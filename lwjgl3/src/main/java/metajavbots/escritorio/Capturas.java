@@ -62,6 +62,8 @@ public final class Capturas extends Juego {
         pantallas.put("18_bienvenida", metajavbots.pantallas.Bienvenida::new);
         pantallas.put("19_rival", metajavbots.pantallas.CodigoDelRival::new);
         pantallas.put("20_maquinas", MaquinasEnMarcha::new);
+        pantallas.put("21_royale", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.royale(this, java.util.List.of())));
+        pantallas.put("22_equipos", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.equipos(this, null)));
         for (String n : pantallas.keySet()) if (solo.isEmpty() || n.contains(solo)) nombres.add(n);
     }
 
@@ -106,7 +108,7 @@ public final class Capturas extends Juego {
             sonidos.tocar("explosion", 0.1f);
             voz.decir("Prueba", metajavbots.textos.Idioma.ES);
         }
-        if (fotogramas == (nombres.get(actual).startsWith("08") || nombres.get(actual).startsWith("20") ? 400 : 45)) {
+        if (fotogramas == (nombres.get(actual).startsWith("08") || nombres.get(actual).startsWith("20") || nombres.get(actual).startsWith("2") && nombres.get(actual).compareTo("21") >= 0 ? 400 : 45)) {
             Pixmap pm = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
             // La imagen sale del revés (OpenGL empieza abajo): se da la vuelta.
             Pixmap derecha = new Pixmap(pm.getWidth(), pm.getHeight(), Pixmap.Format.RGBA8888);

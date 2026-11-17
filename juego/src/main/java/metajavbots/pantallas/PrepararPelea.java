@@ -217,7 +217,7 @@ public final class PrepararPelea implements Pantalla {
     }
 
     /** Battle royale: todos contra todos. Tú, robots de la computadora con piezas al azar y los robots ajenos que haya (hasta 6 en total). */
-    static Encuentro royale(Juego j, List<Path> ajenos) {
+    public static Encuentro royale(Juego j, List<Path> ajenos) {
         Random azar = new Random();
         Encuentro e = new Encuentro();
         e.modo = "ROYALE";
@@ -240,7 +240,7 @@ public final class PrepararPelea implements Pantalla {
     }
 
     /** Por equipos: tú y tu compañero (la computadora, un robot ajeno o el robot de otra partida) contra dos de la computadora. */
-    static Encuentro equipos(Juego j, String[] companero) {
+    public static Encuentro equipos(Juego j, String[] companero) {
         Random azar = new Random();
         Encuentro e = new Encuentro();
         e.modo = "EQUIPOS";
