@@ -22,7 +22,7 @@ import java.util.Set;
 public final class Vigilante {
 
     /** Qué se permite: en un robot, menos (nada de hilos); en los ejercicios, también los hilos. */
-    public enum Modo { ROBOT, EJERCICIO }
+    public enum Modo { ROBOT, EJERCICIO, CONFIANZA }
 
     private Vigilante() {
     }
@@ -99,6 +99,8 @@ public final class Vigilante {
 
     /** ¿Se puede usar esta clase (nombre interno, con barras)? Las del propio jugador se pasan aparte. */
     public static boolean clasePermitida(String nombre, Modo modo) {
+        // Código del propio juego (el rival, para enseñarlo con su traza): se fía.
+        if (modo == Modo.CONFIANZA) return true;
         if (nombre.startsWith("[")) {
             int i = nombre.lastIndexOf('[') + 1;
             if (i >= nombre.length() || nombre.charAt(i) != 'L') return true;   // array de primitivos

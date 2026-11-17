@@ -151,8 +151,9 @@ public final class PrepararPelea implements Pantalla {
             y += 70;
         }
         String[][] modos = {
-                {"ADAPTADA", "pelear.adaptada"}, {"AZAR", "pelear.azar"}, {"DESAFIO", "pelear.desafio"}, {"PRACTICA", "pelear.practica"}};
-        float w = (p.ancho - 80 - 3 * 20) / 4, h = 230;
+                {"ADAPTADA", "pelear.adaptada"}, {"AZAR", "pelear.azar"}, {"DESAFIO", "pelear.desafio"}, {"PRACTICA", "pelear.practica"},
+                {"MCM", "pelear.mcm"}};
+        float w = (p.ancho - 80 - (modos.length - 1) * 20) / modos.length, h = 230;
         for (int i = 0; i < modos.length; i++) {
             float x = 40 + i * (w + 20);
             boolean puede = !modos[i][0].equals("DESAFIO") || Progreso.puedeDesafiar(jug);
@@ -168,7 +169,8 @@ public final class PrepararPelea implements Pantalla {
             }
             if (ui.boton(T.t("pelear.vamos"), x + 20, y + h - 66, w - 40, 50, i == 0 ? Ui.Estilo.PRINCIPAL : Ui.Estilo.NORMAL, puede, null)) {
                 String modo = modos[i][0].equals("ADAPTADA") ? jug.modoIA : modos[i][0];
-                j.ir(new PantallaPelea(encuentro(j, modo)));
+                if (modo.equals("MCM")) j.ir(new MaquinaContraMaquina());
+                else j.ir(new PantallaPelea(encuentro(j, modo)));
             }
         }
         y += h + 30;

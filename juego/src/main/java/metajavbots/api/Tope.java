@@ -17,6 +17,9 @@ public final class Tope {
         long maximo = Long.MAX_VALUE;
         long limiteNanos = Long.MAX_VALUE;
         volatile boolean cancelada;
+        /** Las líneas que se han ejecutado (solo con la traza: el modo máquina contra máquina). */
+        final java.util.BitSet lineas = new java.util.BitSet();
+        int ultima;
     }
 
     static final InheritableThreadLocal<Cuenta> CUENTA = new InheritableThreadLocal<>();
@@ -36,6 +39,14 @@ public final class Tope {
         }
         if (c.cancelada) throw new TopeDeCalculo("cancelado");
         return true;
+    }
+
+    /** Una línea que se ejecuta (lo mete el Inyector con la traza puesta; no cuenta como paso). */
+    public static void linea(int n) {
+        Cuenta c = CUENTA.get();
+        if (c == null) return;
+        c.lineas.set(n);
+        c.ultima = n;
     }
 
     /** Los pasos dados en este turno (o en este ejercicio). */

@@ -296,6 +296,12 @@ public final class Pelea {
         } catch (Throwable e) {
             error(c, e, null);
         }
+        // La traza (modo máquina contra máquina): qué líneas de su código se ejecutaron este turno.
+        java.util.BitSet lineas = Puente.lineas();
+        if (lineas != null && !lineas.isEmpty()) {
+            c.lineasDelTurno = lineas;
+            c.ultimaLinea = Puente.ultimaLinea();
+        }
         // Lo que escribió con System.out va a su consola.
         String escrito = metajavbots.codigo.Salida.soltar();
         if (!escrito.isEmpty()) c.combatiente.escribir(turno, escrito.stripTrailing());

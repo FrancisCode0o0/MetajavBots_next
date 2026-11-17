@@ -390,3 +390,16 @@ temario.pidiendo = Pidiendo a la IA ejercicios a tu medida… | Bitte die KI um 
 temario.validando = Comprobando que los ejercicios de la IA estén bien… | Prüfe, ob die Übungen der KI stimmen… | Checking that the AI's exercises are correct…
 temario.validados = La IA propuso {1} ejercicios; {0} pasan la comprobación y ya son tuyos. | Die KI schlug {1} Übungen vor; {0} bestehen die Prüfung und gehören dir. | The AI proposed {1} exercises; {0} pass the check and are yours.
 temario.sin_ia = Sin cerebro de IA: te preparo los ejercicios y combates del juego que encajan. | Ohne KI-Gehirn: Ich bereite die passenden Übungen und Kämpfe des Spiels vor. | Without an AI brain: I prepare the game's matching exercises and fights.
+
+pelear.mcm = Máquina contra máquina | Maschine gegen Maschine | Machine vs machine
+pelear.mcm_ayuda = Dos robots de la computadora pelean y tú miras su código: se ilumina la línea que se ejecuta. | Zwei Computer-Roboter kämpfen und du siehst ihren Code: Die ausgeführte Zeile leuchtet auf. | Two computer robots fight and you watch their code: the line being run lights up.
+mcm.titulo = Máquina contra máquina | Maschine gegen Maschine | Machine vs machine
+mcm.ayuda = Elige dos robots de la computadora y su nivel. Mientras pelean, verás su código: las líneas que se acaban de ejecutar se iluminan y ▶ marca la última. Pausa con Espacio y avanza turno a turno con → para ver qué línea decide cada movimiento. | Wähle zwei Computer-Roboter und ihre Stufe. Während sie kämpfen, siehst du ihren Code: Die gerade ausgeführten Zeilen leuchten auf und ▶ markiert die letzte. Pausiere mit der Leertaste und geh mit → Zug um Zug weiter, um zu sehen, welche Zeile jede Bewegung entscheidet. | Choose two computer robots and their level. While they fight you see their code: the lines just run light up and ▶ marks the last one. Pause with Space and step tick by tick with → to see which line decides each move.
+mcm.nivel = Nivel | Stufe | Level
+mcm.empezar = ¡Que empiece! | Los geht's! | Let it begin!
+mcm.linea = línea | Zeile | line
+mcm.seguir = Seguir la línea | Der Zeile folgen | Follow the line
+mcm.seguir_ayuda = El código se desplaza solo para enseñar la línea que se ejecuta. | Der Code scrollt von selbst zur ausgeführten Zeile. | The code scrolls by itself to the line being run.
+mcm.gana = ¡Gana {0}! | {0} gewinnt! | {0} wins!
+mcm.otra = Otra pelea | Noch ein Kampf | Another fight
+mcm.sin_jdk = Sin JDK no se puede ver la línea que se ejecuta (pelean igual). | Ohne JDK sieht man die ausgeführte Zeile nicht (sie kämpfen trotzdem). | Without a JDK you cannot see the line being run (they still fight).

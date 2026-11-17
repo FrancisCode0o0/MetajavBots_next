@@ -61,6 +61,7 @@ public final class Capturas extends Juego {
         pantallas.put("17_ajustes", metajavbots.pantallas.Ajustes::new);
         pantallas.put("18_bienvenida", metajavbots.pantallas.Bienvenida::new);
         pantallas.put("19_rival", metajavbots.pantallas.CodigoDelRival::new);
+        pantallas.put("20_maquinas", MaquinasEnMarcha::new);
         for (String n : pantallas.keySet()) if (solo.isEmpty() || n.contains(solo)) nombres.add(n);
     }
 
@@ -100,7 +101,7 @@ public final class Capturas extends Juego {
         super.render();
         if (actual < 0 || actual >= nombres.size()) return;
         fotogramas++;
-        if (fotogramas == (nombres.get(actual).startsWith("08") ? 400 : 45)) {
+        if (fotogramas == (nombres.get(actual).startsWith("08") || nombres.get(actual).startsWith("20") ? 400 : 45)) {
             Pixmap pm = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
             // La imagen sale del revés (OpenGL empieza abajo): se da la vuelta.
             Pixmap derecha = new Pixmap(pm.getWidth(), pm.getHeight(), Pixmap.Format.RGBA8888);
@@ -111,6 +112,23 @@ public final class Capturas extends Juego {
             derecha.dispose();
             System.out.println("foto: " + f);
             siguiente();
+        }
+    }
+
+    /** Máquina contra máquina ya empezada (la pantalla de verdad, tras pulsar «¡Que empiece!»). */
+    static final class MaquinasEnMarcha implements Pantalla {
+        private final metajavbots.pantallas.MaquinaContraMaquina m = new metajavbots.pantallas.MaquinaContraMaquina();
+        private int n;
+
+        @Override
+        public void alEntrar(Juego j) {
+            m.alEntrar(j);
+        }
+
+        @Override
+        public void fotograma(Juego j, float dt) {
+            if (n++ == 2) m.empezarParaCapturas(j);
+            m.fotograma(j, dt);
         }
     }
 

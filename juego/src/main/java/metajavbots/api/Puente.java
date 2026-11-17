@@ -62,6 +62,17 @@ public final class Puente {
         return c == null ? 0 : c.pasos;
     }
 
+    /** Las líneas que ha ejecutado el código que se está contando, y la última (la traza); null si no hay cuenta. */
+    public static java.util.BitSet lineas() {
+        Tope.Cuenta c = Tope.CUENTA.get();
+        return c == null ? null : (java.util.BitSet) c.lineas.clone();
+    }
+
+    public static int ultimaLinea() {
+        Tope.Cuenta c = Tope.CUENTA.get();
+        return c == null ? 0 : c.ultima;
+    }
+
     /** Para lo que esté contando ese hilo (y los suyos): el siguiente paso lanza TopeDeCalculo. */
     public static Object cuentaActual() {
         return Tope.CUENTA.get();

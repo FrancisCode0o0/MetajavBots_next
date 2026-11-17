@@ -40,6 +40,11 @@ public final class VentanaDeCodigo {
     public final List<Marca> marcas = new ArrayList<>();
     /** Una línea que resaltar (la del último error en la pelea, por ejemplo); 0 si ninguna. */
     public int lineaResaltada;
+    /** Las líneas que se acaban de ejecutar (la traza del modo máquina contra máquina), desde 1; y la última, más marcada. */
+    public java.util.BitSet lineasActivas = new java.util.BitSet();
+    public int lineaActiva;
+    /** Si se sigue a la línea activa (se desplaza solo para verla). */
+    public boolean seguirActiva;
     /** Lo que hace Ctrl+S / Ctrl+Intro (compilar), F1 (ayuda de la palabra) y los cambios. */
     public Runnable alCompilar;
     public java.util.function.Consumer<String> alPedirAyuda;
@@ -81,6 +86,10 @@ public final class VentanaDeCodigo {
         if (enfocada) teclas(ui, zh, alto);
         raton(ui, zx, zy, zw, zh, alto, letra);
         if (seguirCursor) llevarAlCursor(zw, zh, alto, letra);
+        if (seguirActiva && lineaActiva > 0) {
+            float ay = (lineaActiva - 1) * alto;
+            if (ay < desplazamientoY + alto * 2 || ay > desplazamientoY + zh - alto * 3) desplazamientoY = ay - zh / 2;
+        }
         seguirCursor = false;
         float maxY = Math.max(0, doc.lineas() * alto - zh + alto * 2);
         desplazamientoY = Math.max(0, Math.min(maxY, desplazamientoY));
@@ -99,6 +108,8 @@ public final class VentanaDeCodigo {
             float ly = zy + l * alto - desplazamientoY;
             if (l == lineaCursor && enfocada) p.rect(zx - 4, ly, zw + 4, alto, t.lineaActual, 1);
             if (lineaResaltada == l + 1) p.rect(zx - 4, ly, zw + 4, alto, t.mal, 0.18f);
+            if (lineasActivas.get(l + 1)) p.rect(zx - 4, ly, zw + 4, alto, t.bien, lineaActiva == l + 1 ? 0.32f : 0.12f);
+            if (lineaActiva == l + 1) p.texto("▶", x + 2, ly + alto * 0.12f, tamano * 0.8f, true, t.bien, 1);
             boolean conError = false, conAviso = false;
             for (Marca m : marcas) if (m.linea == l + 1) {
                 if (m.grave) conError = true;
@@ -142,7 +153,7 @@ public final class VentanaDeCodigo {
         barras(ui, x, zy, w, zh, alto, maxY);
         if (buscando) barraDeBuscar(ui, x, y, w, alto);
         if (proponiendo) dibujarPropuestas(ui, zx, zy, alto, letra);
-        if (soloLectura) p.textoDerecha("🔒 " + metajavbots.textos.T.t("editor.solo_lectura"), x + w - 18, y + h - alto - 4,
+        if (soloLectura) p.textoDerecha("■ " + metajavbots.textos.T.t("editor.solo_lectura"), x + w - 18, y + h - alto - 4,
                 tamano * 0.8f, false, t.textoApagado, 1);
     }
 

@@ -120,7 +120,7 @@ public final class PantallaEjercicio implements Pantalla {
             yy += ui.letra * 1.4f;
         }
         if (pista && !e.pista.es.isEmpty()) {
-            yy += p.parrafo("💡 " + e.pista.en(T.idioma), x + 20, yy, w - 50, ui.letra * 0.85f, ui.tema.aviso, 1) + 10;
+            yy += p.parrafo("★ " + e.pista.en(T.idioma), x + 20, yy, w - 50, ui.letra * 0.85f, ui.tema.aviso, 1) + 10;
         }
         if (solucion) {
             p.texto(T.t("ejercicio.solucion"), x + 20, yy, ui.letra * 0.85f, true, ui.tema.textoSuave, 1);

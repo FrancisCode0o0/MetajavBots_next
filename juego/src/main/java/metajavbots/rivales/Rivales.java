@@ -23,6 +23,11 @@ public final class Rivales {
 
     /** Un rival con las piezas de fábrica de su modelo, mejoradas según el nivel (Mk I a Mk V). */
     public static Combatiente crear(Modelo modelo, double nivel, double agresividad, Random azar) {
+        return crear(modelo, nivel, agresividad, azar, false);
+    }
+
+    /** Con traza: compilado desde su código, para ver qué línea se ejecuta (el modo máquina contra máquina). */
+    public static Combatiente crear(Modelo modelo, double nivel, double agresividad, Random azar, boolean traza) {
         Montaje m = new Montaje(modelo);
         int marca = 1 + (int) Math.round(Math.max(0, Math.min(1, nivel)) * 4);
         CatalogoDePiezas c = CatalogoDePiezas.delJuego();
@@ -37,7 +42,7 @@ public final class Rivales {
             Pieza n = c.pieza("naturaleza_" + modelo.naturaleza.name().toLowerCase(java.util.Locale.ROOT) + (marca == 1 ? "" : "_" + marca));
             if (n != null) m.poner(Montaje.Hueco.NATURALEZA, n);
         }
-        return combatiente(modelo.nombre.es, m, nivel, agresividad, estiloPara(m, azar), azar);
+        return combatiente(modelo.nombre.es, m, nivel, agresividad, estiloPara(m, azar), azar, traza);
     }
 
     /** El muñeco de entrenamiento de los tutoriales (no cuenta para nada). */
@@ -68,12 +73,13 @@ public final class Rivales {
             m.poner(h, opciones.get(azar.nextInt(opciones.size())));
         }
         Estilo[] estilos = Estilo.values();
-        return combatiente("¿" + modelo.nombre.es + "?", m, nivel, agresividad, estilos[azar.nextInt(estilos.length)], azar);
+        return combatiente("¿" + modelo.nombre.es + "?", m, nivel, agresividad, estilos[azar.nextInt(estilos.length)], azar, false);
     }
 
-    private static Combatiente combatiente(String nombre, Montaje m, double nivel, double agresividad, Estilo estilo, Random azar) {
+    private static Combatiente combatiente(String nombre, Montaje m, double nivel, double agresividad, Estilo estilo, Random azar, boolean traza) {
         Ajuste ajuste = new Ajuste(nivel, agresividad, null);
-        Fabrica f = new Fabrica() {
+        Fabrica conTraza = traza ? RivalConTraza.fabrica(ajuste, estilo) : null;
+        Fabrica f = conTraza != null ? conTraza : new Fabrica() {
             @Override
             public RobotBase crear() {
                 return new Rival(ajuste, estilo);

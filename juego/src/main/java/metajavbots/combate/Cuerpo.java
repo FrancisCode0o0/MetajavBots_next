@@ -47,6 +47,9 @@ public final class Cuerpo implements Mando {
     Avistado chocoCon;
     List<Avistamiento> vistos = new ArrayList<>();
     final Random azar;
+    /** Las líneas de su código que se ejecutaron en el último turno que pensó, y la última (con la traza). */
+    public java.util.BitSet lineasDelTurno = new java.util.BitSet();
+    public int ultimaLinea;
     /** Pasos de cálculo del último turno (para el medidor y el depurador). */
     public long pasosDelTurno;
     /** Para el dibujo: cuánto se ha movido (las piernas), el último golpe recibido y el retroceso del arma. */

@@ -55,9 +55,15 @@ public final class Inyector {
     }
 
     public static Inyectado inyectar(String fuente) {
+        return inyectar(fuente, false);
+    }
+
+    /** Con traza, además, una llamada a Tope.linea(n) antes de cada sentencia (para ver qué línea se ejecuta). */
+    public static Inyectado inyectar(String fuente, boolean traza) {
         List<Lexico.Trozo> t = Lexico.codigo(fuente);
         List<int[]> metidos = new ArrayList<>();
         List<String> textos = new ArrayList<>();
+        if (traza) trazar(fuente, t, metidos, textos);
         // Los paréntesis: dónde cierra cada uno.
         int[] pareja = new int[t.size()];
         java.util.Arrays.fill(pareja, -1);
@@ -175,6 +181,147 @@ public final class Inyector {
         }
         for (Integer o : orden) ordenados.add(new int[]{metidos.get(o)[0], textos.get(o).length()});
         return new Inyectado(b.toString(), ordenados);
+    }
+
+    public static final String LINEA = "metajavbots.api.Tope.linea";
+
+    private enum Bloque { CLASE, INICIALIZADOR, SWITCH, SENTENCIAS }
+
+    /**
+     * La traza: delante de cada sentencia de un bloque, «Tope.linea(n);» con la línea donde empieza. No se mete
+     * donde no se puede: en el cuerpo de una clase, en un inicializador de array, entre los «case» de un switch,
+     * delante de un else/catch/finally/while de un do, al principio de un constructor, ni tras un return, throw,
+     * break, continue o yield (javac diría que no se llega).
+     */
+    private static void trazar(String fuente, List<Lexico.Trozo> t, List<int[]> metidos, List<String> textos) {
+        int[] inicioDeLinea = new int[fuente.length() + 2];
+        int linea = 1;
+        for (int i = 0; i < fuente.length(); i++) {
+            inicioDeLinea[i] = linea;
+            if (fuente.charAt(i) == '\n') linea++;
+        }
+        inicioDeLinea[fuente.length()] = linea;
+        Deque<Bloque> bloques = new ArrayDeque<>();
+        Deque<Integer> parentesisDelBloque = new ArrayDeque<>();
+        Deque<String> clases = new ArrayDeque<>();
+        int parentesis = 0;
+        boolean esperaClase = false;
+        String nombreDeClase = null;
+        boolean enConstantesDeEnum = false, esperaEnum = false;
+        int inicioDeSentencia = 0;
+        for (int i = 0; i < t.size(); i++) {
+            Lexico.Trozo x = t.get(i);
+            boolean trasPunto = i > 0 && t.get(i - 1).es(".");
+            Lexico.Trozo antes = i > 0 ? t.get(i - 1) : null;
+            if (x.es("(")) parentesis++;
+            else if (x.es(")")) parentesis = Math.max(0, parentesis - 1);
+            if (!trasPunto && (x.es("class") || x.es("interface") || x.es("enum") || x.es("@interface")
+                    || x.es("record") && i + 2 < t.size() && t.get(i + 1).clase == Lexico.Clase.NOMBRE && t.get(i + 2).es("("))) {
+                esperaClase = true;
+                esperaEnum = x.es("enum");
+                nombreDeClase = i + 1 < t.size() ? t.get(i + 1).texto : null;
+            } else if (x.es("{")) {
+                Bloque arriba = bloques.peek();
+                Bloque tipo;
+                boolean constructor = false;
+                if (esperaClase) {
+                    tipo = Bloque.CLASE;
+                    clases.push(nombreDeClase == null ? "" : nombreDeClase);
+                    esperaClase = false;
+                    enConstantesDeEnum = esperaEnum;
+                    esperaEnum = false;
+                } else if (antes != null && antes.es("->")) {
+                    tipo = Bloque.SENTENCIAS;
+                } else if (antes != null && (antes.es("=") || antes.es("]") || antes.es("(") || antes.es(",") && arriba == Bloque.INICIALIZADOR
+                        || antes.es("{") && arriba == Bloque.INICIALIZADOR || antes.es(","))) {
+                    tipo = arriba == Bloque.CLASE && antes.es(",") ? Bloque.CLASE : Bloque.INICIALIZADOR;
+                } else if (antes != null && antes.es(")") && Formateo.vieneDeSwitch(t, i)) {
+                    tipo = Bloque.SWITCH;
+                } else if (arriba == Bloque.CLASE && enConstantesDeEnum && antes != null && (antes.clase == Lexico.Clase.NOMBRE || antes.es(")"))
+                        && !esMetodoAntes(t, i)) {
+                    tipo = Bloque.CLASE;
+                    clases.push("");
+                } else if (antes != null && antes.es(")") && esClaseAnonimaTraza(t, i)) {
+                    tipo = Bloque.CLASE;
+                    clases.push("");
+                } else {
+                    tipo = Bloque.SENTENCIAS;
+                    if (arriba == Bloque.CLASE && antes != null && antes.es(")")) {
+                        String nombre = nombreAntesDeParentesis(t, i);
+                        constructor = nombre != null && nombre.equals(clases.peek());
+                    }
+                }
+                bloques.push(tipo);
+                parentesisDelBloque.push(parentesis);
+                inicioDeSentencia = i + 1;
+                if (tipo == Bloque.SENTENCIAS && !constructor && i + 1 < t.size() && !t.get(i + 1).es("}")) {
+                    metidos.add(new int[]{x.fin, 0});
+                    textos.add(" " + LINEA + "(" + inicioDeLinea[t.get(i + 1).inicio] + ");");
+                }
+            } else if (x.es("}")) {
+                Bloque cerrado = bloques.isEmpty() ? Bloque.SENTENCIAS : bloques.pop();
+                if (!parentesisDelBloque.isEmpty()) parentesisDelBloque.pop();
+                if (cerrado == Bloque.CLASE && !clases.isEmpty()) clases.pop();
+                inicioDeSentencia = i + 1;
+            } else if (x.es(";")) {
+                Bloque arriba = bloques.peek();
+                if (arriba == Bloque.CLASE) enConstantesDeEnum = false;
+                boolean nivelDelBloque = parentesisDelBloque.isEmpty() || parentesisDelBloque.peek() == parentesis;
+                if (arriba == Bloque.SENTENCIAS && nivelDelBloque && i + 1 < t.size()) {
+                    Lexico.Trozo sig = t.get(i + 1);
+                    boolean prohibido = sig.es("}") || sig.es("else") || sig.es("catch") || sig.es("finally") || sig.es("while")
+                            || sig.es("case") || sig.es("default");
+                    for (int k = inicioDeSentencia; k < i && !prohibido; k++) {
+                        Lexico.Trozo y = t.get(k);
+                        if (y.es("return") || y.es("throw") || y.es("break") || y.es("continue") || y.es("yield")) prohibido = true;
+                    }
+                    if (!prohibido) {
+                        metidos.add(new int[]{x.fin, 0});
+                        textos.add(" " + LINEA + "(" + inicioDeLinea[sig.inicio] + ");");
+                    }
+                }
+                if (nivelDelBloque) inicioDeSentencia = i + 1;
+            }
+        }
+    }
+
+    /** ¿Lo de antes de la «{» es «nombre(…)» de un método (no una constante de enum con argumentos)? Se mira si hay tipo delante. */
+    private static boolean esMetodoAntes(List<Lexico.Trozo> t, int llave) {
+        int i = llave - 1;
+        if (i < 0 || !t.get(i).es(")")) return false;
+        int nivel = 0;
+        for (; i >= 0; i--) {
+            if (t.get(i).es(")")) nivel++;
+            else if (t.get(i).es("(") && --nivel == 0) break;
+        }
+        return i >= 2 && (t.get(i - 2).clase == Lexico.Clase.NOMBRE || t.get(i - 2).clase == Lexico.Clase.TIPO_PRIMITIVO
+                || t.get(i - 2).es(">") || t.get(i - 2).es("]"));
+    }
+
+    private static String nombreAntesDeParentesis(List<Lexico.Trozo> t, int llave) {
+        int i = llave - 1, nivel = 0;
+        for (; i >= 0; i--) {
+            if (t.get(i).es(")")) nivel++;
+            else if (t.get(i).es("(") && --nivel == 0) break;
+        }
+        return i >= 1 ? t.get(i - 1).texto : null;
+    }
+
+    private static boolean esClaseAnonimaTraza(List<Lexico.Trozo> t, int llave) {
+        int i = llave - 1, nivel = 0;
+        for (; i >= 0; i--) {
+            if (t.get(i).es(")")) nivel++;
+            else if (t.get(i).es("(") && --nivel == 0) break;
+        }
+        int k = i - 1, gen = 0;
+        while (k >= 0) {
+            Lexico.Trozo x = t.get(k);
+            if (x.es(">")) gen++;
+            else if (x.es("<")) gen--;
+            else if (gen == 0 && !(x.clase == Lexico.Clase.NOMBRE || x.es("."))) break;
+            k--;
+        }
+        return k >= 0 && t.get(k).es("new");
     }
 
     private static void meter(List<int[]> metidos, List<String> textos, int pos, String texto) {

@@ -5,6 +5,8 @@ import static metajavbots.pruebas.Pruebas.cierto;
 import static metajavbots.pruebas.Pruebas.falso;
 import static metajavbots.pruebas.Pruebas.igual;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 
@@ -202,6 +204,41 @@ final class PruebasDelCompilador {
             cierto(r.bien, "compila: " + r.errores + "\n" + Inyector.inyectar(prog).fuente);
             metajavbots.codigo.Cargador cg = new metajavbots.codigo.Cargador(r.clases, Vigilante.Modo.EJERCICIO);
             igual(328, cg.loadClass("Varios").getMethod("g").invoke(null));
+        });
+
+        caso("traza: el rival compilado con traza pelea y dice qué líneas ejecuta", () -> {
+            Combatiente a = Rivales.crear(Modelo.de("vigia"), 0.6, 0.5, new Random(1), true);
+            Combatiente b = Rivales.crear(Modelo.de("mazo"), 0.6, 0.5, new Random(2), true);
+            Pelea p = new Pelea(a, b, 9);
+            p.empezarRonda();
+            for (int i = 0; i < 200; i++) p.avanzar();
+            cierto(p.cuerpo(0).ultimaLinea > 0, "apunta la última línea");
+            cierto(p.cuerpo(0).lineasDelTurno.cardinality() >= 3, "varias líneas en un turno: " + p.cuerpo(0).lineasDelTurno);
+            String[] lineas = metajavbots.rivales.RivalConTraza.fuente().split("\n");
+            String l = lineas[p.cuerpo(0).ultimaLinea - 1].strip();
+            cierto(!l.isEmpty() && !l.startsWith("//") && !l.startsWith("*"), "la línea es código: «" + l + "»");
+            p.jugarEntera();
+            igual("", a.ultimoError, "sin errores");
+        });
+
+        caso("traza: todas las soluciones de los ejercicios siguen compilando con la traza metida", () -> {
+            List<String> mal = new ArrayList<>();
+            int n = 0;
+            for (metajavbots.ejercicios.Ejercicio e : metajavbots.ejercicios.Banco.delJuego().todos()) {
+                if (e.java > Compilador.versionDeJava()) continue;
+                java.util.Map<String, String> f = new java.util.LinkedHashMap<>();
+                if (e.tipo == metajavbots.ejercicios.Ejercicio.Tipo.CLASE) {
+                    f.put(Compilador.nombreDeClase(e.solucion), e.solucion);
+                } else {
+                    f.put("Ejercicio", "import java.util.*; import java.util.function.*; import java.util.stream.*; public class Ejercicio {\n"
+                            + e.codigoSolucion() + "\n}\n");
+                }
+                Compilador.Resultado r = Compilador.compilar(f, true, true, Vigilante.Modo.EJERCICIO, Locale.ROOT);
+                n++;
+                if (!r.bien) mal.add(e.id + ": " + r.graves());
+            }
+            System.out.println("            " + n + " soluciones compiladas con traza");
+            cierto(mal.isEmpty(), String.join("\n  ", mal));
         });
 
         caso("compilador: cambiar el código entre rondas estrena el robot y conserva la memoria", () -> {

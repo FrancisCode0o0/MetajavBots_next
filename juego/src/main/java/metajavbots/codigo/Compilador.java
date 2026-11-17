@@ -131,6 +131,11 @@ public final class Compilador {
      * Con un modo, el Vigilante revisa cada clase y lo prohibido sale como error.
      */
     public static synchronized Resultado compilar(Map<String, String> fuentes, boolean contarPasos, Vigilante.Modo modo, Locale idioma) {
+        return compilar(fuentes, contarPasos, false, modo, idioma);
+    }
+
+    /** Con traza, cada sentencia apunta su línea al ejecutarse (el modo máquina contra máquina). */
+    public static synchronized Resultado compilar(Map<String, String> fuentes, boolean contarPasos, boolean traza, Vigilante.Modo modo, Locale idioma) {
         long t0 = System.currentTimeMillis();
         List<Fallo> errores = new ArrayList<>();
         if (!hayCompilador()) {
@@ -141,7 +146,7 @@ public final class Compilador {
         List<JavaFileObject> unidades = new ArrayList<>();
         for (Map.Entry<String, String> e : fuentes.entrySet()) {
             String fuente = Documento.normalizar(e.getValue());
-            Inyector.Inyectado in = contarPasos ? Inyector.inyectar(fuente) : null;
+            Inyector.Inyectado in = contarPasos ? Inyector.inyectar(fuente, traza) : null;
             inyectados.put(e.getKey(), in);
             unidades.add(new Fuente(e.getKey(), in != null ? in.fuente : fuente));
         }
@@ -172,7 +177,7 @@ public final class Compilador {
             }
             Map<String, byte[]> clases = new LinkedHashMap<>();
             for (Map.Entry<String, ByteArrayOutputStream> e : salida.entrySet()) clases.put(e.getKey(), e.getValue().toByteArray());
-            if (bien && modo != null) {
+            if (bien && modo != null && modo != Vigilante.Modo.CONFIANZA) {
                 Set<String> propias = new HashSet<>();
                 for (String n : clases.keySet()) propias.add(n.replace('.', '/'));
                 for (Map.Entry<String, byte[]> e : clases.entrySet()) {

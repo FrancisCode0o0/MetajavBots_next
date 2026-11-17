@@ -136,7 +136,7 @@ public final class Formateo {
     }
 
     /** ¿La «{» del trozo j abre el cuerpo de un switch? (… switch ( … ) {) */
-    private static boolean vieneDeSwitch(List<Lexico.Trozo> trozos, int j) {
+    static boolean vieneDeSwitch(List<Lexico.Trozo> trozos, int j) {
         int i = j - 1;
         while (i >= 0 && !trozos.get(i).esCodigo()) i--;
         if (i < 0 || !trozos.get(i).es(")")) return false;
