@@ -6,6 +6,8 @@ Robots que se programan en Java y combaten por rondas, para aprender Java jugand
 
 ![Los dieciséis modelos](docs/imagenes/robots.png)
 
+![Battle royale](docs/imagenes/royale.png)
+
 ## Cómo se juega
 
 1. **Instala un JDK 21 o más nuevo** (por ejemplo, [Eclipse Temurin](https://adoptium.net)). Hace falta un JDK, no solo un JRE: el juego compila tu código Java.
@@ -35,7 +37,7 @@ public class MiRobot extends Metajavbot {
 }
 ```
 
-**Qué hay**: 16 modelos de robot con su silueta y su personalidad; 236 piezas (armas láser, balas, misiles, cuerpo a cuerpo, lanzallamas, escudos, cabezas con radar y especiales, piernas, ruedas, orugas, alas, núcleos); 262 ejercicios que se comprueban solos (al estilo CodingBat y CodeStepByStep) y 70 lecciones en 22 temas de Java, de los primeros pasos a hilos, streams y diseño; 12 etiquetas (Noob, Junior y Senior I-IV) y una secreta; la computadora en cinco dificultades, adaptada a tu nivel; modo azar, desafío, jefes por tema, tope de cálculo, depurador en vivo, laboratorio de pruebas, robots de otros jugadores y tu propio temario; historial con estadísticas; todo en español, alemán e inglés.
+**Qué hay**: 16 modelos de robot con su silueta y su personalidad; 236 piezas (armas láser, balas, misiles, cuerpo a cuerpo, lanzallamas, escudos, cabezas con radar y especiales, piernas, ruedas, orugas, alas, núcleos); 262 ejercicios que se comprueban solos (al estilo CodingBat y CodeStepByStep) y 70 lecciones en 22 temas de Java, de los primeros pasos a hilos, streams y diseño; 12 etiquetas (Noob, Junior y Senior I-IV) y una secreta; la computadora en cinco dificultades, adaptada a tu nivel; modo azar, desafío, battle royale, combate por equipos (con la computadora u otro jugador de compañero), máquina contra máquina (con la línea que se ejecuta a la vista), jefes por tema, tope de cálculo, depurador en vivo, laboratorio de pruebas, robots de otros jugadores y tu propio temario; historial con estadísticas; todo en español, alemán e inglés.
 
 **Cerebro de IA (opcional)**: el juego funciona entero sin IA. Si quieres, en *Ajustes › Cerebro de IA* puedes usar un modelo local con [KoboldCpp](https://github.com/LostRuins/koboldcpp) o uno en línea con tu propia clave (que se guarda fuera del juego). Con IA, los tutoriales son conversaciones, el código se revisa tras cada pelea y el temario se convierte en ejercicios. Más en [docs/CEREBRO.md](docs/CEREBRO.md).
 
