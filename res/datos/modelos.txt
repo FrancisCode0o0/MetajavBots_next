@@ -1,0 +1,263 @@
+# MODELOS de MetajavBots: un bloque por modelo (docs/MODELOS.md). Diseños propios.
+# torso: CAJA ESFERA CUNA BARRIL HEXAGONO ESBELTO CAPARAZON CRISTAL
+# cabeza: VISOR CUPULA MONOOJO ANTENAS CUERNOS CRESTA PANTALLA FAROL CASCO OJOS
+# brazos: FINOS NORMALES GRUESOS · detalles: hombreras remaches rayas mochila cola aleron panel tubos parches pinchos aro capa
+# colores: principal secundario acento (hexadecimal) · piezas: cabeza izquierda derecha piernas núcleo (las de fábrica)
+# personalidad: el archivo de res/dialogos/ con sus diálogos.
+# TODO-FRAN: la lista de modelos, sus nombres y sus números finos son tuyos.
+
+[cobalto]
+nombre = Cobalto | Kobalt | Cobalt
+lema = Un muro que avanza. | Eine Mauer, die vorrückt. | A wall that walks.
+naturaleza = ACERO
+personalidad = estoico
+tamano = 36
+torso = CAJA
+cabeza = VISOR
+brazos = GRUESOS
+detalles = hombreras remaches
+colores = 2F5D8C 9FB6CC FFB238
+blindaje = 1.25
+velocidad = 0.85
+piezas = cabeza_escudo canon_ligero punos orugas nucleo_basico
+desbloqueo = inicio
+
+[chispa]
+nombre = Chispa | Funke | Sparky
+lema = ¡Más rápido que tu compilador! | Schneller als dein Compiler! | Faster than your compiler!
+naturaleza = RAYO
+personalidad = hiperactivo
+tamano = 26
+torso = ESFERA
+cabeza = ANTENAS
+brazos = FINOS
+detalles = aleron rayas
+colores = F2C230 2B2B33 4FD1FF
+blindaje = 0.8
+velocidad = 1.25
+piezas = cabeza_turbo laser_pulso ametralladora ruedas nucleo_bateria
+desbloqueo = inicio
+
+[vigia]
+nombre = Vigía | Späher | Lookout
+lema = Un disparo, un acierto. | Ein Schuss, ein Treffer. | One shot, one hit.
+naturaleza = FOCO
+personalidad = calmado
+tamano = 30
+torso = ESBELTO
+cabeza = MONOOJO
+brazos = NORMALES
+detalles = mochila panel
+colores = 3E7D4E C9D6B8 FF5A5A
+blindaje = 0.95
+velocidad = 1.0
+piezas = cabeza_radar laser_basico laser_francotirador piernas_bipedo nucleo_basico
+desbloqueo = inicio
+
+[mazo]
+nombre = Mazo | Hammerkopf | Sledge
+lema = Primero pego, luego pregunto. | Erst hauen, dann fragen. | Hit first, ask later.
+naturaleza = FURIA
+personalidad = bravucon
+tamano = 38
+torso = BARRIL
+cabeza = CUERNOS
+brazos = GRUESOS
+detalles = pinchos remaches
+colores = B3261E 3A2A2A FFD166
+blindaje = 1.15
+velocidad = 0.95
+piezas = cabeza_furia martillo punos piernas_bipedo nucleo_blindado
+desbloqueo = victorias:3
+
+[grulla]
+nombre = Grulla | Kranich | Crane
+lema = El cielo también es una arena. | Auch der Himmel ist eine Arena. | The sky is an arena too.
+naturaleza = ETER
+personalidad = poetico
+tamano = 28
+torso = CUNA
+cabeza = CRESTA
+brazos = FINOS
+detalles = cola aleron
+colores = EDF2F4 2EC4B6 FF6B9A
+blindaje = 0.85
+velocidad = 1.1
+piezas = cabeza_sombra laser_basico lanzamisiles alas nucleo_basico
+desbloqueo = nivel:NOOB_2
+
+[abaco]
+nombre = Ábaco | Abakus | Abacus
+lema = He calculado 14 millones de futuros. | Ich habe 14 Millionen Zukünfte berechnet. | I computed 14 million futures.
+naturaleza = INGENIO
+personalidad = cerebrito
+tamano = 31
+torso = HEXAGONO
+cabeza = PANTALLA
+brazos = NORMALES
+detalles = tubos panel
+colores = 6A4C93 D7C9F2 7CFF6B
+blindaje = 0.95
+velocidad = 0.95
+piezas = cabeza_pulso lanzamisiles laser_basico patas_arana nucleo_cuantico
+desbloqueo = nivel:NOOB_3
+
+[bastion]
+nombre = Bastión | Bollwerk | Bastion
+lema = Detrás de mí no pasa nada. | Hinter mir passiert nichts. | Nothing gets past me.
+naturaleza = ACERO
+personalidad = protector
+tamano = 37
+torso = CAPARAZON
+cabeza = CUPULA
+brazos = GRUESOS
+detalles = remaches parches
+colores = 6B7F3A D9CBA0 59C3FF
+blindaje = 1.35
+velocidad = 0.75
+piezas = cabeza_escudo escudo_brazo canon_ligero orugas nucleo_blindado
+desbloqueo = victorias:6
+
+[avispa]
+nombre = Avispa | Wespe | Wasp
+lema = Zumbo, pico y me voy. | Summen, stechen, weg. | Buzz, sting, gone.
+naturaleza = RAYO
+personalidad = sarcastico
+tamano = 25
+torso = CUNA
+cabeza = ANTENAS
+brazos = FINOS
+detalles = rayas cola
+colores = 1C1C1C FFC300 FF3D3D
+blindaje = 0.8
+velocidad = 1.2
+piezas = cabeza_turbo taladro ametralladora flotador nucleo_bateria
+desbloqueo = victorias:4
+
+[tejedora]
+nombre = Tejedora | Weberin | Weaver
+lema = Cada hilo es una trampa. | Jeder Faden ist eine Falle. | Every thread is a trap.
+naturaleza = INGENIO
+personalidad = intrigante
+tamano = 30
+torso = ESFERA
+cabeza = OJOS
+brazos = FINOS
+detalles = pinchos
+colores = 8E2C7F 2A1B3D 9CFF57
+blindaje = 0.95
+velocidad = 1.05
+piezas = cabeza_sombra latigo enjambre patas_arana nucleo_cuantico
+desbloqueo = nivel:NOOB_4
+
+[filo]
+nombre = Filo | Schneide | Edge
+lema = El honor se forja en cada golpe. | Ehre wird mit jedem Schlag geschmiedet. | Honor is forged with every strike.
+naturaleza = FURIA
+personalidad = honorable
+tamano = 31
+torso = CRISTAL
+cabeza = CASCO
+brazos = NORMALES
+detalles = hombreras capa
+colores = 9B1D20 C0C5CE F5F3BB
+blindaje = 1.0
+velocidad = 1.1
+piezas = cabeza_furia espada espada piernas_salto nucleo_basico
+desbloqueo = victorias:8
+
+[faro]
+nombre = Faro | Leuchtturm | Beacon
+lema = ¡Que se haga la luz… y que queme! | Es werde Licht… und es brenne! | Let there be light… and let it burn!
+naturaleza = FOCO
+personalidad = teatral
+tamano = 32
+torso = ESBELTO
+cabeza = FAROL
+brazos = NORMALES
+detalles = aro rayas
+colores = F28C28 F7F1E3 FFF36B
+blindaje = 0.9
+velocidad = 0.9
+piezas = cabeza_ojo laser_pesado laser_basico flotador nucleo_bateria
+desbloqueo = nivel:JUNIOR_1
+
+[pixel]
+nombre = Píxel | Pixel | Pixel
+lema = Pulsa START para perder. | Drück START zum Verlieren. | Press START to lose.
+naturaleza = INGENIO
+personalidad = jugueton
+tamano = 28
+torso = CAJA
+cabeza = PANTALLA
+brazos = NORMALES
+detalles = panel
+colores = 27AE60 111A14 B6FF00
+blindaje = 0.95
+velocidad = 1.05
+piezas = cabeza_panoramica canon_ligero laser_pulso ruedas nucleo_cuantico
+desbloqueo = victorias:10
+
+[nimbo]
+nombre = Nimbo | Nimbus | Nimbus
+lema = Mmm… ¿ya ha empezado? | Hmm… hat es schon angefangen? | Hmm… has it started yet?
+naturaleza = ETER
+personalidad = sonador
+tamano = 33
+torso = ESFERA
+cabeza = CUPULA
+brazos = FINOS
+detalles = aro
+colores = A8DADC F1FAEE 457B9D
+blindaje = 1.0
+velocidad = 0.9
+piezas = cabeza_medica brazo_reparador laser_basico flotador nucleo_bateria
+desbloqueo = nivel:JUNIOR_2
+
+[chatarra]
+nombre = Chatarra | Schrotti | Scrapper
+lema = En mis tiempos los robots se hacían con tornillos. | Zu meiner Zeit hatten Roboter noch Schrauben. | In my day robots were made with bolts.
+naturaleza = ACERO
+personalidad = grunon
+tamano = 35
+torso = BARRIL
+cabeza = ANTENAS
+brazos = GRUESOS
+detalles = parches tubos
+colores = 8C5A3C 5E5045 E9C46A
+blindaje = 1.2
+velocidad = 0.85
+piezas = cabeza_radar escopeta punos orugas nucleo_blindado
+desbloqueo = victorias:14
+
+[voltio]
+nombre = Voltio | Volti | Volt
+lema = ¡Doscientos mil voltios de espectáculo! | Zweihunderttausend Volt Show! | Two hundred thousand volts of showtime!
+naturaleza = RAYO
+personalidad = euforico
+tamano = 30
+torso = HEXAGONO
+cabeza = CRESTA
+brazos = NORMALES
+detalles = rayas hombreras
+colores = 00B4D8 0B132B F9F871
+blindaje = 0.95
+velocidad = 1.15
+piezas = cabeza_pulso latigo laser_pulso piernas_salto nucleo_bateria
+desbloqueo = nivel:JUNIOR_3
+
+[eclipse]
+nombre = Eclipse | Finsternis | Eclipse
+lema = Cuando me ves, ya es tarde. | Wenn du mich siehst, ist es zu spät. | When you see me, it is too late.
+naturaleza = ETER
+personalidad = misterioso
+tamano = 29
+torso = CRISTAL
+cabeza = VISOR
+brazos = FINOS
+detalles = capa aleron
+colores = 3C1E5A 11111A C77DFF
+blindaje = 0.9
+velocidad = 1.15
+piezas = cabeza_sombra espada canon_riel alas nucleo_cuantico
+desbloqueo = nivel:SENIOR_1
