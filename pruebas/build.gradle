@@ -1,0 +1,26 @@
+// PRUEBAS: sin ventana. "gradlew pruebas:prueba" (o "jugar.bat prueba").
+apply plugin: 'application'
+
+dependencies {
+    implementation project(':juego')
+    implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+}
+
+application {
+    mainClass = 'metajavbots.pruebas.Pruebas'
+}
+
+tasks.register('prueba', JavaExec) {
+    group = 'verification'
+    description = 'Todas las pruebas sin ventana: editor, compilador, pelea, ejercicios, progreso, textos.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'metajavbots.pruebas.Pruebas'
+    workingDir = rootProject.projectDir
+    systemProperty 'java.awt.headless', 'true'
+    jvmArgs '--enable-native-access=ALL-UNNAMED'
+    maxHeapSize = '1g'
+    // "-Psolo=editor": solo las pruebas cuyo nombre lleva ese texto.
+    if (project.hasProperty('solo')) args project.property('solo').split(',')
+}

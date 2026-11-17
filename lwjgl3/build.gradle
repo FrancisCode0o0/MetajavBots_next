@@ -1,0 +1,29 @@
+// LWJGL3: el lanzador de escritorio.
+apply plugin: 'application'
+
+dependencies {
+    implementation project(':juego')
+    implementation "com.badlogicgames.gdx:gdx-backend-lwjgl3:$gdxVersion"
+    implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
+    implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"
+}
+
+application {
+    mainClass = 'metajavbots.escritorio.Main'
+}
+
+tasks.named('run') {
+    // Se juega desde la raíz: ahí quedan partidas/ y ajustes.txt.
+    workingDir = rootProject.projectDir
+    jvmArgs '--enable-native-access=ALL-UNNAMED'
+}
+
+// "gradlew lwjgl3:capturas": fotos de cada pantalla en build/capturas/, con ventana invisible.
+tasks.register('capturas', JavaExec) {
+    group = 'verification'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'metajavbots.escritorio.Capturas'
+    workingDir = rootProject.projectDir
+    jvmArgs '--enable-native-access=ALL-UNNAMED'
+    args((project.findProperty('salida') ?: 'build/capturas'), (project.findProperty('solo') ?: ''))
+}

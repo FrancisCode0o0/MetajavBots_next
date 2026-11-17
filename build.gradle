@@ -1,0 +1,20 @@
+// Configuración común a los cuatro módulos (motor, juego, lwjgl3, pruebas).
+subprojects {
+    apply plugin: 'java'
+
+    repositories {
+        mavenCentral()
+        // JitPack, solo para shapedrawer (no está en Maven Central).
+        maven {
+            url = 'https://jitpack.io'
+            content { includeGroup 'space.earlygrey' }
+        }
+    }
+
+    // El juego corre en Java 17 o más. Para compilar los robots del jugador hace falta un JDK (trae javac);
+    // con solo un JRE se juega con los robots de fábrica (docs/ESTADO.md).
+    tasks.withType(JavaCompile).configureEach {
+        options.release = 17
+        options.encoding = 'UTF-8'
+    }
+}

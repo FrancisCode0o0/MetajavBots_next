@@ -1,0 +1,13 @@
+// JUEGO: MetajavBots encima del motor. No depende de ninguna ventana concreta.
+apply plugin: 'java-library'
+
+sourceSets {
+    main {
+        // Los datos (modelos, piezas, ejercicios, textos) viven en res/, en la raíz: se leen del classpath.
+        resources.srcDirs = ['../res']
+    }
+}
+
+dependencies {
+    api project(':motor')
+}

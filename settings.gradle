@@ -1,0 +1,8 @@
+// MetajavBots: robots que se programan en Java y combaten por rondas (docs/ESTADO.md).
+//   motor    — CastillaFantasX, copiado tal cual de la Reliquia del Alba (de qué commit sale: docs/ESTADO.md).
+//   juego    — MetajavBots: la pelea, la API de los robots, las piezas, los ejercicios, el progreso, el cerebro de IA
+//              y las pantallas. Usa el motor.
+//   lwjgl3   — el lanzador de escritorio (abre la ventana).
+//   pruebas  — las pruebas sin ventana ("gradlew pruebas:prueba" o "jugar.bat prueba").
+rootProject.name = 'MetajavBots'
+include 'motor', 'juego', 'lwjgl3', 'pruebas'

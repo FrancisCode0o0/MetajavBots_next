@@ -1,0 +1,15 @@
+// MOTOR: CastillaFantasX, lo que sirve para cualquier juego (docs/MOTOR.md). No depende del juego (reliquia)
+// ni de ninguna ventana ni sistema concreto: lo del juego le llega por interfaces o por los datos de res/.
+apply plugin: 'java-library'   // permite "api": las dependencias del motor las ven también el juego, lwjgl3 y headless
+
+dependencies {
+    // 'api' (y no 'implementation'): el juego, lwjgl3 y headless también ven libGDX.
+    api "com.badlogicgames.gdx:gdx:$gdxVersion"
+    // Fuentes TTF dibujadas por libGDX (sustituyen a la "Monospaced" de Java).
+    api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+    // Formas (óvalos, polígonos, líneas) con el mismo SpriteBatch que los sprites.
+    api "space.earlygrey:shapedrawer:$shapedrawerVersion"
+    // Ink (los diálogos, docs/DIALOGOS.md): el que lee las historias y el que las compila desde los .ink de res/ink/.
+    api "com.bladecoder.ink:blade-ink:$inkVersion"
+    api "com.bladecoder.ink:blade-ink-compiler:$inkVersion"
+}

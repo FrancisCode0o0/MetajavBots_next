@@ -1,0 +1,28 @@
+# Lo que se genera al compilar
+build/
+bin/
+.gradle/
+*.class
+out/
+# Eclipse / IntelliJ
+.project
+.classpath
+.settings/
+.idea/
+*.iml
+# Partidas, ajustes y registros del jugador (los genera el juego)
+partidas/
+ajustes.txt
+registro/
+robots_exportados/
+# Claves (API keys): nunca en el repositorio. El juego las guarda fuera, en la carpeta del usuario.
+*.key
+clave*.txt
+.env
+.env.*
+secrets*
+# Modelos de IA (pesan gigas; se bajan aparte, docs/CEREBRO.md)
+*.gguf
+*.bin
+*.safetensors
+koboldcpp*
