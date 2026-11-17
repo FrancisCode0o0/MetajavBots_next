@@ -1,0 +1,837 @@
+# Tema 22: pruebas, estilo y diseño. Código limpio (sin duplicación, cláusulas de guarda, Optional),
+# equals/hashCode, inmutabilidad, patrones (Builder, Strategy, Command) y código que se puede probar.
+=== t22_clausulas_de_guarda
+tema: 22
+dificultad: 1
+java: 1
+tipo: metodo
+titulo.es: Fuera la pirámide de ifs
+titulo.de: Weg mit der if-Pyramide
+titulo.en: Down with the if pyramid
+enunciado.es: La plantilla es una pirámide de ifs difícil de leer, y tiene un fallo: si maxima <= 0 debería lanzar IllegalArgumentException. Reescríbela con cláusulas de guarda (un if que sale pronto por cada caso especial): maxima <= 0, excepción; vida <= 0, "fuera de combate"; menos de un cuarto de maxima, "crítico"; menos de maxima, "tocado"; si no, "intacto".
+enunciado.de: Die Vorlage ist eine schwer lesbare if-Pyramide und hat einen Fehler: Bei maxima <= 0 sollte sie eine IllegalArgumentException werfen. Schreib sie mit Guard Clauses neu (ein if, das bei jedem Sonderfall früh aussteigt): maxima <= 0 Ausnahme; vida <= 0 "fuera de combate"; weniger als ein Viertel von maxima "crítico"; weniger als maxima "tocado"; sonst "intacto".
+enunciado.en: The template is a hard-to-read pyramid of ifs, and it has a bug: if maxima <= 0 it should throw an IllegalArgumentException. Rewrite it with guard clauses (an if that returns early for each special case): maxima <= 0, exception; vida <= 0, "fuera de combate"; less than a quarter of maxima, "crítico"; less than maxima, "tocado"; otherwise "intacto".
+pista.es: Cada caso especial, arriba y con su return (o throw): if (vida <= 0) return "fuera de combate"; Sin else: si el if ha salido, no hace falta. «Menos de un cuarto» sin decimales: vida * 4 < maxima.
+pista.de: Jeder Sonderfall nach oben, mit eigenem return (oder throw): if (vida <= 0) return "fuera de combate"; Ohne else: Wenn das if schon ausgestiegen ist, braucht man keins. «Weniger als ein Viertel» ohne Dezimalzahlen: vida * 4 < maxima.
+pista.en: Each special case at the top, with its own return (or throw): if (vida <= 0) return "fuera de combate"; No else: if the if has already returned, you don't need one. "Less than a quarter" without decimals: vida * 4 < maxima.
+firma: static String estado(int vida, int maxima)
+plantilla:
+    if (maxima > 0) {
+        if (vida > 0) {
+            if (vida * 4 < maxima) {
+                return "crítico";
+            } else {
+                if (vida < maxima) {
+                    return "tocado";
+                } else {
+                    return "intacto";
+                }
+            }
+        } else {
+            return "fuera de combate";
+        }
+    } else {
+        return "fuera de combate";
+    }
+solucion:
+    if (maxima <= 0) {
+        throw new IllegalArgumentException("la vida máxima debe ser positiva: " + maxima);
+    }
+    if (vida <= 0) {
+        return "fuera de combate";
+    }
+    if (vida * 4 < maxima) {
+        return "crítico";
+    }
+    if (vida < maxima) {
+        return "tocado";
+    }
+    return "intacto";
+casos:
+    estado(100, 100) => "intacto"
+    estado(60, 100) => "tocado"
+    estado(24, 100) => "crítico"
+    estado(25, 100) => "tocado"
+    estado(0, 100) => "fuera de combate"
+    estado(-5, 100) => "fuera de combate"
+    estado(10, 0) => !IllegalArgumentException
+
+=== t22_quitar_duplicacion
+tema: 22
+dificultad: 2
+java: 16
+tipo: metodo
+titulo.es: Copiar y pegar sale caro
+titulo.de: Kopieren und Einfügen rächt sich
+titulo.en: Copy and paste comes back to bite
+enunciado.es: La plantilla repite el mismo cálculo para cada arma, y al copiar y pegar se coló un fallo: el misil tiene alcance 300, no 400. Además, un arma desconocida debe lanzar IllegalArgumentException. Reglas: láser (daño 12, alcance 600), bala (8, 400), misil (25, 300); más allá del alcance, 0; dentro, el daño menos 1 por cada 100 de distancia, pero nunca menos de 1. Escribe la regla una sola vez.
+enunciado.de: Die Vorlage wiederholt dieselbe Rechnung für jede Waffe, und beim Kopieren hat sich ein Fehler eingeschlichen: Die Rakete hat Reichweite 300, nicht 400. Außerdem soll eine unbekannte Waffe eine IllegalArgumentException werfen. Regeln: láser (Schaden 12, Reichweite 600), bala (8, 400), misil (25, 300); jenseits der Reichweite 0; innerhalb der Schaden minus 1 pro 100 Entfernung, aber nie unter 1. Schreib die Regel nur einmal.
+enunciado.en: The template repeats the same calculation for every weapon, and copy-paste let a bug slip in: the missile has range 300, not 400. Also, an unknown weapon must throw an IllegalArgumentException. Rules: láser (damage 12, range 600), bala (8, 400), misil (25, 300); beyond the range, 0; within it, the damage minus 1 for every 100 of distance, but never below 1. Write the rule only once.
+pista.es: Separa los datos de la regla: un record local (Java 16) record Arma(int dano, int alcance) {}, un switch que elige los datos de cada arma (con default -> throw ...) y, debajo, la regla una sola vez.
+pista.de: Trenn die Daten von der Regel: ein lokaler Record (Java 16) record Arma(int dano, int alcance) {}, ein switch, das die Daten jeder Waffe wählt (mit default -> throw ...), und darunter die Regel ein einziges Mal.
+pista.en: Separate the data from the rule: a local record (Java 16) record Arma(int dano, int alcance) {}, a switch that picks each weapon's data (with default -> throw ...) and, below it, the rule just once.
+firma: static int danoFinal(String arma, int distancia)
+plantilla:
+    if (arma.equals("láser")) {
+        if (distancia > 600) {
+            return 0;
+        }
+        return Math.max(1, 12 - distancia / 100);
+    }
+    if (arma.equals("bala")) {
+        if (distancia > 400) {
+            return 0;
+        }
+        return Math.max(1, 8 - distancia / 100);
+    }
+    if (arma.equals("misil")) {
+        if (distancia > 400) {
+            return 0;
+        }
+        return Math.max(1, 25 - distancia / 100);
+    }
+    return 0;
+solucion:
+    record Arma(int dano, int alcance) {
+    }
+    Arma datos = switch (arma) {
+        case "láser" -> new Arma(12, 600);
+        case "bala" -> new Arma(8, 400);
+        case "misil" -> new Arma(25, 300);
+        default -> throw new IllegalArgumentException("arma desconocida: " + arma);
+    };
+    if (distancia > datos.alcance()) {
+        return 0;
+    }
+    return Math.max(1, datos.dano() - distancia / 100);
+casos:
+    danoFinal("láser", 250) => 10
+    danoFinal("bala", 0) => 8
+    danoFinal("bala", 400) => 4
+    danoFinal("láser", 601) => 0
+    danoFinal("misil", 300) => 22
+    danoFinal("misil", 350) => 0
+    danoFinal("abrazo", 10) => !IllegalArgumentException
+
+=== t22_optional_en_vez_de_null
+tema: 22
+dificultad: 2
+java: 11
+tipo: metodo
+titulo.es: Optional mejor que null
+titulo.de: Optional statt null
+titulo.en: Optional instead of null
+enunciado.es: Lee un daño escrito a mano. Devuelve Optional.of(n) si el texto, sin espacios alrededor, es un entero >= 0; en cualquier otro caso (null, vacío, letras, negativo), Optional.empty(). Nunca devuelvas null ni dejes escapar una excepción: quien te llama ve en el tipo que puede no haber valor.
+enunciado.de: Lies einen von Hand eingegebenen Schaden. Gib Optional.of(n) zurück, wenn der Text ohne umgebende Leerzeichen eine ganze Zahl >= 0 ist; in jedem anderen Fall (null, leer, Buchstaben, negativ) Optional.empty(). Gib nie null zurück und lass keine Ausnahme entkommen: Der Aufrufer sieht am Typ, dass es vielleicht keinen Wert gibt.
+enunciado.en: Read a hand-typed damage value. Return Optional.of(n) if the text, without surrounding spaces, is an integer >= 0; in any other case (null, empty, letters, negative), Optional.empty(). Never return null or let an exception escape: the caller sees from the type that there may be no value.
+pista.es: if (texto == null) return Optional.empty(); Luego try { int n = Integer.parseInt(texto.strip()); ... } catch (NumberFormatException e) { return Optional.empty(); } strip() llegó en Java 11.
+pista.de: if (texto == null) return Optional.empty(); Dann try { int n = Integer.parseInt(texto.strip()); ... } catch (NumberFormatException e) { return Optional.empty(); } strip() gibt es seit Java 11.
+pista.en: if (texto == null) return Optional.empty(); Then try { int n = Integer.parseInt(texto.strip()); ... } catch (NumberFormatException e) { return Optional.empty(); } strip() arrived in Java 11.
+firma: static Optional<Integer> leerDano(String texto)
+plantilla:
+    return Optional.of(Integer.parseInt(texto));
+solucion:
+    if (texto == null) {
+        return Optional.empty();
+    }
+    try {
+        int dano = Integer.parseInt(texto.strip());
+        return dano >= 0 ? Optional.of(dano) : Optional.empty();
+    } catch (NumberFormatException e) {
+        return Optional.empty();
+    }
+casos:
+    leerDano("15") => Optional.of(15)
+    leerDano(" 7 ") => Optional.of(7)
+    leerDano("0") => Optional.of(0)
+    leerDano("-3") => Optional.empty()
+    leerDano("doce") => Optional.empty()
+    leerDano("") => Optional.empty()
+    leerDano(null) => Optional.empty()
+
+=== t22_escribir_pruebas
+tema: 22
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Escribe tú las pruebas
+titulo.de: Schreib du die Tests
+titulo.en: You write the tests
+enunciado.es: Una función vidaTrasGolpe(vida, dano) debe devolver max(0, vida - dano) y lanzar IllegalArgumentException si dano < 0. Escribe sus pruebas: esCorrecta devuelve true solo si la función que recibe se porta bien en los casos importantes (golpe normal, daño 0, quedarse justo a 0, pasarse y daño negativo) y false si falla en alguno, aunque lance otra excepción.
+enunciado.de: Eine Funktion vidaTrasGolpe(vida, dano) soll max(0, vida - dano) zurückgeben und bei dano < 0 eine IllegalArgumentException werfen. Schreib ihre Tests: esCorrecta gibt nur dann true zurück, wenn sich die übergebene Funktion in den wichtigen Fällen richtig verhält (normaler Treffer, Schaden 0, genau auf 0, darüber hinaus und negativer Schaden), und false, wenn sie in einem davon versagt, auch wenn sie eine andere Ausnahme wirft.
+enunciado.en: A function vidaTrasGolpe(vida, dano) must return max(0, vida - dano) and throw an IllegalArgumentException if dano < 0. Write its tests: esCorrecta returns true only if the function it gets behaves correctly in the important cases (normal hit, zero damage, landing exactly on 0, overshooting and negative damage) and false if it fails any of them, even by throwing a different exception.
+pista.es: Como en JUnit: compara lo esperado con lo obtenido (applyAsInt(100, 30) debe dar 70…), envuelto en try/catch (RuntimeException) para que un fallo inesperado dé false. Para el daño negativo, la prueba pasa solo si salta una IllegalArgumentException.
+pista.de: Wie bei JUnit: Vergleich Erwartetes und Ergebnis (applyAsInt(100, 30) muss 70 ergeben …), in try/catch (RuntimeException) eingepackt, damit ein unerwarteter Fehler false ergibt. Beim negativen Schaden besteht der Test nur, wenn eine IllegalArgumentException fliegt.
+pista.en: As in JUnit: compare expected with actual (applyAsInt(100, 30) must give 70…), wrapped in try/catch (RuntimeException) so an unexpected failure gives false. For negative damage, the test passes only if an IllegalArgumentException is thrown.
+firma: static boolean esCorrecta(IntBinaryOperator vidaTrasGolpe)
+plantilla:
+    return vidaTrasGolpe.applyAsInt(100, 30) == 70;
+solucion:
+    try {
+        boolean bien = vidaTrasGolpe.applyAsInt(100, 30) == 70
+                && vidaTrasGolpe.applyAsInt(100, 0) == 100
+                && vidaTrasGolpe.applyAsInt(50, 50) == 0
+                && vidaTrasGolpe.applyAsInt(20, 90) == 0;
+        if (!bien) {
+            return false;
+        }
+    } catch (RuntimeException e) {
+        return false;
+    }
+    try {
+        vidaTrasGolpe.applyAsInt(10, -5);
+        return false;
+    } catch (IllegalArgumentException e) {
+        return true;
+    } catch (RuntimeException e) {
+        return false;
+    }
+casos:
+    esCorrecta((v, d) -> { if (d < 0) throw new IllegalArgumentException(); return Math.max(0, v - d); }) => true
+    esCorrecta((v, d) -> { if (d < 0) throw new IllegalArgumentException(); return v - d <= 0 ? 0 : v - d; }) => true
+    esCorrecta((v, d) -> { if (d < 0) throw new IllegalArgumentException(); return v - d; }) => false
+    esCorrecta((v, d) -> Math.max(0, v - d)) => false
+    esCorrecta((v, d) -> { if (d <= 0) throw new IllegalArgumentException(); return Math.max(0, v - d); }) => false
+    esCorrecta((v, d) -> { if (d < 0) throw new ArithmeticException(); return Math.max(0, v - d); }) => false
+    esCorrecta((v, d) -> { if (d < 0) throw new IllegalArgumentException(); return d > v ? v : v - d; }) => false
+    esCorrecta((v, d) -> { if (d < 0) throw new IllegalArgumentException(); return Math.max(0, v - d - (v == d ? 1 : 0)); }) => true
+
+=== t22_equals_y_hashcode
+tema: 22
+dificultad: 3
+java: 16
+tipo: clase
+titulo.es: ¿Es la misma pieza?
+titulo.de: Ist es dasselbe Teil?
+titulo.en: Is it the same part?
+enunciado.es: Dos Pieza son iguales si tienen el mismo número de serie y el mismo modelo sin mirar mayúsculas ("Mk II" y "MK II"). Escribe equals y hashCode coherentes entre sí: si dos piezas son iguales, su hashCode también; si no, un HashSet guardaría la misma pieza dos veces.
+enunciado.de: Zwei Pieza sind gleich, wenn sie dieselbe Seriennummer und dasselbe Modell haben, ohne auf Groß- und Kleinschreibung zu achten ("Mk II" und "MK II"). Schreib equals und hashCode passend zueinander: Sind zwei Teile gleich, dann auch ihr hashCode; sonst würde ein HashSet dasselbe Teil zweimal speichern.
+enunciado.en: Two Pieza objects are equal if they have the same serial number and the same model ignoring case ("Mk II" and "MK II"). Write equals and hashCode so they agree: if two parts are equal, so are their hash codes; otherwise a HashSet would store the same part twice.
+pista.es: equals: return o instanceof Pieza otra && serie == otra.serie && modelo.equalsIgnoreCase(otra.modelo); (instanceof con patrón, Java 16; con null da false). hashCode: Objects.hash(modelo.toLowerCase(Locale.ROOT), serie).
+pista.de: equals: return o instanceof Pieza otra && serie == otra.serie && modelo.equalsIgnoreCase(otra.modelo); (instanceof mit Pattern, Java 16; mit null false). hashCode: Objects.hash(modelo.toLowerCase(Locale.ROOT), serie).
+pista.en: equals: return o instanceof Pieza otra && serie == otra.serie && modelo.equalsIgnoreCase(otra.modelo); (instanceof with a pattern, Java 16; false for null). hashCode: Objects.hash(modelo.toLowerCase(Locale.ROOT), serie).
+plantilla:
+    public final class Pieza {
+        private final String modelo;
+        private final int serie;
+
+        public Pieza(String modelo, int serie) {
+            this.modelo = modelo;
+            this.serie = serie;
+        }
+
+        // equals y hashCode
+    }
+solucion:
+    import java.util.Locale;
+    import java.util.Objects;
+
+    public final class Pieza {
+        private final String modelo;
+        private final int serie;
+
+        public Pieza(String modelo, int serie) {
+            this.modelo = Objects.requireNonNull(modelo);
+            this.serie = serie;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            return o instanceof Pieza otra && serie == otra.serie && modelo.equalsIgnoreCase(otra.modelo);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(modelo.toLowerCase(Locale.ROOT), serie);
+        }
+    }
+casos:
+    new Pieza("Mk II", 7).equals(new Pieza("Mk II", 7)) => true
+    new Pieza("Mk II", 7).equals(new Pieza("MK II", 7)) => true
+    new Pieza("Mk II", 7).equals(new Pieza("Mk II", 8)) => false
+    new Pieza("Mk II", 7).equals(new Pieza("Mk III", 7)) => false
+    new Pieza("Mk II", 7).equals(null) => false
+    new Pieza("Mk II", 7).equals("Mk II") => false
+    new Pieza("Mk II", 7).hashCode() == new Pieza("mk ii", 7).hashCode() => true
+    new HashSet<>(List.of(new Pieza("Mk II", 7), new Pieza("MK II", 7), new Pieza("Mk II", 9))).size() => 2
+
+=== t22_objeto_inmutable
+tema: 22
+dificultad: 3
+java: 16
+tipo: clase
+titulo.es: Un montaje que nadie puede estropear
+titulo.de: Eine Bauweise, die keiner kaputtmachen kann
+titulo.en: A build nobody can tamper with
+enunciado.es: Haz Montaje inmutable: record Montaje(String nombre, List<String> piezas) con Montaje conPieza(String pieza), que devuelve un montaje nuevo con la pieza añadida al final. Ni cambiar la lista que se pasó al crearlo, ni la que devuelve piezas(), ni llamar a conPieza debe cambiar un montaje ya creado (piezas().add(...) lanza UnsupportedOperationException).
+enunciado.de: Mach Montaje unveränderlich: record Montaje(String nombre, List<String> piezas) mit Montaje conPieza(String pieza), das eine neue Bauweise mit dem Teil am Ende zurückgibt. Weder das Ändern der beim Erzeugen übergebenen Liste noch der von piezas() gelieferten, noch ein Aufruf von conPieza darf eine bestehende Bauweise verändern (piezas().add(...) wirft eine UnsupportedOperationException).
+enunciado.en: Make Montaje immutable: record Montaje(String nombre, List<String> piezas) with Montaje conPieza(String pieza), which returns a new build with the part added at the end. Neither changing the list passed in at creation, nor the one returned by piezas(), nor calling conPieza may change an existing build (piezas().add(...) throws UnsupportedOperationException).
+pista.es: En el constructor compacto, haz una copia defensiva: piezas = List.copyOf(piezas); (Java 10, ya no se puede modificar). En conPieza, copia a un ArrayList, añade y crea un Montaje nuevo.
+pista.de: Mach im kompakten Konstruktor eine defensive Kopie: piezas = List.copyOf(piezas); (Java 10, danach unveränderbar). In conPieza in eine ArrayList kopieren, hinzufügen und eine neue Montaje erzeugen.
+pista.en: In the compact constructor, make a defensive copy: piezas = List.copyOf(piezas); (Java 10, it can no longer be modified). In conPieza, copy into an ArrayList, add, and create a new Montaje.
+plantilla:
+    import java.util.*;
+
+    public class Montaje {
+        private final String nombre;
+        private final List<String> piezas;
+
+        public Montaje(String nombre, List<String> piezas) {
+            this.nombre = nombre;
+            this.piezas = piezas;
+        }
+
+        public String nombre() {
+            return nombre;
+        }
+
+        public List<String> piezas() {
+            return piezas;
+        }
+
+        public Montaje conPieza(String pieza) {
+            piezas.add(pieza);
+            return this;
+        }
+    }
+solucion:
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public record Montaje(String nombre, List<String> piezas) {
+
+        public Montaje {
+            piezas = List.copyOf(piezas);
+        }
+
+        public Montaje conPieza(String pieza) {
+            List<String> nuevas = new ArrayList<>(piezas);
+            nuevas.add(pieza);
+            return new Montaje(nombre, nuevas);
+        }
+    }
+casos:
+    new Montaje("Tito", List.of("chasis")).conPieza("láser").piezas() => List.of("chasis", "láser")
+    new Montaje("Tito", List.of("chasis")).conPieza("láser").nombre() => "Tito"
+    ((Supplier<Integer>) () -> { Montaje m = new Montaje("Tito", new ArrayList<>(List.of("chasis"))); m.conPieza("láser"); return m.piezas().size(); }).get() => 1
+    ((Supplier<Integer>) () -> { List<String> l = new ArrayList<>(List.of("chasis")); Montaje m = new Montaje("Tito", l); l.add("trampa"); return m.piezas().size(); }).get() => 1
+    new Montaje("Tito", new ArrayList<>()).piezas().add("x") => !UnsupportedOperationException
+
+=== t22_constructor_paso_a_paso
+tema: 22
+dificultad: 3
+java: 6
+tipo: clase
+titulo.es: Montar un robot paso a paso
+titulo.de: Einen Roboter Schritt für Schritt bauen
+titulo.en: Build a robot step by step
+enunciado.es: Completa el patrón Builder: Robot.builder().nombre("Tito").blindaje(3).arma("láser").build(). El Robot es inmutable. Valores por defecto: blindaje 1 y arma "puño". build() lanza IllegalStateException si falta el nombre (o está en blanco) o el blindaje no está entre 1 y 10. toString() da "Tito [blindaje 3, láser]".
+enunciado.de: Vervollständige das Builder-Muster: Robot.builder().nombre("Tito").blindaje(3).arma("láser").build(). Der Robot ist unveränderlich. Standardwerte: blindaje 1 und arma "puño". build() wirft eine IllegalStateException, wenn der Name fehlt (oder leer ist) oder blindaje nicht zwischen 1 und 10 liegt. toString() liefert "Tito [blindaje 3, láser]".
+enunciado.en: Complete the Builder pattern: Robot.builder().nombre("Tito").blindaje(3).arma("láser").build(). The Robot is immutable. Defaults: blindaje 1 and arma "puño". build() throws an IllegalStateException if the name is missing (or blank) or blindaje is not between 1 and 10. toString() gives "Tito [blindaje 3, láser]".
+pista.es: Cada método del Builder guarda su valor y devuelve this, para poder encadenar. build() comprueba todo y llama al constructor privado de Robot, que copia los campos del Builder.
+pista.de: Jede Builder-Methode speichert ihren Wert und gibt this zurück, damit man verketten kann. build() prüft alles und ruft den privaten Konstruktor von Robot auf, der die Felder des Builders übernimmt.
+pista.en: Each Builder method stores its value and returns this, so calls can be chained. build() checks everything and calls Robot's private constructor, which copies the Builder's fields.
+plantilla:
+    public final class Robot {
+        private final String nombre;
+        private final int blindaje;
+        private final String arma;
+
+        private Robot(Builder b) {
+            this.nombre = b.nombre;
+            this.blindaje = b.blindaje;
+            this.arma = b.arma;
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public String nombre() {
+            return nombre;
+        }
+
+        public int blindaje() {
+            return blindaje;
+        }
+
+        public String arma() {
+            return arma;
+        }
+
+        public static final class Builder {
+            private String nombre;
+            private int blindaje;
+            private String arma;
+
+            public Builder nombre(String nombre) {
+                return this;
+            }
+
+            public Builder blindaje(int blindaje) {
+                return this;
+            }
+
+            public Builder arma(String arma) {
+                return this;
+            }
+
+            public Robot build() {
+                return new Robot(this);
+            }
+        }
+    }
+solucion:
+    public final class Robot {
+        private final String nombre;
+        private final int blindaje;
+        private final String arma;
+
+        private Robot(Builder b) {
+            this.nombre = b.nombre;
+            this.blindaje = b.blindaje;
+            this.arma = b.arma;
+        }
+
+        public static Builder builder() {
+            return new Builder();
+        }
+
+        public String nombre() {
+            return nombre;
+        }
+
+        public int blindaje() {
+            return blindaje;
+        }
+
+        public String arma() {
+            return arma;
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " [blindaje " + blindaje + ", " + arma + "]";
+        }
+
+        public static final class Builder {
+            private String nombre;
+            private int blindaje = 1;
+            private String arma = "puño";
+
+            private Builder() {
+            }
+
+            public Builder nombre(String nombre) {
+                this.nombre = nombre;
+                return this;
+            }
+
+            public Builder blindaje(int blindaje) {
+                this.blindaje = blindaje;
+                return this;
+            }
+
+            public Builder arma(String arma) {
+                this.arma = arma;
+                return this;
+            }
+
+            public Robot build() {
+                if (nombre == null || nombre.trim().isEmpty()) {
+                    throw new IllegalStateException("el robot necesita un nombre");
+                }
+                if (blindaje < 1 || blindaje > 10) {
+                    throw new IllegalStateException("blindaje fuera de rango: " + blindaje);
+                }
+                return new Robot(this);
+            }
+        }
+    }
+casos:
+    Robot.builder().nombre("Tito").blindaje(3).arma("láser").build().toString() => "Tito [blindaje 3, láser]"
+    Robot.builder().nombre("Rex").build().toString() => "Rex [blindaje 1, puño]"
+    Robot.builder().arma("misil").nombre("Ada").build().arma() => "misil"
+    Robot.builder().nombre("Bo").blindaje(10).build().blindaje() => 10
+    Robot.builder().blindaje(3).build() => !IllegalStateException
+    Robot.builder().nombre("   ").build() => !IllegalStateException
+    Robot.builder().nombre("Zap").blindaje(11).build() => !IllegalStateException
+
+=== t22_estrategia_de_tiro
+tema: 22
+dificultad: 3
+java: 16
+tipo: clase
+titulo.es: Estrategias de tiro intercambiables
+titulo.de: Austauschbare Zielstrategien
+titulo.en: Interchangeable targeting strategies
+enunciado.es: Patrón Strategy: Estrategia elige un objetivo de la lista. Añade a la interfaz static Estrategia segun(Comparator<Objetivo> preferencia) (el primero según la preferencia; a igualdad, por nombre) y las constantes MAS_CERCANO (menor distancia) y MAS_DEBIL (menor vida). Torreta(Estrategia e) tiene Torreta cambiarEstrategia(Estrategia e) (devuelve this) y String apuntar(List<Objetivo> enemigos): "a por NOMBRE" o "sin objetivo".
+enunciado.de: Strategy-Muster: Estrategia wählt ein Ziel aus der Liste. Ergänze im Interface static Estrategia segun(Comparator<Objetivo> preferencia) (das erste nach der Vorliebe; bei Gleichstand nach Namen) und die Konstanten MAS_CERCANO (kleinste Entfernung) und MAS_DEBIL (wenigste Lebensenergie). Torreta(Estrategia e) hat Torreta cambiarEstrategia(Estrategia e) (gibt this zurück) und String apuntar(List<Objetivo> enemigos): "a por NAME" oder "sin objetivo".
+enunciado.en: Strategy pattern: Estrategia picks a target from the list. Add to the interface static Estrategia segun(Comparator<Objetivo> preferencia) (the first by that preference; on a tie, by name) and the constants MAS_CERCANO (shortest distance) and MAS_DEBIL (lowest health). Torreta(Estrategia e) has Torreta cambiarEstrategia(Estrategia e) (returns this) and String apuntar(List<Objetivo> enemigos): "a por NAME" or "sin objetivo".
+pista.es: segun devuelve una lambda: enemigos -> enemigos.stream().min(preferencia.thenComparing(Objetivo::nombre)). La Torreta no sabe cómo se elige: solo llama a estrategia.elegir(...) y por eso puedes cambiarla en plena pelea.
+pista.de: segun gibt ein Lambda zurück: enemigos -> enemigos.stream().min(preferencia.thenComparing(Objetivo::nombre)). Die Torreta weiß nicht, wie gewählt wird: Sie ruft nur estrategia.elegir(...) auf, darum kannst du sie mitten im Kampf austauschen.
+pista.en: segun returns a lambda: enemigos -> enemigos.stream().min(preferencia.thenComparing(Objetivo::nombre)). The Torreta doesn't know how the choice is made: it just calls estrategia.elegir(...), which is why you can swap it mid-fight.
+plantilla:
+    import java.util.*;
+
+    record Objetivo(String nombre, int distancia, int vida) {
+    }
+
+    @FunctionalInterface
+    interface Estrategia {
+        Optional<Objetivo> elegir(List<Objetivo> enemigos);
+    }
+
+    public class Torreta {
+
+        public Torreta(Estrategia estrategia) {
+        }
+
+        public String apuntar(List<Objetivo> enemigos) {
+            return "sin objetivo";
+        }
+    }
+solucion:
+    import java.util.Comparator;
+    import java.util.List;
+    import java.util.Optional;
+
+    record Objetivo(String nombre, int distancia, int vida) {
+    }
+
+    @FunctionalInterface
+    interface Estrategia {
+        Estrategia MAS_CERCANO = segun(Comparator.comparingInt(Objetivo::distancia));
+        Estrategia MAS_DEBIL = segun(Comparator.comparingInt(Objetivo::vida));
+
+        Optional<Objetivo> elegir(List<Objetivo> enemigos);
+
+        static Estrategia segun(Comparator<Objetivo> preferencia) {
+            return enemigos -> enemigos.stream().min(preferencia.thenComparing(Objetivo::nombre));
+        }
+    }
+
+    public class Torreta {
+        private Estrategia estrategia;
+
+        public Torreta(Estrategia estrategia) {
+            this.estrategia = estrategia;
+        }
+
+        public Torreta cambiarEstrategia(Estrategia estrategia) {
+            this.estrategia = estrategia;
+            return this;
+        }
+
+        public String apuntar(List<Objetivo> enemigos) {
+            return estrategia.elegir(enemigos)
+                    .map(o -> "a por " + o.nombre())
+                    .orElse("sin objetivo");
+        }
+    }
+casos:
+    new Torreta(Estrategia.MAS_CERCANO).apuntar(List.of(new Objetivo("Rex", 300, 50), new Objetivo("Ada", 100, 90))) => "a por Ada"
+    new Torreta(Estrategia.MAS_DEBIL).apuntar(List.of(new Objetivo("Rex", 300, 50), new Objetivo("Ada", 100, 90))) => "a por Rex"
+    new Torreta(Estrategia.MAS_CERCANO).cambiarEstrategia(Estrategia.MAS_DEBIL).apuntar(List.of(new Objetivo("Rex", 300, 50), new Objetivo("Ada", 100, 90))) => "a por Rex"
+    new Torreta(Estrategia.MAS_CERCANO).apuntar(List.of(new Objetivo("Zap", 100, 5), new Objetivo("Bo", 100, 9))) => "a por Bo"
+    new Torreta(Estrategia.segun(Comparator.comparingInt((Objetivo o) -> o.vida()).reversed())).apuntar(List.of(new Objetivo("Ada", 1, 10), new Objetivo("Zap", 9, 80))) => "a por Zap"
+    new Torreta(lista -> lista.stream().filter(o -> o.nombre().startsWith("Z")).findFirst()).apuntar(List.of(new Objetivo("Ada", 1, 1), new Objetivo("Zap", 9, 9))) => "a por Zap"
+    new Torreta(Estrategia.MAS_DEBIL).apuntar(List.of()) => "sin objetivo"
+
+=== t22_version_comparable
+tema: 22
+dificultad: 4
+java: 16
+tipo: clase
+titulo.es: Versiones del firmware
+titulo.de: Firmware-Versionen
+titulo.en: Firmware versions
+enunciado.es: record Version(int mayor, int menor, int parche) implements Comparable<Version>. El constructor rechaza números negativos y static Version de(String texto) lee "1.10.3"; los dos lanzan IllegalArgumentException si algo no vale. compareTo compara número a número (1.10.0 va después de 1.9.9, aunque como texto vaya antes) y toString da "1.10.3".
+enunciado.de: record Version(int mayor, int menor, int parche) implements Comparable<Version>. Der Konstruktor lehnt negative Zahlen ab, und static Version de(String texto) liest "1.10.3"; beide werfen eine IllegalArgumentException, wenn etwas nicht passt. compareTo vergleicht Zahl für Zahl (1.10.0 kommt nach 1.9.9, obwohl es als Text davor käme), und toString liefert "1.10.3".
+enunciado.en: record Version(int mayor, int menor, int parche) implements Comparable<Version>. The constructor rejects negative numbers and static Version de(String texto) reads "1.10.3"; both throw an IllegalArgumentException if anything is wrong. compareTo compares number by number (1.10.0 comes after 1.9.9, even though as text it would come before) and toString gives "1.10.3".
+pista.es: Un private static final Comparator<Version> ORDEN = Comparator.comparingInt(Version::mayor).thenComparingInt(Version::menor).thenComparingInt(Version::parche); y compareTo devuelve ORDEN.compare(this, otra). En de, split("\\.") debe dar 3 partes; convierte la NumberFormatException en IllegalArgumentException.
+pista.de: Ein private static final Comparator<Version> ORDEN = Comparator.comparingInt(Version::mayor).thenComparingInt(Version::menor).thenComparingInt(Version::parche); und compareTo gibt ORDEN.compare(this, otra) zurück. In de muss split("\\.") 3 Teile ergeben; mach aus der NumberFormatException eine IllegalArgumentException.
+pista.en: A private static final Comparator<Version> ORDEN = Comparator.comparingInt(Version::mayor).thenComparingInt(Version::menor).thenComparingInt(Version::parche); and compareTo returns ORDEN.compare(this, otra). In de, split("\\.") must give 3 parts; turn the NumberFormatException into an IllegalArgumentException.
+plantilla:
+    public record Version(int mayor, int menor, int parche) implements Comparable<Version> {
+
+        public static Version de(String texto) {
+            String[] p = texto.split("\\.");
+            return new Version(Integer.parseInt(p[0]), Integer.parseInt(p[1]), Integer.parseInt(p[2]));
+        }
+
+        @Override
+        public int compareTo(Version otra) {
+            return toString().compareTo(otra.toString());
+        }
+
+        @Override
+        public String toString() {
+            return mayor + "." + menor + "." + parche;
+        }
+    }
+solucion:
+    import java.util.Comparator;
+
+    public record Version(int mayor, int menor, int parche) implements Comparable<Version> {
+
+        private static final Comparator<Version> ORDEN = Comparator.comparingInt(Version::mayor)
+                .thenComparingInt(Version::menor)
+                .thenComparingInt(Version::parche);
+
+        public Version {
+            if (mayor < 0 || menor < 0 || parche < 0) {
+                throw new IllegalArgumentException("versión con números negativos");
+            }
+        }
+
+        public static Version de(String texto) {
+            String[] partes = texto.split("\\.");
+            if (partes.length != 3) {
+                throw new IllegalArgumentException("versión no válida: " + texto);
+            }
+            try {
+                return new Version(Integer.parseInt(partes[0]), Integer.parseInt(partes[1]), Integer.parseInt(partes[2]));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("versión no válida: " + texto, e);
+            }
+        }
+
+        @Override
+        public int compareTo(Version otra) {
+            return ORDEN.compare(this, otra);
+        }
+
+        @Override
+        public String toString() {
+            return mayor + "." + menor + "." + parche;
+        }
+    }
+casos:
+    Version.de("1.10.0").compareTo(Version.de("1.9.9")) > 0 => true
+    Version.de("2.0.0").compareTo(new Version(2, 0, 0)) => 0
+    Stream.of("1.10.0", "1.2.0", "1.9.3", "0.9.9").map(Version::de).sorted().map(Version::toString).toList() => List.of("0.9.9", "1.2.0", "1.9.3", "1.10.0")
+    Version.de("3.1.4").toString() => "3.1.4"
+    Version.de("1.2") => !IllegalArgumentException
+    Version.de("1.x.3") => !IllegalArgumentException
+    new Version(1, -1, 0) => !IllegalArgumentException
+
+=== t22_ordenes_con_deshacer
+tema: 22
+dificultad: 4
+java: 10
+tipo: clase
+titulo.es: Órdenes que se pueden deshacer
+titulo.de: Befehle, die man rückgängig machen kann
+titulo.en: Orders you can undo
+enunciado.es: Patrón Command: cada Orden sabe hacer y deshacer su cambio. Termina Cambiar(int posicion, String nueva), que sustituye la pieza de esa posición y recuerda la anterior. En Taller, hacer(Orden) la ejecuta y la apunta en el historial; deshacer() deshace la última (si no hay ninguna, no hace nada); los dos devuelven this. piezas() devuelve una copia que no se puede modificar.
+enunciado.de: Command-Muster: Jede Orden kann ihre Änderung ausführen und rückgängig machen. Vervollständige Cambiar(int posicion, String nueva), das das Teil an dieser Position ersetzt und sich das alte merkt. In Taller führt hacer(Orden) sie aus und trägt sie in den Verlauf ein; deshacer() macht die letzte rückgängig (gibt es keine, passiert nichts); beide geben this zurück. piezas() gibt eine unveränderbare Kopie zurück.
+enunciado.en: Command pattern: each Orden knows how to apply and undo its change. Finish Cambiar(int posicion, String nueva), which replaces the part at that position and remembers the old one. In Taller, hacer(Orden) runs it and records it in the history; deshacer() undoes the last one (if there is none, it does nothing); both return this. piezas() returns a copy that can't be modified.
+pista.es: El historial es una pila: Deque<Orden> historial = new ArrayDeque<>(); push al hacer y pop al deshacer. En Cambiar, set(posicion, nueva) devuelve la pieza que había: guárdala para el deshacer. piezas(): List.copyOf(piezas) (Java 10).
+pista.de: Der Verlauf ist ein Stapel: Deque<Orden> historial = new ArrayDeque<>(); push beim Ausführen, pop beim Rückgängigmachen. In Cambiar gibt set(posicion, nueva) das alte Teil zurück: Heb es fürs Rückgängigmachen auf. piezas(): List.copyOf(piezas) (Java 10).
+pista.en: The history is a stack: Deque<Orden> historial = new ArrayDeque<>(); push when doing and pop when undoing. In Cambiar, set(posicion, nueva) returns the part that was there: keep it for the undo. piezas(): List.copyOf(piezas) (Java 10).
+plantilla:
+    import java.util.*;
+
+    interface Orden {
+        void hacer(List<String> piezas);
+
+        void deshacer(List<String> piezas);
+    }
+
+    final class Poner implements Orden {
+        private final String pieza;
+
+        Poner(String pieza) {
+            this.pieza = pieza;
+        }
+
+        public void hacer(List<String> piezas) {
+            piezas.add(pieza);
+        }
+
+        public void deshacer(List<String> piezas) {
+            piezas.remove(piezas.size() - 1);
+        }
+    }
+
+    final class Cambiar implements Orden {
+        // cambia la pieza de la posición dada y recuerda la que había
+
+        Cambiar(int posicion, String nueva) {
+        }
+
+        public void hacer(List<String> piezas) {
+        }
+
+        public void deshacer(List<String> piezas) {
+        }
+    }
+
+    public class Taller {
+        private final List<String> piezas = new ArrayList<>();
+
+        public Taller hacer(Orden orden) {
+            orden.hacer(piezas);
+            return this;
+        }
+
+        public Taller deshacer() {
+            return this;
+        }
+
+        public List<String> piezas() {
+            return piezas;
+        }
+    }
+solucion:
+    import java.util.ArrayDeque;
+    import java.util.ArrayList;
+    import java.util.Deque;
+    import java.util.List;
+
+    interface Orden {
+        void hacer(List<String> piezas);
+
+        void deshacer(List<String> piezas);
+    }
+
+    final class Poner implements Orden {
+        private final String pieza;
+
+        Poner(String pieza) {
+            this.pieza = pieza;
+        }
+
+        public void hacer(List<String> piezas) {
+            piezas.add(pieza);
+        }
+
+        public void deshacer(List<String> piezas) {
+            piezas.remove(piezas.size() - 1);
+        }
+    }
+
+    final class Cambiar implements Orden {
+        private final int posicion;
+        private final String nueva;
+        private String anterior;
+
+        Cambiar(int posicion, String nueva) {
+            this.posicion = posicion;
+            this.nueva = nueva;
+        }
+
+        public void hacer(List<String> piezas) {
+            anterior = piezas.set(posicion, nueva);
+        }
+
+        public void deshacer(List<String> piezas) {
+            piezas.set(posicion, anterior);
+        }
+    }
+
+    public class Taller {
+        private final List<String> piezas = new ArrayList<>();
+        private final Deque<Orden> historial = new ArrayDeque<>();
+
+        public Taller hacer(Orden orden) {
+            orden.hacer(piezas);
+            historial.push(orden);
+            return this;
+        }
+
+        public Taller deshacer() {
+            if (!historial.isEmpty()) {
+                historial.pop().deshacer(piezas);
+            }
+            return this;
+        }
+
+        public List<String> piezas() {
+            return List.copyOf(piezas);
+        }
+    }
+casos:
+    new Taller().hacer(new Poner("chasis")).hacer(new Poner("láser")).piezas() => List.of("chasis", "láser")
+    new Taller().hacer(new Poner("chasis")).hacer(new Poner("láser")).deshacer().piezas() => List.of("chasis")
+    new Taller().hacer(new Poner("chasis")).hacer(new Poner("láser")).hacer(new Cambiar(1, "misil")).piezas() => List.of("chasis", "misil")
+    new Taller().hacer(new Poner("chasis")).hacer(new Poner("láser")).hacer(new Cambiar(1, "misil")).deshacer().piezas() => List.of("chasis", "láser")
+    new Taller().hacer(new Poner("a")).hacer(new Poner("b")).deshacer().deshacer().deshacer().piezas() => List.of()
+    new Taller().deshacer().piezas() => List.of()
+    new Taller().hacer(new Poner("a")).piezas().add("x") => !UnsupportedOperationException
+
+=== t22_reloj_inyectado
+tema: 22
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Un enfriamiento que se puede probar
+titulo.de: Eine Abkühlzeit, die sich testen lässt
+titulo.en: A cooldown you can test
+enunciado.es: Tras disparar, el arma tarda esperaMs en estar lista. La plantilla lee el reloj real, así que no se puede probar sin esperar de verdad. Usa el reloj que recibe el constructor (inyección de dependencias). Enfriamiento(LongSupplier reloj, long esperaMs) lanza IllegalArgumentException si esperaMs < 0; boolean listo(); boolean disparar() dispara (y devuelve true) solo si está listo. Al principio está listo.
+enunciado.de: Nach einem Schuss braucht die Waffe esperaMs, bis sie wieder bereit ist. Die Vorlage liest die echte Uhr, deshalb lässt sie sich nicht testen, ohne wirklich zu warten. Benutze die Uhr, die der Konstruktor bekommt (Dependency Injection). Enfriamiento(LongSupplier reloj, long esperaMs) wirft eine IllegalArgumentException bei esperaMs < 0; boolean listo(); boolean disparar() schießt (und gibt true zurück) nur, wenn sie bereit ist. Am Anfang ist sie bereit.
+enunciado.en: After firing, the weapon takes esperaMs to be ready again. The template reads the real clock, so it can't be tested without actually waiting. Use the clock the constructor receives (dependency injection). Enfriamiento(LongSupplier reloj, long esperaMs) throws an IllegalArgumentException if esperaMs < 0; boolean listo(); boolean disparar() fires (and returns true) only when ready. At the start it is ready.
+pista.es: Guarda el momento del último disparo (o un indicador de que aún no se ha disparado). listo(): nunca disparó, o reloj.getAsLong() - ultimo >= esperaMs. Las pruebas pasan un reloj falso, () -> t[0], que avanzan a mano.
+pista.de: Merk dir den Zeitpunkt des letzten Schusses (oder ein Zeichen, dass noch nie geschossen wurde). listo(): nie geschossen, oder reloj.getAsLong() - ultimo >= esperaMs. Die Tests übergeben eine falsche Uhr, () -> t[0], die sie von Hand vorstellen.
+pista.en: Keep the time of the last shot (or a flag that it hasn't fired yet). listo(): never fired, or reloj.getAsLong() - ultimo >= esperaMs. The tests pass a fake clock, () -> t[0], which they move forward by hand.
+plantilla:
+    import java.util.function.LongSupplier;
+
+    public class Enfriamiento {
+        private final long esperaMs;
+        private long ultimo = Long.MIN_VALUE;
+
+        public Enfriamiento(LongSupplier reloj, long esperaMs) {
+            this.esperaMs = esperaMs;
+        }
+
+        public boolean listo() {
+            return ultimo == Long.MIN_VALUE || System.currentTimeMillis() - ultimo >= esperaMs;
+        }
+
+        public boolean disparar() {
+            if (!listo()) {
+                return false;
+            }
+            ultimo = System.currentTimeMillis();
+            return true;
+        }
+    }
+solucion:
+    import java.util.Objects;
+    import java.util.function.LongSupplier;
+
+    public class Enfriamiento {
+        private final LongSupplier reloj;
+        private final long esperaMs;
+        private boolean haDisparado;
+        private long ultimo;
+
+        public Enfriamiento(LongSupplier reloj, long esperaMs) {
+            if (esperaMs < 0) {
+                throw new IllegalArgumentException("espera negativa: " + esperaMs);
+            }
+            this.reloj = Objects.requireNonNull(reloj);
+            this.esperaMs = esperaMs;
+        }
+
+        public boolean listo() {
+            return !haDisparado || reloj.getAsLong() - ultimo >= esperaMs;
+        }
+
+        public boolean disparar() {
+            if (!listo()) {
+                return false;
+            }
+            haDisparado = true;
+            ultimo = reloj.getAsLong();
+            return true;
+        }
+    }
+casos:
+    new Enfriamiento(() -> 1000, 200).listo() => true
+    ((Supplier<String>) () -> { long[] t = {0}; Enfriamiento e = new Enfriamiento(() -> t[0], 500); String r = e.disparar() + " " + e.disparar(); t[0] = 499; r += " " + e.listo(); t[0] = 500; return r + " " + e.listo() + " " + e.disparar(); }).get() => "true false false true true"
+    ((Supplier<Boolean>) () -> { long[] t = {5000}; Enfriamiento e = new Enfriamiento(() -> t[0], 0); e.disparar(); return e.disparar(); }).get() => true
+    ((Supplier<Boolean>) () -> { long[] t = {-900}; Enfriamiento e = new Enfriamiento(() -> t[0], 100); e.disparar(); t[0] = -850; return e.listo(); }).get() => false
+    new Enfriamiento(() -> 0, -1) => !IllegalArgumentException

@@ -15,3 +15,11 @@
 13_interfaces.txt
 14_excepciones.txt
 15_colecciones.txt
+16_genericos.txt
+17_lambdas.txt
+18_streams.txt
+19_java_moderno.txt
+20_hilos.txt
+21_recursion.txt
+22_diseno.txt
+23_retos.txt

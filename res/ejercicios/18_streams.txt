@@ -1,0 +1,427 @@
+# Tema 18: streams (Java 8), con lo que añadieron Java 9 (takeWhile), 12 (teeing), 16 (toList) y 24 (gatherers).
+=== t18_dano_total
+tema: 18
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: El daño de toda la ronda
+titulo.de: Der Schaden der ganzen Runde
+titulo.en: The damage of the whole round
+enunciado.es: Los streams llegaron en Java 8. Devuelve la suma de todos los golpes usando un stream, sin bucles.
+enunciado.de: Streams gibt es seit Java 8. Gib die Summe aller Treffer mit einem Stream zurück, ohne Schleifen.
+enunciado.en: Streams arrived in Java 8. Return the sum of all the hits using a stream, with no loops.
+pista.es: golpes.stream() da un Stream<Integer>; mapToInt(Integer::intValue) lo convierte en IntStream, que tiene sum().
+pista.de: golpes.stream() liefert einen Stream<Integer>; mapToInt(Integer::intValue) macht daraus einen IntStream, der sum() hat.
+pista.en: golpes.stream() gives a Stream<Integer>; mapToInt(Integer::intValue) turns it into an IntStream, which has sum().
+firma: static int danoTotal(List<Integer> golpes)
+plantilla:
+    return golpes.isEmpty() ? 0 : golpes.get(0);
+solucion:
+    return golpes.stream().mapToInt(Integer::intValue).sum();
+casos:
+    danoTotal(List.of(12, 8, 25)) => 45
+    danoTotal(List.of(5)) => 5
+    danoTotal(List.of(-3, 3)) => 0
+    danoTotal(List.of()) => 0
+
+=== t18_en_mayusculas
+tema: 18
+dificultad: 1
+java: 16
+tipo: metodo
+titulo.es: Nombres en el marcador
+titulo.de: Namen auf der Anzeigetafel
+titulo.en: Names on the scoreboard
+enunciado.es: El marcador escribe los nombres en mayúsculas. Devuelve una lista nueva con cada nombre en mayúsculas, en el mismo orden. Termina el stream con toList(), que llegó en Java 16.
+enunciado.de: Die Anzeigetafel zeigt die Namen in Großbuchstaben. Gib eine neue Liste mit jedem Namen in Großbuchstaben zurück, in derselben Reihenfolge. Beende den Stream mit toList(), das es seit Java 16 gibt.
+enunciado.en: The scoreboard shows names in capitals. Return a new list with every name in upper case, in the same order. Finish the stream with toList(), added in Java 16.
+pista.es: nombres.stream().map(String::toUpperCase).toList(). Antes de Java 16 se escribía .collect(Collectors.toList()).
+pista.de: nombres.stream().map(String::toUpperCase).toList(). Vor Java 16 schrieb man .collect(Collectors.toList()).
+pista.en: nombres.stream().map(String::toUpperCase).toList(). Before Java 16 you wrote .collect(Collectors.toList()).
+firma: static List<String> enMayusculas(List<String> nombres)
+plantilla:
+    return nombres;
+solucion:
+    return nombres.stream().map(String::toUpperCase).toList();
+casos:
+    enMayusculas(List.of("tito", "Rex")) => List.of("TITO", "REX")
+    enMayusculas(List.of("mk ii")) => List.of("MK II")
+    enMayusculas(List.of("ÑOÑO", "árbol")) => List.of("ÑOÑO", "ÁRBOL")
+    enMayusculas(List.of()) => List.of()
+
+=== t18_media_de_danos
+tema: 18
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: El daño medio
+titulo.de: Der durchschnittliche Schaden
+titulo.en: The average damage
+enunciado.es: Devuelve la media de los daños del array. Si el array está vacío, devuelve 0.0.
+enunciado.de: Gib den Durchschnitt der Schadenswerte im Array zurück. Ist das Array leer, gib 0.0 zurück.
+enunciado.en: Return the average of the damage values in the array. If the array is empty, return 0.0.
+pista.es: Arrays.stream(danos) da un IntStream; average() devuelve un OptionalDouble, porque un array vacío no tiene media: orElse(0.0).
+pista.de: Arrays.stream(danos) liefert einen IntStream; average() gibt ein OptionalDouble zurück, weil ein leeres Array keinen Durchschnitt hat: orElse(0.0).
+pista.en: Arrays.stream(danos) gives an IntStream; average() returns an OptionalDouble, because an empty array has no average: orElse(0.0).
+firma: static double media(int[] danos)
+plantilla:
+    return Arrays.stream(danos).sum() / Math.max(1, danos.length);
+solucion:
+    return Arrays.stream(danos).average().orElse(0.0);
+casos:
+    media(new int[]{10, 20, 30}) => 20.0
+    media(new int[]{1, 2}) => 1.5
+    media(new int[]{7}) => 7.0
+    media(new int[]{}) => 0.0
+
+=== t18_robots_en_pie
+tema: 18
+dificultad: 2
+java: 16
+tipo: metodo
+titulo.es: ¿Quién sigue en pie?
+titulo.de: Wer steht noch?
+titulo.en: Who is still standing?
+enunciado.es: El mapa da la vida de cada robot. Devuelve los nombres de los que tienen vida mayor que 0, en orden alfabético.
+enunciado.de: Die Map gibt die Lebensenergie jedes Roboters an. Gib die Namen derer mit mehr als 0 Leben zurück, alphabetisch sortiert.
+enunciado.en: The map gives each robot's health. Return the names of those with health above 0, in alphabetical order.
+pista.es: vida.entrySet().stream().filter(e -> e.getValue() > 0).map(Map.Entry::getKey).sorted().toList()
+pista.de: vida.entrySet().stream().filter(e -> e.getValue() > 0).map(Map.Entry::getKey).sorted().toList()
+pista.en: vida.entrySet().stream().filter(e -> e.getValue() > 0).map(Map.Entry::getKey).sorted().toList()
+firma: static List<String> enPie(Map<String, Integer> vida)
+plantilla:
+    return new ArrayList<>(vida.keySet());
+solucion:
+    return vida.entrySet().stream()
+            .filter(e -> e.getValue() > 0)
+            .map(Map.Entry::getKey)
+            .sorted()
+            .toList();
+casos:
+    enPie(Map.of("Tito", 30, "Rex", 0, "Ada", 5)) => List.of("Ada", "Tito")
+    enPie(Map.of("Zap", 1)) => List.of("Zap")
+    enPie(Map.of("Rex", -10, "Bo", 0)) => List.of()
+    enPie(Map.of()) => List.of()
+
+=== t18_primer_golpe_fuerte
+tema: 18
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: El primer golpe fuerte
+titulo.de: Der erste harte Treffer
+titulo.en: The first hard hit
+enunciado.es: Devuelve el primer golpe mayor que umbral, envuelto en un Optional (Java 8). Si no hay ninguno, Optional.empty().
+enunciado.de: Gib den ersten Treffer zurück, der größer als umbral ist, verpackt in ein Optional (Java 8). Gibt es keinen, Optional.empty().
+enunciado.en: Return the first hit greater than umbral, wrapped in an Optional (Java 8). If there is none, Optional.empty().
+pista.es: filter(g -> g > umbral) y findFirst(). El stream se para en cuanto lo encuentra: es perezoso.
+pista.de: filter(g -> g > umbral) und findFirst(). Der Stream hört auf, sobald er ihn findet: Er ist lazy.
+pista.en: filter(g -> g > umbral) and findFirst(). The stream stops as soon as it finds it: it is lazy.
+firma: static Optional<Integer> primeroMayorQue(List<Integer> golpes, int umbral)
+plantilla:
+    return golpes.stream().filter(g -> g > umbral).max(Comparator.naturalOrder());
+solucion:
+    return golpes.stream().filter(g -> g > umbral).findFirst();
+casos:
+    primeroMayorQue(List.of(5, 30, 50, 12), 20) => Optional.of(30)
+    primeroMayorQue(List.of(5, 6), 20) => Optional.empty()
+    primeroMayorQue(List.of(20, 21), 20) => Optional.of(21)
+    primeroMayorQue(List.of(), 0) => Optional.empty()
+
+=== t18_participantes
+tema: 18
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Lista de participantes
+titulo.de: Teilnehmerliste
+titulo.en: List of participants
+enunciado.es: Cada línea del registro es "atacante>objetivo". Devuelve todos los robots que aparecen, sin repetir, en orden alfabético y con el formato "[Ada, Rex, Tito]". Si no hay líneas, "[]".
+enunciado.de: Jede Zeile im Protokoll lautet "angreifer>ziel". Gib alle vorkommenden Roboter zurück, ohne Wiederholungen, alphabetisch und im Format "[Ada, Rex, Tito]". Gibt es keine Zeilen, "[]".
+enunciado.en: Each log line is "attacker>target". Return every robot that appears, without repeats, in alphabetical order and in the format "[Ada, Rex, Tito]". If there are no lines, "[]".
+pista.es: flatMap(linea -> Arrays.stream(linea.split(">"))) junta los dos nombres de cada línea en un solo stream; luego distinct(), sorted() y Collectors.joining(", ", "[", "]").
+pista.de: flatMap(linea -> Arrays.stream(linea.split(">"))) bringt beide Namen jeder Zeile in einen einzigen Stream; danach distinct(), sorted() und Collectors.joining(", ", "[", "]").
+pista.en: flatMap(linea -> Arrays.stream(linea.split(">"))) merges the two names on each line into a single stream; then distinct(), sorted() and Collectors.joining(", ", "[", "]").
+firma: static String participantes(List<String> registro)
+plantilla:
+    return registro.toString();
+solucion:
+    return registro.stream()
+            .flatMap(linea -> Arrays.stream(linea.split(">")))
+            .distinct()
+            .sorted()
+            .collect(Collectors.joining(", ", "[", "]"));
+casos:
+    participantes(List.of("Tito>Rex", "Rex>Ada", "Tito>Ada")) => "[Ada, Rex, Tito]"
+    participantes(List.of("Zap>Bo")) => "[Bo, Zap]"
+    participantes(List.of("Bo>Bo", "Bo>Bo")) => "[Bo]"
+    participantes(List.of()) => "[]"
+
+=== t18_contar_por_arma
+tema: 18
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Disparos por arma
+titulo.de: Schüsse pro Waffe
+titulo.en: Shots per weapon
+enunciado.es: Cada elemento es el arma de un disparo. Devuelve un mapa con cuántas veces se usó cada arma.
+enunciado.de: Jedes Element ist die Waffe eines Schusses. Gib eine Map zurück, wie oft jede Waffe benutzt wurde.
+enunciado.en: Each element is the weapon of one shot. Return a map with how many times each weapon was used.
+pista.es: collect(Collectors.groupingBy(arma -> arma, Collectors.counting())). Function.identity() también sirve como «arma -> arma». Los recuentos son Long.
+pista.de: collect(Collectors.groupingBy(waffe -> waffe, Collectors.counting())). Function.identity() geht auch statt «waffe -> waffe». Die Zählungen sind Long.
+pista.en: collect(Collectors.groupingBy(weapon -> weapon, Collectors.counting())). Function.identity() also works instead of "weapon -> weapon". The counts are Long.
+firma: static Map<String, Long> contarPorArma(List<String> disparos)
+plantilla:
+    Map<String, Long> cuenta = new HashMap<>();
+    for (String arma : disparos) {
+        cuenta.put(arma, 1L);
+    }
+    return cuenta;
+solucion:
+    return disparos.stream().collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+casos:
+    contarPorArma(List.of("láser", "misil", "láser")) => Map.of("láser", 2L, "misil", 1L)
+    contarPorArma(List.of("bala", "bala", "bala")) => Map.of("bala", 3L)
+    contarPorArma(List.of("llama")) => Map.of("llama", 1L)
+    contarPorArma(List.of()) => Map.of()
+
+=== t18_tramo_activo
+tema: 18
+dificultad: 3
+java: 9
+tipo: metodo
+titulo.es: El tramo con energía
+titulo.de: Der Abschnitt mit Energie
+titulo.en: The powered stretch
+enunciado.es: Las lecturas de energía empiezan con ceros mientras el robot arranca. Devuelve el primer tramo con energía: salta los ceros del principio y quédate con las lecturas hasta el siguiente cero (sin incluirlo). Usa dropWhile y takeWhile, de Java 9.
+enunciado.de: Die Energiemesswerte beginnen mit Nullen, während der Roboter hochfährt. Gib den ersten Abschnitt mit Energie zurück: Überspring die Nullen am Anfang und nimm die Werte bis zur nächsten Null (ohne sie). Nutze dropWhile und takeWhile aus Java 9.
+enunciado.en: The energy readings start with zeros while the robot boots. Return the first powered stretch: skip the leading zeros and keep the readings up to the next zero (not including it). Use dropWhile and takeWhile, from Java 9.
+pista.es: dropWhile(e -> e == 0) tira mientras se cumple; takeWhile(e -> e != 0) coge mientras se cumple. A diferencia de filter, los dos se fijan en el orden.
+pista.de: dropWhile(e -> e == 0) verwirft, solange es gilt; takeWhile(e -> e != 0) nimmt, solange es gilt. Anders als filter achten beide auf die Reihenfolge.
+pista.en: dropWhile(e -> e == 0) drops while it holds; takeWhile(e -> e != 0) takes while it holds. Unlike filter, both care about the order.
+firma: static List<Integer> tramoActivo(List<Integer> energia)
+plantilla:
+    return energia.stream().filter(e -> e != 0).collect(Collectors.toList());
+solucion:
+    return energia.stream()
+            .dropWhile(e -> e == 0)
+            .takeWhile(e -> e != 0)
+            .collect(Collectors.toList());
+casos:
+    tramoActivo(List.of(0, 0, 5, 7, 0, 9)) => List.of(5, 7)
+    tramoActivo(List.of(3, 4)) => List.of(3, 4)
+    tramoActivo(List.of(0, 0, 0)) => List.of()
+    tramoActivo(List.of(0, 8, 0, 0, 2, 2)) => List.of(8)
+    tramoActivo(List.of()) => List.of()
+
+=== t18_separar_por_peso
+tema: 18
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Piezas pesadas y ligeras
+titulo.de: Schwere und leichte Teile
+titulo.en: Heavy and light parts
+enunciado.es: Cada pieza viene como "nombre:peso". Devuelve un mapa con dos listas de nombres, en el orden original: en true, las de peso mayor que 50; en false, las demás.
+enunciado.de: Jedes Teil kommt als "name:gewicht". Gib eine Map mit zwei Namenslisten in der ursprünglichen Reihenfolge zurück: unter true die mit Gewicht über 50, unter false die übrigen.
+enunciado.en: Each part comes as "name:weight". Return a map with two lists of names, in the original order: under true, those weighing more than 50; under false, the rest.
+pista.es: Primero map(p -> p.split(":")); luego Collectors.partitioningBy(t -> Integer.parseInt(t[1]) > 50, Collectors.mapping(t -> t[0], Collectors.toList())).
+pista.de: Zuerst map(p -> p.split(":")); dann Collectors.partitioningBy(t -> Integer.parseInt(t[1]) > 50, Collectors.mapping(t -> t[0], Collectors.toList())).
+pista.en: First map(p -> p.split(":")); then Collectors.partitioningBy(t -> Integer.parseInt(t[1]) > 50, Collectors.mapping(t -> t[0], Collectors.toList())).
+firma: static Map<Boolean, List<String>> porPeso(List<String> piezas)
+plantilla:
+    return Map.of(true, List.of(), false, List.of());
+solucion:
+    return piezas.stream()
+            .map(p -> p.split(":"))
+            .collect(Collectors.partitioningBy(t -> Integer.parseInt(t[1]) > 50,
+                    Collectors.mapping(t -> t[0], Collectors.toList())));
+casos:
+    porPeso(List.of("cañón:80", "radar:10", "blindaje:120")) => Map.of(true, List.of("cañón", "blindaje"), false, List.of("radar"))
+    porPeso(List.of("antena:50")) => Map.of(true, List.of(), false, List.of("antena"))
+    porPeso(List.of("oruga:51")) => Map.of(true, List.of("oruga"), false, List.of())
+    porPeso(List.of()) => Map.of(true, List.of(), false, List.of())
+
+=== t18_resumen_estadistico
+tema: 18
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Resumen de la pelea
+titulo.de: Kampfstatistik
+titulo.en: Fight summary
+enunciado.es: Devuelve un resumen de los daños con el formato "min=3 max=9 media=6.0" (la media con un decimal y punto decimal). Si no hay daños, "sin datos". Recorre los datos una sola vez.
+enunciado.de: Gib eine Zusammenfassung der Schadenswerte im Format "min=3 max=9 media=6.0" zurück (der Durchschnitt mit einer Nachkommastelle und Dezimalpunkt). Gibt es keine Werte, "sin datos". Geh die Daten nur einmal durch.
+enunciado.en: Return a summary of the damage values in the format "min=3 max=9 media=6.0" (the average with one decimal and a decimal point). If there are no values, "sin datos". Go through the data only once.
+pista.es: mapToInt(...).summaryStatistics() da un IntSummaryStatistics con getMin(), getMax(), getAverage() y getCount(). Para el punto decimal: String.format(Locale.ROOT, "%.1f", media).
+pista.de: mapToInt(...).summaryStatistics() liefert eine IntSummaryStatistics mit getMin(), getMax(), getAverage() und getCount(). Für den Dezimalpunkt: String.format(Locale.ROOT, "%.1f", media).
+pista.en: mapToInt(...).summaryStatistics() gives an IntSummaryStatistics with getMin(), getMax(), getAverage() and getCount(). For the decimal point: String.format(Locale.ROOT, "%.1f", average).
+firma: static String resumen(List<Integer> danos)
+plantilla:
+    return "min=0 max=0 media=0.0";
+solucion:
+    IntSummaryStatistics e = danos.stream().mapToInt(Integer::intValue).summaryStatistics();
+    if (e.getCount() == 0) {
+        return "sin datos";
+    }
+    return String.format(Locale.ROOT, "min=%d max=%d media=%.1f", e.getMin(), e.getMax(), e.getAverage());
+casos:
+    resumen(List.of(3, 9, 6)) => "min=3 max=9 media=6.0"
+    resumen(List.of(1, 2)) => "min=1 max=2 media=1.5"
+    resumen(List.of(-4)) => "min=-4 max=-4 media=-4.0"
+    resumen(List.of(1, 1, 2)) => "min=1 max=2 media=1.3"
+    resumen(List.of()) => "sin datos"
+
+=== t18_rango_con_teeing
+tema: 18
+dificultad: 4
+java: 12
+tipo: metodo
+titulo.es: De un golpe a otro
+titulo.de: Von Treffer zu Treffer
+titulo.en: From one hit to another
+enunciado.es: Devuelve la diferencia entre el golpe más fuerte y el más flojo, o 0 si no hay golpes. Hazlo con un solo collect usando Collectors.teeing (Java 12), que reparte cada elemento entre dos colectores y luego junta sus resultados.
+enunciado.de: Gib den Unterschied zwischen dem stärksten und dem schwächsten Treffer zurück, oder 0, wenn es keine gibt. Mach es mit einem einzigen collect und Collectors.teeing (Java 12), das jedes Element an zwei Collectors verteilt und deren Ergebnisse dann verbindet.
+enunciado.en: Return the difference between the strongest and the weakest hit, or 0 if there are no hits. Do it with a single collect using Collectors.teeing (Java 12), which feeds every element to two collectors and then merges their results.
+pista.es: Collectors.teeing(Collectors.minBy(Comparator.naturalOrder()), Collectors.maxBy(Comparator.naturalOrder()), (min, max) -> ...). min y max son Optional<Integer>.
+pista.de: Collectors.teeing(Collectors.minBy(Comparator.naturalOrder()), Collectors.maxBy(Comparator.naturalOrder()), (min, max) -> ...). min und max sind Optional<Integer>.
+pista.en: Collectors.teeing(Collectors.minBy(Comparator.naturalOrder()), Collectors.maxBy(Comparator.naturalOrder()), (min, max) -> ...). min and max are Optional<Integer>.
+firma: static int rango(List<Integer> golpes)
+plantilla:
+    return golpes.isEmpty() ? 0 : golpes.get(golpes.size() - 1) - golpes.get(0);
+solucion:
+    return golpes.stream().collect(Collectors.teeing(
+            Collectors.minBy(Comparator.<Integer>naturalOrder()),
+            Collectors.maxBy(Comparator.<Integer>naturalOrder()),
+            (min, max) -> min.isPresent() ? max.get() - min.get() : 0));
+casos:
+    rango(List.of(4, 20, 7)) => 16
+    rango(List.of(1, 5)) => 4
+    rango(List.of(9)) => 0
+    rango(List.of(-5, 5, 0)) => 10
+    rango(List.of()) => 0
+
+=== t18_arma_favorita
+tema: 18
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: El arma favorita
+titulo.de: Die Lieblingswaffe
+titulo.en: The favourite weapon
+enunciado.es: Devuelve el arma que más veces aparece. Si hay empate, la primera en orden alfabético. Si la lista está vacía, "".
+enunciado.de: Gib die Waffe zurück, die am häufigsten vorkommt. Bei Gleichstand die alphabetisch erste. Ist die Liste leer, "".
+enunciado.en: Return the weapon that appears most often. On a tie, the first one alphabetically. If the list is empty, "".
+pista.es: Cuenta con groupingBy(..., counting()) y busca el máximo de entrySet().stream() con Map.Entry.comparingByValue(), desempatando con thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())).
+pista.de: Zähl mit groupingBy(..., counting()) und such das Maximum von entrySet().stream() mit Map.Entry.comparingByValue(), bei Gleichstand mit thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())).
+pista.en: Count with groupingBy(..., counting()) and find the maximum of entrySet().stream() with Map.Entry.comparingByValue(), breaking ties with thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())).
+firma: static String armaFavorita(List<String> disparos)
+plantilla:
+    return disparos.isEmpty() ? "" : disparos.get(0);
+solucion:
+    return disparos.stream()
+            .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()))
+            .entrySet().stream()
+            .max(Map.Entry.<String, Long>comparingByValue()
+                    .thenComparing(Map.Entry.comparingByKey(Comparator.reverseOrder())))
+            .map(Map.Entry::getKey)
+            .orElse("");
+casos:
+    armaFavorita(List.of("bala", "láser", "láser", "misil")) => "láser"
+    armaFavorita(List.of("misil", "bala", "misil", "bala")) => "bala"
+    armaFavorita(List.of("llama")) => "llama"
+    armaFavorita(List.of("zeta", "alfa", "beta")) => "alfa"
+    armaFavorita(List.of()) => ""
+
+=== t18_vida_tras_cada_golpe
+tema: 18
+dificultad: 4
+java: 24
+tipo: metodo
+titulo.es: La barra de vida, golpe a golpe
+titulo.de: Der Lebensbalken, Treffer für Treffer
+titulo.en: The health bar, hit by hit
+enunciado.es: El robot empieza con vida y recibe los golpes en orden. Devuelve la vida que le queda tras cada golpe (nunca menos de 0). Usa un gatherer: stream.gather(...) y la clase Gatherers llegaron en Java 24; Gatherers.scan va acumulando y emite cada paso.
+enunciado.de: Der Roboter startet mit vida Leben und kassiert die Treffer der Reihe nach. Gib zurück, wie viel Leben ihm nach jedem Treffer bleibt (nie weniger als 0). Nutze einen Gatherer: stream.gather(...) und die Klasse Gatherers gibt es seit Java 24; Gatherers.scan akkumuliert und gibt jeden Zwischenstand aus.
+enunciado.en: The robot starts with vida health and takes the hits in order. Return the health left after each hit (never below 0). Use a gatherer: stream.gather(...) and the Gatherers class arrived in Java 24; Gatherers.scan accumulates and emits every step.
+pista.es: golpes.stream().gather(Gatherers.scan(() -> vida, (v, g) -> Math.max(0, v - g))).toList()
+pista.de: golpes.stream().gather(Gatherers.scan(() -> vida, (v, g) -> Math.max(0, v - g))).toList()
+pista.en: golpes.stream().gather(Gatherers.scan(() -> vida, (v, g) -> Math.max(0, v - g))).toList()
+firma: static List<Integer> vidaTrasCadaGolpe(int vida, List<Integer> golpes)
+plantilla:
+    return golpes.stream().map(g -> Math.max(0, vida - g)).toList();
+solucion:
+    return golpes.stream()
+            .gather(Gatherers.scan(() -> vida, (v, g) -> Math.max(0, v - g)))
+            .toList();
+casos:
+    vidaTrasCadaGolpe(100, List.of(10, 25, 5)) => List.of(90, 65, 60)
+    vidaTrasCadaGolpe(30, List.of(20, 20, 20)) => List.of(10, 0, 0)
+    vidaTrasCadaGolpe(50, List.of(0)) => List.of(50)
+    vidaTrasCadaGolpe(50, List.of()) => List.of()
+
+=== t18_sumas_de_tres
+tema: 18
+dificultad: 5
+java: 24
+tipo: metodo
+titulo.es: Ráfagas de tres disparos
+titulo.de: Salven aus drei Schüssen
+titulo.en: Three-shot bursts
+enunciado.es: Para detectar ráfagas, suma cada grupo de tres disparos seguidos (1-2-3, 2-3-4, …). Si hay menos de tres disparos, devuelve una sola suma con todos; si no hay ninguno, la lista vacía. Usa Gatherers.windowSliding (Java 24).
+enunciado.de: Um Salven zu erkennen, addiere jede Gruppe aus drei aufeinanderfolgenden Schüssen (1-2-3, 2-3-4, …). Gibt es weniger als drei Schüsse, gib eine einzige Summe aller zurück; gibt es keinen, die leere Liste. Nutze Gatherers.windowSliding (Java 24).
+enunciado.en: To detect bursts, add up every group of three consecutive shots (1-2-3, 2-3-4, …). If there are fewer than three shots, return a single sum of them all; if there are none, the empty list. Use Gatherers.windowSliding (Java 24).
+pista.es: gather(Gatherers.windowSliding(3)) da listas que se solapan (con menos de tres elementos da una sola ventana con todos). Suma cada ventana con mapToInt(Integer::intValue).sum().
+pista.de: gather(Gatherers.windowSliding(3)) liefert sich überlappende Listen (bei weniger als drei Elementen ein einziges Fenster mit allen). Summiere jedes Fenster mit mapToInt(Integer::intValue).sum().
+pista.en: gather(Gatherers.windowSliding(3)) gives overlapping lists (with fewer than three elements, a single window with all of them). Add up each window with mapToInt(Integer::intValue).sum().
+firma: static List<Integer> sumasDeTres(List<Integer> disparos)
+plantilla:
+    return disparos.stream()
+            .gather(Gatherers.windowFixed(3))
+            .map(v -> v.stream().mapToInt(Integer::intValue).sum())
+            .toList();
+solucion:
+    return disparos.stream()
+            .gather(Gatherers.windowSliding(3))
+            .map(ventana -> ventana.stream().mapToInt(Integer::intValue).sum())
+            .toList();
+casos:
+    sumasDeTres(List.of(1, 2, 3, 4, 5)) => List.of(6, 9, 12)
+    sumasDeTres(List.of(10, 0, 10)) => List.of(20)
+    sumasDeTres(List.of(4, 5)) => List.of(9)
+    sumasDeTres(List.of(1, 1, 1, 1)) => List.of(3, 3)
+    sumasDeTres(List.of()) => List.of()
+
+=== t18_mejores_por_equipo
+tema: 18
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Clasificación por equipos
+titulo.de: Rangliste nach Teams
+titulo.en: Standings by team
+enunciado.es: Cada ficha es "equipo:robot:puntos". Devuelve un mapa ordenado por nombre de equipo; en cada equipo, la lista de robots de más a menos puntos (a igualdad de puntos, por orden alfabético). Con un solo stream.
+enunciado.de: Jede Karte lautet "team:roboter:punkte". Gib eine nach Teamnamen sortierte Map zurück; in jedem Team die Liste der Roboter von den meisten zu den wenigsten Punkten (bei Gleichstand alphabetisch). Mit einem einzigen Stream.
+enunciado.en: Each card is "team:robot:points". Return a map sorted by team name; for each team, the list of robots from most to fewest points (equal points: alphabetical order). With a single stream.
+pista.es: Divide con split(":"), ordena primero todo (comparingInt(...).reversed().thenComparing(...)) y agrupa después con groupingBy(t -> t[0], TreeMap::new, mapping(t -> t[1], toList())): groupingBy respeta el orden de llegada.
+pista.de: Zerleg mit split(":"), sortiere zuerst alles (comparingInt(...).reversed().thenComparing(...)) und gruppiere danach mit groupingBy(t -> t[0], TreeMap::new, mapping(t -> t[1], toList())): groupingBy behält die Reihenfolge bei.
+pista.en: Split with split(":"), sort everything first (comparingInt(...).reversed().thenComparing(...)) and group afterwards with groupingBy(t -> t[0], TreeMap::new, mapping(t -> t[1], toList())): groupingBy keeps the encounter order.
+firma: static Map<String, List<String>> clasificacion(List<String> fichas)
+plantilla:
+    return fichas.stream()
+            .map(f -> f.split(":"))
+            .collect(Collectors.groupingBy(t -> t[0], TreeMap::new, Collectors.mapping(t -> t[1], Collectors.toList())));
+solucion:
+    Comparator<String[]> porPuntos = Comparator.comparingInt((String[] t) -> Integer.parseInt(t[2])).reversed();
+    return fichas.stream()
+            .map(f -> f.split(":"))
+            .sorted(porPuntos.thenComparing(t -> t[1]))
+            .collect(Collectors.groupingBy(t -> t[0], TreeMap::new,
+                    Collectors.mapping(t -> t[1], Collectors.toList())));
+casos:
+    clasificacion(List.of("rojo:Tito:30", "azul:Ada:10", "rojo:Rex:45", "azul:Bo:70")) => Map.of("azul", List.of("Bo", "Ada"), "rojo", List.of("Rex", "Tito"))
+    clasificacion(List.of("verde:Zap:5", "verde:Al:5", "verde:Mo:9")) => Map.of("verde", List.of("Mo", "Al", "Zap"))
+    clasificacion(List.of("solo:Uno:0")) => Map.of("solo", List.of("Uno"))
+    clasificacion(List.of()) => Map.of()
+    clasificacion(List.of("b:X:1", "a:Y:2")).keySet().toString() => "[a, b]"

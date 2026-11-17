@@ -1,0 +1,348 @@
+# Tema 17: lambdas, referencias a métodos e interfaces funcionales (Java 8).
+=== t17_filtro_mayor_que
+tema: 17
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Un filtro de golpes fuertes
+titulo.de: Ein Filter für harte Treffer
+titulo.en: A filter for hard hits
+enunciado.es: Las lambdas llegaron en Java 8. Devuelve un Predicate<Integer> que diga true cuando el daño es mayor que umbral.
+enunciado.de: Lambdas gibt es seit Java 8. Gib ein Predicate<Integer> zurück, das true liefert, wenn der Schaden größer als umbral ist.
+enunciado.en: Lambdas arrived in Java 8. Return a Predicate<Integer> that says true when the damage is greater than umbral.
+pista.es: Una lambda es una función sin nombre: return dano -> dano > umbral; La lambda puede usar umbral porque es efectivamente final.
+pista.de: Ein Lambda ist eine Funktion ohne Namen: return dano -> dano > umbral; Das Lambda darf umbral benutzen, weil es effektiv final ist.
+pista.en: A lambda is a function without a name: return dano -> dano > umbral; The lambda may use umbral because it is effectively final.
+firma: static Predicate<Integer> mayorQue(int umbral)
+plantilla:
+    return dano -> false;
+solucion:
+    return dano -> dano > umbral;
+casos:
+    mayorQue(10).test(15) => true
+    mayorQue(10).test(10) => false
+    mayorQue(-1).test(0) => true
+    mayorQue(0).negate().test(0) => true
+
+=== t17_aplicar_a_todos
+tema: 17
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Aplicar un efecto a todos los golpes
+titulo.de: Einen Effekt auf alle Treffer anwenden
+titulo.en: Apply an effect to every hit
+enunciado.es: Devuelve una lista nueva con el resultado de aplicar f a cada daño, en el mismo orden. La lista original no se cambia.
+enunciado.de: Gib eine neue Liste zurück, in der f auf jeden Schaden angewendet wurde, in derselben Reihenfolge. Die ursprüngliche Liste bleibt unverändert.
+enunciado.en: Return a new list with the result of applying f to each damage value, in the same order. The original list is left unchanged.
+pista.es: Un UnaryOperator<Integer> es una función de Integer a Integer: llama a f.apply(d) para cada d.
+pista.de: Ein UnaryOperator<Integer> ist eine Funktion von Integer nach Integer: Ruf f.apply(d) für jedes d auf.
+pista.en: A UnaryOperator<Integer> is a function from Integer to Integer: call f.apply(d) for each d.
+firma: static List<Integer> aplicar(List<Integer> danos, UnaryOperator<Integer> f)
+plantilla:
+    return new ArrayList<>(danos);
+solucion:
+    List<Integer> resultado = new ArrayList<>();
+    for (Integer d : danos) {
+        resultado.add(f.apply(d));
+    }
+    return resultado;
+casos:
+    aplicar(List.of(1, 2, 3), d -> d * 2) => List.of(2, 4, 6)
+    aplicar(List.of(-4, 5), Math::abs) => List.of(4, 5)
+    aplicar(List.of(7, 8), d -> 0) => List.of(0, 0)
+    aplicar(List.of(), d -> d + 1) => List.of()
+
+=== t17_quitar_rotas
+tema: 17
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Fuera las piezas rotas
+titulo.de: Weg mit den kaputten Teilen
+titulo.en: Out with the broken parts
+enunciado.es: Cada número es la vida de una pieza. Devuelve una copia de la lista sin las piezas rotas (vida 0 o menos), en el mismo orden. Usa removeIf, un método por defecto de Collection que llegó en Java 8.
+enunciado.de: Jede Zahl ist die Lebensenergie eines Teils. Gib eine Kopie der Liste ohne die kaputten Teile (Leben 0 oder weniger) zurück, in derselben Reihenfolge. Nutze removeIf, eine Default-Methode von Collection aus Java 8.
+enunciado.en: Each number is the health of a part. Return a copy of the list without the broken parts (health 0 or less), in the same order. Use removeIf, a default method of Collection added in Java 8.
+pista.es: List<Integer> copia = new ArrayList<>(vidas); copia.removeIf(v -> v <= 0); return copia;
+pista.de: List<Integer> copia = new ArrayList<>(vidas); copia.removeIf(v -> v <= 0); return copia;
+pista.en: List<Integer> copia = new ArrayList<>(vidas); copia.removeIf(v -> v <= 0); return copia;
+firma: static List<Integer> sinRotas(List<Integer> vidas)
+plantilla:
+    List<Integer> copia = new ArrayList<>(vidas);
+    copia.removeIf(v -> v < 0);
+    return copia;
+solucion:
+    List<Integer> copia = new ArrayList<>(vidas);
+    copia.removeIf(v -> v <= 0);
+    return copia;
+casos:
+    sinRotas(List.of(5, 0, -3, 8)) => List.of(5, 8)
+    sinRotas(List.of(0, 0)) => List.of()
+    sinRotas(List.of(1, 2, 3)) => List.of(1, 2, 3)
+    sinRotas(List.of()) => List.of()
+
+=== t17_valor_o_alternativa
+tema: 17
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Plan B, solo si hace falta
+titulo.de: Plan B, nur wenn nötig
+titulo.en: Plan B, only when needed
+enunciado.es: Devuelve valor si no es null; si es null, el resultado de alternativa.get(). La alternativa puede ser cara (o fallar), así que solo se llama cuando hace falta: eso es la evaluación perezosa con Supplier.
+enunciado.de: Gib valor zurück, wenn es nicht null ist; sonst das Ergebnis von alternativa.get(). Die Alternative kann teuer sein (oder scheitern), darum wird sie nur aufgerufen, wenn nötig: Das ist Lazy Evaluation mit Supplier.
+enunciado.en: Return valor if it is not null; if it is null, the result of alternativa.get(). The alternative may be expensive (or fail), so it is only called when needed: that is lazy evaluation with a Supplier.
+pista.es: return valor != null ? valor : alternativa.get(); Fíjate en que no hay que llamar a get() antes de saber si hace falta.
+pista.de: return valor != null ? valor : alternativa.get(); Ruf get() erst auf, wenn klar ist, dass du es brauchst.
+pista.en: return valor != null ? valor : alternativa.get(); Don't call get() before you know you need it.
+firma: static <T> T oSiNo(T valor, Supplier<? extends T> alternativa)
+plantilla:
+    T otro = alternativa.get();
+    return valor != null ? valor : otro;
+solucion:
+    return valor != null ? valor : alternativa.get();
+casos:
+    oSiNo("láser", () -> "bala") => "láser"
+    oSiNo((String) null, () -> "bala") => "bala"
+    oSiNo("láser", () -> { throw new IllegalStateException("no me llames"); }) => "láser"
+    oSiNo((Integer) null, () -> 0) => 0
+    oSiNo((String) null, () -> { throw new IllegalStateException(); }) => !IllegalStateException
+
+=== t17_plegar_valores
+tema: 17
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Plegar las lecturas
+titulo.de: Messwerte zusammenfalten
+titulo.en: Fold the readings
+enunciado.es: Combina todos los valores con op, de izquierda a derecha, empezando por inicial: op(op(op(inicial, v0), v1), v2)… IntBinaryOperator es una interfaz funcional para int, sin cajas Integer.
+enunciado.de: Verknüpfe alle Werte mit op von links nach rechts, beginnend mit inicial: op(op(op(inicial, v0), v1), v2) … IntBinaryOperator ist ein funktionales Interface für int, ohne Integer-Boxing.
+enunciado.en: Combine all the values with op, from left to right, starting with inicial: op(op(op(inicial, v0), v1), v2)… IntBinaryOperator is a functional interface for int, with no Integer boxing.
+pista.es: Un acumulador: int r = inicial; y en el bucle r = op.applyAsInt(r, v);
+pista.de: Ein Akkumulator: int r = inicial; und in der Schleife r = op.applyAsInt(r, v);
+pista.en: An accumulator: int r = inicial; and in the loop r = op.applyAsInt(r, v);
+firma: static int plegar(int[] valores, int inicial, IntBinaryOperator op)
+plantilla:
+    return inicial;
+solucion:
+    int resultado = inicial;
+    for (int v : valores) {
+        resultado = op.applyAsInt(resultado, v);
+    }
+    return resultado;
+casos:
+    plegar(new int[]{1, 2, 3}, 0, Integer::sum) => 6
+    plegar(new int[]{4, 9, 2}, Integer.MIN_VALUE, Math::max) => 9
+    plegar(new int[]{1, 2, 3}, 0, (a, b) -> a * 10 + b) => 123
+    plegar(new int[]{}, 7, Integer::sum) => 7
+    plegar(new int[]{10, 3}, 100, (a, b) -> a - b) => 87
+
+=== t17_ordenar_por_largo
+tema: 17
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Ordenar nombres de robots
+titulo.de: Roboternamen sortieren
+titulo.en: Sort robot names
+enunciado.es: Devuelve una copia de la lista ordenada por longitud (los cortos primero) y, a igual longitud, por orden alfabético. Construye el Comparator con Comparator.comparingInt y thenComparing (Java 8).
+enunciado.de: Gib eine Kopie der Liste zurück, sortiert nach Länge (die kurzen zuerst) und bei gleicher Länge alphabetisch. Baue den Comparator mit Comparator.comparingInt und thenComparing (Java 8).
+enunciado.en: Return a copy of the list sorted by length (short ones first) and, for equal length, alphabetically. Build the Comparator with Comparator.comparingInt and thenComparing (Java 8).
+pista.es: Comparator.comparingInt(String::length).thenComparing(Comparator.naturalOrder()). Ordena la copia con copia.sort(comparador).
+pista.de: Comparator.comparingInt(String::length).thenComparing(Comparator.naturalOrder()). Sortiere die Kopie mit copia.sort(comparador).
+pista.en: Comparator.comparingInt(String::length).thenComparing(Comparator.naturalOrder()). Sort the copy with copia.sort(comparador).
+firma: static List<String> ordenados(List<String> nombres)
+plantilla:
+    List<String> copia = new ArrayList<>(nombres);
+    copia.sort(Comparator.comparingInt(String::length));
+    return copia;
+solucion:
+    List<String> copia = new ArrayList<>(nombres);
+    copia.sort(Comparator.comparingInt(String::length).thenComparing(Comparator.naturalOrder()));
+    return copia;
+casos:
+    ordenados(List.of("Titán", "Bo", "Zap", "Al")) => List.of("Al", "Bo", "Zap", "Titán")
+    ordenados(List.of("ccc", "bbb", "aaa")) => List.of("aaa", "bbb", "ccc")
+    ordenados(List.of("Omega", "R2", "Mk", "Delta")) => List.of("Mk", "R2", "Delta", "Omega")
+    ordenados(List.of()) => List.of()
+
+=== t17_encadenar_pasos
+tema: 17
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Una cadena de efectos
+titulo.de: Eine Kette von Effekten
+titulo.en: A chain of effects
+enunciado.es: Devuelve una sola Function que aplique todos los pasos en orden: primero pasos.get(0), luego pasos.get(1)… Si la lista está vacía, la función devuelve lo mismo que recibe.
+enunciado.de: Gib eine einzige Function zurück, die alle Schritte der Reihe nach anwendet: zuerst pasos.get(0), dann pasos.get(1) … Ist die Liste leer, gibt die Funktion zurück, was sie bekommt.
+enunciado.en: Return a single Function that applies every step in order: first pasos.get(0), then pasos.get(1)… If the list is empty, the function returns whatever it receives.
+pista.es: Empieza con Function.identity() y ve uniendo con resultado = resultado.andThen(paso). Ojo: compose aplica en el orden contrario.
+pista.de: Beginne mit Function.identity() und häng an mit resultado = resultado.andThen(paso). Achtung: compose wendet in umgekehrter Reihenfolge an.
+pista.en: Start with Function.identity() and keep joining with resultado = resultado.andThen(paso). Careful: compose applies in the opposite order.
+firma: static Function<Integer, Integer> encadenar(List<Function<Integer, Integer>> pasos)
+plantilla:
+    Function<Integer, Integer> resultado = Function.identity();
+    for (Function<Integer, Integer> paso : pasos) {
+        resultado = resultado.compose(paso);
+    }
+    return resultado;
+solucion:
+    Function<Integer, Integer> resultado = Function.identity();
+    for (Function<Integer, Integer> paso : pasos) {
+        resultado = resultado.andThen(paso);
+    }
+    return resultado;
+casos:
+    encadenar(List.of(x -> x + 1, x -> x * 10)).apply(2) => 30
+    encadenar(List.of(x -> x * 10, x -> x + 1)).apply(2) => 21
+    encadenar(List.of()).apply(7) => 7
+    encadenar(List.of(x -> x - 5, Math::abs, x -> x * x)).apply(1) => 16
+
+=== t17_arma_funcional
+tema: 17
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Tu propia interfaz funcional
+titulo.de: Dein eigenes funktionales Interface
+titulo.en: Your own functional interface
+enunciado.es: Completa la interfaz funcional Arma (un solo método abstracto: int disparar(int distancia)). Añade el método por defecto Arma potenciada(int extra), que suma extra al daño pero nunca baja de 0, y el método estático Arma fija(int dano), que hace siempre el mismo daño.
+enunciado.de: Vervollständige das funktionale Interface Arma (eine einzige abstrakte Methode: int disparar(int distancia)). Ergänze die Default-Methode Arma potenciada(int extra), die extra zum Schaden addiert, aber nie unter 0 fällt, und die statische Methode Arma fija(int dano), die immer gleich viel Schaden macht.
+enunciado.en: Complete the functional interface Arma (a single abstract method: int disparar(int distancia)). Add the default method Arma potenciada(int extra), which adds extra to the damage but never goes below 0, and the static method Arma fija(int dano), which always does the same damage.
+pista.es: Dentro del default puedes devolver una lambda que llama a this: return d -> Math.max(0, disparar(d) + extra); Y fija: return d -> dano;
+pista.de: In der Default-Methode darfst du ein Lambda zurückgeben, das this aufruft: return d -> Math.max(0, disparar(d) + extra); Und fija: return d -> dano;
+pista.en: Inside the default method you can return a lambda that calls this: return d -> Math.max(0, disparar(d) + extra); And fija: return d -> dano;
+plantilla:
+    @FunctionalInterface
+    public interface Arma {
+        int disparar(int distancia);
+    }
+solucion:
+    @FunctionalInterface
+    public interface Arma {
+        int disparar(int distancia);
+
+        default Arma potenciada(int extra) {
+            return distancia -> Math.max(0, disparar(distancia) + extra);
+        }
+
+        static Arma fija(int dano) {
+            return distancia -> dano;
+        }
+    }
+casos:
+    Arma.fija(10).disparar(500) => 10
+    ((Arma) d -> 100 - d).disparar(30) => 70
+    ((Arma) d -> 100 - d).potenciada(5).disparar(30) => 75
+    Arma.fija(3).potenciada(-5).disparar(0) => 0
+    Arma.fija(3).potenciada(2).potenciada(2).disparar(9) => 7
+
+=== t17_recordar_resultados
+tema: 17
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Un ordenador de a bordo con memoria
+titulo.de: Ein Bordcomputer mit Gedächtnis
+titulo.en: An onboard computer with memory
+enunciado.es: Devuelve una función que dé los mismos resultados que f pero que la llame solo una vez por cada valor distinto: guarda los resultados y repítelos. Es la memoización, una técnica muy usada en algoritmos.
+enunciado.de: Gib eine Funktion zurück, die dieselben Ergebnisse wie f liefert, f aber nur einmal pro unterschiedlichem Wert aufruft: Merk dir die Ergebnisse und liefere sie erneut. Das ist Memoisierung, eine häufige Technik in Algorithmen.
+enunciado.en: Return a function that gives the same results as f but calls it only once for each distinct value: store the results and reuse them. This is memoization, a technique used a lot in algorithms.
+pista.es: Crea un Map<T, R> fuera de la lambda y devuelve x -> memoria.computeIfAbsent(x, f). La lambda «captura» el mapa y lo conserva entre llamadas.
+pista.de: Leg eine Map<T, R> außerhalb des Lambdas an und gib x -> memoria.computeIfAbsent(x, f) zurück. Das Lambda «fängt» die Map ein und behält sie zwischen den Aufrufen.
+pista.en: Create a Map<T, R> outside the lambda and return x -> memoria.computeIfAbsent(x, f). The lambda "captures" the map and keeps it between calls.
+firma: static <T, R> Function<T, R> recordar(Function<T, R> f)
+plantilla:
+    return f;
+solucion:
+    Map<T, R> memoria = new HashMap<>();
+    return x -> memoria.computeIfAbsent(x, f);
+casos:
+    recordar((Integer x) -> x * x).apply(9) => 81
+    recordar(String::length).apply("radar") => 5
+    ((Supplier<Integer>) () -> { int[] llamadas = {0}; Function<Integer, Integer> g = recordar(x -> { llamadas[0]++; return x + 1; }); g.apply(3); g.apply(3); g.apply(4); g.apply(3); return llamadas[0]; }).get() => 2
+    ((Supplier<Integer>) () -> { int[] llamadas = {0}; Function<String, String> g = recordar(s -> { llamadas[0]++; return s.toUpperCase(); }); return g.apply("a").length() + g.apply("a").length() + llamadas[0]; }).get() => 3
+
+=== t17_radio_de_eventos
+tema: 17
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: La radio del equipo
+titulo.de: Der Teamfunk
+titulo.en: The team radio
+enunciado.es: Escribe la clase Radio. Radio escuchar(String tipo, Consumer<String> oyente) apunta un oyente para un tipo de aviso (y devuelve this). int emitir(String tipo, String mensaje) pasa el mensaje a los oyentes de ese tipo, en el orden en que se apuntaron, y devuelve a cuántos avisó.
+enunciado.de: Schreib die Klasse Radio. Radio escuchar(String tipo, Consumer<String> oyente) meldet einen Zuhörer für eine Art von Meldung an (und gibt this zurück). int emitir(String tipo, String mensaje) gibt die Nachricht an die Zuhörer dieser Art weiter, in der Reihenfolge ihrer Anmeldung, und gibt zurück, wie viele es waren.
+enunciado.en: Write the Radio class. Radio escuchar(String tipo, Consumer<String> oyente) registers a listener for a kind of message (and returns this). int emitir(String tipo, String mensaje) passes the message to the listeners of that kind, in the order they registered, and returns how many were told.
+pista.es: Un Map<String, List<Consumer<String>>>: en escuchar, computeIfAbsent(tipo, t -> new ArrayList<>()).add(oyente); en emitir, getOrDefault(tipo, List.of()) y oyente.accept(mensaje) a cada uno.
+pista.de: Eine Map<String, List<Consumer<String>>>: in escuchar computeIfAbsent(tipo, t -> new ArrayList<>()).add(oyente); in emitir getOrDefault(tipo, List.of()) und für jeden oyente.accept(mensaje).
+pista.en: A Map<String, List<Consumer<String>>>: in escuchar, computeIfAbsent(tipo, t -> new ArrayList<>()).add(oyente); in emitir, getOrDefault(tipo, List.of()) and oyente.accept(mensaje) for each one.
+plantilla:
+    import java.util.*;
+    import java.util.function.Consumer;
+
+    public class Radio {
+
+        public Radio escuchar(String tipo, Consumer<String> oyente) {
+            return this;
+        }
+
+        public int emitir(String tipo, String mensaje) {
+            return 0;
+        }
+    }
+solucion:
+    import java.util.ArrayList;
+    import java.util.Collections;
+    import java.util.HashMap;
+    import java.util.List;
+    import java.util.Map;
+    import java.util.function.Consumer;
+
+    public class Radio {
+        private final Map<String, List<Consumer<String>>> oyentes = new HashMap<>();
+
+        public Radio escuchar(String tipo, Consumer<String> oyente) {
+            oyentes.computeIfAbsent(tipo, t -> new ArrayList<>()).add(oyente);
+            return this;
+        }
+
+        public int emitir(String tipo, String mensaje) {
+            List<Consumer<String>> lista = oyentes.getOrDefault(tipo, Collections.emptyList());
+            lista.forEach(oyente -> oyente.accept(mensaje));
+            return lista.size();
+        }
+    }
+casos:
+    new Radio().escuchar("golpe", m -> { }).escuchar("golpe", m -> { }).emitir("golpe", "láser") => 2
+    new Radio().escuchar("golpe", m -> { }).emitir("radar", "enemigo al norte") => 0
+    new Radio().emitir("golpe", "nada") => 0
+    ((Supplier<String>) () -> { StringBuilder log = new StringBuilder(); new Radio().escuchar("golpe", m -> log.append("A:").append(m).append(' ')).escuchar("radar", m -> log.append("R ")).escuchar("golpe", m -> log.append("B:").append(m)).emitir("golpe", "misil"); return log.toString(); }).get() => "A:misil B:misil"
+
+=== t17_currificar
+tema: 17
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Funciones de una en una
+titulo.de: Funktionen Stück für Stück
+titulo.en: Functions one argument at a time
+enunciado.es: Convierte una BiFunction de dos argumentos en una función que recibe el primero y devuelve otra función que espera el segundo: currificar(f).apply(a).apply(b) es lo mismo que f.apply(a, b). Así puedes fijar el primer argumento y reutilizar la función que queda.
+enunciado.de: Mach aus einer BiFunction mit zwei Argumenten eine Funktion, die das erste nimmt und eine weitere Funktion zurückgibt, die auf das zweite wartet: currificar(f).apply(a).apply(b) ist dasselbe wie f.apply(a, b). So kannst du das erste Argument festlegen und die übrige Funktion wiederverwenden.
+enunciado.en: Turn a two-argument BiFunction into a function that takes the first argument and returns another function waiting for the second: currificar(f).apply(a).apply(b) is the same as f.apply(a, b). That way you can fix the first argument and reuse the function that is left.
+pista.es: Una lambda que devuelve una lambda: return a -> b -> f.apply(a, b);
+pista.de: Ein Lambda, das ein Lambda zurückgibt: return a -> b -> f.apply(a, b);
+pista.en: A lambda that returns a lambda: return a -> b -> f.apply(a, b);
+firma: static <A, B, R> Function<A, Function<B, R>> currificar(BiFunction<A, B, R> f)
+plantilla:
+    return a -> b -> null;
+solucion:
+    return a -> b -> f.apply(a, b);
+casos:
+    currificar((Integer a, Integer b) -> a - b).apply(10).apply(3) => 7
+    currificar(String::concat).apply("Mk ").apply("II") => "Mk II"
+    currificar((String a, Integer b) -> a.length() + b).apply("").apply(0) => 0
+    ((Supplier<Integer>) () -> { Function<Integer, Integer> triple = currificar((Integer a, Integer b) -> a * b).apply(3); return triple.apply(2) + triple.apply(5); }).get() => 21

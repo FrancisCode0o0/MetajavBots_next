@@ -1,0 +1,665 @@
+# Tema 20: hilos y concurrencia. Thread y synchronized (Java 1), java.util.concurrent (Java 5),
+# CompletableFuture (Java 8), ExecutorService con try-with-resources (Java 19) e hilos virtuales (Java 21).
+# Todos son deterministas: se espera a los hilos (join, cerrar el pool) y nada depende del reloj.
+=== t20_primer_hilo
+tema: 20
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Un trabajo en otro hilo
+titulo.de: Eine Aufgabe in einem anderen Thread
+titulo.en: A job on another thread
+enunciado.es: Crea un hilo llamado nombre que apunte el nombre del hilo en el que se ejecuta (Thread.currentThread().getName()). Arráncalo, espera a que termine y devuelve lo que apuntó. Ojo: start() lo ejecuta en el hilo nuevo; run() lo ejecutaría en el tuyo.
+enunciado.de: Erzeuge einen Thread namens nombre, der sich den Namen des Threads merkt, in dem er läuft (Thread.currentThread().getName()). Starte ihn, warte, bis er fertig ist, und gib zurück, was er notiert hat. Achtung: start() führt ihn im neuen Thread aus; run() würde ihn in deinem ausführen.
+enunciado.en: Create a thread named nombre that records the name of the thread it runs on (Thread.currentThread().getName()). Start it, wait for it to finish and return what it recorded. Careful: start() runs it on the new thread; run() would run it on yours.
+pista.es: String[] visto = new String[1]; Thread t = new Thread(() -> visto[0] = Thread.currentThread().getName(), nombre); t.start(); t.join(); join() también garantiza que ves lo que escribió el hilo.
+pista.de: String[] visto = new String[1]; Thread t = new Thread(() -> visto[0] = Thread.currentThread().getName(), nombre); t.start(); t.join(); join() garantiert auch, dass du siehst, was der Thread geschrieben hat.
+pista.en: String[] visto = new String[1]; Thread t = new Thread(() -> visto[0] = Thread.currentThread().getName(), nombre); t.start(); t.join(); join() also guarantees you see what the thread wrote.
+firma: static String nombreVisto(String nombre) throws InterruptedException
+plantilla:
+    String[] visto = new String[1];
+    Thread t = new Thread(() -> visto[0] = Thread.currentThread().getName(), nombre);
+    t.run();
+    return visto[0];
+solucion:
+    String[] visto = new String[1];
+    Thread hilo = new Thread(() -> visto[0] = Thread.currentThread().getName(), nombre);
+    hilo.start();
+    hilo.join();
+    return visto[0];
+casos:
+    nombreVisto("radar") => "radar"
+    nombreVisto("motor") => "motor"
+    nombreVisto("hilo-7") => "hilo-7"
+    nombreVisto("") => ""
+
+=== t20_suma_en_dos_mitades
+tema: 20
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Dos hilos, dos mitades
+titulo.de: Zwei Threads, zwei Hälften
+titulo.en: Two threads, two halves
+enunciado.es: Suma el array con dos hilos: uno suma la primera mitad (de 0 a datos.length / 2, sin incluirlo) y otro el resto. Cada hilo guarda su resultado en su propia casilla de un long[2]; espera a los dos con join() y devuelve la suma de las dos casillas.
+enunciado.de: Addiere das Array mit zwei Threads: Einer summiert die erste Hälfte (von 0 bis datos.length / 2, ausschließlich), der andere den Rest. Jeder Thread speichert sein Ergebnis in seinem eigenen Feld eines long[2]; warte mit join() auf beide und gib die Summe beider Felder zurück.
+enunciado.en: Add up the array with two threads: one sums the first half (from 0 up to datos.length / 2, exclusive) and the other the rest. Each thread stores its result in its own slot of a long[2]; wait for both with join() and return the sum of the two slots.
+pista.es: Como cada hilo escribe en una casilla distinta, no se pisan y no hace falta synchronized. int mitad = datos.length / 2; y un bucle por hilo.
+pista.de: Weil jeder Thread in ein anderes Feld schreibt, kommen sie sich nicht in die Quere, und synchronized ist unnötig. int mitad = datos.length / 2; und eine Schleife pro Thread.
+pista.en: Since each thread writes to a different slot, they don't clash and synchronized isn't needed. int mitad = datos.length / 2; and one loop per thread.
+firma: static long sumaEnParalelo(int[] datos) throws InterruptedException
+plantilla:
+    long suma = 0;
+    for (int i = 0; i < datos.length / 2; i++) {
+        suma += datos[i];
+    }
+    return suma;
+solucion:
+    int mitad = datos.length / 2;
+    long[] parciales = new long[2];
+    Thread primera = new Thread(() -> {
+        for (int i = 0; i < mitad; i++) {
+            parciales[0] += datos[i];
+        }
+    });
+    Thread segunda = new Thread(() -> {
+        for (int i = mitad; i < datos.length; i++) {
+            parciales[1] += datos[i];
+        }
+    });
+    primera.start();
+    segunda.start();
+    primera.join();
+    segunda.join();
+    return parciales[0] + parciales[1];
+casos:
+    sumaEnParalelo(new int[]{1, 2, 3, 4}) => 10L
+    sumaEnParalelo(new int[]{5, 6, 7}) => 18L
+    sumaEnParalelo(new int[]{9}) => 9L
+    sumaEnParalelo(new int[]{}) => 0L
+    sumaEnParalelo(IntStream.rangeClosed(1, 100_000).toArray()) => 5000050000L
+
+=== t20_primos_en_paralelo
+tema: 20
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Frecuencias primas, en paralelo
+titulo.de: Primfrequenzen, parallel
+titulo.en: Prime frequencies, in parallel
+enunciado.es: La radio usa frecuencias primas. Devuelve cuántos números primos hay entre 2 y hasta (incluido), con un stream paralelo: parallel() reparte el trabajo entre varios hilos (Java 8).
+enunciado.de: Das Funkgerät nutzt Primfrequenzen. Gib zurück, wie viele Primzahlen es zwischen 2 und hasta (einschließlich) gibt, mit einem parallelen Stream: parallel() verteilt die Arbeit auf mehrere Threads (Java 8).
+enunciado.en: The radio uses prime frequencies. Return how many primes there are between 2 and hasta (inclusive), with a parallel stream: parallel() spreads the work over several threads (Java 8).
+pista.es: IntStream.rangeClosed(2, hasta).parallel().filter(n -> ...).count(). n es primo si ningún d entre 2 y la raíz de n lo divide: IntStream.rangeClosed(2, (int) Math.sqrt(n)).noneMatch(d -> n % d == 0).
+pista.de: IntStream.rangeClosed(2, hasta).parallel().filter(n -> ...).count(). n ist prim, wenn kein d zwischen 2 und der Wurzel von n es teilt: IntStream.rangeClosed(2, (int) Math.sqrt(n)).noneMatch(d -> n % d == 0).
+pista.en: IntStream.rangeClosed(2, hasta).parallel().filter(n -> ...).count(). n is prime if no d between 2 and the square root of n divides it: IntStream.rangeClosed(2, (int) Math.sqrt(n)).noneMatch(d -> n % d == 0).
+firma: static long contarPrimos(int hasta)
+plantilla:
+    return IntStream.rangeClosed(2, hasta).parallel().filter(n -> n % 2 != 0).count();
+solucion:
+    return IntStream.rangeClosed(2, hasta)
+            .parallel()
+            .filter(n -> IntStream.rangeClosed(2, (int) Math.sqrt(n)).noneMatch(d -> n % d == 0))
+            .count();
+casos:
+    contarPrimos(10) => 4L
+    contarPrimos(2) => 1L
+    contarPrimos(1) => 0L
+    contarPrimos(100) => 25L
+    contarPrimos(100_000) => 9592L
+
+=== t20_contador_sincronizado
+tema: 20
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Un contador que no pierde golpes
+titulo.de: Ein Zähler, der keine Treffer verliert
+titulo.en: A counter that never misses a hit
+enunciado.es: Varios hilos llaman a sumar() a la vez. Si dos leen y escriben valor al mismo tiempo, se pierden sumas (una condición de carrera). Completa sumar() y valor() con synchronized para que cada suma cuente. martillear(hilos, veces) ya está hecho: lo usa para probarlo.
+enunciado.de: Mehrere Threads rufen gleichzeitig sumar() auf. Lesen und schreiben zwei gleichzeitig valor, gehen Additionen verloren (eine Race Condition). Vervollständige sumar() und valor() mit synchronized, damit jede Addition zählt. martillear(hilos, veces) ist schon fertig und testet es.
+enunciado.en: Several threads call sumar() at once. If two read and write valor at the same time, increments are lost (a race condition). Complete sumar() and valor() with synchronized so that every increment counts. martillear(hilos, veces) is already done: it uses them to test it.
+pista.es: public synchronized void sumar() { valor++; } valor++ son tres pasos (leer, sumar, escribir): synchronized hace que solo un hilo a la vez los dé.
+pista.de: public synchronized void sumar() { valor++; } valor++ sind drei Schritte (lesen, addieren, schreiben): synchronized sorgt dafür, dass immer nur ein Thread sie macht.
+pista.en: public synchronized void sumar() { valor++; } valor++ is three steps (read, add, write): synchronized makes sure only one thread at a time takes them.
+plantilla:
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public class Contador {
+        private int valor;
+
+        public void sumar() {
+            // suma uno sin que los hilos se pisen
+        }
+
+        public int valor() {
+            return valor;
+        }
+
+        /** Ya hecho: lanza «hilos» hilos que suman «veces» cada uno, espera a todos y devuelve el total. */
+        public static int martillear(int hilos, int veces) throws InterruptedException {
+            Contador contador = new Contador();
+            List<Thread> lista = new ArrayList<>();
+            for (int i = 0; i < hilos; i++) {
+                Thread t = new Thread(() -> {
+                    for (int k = 0; k < veces; k++) {
+                        contador.sumar();
+                    }
+                });
+                lista.add(t);
+                t.start();
+            }
+            for (Thread t : lista) {
+                t.join();
+            }
+            return contador.valor();
+        }
+    }
+solucion:
+    import java.util.ArrayList;
+    import java.util.List;
+
+    public class Contador {
+        private int valor;
+
+        public synchronized void sumar() {
+            valor++;
+        }
+
+        public synchronized int valor() {
+            return valor;
+        }
+
+        /** Ya hecho: lanza «hilos» hilos que suman «veces» cada uno, espera a todos y devuelve el total. */
+        public static int martillear(int hilos, int veces) throws InterruptedException {
+            Contador contador = new Contador();
+            List<Thread> lista = new ArrayList<>();
+            for (int i = 0; i < hilos; i++) {
+                Thread t = new Thread(() -> {
+                    for (int k = 0; k < veces; k++) {
+                        contador.sumar();
+                    }
+                });
+                lista.add(t);
+                t.start();
+            }
+            for (Thread t : lista) {
+                t.join();
+            }
+            return contador.valor();
+        }
+    }
+casos:
+    Contador.martillear(4, 25_000) => 100000
+    Contador.martillear(1, 5) => 5
+    Contador.martillear(8, 0) => 0
+    new Contador().valor() => 0
+
+=== t20_disparos_atomicos
+tema: 20
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Contar disparos sin candados
+titulo.de: Schüsse zählen ohne Sperren
+titulo.en: Count shots without locks
+enunciado.es: Escribe static int contarDisparos(int robots, int disparosPorRobot) en la clase Municion: un ExecutorService de 4 hilos (Java 5) ejecuta una tarea por robot, y cada tarea suma disparosPorRobot a un AtomicInteger. Cierra el pool, espera a que acabe y devuelve el total.
+enunciado.de: Schreib static int contarDisparos(int robots, int disparosPorRobot) in der Klasse Municion: Ein ExecutorService mit 4 Threads (Java 5) führt eine Aufgabe pro Roboter aus, und jede Aufgabe addiert disparosPorRobot zu einem AtomicInteger. Fahr den Pool herunter, warte, bis er fertig ist, und gib die Summe zurück.
+enunciado.en: Write static int contarDisparos(int robots, int disparosPorRobot) in the Municion class: an ExecutorService with 4 threads (Java 5) runs one task per robot, and each task adds disparosPorRobot to an AtomicInteger. Shut the pool down, wait for it to finish and return the total.
+pista.es: Executors.newFixedThreadPool(4); pool.submit(() -> { ... cuenta.incrementAndGet(); ... }); y al final pool.shutdown(); pool.awaitTermination(10, TimeUnit.SECONDS); incrementAndGet es atómico: no necesita synchronized.
+pista.de: Executors.newFixedThreadPool(4); pool.submit(() -> { ... cuenta.incrementAndGet(); ... }); und am Ende pool.shutdown(); pool.awaitTermination(10, TimeUnit.SECONDS); incrementAndGet ist atomar: Es braucht kein synchronized.
+pista.en: Executors.newFixedThreadPool(4); pool.submit(() -> { ... cuenta.incrementAndGet(); ... }); and at the end pool.shutdown(); pool.awaitTermination(10, TimeUnit.SECONDS); incrementAndGet is atomic: it needs no synchronized.
+plantilla:
+    import java.util.concurrent.*;
+    import java.util.concurrent.atomic.AtomicInteger;
+
+    public class Municion {
+
+        public static int contarDisparos(int robots, int disparosPorRobot) throws InterruptedException {
+            // tu pool de 4 hilos y tu AtomicInteger
+            return 0;
+        }
+    }
+solucion:
+    import java.util.concurrent.ExecutorService;
+    import java.util.concurrent.Executors;
+    import java.util.concurrent.TimeUnit;
+    import java.util.concurrent.atomic.AtomicInteger;
+
+    public class Municion {
+
+        public static int contarDisparos(int robots, int disparosPorRobot) throws InterruptedException {
+            AtomicInteger cuenta = new AtomicInteger();
+            ExecutorService pool = Executors.newFixedThreadPool(4);
+            for (int r = 0; r < robots; r++) {
+                pool.submit(() -> {
+                    for (int i = 0; i < disparosPorRobot; i++) {
+                        cuenta.incrementAndGet();
+                    }
+                });
+            }
+            pool.shutdown();
+            pool.awaitTermination(10, TimeUnit.SECONDS);
+            return cuenta.get();
+        }
+    }
+casos:
+    Municion.contarDisparos(10, 1000) => 10000
+    Municion.contarDisparos(1, 7) => 7
+    Municion.contarDisparos(3, 0) => 0
+    Municion.contarDisparos(0, 50) => 0
+    Municion.contarDisparos(16, 5000) => 80000
+
+=== t20_dano_por_robot
+tema: 20
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: El marcador compartido
+titulo.de: Die gemeinsame Anzeigetafel
+titulo.en: The shared scoreboard
+enunciado.es: Escribe static Map<String, Integer> danoPorRobot(List<String> golpes) en la clase Marcador. Cada golpe es "robot:daño". Reparte los golpes entre las tareas de un pool de 4 hilos, que suman el daño de cada robot en un ConcurrentHashMap (Java 5) con merge (Java 8). Devuelve el mapa cuando hayan terminado todas.
+enunciado.de: Schreib static Map<String, Integer> danoPorRobot(List<String> golpes) in der Klasse Marcador. Jeder Treffer lautet "roboter:schaden". Verteile die Treffer auf Aufgaben eines Pools mit 4 Threads, die den Schaden jedes Roboters in einer ConcurrentHashMap (Java 5) mit merge (Java 8) aufsummieren. Gib die Map zurück, wenn alle fertig sind.
+enunciado.en: Write static Map<String, Integer> danoPorRobot(List<String> golpes) in the Marcador class. Each hit is "robot:damage". Spread the hits over tasks in a pool of 4 threads, which add up each robot's damage in a ConcurrentHashMap (Java 5) with merge (Java 8). Return the map once they have all finished.
+pista.es: marcador.merge(robot, dano, Integer::sum) es atómico en un ConcurrentHashMap: dos hilos pueden sumar al mismo robot sin perder nada. Con un HashMap normal se perderían sumas.
+pista.de: marcador.merge(robot, dano, Integer::sum) ist in einer ConcurrentHashMap atomar: Zwei Threads können zum selben Roboter addieren, ohne dass etwas verloren geht. Mit einer normalen HashMap gingen Summen verloren.
+pista.en: marcador.merge(robot, dano, Integer::sum) is atomic on a ConcurrentHashMap: two threads can add to the same robot without losing anything. With a plain HashMap, additions would get lost.
+plantilla:
+    import java.util.*;
+    import java.util.concurrent.*;
+
+    public class Marcador {
+
+        public static Map<String, Integer> danoPorRobot(List<String> golpes) throws InterruptedException {
+            Map<String, Integer> marcador = new HashMap<>();
+            return marcador;
+        }
+    }
+solucion:
+    import java.util.List;
+    import java.util.Map;
+    import java.util.concurrent.ConcurrentHashMap;
+    import java.util.concurrent.ExecutorService;
+    import java.util.concurrent.Executors;
+    import java.util.concurrent.TimeUnit;
+
+    public class Marcador {
+
+        public static Map<String, Integer> danoPorRobot(List<String> golpes) throws InterruptedException {
+            Map<String, Integer> marcador = new ConcurrentHashMap<>();
+            ExecutorService pool = Executors.newFixedThreadPool(4);
+            for (String golpe : golpes) {
+                pool.submit(() -> {
+                    String[] partes = golpe.split(":");
+                    marcador.merge(partes[0], Integer.parseInt(partes[1]), Integer::sum);
+                });
+            }
+            pool.shutdown();
+            pool.awaitTermination(10, TimeUnit.SECONDS);
+            return marcador;
+        }
+    }
+casos:
+    Marcador.danoPorRobot(List.of("Tito:10", "Rex:5", "Tito:7")) => Map.of("Tito", 17, "Rex", 5)
+    Marcador.danoPorRobot(List.of("Ada:0")) => Map.of("Ada", 0)
+    Marcador.danoPorRobot(List.of()) => Map.of()
+    Marcador.danoPorRobot(Collections.nCopies(5000, "Zap:2")) => Map.of("Zap", 10000)
+
+=== t20_danos_con_futuros
+tema: 20
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Cálculos con futuro
+titulo.de: Berechnungen mit Zukunft
+titulo.en: Calculations with a future
+enunciado.es: Escribe static List<Integer> danos(List<Integer> distancias) en la clase Balistica. Por cada distancia d, una tarea Callable calcula el daño max(0, 100 - d / 10). Lánzalas todas con invokeAll en un pool de 3 hilos y devuelve los resultados en el mismo orden que las distancias. Cierra el pool siempre.
+enunciado.de: Schreib static List<Integer> danos(List<Integer> distancias) in der Klasse Balistica. Für jede Entfernung d berechnet eine Callable-Aufgabe den Schaden max(0, 100 - d / 10). Starte alle mit invokeAll in einem Pool mit 3 Threads und gib die Ergebnisse in derselben Reihenfolge wie die Entfernungen zurück. Fahr den Pool immer herunter.
+enunciado.en: Write static List<Integer> danos(List<Integer> distancias) in the Balistica class. For each distance d, a Callable task computes the damage max(0, 100 - d / 10). Launch them all with invokeAll on a pool of 3 threads and return the results in the same order as the distances. Always shut the pool down.
+pista.es: Un Callable<Integer> devuelve un valor (un Runnable no). invokeAll espera a todas y da una List<Future<Integer>> en orden; future.get() da cada resultado. El shutdown, en un finally.
+pista.de: Ein Callable<Integer> liefert einen Wert (ein Runnable nicht). invokeAll wartet auf alle und liefert eine List<Future<Integer>> in Reihenfolge; future.get() liefert jedes Ergebnis. Das shutdown gehört in ein finally.
+pista.en: A Callable<Integer> returns a value (a Runnable doesn't). invokeAll waits for all of them and gives a List<Future<Integer>> in order; future.get() gives each result. Put the shutdown in a finally.
+plantilla:
+    import java.util.*;
+    import java.util.concurrent.*;
+
+    public class Balistica {
+
+        public static List<Integer> danos(List<Integer> distancias) throws Exception {
+            return new ArrayList<>(distancias);
+        }
+    }
+solucion:
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.concurrent.Callable;
+    import java.util.concurrent.ExecutorService;
+    import java.util.concurrent.Executors;
+    import java.util.concurrent.Future;
+
+    public class Balistica {
+
+        public static List<Integer> danos(List<Integer> distancias) throws Exception {
+            List<Callable<Integer>> tareas = new ArrayList<>();
+            for (int d : distancias) {
+                tareas.add(() -> Math.max(0, 100 - d / 10));
+            }
+            ExecutorService pool = Executors.newFixedThreadPool(3);
+            try {
+                List<Integer> resultados = new ArrayList<>();
+                for (Future<Integer> futuro : pool.invokeAll(tareas)) {
+                    resultados.add(futuro.get());
+                }
+                return resultados;
+            } finally {
+                pool.shutdown();
+            }
+        }
+    }
+casos:
+    Balistica.danos(List.of(0, 500, 990)) => List.of(100, 50, 1)
+    Balistica.danos(List.of(2000)) => List.of(0)
+    Balistica.danos(List.of(15, 25, 35, 45)) => List.of(99, 98, 97, 96)
+    Balistica.danos(List.of()) => List.of()
+
+=== t20_ataque_combinado
+tema: 20
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Un ataque combinado asíncrono
+titulo.de: Ein asynchroner Kombiangriff
+titulo.en: An asynchronous combined attack
+enunciado.es: En la clase Ataque, escribe static String combinado(int laser, int misil). Calcula a la vez, con CompletableFuture.supplyAsync (Java 8), calcular("láser", laser) y calcular("misil", misil) (ya hecho); junta los dos con thenCombine y devuelve "total: N". Si alguno falla, devuelve "fallo: " y el mensaje de su excepción.
+enunciado.de: Schreib in der Klasse Ataque static String combinado(int laser, int misil). Berechne gleichzeitig mit CompletableFuture.supplyAsync (Java 8) calcular("láser", laser) und calcular("misil", misil) (schon fertig); verbinde beide mit thenCombine und gib "total: N" zurück. Scheitert eins, gib "fallo: " und die Meldung seiner Ausnahme zurück.
+enunciado.en: In the Ataque class, write static String combinado(int laser, int misil). Compute calcular("láser", laser) and calcular("misil", misil) (already done) at the same time with CompletableFuture.supplyAsync (Java 8); merge them with thenCombine and return "total: N". If either fails, return "fallo: " plus its exception's message.
+pista.es: a.thenCombine(b, Integer::sum).thenApply(t -> "total: " + t).exceptionally(e -> "fallo: " + e.getCause().getMessage()).join(). La excepción llega envuelta en una CompletionException: el mensaje está en getCause().
+pista.de: a.thenCombine(b, Integer::sum).thenApply(t -> "total: " + t).exceptionally(e -> "fallo: " + e.getCause().getMessage()).join(). Die Ausnahme kommt verpackt in einer CompletionException an: Die Meldung steckt in getCause().
+pista.en: a.thenCombine(b, Integer::sum).thenApply(t -> "total: " + t).exceptionally(e -> "fallo: " + e.getCause().getMessage()).join(). The exception arrives wrapped in a CompletionException: the message is in getCause().
+plantilla:
+    import java.util.concurrent.CompletableFuture;
+
+    public class Ataque {
+
+        public static String combinado(int laser, int misil) {
+            return "total: " + (calcular("láser", laser) + calcular("misil", misil));
+        }
+
+        /** Ya hecho: el daño de un arma; si la potencia es negativa, el arma está averiada. */
+        static int calcular(String arma, int potencia) {
+            if (potencia < 0) {
+                throw new IllegalArgumentException(arma + " averiado");
+            }
+            return potencia * 2;
+        }
+    }
+solucion:
+    import java.util.concurrent.CompletableFuture;
+
+    public class Ataque {
+
+        public static String combinado(int laser, int misil) {
+            CompletableFuture<Integer> rayo = CompletableFuture.supplyAsync(() -> calcular("láser", laser));
+            CompletableFuture<Integer> cohete = CompletableFuture.supplyAsync(() -> calcular("misil", misil));
+            return rayo.thenCombine(cohete, Integer::sum)
+                    .thenApply(total -> "total: " + total)
+                    .exceptionally(e -> "fallo: " + e.getCause().getMessage())
+                    .join();
+        }
+
+        /** Ya hecho: el daño de un arma; si la potencia es negativa, el arma está averiada. */
+        static int calcular(String arma, int potencia) {
+            if (potencia < 0) {
+                throw new IllegalArgumentException(arma + " averiado");
+            }
+            return potencia * 2;
+        }
+    }
+casos:
+    Ataque.combinado(5, 10) => "total: 30"
+    Ataque.combinado(0, 0) => "total: 0"
+    Ataque.combinado(-1, 10) => "fallo: láser averiado"
+    Ataque.combinado(5, -3) => "fallo: misil averiado"
+
+=== t20_sondas_virtuales
+tema: 20
+dificultad: 3
+java: 21
+tipo: clase
+titulo.es: Diez mil sondas a la vez
+titulo.de: Zehntausend Sonden auf einmal
+titulo.en: Ten thousand probes at once
+enunciado.es: En la clase Sondas, escribe static int lanzar(int n): lanza n tareas en hilos virtuales (Java 21) con Executors.newVirtualThreadPerTaskExecutor() dentro de un try-with-resources. Cada tarea espera 1 ms (Thread.sleep(1), como si esperase al radar) y cuenta en un AtomicInteger si su hilo es virtual. Devuelve la cuenta.
+enunciado.de: Schreib in der Klasse Sondas static int lanzar(int n): Starte n Aufgaben in virtuellen Threads (Java 21) mit Executors.newVirtualThreadPerTaskExecutor() in einem try-with-resources. Jede Aufgabe wartet 1 ms (Thread.sleep(1), als würde sie aufs Radar warten) und zählt in einem AtomicInteger, ob ihr Thread virtuell ist. Gib die Zahl zurück.
+enunciado.en: In the Sondas class, write static int lanzar(int n): launch n tasks on virtual threads (Java 21) with Executors.newVirtualThreadPerTaskExecutor() inside a try-with-resources. Each task waits 1 ms (Thread.sleep(1), as if waiting for the radar) and counts in an AtomicInteger whether its thread is virtual. Return the count.
+pista.es: Desde Java 19, ExecutorService es AutoCloseable: al salir del try, close() espera a que acaben todas las tareas. Thread.currentThread().isVirtual() dice si el hilo es virtual. Miles de hilos virtuales cuestan muy poco.
+pista.de: Seit Java 19 ist ExecutorService AutoCloseable: Beim Verlassen des try wartet close(), bis alle Aufgaben fertig sind. Thread.currentThread().isVirtual() sagt, ob der Thread virtuell ist. Tausende virtuelle Threads kosten sehr wenig.
+pista.en: Since Java 19, ExecutorService is AutoCloseable: when leaving the try, close() waits for every task to finish. Thread.currentThread().isVirtual() tells whether the thread is virtual. Thousands of virtual threads cost very little.
+plantilla:
+    import java.util.concurrent.*;
+    import java.util.concurrent.atomic.AtomicInteger;
+
+    public class Sondas {
+
+        public static int lanzar(int n) {
+            AtomicInteger virtuales = new AtomicInteger();
+            try (ExecutorService pool = Executors.newFixedThreadPool(4)) {
+                for (int i = 0; i < n; i++) {
+                    pool.submit(() -> {
+                        if (Thread.currentThread().isVirtual()) {
+                            virtuales.incrementAndGet();
+                        }
+                    });
+                }
+            }
+            return virtuales.get();
+        }
+    }
+solucion:
+    import java.util.concurrent.ExecutorService;
+    import java.util.concurrent.Executors;
+    import java.util.concurrent.atomic.AtomicInteger;
+
+    public class Sondas {
+
+        public static int lanzar(int n) {
+            AtomicInteger virtuales = new AtomicInteger();
+            try (ExecutorService pool = Executors.newVirtualThreadPerTaskExecutor()) {
+                for (int i = 0; i < n; i++) {
+                    pool.submit(() -> {
+                        Thread.sleep(1);
+                        if (Thread.currentThread().isVirtual()) {
+                            virtuales.incrementAndGet();
+                        }
+                        return null;
+                    });
+                }
+            }
+            return virtuales.get();
+        }
+    }
+casos:
+    Sondas.lanzar(1) => 1
+    Sondas.lanzar(100) => 100
+    Sondas.lanzar(10_000) => 10000
+    Sondas.lanzar(0) => 0
+
+=== t20_productor_consumidor
+tema: 20
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Emisor y receptor
+titulo.de: Sender und Empfänger
+titulo.en: Transmitter and receiver
+enunciado.es: En la clase Enlace, escribe static List<String> transmitir(List<String> mensajes): un hilo emisor mete los mensajes, en orden, en un ArrayBlockingQueue de capacidad 2 (Java 5) y al final una marca de fin; un hilo receptor los saca hasta la marca y los guarda. Espera a los dos y devuelve lo recibido. Como marca, usa Optional.empty() en una cola de Optional<String>.
+enunciado.de: Schreib in der Klasse Enlace static List<String> transmitir(List<String> mensajes): Ein Sender-Thread legt die Nachrichten der Reihe nach in eine ArrayBlockingQueue mit Kapazität 2 (Java 5) und am Ende eine Endmarke; ein Empfänger-Thread holt sie bis zur Marke heraus und speichert sie. Warte auf beide und gib das Empfangene zurück. Als Marke nimm Optional.empty() in einer Queue aus Optional<String>.
+enunciado.en: In the Enlace class, write static List<String> transmitir(List<String> mensajes): a sender thread puts the messages, in order, into an ArrayBlockingQueue with capacity 2 (Java 5) and then an end mark; a receiver thread takes them out up to the mark and keeps them. Wait for both and return what was received. As the mark, use Optional.empty() in a queue of Optional<String>.
+pista.es: put() espera si la cola está llena y take() si está vacía: así se coordinan solos. La marca de fin (la «píldora venenosa») le dice al receptor que pare. Ambos lanzan InterruptedException: atrápala dentro de cada lambda.
+pista.de: put() wartet, wenn die Queue voll ist, und take(), wenn sie leer ist: So stimmen sie sich von selbst ab. Die Endmarke (die «Giftpille») sagt dem Empfänger, dass er aufhören soll. Beide werfen InterruptedException: Fang sie in jedem Lambda ab.
+pista.en: put() waits when the queue is full and take() when it is empty: that way they coordinate on their own. The end mark (the "poison pill") tells the receiver to stop. Both throw InterruptedException: catch it inside each lambda.
+plantilla:
+    import java.util.*;
+    import java.util.concurrent.*;
+
+    public class Enlace {
+
+        public static List<String> transmitir(List<String> mensajes) throws InterruptedException {
+            List<String> recibidos = new ArrayList<>();
+            return recibidos;
+        }
+    }
+solucion:
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.Optional;
+    import java.util.concurrent.ArrayBlockingQueue;
+    import java.util.concurrent.BlockingQueue;
+
+    public class Enlace {
+
+        public static List<String> transmitir(List<String> mensajes) throws InterruptedException {
+            BlockingQueue<Optional<String>> cola = new ArrayBlockingQueue<>(2);
+            List<String> recibidos = new ArrayList<>();
+            Thread emisor = new Thread(() -> {
+                try {
+                    for (String m : mensajes) {
+                        cola.put(Optional.of(m));
+                    }
+                    cola.put(Optional.empty());
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+            Thread receptor = new Thread(() -> {
+                try {
+                    for (Optional<String> m = cola.take(); m.isPresent(); m = cola.take()) {
+                        recibidos.add(m.get());
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
+            });
+            emisor.start();
+            receptor.start();
+            emisor.join();
+            receptor.join();
+            return recibidos;
+        }
+    }
+casos:
+    Enlace.transmitir(List.of("hola", "enemigo al norte", "cambio")) => List.of("hola", "enemigo al norte", "cambio")
+    Enlace.transmitir(List.of("")) => List.of("")
+    Enlace.transmitir(List.of()) => List.of()
+    Enlace.transmitir(Collections.nCopies(1000, "ping")).size() => 1000
+    Enlace.transmitir(IntStream.range(0, 500).mapToObj(String::valueOf).toList()) => IntStream.range(0, 500).mapToObj(String::valueOf).toList()
+
+=== t20_almacenes_sin_bloqueo
+tema: 20
+dificultad: 5
+java: 8
+tipo: clase
+titulo.es: Dos almacenes sin abrazo mortal
+titulo.de: Zwei Lager ohne Deadlock
+titulo.en: Two stores without a deadlock
+enunciado.es: Escribe static void mover(Almacen de, Almacen a, int n): pasa n piezas de un almacén a otro bloqueando los dos (y lanza IllegalStateException si de no tiene bastantes). Si un hilo bloquea norte y luego sur mientras otro bloquea sur y luego norte, se esperan para siempre (un deadlock). Evítalo bloqueando siempre primero el de id menor. cruce(veces) ya está hecho.
+enunciado.de: Schreib static void mover(Almacen de, Almacen a, int n): Verschieb n Teile von einem Lager ins andere und sperre dabei beide (wirf eine IllegalStateException, wenn de nicht genug hat). Sperrt ein Thread erst Nord und dann Süd, während ein anderer erst Süd und dann Nord sperrt, warten sie ewig aufeinander (ein Deadlock). Vermeide das, indem du immer zuerst das Lager mit der kleineren id sperrst. cruce(veces) ist schon fertig.
+enunciado.en: Write static void mover(Almacen de, Almacen a, int n): move n parts from one store to the other while locking both (and throw IllegalStateException if de doesn't have enough). If one thread locks north then south while another locks south then north, they wait for each other forever (a deadlock). Avoid it by always locking the one with the lower id first. cruce(veces) is already done.
+pista.es: Almacen primero = de.id < a.id ? de : a; Almacen segundo = primero == de ? a : de; synchronized (primero) { synchronized (segundo) { ... } } Un orden fijo para los candados hace imposible el ciclo de esperas.
+pista.de: Almacen primero = de.id < a.id ? de : a; Almacen segundo = primero == de ? a : de; synchronized (primero) { synchronized (segundo) { ... } } Eine feste Reihenfolge der Sperren macht den Warte-Kreis unmöglich.
+pista.en: Almacen primero = de.id < a.id ? de : a; Almacen segundo = primero == de ? a : de; synchronized (primero) { synchronized (segundo) { ... } } A fixed lock order makes the cycle of waits impossible.
+plantilla:
+    public class Almacen {
+        private final int id;
+        private int piezas;
+
+        public Almacen(int id, int piezas) {
+            this.id = id;
+            this.piezas = piezas;
+        }
+
+        public synchronized int piezas() {
+            return piezas;
+        }
+
+        public static void mover(Almacen de, Almacen a, int n) {
+            // bloquea los dos almacenes, siempre en el mismo orden
+        }
+
+        /** Ya hecho: dos hilos se pasan piezas a la vez, en sentidos contrarios. */
+        public static String cruce(int veces) throws InterruptedException {
+            Almacen norte = new Almacen(1, 1000);
+            Almacen sur = new Almacen(2, 1000);
+            Thread ida = new Thread(() -> {
+                for (int i = 0; i < veces; i++) {
+                    mover(norte, sur, 1);
+                }
+            });
+            Thread vuelta = new Thread(() -> {
+                for (int i = 0; i < veces; i++) {
+                    mover(sur, norte, 2);
+                }
+            });
+            ida.start();
+            vuelta.start();
+            ida.join();
+            vuelta.join();
+            return norte.piezas() + "/" + sur.piezas();
+        }
+    }
+solucion:
+    public class Almacen {
+        private final int id;
+        private int piezas;
+
+        public Almacen(int id, int piezas) {
+            this.id = id;
+            this.piezas = piezas;
+        }
+
+        public synchronized int piezas() {
+            return piezas;
+        }
+
+        public static void mover(Almacen de, Almacen a, int n) {
+            Almacen primero = de.id < a.id ? de : a;
+            Almacen segundo = primero == de ? a : de;
+            synchronized (primero) {
+                synchronized (segundo) {
+                    if (de.piezas < n) {
+                        throw new IllegalStateException("no hay bastantes piezas");
+                    }
+                    de.piezas -= n;
+                    a.piezas += n;
+                }
+            }
+        }
+
+        /** Ya hecho: dos hilos se pasan piezas a la vez, en sentidos contrarios. */
+        public static String cruce(int veces) throws InterruptedException {
+            Almacen norte = new Almacen(1, 1000);
+            Almacen sur = new Almacen(2, 1000);
+            Thread ida = new Thread(() -> {
+                for (int i = 0; i < veces; i++) {
+                    mover(norte, sur, 1);
+                }
+            });
+            Thread vuelta = new Thread(() -> {
+                for (int i = 0; i < veces; i++) {
+                    mover(sur, norte, 2);
+                }
+            });
+            ida.start();
+            vuelta.start();
+            ida.join();
+            vuelta.join();
+            return norte.piezas() + "/" + sur.piezas();
+        }
+    }
+casos:
+    Almacen.cruce(100) => "1100/900"
+    Almacen.cruce(400) => "1400/600"
+    Almacen.cruce(0) => "1000/1000"
+    ((Supplier<String>) () -> { Almacen a = new Almacen(1, 10); Almacen b = new Almacen(2, 0); Almacen.mover(a, b, 4); Almacen.mover(b, a, 1); return a.piezas() + "/" + b.piezas(); }).get() => "7/3"
+    ((Supplier<String>) () -> { Almacen.mover(new Almacen(1, 3), new Almacen(2, 0), 5); return "movido"; }).get() => !IllegalStateException

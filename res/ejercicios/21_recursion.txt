@@ -1,0 +1,504 @@
+# Tema 21: recursión y algoritmos. Caso base y caso recursivo, memoización, divide y vencerás,
+# vuelta atrás (backtracking) y recorridos de mapas de la arena.
+=== t21_factorial
+tema: 21
+dificultad: 1
+java: 1
+tipo: metodo
+titulo.es: Factorial, de forma recursiva
+titulo.de: Fakultät, rekursiv
+titulo.en: Factorial, recursively
+enunciado.es: Devuelve n! (n factorial) con un método que se llama a sí mismo: 0! = 1 y n! = n * (n - 1)!. Si n es negativo, lanza IllegalArgumentException.
+enunciado.de: Gib n! (n Fakultät) mit einer Methode zurück, die sich selbst aufruft: 0! = 1 und n! = n * (n - 1)!. Ist n negativ, wirf eine IllegalArgumentException.
+enunciado.en: Return n! (n factorial) with a method that calls itself: 0! = 1 and n! = n * (n - 1)!. If n is negative, throw an IllegalArgumentException.
+pista.es: Toda recursión necesita un caso base que no se llame a sí mismo: if (n == 0) return 1; Y el resto: return n * factorial(n - 1);
+pista.de: Jede Rekursion braucht einen Basisfall, der sich nicht selbst aufruft: if (n == 0) return 1; Und der Rest: return n * factorial(n - 1);
+pista.en: Every recursion needs a base case that doesn't call itself: if (n == 0) return 1; And the rest: return n * factorial(n - 1);
+firma: static long factorial(int n)
+plantilla:
+    return n;
+solucion:
+    if (n < 0) {
+        throw new IllegalArgumentException("n negativo: " + n);
+    }
+    if (n == 0) {
+        return 1;
+    }
+    return n * factorial(n - 1);
+casos:
+    factorial(0) => 1L
+    factorial(1) => 1L
+    factorial(5) => 120L
+    factorial(20) => 2432902008176640000L
+    factorial(-1) => !IllegalArgumentException
+
+=== t21_suma_de_cifras
+tema: 21
+dificultad: 1
+java: 1
+tipo: metodo
+titulo.es: La suma de las cifras del número de serie
+titulo.de: Die Quersumme der Seriennummer
+titulo.en: The digit sum of the serial number
+enunciado.es: Devuelve la suma de las cifras de n (n >= 0) de forma recursiva: la última cifra más la suma de las cifras del resto.
+enunciado.de: Gib die Quersumme von n (n >= 0) rekursiv zurück: die letzte Ziffer plus die Quersumme des Rests.
+enunciado.en: Return the sum of the digits of n (n >= 0) recursively: the last digit plus the digit sum of the rest.
+pista.es: n % 10 es la última cifra y n / 10 el resto del número. Caso base: si n < 10, la suma es n.
+pista.de: n % 10 ist die letzte Ziffer und n / 10 der Rest der Zahl. Basisfall: Ist n < 10, ist die Summe n.
+pista.en: n % 10 is the last digit and n / 10 the rest of the number. Base case: if n < 10, the sum is n.
+firma: static int sumaDeCifras(int n)
+plantilla:
+    return n % 10;
+solucion:
+    if (n < 10) {
+        return n;
+    }
+    return n % 10 + sumaDeCifras(n / 10);
+casos:
+    sumaDeCifras(0) => 0
+    sumaDeCifras(7) => 7
+    sumaDeCifras(1234) => 10
+    sumaDeCifras(99999) => 45
+    sumaDeCifras(1000000) => 1
+
+=== t21_palindromo
+tema: 21
+dificultad: 2
+java: 1
+tipo: metodo
+titulo.es: Señales capicúa
+titulo.de: Palindrom-Signale
+titulo.en: Palindrome signals
+enunciado.es: Devuelve true si la señal se lee igual al derecho y al revés. Hazlo recursivo: compara los extremos y, si son iguales, mira lo que queda en medio.
+enunciado.de: Gib true zurück, wenn sich das Signal vorwärts und rückwärts gleich liest. Mach es rekursiv: Vergleich die Enden und schau dir, wenn sie gleich sind, den Rest in der Mitte an.
+enunciado.en: Return true if the signal reads the same forwards and backwards. Make it recursive: compare the ends and, if they match, look at what is left in the middle.
+pista.es: Caso base: un texto de 0 o 1 letras es capicúa. Si no, s.charAt(0) == s.charAt(s.length() - 1) && esPalindromo(s.substring(1, s.length() - 1)).
+pista.de: Basisfall: Ein Text mit 0 oder 1 Zeichen ist ein Palindrom. Sonst s.charAt(0) == s.charAt(s.length() - 1) && esPalindromo(s.substring(1, s.length() - 1)).
+pista.en: Base case: a text with 0 or 1 characters is a palindrome. Otherwise s.charAt(0) == s.charAt(s.length() - 1) && esPalindromo(s.substring(1, s.length() - 1)).
+firma: static boolean esPalindromo(String s)
+plantilla:
+    return s.isEmpty() || s.charAt(0) == s.charAt(s.length() - 1);
+solucion:
+    if (s.length() <= 1) {
+        return true;
+    }
+    return s.charAt(0) == s.charAt(s.length() - 1) && esPalindromo(s.substring(1, s.length() - 1));
+casos:
+    esPalindromo("radar") => true
+    esPalindromo("robot") => false
+    esPalindromo("abba") => true
+    esPalindromo("abca") => false
+    esPalindromo("a") => true
+    esPalindromo("") => true
+
+=== t21_potencia_rapida
+tema: 21
+dificultad: 2
+java: 1
+tipo: metodo
+titulo.es: Potencias a toda velocidad
+titulo.de: Potenzen im Eiltempo
+titulo.en: Powers at full speed
+enunciado.es: Devuelve base elevado a exp (exp >= 0) dando pocos pasos: base^exp es (base^(exp/2))², multiplicado una vez más por base si exp es impar. Así, exp = 2.000 millones necesita solo unas 31 llamadas; un bucle que multiplica exp veces no acaba a tiempo.
+enunciado.de: Gib base hoch exp (exp >= 0) mit wenigen Schritten zurück: base^exp ist (base^(exp/2))², bei ungeradem exp noch einmal mit base multipliziert. So braucht exp = 2 Milliarden nur etwa 31 Aufrufe; eine Schleife, die exp-mal multipliziert, wird nicht rechtzeitig fertig.
+enunciado.en: Return base raised to exp (exp >= 0) in few steps: base^exp is (base^(exp/2))², multiplied by base once more if exp is odd. That way exp = 2 billion needs only about 31 calls; a loop multiplying exp times won't finish in time.
+pista.es: if (exp == 0) return 1; long mitad = potencia(base, exp / 2); Calcula la mitad una sola vez y úsala dos veces: llamar dos veces lo haría lento otra vez.
+pista.de: if (exp == 0) return 1; long mitad = potencia(base, exp / 2); Berechne die Hälfte nur einmal und benutze sie zweimal: Zwei Aufrufe würden es wieder langsam machen.
+pista.en: if (exp == 0) return 1; long mitad = potencia(base, exp / 2); Compute the half once and use it twice: calling it twice would make it slow again.
+firma: static long potencia(long base, int exp)
+plantilla:
+    long resultado = 1;
+    for (int i = 0; i < exp; i++) {
+        resultado *= base;
+    }
+    return resultado;
+solucion:
+    if (exp == 0) {
+        return 1;
+    }
+    long mitad = potencia(base, exp / 2);
+    long cuadrado = mitad * mitad;
+    return exp % 2 == 0 ? cuadrado : cuadrado * base;
+casos:
+    potencia(2, 10) => 1024L
+    potencia(3, 0) => 1L
+    potencia(-2, 3) => -8L
+    potencia(2, 62) => 4611686018427387904L
+    potencia(1, 2_000_000_000) => 1L
+    potencia(-1, 1_999_999_999) => -1L
+
+=== t21_fibonacci_con_memoria
+tema: 21
+dificultad: 2
+java: 7
+tipo: clase
+titulo.es: Fibonacci con memoria
+titulo.de: Fibonacci mit Gedächtnis
+titulo.en: Fibonacci with memory
+enunciado.es: fib(0) = 0, fib(1) = 1 y fib(n) = fib(n - 1) + fib(n - 2). La versión de la plantilla es correcta pero calcula lo mismo millones de veces: fib(90) no acabaría nunca. Guarda cada resultado la primera vez (memoización) para que static long fib(int n) sea rápida. Si n es negativo, IllegalArgumentException.
+enunciado.de: fib(0) = 0, fib(1) = 1 und fib(n) = fib(n - 1) + fib(n - 2). Die Version in der Vorlage ist richtig, rechnet aber dasselbe millionenfach: fib(90) würde nie fertig. Speichere jedes Ergebnis beim ersten Mal (Memoisierung), damit static long fib(int n) schnell ist. Bei negativem n eine IllegalArgumentException.
+enunciado.en: fib(0) = 0, fib(1) = 1 and fib(n) = fib(n - 1) + fib(n - 2). The template's version is correct but computes the same thing millions of times: fib(90) would never finish. Store each result the first time (memoization) so that static long fib(int n) is fast. If n is negative, IllegalArgumentException.
+pista.es: Un private static final Map<Integer, Long> memoria: mira si ya está con get; si no, calcula, guarda con put y devuelve. Ojo: computeIfAbsent con recursión dentro lanza ConcurrentModificationException en un HashMap.
+pista.de: Eine private static final Map<Integer, Long> memoria: Schau mit get nach, ob es schon drin ist; sonst rechnen, mit put speichern und zurückgeben. Achtung: computeIfAbsent mit Rekursion darin wirft bei einer HashMap eine ConcurrentModificationException.
+pista.en: A private static final Map<Integer, Long> memoria: check with get whether it is already there; if not, compute, store with put and return. Careful: computeIfAbsent with recursion inside throws ConcurrentModificationException on a HashMap.
+plantilla:
+    import java.util.*;
+
+    public class Fibonacci {
+
+        public static long fib(int n) {
+            if (n < 2) {
+                return n;
+            }
+            return fib(n - 1) + fib(n - 2);
+        }
+    }
+solucion:
+    import java.util.HashMap;
+    import java.util.Map;
+
+    public class Fibonacci {
+        private static final Map<Integer, Long> memoria = new HashMap<>();
+
+        public static long fib(int n) {
+            if (n < 0) {
+                throw new IllegalArgumentException("n negativo: " + n);
+            }
+            if (n < 2) {
+                return n;
+            }
+            Long guardado = memoria.get(n);
+            if (guardado != null) {
+                return guardado;
+            }
+            long resultado = fib(n - 1) + fib(n - 2);
+            memoria.put(n, resultado);
+            return resultado;
+        }
+    }
+casos:
+    Fibonacci.fib(0) => 0L
+    Fibonacci.fib(1) => 1L
+    Fibonacci.fib(10) => 55L
+    Fibonacci.fib(50) => 12586269025L
+    Fibonacci.fib(90) => 2880067194370816120L
+    Fibonacci.fib(-1) => !IllegalArgumentException
+
+=== t21_busqueda_binaria
+tema: 21
+dificultad: 3
+java: 1
+tipo: metodo
+titulo.es: Buscar en la lista ordenada
+titulo.de: Suchen in der sortierten Liste
+titulo.en: Search the sorted list
+enunciado.es: El array está ordenado de menor a mayor. Devuelve la posición de objetivo entre desde (incluido) y hasta (excluido), o -1 si no está. Hazlo recursivo con búsqueda binaria: mira el centro y sigue solo por la mitad donde puede estar.
+enunciado.de: Das Array ist aufsteigend sortiert. Gib die Position von objetivo zwischen desde (einschließlich) und hasta (ausschließlich) zurück, oder -1, wenn es nicht vorkommt. Mach es rekursiv mit binärer Suche: Schau in die Mitte und such nur in der Hälfte weiter, in der es sein kann.
+enunciado.en: The array is sorted in ascending order. Return the position of objetivo between desde (inclusive) and hasta (exclusive), or -1 if it isn't there. Make it recursive with binary search: look at the middle and carry on only in the half where it can be.
+pista.es: Si desde >= hasta, no está. int medio = (desde + hasta) >>> 1; si ordenado[medio] < objetivo, sigue en (medio + 1, hasta); si es mayor, en (desde, medio).
+pista.de: Ist desde >= hasta, ist es nicht da. int medio = (desde + hasta) >>> 1; ist ordenado[medio] < objetivo, such in (medio + 1, hasta) weiter; ist es größer, in (desde, medio).
+pista.en: If desde >= hasta, it isn't there. int medio = (desde + hasta) >>> 1; if ordenado[medio] < objetivo, carry on in (medio + 1, hasta); if it is larger, in (desde, medio).
+firma: static int buscar(int[] ordenado, int objetivo, int desde, int hasta)
+plantilla:
+    return -1;
+solucion:
+    if (desde >= hasta) {
+        return -1;
+    }
+    int medio = (desde + hasta) >>> 1;
+    if (ordenado[medio] == objetivo) {
+        return medio;
+    }
+    if (ordenado[medio] < objetivo) {
+        return buscar(ordenado, objetivo, medio + 1, hasta);
+    }
+    return buscar(ordenado, objetivo, desde, medio);
+casos:
+    buscar(new int[]{1, 3, 5, 7, 9}, 7, 0, 5) => 3
+    buscar(new int[]{1, 3, 5, 7, 9}, 1, 0, 5) => 0
+    buscar(new int[]{1, 3, 5, 7, 9}, 4, 0, 5) => -1
+    buscar(new int[]{2}, 2, 0, 1) => 0
+    buscar(new int[]{}, 1, 0, 0) => -1
+    buscar(IntStream.range(0, 1_000_000).map(i -> 2 * i).toArray(), 777_776, 0, 1_000_000) => 388888
+    buscar(IntStream.range(0, 1_000_000).map(i -> 2 * i).toArray(), 777_777, 0, 1_000_000) => -1
+
+=== t21_permutaciones
+tema: 21
+dificultad: 3
+java: 7
+tipo: metodo
+titulo.es: Todas las secuencias de órdenes
+titulo.de: Alle Befehlsfolgen
+titulo.en: Every sequence of orders
+enunciado.es: Cada letra es una orden distinta para el robot. Devuelve todas las formas de ordenarlas. Orden del resultado: primero las que empiezan por la primera letra de letras (con el resto ordenado igual, recursivamente), luego las que empiezan por la segunda… Para "" devuelve una lista con "".
+enunciado.de: Jeder Buchstabe ist ein anderer Befehl für den Roboter. Gib alle Möglichkeiten zurück, sie anzuordnen. Reihenfolge des Ergebnisses: zuerst die, die mit dem ersten Buchstaben von letras beginnen (der Rest rekursiv genauso geordnet), dann die mit dem zweiten … Für "" gib eine Liste mit "" zurück.
+enunciado.en: Each letter is a different order for the robot. Return every way to arrange them. Order of the result: first those starting with the first letter of letras (with the rest ordered the same way, recursively), then those starting with the second… For "" return a list containing "".
+pista.es: Para cada posición i: toma la letra letras.charAt(i), calcula las permutaciones del resto (letras sin esa letra) y pon la letra delante de cada una.
+pista.de: Für jede Position i: Nimm den Buchstaben letras.charAt(i), berechne die Permutationen des Rests (letras ohne diesen Buchstaben) und setz den Buchstaben vor jede davon.
+pista.en: For each position i: take the letter letras.charAt(i), compute the permutations of the rest (letras without that letter) and put the letter in front of each of them.
+firma: static List<String> permutaciones(String letras)
+plantilla:
+    return List.of(letras);
+solucion:
+    if (letras.isEmpty()) {
+        return List.of("");
+    }
+    List<String> resultado = new ArrayList<>();
+    for (int i = 0; i < letras.length(); i++) {
+        char primera = letras.charAt(i);
+        String resto = letras.substring(0, i) + letras.substring(i + 1);
+        for (String p : permutaciones(resto)) {
+            resultado.add(primera + p);
+        }
+    }
+    return resultado;
+casos:
+    permutaciones("ab") => List.of("ab", "ba")
+    permutaciones("abc") => List.of("abc", "acb", "bac", "bca", "cab", "cba")
+    permutaciones("LRD") => List.of("LRD", "LDR", "RLD", "RDL", "DLR", "DRL")
+    permutaciones("a") => List.of("a")
+    permutaciones("") => List.of("")
+    permutaciones("abcdef").size() => 720
+
+=== t21_rellenar_zona
+tema: 21
+dificultad: 3
+java: 1
+tipo: metodo
+titulo.es: Explorar la zona de la arena
+titulo.de: Den Bereich der Arena erkunden
+titulo.en: Explore the arena zone
+enunciado.es: El mapa de la arena tiene suelo '.' y muros '#'. Desde (fila, col), el robot pinta con 'o' todo el suelo al que puede llegar andando en horizontal o vertical. Devuelve cuántas casillas ha pintado. Si empieza fuera del mapa, en un muro o en algo ya pintado, 0.
+enunciado.de: Die Arenakarte hat Boden '.' und Mauern '#'. Ab (fila, col) markiert der Roboter mit 'o' allen Boden, den er waagerecht oder senkrecht erreichen kann. Gib zurück, wie viele Felder er markiert hat. Startet er außerhalb der Karte, auf einer Mauer oder auf schon Markiertem, 0.
+enunciado.en: The arena map has floor '.' and walls '#'. From (fila, col), the robot paints with 'o' all the floor it can reach moving horizontally or vertically. Return how many cells it painted. If it starts outside the map, on a wall or on something already painted, 0.
+pista.es: Es el «relleno por difusión» (flood fill). Si la casilla no vale, return 0. Si vale, píntala primero (así no vuelves a ella) y devuelve 1 + la suma de las cuatro vecinas.
+pista.de: Das ist «Flood Fill». Ist das Feld ungültig, return 0. Sonst markiere es zuerst (damit du nicht zurückkommst) und gib 1 + die Summe der vier Nachbarn zurück.
+pista.en: This is flood fill. If the cell isn't valid, return 0. Otherwise paint it first (so you don't come back to it) and return 1 + the sum of the four neighbours.
+firma: static int rellenar(char[][] mapa, int fila, int col)
+plantilla:
+    if (mapa[fila][col] != '.') {
+        return 0;
+    }
+    mapa[fila][col] = 'o';
+    return 1;
+solucion:
+    if (fila < 0 || fila >= mapa.length || col < 0 || col >= mapa[fila].length || mapa[fila][col] != '.') {
+        return 0;
+    }
+    mapa[fila][col] = 'o';
+    return 1
+            + rellenar(mapa, fila + 1, col)
+            + rellenar(mapa, fila - 1, col)
+            + rellenar(mapa, fila, col + 1)
+            + rellenar(mapa, fila, col - 1);
+casos:
+    rellenar(new char[][]{"..#".toCharArray(), ".##".toCharArray(), "...".toCharArray()}, 0, 0) => 6
+    rellenar(new char[][]{"..#".toCharArray(), ".##".toCharArray(), "...".toCharArray()}, 0, 2) => 0
+    rellenar(new char[][]{".#.".toCharArray(), "#.#".toCharArray(), ".#.".toCharArray()}, 1, 1) => 1
+    rellenar(new char[][]{"..#..".toCharArray(), "..#..".toCharArray()}, 1, 4) => 4
+    rellenar(new char[][]{"...".toCharArray()}, 5, 5) => 0
+    rellenar(IntStream.range(0, 30).mapToObj(i -> ".".repeat(30).toCharArray()).toArray(char[][]::new), 0, 0) => 900
+
+=== t21_torres_de_hanoi
+tema: 21
+dificultad: 3
+java: 1
+tipo: salida
+titulo.es: Apilar blindajes de un poste a otro
+titulo.de: Panzerplatten von Stange zu Stange
+titulo.en: Moving armour plates between posts
+enunciado.es: Hay n placas de blindaje apiladas en el poste desde, de mayor (n) a menor (1). Pásalas al poste hasta usando el poste libre, moviendo una placa cada vez y sin poner nunca una grande sobre una pequeña. Imprime cada movimiento como "placa 1: A -> C".
+enunciado.de: Auf der Stange desde liegen n Panzerplatten, von der größten (n) bis zur kleinsten (1). Bring sie mit Hilfe der Stange libre auf die Stange hasta, immer nur eine Platte auf einmal und nie eine große auf eine kleine. Gib jeden Zug als "placa 1: A -> C" aus.
+enunciado.en: There are n armour plates stacked on post desde, from largest (n) to smallest (1). Move them to post hasta using post libre, one plate at a time and never putting a large one on a small one. Print each move as "placa 1: A -> C".
+pista.es: Para mover n placas: mueve n - 1 de desde a libre, mueve la placa n de desde a hasta y vuelve a poner las n - 1 de libre a hasta. Con n == 0 no se hace nada.
+pista.de: Um n Platten zu bewegen: Bring n - 1 von desde nach libre, bewege Platte n von desde nach hasta und bring die n - 1 von libre nach hasta. Bei n == 0 passiert nichts.
+pista.en: To move n plates: move n - 1 from desde to libre, move plate n from desde to hasta and put the n - 1 back from libre onto hasta. With n == 0 nothing happens.
+firma: static void hanoi(int n, char desde, char hasta, char libre)
+plantilla:
+    System.out.println("placa " + n + ": " + desde + " -> " + hasta);
+solucion:
+    if (n == 0) {
+        return;
+    }
+    hanoi(n - 1, desde, libre, hasta);
+    System.out.println("placa " + n + ": " + desde + " -> " + hasta);
+    hanoi(n - 1, libre, hasta, desde);
+casos:
+    hanoi(1, 'A', 'C', 'B'); => "placa 1: A -> C\n"
+    hanoi(2, 'A', 'C', 'B'); => "placa 1: A -> B\nplaca 2: A -> C\nplaca 1: B -> C\n"
+    hanoi(3, 'A', 'C', 'B'); => "placa 1: A -> C\nplaca 2: A -> B\nplaca 1: C -> B\nplaca 3: A -> C\nplaca 1: B -> A\nplaca 2: B -> C\nplaca 1: A -> C\n"
+    hanoi(2, 'X', 'Y', 'Z'); => "placa 1: X -> Z\nplaca 2: X -> Y\nplaca 1: Z -> Y\n"
+    hanoi(0, 'A', 'C', 'B'); => ""
+
+=== t21_ordenar_por_mezcla
+tema: 21
+dificultad: 4
+java: 6
+tipo: metodo
+titulo.es: Ordenar por mezcla
+titulo.de: Sortieren durch Mischen
+titulo.en: Merge sort
+enunciado.es: Devuelve un array nuevo con los datos ordenados de menor a mayor, sin cambiar el original y sin Arrays.sort: parte el array en dos mitades, ordena cada una con una llamada recursiva y mézclalas cogiendo siempre el menor de los dos primeros.
+enunciado.de: Gib ein neues Array mit den Daten aufsteigend sortiert zurück, ohne das Original zu ändern und ohne Arrays.sort: Teil das Array in zwei Hälften, sortiere jede mit einem rekursiven Aufruf und misch sie, indem du immer das kleinere der beiden vordersten nimmst.
+enunciado.en: Return a new array with the data sorted in ascending order, without changing the original and without Arrays.sort: split the array in two halves, sort each with a recursive call and merge them by always taking the smaller of the two front elements.
+pista.es: Caso base: con 0 o 1 elementos, devuelve datos.clone(). Las mitades, con Arrays.copyOfRange. Para mezclar, tres índices: uno por mitad y otro para el resultado.
+pista.de: Basisfall: Bei 0 oder 1 Elementen gib datos.clone() zurück. Die Hälften mit Arrays.copyOfRange. Zum Mischen drei Indizes: einer pro Hälfte und einer fürs Ergebnis.
+pista.en: Base case: with 0 or 1 elements, return datos.clone(). The halves, with Arrays.copyOfRange. To merge, three indices: one per half and one for the result.
+firma: static int[] ordenar(int[] datos)
+plantilla:
+    return datos;
+solucion:
+    if (datos.length <= 1) {
+        return datos.clone();
+    }
+    int mitad = datos.length / 2;
+    int[] izquierda = ordenar(Arrays.copyOfRange(datos, 0, mitad));
+    int[] derecha = ordenar(Arrays.copyOfRange(datos, mitad, datos.length));
+    int[] resultado = new int[datos.length];
+    int i = 0, j = 0, k = 0;
+    while (i < izquierda.length && j < derecha.length) {
+        resultado[k++] = izquierda[i] <= derecha[j] ? izquierda[i++] : derecha[j++];
+    }
+    while (i < izquierda.length) {
+        resultado[k++] = izquierda[i++];
+    }
+    while (j < derecha.length) {
+        resultado[k++] = derecha[j++];
+    }
+    return resultado;
+casos:
+    ordenar(new int[]{5, 2, 9, 1}) => new int[]{1, 2, 5, 9}
+    ordenar(new int[]{3, 3, 1}) => new int[]{1, 3, 3}
+    ordenar(new int[]{-1, -5, 0}) => new int[]{-5, -1, 0}
+    ordenar(new int[]{}) => new int[]{}
+    ((Supplier<int[]>) () -> { int[] d = {3, 1, 2}; ordenar(d); return d; }).get() => new int[]{3, 1, 2}
+    ordenar(new Random(7).ints(10_000, -1000, 1000).toArray()) => new Random(7).ints(10_000, -1000, 1000).sorted().toArray()
+
+=== t21_formas_de_cargar
+tema: 21
+dificultad: 4
+java: 1
+tipo: metodo
+titulo.es: Cargar el peso justo
+titulo.de: Genau das richtige Gewicht laden
+titulo.en: Load exactly the right weight
+enunciado.es: Con las piezas de pesos[desde] en adelante (cada una se usa como mucho una vez; todos los pesos son positivos), ¿de cuántas formas se puede sumar exactamente restante? Cargar nada cuenta como una forma de sumar 0.
+enunciado.de: Mit den Teilen ab pesos[desde] (jedes höchstens einmal; alle Gewichte sind positiv): Auf wie viele Arten lässt sich genau restante erreichen? Nichts zu laden zählt als eine Art, 0 zu erreichen.
+enunciado.en: Using the parts from pesos[desde] onwards (each used at most once; all weights are positive), in how many ways can you add up to exactly restante? Loading nothing counts as one way to reach 0.
+pista.es: Vuelta atrás: con cada pieza hay dos caminos, cogerla (restante - pesos[desde]) o dejarla; suma los dos con desde + 1. Casos base: restante == 0 da 1; restante < 0 o sin piezas, 0.
+pista.de: Backtracking: Für jedes Teil gibt es zwei Wege, es nehmen (restante - pesos[desde]) oder liegen lassen; addiere beide mit desde + 1. Basisfälle: restante == 0 ergibt 1; restante < 0 oder keine Teile mehr, 0.
+pista.en: Backtracking: each part gives two paths, take it (restante - pesos[desde]) or leave it; add both with desde + 1. Base cases: restante == 0 gives 1; restante < 0 or no parts left, 0.
+firma: static int formas(int[] pesos, int desde, int restante)
+plantilla:
+    return 0;
+solucion:
+    if (restante == 0) {
+        return 1;
+    }
+    if (restante < 0 || desde == pesos.length) {
+        return 0;
+    }
+    return formas(pesos, desde + 1, restante - pesos[desde]) + formas(pesos, desde + 1, restante);
+casos:
+    formas(new int[]{2, 3, 5}, 0, 5) => 2
+    formas(new int[]{1, 1, 1}, 0, 2) => 3
+    formas(new int[]{4}, 0, 3) => 0
+    formas(new int[]{5, 5}, 0, 0) => 1
+    formas(new int[]{2, 3, 5}, 1, 5) => 1
+    formas(new int[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10}, 0, 10) => 10
+
+=== t21_camino_mas_corto
+tema: 21
+dificultad: 4
+java: 7
+tipo: metodo
+titulo.es: El camino más corto hasta el enemigo
+titulo.de: Der kürzeste Weg zum Gegner
+titulo.en: The shortest path to the enemy
+enunciado.es: En el mapa hay un robot 'R', un enemigo 'E', suelo '.' y muros '#' (todas las filas miden lo mismo). Devuelve el menor número de pasos (arriba, abajo, izquierda o derecha) para llegar de R a E, o -1 si no se puede.
+enunciado.de: Auf der Karte gibt es einen Roboter 'R', einen Gegner 'E', Boden '.' und Mauern '#' (alle Zeilen sind gleich lang). Gib die kleinste Zahl an Schritten (hoch, runter, links oder rechts) von R nach E zurück, oder -1, wenn es nicht geht.
+enunciado.en: The map has a robot 'R', an enemy 'E', floor '.' and walls '#' (all rows are the same length). Return the smallest number of steps (up, down, left or right) from R to E, or -1 if it can't be done.
+pista.es: Búsqueda en anchura (BFS): una cola ArrayDeque<int[]> con R a distancia 0; saca una casilla, y a cada vecina libre que no hayas visto ponle distancia + 1 y métela en la cola. La primera vez que sacas E, esa es la distancia mínima.
+pista.de: Breitensuche (BFS): eine Queue ArrayDeque<int[]> mit R bei Entfernung 0; nimm ein Feld heraus und gib jedem freien, noch nicht besuchten Nachbarn Entfernung + 1 und leg ihn in die Queue. Beim ersten Herausnehmen von E hast du die kürzeste Entfernung.
+pista.en: Breadth-first search (BFS): an ArrayDeque<int[]> queue with R at distance 0; take a cell out, and give every free neighbour you haven't seen distance + 1 and add it to the queue. The first time you take E out, that is the shortest distance.
+firma: static int pasosHastaEnemigo(String[] mapa)
+plantilla:
+    return -1;
+solucion:
+    int filas = mapa.length;
+    int columnas = filas == 0 ? 0 : mapa[0].length();
+    int[][] distancia = new int[filas][columnas];
+    Deque<int[]> cola = new ArrayDeque<>();
+    for (int f = 0; f < filas; f++) {
+        Arrays.fill(distancia[f], -1);
+        int c = mapa[f].indexOf('R');
+        if (c >= 0) {
+            distancia[f][c] = 0;
+            cola.add(new int[]{f, c});
+        }
+    }
+    int[][] direcciones = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+    while (!cola.isEmpty()) {
+        int[] actual = cola.poll();
+        int pasos = distancia[actual[0]][actual[1]];
+        if (mapa[actual[0]].charAt(actual[1]) == 'E') {
+            return pasos;
+        }
+        for (int[] d : direcciones) {
+            int f = actual[0] + d[0];
+            int c = actual[1] + d[1];
+            if (f >= 0 && f < filas && c >= 0 && c < columnas && mapa[f].charAt(c) != '#' && distancia[f][c] < 0) {
+                distancia[f][c] = pasos + 1;
+                cola.add(new int[]{f, c});
+            }
+        }
+    }
+    return -1;
+casos:
+    pasosHastaEnemigo(new String[]{"R..", ".#.", "..E"}) => 4
+    pasosHastaEnemigo(new String[]{"RE"}) => 1
+    pasosHastaEnemigo(new String[]{"R#E"}) => -1
+    pasosHastaEnemigo(new String[]{"R.#...", ".##.#.", "....#E"}) => 11
+    pasosHastaEnemigo(new String[]{"R...", "####", "...E"}) => -1
+    pasosHastaEnemigo(new String[]{"E..", "...", "..R"}) => 4
+
+=== t21_torretas_sin_cruce
+tema: 21
+dificultad: 5
+java: 1
+tipo: metodo
+titulo.es: Torretas sin fuego cruzado
+titulo.de: Geschütztürme ohne Kreuzfeuer
+titulo.en: Turrets without crossfire
+enunciado.es: Hay que poner n torretas en una cuadrícula de n x n, una por fila, sin que dos compartan columna ni diagonal (se dispararían). columnas[f] dice en qué columna está la torreta de la fila f, para las filas anteriores a fila. Devuelve de cuántas formas se pueden colocar las que faltan. La llamada inicial es colocar(n, 0, new int[n]).
+enunciado.de: Es sollen n Geschütztürme auf ein n x n-Raster, einer pro Zeile, ohne dass zwei Spalte oder Diagonale teilen (sie würden sich beschießen). columnas[f] gibt für die Zeilen vor fila an, in welcher Spalte der Turm von Zeile f steht. Gib zurück, auf wie viele Arten sich die fehlenden platzieren lassen. Der erste Aufruf ist colocar(n, 0, new int[n]).
+enunciado.en: You must place n turrets on an n x n grid, one per row, so that no two share a column or a diagonal (they would shoot each other). columnas[f] says which column the turret in row f is in, for the rows before fila. Return how many ways the remaining ones can be placed. The first call is colocar(n, 0, new int[n]).
+pista.es: Si fila == n, ya están todas: 1 forma. Si no, prueba cada columna c: si no choca con ninguna fila anterior f (columnas[f] != c y Math.abs(columnas[f] - c) != fila - f), apúntala en columnas[fila] y suma colocar(n, fila + 1, columnas).
+pista.de: Ist fila == n, stehen alle: 1 Möglichkeit. Sonst probier jede Spalte c: Kollidiert sie mit keiner früheren Zeile f (columnas[f] != c und Math.abs(columnas[f] - c) != fila - f), trag sie in columnas[fila] ein und addiere colocar(n, fila + 1, columnas).
+pista.en: If fila == n, they are all placed: 1 way. Otherwise try each column c: if it doesn't clash with any earlier row f (columnas[f] != c and Math.abs(columnas[f] - c) != fila - f), record it in columnas[fila] and add colocar(n, fila + 1, columnas).
+firma: static int colocar(int n, int fila, int[] columnas)
+plantilla:
+    return 0;
+solucion:
+    if (fila == n) {
+        return 1;
+    }
+    int formas = 0;
+    for (int c = 0; c < n; c++) {
+        boolean libre = true;
+        for (int f = 0; f < fila && libre; f++) {
+            libre = columnas[f] != c && Math.abs(columnas[f] - c) != fila - f;
+        }
+        if (libre) {
+            columnas[fila] = c;
+            formas += colocar(n, fila + 1, columnas);
+        }
+    }
+    return formas;
+casos:
+    colocar(1, 0, new int[1]) => 1
+    colocar(2, 0, new int[2]) => 0
+    colocar(4, 0, new int[4]) => 2
+    colocar(6, 0, new int[6]) => 4
+    colocar(8, 0, new int[8]) => 92
+    colocar(4, 1, new int[]{1, 0, 0, 0}) => 1

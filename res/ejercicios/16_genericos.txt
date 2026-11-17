@@ -1,0 +1,518 @@
+# Tema 16: genéricos (Java 5). Clases y métodos genéricos, tipos acotados, comodines y PECS.
+=== t16_caja_de_piezas
+tema: 16
+dificultad: 1
+java: 7
+tipo: clase
+titulo.es: Una caja para cualquier pieza
+titulo.de: Eine Kiste für jedes Teil
+titulo.en: A box for any part
+enunciado.es: La clase Caja guarda su contenido como Object y obliga a hacer casts. Hazla genérica (los genéricos llegaron en Java 5): Caja<T> con el constructor Caja(T contenido), T sacar() y boolean estaVacia() (true si el contenido es null). Así new Caja<>("láser") funciona con el operador diamante de Java 7.
+enunciado.de: Die Klasse Caja speichert ihren Inhalt als Object, und man muss ständig casten. Mach sie generisch (Generics gibt es seit Java 5): Caja<T> mit dem Konstruktor Caja(T contenido), T sacar() und boolean estaVacia() (true, wenn der Inhalt null ist). Dann klappt new Caja<>("láser") mit dem Diamant-Operator aus Java 7.
+enunciado.en: The Caja class stores its content as Object and forces you to cast. Make it generic (generics arrived in Java 5): Caja<T> with the constructor Caja(T contenido), T sacar() and boolean estaVacia() (true when the content is null). Then new Caja<>("láser") works with the diamond operator from Java 7.
+pista.es: Escribe public class Caja<T> y cambia Object por T en el campo, el constructor y sacar().
+pista.de: Schreib public class Caja<T> und ersetze Object durch T im Feld, im Konstruktor und in sacar().
+pista.en: Write public class Caja<T> and replace Object with T in the field, the constructor and sacar().
+plantilla:
+    public class Caja {
+        private final Object contenido;
+
+        public Caja(Object contenido) {
+            this.contenido = contenido;
+        }
+
+        public Object sacar() {
+            return contenido;
+        }
+
+        public boolean estaVacia() {
+            return false;
+        }
+    }
+solucion:
+    public class Caja<T> {
+        private final T contenido;
+
+        public Caja(T contenido) {
+            this.contenido = contenido;
+        }
+
+        public T sacar() {
+            return contenido;
+        }
+
+        public boolean estaVacia() {
+            return contenido == null;
+        }
+    }
+casos:
+    new Caja<>("láser").sacar() => "láser"
+    new Caja<>(7).sacar() + 1 => 8
+    new Caja<>("radar").sacar().length() => 5
+    new Caja<String>(null).estaVacia() => true
+    new Caja<>(2.5).estaVacia() => false
+
+=== t16_ultimo_de_la_lista
+tema: 16
+dificultad: 1
+java: 5
+tipo: metodo
+titulo.es: El último de la cola
+titulo.de: Der Letzte in der Schlange
+titulo.en: Last in line
+enunciado.es: Escribe un método genérico que devuelva el último elemento de una lista de cualquier tipo, o null si la lista está vacía.
+enunciado.de: Schreib eine generische Methode, die das letzte Element einer Liste beliebigen Typs zurückgibt, oder null, wenn die Liste leer ist.
+enunciado.en: Write a generic method that returns the last element of a list of any type, or null if the list is empty.
+pista.es: El <T> delante del tipo de retorno declara la variable de tipo. El último está en lista.get(lista.size() - 1). (Desde Java 21 existe lista.getLast(), pero lanza una excepción si la lista está vacía.)
+pista.de: Das <T> vor dem Rückgabetyp deklariert die Typvariable. Das letzte steht in lista.get(lista.size() - 1). (Seit Java 21 gibt es lista.getLast(), das bei leerer Liste aber eine Ausnahme wirft.)
+pista.en: The <T> before the return type declares the type variable. The last one is lista.get(lista.size() - 1). (Since Java 21 there is lista.getLast(), but it throws if the list is empty.)
+firma: static <T> T ultimo(List<T> lista)
+plantilla:
+    return null;
+solucion:
+    return lista.isEmpty() ? null : lista.get(lista.size() - 1);
+casos:
+    ultimo(List.of("Mk I", "Mk II", "Mk III")) => "Mk III"
+    ultimo(List.of(42)) => 42
+    ultimo(List.of(1.5, 2.5)) => 2.5
+    ultimo(new ArrayList<String>()) => null
+
+=== t16_par_de_valores
+tema: 16
+dificultad: 2
+java: 7
+tipo: clase
+titulo.es: Un par de cualquier cosa
+titulo.de: Ein Paar aus irgendwas
+titulo.en: A pair of anything
+enunciado.es: Escribe la clase genérica Par<A, B> con el constructor Par(A primero, B segundo), los métodos A primero(), B segundo(), Par<B, A> invertido() (los dos valores cambiados de sitio) y toString() con la forma "(primero, segundo)".
+enunciado.de: Schreib die generische Klasse Par<A, B> mit dem Konstruktor Par(A primero, B segundo), den Methoden A primero(), B segundo(), Par<B, A> invertido() (beide Werte vertauscht) und toString() in der Form "(primero, segundo)".
+enunciado.en: Write the generic class Par<A, B> with the constructor Par(A primero, B segundo), the methods A primero(), B segundo(), Par<B, A> invertido() (the two values swapped) and toString() in the form "(primero, segundo)".
+pista.es: Una clase puede tener varias variables de tipo: class Par<A, B>. invertido() devuelve new Par<>(segundo, primero). Desde Java 16, un record Par<A, B>(A primero, B segundo) te daría casi todo hecho.
+pista.de: Eine Klasse darf mehrere Typvariablen haben: class Par<A, B>. invertido() gibt new Par<>(segundo, primero) zurück. Seit Java 16 erledigt ein record Par<A, B>(A primero, B segundo) fast alles.
+pista.en: A class can have several type variables: class Par<A, B>. invertido() returns new Par<>(segundo, primero). Since Java 16, a record Par<A, B>(A primero, B segundo) would do most of the work.
+plantilla:
+    public class Par<A, B> {
+        // tus campos, tu constructor y tus métodos
+    }
+solucion:
+    public class Par<A, B> {
+        private final A primero;
+        private final B segundo;
+
+        public Par(A primero, B segundo) {
+            this.primero = primero;
+            this.segundo = segundo;
+        }
+
+        public A primero() {
+            return primero;
+        }
+
+        public B segundo() {
+            return segundo;
+        }
+
+        public Par<B, A> invertido() {
+            return new Par<>(segundo, primero);
+        }
+
+        @Override
+        public String toString() {
+            return "(" + primero + ", " + segundo + ")";
+        }
+    }
+casos:
+    new Par<>("láser", 12).primero() => "láser"
+    new Par<>("láser", 12).invertido().primero() + 1 => 13
+    new Par<>(1, 'x').invertido().segundo() => 1
+    new Par<>("a", 2.0).toString() => "(a, 2.0)"
+    new Par<>(null, "b").invertido().toString() => "(b, null)"
+
+=== t16_suma_con_comodin
+tema: 16
+dificultad: 2
+java: 5
+tipo: metodo
+titulo.es: Sumar números de cualquier tipo
+titulo.de: Zahlen jeder Art addieren
+titulo.en: Add numbers of any kind
+enunciado.es: Los sensores dan lecturas como Integer, Long, Float o Double. Devuelve la suma de todas como double. El parámetro es List<? extends Number>: una lista de cualquier subtipo de Number.
+enunciado.de: Die Sensoren liefern Messwerte als Integer, Long, Float oder Double. Gib die Summe aller als double zurück. Der Parameter ist List<? extends Number>: eine Liste irgendeines Untertyps von Number.
+enunciado.en: The sensors report readings as Integer, Long, Float or Double. Return the sum of all of them as a double. The parameter is List<? extends Number>: a list of any subtype of Number.
+pista.es: De una List<? extends Number> puedes leer elementos como Number (pero no añadir). Cada Number tiene doubleValue().
+pista.de: Aus einer List<? extends Number> kannst du Elemente als Number lesen (aber nichts hinzufügen). Jede Number hat doubleValue().
+pista.en: From a List<? extends Number> you can read elements as Number (but not add any). Every Number has doubleValue().
+firma: static double sumaTotal(List<? extends Number> numeros)
+plantilla:
+    return 0;
+solucion:
+    double suma = 0;
+    for (Number n : numeros) {
+        suma += n.doubleValue();
+    }
+    return suma;
+casos:
+    sumaTotal(List.of(1, 2, 3)) => 6.0
+    sumaTotal(List.of(1, 2.5, 3L)) => 6.5
+    sumaTotal(List.of(-1.5f, 0.5f)) => -1.0
+    sumaTotal(List.of()) => 0.0
+
+=== t16_maximo_acotado
+tema: 16
+dificultad: 3
+java: 5
+tipo: metodo
+titulo.es: El mayor de cualquier cosa comparable
+titulo.de: Das Größte von allem Vergleichbaren
+titulo.en: The largest of anything comparable
+enunciado.es: Devuelve el mayor elemento de la lista. El tipo está acotado: T extends Comparable<? super T>, así que sirve para números, textos y fechas. Si la lista está vacía, lanza IllegalArgumentException.
+enunciado.de: Gib das größte Element der Liste zurück. Der Typ ist beschränkt: T extends Comparable<? super T>, daher geht es für Zahlen, Texte und Datumswerte. Ist die Liste leer, wirf eine IllegalArgumentException.
+enunciado.en: Return the largest element in the list. The type is bounded: T extends Comparable<? super T>, so it works for numbers, strings and dates. If the list is empty, throw an IllegalArgumentException.
+pista.es: Empieza con el primero y recorre el resto: si x.compareTo(mayor) > 0, x es el nuevo mayor. El ? super T hace falta para LocalDate, que es Comparable<ChronoLocalDate>.
+pista.de: Fang mit dem ersten an und geh den Rest durch: Wenn x.compareTo(mayor) > 0, ist x das neue Maximum. Das ? super T braucht man für LocalDate, das Comparable<ChronoLocalDate> ist.
+pista.en: Start with the first one and walk the rest: if x.compareTo(mayor) > 0, x is the new maximum. The ? super T is needed for LocalDate, which is Comparable<ChronoLocalDate>.
+firma: static <T extends Comparable<? super T>> T maximo(List<T> lista)
+plantilla:
+    return lista.get(0);
+solucion:
+    if (lista.isEmpty()) {
+        throw new IllegalArgumentException("la lista está vacía");
+    }
+    T mayor = lista.get(0);
+    for (T x : lista) {
+        if (x.compareTo(mayor) > 0) {
+            mayor = x;
+        }
+    }
+    return mayor;
+casos:
+    maximo(List.of(3, 9, 4)) => 9
+    maximo(List.of(-5, -2, -9)) => -2
+    maximo(List.of("bala", "misil", "láser")) => "misil"
+    maximo(List.of(java.time.LocalDate.of(2023, 5, 5), java.time.LocalDate.of(2024, 1, 1))) => java.time.LocalDate.of(2024, 1, 1)
+    maximo(new ArrayList<Integer>()) => !IllegalArgumentException
+
+=== t16_invertir_mapa
+tema: 16
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: ¿Quién juega en cada equipo?
+titulo.de: Wer spielt in welchem Team?
+titulo.en: Who plays on each team?
+enunciado.es: El mapa dice el equipo de cada robot. Devuelve el mapa al revés: para cada valor, la lista de claves que lo tienen, en el orden en que las recorre el mapa original. Funciona con cualquier tipo de claves y valores.
+enunciado.de: Die Map nennt das Team jedes Roboters. Gib sie umgedreht zurück: zu jedem Wert die Liste der Schlüssel, die ihn haben, in der Reihenfolge, in der die ursprüngliche Map sie durchläuft. Funktioniert mit beliebigen Schlüssel- und Werttypen.
+enunciado.en: The map says which team each robot is on. Return it inverted: for each value, the list of keys that have it, in the order the original map iterates them. It works for any key and value types.
+pista.es: Recorre mapa.entrySet() y usa resultado.computeIfAbsent(valor, v -> new ArrayList<>()).add(clave) (computeIfAbsent llegó en Java 8).
+pista.de: Geh mapa.entrySet() durch und nutze resultado.computeIfAbsent(wert, v -> new ArrayList<>()).add(schluessel) (computeIfAbsent gibt es seit Java 8).
+pista.en: Walk mapa.entrySet() and use resultado.computeIfAbsent(value, v -> new ArrayList<>()).add(key) (computeIfAbsent arrived in Java 8).
+firma: static <K, V> Map<V, List<K>> invertir(Map<K, V> mapa)
+plantilla:
+    return new HashMap<>();
+solucion:
+    Map<V, List<K>> resultado = new HashMap<>();
+    for (Map.Entry<K, V> e : mapa.entrySet()) {
+        resultado.computeIfAbsent(e.getValue(), v -> new ArrayList<>()).add(e.getKey());
+    }
+    return resultado;
+casos:
+    invertir(new TreeMap<>(Map.of("Zeta", "rojo", "Alfa", "rojo", "Beta", "azul"))) => Map.of("rojo", List.of("Alfa", "Zeta"), "azul", List.of("Beta"))
+    invertir(new TreeMap<>(Map.of(3, 'x', 1, 'x', 2, 'y'))) => Map.of('x', List.of(1, 3), 'y', List.of(2))
+    invertir(Map.of(1, "solo")) => Map.of("solo", List.of(1))
+    invertir(Map.of()) => Map.of()
+
+=== t16_en_trozos
+tema: 16
+dificultad: 3
+java: 7
+tipo: metodo
+titulo.es: Escuadrones de robots
+titulo.de: Roboterstaffeln
+titulo.en: Robot squads
+enunciado.es: Reparte la lista en trozos de tamano elementos, en orden; el último puede quedar más corto. Si tamano es menor que 1, lanza IllegalArgumentException. Funciona con listas de cualquier tipo.
+enunciado.de: Teile die Liste der Reihe nach in Stücke mit je tamano Elementen; das letzte darf kürzer sein. Ist tamano kleiner als 1, wirf eine IllegalArgumentException. Funktioniert mit Listen jedes Typs.
+enunciado.en: Split the list, in order, into chunks of tamano elements; the last one may be shorter. If tamano is less than 1, throw an IllegalArgumentException. It works with lists of any type.
+pista.es: Avanza de tamano en tamano y copia cada trozo con new ArrayList<>(lista.subList(i, Math.min(i + tamano, lista.size()))). En Java 24, gather(Gatherers.windowFixed(tamano)) hace lo mismo con streams.
+pista.de: Geh in Schritten von tamano weiter und kopiere jedes Stück mit new ArrayList<>(lista.subList(i, Math.min(i + tamano, lista.size()))). In Java 24 macht gather(Gatherers.windowFixed(tamano)) dasselbe mit Streams.
+pista.en: Step forward by tamano and copy each chunk with new ArrayList<>(lista.subList(i, Math.min(i + tamano, lista.size()))). In Java 24, gather(Gatherers.windowFixed(tamano)) does the same with streams.
+firma: static <T> List<List<T>> enTrozos(List<T> lista, int tamano)
+plantilla:
+    List<List<T>> trozos = new ArrayList<>();
+    trozos.add(lista);
+    return trozos;
+solucion:
+    if (tamano < 1) {
+        throw new IllegalArgumentException("tamaño no válido: " + tamano);
+    }
+    List<List<T>> trozos = new ArrayList<>();
+    for (int i = 0; i < lista.size(); i += tamano) {
+        trozos.add(new ArrayList<>(lista.subList(i, Math.min(i + tamano, lista.size()))));
+    }
+    return trozos;
+casos:
+    enTrozos(List.of(1, 2, 3, 4, 5), 2) => List.of(List.of(1, 2), List.of(3, 4), List.of(5))
+    enTrozos(List.of("a", "b", "c"), 3) => List.of(List.of("a", "b", "c"))
+    enTrozos(List.of("a", "b"), 5) => List.of(List.of("a", "b"))
+    enTrozos(List.of(), 2) => List.of()
+    enTrozos(List.of(1), 0) => !IllegalArgumentException
+
+=== t16_pila_generica
+tema: 16
+dificultad: 3
+java: 7
+tipo: clase
+titulo.es: Una pila de piezas
+titulo.de: Ein Stapel Teile
+titulo.en: A stack of parts
+enunciado.es: Escribe Pila<T> implements Iterable<T>: Pila<T> apilar(T cosa) (devuelve this para encadenar), T desapilar() y T cima() (las dos lanzan IllegalStateException si está vacía), int tamano() y boolean estaVacia(). Al recorrerla, sale primero la cima.
+enunciado.de: Schreib Pila<T> implements Iterable<T>: Pila<T> apilar(T cosa) (gibt this zum Verketten zurück), T desapilar() und T cima() (beide werfen IllegalStateException, wenn der Stapel leer ist), int tamano() und boolean estaVacia(). Beim Durchlaufen kommt das oberste Element zuerst.
+enunciado.en: Write Pila<T> implements Iterable<T>: Pila<T> apilar(T cosa) (returns this for chaining), T desapilar() and T cima() (both throw IllegalStateException when empty), int tamano() and boolean estaVacia(). When iterating, the top comes first.
+pista.es: Guarda los elementos en un ArrayDeque<T> (Java 6): push, pop y peek trabajan por delante, y su iterator() ya empieza por la cima.
+pista.de: Speichere die Elemente in einer ArrayDeque<T> (Java 6): push, pop und peek arbeiten vorne, und ihr iterator() beginnt schon oben.
+pista.en: Keep the elements in an ArrayDeque<T> (Java 6): push, pop and peek work at the front, and its iterator() already starts at the top.
+plantilla:
+    import java.util.*;
+
+    public class Pila<T> implements Iterable<T> {
+
+        public Pila<T> apilar(T cosa) {
+            return this;
+        }
+
+        public T desapilar() {
+            return null;
+        }
+
+        public T cima() {
+            return null;
+        }
+
+        public int tamano() {
+            return 0;
+        }
+
+        public boolean estaVacia() {
+            return true;
+        }
+
+        @Override
+        public Iterator<T> iterator() {
+            return Collections.emptyIterator();
+        }
+    }
+solucion:
+    import java.util.ArrayDeque;
+    import java.util.Deque;
+    import java.util.Iterator;
+
+    public class Pila<T> implements Iterable<T> {
+        private final Deque<T> elementos = new ArrayDeque<>();
+
+        public Pila<T> apilar(T cosa) {
+            elementos.push(cosa);
+            return this;
+        }
+
+        public T desapilar() {
+            comprobarQueNoEstaVacia();
+            return elementos.pop();
+        }
+
+        public T cima() {
+            comprobarQueNoEstaVacia();
+            return elementos.peek();
+        }
+
+        public int tamano() {
+            return elementos.size();
+        }
+
+        public boolean estaVacia() {
+            return elementos.isEmpty();
+        }
+
+        @Override
+        public Iterator<T> iterator() {
+            return elementos.iterator();
+        }
+
+        private void comprobarQueNoEstaVacia() {
+            if (elementos.isEmpty()) {
+                throw new IllegalStateException("la pila está vacía");
+            }
+        }
+    }
+casos:
+    new Pila<String>().apilar("chasis").apilar("brazo").desapilar() => "brazo"
+    new Pila<String>().apilar("chasis").apilar("brazo").cima() => "brazo"
+    new Pila<Integer>().apilar(1).apilar(2).apilar(3).tamano() => 3
+    new Pila<Double>().estaVacia() => true
+    new Pila<Integer>().desapilar() => !IllegalStateException
+    new Pila<String>().cima() => !IllegalStateException
+    String.join(",", new Pila<String>().apilar("a").apilar("b").apilar("c")) => "c,b,a"
+
+=== t16_almacen_con_codigo
+tema: 16
+dificultad: 4
+java: 16
+tipo: clase
+titulo.es: Un almacén que solo acepta piezas con código
+titulo.de: Ein Lager nur für Teile mit Code
+titulo.en: A store that only takes coded parts
+enunciado.es: Escribe Almacen<T extends ConCodigo>: Almacen<T> guardar(T cosa) (si ya hay otra con el mismo código, la sustituye; devuelve this), Optional<T> buscar(String codigo), int tamano() y List<T> todos() (ordenados por código). ConCodigo y Pieza ya están hechos.
+enunciado.de: Schreib Almacen<T extends ConCodigo>: Almacen<T> guardar(T cosa) (gibt es schon eins mit demselben Code, wird es ersetzt; gibt this zurück), Optional<T> buscar(String codigo), int tamano() und List<T> todos() (nach Code sortiert). ConCodigo und Pieza sind schon fertig.
+enunciado.en: Write Almacen<T extends ConCodigo>: Almacen<T> guardar(T cosa) (if another one has the same code, it is replaced; returns this), Optional<T> buscar(String codigo), int tamano() and List<T> todos() (sorted by code). ConCodigo and Pieza are already done.
+pista.es: Gracias a la cota T extends ConCodigo puedes llamar a cosa.codigo(). Un TreeMap<String, T> guarda por código y ya los recorre ordenados.
+pista.de: Dank der Schranke T extends ConCodigo darfst du cosa.codigo() aufrufen. Eine TreeMap<String, T> speichert nach Code und liefert sie schon sortiert.
+pista.en: Thanks to the bound T extends ConCodigo you can call cosa.codigo(). A TreeMap<String, T> stores by code and already iterates them in order.
+plantilla:
+    import java.util.*;
+
+    interface ConCodigo {
+        String codigo();
+    }
+
+    record Pieza(String codigo, int peso) implements ConCodigo {
+    }
+
+    public class Almacen<T extends ConCodigo> {
+        // guardar, buscar, tamano y todos
+    }
+solucion:
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.Map;
+    import java.util.Optional;
+    import java.util.TreeMap;
+
+    interface ConCodigo {
+        String codigo();
+    }
+
+    record Pieza(String codigo, int peso) implements ConCodigo {
+    }
+
+    public class Almacen<T extends ConCodigo> {
+        private final Map<String, T> porCodigo = new TreeMap<>();
+
+        public Almacen<T> guardar(T cosa) {
+            porCodigo.put(cosa.codigo(), cosa);
+            return this;
+        }
+
+        public Optional<T> buscar(String codigo) {
+            return Optional.ofNullable(porCodigo.get(codigo));
+        }
+
+        public int tamano() {
+            return porCodigo.size();
+        }
+
+        public List<T> todos() {
+            return new ArrayList<>(porCodigo.values());
+        }
+    }
+casos:
+    new Almacen<Pieza>().guardar(new Pieza("L1", 12)).buscar("L1").map(Pieza::peso) => Optional.of(12)
+    new Almacen<Pieza>().buscar("X9") => Optional.empty()
+    new Almacen<Pieza>().guardar(new Pieza("L1", 12)).guardar(new Pieza("L1", 15)).tamano() => 1
+    new Almacen<Pieza>().guardar(new Pieza("L1", 12)).guardar(new Pieza("L1", 15)).buscar("L1").get().peso() => 15
+    new Almacen<Pieza>().guardar(new Pieza("B2", 1)).guardar(new Pieza("A7", 2)).todos() => List.of(new Pieza("A7", 2), new Pieza("B2", 1))
+    new Almacen<Pieza>().todos() => List.of()
+
+=== t16_mejor_segun
+tema: 16
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: El mejor según lo que tú digas
+titulo.de: Das Beste nach deinem Maßstab
+titulo.en: The best by your own measure
+enunciado.es: Devuelve el elemento de la lista cuya clave (la que calcula la función clave) es la mayor. Si hay empate, el primero. Si la lista está vacía, null. La firma usa dos variables de tipo y comodines: así sirve para cualquier elemento y cualquier clave comparable.
+enunciado.de: Gib das Element der Liste zurück, dessen Schlüssel (berechnet von der Funktion clave) am größten ist. Bei Gleichstand das erste. Ist die Liste leer, null. Die Signatur nutzt zwei Typvariablen und Wildcards: So passt sie für jedes Element und jeden vergleichbaren Schlüssel.
+enunciado.en: Return the element of the list whose key (computed by the clave function) is the largest. On a tie, the first one. If the list is empty, null. The signature uses two type variables and wildcards, so it works for any element and any comparable key.
+pista.es: Guarda el mejor elemento y su clave; cambia solo si la nueva clave es estrictamente mayor (compareTo(...) > 0). PECS: la función consume T (? super T) y produce C (? extends C).
+pista.de: Merk dir das beste Element und seinen Schlüssel; wechsle nur, wenn der neue Schlüssel echt größer ist (compareTo(...) > 0). PECS: Die Funktion verbraucht T (? super T) und erzeugt C (? extends C).
+pista.en: Keep the best element and its key; switch only when the new key is strictly larger (compareTo(...) > 0). PECS: the function consumes T (? super T) and produces C (? extends C).
+firma: static <T, C extends Comparable<? super C>> T mejorSegun(List<T> lista, Function<? super T, ? extends C> clave)
+plantilla:
+    return lista.isEmpty() ? null : lista.get(0);
+solucion:
+    T mejor = null;
+    C mejorClave = null;
+    for (T x : lista) {
+        C k = clave.apply(x);
+        if (mejorClave == null || k.compareTo(mejorClave) > 0) {
+            mejor = x;
+            mejorClave = k;
+        }
+    }
+    return mejor;
+casos:
+    mejorSegun(List.of("Mk I", "Mk III", "Mk II"), String::length) => "Mk III"
+    mejorSegun(List.of("ab", "cd", "e"), String::length) => "ab"
+    mejorSegun(List.of(3, -7, 5), x -> -x) => -7
+    mejorSegun(List.of("radar", "Láser", "bala"), String::toLowerCase) => "radar"
+    mejorSegun(new ArrayList<String>(), String::length) => null
+
+=== t16_inventario_seguro
+tema: 16
+dificultad: 5
+java: 7
+tipo: clase
+titulo.es: Un inventario a prueba de trampas
+titulo.de: Ein Inventar, das sich nicht austricksen lässt
+titulo.en: A cheat-proof inventory
+enunciado.es: El Inventario guarda una cosa por tipo. Escribe <T> Inventario poner(Class<T> tipo, T valor) (devuelve this; si ya había una de ese tipo, la sustituye), <T> T sacar(Class<T> tipo) (null si no hay) e int tamano(). Aunque alguien use tipos crudos para colar un valor del tipo equivocado, poner debe lanzar ClassCastException en el momento.
+enunciado.de: Das Inventario speichert ein Ding pro Typ. Schreib <T> Inventario poner(Class<T> tipo, T valor) (gibt this zurück; gab es schon eins dieses Typs, wird es ersetzt), <T> T sacar(Class<T> tipo) (null, wenn keins da ist) und int tamano(). Auch wenn jemand mit Raw Types einen Wert vom falschen Typ einschmuggelt, muss poner sofort eine ClassCastException werfen.
+enunciado.en: The Inventario stores one thing per type. Write <T> Inventario poner(Class<T> tipo, T valor) (returns this; if there was already one of that type, it is replaced), <T> T sacar(Class<T> tipo) (null if there is none) and int tamano(). Even if someone uses raw types to sneak in a value of the wrong type, poner must throw a ClassCastException right away.
+pista.es: Guarda en un Map<Class<?>, Object>. El objeto Class<T> hace de «llave con tipo»: tipo.cast(valor) comprueba el tipo al guardar y tipo.cast(...) convierte sin warnings al sacar.
+pista.de: Speichere in einer Map<Class<?>, Object>. Das Class<T>-Objekt ist ein «typisierter Schlüssel»: tipo.cast(valor) prüft den Typ beim Speichern, und tipo.cast(...) wandelt beim Herausholen ohne Warnungen um.
+pista.en: Store in a Map<Class<?>, Object>. The Class<T> object acts as a "typed key": tipo.cast(valor) checks the type when storing, and tipo.cast(...) converts without warnings when taking it out.
+plantilla:
+    import java.util.*;
+
+    public class Inventario {
+        private final Map<Class<?>, Object> cosas = new HashMap<>();
+
+        public <T> Inventario poner(Class<T> tipo, T valor) {
+            return this;
+        }
+
+        public <T> T sacar(Class<T> tipo) {
+            return null;
+        }
+
+        public int tamano() {
+            return 0;
+        }
+    }
+solucion:
+    import java.util.HashMap;
+    import java.util.Map;
+    import java.util.Objects;
+
+    public class Inventario {
+        private final Map<Class<?>, Object> cosas = new HashMap<>();
+
+        public <T> Inventario poner(Class<T> tipo, T valor) {
+            cosas.put(Objects.requireNonNull(tipo), tipo.cast(valor));
+            return this;
+        }
+
+        public <T> T sacar(Class<T> tipo) {
+            return tipo.cast(cosas.get(tipo));
+        }
+
+        public int tamano() {
+            return cosas.size();
+        }
+    }
+casos:
+    new Inventario().poner(String.class, "láser").poner(Integer.class, 3).sacar(Integer.class) + 1 => 4
+    new Inventario().poner(String.class, "láser").sacar(String.class).toUpperCase() => "LÁSER"
+    new Inventario().sacar(Double.class) => null
+    new Inventario().poner(Integer.class, 1).poner(Integer.class, 2).sacar(Integer.class) => 2
+    new Inventario().poner(Integer.class, 1).poner(Integer.class, 2).poner(String.class, "x").tamano() => 2
+    new Inventario().poner((Class) Integer.class, "trampa") => !ClassCastException

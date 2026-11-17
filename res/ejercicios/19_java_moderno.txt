@@ -1,0 +1,575 @@
+# Tema 19: Java moderno. enum (5), switch expressions (14), text blocks (15), records e instanceof con patrón (16),
+# sealed (17), pattern matching en switch, record patterns y colecciones secuenciadas (21), _ (22),
+# cuerpos de constructor flexibles (25).
+=== t19_switch_de_armas
+tema: 19
+dificultad: 1
+java: 14
+tipo: metodo
+titulo.es: Un switch que no se cae
+titulo.de: Ein switch, der nicht durchfällt
+titulo.en: A switch that doesn't fall through
+enunciado.es: Este switch antiguo tiene un fallo: al láser le falta el break y cae en la bala. Reescríbelo como switch expression (Java 14): láser 12, bala y perdigón 8, misil 25, llama 5 y cualquier otra cosa 0.
+enunciado.de: Dieses alte switch hat einen Fehler: Beim Laser fehlt das break, und er fällt in die Kugel durch. Schreib es als switch expression neu (Java 14): láser 12, bala und perdigón 8, misil 25, llama 5 und alles andere 0.
+enunciado.en: This old switch has a bug: the laser is missing its break and falls into the bullet. Rewrite it as a switch expression (Java 14): láser 12, bala and perdigón 8, misil 25, llama 5 and anything else 0.
+pista.es: return switch (arma) { case "láser" -> 12; case "bala", "perdigón" -> 8; ... default -> 0; }; Con la flecha no hay caídas ni break, y el switch devuelve un valor.
+pista.de: return switch (arma) { case "láser" -> 12; case "bala", "perdigón" -> 8; ... default -> 0; }; Mit dem Pfeil gibt es kein Durchfallen und kein break, und das switch liefert einen Wert.
+pista.en: return switch (arma) { case "láser" -> 12; case "bala", "perdigón" -> 8; ... default -> 0; }; With the arrow there is no fall-through and no break, and the switch yields a value.
+firma: static int danoDeArma(String arma)
+plantilla:
+    int dano = 0;
+    switch (arma) {
+        case "láser":
+            dano = 12;
+        case "bala":
+            dano = 8;
+            break;
+        case "misil":
+            dano = 25;
+            break;
+    }
+    return dano;
+solucion:
+    return switch (arma) {
+        case "láser" -> 12;
+        case "bala", "perdigón" -> 8;
+        case "misil" -> 25;
+        case "llama" -> 5;
+        default -> 0;
+    };
+casos:
+    danoDeArma("láser") => 12
+    danoDeArma("bala") => 8
+    danoDeArma("perdigón") => 8
+    danoDeArma("misil") => 25
+    danoDeArma("llama") => 5
+    danoDeArma("abrazo") => 0
+
+=== t19_enum_de_armas
+tema: 19
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Las armas, en un enum
+titulo.de: Die Waffen als enum
+titulo.en: Weapons as an enum
+enunciado.es: Escribe enum Arma con LASER(12, 600), BALA(8, 400), MISIL(25, 300) y LLAMA(30, 100) (daño y alcance). Métodos: int dano(), int alcance(), boolean alcanza(int distancia) (si distancia <= alcance) y static Optional<Arma> mejorPara(int distancia): la que más daño hace entre las que alcanzan.
+enunciado.de: Schreib enum Arma mit LASER(12, 600), BALA(8, 400), MISIL(25, 300) und LLAMA(30, 100) (Schaden und Reichweite). Methoden: int dano(), int alcance(), boolean alcanza(int distancia) (wenn distancia <= alcance) und static Optional<Arma> mejorPara(int distancia): die mit dem meisten Schaden unter denen, die hinreichen.
+enunciado.en: Write enum Arma with LASER(12, 600), BALA(8, 400), MISIL(25, 300) and LLAMA(30, 100) (damage and range). Methods: int dano(), int alcance(), boolean alcanza(int distancia) (when distancia <= alcance) and static Optional<Arma> mejorPara(int distancia): the one doing most damage among those in range.
+pista.es: Un enum puede tener campos y un constructor (privado). values() da todas las constantes: Arrays.stream(values()).filter(a -> a.alcanza(distancia)).max(Comparator.comparingInt(Arma::dano)).
+pista.de: Ein enum darf Felder und einen (privaten) Konstruktor haben. values() liefert alle Konstanten: Arrays.stream(values()).filter(a -> a.alcanza(distancia)).max(Comparator.comparingInt(Arma::dano)).
+pista.en: An enum can have fields and a (private) constructor. values() gives every constant: Arrays.stream(values()).filter(a -> a.alcanza(distancia)).max(Comparator.comparingInt(Arma::dano)).
+plantilla:
+    public enum Arma {
+        LASER, BALA, MISIL, LLAMA
+    }
+solucion:
+    import java.util.Arrays;
+    import java.util.Comparator;
+    import java.util.Optional;
+
+    public enum Arma {
+        LASER(12, 600), BALA(8, 400), MISIL(25, 300), LLAMA(30, 100);
+
+        private final int dano;
+        private final int alcance;
+
+        Arma(int dano, int alcance) {
+            this.dano = dano;
+            this.alcance = alcance;
+        }
+
+        public int dano() {
+            return dano;
+        }
+
+        public int alcance() {
+            return alcance;
+        }
+
+        public boolean alcanza(int distancia) {
+            return distancia <= alcance;
+        }
+
+        public static Optional<Arma> mejorPara(int distancia) {
+            return Arrays.stream(values())
+                    .filter(a -> a.alcanza(distancia))
+                    .max(Comparator.comparingInt(Arma::dano));
+        }
+    }
+casos:
+    Arma.MISIL.dano() => 25
+    Arma.valueOf("LASER").alcance() => 600
+    Arma.BALA.alcanza(400) => true
+    Arma.BALA.alcanza(401) => false
+    Arma.mejorPara(50) => Optional.of(Arma.LLAMA)
+    Arma.mejorPara(250) => Optional.of(Arma.MISIL)
+    Arma.mejorPara(500) => Optional.of(Arma.LASER)
+    Arma.mejorPara(700) => Optional.empty()
+
+=== t19_record_posicion
+tema: 19
+dificultad: 2
+java: 16
+tipo: clase
+titulo.es: Una posición que no se sale de la arena
+titulo.de: Eine Position, die in der Arena bleibt
+titulo.en: A position that stays in the arena
+enunciado.es: Escribe record Posicion(double x, double y) (los records llegaron en Java 16). El constructor compacto lanza IllegalArgumentException si x no está entre 0 y 1000 o y no está entre 0 y 700. Añade Posicion mover(double dx, double dy), que devuelve una posición nueva, y double distancia(Posicion otra).
+enunciado.de: Schreib record Posicion(double x, double y) (Records gibt es seit Java 16). Der kompakte Konstruktor wirft eine IllegalArgumentException, wenn x nicht zwischen 0 und 1000 oder y nicht zwischen 0 und 700 liegt. Ergänze Posicion mover(double dx, double dy), das eine neue Position zurückgibt, und double distancia(Posicion otra).
+enunciado.en: Write record Posicion(double x, double y) (records arrived in Java 16). The compact constructor throws an IllegalArgumentException if x is not between 0 and 1000 or y is not between 0 and 700. Add Posicion mover(double dx, double dy), which returns a new position, and double distancia(Posicion otra).
+pista.es: El constructor compacto no repite los parámetros: Posicion { if (x < 0 || x > 1000 || ...) throw ...; }. equals, hashCode y toString ya los escribe el record.
+pista.de: Der kompakte Konstruktor wiederholt die Parameter nicht: Posicion { if (x < 0 || x > 1000 || ...) throw ...; }. equals, hashCode und toString schreibt der Record selbst.
+pista.en: The compact constructor doesn't repeat the parameters: Posicion { if (x < 0 || x > 1000 || ...) throw ...; }. The record already writes equals, hashCode and toString.
+plantilla:
+    public record Posicion(double x, double y) {
+    }
+solucion:
+    public record Posicion(double x, double y) {
+
+        public Posicion {
+            if (x < 0 || x > 1000 || y < 0 || y > 700) {
+                throw new IllegalArgumentException("fuera de la arena: " + x + ", " + y);
+            }
+        }
+
+        public Posicion mover(double dx, double dy) {
+            return new Posicion(x + dx, y + dy);
+        }
+
+        public double distancia(Posicion otra) {
+            return Math.hypot(otra.x - x, otra.y - y);
+        }
+    }
+casos:
+    new Posicion(1, 2).mover(3, 4) => new Posicion(4, 6)
+    new Posicion(0, 0).distancia(new Posicion(300, 400)) => 500.0
+    new Posicion(1, 2).toString() => "Posicion[x=1.0, y=2.0]"
+    new Posicion(1000, 700).equals(new Posicion(1000, 700)) => true
+    new Posicion(-1, 0) => !IllegalArgumentException
+    new Posicion(10, 701) => !IllegalArgumentException
+    new Posicion(990, 10).mover(20, 0) => !IllegalArgumentException
+
+=== t19_instanceof_con_patron
+tema: 19
+dificultad: 2
+java: 16
+tipo: metodo
+titulo.es: ¿Qué ha captado el sensor?
+titulo.de: Was hat der Sensor erfasst?
+titulo.en: What did the sensor pick up?
+enunciado.es: Devuelve "número N" si cosa es un Integer, "texto de N letras" si es un String que no está en blanco, "array de N" si es un int[] y "otra cosa" en cualquier otro caso (también null). Usa instanceof con patrón (Java 16): sin casts.
+enunciado.de: Gib "número N" zurück, wenn cosa ein Integer ist, "texto de N letras", wenn es ein nicht leerer String ist, "array de N", wenn es ein int[] ist, und sonst "otra cosa" (auch bei null). Nutze instanceof mit Pattern (Java 16): ohne Casts.
+enunciado.en: Return "número N" if cosa is an Integer, "texto de N letras" if it is a String that isn't blank, "array de N" if it is an int[], and "otra cosa" otherwise (null too). Use instanceof with a pattern (Java 16): no casts.
+pista.es: if (cosa instanceof String s && !s.isBlank()) declara s solo cuando encaja. instanceof con null siempre da false.
+pista.de: if (cosa instanceof String s && !s.isBlank()) deklariert s nur, wenn es passt. instanceof mit null ist immer false.
+pista.en: if (cosa instanceof String s && !s.isBlank()) declares s only when it matches. instanceof with null is always false.
+firma: static String describir(Object cosa)
+plantilla:
+    if (cosa instanceof Integer) {
+        return "número " + cosa;
+    }
+    return "otra cosa";
+solucion:
+    if (cosa instanceof Integer n) {
+        return "número " + n;
+    }
+    if (cosa instanceof String s && !s.isBlank()) {
+        return "texto de " + s.length() + " letras";
+    }
+    if (cosa instanceof int[] a) {
+        return "array de " + a.length;
+    }
+    return "otra cosa";
+casos:
+    describir(42) => "número 42"
+    describir("radar") => "texto de 5 letras"
+    describir("   ") => "otra cosa"
+    describir(new int[]{4, 5, 6}) => "array de 3"
+    describir(2.5) => "otra cosa"
+    describir(null) => "otra cosa"
+
+=== t19_ficha_con_text_block
+tema: 19
+dificultad: 2
+java: 15
+tipo: salida
+titulo.es: La ficha del robot
+titulo.de: Der Steckbrief des Roboters
+titulo.en: The robot's profile card
+enunciado.es: Imprime la ficha del robot (el nombre en mayúsculas) exactamente así, línea a línea: == FICHA == / Robot: NOMBRE / Vida: vida/100 / Lema: "¡A por ellos!". Usa un text block (Java 15) y formatted().
+enunciado.de: Gib den Steckbrief des Roboters (den Namen in Großbuchstaben) genau so aus, Zeile für Zeile: == FICHA == / Robot: NAME / Vida: vida/100 / Lema: "¡A por ellos!". Nutze einen Textblock (Java 15) und formatted().
+enunciado.en: Print the robot's card (the name in capitals) exactly like this, line by line: == FICHA == / Robot: NAME / Vida: vida/100 / Lema: "¡A por ellos!". Use a text block (Java 15) and formatted().
+pista.es: Un text block empieza con """ y un salto de línea; dentro, las comillas no se escapan. Pon %s y %d y llama a .formatted(nombre.toUpperCase(), vida). Imprime con print: el bloque ya acaba en salto de línea.
+pista.de: Ein Textblock beginnt mit """ und einem Zeilenumbruch; darin werden Anführungszeichen nicht escaped. Setz %s und %d ein und ruf .formatted(nombre.toUpperCase(), vida) auf. Gib mit print aus: Der Block endet schon mit einem Zeilenumbruch.
+pista.en: A text block starts with """ and a line break; inside it, quotes need no escaping. Put %s and %d in it and call .formatted(nombre.toUpperCase(), vida). Print with print: the block already ends with a line break.
+firma: static void ficha(String nombre, int vida)
+plantilla:
+    System.out.println("== FICHA ==");
+    System.out.println("Robot: " + nombre);
+solucion:
+    System.out.print("""
+            == FICHA ==
+            Robot: %s
+            Vida: %d/100
+            Lema: "¡A por ellos!"
+            """.formatted(nombre.toUpperCase(), vida));
+casos:
+    ficha("Tito", 80); => "== FICHA ==\nRobot: TITO\nVida: 80/100\nLema: \"¡A por ellos!\"\n"
+    ficha("rex", 0); => "== FICHA ==\nRobot: REX\nVida: 0/100\nLema: \"¡A por ellos!\"\n"
+    ficha("Mk II", 100); => "== FICHA ==\nRobot: MK II\nVida: 100/100\nLema: \"¡A por ellos!\"\n"
+    ficha("", 5); => "== FICHA ==\nRobot: \nVida: 5/100\nLema: \"¡A por ellos!\"\n"
+
+=== t19_ignorar_con_guion_bajo
+tema: 19
+dificultad: 2
+java: 22
+tipo: metodo
+titulo.es: Lecturas con ruido
+titulo.de: Verrauschte Messwerte
+titulo.en: Noisy readings
+enunciado.es: Algunas lecturas del radar llegan estropeadas. Devuelve la suma de las que son números enteros válidos (para Integer.parseInt) e ignora las demás. Desde Java 22, una variable que no usas se llama _: catch (NumberFormatException _).
+enunciado.de: Manche Radarwerte kommen kaputt an. Gib die Summe derer zurück, die gültige ganze Zahlen sind (für Integer.parseInt), und ignoriere den Rest. Seit Java 22 heißt eine Variable, die du nicht benutzt, _: catch (NumberFormatException _).
+enunciado.en: Some radar readings arrive garbled. Return the sum of those that are valid integers (for Integer.parseInt) and ignore the rest. Since Java 22, a variable you don't use is called _: catch (NumberFormatException _).
+pista.es: Dentro del for, try { suma += Integer.parseInt(l); } catch (NumberFormatException _) { } Ojo: parseInt no admite espacios ni decimales.
+pista.de: In der for-Schleife: try { suma += Integer.parseInt(l); } catch (NumberFormatException _) { } Achtung: parseInt akzeptiert keine Leerzeichen und keine Dezimalzahlen.
+pista.en: Inside the for loop: try { suma += Integer.parseInt(l); } catch (NumberFormatException _) { } Careful: parseInt accepts neither spaces nor decimals.
+firma: static int sumarValidas(List<String> lecturas)
+plantilla:
+    int suma = 0;
+    for (String l : lecturas) {
+        suma += Integer.parseInt(l);
+    }
+    return suma;
+solucion:
+    int suma = 0;
+    for (String lectura : lecturas) {
+        try {
+            suma += Integer.parseInt(lectura);
+        } catch (NumberFormatException _) {
+            // lectura estropeada: no cuenta
+        }
+    }
+    return suma;
+casos:
+    sumarValidas(List.of("10", "5")) => 15
+    sumarValidas(List.of("10", "x7", "5")) => 15
+    sumarValidas(List.of("-3", "3.5", " 4", "")) => -3
+    sumarValidas(List.of()) => 0
+
+=== t19_colecciones_secuenciadas
+tema: 19
+dificultad: 2
+java: 21
+tipo: metodo
+titulo.es: El primero y el último de la fila
+titulo.de: Der Erste und der Letzte in der Reihe
+titulo.en: First and last in the row
+enunciado.es: Java 21 trajo SequencedCollection: listas, deques y conjuntos ordenados comparten getFirst() y getLast(). Devuelve "primero/último" de la colección, o "" si está vacía.
+enunciado.de: Java 21 brachte SequencedCollection: Listen, Deques und geordnete Mengen haben gemeinsam getFirst() und getLast(). Gib "erstes/letztes" der Collection zurück, oder "", wenn sie leer ist.
+enunciado.en: Java 21 brought SequencedCollection: lists, deques and ordered sets now share getFirst() and getLast(). Return "first/last" of the collection, or "" if it is empty.
+pista.es: if (fila.isEmpty()) return ""; return fila.getFirst() + "/" + fila.getLast(); Funciona igual con List, ArrayDeque, LinkedHashSet o TreeSet.
+pista.de: if (fila.isEmpty()) return ""; return fila.getFirst() + "/" + fila.getLast(); Das klappt genauso mit List, ArrayDeque, LinkedHashSet oder TreeSet.
+pista.en: if (fila.isEmpty()) return ""; return fila.getFirst() + "/" + fila.getLast(); It works the same with List, ArrayDeque, LinkedHashSet or TreeSet.
+firma: static String extremos(SequencedCollection<String> fila)
+plantilla:
+    return fila.isEmpty() ? "" : fila.iterator().next() + "/";
+solucion:
+    if (fila.isEmpty()) {
+        return "";
+    }
+    return fila.getFirst() + "/" + fila.getLast();
+casos:
+    extremos(List.of("Tito", "Rex", "Ada")) => "Tito/Ada"
+    extremos(new ArrayDeque<>(List.of("Zap"))) => "Zap/Zap"
+    extremos(new TreeSet<>(Set.of("zeta", "alfa", "beta"))) => "alfa/zeta"
+    extremos(new LinkedHashSet<>(List.of("b", "a", "b"))) => "b/a"
+    extremos(List.of()) => ""
+
+=== t19_switch_con_patrones
+tema: 19
+dificultad: 3
+java: 21
+tipo: metodo
+titulo.es: Clasificar lecturas del radar
+titulo.de: Radarmeldungen einordnen
+titulo.en: Classify radar readings
+enunciado.es: Con pattern matching en switch (Java 21): null da "sin señal"; un Integer negativo, "error N" (N sin signo); otro Integer, "distancia N"; un String en blanco, "vacía"; otro String, "mensaje: S"; un Double, "ángulo D" con un decimal; cualquier otra cosa, "desconocida".
+enunciado.de: Mit Pattern Matching im switch (Java 21): null ergibt "sin señal"; ein negativer Integer "error N" (N ohne Vorzeichen); ein anderer Integer "distancia N"; ein leerer String "vacía"; ein anderer String "mensaje: S"; ein Double "ángulo D" mit einer Nachkommastelle; alles andere "desconocida".
+enunciado.en: With pattern matching for switch (Java 21): null gives "sin señal"; a negative Integer, "error N" (N without the sign); any other Integer, "distancia N"; a blank String, "vacía"; any other String, "mensaje: S"; a Double, "ángulo D" with one decimal; anything else, "desconocida".
+pista.es: case null -> ...; case Integer i when i < 0 -> ...; case Integer i -> ...; Los casos con when van antes que los generales. Para el decimal: String.format(Locale.ROOT, "%.1f", d).
+pista.de: case null -> ...; case Integer i when i < 0 -> ...; case Integer i -> ...; Die Fälle mit when kommen vor den allgemeinen. Für die Nachkommastelle: String.format(Locale.ROOT, "%.1f", d).
+pista.en: case null -> ...; case Integer i when i < 0 -> ...; case Integer i -> ...; The cases with when go before the general ones. For the decimal: String.format(Locale.ROOT, "%.1f", d).
+firma: static String clasificar(Object lectura)
+plantilla:
+    return String.valueOf(lectura);
+solucion:
+    return switch (lectura) {
+        case null -> "sin señal";
+        case Integer i when i < 0 -> "error " + -i;
+        case Integer i -> "distancia " + i;
+        case String s when s.isBlank() -> "vacía";
+        case String s -> "mensaje: " + s;
+        case Double d -> String.format(Locale.ROOT, "ángulo %.1f", d);
+        default -> "desconocida";
+    };
+casos:
+    clasificar(null) => "sin señal"
+    clasificar(-3) => "error 3"
+    clasificar(250) => "distancia 250"
+    clasificar(0) => "distancia 0"
+    clasificar("  ") => "vacía"
+    clasificar("enemigo al norte") => "mensaje: enemigo al norte"
+    clasificar(3.14159) => "ángulo 3.1"
+    clasificar('x') => "desconocida"
+
+=== t19_disparos_sellados
+tema: 19
+dificultad: 3
+java: 21
+tipo: clase
+titulo.es: Disparos sellados
+titulo.de: Versiegelte Schüsse
+titulo.en: Sealed shots
+enunciado.es: Haz que Disparo sea sealed (Java 17) y permita solo Laser, Bala y Misil. Escribe static int dano(Disparo d) con un switch de patrones de records (Java 21) y sin default: Laser vale potencia * 2; Bala, calibre * cantidad; Misil, 40 si es guiado y 25 si no.
+enunciado.de: Mach Disparo sealed (Java 17), sodass nur Laser, Bala und Misil erlaubt sind. Schreib static int dano(Disparo d) mit einem switch über Record-Patterns (Java 21) und ohne default: Laser zählt potencia * 2; Bala calibre * cantidad; Misil 40, wenn gelenkt, sonst 25.
+enunciado.en: Make Disparo sealed (Java 17) so that it permits only Laser, Bala and Misil. Write static int dano(Disparo d) with a switch over record patterns (Java 21) and no default: Laser is worth potencia * 2; Bala, calibre * cantidad; Misil, 40 if guided and 25 if not.
+pista.es: public sealed interface Disparo permits Laser, Bala, Misil. En el switch: case Bala(int calibre, int cantidad) -> calibre * cantidad; Como la interfaz está sellada, el compilador sabe que no falta ningún caso.
+pista.de: public sealed interface Disparo permits Laser, Bala, Misil. Im switch: case Bala(int calibre, int cantidad) -> calibre * cantidad; Weil das Interface versiegelt ist, weiß der Compiler, dass kein Fall fehlt.
+pista.en: public sealed interface Disparo permits Laser, Bala, Misil. In the switch: case Bala(int calibre, int cantidad) -> calibre * cantidad; Since the interface is sealed, the compiler knows no case is missing.
+plantilla:
+    public interface Disparo {
+
+        static int dano(Disparo d) {
+            return 0;
+        }
+    }
+
+    record Laser(int potencia) implements Disparo {
+    }
+
+    record Bala(int calibre, int cantidad) implements Disparo {
+    }
+
+    record Misil(boolean guiado) implements Disparo {
+    }
+solucion:
+    public sealed interface Disparo permits Laser, Bala, Misil {
+
+        static int dano(Disparo d) {
+            return switch (d) {
+                case Laser(int potencia) -> potencia * 2;
+                case Bala(int calibre, int cantidad) -> calibre * cantidad;
+                case Misil(boolean guiado) -> guiado ? 40 : 25;
+            };
+        }
+    }
+
+    record Laser(int potencia) implements Disparo {
+    }
+
+    record Bala(int calibre, int cantidad) implements Disparo {
+    }
+
+    record Misil(boolean guiado) implements Disparo {
+    }
+casos:
+    Disparo.dano(new Laser(6)) => 12
+    Disparo.dano(new Bala(3, 5)) => 15
+    Disparo.dano(new Misil(true)) => 40
+    Disparo.dano(new Misil(false)) => 25
+    Disparo.dano(new Bala(9, 0)) => 0
+    Disparo.class.isSealed() => true
+
+=== t19_constructor_flexible
+tema: 19
+dificultad: 4
+java: 25
+tipo: clase
+titulo.es: Comprobar antes de llamar a super
+titulo.de: Prüfen vor dem super-Aufruf
+titulo.en: Check before calling super
+enunciado.es: Blindaje(int grosor) crea una Pieza llamada "blindaje Nmm" que pesa grosor * 3. Si grosor no está entre 1 y 10, lanza IllegalArgumentException sin llegar a crear la Pieza (Pieza.creadas() no debe cambiar). Desde Java 25 el constructor puede comprobar y calcular antes de super(...).
+enunciado.de: Blindaje(int grosor) erzeugt ein Pieza namens "blindaje Nmm", das grosor * 3 wiegt. Liegt grosor nicht zwischen 1 und 10, wirf eine IllegalArgumentException, ohne dass das Pieza entsteht (Pieza.creadas() darf sich nicht ändern). Seit Java 25 darf der Konstruktor vor super(...) prüfen und rechnen.
+enunciado.en: Blindaje(int grosor) creates a Pieza called "blindaje Nmm" that weighs grosor * 3. If grosor is not between 1 and 10, throw an IllegalArgumentException without creating the Pieza at all (Pieza.creadas() must not change). Since Java 25 the constructor may check and compute before super(...).
+pista.es: Pon el if con el throw antes de super("blindaje " + grosor + "mm", grosor * 3). Antes de super no puedes usar this, pero sí los parámetros. Antes de Java 25 había que hacerlo con un método estático auxiliar.
+pista.de: Setz das if mit dem throw vor super("blindaje " + grosor + "mm", grosor * 3). Vor super darfst du this nicht benutzen, die Parameter aber schon. Vor Java 25 brauchte man dafür eine statische Hilfsmethode.
+pista.en: Put the if with the throw before super("blindaje " + grosor + "mm", grosor * 3). Before super you can't use this, but you can use the parameters. Before Java 25 you needed a static helper method for this.
+plantilla:
+    public class Blindaje extends Pieza {
+
+        public Blindaje(int grosor) {
+            super("blindaje", 0);
+        }
+    }
+
+    class Pieza {
+        private static int creadas = 0;
+        private final String nombre;
+        private final int peso;
+
+        Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+            creadas++;
+        }
+
+        String nombre() {
+            return nombre;
+        }
+
+        int peso() {
+            return peso;
+        }
+
+        static int creadas() {
+            return creadas;
+        }
+    }
+solucion:
+    public class Blindaje extends Pieza {
+
+        public Blindaje(int grosor) {
+            if (grosor < 1 || grosor > 10) {
+                throw new IllegalArgumentException("grosor fuera de rango: " + grosor);
+            }
+            super("blindaje " + grosor + "mm", grosor * 3);
+        }
+    }
+
+    class Pieza {
+        private static int creadas = 0;
+        private final String nombre;
+        private final int peso;
+
+        Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+            creadas++;
+        }
+
+        String nombre() {
+            return nombre;
+        }
+
+        int peso() {
+            return peso;
+        }
+
+        static int creadas() {
+            return creadas;
+        }
+    }
+casos:
+    new Blindaje(4).peso() => 12
+    new Blindaje(4).nombre() => "blindaje 4mm"
+    new Blindaje(10).peso() => 30
+    new Blindaje(0) => !IllegalArgumentException
+    new Blindaje(11) => !IllegalArgumentException
+    ((Supplier<Integer>) () -> { int antes = Pieza.creadas(); try { new Blindaje(-2); } catch (IllegalArgumentException e) { } return Pieza.creadas() - antes; }).get() => 0
+
+=== t19_formula_de_dano
+tema: 19
+dificultad: 5
+java: 22
+tipo: clase
+titulo.es: Fórmulas de daño
+titulo.de: Schadensformeln
+titulo.en: Damage formulas
+enunciado.es: Una Formula sellada es Num(int valor), Suma(izq, der), Producto(izq, der) o Neg(f). Escribe static int evaluar(Formula f), static String mostrar(Formula f) (Suma "(a + b)", Producto "(a * b)", Neg "-a", Num el número) y static Formula simplificar(Formula f): simplifica primero los hijos y luego quita x + 0, 0 + x, x * 1, 1 * x, cambia x * 0 y 0 * x por Num(0) y -(-x) por x. Usa patrones de records anidados (Java 21) y _ (Java 22).
+enunciado.de: Eine versiegelte Formula ist Num(int valor), Suma(izq, der), Producto(izq, der) oder Neg(f). Schreib static int evaluar(Formula f), static String mostrar(Formula f) (Suma "(a + b)", Producto "(a * b)", Neg "-a", Num die Zahl) und static Formula simplificar(Formula f): Vereinfache zuerst die Kinder, dann entferne x + 0, 0 + x, x * 1, 1 * x, ersetze x * 0 und 0 * x durch Num(0) und -(-x) durch x. Nutze verschachtelte Record-Patterns (Java 21) und _ (Java 22).
+enunciado.en: A sealed Formula is Num(int valor), Suma(izq, der), Producto(izq, der) or Neg(f). Write static int evaluar(Formula f), static String mostrar(Formula f) (Suma "(a + b)", Producto "(a * b)", Neg "-a", Num the number) and static Formula simplificar(Formula f): simplify the children first, then drop x + 0, 0 + x, x * 1, 1 * x, replace x * 0 and 0 * x with Num(0), and -(-x) with x. Use nested record patterns (Java 21) and _ (Java 22).
+pista.es: Las tres son recursivas. En simplificar, construye el nodo con los hijos ya simplificados y haz switch sobre él: case Producto(Num(var c), _) when c == 0 -> new Num(0); … y al final case Producto p -> p;
+pista.de: Alle drei sind rekursiv. In simplificar baust du den Knoten mit den schon vereinfachten Kindern und machst ein switch darüber: case Producto(Num(var c), _) when c == 0 -> new Num(0); … und am Ende case Producto p -> p;
+pista.en: All three are recursive. In simplificar, build the node with the already simplified children and switch on it: case Producto(Num(var c), _) when c == 0 -> new Num(0); … and finally case Producto p -> p;
+plantilla:
+    public sealed interface Formula permits Num, Suma, Producto, Neg {
+
+        static int evaluar(Formula f) {
+            return 0;
+        }
+
+        static String mostrar(Formula f) {
+            return "";
+        }
+
+        static Formula simplificar(Formula f) {
+            return f;
+        }
+    }
+
+    record Num(int valor) implements Formula {
+    }
+
+    record Suma(Formula izq, Formula der) implements Formula {
+    }
+
+    record Producto(Formula izq, Formula der) implements Formula {
+    }
+
+    record Neg(Formula f) implements Formula {
+    }
+solucion:
+    public sealed interface Formula permits Num, Suma, Producto, Neg {
+
+        static int evaluar(Formula f) {
+            return switch (f) {
+                case Num(var valor) -> valor;
+                case Suma(var a, var b) -> evaluar(a) + evaluar(b);
+                case Producto(var a, var b) -> evaluar(a) * evaluar(b);
+                case Neg(var a) -> -evaluar(a);
+            };
+        }
+
+        static String mostrar(Formula f) {
+            return switch (f) {
+                case Num(var valor) -> String.valueOf(valor);
+                case Suma(var a, var b) -> "(" + mostrar(a) + " + " + mostrar(b) + ")";
+                case Producto(var a, var b) -> "(" + mostrar(a) + " * " + mostrar(b) + ")";
+                case Neg(var a) -> "-" + mostrar(a);
+            };
+        }
+
+        static Formula simplificar(Formula f) {
+            return switch (f) {
+                case Num n -> n;
+                case Neg(var a) -> switch (simplificar(a)) {
+                    case Neg(var dentro) -> dentro;
+                    case Formula otra -> new Neg(otra);
+                };
+                case Suma(var a, var b) -> switch (new Suma(simplificar(a), simplificar(b))) {
+                    case Suma(Num(var c), var x) when c == 0 -> x;
+                    case Suma(var x, Num(var c)) when c == 0 -> x;
+                    case Suma s -> s;
+                };
+                case Producto(var a, var b) -> switch (new Producto(simplificar(a), simplificar(b))) {
+                    case Producto(Num(var c), _) when c == 0 -> new Num(0);
+                    case Producto(_, Num(var c)) when c == 0 -> new Num(0);
+                    case Producto(Num(var c), var x) when c == 1 -> x;
+                    case Producto(var x, Num(var c)) when c == 1 -> x;
+                    case Producto p -> p;
+                };
+            };
+        }
+    }
+
+    record Num(int valor) implements Formula {
+    }
+
+    record Suma(Formula izq, Formula der) implements Formula {
+    }
+
+    record Producto(Formula izq, Formula der) implements Formula {
+    }
+
+    record Neg(Formula f) implements Formula {
+    }
+casos:
+    Formula.evaluar(new Suma(new Num(2), new Producto(new Num(3), new Num(4)))) => 14
+    Formula.evaluar(new Neg(new Suma(new Num(1), new Num(1)))) => -2
+    Formula.mostrar(new Producto(new Suma(new Num(2), new Num(3)), new Neg(new Num(4)))) => "((2 + 3) * -4)"
+    Formula.mostrar(new Num(7)) => "7"
+    Formula.simplificar(new Suma(new Num(7), new Num(0))) => new Num(7)
+    Formula.simplificar(new Producto(new Suma(new Num(0), new Num(5)), new Num(1))) => new Num(5)
+    Formula.simplificar(new Neg(new Neg(new Producto(new Num(9), new Num(0))))) => new Num(0)
+    Formula.simplificar(new Suma(new Num(2), new Neg(new Num(3)))) => new Suma(new Num(2), new Neg(new Num(3)))
