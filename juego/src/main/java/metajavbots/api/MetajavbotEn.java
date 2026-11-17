@@ -202,6 +202,11 @@ public abstract class MetajavbotEn extends RobotBase {
         return m().arma(Mando.DERECHA);
     }
 
+    /** The head special: "ESCUDO" (shield), "TURBO", "REPARAR" (repair), "CAMUFLAJE" (cloak), "PULSO" (pulse), "SOBRECARGA" (overload) ("" if none). */
+    public final String headSpecial() {
+        return m().arma(Mando.CABEZA);
+    }
+
     /** How far the left arm's weapon reaches. */
     public final double rangeLeft() {
         return m().alcance(Mando.IZQUIERDA);

@@ -203,6 +203,11 @@ public abstract class Metajavbot extends RobotBase {
         return m().arma(Mando.DERECHA);
     }
 
+    /** Lo especial de la cabeza: "ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA" ("" si no tiene). */
+    public final String especialCabeza() {
+        return m().arma(Mando.CABEZA);
+    }
+
     /** Hasta dónde llega el arma del brazo izquierdo. */
     public final double alcanceIzquierda() {
         return m().alcance(Mando.IZQUIERDA);

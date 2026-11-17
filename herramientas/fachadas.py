@@ -23,6 +23,7 @@ metodos = {
     'especial': ('spezial', 'special'), 'atacar': ('angreifen', 'attack'),
     'listoIzquierda': ('bereitLinks', 'readyLeft'), 'listoDerecha': ('bereitRechts', 'readyRight'),
     'listoEspecial': ('bereitSpezial', 'readySpecial'),
+    'especialCabeza': ('spezialKopf', 'headSpecial'),
     'armaIzquierda': ('waffeLinks', 'weaponLeft'), 'armaDerecha': ('waffeRechts', 'weaponRight'),
     'alcanceIzquierda': ('reichweiteLinks', 'rangeLeft'), 'alcanceDerecha': ('reichweiteRechts', 'rangeRight'),
     'x': ('x', 'x'), 'y': ('y', 'y'), 'rumbo': ('richtung', 'heading'), 'mira': ('blick', 'aimDirection'),
@@ -88,6 +89,7 @@ doc = {
         'spezial': 'Benutzt das Spezielle des Kopfes (Schild, Turbo, Reparatur…, je nach Teil).',
         'angreifen': 'Greift mit dem Arm an, der bereit ist (zuerst der rechte).',
         'waffeLinks': 'Die Waffe des linken Arms: "LASER", "BALA" (Kugel), "MISIL" (Rakete), "CUERPO" (Nahkampf), "ESCUDO" (Schild), "REPARAR"… ("" wenn keine).',
+        'spezialKopf': 'Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO" (Puls), "SOBRECARGA" (Überladung) ("" wenn keins).',
         'reichweiteLinks': 'Wie weit die Waffe des linken Arms reicht.',
         'richtung': 'Wohin der Körper schaut (Grad).',
         'blick': 'Wohin das Visier schaut (Grad).',
@@ -156,6 +158,7 @@ doc = {
         'special': "Uses the head's special (a shield, a turbo, repair…, depending on the part).",
         'attack': 'Attacks with whichever arm is ready (right first).',
         'weaponLeft': 'The left arm weapon: "LASER", "BALA" (bullet), "MISIL" (missile), "CUERPO" (melee), "ESCUDO" (shield), "REPARAR" (repair)… ("" if none).',
+        'headSpecial': 'The head special: "ESCUDO" (shield), "TURBO", "REPARAR" (repair), "CAMUFLAJE" (cloak), "PULSO" (pulse), "SOBRECARGA" (overload) ("" if none).',
         'rangeLeft': "How far the left arm's weapon reaches.",
         'heading': 'Where the body faces (degrees).',
         'aimDirection': 'Where the sight points (degrees).',
@@ -207,5 +210,5 @@ for lang, idx, cls in (('de', 0, 'MetajavbotDe'), ('en', 1, 'MetajavbotEn')):
             bloque = re.sub(r'\b%s\b' % a, b, bloque)
         return bloque
     s = re.sub(r'^    public (?:final )?[\w<>]+ \w+\([^)]*\) \{\n(?:        .*\n)*?    \}', fix, s, flags=re.M)
-    open(cls + '.java', 'w', encoding='utf-8').write(s)
+    open(cls + '.java', 'w', encoding='utf-8', newline='\n').write(s)
 print('ok')
