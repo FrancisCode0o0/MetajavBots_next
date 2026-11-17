@@ -155,16 +155,15 @@ public final class VentanaDeCodigo {
         for (int s = Documento.SANGRIA; s < sangria; s += Documento.SANGRIA) p.rect(x0 + s * letra, y, 1, alto, t.borde, 0.6f);
         int col = 0;
         int k = buscarTrozo(ini);
+        List<Object[]> colores = new ArrayList<>();
         while (col < texto.length()) {
             int pos = ini + col;
             Lexico.Trozo tr = k < trozos.size() ? trozos.get(k) : null;
             int hasta;
             int color;
-            boolean negrita = false;
             if (tr != null && tr.inicio <= pos && tr.fin > pos) {
                 hasta = Math.min(fin, tr.fin) - ini;
                 color = colorDe(t, tr, k);
-                negrita = tr.clase == Lexico.Clase.CLAVE;
                 if (tr.fin <= fin) k++;
             } else {
                 int siguiente = tr != null && tr.inicio > pos ? Math.min(fin, tr.inicio) : fin;
@@ -173,12 +172,11 @@ public final class VentanaDeCodigo {
             }
             if (hasta <= col) hasta = col + 1;
             String trozo = texto.substring(col, Math.min(hasta, texto.length()));
-            if (!trozo.isBlank()) {
-                if (palabra != null && trozo.equals(palabra)) p.rect(x0 + col * letra, y + 2, trozo.length() * letra, alto - 4, t.seleccion, 0.45f);
-                p.texto(trozo, x0 + col * letra, ty, tamano, negrita, color, 1);
-            }
+            if (palabra != null && trozo.equals(palabra)) p.rect(x0 + col * letra, y + 2, trozo.length() * letra, alto - 4, t.seleccion, 0.45f);
+            colores.add(new Object[]{trozo, color});
             col = hasta;
         }
+        p.textoDeColores(colores, x0, ty, tamano);
         if (pareja >= 0) {
             int cursorPareja = doc.cursor() > 0 && "(){}[]".indexOf(doc.letra(doc.cursor() - 1)) >= 0 ? doc.cursor() - 1 : doc.cursor();
             for (int pos : new int[]{pareja, cursorPareja}) {

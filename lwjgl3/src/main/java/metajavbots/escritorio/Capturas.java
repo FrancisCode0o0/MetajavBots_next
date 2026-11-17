@@ -49,6 +49,18 @@ public final class Capturas extends Juego {
         pantallas.put("05_taller", metajavbots.pantallas.Taller::new);
         pantallas.put("06_ejercicios", metajavbots.pantallas.Ejercicios::new);
         pantallas.put("07_pelear", metajavbots.pantallas.PrepararPelea::new);
+        pantallas.put("08_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.encuentro(this, "ADAPTADA")));
+        pantallas.put("09_ejercicio", () -> new metajavbots.pantallas.PantallaEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("05").get(2)));
+        pantallas.put("10_tutoriales", metajavbots.pantallas.Tutoriales::new);
+        pantallas.put("11_leccion", () -> new metajavbots.pantallas.PantallaLeccion(metajavbots.ejercicios.Leccion.todas().get(0)));
+        pantallas.put("12_especial", metajavbots.pantallas.ModoEspecial::new);
+        pantallas.put("13_laboratorio", () -> new metajavbots.pantallas.PantallaLaboratorio(metajavbots.ejercicios.Laboratorio.todos().get(0)));
+        pantallas.put("14_temario", metajavbots.pantallas.Temario::new);
+        pantallas.put("15_historial", metajavbots.pantallas.Historial::new);
+        pantallas.put("16_panel_ia", metajavbots.pantallas.PanelIA::new);
+        pantallas.put("17_ajustes", metajavbots.pantallas.Ajustes::new);
+        pantallas.put("18_bienvenida", metajavbots.pantallas.Bienvenida::new);
+        pantallas.put("19_rival", metajavbots.pantallas.CodigoDelRival::new);
         for (String n : pantallas.keySet()) if (solo.isEmpty() || n.contains(solo)) nombres.add(n);
     }
 
@@ -61,6 +73,14 @@ public final class Capturas extends Juego {
         Jugador.Robot r = new Jugador.Robot("Cobaltito", "cobalto");
         r.codigo = Comun.plantilla(j.idioma);
         j.robots.add(r);
+        Random azar = new Random(4);
+        for (int i = 0; i < 24; i++) {
+            j.historial.add(new metajavbots.progreso.Registro(System.currentTimeMillis() - (24 - i) * 3600_000L, i % 5 == 0 ? "AZAR" : "ADAPTADA",
+                    "Rival", Modelo.todos().get(azar.nextInt(16)).id, "cobalto", 0.4, azar.nextInt(3) == 0
+                    ? metajavbots.progreso.Registro.Resultado.DERROTA : metajavbots.progreso.Registro.Resultado.VICTORIA,
+                    40 + azar.nextInt(120), 60 + azar.nextInt(140), 4, "JUNIOR_2"));
+        }
+        j.ejerciciosResueltos.addAll(java.util.List.of("t01_hola_arena", "muestra_sumar"));
         ponerJugador(j);
         siguiente();
     }
@@ -80,7 +100,7 @@ public final class Capturas extends Juego {
         super.render();
         if (actual < 0 || actual >= nombres.size()) return;
         fotogramas++;
-        if (fotogramas == 45) {
+        if (fotogramas == (nombres.get(actual).startsWith("08") ? 400 : 45)) {
             Pixmap pm = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
             // La imagen sale del revés (OpenGL empieza abajo): se da la vuelta.
             Pixmap derecha = new Pixmap(pm.getWidth(), pm.getHeight(), Pixmap.Format.RGBA8888);

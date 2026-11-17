@@ -236,19 +236,18 @@ public final class PantallaPelea implements Pantalla {
             int color = i == 0 ? 0x3FE0FF : 0xFF4FD8;
             p.texto(co.nombre + (co.computadora ? "  ·  " + T.t("pelea.computadora") : ""), x, 8, ui.letra, true, color, 1);
             if (c == null) continue;
-            float bx = x, by = 38;
+            float bx = x, by = 34;
+            p.textoDerecha(T.f("pelea.dano", Math.round(co.danoTotalRecibido)), x + 588, 10, ui.letra * 0.8f, false, ui.tema.texto, 1);
             String[] nombres = {T.t("parte.cabeza"), T.t("parte.izquierda"), T.t("parte.derecha"), T.t("parte.piernas")};
             for (int k = 0; k < 4; k++) {
                 float parte = (float) (c.parte[k] / Math.max(1, c.parteMax[k]));
                 int col = parte > 0.5f ? ui.tema.bien : parte > 0.2f ? ui.tema.aviso : ui.tema.mal;
-                ui.barra(bx + k * 148, by, 140, 16, parte, col, null);
-                p.texto(nombres[k], bx + k * 148 + 4, by + 19, ui.letra * 0.62f, false, ui.tema.textoSuave, 1);
+                ui.barra(bx + k * 148, by, 140, 14, parte, col, null);
+                p.texto(nombres[k], bx + k * 148 + 4, by + 17, ui.letra * 0.6f, false, ui.tema.textoSuave, 1);
                 if (ui.e.dentro(bx + k * 148, by, 140, 30)) ui.avisar(nombres[k] + ": " + Math.round(c.parte[k]) + " / " + Math.round(c.parteMax[k]));
             }
-            ui.barra(bx + 4 * 148, by, 0, 0, 0, 0, null);
-            p.texto(T.f("pelea.dano", Math.round(co.danoTotalRecibido)), x + (derecha ? 0 : 0), 64, ui.letra * 0.7f, false, ui.tema.texto, 1);
-            float ex = x + 200, ew = 380;
-            ui.barra(ex, 66, ew, 10, (float) (c.energia / Math.max(1, c.cifras.energiaMax)), 0xFFD23F, null);
+            ui.barra(x, 72, 588, 7, (float) (c.energia / Math.max(1, c.cifras.energiaMax)), 0xFFD23F, null);
+            if (ui.e.dentro(x, 68, 588, 14)) ui.avisar(T.t("pelea.energia") + ": " + Math.round(c.energia));
         }
         float cx = p.ancho / 2;
         p.textoCentrado(T.f("pelea.ronda", pelea.ronda(), pelea.rondas), cx, 8, ui.letra * 1.1f, true, ui.tema.texto, 1);

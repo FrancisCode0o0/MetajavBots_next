@@ -248,6 +248,26 @@ public final class Pincel {
         return medida.width;
     }
 
+    /**
+     * Una línea con colores por trozos, de una vez (la fuente coloca cada letra: en el editor de código,
+     * así ninguna letra se monta en otra). Cada trozo: {texto, color RGB}.
+     */
+    public void textoDeColores(java.util.List<Object[]> trozos, float x, float y, float tamano) {
+        if (trozos.isEmpty()) return;
+        BitmapFont f = letra(tamano, false);
+        StringBuilder b = new StringBuilder();
+        for (Object[] t : trozos) {
+            String s = (String) t[0];
+            if (s.isEmpty()) continue;
+            b.append("[#").append(String.format("%06X", ((Integer) t[1]) & 0xFFFFFF)).append(']').append(s.replace("[", "[[")).append("[]");
+        }
+        boolean antes = f.getData().markupEnabled;
+        f.getData().markupEnabled = true;
+        f.setColor(1, 1, 1, 1);
+        f.draw(lote, b, x, y);
+        f.getData().markupEnabled = antes;
+    }
+
     public float textoCentrado(String s, float cx, float y, float tamano, boolean negrita, int rgb, float alfa) {
         float w = ancho(s, tamano, negrita);
         texto(s, cx - w / 2, y, tamano, negrita, rgb, alfa);
@@ -311,8 +331,12 @@ public final class Pincel {
 
     /** El ancho de una letra de la fuente de código (todas iguales: es monoespaciada). */
     public float anchoDeLetra(float tamano) {
-        medida.setText(letra(tamano, false), "M");
-        return medida.width;
+        // Lo que avanza cada letra (no lo que mide su dibujo): la diferencia entre dos letras y una.
+        BitmapFont f = letra(tamano, false);
+        medida.setText(f, "MMMMMMMMMMM");
+        float once = medida.width;
+        medida.setText(f, "M");
+        return (once - medida.width) / 10;
     }
 
     // ================================================================ recortes
