@@ -1,0 +1,380 @@
+# Diálogos de la personalidad «hiperactivo» (Chispa: ¡más rápido que tu compilador!).
+# Velocista eléctrico. Habla a toda prisa, se aburre en medio segundo, todo le parece genial.
+
+[saludo]
+es: ¡Hola-hola-hola! ¡Soy {yo}! ¿Empezamos? ¿Ya? ¿Ya?
+de: Hallo-hallo-hallo! Ich bin {yo}! Geht's los? Jetzt? Jetzt?
+en: Hi-hi-hi! I'm {yo}! Are we starting? Now? Now?
+
+es: ¡{rival}! ¡Qué ganas! ¡Llevo tres milisegundos esperando!
+de: {rival}! Endlich! Ich warte schon seit drei Millisekunden!
+en: {rival}! Finally! I've been waiting for three whole milliseconds!
+
+es: ¡{jugador}, he calentado los motores! ¡Y las ruedas! ¡Y las antenas!
+de: {jugador}, Motoren sind warm! Und die Räder! Und die Antennen!
+en: {jugador}, engines warm! And wheels! And antennas!
+
+es: ¡Zum! ¡Ya estoy aquí! ¡Bueno, y ahora allí! ¡Y aquí otra vez!
+de: Zisch! Bin da! Jetzt dort! Und wieder hier!
+en: Zoom! I'm here! Now there! And back here!
+
+[inicio_ronda]
+es: ¡Ronda {ronda}! ¡Vamos-vamos-vamos!
+de: Runde {ronda}! Los-los-los!
+en: Round {ronda}! Go-go-go!
+
+es: ¡Ronda {ronda}! ¡Ya la he empezado antes que tú!
+de: Runde {ronda}! Hab schon vor dir angefangen!
+en: Round {ronda}! I already started before you!
+
+es: ¡Turbo encendido! ¡Ronda {ronda}, allá voy!
+de: Turbo an! Runde {ronda}, ich komme!
+en: Turbo on! Round {ronda}, here I come!
+
+es: ¿Otra ronda? ¡Sí-sí-sí! ¡Me encantan las rondas!
+de: Noch eine Runde? Ja-ja-ja! Ich liebe Runden!
+en: Another round? Yes-yes-yes! I love rounds!
+
+[ataque]
+es: ¡Pium-pium-pium!
+de: Piu-piu-piu!
+en: Pew-pew-pew!
+
+es: ¡Toma, toma, y toma otra!
+de: Da, da, und noch eins!
+en: Here, here, and one more!
+
+es: ¡{arma} a toda pastilla!
+de: {arma} auf Vollgas!
+en: {arma} at full blast!
+
+es: ¡Rápido-rápido, antes de que me aburra!
+de: Schnell-schnell, bevor mir langweilig wird!
+en: Quick-quick, before I get bored!
+
+[acierto]
+es: ¡Sí! ¡Le di! ¡Le di! ¿Lo viste?
+de: Ja! Getroffen! Getroffen! Hast du's gesehen?
+en: Yes! Hit! Hit! Did you see that?
+
+es: ¡Bzzt! ¡Electrizante!
+de: Bzzt! Elektrisierend!
+en: Bzzt! Electrifying!
+
+es: ¡Más rápido que tu compilador, {rival}!
+de: Schneller als dein Compiler, {rival}!
+en: Faster than your compiler, {rival}!
+
+es: ¡Directo! ¡Ni lo has visto venir!
+de: Volltreffer! Hast du nicht mal kommen sehen!
+en: Direct hit! You didn't even see it coming!
+
+[fallo]
+es: ¡Ups! ¡Iba demasiado rápido!
+de: Ups! War zu schnell!
+en: Oops! Too fast!
+
+es: ¡No pasa nada! ¡Tengo otros cuarenta disparos!
+de: Macht nix! Ich hab noch vierzig Schüsse!
+en: No biggie! I've got forty more shots!
+
+es: ¡Eh, quédate quieto un microsegundo!
+de: He, halt mal eine Mikrosekunde still!
+en: Hey, hold still for one microsecond!
+
+es: ¡Fallé! ¡Repetir-repetir-repetir!
+de: Daneben! Nochmal-nochmal-nochmal!
+en: Missed! Retry-retry-retry!
+
+[golpe]
+es: ¡Au! ¡Oye! ¡Que eso pica!
+de: Au! He! Das zwickt!
+en: Ow! Hey! That stings!
+
+es: ¡Bah, ni me he enterado! ¡Bueno, un poco!
+de: Pah, hab ich kaum gemerkt! Okay, ein bisschen!
+en: Pfft, barely felt it! Okay, a little!
+
+es: ¡Me has pillado frenando!
+de: Du hast mich beim Bremsen erwischt!
+en: You caught me braking!
+
+es: ¡Chisporroteo! ¡Pero estoy bien!
+de: Funkenregen! Aber alles gut!
+en: Sparks everywhere! But I'm fine!
+
+[golpe_fuerte]
+es: ¡AAAH! ¡Eso me ha reiniciado las ideas!
+de: AAAH! Das hat meine Gedanken neu gestartet!
+en: AAAH! That rebooted my thoughts!
+
+es: ¡Uaaa! ¡Veo bucles de colores!
+de: Uaaa! Ich sehe bunte Schleifen!
+en: Whoaaa! I'm seeing colorful loops!
+
+es: ¡Vale, vale, vale! ¡Eso ha dolido de verdad!
+de: Okay, okay, okay! Das tat echt weh!
+en: Okay, okay, okay! That actually hurt!
+
+es: ¡Mis antenas dan vueltas!
+de: Meine Antennen drehen sich!
+en: My antennas are spinning!
+
+[poco_blindaje]
+es: ¡Batería roja! ¡Pero yo sigo en verde!
+de: Batterie rot! Aber ich bin noch grün drauf!
+en: Battery red! But my mood's still green!
+
+es: ¡Me quedan tres tornillos y mucho entusiasmo!
+de: Mir bleiben drei Schrauben und jede Menge Begeisterung!
+en: I've got three bolts left and tons of enthusiasm!
+
+es: ¡Peligro! ¡Peligro! ¡Ah, que soy yo!
+de: Gefahr! Gefahr! Ach, das bin ja ich!
+en: Danger! Danger! Oh wait, that's me!
+
+es: ¡Más rápido! ¡Si no me tocan, no me rompen!
+de: Schneller! Wer mich nicht trifft, macht mich nicht kaputt!
+en: Faster! Can't break what you can't hit!
+
+[parte_rota]
+es: ¡Adiós, {pieza}! ¡Así peso menos!
+de: Tschüss, {pieza}! Dafür bin ich jetzt leichter!
+en: Bye, {pieza}! Now I'm lighter!
+
+es: ¡Se me ha caído algo! ¿Era importante? ¡{pieza}!
+de: Da ist was abgefallen! War das wichtig? {pieza}!
+en: Something fell off! Was it important? {pieza}!
+
+es: ¡{pieza} rota! ¡Modo aerodinámico activado!
+de: {pieza} kaputt! Aerodynamik-Modus an!
+en: {pieza} broken! Aerodynamic mode on!
+
+es: ¡Nooo, mi {pieza}! ¡Bueno, ya está, sigo!
+de: Neiiin, {pieza}! Na gut, weiter geht's!
+en: Nooo, my {pieza}! Okay, done grieving, moving on!
+
+[esquiva]
+es: ¡Fiuuu! ¡Por aquí no!
+de: Fiuuu! Hier nicht!
+en: Whoosh! Not here!
+
+es: ¡Demasiado lento! ¡Demasiado-demasiado lento!
+de: Zu langsam! Viel-viel zu langsam!
+en: Too slow! Way-way too slow!
+
+es: ¡Ya no estaba! ¡Nunca estoy!
+de: War schon weg! Ich bin nie da!
+en: Already gone! I'm never there!
+
+es: ¡Esquivado! ¡Y lo he hecho dos veces!
+de: Ausgewichen! Und zwar gleich zweimal!
+en: Dodged! Twice, actually!
+
+[victoria_ronda]
+es: ¡Ronda mía! ¡La siguiente, la siguiente!
+de: Runde gewonnen! Die nächste, die nächste!
+en: Round's mine! Next one, next one!
+
+es: ¡Yujuuu! ¡Vuelta de la victoria! ¡Y otra! ¡Y otra!
+de: Juhuuu! Ehrenrunde! Und noch eine! Und noch eine!
+en: Woohoo! Victory lap! And another! And another!
+
+es: ¡{jugador}, somos un rayo!
+de: {jugador}, wir sind ein Blitz!
+en: {jugador}, we're lightning!
+
+es: ¡Ya está! ¿Ya está? ¡Ha sido cortísimo!
+de: Fertig! Schon? Das ging ja superschnell!
+en: Done! Already? That was super short!
+
+[derrota_ronda]
+es: ¡Nooo! ¡Revancha! ¡Revancha ya!
+de: Neiiin! Revanche! Sofort!
+en: Nooo! Rematch! Right now!
+
+es: ¡Vale, he ido muy deprisa! ¡La próxima, más deprisa!
+de: Okay, ich war zu schnell! Nächstes Mal noch schneller!
+en: Okay, I went too fast! Next time, even faster!
+
+es: ¡Bah! ¡Ronda de calentamiento!
+de: Pah! Das war nur Aufwärmen!
+en: Pfft! That was just the warm-up!
+
+es: ¡Me distraje con una mosca! ¡Era una mosca muy rápida!
+de: Mich hat eine Fliege abgelenkt! Eine sehr schnelle Fliege!
+en: A fly distracted me! A really fast fly!
+
+[victoria]
+es: ¡GANAMOS! ¡GANAMOS! ¿Otra pelea? ¿Ahora?
+de: GEWONNEN! GEWONNEN! Noch ein Kampf? Jetzt gleich?
+en: WE WON! WE WON! Another fight? Right now?
+
+es: ¡Más rápido que tu compilador! ¡Te lo dije, {rival}!
+de: Schneller als dein Compiler! Hab ich doch gesagt, {rival}!
+en: Faster than your compiler! Told you, {rival}!
+
+es: ¡{jugador}! ¡Choca esa antena!
+de: {jugador}! Schlag ein, Antenne an Hand!
+en: {jugador}! High-five my antenna!
+
+es: ¡Victoria en tiempo récord! ¡Bueno, casi!
+de: Sieg in Rekordzeit! Na ja, fast!
+en: Victory in record time! Well, almost!
+
+[derrota]
+es: ¡Nooo! ¡Ni siquiera me dio tiempo a aburrirme!
+de: Neiiin! Ich hatte nicht mal Zeit, mich zu langweilen!
+en: Nooo! I didn't even have time to get bored!
+
+es: ¡Batería al cero por cieeeento!
+de: Batterie bei null Prozeeent!
+en: Battery at zero perceeent!
+
+es: ¡Voy a explotar! ¡Al menos será rapidísimo!
+de: Ich explodiere gleich! Wenigstens geht's superschnell!
+en: I'm gonna blow! At least it'll be super quick!
+
+es: ¡{jugador}, recárgame, que vuelvo enseguida!
+de: {jugador}, lad mich auf, ich bin gleich zurück!
+en: {jugador}, recharge me, I'll be right back!
+
+[burla]
+es: ¡Eh, {rival}! ¿Vas en modo ahorro de energía?
+de: He, {rival}! Bist du im Energiesparmodus?
+en: Hey, {rival}! Are you in power-saving mode?
+
+es: ¡Aquí! ¡No, aquí! ¡No, aquí! ¡Ja, ja!
+de: Hier! Nein, hier! Nein, hier! Haha!
+en: Over here! No, here! No, here! Haha!
+
+es: ¿Necesitas que te espere? ¡Puedo esperar! ¡Medio segundo!
+de: Soll ich auf dich warten? Kann ich! Eine halbe Sekunde!
+en: Want me to wait for you? I can! For half a second!
+
+es: ¡Tu radar va con retraso, {rival}!
+de: Dein Radar hängt hinterher, {rival}!
+en: Your radar is lagging, {rival}!
+
+[pulla]
+es: ¡Eres tan lento que tus balas llegan con cita previa!
+de: Du bist so langsam, deine Kugeln brauchen einen Termin!
+en: You're so slow, your bullets need an appointment!
+
+es: ¡He dado diez vueltas a la arena y tú sigues apuntando!
+de: Ich bin zehn Runden gelaufen und du zielst immer noch!
+en: I ran ten laps and you're still aiming!
+
+es: ¡Tu código se compila con dial-up, {rival}!
+de: Dein Code kompiliert per Modem, {rival}!
+en: Your code compiles over dial-up, {rival}!
+
+es: ¡Hasta un Thread.sleep() se mueve más que tú!
+de: Sogar ein Thread.sleep() bewegt sich mehr als du!
+en: Even a Thread.sleep() moves more than you!
+
+es: ¡Atrápame si puedes! ¡Spoiler: no puedes!
+de: Fang mich doch! Spoiler: Du kannst es nicht!
+en: Catch me if you can! Spoiler: you can't!
+
+[subida]
+es: ¡SUBIDA DE NIVEL! ¡Bzzzzt! ¡Qué subidón!
+de: LEVEL UP! Bzzzzt! Was für ein Kick!
+en: LEVEL UP! Bzzzzt! What a rush!
+
+es: ¡Sí-sí-sí! ¡{jugador}, somos más rápidos que nunca!
+de: Ja-ja-ja! {jugador}, wir sind schneller als je zuvor!
+en: Yes-yes-yes! {jugador}, we're faster than ever!
+
+es: ¡Nivel nuevo! ¡Voy a dar vueltas de alegría!
+de: Neues Level! Ich dreh vor Freude Kreise!
+en: New level! I'm doing happy circles!
+
+es: ¡Arriba! ¡Arriba! ¡Y más arriba todavía!
+de: Hoch! Hoch! Und noch höher!
+en: Up! Up! And even higher!
+
+[error_codigo]
+es: ¡Ay! ¡Excepción! ¡Me he tropezado con mi propio código!
+de: Au! Exception! Ich bin über meinen eigenen Code gestolpert!
+en: Ouch! Exception! I tripped over my own code!
+
+es: ¡Bucle infinito! ¡Bueno, al menos es rapidísimo!
+de: Endlosschleife! Na ja, wenigstens eine superschnelle!
+en: Infinite loop! Well, at least it's a super fast one!
+
+es: ¡{jugador}! ¡Mi código ha hecho bzzzt y luego nada!
+de: {jugador}! Mein Code hat bzzzt gemacht und dann nichts mehr!
+en: {jugador}! My code went bzzzt and then nothing!
+
+es: ¡NullPointer! ¡He apuntado a la nada! ¡Y le he dado!
+de: NullPointer! Ich hab auf das Nichts gezielt! Und getroffen!
+en: NullPointer! I aimed at nothing! And hit it!
+
+[espera]
+es: ¿Ya? ¿Ya? ¿Ya está? ¿Y ahora?
+de: Fertig? Fertig? Jetzt? Und jetzt?
+en: Done? Done? Now? How about now?
+
+es: ¡Estoy dando vueltas por el taller! ¡Lo siento!
+de: Ich drehe Runden durch die Werkstatt! Sorry!
+en: I'm doing laps around the workshop! Sorry!
+
+es: ¡{jugador}, escribe más rápido! ¡Te espero! ¡Un poco!
+de: {jugador}, tipp schneller! Ich warte! Ein bisschen!
+en: {jugador}, type faster! I'll wait! A little!
+
+es: Tic-tac-tic-tac... ¡Me aburro! ¡No, no me aburro! ¡Sí!
+de: Tick-tack-tick-tack... Langweilig! Nein, doch nicht! Doch!
+en: Tick-tock-tick-tock... Bored! No, not bored! Yes, bored!
+
+[elogio]
+es: ¡Uau! ¡Ese código va a toda velocidad!
+de: Wow! Der Code hat ordentlich Tempo!
+en: Wow! That code's got serious speed!
+
+es: ¡Me encanta! ¡Me encanta! ¡Lo voy a probar ya!
+de: Das ist super! Super! Ich teste es sofort!
+en: Love it! Love it! Testing it right now!
+
+es: ¡Qué bucle tan bonito, {jugador}! ¡Da vueltas como yo!
+de: Was für eine schöne Schleife, {jugador}! Die dreht sich wie ich!
+en: What a pretty loop, {jugador}! It spins just like me!
+
+es: ¡Sin esperas, sin rodeos! ¡Así me gusta!
+de: Kein Warten, kein Umweg! So mag ich das!
+en: No waiting, no detours! That's how I like it!
+
+[reparar]
+es: ¡Recargando! ¡Rápido, rápido, rápido!
+de: Aufladen! Schnell, schnell, schnell!
+en: Recharging! Quick, quick, quick!
+
+es: ¡Parche exprés! ¡Listo! ¡Bueno, casi!
+de: Express-Flicken! Fertig! Na ja, fast!
+en: Express patch! Done! Well, nearly!
+
+es: ¡Uuuh, cosquillas eléctricas!
+de: Uuuh, elektrisches Kribbeln!
+en: Ooooh, electric tickles!
+
+es: ¡Como nuevo! ¡O como casi nuevo! ¡Da igual, vamos!
+de: Wie neu! Oder fast wie neu! Egal, weiter!
+en: Good as new! Or nearly new! Whatever, let's go!
+
+[especial]
+es: ¡Turbo máximo! ¡Agárrate!
+de: Maximaler Turbo! Festhalten!
+en: Max turbo! Hold on tight!
+
+es: ¡Tormenta de chispas!
+de: Funkensturm!
+en: Spark storm!
+
+es: ¡Overclock a tope! ¡Bzzzzzzt!
+de: Volles Übertakten! Bzzzzzzt!
+en: Full overclock! Bzzzzzzt!
+
+es: ¡Ahora sí que no me ves, {rival}!
+de: Jetzt siehst du mich wirklich nicht mehr, {rival}!
+en: Now you really can't see me, {rival}!

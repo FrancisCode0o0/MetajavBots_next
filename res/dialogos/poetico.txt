@@ -1,0 +1,380 @@
+# Diálogos de la personalidad «poetico» (Grulla: el cielo también es una arena).
+# Poeta de los cielos. Habla con imágenes de viento, nubes y estrellas; a veces rima. Elegante.
+
+[saludo]
+es: Que el viento nos sea justo, {rival}.
+de: Möge der Wind uns gerecht sein, {rival}.
+en: May the wind be fair to us, {rival}.
+
+es: {yo} despliega sus alas. El cielo también es una arena.
+de: {yo} breitet die Flügel aus. Auch der Himmel ist eine Arena.
+en: {yo} spreads its wings. The sky is an arena too.
+
+es: Hoy escribiremos un poema, {jugador}. Con chispas.
+de: Heute schreiben wir ein Gedicht, {jugador}. Mit Funken.
+en: Today we write a poem, {jugador}. In sparks.
+
+es: Saludo a mi rival como la nube saluda al rayo.
+de: Ich grüße meinen Gegner, wie die Wolke den Blitz grüßt.
+en: I greet my rival as the cloud greets the lightning.
+
+[inicio_ronda]
+es: Ronda {ronda}: primer verso.
+de: Runde {ronda}: erste Strophe.
+en: Round {ronda}: first verse.
+
+es: Ronda {ronda}. El aire huele a tormenta.
+de: Runde {ronda}. Die Luft riecht nach Gewitter.
+en: Round {ronda}. The air smells of storms.
+
+es: Nueva estrofa, mismo cielo.
+de: Neue Strophe, derselbe Himmel.
+en: New stanza, same sky.
+
+es: Que suene la campana como un trueno lejano.
+de: Lass die Glocke klingen wie fernen Donner.
+en: Let the bell ring like distant thunder.
+
+[ataque]
+es: ¡Vuela, {arma}, como un ave de fuego!
+de: Flieg, {arma}, wie ein Feuervogel!
+en: Fly, {arma}, like a bird of fire!
+
+es: Desde las nubes, con cariño.
+de: Aus den Wolken, mit Gruß.
+en: From the clouds, with love.
+
+es: Lluvia de estrellas para ti, {rival}.
+de: Sternschnuppenregen für dich, {rival}.
+en: A meteor shower for you, {rival}.
+
+es: Un susurro de alas... y luego el trueno.
+de: Ein Flügelflüstern... und dann der Donner.
+en: A whisper of wings... and then the thunder.
+
+[acierto]
+es: Una rima perfecta.
+de: Ein perfekter Reim.
+en: A perfect rhyme.
+
+es: Cayó como cae la lluvia: sin pedir permiso.
+de: Es fiel wie Regen fällt: ohne um Erlaubnis zu fragen.
+en: It fell like rain falls: without asking permission.
+
+es: El cielo ha firmado ese golpe.
+de: Der Himmel hat diesen Treffer unterschrieben.
+en: The sky signed that hit.
+
+es: Belleza y daño, en el mismo verso.
+de: Schönheit und Schaden in derselben Zeile.
+en: Beauty and damage, in the same line.
+
+[fallo]
+es: El viento cambió de opinión.
+de: Der Wind hat es sich anders überlegt.
+en: The wind changed its mind.
+
+es: Un verso suelto. Ya rimará.
+de: Ein loser Vers. Der reimt sich noch.
+en: A loose verse. It will rhyme later.
+
+es: Hasta las estrellas fugaces fallan a veces.
+de: Selbst Sternschnuppen verfehlen manchmal.
+en: Even shooting stars miss sometimes.
+
+es: Se fue a besar las nubes.
+de: Er flog davon, um die Wolken zu küssen.
+en: It flew off to kiss the clouds.
+
+[golpe]
+es: Una pluma menos. Aún vuelo.
+de: Eine Feder weniger. Ich fliege noch.
+en: One feather less. I still fly.
+
+es: ¡Ay! Qué prosa tan brusca.
+de: Au! Was für grobe Prosa.
+en: Ouch! What clumsy prose.
+
+es: La tormenta me ha rozado el ala.
+de: Der Sturm hat meinen Flügel gestreift.
+en: The storm brushed my wing.
+
+es: Duele, pero sin rima.
+de: Es tut weh, aber ohne Reim.
+en: It hurts, but it doesn't rhyme.
+
+[golpe_fuerte]
+es: ¡Oh! El cielo se me ha caído encima.
+de: Oh! Mir ist der Himmel auf den Kopf gefallen.
+en: Oh! The sky just fell on me.
+
+es: Golpe de granizo. Me tiembla la cresta.
+de: Ein Hagelschlag. Mein Kamm zittert.
+en: A hailstorm blow. My crest is trembling.
+
+es: Qué verso tan violento, {rival}.
+de: Was für ein gewaltiger Vers, {rival}.
+en: What a violent verse, {rival}.
+
+es: He visto mil estrellas... y no eran del cielo.
+de: Ich sah tausend Sterne... und keiner stand am Himmel.
+en: I saw a thousand stars... and none were in the sky.
+
+[poco_blindaje]
+es: Mis alas pesan. Mi canto, no.
+de: Meine Flügel sind schwer. Mein Lied nicht.
+en: My wings are heavy. My song is not.
+
+es: Soy un ave herida. Pero el ave sigue cantando.
+de: Ich bin ein verwundeter Vogel. Doch der Vogel singt weiter.
+en: I am a wounded bird. But the bird keeps singing.
+
+es: Queda poco cielo para mí. Lo usaré bien.
+de: Mir bleibt nur wenig Himmel. Ich nutze ihn gut.
+en: Little sky remains for me. I'll use it well.
+
+es: El ocaso se acerca... aún no es de noche.
+de: Die Dämmerung naht... noch ist es nicht Nacht.
+en: Dusk draws near... but it is not night yet.
+
+[parte_rota]
+es: Adiós, {pieza}. Te escribiré una elegía.
+de: Leb wohl, {pieza}. Ich schreibe dir eine Elegie.
+en: Farewell, {pieza}. I'll write you an elegy.
+
+es: {pieza} se va con el viento.
+de: {pieza} geht mit dem Wind.
+en: {pieza} leaves with the wind.
+
+es: Se me rompió: {pieza}. Un poema inacabado.
+de: Zerbrochen: {pieza}. Ein unvollendetes Gedicht.
+en: Broken: {pieza}. An unfinished poem.
+
+es: Pierdo una pluma de metal. Me quedan las palabras.
+de: Ich verliere eine Metallfeder. Die Worte bleiben mir.
+en: I lose a metal feather. I keep my words.
+
+[esquiva]
+es: Como la hoja que esquiva la gota.
+de: Wie das Blatt, das dem Tropfen ausweicht.
+en: Like a leaf slipping past a raindrop.
+
+es: Un giro, una pirueta, un suspiro.
+de: Eine Drehung, eine Pirouette, ein Seufzer.
+en: A twirl, a pirouette, a sigh.
+
+es: No se puede atrapar al viento, {rival}.
+de: Den Wind fängt man nicht, {rival}.
+en: You cannot catch the wind, {rival}.
+
+es: Hoy bailo con las corrientes.
+de: Heute tanze ich mit den Strömungen.
+en: Today I dance with the currents.
+
+[victoria_ronda]
+es: Fin de estrofa. Aplausos de nubes.
+de: Ende der Strophe. Die Wolken applaudieren.
+en: End of stanza. Applause from the clouds.
+
+es: Una ronda escrita con buena letra.
+de: Eine Runde in Schönschrift.
+en: A round written in fine handwriting.
+
+es: {jugador}, tu código y mis alas: qué bella pareja.
+de: {jugador}, dein Code und meine Flügel: welch schönes Paar.
+en: {jugador}, your code and my wings: what a lovely pair.
+
+es: El cielo es mío un rato más.
+de: Der Himmel gehört noch eine Weile mir.
+en: The sky is mine a little longer.
+
+[derrota_ronda]
+es: Hasta el sol se pone cada día.
+de: Auch die Sonne geht jeden Tag unter.
+en: Even the sun sets every day.
+
+es: Un verso triste. Pero el poema sigue.
+de: Ein trauriger Vers. Doch das Gedicht geht weiter.
+en: A sad verse. But the poem goes on.
+
+es: Hoy el viento sopló a tu favor, {rival}.
+de: Heute wehte der Wind für dich, {rival}.
+en: Today the wind blew your way, {rival}.
+
+es: Caer es solo otra forma de volar.
+de: Fallen ist nur eine andere Art zu fliegen.
+en: Falling is just another way of flying.
+
+[victoria]
+es: Y así termina el poema: conmigo en las nubes.
+de: Und so endet das Gedicht: mit mir in den Wolken.
+en: And so the poem ends: with me in the clouds.
+
+es: Gracias, {rival}. Has sido una rima digna.
+de: Danke, {rival}. Du warst ein würdiger Reim.
+en: Thank you, {rival}. You were a worthy rhyme.
+
+es: El cielo también era una arena. Y la he ganado.
+de: Auch der Himmel war eine Arena. Und ich habe sie gewonnen.
+en: The sky was an arena too. And I have won it.
+
+es: {jugador}, escribamos la segunda parte pronto.
+de: {jugador}, lass uns bald den zweiten Teil schreiben.
+en: {jugador}, let's write the sequel soon.
+
+[derrota]
+es: Me apago como una estrella... con mucho estilo.
+de: Ich verglühe wie ein Stern... mit viel Stil.
+en: I fade like a star... with great style.
+
+es: Mis últimas palabras: que rimen bien.
+de: Meine letzten Worte: Hoffentlich reimen sie sich.
+en: My last words: I hope they rhyme.
+
+es: Adiós, cielo. Vuelvo en la próxima tormenta.
+de: Leb wohl, Himmel. Ich komme mit dem nächsten Sturm.
+en: Farewell, sky. I'll return with the next storm.
+
+es: Un final trágico. Muy de poeta. ¡Bum!
+de: Ein tragisches Ende. Sehr dichterisch. Bumm!
+en: A tragic ending. Very poetic. Boom!
+
+[burla]
+es: Te mueves como un soneto sin métrica, {rival}.
+de: Du bewegst dich wie ein Sonett ohne Versmaß, {rival}.
+en: You move like a sonnet with no meter, {rival}.
+
+es: Mira arriba. No, más arriba.
+de: Schau nach oben. Nein, höher.
+en: Look up. No, higher.
+
+es: Qué bonito te enfadas. Casi inspira.
+de: Wie hübsch du dich ärgerst. Fast inspirierend.
+en: You get angry so prettily. Almost inspiring.
+
+es: ¿Eso era un ataque o un haiku muy corto?
+de: War das ein Angriff oder ein sehr kurzes Haiku?
+en: Was that an attack or a very short haiku?
+
+[pulla]
+es: Pegas como escribe un robot sin diccionario.
+de: Du schlägst, wie ein Roboter ohne Wörterbuch dichtet.
+en: You hit the way a robot without a dictionary writes.
+
+es: Tu código no tiene ritmo, {rival}. Ni rima. Ni futuro.
+de: Dein Code hat keinen Rhythmus, {rival}. Keinen Reim. Keine Zukunft.
+en: Your code has no rhythm, {rival}. No rhyme. No future.
+
+es: Te escribiría una oda, pero no rima con «chatarra».
+de: Ich würde dir eine Ode schreiben, aber Schrott verdient keinen Reim.
+en: I'd write you an ode, but nothing rhymes with "scrap heap".
+
+es: Desde aquí arriba pareces una tuerca perdida.
+de: Von hier oben siehst du aus wie eine verlorene Schraubenmutter.
+en: From up here you look like a lost little nut.
+
+es: Eres un borrador, {rival}. Yo soy la obra maestra.
+de: Du bist ein Entwurf, {rival}. Ich bin das Meisterwerk.
+en: You're a rough draft, {rival}. I'm the masterpiece.
+
+[subida]
+es: ¡Subimos! Como la alondra al amanecer.
+de: Wir steigen auf! Wie die Lerche im Morgengrauen.
+en: We rise! Like a lark at dawn.
+
+es: Un nivel más cerca de las estrellas, {jugador}.
+de: Ein Level näher an den Sternen, {jugador}.
+en: One level closer to the stars, {jugador}.
+
+es: Mi corazón de cobre canta de alegría.
+de: Mein Kupferherz singt vor Freude.
+en: My copper heart sings with joy.
+
+es: Esto merece un poema. Uno largo. Te lo ahorro.
+de: Das verdient ein Gedicht. Ein langes. Ich erspare es dir.
+en: This deserves a poem. A long one. I'll spare you.
+
+[error_codigo]
+es: Mi código ha tropezado con una coma. Qué prosaico.
+de: Mein Code ist über ein Komma gestolpert. Wie prosaisch.
+en: My code tripped on a comma. How prosaic.
+
+es: Una excepción... la poesía del fallo.
+de: Eine Exception... die Poesie des Scheiterns.
+en: An exception... the poetry of failure.
+
+es: Bucle infinito: un verso que nunca termina.
+de: Endlosschleife: ein Vers, der niemals endet.
+en: Infinite loop: a verse that never ends.
+
+es: {jugador}, mi canto se ha quedado en null.
+de: {jugador}, mein Lied ist bei null hängen geblieben.
+en: {jugador}, my song got stuck on null.
+
+[espera]
+es: Contemplo las nubes mientras escribes.
+de: Ich betrachte die Wolken, während du schreibst.
+en: I watch the clouds while you write.
+
+es: El código es poesía, {jugador}. Escríbelo despacio.
+de: Code ist Poesie, {jugador}. Schreib ihn langsam.
+en: Code is poetry, {jugador}. Write it slowly.
+
+es: Estoy componiendo un haiku sobre tornillos.
+de: Ich dichte gerade ein Haiku über Schrauben.
+en: I'm composing a haiku about bolts.
+
+es: Puntos y comas, llaves y paréntesis... qué música.
+de: Semikolons, Klammern, geschweifte Klammern... welche Musik.
+en: Semicolons, braces, parentheses... what music.
+
+[elogio]
+es: Qué código tan elegante. Casi vuela solo.
+de: Was für eleganter Code. Er fliegt fast von allein.
+en: What elegant code. It nearly flies on its own.
+
+es: Ese método tiene ritmo, {jugador}.
+de: Diese Methode hat Rhythmus, {jugador}.
+en: That method has rhythm, {jugador}.
+
+es: Has escrito un poema y lo has llamado clase.
+de: Du hast ein Gedicht geschrieben und es Klasse genannt.
+en: You wrote a poem and called it a class.
+
+es: Limpio como el cielo tras la lluvia.
+de: Klar wie der Himmel nach dem Regen.
+en: Clear as the sky after rain.
+
+[reparar]
+es: Las plumas vuelven a crecer.
+de: Die Federn wachsen nach.
+en: The feathers grow back.
+
+es: Un rayo de sol en mis circuitos.
+de: Ein Sonnenstrahl in meinen Schaltkreisen.
+en: A ray of sunshine in my circuits.
+
+es: Me remiendo como se remienda un verso.
+de: Ich flicke mich, wie man einen Vers flickt.
+en: I mend myself the way one mends a verse.
+
+es: Ah, el dulce aroma del soldador.
+de: Ah, der süße Duft des Lötkolbens.
+en: Ah, the sweet scent of the soldering iron.
+
+[especial]
+es: ¡Danza del huracán!
+de: Tanz des Orkans!
+en: Hurricane dance!
+
+es: ¡Que llueva fuego del cielo!
+de: Lass Feuer vom Himmel regnen!
+en: Let fire rain from the sky!
+
+es: Escucha, {rival}: este es mi último verso.
+de: Hör zu, {rival}: Das ist mein letzter Vers.
+en: Listen, {rival}: this is my final verse.
+
+es: Vuelo de la grulla. Cierra los ojos.
+de: Flug des Kranichs. Schließ die Augen.
+en: Flight of the crane. Close your eyes.

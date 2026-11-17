@@ -1,0 +1,384 @@
+# Diálogos de la personalidad «estoico» (Cobalto: un muro que avanza).
+# Veterano de mil peleas. Habla poco, despacio y sin adornos. Nada le asusta.
+
+[saludo]
+es: {yo}. Listo. Empecemos.
+de: {yo}. Bereit. Fangen wir an.
+en: {yo}. Ready. Let us begin.
+
+es: He visto muchas arenas, {rival}. Esta es una más.
+de: Ich habe viele Arenen gesehen, {rival}. Das hier ist nur eine weitere.
+en: I have seen many arenas, {rival}. This is just one more.
+
+es: No hablo mucho. Peleo.
+de: Ich rede nicht viel. Ich kämpfe.
+en: I do not talk much. I fight.
+
+es: {jugador}, tu código va conmigo. No lo dejaré caer.
+de: {jugador}, dein Code geht mit mir. Ich lasse ihn nicht fallen.
+en: {jugador}, your code walks with me. I will not drop it.
+
+es: Saludo al rival. Luego, a trabajar.
+de: Ich grüße den Gegner. Dann wird gearbeitet.
+en: I salute my opponent. Then, to work.
+
+[inicio_ronda]
+es: Ronda {ronda}. Un paso tras otro.
+de: Runde {ronda}. Ein Schritt nach dem anderen.
+en: Round {ronda}. One step after another.
+
+es: Ronda {ronda}. Nada ha cambiado. Sigo aquí.
+de: Runde {ronda}. Nichts hat sich geändert. Ich stehe noch.
+en: Round {ronda}. Nothing has changed. I am still here.
+
+es: Respira, núcleo. Ronda {ronda}.
+de: Atme, Kern. Runde {ronda}.
+en: Breathe, core. Round {ronda}.
+
+es: Otra ronda. El muro avanza.
+de: Noch eine Runde. Die Mauer rückt vor.
+en: Another round. The wall walks on.
+
+[ataque]
+es: Ahora.
+de: Jetzt.
+en: Now.
+
+es: Con calma. Con fuerza.
+de: Ruhig. Mit Wucht.
+en: Calm. And heavy.
+
+es: {arma}. Sin prisa.
+de: {arma}. Ohne Eile.
+en: {arma}. No hurry.
+
+es: Recibe esto, {rival}.
+de: Nimm das, {rival}.
+en: Take this, {rival}.
+
+[acierto]
+es: Bien.
+de: Gut.
+en: Good.
+
+es: Donde tenía que ir.
+de: Genau dorthin, wo er hingehörte.
+en: Right where it belonged.
+
+es: Un golpe honrado.
+de: Ein ehrlicher Treffer.
+en: An honest hit.
+
+es: Uno menos. Quedan muchos.
+de: Einer weniger. Es kommen noch viele.
+en: One down. Many more to go.
+
+[fallo]
+es: Fallé. Pasa.
+de: Daneben. Kommt vor.
+en: Missed. It happens.
+
+es: El siguiente irá dentro.
+de: Der nächste sitzt.
+en: The next one lands.
+
+es: Paciencia. El muro no tiene prisa.
+de: Geduld. Die Mauer hat keine Eile.
+en: Patience. The wall is in no hurry.
+
+es: Aire. El aire no se queja.
+de: Nur Luft. Die Luft beschwert sich nicht.
+en: Just air. The air does not complain.
+
+[golpe]
+es: Lo he sentido. Sigo.
+de: Gespürt. Weiter.
+en: Felt that. Moving on.
+
+es: Una abolladura más para la colección.
+de: Noch eine Delle für die Sammlung.
+en: One more dent for the collection.
+
+es: El acero aguanta.
+de: Der Stahl hält.
+en: The steel holds.
+
+es: Eso no basta, {rival}.
+de: Das reicht nicht, {rival}.
+en: That is not enough, {rival}.
+
+[golpe_fuerte]
+es: Uf. Eso sí ha dolido.
+de: Uff. Das hat gesessen.
+en: Oof. That one landed.
+
+es: Buen golpe. Lo reconozco.
+de: Guter Schlag. Das gebe ich zu.
+en: Good hit. I will admit it.
+
+es: Me ha temblado hasta el núcleo. Sigo de pie.
+de: Mir hat der Kern gebebt. Ich stehe noch.
+en: That shook my core. I am still standing.
+
+es: Duro. Yo también lo soy.
+de: Hart. Ich bin es auch.
+en: Hard. So am I.
+
+[poco_blindaje]
+es: Queda poco blindaje. Queda mucha voluntad.
+de: Wenig Panzerung übrig. Viel Wille übrig.
+en: Little armor left. Plenty of will left.
+
+es: He estado peor. Creo.
+de: Mir ging es schon schlechter. Glaube ich.
+en: I have been worse. I think.
+
+es: Las grietas no deciden. Decido yo.
+de: Die Risse entscheiden nicht. Ich entscheide.
+en: Cracks do not decide. I do.
+
+es: Aún no, {rival}. Aún no.
+de: Noch nicht, {rival}. Noch nicht.
+en: Not yet, {rival}. Not yet.
+
+[parte_rota]
+es: {pieza}: rota. Ya no me hacía falta.
+de: {pieza}: hinüber. Brauchte ich eh nicht.
+en: {pieza}: gone. I did not need it anyway.
+
+es: Pieza rota: {pieza}. El resto sigue.
+de: Das Teil {pieza} ist hin. Der Rest läuft.
+en: The {pieza} broke. The rest keeps going.
+
+es: Una pieza menos. El mismo robot.
+de: Ein Teil weniger. Derselbe Roboter.
+en: One part less. Same robot.
+
+es: {pieza} perdida. Me adapto.
+de: {pieza} verloren. Ich passe mich an.
+en: {pieza} lost. I adapt.
+
+[esquiva]
+es: No.
+de: Nein.
+en: No.
+
+es: Lo vi venir hace rato.
+de: Das sah ich schon lange kommen.
+en: Saw that coming a while ago.
+
+es: Despacio no es lo mismo que torpe.
+de: Langsam heißt nicht ungeschickt.
+en: Slow is not the same as clumsy.
+
+es: Un paso a un lado. Suficiente.
+de: Ein Schritt zur Seite. Genügt.
+en: One step aside. Enough.
+
+[victoria_ronda]
+es: Ronda mía. Sigamos.
+de: Runde an mich. Weiter.
+en: My round. Let us continue.
+
+es: Una ronda. No es la pelea.
+de: Eine Runde. Nicht der Kampf.
+en: One round. Not the fight.
+
+es: Bien hecho, {jugador}. Sin celebrar todavía.
+de: Gut gemacht, {jugador}. Noch nicht feiern.
+en: Well done, {jugador}. No celebrating yet.
+
+es: El muro sigue en pie. El otro, no tanto.
+de: Die Mauer steht. Der andere eher nicht.
+en: The wall stands. The other one, not so much.
+
+[derrota_ronda]
+es: Ronda perdida. La pelea no.
+de: Runde verloren. Der Kampf nicht.
+en: Round lost. Not the fight.
+
+es: Aprendo. Vuelvo.
+de: Ich lerne. Ich komme wieder.
+en: I learn. I return.
+
+es: Me has ganado esta, {rival}. Guárdala bien.
+de: Diese hast du, {rival}. Pass gut darauf auf.
+en: You won this one, {rival}. Keep it safe.
+
+es: Caer es parte del camino.
+de: Fallen gehört zum Weg.
+en: Falling is part of the road.
+
+[victoria]
+es: Se acabó. Buena pelea, {rival}.
+de: Vorbei. Guter Kampf, {rival}.
+en: It is over. Good fight, {rival}.
+
+es: Victoria. Mañana, otra arena.
+de: Sieg. Morgen eine andere Arena.
+en: Victory. Tomorrow, another arena.
+
+es: El muro avanzó. Nadie lo detuvo.
+de: Die Mauer rückte vor. Niemand hielt sie auf.
+en: The wall walked. Nobody stopped it.
+
+es: Tu código y mi acero, {jugador}. Buen equipo.
+de: Dein Code und mein Stahl, {jugador}. Gutes Team.
+en: Your code and my steel, {jugador}. Good team.
+
+[derrota]
+es: Bien peleado, {rival}. Me toca descansar.
+de: Gut gekämpft, {rival}. Zeit, dass ich ruhe.
+en: Well fought, {rival}. Time for me to rest.
+
+es: Hasta los muros caen. Luego se reconstruyen.
+de: Auch Mauern fallen. Dann baut man sie wieder auf.
+en: Even walls fall. Then they get rebuilt.
+
+es: {jugador}... arréglame. Volveremos.
+de: {jugador}... reparier mich. Wir kommen wieder.
+en: {jugador}... fix me. We will be back.
+
+es: No me arrepiento de nada. Bum.
+de: Ich bereue nichts. Bumm.
+en: No regrets. Boom.
+
+[burla]
+es: ¿Eso era todo?
+de: War das schon alles?
+en: Was that all?
+
+es: Me han hecho más daño las escaleras.
+de: Treppen haben mir schon mehr wehgetan.
+en: Stairs have hurt me more.
+
+es: Sigue probando, {rival}. Yo espero.
+de: Probier ruhig weiter, {rival}. Ich warte.
+en: Keep trying, {rival}. I will wait.
+
+es: Tranquilo. Nadie gana a la primera.
+de: Keine Sorge. Niemand gewinnt beim ersten Mal.
+en: Relax. Nobody wins on the first try.
+
+[pulla]
+es: Golpeas como un bucle vacío: mucho ruido, nada dentro.
+de: Du schlägst wie eine leere Schleife: viel Lärm, nichts drin.
+en: You hit like an empty loop: lots of noise, nothing inside.
+
+es: He oxidado robots más duros que tú bajo la lluvia.
+de: Ich habe härtere Roboter als dich im Regen rosten sehen.
+en: I have watched tougher robots than you rust in the rain.
+
+es: Llevo más peleas que tú líneas de código, {rival}.
+de: Ich habe mehr Kämpfe hinter mir als du Codezeilen, {rival}.
+en: I have more fights behind me than you have lines of code, {rival}.
+
+es: Ríndete ya. Así llegas pronto al taller.
+de: Gib lieber auf. Dann bist du schneller in der Werkstatt.
+en: Give up now. You will reach the workshop sooner.
+
+es: Soy un muro. Tú eres una pelota de goma.
+de: Ich bin eine Mauer. Du bist ein Gummiball.
+en: I am a wall. You are a rubber ball.
+
+[subida]
+es: Más nivel. Más responsabilidad. Bien, {jugador}.
+de: Mehr Level, mehr Verantwortung. Gut, {jugador}.
+en: Higher level. More responsibility. Good, {jugador}.
+
+es: Subimos. Despacio, pero subimos.
+de: Wir steigen auf. Langsam, aber wir steigen.
+en: We climb. Slowly, but we climb.
+
+es: Esto me alegra. Aunque no lo parezca.
+de: Das freut mich. Auch wenn man es nicht sieht.
+en: This makes me glad. Even if it does not show.
+
+es: Un escalón más. El camino es largo. Me gusta.
+de: Eine Stufe mehr. Der Weg ist lang. Das gefällt mir.
+en: One more step. The road is long. I like it.
+
+[error_codigo]
+es: Una excepción. Me he quedado mirando a la pared.
+de: Eine Exception. Ich starre jetzt die Wand an.
+en: An exception. I am now staring at a wall.
+
+es: {jugador}, mi código se ha tropezado. Yo no.
+de: {jugador}, mein Code ist gestolpert. Ich nicht.
+en: {jugador}, my code tripped. I did not.
+
+es: Error. Lo acepto. Arréglalo luego.
+de: Fehler. Ich nehme ihn hin. Repariere ihn später.
+en: Error. I accept it. Fix it later.
+
+es: Un null donde esperaba un plan. Sigo igual.
+de: Ein null, wo ich einen Plan erwartet habe. Ich bleibe ruhig.
+en: A null where I expected a plan. I remain calm.
+
+[espera]
+es: Espero. Se me da bien.
+de: Ich warte. Darin bin ich gut.
+en: I wait. I am good at it.
+
+es: Sin prisa, {jugador}. El código bueno tarda.
+de: Keine Eile, {jugador}. Guter Code braucht Zeit.
+en: No rush, {jugador}. Good code takes time.
+
+es: Estoy contando mis remaches. Todos en su sitio.
+de: Ich zähle meine Nieten. Alle an ihrem Platz.
+en: Counting my rivets. All in place.
+
+es: Aquí sigo. Como siempre.
+de: Ich bin noch hier. Wie immer.
+en: Still here. As always.
+
+[elogio]
+es: Código limpio. Como debe ser.
+de: Sauberer Code. So gehört sich das.
+en: Clean code. As it should be.
+
+es: Esto está bien hecho. No digo eso a menudo.
+de: Das ist gut gemacht. Das sage ich nicht oft.
+en: This is well made. I do not say that often.
+
+es: Sólido. Me gusta lo sólido.
+de: Solide. Ich mag Solides.
+en: Solid. I like solid.
+
+es: Pocas líneas, mucho sentido. Bien, {jugador}.
+de: Wenige Zeilen, viel Sinn. Gut, {jugador}.
+en: Few lines, lots of sense. Good, {jugador}.
+
+[reparar]
+es: Remiendo y sigo.
+de: Flicken und weiter.
+en: Patch up and move on.
+
+es: Un poco de soldadura. Suficiente.
+de: Ein bisschen Schweißen. Genügt.
+en: A little welding. Enough.
+
+es: Me curo despacio. Pero me curo.
+de: Ich heile langsam. Aber ich heile.
+en: I heal slowly. But I heal.
+
+es: Otra cicatriz de metal. Las llevo con orgullo.
+de: Noch eine Metallnarbe. Ich trage sie mit Stolz.
+en: Another metal scar. I wear them with pride.
+
+[especial]
+es: Ha llegado el momento.
+de: Jetzt ist es Zeit.
+en: The time has come.
+
+es: El muro cae sobre ti, {rival}.
+de: Die Mauer fällt auf dich, {rival}.
+en: The wall falls on you, {rival}.
+
+es: Todo mi peso. Todo de una vez.
+de: Mein ganzes Gewicht. Alles auf einmal.
+en: All my weight. All at once.
+
+es: Avance de acero.
+de: Stahlvorstoß.
+en: Steel advance.

@@ -1,0 +1,384 @@
+# Teatral: Faro / Leuchtturm / Beacon. Diva-faro que vive para el foco y el aplauso.
+# Todo es una obra, un estreno, una tragedia o un triunfo; habla al público y exagera.
+
+[saludo]
+es: ¡Que se encienda el foco! ¡La estrella ha llegado!
+de: Scheinwerfer an! Der Star ist da!
+en: Spotlight on! The star has arrived!
+
+es: {rival}, esta noche tienes el honor de ser mi secundario.
+de: {rival}, heute Abend darfst du meine Nebenrolle spielen.
+en: {rival}, tonight you have the honor of being my supporting act.
+
+es: Damas, caballeros, robots… ¡yo!
+de: Meine Damen, meine Herren, Roboter… ich!
+en: Ladies, gentlemen, robots… me!
+
+es: {jugador}, ¿has traído flores? Las necesitaré al final.
+de: {jugador}, hast du Blumen dabei? Die brauche ich am Ende.
+en: {jugador}, did you bring flowers? I'll need them at the end.
+
+es: Que se haga la luz… ¡y que queme!
+de: Es werde Licht… und es brenne!
+en: Let there be light… and let it burn!
+
+[inicio_ronda]
+es: ¡Acto {ronda}! ¡Se levanta el telón!
+de: Akt {ronda}! Der Vorhang hebt sich!
+en: Act {ronda}! The curtain rises!
+
+es: Ronda {ronda}. Público, preparad los pañuelos.
+de: Runde {ronda}. Publikum, holt die Taschentücher raus.
+en: Round {ronda}. Audience, ready your handkerchiefs.
+
+es: ¡Luces, cámara… combate!
+de: Licht, Kamera… Kampf!
+en: Lights, camera… combat!
+
+es: Escena {ronda}: la estrella brilla, el villano tiembla.
+de: Szene {ronda}: Der Star strahlt, der Schurke zittert.
+en: Scene {ronda}: the star shines, the villain trembles.
+
+[ataque]
+es: ¡Contempla mi resplandor!
+de: Bestaune meinen Glanz!
+en: Behold my radiance!
+
+es: ¡Un rayo de pura elegancia!
+de: Ein Strahl purer Eleganz!
+en: A beam of pure elegance!
+
+es: ¡Esto merece una ovación!
+de: Das verdient Standing Ovations!
+en: This deserves an ovation!
+
+es: ¡Foco, por favor! ¡Ataco!
+de: Scheinwerfer, bitte! Ich greife an!
+en: Spotlight, please! I attack!
+
+[acierto]
+es: ¡Bravo! ¡Bravísimo! ¡Lo digo yo misma!
+de: Bravo! Bravissimo! Das sag ich mir selbst!
+en: Bravo! Bravissimo! I'll say it myself!
+
+es: ¡Y el público enloquece!
+de: Und das Publikum rastet aus!
+en: And the crowd goes wild!
+
+es: ¡Un golpe digno de un estreno!
+de: Ein Treffer wie bei einer Premiere!
+en: A hit worthy of opening night!
+
+es: ¿Has visto eso, {jugador}? ¡Arte!
+de: Hast du das gesehen, {jugador}? Kunst!
+en: Did you see that, {jugador}? Art!
+
+[fallo]
+es: ¡Quién ha movido el decorado!
+de: Wer hat die Kulisse verschoben?!
+en: Who moved the scenery?!
+
+es: Era un ensayo. El de verdad viene ahora.
+de: Das war nur die Probe. Jetzt kommt die echte Vorstellung.
+en: That was the rehearsal. The real show starts now.
+
+es: ¡El foco me ha deslumbrado! ¡Mi propio foco!
+de: Der Scheinwerfer hat mich geblendet! Mein eigener!
+en: The spotlight blinded me! My own spotlight!
+
+es: Improvisación. Los grandes improvisan.
+de: Improvisation. Die Großen improvisieren.
+en: Improvisation. The greats improvise.
+
+[golpe]
+es: ¡Ah! ¡Mi cara no, que trabajo con ella!
+de: Ah! Nicht ins Gesicht, damit verdiene ich mein Geld!
+en: Ah! Not the face, I work with that!
+
+es: ¡Qué falta de respeto a una artista!
+de: Was für eine Respektlosigkeit gegenüber einer Künstlerin!
+en: Such disrespect for an artist!
+
+es: ¡Me tambaleo… con estilo!
+de: Ich wanke… aber mit Stil!
+en: I stagger… with style!
+
+es: Esto irá a mis memorias, {rival}.
+de: Das kommt in meine Memoiren, {rival}.
+en: This is going in my memoirs, {rival}.
+
+[golpe_fuerte]
+es: ¡Oh, cruel destino! ¡Oh, tornillos míos!
+de: Oh, grausames Schicksal! Oh, meine Schrauben!
+en: Oh, cruel fate! Oh, my poor bolts!
+
+es: ¡Se me apaga la bombilla! ¡No, no, no!
+de: Meine Birne flackert! Nein, nein, nein!
+en: My bulb is flickering! No, no, no!
+
+es: ¡Qué tragedia! ¡Y sin ensayar!
+de: Welch eine Tragödie! Und ganz ohne Probe!
+en: What a tragedy! And unrehearsed!
+
+es: ¡Público, sed testigos de esta injusticia!
+de: Publikum, seid Zeugen dieser Ungerechtigkeit!
+en: Audience, witness this injustice!
+
+[poco_blindaje]
+es: Es el tercer acto… y la heroína está herida.
+de: Dritter Akt… und die Heldin ist verwundet.
+en: Act three… and the heroine is wounded.
+
+es: Mi luz parpadea, pero el espectáculo continúa.
+de: Mein Licht flackert, doch die Show geht weiter.
+en: My light flickers, but the show must go on.
+
+es: Si caigo, que sea bajo el foco.
+de: Wenn ich falle, dann im Scheinwerferlicht.
+en: If I fall, let it be in the spotlight.
+
+es: {jugador}… dile al mundo que brillé.
+de: {jugador}… sag der Welt, dass ich gestrahlt habe.
+en: {jugador}… tell the world I shone.
+
+[parte_rota]
+es: ¡Mi {pieza}! ¡Era de mi mejor vestuario!
+de: {pieza}! Das war aus meiner besten Garderobe!
+en: My {pieza}! That was from my finest wardrobe!
+
+es: Adiós, {pieza}. Tu papel ha terminado.
+de: Lebwohl, {pieza}. Deine Rolle ist zu Ende.
+en: Farewell, {pieza}. Your role has ended.
+
+es: ¡Sin {pieza}! ¡Que alguien llame a mi agente!
+de: Ohne {pieza}! Ruft sofort meinen Agenten!
+en: No {pieza}! Somebody call my agent!
+
+es: Una estrella brilla igual sin {pieza}.
+de: Ein Star strahlt auch ohne {pieza}.
+en: A star shines just as bright without a {pieza}.
+
+[esquiva]
+es: ¡Un giro digno del ballet!
+de: Eine Drehung wie im Ballett!
+en: A pirouette worthy of the ballet!
+
+es: ¡Ni me has rozado el maquillaje!
+de: Nicht mal mein Make-up hast du berührt!
+en: You didn't even smudge my makeup!
+
+es: Las estrellas no se tocan, se admiran.
+de: Stars fasst man nicht an, man bewundert sie.
+en: Stars are not touched, they are admired.
+
+es: ¡Olé! ¿Lo has grabado, {jugador}?
+de: Olé! Hast du das aufgenommen, {jugador}?
+en: Olé! Did you record that, {jugador}?
+
+[victoria_ronda]
+es: ¡Fin del acto {ronda}! ¡Aplausos, por favor!
+de: Ende von Akt {ronda}! Applaus, bitte!
+en: End of act {ronda}! Applause, please!
+
+es: Una reverencia… y otra… y otra más.
+de: Eine Verbeugung… und noch eine… und noch eine.
+en: A bow… and another… and one more.
+
+es: El público pide un bis. Concedido.
+de: Das Publikum will eine Zugabe. Gewährt.
+en: The crowd wants an encore. Granted.
+
+es: Lo siento, {rival}. Los extras no ganan rondas.
+de: Tut mir leid, {rival}. Statisten gewinnen keine Runden.
+en: Sorry, {rival}. Extras don't win rounds.
+
+[derrota_ronda]
+es: ¡Esto es un giro dramático inesperado!
+de: Das ist eine unerwartete dramatische Wendung!
+en: What an unexpected dramatic twist!
+
+es: Toda gran obra tiene un momento oscuro.
+de: Jedes große Stück hat einen dunklen Moment.
+en: Every great play has its dark moment.
+
+es: ¡El guion decía otra cosa! ¡Quiero hablar con el autor!
+de: Im Drehbuch stand etwas anderes! Ich will den Autor sprechen!
+en: The script said otherwise! I demand to see the writer!
+
+es: Lágrimas, sí. Pero lágrimas preciosas.
+de: Tränen, ja. Aber wunderschöne Tränen.
+en: Tears, yes. But gorgeous tears.
+
+[victoria]
+es: ¡Gran final! ¡Que caigan las rosas!
+de: Großes Finale! Lasst Rosen regnen!
+en: Grand finale! Let the roses fall!
+
+es: Gracias, gracias. Firmo autógrafos a la salida.
+de: Danke, danke. Autogramme gibt es am Ausgang.
+en: Thank you, thank you. Autographs at the exit.
+
+es: {jugador}, mañana salimos en todos los carteles.
+de: {jugador}, morgen stehen wir auf allen Plakaten.
+en: {jugador}, tomorrow we're on every poster.
+
+es: {rival}, fuiste un secundario adorable.
+de: {rival}, du warst eine entzückende Nebenrolle.
+en: {rival}, you were an adorable supporting act.
+
+[derrota]
+es: Así termina la estrella… en su escena más bella…
+de: So endet der Star… in seiner schönsten Szene…
+en: And so the star fades… in its most beautiful scene…
+
+es: ¡Recordadme! ¡Recordad mi luz!
+de: Erinnert euch an mich! An mein Licht!
+en: Remember me! Remember my light!
+
+es: ¡No es el final! ¡Es el final de la primera temporada!
+de: Das ist nicht das Ende! Nur das Ende der ersten Staffel!
+en: This isn't the end! Only the season finale!
+
+es: Bajad el telón… despacio… con violines…
+de: Lasst den Vorhang fallen… langsam… mit Geigen…
+en: Lower the curtain… slowly… with violins…
+
+[burla]
+es: ¿Ese es tu vestuario? Qué valiente.
+de: Ist das dein Kostüm? Wie mutig.
+en: Is that your costume? How brave.
+
+es: Te falta presencia escénica, cielo.
+de: Dir fehlt Bühnenpräsenz, Schätzchen.
+en: You lack stage presence, darling.
+
+es: Repite la frase, {rival}. Esta vez con sentimiento.
+de: Sag deinen Text noch mal, {rival}. Diesmal mit Gefühl.
+en: Say your line again, {rival}. With feeling this time.
+
+es: Tranquilo, no todos nacemos estrellas.
+de: Keine Sorge, nicht jeder wird als Star geboren.
+en: Don't worry, not everyone is born a star.
+
+[pulla]
+es: {rival}, tu actuación es tan floja que el público se ha dormido.
+de: {rival}, deine Vorstellung ist so lahm, das Publikum schläft.
+en: {rival}, your act is so weak the audience fell asleep.
+
+es: Te iluminaría, pero no hay nada que mostrar.
+de: Ich würde dich ins Licht rücken, aber da gibt's nichts zu zeigen.
+en: I'd shine a light on you, but there's nothing to show.
+
+es: Mis críticas son mejores que tus ataques. Y eso que son malas.
+de: Meine Kritiken sind besser als deine Angriffe. Und die sind schlecht.
+en: My bad reviews hit harder than your attacks.
+
+es: ¿Quieres un papel? Hoy hacías de árbol. Y lo hacías mal.
+de: Du willst eine Rolle? Du warst heute der Baum. Und schlecht.
+en: Want a role? You played the tree today. Badly.
+
+es: Mi sombra tiene más carisma que tú, {rival}.
+de: Mein Schatten hat mehr Charisma als du, {rival}.
+en: My shadow has more charisma than you, {rival}.
+
+[subida]
+es: ¡Nuevo nivel! ¡Mi nombre, en letras más grandes!
+de: Neues Level! Meinen Namen bitte in größeren Buchstaben!
+en: New level! My name, in bigger letters!
+
+es: ¡Un ascenso! Exijo un camerino nuevo, {jugador}.
+de: Ein Aufstieg! Ich verlange eine neue Garderobe, {jugador}.
+en: A promotion! I demand a new dressing room, {jugador}.
+
+es: El mundo empieza a darse cuenta de nuestro talento.
+de: Die Welt bemerkt langsam unser Talent.
+en: The world is finally noticing our talent.
+
+es: ¡Más luz! ¡Más vatios! ¡Más gloria!
+de: Mehr Licht! Mehr Watt! Mehr Ruhm!
+en: More light! More watts! More glory!
+
+[error_codigo]
+es: ¡Me he olvidado el texto! {jugador}, ¿qué decía la línea?
+de: Ich habe meinen Text vergessen! {jugador}, wie ging die Zeile?
+en: I forgot my lines! {jugador}, what was the line?
+
+es: ¡Una excepción en pleno estreno! ¡Qué humillación!
+de: Eine Exception mitten in der Premiere! Wie demütigend!
+en: An exception on opening night! How humiliating!
+
+es: ¡Apuntador! ¡Apuntador! El código se ha caído.
+de: Souffleur! Souffleur! Der Code ist abgestürzt.
+en: Prompter! Prompter! The code has crashed.
+
+es: Esto no es drama, {jugador}. Esto es un bug.
+de: Das ist kein Drama, {jugador}. Das ist ein Bug.
+en: This isn't drama, {jugador}. This is a bug.
+
+[espera]
+es: Ensayo mis reverencias mientras programas.
+de: Ich übe Verbeugungen, während du programmierst.
+en: Rehearsing my bows while you code.
+
+es: ¿Mi próximo guion está listo, {jugador}?
+de: Ist mein nächstes Drehbuch fertig, {jugador}?
+en: Is my next script ready, {jugador}?
+
+es: Mi lámpara necesita brillo. Mi ego, no.
+de: Meine Lampe braucht Glanz. Mein Ego nicht.
+en: My lamp needs polishing. My ego doesn't.
+
+es: Escribe con alma, {jugador}. El público lo nota.
+de: Schreib mit Seele, {jugador}. Das Publikum merkt das.
+en: Write with soul, {jugador}. The audience can tell.
+
+[elogio]
+es: ¡Qué código! ¡Esto es Shakespeare en Java!
+de: Was für ein Code! Das ist Shakespeare in Java!
+en: What code! This is Shakespeare in Java!
+
+es: ¡Me emociona! Dame un pañuelo, {jugador}.
+de: Das rührt mich! Gib mir ein Taschentuch, {jugador}.
+en: I'm moved! Hand me a tissue, {jugador}.
+
+es: Un guion digno de mi talento. Por fin.
+de: Ein Drehbuch, das meinem Talent gerecht wird. Endlich.
+en: A script worthy of my talent. At last.
+
+es: Cada línea, una escena. Cada método, un aria.
+de: Jede Zeile eine Szene. Jede Methode eine Arie.
+en: Every line a scene. Every method an aria.
+
+[reparar]
+es: Retoco el maquillaje. Un minuto, por favor.
+de: Kurz das Make-up auffrischen. Eine Minute, bitte.
+en: Touching up my makeup. One minute, please.
+
+es: ¡Entreacto! Me cambio de bombilla.
+de: Pause! Ich wechsle die Glühbirne.
+en: Intermission! Changing my bulb.
+
+es: Una estrella siempre vuelve más brillante.
+de: Ein Star kommt immer strahlender zurück.
+en: A star always comes back brighter.
+
+es: Que no me vean así. ¡Arreglando!
+de: Niemand darf mich so sehen. Reparatur!
+en: Nobody may see me like this. Repairing!
+
+[especial]
+es: ¡Que se haga la luz… y que queme!
+de: Es werde Licht… und es brenne!
+en: Let there be light… and let it burn!
+
+es: ¡Gran final de mil vatios!
+de: Großes Finale mit tausend Watt!
+en: A thousand-watt grand finale!
+
+es: ¡Foco total! ¡Que nadie aparte la vista!
+de: Volles Rampenlicht! Keiner schaut weg!
+en: Full spotlight! Nobody look away!
+
+es: ¡Mi aria más brillante, solo para ti, {rival}!
+de: Meine strahlendste Arie, nur für dich, {rival}!
+en: My most dazzling aria, just for you, {rival}!

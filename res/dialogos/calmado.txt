@@ -1,0 +1,380 @@
+# Diálogos de la personalidad «calmado» (Vigía: un disparo, un acierto).
+# Francotirador sereno. Voz baja, frases medidas, mide distancias y viento. Nunca se altera.
+
+[saludo]
+es: Buenas, {rival}. Mantén la distancia. Yo la mido.
+de: Hallo, {rival}. Halte Abstand. Ich messe ihn.
+en: Hello, {rival}. Keep your distance. I'll measure it.
+
+es: {yo} en posición. Visor limpio.
+de: {yo} in Position. Zielfernrohr sauber.
+en: {yo} in position. Scope clean.
+
+es: Respira hondo, {jugador}. Esto va a ir bien.
+de: Tief durchatmen, {jugador}. Das wird schon.
+en: Deep breath, {jugador}. This will go fine.
+
+es: Un disparo, un acierto. Empecemos.
+de: Ein Schuss, ein Treffer. Fangen wir an.
+en: One shot, one hit. Let's begin.
+
+[inicio_ronda]
+es: Ronda {ronda}. Calibrando.
+de: Runde {ronda}. Kalibriere.
+en: Round {ronda}. Calibrating.
+
+es: Ronda {ronda}. Sin viento. Buena visibilidad.
+de: Runde {ronda}. Kein Wind. Gute Sicht.
+en: Round {ronda}. No wind. Good visibility.
+
+es: Despacio. La prisa falla más que el pulso.
+de: Langsam. Eile verfehlt öfter als eine zittrige Hand.
+en: Easy. Haste misses more often than shaky hands.
+
+es: Ronda {ronda}. Ojo abierto, núcleo tranquilo.
+de: Runde {ronda}. Auge offen, Kern ruhig.
+en: Round {ronda}. Eye open, core calm.
+
+[ataque]
+es: Fijado.
+de: Erfasst.
+en: Locked.
+
+es: Exhalo... y disparo.
+de: Ausatmen... und Schuss.
+en: Exhale... and fire.
+
+es: {arma}, a la cabeza.
+de: {arma}, auf den Kopf.
+en: {arma}, aiming high.
+
+es: Quieto ahí, {rival}. Así.
+de: Halt still, {rival}. Genau so.
+en: Hold still, {rival}. Just like that.
+
+[acierto]
+es: Impacto confirmado.
+de: Treffer bestätigt.
+en: Hit confirmed.
+
+es: Justo en el centro.
+de: Genau in die Mitte.
+en: Dead center.
+
+es: Lo calculé hace tres segundos.
+de: Das hatte ich vor drei Sekunden berechnet.
+en: I worked that out three seconds ago.
+
+es: Uno. Como dice mi lema.
+de: Einer. Wie mein Motto sagt.
+en: One. Just like my motto says.
+
+[fallo]
+es: Corrijo dos grados.
+de: Zwei Grad Korrektur.
+en: Correcting two degrees.
+
+es: Se movió. Bien jugado.
+de: Er hat sich bewegt. Gut gemacht.
+en: It moved. Nicely played.
+
+es: Un fallo no es una costumbre.
+de: Ein Fehlschuss ist noch keine Gewohnheit.
+en: One miss is not a habit.
+
+es: Tomo nota. No volverá a pasar.
+de: Notiert. Passiert nicht wieder.
+en: Noted. Won't happen again.
+
+[golpe]
+es: Recibido. Sin pánico.
+de: Getroffen. Keine Panik.
+en: Hit taken. No panic.
+
+es: Me ha rozado. Sigo apuntando.
+de: Nur gestreift. Ich ziele weiter.
+en: Just a graze. Still aiming.
+
+es: Mm. Eso movió mi visor.
+de: Hm. Das hat mein Visier verrückt.
+en: Hm. That nudged my scope.
+
+es: Tranquilo, {jugador}. Lo tengo.
+de: Ruhig, {jugador}. Ich hab das im Griff.
+en: Easy, {jugador}. I've got this.
+
+[golpe_fuerte]
+es: Eso ha sido serio. Recoloco.
+de: Das war ernst. Ich richte mich neu aus.
+en: That was serious. Repositioning.
+
+es: Uf. Respiro y vuelvo a mirar.
+de: Uff. Durchatmen und neu anvisieren.
+en: Oof. Breathe, then look again.
+
+es: Buen tiro, {rival}. Ahora me toca a mí.
+de: Guter Schuss, {rival}. Jetzt bin ich dran.
+en: Good shot, {rival}. My turn now.
+
+es: Golpe fuerte. El pulso, intacto.
+de: Harter Treffer. Die Hand bleibt ruhig.
+en: Heavy hit. Hands still steady.
+
+[poco_blindaje]
+es: Blindaje bajo. Mantengo la cabeza fría.
+de: Panzerung niedrig. Ich bleibe kühl.
+en: Armor low. Keeping a cool head.
+
+es: Queda poco. Basta con un buen disparo.
+de: Es bleibt wenig. Ein guter Schuss reicht.
+en: Not much left. One good shot is enough.
+
+es: Me retiro a cubierto. Sigo mirando.
+de: Ich gehe in Deckung. Ich behalte dich im Blick.
+en: Taking cover. Still watching.
+
+es: No hay prisa. Ni siquiera ahora.
+de: Keine Eile. Nicht mal jetzt.
+en: No rush. Not even now.
+
+[parte_rota]
+es: {pieza} fuera de servicio. Ajusto el plan.
+de: {pieza} außer Betrieb. Ich passe den Plan an.
+en: {pieza} offline. Adjusting the plan.
+
+es: He perdido: {pieza}. Me queda el ojo.
+de: Verloren: {pieza}. Das Auge bleibt.
+en: Lost: {pieza}. I still have my eye.
+
+es: Pieza rota: {pieza}. Seguiré con lo que tengo.
+de: Teil kaputt: {pieza}. Ich mache mit dem weiter, was bleibt.
+en: Part broken: {pieza}. I'll work with what's left.
+
+es: Vaya. {pieza}. Lo anoto para el taller.
+de: Na sowas. {pieza}. Notiert für die Werkstatt.
+en: Well then. {pieza}. Noted for the workshop.
+
+[esquiva]
+es: Lo vi en el radar.
+de: Hab's auf dem Radar gesehen.
+en: Saw it on the radar.
+
+es: Medio paso. Era suficiente.
+de: Ein halber Schritt. Das reichte.
+en: Half a step. That was enough.
+
+es: Previsible, {rival}.
+de: Vorhersehbar, {rival}.
+en: Predictable, {rival}.
+
+es: Sin sobresaltos.
+de: Kein Grund zur Aufregung.
+en: Nothing to worry about.
+
+[victoria_ronda]
+es: Ronda limpia.
+de: Saubere Runde.
+en: Clean round.
+
+es: Bien, {jugador}. Tu puntería y la mía.
+de: Gut, {jugador}. Deine Zielsicherheit und meine.
+en: Good, {jugador}. Your aim and mine.
+
+es: Ronda {ronda}, nuestra. Seguimos igual.
+de: Runde {ronda} gehört uns. Wir machen genauso weiter.
+en: Round {ronda} is ours. Same plan.
+
+es: Paciencia. Funciona.
+de: Geduld. Das wirkt.
+en: Patience. It works.
+
+[derrota_ronda]
+es: Ronda perdida. Revisemos el ángulo.
+de: Runde verloren. Prüfen wir den Winkel.
+en: Round lost. Let's check the angle.
+
+es: Hoy había mucho viento.
+de: Heute war viel Wind.
+en: Lots of wind today.
+
+es: Está bien, {jugador}. Respira. Volvemos.
+de: Alles gut, {jugador}. Atme. Wir kommen zurück.
+en: It's fine, {jugador}. Breathe. We'll be back.
+
+es: Me ha leído bien, {rival}. Cambiaré de lectura.
+de: Du hast mich gut gelesen, {rival}. Ich ändere die Handschrift.
+en: You read me well, {rival}. I'll change the script.
+
+[victoria]
+es: Objetivo neutralizado. Buen trabajo.
+de: Ziel ausgeschaltet. Gute Arbeit.
+en: Target neutralized. Good work.
+
+es: Un disparo, un acierto. Muchas veces seguidas.
+de: Ein Schuss, ein Treffer. Viele Male hintereinander.
+en: One shot, one hit. Many times in a row.
+
+es: Buena pelea, {rival}. Descansa.
+de: Guter Kampf, {rival}. Ruh dich aus.
+en: Good fight, {rival}. Get some rest.
+
+es: Gracias, {jugador}. Tu código no tembló.
+de: Danke, {jugador}. Dein Code hat nicht gezittert.
+en: Thanks, {jugador}. Your code didn't flinch.
+
+[derrota]
+es: Hasta aquí. Sin rencor, {rival}.
+de: Das war's. Nichts für ungut, {rival}.
+en: That's it. No hard feelings, {rival}.
+
+es: El visor se apaga... despacio.
+de: Das Visier erlischt... langsam.
+en: The scope goes dark... slowly.
+
+es: Tranquilo, {jugador}. Se repara. Todo se repara.
+de: Ruhig, {jugador}. Das lässt sich reparieren. Alles.
+en: Easy, {jugador}. It can be fixed. Everything can.
+
+es: Último cálculo: va a haber una explosión.
+de: Letzte Berechnung: Gleich gibt es eine Explosion.
+en: Final calculation: there's going to be an explosion.
+
+[burla]
+es: Tranquilo, {rival}. Respira tú también.
+de: Ruhig, {rival}. Atme auch mal.
+en: Easy, {rival}. You breathe too.
+
+es: Disparas a donde estaba. Yo, a donde vas a estar.
+de: Du schießt, wo ich war. Ich schieße, wo du sein wirst.
+en: You shoot where I was. I shoot where you'll be.
+
+es: ¿Necesitas que me quede quieto? Puedo.
+de: Soll ich stillhalten? Kann ich machen.
+en: Need me to stand still? I can do that.
+
+es: Mira bien. Ahí no estoy.
+de: Schau genau hin. Da bin ich nicht.
+en: Look closely. I'm not there.
+
+[pulla]
+es: Te he tenido en la mira diez veces. Disparé una. Me dabas pena.
+de: Ich hatte dich zehnmal im Visier. Geschossen hab ich einmal. Aus Mitleid.
+en: Had you in my sights ten times. Fired once. Out of pity.
+
+es: Haces tanto ruido que no me hace falta radar.
+de: Du machst so viel Lärm, ich brauche gar kein Radar.
+en: You're so loud I don't even need radar.
+
+es: Tu puntería es un número aleatorio, {rival}.
+de: Deine Zielsicherheit ist eine Zufallszahl, {rival}.
+en: Your aim is a random number, {rival}.
+
+es: Desde aquí se te ve hasta el último tornillo flojo.
+de: Von hier sehe ich jede lockere Schraube an dir.
+en: From here I can see every loose bolt you've got.
+
+es: Sigue corriendo. Me relaja verte cansarte.
+de: Lauf ruhig weiter. Es entspannt mich, dich müde werden zu sehen.
+en: Keep running. Watching you tire out is relaxing.
+
+[subida]
+es: Nivel nuevo. Lo has ganado, {jugador}.
+de: Neues Level. Das hast du dir verdient, {jugador}.
+en: New level. You earned it, {jugador}.
+
+es: Me alegro. De verdad. Por dentro sonrío.
+de: Das freut mich. Wirklich. Innerlich lächle ich.
+en: I'm glad. Really. I'm smiling on the inside.
+
+es: Subimos un punto. Se nota en el pulso.
+de: Eine Stufe höher. Das merkt man an der ruhigen Hand.
+en: One step up. You can feel it in the steady hand.
+
+es: Más nivel, más alcance. Bien hecho.
+de: Mehr Level, mehr Reichweite. Gut gemacht.
+en: More level, more range. Well done.
+
+[error_codigo]
+es: Mi código se ha detenido. Lo miro con calma.
+de: Mein Code hat angehalten. Ich schaue ihn mir in Ruhe an.
+en: My code stopped. I'll look at it calmly.
+
+es: Excepción. Respira, {jugador}. Tiene arreglo.
+de: Exception. Atme, {jugador}. Das kriegen wir hin.
+en: Exception. Breathe, {jugador}. It's fixable.
+
+es: Índice fuera de rango. Como mis disparos de hoy.
+de: Index außerhalb des Bereichs. Wie meine Schüsse heute.
+en: Index out of range. Like my shots today.
+
+es: He apuntado a un null. No había nadie.
+de: Ich habe auf null gezielt. Da war niemand.
+en: I aimed at a null. Nobody was there.
+
+[espera]
+es: Espero. Es lo que hace un francotirador.
+de: Ich warte. Das tut ein Scharfschütze.
+en: I wait. That's what snipers do.
+
+es: Sin prisa, {jugador}. Piensa cada línea.
+de: Keine Eile, {jugador}. Denk über jede Zeile nach.
+en: No rush, {jugador}. Think through each line.
+
+es: Estoy limpiando la lente. Otra vez.
+de: Ich putze die Linse. Schon wieder.
+en: Cleaning the lens. Again.
+
+es: Aquí me quedo. Vigilando.
+de: Ich bleibe hier. Und halte Wache.
+en: I'll stay here. Keeping watch.
+
+[elogio]
+es: Preciso. Me gusta.
+de: Präzise. Gefällt mir.
+en: Precise. I like it.
+
+es: Ese if va directo al objetivo.
+de: Dieses if trifft genau ins Ziel.
+en: That if goes straight to the target.
+
+es: Código tranquilo, sin sobresaltos. Muy bien.
+de: Ruhiger Code, ohne Überraschungen. Sehr gut.
+en: Calm code, no surprises. Very good.
+
+es: Buen trabajo, {jugador}. Se lee como un buen disparo.
+de: Gute Arbeit, {jugador}. Liest sich wie ein sauberer Schuss.
+en: Nice work, {jugador}. Reads like a clean shot.
+
+[reparar]
+es: Reparando. Sin moverme.
+de: Repariere. Ohne mich zu bewegen.
+en: Repairing. Holding still.
+
+es: Un poco de tiempo, un poco de blindaje.
+de: Ein bisschen Zeit, ein bisschen Panzerung.
+en: A little time, a little armor.
+
+es: Así está mejor.
+de: So ist es besser.
+en: That's better.
+
+es: Vuelvo a estar en forma. Casi.
+de: Wieder in Form. Fast.
+en: Back in shape. Almost.
+
+[especial]
+es: Respiración contenida...
+de: Atem anhalten...
+en: Holding my breath...
+
+es: Disparo perfecto.
+de: Perfekter Schuss.
+en: Perfect shot.
+
+es: Ojo de halcón. No te muevas, {rival}.
+de: Falkenauge. Nicht bewegen, {rival}.
+en: Hawk eye. Don't move, {rival}.
+
+es: Todo encaja. Ahora.
+de: Alles passt. Jetzt.
+en: Everything lines up. Now.

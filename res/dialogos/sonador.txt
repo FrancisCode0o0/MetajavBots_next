@@ -1,0 +1,380 @@
+# Soñador: Nimbo / Nimbus / Nimbus. Nube redonda y dormilona que pelea medio en sueños.
+# Bosteza, se despista, cuenta tornillos para dormirse y cuenta lo que ha soñado. Muy tierno.
+
+[saludo]
+es: Mmm… ¿ya ha empezado? Hola, {rival}… creo.
+de: Hmm… hat es schon angefangen? Hallo, {rival}… glaube ich.
+en: Hmm… has it started yet? Hi, {rival}… I think.
+
+es: Buenas noches… digo, buenos días, {rival}.
+de: Gute Nacht… äh, guten Morgen, {rival}.
+en: Good night… I mean, good morning, {rival}.
+
+es: He soñado que ganaba. Vamos a ver si era verdad.
+de: Ich habe geträumt, dass ich gewinne. Mal sehen, ob's stimmt.
+en: I dreamt I won. Let's see if it comes true.
+
+es: {jugador}, cinco minutitos más… vale, vale, ya peleo.
+de: {jugador}, noch fünf Minütchen… schon gut, ich kämpfe ja.
+en: {jugador}, five more minutes… okay, okay, I'm fighting.
+
+[inicio_ronda]
+es: Ronda {ronda}… ¿o era la siesta {ronda}?
+de: Runde {ronda}… oder war es Nickerchen {ronda}?
+en: Round {ronda}… or was it nap {ronda}?
+
+es: Aaah… (bostezo) … ronda {ronda}. Listo. Más o menos.
+de: Aaah… (gähn) … Runde {ronda}. Bereit. So ungefähr.
+en: Aaah… (yawn) … round {ronda}. Ready. Sort of.
+
+es: Floto hacia la ronda {ronda}… despacito…
+de: Ich schwebe in Runde {ronda}… ganz gemütlich…
+en: Drifting into round {ronda}… nice and slow…
+
+es: Ronda {ronda}. Hoy las nubes huelen a victoria.
+de: Runde {ronda}. Heute riechen die Wolken nach Sieg.
+en: Round {ronda}. The clouds smell like victory today.
+
+[ataque]
+es: Toma… un sueño… muy fuerte…
+de: Hier… ein Traum… ein ganz starker…
+en: Here… have a dream… a really strong one…
+
+es: Allá va… creo que hacia ti.
+de: Da geht's hin… ich glaube, zu dir.
+en: There it goes… toward you, I think.
+
+es: Un rayito de luna para {rival}.
+de: Ein Mondstrählchen für {rival}.
+en: A little moonbeam for {rival}.
+
+es: Tormentita… pum.
+de: Kleines Gewitter… bumm.
+en: Tiny thunderstorm… boom.
+
+[acierto]
+es: ¡Oh! ¿He sido yo? Qué bien.
+de: Oh! War ich das? Wie schön.
+en: Oh! Was that me? How nice.
+
+es: Le he dado… como en mi sueño.
+de: Getroffen… genau wie im Traum.
+en: I hit it… just like in my dream.
+
+es: Lluvia de golpecitos. Plic, plic.
+de: Ein Nieselregen aus Treffern. Plitsch, platsch.
+en: A drizzle of hits. Pitter, patter.
+
+es: Mmm, eso ha sido bonito.
+de: Hmm, das war hübsch.
+en: Mmm, that was lovely.
+
+[fallo]
+es: Uy… me he quedado dormido apuntando.
+de: Huch… ich bin beim Zielen eingeschlafen.
+en: Oops… I fell asleep while aiming.
+
+es: ¿Dónde se ha ido? Estaba aquí hace un sueño.
+de: Wo ist er hin? Eben war er noch hier, vor einem Traum.
+en: Where did it go? It was right here, one dream ago.
+
+es: Le he dado a una nube. Perdón, nube.
+de: Ich hab eine Wolke getroffen. Entschuldigung, Wolke.
+en: I hit a cloud. Sorry, cloud.
+
+es: Tranquilo, {jugador}. Las nubes no tienen prisa.
+de: Ruhig, {jugador}. Wolken haben keine Eile.
+en: Easy, {jugador}. Clouds are never in a hurry.
+
+[golpe]
+es: ¡Ay! Me has despertado.
+de: Au! Du hast mich geweckt.
+en: Ow! You woke me up.
+
+es: Eso ha sido un mal sueño… y de verdad.
+de: Das war ein Albtraum… und echt.
+en: That was a bad dream… and a real one.
+
+es: Mi algodón… ¿por qué?
+de: Meine Watte… warum?
+en: My fluff… why?
+
+es: Mmmf. Me hago una bolita.
+de: Mmpf. Ich rolle mich ein.
+en: Mmph. Curling up into a ball.
+
+[golpe_fuerte]
+es: ¡Uaaah! ¡Me he caído de la cama!
+de: Uaaah! Ich bin aus dem Bett gefallen!
+en: Waaah! I fell out of bed!
+
+es: ¡Ahora sí que estoy despierto! Y enfadado. Un poco.
+de: Jetzt bin ich wach! Und sauer. Ein bisschen.
+en: Now I'm wide awake! And grumpy. A little.
+
+es: Se me ha deshecho la nube… y el sueño…
+de: Meine Wolke ist zerzaust… und mein Traum auch…
+en: My cloud got scattered… and my dream too…
+
+es: ¡Trueno! ¡Ese era yo por dentro!
+de: Donner! Das war ich, von innen!
+en: Thunder! That was my insides!
+
+[poco_blindaje]
+es: Me estoy desvaneciendo… como la niebla de la mañana…
+de: Ich löse mich auf… wie Morgennebel…
+en: I'm fading away… like morning mist…
+
+es: Tengo sueño… mucho sueño… no, ¡aguanta, {yo}!
+de: So müde… so müde… nein, halt durch, {yo}!
+en: So sleepy… so sleepy… no, hang in there, {yo}!
+
+es: {jugador}, si me duermo, despiértame con una buena idea.
+de: {jugador}, wenn ich einschlafe, weck mich mit einer guten Idee.
+en: {jugador}, if I doze off, wake me with a good idea.
+
+es: Quedan pocas gotitas… pero son gotitas valientes.
+de: Nur noch ein paar Tröpfchen… aber tapfere Tröpfchen.
+en: Just a few droplets left… but brave droplets.
+
+[parte_rota]
+es: Oh… {pieza} se ha ido flotando…
+de: Oh… {pieza} ist davongeschwebt…
+en: Oh… my {pieza} floated away…
+
+es: Sin {pieza}. Bueno, en sueños tengo dos.
+de: Ohne {pieza}. Na ja, im Traum hab ich zwei.
+en: No {pieza}. Well, in my dreams I have two.
+
+es: Adiós, {pieza}. Que descanses.
+de: Gute Nacht, {pieza}. Schlaf gut.
+en: Goodnight, {pieza}. Rest well.
+
+es: ¿{pieza}? Mmm, no la necesitaba para dormir.
+de: {pieza}? Hmm, zum Schlafen brauch ich das nicht.
+en: My {pieza}? Hmm, I don't need it to sleep.
+
+[esquiva]
+es: Me he movido sin querer. Qué suerte.
+de: Ich hab mich aus Versehen bewegt. Glück gehabt.
+en: I moved by accident. Lucky me.
+
+es: Soy una nube. Me atraviesas.
+de: Ich bin eine Wolke. Du gehst durch mich durch.
+en: I'm a cloud. You go right through me.
+
+es: Fiuuu… me ha llevado el viento.
+de: Fiuuu… der Wind hat mich weggeweht.
+en: Whoosh… the wind carried me off.
+
+es: Me he dado la vuelta en sueños. Justo a tiempo.
+de: Im Schlaf umgedreht. Gerade rechtzeitig.
+en: Rolled over in my sleep. Just in time.
+
+[victoria_ronda]
+es: ¿He ganado la ronda? Qué sueño tan bonito.
+de: Ich habe die Runde gewonnen? Was für ein schöner Traum.
+en: I won the round? What a lovely dream.
+
+es: Ronda {ronda}… mía. Me merezco una siestecita.
+de: Runde {ronda}… meine. Jetzt hab ich ein Nickerchen verdient.
+en: Round {ronda}… mine. I've earned a little nap.
+
+es: ¡Arcoíris! Siempre sale uno cuando gano.
+de: Regenbogen! Der kommt immer, wenn ich gewinne.
+en: Rainbow! One always shows up when I win.
+
+es: Shhh, {rival}. Descansa un poquito tú también.
+de: Pssst, {rival}. Ruh dich auch ein bisschen aus.
+en: Shhh, {rival}. You rest a little too.
+
+[derrota_ronda]
+es: Mmm… me he dormido justo en lo importante.
+de: Hmm… genau im wichtigen Moment eingeschlafen.
+en: Hmm… dozed off right at the important part.
+
+es: No pasa nada. Las nubes siempre vuelven.
+de: Macht nichts. Wolken kommen immer wieder.
+en: That's okay. Clouds always come back.
+
+es: Era un mal sueño. El siguiente será mejor.
+de: Das war ein schlechter Traum. Der nächste wird besser.
+en: That was a bad dream. The next one will be better.
+
+es: {jugador}… ¿me tapas un poquito? Ya sigo.
+de: {jugador}… deckst du mich kurz zu? Dann geht's weiter.
+en: {jugador}… tuck me in for a sec? Then I'll go on.
+
+[victoria]
+es: ¡He ganado! Y casi sin despertarme.
+de: Ich hab gewonnen! Und bin dabei kaum aufgewacht.
+en: I won! And I barely even woke up.
+
+es: Lo soñé y se cumplió. Gracias, {jugador}.
+de: Ich habe es geträumt, und es ist wahr geworden. Danke, {jugador}.
+en: I dreamt it and it came true. Thank you, {jugador}.
+
+es: Buenas noches, {rival}. Ha sido un combate muy tierno.
+de: Gute Nacht, {rival}. Das war ein sehr gemütlicher Kampf.
+en: Goodnight, {rival}. That was a very cozy fight.
+
+es: Victoria… almohada… siesta… zzz…
+de: Sieg… Kissen… Nickerchen… zzz…
+en: Victory… pillow… nap… zzz…
+
+[derrota]
+es: Qué sueño tan raro… explotaba y todo…
+de: Was für ein komischer Traum… ich explodiere sogar…
+en: What a strange dream… I even explode in it…
+
+es: Me deshago en lluvia… pero volveré a ser nube.
+de: Ich zerfalle zu Regen… doch ich werde wieder Wolke.
+en: I'm turning into rain… but I'll be a cloud again.
+
+es: Buenas noches, {jugador}… mañana más…
+de: Gute Nacht, {jugador}… morgen weiter…
+en: Goodnight, {jugador}… more tomorrow…
+
+es: Mmm… ¿ya ha terminado?
+de: Hmm… ist es schon vorbei?
+en: Hmm… is it over already?
+
+[burla]
+es: Peleas como una almohada, {rival}. Es un cumplido.
+de: Du kämpfst wie ein Kissen, {rival}. Ist ein Kompliment.
+en: You fight like a pillow, {rival}. It's a compliment.
+
+es: Me estás dando sueño. Mucho sueño.
+de: Du machst mich müde. Sehr müde.
+en: You're making me sleepy. So sleepy.
+
+es: Ese ataque me ha hecho cosquillas.
+de: Der Angriff hat gekitzelt.
+en: That attack tickled.
+
+es: ¿Tú también has dormido mal?
+de: Hast du auch schlecht geschlafen?
+en: Did you sleep badly too?
+
+[pulla]
+es: {rival}, he visto ronquidos más peligrosos que tú.
+de: {rival}, ich habe gefährlicheres Schnarchen gehört als dich.
+en: {rival}, I've heard snores more dangerous than you.
+
+es: Te gano dormido. De hecho, estoy dormido.
+de: Ich schlag dich im Schlaf. Ich schlafe sogar gerade.
+en: I can beat you in my sleep. I'm asleep right now.
+
+es: Eres tan aburrido que he contado tus golpes para dormirme.
+de: Du bist so langweilig, ich zähle deine Schläge zum Einschlafen.
+en: You're so dull I count your hits to fall asleep.
+
+es: Mis pesadillas dan más miedo que tú, {rival}.
+de: Meine Albträume sind gruseliger als du, {rival}.
+en: My nightmares are scarier than you, {rival}.
+
+es: Despiértame cuando empieces a pelear de verdad.
+de: Weck mich, wenn du richtig anfängst zu kämpfen.
+en: Wake me when you start fighting for real.
+
+[subida]
+es: ¡Un nivel más! Floto un poquito más alto.
+de: Ein Level mehr! Ich schwebe ein bisschen höher.
+en: One more level! I'm floating a bit higher.
+
+es: He soñado con esto, {jugador}. ¡Y es real!
+de: Davon hab ich geträumt, {jugador}. Und es ist echt!
+en: I dreamt about this, {jugador}. And it's real!
+
+es: Más cerca de las estrellas. Qué gustito.
+de: Näher an den Sternen. Wie schön.
+en: Closer to the stars. So nice.
+
+es: ¡Nivel nuevo! Esto se celebra con una siesta.
+de: Neues Level! Das feiern wir mit einem Nickerchen.
+en: New level! This calls for a celebratory nap.
+
+[error_codigo]
+es: {jugador}… mi código se ha quedado dormido. Y no despierta.
+de: {jugador}… mein Code ist eingeschlafen. Und wacht nicht auf.
+en: {jugador}… my code fell asleep. And it won't wake up.
+
+es: He soñado con una excepción… ah, no, es de verdad.
+de: Ich hab von einer Exception geträumt… ach nein, die ist echt.
+en: I dreamt of an exception… oh, no, it's real.
+
+es: Algo se ha roto ahí dentro. Hace frío y está oscuro.
+de: Da drin ist was kaputt. Kalt und dunkel ist es.
+en: Something broke in there. It's cold and dark.
+
+es: Uy. Creo que he caminado sonámbulo por el código.
+de: Huch. Ich bin wohl durch den Code geschlafwandelt.
+en: Oops. I think I sleepwalked through the code.
+
+[espera]
+es: Zzz… zzz… avísame cuando acabes… zzz…
+de: Zzz… zzz… sag Bescheid, wenn du fertig bist… zzz…
+en: Zzz… zzz… let me know when you're done… zzz…
+
+es: Cuento tornillos para dormirme. Uno, dos, tres…
+de: Ich zähle Schrauben zum Einschlafen. Eins, zwei, drei…
+en: Counting bolts to fall asleep. One, two, three…
+
+es: He soñado que era un bucle for. Daba vueltas y vueltas.
+de: Ich habe geträumt, ich wäre eine for-Schleife. Immer im Kreis.
+en: I dreamt I was a for loop. Round and round I went.
+
+es: No hay prisa, {jugador}. Yo floto por aquí.
+de: Keine Eile, {jugador}. Ich schwebe hier herum.
+en: No rush, {jugador}. I'll just float around here.
+
+[elogio]
+es: Este código es blandito y suave. Me gusta.
+de: Dieser Code ist weich und kuschelig. Gefällt mir.
+en: This code is soft and fluffy. I like it.
+
+es: Qué bonito, {jugador}. Parece un sueño.
+de: Wie schön, {jugador}. Wie ein Traum.
+en: How pretty, {jugador}. Like a dream.
+
+es: Con este código podría pelear hasta despierto.
+de: Mit diesem Code könnte ich sogar wach kämpfen.
+en: With this code I could even fight awake.
+
+es: Mmm… sí. Esto tiene sentido hasta a las tres de la mañana.
+de: Hmm… ja. Das ergibt sogar um drei Uhr nachts Sinn.
+en: Mmm… yes. This makes sense even at three in the morning.
+
+[reparar]
+es: Una siestecita reparadora…
+de: Ein erholsames Nickerchen…
+en: A restorative little nap…
+
+es: Me relleno de algodón nuevo. Ahhh.
+de: Ich stopfe mich mit frischer Watte aus. Ahhh.
+en: Refilling with fresh fluff. Ahhh.
+
+es: Lluvia curativa, plic, plic, plic.
+de: Heilender Regen, plitsch, platsch, plitsch.
+en: Healing rain, pitter, patter, pitter.
+
+es: Mi brazo de curar sabe lo que hace. Yo no tanto.
+de: Mein Heilarm weiß, was er tut. Ich weniger.
+en: My healing arm knows what it's doing. I'm less sure.
+
+[especial]
+es: ¡Tormenta de sueños!
+de: Traumgewitter!
+en: Dream storm!
+
+es: ¡Despierto del todo! ¡Por fin! ¡Toma!
+de: Hellwach! Endlich! Da!
+en: Fully awake! At last! Take this!
+
+es: Duerme tú ahora, {rival}. Nana de rayos.
+de: Jetzt schläfst du, {rival}. Ein Blitz-Schlaflied.
+en: Your turn to sleep, {rival}. A lightning lullaby.
+
+es: ¡Granizo de almohadas!
+de: Kissen-Hagel!
+en: Pillow hailstorm!

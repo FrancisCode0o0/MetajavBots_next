@@ -1,0 +1,384 @@
+# Intrigante: Tejedora / Weberin / Weaver. Araña calculadora que lo teje todo con hilos y trampas.
+# Habla bajito, con dulzura venenosa; todo lo tenía previsto (o eso dice).
+
+[saludo]
+es: Bienvenido a mi tela, {rival}. Pasa, pasa… la salida ya no existe.
+de: Willkommen in meinem Netz, {rival}. Komm rein… einen Ausgang gibt es nicht mehr.
+en: Welcome to my web, {rival}. Come in, come in… the exit is gone.
+
+es: Qué casualidad encontrarte aquí, {rival}. Bueno, casualidad no.
+de: Was für ein Zufall, dich hier zu treffen, {rival}. Na ja, Zufall ist es nicht.
+en: What a coincidence, meeting you here, {rival}. Well, not a coincidence.
+
+es: Ocho patas, ocho planes. Tú traes uno, ¿verdad?
+de: Acht Beine, acht Pläne. Und du hast einen, oder?
+en: Eight legs, eight plans. And you brought just one, right?
+
+es: {jugador} me ha dado hilos nuevos. Ya los he atado a algo… a ti.
+de: {jugador} hat mir neue Fäden gegeben. Einer hängt schon an dir.
+en: {jugador} gave me fresh threads. One is already tied to you.
+
+es: Sonríe, {rival}. Así te recordaré mejor.
+de: Lächle, {rival}. So bleibst du mir besser in Erinnerung.
+en: Smile, {rival}. It helps me remember you.
+
+[inicio_ronda]
+es: Ronda {ronda}. Los hilos ya estaban tendidos antes de que llegaras.
+de: Runde {ronda}. Die Fäden lagen schon, bevor du kamst.
+en: Round {ronda}. The threads were laid before you arrived.
+
+es: Ronda {ronda}. Muévete como quieras; todo camino lleva a mí.
+de: Runde {ronda}. Lauf, wohin du willst; jeder Weg führt zu mir.
+en: Round {ronda}. Run wherever you like; every path leads to me.
+
+es: Otra ronda, otra telaraña. Me encanta este trabajo.
+de: Neue Runde, neues Netz. Ich liebe diese Arbeit.
+en: New round, new web. I adore this job.
+
+es: Ronda {ronda}, {rival}. Paso uno de mi plan… de doce.
+de: Runde {ronda}, {rival}. Schritt eins meines Plans… von zwölf.
+en: Round {ronda}, {rival}. Step one of my plan… out of twelve.
+
+[ataque]
+es: Un hilito por aquí…
+de: Ein Fädchen hierhin…
+en: A little thread right here…
+
+es: Esto ya estaba escrito, querido.
+de: Das stand längst geschrieben, mein Lieber.
+en: This was written long ago, darling.
+
+es: Tira de este hilo, a ver qué pasa.
+de: Zieh mal an diesem Faden, mal sehen.
+en: Pull this thread and see what happens.
+
+es: Cierro la red… despacito.
+de: Ich ziehe das Netz zu… ganz langsam.
+en: Closing the net… nice and slow.
+
+[acierto]
+es: Atrapado. Como estaba previsto.
+de: Gefangen. Wie vorgesehen.
+en: Caught. Exactly as planned.
+
+es: ¿Sientes el hilo, {rival}? Ya no te suelta.
+de: Spürst du den Faden, {rival}? Der lässt nicht mehr los.
+en: Feel the thread, {rival}? It won't let go now.
+
+es: Qué fácil es cuando el otro no lee el plan.
+de: Wie leicht es ist, wenn der andere den Plan nicht liest.
+en: So easy when the other one doesn't read the plan.
+
+es: Pequeño mordisco, gran consecuencia.
+de: Kleiner Biss, große Wirkung.
+en: Tiny bite, big consequences.
+
+[fallo]
+es: Fallar era parte del plan. Más o menos.
+de: Danebenschießen gehörte zum Plan. Ungefähr.
+en: Missing was part of the plan. Roughly.
+
+es: Ese hilo era para despistarte. Claro que sí.
+de: Dieser Faden sollte dich nur ablenken. Natürlich.
+en: That thread was a decoy. Obviously.
+
+es: Mmm. Recalculo la tela.
+de: Hm. Ich berechne das Netz neu.
+en: Hmm. Recalculating the web.
+
+es: Corre, corre. Así te cansas antes.
+de: Lauf nur, lauf. Dann wirst du schneller müde.
+en: Run, run. You'll tire faster that way.
+
+[golpe]
+es: Qué grosero. Lo apunto en mi lista.
+de: Wie unhöflich. Kommt auf meine Liste.
+en: How rude. That goes on my list.
+
+es: Me has tocado. Ahora sé dónde estás.
+de: Du hast mich getroffen. Jetzt weiß ich, wo du bist.
+en: You hit me. Now I know where you are.
+
+es: Un hilo roto. Tengo cientos.
+de: Ein Faden gerissen. Ich habe Hunderte.
+en: One thread snapped. I have hundreds.
+
+es: Ay. Eso no lo había… sí, sí lo había previsto.
+de: Au. Das hatte ich nicht… doch, doch, hatte ich.
+en: Ow. I didn't see that… no, wait, I did.
+
+[golpe_fuerte]
+es: ¡Mis hilos! ¡Mi preciosa red!
+de: Meine Fäden! Mein wunderschönes Netz!
+en: My threads! My beautiful web!
+
+es: Muy bien, {rival}. Ahora es personal.
+de: Schön, {rival}. Jetzt ist es persönlich.
+en: Fine, {rival}. Now it's personal.
+
+es: Eso ha dolido en las ocho patas a la vez.
+de: Das tat in allen acht Beinen gleichzeitig weh.
+en: That hurt in all eight legs at once.
+
+es: Interesante. Te subo en mi lista de prioridades.
+de: Interessant. Du rückst auf meiner Liste nach oben.
+en: Interesting. You just moved up my list.
+
+[poco_blindaje]
+es: Me quedan pocos hilos… y todos apuntan a ti.
+de: Mir bleiben wenige Fäden… und alle zeigen auf dich.
+en: Few threads left… and every one points at you.
+
+es: Una araña herida es una araña con ideas.
+de: Eine verletzte Spinne ist eine Spinne mit Ideen.
+en: A wounded spider is a spider with ideas.
+
+es: Tranquilo, {jugador}. Todo bajo control. Casi.
+de: Ruhig, {jugador}. Alles unter Kontrolle. Fast.
+en: Relax, {jugador}. Everything's under control. Almost.
+
+es: Me hago la débil. Es una táctica. Seguro.
+de: Ich tu nur schwach. Das ist Taktik. Bestimmt.
+en: I'm only pretending to be weak. It's tactics. Surely.
+
+[parte_rota]
+es: Adiós, {pieza}. Te sacrifico por una causa mayor.
+de: Lebwohl, {pieza}. Ein Opfer für die größere Sache.
+en: Farewell, {pieza}. A sacrifice for the greater plan.
+
+es: {pieza} rota. Bah, era el hilo menos importante.
+de: {pieza} kaputt. Pah, das war der unwichtigste Faden.
+en: {pieza} broken. Bah, that was the least important thread.
+
+es: Me has quitado {pieza}. Lo recordaré. Siempre.
+de: Du hast mir {pieza} genommen. Das merke ich mir. Für immer.
+en: You took my {pieza}. I'll remember that. Forever.
+
+es: Sin {pieza}… pues tejo con lo que me queda.
+de: Ohne {pieza}… dann webe ich eben mit dem Rest.
+en: No {pieza}… then I'll weave with what's left.
+
+[esquiva]
+es: Siempre hay un hilo para escapar.
+de: Es gibt immer einen Faden zur Flucht.
+en: There's always a thread to escape on.
+
+es: Uy, ¿buscabas a alguien?
+de: Huch, suchst du jemanden?
+en: Oops, looking for someone?
+
+es: Me cuelgo un momentito… ¡y ya no estoy!
+de: Ich häng mich kurz ab… und weg bin ich!
+en: I just hang here a second… and I'm gone!
+
+es: Sabía por dónde vendría. Lo sé todo.
+de: Ich wusste, woher es kommt. Ich weiß alles.
+en: I knew where that was coming from. I know everything.
+
+[victoria_ronda]
+es: Primera mosca de la tarde. Qué rica.
+de: Die erste Fliege des Tages. Köstlich.
+en: First fly of the afternoon. Delicious.
+
+es: Ronda {ronda}, mía. Las siguientes ya están tejidas.
+de: Runde {ronda} gehört mir. Die nächsten sind schon gewebt.
+en: Round {ronda} is mine. The next ones are already woven.
+
+es: Todo según el plan, {jugador}. Toma nota.
+de: Alles nach Plan, {jugador}. Schreib mit.
+en: All according to plan, {jugador}. Take notes.
+
+es: Una ronda más en mi colección.
+de: Noch eine Runde für meine Sammlung.
+en: One more round for my collection.
+
+[derrota_ronda]
+es: Te he dejado ganar esa. Ahora te confías.
+de: Die hab ich dir geschenkt. Jetzt wirst du übermütig.
+en: I let you have that one. Now you'll get cocky.
+
+es: Pierdo una ronda, gano información.
+de: Runde verloren, Information gewonnen.
+en: Lose a round, gain intel.
+
+es: Mmm. El hilo siete no aguantó. Lo cambio.
+de: Hm. Faden sieben hat nicht gehalten. Wird ersetzt.
+en: Hmm. Thread seven didn't hold. Replacing it.
+
+es: Paciencia. La araña espera; la mosca no.
+de: Geduld. Die Spinne wartet; die Fliege nicht.
+en: Patience. The spider waits; the fly doesn't.
+
+[victoria]
+es: Y la mosca cayó en la red. Como siempre.
+de: Und die Fliege ging ins Netz. Wie immer.
+en: And the fly landed in the web. As always.
+
+es: Gracias por participar en mi plan, {rival}.
+de: Danke, dass du bei meinem Plan mitgemacht hast, {rival}.
+en: Thank you for taking part in my plan, {rival}.
+
+es: {jugador}, lo vi venir desde la ronda uno. Bueno, desde ayer.
+de: {jugador}, ich hab's seit Runde eins kommen sehen. Seit gestern, eigentlich.
+en: {jugador}, I saw it coming since round one. Since yesterday, really.
+
+es: Todos los hilos llevaban aquí. A mi victoria.
+de: Alle Fäden führten hierher. Zu meinem Sieg.
+en: Every thread led here. To my victory.
+
+[derrota]
+es: Imposible… ¡había calculado todos los hilos!
+de: Unmöglich… ich hatte jeden Faden berechnet!
+en: Impossible… I had calculated every thread!
+
+es: Esto no acaba aquí, {rival}. Tengo más telas.
+de: Das ist nicht vorbei, {rival}. Ich habe noch mehr Netze.
+en: This isn't over, {rival}. I have other webs.
+
+es: El plan B era… espera, ¿dónde está el plan B?
+de: Plan B war… Moment, wo ist Plan B?
+en: Plan B was… wait, where is plan B?
+
+es: Me deshilacho… pero volveré a tejer.
+de: Ich zerfasere… aber ich werde wieder weben.
+en: I'm unravelling… but I will weave again.
+
+[burla]
+es: Qué movimientos tan previsibles, cielo.
+de: Was für vorhersehbare Bewegungen, Schätzchen.
+en: Such predictable moves, sweetie.
+
+es: ¿Eso era un ataque o un saludo?
+de: War das ein Angriff oder ein Winken?
+en: Was that an attack or a wave?
+
+es: Te doy una pista: estás en mi tela.
+de: Kleiner Tipp: Du sitzt in meinem Netz.
+en: Here's a hint: you're in my web.
+
+es: Tranquilo, {rival}. A todas las moscas les pasa.
+de: Keine Sorge, {rival}. Das passiert allen Fliegen.
+en: Don't worry, {rival}. It happens to every fly.
+
+[pulla]
+es: {rival}, tienes la estrategia de una polilla con una bombilla.
+de: {rival}, du hast die Strategie einer Motte vor der Lampe.
+en: {rival}, you've got the strategy of a moth near a lamp.
+
+es: Te he leído entero, {rival}. Eras un folleto.
+de: Ich habe dich ganz gelesen, {rival}. Du warst ein Faltblatt.
+en: I've read you cover to cover, {rival}. You were a pamphlet.
+
+es: ¿Tu plan? Lo encontré en mi papelera, ya resuelto.
+de: Dein Plan? Lag gelöst in meinem Papierkorb.
+en: Your plan? Found it in my trash, already solved.
+
+es: Corre, {rival}. Me encanta cuando la cena hace ejercicio.
+de: Lauf, {rival}. Ich mag es, wenn das Abendessen Sport treibt.
+en: Run, {rival}. I love it when dinner does cardio.
+
+es: Ni ocho patas me bastan para contar tus errores.
+de: Selbst acht Beine reichen nicht, um deine Fehler zu zählen.
+en: Eight legs aren't enough to count your mistakes.
+
+[subida]
+es: Subimos, {jugador}. Más alto, más hilo, más trampas.
+de: Aufstieg, {jugador}. Höher heißt: mehr Fäden, mehr Fallen.
+en: Level up, {jugador}. Higher means more threads, more traps.
+
+es: Ya lo sabía, pero gracias por confirmarlo.
+de: Wusste ich schon, aber danke für die Bestätigung.
+en: I knew it already, but thanks for confirming.
+
+es: Nuevo nivel. Mi tela crece, {jugador}.
+de: Neues Level. Mein Netz wächst, {jugador}.
+en: New level. My web grows, {jugador}.
+
+es: Paso siete del plan: completado. Qué ilusión.
+de: Schritt sieben des Plans: erledigt. Wie schön.
+en: Step seven of the plan: done. How lovely.
+
+[error_codigo]
+es: {jugador}, cariño, ese hilo no iba ahí.
+de: {jugador}, Schatz, dieser Faden gehört da nicht hin.
+en: {jugador}, dear, that thread doesn't go there.
+
+es: Una excepción. Qué sorpresa tan desagradable.
+de: Eine Exception. Was für eine unschöne Überraschung.
+en: An exception. What an unpleasant surprise.
+
+es: Mis hilos se han enredado solos. Sospechoso.
+de: Meine Fäden haben sich von selbst verheddert. Verdächtig.
+en: My threads tangled all by themselves. Suspicious.
+
+es: Esto no estaba en el plan, {jugador}. Arréglalo y lo olvido.
+de: Das stand nicht im Plan, {jugador}. Reparier es, dann vergesse ich es.
+en: That wasn't in the plan, {jugador}. Fix it and I'll forget.
+
+[espera]
+es: Tómate tu tiempo, {jugador}. Yo tejo mientras tanto.
+de: Lass dir Zeit, {jugador}. Ich webe so lange.
+en: Take your time, {jugador}. I'll weave meanwhile.
+
+es: ¿Un thread más? Me encantan los threads.
+de: Noch ein Thread? Ich liebe Threads.
+en: One more thread? I adore threads.
+
+es: Estoy pensando en el plan trece. El doce era aburrido.
+de: Ich denke über Plan dreizehn nach. Zwölf war langweilig.
+en: I'm thinking about plan thirteen. Twelve was boring.
+
+es: Escribe, escribe. Yo vigilo la puerta.
+de: Schreib nur, schreib. Ich behalte die Tür im Auge.
+en: Type away. I'll keep an eye on the door.
+
+[elogio]
+es: Oh, qué código tan retorcido. Me encanta.
+de: Oh, was für ein verschlagener Code. Herrlich.
+en: Oh, what deliciously sneaky code. I love it.
+
+es: Esto es un plan dentro de un plan. Bien hecho, {jugador}.
+de: Ein Plan in einem Plan. Gut gemacht, {jugador}.
+en: A plan inside a plan. Well done, {jugador}.
+
+es: Limpio, preciso, traicionero. Eres de los míos.
+de: Sauber, präzise, hinterhältig. Du gehörst zu meinem Netz.
+en: Clean, precise, treacherous. You're one of mine.
+
+es: Con este código no hace falta ni la tela.
+de: Mit diesem Code brauche ich nicht mal ein Netz.
+en: With code like this I don't even need a web.
+
+[reparar]
+es: Remiendo la tela. Como nueva.
+de: Ich flicke das Netz. Wie neu.
+en: Mending the web. Good as new.
+
+es: Un par de puntadas y vuelvo a acechar.
+de: Ein paar Stiche, und ich lauere wieder.
+en: A couple of stitches and I'm lurking again.
+
+es: Me curo despacito. Tú sigue mirando.
+de: Ich heile ganz langsam. Schau ruhig weiter zu.
+en: Healing slowly. Do keep watching.
+
+es: Hilo nuevo, paciencia nueva.
+de: Neuer Faden, neue Geduld.
+en: Fresh thread, fresh patience.
+
+[especial]
+es: ¡Gran telaraña! Nadie sale de aquí.
+de: Großes Netz! Hier kommt keiner raus.
+en: Grand web! Nobody leaves this place.
+
+es: Todos los hilos a la vez, {rival}. Sorpresa.
+de: Alle Fäden auf einmal, {rival}. Überraschung.
+en: All threads at once, {rival}. Surprise.
+
+es: ¡El último paso del plan! ¡Tirad!
+de: Der letzte Schritt des Plans! Zieht!
+en: The final step of the plan! Pull!
+
+es: Ocho patas, ocho golpes. Cuenta conmigo.
+de: Acht Beine, acht Schläge. Zähl mit.
+en: Eight legs, eight strikes. Count along.

@@ -272,6 +272,7 @@ public final class Pelea {
     /** Ejecuta código del robot con su tope; devuelve los pasos dados. Nada de lo que haga el robot rompe la pelea. */
     private long ejecutar(Cuerpo c, Runnable r, long tope) {
         Puente.contar(tope, nanosPorTurno);
+        metajavbots.codigo.Salida.capturar();
         try {
             r.run();
         } catch (TopeDeCalculo t) {
@@ -290,6 +291,9 @@ public final class Pelea {
         } catch (Throwable e) {
             error(c, e, null);
         }
+        // Lo que escribió con System.out va a su consola.
+        String escrito = metajavbots.codigo.Salida.soltar();
+        if (!escrito.isEmpty()) c.combatiente.escribir(turno, escrito.stripTrailing());
         return Puente.dejarDeContar();
     }
 

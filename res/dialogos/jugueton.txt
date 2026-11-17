@@ -1,0 +1,380 @@
+# Juguetón: Píxel / Pixel / Pixel. Robot de pantalla verde, jugador retro de recreativa:
+# todo es un videojuego (vidas, combos, jefes, récords, monedas). Travieso y alegre.
+
+[saludo]
+es: ¡Jugador dos se ha unido a la partida! Hola, {rival}.
+de: Spieler zwei ist beigetreten! Hallo, {rival}.
+en: Player two has joined the game! Hi, {rival}.
+
+es: Pulsa START para perder, {rival}.
+de: Drück START zum Verlieren, {rival}.
+en: Press START to lose, {rival}.
+
+es: ¡Inserta moneda! Yo ya tengo tres vidas.
+de: Münze einwerfen! Ich hab schon drei Leben.
+en: Insert coin! I've already got three lives.
+
+es: {jugador}, ¿jugamos? ¡Este nivel parece facilito!
+de: {jugador}, zocken wir? Das Level sieht easy aus!
+en: {jugador}, wanna play? This level looks easy!
+
+[inicio_ronda]
+es: ¡Nivel {ronda}! ¡Ready? GO!
+de: Level {ronda}! Ready? GO!
+en: Level {ronda}! Ready? GO!
+
+es: Ronda {ronda}. Cargando… cargando… ¡listo!
+de: Runde {ronda}. Lädt… lädt… fertig!
+en: Round {ronda}. Loading… loading… done!
+
+es: ¡Mundo {ronda}! Aquí sale el jefe, seguro.
+de: Welt {ronda}! Hier kommt bestimmt der Boss.
+en: World {ronda}! The boss shows up here for sure.
+
+es: ¡Ronda {ronda}! Contador de combos a cero.
+de: Runde {ronda}! Combo-Zähler auf null.
+en: Round {ronda}! Combo counter reset.
+
+[ataque]
+es: ¡Arriba, arriba, abajo, abajo… FUEGO!
+de: Hoch, hoch, runter, runter… FEUER!
+en: Up, up, down, down… FIRE!
+
+es: ¡Pium pium!
+de: Piu piu!
+en: Pew pew!
+
+es: ¡Botón A! ¡Botón A! ¡Botón A!
+de: A-Knopf! A-Knopf! A-Knopf!
+en: A button! A button! A button!
+
+es: ¡Toma powerup!
+de: Hier, ein Power-up!
+en: Have a power-up!
+
+[acierto]
+es: ¡Cien puntos!
+de: Hundert Punkte!
+en: A hundred points!
+
+es: ¡Combo x2! ¡Combo x3!
+de: Combo mal zwei! Mal drei!
+en: Combo times two! Times three!
+
+es: ¡Ding! ¡Ding! ¡Ding!
+de: Pling! Pling! Pling!
+en: Ding! Ding! Ding!
+
+es: ¡Récord a la vista, {jugador}!
+de: Highscore in Sicht, {jugador}!
+en: High score incoming, {jugador}!
+
+[fallo]
+es: ¡Uy! Lag. Seguro que es lag.
+de: Huch! Lag. Ganz sicher Lag.
+en: Whoops! Lag. Definitely lag.
+
+es: ¡El mando va mal!
+de: Der Controller spinnt!
+en: The controller is broken!
+
+es: Fallé a propósito. Es un speedrun raro.
+de: Absichtlich verfehlt. Ist ein komischer Speedrun.
+en: Missed on purpose. It's a weird speedrun.
+
+es: Bah, ese enemigo tiene hitbox tramposa.
+de: Pah, der Gegner hat eine geschummelte Hitbox.
+en: Bah, that enemy has a cheaty hitbox.
+
+[golpe]
+es: ¡Au! ¡Menos una vida!
+de: Au! Ein Leben weniger!
+en: Ow! Minus one life!
+
+es: ¡Bip bup! ¡Me han dado!
+de: Bip bup! Getroffen!
+en: Beep boop! I'm hit!
+
+es: ¡Eh! ¡Eso no vale, estaba en pausa!
+de: Hey! Das gilt nicht, ich war auf Pause!
+en: Hey! That doesn't count, I was paused!
+
+es: Daño recibido. Sigo jugando.
+de: Schaden kassiert. Ich spiel weiter.
+en: Damage taken. Still playing.
+
+[golpe_fuerte]
+es: ¡Golpe crítico! ¡Mis píxeles!
+de: Kritischer Treffer! Meine Pixel!
+en: Critical hit! My pixels!
+
+es: ¡Uaaah! ¡Me he quedado en blanco y negro!
+de: Uaaah! Jetzt bin ich schwarz-weiß!
+en: Waaah! I just went black and white!
+
+es: ¡Eso ha sido un ataque de jefe final!
+de: Das war ein Endboss-Angriff!
+en: That was a final boss attack!
+
+es: ¡Se me ha reiniciado la pantalla!
+de: Mein Bildschirm hat neu gestartet!
+en: My screen just rebooted!
+
+[poco_blindaje]
+es: ¡Última vida! ¡Música rápida, por favor!
+de: Letztes Leben! Schnelle Musik, bitte!
+en: Last life! Cue the fast music!
+
+es: ¡Barra en rojo! ¡Bip, bip, bip!
+de: Balken im Roten! Piep, piep, piep!
+en: Health bar in the red! Beep, beep, beep!
+
+es: {jugador}, ¿guardaste la partida? Pregunto por nada.
+de: {jugador}, hast du gespeichert? Nur so gefragt.
+en: {jugador}, did you save the game? Just asking.
+
+es: ¡Necesito un corazón! ¿Alguien ha visto un corazón?
+de: Ich brauche ein Herz! Hat jemand ein Herz gesehen?
+en: I need a heart pickup! Anyone seen a heart?
+
+[parte_rota]
+es: ¡Has roto {pieza}! ¡Eso era de edición limitada!
+de: {pieza} kaputt! Das war eine limitierte Edition!
+en: You broke my {pieza}! That was a limited edition!
+
+es: {pieza} perdida. Bueno, en el nivel siguiente hay otra.
+de: {pieza} verloren. Egal, im nächsten Level gibt's eine neue.
+en: {pieza} lost. Eh, there's another one next level.
+
+es: ¡Sin {pieza}! Modo difícil activado.
+de: Ohne {pieza}! Schwerer Modus aktiviert.
+en: No {pieza}! Hard mode activated.
+
+es: Adiós, {pieza}. Para ti es game over.
+de: Tschüss, {pieza}. Für dich ist Game Over.
+en: Bye, {pieza}. Game over for you, buddy.
+
+[esquiva]
+es: ¡Salto perfecto!
+de: Perfekter Sprung!
+en: Perfect jump!
+
+es: ¡Frames de invencibilidad!
+de: Unverwundbarkeits-Frames!
+en: Invincibility frames!
+
+es: ¡Nope! ¡No me pillas!
+de: Nö! Kriegst mich nicht!
+en: Nope! Can't catch me!
+
+es: ¡Esquiva con giro! Eso suma puntos de estilo.
+de: Ausweichen mit Drehung! Gibt Stilpunkte.
+en: Dodge roll! That's style points.
+
+[victoria_ronda]
+es: ¡Nivel {ronda} superado!
+de: Level {ronda} geschafft!
+en: Level {ronda} cleared!
+
+es: ¡Estrella de bonus para mí!
+de: Bonusstern für mich!
+en: Bonus star for me!
+
+es: ¡Fanfarria de victoria! Tururú, tururú.
+de: Siegesfanfare! Dü-dü-düüü!
+en: Victory jingle! Doo-doo-doo!
+
+es: ¡Checkpoint guardado, {jugador}!
+de: Checkpoint gespeichert, {jugador}!
+en: Checkpoint saved, {jugador}!
+
+[derrota_ronda]
+es: Bah, era la ronda de tutorial.
+de: Pah, das war die Tutorial-Runde.
+en: Bah, that was the tutorial round.
+
+es: ¡Continuar? ¡Sí! ¡Sí! ¡Mil veces sí!
+de: Weiterspielen? Ja! Ja! Tausendmal ja!
+en: Continue? Yes! Yes! A thousand times yes!
+
+es: Me queda una vida extra. Creo.
+de: Ich hab noch ein Extraleben. Glaub ich.
+en: I've got an extra life left. I think.
+
+es: Vale, ahora ya me sé el patrón del jefe.
+de: Okay, jetzt kenne ich das Muster vom Boss.
+en: Okay, now I know the boss pattern.
+
+[victoria]
+es: ¡YOU WIN! ¡Pon tus iniciales, {jugador}!
+de: YOU WIN! Trag deine Initialen ein, {jugador}!
+en: YOU WIN! Enter your initials, {jugador}!
+
+es: ¡Nuevo récord! ¡Primero en la tabla!
+de: Neuer Highscore! Platz eins!
+en: New high score! Top of the board!
+
+es: Gracias por jugar, {rival}. ¿Revancha? Te dejo el mando bueno.
+de: Danke fürs Spielen, {rival}. Revanche? Du kriegst den guten Controller.
+en: Thanks for playing, {rival}. Rematch? You can have the good controller.
+
+es: ¡Créditos finales! ¡Y salgo yo en todos!
+de: Abspann! Und ich bin in jeder Zeile!
+en: End credits! And I'm in all of them!
+
+[derrota]
+es: Game over… ¿alguien tiene otra moneda?
+de: Game Over… hat jemand noch eine Münze?
+en: Game over… anyone got another coin?
+
+es: ¡Nooo! ¡Y no había guardado!
+de: Neiiin! Und ich hab nicht gespeichert!
+en: Nooo! And I didn't save!
+
+es: Pantalla de continuar… diez… nueve… ocho…
+de: Weiter-Bildschirm… zehn… neun… acht…
+en: Continue screen… ten… nine… eight…
+
+es: Bien jugado, {rival}. ¡Pero te reto otra vez!
+de: Gut gespielt, {rival}. Aber ich fordere dich nochmal heraus!
+en: Good game, {rival}. But I'm challenging you again!
+
+[burla]
+es: ¿Juegas con el mando desconectado?
+de: Spielst du mit ausgestecktem Controller?
+en: Are you playing with the controller unplugged?
+
+es: ¡Nivel fácil, {rival}! ¡Puedes ponerlo en fácil!
+de: Leichter Modus, {rival}! Du kannst auf leicht stellen!
+en: Easy mode, {rival}! You can switch to easy!
+
+es: Eres como el primer enemigo del juego. Simpático.
+de: Du bist wie der erste Gegner im Spiel. Niedlich.
+en: You're like the first enemy in the game. Cute.
+
+es: ¡Te he quitado otra vida! ¡Lo digo con cariño!
+de: Wieder ein Leben weg! Ist lieb gemeint!
+en: Took another life! Said with love!
+
+[pulla]
+es: {rival}, juegas como si leyeras el manual al revés.
+de: {rival}, du spielst, als hättest du die Anleitung falsch rum gelesen.
+en: {rival}, you play like you read the manual upside down.
+
+es: Eres un enemigo de nivel uno con traje de jefe.
+de: Du bist ein Level-eins-Gegner im Boss-Kostüm.
+en: You're a level one enemy in a boss costume.
+
+es: Tu récord lo bato con los ojos cerrados y un dedo.
+de: Deinen Highscore knacke ich blind und mit einem Finger.
+en: I'd beat your high score blind, with one finger.
+
+es: ¿Eso era un combo? Mi tostadora pulsa botones más rápido.
+de: Das war ein Combo? Mein Toaster drückt schneller.
+en: That was a combo? My toaster mashes buttons faster.
+
+es: ¡{rival}, eres el tutorial de mi partida!
+de: {rival}, du bist das Tutorial meines Spiels!
+en: {rival}, you're the tutorial of my game!
+
+[subida]
+es: ¡LEVEL UP! ¡Tururú, tururú, turuuú!
+de: LEVEL UP! Dü-dü-dü-düüü!
+en: LEVEL UP! Doo-doo-doo-dooo!
+
+es: ¡Nuevo mundo desbloqueado, {jugador}!
+de: Neue Welt freigeschaltet, {jugador}!
+en: New world unlocked, {jugador}!
+
+es: ¡Más puntos de experiencia! Me brillan los píxeles.
+de: Mehr Erfahrungspunkte! Meine Pixel glitzern.
+en: More XP! My pixels are sparkling.
+
+es: ¡Logro conseguido: ser increíbles!
+de: Erfolg freigeschaltet: Unglaublich sein!
+en: Achievement unlocked: being awesome!
+
+[error_codigo]
+es: ¡Glitch! ¡Me he caído fuera del mapa!
+de: Glitch! Ich bin aus der Karte gefallen!
+en: Glitch! I fell out of the map!
+
+es: {jugador}, ¡el juego se ha colgado! ¿Lo soplamos?
+de: {jugador}, das Spiel hängt! Pusten wir rein?
+en: {jugador}, the game froze! Should we blow on it?
+
+es: Excepción. Esto no salía en el manual.
+de: Exception. Stand nicht in der Anleitung.
+en: Exception. That wasn't in the manual.
+
+es: ¡Pantalla azul! Bueno, verde. Pero mal.
+de: Bluescreen! Na gut, Greenscreen. Aber kaputt.
+en: Blue screen! Well, green. But broken.
+
+[espera]
+es: Mientras programas, juego a la serpiente en mi pantalla.
+de: Während du codest, spiele ich Snake auf meinem Bildschirm.
+en: While you code, I'm playing snake on my screen.
+
+es: ¿Ya? ¿Ya? ¿Ya? ¿Ya está?
+de: Fertig? Fertig? Fertig? Schon fertig?
+en: Done? Done? Done? Is it done?
+
+es: Pantalla de carga… la más larga de mi vida.
+de: Ladebildschirm… der längste meines Lebens.
+en: Loading screen… the longest of my life.
+
+es: Ponme un truco secreto, {jugador}. Uno chulo.
+de: Bau mir einen Cheatcode ein, {jugador}. Einen coolen.
+en: Give me a secret cheat code, {jugador}. A cool one.
+
+[elogio]
+es: ¡Qué código! ¡Esto es un power-up de los buenos!
+de: Was für ein Code! Das ist ein richtig gutes Power-up!
+en: What code! That's a top-tier power-up!
+
+es: ¡Combo de código perfecto, {jugador}!
+de: Perfekter Code-Combo, {jugador}!
+en: Perfect code combo, {jugador}!
+
+es: Esto funciona como un truco secreto. ¡Me encanta!
+de: Das wirkt wie ein Cheatcode. Ich liebe es!
+en: This works like a cheat code. Love it!
+
+es: ¡Cinco estrellas! ¡Diez estrellas! ¡Todas las estrellas!
+de: Fünf Sterne! Zehn Sterne! Alle Sterne!
+en: Five stars! Ten stars! All the stars!
+
+[reparar]
+es: ¡Corazón recogido! Vida +1.
+de: Herz eingesammelt! Leben plus eins.
+en: Heart collected! Life plus one.
+
+es: ¡Poción! ¡Glu, glu, glu!
+de: Heiltrank! Gluck, gluck, gluck!
+en: Potion! Glug, glug, glug!
+
+es: Recargando barra de vida… ¡tirurí!
+de: Lebensbalken lädt… düdelü!
+en: Refilling health bar… bleep bloop!
+
+es: ¡Respawn! Como nuevo.
+de: Respawn! Wie neu.
+en: Respawn! Good as new.
+
+[especial]
+es: ¡Ataque definitivo! ¡Arriba, abajo, izquierda, derecha, B, A!
+de: Ultimativer Angriff! Hoch, runter, links, rechts, B, A!
+en: Ultimate move! Up, down, left, right, B, A!
+
+es: ¡Supercombo de cien golpes!
+de: Supercombo mit hundert Treffern!
+en: Hundred-hit super combo!
+
+es: ¡Modo turbo activado!
+de: Turbomodus aktiviert!
+en: Turbo mode activated!
+
+es: ¡Bomba de píxeles! ¡Fiuuu, bum!
+de: Pixelbombe! Fiuuu, bumm!
+en: Pixel bomb! Fwoooo, boom!

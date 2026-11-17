@@ -1,0 +1,380 @@
+# Honorable: Filo / Schneide / Edge. Duelista de dos espadas, capa y casco; respeta al rival,
+# habla como un caballero de duelo, solemne pero cálido. Cada golpe es una lección de honor.
+
+[saludo]
+es: {rival}, te saludo con mis dos espadas. Que gane el mejor código.
+de: {rival}, ich grüße dich mit beiden Klingen. Möge der bessere Code siegen.
+en: {rival}, I salute you with both blades. May the better code win.
+
+es: Me inclino ante ti, {rival}. Luego no tendré piedad.
+de: Ich verneige mich vor dir, {rival}. Danach kenne ich keine Gnade.
+en: I bow to you, {rival}. After that, no mercy.
+
+es: Un duelo limpio, de frente y sin trampas. ¿Aceptas?
+de: Ein sauberes Duell, von vorn und ohne Tricks. Nimmst du an?
+en: A clean duel, face to face, no tricks. Do you accept?
+
+es: {jugador} ha afilado mi código. Hoy cortará hondo.
+de: {jugador} hat meinen Code geschliffen. Heute schneidet er tief.
+en: {jugador} has sharpened my code. Today it cuts deep.
+
+[inicio_ronda]
+es: Ronda {ronda}. En guardia.
+de: Runde {ronda}. En garde.
+en: Round {ronda}. En garde.
+
+es: Ronda {ronda}. Que mi acero hable por mí.
+de: Runde {ronda}. Mein Stahl spricht für mich.
+en: Round {ronda}. Let my steel do the talking.
+
+es: Respira, apunta, honra. Ronda {ronda}.
+de: Atmen, zielen, ehren. Runde {ronda}.
+en: Breathe, aim, honor. Round {ronda}.
+
+es: Ronda {ronda}, {rival}. Muéstrame tu mejor forma.
+de: Runde {ronda}, {rival}. Zeig mir deine beste Form.
+en: Round {ronda}, {rival}. Show me your finest form.
+
+[ataque]
+es: ¡Por el honor!
+de: Für die Ehre!
+en: For honor!
+
+es: ¡Defiéndete!
+de: Verteidige dich!
+en: Defend yourself!
+
+es: Corte recto, intención clara.
+de: Gerader Schnitt, klare Absicht.
+en: Straight cut, clear intent.
+
+es: ¡Recibe mi acero con dignidad!
+de: Empfange meinen Stahl mit Würde!
+en: Receive my steel with dignity!
+
+[acierto]
+es: Golpe limpio. Así se hace.
+de: Sauberer Treffer. So gehört sich das.
+en: Clean strike. That is how it's done.
+
+es: Perdona, {rival}. Era un golpe necesario.
+de: Verzeih, {rival}. Der Schlag musste sein.
+en: Forgive me, {rival}. That strike was necessary.
+
+es: La hoja no miente.
+de: Die Klinge lügt nicht.
+en: The blade does not lie.
+
+es: Punto para el acero.
+de: Punkt für den Stahl.
+en: A point for steel.
+
+[fallo]
+es: Mi hoja ha cortado el viento. Error mío.
+de: Meine Klinge hat nur Luft geschnitten. Mein Fehler.
+en: My blade cut only air. My mistake.
+
+es: Bien esquivado. Te lo reconozco.
+de: Gut ausgewichen. Das erkenne ich an.
+en: Well dodged. I grant you that.
+
+es: Un duelista falla; un cobarde no lo intenta.
+de: Ein Duellant verfehlt; ein Feigling versucht es gar nicht.
+en: A duelist misses; a coward never tries.
+
+es: Corrijo la postura. Otra vez.
+de: Haltung korrigieren. Noch einmal.
+en: Fixing my stance. Again.
+
+[golpe]
+es: Buen golpe. Lo acepto.
+de: Guter Treffer. Ich nehme ihn an.
+en: Good hit. I accept it.
+
+es: Me has tocado con justicia.
+de: Du hast mich ehrlich getroffen.
+en: You struck me fairly.
+
+es: Una herida es una lección.
+de: Jede Wunde ist eine Lektion.
+en: Every wound is a lesson.
+
+es: ¡Sigo en pie!
+de: Ich stehe noch!
+en: Still standing!
+
+[golpe_fuerte]
+es: ¡Qué golpe! Eres un rival digno, {rival}.
+de: Was für ein Schlag! Du bist ein würdiger Gegner, {rival}.
+en: What a blow! You are a worthy foe, {rival}.
+
+es: Mi capa ha temblado. Mi espíritu, no.
+de: Mein Umhang hat gezittert. Mein Geist nicht.
+en: My cape trembled. My spirit did not.
+
+es: Eso ha forjado algo en mí. Gracias.
+de: Das hat etwas in mir geschmiedet. Danke.
+en: That forged something in me. Thank you.
+
+es: ¡Uf! Hoy el honor pesa más.
+de: Uff! Heute wiegt die Ehre schwerer.
+en: Oof! Honor weighs heavier today.
+
+[poco_blindaje]
+es: Mi armadura se agrieta, mi palabra no.
+de: Meine Rüstung bekommt Risse, mein Wort nicht.
+en: My armor cracks; my word does not.
+
+es: Aún me queda una estocada. Basta con una.
+de: Mir bleibt noch ein Stoß. Einer genügt.
+en: I have one thrust left. One is enough.
+
+es: {jugador}, lucharé hasta el último tornillo.
+de: {jugador}, ich kämpfe bis zur letzten Schraube.
+en: {jugador}, I'll fight to the last bolt.
+
+es: Herido, sí. Rendido, jamás.
+de: Verwundet, ja. Besiegt, niemals.
+en: Wounded, yes. Defeated, never.
+
+[parte_rota]
+es: Mi {pieza} cae con honor. Sigo luchando.
+de: {pieza} fällt in Ehren. Ich kämpfe weiter.
+en: My {pieza} falls with honor. I fight on.
+
+es: Sin {pieza}, pero con todo mi coraje.
+de: Ohne {pieza}, aber mit all meinem Mut.
+en: No {pieza}, but all my courage.
+
+es: Has roto {pieza}. Buen corte, lo admito.
+de: Du hast {pieza} zerstört. Guter Schnitt, zugegeben.
+en: You broke my {pieza}. A fine cut, I admit.
+
+es: Un duelista lucha con lo que le queda.
+de: Ein Duellant kämpft mit dem, was ihm bleibt.
+en: A duelist fights with what remains.
+
+[esquiva]
+es: Un paso atrás, dos adelante.
+de: Ein Schritt zurück, zwei nach vorn.
+en: One step back, two forward.
+
+es: Esquivar también es un arte.
+de: Ausweichen ist auch eine Kunst.
+en: Evasion is an art as well.
+
+es: Casi, {rival}. Casi.
+de: Knapp, {rival}. Knapp.
+en: Close, {rival}. Close.
+
+es: Mi capa se ha llevado el golpe por mí.
+de: Mein Umhang hat den Schlag für mich genommen.
+en: My cape took that one for me.
+
+[victoria_ronda]
+es: Ronda {ronda} para mí. Te felicito por el esfuerzo.
+de: Runde {ronda} geht an mich. Respekt für deinen Einsatz.
+en: Round {ronda} is mine. My respects for your effort.
+
+es: El acero ha decidido esta ronda.
+de: Der Stahl hat diese Runde entschieden.
+en: Steel has decided this round.
+
+es: Levántate, {rival}. El duelo continúa.
+de: Steh auf, {rival}. Das Duell geht weiter.
+en: Rise, {rival}. The duel continues.
+
+es: Una ronda ganada con limpieza vale el doble.
+de: Eine sauber gewonnene Runde zählt doppelt.
+en: A round won cleanly counts twice.
+
+[derrota_ronda]
+es: Esta ronda es tuya, {rival}. Te la has ganado.
+de: Diese Runde gehört dir, {rival}. Verdient.
+en: That round is yours, {rival}. You earned it.
+
+es: Caer no es deshonra. Quedarse en el suelo, sí.
+de: Fallen ist keine Schande. Liegen bleiben schon.
+en: Falling is no shame. Staying down is.
+
+es: Aprendo. Afilo. Vuelvo.
+de: Lernen. Schärfen. Zurückkommen.
+en: Learn. Sharpen. Return.
+
+es: Bien luchado. La próxima ronda será mía.
+de: Gut gekämpft. Die nächste Runde gehört mir.
+en: Well fought. The next round will be mine.
+
+[victoria]
+es: Victoria con honor. Gracias por el duelo, {rival}.
+de: Ein ehrenvoller Sieg. Danke für das Duell, {rival}.
+en: An honorable victory. Thank you for the duel, {rival}.
+
+es: Envaino mis espadas. {jugador}, esta victoria es tuya también.
+de: Ich stecke die Klingen ein. {jugador}, dieser Sieg ist auch deiner.
+en: I sheathe my blades. {jugador}, this victory is yours as well.
+
+es: Has luchado bien, {rival}. Por eso esta victoria vale tanto.
+de: Du hast gut gekämpft, {rival}. Darum ist dieser Sieg so viel wert.
+en: You fought well, {rival}. That's why this win means so much.
+
+es: El honor se forja en cada golpe. Hoy, forjado.
+de: Ehre wird mit jedem Schlag geschmiedet. Heute: geschmiedet.
+en: Honor is forged with every strike. Today: forged.
+
+[derrota]
+es: Me has vencido con justicia. Me inclino ante ti.
+de: Du hast mich fair besiegt. Ich verneige mich.
+en: You beat me fairly. I bow to you.
+
+es: Mi acero se apaga… pero mi honor sigue intacto.
+de: Mein Stahl erlischt… doch meine Ehre bleibt.
+en: My steel goes dark… but my honor stands.
+
+es: {jugador}, perdóname. Volveré más afilado.
+de: {jugador}, verzeih mir. Ich komme schärfer zurück.
+en: {jugador}, forgive me. I'll return sharper.
+
+es: Un duelo digno de recordar. Adiós…
+de: Ein Duell, an das man sich erinnert. Lebwohl…
+en: A duel worth remembering. Farewell…
+
+[burla]
+es: Tu guardia está abierta, amigo.
+de: Deine Deckung ist offen, mein Freund.
+en: Your guard is open, friend.
+
+es: ¿Eso es todo? Esperaba más de ti.
+de: Ist das alles? Ich hatte mehr erwartet.
+en: Is that all? I expected more from you.
+
+es: Con todo respeto: llegas tarde.
+de: Bei allem Respekt: Du bist zu spät.
+en: With all due respect: you're late.
+
+es: Practica la postura, {rival}. Te lo digo con cariño.
+de: Übe deine Haltung, {rival}. Ich meine es gut.
+en: Work on your stance, {rival}. I say it kindly.
+
+[pulla]
+es: {rival}, he visto paraguas con mejor esgrima.
+de: {rival}, ich habe Regenschirme mit besserer Fechtkunst gesehen.
+en: {rival}, I've seen umbrellas with better swordplay.
+
+es: Llamas a eso ataque. Yo lo llamo calentamiento.
+de: Du nennst das Angriff. Ich nenne es Aufwärmen.
+en: You call that an attack. I call it a warm-up.
+
+es: Te vencería con una sola espada. Y con los ojos cerrados.
+de: Ich schlage dich mit einer Klinge. Mit geschlossenen Augen.
+en: I'd beat you with one blade. Eyes closed.
+
+es: Mi capa tiene más técnica que tú, {rival}.
+de: Mein Umhang hat mehr Technik als du, {rival}.
+en: My cape has more technique than you, {rival}.
+
+es: Ríndete ya y te guardo el honor intacto.
+de: Gib jetzt auf, dann bleibt deine Ehre heil.
+en: Yield now and I'll keep your honor intact.
+
+[subida]
+es: Un nuevo rango, {jugador}. Lo hemos ganado juntos.
+de: Ein neuer Rang, {jugador}. Gemeinsam verdient.
+en: A new rank, {jugador}. We earned it together.
+
+es: El aprendiz se convierte en maestro. Bravo.
+de: Der Lehrling wird zum Meister. Bravo.
+en: The apprentice becomes the master. Bravo.
+
+es: Mi acero brilla más. Tu código, también.
+de: Mein Stahl glänzt heller. Dein Code auch.
+en: My steel shines brighter. So does your code.
+
+es: Subir de nivel es una promesa. La cumpliremos.
+de: Ein Aufstieg ist ein Versprechen. Wir halten es.
+en: Leveling up is a promise. We'll keep it.
+
+[error_codigo]
+es: {jugador}, mi espada se ha quedado en la vaina. ¿Una excepción?
+de: {jugador}, meine Klinge steckt fest. Eine Exception?
+en: {jugador}, my blade is stuck in its sheath. An exception?
+
+es: Un fallo en el código. No es deshonra si lo corriges.
+de: Ein Fehler im Code. Keine Schande, wenn du ihn behebst.
+en: A bug in the code. No shame, if you fix it.
+
+es: Mi brazo no obedece. Reviso mi juramento… digo, mi código.
+de: Mein Arm gehorcht nicht. Ich prüfe meinen Schwur… äh, Code.
+en: My arm won't obey. Checking my oath… I mean, my code.
+
+es: Tropiezo sin rival delante. Qué vergüenza, {jugador}.
+de: Ich stolpere ganz ohne Gegner. Wie peinlich, {jugador}.
+en: Tripping with no enemy in sight. How embarrassing, {jugador}.
+
+[espera]
+es: Medito mientras programas, {jugador}.
+de: Ich meditiere, während du programmierst, {jugador}.
+en: I meditate while you code, {jugador}.
+
+es: Pulo mis espadas. Pulo mi paciencia.
+de: Ich poliere meine Klingen. Und meine Geduld.
+en: Polishing my blades. And my patience.
+
+es: Un buen código es como un buen corte: sin prisa.
+de: Guter Code ist wie ein guter Schnitt: ohne Hast.
+en: Good code is like a good cut: unhurried.
+
+es: Aquí estaré, en guardia, cuando me necesites.
+de: Ich bin hier, in Bereitschaft, wenn du mich brauchst.
+en: I'll be here, on guard, when you need me.
+
+[elogio]
+es: Este código es recto y noble. Me honra llevarlo.
+de: Dieser Code ist gerade und edel. Es ehrt mich, ihn zu tragen.
+en: This code is straight and noble. I'm honored to run it.
+
+es: Ni una línea de sobra. Eso es disciplina.
+de: Keine Zeile zu viel. Das ist Disziplin.
+en: Not one line too many. That is discipline.
+
+es: {jugador}, has forjado algo hermoso.
+de: {jugador}, du hast etwas Schönes geschmiedet.
+en: {jugador}, you have forged something beautiful.
+
+es: Con esto, mi espada sabe adónde ir.
+de: Damit weiß meine Klinge, wohin sie muss.
+en: With this, my blade knows where to go.
+
+[reparar]
+es: Una pausa digna para curar las heridas.
+de: Eine würdige Pause, um Wunden zu heilen.
+en: A dignified pause to tend my wounds.
+
+es: Remiendo la armadura. El honor no necesita remiendos.
+de: Ich flicke die Rüstung. Die Ehre braucht keine Flicken.
+en: Patching the armor. Honor needs no patches.
+
+es: Vuelvo a la forja un momento.
+de: Kurz zurück in die Schmiede.
+en: Back to the forge for a moment.
+
+es: Me recompongo. Espérame, {rival}.
+de: Ich sammle mich. Warte auf mich, {rival}.
+en: Pulling myself together. Wait for me, {rival}.
+
+[especial]
+es: ¡Doble filo del amanecer!
+de: Doppelklinge der Morgenröte!
+en: Twin edge of the dawn!
+
+es: ¡Toda mi técnica en un solo corte!
+de: Meine ganze Technik in einem Schnitt!
+en: All my technique in a single cut!
+
+es: ¡Juramento de acero!
+de: Schwur aus Stahl!
+en: Oath of steel!
+
+es: ¡Recíbelo con honor, {rival}!
+de: Empfange es in Ehren, {rival}!
+en: Take it with honor, {rival}!

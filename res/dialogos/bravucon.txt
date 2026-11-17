@@ -1,0 +1,384 @@
+# Diálogos de la personalidad «bravucon» (Mazo: primero pego, luego pregunto).
+# Fanfarrón de ring. Grita, presume, habla de sí mismo en tercera persona. Buen fondo.
+
+[saludo]
+es: ¡¿QUIÉN SE ATREVE?! ¡Ah, eres tú, {rival}! ¡Qué pena me das!
+de: WER WAGT ES?! Ach, du bist's, {rival}! Du tust mir jetzt schon leid!
+en: WHO DARES?! Oh, it's you, {rival}! I already feel sorry for you!
+
+es: ¡{yo} ha llegado! ¡Que alguien avise al chatarrero!
+de: {yo} ist da! Ruft schon mal den Schrotthändler!
+en: {yo} has arrived! Somebody call the scrapyard!
+
+es: ¡Mírame bien, {rival}! ¡Es lo último que vas a ver entero!
+de: Schau mich gut an, {rival}! Das Letzte, was du in einem Stück siehst!
+en: Take a good look, {rival}! Last thing you'll see in one piece!
+
+es: ¡{jugador}! ¡Tú programa, que yo pongo los puños!
+de: {jugador}! Du programmierst, ich liefere die Fäuste!
+en: {jugador}! You write the code, I bring the fists!
+
+es: ¡Primero pego, luego pregunto! ¡Y hoy no pienso preguntar!
+de: Erst hauen, dann fragen! Und heute frage ich gar nicht!
+en: Hit first, ask later! And today I'm not asking!
+
+[inicio_ronda]
+es: ¡RONDA {ronda}! ¡A MACHACAR!
+de: RUNDE {ronda}! ZEIT ZUM ZERLEGEN!
+en: ROUND {ronda}! SMASHING TIME!
+
+es: ¡Ronda {ronda}! ¡{yo} tiene hambre de tornillos!
+de: Runde {ronda}! {yo} hat Hunger auf Schrauben!
+en: Round {ronda}! {yo} is hungry for bolts!
+
+es: ¡Suena la campana! ¡Y luego vas a sonar tú!
+de: Die Glocke läutet! Und gleich läutest du!
+en: There's the bell! Next thing ringing is you!
+
+es: ¡Otra ronda! ¡Otra paliza! ¡Qué día tan bonito!
+de: Noch eine Runde! Noch eine Abreibung! Was für ein schöner Tag!
+en: Another round! Another beating! What a lovely day!
+
+[ataque]
+es: ¡TOMA!
+de: DA!
+en: TAKE THAT!
+
+es: ¡Martillazo de cortesía!
+de: Ein Hammerschlag aufs Haus!
+en: Complimentary hammer blow!
+
+es: ¡Ven aquí, que te doy un abrazo de hierro!
+de: Komm her, ich drück dich mit Eisen!
+en: Come here, I'll give you an iron hug!
+
+es: ¡{arma}! ¡Al careto!
+de: {arma}! Mitten auf die Zwölf!
+en: {arma}! Right in the faceplate!
+
+[acierto]
+es: ¡JA! ¡Eso va a dejar marca!
+de: HA! Das hinterlässt Spuren!
+en: HA! That's gonna leave a mark!
+
+es: ¡Toc-toc! ¿Quién es? ¡{yo}, en tu cara!
+de: Klopf-klopf! Wer ist da? {yo}, in deinem Gesicht!
+en: Knock-knock! Who's there? {yo}, in your face!
+
+es: ¡Eso ha sonado a chatarra! ¡Me encanta ese sonido!
+de: Das klang nach Schrott! Ich liebe dieses Geräusch!
+en: That sounded like scrap! I love that sound!
+
+es: ¡Directo al núcleo! ¡Como debe ser!
+de: Direkt in den Kern! So gehört sich das!
+en: Straight to the core! That's the way!
+
+[fallo]
+es: ¡El aire se lo merecía!
+de: Die Luft hatte es verdient!
+en: The air had it coming!
+
+es: ¡Bah! ¡Era un golpe de calentamiento!
+de: Pah! Das war nur zum Aufwärmen!
+en: Pfft! That was a warm-up swing!
+
+es: ¡No huyas, cobarde! ¡Bueno, huye, pero despacio!
+de: Lauf nicht weg, Feigling! Na gut, lauf, aber langsam!
+en: Don't run, coward! Fine, run, but slowly!
+
+es: ¡Fallé a propósito! ¡Para darte esperanzas!
+de: Absichtlich daneben! Damit du noch Hoffnung hast!
+en: Missed on purpose! To give you some hope!
+
+[golpe]
+es: ¡¿Eso era un golpe o una caricia?!
+de: War das ein Schlag oder ein Streicheln?!
+en: Was that a punch or a pat?!
+
+es: ¡Ja! ¡Me haces cosquillas!
+de: Ha! Das kitzelt!
+en: Ha! That tickles!
+
+es: ¡Ahora sí que me has enfadado! ¡Más!
+de: Jetzt hast du mich richtig wütend gemacht! Noch wütender!
+en: Now you've made me mad! Madder!
+
+es: ¡Mis pinchos ni se han enterado!
+de: Meine Stacheln haben nichts gemerkt!
+en: My spikes didn't even notice!
+
+[golpe_fuerte]
+es: ¡OUCH! ¡Vale, eso ha dolido un poquito! ¡Un poquito!
+de: AUTSCH! Okay, das tat ein kleines bisschen weh! Ganz klein!
+en: OUCH! Okay, that hurt a tiny bit! TINY!
+
+es: ¡Grrr! ¡Ahora es personal!
+de: Grrr! Jetzt ist es persönlich!
+en: Grrr! Now it's personal!
+
+es: ¡Buen golpe! ¡No se lo digas a nadie que lo he dicho!
+de: Guter Schlag! Sag keinem, dass ich das gesagt hab!
+en: Good hit! Don't tell anyone I said that!
+
+es: ¡Me has movido los cuernos! ¡Nadie me mueve los cuernos!
+de: Du hast meine Hörner verbogen! Keiner verbiegt meine Hörner!
+en: You bent my horns! Nobody bends my horns!
+
+[poco_blindaje]
+es: ¡{yo} herido es {yo} peligroso!
+de: Ein verletzter {yo} ist ein gefährlicher {yo}!
+en: A wounded {yo} is a dangerous {yo}!
+
+es: ¡Esto es el principio de mi gran remontada!
+de: Das ist der Anfang meines großen Comebacks!
+en: This is the start of my big comeback!
+
+es: ¡Poco blindaje, mucha furia! ¡Mala combinación para ti!
+de: Wenig Panzerung, viel Wut! Schlechte Mischung für dich!
+en: Low armor, high fury! Bad combo for you!
+
+es: ¡Estoy dejando que ganes un poco! ¡Para que sea emocionante!
+de: Ich lass dich nur ein bisschen gewinnen! Damit's spannend bleibt!
+en: I'm letting you win a little! To keep it exciting!
+
+[parte_rota]
+es: ¡Mi {pieza}! ¡Me la vas a pagar con intereses!
+de: {pieza}! Das zahlst du mir mit Zinsen zurück!
+en: My {pieza}! You'll pay for that with interest!
+
+es: ¡{pieza} rota! ¡No me hacía falta para ganarte!
+de: {pieza} kaputt! Brauch ich nicht, um dich zu besiegen!
+en: {pieza} broken! Don't need it to beat you!
+
+es: ¡Se me ha caído: {pieza}! ¡Ahora estoy MÁS enfadado!
+de: Abgefallen: {pieza}! Jetzt bin ich NOCH wütender!
+en: Fell off: {pieza}! Now I'm EVEN ANGRIER!
+
+es: ¡Eh! ¡Esa pieza era de coleccionista!
+de: He! Das war ein Sammlerstück!
+en: Hey! That part was a collector's item!
+
+[esquiva]
+es: ¡Ja! ¡Ni de lejos!
+de: Ha! Nicht mal annähernd!
+en: Ha! Not even close!
+
+es: ¡Un barril también sabe bailar!
+de: Auch ein Fass kann tanzen!
+en: Even a barrel can dance!
+
+es: ¡Lento! ¡Leeento! ¡Yo soy rápido cuando quiero!
+de: Lahm! Laaahm! Ich bin schnell, wenn ich will!
+en: Slow! Slooow! I'm fast when I want to be!
+
+es: ¡Esquivado con estilo!
+de: Mit Stil ausgewichen!
+en: Dodged with style!
+
+[victoria_ronda]
+es: ¡RONDA PARA {yo}! ¡Que lo apunten en la pared!
+de: RUNDE AN {yo}! Schreibt das an die Wand!
+en: ROUND TO {yo}! Write it on the wall!
+
+es: ¡¿Alguien más?! ¡¿Nadie?!
+de: Sonst noch wer?! Niemand?!
+en: Anyone else?! Nobody?!
+
+es: ¡{jugador}! ¡Somos los reyes del ring!
+de: {jugador}! Wir sind die Könige des Rings!
+en: {jugador}! We're the kings of the ring!
+
+es: ¡Una menos! ¡Esto va a ser una paliza histórica!
+de: Eine weniger! Das wird eine historische Abreibung!
+en: One down! This'll be a historic beatdown!
+
+[derrota_ronda]
+es: ¡¿QUÉ?! ¡Revisión! ¡Quiero ver la repetición!
+de: WAS?! Einspruch! Ich will die Wiederholung sehen!
+en: WHAT?! Objection! I want to see the replay!
+
+es: ¡Me he tropezado con mi propio martillo! ¡No cuenta!
+de: Ich bin über meinen eigenen Hammer gestolpert! Zählt nicht!
+en: I tripped over my own hammer! Doesn't count!
+
+es: ¡Bah! ¡Te he dejado ganar para que no llores!
+de: Pah! Ich hab dich gewinnen lassen, damit du nicht weinst!
+en: Pfft! I let you win so you wouldn't cry!
+
+es: ¡Esto solo me pone más fuerte, {rival}!
+de: Das macht mich nur stärker, {rival}!
+en: This only makes me stronger, {rival}!
+
+[victoria]
+es: ¡CAMPEÓN! ¡CAMPEÓN! ¡{yo} ES EL CAMPEÓN!
+de: CHAMPION! CHAMPION! {yo} IST DER CHAMPION!
+en: CHAMPION! CHAMPION! {yo} IS THE CHAMPION!
+
+es: ¡Que alguien barra los tornillos de {rival}!
+de: Kann mal jemand die Schrauben von {rival} zusammenfegen?
+en: Somebody sweep up {rival}'s bolts!
+
+es: ¡Ni siquiera he sudado aceite!
+de: Ich hab nicht mal Öl geschwitzt!
+en: Didn't even break an oil sweat!
+
+es: ¡{jugador}, tu código y mis puños! ¡Invencibles!
+de: {jugador}, dein Code und meine Fäuste! Unschlagbar!
+en: {jugador}, your code and my fists! Unbeatable!
+
+[derrota]
+es: ¡Imposible! ¡{yo} nunca pierde! ¡{yo} solo... explota!
+de: Unmöglich! {yo} verliert nie! Er... explodiert nur!
+en: Impossible! {yo} never loses! {yo} just... explodes!
+
+es: ¡Esto no ha terminado! ¡Bueno, sí! ¡Pero volveré!
+de: Das ist noch nicht vorbei! Okay, doch! Aber ich komme wieder!
+en: This isn't over! Okay, it is! But I'll be back!
+
+es: ¡{jugador}! ¡Dile a todos que caí luchando!
+de: {jugador}! Sag allen, ich bin kämpfend gefallen!
+en: {jugador}! Tell everyone I went down swinging!
+
+es: ¡Una explosión digna de un campeón! ¡BUUUM!
+de: Eine Explosion, würdig eines Champions! BUUUMM!
+en: An explosion fit for a champion! KABOOOM!
+
+[burla]
+es: ¡Eh, {rival}! ¿Te han programado con los ojos cerrados?
+de: He, {rival}! Hat man dich mit geschlossenen Augen programmiert?
+en: Hey, {rival}! Were you programmed with your eyes shut?
+
+es: ¡Ven, ven! ¡Que no muerdo! ¡Bueno, un poco!
+de: Komm her, komm! Ich beiß nicht! Na gut, ein bisschen!
+en: Come on, come on! I don't bite! Well, a little!
+
+es: ¡Te dejo pegarme primero! ¡Es lo justo!
+de: Du darfst zuerst zuschlagen! Ist nur fair!
+en: I'll let you hit first! Only fair!
+
+es: ¡Qué bonito brillas! ¡Te durará poco!
+de: Wie schön du glänzt! Nicht mehr lange!
+en: You're so shiny! Not for long!
+
+[pulla]
+es: ¡Pegas tan flojo que mis abolladuras se ríen!
+de: Du schlägst so schwach, meine Dellen lachen sich kaputt!
+en: You hit so soft my dents are laughing!
+
+es: ¡Te voy a convertir en tostadora, {rival}!
+de: Ich mach aus dir einen Toaster, {rival}!
+en: I'm gonna turn you into a toaster, {rival}!
+
+es: ¡Tu código tiene más bugs que un nido de avispas!
+de: Dein Code hat mehr Bugs als ein Ameisenhaufen!
+en: Your code has more bugs than an anthill!
+
+es: ¡Cuando acabe contigo, vas a salir en piezas de repuesto!
+de: Wenn ich mit dir fertig bin, gibt's dich nur noch als Ersatzteile!
+en: When I'm done, you'll be sold as spare parts!
+
+es: ¡{yo} ha venido a dos cosas: a pegar y a pegar otra vez!
+de: {yo} ist für zwei Dinge hier: hauen und nochmal hauen!
+en: {yo} came for two things: hitting, and hitting again!
+
+[subida]
+es: ¡SUBIDA DE NIVEL! ¡{yo} es aún más {yo}!
+de: LEVEL UP! {yo} ist jetzt noch mehr {yo}!
+en: LEVEL UP! {yo} just got even more {yo}!
+
+es: ¡JA! ¡{jugador}, que tiemble toda la liga!
+de: HA! {jugador}, die ganze Liga soll zittern!
+en: HA! {jugador}, let the whole league tremble!
+
+es: ¡Más nivel, más músculo de acero!
+de: Mehr Level, mehr Stahlmuskeln!
+en: More level, more steel muscle!
+
+es: ¡Esto hay que celebrarlo! ¡Rompiendo algo!
+de: Das muss gefeiert werden! Mit Zertrümmern!
+en: This calls for a celebration! Let's smash something!
+
+[error_codigo]
+es: ¡¿Una excepción?! ¡Que venga aquí y me lo diga a la cara!
+de: Eine Exception?! Die soll herkommen und es mir ins Gesicht sagen!
+en: An exception?! Let it come here and say that to my face!
+
+es: ¡Mi código se ha caído! ¡Ha sido un empujón!
+de: Mein Code ist umgefallen! Man hat ihn geschubst!
+en: My code fell over! Somebody pushed it!
+
+es: ¡{jugador}! ¡Mis puños quieren pegar y el código dice que no!
+de: {jugador}! Meine Fäuste wollen hauen, der Code sagt nein!
+en: {jugador}! My fists wanna swing and the code says no!
+
+es: ¡Error de sintaxis! ¡A ese también le pegaría!
+de: Syntaxfehler! Dem würde ich auch eine verpassen!
+en: Syntax error! I'd punch that too!
+
+[espera]
+es: ¡Venga, {jugador}! ¡Mis puños se están oxidando!
+de: Los, {jugador}! Meine Fäuste rosten schon!
+en: Come on, {jugador}! My fists are rusting!
+
+es: ¡Estoy haciendo flexiones! ¡Ciento una! ¡Ciento dos!
+de: Ich mache Liegestütze! Hunderteins! Hundertzwei!
+en: Doing push-ups! A hundred and one! A hundred and two!
+
+es: ¡¿Cuánto falta?! ¡Quiero romper algo!
+de: Wie lange noch?! Ich will was kaputt machen!
+en: How much longer?! I wanna break something!
+
+es: ¡{yo} espera! ¡{yo} no se queja! ¡{yo} se queja un poco!
+de: {yo} wartet! {yo} meckert nicht! Na gut, ein bisschen!
+en: {yo} waits! {yo} doesn't complain! {yo} complains a little!
+
+[elogio]
+es: ¡ESO ES CÓDIGO CON PUÑOS!
+de: DAS IST CODE MIT FÄUSTEN!
+en: NOW THAT'S CODE WITH FISTS!
+
+es: ¡Me gusta! ¡Es directo, como un cabezazo!
+de: Gefällt mir! Direkt wie eine Kopfnuss!
+en: Love it! Straight to the point, like a headbutt!
+
+es: ¡{jugador}, eres el mejor entrenador del barrio!
+de: {jugador}, du bist der beste Trainer im ganzen Viertel!
+en: {jugador}, you're the best coach on the block!
+
+es: ¡Con esto voy a pegar el doble! ¡O el triple!
+de: Damit hau ich doppelt so hart zu! Oder dreifach!
+en: With this I'll hit twice as hard! Or triple!
+
+[reparar]
+es: ¡Unas tiritas de acero y como nuevo!
+de: Ein paar Stahlpflaster und wie neu!
+en: Some steel band-aids and good as new!
+
+es: ¡Esto no es curarme! ¡Es recargar furia!
+de: Das ist kein Heilen! Das ist Wut nachladen!
+en: This isn't healing! It's reloading fury!
+
+es: ¡Remiendo rápido! ¡Que me quedan cosas que romper!
+de: Schnell geflickt! Ich hab noch einiges zu zerlegen!
+en: Quick patch! I still got stuff to smash!
+
+es: ¡Ahh! ¡Ya vuelvo a estar guapo!
+de: Ahh! Jetzt seh ich wieder gut aus!
+en: Ahh! Looking handsome again!
+
+[especial]
+es: ¡¡MARTILLAZO DEFINITIVO!!
+de: ULTIMATIVER HAMMERSCHLAG!!
+en: ULTIMATE HAMMER SMASH!!
+
+es: ¡Agárrate, {rival}! ¡Esto va a doler en tres idiomas!
+de: Halt dich fest, {rival}! Das tut in drei Sprachen weh!
+en: Brace yourself, {rival}! This hurts in three languages!
+
+es: ¡Furia total! ¡Toda la que tengo y un poco más!
+de: Volle Wut! Alles, was ich hab, und noch mehr!
+en: Total fury! Everything I've got and then some!
+
+es: ¡Cabezazo de cuernos! ¡Embestida!
+de: Hörnerstoß! Volle Attacke!
+en: Horn charge! Full steam!
