@@ -26,7 +26,7 @@ public final class CerebroHttp implements Cerebro {
     private final String direccion, clave, modelo, nombre;
     private final HttpClient cliente = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
     /** Lo que puede tardar una respuesta (un modelo local en un portátil, bastante). */
-    public Duration espera = Duration.ofSeconds(120);
+    public Duration espera = Duration.ofSeconds(300);
 
     public CerebroHttp(Forma forma, String direccion, String clave, String modelo, String nombre) {
         this.forma = forma;

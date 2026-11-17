@@ -24,7 +24,9 @@ import java.util.stream.Stream;
 public final class CerebroLocal {
 
     /** El modelo del juego (Qwen3.5-9B) y el de Jarvis, por orden de preferencia. */
-    public static final String[] MODELOS = {"Qwen_Qwen3.5-9B-Q4_K_M.gguf", "qwen2.5-coder-7b-instruct-q6_k.gguf"};
+    // Gemma 3 4B primero: en el portátil de Fran (i7-1065G7, 20 GB, gráfica integrada) es el que contesta rápido y deja
+    // memoria de sobra; Qwen3.5-9B, cuando KoboldCpp lo cargue (docs/CEREBRO.md); el de Jarvis, de respaldo.
+    public static final String[] MODELOS = {"google_gemma-3-4b-it-Q4_K_M.gguf", "Qwen_Qwen3.5-9B-Q4_K_M.gguf", "qwen2.5-coder-7b-instruct-q6_k.gguf"};
     public static final int PUERTO_DEL_JUEGO = 5002, PUERTO_DE_JARVIS = 5001;
     private static Process proceso;
 
@@ -106,8 +108,12 @@ public final class CerebroLocal {
      * Se llama en un hilo aparte: tarda.
      */
     public static String arrancarElQueFuncione(Path carpeta, java.util.function.Consumer<String> estado) {
+        return arrancarElQueFuncione(carpeta, modelos(carpeta), estado);
+    }
+
+    public static synchronized String arrancarElQueFuncione(Path carpeta, List<Path> modelos, java.util.function.Consumer<String> estado) {
         if (escucha("http://localhost:" + PUERTO_DEL_JUEGO)) return "ya";
-        for (Path m : modelos(carpeta)) {
+        for (Path m : modelos) {
             if (estado != null) estado.accept(m.getFileName().toString());
             String r = arrancar(carpeta, m);
             if (!r.equals("arrancando")) return r;

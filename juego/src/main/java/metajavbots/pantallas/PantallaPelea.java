@@ -60,6 +60,7 @@ public final class PantallaPelea implements Pantalla {
     private final Ui.Desplazable desplConsola = new Ui.Desplazable(), desplVariables = new Ui.Desplazable(), desplInforme = new Ui.Desplazable();
     private int pestanaEntreRondas;
     private boolean ganoElJugador, objetivoCumplido;
+    private volatile String resumenDelLocutor;
     private Revisor.Informe revision;
 
     public PantallaPelea(Encuentro e) {
@@ -124,7 +125,71 @@ public final class PantallaPelea implements Pantalla {
         }
         pelea.empezarRonda();
         entreRondas = false;
+        pedirPullas(j);
+        if (resumenDelLocutor != null) {
+            // Lo que la IA del locutor dijo de la ronda anterior, al empezar esta.
+            locutor = resumenDelLocutor;
+            tiempoLocutor = 5;
+            j.voz.decir(resumenDelLocutor, j.jugador.idioma);
+            resumenDelLocutor = null;
+        }
         j.sonidos.tocar("campana", 0.8f);
+    }
+
+    /**
+     * Con cerebro de IA, entre rondas: la IA no decide cada movimiento, pero elige el estilo del rival para la ronda
+     * siguiente (a la vista del informe) y el locutor resume la ronda con una frase propia. El nivel no cambia.
+     */
+    private void ajustarRivalConIA(Juego j) {
+        metajavbots.cerebro.Cerebro c = metajavbots.cerebro.CerebroDelJuego.rapido(j.jugador);
+        if (c == null || !encuentro.rival.computadora || encuentro.jefe != null) return;
+        Combatiente.Informe yoInf = pelea.informe(0), elInf = pelea.informe(1);
+        String informe = String.format(java.util.Locale.ROOT,
+                "Round %d. Player robot: took %.0f damage, dealt %.0f, accuracy %.0f%%, close-range damage taken by the computer %.0f, "
+                        + "long-range damage taken by the computer %.0f.",
+                pelea.ronda(), yoInf.danoRecibido, yoInf.danoHecho, yoInf.punteria() * 100,
+                elInf.danoPorArmaRecibido.getOrDefault("cuerpo", 0.0) + elInf.danoPorArmaRecibido.getOrDefault("choque", 0.0),
+                elInf.danoPorArmaRecibido.getOrDefault("laser", 0.0) + elInf.danoPorArmaRecibido.getOrDefault("bala", 0.0)
+                        + elInf.danoPorArmaRecibido.getOrDefault("misil", 0.0));
+        Thread h = new Thread(() -> {
+            try {
+                String r = c.preguntar(metajavbots.cerebro.CerebroDelJuego.sistemaEstilo(), informe, 6).toUpperCase(java.util.Locale.ROOT);
+                for (metajavbots.rivales.Estilo e : metajavbots.rivales.Estilo.values()) {
+                    if (r.contains(e.name())) {
+                        encuentro.rival.memoria.put("estilo", e);
+                        break;
+                    }
+                }
+                String f = c.preguntar(metajavbots.cerebro.CerebroDelJuego.sistemaLocutor(j.jugador.idioma), informe, 25);
+                if (metajavbots.cerebro.Moderacion.aceptable(f)) resumenDelLocutor = f.replace("\"", "").strip();
+            } catch (Exception e) {
+                // sin cerebro, la computadora se adapta sola (Rival.alAcabarRonda)
+            }
+        }, "ajustar-rival");
+        h.setDaemon(true);
+        h.start();
+    }
+
+    /** Con cerebro de IA y la computadora de rival: unas pullas nuevas para esta ronda (se moderan antes de decirlas). */
+    private void pedirPullas(Juego j) {
+        metajavbots.cerebro.Cerebro c = metajavbots.cerebro.CerebroDelJuego.rapido(j.jugador);
+        if (c == null || !encuentro.rival.computadora || j.jugador.agresividad < 0.3) return;
+        String sistema = metajavbots.cerebro.CerebroDelJuego.sistemaPullas(j.jugador.idioma, encuentro.rival.montaje.modelo.personalidad,
+                j.jugador.agresividad);
+        for (int i = 0; i < 3; i++) {
+            final int n = i;
+            Thread h = new Thread(() -> {
+                try {
+                    String f = c.preguntar(sistema, "Opponent robot: " + yo.nombre + ". Round " + pelea.ronda() + ". Line " + (n + 1) + ".", 20);
+                    f = f.replace("\"", "").replace("«", "").replace("»", "").strip();
+                    if (metajavbots.cerebro.Moderacion.aceptable(f)) narrador.pullasDeLaIA.add(f);
+                } catch (Exception e) {
+                    // sin cerebro, las de siempre
+                }
+            }, "pullas");
+            h.setDaemon(true);
+            h.start();
+        }
     }
 
     private void compilar(Juego j) {
@@ -188,6 +253,7 @@ public final class PantallaPelea implements Pantalla {
                 pestanaEntreRondas = 0;
                 editor.ponerTexto(j.jugador.robot().codigo);
                 revision = Revisor.revisar(editor.doc.texto(), pelea, j.jugador.idioma);
+                ajustarRivalConIA(j);
             } else if (pelea.estado() == Pelea.Estado.TERMINADA) {
                 acabar(j);
             }

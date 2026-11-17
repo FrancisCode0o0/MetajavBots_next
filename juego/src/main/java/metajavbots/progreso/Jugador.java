@@ -76,9 +76,11 @@ public final class Jugador {
     /** El panel de la IA: modo (ADAPTADA o una Dificultad), agresividad, humor y cortesía (0..1). */
     public String modoIA = "ADAPTADA";
     public double agresividad = 0.4, humor = 0.6, cortesia = 0.5;
-    /** El cerebro de IA: NINGUNO, LOCAL o EN_LINEA (la clave no se guarda aquí: Cerebro la guarda aparte). */
+    /** El cerebro de IA: NINGUNO, LOCAL, EN_LINEA o AMBOS (la clave no se guarda aquí: la guarda Claves aparte). */
     public String cerebro = "NINGUNO";
-    public String proveedor = "anthropic", modeloEnLinea = "", direccionLocal = "http://localhost:5001";
+    public String proveedor = "anthropic", modeloEnLinea = "", direccionLocal = "http://localhost:5002", direccionEnLinea = "";
+    /** El modelo local elegido (un .gguf de la carpeta) y la carpeta (vacía: la de Jarvis). */
+    public String modeloLocal = "", carpetaModelos = "";
     /** Ajustes de la pantalla y el sonido. */
     public float tamanoDeLetra = 18, volumen = 0.8f, volumenVoz = 0.9f;
     public boolean vozDelLocutor = true, temaClaro;

@@ -39,6 +39,8 @@ public final class Narrador {
     private final boolean[] avisoPocoBlindaje = new boolean[2];
     private boolean primerGolpe;
     private int ultimoLider = -1;
+    /** Pullas nuevas que ha escrito el cerebro de IA para la computadora (ya moderadas); se gastan al decirlas. */
+    public final java.util.Deque<String> pullasDeLaIA = new java.util.concurrent.ConcurrentLinkedDeque<>();
 
     public Narrador(Combatiente a, Combatiente b) {
         robots[0] = Dialogos.de(a.montaje.modelo.personalidad);
@@ -174,6 +176,12 @@ public final class Narrador {
         double ganas = computadora ? agresividad : 0.15;
         if (azar.nextDouble() > ganas * 0.25) return;
         boolean dura = computadora && agresividad >= 0.6 && azar.nextDouble() < agresividad;
+        if (computadora && !pullasDeLaIA.isEmpty() && esperaRobot[quienPega] <= 0 && azar.nextBoolean()) {
+            String f = pullasDeLaIA.poll();
+            esperaRobot[quienPega] = 4;
+            if (f != null && alHablarRobot != null) alHablarRobot.accept(quienPega, f);
+            return;
+        }
         robot(quienPega, dura ? "pulla" : "burla", false, null);
     }
 

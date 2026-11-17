@@ -5,7 +5,6 @@ import java.nio.file.Path;
 import metajavbots.Juego;
 import metajavbots.cerebro.Cerebro;
 import metajavbots.cerebro.CerebroDelJuego;
-import metajavbots.cerebro.CerebroHttp;
 import metajavbots.cerebro.CerebroLocal;
 import metajavbots.cerebro.Claves;
 import metajavbots.pantalla.CampoDeTexto;
@@ -37,15 +36,14 @@ public final class Ajustes implements Pantalla {
         clave.oculto = true;
         clave.ponerTexto(Claves.leer(jug.proveedor));
         modelo.ponerTexto(jug.modeloEnLinea);
-        direccion.ponerTexto(jug.direccionLocal);
-        carpeta.ponerTexto(CerebroLocal.carpeta(null).toString());
+        direccion.ponerTexto(jug.direccionEnLinea);
+        carpeta.ponerTexto(CerebroLocal.carpeta(jug.carpetaModelos).toString());
     }
 
     @Override
     public void alSalir(Juego j) {
         Jugador jug = j.jugador;
         jug.modeloEnLinea = modelo.texto().strip();
-        jug.direccionLocal = direccion.texto().strip();
         j.ponerJugador(jug);
         j.guardar();
     }
@@ -96,52 +94,65 @@ public final class Ajustes implements Pantalla {
         float cy = ui.panel(cx, arriba + 16, w, p.alto - arriba - 40, T.t("ajustes.cerebro"));
         p.parrafo(T.t("ajustes.cerebro_ayuda"), cx + 20, cy, w - 40, ui.letra * 0.8f, ui.tema.textoSuave, 1);
         cy += 70;
-        String[] opciones = {"NINGUNO", "LOCAL", "EN_LINEA"};
-        for (int i = 0; i < 3; i++) {
-            if (ui.boton(T.t("cerebro." + opciones[i].toLowerCase()), cx + 20 + i * ((w - 40) / 3), cy, (w - 40) / 3 - 10, 50,
-                    jug.cerebro.equals(opciones[i]) ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) jug.cerebro = opciones[i];
+        String[] opciones = {"NINGUNO", "LOCAL", "EN_LINEA", "AMBOS"};
+        float ow = (w - 40) / opciones.length;
+        for (int i = 0; i < opciones.length; i++) {
+            if (ui.boton(T.t("cerebro." + opciones[i].toLowerCase()), cx + 20 + i * ow, cy, ow - 8, 50,
+                    jug.cerebro.equals(opciones[i]) ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true, T.t("cerebro." + opciones[i].toLowerCase() + "_ayuda"))) {
+                jug.cerebro = opciones[i];
+            }
         }
-        cy += 70;
-        if (jug.cerebro.equals("LOCAL")) {
-            p.texto(T.t("ajustes.direccion"), cx + 20, cy, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
-            direccion.dibujar(ui, cx + 20, cy + 26, w - 40, 46, "http://localhost:5002");
-            jug.direccionLocal = direccion.texto().strip();
-            cy += 90;
-            p.texto(T.t("ajustes.carpeta_modelos"), cx + 20, cy, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
-            carpeta.dibujar(ui, cx + 20, cy + 26, w - 40, 46, "");
-            cy += 90;
-            if (ui.boton(T.t("ajustes.arrancar_local"), cx + 20, cy, 300, 50, Ui.Estilo.NORMAL, true, T.t("ajustes.arrancar_ayuda"))) {
-                Path c = CerebroLocal.carpeta(carpeta.texto());
+        cy += 64;
+        boolean local = jug.cerebro.equals("LOCAL") || jug.cerebro.equals("AMBOS");
+        boolean enLinea = jug.cerebro.equals("EN_LINEA") || jug.cerebro.equals("AMBOS");
+        if (local) {
+            p.texto(T.t("ajustes.carpeta_modelos"), cx + 20, cy, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
+            carpeta.dibujar(ui, cx + 20, cy + 22, w - 40, 42, "");
+            jug.carpetaModelos = carpeta.texto().strip().equals(CerebroLocal.carpeta(null).toString()) ? "" : carpeta.texto().strip();
+            cy += 74;
+            java.util.List<Path> ms = CerebroLocal.modelos(CerebroLocal.carpeta(jug.carpetaModelos));
+            int i = -1;
+            for (int k = 0; k < ms.size(); k++) if (ms.get(k).getFileName().toString().equals(jug.modeloLocal)) i = k;
+            if (ui.boton("◄", cx + 20, cy, 46, 44, Ui.Estilo.PLANO, !ms.isEmpty(), null)) i = (i - 1 + ms.size()) % Math.max(1, ms.size());
+            if (ui.boton("►", cx + w - 66, cy, 46, 44, Ui.Estilo.PLANO, !ms.isEmpty(), null)) i = (i + 1) % Math.max(1, ms.size());
+            if (i >= 0 && i < ms.size()) jug.modeloLocal = ms.get(i).getFileName().toString();
+            String nombreModelo = ms.isEmpty() ? T.t("ajustes.sin_modelos")
+                    : jug.modeloLocal.isEmpty() ? T.f("ajustes.modelo_auto", ms.get(0).getFileName()) : jug.modeloLocal;
+            p.textoCentrado(ui.recortarTexto(nombreModelo, w - 160, ui.letra * 0.8f, false), cx + w / 2, cy + 12, ui.letra * 0.8f, false, ui.tema.texto, 1);
+            cy += 54;
+            if (ui.boton(T.t("ajustes.arrancar_local"), cx + 20, cy, (w - 50) / 2, 46, Ui.Estilo.NORMAL, true, T.t("ajustes.arrancar_ayuda"))) {
+                Cerebro c = CerebroDelJuego.rapido(jug);
                 estadoCerebro = T.t("ajustes.arrancando");
                 Thread h = new Thread(() -> {
-                    String r = CerebroLocal.arrancarElQueFuncione(c, m -> estadoCerebro = T.f("ajustes.cargando", m));
-                    estadoCerebro = r.equals("ya") ? T.t("ajustes.local_listo") : T.f("ajustes.local_error", r);
-                    if (r.equals("ya")) {
-                        jug.direccionLocal = "http://localhost:" + CerebroLocal.PUERTO_DEL_JUEGO;
-                        direccion.ponerTexto(jug.direccionLocal);
+                    try {
+                        c.preguntar("Answer with one word.", "Say OK.", 4);
+                        estadoCerebro = T.t("ajustes.local_listo");
+                    } catch (Exception e) {
+                        estadoCerebro = T.f("ajustes.local_error", e.getMessage());
                     }
                 }, "arrancar-cerebro");
                 h.setDaemon(true);
                 h.start();
             }
-            if (ui.boton(T.t("ajustes.usar_jarvis"), cx + 330, cy, w - 350, 50, Ui.Estilo.PLANO, true, T.t("ajustes.usar_jarvis_ayuda"))) {
-                jug.direccionLocal = "http://localhost:" + CerebroLocal.PUERTO_DE_JARVIS;
-                direccion.ponerTexto(jug.direccionLocal);
+            boolean jarvis = jug.direccionLocal.contains(":" + CerebroLocal.PUERTO_DE_JARVIS);
+            if (ui.boton(T.t("ajustes.usar_jarvis"), cx + 30 + (w - 50) / 2, cy, (w - 50) / 2, 46, jarvis ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
+                    T.t("ajustes.usar_jarvis_ayuda"))) {
+                jug.direccionLocal = "http://localhost:" + (jarvis ? CerebroLocal.PUERTO_DEL_JUEGO : CerebroLocal.PUERTO_DE_JARVIS);
             }
-            cy += 66;
-        } else if (jug.cerebro.equals("EN_LINEA")) {
+            cy += 60;
+        }
+        if (enLinea) {
             String[] provs = {"anthropic", "openai", "otro"};
             for (int i = 0; i < provs.length; i++) {
-                if (ui.boton(provs[i], cx + 20 + i * ((w - 40) / 3), cy, (w - 40) / 3 - 10, 46,
+                if (ui.boton(provs[i], cx + 20 + i * ((w - 40) / 3), cy, (w - 40) / 3 - 10, 42,
                         jug.proveedor.equals(provs[i]) ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
                     jug.proveedor = provs[i];
                     clave.ponerTexto(Claves.leer(provs[i]));
                 }
             }
-            cy += 62;
-            p.texto(T.t("ajustes.clave"), cx + 20, cy, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
-            clave.dibujar(ui, cx + 20, cy + 26, w - 200, 46, "sk-…");
-            if (ui.boton(T.t("ajustes.guardar_clave"), cx + w - 170, cy + 26, 150, 46, Ui.Estilo.NORMAL)) {
+            cy += 52;
+            clave.dibujar(ui, cx + 20, cy, w - 200, 42, T.t("ajustes.clave"));
+            if (ui.boton(T.t("ajustes.guardar_clave"), cx + w - 170, cy, 150, 42, Ui.Estilo.NORMAL, true, T.t("ajustes.clave_ayuda"))) {
                 try {
                     Claves.guardar(jug.proveedor, clave.texto());
                     estadoCerebro = T.t("ajustes.clave_guardada");
@@ -149,30 +160,33 @@ public final class Ajustes implements Pantalla {
                     estadoCerebro = e.toString();
                 }
             }
-            cy += 84;
-            p.parrafo(T.t("ajustes.clave_ayuda"), cx + 20, cy, w - 40, ui.letra * 0.72f, ui.tema.textoApagado, 1);
-            cy += 50;
-            p.texto(T.t("ajustes.modelo"), cx + 20, cy, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
-            modelo.dibujar(ui, cx + 20, cy + 26, w - 40, 46, jug.proveedor.equals("anthropic") ? "claude-haiku-5-5" : "gpt-4o-mini");
+            cy += 52;
+            modelo.dibujar(ui, cx + 20, cy, w - 40, 42, T.t("ajustes.modelo") + ": " + (jug.proveedor.equals("anthropic") ? "claude-haiku-5-5" : "gpt-4o-mini"));
             jug.modeloEnLinea = modelo.texto().strip();
-            cy += 84;
+            cy += 52;
             if (jug.proveedor.equals("otro")) {
-                p.texto(T.t("ajustes.direccion"), cx + 20, cy, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
-                direccion.dibujar(ui, cx + 20, cy + 26, w - 40, 46, "https://…");
-                jug.direccionLocal = direccion.texto().strip();
-                cy += 84;
+                direccion.dibujar(ui, cx + 20, cy, w - 40, 42, T.t("ajustes.direccion") + ": https://…");
+                jug.direccionEnLinea = direccion.texto().strip();
+                cy += 52;
             }
         }
-        if (!jug.cerebro.equals("NINGUNO") && ui.boton(T.t("ajustes.probar"), cx + 20, cy, 200, 50, Ui.Estilo.PRINCIPAL)) {
-            Cerebro c = CerebroDelJuego.de(jug);
+        if (!jug.cerebro.equals("NINGUNO") && ui.boton(T.t("ajustes.probar"), cx + 20, cy, 200, 48, Ui.Estilo.PRINCIPAL)) {
+            Cerebro c = CerebroDelJuego.pesado(jug);
             if (c == null) estadoCerebro = T.t("ajustes.falta_clave");
             else {
                 estadoCerebro = T.t("cerebro.pensando");
-                Thread h = new Thread(() -> estadoCerebro = ((CerebroHttp) c).responde() ? T.f("ajustes.responde", c.nombre()) : T.t("ajustes.no_responde"));
+                Thread h = new Thread(() -> {
+                    try {
+                        String r = c.preguntar("Answer with one word.", "Say OK.", 4);
+                        estadoCerebro = r == null || r.isBlank() ? T.t("ajustes.no_responde") : T.f("ajustes.responde", c.nombre());
+                    } catch (Exception e) {
+                        estadoCerebro = T.t("ajustes.no_responde") + " (" + e.getMessage() + ")";
+                    }
+                }, "probar-cerebro");
                 h.setDaemon(true);
                 h.start();
             }
         }
-        p.parrafo(estadoCerebro, cx + 20, cy + 64, w - 40, ui.letra * 0.85f, ui.tema.texto, 1);
+        p.parrafo(estadoCerebro, cx + 20, cy + 58, w - 40, ui.letra * 0.8f, ui.tema.texto, 1);
     }
 }

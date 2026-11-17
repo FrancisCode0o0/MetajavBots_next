@@ -17,31 +17,80 @@ public final class CerebroDelJuego {
     private CerebroDelJuego() {
     }
 
-    /** El cerebro de los ajustes del jugador, o null si no tiene (el juego funciona igual). */
+    /**
+     * El cerebro para lo pesado (revisar el código, los tutores, el temario, los retos), o null si no hay. Con el doble
+     * cerebro (AMBOS) es el de en línea, y si falla internet o la clave, el local se encarga.
+     */
     public static Cerebro de(Jugador j) {
+        return pesado(j);
+    }
+
+    public static Cerebro pesado(Jugador j) {
         if (j == null) return null;
         switch (j.cerebro) {
-            case "LOCAL": {
-                String d = j.direccionLocal == null || j.direccionLocal.isBlank() ? "http://localhost:" + CerebroLocal.PUERTO_DEL_JUEGO : j.direccionLocal;
-                return new CerebroHttp(CerebroHttp.Forma.OPENAI, d, "", "", "KoboldCpp");
+            case "LOCAL": return local(j);
+            case "EN_LINEA": return enLinea(j);
+            case "AMBOS": {
+                Cerebro en = enLinea(j), lo = local(j);
+                return en == null ? lo : new ConRespaldo(en, lo);
             }
-            case "EN_LINEA": {
-                String clave = Claves.leer(j.proveedor);
-                if (clave.isEmpty()) return null;
-                switch (j.proveedor) {
-                    case "anthropic":
-                        return new CerebroHttp(CerebroHttp.Forma.ANTHROPIC, "https://api.anthropic.com", clave,
-                                j.modeloEnLinea.isBlank() ? "claude-haiku-5-5" : j.modeloEnLinea, "Claude");
-                    case "openai":
-                        return new CerebroHttp(CerebroHttp.Forma.OPENAI, "https://api.openai.com", clave,
-                                j.modeloEnLinea.isBlank() ? "gpt-4o-mini" : j.modeloEnLinea, "OpenAI");
-                    default:
-                        // Cualquier otro compatible con OpenAI: en «direccionLocal» va su dirección.
-                        return new CerebroHttp(CerebroHttp.Forma.OPENAI, j.direccionLocal, clave, j.modeloEnLinea, j.proveedor);
-                }
-            }
+            default: return null;
+        }
+    }
+
+    /** El cerebro para lo rápido y constante (pullas, locutor, diálogos de los robots): con AMBOS, el local. */
+    public static Cerebro rapido(Jugador j) {
+        if (j == null) return null;
+        switch (j.cerebro) {
+            case "LOCAL": case "AMBOS": return local(j);
+            case "EN_LINEA": return enLinea(j);
+            default: return null;
+        }
+    }
+
+    static Cerebro local(Jugador j) {
+        String d = j.direccionLocal == null || j.direccionLocal.isBlank() ? "http://localhost:" + CerebroLocal.PUERTO_DEL_JUEGO : j.direccionLocal;
+        return new CerebroLocalPerezoso(d, CerebroLocal.carpeta(j.carpetaModelos), j.modeloLocal);
+    }
+
+    static Cerebro enLinea(Jugador j) {
+        String clave = Claves.leer(j.proveedor);
+        if (clave.isEmpty()) return null;
+        switch (j.proveedor) {
+            case "anthropic":
+                return new CerebroHttp(CerebroHttp.Forma.ANTHROPIC, "https://api.anthropic.com", clave,
+                        j.modeloEnLinea.isBlank() ? "claude-haiku-5-5" : j.modeloEnLinea, "Claude");
+            case "openai":
+                return new CerebroHttp(CerebroHttp.Forma.OPENAI, "https://api.openai.com", clave,
+                        j.modeloEnLinea.isBlank() ? "gpt-4o-mini" : j.modeloEnLinea, "OpenAI");
             default:
-                return null;
+                // Cualquier otro compatible con OpenAI, con su dirección.
+                return j.direccionEnLinea.isBlank() ? null
+                        : new CerebroHttp(CerebroHttp.Forma.OPENAI, j.direccionEnLinea, clave, j.modeloEnLinea, j.proveedor);
+        }
+    }
+
+    /** Pregunta al primero; si falla (sin internet, sin clave válida), al segundo. */
+    static final class ConRespaldo implements Cerebro {
+        private final Cerebro primero, segundo;
+
+        ConRespaldo(Cerebro primero, Cerebro segundo) {
+            this.primero = primero;
+            this.segundo = segundo;
+        }
+
+        @Override
+        public String nombre() {
+            return primero.nombre() + " + " + segundo.nombre();
+        }
+
+        @Override
+        public String preguntar(String sistema, List<Mensaje> conversacion, int maximoDePalabras) throws Exception {
+            try {
+                return primero.preguntar(sistema, conversacion, maximoDePalabras);
+            } catch (Exception e) {
+                return segundo.preguntar(sistema, conversacion, maximoDePalabras);
+            }
         }
     }
 
@@ -99,6 +148,21 @@ public final class CerebroDelJuego {
                 + (agresividad > 0.75 ? ", cocky and cheeky" : ", teasing") + ". Talk about robots, metal, code, bugs, sparks and scrap. "
                 + "NEVER mention origin, race, nationality, religion, sex, gender, body, disability, age, death or violence against people. "
                 + "No insults beyond playful robot jokes. Output only the line.";
+    }
+
+    /** El estilo del rival para la ronda siguiente (la IA no lleva cada movimiento: elige la táctica). */
+    public static String sistemaEstilo() {
+        return "You are the coach of a computer-controlled fighting robot. Given the last round's report, choose the tactic for the next "
+                + "round. Answer with exactly ONE word from: FRANCOTIRADOR (keep distance, shoot from afar), ACOSADOR (circle at mid range), "
+                + "TANQUE (advance steadily), EMBESTIDOR (ram and melee), DANZARIN (erratic dodging). If the computer took much close-range "
+                + "damage, prefer FRANCOTIRADOR; if it took much long-range damage, prefer ACOSADOR, DANZARIN or EMBESTIDOR.";
+    }
+
+    /** El locutor robot loco resume la ronda en una frase. */
+    public static String sistemaLocutor(Idioma i) {
+        return "You are a CRAZY robot announcer of a family-friendly robot fighting show, with glitches and programming jokes. "
+                + "In ONE short exclamation (max 18 words) in " + idiomaDe(i) + ", comment on the round report you get. No emoji. "
+                + "Never mention origin, religion, sex, body, disability or violence against people.";
     }
 
     /** Charlar con tu robot en el taller. */

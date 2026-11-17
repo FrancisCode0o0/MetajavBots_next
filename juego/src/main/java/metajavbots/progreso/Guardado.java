@@ -93,6 +93,9 @@ public final class Guardado {
         v.put("proveedor", j.proveedor);
         v.put("modeloEnLinea", j.modeloEnLinea);
         v.put("direccionLocal", j.direccionLocal);
+        v.put("direccionEnLinea", j.direccionEnLinea);
+        v.put("modeloLocal", j.modeloLocal);
+        v.put("carpetaModelos", j.carpetaModelos);
         v.put("tamanoDeLetra", numero(j.tamanoDeLetra));
         v.put("volumen", numero(j.volumen));
         v.put("volumenVoz", numero(j.volumenVoz));
@@ -158,7 +161,10 @@ public final class Guardado {
         j.cerebro = v.getOrDefault("cerebro", "NINGUNO");
         j.proveedor = v.getOrDefault("proveedor", "anthropic");
         j.modeloEnLinea = v.getOrDefault("modeloEnLinea", "");
-        j.direccionLocal = v.getOrDefault("direccionLocal", "http://localhost:5001");
+        j.direccionLocal = v.getOrDefault("direccionLocal", "http://localhost:5002");
+        j.direccionEnLinea = v.getOrDefault("direccionEnLinea", "");
+        j.modeloLocal = v.getOrDefault("modeloLocal", "");
+        j.carpetaModelos = v.getOrDefault("carpetaModelos", "");
         j.tamanoDeLetra = (float) decimal(v.get("tamanoDeLetra"), 18);
         j.volumen = (float) decimal(v.get("volumen"), 0.8);
         j.volumenVoz = (float) decimal(v.get("volumenVoz"), 0.9);
