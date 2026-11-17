@@ -19,7 +19,7 @@ tasks.register('prueba', JavaExec) {
     mainClass = 'metajavbots.pruebas.Pruebas'
     workingDir = rootProject.projectDir
     systemProperty 'java.awt.headless', 'true'
-    jvmArgs '--enable-native-access=ALL-UNNAMED'
+    jvmArgs '--enable-native-access=ALL-UNNAMED', '-Dstdout.encoding=UTF-8', '-Dstderr.encoding=UTF-8'
     maxHeapSize = '1g'
     // "-Psolo=editor": solo las pruebas cuyo nombre lleva ese texto.
     if (project.hasProperty('solo')) args project.property('solo').split(',')
