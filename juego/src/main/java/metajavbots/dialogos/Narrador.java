@@ -23,8 +23,10 @@ import metajavbots.textos.Idioma;
 public final class Narrador {
 
     private final Dialogos locutor = Dialogos.de("locutor");
-    private final Dialogos[] robots = new Dialogos[2];
-    private final String[] nombres = new String[2];
+    private final Dialogos[] robots;
+    private final String[] nombres;
+    /** El equipo de cada uno (para saber quién es rival de quién). */
+    private int[] equipos = {0, 1};
     private final Random azar = new Random();
     public Idioma idioma = Idioma.ES;
     public String jugador = "";
@@ -35,24 +37,39 @@ public final class Narrador {
     /** Lo que dice un robot (quién, texto). */
     public BiConsumer<Integer, String> alHablarRobot;
     private float esperaLocutor, tiempoSinAtacar;
-    private final float[] esperaRobot = new float[2];
-    private final boolean[] avisoPocoBlindaje = new boolean[2];
+    private float[] esperaRobot;
+    private boolean[] avisoPocoBlindaje;
     private boolean primerGolpe;
     private int ultimoLider = -1;
     /** Pullas nuevas que ha escrito el cerebro de IA para la computadora (ya moderadas); se gastan al decirlas. */
     public final java.util.Deque<String> pullasDeLaIA = new java.util.concurrent.ConcurrentLinkedDeque<>();
 
     public Narrador(Combatiente a, Combatiente b) {
-        robots[0] = Dialogos.de(a.montaje.modelo.personalidad);
-        robots[1] = Dialogos.de(b.montaje.modelo.personalidad);
-        nombres[0] = a.nombre;
-        nombres[1] = b.nombre;
+        this(new Combatiente[]{a, b}, new int[]{0, 1});
+    }
+
+    public Narrador(Combatiente[] cs, int[] equipos) {
+        robots = new Dialogos[cs.length];
+        nombres = new String[cs.length];
+        for (int i = 0; i < cs.length; i++) {
+            robots[i] = Dialogos.de(cs[i].montaje.modelo.personalidad);
+            nombres[i] = cs[i].nombre;
+        }
+        this.equipos = equipos.clone();
+        esperaRobot = new float[cs.length];
+        avisoPocoBlindaje = new boolean[cs.length];
+    }
+
+    /** Un rival de «quien» (el primero de otro equipo). */
+    private int rival(int quien) {
+        for (int i = 0; i < nombres.length; i++) if (equipos[i] != equipos[Math.max(0, quien)]) return i;
+        return quien == 0 ? 1 : 0;
     }
 
     private Map<String, String> huecos(int quien, String pieza) {
         Map<String, String> h = new HashMap<>();
         h.put("yo", quien >= 0 ? nombres[quien] : "");
-        h.put("rival", quien >= 0 ? nombres[1 - quien] : nombres[1]);
+        h.put("rival", quien >= 0 ? nombres[rival(quien)] : nombres[1]);
         h.put("jugador", jugador);
         h.put("pieza", pieza == null ? "" : pieza);
         return h;
@@ -69,7 +86,7 @@ public final class Narrador {
 
     /** Lo dice un robot si toca. */
     public void robot(int quien, String evento, boolean importante, String pieza) {
-        if (quien < 0 || quien > 1) return;
+        if (quien < 0 || quien >= robots.length) return;
         if (!importante && esperaRobot[quien] > 0) return;
         String f = robots[quien].frase(evento, idioma, huecos(quien, pieza));
         if (f == null) return;
@@ -88,8 +105,7 @@ public final class Narrador {
     /** Mira los sucesos del turno y decide qué se dice. dt: el tiempo que ha pasado. */
     public void turno(Pelea pelea, float dt) {
         esperaLocutor -= dt;
-        esperaRobot[0] -= dt;
-        esperaRobot[1] -= dt;
+        for (int i = 0; i < esperaRobot.length; i++) esperaRobot[i] -= dt;
         tiempoSinAtacar += dt;
         for (Suceso s : pelea.sucesos()) {
             int q = s.quien;
@@ -111,8 +127,8 @@ public final class Narrador {
                         locutor("golpe_fuerte", false, null);
                     }
                     robot(q, s.valor >= 12 ? "golpe_fuerte" : "golpe", false, null);
-                    if (azar.nextFloat() < 0.25f) robot(1 - q, "acierto", false, null);
-                    pullas(pelea, 1 - q);
+                    if (azar.nextFloat() < 0.25f) robot(rival(q), "acierto", false, null);
+                    pullas(pelea, rival(q));
                     break;
                 case FALLO_CUERPO:
                     if (azar.nextFloat() < 0.3f) robot(q, "fallo", false, null);
@@ -143,16 +159,20 @@ public final class Narrador {
                     locutor("fin_ronda", true, null);
                     Pelea.Estado e = pelea.estado();
                     if (e != Pelea.Estado.TERMINADA) {
-                        double a = pelea.informe(0).danoRecibido, b = pelea.informe(1).danoRecibido;
-                        robot(a <= b ? 0 : 1, "victoria_ronda", true, null);
-                        robot(a <= b ? 1 : 0, "derrota_ronda", true, null);
+                        int mejor = 0, peor = 0;
+                        for (int i = 1; i < nombres.length; i++) {
+                            if (pelea.informe(i).danoRecibido < pelea.informe(mejor).danoRecibido) mejor = i;
+                            if (pelea.informe(i).danoRecibido > pelea.informe(peor).danoRecibido) peor = i;
+                        }
+                        robot(mejor, "victoria_ronda", true, null);
+                        if (peor != mejor) robot(peor, "derrota_ronda", true, null);
                     }
                     break;
                 }
                 default: break;
             }
         }
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < nombres.length; i++) {
             Cuerpo c = pelea.cuerpo(i);
             if (c != null && !avisoPocoBlindaje[i] && c.blindaje() < 30) {
                 avisoPocoBlindaje[i] = true;
@@ -164,7 +184,8 @@ public final class Narrador {
             locutor("aburrido", false, null);
         }
         // ¿Remontada? Quien va perdiendo pasa a ir ganando.
-        double da = pelea.combatientes[0].danoTotalRecibido, db = pelea.combatientes[1].danoTotalRecibido;
+        double da = pelea.danoDelEquipo(pelea.equipo[0]), db = Double.MAX_VALUE;
+        for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.equipo[i] != pelea.equipo[0]) db = Math.min(db, pelea.danoDelEquipo(pelea.equipo[i]));
         int lider = Math.abs(da - db) < 5 ? ultimoLider : da < db ? 0 : 1;
         if (ultimoLider >= 0 && lider != ultimoLider && pelea.ronda() >= 2) locutor("remontada", true, null);
         ultimoLider = lider;

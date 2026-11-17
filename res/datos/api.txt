@@ -72,6 +72,15 @@ es: Al acabar la ronda.
 de: Am Ende der Runde.
 en: At the end of the round.
 
+=== api.alOirAlEquipo
+tema: 13
+firma: void alOirAlEquipo(String de, String mensaje)
+firma.de: void beiTeamNachricht(String von, String nachricht)
+firma.en: void onTeamMessage(String from, String message)
+es: Cuando un compañero de equipo te avisa (en las peleas por equipos).
+de: Wenn dir ein Teamkamerad etwas meldet (in Teamkämpfen).
+en: When a teammate tells you something (in team fights).
+
 === api.avanzar
 tema: 01
 firma: void avanzar(double distancia)
@@ -404,6 +413,24 @@ firma.en: List<Enemy> seenEnemies()
 es: Los enemigos que ves ahora mismo (tema 15: colecciones).
 de: Die Gegner, die du gerade siehst (Thema 15: Collections).
 en: The enemies you can see right now (topic 15: collections).
+
+=== api.companeros
+tema: 15
+firma: List<Enemigo> companeros()
+firma.de: List<Gegner> kameraden()
+firma.en: List<Enemy> teammates()
+es: Tus compañeros de equipo (en las peleas por equipos; vacía si peleas solo).
+de: Deine Teamkameraden (in Teamkämpfen; leer, wenn du allein kämpfst).
+en: Your teammates (in team fights; empty when you fight alone).
+
+=== api.avisarAlEquipo
+tema: 08
+firma: void avisarAlEquipo(Object mensaje)
+firma.de: void teamMelden(Object nachricht)
+firma.en: void tellTeam(Object message)
+es: Avisa a tus compañeros (les llega el turno siguiente en alOirAlEquipo): «voy a por el de la izquierda».
+de: Meldet deinen Kameraden etwas (es kommt im nächsten Zug in beiTeamNachricht an).
+en: Tells your teammates something (it arrives next tick in onTeamMessage).
 
 === api.anguloHacia
 tema: 06

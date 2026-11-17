@@ -47,6 +47,8 @@ public final class PrepararPelea implements Pantalla {
 
     /** Otra igual que la anterior (revancha), con un rival nuevo del mismo modo. */
     public static Pantalla repetir(Juego j, Encuentro anterior) {
+        if (anterior.modo.equals("ROYALE")) return new PantallaPelea(royale(j, robotsAjenos()));
+        if (anterior.modo.equals("EQUIPOS")) return new PantallaPelea(equipos(j, null));
         if (anterior.modo.equals("JEFE") || anterior.modo.equals("TUTORIAL") || anterior.modo.equals("TEMARIO") || anterior.modo.equals("AJENO")) {
             Encuentro e = new Encuentro();
             e.rival = Rivales.crear(anterior.rival.montaje.modelo, anterior.nivelRival, j.jugador.agresividad, new Random());
@@ -113,9 +115,19 @@ public final class PrepararPelea implements Pantalla {
         return e;
     }
 
+    /** Los posibles compañeros de equipo: {nombre, tipo («ajeno» o «partida»), ruta o carpeta}. -1: la computadora. */
+    private final List<String[]> companeros = new ArrayList<>();
+    private int companero = -1;
+
     @Override
     public void alEntrar(Juego j) {
         ajenos = robotsAjenos();
+        companeros.clear();
+        for (Path a : ajenos) companeros.add(new String[]{a.getFileName().toString().replace(".java", ""), "ajeno", a.toString()});
+        for (String carpeta : metajavbots.progreso.Guardado.partidas()) {
+            if (carpeta.equals(metajavbots.progreso.Guardado.carpetaDe(j.jugador.nombre))) continue;
+            companeros.add(new String[]{carpeta.replace('_', ' '), "partida", carpeta});
+        }
         if (robotElegido < 0) robotElegido = j.jugador.robotElegido;
     }
 
@@ -152,14 +164,23 @@ public final class PrepararPelea implements Pantalla {
         }
         String[][] modos = {
                 {"ADAPTADA", "pelear.adaptada"}, {"AZAR", "pelear.azar"}, {"DESAFIO", "pelear.desafio"}, {"PRACTICA", "pelear.practica"},
-                {"MCM", "pelear.mcm"}};
-        float w = (p.ancho - 80 - (modos.length - 1) * 20) / modos.length, h = 230;
+                {"ROYALE", "pelear.royale"}, {"EQUIPOS", "pelear.equipos"}, {"MCM", "pelear.mcm"}};
+        int columnas = 4;
+        float w = (p.ancho - 80 - (columnas - 1) * 20) / columnas, h = 200;
+        float y0 = y;
         for (int i = 0; i < modos.length; i++) {
-            float x = 40 + i * (w + 20);
+            float x = 40 + (i % columnas) * (w + 20);
+            y = y0 + (i / columnas) * (h + 16);
             boolean puede = !modos[i][0].equals("DESAFIO") || Progreso.puedeDesafiar(jug);
             p.caja(x, y, w, h, 14, ui.tema.panel, 1);
             p.texto(T.t(modos[i][1]), x + 20, y + 18, ui.letra * 1.3f, true, puede ? ui.tema.texto : ui.tema.textoApagado, 1);
-            p.parrafo(T.t(modos[i][1] + "_ayuda"), x + 20, y + 60, w - 40, ui.letra * 0.85f, ui.tema.textoSuave, 1);
+            p.parrafo(T.t(modos[i][1] + "_ayuda"), x + 20, y + 54, w - 40, ui.letra * 0.78f, ui.tema.textoSuave, 1);
+            if (modos[i][0].equals("EQUIPOS")) {
+                String nombre = companero < 0 ? T.t("pelear.companero_ia") : companeros.get(companero)[0];
+                if (ui.boton(T.f("pelear.companero", nombre), x + 20, y + h - 120, w - 40, 44, Ui.Estilo.PLANO, true, T.t("pelear.companero_ayuda"))) {
+                    companero = companero + 1 >= companeros.size() ? -1 : companero + 1;
+                }
+            }
             if (modos[i][0].equals("ADAPTADA") && !jug.modoIA.equals("ADAPTADA")) {
                 p.texto(T.f("pelear.dificultad_fija", jug.modoIA), x + 20, y + h - 100, ui.letra * 0.8f, false, ui.tema.aviso, 1);
             }
@@ -170,10 +191,12 @@ public final class PrepararPelea implements Pantalla {
             if (ui.boton(T.t("pelear.vamos"), x + 20, y + h - 66, w - 40, 50, i == 0 ? Ui.Estilo.PRINCIPAL : Ui.Estilo.NORMAL, puede, null)) {
                 String modo = modos[i][0].equals("ADAPTADA") ? jug.modoIA : modos[i][0];
                 if (modo.equals("MCM")) j.ir(new MaquinaContraMaquina());
+                else if (modo.equals("ROYALE")) j.ir(new PantallaPelea(royale(j, ajenos)));
+                else if (modo.equals("EQUIPOS")) j.ir(new PantallaPelea(equipos(j, companero < 0 ? null : companeros.get(companero))));
                 else j.ir(new PantallaPelea(encuentro(j, modo)));
             }
         }
-        y += h + 30;
+        y = y0 + 2 * (h + 16) + 10;
         // Los robots de otros jugadores.
         float pw = p.ancho - 80;
         float cy = ui.panel(40, y, pw, p.alto - y - 30, T.t("pelear.ajenos"));
@@ -191,6 +214,81 @@ public final class PrepararPelea implements Pantalla {
         if (ajenos.isEmpty()) p.texto(T.t("pelear.sin_ajenos"), 70, yy + 10, ui.letra * 0.9f, false, ui.tema.textoApagado, 1);
         ui.finDesplazable(despl, Math.max(56, ajenos.size() * 56));
         if (!aviso.isEmpty()) p.texto(aviso, 60, p.alto - 60, ui.letra * 0.85f, false, ui.tema.mal, 1);
+    }
+
+    /** Battle royale: todos contra todos. Tú, robots de la computadora con piezas al azar y los robots ajenos que haya (hasta 6 en total). */
+    static Encuentro royale(Juego j, List<Path> ajenos) {
+        Random azar = new Random();
+        Encuentro e = new Encuentro();
+        e.modo = "ROYALE";
+        e.nivelRival = Progreso.nivelParaLaPelea(j.jugador, azar);
+        e.escenario = escenarioAlAzar();
+        e.rival = Rivales.alAzar(e.nivelRival, j.jugador.agresividad, azar);
+        int equipo = 2;
+        for (Path a : ajenos) {
+            if (e.demas.size() >= 2) break;
+            Combatiente c = cargarAjeno(a);
+            if (c == null) continue;
+            e.demas.add(c);
+            e.equiposDeLosDemas.add(equipo++);
+        }
+        while (e.demas.size() < 3) {
+            e.demas.add(Rivales.alAzar(e.nivelRival, j.jugador.agresividad, azar));
+            e.equiposDeLosDemas.add(equipo++);
+        }
+        return e;
+    }
+
+    /** Por equipos: tú y tu compañero (la computadora, un robot ajeno o el robot de otra partida) contra dos de la computadora. */
+    static Encuentro equipos(Juego j, String[] companero) {
+        Random azar = new Random();
+        Encuentro e = new Encuentro();
+        e.modo = "EQUIPOS";
+        e.nivelRival = Progreso.nivelParaLaPelea(j.jugador, azar);
+        e.escenario = escenarioAlAzar();
+        List<Modelo> ms = Modelo.todos();
+        e.rival = Rivales.crear(ms.get(azar.nextInt(ms.size())), e.nivelRival, j.jugador.agresividad, azar);
+        Combatiente amigo = null;
+        if (companero != null && companero[1].equals("ajeno")) amigo = cargarAjeno(Paths.get(companero[2]));
+        if (companero != null && companero[1].equals("partida")) amigo = robotDeOtraPartida(companero[2]);
+        if (amigo == null) {
+            amigo = Rivales.crear(ms.get(azar.nextInt(ms.size())), Math.max(0.3, e.nivelRival), 0.2, azar);
+            amigo = new Combatiente(T.t("pelear.companero_ia") + " (" + amigo.montaje.modelo.nombre(T.idioma) + ")", amigo.montaje, amigo.fabrica);
+        }
+        amigo.computadora = false;
+        e.demas.add(amigo);
+        e.equiposDeLosDemas.add(0);
+        e.demas.add(Rivales.crear(ms.get(azar.nextInt(ms.size())), e.nivelRival, j.jugador.agresividad, azar));
+        e.equiposDeLosDemas.add(1);
+        return e;
+    }
+
+    static Combatiente cargarAjeno(Path archivo) {
+        try {
+            if (!Compilador.hayCompilador()) return null;
+            String codigo = Files.readString(archivo, StandardCharsets.UTF_8);
+            RobotDelJugador r = new RobotDelJugador();
+            if (!r.compilar(codigo, Locale.ROOT).bien) return null;
+            Combatiente c = new Combatiente(archivo.getFileName().toString().replace(".java", ""), Exportar.montajeDe(codigo), r);
+            c.computadora = true;
+            return c;
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    /** El robot elegido de otra partida de este ordenador (otro jugador): su código y sus piezas. */
+    static Combatiente robotDeOtraPartida(String carpeta) {
+        try {
+            metajavbots.progreso.Jugador otro = metajavbots.progreso.Guardado.leer(carpeta);
+            metajavbots.progreso.Jugador.Robot r = otro.robot();
+            if (r == null || !Compilador.hayCompilador()) return null;
+            RobotDelJugador f = new RobotDelJugador();
+            if (!f.compilar(r.codigo, Locale.ROOT).bien) return null;
+            return new Combatiente(r.nombre + " (" + otro.nombre + ")", r.montaje(), f);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 
     /** Un robot ajeno: su archivo .java lleva en un comentario el modelo y las piezas (lo pone «Exportar» del taller). */

@@ -30,7 +30,9 @@ public final class Pelea {
 
     public final double ancho, alto;
     public final int turnosPorRonda;
-    public final Combatiente[] combatientes = new Combatiente[2];
+    public final Combatiente[] combatientes;
+    /** El equipo de cada combatiente: 0 y 1 en una pelea normal; uno distinto cada uno en un battle royale. */
+    public final int[] equipo;
     private final long semilla;
     private final Random azar;
     private Estado estado = Estado.ANTES;
@@ -45,7 +47,7 @@ public final class Pelea {
     /** Si no es 0, el tope de pasos de todos (el modo especial «tope de cálculo»); si es 0, el de cada núcleo. */
     public long topeDePasos;
     /** Cuánto daño le llega a cada uno (1 = todo). Los jefes del modo especial ponen 0.1 si el código no usa su tema. */
-    public final double[] resistencia = {1, 1};
+    public final double[] resistencia;
     /** El ganador (0 o 1), -1 si empate, -2 si no ha acabado. */
     private int ganador = -2;
 
@@ -74,8 +76,20 @@ public final class Pelea {
     public int rondas = RONDAS;
 
     public Pelea(Combatiente a, Combatiente b, long semilla, double ancho, double alto, int turnosPorRonda) {
-        combatientes[0] = a;
-        combatientes[1] = b;
+        this(new Combatiente[]{a, b}, new int[]{0, 1}, semilla, ancho, alto, turnosPorRonda);
+    }
+
+    /** Una pelea de varios (battle royale: cada uno su equipo; por equipos: los del mismo número van juntos). */
+    public Pelea(Combatiente[] cs, int[] equipos, long semilla) {
+        this(cs, equipos, semilla, 1000, 700, 1200);
+    }
+
+    public Pelea(Combatiente[] cs, int[] equipos, long semilla, double ancho, double alto, int turnosPorRonda) {
+        if (cs.length < 2 || equipos.length != cs.length) throw new IllegalArgumentException("hacen falta al menos dos, cada uno con su equipo");
+        combatientes = cs.clone();
+        equipo = equipos.clone();
+        resistencia = new double[cs.length];
+        java.util.Arrays.fill(resistencia, 1);
         this.semilla = semilla;
         this.azar = new Random(semilla);
         this.ancho = ancho;
@@ -131,17 +145,33 @@ public final class Pelea {
         rayos.clear();
         // Cada ronda, en un sitio distinto: uno a cada lado.
         double margen = 120;
-        double ya = margen + azar.nextDouble() * (alto - 2 * margen);
-        double yb = margen + azar.nextDouble() * (alto - 2 * margen);
-        boolean cambia = ronda % 2 == 0;
-        double xa = cambia ? ancho - margen : margen, xb = cambia ? margen : ancho - margen;
-        cuerpos = new Cuerpo[]{
-                new Cuerpo(this, 0, combatientes[0], xa, ya, cambia ? 180 : 0, semilla * 31 + ronda * 7),
-                new Cuerpo(this, 1, combatientes[1], xb, yb, cambia ? 0 : 180, semilla * 31 + ronda * 7 + 3)};
+        if (combatientes.length == 2) {
+            double ya = margen + azar.nextDouble() * (alto - 2 * margen);
+            double yb = margen + azar.nextDouble() * (alto - 2 * margen);
+            boolean cambia = ronda % 2 == 0;
+            double xa = cambia ? ancho - margen : margen, xb = cambia ? margen : ancho - margen;
+            cuerpos = new Cuerpo[]{
+                    new Cuerpo(this, 0, combatientes[0], xa, ya, cambia ? 180 : 0, semilla * 31 + ronda * 7),
+                    new Cuerpo(this, 1, combatientes[1], xb, yb, cambia ? 0 : 180, semilla * 31 + ronda * 7 + 3)};
+        } else {
+            // Varios: en corro alrededor del centro, los del mismo equipo juntos, mirando al centro.
+            int n = combatientes.length;
+            Integer[] orden = new Integer[n];
+            for (int i = 0; i < n; i++) orden[i] = i;
+            java.util.Arrays.sort(orden, (p, q) -> Integer.compare(equipo[p], equipo[q]));
+            double giro = azar.nextDouble() * 360;
+            cuerpos = new Cuerpo[n];
+            for (int k = 0; k < n; k++) {
+                int i = orden[k];
+                double a = Math.toRadians(giro + 360.0 * k / n);
+                double x = ancho / 2 + Math.cos(a) * (ancho / 2 - margen), y = alto / 2 + Math.sin(a) * (alto / 2 - margen);
+                cuerpos[i] = new Cuerpo(this, i, combatientes[i], x, y, normal(Math.toDegrees(a) + 180), semilla * 31 + ronda * 7 + i * 3);
+            }
+        }
         estado = Estado.LUCHANDO;
         sucesosDelTurno.clear();
         suceso(Suceso.Tipo.RONDA_EMPIEZA, -1, ancho / 2, alto / 2, 0, ronda, "");
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < combatientes.length; i++) {
             Combatiente c = combatientes[i];
             c.informes.add(new Combatiente.Informe());
             prepararRobot(cuerpos[i]);
@@ -177,28 +207,77 @@ public final class Pelea {
         if (estado != Estado.LUCHANDO) return;
         sucesosDelTurno.clear();
         turno++;
-        Cuerpo a = cuerpos[0], b = cuerpos[1];
-        // 1) Lo que ve cada uno (una foto del principio del turno).
-        a.vistos = vistosPor(a, b);
-        b.vistos = vistosPor(b, a);
-        // 2) El código de cada uno (en orden alterno, para que nadie vaya siempre primero).
-        if (turno % 2 == 0) {
-            pensar(a);
-            pensar(b);
-        } else {
-            pensar(b);
-            pensar(a);
+        int n = cuerpos.length;
+        // 1) Lo que ve cada uno (una foto del principio del turno): sus enemigos a la vista y sus compañeros.
+        for (Cuerpo c : cuerpos) {
+            List<Avistamiento> vistos = new ArrayList<>(1), companeros = new ArrayList<>(0);
+            for (Cuerpo otro : cuerpos) {
+                if (otro == c) continue;
+                if (otro.equipo == c.equipo) {
+                    if (!otro.fuera) companeros.add(new Avistamiento(c, otro));
+                } else {
+                    vistos.addAll(vistosPor(c, otro));
+                }
+            }
+            if (vistos.size() > 1) vistos.sort((p, q) -> Double.compare(p.distancia(), q.distancia()));
+            c.vistos = vistos;
+            c.companeros = companeros;
         }
+        // 2) El código de cada uno (empieza uno distinto cada turno, para que nadie vaya siempre primero).
+        for (int k = 0; k < n; k++) pensar(cuerpos[(turno + k) % n]);
         // 3) Los ataques, el movimiento, los choques, los proyectiles.
-        for (Cuerpo c : cuerpos) atacar(c, c == a ? b : a);
+        for (Cuerpo c : cuerpos) atacar(c, objetivo(c));
         for (Cuerpo c : cuerpos) mover(c);
-        chocar(a, b);
-        for (Cuerpo c : cuerpos) efectosContinuos(c, c == a ? b : a);
+        for (int i = 0; i < n; i++) for (int k = i + 1; k < n; k++) chocar(cuerpos[i], cuerpos[k]);
+        for (Cuerpo c : cuerpos) efectosContinuos(c, objetivo(c));
         moverProyectiles();
         for (Rayo r : rayos) r.vida--;
         rayos.removeIf(r -> r.vida <= 0);
-        // 4) ¿Acaba la ronda?
-        if (turno >= turnosPorRonda || a.fuera || b.fuera) acabarRonda();
+        // 4) ¿Acaba la ronda? Al acabarse el tiempo, o cuando solo queda en pie un equipo.
+        if (turno >= turnosPorRonda || equiposEnPie() <= 1) acabarRonda();
+    }
+
+    private int equiposEnPie() {
+        java.util.Set<Integer> e = new java.util.HashSet<>();
+        for (Cuerpo c : cuerpos) if (!c.fuera) e.add(c.equipo);
+        return e.size();
+    }
+
+    /** El enemigo al que apunta: el que queda más cerca de la mira (y, a igualdad, el más cercano). */
+    Cuerpo objetivo(Cuerpo c) {
+        Cuerpo mejor = null;
+        double nota = Double.MAX_VALUE;
+        for (Cuerpo e : cuerpos) {
+            if (e == c || e.equipo == c.equipo || e.fuera) continue;
+            double d = Math.hypot(e.x - c.x, e.y - c.y);
+            double ang = Math.abs(normal(Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x)) - c.mira));
+            double v = ang * 6 + d * 0.05;
+            if (v < nota) {
+                nota = v;
+                mejor = e;
+            }
+        }
+        if (mejor != null) return mejor;
+        for (Cuerpo e : cuerpos) if (e != c && e.equipo != c.equipo) return e;
+        return c;
+    }
+
+    /** Un aviso a los compañeros: les llega el turno siguiente (y se ve como un bocadillo). */
+    void avisar(Cuerpo de, String mensaje) {
+        for (Cuerpo c : cuerpos) if (c != de && c.equipo == de.equipo && c.avisos.size() < 20) c.avisos.add(new String[]{de.combatiente.nombre, mensaje});
+        suceso(Suceso.Tipo.DECIR, de.indice, de.x, de.y, 0, 1, "» " + mensaje);
+    }
+
+    /** Los puntos de un equipo: el daño que han recibido entre todos (menos es mejor). */
+    public double danoDelEquipo(int e) {
+        double d = 0;
+        for (int i = 0; i < combatientes.length; i++) if (equipo[i] == e) d += combatientes[i].danoTotalRecibido;
+        return d;
+    }
+
+    /** El equipo ganador (-1 si empate, -2 si no ha acabado). */
+    public int equipoGanador() {
+        return ganador < 0 ? ganador : equipo[ganador];
     }
 
     private void acabarRonda() {
@@ -211,9 +290,28 @@ public final class Pelea {
         suceso(Suceso.Tipo.RONDA_ACABA, -1, ancho / 2, alto / 2, 0, ronda, "");
         if (ronda >= rondas) {
             estado = Estado.TERMINADA;
-            double da = combatientes[0].danoTotalRecibido, db = combatientes[1].danoTotalRecibido;
-            if (Math.abs(da - db) < 0.5) ganador = -1;
-            else ganador = da < db ? 0 : 1;
+            // Gana el equipo que menos daño ha recibido; el ganador es su primer combatiente.
+            java.util.Map<Integer, Double> puntos = new java.util.TreeMap<>();
+            for (int e : equipo) puntos.put(e, danoDelEquipo(e));
+            double mejor = Double.MAX_VALUE, segundo = Double.MAX_VALUE;
+            int equipoMejor = -1;
+            for (java.util.Map.Entry<Integer, Double> p : puntos.entrySet()) {
+                if (p.getValue() < mejor) {
+                    segundo = mejor;
+                    mejor = p.getValue();
+                    equipoMejor = p.getKey();
+                } else if (p.getValue() < segundo) {
+                    segundo = p.getValue();
+                }
+            }
+            if (Math.abs(segundo - mejor) < 0.5) ganador = -1;
+            else {
+                ganador = 0;
+                for (int i = 0; i < equipo.length; i++) if (equipo[i] == equipoMejor) {
+                    ganador = i;
+                    break;
+                }
+            }
             suceso(Suceso.Tipo.PELEA_ACABA, ganador, ancho / 2, alto / 2, 0, ganador, "");
         } else {
             estado = Estado.ENTRE_RONDAS;
@@ -224,7 +322,11 @@ public final class Pelea {
     public void rendirse(int quien) {
         if (estado == Estado.TERMINADA) return;
         estado = Estado.TERMINADA;
-        ganador = 1 - quien;
+        ganador = 0;
+        for (int i = 0; i < equipo.length; i++) if (equipo[i] != equipo[quien]) {
+            ganador = i;
+            break;
+        }
         suceso(Suceso.Tipo.PELEA_ACABA, ganador, ancho / 2, alto / 2, 0, ganador, "rendicion");
     }
 
@@ -260,11 +362,14 @@ public final class Pelea {
         c.chocoConPared = false;
         metajavbots.api.Avistado choque = c.chocoCon;
         c.chocoCon = null;
+        List<String[]> avisos = new ArrayList<>(c.avisos);
+        c.avisos.clear();
         long pasos = ejecutar(c, () -> {
             for (metajavbots.api.Impacto g : golpes) Puente.golpeado(co.robot, g);
             for (metajavbots.api.Impacto g : aciertos) Puente.acierto(co.robot, g);
             if (pared) Puente.pared(co.robot);
             if (choque != null) Puente.choque(co.robot, choque);
+            for (String[] a : avisos) Puente.equipo(co.robot, a[0], a[1]);
             for (Avistamiento v : c.vistos) Puente.ver(co.robot, v);
             Puente.turno(co.robot);
         }, tope);
@@ -480,14 +585,18 @@ public final class Pelea {
                 c.camuflaje = (int) p.valor("duracion", 75);
                 break;
             case PULSO: {
-                double d = Math.hypot(e.x - c.x, e.y - c.y);
-                if (!e.fuera && d <= p.valor("alcance", 240)) {
-                    aturdir(e, (int) p.valor("aturde", 30));
-                    danar(e, c, 3, "pulso", Math.toDegrees(Math.atan2(c.y - e.y, c.x - e.x)), false);
+                // El pulso llega a todos los enemigos cercanos.
+                for (Cuerpo otro : cuerpos) {
+                    if (otro.equipo == c.equipo || otro.fuera) continue;
+                    double d = Math.hypot(otro.x - c.x, otro.y - c.y);
+                    if (d <= p.valor("alcance", 240)) {
+                        aturdir(otro, (int) p.valor("aturde", 30));
+                        danar(otro, c, 3, "pulso", Math.toDegrees(Math.atan2(c.y - otro.y, c.x - otro.x)), false);
+                    }
                 }
                 // El pulso también borra los proyectiles enemigos cercanos.
                 for (Proyectil pr : proyectiles) {
-                    if (pr.dueno != c.indice && Math.hypot(pr.x - c.x, pr.y - c.y) < p.valor("alcance", 240)) pr.vivo = false;
+                    if (cuerpos[pr.dueno].equipo != c.equipo && Math.hypot(pr.x - c.x, pr.y - c.y) < p.valor("alcance", 240)) pr.vivo = false;
                 }
                 break;
             }
@@ -689,13 +798,15 @@ public final class Pelea {
         double va = Math.abs(a.velocidad), vb = Math.abs(b.velocidad);
         double pa = a.combatiente.montaje.peso(), pb = b.combatiente.montaje.peso();
         double angA = Math.toDegrees(Math.atan2(dy, dx));
-        if (va + vb > 1) {
+        if (va + vb > 1 && a.equipo != b.equipo) {
             suceso(Suceso.Tipo.CHOQUE, a.indice, (a.x + b.x) / 2, (a.y + b.y) / 2, angA, va + vb, "");
             danar(b, a, 0.3 + va * 0.5 * (pa / Math.max(10, pb)), "choque", angA + 180, true);
             danar(a, b, 0.3 + vb * 0.5 * (pb / Math.max(10, pa)), "choque", angA, true);
         }
-        a.chocoCon = new Avistamiento(a, b);
-        b.chocoCon = new Avistamiento(b, a);
+        if (a.equipo != b.equipo) {
+            a.chocoCon = new Avistamiento(a, b);
+            b.chocoCon = new Avistamiento(b, a);
+        }
         a.velocidad *= 0.3;
         b.velocidad *= 0.3;
     }
@@ -715,11 +826,27 @@ public final class Pelea {
         }
     }
 
+    /** El blanco al que persigue un misil: el enemigo más cercano a él. */
+    private Cuerpo objetivoDelMisil(Cuerpo dueno, Proyectil p) {
+        Cuerpo mejor = null;
+        double d = Double.MAX_VALUE;
+        for (Cuerpo e : cuerpos) {
+            if (e.equipo == dueno.equipo || e.fuera) continue;
+            double x = Math.hypot(e.x - p.x, e.y - p.y);
+            if (x < d) {
+                d = x;
+                mejor = e;
+            }
+        }
+        return mejor == null ? dueno : mejor;
+    }
+
     private void moverProyectiles() {
         for (Proyectil p : proyectiles) {
             if (!p.vivo) continue;
-            Cuerpo blanco = cuerpos[1 - p.dueno];
-            if (p.misil && !blanco.fuera && blanco.camuflaje <= 0) {
+            Cuerpo dueno = cuerpos[p.dueno];
+            Cuerpo blanco = objetivoDelMisil(dueno, p);
+            if (p.misil && blanco != dueno && !blanco.fuera && blanco.camuflaje <= 0) {
                 // El misil gira hacia el blanco, poco a poco.
                 double quiero = Math.toDegrees(Math.atan2(blanco.y - p.y, blanco.x - p.x));
                 double ahora = p.angulo();
@@ -736,10 +863,14 @@ public final class Pelea {
                 if (p.misil) suceso(Suceso.Tipo.EXPLOSION, p.dueno, p.x, p.y, 0, 0, "misil");
                 continue;
             }
-            if (!blanco.fuera && Math.hypot(blanco.x - p.x, blanco.y - p.y) <= blanco.radio) {
-                p.vivo = false;
-                if (p.misil) suceso(Suceso.Tipo.EXPLOSION, p.dueno, p.x, p.y, 0, p.dano, "misil");
-                danar(blanco, cuerpos[p.dueno], p.dano, p.misil ? "misil" : "bala", p.angulo() + 180, false);
+            for (Cuerpo e : cuerpos) {
+                if (e.equipo == dueno.equipo || e.fuera || (e.vuela() && !p.misil && false)) continue;
+                if (Math.hypot(e.x - p.x, e.y - p.y) <= e.radio) {
+                    p.vivo = false;
+                    if (p.misil) suceso(Suceso.Tipo.EXPLOSION, p.dueno, p.x, p.y, 0, p.dano, "misil");
+                    danar(e, dueno, p.dano, p.misil ? "misil" : "bala", p.angulo() + 180, false);
+                    break;
+                }
             }
         }
         proyectiles.removeIf(p -> !p.vivo);

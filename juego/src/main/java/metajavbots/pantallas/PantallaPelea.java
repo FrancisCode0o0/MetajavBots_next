@@ -89,10 +89,24 @@ public final class PantallaPelea implements Pantalla {
                 avisoDeCodigo = T.t("pelea.codigo_no_compila");
             }
         }
-        pelea = new Pelea(yo, encuentro.rival, new Random().nextLong());
+        if (encuentro.demas.isEmpty()) {
+            pelea = new Pelea(yo, encuentro.rival, new Random().nextLong());
+        } else {
+            int n = 2 + encuentro.demas.size();
+            Combatiente[] cs = new Combatiente[n];
+            int[] eq = new int[n];
+            cs[0] = yo;
+            cs[1] = encuentro.rival;
+            eq[1] = 1;
+            for (int i = 0; i < encuentro.demas.size(); i++) {
+                cs[2 + i] = encuentro.demas.get(i);
+                eq[2 + i] = encuentro.equiposDeLosDemas.get(i);
+            }
+            pelea = new Pelea(cs, eq, new Random().nextLong());
+        }
         pelea.rondas = encuentro.rondas;
         pelea.topeDePasos = encuentro.topeDePasos;
-        narrador = new Narrador(yo, encuentro.rival);
+        narrador = new Narrador(pelea.combatientes, pelea.equipo);
         narrador.idioma = jug.idioma;
         narrador.jugador = jug.nombre;
         narrador.agresividad = jug.agresividad;
@@ -289,7 +303,38 @@ public final class PantallaPelea implements Pantalla {
 
     // ================================================================ marcador
 
+    /** En una pelea de varios: el jugador arriba a la izquierda y los demás en una fila, con el color de su equipo. */
+    private void marcadorDeVarios(Juego j) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        p.rect(0, 0, p.ancho, 88, ui.tema.panel, 0.97f);
+        p.rect(0, 87, p.ancho, 1, ui.tema.borde, 1);
+        int n = pelea.combatientes.length;
+        float w = Math.min(260, (p.ancho - 260) / n);
+        for (int i = 0; i < n; i++) {
+            Cuerpo c = pelea.cuerpo(i);
+            Combatiente co = pelea.combatientes[i];
+            float x = 16 + i * w;
+            int color = VistaDeArena.COLORES[pelea.equipo[i] % VistaDeArena.COLORES.length];
+            p.texto(ui.recortarTexto(co.nombre, w - 20, ui.letra * 0.8f, true), x, 8, ui.letra * 0.8f, true, color, 1);
+            if (c != null) {
+                float parte = (float) (c.blindaje() / 100);
+                ui.barra(x, 34, w - 20, 14, parte, parte > 0.5f ? ui.tema.bien : parte > 0.2f ? ui.tema.aviso : ui.tema.mal, null);
+            }
+            p.texto(T.f("pelea.dano", Math.round(co.danoTotalRecibido)), x, 54, ui.letra * 0.65f, false, ui.tema.textoSuave, 1);
+        }
+        float cx = p.ancho - 130;
+        p.textoCentrado(T.f("pelea.ronda", pelea.ronda(), pelea.rondas), cx, 8, ui.letra * 0.9f, true, ui.tema.texto, 1);
+        int segundos = (int) Math.ceil((pelea.turnosPorRonda - pelea.turno()) / (double) Pelea.TURNOS_POR_SEGUNDO);
+        p.textoCentrado(String.format("%d:%02d", Math.max(0, segundos) / 60, Math.max(0, segundos) % 60), cx, 36, ui.letra * 1.5f, true,
+                segundos <= 10 ? ui.tema.mal : ui.tema.texto, 1);
+    }
+
     private void marcador(Juego j) {
+        if (pelea.combatientes.length > 2) {
+            marcadorDeVarios(j);
+            return;
+        }
         Pincel p = j.pincel;
         Ui ui = j.ui;
         p.rect(0, 0, p.ancho, 88, ui.tema.panel, 0.97f);
@@ -536,7 +581,7 @@ public final class PantallaPelea implements Pantalla {
         terminada = true;
         tiempoFinal = 0;
         int g = pelea.ganador();
-        ganoElJugador = g == 0;
+        ganoElJugador = g >= 0 && pelea.equipo[g] == pelea.equipo[0];
         Jugador jug = j.jugador;
         jug.robot().ponerPiezas(yo.montaje);
         Registro.Resultado res = g == 0 ? Registro.Resultado.VICTORIA : g == 1 ? Registro.Resultado.DERROTA : Registro.Resultado.EMPATE;
@@ -560,8 +605,10 @@ public final class PantallaPelea implements Pantalla {
         // El que pierde explota (a los 0,6 s, con todo).
         if (!explotado && tiempoFinal > 0.6f && g >= 0) {
             explotado = true;
-            Cuerpo perdedor = pelea.cuerpo(1 - g);
-            if (perdedor != null) {
+            // Explotan todos los que no son del equipo ganador.
+            for (int i = 0; i < pelea.combatientes.length; i++) {
+                Cuerpo perdedor = pelea.cuerpo(i);
+                if (perdedor == null || pelea.equipo[i] == pelea.equipo[g]) continue;
                 float[] cab = vista.cabezaDe(perdedor);
                 vista.efectos.explosion(cab[0], cab[1] + 40, 2.2f);
                 perdedor.fuera = true;
@@ -570,7 +617,10 @@ public final class PantallaPelea implements Pantalla {
             j.sacudir(14, 0.9f);
             narrador.locutor(ganoElJugador ? "victoria_jugador" : "derrota_jugador", true, null);
             narrador.robot(g, "victoria", true, null);
-            narrador.robot(1 - g, "derrota", true, null);
+            for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.equipo[i] != pelea.equipo[g]) {
+                narrador.robot(i, "derrota", true, null);
+                break;
+            }
             if (cambio != null && cambio.subio) {
                 j.sonidos.tocar("subida", 1f);
                 narrador.locutor("subida_nivel", true, null);

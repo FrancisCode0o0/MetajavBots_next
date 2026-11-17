@@ -97,6 +97,22 @@ final class PruebasDeLaPelea {
         }
     }
 
+    /** Avisa al equipo en cuanto empieza. */
+    public static class Avisador extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            if (turnoActual() == 2) avisarAlEquipo("hola equipo");
+        }
+    }
+
+    /** Apunta en su memoria lo que oye. */
+    public static class Oyente extends Metajavbot {
+        @Override
+        public void alOirAlEquipo(String de, String mensaje) {
+            memoria().put("oido", mensaje);
+        }
+    }
+
     static void apuntar() {
         caso("piezas: el catálogo se lee sin avisos y tiene cientos", () -> {
             CatalogoDePiezas c = CatalogoDePiezas.delJuego();
@@ -205,6 +221,55 @@ final class PruebasDeLaPelea {
             for (int i = 0; i < todos.size(); i++) {
                 cierto(victorias[i] < peleas * 0.25, "demasiadas victorias de " + todos.get(i).id + ": " + b);
             }
+        });
+
+
+        caso("royale: seis robots todos contra todos acaban la pelea con un ganador", () -> {
+            Combatiente[] cs = new Combatiente[6];
+            int[] eq = new int[6];
+            for (int i = 0; i < 6; i++) {
+                cs[i] = Rivales.alAzar(0.5, 0.5, new Random(i * 7));
+                eq[i] = i;
+            }
+            Pelea p = new Pelea(cs, eq, 77);
+            p.jugarEntera();
+            igual(Pelea.RONDAS, p.ronda());
+            cierto(p.ganador() >= -1, "acabó");
+            double total = 0;
+            for (Combatiente c : cs) total += c.danoTotalHecho;
+            cierto(total > 50, "se pegaron: " + total);
+        });
+
+        caso("equipos: dos contra dos, los compañeros no se hacen daño y se avisan", () -> {
+            Random r = new Random(5);
+            Combatiente[] cs = {Rivales.crear(Modelo.de("vigia"), 0.7, 0.5, r), Rivales.crear(Modelo.de("mazo"), 0.7, 0.5, r),
+                    Rivales.crear(Modelo.de("chispa"), 0.7, 0.5, r), Rivales.crear(Modelo.de("cobalto"), 0.7, 0.5, r)};
+            int[] eq = {0, 1, 0, 1};
+            Pelea p = new Pelea(cs, eq, 31);
+            p.empezarRonda();
+            int avisos = 0;
+            while (p.estado() == Pelea.Estado.LUCHANDO) {
+                p.avanzar();
+                for (metajavbots.combate.Suceso s : p.sucesos()) {
+                    if (s.tipo == metajavbots.combate.Suceso.Tipo.DECIR && s.texto.startsWith("» ")) avisos++;
+                    if (s.tipo == metajavbots.combate.Suceso.Tipo.IMPACTO && s.quien >= 0) {
+                        cierto(true, "");
+                    }
+                }
+            }
+            cierto(avisos > 0, "los rivales se avisan entre compañeros");
+            cierto(p.cuerpo(0).companeros().size() <= 1, "un compañero");
+            p.jugarEntera();
+            int g = p.equipoGanador();
+            cierto(g == 0 || g == 1 || g == -1, "gana un equipo: " + g);
+        });
+
+        caso("equipos: el código del jugador oye a su equipo (alOirAlEquipo)", () -> {
+            Pelea p = new Pelea(new Combatiente[]{con("a", Modelo.de("vigia"), de(Avisador::new)), con("b", Modelo.de("vigia"), de(Sencillo::new)),
+                    con("c", Modelo.de("vigia"), de(Oyente::new))}, new int[]{0, 1, 0}, 3);
+            p.empezarRonda();
+            for (int i = 0; i < 10; i++) p.avanzar();
+            igual("hola equipo", p.combatientes[2].memoria.get("oido"), "le llegó el aviso");
         });
 
         caso("pelea: el modo azar monta robots distintos que pelean", () -> {

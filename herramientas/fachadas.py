@@ -13,6 +13,7 @@ hooks = {
     'alChocarConPared': ('beiWand', 'onHitWall'),
     'alChocarConEnemigo': ('beiZusammenstoss', 'onBump'),
     'alAcabarRonda': ('beiRundenende', 'onRoundEnd'),
+    'alOirAlEquipo': ('beiTeamNachricht', 'onTeamMessage'),
 }
 metodos = {
     'avanzar': ('vorwaerts', 'ahead'), 'retroceder': ('rueckwaerts', 'back'), 'girar': ('drehen', 'turn'),
@@ -33,6 +34,7 @@ metodos = {
     'restanteAvance': ('restStrecke', 'remainingDistance'), 'restanteGiro': ('restDrehung', 'remainingTurn'),
     'restanteMira': ('restZielen', 'remainingAim'),
     'enemigosVistos': ('gesehen', 'seenEnemies'),
+    'companeros': ('kameraden', 'teammates'), 'avisarAlEquipo': ('teamMelden', 'tellTeam'),
     'anguloHacia': ('winkelZu', 'angleTo'), 'distanciaA': ('abstandZu', 'distanceTo'),
     'normalizar': ('normalisieren', 'normalize'),
     'azar': ('zufall', 'random'), 'decir': ('sagen', 'say'), 'escribir': ('ausgeben', 'print'),
@@ -77,6 +79,9 @@ doc = {
         'beiWand': 'Wenn du gegen eine Wand fährst (kostet etwas Panzerung).',
         'beiZusammenstoss': 'Wenn du mit einem Gegner zusammenstößt.',
         'beiRundenende': 'Am Ende der Runde.',
+        'beiTeamNachricht': 'Wenn dir ein Teamkamerad etwas meldet (in Teamkämpfen).',
+        'kameraden': 'Deine Teamkameraden (in Teamkämpfen; leer, wenn du allein kämpfst).',
+        'teamMelden': 'Meldet deinen Kameraden etwas (es kommt im nächsten Zug in beiTeamNachricht an).',
         'vorwaerts': 'Fährt diese Strecke vorwärts (negativ: rückwärts). Ersetzt den vorigen Fahrbefehl.',
         'rueckwaerts': 'Fährt diese Strecke rückwärts.',
         'drehen': 'Dreht den Körper um diese Grad (positiv: nach links).',
@@ -146,6 +151,9 @@ doc = {
         'onHitWall': 'When you crash into a wall (it costs a little armor).',
         'onBump': 'When you bump into an enemy.',
         'onRoundEnd': 'At the end of the round.',
+        'onTeamMessage': 'When a teammate tells you something (in team fights).',
+        'teammates': 'Your teammates (in team fights; empty when you fight alone).',
+        'tellTeam': 'Tells your teammates something (it arrives next tick in onTeamMessage).',
         'ahead': 'Moves forward this distance (negative: backwards). Replaces the previous move order.',
         'back': 'Moves backwards this distance.',
         'turn': 'Turns the body this many degrees (positive: left).',
@@ -178,8 +186,8 @@ doc = {
         'memory': 'Whatever you want to remember from round to round (topic 15: Map). It survives code changes.',
     }}
 tipos = {'de': {'Enemigo': 'Gegner', 'Golpe': 'Treffer'}, 'en': {'Enemigo': 'Enemy', 'Golpe': 'Hit'}}
-params = {'de': {'distancia': 'strecke', 'grados': 'grad', 'angulo': 'winkel', 'texto': 'text', 'g': 't', 'e': 'g'},
-          'en': {'distancia': 'distance', 'grados': 'degrees', 'angulo': 'angle', 'texto': 'text', 'e': 'e', 'g': 'h'}}
+params = {'de': {'distancia': 'strecke', 'grados': 'grad', 'angulo': 'winkel', 'texto': 'text', 'mensaje': 'nachricht', 'de': 'von', 'g': 't', 'e': 'g'},
+          'en': {'distancia': 'distance', 'grados': 'degrees', 'angulo': 'angle', 'texto': 'text', 'mensaje': 'message', 'de': 'from', 'e': 'e', 'g': 'h'}}
 secciones = [('lo que sobrescribes', ('was du überschreibst', 'what you override')), ('moverse', ('fahren', 'moving')),
              ('apuntar y atacar', ('zielen und angreifen', 'aiming and attacking')), ('saber', ('wissen', 'knowing')),
              ('ayudas', ('Hilfen', 'helpers'))]

@@ -45,6 +45,10 @@ public final class Puente {
         r.finDeRonda();
     }
 
+    public static void equipo(RobotBase r, String de, String mensaje) {
+        r.equipo(de, mensaje);
+    }
+
     // ---------------------------------------------------------------- el Tope
 
     /** Empieza a contar en este hilo: hasta «maximo» pasos y «nanos» de tiempo. */

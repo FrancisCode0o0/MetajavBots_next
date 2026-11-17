@@ -30,6 +30,8 @@ public abstract class RobotBase {
 
     abstract void finDeRonda();
 
+    abstract void equipo(String de, String mensaje);
+
     final Mando m() {
         if (mando == null) throw new IllegalStateException("El robot aún no está en la arena (no muevas nada en el constructor: usa alEmpezar).");
         return mando;

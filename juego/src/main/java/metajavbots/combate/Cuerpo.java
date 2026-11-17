@@ -21,6 +21,11 @@ public final class Cuerpo implements Mando {
 
     final Pelea pelea;
     public final int indice;
+    /** Su equipo (en una pelea de dos, 0 y 1; en un battle royale, cada uno el suyo). */
+    public final int equipo;
+    /** Los avisos de los compañeros que le llegan el turno siguiente: {de, mensaje}. */
+    final List<String[]> avisos = new ArrayList<>();
+    List<Avistamiento> companeros = new ArrayList<>();
     public final Combatiente combatiente;
     public final Montaje.Cifras cifras;
     public final double radio;
@@ -60,6 +65,7 @@ public final class Cuerpo implements Mando {
     Cuerpo(Pelea pelea, int indice, Combatiente c, double x, double y, double rumbo, long semilla) {
         this.pelea = pelea;
         this.indice = indice;
+        this.equipo = pelea.equipo[indice];
         this.combatiente = c;
         this.cifras = c.montaje.cifras();
         this.radio = c.montaje.modelo.tamano;
@@ -215,6 +221,18 @@ public final class Cuerpo implements Mando {
     @Override
     public List<? extends Avistado> vistos() {
         return vistos;
+    }
+
+    @Override
+    public List<? extends Avistado> companeros() {
+        return companeros;
+    }
+
+    @Override
+    public void avisarAlEquipo(String mensaje) {
+        if (mensaje == null) return;
+        String m = mensaje.length() > 200 ? mensaje.substring(0, 200) : mensaje;
+        pelea.avisar(this, m);
     }
 
     @Override

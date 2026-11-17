@@ -31,4 +31,10 @@ public final class Encuentro {
     /** Si cuenta para el progreso (el historial y la etiqueta). */
     public boolean cuenta = true;
     public String titulo = "";
+    /**
+     * Los demás de una pelea de varios (battle royale o por equipos), además del jugador (equipo 0) y del rival
+     * (equipo 1): cada uno con su equipo en «equiposDeLosDemas». Vacío en una pelea normal.
+     */
+    public final java.util.List<Combatiente> demas = new java.util.ArrayList<>();
+    public final java.util.List<Integer> equiposDeLosDemas = new java.util.ArrayList<>();
 }

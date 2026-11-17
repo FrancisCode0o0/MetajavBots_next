@@ -67,6 +67,12 @@ public interface Mando {
     /** Los enemigos que se ven ahora mismo. */
     List<? extends Avistado> vistos();
 
+    /** Los compañeros de equipo (vivos), estén donde estén: el equipo comparte su posición. */
+    List<? extends Avistado> companeros();
+
+    /** Manda un mensaje a los compañeros (les llega el turno siguiente, en alOirAlEquipo). */
+    void avisarAlEquipo(String mensaje);
+
     void decir(String texto);
 
     void escribir(String texto);

@@ -71,6 +71,10 @@ public abstract class Metajavbot extends RobotBase {
     public void alAcabarRonda() {
     }
 
+    /** Cuando un compañero de equipo te avisa (en las peleas por equipos). */
+    public void alOirAlEquipo(String de, String mensaje) {
+    }
+
     @Override
     final void empezar() {
         alEmpezar();
@@ -109,6 +113,11 @@ public abstract class Metajavbot extends RobotBase {
     @Override
     final void finDeRonda() {
         alAcabarRonda();
+    }
+
+    @Override
+    final void equipo(String de, String mensaje) {
+        alOirAlEquipo(de, mensaje);
     }
 
     // ================================================================ moverse
@@ -286,6 +295,16 @@ public abstract class Metajavbot extends RobotBase {
     /** Los enemigos que ves ahora mismo (tema 15: colecciones). */
     public final List<Enemigo> enemigosVistos() {
         return new ArrayList<>(m().vistos());
+    }
+
+    /** Tus compañeros de equipo (en las peleas por equipos; vacía si peleas solo). */
+    public final List<Enemigo> companeros() {
+        return new ArrayList<>(m().companeros());
+    }
+
+    /** Avisa a tus compañeros (les llega el turno siguiente en alOirAlEquipo): «voy a por el de la izquierda». */
+    public final void avisarAlEquipo(Object mensaje) {
+        m().avisarAlEquipo(aTexto(mensaje));
     }
 
     // ================================================================ ayudas

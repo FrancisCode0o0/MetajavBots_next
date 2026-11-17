@@ -59,6 +59,26 @@ public class Rival extends Metajavbot {
         enemigoDistancia = e.distancia();
         enemigoVuela = e.vuela();
         turnoDelUltimoAvistamiento = turnoActual();
+        // En equipo: de vez en cuando, avisa a los compañeros de dónde está el enemigo.
+        if (!companeros().isEmpty() && turnoActual() % 45 == 0) {
+            avisarAlEquipo("objetivo " + (int) e.x() + " " + (int) e.y());
+        }
+    }
+
+    /** Un compañero dice dónde hay un enemigo: si yo no veo ninguno, voy para allá. */
+    @Override
+    public void alOirAlEquipo(String de, String mensaje) {
+        String[] partes = mensaje.split(" ");
+        if (partes.length != 3 || !partes[0].equals("objetivo")) return;
+        if (turnoActual() - turnoDelUltimoAvistamiento < 25) return;
+        try {
+            double x = Double.parseDouble(partes[1]), y = Double.parseDouble(partes[2]);
+            girarHacia(anguloHacia(x, y));
+            apuntarA(x, y);
+            avanzar(Math.min(200, distanciaA(x, y) - 150));
+        } catch (NumberFormatException ex) {
+            // un aviso que no entiendo: lo ignoro
+        }
     }
 
     @Override

@@ -27,12 +27,12 @@ public final class VistaDeArena {
     private static final float TIRO = 58;
     public final Efectos efectos = new Efectos();
     private final DibujoRobot dibujo;
-    private final DibujoRobot.Estado[] estados = {new DibujoRobot.Estado(), new DibujoRobot.Estado()};
+    private DibujoRobot.Estado[] estados = {new DibujoRobot.Estado(), new DibujoRobot.Estado()};
     private final Random azar = new Random(11);
     private float tiempo;
     /** Lo que dice cada robot (el bocadillo) y cuánto le queda. */
-    private final String[] bocadillo = {"", ""};
-    private final float[] tiempoBocadillo = new float[2];
+    private String[] bocadillo = {"", ""};
+    private float[] tiempoBocadillo = new float[2];
     // El rectángulo de pantalla donde está la arena.
     private float ax, ay, aw, ah, escalaX;
     private double ancho = 1000, alto = 700;
@@ -44,8 +44,21 @@ public final class VistaDeArena {
         dibujo = new DibujoRobot(p);
     }
 
+    /** Para una pelea de varios: un estado y un bocadillo para cada uno. */
+    private void cuantos(int n) {
+        if (estados.length == n) return;
+        estados = new DibujoRobot.Estado[n];
+        for (int i = 0; i < n; i++) estados[i] = new DibujoRobot.Estado();
+        bocadillo = new String[n];
+        java.util.Arrays.fill(bocadillo, "");
+        tiempoBocadillo = new float[n];
+    }
+
+    /** Los colores de los equipos (los láseres y los nombres). */
+    public static final int[] COLORES = {0x3FE0FF, 0xFF4FD8, 0x9CFF57, 0xFFC857, 0xB07CFF, 0xFF7A45};
+
     public void decir(int quien, String texto) {
-        if (quien < 0 || quien > 1 || texto == null) return;
+        if (quien < 0 || quien >= bocadillo.length || texto == null) return;
         bocadillo[quien] = texto;
         tiempoBocadillo[quien] = 2.5f + texto.length() * 0.04f;
     }
@@ -148,21 +161,20 @@ public final class VistaDeArena {
         fondo(p);
         suelo(p);
         // Lo que está más lejos (y mayor), antes.
-        Cuerpo a = pelea.cuerpo(0), b = pelea.cuerpo(1);
-        if (a != null && b != null) {
-            Cuerpo lejos = a.y >= b.y ? a : b, cerca = lejos == a ? b : a;
-            sombraYRobot(p, lejos, pelea, dt);
-            sombraYRobot(p, cerca, pelea, dt);
+        cuantos(pelea.combatientes.length);
+        // Lo que está más lejos (y mayor), antes.
+        java.util.List<Cuerpo> orden = new java.util.ArrayList<>();
+        for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.cuerpo(i) != null) orden.add(pelea.cuerpo(i));
+        orden.sort((u, v) -> Double.compare(v.y, u.y));
+        for (Cuerpo c : orden) sombraYRobot(p, c, pelea, dt);
+        if (!orden.isEmpty()) {
             proyectiles(p, pelea);
             rayos(p, pelea);
             llamas(p, pelea);
         }
         efectos.avanzar(dt);
         efectos.dibujar(p);
-        if (a != null && b != null) {
-            bocadillo(p, a, 0, dt);
-            bocadillo(p, b, 1, dt);
-        }
+        for (Cuerpo c : orden) bocadillo(p, c, c.indice, dt);
         p.sinRecorte();
     }
 
@@ -308,6 +320,15 @@ public final class VistaDeArena {
         float px = sx(c.x, c.y), py = sy(c.y);
         float talla = escalaX * f(c.y) * 1.45f;
         dibujo.dibujar(co.montaje.modelo, co.montaje, px, py, talla, e);
+        if (pelea.combatientes.length > 2) {
+            float cabeza = py - (float) (125 * escalaX * co.montaje.modelo.tamano / 30);
+            int color = COLORES[pelea.equipo[c.indice] % COLORES.length];
+            p.caja(px - 60, cabeza - 4, 120, 22, 8, 0x0B0F18, 0.7f);
+            p.textoCentrado(co.nombre, px, cabeza, 14, true, c.fuera ? 0x777777 : color, 1);
+            float parte = (float) (c.blindaje() / 100);
+            p.rect(px - 50, cabeza + 20, 100, 4, 0x222222, 0.8f);
+            p.rect(px - 50, cabeza + 20, 100 * parte, 4, parte > 0.5f ? 0x5BD685 : parte > 0.2f ? 0xFFC857 : 0xFF6B6B, 1);
+        }
         // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea.
         double dano = Math.min(1.2, co.estropeado());
         float alto = (float) (62 * talla * co.montaje.modelo.tamano / 30);
@@ -339,7 +360,7 @@ public final class VistaDeArena {
         for (Pelea.Rayo r : pelea.rayos) {
             float a = r.vida / 8f;
             float x1 = sx(r.x1, r.y1), y1 = sy(r.y1) - TIRO * escalaX, x2 = sx(r.x2, r.y2), y2 = sy(r.y2) - TIRO * escalaX;
-            int color = r.dueno == 0 ? 0x3FE0FF : 0xFF4FD8;
+            int color = COLORES[pelea.equipo[r.dueno] % COLORES.length];
             p.linea(x1, y1, x2, y2, 12 * escalaX * a, color, 0.25f * a);
             p.linea(x1, y1, x2, y2, 5 * escalaX * a, color, 0.7f * a);
             p.linea(x1, y1, x2, y2, 2 * escalaX, 0xFFFFFF, a);
@@ -348,7 +369,7 @@ public final class VistaDeArena {
     }
 
     private void llamas(Pincel p, Pelea pelea) {
-        for (int i = 0; i < 2; i++) {
+        for (int i = 0; i < pelea.combatientes.length; i++) {
             Cuerpo c = pelea.cuerpo(i);
             if (c == null || c.llama <= 0) continue;
             double ang = Math.toRadians(c.mira);

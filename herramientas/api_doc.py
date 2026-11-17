@@ -16,7 +16,7 @@ TEMAS = {
     'x': '02', 'y': '02', 'rumbo': '02', 'mira': '02', 'velocidad': '02', 'energia': '02', 'blindaje': '02', 'turnoActual': '02',
     'ronda': '02', 'anchoArena': '02', 'altoArena': '02', 'restanteAvance': '04', 'restanteGiro': '04', 'restanteMira': '04',
     'enemigosVistos': '15', 'anguloHacia': '06', 'distanciaA': '06', 'normalizar': '06', 'azar': '09', 'decir': '01', 'escribir': '01',
-    'memoria': '15',
+    'memoria': '15', 'alOirAlEquipo': '13', 'companeros': '15', 'avisarAlEquipo': '08',
 }
 
 def metodos(archivo):

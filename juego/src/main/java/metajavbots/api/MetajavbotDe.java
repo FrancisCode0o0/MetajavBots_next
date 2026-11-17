@@ -70,6 +70,10 @@ public abstract class MetajavbotDe extends RobotBase {
     public void beiRundenende() {
     }
 
+    /** Wenn dir ein Teamkamerad etwas meldet (in Teamkämpfen). */
+    public void beiTeamNachricht(String von, String nachricht) {
+    }
+
     @Override
     final void empezar() {
         beimStart();
@@ -108,6 +112,11 @@ public abstract class MetajavbotDe extends RobotBase {
     @Override
     final void finDeRonda() {
         beiRundenende();
+    }
+
+    @Override
+    final void equipo(String de, String mensaje) {
+        beiTeamNachricht(de, mensaje);
     }
 
     // ================================================================ fahren
@@ -285,6 +294,16 @@ public abstract class MetajavbotDe extends RobotBase {
     /** Die Gegner, die du gerade siehst (Thema 15: Collections). */
     public final List<Gegner> gesehen() {
         return new ArrayList<>(m().vistos());
+    }
+
+    /** Deine Teamkameraden (in Teamkämpfen; leer, wenn du allein kämpfst). */
+    public final List<Gegner> kameraden() {
+        return new ArrayList<>(m().companeros());
+    }
+
+    /** Meldet deinen Kameraden etwas (es kommt im nächsten Zug in beiTeamNachricht an). */
+    public final void teamMelden(Object nachricht) {
+        m().avisarAlEquipo(aTexto(nachricht));
     }
 
     // ================================================================ Hilfen

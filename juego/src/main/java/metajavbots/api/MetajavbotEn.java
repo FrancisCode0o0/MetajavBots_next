@@ -70,6 +70,10 @@ public abstract class MetajavbotEn extends RobotBase {
     public void onRoundEnd() {
     }
 
+    /** When a teammate tells you something (in team fights). */
+    public void onTeamMessage(String from, String message) {
+    }
+
     @Override
     final void empezar() {
         onStart();
@@ -108,6 +112,11 @@ public abstract class MetajavbotEn extends RobotBase {
     @Override
     final void finDeRonda() {
         onRoundEnd();
+    }
+
+    @Override
+    final void equipo(String de, String mensaje) {
+        onTeamMessage(de, mensaje);
     }
 
     // ================================================================ moving
@@ -285,6 +294,16 @@ public abstract class MetajavbotEn extends RobotBase {
     /** The enemies you can see right now (topic 15: collections). */
     public final List<Enemy> seenEnemies() {
         return new ArrayList<>(m().vistos());
+    }
+
+    /** Your teammates (in team fights; empty when you fight alone). */
+    public final List<Enemy> teammates() {
+        return new ArrayList<>(m().companeros());
+    }
+
+    /** Tells your teammates something (it arrives next tick in onTeamMessage). */
+    public final void tellTeam(Object message) {
+        m().avisarAlEquipo(aTexto(message));
     }
 
     // ================================================================ helpers
