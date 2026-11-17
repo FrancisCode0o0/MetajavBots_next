@@ -403,3 +403,6 @@ mcm.seguir_ayuda = El código se desplaza solo para enseñar la línea que se ej
 mcm.gana = ¡Gana {0}! | {0} gewinnt! | {0} wins!
 mcm.otra = Otra pelea | Noch ein Kampf | Another fight
 mcm.sin_jdk = Sin JDK no se puede ver la línea que se ejecuta (pelean igual). | Ohne JDK sieht man die ausgeführte Zeile nicht (sie kämpfen trotzdem). | Without a JDK you cannot see the line being run (they still fight).
+taller.charla = Charla | Plaudern | Chat
+charla.titulo = Habla con {0} | Sprich mit {0} | Talk to {0}
+charla.escribe = Escríbele algo e Intro (con IA, conversa de verdad) | Schreib ihm etwas und Enter (mit KI plaudert er wirklich) | Write something and press Enter (with AI it really chats)

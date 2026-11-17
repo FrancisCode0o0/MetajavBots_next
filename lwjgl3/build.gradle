@@ -26,4 +26,6 @@ tasks.register('capturas', JavaExec) {
     workingDir = rootProject.projectDir
     jvmArgs '--enable-native-access=ALL-UNNAMED'
     args((project.findProperty('salida') ?: 'build/capturas'), (project.findProperty('solo') ?: ''))
+    // "-Psonido": con el audio encendido (para comprobar que suena sin fallar).
+    if (project.hasProperty('sonido')) systemProperty 'capturas.sonido', 'si'
 }

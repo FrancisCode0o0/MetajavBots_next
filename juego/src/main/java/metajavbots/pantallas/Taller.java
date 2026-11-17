@@ -43,6 +43,7 @@ public final class Taller implements Pantalla {
     private int modeloNuevo;
     private boolean creando;
     private final RobotDelJugador probador = new RobotDelJugador();
+    private final Charla charla = new Charla();
 
     @Override
     public void alEntrar(Juego j) {
@@ -143,9 +144,9 @@ public final class Taller implements Pantalla {
             nuevoRobot(j, x, y, w, p.alto - y - 20);
             return;
         }
-        String[] pest = {T.t("taller.codigo"), T.t("taller.piezas"), T.t("taller.modelo")};
+        String[] pest = {T.t("taller.codigo"), T.t("taller.piezas"), T.t("taller.modelo"), T.t("taller.charla")};
         int antes = pestana;
-        pestana = ui.pestanas(pest, pestana, x, y, 540, 46);
+        pestana = ui.pestanas(pest, pestana, x, y, 720, 46);
         if (antes == 0 && pestana != 0) guardarCodigo(j);
         float cy = y + 56, ch = p.alto - cy - 20;
         if (r == null) return;
@@ -157,6 +158,10 @@ public final class Taller implements Pantalla {
         }
         if (pestana == 2) {
             modelos(j, r, x, cy, w, ch);
+            return;
+        }
+        if (pestana == 3) {
+            charla.dibujar(j, r, editor.doc.texto(), x, cy, w, ch);
             return;
         }
         // La barra del código.

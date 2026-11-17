@@ -101,6 +101,11 @@ public final class Capturas extends Juego {
         super.render();
         if (actual < 0 || actual >= nombres.size()) return;
         fotogramas++;
+        if (fotogramas == 10 && System.getProperty("capturas.sonido") != null) {
+            sonidos.tocar("laser", 0.1f);
+            sonidos.tocar("explosion", 0.1f);
+            voz.decir("Prueba", metajavbots.textos.Idioma.ES);
+        }
         if (fotogramas == (nombres.get(actual).startsWith("08") || nombres.get(actual).startsWith("20") ? 400 : 45)) {
             Pixmap pm = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
             // La imagen sale del revés (OpenGL empieza abajo): se da la vuelta.
@@ -190,7 +195,7 @@ public final class Capturas extends Juego {
         c.setWindowedMode(Integer.parseInt(wh[0]), Integer.parseInt(wh[1]));
         c.setInitialVisible(false);
         c.setBackBufferConfig(8, 8, 8, 8, 16, 0, 4);
-        c.disableAudio(true);
+        c.disableAudio(System.getProperty("capturas.sonido") == null);
         new Lwjgl3Application(new Capturas(salida, args.length > 1 ? args[1] : ""), c);
     }
 }
