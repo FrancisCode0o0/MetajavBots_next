@@ -1,0 +1,166 @@
+# Tema 07: arrays.
+=== l07_estante_de_valores
+tema: 07
+orden: 1
+titulo.es: Un estante de cajas numeradas
+titulo.de: Ein Regal mit nummerierten Fächern
+titulo.en: A shelf of numbered boxes
+--- pagina
+es: Un array es una fila de cajas del mismo tipo, una detrás de otra, con un número cada una: su índice.
+es: El primero es el 0, no el 1, y el último es length - 1. Si pides la caja giros[4] de un array de 4,
+es: el robot explota con ArrayIndexOutOfBoundsException. El tamaño se fija al crearlo y ya no cambia.
+de: Ein Array ist eine Reihe von Fächern desselben Typs, jedes mit einer Nummer: seinem Index.
+de: Das erste ist 0, nicht 1, und das letzte ist length - 1. Fragst du bei einem Array mit 4 Fächern
+de: nach giros[4], fliegt der Roboter mit einer ArrayIndexOutOfBoundsException in die Luft.
+de: Die Größe wird beim Anlegen festgelegt und ändert sich nie mehr.
+en: An array is a row of boxes of the same type, one after another, each with a number: its index.
+en: The first is 0, not 1, and the last is length - 1. Ask for giros[4] in an array of 4
+en: and the robot blows up with an ArrayIndexOutOfBoundsException. The size is fixed when it's created.
+codigo:
+    double[] giros = {90, -45, 30, -75};    // una coreografía
+    int[] golpes = new int[10];             // diez ceros
+    escribir(giros[0]);                     // 90.0
+    escribir(giros.length);                 // 4
+--- pagina
+es: Un array da a tu robot una coreografía imprevisible para el rival y fácil de cambiar para ti.
+es: Con % el índice da vueltas solo y nunca se sale: cada 30 turnos pasa al siguiente movimiento.
+es: Si quieres otro baile, cambias los números del array y no tocas nada más.
+de: Ein Array gibt deinem Roboter eine Choreografie, die der Gegner nicht vorhersieht und du leicht änderst.
+de: Mit % läuft der Index von selbst im Kreis und fällt nie heraus: Alle 30 Züge kommt die nächste Bewegung.
+de: Willst du einen anderen Tanz, änderst du die Zahlen im Array und sonst nichts.
+en: An array gives your robot a dance the rival can't predict and you can change easily.
+en: With % the index wraps around on its own and never falls off the end: every 30 turns, the next move.
+en: Want a different dance? Change the numbers in the array and nothing else.
+codigo:
+    double[] giros = {90, -45, 30, -75};
+    @Override
+    public void cadaTurno() {
+        int paso = (turnoActual() / 30) % giros.length;
+        if (turnoActual() % 30 == 0) {
+            girar(giros[paso]);
+        }
+        avanzar(80);
+    }
+--- tarea
+robot: usa:length
+es: Mueve tu robot con una coreografía guardada en un array, usando length para no salirte nunca de él.
+de: Bewege deinen Roboter mit einer Choreografie aus einem Array und benutze length, damit du nie herausfällst.
+en: Move your robot with a dance stored in an array, using length so you never fall off its end.
+--- tarea
+ejercicio: t07_ultima_pieza
+es: La última pieza del estante. Pista: no es la que tiene el número length.
+de: Das letzte Teil im Regal. Tipp: Es ist nicht das mit der Nummer length.
+en: The last part on the shelf. Hint: it's not the one numbered length.
+
+=== l07_recorrer
+tema: 07
+orden: 2
+titulo.es: Recorrer el estante
+titulo.de: Das Regal durchgehen
+titulo.en: Walking along the shelf
+--- pagina
+es: Lo más habitual con un array es mirar todas sus cajas una por una. Con for e índice sabes
+es: en qué posición estás; con for-each (for (double d : danos)) solo ves el valor, pero no te puedes
+es: equivocar de índice. Si no necesitas la posición, for-each es más limpio y más seguro.
+de: Das Häufigste mit einem Array: alle Fächer nacheinander ansehen. Mit for und Index weißt du,
+de: an welcher Stelle du bist; mit for-each (for (double d : danos)) siehst du nur den Wert, kannst dich
+de: aber auch nicht beim Index vertun. Brauchst du die Position nicht, ist for-each sauberer und sicherer.
+en: The most common thing to do with an array is to look at every box in turn. With for and an index you
+en: know which position you're at; with for-each (for (double d : danos)) you only see the value, but you
+en: can't get the index wrong. If you don't need the position, for-each is cleaner and safer.
+codigo:
+    double total = 0, peor = 0;
+    for (double d : danos) {
+        total += d;
+        peor = Math.max(peor, d);
+    }
+--- pagina
+es: Un uso muy de robot: recordar los últimos golpes en un array circular. Guardas cada golpe en la casilla
+es: siguiente y, al llegar al final, vuelves a la 0 con %. Así siempre tienes los 5 últimos sin que el array
+es: crezca, y puedes decidir: «si los últimos golpes suman mucho, cambio de táctica».
+de: Ein typischer Roboter-Trick: die letzten Treffer in einem Ring-Array merken. Jeder Treffer kommt ins nächste
+de: Fach, und am Ende geht es mit % zurück zu 0. So hast du immer die letzten 5, ohne dass das Array wächst,
+de: und kannst entscheiden: „Wenn die letzten Treffer zusammen viel sind, wechsle ich die Taktik.“
+en: A very robot-ish trick: remember the last hits in a circular array. You store each hit in the next box
+en: and, when you reach the end, go back to 0 with %. That way you always have the last 5 without the array
+en: growing, and you can decide: "if the last hits add up to a lot, I change tactics".
+codigo:
+    double[] ultimos = new double[5];
+    int siguiente = 0;
+    @Override
+    public void alRecibirGolpe(Golpe g) {
+        ultimos[siguiente] = g.dano();
+        siguiente = (siguiente + 1) % ultimos.length;
+        double suma = 0;
+        for (double d : ultimos) {
+            suma += d;
+        }
+        if (suma > 30) {
+            girarHacia(g.angulo() + 90);
+            avanzar(200);              // esto se pone feo
+        }
+    }
+--- tarea
+ejercicio: t07_danio_total
+es: Suma todo el daño de la ronda recorriendo el array.
+de: Summiere den ganzen Schaden der Runde, indem du das Array durchgehst.
+en: Add up all the damage of the round by walking through the array.
+--- tarea
+ejercicio: t07_golpe_maximo
+es: Encuentra el golpe más fuerte. ¿Con qué valor empiezas la búsqueda?
+de: Finde den stärksten Treffer. Mit welchem Wert beginnst du die Suche?
+en: Find the strongest hit. What value do you start the search with?
+
+=== l07_mas_alla
+tema: 07
+orden: 3
+titulo.es: Copias, herramientas y tableros
+titulo.de: Kopien, Werkzeuge und Spielbretter
+titulo.en: Copies, tools and grids
+--- pagina
+es: Un array no se guarda en la variable: la variable solo apunta a él. Si haces b = a, no copias nada,
+es: tienes dos nombres para el MISMO array, y cambiar b[0] cambia a[0]. Para copiar de verdad,
+es: usa a.clone() o Arrays.copyOf(a, a.length). Y para comparar contenidos, Arrays.equals(a, b), no ==.
+de: Ein Array steckt nicht in der Variablen: Die Variable zeigt nur darauf. b = a kopiert nichts,
+de: du hast zwei Namen für DASSELBE Array, und b[0] zu ändern ändert a[0]. Zum echten Kopieren
+de: nimm a.clone() oder Arrays.copyOf(a, a.length). Und um Inhalte zu vergleichen: Arrays.equals(a, b), nicht ==.
+en: An array isn't stored in the variable: the variable only points to it. b = a copies nothing,
+en: you get two names for the SAME array, and changing b[0] changes a[0]. To really copy,
+en: use a.clone() or Arrays.copyOf(a, a.length). And to compare contents, Arrays.equals(a, b), not ==.
+--- pagina
+es: La clase Arrays (de java.util) trae ayudas: Arrays.sort ordena, Arrays.toString lo convierte en texto
+es: para escribirlo en la consola (println de un array solo muestra algo como [D@1b6d3586) y Arrays.fill rellena.
+es: Para usarla, pon import java.util.Arrays; al principio del archivo.
+de: Die Klasse Arrays (aus java.util) hilft: Arrays.sort sortiert, Arrays.toString macht Text daraus
+de: (println eines Arrays zeigt nur so etwas wie [D@1b6d3586), und Arrays.fill füllt es auf.
+de: Dafür kommt import java.util.Arrays; an den Anfang der Datei.
+en: The Arrays class (from java.util) has helpers: Arrays.sort sorts, Arrays.toString turns it into text
+en: for the console (println of an array only shows something like [D@1b6d3586) and Arrays.fill fills it.
+en: To use it, put import java.util.Arrays; at the top of the file.
+--- pagina
+es: Un array puede contener arrays: es una tabla, filas y columnas. Divide la arena en casillas de 100
+es: y lleva la cuenta de dónde has visto al enemigo: visto[columna][fila]++. Con el tiempo sabrás
+es: sus rincones favoritos. visto.length son las columnas y visto[0].length las filas.
+de: Ein Array kann Arrays enthalten: eine Tabelle mit Zeilen und Spalten. Teil die Arena in Felder von 100
+de: und zähl mit, wo du den Gegner gesehen hast: visto[spalte][zeile]++. Mit der Zeit kennst du
+de: seine Lieblingsecken. visto.length sind die Spalten, visto[0].length die Zeilen.
+en: An array can hold arrays: that's a table, rows and columns. Split the arena into 100-unit squares
+en: and count where you've seen the enemy: visto[column][row]++. Over time you'll learn
+en: its favourite corners. visto.length is the number of columns and visto[0].length the rows.
+codigo:
+    int[][] visto = new int[20][20];
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        int col = (int) (e.x() / 100), fila = (int) (e.y() / 100);
+        visto[col][fila]++;
+    }
+--- tarea
+ejercicio: t07_suma_por_fila
+es: El daño de cada ronda está en una fila de una tabla. Suma cada fila por separado.
+de: Der Schaden jeder Runde steht in einer Tabellenzeile. Summiere jede Zeile für sich.
+en: Each round's damage is in one row of a table. Add up each row separately.
+--- tarea
+ejercicio: t07_invertir
+es: Da la vuelta a la fila, de punta a punta, sin perder ninguna pieza.
+de: Dreh die Reihe von einem Ende zum anderen um, ohne ein Teil zu verlieren.
+en: Reverse the row from end to end without losing a single part.

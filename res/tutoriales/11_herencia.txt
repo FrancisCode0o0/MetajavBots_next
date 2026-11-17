@@ -1,0 +1,153 @@
+# Tema 11: herencia (extends, super y @Override).
+=== l11_extends
+tema: 11
+orden: 1
+titulo.es: Heredar sin trabajar
+titulo.de: Erben ohne Arbeit
+titulo.en: Inheriting without the work
+--- pagina
+es: Otra palabra misteriosa resuelta: MiRobot extends Metajavbot. extends significa «es un»: tu robot ES UN
+es: Metajavbot, y por eso hereda todo lo que este sabe hacer: avanzar, girar, apuntar, atacar…
+es: Tú no los has escrito, y aun así los tienes. La herencia reutiliza un plano entero
+es: y te deja añadir o cambiar solo lo tuyo.
+de: Noch ein Rätselwort gelöst: MiRobot extends Metajavbot. extends heißt „ist ein“: Dein Roboter IST EIN
+de: Metajavbot (MetajavbotDe) und erbt deshalb alles, was dieser kann: fahren, drehen, zielen, angreifen …
+de: Du hast es nicht geschrieben, und trotzdem hast du es. Vererbung verwendet einen ganzen Bauplan wieder
+de: und lässt dich nur dein Eigenes ergänzen oder ändern.
+en: Another mystery word solved: MiRobot extends Metajavbot. extends means "is a": your robot IS A
+en: Metajavbot (MetajavbotEn), and that's why it inherits everything that one can do: move, turn, aim, attack…
+en: You didn't write any of it, and yet you have it. Inheritance reuses a whole blueprint
+en: and lets you add or change only your own bits.
+--- pagina
+es: Mira el código de Metajavbot y verás que avanzar es final: las subclases no pueden cambiarlo.
+es: Así la arena se asegura de que nadie haga trampas con el movimiento. En cambio, cadaTurno está vacío
+es: y sin final: está ahí precisamente para que tú lo rellenes. Una buena clase padre decide
+es: qué se puede cambiar y qué no.
+de: Schau dir den Code von Metajavbot an: vorwaerts ist final, Unterklassen können es nicht ändern.
+de: So stellt die Arena sicher, dass niemand bei der Bewegung schummelt. jedenZug dagegen ist leer
+de: und nicht final: Es ist genau dafür da, dass du es füllst. Eine gute Elternklasse entscheidet,
+de: was man ändern darf und was nicht.
+en: Look at Metajavbot's code and you'll see ahead is final: subclasses can't change it.
+en: That's how the arena makes sure nobody cheats on movement. onTick, on the other hand, is empty
+en: and not final: it's there precisely for you to fill in. A good parent class decides
+en: what may be changed and what may not.
+--- tarea
+ejercicio: t11_robot_volador
+es: Un robot que vuela es un robot: hereda todo y añade lo suyo.
+de: Ein fliegender Roboter ist ein Roboter: Er erbt alles und ergänzt das Seine.
+en: A flying robot is a robot: it inherits everything and adds its own thing.
+
+=== l11_override
+tema: 11
+orden: 2
+titulo.es: @Override, tu ángel de la guarda
+titulo.de: @Override, dein Schutzengel
+titulo.en: @Override, your guardian angel
+--- pagina
+es: Sobrescribir es dar tu propia versión de un método heredado: mismo nombre, mismos parámetros.
+es: @Override encima no es obligatorio, pero es tu ángel de la guarda. Imagina que escribes cadaturno con
+es: minúscula: sin @Override, Java cree que es un método nuevo, la arena nunca lo llama y tu robot se queda
+es: quieto sin que nadie entienda por qué. Con @Override, el compilador grita: «eso no sobrescribe nada».
+de: Überschreiben heißt, eine eigene Version einer geerbten Methode zu liefern: gleicher Name, gleiche Parameter.
+de: @Override darüber ist keine Pflicht, aber dein Schutzengel. Stell dir vor, du schreibst jedenzug klein:
+de: Ohne @Override hält Java es für eine neue Methode, die Arena ruft sie nie auf, und dein Roboter steht still,
+de: ohne dass jemand versteht, warum. Mit @Override schreit der Compiler: „Das überschreibt gar nichts.“
+en: Overriding means providing your own version of an inherited method: same name, same parameters.
+en: @Override on top isn't mandatory, but it's your guardian angel. Imagine you type ontick in lowercase:
+en: without @Override, Java thinks it's a new method, the arena never calls it and your robot just stands
+en: there with nobody knowing why. With @Override, the compiler shouts: "that doesn't override anything".
+codigo:
+    @Override
+    public void cadaTurno() {        // bien escrito: la arena lo llama
+        avanzar(60);
+    }
+    public void cadaturno() {        // ¡ojo! otro método, nadie lo llama
+        avanzar(60);
+    }
+--- pagina
+es: Con super llamas a la versión del padre desde la tuya. Es útil cuando quieres AÑADIR algo a lo heredado,
+es: no sustituirlo del todo. En Metajavbot los métodos al… están vacíos, así que super no hace nada;
+es: pero en tus propias jerarquías, super.metodo() evita copiar y pegar el código del padre.
+de: Mit super rufst du aus deiner Version die des Elternteils auf. Nützlich, wenn du dem Geerbten etwas
+de: HINZUFÜGEN statt es ganz ersetzen willst. In Metajavbot sind die bei…-Methoden leer, super bewirkt also nichts;
+de: in deinen eigenen Hierarchien aber erspart dir super.methode(), den Code der Eltern zu kopieren.
+en: With super you call the parent's version from yours. It's useful when you want to ADD to what you inherit
+en: rather than replace it completely. In Metajavbot the on… methods are empty, so super does nothing;
+en: but in your own hierarchies, super.method() saves you copying and pasting the parent's code.
+--- tarea
+robot: ronda_sin_errores
+es: Pon @Override en todos los métodos que sobrescribes, corrige lo que proteste el compilador y pelea una ronda.
+de: Setz @Override über alle Methoden, die du überschreibst, behebe, was der Compiler meldet, und kämpf eine Runde.
+en: Put @Override on every method you override, fix whatever the compiler complains about and fight a round.
+--- tarea
+ejercicio: t11_arma_super
+es: Un arma es una pieza: aprovecha lo del padre con super.
+de: Eine Waffe ist ein Bauteil: Nutze das Geerbte mit super.
+en: A weapon is a part: reuse the parent's work with super.
+
+=== l11_tu_jerarquia
+tema: 11
+orden: 3
+titulo.es: Tu propia familia de tácticas
+titulo.de: Deine eigene Taktik-Familie
+titulo.en: Your own family of tactics
+--- pagina
+es: Construye una jerarquía propia: una clase Tactica con lo común (por ejemplo, el nombre y un método mover)
+es: y subclases que la especializan. Cada una sobrescribe mover a su manera. El robot guarda una Tactica
+es: y la usa sin saber cuál es: eso es el principio del polimorfismo (tema 12).
+de: Bau dir eine eigene Hierarchie: eine Klasse Tactica mit dem Gemeinsamen (etwa einem Namen und einer
+de: Methode mover) und Unterklassen, die sie spezialisieren. Jede überschreibt mover auf ihre Art. Der
+de: Roboter merkt sich eine Tactica und benutzt sie, ohne zu wissen, welche: Das ist der Anfang der
+de: Polymorphie (Thema 12).
+en: Build your own hierarchy: a Tactica class with the common parts (say, a name and a mover method)
+en: and subclasses that specialise it. Each one overrides mover in its own way. The robot keeps a Tactica
+en: and uses it without knowing which one it is: that's the start of polymorphism (topic 12).
+codigo:
+    class Tactica {
+        final String nombre;
+        Tactica(String nombre) {
+            this.nombre = nombre;
+        }
+        void mover(Metajavbot r) {
+            r.avanzar(60);
+        }
+    }
+    class Kamikaze extends Tactica {
+        Kamikaze() {
+            super("kamikaze");         // primero, el constructor del padre
+        }
+        @Override
+        void mover(Metajavbot r) {
+            r.avanzar(200);
+        }
+    }
+--- pagina
+es: super(...) llama al constructor del padre. Hasta Java 24 tenía que ser la PRIMERA línea del constructor,
+es: lo que obligaba a trucos raros para comprobar los datos antes. Desde Java 25 (cuerpos de constructor
+es: flexibles) puedes validar antes del super(...), siempre que no uses aún el objeto a medio hacer.
+de: super(...) ruft den Konstruktor der Elternklasse auf. Bis Java 24 musste das die ERSTE Zeile sein,
+de: was zu seltsamen Tricks zwang, um Daten vorher zu prüfen. Seit Java 25 (flexible Konstruktor-Rümpfe)
+de: darfst du vor super(...) prüfen, solange du das halbfertige Objekt noch nicht benutzt.
+en: super(...) calls the parent's constructor. Up to Java 24 it had to be the FIRST line of the constructor,
+en: which forced odd tricks to check the data beforehand. Since Java 25 (flexible constructor bodies)
+en: you can validate before super(...), as long as you don't use the half-built object yet.
+--- pagina
+es: La herencia es potente, pero no la uses para todo. Pregúntate: ¿B ES UN A de verdad? Un Kamikaze es una
+es: Tactica: sí. Un Robot es un Brazo: no, un robot TIENE brazos. Para «tiene», usa un campo (composición).
+es: Y protected deja ver algo a las subclases sin abrirlo a todo el mundo.
+de: Vererbung ist mächtig, aber nicht für alles gedacht. Frag dich: IST B wirklich EIN A? Ein Kamikaze ist eine
+de: Tactica: ja. Ein Roboter ist ein Arm: nein, ein Roboter HAT Arme. Für „hat“ nimm ein Feld (Komposition).
+de: Und protected lässt Unterklassen etwas sehen, ohne es der ganzen Welt zu öffnen.
+en: Inheritance is powerful, but don't use it for everything. Ask yourself: IS B really AN A? A Kamikaze is a
+en: Tactica: yes. A Robot is an Arm: no, a robot HAS arms. For "has", use a field (composition).
+en: And protected lets subclasses see something without opening it up to the whole world.
+--- tarea
+robot: usa:super
+es: Crea tu jerarquía de tácticas con un constructor que llame a super(...) y úsala en tu robot una ronda.
+de: Bau deine Taktik-Hierarchie mit einem Konstruktor, der super(...) aufruft, und nutz sie eine Runde lang.
+en: Build your tactics hierarchy with a constructor that calls super(...) and use it in your robot for a round.
+--- tarea
+ejercicio: t11_chasis_ligero
+es: Chasis ligero y pesado: cada uno pasa sus datos al padre con super(...).
+de: Leichtes und schweres Chassis: Jedes gibt seine Daten mit super(...) an die Elternklasse weiter.
+en: Light and heavy chassis: each passes its data to the parent with super(...).

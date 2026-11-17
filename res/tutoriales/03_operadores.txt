@@ -1,0 +1,169 @@
+# Tema 03: operadores y expresiones.
+=== l03_cuentas_del_robot
+tema: 03
+orden: 1
+titulo.es: Las cuentas del robot
+titulo.de: Der Roboter rechnet
+titulo.en: The robot does the maths
+--- pagina
+es: Una expresión es cualquier cosa que Java puede calcular hasta llegar a un valor: 3 + 4, blindaje() / 2,
+es: e.distancia() - 50. Los operadores de siempre: + suma, - resta, * multiplica y / divide.
+es: Como en el colegio, * y / van antes que + y -. Cuando dudes, pon paréntesis: no cuestan nada
+es: y quien lea tu código no tendrá que recordar ninguna regla.
+de: Ein Ausdruck ist alles, was Java bis zu einem Wert ausrechnen kann: 3 + 4, panzerung() / 2,
+de: g.entfernung() - 50. Die üblichen Operatoren: + addiert, - subtrahiert, * multipliziert, / teilt.
+de: Wie in der Schule gilt Punkt vor Strich. Im Zweifel setz Klammern: Sie kosten nichts,
+de: und wer deinen Code liest, muss sich keine Regel merken.
+en: An expression is anything Java can calculate down to a value: 3 + 4, armor() / 2,
+en: e.distance() - 50. The usual operators: + adds, - subtracts, * multiplies and / divides.
+en: As at school, * and / come before + and -. When in doubt, add parentheses: they're free
+en: and whoever reads your code won't have to remember any rules.
+codigo:
+    // Cuanto menos blindaje, pasos más cortos y nerviosos.
+    avanzar(20 + blindaje() / 2);
+    double media = (a + b + c) / 3;   // sin paréntesis solo se dividiría c
+--- pagina
+es: El operador % da el resto de una división: 17 % 5 es 2. Parece una rareza, pero es oro para un robot:
+es: turnoActual() % 60 va de 0 a 59 y vuelve a empezar, como un reloj. Sirve para hacer algo cada cierto
+es: tiempo, para saber si un número es par (n % 2 == 0) o para quedarte con la última cifra (n % 10).
+de: Der Operator % liefert den Rest einer Division: 17 % 5 ist 2. Klingt nach Spielerei, ist aber Gold wert:
+de: zug() % 60 läuft von 0 bis 59 und fängt wieder von vorn an, wie eine Uhr. Damit tust du etwas in festen
+de: Abständen, prüfst, ob eine Zahl gerade ist (n % 2 == 0), oder holst dir die letzte Ziffer (n % 10).
+en: The % operator gives the remainder of a division: 17 % 5 is 2. Sounds like a curiosity, but it's gold:
+en: tick() % 60 goes from 0 to 59 and starts again, like a clock. Use it to do something every so often,
+en: to check if a number is even (n % 2 == 0) or to grab the last digit (n % 10).
+codigo:
+    // Un zigzag: 0..39 gira a un lado, 40..79 al otro.
+    double fase = turnoActual() % 80;
+    girar(fase < 40 ? 6 : -6);
+    avanzar(60);
+--- pagina
+es: Acuérdate de la trampa del tema anterior: 1 / 2 es 0 porque los dos son int. En una media,
+es: en un porcentaje o en una velocidad, asegúrate de que al menos uno de los números sea double.
+es: Y dividir un int entre 0 rompe el programa (ArithmeticException), mientras que un double entre 0
+es: da Infinity sin quejarse. Ninguna de las dos cosas es lo que quieres.
+de: Denk an die Falle aus dem letzten Thema: 1 / 2 ist 0, weil beide int sind. Bei Durchschnitt,
+de: Prozent oder Geschwindigkeit sorg dafür, dass mindestens eine der Zahlen ein double ist.
+de: Und ein int durch 0 zu teilen lässt das Programm abstürzen (ArithmeticException), ein double durch 0
+de: ergibt kommentarlos Infinity. Beides willst du nicht.
+en: Remember the trap from the last topic: 1 / 2 is 0 because both are ints. In an average,
+en: a percentage or a speed, make sure at least one of the numbers is a double.
+en: And dividing an int by 0 crashes the program (ArithmeticException), while a double divided by 0
+en: quietly gives Infinity. Neither is what you want.
+--- tarea
+ejercicio: t03_media_de_tres
+es: Tres sensores, una media. Pon los paréntesis donde hacen falta.
+de: Drei Sensoren, ein Durchschnitt. Setz die Klammern dorthin, wo sie hingehören.
+en: Three sensors, one average. Put the parentheses where they belong.
+--- tarea
+ejercicio: t03_cargadores_necesarios
+es: ¿Cuántos cargadores hacen falta? Aquí la división entera y el resto trabajan juntos.
+de: Wie viele Magazine braucht man? Hier arbeiten ganzzahlige Division und Rest zusammen.
+en: How many magazines are needed? Here integer division and remainder work together.
+
+=== l03_comparar_y_combinar
+tema: 03
+orden: 2
+titulo.es: Sí, no y quizás
+titulo.de: Ja, nein und vielleicht
+titulo.en: Yes, no and maybe
+--- pagina
+es: Las comparaciones dan un boolean: < menor, > mayor, <= menor o igual, >= mayor o igual,
+es: == igual y != distinto. Fíjate en el doble ==: un solo = guarda un valor, dos lo comparan.
+es: Confundirlos es tan habitual que tiene su propio lugar en el museo de los errores de Java.
+de: Vergleiche liefern ein boolean: < kleiner, > größer, <= kleiner gleich, >= größer gleich,
+de: == gleich und != ungleich. Achte auf das doppelte ==: Ein = speichert einen Wert, zwei vergleichen.
+de: Die Verwechslung ist so häufig, dass sie einen Ehrenplatz im Museum der Java-Fehler hat.
+en: Comparisons give a boolean: < less, > greater, <= less or equal, >= greater or equal,
+en: == equal and != not equal. Notice the double ==: a single = stores a value, two compare.
+en: Mixing them up is so common it has its own room in the museum of Java mistakes.
+codigo:
+    boolean aTiro = e.distancia() < alcanceDerecha();
+    boolean tocado = blindaje() < 50;
+--- pagina
+es: Para juntar condiciones: && es «y» (las dos tienen que cumplirse), || es «o» (basta con una)
+es: y ! es «no» (le da la vuelta). Java es perezoso, y eso es bueno: en a && b, si a es false,
+es: ni mira b. Así puedes escribir listoDerecha() && e.distancia() < 200 sin calcular de más.
+de: Bedingungen verknüpfst du so: && ist „und“ (beide müssen stimmen), || ist „oder“ (eine reicht),
+de: und ! ist „nicht“ (dreht es um). Java ist faul, und das ist gut: Ist bei a && b schon a false,
+de: schaut es sich b gar nicht mehr an. So prüfst du bereitRechts() && g.entfernung() < 200 ohne Mehraufwand.
+en: To combine conditions: && means "and" (both must hold), || means "or" (one is enough)
+en: and ! means "not" (it flips it). Java is lazy, and that's good: in a && b, if a is false,
+en: it doesn't even look at b. So you can write readyRight() && e.distance() < 200 with no wasted work.
+codigo:
+    boolean disparar = listoDerecha() && e.distancia() < alcanceDerecha();
+    boolean huir = blindaje() < 25 || energia() < 10;
+    boolean tranquilo = !huir;
+--- pagina
+es: El operador ternario es un «si» en miniatura que da un valor: condición ? siEsVerdad : siEsFalso.
+es: Es perfecto para elegir entre dos números, pero si la cosa se complica, usa un if de verdad (tema 4).
+de: Der ternäre Operator ist ein Mini-„wenn“, das einen Wert liefert: bedingung ? wennJa : wennNein.
+de: Ideal, um zwischen zwei Zahlen zu wählen; wird es komplizierter, nimm ein richtiges if (Thema 4).
+en: The ternary operator is a tiny "if" that produces a value: condition ? ifTrue : ifFalse.
+en: It's perfect for choosing between two numbers, but if things get complicated, use a real if (topic 4).
+codigo:
+    double paso = blindaje() < 30 ? 120 : 50;   // tocado: corre
+    avanzar(paso);
+--- tarea
+ejercicio: t03_en_alcance
+es: ¿Está a tiro el enemigo? Devuélvelo con una sola comparación.
+de: Ist der Gegner in Reichweite? Gib es mit einem einzigen Vergleich zurück.
+en: Is the enemy in range? Return it with a single comparison.
+--- tarea
+ejercicio: t03_un_solo_escudo
+es: Un escudo y solo uno: combina condiciones con cuidado para que dos escudos no valgan.
+de: Ein Schild und nur einer: Verknüpfe die Bedingungen so, dass zwei Schilde nicht zählen.
+en: One shield and only one: combine the conditions so that two shields don't count.
+
+=== l03_atajos_y_math
+tema: 03
+orden: 3
+titulo.es: Atajos y la caja de herramientas Math
+titulo.de: Abkürzungen und der Werkzeugkasten Math
+titulo.en: Shortcuts and the Math toolbox
+--- pagina
+es: Sumar uno es tan frecuente que tiene atajo: aciertos++ es lo mismo que aciertos = aciertos + 1.
+es: También existen +=, -=, *= y /=: vida -= 10 resta 10. Úsalos con campos para llevar la cuenta
+es: de lo que pasa en la pelea, por ejemplo en alAcertar, que se llama cada vez que das en el blanco.
+de: Eins dazuzählen ist so häufig, dass es eine Abkürzung gibt: treffer++ ist dasselbe wie treffer = treffer + 1.
+de: Es gibt auch +=, -=, *= und /=: leben -= 10 zieht 10 ab. Mit Feldern zählst du so mit, was im Kampf passiert,
+de: zum Beispiel in beiEigenemTreffer (onHitEnemy), das jedes Mal aufgerufen wird, wenn du triffst.
+en: Adding one is so common it has a shortcut: hits++ is the same as hits = hits + 1.
+en: There's also +=, -=, *= and /=: life -= 10 subtracts 10. Use them with fields to keep score of the fight,
+en: for example in onHitEnemy (alAcertar), which is called every time you land a hit.
+codigo:
+    int aciertos = 0;
+    @Override
+    public void alAcertar(Golpe g) {
+        aciertos++;
+        decir("Van " + aciertos);
+    }
+--- pagina
+es: Cuidado con + y los textos. "Van " + 2 + 3 da "Van 23": Java lee de izquierda a derecha,
+es: y en cuanto hay un texto, + pega en vez de sumar. Si querías 5, pon paréntesis: "Van " + (2 + 3).
+de: Vorsicht mit + und Text. "Schon " + 2 + 3 ergibt "Schon 23": Java liest von links nach rechts,
+de: und sobald Text im Spiel ist, klebt + zusammen, statt zu addieren. Wolltest du 5: "Schon " + (2 + 3).
+en: Careful with + and text. "Hits " + 2 + 3 gives "Hits 23": Java reads from left to right,
+en: and as soon as there's text, + glues instead of adding. If you wanted 5, use parentheses: "Hits " + (2 + 3).
+--- pagina
+es: Math trae herramientas listas: Math.abs(x) quita el signo, Math.max y Math.min eligen,
+es: Math.sqrt saca la raíz y Math.round redondea. Desde Java 21, Math.clamp(valor, min, max)
+es: deja un número dentro de unos límites de una vez. Muy útil para no salirse de la arena.
+de: Math bringt fertige Werkzeuge mit: Math.abs(x) entfernt das Vorzeichen, Math.max und Math.min wählen aus,
+de: Math.sqrt zieht die Wurzel, Math.round rundet. Seit Java 21 hält Math.clamp(wert, min, max)
+de: eine Zahl in einem Schritt innerhalb von Grenzen. Praktisch, um nicht aus der Arena zu fallen.
+en: Math comes with ready-made tools: Math.abs(x) drops the sign, Math.max and Math.min pick one,
+en: Math.sqrt takes the square root and Math.round rounds. Since Java 21, Math.clamp(value, min, max)
+en: keeps a number within limits in one go. Very handy for staying inside the arena.
+codigo:
+    double destinoX = Math.clamp(x() + 200, 50, anchoArena() - 50);
+--- tarea
+robot: aciertos>=4
+es: Lleva la cuenta de tus aciertos con ++ en alAcertar, dilo en un bocadillo y acierta al menos 4 veces.
+de: Zähl deine Treffer mit ++ in beiEigenemTreffer, sag sie in einer Sprechblase an und triff mindestens 4-mal.
+en: Count your hits with ++ in onHitEnemy, announce them in a speech bubble and hit at least 4 times.
+--- tarea
+ejercicio: t03_limitar_energia
+es: Que la energía no se salga nunca de 0 a 100 (Math.clamp, Java 21).
+de: Die Energie darf nie aus 0 bis 100 herausfallen (Math.clamp, Java 21).
+en: Energy must never leave the range 0 to 100 (Math.clamp, Java 21).

@@ -1,0 +1,170 @@
+# Tema 20: hilos y concurrencia. Los robots no pueden crear hilos (la pelea tiene que ser justa y repetible):
+# estas lecciones se practican con ejercicios.
+=== l20_que_es_un_hilo
+tema: 20
+orden: 1
+titulo.es: Varias cosas a la vez
+titulo.de: Mehreres gleichzeitig
+titulo.en: Several things at once
+--- pagina
+es: Un hilo (thread) es una línea de ejecución. Tu programa empieza con uno, pero puede lanzar más para hacer
+es: varias cosas a la vez: calcular en un núcleo del procesador mientras otro dibuja la pantalla.
+es: La arena, por ejemplo, dibuja y suena en hilos distintos de los que calculan la pelea.
+de: Ein Thread ist ein Ausführungsstrang. Dein Programm startet mit einem, kann aber weitere starten, um mehreres
+de: gleichzeitig zu tun: auf einem Prozessorkern rechnen, während ein anderer den Bildschirm zeichnet.
+de: Die Arena zum Beispiel zeichnet und spielt Töne in anderen Threads als denen, die den Kampf berechnen.
+en: A thread is a line of execution. Your program starts with one, but it can launch more to do several things
+en: at once: calculating on one processor core while another draws the screen.
+en: The arena, for instance, draws and plays sound on different threads from the ones that compute the fight.
+--- pagina
+es: ¿Y por qué tu robot NO puede crear hilos? Porque la pelea tiene que ser justa y repetible: con hilos,
+es: el orden en que pasan las cosas depende del procesador y cada pelea sería distinta. Por eso este tema
+es: se practica con ejercicios, que sí pueden usarlos. Lo que aprendas aquí es lo que se usa en servidores,
+es: juegos y apps de verdad.
+de: Und warum darf dein Roboter KEINE Threads starten? Weil der Kampf fair und wiederholbar sein muss: Mit Threads
+de: hängt die Reihenfolge der Ereignisse vom Prozessor ab, und jeder Kampf liefe anders. Darum übst du dieses Thema
+de: mit Aufgaben, die Threads benutzen dürfen. Was du hier lernst, steckt in echten Servern, Spielen und Apps.
+en: So why can't your robot create threads? Because the fight must be fair and repeatable: with threads,
+en: the order in which things happen depends on the processor and every fight would be different. That's why
+en: this topic is practised with exercises, which may use them. What you learn here is what real servers,
+en: games and apps use.
+--- pagina
+es: Para lanzar un hilo, le das un Runnable (una lambda vale) y llamas a start(). El error clásico es
+es: llamar a run(): funciona, pero en el MISMO hilo, sin paralelismo ninguno. Y join() espera a que
+es: el hilo termine antes de usar su resultado; sin él, lees el resultado cuando aún no está.
+de: Um einen Thread zu starten, gibst du ihm ein Runnable (ein Lambda genügt) und rufst start() auf. Der klassische
+de: Fehler ist run(): Das klappt, aber im SELBEN Thread, ganz ohne Parallelität. Und join() wartet, bis der Thread
+de: fertig ist, bevor du sein Ergebnis benutzt; ohne join liest du es, bevor es da ist.
+en: To launch a thread you give it a Runnable (a lambda will do) and call start(). The classic mistake is
+en: calling run(): it works, but on the SAME thread, with no parallelism at all. And join() waits for
+en: the thread to finish before you use its result; without it, you read the result before it's there.
+codigo:
+    long[] mitades = new long[2];
+    Thread t = new Thread(() -> mitades[0] = sumar(0, 500_000));
+    t.start();                         // ¡start, no run!
+    mitades[1] = sumar(500_000, 1_000_000);
+    t.join();                          // espera a la otra mitad
+    long total = mitades[0] + mitades[1];
+--- tarea
+ejercicio: t20_primer_hilo
+es: Haz un trabajo en otro hilo y espera a que acabe.
+de: Erledige eine Arbeit in einem anderen Thread und warte, bis sie fertig ist.
+en: Do some work on another thread and wait for it to finish.
+--- tarea
+ejercicio: t20_suma_en_dos_mitades
+es: Dos hilos, dos mitades, una suma.
+de: Zwei Threads, zwei Hälften, eine Summe.
+en: Two threads, two halves, one sum.
+
+=== l20_carreras
+tema: 20
+orden: 2
+titulo.es: Carreras y candados
+titulo.de: Wettrennen und Schlösser
+titulo.en: Races and locks
+--- pagina
+es: contador++ parece una sola orden, pero son tres: leer, sumar uno, escribir. Si dos hilos lo hacen a la vez,
+es: los dos pueden leer 5 y escribir 6: se ha perdido un golpe. Es una condición de carrera, y lo peor es que
+es: solo falla a veces, así que puede pasar todas tus pruebas y explotar en producción.
+de: zaehler++ wirkt wie ein Befehl, sind aber drei: lesen, eins addieren, schreiben. Tun zwei Threads das
+de: gleichzeitig, lesen beide 5 und schreiben 6: Ein Treffer ist verloren. Das ist eine Race Condition, und
+de: das Gemeine: Sie tritt nur manchmal auf, besteht also womöglich alle Tests und knallt erst im
+de: Echtbetrieb.
+en: counter++ looks like one order, but it's three: read, add one, write. If two threads do it at once,
+en: both may read 5 and write 6: a hit has been lost. It's a race condition, and the worst part is that
+en: it only fails sometimes, so it can pass all your tests and blow up in production.
+--- pagina
+es: La solución clásica es synchronized: un candado que solo deja entrar a un hilo cada vez.
+es: Para contadores sueltos, AtomicInteger e incrementAndGet() hacen lo mismo sin candado y más rápido.
+es: Y para mapas compartidos, ConcurrentHashMap con merge suma sin pisarse.
+de: Die klassische Lösung ist synchronized: ein Schloss, das immer nur einen Thread hineinlässt.
+de: Für einzelne Zähler machen AtomicInteger und incrementAndGet() dasselbe ohne Schloss und schneller.
+de: Und für geteilte Maps summiert ConcurrentHashMap mit merge, ohne dass sich jemand auf die Füße tritt.
+en: The classic fix is synchronized: a lock that only lets one thread in at a time.
+en: For single counters, AtomicInteger and incrementAndGet() do the same without a lock, and faster.
+en: And for shared maps, ConcurrentHashMap with merge adds up without anyone treading on anyone's toes.
+codigo:
+    class Marcador {
+        private int golpes = 0;
+        synchronized void sumar() {
+            golpes++;
+        }
+        synchronized int golpes() {
+            return golpes;
+        }
+    }
+    AtomicInteger disparos = new AtomicInteger();
+    disparos.incrementAndGet();
+--- tarea
+ejercicio: t20_contador_sincronizado
+es: Un contador que no pierde golpes aunque cuenten muchos hilos.
+de: Ein Zähler, der keine Treffer verliert, auch wenn viele Threads zählen.
+en: A counter that loses no hits even when many threads are counting.
+--- tarea
+ejercicio: t20_disparos_atomicos
+es: Cuenta disparos sin candados, con un AtomicInteger.
+de: Zähl Schüsse ohne Schloss, mit einem AtomicInteger.
+en: Count shots without locks, with an AtomicInteger.
+
+=== l20_ejecutores_y_virtuales
+tema: 20
+orden: 3
+titulo.es: Equipos de trabajo e hilos virtuales
+titulo.de: Arbeitsteams und virtuelle Threads
+titulo.en: Work crews and virtual threads
+--- pagina
+es: Crear hilos a mano es como contratar a un mecánico para cada tornillo. Un ExecutorService es un taller
+es: con mecánicos fijos: le das tareas con submit y te devuelve un Future, un resguardo para recoger el resultado
+es: con get() cuando esté. CompletableFuture (Java 8) encadena pasos: «cuando acabes esto, haz aquello».
+de: Threads von Hand zu erzeugen ist, als stellte man für jede Schraube einen Mechaniker ein. Ein
+de: ExecutorService ist eine Werkstatt mit festen Mechanikern: Mit submit gibst du Aufgaben ab und bekommst
+de: ein Future, einen Abholschein für das Ergebnis per get(). CompletableFuture (Java 8) verkettet Schritte:
+de: „Wenn das fertig ist, mach jenes.“
+en: Creating threads by hand is like hiring a mechanic for every bolt. An ExecutorService is a workshop
+en: with permanent mechanics: you hand it tasks with submit and get back a Future, a ticket to collect the result
+en: with get() when it's ready. CompletableFuture (Java 8) chains steps: "when you finish this, do that".
+--- pagina
+es: Los hilos normales son caros: cada uno se lleva su trozo de memoria y del sistema. Java 21 trajo los hilos
+es: virtuales: ligerísimos, gestionados por la propia Java, puedes lanzar diez mil sin despeinarte.
+es: Son ideales para tareas que pasan mucho tiempo esperando (red, discos). Para cálculo puro, siguen mandando
+es: los núcleos que tenga tu procesador.
+de: Normale Threads sind teuer: Jeder belegt eigenen Speicher und Systemressourcen. Java 21 brachte
+de: virtuelle Threads: federleicht, von Java selbst verwaltet, zehntausend davon schaffst du locker. Ideal
+de: für Aufgaben, die viel warten (Netz, Festplatte). Bei reiner Rechenarbeit bestimmen weiterhin die Kerne
+de: deines Prozessors das Tempo.
+en: Regular threads are expensive: each takes its own chunk of memory and system resources. Java 21 brought virtual
+en: threads: featherweight, managed by Java itself, you can launch ten thousand without breaking a sweat.
+en: They're ideal for tasks that spend a lot of time waiting (network, disks). For pure number crunching,
+en: your processor's cores still call the shots.
+codigo:
+    try (var taller = Executors.newVirtualThreadPerTaskExecutor()) {
+        List<Future<Integer>> sondas = new ArrayList<>();
+        for (int i = 0; i < 10_000; i++) {
+            int n = i;
+            sondas.add(taller.submit(() -> medir(n)));
+        }
+        int total = 0;
+        for (Future<Integer> f : sondas) {
+            total += f.get();
+        }
+    }
+--- pagina
+es: El peligro final es el abrazo mortal (deadlock): el hilo A tiene el candado 1 y espera el 2, el hilo B
+es: tiene el 2 y espera el 1. Ninguno cede y el programa se queda congelado para siempre.
+es: La regla que lo evita: coge siempre los candados en el mismo orden, en todos los hilos.
+de: Die letzte Gefahr ist die Verklemmung (Deadlock): Thread A hält Schloss 1 und wartet auf 2, Thread B hält 2
+de: und wartet auf 1. Keiner gibt nach, und das Programm friert für immer ein.
+de: Die Regel dagegen: Nimm die Schlösser immer in derselben Reihenfolge, in allen Threads.
+en: The final danger is the deadly embrace (deadlock): thread A holds lock 1 and waits for 2, thread B
+en: holds 2 and waits for 1. Neither gives way and the program freezes forever.
+en: The rule that prevents it: always take the locks in the same order, in every thread.
+--- tarea
+ejercicio: t20_sondas_virtuales
+es: Diez mil sondas a la vez con hilos virtuales (Java 21).
+de: Zehntausend Sonden gleichzeitig mit virtuellen Threads (Java 21).
+en: Ten thousand probes at once with virtual threads (Java 21).
+--- tarea
+ejercicio: t20_almacenes_sin_bloqueo
+es: Dos almacenes que se pasan piezas sin quedarse en un abrazo mortal.
+de: Zwei Lager, die sich Teile zuschieben, ohne sich zu verklemmen.
+en: Two warehouses passing parts to each other without a deadly embrace.

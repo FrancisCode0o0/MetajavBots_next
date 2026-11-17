@@ -1,0 +1,586 @@
+# La API de los robots (la genera herramientas/api_doc.py; no se toca a mano).
+
+=== api.alEmpezar
+tema: 11
+firma: void alEmpezar()
+firma.de: void beimStart()
+firma.en: void onStart()
+es: Al empezar cada ronda (antes del primer turno). Tema 06: métodos.
+de: Zu Beginn jeder Runde (vor dem ersten Zug). Thema 06: Methoden.
+en: At the start of every round (before the first tick). Topic 06: methods.
+
+=== api.cadaTurno
+tema: 11
+firma: void cadaTurno()
+firma.de: void jedenZug()
+firma.en: void onTick()
+es: Cada turno (unos 30 por segundo). Aquí va lo principal.
+de: In jedem Zug (etwa 30 pro Sekunde). Hier steht das Wichtigste.
+en: Every tick (about 30 per second). The main logic goes here.
+
+=== api.alVerEnemigo
+tema: 11
+firma: void alVerEnemigo(Enemigo e)
+firma.de: void beiSicht(Gegner g)
+firma.en: void onSeeEnemy(Enemy e)
+es: Cada turno en que tu radar ve a un enemigo.
+de: In jedem Zug, in dem dein Radar einen Gegner sieht.
+en: Every tick in which your radar sees an enemy.
+
+=== api.alRecibirGolpe
+tema: 11
+firma: void alRecibirGolpe(Golpe g)
+firma.de: void beiTreffer(Treffer t)
+firma.en: void onHit(Hit h)
+es: Cuando te dan.
+de: Wenn du getroffen wirst.
+en: When you get hit.
+
+=== api.alAcertar
+tema: 11
+firma: void alAcertar(Golpe g)
+firma.de: void beiEigenemTreffer(Treffer t)
+firma.en: void onHitEnemy(Hit h)
+es: Cuando tu ataque da en el blanco.
+de: Wenn dein Angriff trifft.
+en: When your attack lands.
+
+=== api.alChocarConPared
+tema: 11
+firma: void alChocarConPared()
+firma.de: void beiWand()
+firma.en: void onHitWall()
+es: Cuando chocas con una pared (te hace un poco de daño).
+de: Wenn du gegen eine Wand fährst (kostet etwas Panzerung).
+en: When you crash into a wall (it costs a little armor).
+
+=== api.alChocarConEnemigo
+tema: 11
+firma: void alChocarConEnemigo(Enemigo e)
+firma.de: void beiZusammenstoss(Gegner g)
+firma.en: void onBump(Enemy e)
+es: Cuando chocas con un enemigo.
+de: Wenn du mit einem Gegner zusammenstößt.
+en: When you bump into an enemy.
+
+=== api.alAcabarRonda
+tema: 11
+firma: void alAcabarRonda()
+firma.de: void beiRundenende()
+firma.en: void onRoundEnd()
+es: Al acabar la ronda.
+de: Am Ende der Runde.
+en: At the end of the round.
+
+=== api.avanzar
+tema: 01
+firma: void avanzar(double distancia)
+firma.de: void vorwaerts(double strecke)
+firma.en: void ahead(double distance)
+es: Avanza esa distancia (negativa: marcha atrás). Sustituye a la orden de avance anterior.
+de: Fährt diese Strecke vorwärts (negativ: rückwärts). Ersetzt den vorigen Fahrbefehl.
+en: Moves forward this distance (negative: backwards). Replaces the previous move order.
+
+=== api.retroceder
+tema: 01
+firma: void retroceder(double distancia)
+firma.de: void rueckwaerts(double strecke)
+firma.en: void back(double distance)
+es: Marcha atrás esa distancia.
+de: Fährt diese Strecke rückwärts.
+en: Moves backwards this distance.
+
+=== api.girar
+tema: 01
+firma: void girar(double grados)
+firma.de: void drehen(double grad)
+firma.en: void turn(double degrees)
+es: Gira el cuerpo esos grados (positivos: a la izquierda).
+de: Dreht den Körper um diese Grad (positiv: nach links).
+en: Turns the body this many degrees (positive: left).
+
+=== api.girarIzquierda
+tema: 01
+firma: void girarIzquierda(double grados)
+firma.de: void linksDrehen(double grad)
+firma.en: void turnLeft(double degrees)
+es: void girarIzquierda(double grados)
+de: void linksDrehen(double grad)
+en: void turnLeft(double degrees)
+
+=== api.girarDerecha
+tema: 01
+firma: void girarDerecha(double grados)
+firma.de: void rechtsDrehen(double grad)
+firma.en: void turnRight(double degrees)
+es: void girarDerecha(double grados)
+de: void rechtsDrehen(double grad)
+en: void turnRight(double degrees)
+
+=== api.girarHacia
+tema: 03
+firma: void girarHacia(double angulo)
+firma.de: void drehenNach(double winkel)
+firma.en: void turnTo(double angle)
+es: Gira el cuerpo hasta mirar hacia ese ángulo absoluto, por el camino más corto.
+de: Dreht den Körper auf diesen absoluten Winkel, auf dem kürzesten Weg.
+en: Turns the body to face this absolute angle, the short way.
+
+=== api.detener
+tema: 01
+firma: void detener()
+firma.de: void anhalten()
+firma.en: void stop()
+es: Para: sin avanzar ni girar.
+de: Hält an: weder fahren noch drehen.
+en: Stops: no moving, no turning.
+
+=== api.apuntar
+tema: 01
+firma: void apuntar(double grados)
+firma.de: void zielen(double grad)
+firma.en: void aim(double degrees)
+es: Gira la mira (los brazos y el radar) esos grados, sin girar el cuerpo.
+de: Dreht das Visier (Arme und Radar) um diese Grad, ohne den Körper zu drehen.
+en: Turns the sight (arms and radar) this many degrees without turning the body.
+
+=== api.apuntarHacia
+tema: 03
+firma: void apuntarHacia(double angulo)
+firma.de: void zielenNach(double winkel)
+firma.en: void aimTo(double angle)
+es: Gira la mira hasta ese ángulo absoluto.
+de: Dreht das Visier auf diesen absoluten Winkel.
+en: Turns the sight to this absolute angle.
+
+=== api.apuntarA
+tema: 03
+firma: void apuntarA(double x, double y)
+firma.de: void zielenAuf(double x, double y)
+firma.en: void aimAt(double x, double y)
+es: Gira la mira hacia ese punto de la arena.
+de: Dreht das Visier auf diesen Punkt der Arena.
+en: Turns the sight towards this point of the arena.
+
+=== api.atacarIzquierda
+tema: 04
+firma: boolean atacarIzquierda()
+firma.de: boolean angriffLinks()
+firma.en: boolean attackLeft()
+es: Ataca con el brazo izquierdo hacia donde mira. Devuelve false si aún no estaba listo.
+de: Greift mit dem linken Arm in Blickrichtung an. Gibt false zurück, wenn er noch nicht bereit war.
+en: Attacks with the left arm where the sight points. Returns false if it was not ready yet.
+
+=== api.atacarDerecha
+tema: 04
+firma: boolean atacarDerecha()
+firma.de: boolean angriffRechts()
+firma.en: boolean attackRight()
+es: boolean atacarDerecha()
+de: boolean angriffRechts()
+en: boolean attackRight()
+
+=== api.especial
+tema: 04
+firma: boolean especial()
+firma.de: boolean spezial()
+firma.en: boolean special()
+es: Usa lo especial de la cabeza (un escudo, un turbo, reparar…, según la pieza).
+de: Benutzt das Spezielle des Kopfes (Schild, Turbo, Reparatur…, je nach Teil).
+en: Uses the head's special (a shield, a turbo, repair…, depending on the part).
+
+=== api.atacar
+tema: 01
+firma: boolean atacar()
+firma.de: boolean angreifen()
+firma.en: boolean attack()
+es: Ataca con el brazo que esté listo (primero el derecho).
+de: Greift mit dem Arm an, der bereit ist (zuerst der rechte).
+en: Attacks with whichever arm is ready (right first).
+
+=== api.listoIzquierda
+tema: 04
+firma: boolean listoIzquierda()
+firma.de: boolean bereitLinks()
+firma.en: boolean readyLeft()
+es: boolean listoIzquierda()
+de: boolean bereitLinks()
+en: boolean readyLeft()
+
+=== api.listoDerecha
+tema: 04
+firma: boolean listoDerecha()
+firma.de: boolean bereitRechts()
+firma.en: boolean readyRight()
+es: boolean listoDerecha()
+de: boolean bereitRechts()
+en: boolean readyRight()
+
+=== api.listoEspecial
+tema: 04
+firma: boolean listoEspecial()
+firma.de: boolean bereitSpezial()
+firma.en: boolean readySpecial()
+es: boolean listoEspecial()
+de: boolean bereitSpezial()
+en: boolean readySpecial()
+
+=== api.armaIzquierda
+tema: 08
+firma: String armaIzquierda()
+firma.de: String waffeLinks()
+firma.en: String weaponLeft()
+es: El arma del brazo izquierdo: "LASER", "BALA", "MISIL", "CUERPO", "ESCUDO", "REPARAR"… ("" si no hay).
+de: Die Waffe des linken Arms: "LASER", "BALA" (Kugel), "MISIL" (Rakete), "CUERPO" (Nahkampf), "ESCUDO" (Schild), "REPARAR"… ("" wenn keine).
+en: The left arm weapon: "LASER", "BALA" (bullet), "MISIL" (missile), "CUERPO" (melee), "ESCUDO" (shield), "REPARAR" (repair)… ("" if none).
+
+=== api.armaDerecha
+tema: 08
+firma: String armaDerecha()
+firma.de: String waffeRechts()
+firma.en: String weaponRight()
+es: String armaDerecha()
+de: String waffeRechts()
+en: String weaponRight()
+
+=== api.especialCabeza
+tema: 08
+firma: String especialCabeza()
+firma.de: String spezialKopf()
+firma.en: String headSpecial()
+es: Lo especial de la cabeza: "ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA" ("" si no tiene).
+de: Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO" (Puls), "SOBRECARGA" (Überladung) ("" wenn keins).
+en: The head special: "ESCUDO" (shield), "TURBO", "REPARAR" (repair), "CAMUFLAJE" (cloak), "PULSO" (pulse), "SOBRECARGA" (overload) ("" if none).
+
+=== api.alcanceIzquierda
+tema: 02
+firma: double alcanceIzquierda()
+firma.de: double reichweiteLinks()
+firma.en: double rangeLeft()
+es: Hasta dónde llega el arma del brazo izquierdo.
+de: Wie weit die Waffe des linken Arms reicht.
+en: How far the left arm's weapon reaches.
+
+=== api.alcanceDerecha
+tema: 02
+firma: double alcanceDerecha()
+firma.de: double reichweiteRechts()
+firma.en: double rangeRight()
+es: double alcanceDerecha()
+de: double reichweiteRechts()
+en: double rangeRight()
+
+=== api.x
+tema: 02
+firma: double x()
+firma.de: double x()
+firma.en: double x()
+es: double x()
+de: double x()
+en: double x()
+
+=== api.y
+tema: 02
+firma: double y()
+firma.de: double y()
+firma.en: double y()
+es: double y()
+de: double y()
+en: double y()
+
+=== api.rumbo
+tema: 02
+firma: double rumbo()
+firma.de: double richtung()
+firma.en: double heading()
+es: Hacia dónde mira el cuerpo (grados).
+de: Wohin der Körper schaut (Grad).
+en: Where the body faces (degrees).
+
+=== api.mira
+tema: 02
+firma: double mira()
+firma.de: double blick()
+firma.en: double aimDirection()
+es: Hacia dónde mira la mira (grados).
+de: Wohin das Visier schaut (Grad).
+en: Where the sight points (degrees).
+
+=== api.velocidad
+tema: 02
+firma: double velocidad()
+firma.de: double geschwindigkeit()
+firma.en: double speed()
+es: double velocidad()
+de: double geschwindigkeit()
+en: double speed()
+
+=== api.energia
+tema: 02
+firma: double energia()
+firma.de: double energie()
+firma.en: double energy()
+es: La energía (los láseres y lo especial la gastan; se recarga sola).
+de: Die Energie (Laser und Spezielles verbrauchen sie; sie lädt sich von selbst).
+en: Energy (lasers and specials use it; it recharges by itself).
+
+=== api.blindaje
+tema: 02
+firma: double blindaje()
+firma.de: double panzerung()
+firma.en: double armor()
+es: Lo que te queda de blindaje, de 0 a 100.
+de: Deine restliche Panzerung, von 0 bis 100.
+en: Your remaining armor, from 0 to 100.
+
+=== api.turnoActual
+tema: 02
+firma: int turnoActual()
+firma.de: int zug()
+firma.en: int tick()
+es: El número de turno de esta ronda (desde 0).
+de: Die Nummer des Zuges in dieser Runde (ab 0).
+en: The tick number in this round (from 0).
+
+=== api.ronda
+tema: 02
+firma: int ronda()
+firma.de: int runde()
+firma.en: int round()
+es: La ronda (de 1 a 4).
+de: Die Runde (1 bis 4).
+en: The round (1 to 4).
+
+=== api.anchoArena
+tema: 02
+firma: double anchoArena()
+firma.de: double arenaBreite()
+firma.en: double arenaWidth()
+es: double anchoArena()
+de: double arenaBreite()
+en: double arenaWidth()
+
+=== api.altoArena
+tema: 02
+firma: double altoArena()
+firma.de: double arenaHoehe()
+firma.en: double arenaHeight()
+es: double altoArena()
+de: double arenaHoehe()
+en: double arenaHeight()
+
+=== api.restanteAvance
+tema: 04
+firma: double restanteAvance()
+firma.de: double restStrecke()
+firma.en: double remainingDistance()
+es: Lo que le falta por avanzar de la última orden.
+de: Was vom letzten Fahrbefehl noch fehlt.
+en: What is left of the last move order.
+
+=== api.restanteGiro
+tema: 04
+firma: double restanteGiro()
+firma.de: double restDrehung()
+firma.en: double remainingTurn()
+es: Lo que le falta por girar de la última orden.
+de: Was vom letzten Drehbefehl noch fehlt.
+en: What is left of the last turn order.
+
+=== api.restanteMira
+tema: 04
+firma: double restanteMira()
+firma.de: double restZielen()
+firma.en: double remainingAim()
+es: double restanteMira()
+de: double restZielen()
+en: double remainingAim()
+
+=== api.enemigosVistos
+tema: 15
+firma: List<Enemigo> enemigosVistos()
+firma.de: List<Gegner> gesehen()
+firma.en: List<Enemy> seenEnemies()
+es: Los enemigos que ves ahora mismo (tema 15: colecciones).
+de: Die Gegner, die du gerade siehst (Thema 15: Collections).
+en: The enemies you can see right now (topic 15: collections).
+
+=== api.anguloHacia
+tema: 06
+firma: double anguloHacia(double x, double y)
+firma.de: double winkelZu(double x, double y)
+firma.en: double angleTo(double x, double y)
+es: El ángulo absoluto desde ti hasta ese punto.
+de: Der absolute Winkel von dir zu diesem Punkt.
+en: The absolute angle from you to that point.
+
+=== api.distanciaA
+tema: 06
+firma: double distanciaA(double x, double y)
+firma.de: double abstandZu(double x, double y)
+firma.en: double distanceTo(double x, double y)
+es: La distancia desde ti hasta ese punto.
+de: Der Abstand von dir zu diesem Punkt.
+en: The distance from you to that point.
+
+=== api.normalizar
+tema: 06
+firma: double normalizar(double grados)
+firma.de: double normalisieren(double grad)
+firma.en: double normalize(double degrees)
+es: Lleva un ángulo a (-180, 180]: normalizar(350) da -10.
+de: Bringt einen Winkel nach (-180, 180]: normalisieren(350) ergibt -10.
+en: Brings an angle into (-180, 180]: normalize(350) gives -10.
+
+=== api.azar
+tema: 09
+firma: Random azar()
+firma.de: Random zufall()
+firma.en: Random random()
+es: Números al azar (los de tu robot: la misma pelea repetida da lo mismo).
+de: Zufallszahlen (die deines Roboters: derselbe Kampf ergibt dasselbe).
+en: Random numbers (your robot's own: the same fight replayed gives the same).
+
+=== api.decir
+tema: 01
+firma: void decir(Object texto)
+firma.de: void sagen(Object text)
+firma.en: void say(Object text)
+es: Dice algo en un bocadillo, encima del robot.
+de: Sagt etwas in einer Sprechblase über dem Roboter.
+en: Says something in a speech bubble above the robot.
+
+=== api.escribir
+tema: 01
+firma: void escribir(Object texto)
+firma.de: void ausgeben(Object text)
+firma.en: void print(Object text)
+es: Escribe en la consola de tu robot (debajo del código).
+de: Schreibt in die Konsole deines Roboters (unter dem Code).
+en: Writes to your robot's console (below the code).
+
+=== Enemigo.x
+tema: 13
+firma: Enemigo: double x()
+firma.de: Gegner: double x()
+firma.en: Enemy: double x()
+es: Dónde está (en la arena).
+de: Wo er steht (in der Arena).
+en: Where it is (in the arena).
+
+=== Enemigo.y
+tema: 13
+firma: Enemigo: double y()
+firma.de: Gegner: double y()
+firma.en: Enemy: double y()
+es: double y()
+de: 
+en: 
+
+=== Enemigo.distancia
+tema: 13
+firma: Enemigo: double distancia()
+firma.de: Gegner: double entfernung()
+firma.en: Enemy: double distance()
+es: Lo lejos que está de ti.
+de: Wie weit er von dir entfernt ist.
+en: How far away it is.
+
+=== Enemigo.angulo
+tema: 13
+firma: Enemigo: double angulo()
+firma.de: Gegner: double winkel()
+firma.en: Enemy: double angle()
+es: El ángulo (en grados, absoluto) en que lo ves desde donde estás: apuntarHacia(e.angulo()).
+de: Der Winkel (in Grad, absolut), unter dem du ihn siehst: zielenNach(g.winkel()).
+en: The absolute angle (degrees) at which you see it: aimTo(e.angle()).
+
+=== Enemigo.rumbo
+tema: 13
+firma: Enemigo: double rumbo()
+firma.de: Gegner: double richtung()
+firma.en: Enemy: double heading()
+es: Hacia dónde va él (grados).
+de: Wohin er fährt (Grad).
+en: Where it is heading (degrees).
+
+=== Enemigo.velocidad
+tema: 13
+firma: Enemigo: double velocidad()
+firma.de: Gegner: double geschwindigkeit()
+firma.en: Enemy: double speed()
+es: Lo rápido que va (unidades por turno; negativo si va marcha atrás).
+de: Wie schnell er ist (Einheiten pro Zug; negativ rückwärts).
+en: How fast it moves (units per tick; negative when reversing).
+
+=== Enemigo.blindaje
+tema: 13
+firma: Enemigo: double blindaje()
+firma.de: Gegner: double panzerung()
+firma.en: Enemy: double armor()
+es: Lo que le queda de blindaje, de 0 a 100.
+de: Seine restliche Panzerung, von 0 bis 100.
+en: Its remaining armor, from 0 to 100.
+
+=== Enemigo.nombre
+tema: 13
+firma: Enemigo: String nombre()
+firma.de: Gegner: String name()
+firma.en: Enemy: String name()
+es: Su nombre.
+de: Sein Name.
+en: Its name.
+
+=== Enemigo.modelo
+tema: 13
+firma: Enemigo: String modelo()
+firma.de: Gegner: String modell()
+firma.en: Enemy: String model()
+es: Su modelo (por ejemplo, "cobalto").
+de: Sein Modell (zum Beispiel "cobalto").
+en: Its model (for example "cobalto").
+
+=== Enemigo.vuela
+tema: 13
+firma: Enemigo: boolean vuela()
+firma.de: Gegner: boolean fliegt()
+firma.en: Enemy: boolean flies()
+es: ¿Va volando? (los golpes cuerpo a cuerpo no le llegan).
+de: Fliegt er? (Nahkampfschläge erreichen ihn nicht).
+en: Is it flying? (melee hits can't reach it).
+
+=== Golpe.dano
+tema: 13
+firma: Golpe: double dano()
+firma.de: Treffer: double schaden()
+firma.en: Hit: double damage()
+es: Cuánto blindaje quitó.
+de: Wie viel Panzerung er gekostet hat.
+en: How much armor it took.
+
+=== Golpe.arma
+tema: 13
+firma: Golpe: String arma()
+firma.de: Treffer: String waffe()
+firma.en: Hit: String weapon()
+es: Con qué: "laser", "bala", "misil", "cuerpo", "choque" o "pared".
+de: Womit: "laser", "kugel", "rakete", "nahkampf", "zusammenstoss" oder "wand".
+en: With what: "laser", "bullet", "missile", "melee", "ram" or "wall".
+
+=== Golpe.angulo
+tema: 13
+firma: Golpe: double angulo()
+firma.de: Treffer: double winkel()
+firma.en: Hit: double angle()
+es: De dónde vino (grados, absoluto): si te dan, girarHacia(g.angulo() + 90) para esquivar de lado.
+de: Woher er kam (Grad, absolut).
+en: Where it came from (absolute degrees).
+
+=== Golpe.pieza
+tema: 13
+firma: Golpe: String pieza()
+firma.de: Treffer: String teil()
+firma.en: Hit: String part()
+es: Qué pieza recibió el golpe: "cabeza", "izquierda", "derecha" o "piernas".
+de: Welches Teil getroffen wurde: "kopf", "links", "rechts" oder "beine".
+en: Which part was hit: "head", "left", "right" or "legs".

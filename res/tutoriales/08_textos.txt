@@ -1,0 +1,139 @@
+# Tema 08: textos (String y StringBuilder).
+=== l08_string
+tema: 08
+orden: 1
+titulo.es: Letras en fila
+titulo.de: Buchstaben in einer Reihe
+titulo.en: Letters in a row
+--- pagina
+es: Un String es un texto: una fila de char, como un array de letras, pero con muchos métodos útiles.
+es: length() da cuántas letras tiene (con paréntesis, a diferencia de los arrays), charAt(0) la primera,
+es: substring(0, 3) un trozo y toUpperCase() lo pasa a mayúsculas. Los índices empiezan en 0, como siempre.
+de: Ein String ist ein Text: eine Reihe von chars, wie ein Array aus Buchstaben, aber mit vielen nützlichen
+de: Methoden. length() sagt, wie viele Zeichen er hat (mit Klammern, anders als bei Arrays), charAt(0)
+de: liefert das erste, substring(0, 3) ein Stück und toUpperCase() macht Großbuchstaben. Die Indizes
+de: beginnen wie immer bei 0.
+en: A String is text: a row of chars, like an array of letters, but with lots of handy methods.
+en: length() gives how many characters it has (with parentheses, unlike arrays), charAt(0) the first,
+en: substring(0, 3) a piece and toUpperCase() turns it into capitals. Indexes start at 0, as always.
+codigo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        String nombre = e.nombre();
+        String inicial = nombre.substring(0, 1).toUpperCase();
+        decir("Te veo, " + inicial + "." + " ¡Blindaje " + (int) e.blindaje() + "!");
+    }
+--- pagina
+es: Los String no se pueden cambiar (son inmutables). nombre.toUpperCase() no toca nombre:
+es: te DEVUELVE un texto nuevo. Si escribes nombre.toUpperCase(); a secas, el resultado se pierde.
+es: Lo correcto es guardarlo: nombre = nombre.toUpperCase(); Es un despiste muy común y Java no avisa.
+de: Strings lassen sich nicht ändern (sie sind unveränderlich). nombre.toUpperCase() fasst nombre nicht an:
+de: Es GIBT einen neuen Text ZURÜCK. Schreibst du nur nombre.toUpperCase();, geht das Ergebnis verloren.
+de: Richtig ist, es zu speichern: nombre = nombre.toUpperCase(); Ein häufiger Patzer, und Java warnt nicht.
+en: Strings can't be changed (they're immutable). name.toUpperCase() doesn't touch name:
+en: it RETURNS a new text. If you write just name.toUpperCase(); the result is lost.
+en: The right way is to keep it: name = name.toUpperCase(); A very common slip, and Java won't warn you.
+--- tarea
+ejercicio: t08_placa_del_robot
+es: Monta la placa del robot juntando textos y números.
+de: Bau das Typenschild des Roboters aus Texten und Zahlen zusammen.
+en: Build the robot's nameplate by joining text and numbers.
+--- tarea
+ejercicio: t08_ultima_letra
+es: La última letra del código. ¿Qué índice tiene?
+de: Der letzte Buchstabe des Codes. Welchen Index hat er?
+en: The last letter of the code. What index does it have?
+
+=== l08_comparar_textos
+tema: 08
+orden: 2
+titulo.es: La trampa del ==
+titulo.de: Die ==-Falle
+titulo.en: The == trap
+--- pagina
+es: Esta es LA trampa de Java: para comparar textos, == no sirve. == pregunta «¿es el mismo objeto?»,
+es: no «¿pone lo mismo?». Dos textos iguales pueden vivir en sitios distintos de la memoria,
+es: y entonces == dice false. A veces funciona por casualidad, que es lo peor: falla justo en la pelea importante.
+es: Usa siempre equals: g.arma().equals("laser").
+de: Das ist DIE Java-Falle: Um Texte zu vergleichen, taugt == nicht. == fragt „Ist es dasselbe Objekt?“,
+de: nicht „Steht dasselbe drin?“. Zwei gleiche Texte können an verschiedenen Stellen im Speicher liegen,
+de: und dann sagt == false. Manchmal klappt es zufällig, und das ist das Schlimmste: Es versagt im wichtigen Kampf.
+de: Nimm immer equals: t.waffe().equals("laser").
+en: This is THE Java trap: to compare text, == doesn't work. == asks "is it the same object?",
+en: not "does it say the same thing?". Two equal texts can live in different places in memory,
+en: and then == says false. Sometimes it works by luck, which is the worst: it fails in the fight that matters.
+en: Always use equals: h.weapon().equals("laser").
+codigo:
+    @Override
+    public void alRecibirGolpe(Golpe g) {
+        if (g.arma().equals("misil")) {
+            girarHacia(g.angulo() + 90);
+            avanzar(200);              // los misiles se esquivan corriendo
+        } else if ("laser".equals(g.arma())) {
+            apuntarHacia(g.angulo());  // los láseres se contestan
+            atacar();
+        }
+    }
+--- pagina
+es: Más amigos de comparar: equalsIgnoreCase ignora mayúsculas, startsWith y contains buscan dentro,
+es: isEmpty dice si no hay nada y, desde Java 11, isBlank dice si solo hay espacios y strip los quita.
+es: Escribir "laser".equals(x) en vez de x.equals("laser") tiene premio: si x es null, no explota.
+de: Weitere Vergleichshelfer: equalsIgnoreCase ignoriert Groß und klein, startsWith und contains suchen darin,
+de: isEmpty sagt, ob gar nichts drinsteht, und seit Java 11 sagt isBlank, ob nur Leerzeichen da sind,
+de: und strip entfernt sie. "laser".equals(x) statt x.equals("laser") lohnt sich: Ist x null, knallt es nicht.
+en: More comparison helpers: equalsIgnoreCase ignores case, startsWith and contains search inside, isEmpty
+en: tells you if there's nothing and, since Java 11, isBlank tells you if there are only spaces, and strip
+en: removes them. Writing "laser".equals(x) instead of x.equals("laser") pays off: if x is null, no crash.
+--- tarea
+robot: usa:equals
+es: Reacciona distinto según el arma que te golpee, comparando con equals, y pelea una ronda.
+de: Reagier je nach Waffe, die dich trifft, unterschiedlich, vergleiche mit equals und kämpf eine Runde.
+en: React differently depending on the weapon that hits you, comparing with equals, and fight a round.
+--- tarea
+ejercicio: t08_misma_clave
+es: ¿Son la misma clave? Compara los textos como se debe.
+de: Ist es derselbe Schlüssel? Vergleiche die Texte, wie es sich gehört.
+en: Is it the same key? Compare the texts the proper way.
+
+=== l08_construir_textos
+tema: 08
+orden: 3
+titulo.es: Fabricar textos sin derrochar
+titulo.de: Texte bauen ohne Verschwendung
+titulo.en: Building text without waste
+--- pagina
+es: Como los String no cambian, cada + en un bucle fabrica un texto nuevo y tira el anterior. Con diez vueltas
+es: da igual; con diez mil, tu robot pierde el turno. StringBuilder es un texto que SÍ cambia:
+es: append añade al final sin copiar todo cada vez, y toString() te da el String cuando acabas.
+de: Weil Strings sich nicht ändern, baut jedes + in einer Schleife einen neuen Text und wirft den alten weg.
+de: Bei zehn Runden egal, bei zehntausend verliert dein Roboter den Zug. StringBuilder ist ein Text, der sich
+de: DOCH ändert: append hängt hinten an, ohne alles zu kopieren, und toString() liefert am Ende den String.
+en: Since Strings don't change, every + in a loop builds a new text and throws the old one away. For ten laps
+en: it doesn't matter; for ten thousand, your robot loses its turn. StringBuilder is text that DOES change:
+en: append adds to the end without copying everything, and toString() gives you the String when you're done.
+codigo:
+    StringBuilder sb = new StringBuilder();
+    for (int i = 0; i < 5; i++) {
+        sb.append(i < blindaje() / 20 ? '#' : '.');
+    }
+    decir("[" + sb.toString() + "]");     // [###..]
+--- pagina
+es: Atajos modernos: "#".repeat(5) da "#####" (Java 11), y "%d%%".formatted(80) rellena huecos
+es: como printf pero devolviendo el texto (Java 15). Con ellos, una barra de vida cabe en una línea.
+de: Moderne Abkürzungen: "#".repeat(5) ergibt "#####" (Java 11), und "%d%%".formatted(80) füllt Lücken
+de: wie printf, gibt den Text aber zurück (Java 15). Damit passt ein Lebensbalken in eine Zeile.
+en: Modern shortcuts: "#".repeat(5) gives "#####" (Java 11), and "%d%%".formatted(80) fills in gaps
+en: like printf but returns the text (Java 15). With them, a health bar fits on one line.
+codigo:
+    int llenas = (int) (blindaje() / 10);
+    decir("#".repeat(llenas) + ".".repeat(10 - llenas) + " %d%%".formatted((int) blindaje()));
+--- tarea
+ejercicio: t08_barra_de_vida
+es: La barra de vida, con repeat, del tamaño justo.
+de: Der Lebensbalken, mit repeat, genau in der richtigen Länge.
+en: The health bar, with repeat, exactly the right length.
+--- tarea
+ejercicio: t08_al_reves
+es: Da la vuelta a un mensaje letra a letra (StringBuilder tiene un método que te encantará).
+de: Dreh eine Nachricht Buchstabe für Buchstabe um (StringBuilder hat eine Methode, die dir gefallen wird).
+en: Reverse a message letter by letter (StringBuilder has a method you'll love).

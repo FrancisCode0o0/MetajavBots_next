@@ -196,7 +196,7 @@ public final class Pincel {
     public void contorno(float[] v, float grosor, int rgb, float alfa) {
         if (v.length < 4) return;
         pintar(rgb, alfa);
-        formas.path(v, grosor, space.earlygrey.shapedrawer.JoinType.SMOOTH, false);
+        formas.path(v, grosor, space.earlygrey.shapedrawer.JoinType.NONE, false);
     }
 
     public void triangulo(float x1, float y1, float x2, float y2, float x3, float y3, int rgb, float alfa) {

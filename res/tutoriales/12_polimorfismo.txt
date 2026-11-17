@@ -1,0 +1,150 @@
+# Tema 12: polimorfismo y clases abstractas.
+=== l12_muchas_formas
+tema: 12
+orden: 1
+titulo.es: Una variable, muchas formas
+titulo.de: Eine Variable, viele Gestalten
+titulo.en: One variable, many shapes
+--- pagina
+es: Una variable de tipo Tactica puede guardar un Kamikaze, un Francotirador o cualquier otra subclase.
+es: Cuando llamas a tactica.mover(this), Java mira qué objeto hay DE VERDAD dentro y ejecuta SU versión.
+es: Eso es el polimorfismo: el mismo mensaje, distintas respuestas. Y lo decide en marcha, turno a turno.
+de: Eine Variable vom Typ Tactica kann einen Kamikaze, einen Scharfschützen oder jede andere Unterklasse
+de: enthalten. Rufst du tactica.mover(this) auf, schaut Java, welches Objekt WIRKLICH drinsteckt, und führt
+de: DESSEN Version aus. Das ist Polymorphie: dieselbe Nachricht, verschiedene Antworten. Und das wird zur
+de: Laufzeit entschieden, Zug für Zug.
+en: A variable of type Tactica can hold a Kamikaze, a Sniper or any other subclass.
+en: When you call tactica.mover(this), Java checks which object is REALLY inside and runs ITS version.
+en: That's polymorphism: the same message, different answers. And it's decided while running, turn by turn.
+--- pagina
+es: Lo mejor: cambiar de comportamiento es cambiar de objeto. Con el blindaje alto vas a por todas;
+es: cuando baja, cambias la táctica por una prudente. cadaTurno no se llena de ifs por cada estilo:
+es: solo pregunta qué táctica toca y le dice «muévete». Añadir una táctica nueva no toca el resto del código.
+de: Das Beste: Verhalten wechseln heißt Objekt wechseln. Mit viel Panzerung gehst du aufs Ganze; wird sie
+de: knapp, tauschst du die Taktik gegen eine vorsichtige. jedenZug füllt sich nicht mit ifs für jeden Stil:
+de: Es fragt nur, welche Taktik dran ist, und sagt ihr „beweg dich“. Eine neue Taktik ändert den Rest nicht.
+en: Best of all: changing behaviour means changing objects. With high armor you go all in;
+en: when it drops, you swap to a careful tactic. onTick doesn't fill up with ifs for every style:
+en: it just asks which tactic is on and tells it "move". Adding a new tactic doesn't touch the rest of the code.
+codigo:
+    class Prudente extends Tactica {
+        Prudente() {
+            super("prudente");
+        }
+        @Override
+        void mover(Metajavbot r) {
+            r.girar(10);
+            r.avanzar(120);
+        }
+    }
+    Tactica tactica = new Kamikaze();
+    @Override
+    public void cadaTurno() {
+        if (blindaje() < 40 && !(tactica instanceof Prudente)) {
+            tactica = new Prudente();
+            decir("Modo " + tactica.nombre);
+        }
+        tactica.mover(this);
+    }
+--- tarea
+robot: aciertos>=6
+es: Cambia de táctica según tu blindaje usando una variable de la clase padre, y acierta al muñeco 6 veces.
+de: Wechsle je nach Panzerung die Taktik über eine Variable vom Elterntyp und triff die Puppe 6-mal.
+en: Switch tactics based on your armor using a variable of the parent type, and hit the dummy 6 times.
+--- tarea
+ejercicio: t12_sonido_de_armas
+es: Cada arma suena a su manera: el mismo método, distintas subclases.
+de: Jede Waffe klingt anders: dieselbe Methode, verschiedene Unterklassen.
+en: Every weapon sounds different: the same method, different subclasses.
+
+=== l12_abstractas
+tema: 12
+orden: 2
+titulo.es: Planos a medio dibujar
+titulo.de: Halb gezeichnete Baupläne
+titulo.en: Half-drawn blueprints
+--- pagina
+es: ¿Qué hace una Tactica «a secas»? En realidad nada: es una idea, no algo que exista solo.
+es: Márcala abstract y Java no dejará hacer new Tactica(). Un método abstract no tiene cuerpo,
+es: solo la firma terminada en ;, y OBLIGA a cada subclase a escribirlo. Si se te olvida, no compila:
+es: mejor un error ahora que un robot que no hace nada en la arena.
+de: Was macht eine Tactica „an sich“? Eigentlich nichts: Sie ist eine Idee, nichts, das allein existiert.
+de: Mach sie abstract, und Java verbietet new Tactica(). Eine abstrakte Methode hat keinen Rumpf,
+de: nur die Signatur mit ;, und ZWINGT jede Unterklasse, sie zu schreiben. Vergisst du es, kompiliert nichts:
+de: Lieber jetzt ein Fehler als ein Roboter, der in der Arena nichts tut.
+en: What does a plain Tactica do? Nothing, really: it's an idea, not something that exists on its own.
+en: Mark it abstract and Java won't allow new Tactica(). An abstract method has no body,
+en: just the signature ending in ;, and it FORCES every subclass to write it. Forget it and it won't compile:
+en: better an error now than a robot that does nothing in the arena.
+codigo:
+    abstract class Tactica {
+        abstract void mover(Metajavbot r);
+        void apuntar(Metajavbot r, Enemigo e) {    // lo común, ya escrito
+            r.apuntarHacia(e.angulo());
+        }
+    }
+--- pagina
+es: Metajavbot también es abstracta: nadie puede hacer new Metajavbot(), solo robots concretos como el tuyo.
+es: Y usa un truco llamado método plantilla: la arena llama a un método suyo, final, que a su vez llama
+es: a tu cadaTurno. El padre fija el esqueleto (cuándo pasa cada cosa) y el hijo rellena los huecos.
+de: Auch Metajavbot ist abstrakt: Niemand kann new Metajavbot() schreiben, nur konkrete Roboter wie deinen.
+de: Und sie nutzt einen Trick namens Schablonenmethode: Die Arena ruft eine finale Methode von ihr auf, die
+de: wiederum dein jedenZug aufruft. Die Eltern legen das Gerüst fest (wann was passiert), das Kind füllt die
+de: Lücken.
+en: Metajavbot is abstract too: nobody can do new Metajavbot(), only concrete robots like yours.
+en: And it uses a trick called the template method: the arena calls a final method of its own, which in turn
+en: calls your onTick. The parent sets the skeleton (when each thing happens) and the child fills the gaps.
+--- tarea
+robot: usa:abstract
+es: Haz tu clase Tactica abstract, con al menos un método abstract, y pelea una ronda con dos tácticas.
+de: Mach deine Klasse Tactica abstract, mit mindestens einer abstrakten Methode, und kämpf eine Runde mit
+de: zwei Taktiken.
+en: Make your Tactica class abstract, with at least one abstract method, and fight a round with two tactics.
+--- tarea
+ejercicio: t12_metodo_plantilla
+es: Los pasos de un ataque: el padre dicta el orden, los hijos el detalle.
+de: Die Schritte eines Angriffs: Die Eltern bestimmen die Reihenfolge, die Kinder die Details.
+en: The steps of an attack: the parent sets the order, the children the details.
+
+=== l12_estados
+tema: 12
+orden: 3
+titulo.es: Un cerebro con estados
+titulo.de: Ein Gehirn mit Zuständen
+titulo.en: A brain with states
+--- pagina
+es: Muchos robots de la arena piensan en estados: BUSCAR, ATACAR, HUIR. En cada estado hacen una cosa
+es: y ciertas señales los hacen cambiar: «veo al enemigo» pasa de BUSCAR a ATACAR, «me queda poco blindaje»
+es: pasa a HUIR. Es una máquina de estados, y con clases (un estado = una subclase) queda ordenadísima.
+de: Viele Roboter in der Arena denken in Zuständen: SUCHEN, ANGREIFEN, FLIEHEN. In jedem Zustand tun sie
+de: eine Sache, und bestimmte Signale lassen sie wechseln: „Ich sehe den Gegner“ führt von SUCHEN zu
+de: ANGREIFEN, „Panzerung knapp“ zu FLIEHEN. Das ist ein Zustandsautomat, und mit Klassen (ein Zustand =
+de: eine Unterklasse) bleibt er schön ordentlich.
+en: Many robots in the arena think in states: SEARCH, ATTACK, FLEE. In each state they do one thing
+en: and certain signals make them switch: "I see the enemy" goes from SEARCH to ATTACK, "armor is low"
+en: goes to FLEE. It's a state machine, and with classes (one state = one subclass) it stays very tidy.
+--- pagina
+es: Para preguntar qué tipo de objeto tienes, instanceof. Desde Java 16 con patrón: if (p instanceof Arma a)
+es: comprueba y además te da la variable a ya convertida, sin cast. Úsalo con mesura: si te encuentras
+es: preguntando el tipo en todas partes, quizá ese comportamiento debería ser un método sobrescrito.
+de: Um zu fragen, welchen Typ ein Objekt hat, gibt es instanceof. Seit Java 16 mit Muster: if (p instanceof Arma a)
+de: prüft und gibt dir gleich die umgewandelte Variable a, ohne Cast. Sparsam einsetzen: Fragst du überall
+de: nach dem Typ, sollte das Verhalten vielleicht eine überschriebene Methode sein.
+en: To ask what type of object you have, use instanceof. Since Java 16 with a pattern: if (p instanceof Arma a)
+en: checks and also hands you the variable a already converted, no cast. Use it sparingly: if you find yourself
+en: asking the type everywhere, maybe that behaviour should be an overridden method.
+codigo:
+    Object guardado = memoria().get("tactica");
+    if (guardado instanceof String nombre && nombre.equals("prudente")) {
+        tactica = new Prudente();
+    }
+--- tarea
+ejercicio: t12_maquina_de_estados
+es: Escribe el cerebro del rival como una máquina de estados.
+de: Schreib das Gehirn des Gegners als Zustandsautomaten.
+en: Write the rival's brain as a state machine.
+--- tarea
+ejercicio: t12_instanceof_patron
+es: Clasifica piezas con instanceof y patrón (Java 16).
+de: Ordne Bauteile mit instanceof und Muster ein (Java 16).
+en: Sort parts with instanceof and a pattern (Java 16).

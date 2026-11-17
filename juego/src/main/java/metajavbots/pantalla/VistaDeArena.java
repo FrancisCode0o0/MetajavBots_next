@@ -1,0 +1,400 @@
+package metajavbots.pantalla;
+
+import java.util.Random;
+
+import metajavbots.combate.Combatiente;
+import metajavbots.combate.Cuerpo;
+import metajavbots.combate.Pelea;
+import metajavbots.combate.Proyectil;
+import metajavbots.combate.Suceso;
+import metajavbots.piezas.Montaje;
+import metajavbots.piezas.Pieza;
+import metajavbots.sonido.Sonidos;
+
+/**
+ * VISTA DE LA ARENA — Dibuja una pelea: el escenario (hangar, desierto,
+ * ciudad de neón, laboratorio o luna), el suelo en perspectiva, los robots
+ * ordenados por profundidad, los láseres, las balas, los misiles con su
+ * estela, las llamas, las chispas, el humo de los robots dañados y los
+ * bocadillos. Convierte cada Suceso de la pelea en efectos y sonidos.
+ */
+public final class VistaDeArena {
+
+    public enum Escenario { HANGAR, DESIERTO, NEON, LABORATORIO, LUNA }
+
+    public Escenario escenario = Escenario.HANGAR;
+    /** A qué altura (en unidades de la arena) salen los disparos. */
+    private static final float TIRO = 58;
+    public final Efectos efectos = new Efectos();
+    private final DibujoRobot dibujo;
+    private final DibujoRobot.Estado[] estados = {new DibujoRobot.Estado(), new DibujoRobot.Estado()};
+    private final Random azar = new Random(11);
+    private float tiempo;
+    /** Lo que dice cada robot (el bocadillo) y cuánto le queda. */
+    private final String[] bocadillo = {"", ""};
+    private final float[] tiempoBocadillo = new float[2];
+    // El rectángulo de pantalla donde está la arena.
+    private float ax, ay, aw, ah, escalaX;
+    private double ancho = 1000, alto = 700;
+    public float sacudida;
+    /** La alegría de los robots (al subir de nivel saltan). */
+    public float alegria;
+
+    public VistaDeArena(Pincel p) {
+        dibujo = new DibujoRobot(p);
+    }
+
+    public void decir(int quien, String texto) {
+        if (quien < 0 || quien > 1 || texto == null) return;
+        bocadillo[quien] = texto;
+        tiempoBocadillo[quien] = 2.5f + texto.length() * 0.04f;
+    }
+
+    // ================================================================ coordenadas
+
+    private float f(double y) {
+        return (float) (0.8 + 0.2 * (1 - y / alto));
+    }
+
+    public float sx(double x, double y) {
+        return (float) (ax + aw / 2 + (x - ancho / 2) * escalaX * f(y));
+    }
+
+    public float sy(double y) {
+        float suelo = ah * 0.62f;
+        return (float) (ay + ah * 0.3f + (1 - y / alto) * suelo);
+    }
+
+    // ================================================================ sucesos → efectos y sonidos
+
+    public void sucesos(Pelea pelea, Sonidos sonidos) {
+        for (Suceso s : pelea.sucesos()) {
+            float px = sx(s.x, s.y), py = sy(s.y) - TIRO * escalaX;
+            switch (s.tipo) {
+                case LASER: if (sonidos != null) sonidos.tocar(s.valor > 10 ? "laser_pesado" : "laser", 0.6f, 0.9f + azar.nextFloat() * 0.2f); break;
+                case DISPARO: if (sonidos != null) sonidos.tocar(s.valor > 1 ? "disparo" : "ametralladora", 0.5f); break;
+                case MISIL: if (sonidos != null) sonidos.tocar("misil", 0.5f); break;
+                case LLAMA: if (sonidos != null) sonidos.tocar("llama", 0.5f); break;
+                case GOLPE_CUERPO:
+                    efectos.chispas(px, py, 18, 0xFFE38A);
+                    sacudida = Math.max(sacudida, 6);
+                    if (sonidos != null) sonidos.tocar(s.valor > 20 ? "golpe_fuerte" : "golpe_metal", 0.8f);
+                    break;
+                case FALLO_CUERPO: if (sonidos != null) sonidos.tocar("fallo", 0.4f); break;
+                case IMPACTO: {
+                    float fuerza = (float) Math.min(1.5, s.valor / 10);
+                    efectos.chispas(px, py, 4 + (int) (fuerza * 10), s.texto.equals("laser") ? 0x9FF7FF : 0xFFD27A);
+                    if (s.valor > 8) sacudida = Math.max(sacudida, 3 + fuerza * 4);
+                    if (sonidos != null && !s.texto.equals("llama") && !s.texto.equals("pared")) sonidos.tocar("chispa", 0.4f + fuerza * 0.3f);
+                    break;
+                }
+                case EXPLOSION:
+                    efectos.explosion(px, sy(s.y) - 10 * escalaX, 0.6f);
+                    if (sonidos != null) sonidos.tocar("explosion", 0.7f);
+                    sacudida = Math.max(sacudida, 5);
+                    break;
+                case ESQUIVA: if (sonidos != null) sonidos.tocar("fallo", 0.3f, 1.4f); break;
+                case BLOQUEO:
+                    efectos.chispas(px, py, 10, 0x9FE7FF);
+                    if (sonidos != null) sonidos.tocar("escudo", 0.5f);
+                    break;
+                case PARED: case CHOQUE:
+                    efectos.chispas(px, sy(s.y) - 10, 6, 0xFFFFFF);
+                    if (sonidos != null) sonidos.tocar(s.tipo == Suceso.Tipo.PARED ? "pared" : "choque", 0.6f);
+                    break;
+                case PARTE_ROTA:
+                    efectos.explosion(px, py, 0.5f);
+                    if (sonidos != null) sonidos.tocar("parte_rota", 0.8f);
+                    sacudida = Math.max(sacudida, 8);
+                    break;
+                case FUERA_DE_COMBATE:
+                    efectos.explosion(px, py, 1f);
+                    if (sonidos != null) sonidos.tocar("explosion", 1f);
+                    sacudida = Math.max(sacudida, 12);
+                    break;
+                case ESPECIAL:
+                    if (sonidos != null) {
+                        String que = s.texto.equals("escudo") || s.texto.equals("escudo_brazo") ? "escudo" : s.texto.equals("turbo") ? "turbo"
+                                : s.texto.equals("pulso") ? "pulso" : s.texto.equals("camuflaje") ? "camuflaje" : "servo";
+                        sonidos.tocar(que, 0.7f);
+                    }
+                    if (s.texto.equals("pulso")) efectos.anadir(Efectos.Tipo.ONDA, px, py, 0, 0, 0.5f, 240 * escalaX, 0x9BE7FF);
+                    break;
+                case REPARACION: if (sonidos != null) sonidos.tocar("reparar", 0.6f); break;
+                case ATURDIDO: if (sonidos != null) sonidos.tocar("pulso", 0.4f, 1.5f); break;
+                case DECIR: decir(s.quien, s.texto); break;
+                case ERROR_CODIGO: if (sonidos != null) sonidos.tocar("error", 0.5f); break;
+                case TOPE: if (sonidos != null) sonidos.tocar("tope", 0.3f); break;
+                case RONDA_EMPIEZA: case RONDA_ACABA: if (sonidos != null) sonidos.tocar("campana", 0.8f); break;
+                default: break;
+            }
+        }
+    }
+
+    // ================================================================ dibujar
+
+    public void dibujar(Pincel p, Pelea pelea, float x, float y, float w, float h, float dt) {
+        tiempo += dt;
+        ancho = pelea.ancho;
+        alto = pelea.alto;
+        float temblor = sacudida > 0.1f ? (azar.nextFloat() * 2 - 1) * sacudida : 0;
+        sacudida *= 0.88f;
+        ax = x + temblor;
+        ay = y + temblor * 0.6f;
+        aw = w;
+        ah = h;
+        escalaX = (float) (aw * 0.94 / ancho);
+        p.recortar(x, y, w, h);
+        fondo(p);
+        suelo(p);
+        // Lo que está más lejos (y mayor), antes.
+        Cuerpo a = pelea.cuerpo(0), b = pelea.cuerpo(1);
+        if (a != null && b != null) {
+            Cuerpo lejos = a.y >= b.y ? a : b, cerca = lejos == a ? b : a;
+            sombraYRobot(p, lejos, pelea, dt);
+            sombraYRobot(p, cerca, pelea, dt);
+            proyectiles(p, pelea);
+            rayos(p, pelea);
+            llamas(p, pelea);
+        }
+        efectos.avanzar(dt);
+        efectos.dibujar(p);
+        if (a != null && b != null) {
+            bocadillo(p, a, 0, dt);
+            bocadillo(p, b, 1, dt);
+        }
+        p.sinRecorte();
+    }
+
+    private void fondo(Pincel p) {
+        float cielo = ay + ah * 0.32f;
+        switch (escenario) {
+            case DESIERTO: {
+                p.degradado(ax - 20, ay - 20, aw + 40, cielo - ay + 30, 0xF6A85E, 0xFCD9A0, 1);
+                p.circulo(ax + aw * 0.75f, ay + ah * 0.14f, ah * 0.08f, 0xFFF4D6, 1);
+                p.brillo(ax + aw * 0.75f, ay + ah * 0.14f, ah * 0.1f, 0xFFE3A3, 0.6f);
+                for (int i = 0; i < 4; i++) {
+                    float dx = ax + i * aw / 3f - aw * 0.1f;
+                    p.elipse(dx, cielo, aw * 0.28f, ah * 0.08f, 0, Pincel.mezcla(0xC97B3D, 0xE9A86A, i / 4f), 1);
+                }
+                break;
+            }
+            case NEON: {
+                p.degradado(ax - 20, ay - 20, aw + 40, cielo - ay + 30, 0x0B0624, 0x3A0F5C, 1);
+                Random r = new Random(5);
+                for (int i = 0; i < 26; i++) {
+                    float bw = 30 + r.nextFloat() * 70, bh = 50 + r.nextFloat() * ah * 0.22f;
+                    float bx = ax + r.nextFloat() * aw;
+                    p.rect(bx, cielo - bh, bw, bh + 4, 0x150B2E, 1);
+                    for (int k = 0; k < 6; k++) {
+                        if (r.nextFloat() < 0.5f) p.rect(bx + 6 + r.nextFloat() * (bw - 14), cielo - bh + 8 + r.nextFloat() * (bh - 16), 5, 3,
+                                r.nextBoolean() ? 0xFF3CAC : 0x2DE2E6, 0.6f + 0.4f * (float) Math.sin(tiempo * 2 + i + k));
+                    }
+                }
+                p.rect(ax - 20, cielo - 3, aw + 40, 3, 0xFF3CAC, 0.8f);
+                break;
+            }
+            case LABORATORIO: {
+                p.degradado(ax - 20, ay - 20, aw + 40, cielo - ay + 30, 0xD8E2EA, 0xB9C7D3, 1);
+                for (int i = 0; i < 7; i++) {
+                    float px = ax + aw * (0.06f + i * 0.14f);
+                    p.caja(px, ay + ah * 0.06f, aw * 0.1f, ah * 0.15f, 6, 0x2A3644, 1);
+                    p.rect(px + 6, ay + ah * 0.06f + 6, aw * 0.1f - 12, ah * 0.15f - 12, 0x0E2A1E, 1);
+                    for (int k = 0; k < 4; k++) {
+                        float lw = (aw * 0.1f - 20) * (0.3f + 0.7f * (float) Math.abs(Math.sin(tiempo * 0.7 + i * 1.3 + k)));
+                        p.rect(px + 10, ay + ah * 0.06f + 12 + k * 9, lw, 3, 0x5BD685, 0.9f);
+                    }
+                }
+                break;
+            }
+            case LUNA: {
+                p.degradado(ax - 20, ay - 20, aw + 40, cielo - ay + 30, 0x03040A, 0x0D1124, 1);
+                Random r = new Random(9);
+                for (int i = 0; i < 120; i++) {
+                    float sxx = ax + r.nextFloat() * aw, syy = ay + r.nextFloat() * (cielo - ay);
+                    p.circulo(sxx, syy, r.nextFloat() * 1.6f + 0.3f, 0xFFFFFF, 0.4f + 0.6f * (float) Math.abs(Math.sin(tiempo + i)));
+                }
+                p.circulo(ax + aw * 0.2f, ay + ah * 0.13f, ah * 0.09f, 0x3D7BD9, 1);
+                p.circulo(ax + aw * 0.2f - ah * 0.02f, ay + ah * 0.12f, ah * 0.05f, 0x4CAF50, 0.8f);
+                break;
+            }
+            case HANGAR:
+            default: {
+                p.degradado(ax - 20, ay - 20, aw + 40, cielo - ay + 30, 0x1B2230, 0x2C3646, 1);
+                for (int i = 0; i < 9; i++) {
+                    float px = ax + i * aw / 8f;
+                    p.rect(px - 5, ay, 10, cielo - ay, 0x141A24, 1);
+                    p.linea(px, ay + 10, px + aw / 8f, cielo - 20, 4, 0x141A24, 1);
+                }
+                for (int i = 0; i < 5; i++) {
+                    float lx = ax + aw * (0.12f + i * 0.19f);
+                    p.brillo(lx, ay + ah * 0.05f, 30, 0xFFF1C1, 0.5f);
+                    p.circulo(lx, ay + ah * 0.05f, 6, 0xFFF8E1, 1);
+                }
+                break;
+            }
+        }
+    }
+
+    private void suelo(Pincel p) {
+        int suelo1, suelo2, linea;
+        switch (escenario) {
+            case DESIERTO: suelo1 = 0xD8A066; suelo2 = 0xC4884E; linea = 0xB27740; break;
+            case NEON: suelo1 = 0x150B2E; suelo2 = 0x0B0618; linea = 0x2DE2E6; break;
+            case LABORATORIO: suelo1 = 0xE9EEF2; suelo2 = 0xCDD6DE; linea = 0xA5B3C0; break;
+            case LUNA: suelo1 = 0x6E6F75; suelo2 = 0x4A4B50; linea = 0x5C5D62; break;
+            default: suelo1 = 0x3C4656; suelo2 = 0x262E3A; linea = 0x4E5A6E; break;
+        }
+        // Fuera de la arena: el suelo de alrededor, más oscuro, hasta abajo del todo.
+        float horizonte = ay + ah * 0.3f;
+        p.degradado(ax - 20, horizonte, aw + 40, ah - (horizonte - ay) + 20, Pincel.oscurecer(suelo2, 0.35f), Pincel.oscurecer(suelo2, 0.6f), 1);
+        float[] v = {sx(0, alto), sy(alto), sx(ancho, alto), sy(alto), sx(ancho, 0), sy(0), sx(0, 0), sy(0)};
+        p.poligono(v, suelo2, 1);
+        // Baldosas a cuadros, con la perspectiva.
+        int nx = 10, ny = 7;
+        for (int i = 0; i < nx; i++) {
+            for (int j = 0; j < ny; j++) {
+                if ((i + j) % 2 != 0) continue;
+                double x0 = ancho * i / nx, x1 = ancho * (i + 1) / nx, y0 = alto * j / ny, y1 = alto * (j + 1) / ny;
+                p.poligono(new float[]{sx(x0, y1), sy(y1), sx(x1, y1), sy(y1), sx(x1, y0), sy(y0), sx(x0, y0), sy(y0)}, suelo1, 1);
+            }
+        }
+        float grosor = escenario == Escenario.NEON ? 2 : 1;
+        float brilloNeon = escenario == Escenario.NEON ? 0.35f + 0.25f * (float) Math.sin(tiempo * 2) : 0.5f;
+        for (int i = 0; i <= nx; i++) p.linea(sx(ancho * i / nx, alto), sy(alto), sx(ancho * i / nx, 0), sy(0), grosor, linea, brilloNeon);
+        for (int j = 0; j <= ny; j++) p.linea(sx(0, alto * j / ny), sy(alto * j / ny), sx(ancho, alto * j / ny), sy(alto * j / ny), grosor, linea, brilloNeon);
+        // El borde de la arena: una banda con luces.
+        int borde = escenario == Escenario.NEON ? 0xFF3CAC : escenario == Escenario.LABORATORIO ? 0xFFB000 : 0xFFC857;
+        p.linea(sx(0, 0), sy(0), sx(ancho, 0), sy(0), 6, 0x111111, 0.8f);
+        p.linea(sx(0, 0), sy(0) - 3, sx(ancho, 0), sy(0) - 3, 3, borde, 0.9f);
+        p.linea(sx(0, alto), sy(alto), sx(ancho, alto), sy(alto), 3, borde, 0.6f);
+        p.linea(sx(0, 0), sy(0), sx(0, alto), sy(alto), 3, borde, 0.7f);
+        p.linea(sx(ancho, 0), sy(0), sx(ancho, alto), sy(alto), 3, borde, 0.7f);
+        // El muro de delante: una banda de metal bajo el borde.
+        float muro = 22;
+        p.poligono(new float[]{sx(0, 0), sy(0), sx(ancho, 0), sy(0), sx(ancho, 0), sy(0) + muro, sx(0, 0), sy(0) + muro},
+                Pincel.oscurecer(suelo2, 0.5f), 1);
+        for (int i = 0; i < 20; i++) {
+            float lx = sx(ancho * (i + 0.5) / 20, 0);
+            p.linea(lx - 10, sy(0) + 4, lx + 10, sy(0) + muro - 4, 5, borde, 0.25f);
+        }
+        for (int i = 0; i <= 10; i++) {
+            float lx = sx(ancho * i / 10, 0);
+            p.circulo(lx, sy(0) - 3, 3, borde, 0.5f + 0.5f * (float) Math.abs(Math.sin(tiempo * 3 + i)));
+        }
+    }
+
+    private void sombraYRobot(Pincel p, Cuerpo c, Pelea pelea, float dt) {
+        DibujoRobot.Estado e = estados[c.indice];
+        Combatiente co = c.combatiente;
+        double mira = Math.toRadians(c.mira);
+        e.lado = Math.cos(mira) >= 0 ? 1 : -1;
+        e.alzado = (float) Math.sin(mira) * 0.55f;
+        e.paso = (float) c.paso;
+        e.tiempo = tiempo + c.indice * 1.7f;
+        for (int i = 0; i < 4; i++) e.partes[i] = (float) (c.parte[i] / Math.max(1, c.parteMax[i]));
+        e.abolladuras = co.abolladuras;
+        e.retroceso = (float) c.retroceso;
+        e.sacudida = (float) c.sacudida;
+        e.escudo = c.escudoCabeza > 0 || c.escudoBrazo > 0;
+        e.turbo = c.turbo > 0;
+        e.camuflaje = c.camuflaje > 0;
+        e.aturdido = c.aturdido > 0;
+        e.sobrecarga = c.sobrecarga > 0;
+        e.fuera = c.fuera;
+        e.brazoQueAtaca = pelea.turno() - c.ultimoAtaque < 8 ? c.brazoDelUltimoAtaque : -1;
+        e.alegria = alegria;
+        e.cara = c.fuera ? 3 : pelea.turno() - c.ultimoGolpe < 20 ? 3 : pelea.turno() - c.ultimoAtaque < 20 ? 2 : 0;
+        float px = sx(c.x, c.y), py = sy(c.y);
+        float talla = escalaX * f(c.y) * 1.45f;
+        dibujo.dibujar(co.montaje.modelo, co.montaje, px, py, talla, e);
+        // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea.
+        double dano = Math.min(1.2, co.estropeado());
+        float alto = (float) (62 * talla * co.montaje.modelo.tamano / 30);
+        if (dano > 0.15 && azar.nextFloat() < dano * 0.5f) efectos.humo(px + azar.nextFloat() * 20 - 10, py - alto * 0.8f, (float) dano);
+        for (int i = 0; i < 4; i++) {
+            if (c.parte[i] <= 0 && azar.nextFloat() < 0.08f) efectos.chispas(px + azar.nextFloat() * 30 - 15, py - alto * (0.3f + 0.15f * i), 3, 0xFFE38A);
+        }
+        if (c.fuera && azar.nextFloat() < 0.5f) efectos.humo(px, py - alto * 0.6f, 1.2f);
+    }
+
+    private void proyectiles(Pincel p, Pelea pelea) {
+        for (Proyectil pr : pelea.proyectiles) {
+            float px = sx(pr.x, pr.y), py = sy(pr.y) - TIRO * escalaX;
+            if (pr.misil) {
+                float tx = sx(pr.x - pr.vx * 3, pr.y - pr.vy * 3), ty = sy(pr.y - pr.vy * 3) - TIRO * escalaX;
+                p.linea(tx, ty, px, py, 6 * escalaX, 0xE63946, 1);
+                p.circulo(px, py, 3.5f * escalaX, 0xFFFFFF, 1);
+                p.brillo(tx, ty, 6 * escalaX, 0xFF9F1C, 0.7f);
+                if (azar.nextFloat() < 0.7f) efectos.humo(tx, ty, 0.2f);
+            } else {
+                float tx = sx(pr.x - pr.vx * 1.5, pr.y - pr.vy * 1.5), ty = sy(pr.y - pr.vy * 1.5) - TIRO * escalaX;
+                p.linea(tx, ty, px, py, 3.2f * escalaX, 0xFFD27A, 0.8f);
+                p.circulo(px, py, 2.6f * escalaX, 0xFFF6D5, 1);
+            }
+        }
+    }
+
+    private void rayos(Pincel p, Pelea pelea) {
+        for (Pelea.Rayo r : pelea.rayos) {
+            float a = r.vida / 8f;
+            float x1 = sx(r.x1, r.y1), y1 = sy(r.y1) - TIRO * escalaX, x2 = sx(r.x2, r.y2), y2 = sy(r.y2) - TIRO * escalaX;
+            int color = r.dueno == 0 ? 0x3FE0FF : 0xFF4FD8;
+            p.linea(x1, y1, x2, y2, 12 * escalaX * a, color, 0.25f * a);
+            p.linea(x1, y1, x2, y2, 5 * escalaX * a, color, 0.7f * a);
+            p.linea(x1, y1, x2, y2, 2 * escalaX, 0xFFFFFF, a);
+            if (r.acerto) p.brillo(x2, y2, 10 * escalaX, color, a);
+        }
+    }
+
+    private void llamas(Pincel p, Pelea pelea) {
+        for (int i = 0; i < 2; i++) {
+            Cuerpo c = pelea.cuerpo(i);
+            if (c == null || c.llama <= 0) continue;
+            double ang = Math.toRadians(c.mira);
+            for (int k = 0; k < 4; k++) {
+                double d = 30 + azar.nextDouble() * 150;
+                double ex = c.x + Math.cos(ang + (azar.nextDouble() - 0.5) * 0.4) * d, ey = c.y + Math.sin(ang + (azar.nextDouble() - 0.5) * 0.4) * d;
+                efectos.anadir(Efectos.Tipo.FUEGO, sx(ex, ey), sy(ey) - TIRO * escalaX, 0, -20, 0.25f, (float) (5 + d * 0.06) * escalaX,
+                        azar.nextBoolean() ? 0xFF6B1A : 0xFFC145);
+            }
+        }
+    }
+
+    private void bocadillo(Pincel p, Cuerpo c, int i, float dt) {
+        if (tiempoBocadillo[i] <= 0 || bocadillo[i].isEmpty()) return;
+        tiempoBocadillo[i] -= dt;
+        float a = Math.min(1, tiempoBocadillo[i] * 2);
+        float t = 15;
+        float w = Math.min(340, p.ancho(bocadillo[i], t, false) + 24);
+        float h = p.altoDeParrafo(bocadillo[i], w - 20, t) + 14;
+        float px = sx(c.x, c.y), py = sy(c.y) - (float) (150 * escalaX * c.combatiente.montaje.modelo.tamano / 30) - h;
+        float bx = Math.max(ax + 6, Math.min(ax + aw - w - 6, px - w / 2));
+        p.caja(bx, py, w, h, 10, 0xFFFFFF, 0.93f * a);
+        p.triangulo(px - 8, py + h - 1, px + 8, py + h - 1, px, py + h + 10, 0xFFFFFF, 0.93f * a);
+        p.parrafo(bocadillo[i], bx + 10, py + 7, w - 20, t, 0x14161A, a);
+    }
+
+    /** Para quien dibuja encima (las barras de vida): dónde queda la cabeza de un robot en pantalla. */
+    public float[] cabezaDe(Cuerpo c) {
+        float px = sx(c.x, c.y), py = sy(c.y) - (float) (140 * escalaX * c.combatiente.montaje.modelo.tamano / 30);
+        return new float[]{px, py};
+    }
+
+    /** Un robot suelto (para el taller y los menús), sin pelea. */
+    public void robotSuelto(Pincel p, Montaje m, float x, float y, float talla, float t, float alegriaDelRobot, boolean mirarDerecha) {
+        DibujoRobot.Estado e = new DibujoRobot.Estado();
+        e.lado = mirarDerecha ? 1 : -1;
+        e.tiempo = t;
+        e.paso = 0;
+        e.alzado = 0.05f * (float) Math.sin(t * 1.5);
+        e.alegria = alegriaDelRobot;
+        e.cara = alegriaDelRobot > 0 ? 1 : 0;
+        dibujo.dibujar(m.modelo, m, x, y, talla, e);
+    }
+
+    /** Las piezas que más se ven, para que la pelea suene y se vea según el arma. */
+    static boolean esCuerpo(Pieza p) {
+        return p != null && p.arma() == Pieza.Arma.CUERPO;
+    }
+}

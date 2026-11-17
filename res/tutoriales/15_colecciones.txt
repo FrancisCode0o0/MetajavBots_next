@@ -1,0 +1,164 @@
+# Tema 15: colecciones (List, Set y Map).
+=== l15_listas
+tema: 15
+orden: 1
+titulo.es: Listas que crecen
+titulo.de: Listen, die wachsen
+titulo.en: Lists that grow
+--- pagina
+es: Un array tiene tamaño fijo; una List crece y encoge sola. ArrayList es la más usada: add añade,
+es: get(i) lee, size() dice cuántos hay y remove quita. Entre < > va el tipo de lo que guarda:
+es: List<Enemigo> es «una lista de enemigos». Desde Java 7 puedes escribir new ArrayList<>() con el rombo vacío.
+de: Ein Array hat eine feste Größe; eine List wächst und schrumpft von selbst. ArrayList ist die meistbenutzte:
+de: add fügt hinzu, get(i) liest, size() zählt, remove entfernt. In < > steht der Typ des Inhalts:
+de: List<Gegner> ist „eine Liste von Gegnern“. Seit Java 7 darfst du new ArrayList<>() mit leerer Raute schreiben.
+en: An array has a fixed size; a List grows and shrinks by itself. ArrayList is the most used: add adds,
+en: get(i) reads, size() tells you how many and remove takes one out. The type it holds goes between < >:
+en: List<Enemy> means "a list of enemies". Since Java 7 you can write new ArrayList<>() with the empty diamond.
+--- pagina
+es: enemigosVistos() te da la lista de los enemigos que ves ahora mismo. Con varios rivales, recórrela
+es: y quédate con el más cercano: es el más fácil de acertar y el que más daño te puede hacer.
+es: Fíjate en el null inicial: si la lista está vacía, no hay a quién disparar.
+de: gesehen() liefert die Liste der Gegner, die du gerade siehst. Bei mehreren Rivalen geh sie durch
+de: und nimm den nächsten: Er ist am leichtesten zu treffen und kann dir am meisten schaden.
+de: Beachte das null am Anfang: Ist die Liste leer, gibt es niemanden zum Beschießen.
+en: seenEnemies() gives you the list of enemies you can see right now. With several rivals, walk through it
+en: and keep the nearest one: it's the easiest to hit and the one that can hurt you most.
+en: Note the initial null: if the list is empty, there's nobody to shoot at.
+codigo:
+    @Override
+    public void cadaTurno() {
+        Enemigo cerca = null;
+        for (Enemigo e : enemigosVistos()) {
+            if (cerca == null || e.distancia() < cerca.distancia()) {
+                cerca = e;
+            }
+        }
+        if (cerca != null) {
+            apuntarHacia(cerca.angulo());
+            atacar();
+        } else {
+            apuntar(25);
+        }
+        avanzar(70);
+    }
+--- pagina
+es: List.of(1, 2, 3) (Java 9) crea una lista que no se puede cambiar: si intentas add, salta
+es: UnsupportedOperationException. Es perfecta para datos fijos, como un arsenal que no debe tocarse.
+es: Y en una List<Integer> no caben int sueltos, sino Integer: Java los envuelve solo (autoboxing).
+de: List.of(1, 2, 3) (Java 9) erzeugt eine unveränderliche Liste: Versuchst du add, fliegt
+de: eine UnsupportedOperationException. Ideal für feste Daten, etwa ein Arsenal, das niemand anfassen soll.
+de: Und in eine List<Integer> passen keine nackten ints, sondern Integer: Java verpackt sie selbst (Autoboxing).
+en: List.of(1, 2, 3) (Java 9) creates a list that can't be changed: try add and you get an
+en: UnsupportedOperationException. Perfect for fixed data, like an arsenal nobody should touch.
+en: And a List<Integer> can't hold bare ints, only Integers: Java wraps them for you (autoboxing).
+--- tarea
+robot: aciertos>=8
+es: Recorre enemigosVistos(), apunta siempre al más cercano y acierta al muñeco 8 veces.
+de: Geh gesehen() durch, ziel immer auf den nächsten Gegner und triff die Puppe 8-mal.
+en: Walk through seenEnemies(), always aim at the nearest one and hit the dummy 8 times.
+--- tarea
+ejercicio: t15_peso_total
+es: Suma el peso de toda la carga guardada en una lista.
+de: Summiere das Gewicht der ganzen Ladung in einer Liste.
+en: Add up the weight of all the cargo stored in a list.
+
+=== l15_set_y_map
+tema: 15
+orden: 2
+titulo.es: Sin repetidos y con etiqueta
+titulo.de: Ohne Doppelte und mit Etikett
+titulo.en: No duplicates, and with labels
+--- pagina
+es: Un Set es una bolsa sin repetidos: añadir dos veces lo mismo no hace nada. Viene bien para preguntas
+es: como «¿qué modelos distintos he visto?». HashSet es rápido pero no guarda orden; TreeSet los ordena.
+es: Para que un Set reconozca dos objetos tuyos como iguales, tu clase necesita equals y hashCode.
+de: Ein Set ist ein Beutel ohne Doppelte: Zweimal dasselbe hinzufügen bewirkt nichts. Gut für Fragen wie
+de: „Welche verschiedenen Modelle habe ich gesehen?“. HashSet ist schnell, aber ohne Reihenfolge; TreeSet sortiert.
+de: Damit ein Set zwei deiner Objekte als gleich erkennt, braucht deine Klasse equals und hashCode.
+en: A Set is a bag with no duplicates: adding the same thing twice does nothing. Good for questions like
+en: "which different models have I seen?". HashSet is fast but keeps no order; TreeSet sorts them.
+en: For a Set to recognise two of your objects as equal, your class needs equals and hashCode.
+--- pagina
+es: Un Map guarda pares clave → valor, como un diccionario: put(clave, valor) guarda, get(clave) busca.
+es: memoria() es un Map<String, Object>, ¡y sobrevive entre rondas aunque cambies el código!
+es: Úsalo para aprender del rival: qué arma te ha hecho más daño, cuántas rondas has ganado.
+es: getOrDefault y merge ahorran los ifs de «¿ya existía esta clave?».
+de: Eine Map speichert Paare Schlüssel → Wert, wie ein Wörterbuch: put(schluessel, wert) speichert, get
+de: sucht. gedaechtnis() ist eine Map<String, Object>, und sie überlebt zwischen den Runden, selbst wenn du
+de: den Code änderst! Lern damit vom Gegner: welche Waffe dir am meisten geschadet hat, wie viele Runden du
+de: gewonnen hast. getOrDefault und merge ersparen die ifs à la „Gab es den Schlüssel schon?“.
+en: A Map stores key → value pairs, like a dictionary: put(key, value) stores, get(key) looks up.
+en: memory() is a Map<String, Object>, and it survives between rounds even if you change your code!
+en: Use it to learn from the rival: which weapon hurt you most, how many rounds you've won.
+en: getOrDefault and merge save you the "did this key exist already?" ifs.
+codigo:
+    @Override
+    public void alRecibirGolpe(Golpe g) {
+        String clave = "dano_" + g.arma();
+        double antes = (double) memoria().getOrDefault(clave, 0.0);
+        memoria().put(clave, antes + g.dano());
+    }
+    @Override
+    public void alEmpezar() {
+        escribir("Lo que me ha dolido: " + memoria());
+    }
+--- tarea
+robot: usa:memoria
+es: Guarda en memoria() algo que aprendas en la ronda (el daño por arma, por ejemplo) y escríbelo al empezar
+es: la siguiente.
+de: Speichere in gedaechtnis() etwas, das du in der Runde lernst (Schaden pro Waffe etwa), und gib es danach aus.
+en: Store something you learn in the round in memory() (damage per weapon, say) and print it when the next
+en: one starts.
+--- tarea
+ejercicio: t15_contar_armas
+es: ¿Qué armas se usaron, y cuántas veces? Un Map lleva la cuenta.
+de: Welche Waffen wurden wie oft benutzt? Eine Map führt Buch.
+en: Which weapons were used, and how often? A Map keeps count.
+
+=== l15_ordenar_y_colas
+tema: 15
+orden: 3
+titulo.es: Ordenar, hacer cola y no romper nada
+titulo.de: Sortieren, Schlange stehen und nichts kaputt machen
+titulo.en: Sorting, queueing and breaking nothing
+--- pagina
+es: Para ordenar con tu propio criterio, un Comparator:
+es: lista.sort(Comparator.comparingDouble(Enemigo::distancia)) pone primero al más cercano (las flechas ::
+es: las verás en el tema 17). Un TreeMap mantiene las claves ordenadas solo, y una Deque es una cola por los
+es: dos lados: addLast para ponerse a la cola, pollFirst para atender.
+de: Zum Sortieren nach eigenem Kriterium nimmst du einen Comparator:
+de: liste.sort(Comparator.comparingDouble(Gegner::entfernung)) stellt den Nächsten nach vorn (:: kommt in
+de: Thema 17). Eine TreeMap hält ihre Schlüssel von selbst sortiert, und eine Deque ist eine Schlange mit
+de: zwei Enden: addLast zum Anstellen, pollFirst zum Bedienen.
+en: To sort by your own rule, use a Comparator: list.sort(Comparator.comparingDouble(Enemy::distance))
+en: puts the nearest first (you'll meet :: in topic 17). A TreeMap keeps its keys sorted on its own,
+en: and a Deque is a queue open at both ends: addLast to join the queue, pollFirst to serve.
+--- pagina
+es: Trampa famosa: quitar elementos de una lista mientras la recorres con for-each lanza
+es: ConcurrentModificationException. La lista cambia bajo tus pies y el bucle se pierde. Usa un Iterator
+es: con su remove(), o mejor aún lista.removeIf(g -> g.dano() < 5), que lo hace bien por ti.
+de: Berühmte Falle: Elemente aus einer Liste zu entfernen, während du sie mit for-each durchläufst, wirft eine
+de: ConcurrentModificationException. Die Liste ändert sich unter deinen Füßen, und die Schleife verirrt sich.
+de: Nimm einen Iterator mit seinem remove() oder besser liste.removeIf(t -> t.schaden() < 5), das macht es richtig.
+en: Famous trap: removing elements from a list while walking it with for-each throws a
+en: ConcurrentModificationException. The list changes under your feet and the loop gets lost. Use an Iterator
+en: with its remove(), or better still list.removeIf(h -> h.damage() < 5), which does it right for you.
+--- pagina
+es: Java 21 trajo las colecciones secuenciadas: List, Deque y LinkedHashSet tienen ahora getFirst(), getLast()
+es: y reversed(). Antes había que escribir lista.get(lista.size() - 1) para el último, con su riesgo de despiste.
+de: Java 21 brachte die Sequenced Collections: List, Deque und LinkedHashSet haben jetzt getFirst(),
+de: getLast() und reversed(). Vorher musste man für das letzte liste.get(liste.size() - 1) schreiben, mit
+de: Verwechslungsgefahr.
+en: Java 21 brought sequenced collections: List, Deque and LinkedHashSet now have getFirst(), getLast()
+en: and reversed(). Before, you had to write list.get(list.size() - 1) for the last one, with room for slips.
+--- tarea
+ejercicio: t15_golpes_fuertes
+es: Quita los golpes flojos sin romper la lista.
+de: Entferne die schwachen Treffer, ohne die Liste zu zerbrechen.
+en: Remove the weak hits without breaking the list.
+--- tarea
+ejercicio: t15_primero_y_ultimo
+es: El primero y el último de la cola, con los métodos de Java 21.
+de: Der Erste und der Letzte in der Schlange, mit den Methoden aus Java 21.
+en: The first and the last in the queue, with the Java 21 methods.

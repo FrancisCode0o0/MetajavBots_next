@@ -1,0 +1,154 @@
+# Tema 14: excepciones (try, catch, throw y las propias).
+=== l14_cuando_algo_explota
+tema: 14
+orden: 1
+titulo.es: Cuando algo explota
+titulo.de: Wenn etwas explodiert
+titulo.en: When something blows up
+--- pagina
+es: Una excepción es la forma que tiene Java de decir «esto no se puede hacer»: dividir un int entre 0,
+es: usar un null, pedir la casilla 10 de un array de 5. Java para en seco, lanza la excepción y,
+es: si nadie la atrapa, tu robot pierde el turno (y el locutor se lo pasa en grande).
+de: Eine Ausnahme ist Javas Art zu sagen „das geht nicht“: ein int durch 0 teilen, null benutzen,
+de: in einem Array mit 5 Fächern nach Fach 10 fragen. Java stoppt sofort, wirft die Ausnahme, und
+de: fängt sie niemand, verliert dein Roboter den Zug (und der Sprecher hat seinen Spaß).
+en: An exception is Java's way of saying "this can't be done": dividing an int by 0,
+en: using a null, asking for box 10 of a 5-box array. Java stops dead, throws the exception and,
+en: if nobody catches it, your robot loses its turn (and the announcer has a field day).
+--- pagina
+es: Aprende a leer el mensaje: el nombre dice QUÉ pasó (NullPointerException, ArithmeticException…),
+es: el texto dice el detalle y la traza dice DÓNDE: busca la primera línea que mencione tu código
+es: y su número de línea. Desde Java 14 los NullPointerException dicen incluso qué variable era null.
+es: Lo de abajo de la traza es quien llamó a quien, como migas de pan hasta el error.
+de: Lern, die Meldung zu lesen: Der Name sagt, WAS passiert ist (NullPointerException, ArithmeticException
+de: …), der Text nennt Details, und der Stacktrace sagt, WO: Such die erste Zeile mit deinem Code und ihrer
+de: Zeilennummer. Seit Java 14 verraten NullPointerExceptions sogar, welche Variable null war. Weiter unten
+de: im Stacktrace steht, wer wen aufgerufen hat, wie Brotkrumen bis zum Fehler.
+en: Learn to read the message: the name says WHAT happened (NullPointerException, ArithmeticException…),
+en: the text gives the detail and the stack trace says WHERE: look for the first line that mentions your code
+en: and its line number. Since Java 14, NullPointerExceptions even tell you which variable was null.
+en: Further down the trace is who called whom, like breadcrumbs leading to the error.
+--- pagina
+es: La mejor excepción es la que no ocurre. Antes de dividir, mira que el divisor no sea 0; antes de usar un
+es: objeto, mira que no sea null; antes de usar un índice, mira que esté entre 0 y length - 1.
+es: Un if a tiempo vale más que cualquier try.
+de: Die beste Ausnahme ist die, die gar nicht passiert. Prüf vor dem Teilen, dass der Teiler nicht 0 ist;
+de: vor dem Benutzen eines Objekts, dass es nicht null ist; vor dem Index, dass er zwischen 0 und length - 1 liegt.
+de: Ein rechtzeitiges if ist mehr wert als jedes try.
+en: The best exception is the one that never happens. Before dividing, check the divisor isn't 0;
+en: before using an object, check it isn't null; before using an index, check it's between 0 and length - 1.
+en: A timely if is worth more than any try.
+codigo:
+    double media = vistos == 0 ? 0 : sumaDistancias / vistos;
+    if (ultimo != null) {
+        apuntarA(ultimo.x, ultimo.y);
+    }
+--- tarea
+robot: ronda_sin_errores
+es: Revisa tu robot buscando divisiones, nulls e índices peligrosos, y aguanta una ronda entera sin excepciones.
+de: Durchsuch deinen Roboter nach gefährlichen Divisionen, nulls und Indizes und überstehe eine Runde ohne
+de: Ausnahme.
+en: Go through your robot looking for risky divisions, nulls and indexes, and get through a round with no
+en: exceptions.
+--- tarea
+ejercicio: t14_leer_nivel
+es: Lee un nivel escrito como texto sin que un dato malo te tumbe.
+de: Lies eine als Text geschriebene Stufe, ohne dass dich ein schlechter Wert umhaut.
+en: Read a level written as text without a bad value knocking you out.
+
+=== l14_try_catch_finally
+tema: 14
+orden: 2
+titulo.es: Atrapar al vuelo
+titulo.de: Im Flug fangen
+titulo.en: Catching it in mid-air
+--- pagina
+es: Cuando no puedes evitar el riesgo (leer un número escrito por alguien, por ejemplo), envuélvelo en try.
+es: Si dentro salta una excepción, Java salta al catch que la atrape y el programa sigue vivo.
+es: Atrapa la excepción concreta que esperas, no Exception a lo bruto: si no, también taparás errores
+es: que no tenías previstos y que sí querías ver.
+de: Kannst du das Risiko nicht vermeiden (etwa eine von jemandem geschriebene Zahl lesen), pack es in try.
+de: Fliegt darin eine Ausnahme, springt Java zum passenden catch, und das Programm lebt weiter.
+de: Fang die konkrete Ausnahme, die du erwartest, nicht pauschal Exception: Sonst verdeckst du auch Fehler,
+de: mit denen du nicht gerechnet hast und die du eigentlich sehen wolltest.
+en: When you can't avoid the risk (reading a number someone typed, for example), wrap it in try.
+en: If an exception jumps out inside, Java jumps to the catch that matches and the program stays alive.
+en: Catch the specific exception you expect, not Exception wholesale: otherwise you'll also hide errors
+en: you didn't foresee and actually wanted to see.
+codigo:
+    int rondasGanadas;
+    try {
+        rondasGanadas = Integer.parseInt(String.valueOf(memoria().get("ganadas")));
+    } catch (NumberFormatException e) {
+        rondasGanadas = 0;             // primera ronda: aún no había nada guardado
+    }
+--- pagina
+es: finally se ejecuta SIEMPRE, haya excepción o no: ideal para dejar las cosas en orden (enfriar el arma,
+es: cerrar un recurso). Desde Java 7 puedes atrapar varias de golpe con multi-catch:
+es: catch (NumberFormatException | NullPointerException e). Y nunca dejes un catch vacío:
+es: un error tragado en silencio es el más difícil de encontrar.
+de: finally läuft IMMER, mit oder ohne Ausnahme: ideal, um aufzuräumen (die Waffe abkühlen,
+de: eine Ressource schließen). Seit Java 7 fängst du mit Multi-Catch mehrere auf einmal:
+de: catch (NumberFormatException | NullPointerException e). Und lass nie ein catch leer:
+de: Ein still verschluckter Fehler ist am schwersten zu finden.
+en: finally ALWAYS runs, exception or not: ideal for tidying up (cooling the weapon,
+en: closing a resource). Since Java 7 you can catch several at once with multi-catch:
+en: catch (NumberFormatException | NullPointerException e). And never leave a catch empty:
+en: an error swallowed in silence is the hardest one to find.
+--- tarea
+ejercicio: t14_finally_disparo
+es: Dispara y enfría el arma siempre, pase lo que pase: finally.
+de: Schieß und kühl die Waffe immer ab, egal was passiert: finally.
+en: Fire and always cool the weapon, whatever happens: finally.
+--- tarea
+ejercicio: t14_multicatch
+es: Una casilla del mapa puede fallar de dos formas: atrápalas juntas.
+de: Ein Kartenfeld kann auf zwei Arten scheitern: Fang beide zusammen.
+en: A map square can fail in two ways: catch them together.
+
+=== l14_lanzar_las_tuyas
+tema: 14
+orden: 3
+titulo.es: Lanzar las tuyas
+titulo.de: Eigene werfen
+titulo.en: Throwing your own
+--- pagina
+es: Tú también puedes lanzar: throw new IllegalArgumentException("daño negativo"). Hazlo cuando a tu método
+es: le pidan algo sin sentido: es mejor gritar en el momento que devolver un resultado falso que nadie
+es: notará hasta mucho después. Para problemas de tu dominio, crea tu clase: extends RuntimeException.
+de: Du kannst auch selbst werfen: throw new IllegalArgumentException("negativer Schaden"). Tu das, wenn man
+de: von deiner Methode Unsinn verlangt: Lieber sofort schreien, als ein falsches Ergebnis zu liefern, das
+de: erst viel später jemand bemerkt. Für Probleme deines Fachgebiets bau eine eigene Klasse: extends
+de: RuntimeException.
+en: You can throw too: throw new IllegalArgumentException("negative damage"). Do it when your method is
+en: asked for something nonsensical: better to shout right away than return a wrong result that nobody
+en: notices until much later. For problems in your own domain, write your own class: extends RuntimeException.
+codigo:
+    class SinMunicion extends RuntimeException {
+        SinMunicion(String arma) {
+            super("Sin munición: " + arma);
+        }
+    }
+--- pagina
+es: Hay dos familias. Las no comprobadas (RuntimeException y sus hijas) suelen ser fallos de programación
+es: y no obligan a nada. Las comprobadas (Exception, como IOException) son problemas externos esperables, y Java
+es: te OBLIGA a atraparlas o a declararlas con throws. Desde Java 7, try-with-resources cierra solo lo que abres:
+es: try (var canal = abrir()) { ... } llama a close() al salir, incluso si algo falla.
+de: Es gibt zwei Familien. Ungeprüfte (RuntimeException und ihre Kinder) sind meist Programmierfehler
+de: und erzwingen nichts. Geprüfte (Exception, etwa IOException) sind erwartbare äußere Probleme, und Java
+de: ZWINGT dich, sie zu fangen oder mit throws anzukündigen. Seit Java 7 schließt try-with-resources von selbst:
+de: try (var kanal = oeffnen()) { ... } ruft beim Verlassen close() auf, auch wenn etwas schiefgeht.
+en: There are two families. Unchecked ones (RuntimeException and its children) are usually programming bugs
+en: and force nothing. Checked ones (Exception, like IOException) are expected outside problems, and Java
+en: FORCES you to catch them or declare them with throws. Since Java 7, try-with-resources closes things for you:
+en: try (var channel = open()) { ... } calls close() on the way out, even if something fails.
+--- tarea
+ejercicio: t14_canon_sin_balas
+es: Tu primera excepción propia: un cañón que se queja cuando no le quedan balas.
+de: Deine erste eigene Ausnahme: eine Kanone, die sich beschwert, wenn ihr die Kugeln ausgehen.
+en: Your first custom exception: a cannon that complains when it runs out of shells.
+--- tarea
+ejercicio: t14_canal_recursos
+es: Un canal de radio que se cierra solo con try-with-resources.
+de: Ein Funkkanal, der sich mit try-with-resources selbst schließt.
+en: A radio channel that closes itself with try-with-resources.

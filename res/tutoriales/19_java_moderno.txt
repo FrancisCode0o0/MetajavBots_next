@@ -1,0 +1,232 @@
+# Tema 19: Java moderno (enum, record, sealed y pattern matching).
+=== l19_enum
+tema: 19
+orden: 1
+titulo.es: Enum: una lista cerrada de opciones
+titulo.de: Enum: eine geschlossene Liste von Möglichkeiten
+titulo.en: Enum: a closed list of options
+--- pagina
+es: ¿Cuántos estados tiene tu robot? BUSCAR, ATACAR y HUIR. Si los guardas como String, un día escribirás
+es: "atacar" en minúscula y nada funcionará. Un enum (Java 5) es un tipo con una lista cerrada de valores:
+es: Estado.ATACAR existe, Estado.ATACARR no compila. El error tipográfico pasa de la arena al compilador.
+de: Wie viele Zustände hat dein Roboter? SUCHEN, ANGREIFEN, FLIEHEN. Speicherst du sie als String, schreibst
+de: du eines Tages "angreifen" klein, und nichts geht mehr. Ein enum (Java 5) ist ein Typ mit einer
+de: geschlossenen Liste von Werten: Estado.ATACAR gibt es, Estado.ATACARR kompiliert nicht. Der Tippfehler
+de: landet beim Compiler, nicht im Kampf.
+en: How many states does your robot have? SEARCH, ATTACK and FLEE. Store them as Strings and one day you'll type
+en: "attack" in lowercase and nothing will work. An enum (Java 5) is a type with a closed list of values:
+en: Estado.ATACAR exists, Estado.ATACARR doesn't compile. The typo moves from the arena to the compiler.
+codigo:
+    enum Estado { BUSCAR, ATACAR, HUIR }
+    Estado estado = Estado.BUSCAR;
+    int ultimaVez = -100;
+    @Override
+    public void cadaTurno() {
+        if (blindaje() < 25) {
+            estado = Estado.HUIR;
+        } else if (turnoActual() - ultimaVez > 15) {
+            estado = Estado.BUSCAR;
+        }
+        switch (estado) {
+            case BUSCAR -> { apuntar(25); avanzar(80); girar(5); }
+            case ATACAR -> { avanzar(40); girar(10); }
+            case HUIR -> { avanzar(200); girar(20); }
+        }
+    }
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        ultimaVez = turnoActual();
+        if (estado != Estado.HUIR) {
+            estado = Estado.ATACAR;
+        }
+        apuntarHacia(e.angulo());
+        atacar();
+    }
+--- pagina
+es: Un enum es una clase de verdad: sus valores pueden tener campos, constructor y métodos.
+es: Con un switch sobre un enum, Java sabe cuáles son TODOS los casos, y en una expresión switch
+es: te avisa si te falta alguno. Además, los enum se comparan con == sin miedo: cada valor existe una sola vez.
+de: Ein enum ist eine echte Klasse: Seine Werte können Felder, einen Konstruktor und Methoden haben.
+de: Bei einem switch über ein enum kennt Java ALLE Fälle, und in einem switch-Ausdruck warnt es dich,
+de: wenn einer fehlt. Außerdem vergleicht man enums ohne Sorge mit ==: Jeder Wert existiert nur einmal.
+en: An enum is a real class: its values can have fields, a constructor and methods.
+en: With a switch over an enum, Java knows ALL the cases, and in a switch expression it tells you
+en: if one is missing. And enums can be compared with == without fear: each value exists exactly once.
+--- tarea
+robot: usa:enum
+es: Organiza tu robot con un enum de estados y un switch, y pelea una ronda con él.
+de: Organisiere deinen Roboter mit einem enum für Zustände und einem switch und kämpf eine Runde damit.
+en: Organise your robot with an enum of states and a switch, and fight a round with it.
+--- tarea
+ejercicio: t19_enum_de_armas
+es: Las armas, en un enum con sus propios datos.
+de: Die Waffen als enum mit eigenen Daten.
+en: The weapons, in an enum with their own data.
+
+=== l19_record
+tema: 19
+orden: 2
+titulo.es: Record: datos sin papeleo
+titulo.de: Record: Daten ohne Papierkram
+titulo.en: Record: data without the paperwork
+--- pagina
+es: ¿Recuerdas el Avistamiento del tema 9, con su constructor, sus final, su toString…? Desde Java 16
+es: todo eso cabe en una línea: record Avistamiento(double x, double y, int turno) {}. Un record es una clase
+es: inmutable para llevar datos: Java escribe por ti el constructor, los métodos x(), y(), turno(),
+es: equals, hashCode y toString.
+de: Erinnerst du dich an die Sichtung aus Thema 9, mit Konstruktor, finals, toString …? Seit Java 16 passt
+de: das alles in eine Zeile: record Avistamiento(double x, double y, int turno) {}. Ein Record ist eine
+de: unveränderliche Klasse für Daten: Java schreibt dir Konstruktor, die Methoden x(), y(), turno(),
+de: equals, hashCode und toString.
+en: Remember the Sighting from topic 9, with its constructor, its finals, its toString…? Since Java 16
+en: all of that fits on one line: record Avistamiento(double x, double y, int turno) {}. A record is an
+en: immutable class for carrying data: Java writes the constructor, the methods x(), y(), turno(),
+en: equals, hashCode and toString for you.
+codigo:
+    record Punto(double x, double y) {
+        Punto {                        // constructor compacto: solo las comprobaciones
+            if (Double.isNaN(x) || Double.isNaN(y)) {
+                throw new IllegalArgumentException("punto sin sentido");
+            }
+        }
+        double distanciaA(Punto otro) {
+            return Math.hypot(x - otro.x, y - otro.y);
+        }
+    }
+--- pagina
+es: Un record es ideal para la predicción: una función que recibe al enemigo y devuelve el Punto
+es: donde estará. Dos Puntos con las mismas coordenadas son iguales con equals, así que también
+es: sirven de clave en un Map o en un Set sin escribir nada más.
+de: Ein Record ist ideal für die Vorhersage: eine Funktion, die den Gegner bekommt und den Punto zurückgibt,
+de: wo er sein wird. Zwei Puntos mit denselben Koordinaten sind laut equals gleich, also taugen sie
+de: ohne weiteren Code als Schlüssel in einer Map oder einem Set.
+en: A record is ideal for prediction: a function that takes the enemy and returns the Punto
+en: where it will be. Two Puntos with the same coordinates are equal by equals, so they also work
+en: as keys in a Map or a Set without writing anything else.
+codigo:
+    Punto prever(Enemigo e, double turnos) {
+        double r = Math.toRadians(e.rumbo());
+        return new Punto(e.x() + Math.cos(r) * e.velocidad() * turnos,
+                         e.y() + Math.sin(r) * e.velocidad() * turnos);
+    }
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        Punto p = prever(e, e.distancia() / 14);
+        apuntarA(p.x(), p.y());
+        atacar();
+    }
+--- tarea
+robot: usa:record
+es: Usa un record para guardar o predecir posiciones y apunta con él durante una ronda.
+de: Benutz ein Record, um Positionen zu speichern oder vorherzusagen, und ziel eine Runde lang damit.
+en: Use a record to store or predict positions and aim with it for a round.
+--- tarea
+ejercicio: t19_record_posicion
+es: Una posición que no se sale de la arena: un record con constructor compacto.
+de: Eine Position, die die Arena nicht verlässt: ein Record mit kompaktem Konstruktor.
+en: A position that never leaves the arena: a record with a compact constructor.
+
+=== l19_sealed_y_patrones
+tema: 19
+orden: 3
+titulo.es: Familias selladas y patrones
+titulo.de: Versiegelte Familien und Muster
+titulo.en: Sealed families and patterns
+--- pagina
+es: sealed (Java 17) cierra una jerarquía: sealed interface Lectura permits Eco, Ruido, Nada dice que SOLO
+es: esas tres clases pueden implementarla. Parece una restricción, pero da un superpoder: el compilador
+es: conoce todos los casos posibles y puede comprobar que los tratas todos.
+de: sealed (Java 17) schließt eine Hierarchie ab: sealed interface Lectura permits Eco, Ruido, Nada heißt, NUR
+de: diese drei Klassen dürfen es implementieren. Klingt nach Einschränkung, bringt aber eine Superkraft:
+de: Der Compiler kennt alle möglichen Fälle und kann prüfen, ob du jeden behandelst.
+en: sealed (Java 17) closes off a hierarchy: sealed interface Lectura permits Eco, Ruido, Nada says ONLY
+en: those three classes may implement it. Sounds restrictive, but it brings a superpower: the compiler
+en: knows every possible case and can check that you handle them all.
+--- pagina
+es: Desde Java 21, switch acepta patrones de tipo y de record: case Eco(double d, double a) when d < 100
+es: comprueba el tipo, saca los componentes y añade una condición, todo en una línea.
+es: Con una jerarquía sellada no hace falta default: si añades un tipo nuevo, el compilador te señala
+es: cada switch que se ha quedado sin cubrirlo. Y desde Java 22, _ dice «este no lo necesito».
+de: Seit Java 21 kennt switch Typ- und Record-Muster: case Eco(double d, double a) when d < 100
+de: prüft den Typ, holt die Komponenten heraus und fügt eine Bedingung hinzu, alles in einer Zeile.
+de: Bei einer versiegelten Hierarchie braucht es kein default: Kommt ein neuer Typ dazu, zeigt dir der Compiler
+de: jeden switch, der ihn nicht abdeckt. Und seit Java 22 sagt _: „Den brauche ich nicht.“
+en: Since Java 21, switch accepts type and record patterns: case Eco(double d, double a) when d < 100
+en: checks the type, pulls out the components and adds a condition, all on one line.
+en: With a sealed hierarchy there's no need for default: add a new type and the compiler points out
+en: every switch that no longer covers it. And since Java 22, _ says "I don't need this one".
+codigo:
+    sealed interface Lectura permits Eco, Ruido, Nada {}
+    record Eco(double distancia, double angulo) implements Lectura {}
+    record Ruido(double nivel) implements Lectura {}
+    record Nada() implements Lectura {}
+    String describir(Lectura l) {
+        return switch (l) {
+            case Eco(double d, double _) when d < 100 -> "¡encima!";
+            case Eco(double d, double _) -> "eco a " + (int) d;
+            case Ruido r -> "ruido " + r.nivel();
+            case Nada() -> "silencio";
+        };
+    }
+--- tarea
+ejercicio: t19_switch_con_patrones
+es: Clasifica las lecturas del radar con un switch de patrones (Java 21).
+de: Ordne die Radarmessungen mit einem Muster-switch ein (Java 21).
+en: Sort the radar readings with a pattern switch (Java 21).
+--- tarea
+ejercicio: t19_disparos_sellados
+es: Disparos sellados: una jerarquía cerrada y un switch que los cubre todos.
+de: Versiegelte Schüsse: eine geschlossene Hierarchie und ein switch, der alle abdeckt.
+en: Sealed shots: a closed hierarchy and a switch that covers them all.
+
+=== l19_novedades
+tema: 19
+orden: 4
+titulo.es: Lo último del taller
+titulo.de: Das Neueste aus der Werkstatt
+titulo.en: Fresh from the workshop
+--- pagina
+es: Java saca versión cada seis meses, y muchas novedades te hacen la vida más fácil. Repaso rápido de lo
+es: que ya has visto: var (10), switch con flechas y como expresión (14), bloques de texto (15),
+es: records e instanceof con patrón (16), sealed (17), switch con patrones, record patterns y colecciones
+es: secuenciadas (21), variables sin nombre con _ (22) y gatherers (24).
+de: Java erscheint alle sechs Monate, und viele Neuerungen machen dir das Leben leichter. Kurze Wiederholung:
+de: var (10), switch mit Pfeilen und als Ausdruck (14), Textblöcke (15), Records und instanceof mit Muster (16),
+de: sealed (17), switch mit Mustern, Record-Muster und Sequenced Collections (21), unbenannte Variablen mit _ (22)
+de: und Gatherers (24).
+en: Java ships a new version every six months, and many new features make your life easier. A quick recap of what
+en: you've seen: var (10), arrow switches and switch expressions (14), text blocks (15),
+en: records and pattern instanceof (16), sealed (17), pattern switch, record patterns and sequenced
+en: collections (21), unnamed variables with _ (22) and gatherers (24).
+--- pagina
+es: Java 25 trae dos más. Los archivos compactos: un programa pequeño ya no necesita class ni static,
+es: basta con void main() { IO.println("¡Hola!"); }, ideal para probar ideas rápido.
+es: Y los cuerpos de constructor flexibles: puedes comprobar los argumentos ANTES de llamar a super(...),
+es: en vez de inventar métodos auxiliares estáticos solo para validar.
+de: Java 25 bringt zwei weitere. Kompakte Quelldateien: Ein kleines Programm braucht weder class noch static,
+de: void main() { IO.println("Hallo!"); } genügt, ideal, um Ideen schnell auszuprobieren.
+de: Und flexible Konstruktor-Rümpfe: Du darfst Argumente VOR dem Aufruf von super(...) prüfen,
+de: statt statische Hilfsmethoden nur fürs Validieren zu erfinden.
+en: Java 25 brings two more. Compact source files: a small program no longer needs class or static,
+en: void main() { IO.println("Hello!"); } is enough, ideal for trying ideas quickly.
+en: And flexible constructor bodies: you can check the arguments BEFORE calling super(...),
+en: instead of inventing static helper methods just to validate.
+codigo:
+    class Torreta extends Arma {
+        Torreta(double alcance) {
+            if (alcance > 500) {       // Java 25: antes del super, sin usar this
+                throw new IllegalArgumentException("demasiado lejos");
+            }
+            super("torreta", alcance);
+        }
+    }
+--- tarea
+ejercicio: t19_constructor_flexible
+es: Comprueba los datos antes de llamar a super (Java 25).
+de: Prüfe die Daten, bevor du super aufrufst (Java 25).
+en: Check the data before calling super (Java 25).
+--- tarea
+ejercicio: t19_ignorar_con_guion_bajo
+es: Lecturas con ruido: ignora lo que no necesitas con _ (Java 22).
+de: Messungen mit Rauschen: Ignoriere mit _, was du nicht brauchst (Java 22).
+en: Noisy readings: ignore what you don't need with _ (Java 22).

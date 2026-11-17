@@ -1,0 +1,190 @@
+# Tema 02: variables y tipos primitivos.
+=== l02_cajas_con_nombre
+tema: 02
+orden: 1
+titulo.es: Cajas con nombre
+titulo.de: Schachteln mit Namen
+titulo.en: Boxes with names
+--- pagina
+es: Una variable es una caja con una etiqueta: dentro guardas un valor y luego lo usas por su nombre.
+es: En Java, cada caja tiene además un TIPO, que dice qué cabe en ella. int guarda números enteros
+es: (3, -40, 1000) y double guarda números con decimales (2.5, 0.1). La caja se crea así: tipo nombre = valor;
+de: Eine Variable ist eine Schachtel mit Etikett: Du legst einen Wert hinein und benutzt ihn über seinen Namen.
+de: In Java hat jede Schachtel außerdem einen TYP, der sagt, was hineinpasst. int speichert ganze Zahlen
+de: (3, -40, 1000), double Kommazahlen (2.5, 0.1). So entsteht die Schachtel: typ name = wert;
+en: A variable is a labelled box: you put a value inside and then use it by its name. In Java every box also
+en: has a TYPE that says what fits in it. int stores whole numbers (3, -40, 1000) and double stores numbers
+en: with decimals (2.5, 0.1). You make the box like this: type name = value;
+codigo:
+    double paso = 60;
+    double curva = 4;
+    avanzar(paso);
+    girar(curva);
+--- pagina
+es: ¿Por qué no escribir 60 directamente? Porque el nombre explica qué es ese número, y porque si lo usas en
+es: cinco sitios, lo cambias en uno solo. Ojo: en Java, = no significa «es igual». Significa «guarda esto en
+es: la caja». Por eso paso = paso + 10; es perfectamente lógico: «el paso nuevo es el viejo más 10».
+de: Warum nicht einfach 60 schreiben? Weil der Name erklärt, was die Zahl bedeutet, und weil du sie, wenn
+de: sie an fünf Stellen vorkommt, nur an einer änderst. Achtung: In Java heißt = nicht „ist gleich“, sondern
+de: „leg das in die Schachtel“. Darum ist paso = paso + 10; völlig logisch: „neuer Schritt = alter Schritt
+de: plus 10“.
+en: Why not just write 60? Because the name explains what the number means, and if you use it in five places
+en: you change it in one. Careful: in Java, = does not mean "equals". It means "store this in the box".
+en: That's why step = step + 10; makes perfect sense: "the new step is the old one plus 10".
+--- pagina
+es: Las reglas de los nombres: empiezan por letra, sin espacios, y se escriben en camelCase:
+es: velocidadMaxima, turnosSinVer. No puedes usar palabras reservadas como int o class.
+es: Y no puedes usar una caja antes de crearla ni crear dos con el mismo nombre en el mismo sitio:
+es: el compilador te lo dirá con un «cannot find symbol» o un «already defined».
+de: Die Namensregeln: Sie beginnen mit einem Buchstaben, ohne Leerzeichen, und werden in camelCase geschrieben:
+de: maxGeschwindigkeit, zuegeOhneSicht. Reservierte Wörter wie int oder class sind tabu.
+de: Du kannst eine Schachtel nicht benutzen, bevor es sie gibt, und nicht zwei gleichnamige am selben Ort anlegen:
+de: Der Compiler meldet dann „cannot find symbol“ oder „already defined“.
+en: Naming rules: names start with a letter, have no spaces and are written in camelCase:
+en: maxSpeed, turnsWithoutSight. You can't use reserved words such as int or class.
+en: And you can't use a box before creating it, or create two with the same name in the same place:
+en: the compiler will tell you with "cannot find symbol" or "already defined".
+--- tarea
+robot: usa:double
+es: Guarda el paso y la curva de tu robot en variables double y úsalas para moverte durante una ronda.
+de: Speichere Schritt und Kurve deines Roboters in double-Variablen und benutze sie eine Runde lang zum Fahren.
+en: Store your robot's step and curve in double variables and use them to move for a whole round.
+--- tarea
+ejercicio: t02_horas_de_bateria
+es: Calcula cuántas horas dura la batería guardando cada dato en su propia variable.
+de: Berechne, wie viele Stunden der Akku hält, und gib jedem Wert seine eigene Variable.
+en: Work out how many hours the battery lasts, giving each value its own variable.
+
+=== l02_tipos_primitivos
+tema: 02
+orden: 2
+titulo.es: Ocho tipos y una trampa
+titulo.de: Acht Typen und eine Falle
+titulo.en: Eight types and a trap
+--- pagina
+es: Java tiene ocho tipos primitivos. Los que más usarás: int (enteros), double (decimales),
+es: boolean (true o false, sí o no) y char (una sola letra, entre comillas simples: 'A').
+es: Para números enormes está long, y byte, short y float existen pero casi nunca hacen falta.
+es: Cada tipo ocupa un tamaño fijo: un int llega hasta unos 2 100 millones, y ni uno más.
+de: Java hat acht primitive Typen. Am häufigsten brauchst du int (ganze Zahlen), double (Kommazahlen),
+de: boolean (true oder false, ja oder nein) und char (ein einzelnes Zeichen in einfachen Anführungszeichen: 'A').
+de: Für riesige Zahlen gibt es long; byte, short und float gibt es auch, braucht man aber selten.
+de: Jeder Typ hat eine feste Größe: Ein int reicht bis etwa 2,1 Milliarden und keinen Schritt weiter.
+en: Java has eight primitive types. The ones you'll use most: int (whole numbers), double (decimals),
+en: boolean (true or false, yes or no) and char (a single character in single quotes: 'A').
+en: For huge numbers there's long; byte, short and float exist too but are rarely needed.
+en: Each type has a fixed size: an int goes up to about 2.1 billion, and not one more.
+codigo:
+    int disparos = 0;
+    double energiaMinima = 20.5;
+    boolean modoAtaque = true;
+    char rango = 'S';
+    long creditos = 5_000_000_000L;   // la L dice: esto es un long
+--- pagina
+es: La trampa: si divides dos int, el resultado es int y los decimales se tiran a la basura. 7 / 2 da 3, no 3.5.
+es: Basta con que uno de los dos sea double para que el resultado lo sea: 7 / 2.0 da 3.5.
+es: Al revés, para quitar decimales a propósito se hace un cast: (int) 3.9 da 3 (corta, no redondea).
+de: Die Falle: Teilst du zwei ints, ist das Ergebnis ein int, und die Nachkommastellen landen im Müll. 7 / 2
+de: ergibt 3, nicht 3.5. Ist einer der beiden ein double, wird es auch das Ergebnis: 7 / 2.0 ergibt 3.5.
+de: Umgekehrt entfernst du Nachkommastellen absichtlich mit einem Cast: (int) 3.9 ergibt 3 (abschneiden,
+de: nicht runden).
+en: The trap: if you divide two ints, the result is an int and the decimals go in the bin. 7 / 2 is 3, not 3.5.
+en: If just one of them is a double, so is the result: 7 / 2.0 is 3.5.
+en: The other way round, you drop decimals on purpose with a cast: (int) 3.9 is 3 (it cuts, it doesn't round).
+codigo:
+    int golpes = 7;
+    double media = golpes / 2;      // ¡3.0! la división ya se hizo entera
+    double bien = golpes / 2.0;     // 3.5
+    int vida = (int) blindaje();    // sin decimales
+--- pagina
+es: Si te pasas del tamaño de un tipo, no salta ninguna alarma: el número da la vuelta, como un cuentakilómetros
+es: viejo. El int más grande más uno es el más negativo. Por eso, si un cálculo puede ser enorme, usa long.
+es: Y un char es en el fondo un número: 'A' + 1 vale 66, y (char) ('A' + 1) es 'B'.
+de: Überschreitest du die Größe eines Typs, gibt es keinen Alarm: Die Zahl springt um wie ein alter
+de: Kilometerzähler. Das größte int plus eins ist das negativste. Kann eine Rechnung riesig werden, nimm
+de: long. Und ein char ist im Grunde eine Zahl: 'A' + 1 ist 66, und (char) ('A' + 1) ist 'B'.
+en: Go past a type's size and no alarm goes off: the number wraps around like an old odometer.
+en: The biggest int plus one is the most negative one. So if a calculation might be huge, use long.
+en: And a char is a number deep down: 'A' + 1 is 66, and (char) ('A' + 1) is 'B'.
+--- tarea
+ejercicio: t02_media_de_dos
+es: Esta media pierde decimales por el camino. Descubre por qué y arréglala.
+de: Dieser Durchschnitt verliert unterwegs Nachkommastellen. Finde heraus, warum, und reparier ihn.
+en: This average loses its decimals along the way. Find out why and fix it.
+--- tarea
+ejercicio: t02_energia_maxima
+es: Mil millones por reactor y varios reactores: elige un tipo en el que quepa el total.
+de: Eine Milliarde pro Reaktor und mehrere Reaktoren: Wähle einen Typ, in den die Summe passt.
+en: A billion per reactor and several reactors: pick a type the total fits into.
+
+=== l02_memoria_entre_turnos
+tema: 02
+orden: 3
+titulo.es: Recordar entre turnos
+titulo.de: Sich zwischen Zügen erinnern
+titulo.en: Remembering between turns
+--- pagina
+es: Una variable creada dentro de cadaTurno nace al empezar el turno y muere al acabarlo.
+es: Al turno siguiente es otra caja nueva, vacía. Si quieres que el robot recuerde algo
+es: (cuántos turnos lleva sin ver al enemigo, cuántas veces ha acertado), crea la variable FUERA del método,
+es: dentro de la clase. Eso se llama campo, y vive mientras viva el robot.
+de: Eine Variable, die in jedenZug entsteht, wird zu Beginn des Zuges geboren und stirbt am Ende.
+de: Im nächsten Zug ist es eine neue, leere Schachtel. Soll sich der Roboter etwas merken
+de: (wie viele Züge er den Gegner nicht gesehen hat, wie oft er getroffen hat), leg die Variable AUSSERHALB
+de: der Methode an, direkt in der Klasse. Das heißt Feld, und es lebt, solange der Roboter lebt.
+en: A variable created inside onTick is born when the turn starts and dies when it ends.
+en: Next turn it's a brand-new, empty box. If you want the robot to remember something
+en: (how many turns since it last saw the enemy, how many hits it landed), create the variable OUTSIDE the method,
+en: inside the class. That's called a field, and it lives as long as the robot does.
+codigo:
+    public class MiRobot extends Metajavbot {
+        int turnosSinVer = 0;          // campo: sobrevive entre turnos
+        @Override
+        public void cadaTurno() {
+            turnosSinVer = turnosSinVer + 1;
+            avanzar(60);
+            apuntar(25);
+        }
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            turnosSinVer = 0;
+            apuntarHacia(e.angulo());
+            atacar();
+        }
+    }
+--- pagina
+es: Hay valores que nunca deben cambiar: el alcance que consideras «cerca», el giro del radar.
+es: Ponles final y Java no dejará que nadie (ni tú, por despiste) los toque. Por costumbre,
+es: las constantes de la clase se escriben en MAYÚSCULAS con guiones bajos: static final double CERCA = 150;
+de: Manche Werte dürfen sich nie ändern: was für dich „nah“ ist, wie weit das Radar dreht. Schreib final
+de: davor, und Java lässt niemanden (auch dich nicht aus Versehen) daran herumspielen. Konstanten der Klasse
+de: schreibt man üblicherweise in GROSSBUCHSTABEN mit Unterstrich: static final double NAH = 150;
+en: Some values must never change: the distance you consider "close", how far the radar turns.
+en: Mark them final and Java won't let anyone (not even you, by accident) touch them. By convention,
+en: class constants are written in UPPER_CASE with underscores: static final double CLOSE = 150;
+codigo:
+    static final double GIRO_RADAR = 25;
+    static final double CERCA = 150;
+--- pagina
+es: Desde Java 10 puedes escribir var en lugar del tipo en las variables locales: var paso = 60.0;
+es: Java deduce que es double. No es un tipo «comodín»: la caja sigue siendo double para siempre,
+es: solo te ahorras escribirlo. Úsalo cuando el tipo se vea a simple vista; si no, mejor escríbelo.
+es: Y ojo: var paso = 60; sería int, no double. La diferencia está en ese .0.
+de: Seit Java 10 darfst du bei lokalen Variablen var statt des Typs schreiben: var schritt = 60.0;
+de: Java erkennt selbst, dass es ein double ist. Das ist kein „Joker-Typ“: Die Schachtel bleibt für immer double,
+de: du sparst dir nur das Hinschreiben. Nimm var, wenn der Typ offensichtlich ist; sonst schreib ihn lieber aus.
+de: Vorsicht: var schritt = 60; wäre ein int, kein double. Der Unterschied steckt im .0.
+en: Since Java 10 you can write var instead of the type for local variables: var step = 60.0;
+en: Java works out that it's a double. It's not a "wildcard" type: the box stays a double forever,
+en: you just skip writing it. Use var when the type is obvious at a glance; otherwise, spell it out.
+en: And watch out: var step = 60; would be an int, not a double. The difference is that .0.
+--- tarea
+robot: usa:final
+es: Crea al menos una constante con final (por ejemplo, el giro del radar) y úsala en tu robot durante una ronda.
+de: Lege mindestens eine Konstante mit final an (zum Beispiel die Radardrehung) und nutze sie eine Runde lang.
+en: Create at least one constant with final (the radar turn, say) and use it in your robot for a round.
+--- tarea
+ejercicio: t02_etiqueta_con_var
+es: Escribe la etiqueta del modelo usando var (Java 10) donde el tipo se vea claro.
+de: Schreib das Modelletikett mit var (Java 10), wo der Typ klar erkennbar ist.
+en: Write the model label using var (Java 10) where the type is obvious.

@@ -1,0 +1,193 @@
+# Tema 04: condicionales (if, else y switch).
+=== l04_si_entonces
+tema: 04
+orden: 1
+titulo.es: Si lo ves, dispara
+titulo.de: Wenn du ihn siehst, schieß
+titulo.en: If you see it, shoot
+--- pagina
+es: Hasta ahora el robot hacía siempre lo mismo. Con if decide: si la condición es verdad, hace lo de dentro
+es: de las llaves; si no, se lo salta. Y con else le dices qué hacer en el otro caso.
+es: Es la primera vez que tu robot «piensa» de verdad, aunque solo sea un poquito.
+de: Bisher hat der Roboter immer dasselbe getan. Mit if entscheidet er: Ist die Bedingung wahr, tut er,
+de: was in den Klammern steht; sonst überspringt er es. Mit else sagst du ihm, was er im anderen Fall tun soll.
+de: Zum ersten Mal „denkt“ dein Roboter wirklich, wenn auch nur ein bisschen.
+en: Until now the robot always did the same thing. With if it decides: if the condition is true, it does what's
+en: inside the braces; if not, it skips it. And with else you tell it what to do otherwise.
+en: It's the first time your robot really "thinks", even if only a little.
+codigo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        apuntarHacia(e.angulo());
+        if (e.distancia() < alcanceDerecha()) {
+            atacar();
+        } else {
+            girarHacia(e.angulo());
+            avanzar(80);               // aún no llega: acércate
+        }
+    }
+--- pagina
+es: Error clásico número uno: un punto y coma después del if. if (cerca); { atacar(); } compila, pero
+es: el ; termina el if ahí mismo y las llaves se ejecutan SIEMPRE. Número dos: if (x = 5) en vez de
+es: if (x == 5). Y un consejo: pon llaves siempre, aunque solo haya una línea. Algún día añadirás otra
+es: y te preguntarás por qué se ejecuta cuando no toca.
+de: Klassischer Fehler Nummer eins: ein Semikolon nach dem if. if (nah); { angreifen(); } kompiliert, aber
+de: das ; beendet das if sofort, und die Klammern laufen IMMER. Nummer zwei: if (x = 5) statt if (x == 5).
+de: Und ein Tipp: Setz immer Klammern, auch bei nur einer Zeile. Irgendwann fügst du eine zweite hinzu
+de: und wunderst dich, warum sie läuft, wenn sie nicht soll.
+en: Classic mistake number one: a semicolon after the if. if (close); { attack(); } compiles, but the ;
+en: ends the if right there and the braces run ALWAYS. Number two: if (x = 5) instead of if (x == 5).
+en: And a tip: always use braces, even for a single line. One day you'll add a second line
+en: and wonder why it runs when it shouldn't.
+--- pagina
+es: Ahora puedes arreglar el radar. Antes, cadaTurno giraba la mira siempre, incluso con el enemigo delante.
+es: Guarda en un campo el turno en que lo viste por última vez, y solo barre la arena si hace rato que no lo ves.
+es: Así la mira se queda clavada en el rival en lugar de pasarle de largo.
+de: Jetzt kannst du das Radar reparieren. Bisher drehte jedenZug das Visier immer, selbst mit dem Gegner vor
+de: dir. Merk dir in einem Feld den Zug, in dem du ihn zuletzt gesehen hast, und such nur, wenn das schon
+de: eine Weile her ist. So bleibt das Visier am Gegner kleben, statt an ihm vorbeizuschwenken.
+en: Now you can fix the radar. Before, onTick always turned the aim, even with the enemy right in front.
+en: Store in a field the turn you last saw it, and only sweep the arena if it's been a while.
+en: That way the aim stays locked on the rival instead of sliding past it.
+codigo:
+    int ultimaVez = -100;
+    @Override
+    public void cadaTurno() {
+        if (turnoActual() - ultimaVez > 10) {
+            apuntar(25);               // lo he perdido: a buscar
+        }
+        avanzar(60);
+        girar(3);
+    }
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        ultimaVez = turnoActual();
+        apuntarHacia(e.angulo());
+        if (e.distancia() < alcanceDerecha()) {
+            atacar();
+        }
+    }
+--- tarea
+robot: aciertos>=6
+es: Con el radar que se queda fijo y el if que solo ataca a tiro, acierta al muñeco 6 veces en una ronda.
+de: Mit dem Radar, das am Ziel bleibt, und einem if, das nur in Reichweite angreift: 6 Treffer in einer Runde.
+en: With a radar that stays locked and an if that only attacks in range, hit the dummy 6 times in one round.
+--- tarea
+ejercicio: t04_puede_disparar
+es: ¿Puede disparar el láser? Depende de varias cosas a la vez: decídelo con if.
+de: Kann der Laser feuern? Das hängt von mehreren Dingen ab: Entscheide es mit if.
+en: Can the laser fire? It depends on several things at once: decide it with if.
+
+=== l04_cadena_de_decisiones
+tema: 04
+orden: 2
+titulo.es: Una cadena de decisiones
+titulo.de: Eine Kette von Entscheidungen
+titulo.en: A chain of decisions
+--- pagina
+es: Con else if encadenas varias preguntas: Java las mira de arriba abajo y hace SOLO la primera que se cumpla.
+es: Por eso el orden importa. Si preguntas primero «¿blindaje < 70?» y luego «¿blindaje < 25?»,
+es: la segunda no llegará nunca: cualquier robot con 10 ya entró por la primera puerta.
+es: Regla práctica: lo más concreto (o lo más urgente) va primero.
+de: Mit else if hängst du mehrere Fragen aneinander: Java prüft sie von oben nach unten und führt NUR die erste
+de: aus, die zutrifft. Darum zählt die Reihenfolge. Fragst du zuerst „Panzerung < 70?“ und dann „< 25?“,
+de: kommt die zweite nie dran: Ein Roboter mit 10 ist längst durch die erste Tür gegangen.
+de: Faustregel: Das Speziellste (oder Dringendste) kommt zuerst.
+en: With else if you chain several questions: Java checks them top to bottom and runs ONLY the first one
+en: that holds. That's why order matters. If you ask "armor < 70?" first and "armor < 25?" second, the
+en: second one never gets a turn: any robot on 10 already went through the first door. Rule of thumb: the
+en: most specific (or most urgent) case goes first.
+codigo:
+    if (blindaje() < 25) {
+        retroceder(120);               // ¡a por la caja de primeros auxilios!
+    } else if (blindaje() < 60) {
+        avanzar(60);
+        girar(8);                      // prudente: círculos cerrados
+    } else {
+        avanzar(100);                  // fresco como una lechuga
+    }
+--- pagina
+es: Recibir golpes también es información. alRecibirGolpe te da un Golpe g con g.angulo(), de dónde vino.
+es: Girar 90 grados respecto a ese ángulo te pone de lado a la línea de fuego: el siguiente disparo pasará
+es: rozando. Esquivar así es una de las mejoras más baratas que existen.
+de: Auch Treffer sind Informationen. beiTreffer (onHit) gibt dir einen Treffer t mit t.winkel(), woher er kam.
+de: Drehst du dich 90 Grad zu diesem Winkel, stehst du seitlich zur Schusslinie: Der nächste Schuss streift nur.
+de: So auszuweichen ist eine der billigsten Verbesserungen überhaupt.
+en: Getting hit is information too. onHit (alRecibirGolpe) gives you a Hit h with h.angle(), where it came from.
+en: Turning 90 degrees to that angle puts you side-on to the line of fire: the next shot will only graze you.
+en: Dodging like this is one of the cheapest upgrades there is.
+codigo:
+    @Override
+    public void alRecibirGolpe(Golpe g) {
+        girarHacia(g.angulo() + 90);
+        avanzar(150);
+    }
+--- tarea
+robot: dano<=40
+es: Decide con else if según tu blindaje y esquiva de lado al recibir golpes: termina la ronda con 40 de
+es: daño o menos.
+de: Entscheide mit else if nach deiner Panzerung und weich seitlich aus: höchstens 40 Schaden in der Runde.
+en: Decide with else if based on your armor and dodge sideways when hit: end the round with 40 damage or less.
+--- tarea
+ejercicio: t04_nivel_de_alarma
+es: Traduce un número en un nivel de alarma. Ordena bien las preguntas.
+de: Übersetze eine Zahl in eine Alarmstufe. Bring die Fragen in die richtige Reihenfolge.
+en: Turn a number into an alarm level. Get the questions in the right order.
+
+=== l04_switch
+tema: 04
+orden: 3
+titulo.es: Switch: un desvío con muchas salidas
+titulo.de: Switch: eine Weiche mit vielen Ausgängen
+titulo.en: Switch: a junction with many exits
+--- pagina
+es: Cuando comparas una misma cosa con muchos valores concretos, switch se lee mejor que diez else if.
+es: El switch clásico tiene una trampa famosa: si olvidas break, Java «se cae» al caso siguiente
+es: y ejecuta también su código. A veces es lo que quieres, casi siempre es un despiste.
+de: Vergleichst du eine Sache mit vielen festen Werten, liest sich switch besser als zehn else if.
+de: Der klassische switch hat eine berühmte Falle: Vergisst du break, „fällt“ Java in den nächsten Fall
+de: und führt dessen Code auch aus. Manchmal gewollt, fast immer ein Versehen.
+en: When you compare one thing against many specific values, a switch reads better than ten else ifs.
+en: The classic switch has a famous trap: forget break and Java "falls through" to the next case
+en: and runs its code too. Sometimes that's what you want; almost always it's a slip.
+codigo:
+    @Override
+    public void alRecibirGolpe(Golpe g) {
+        switch (g.pieza()) {
+            case "cabeza":
+                decir("¡Mis circuitos!");
+                break;
+            case "piernas":
+                avanzar(150);          // que no me vuelvan a pillar quieto
+                break;
+            default:
+                girarHacia(g.angulo() + 90);
+        }
+    }
+--- pagina
+es: Desde Java 14 hay un switch con flechas: case "laser" -> ...; sin break y sin caídas.
+es: Y además puede DEVOLVER un valor (expresión switch), así que eliges un número en una sola sentencia.
+es: Puedes juntar varios casos con comas. Si te falta algún caso, el default lo cubre.
+de: Seit Java 14 gibt es switch mit Pfeilen: case "laser" -> ...; ohne break und ohne Durchfallen. Außerdem
+de: kann er einen Wert ZURÜCKGEBEN (switch-Ausdruck), du wählst also eine Zahl in einer einzigen Anweisung.
+de: Mehrere Fälle trennst du mit Kommas. Fehlt einer, fängt default ihn auf.
+en: Since Java 14 there's a switch with arrows: case "laser" -> ...; no break and no falling through.
+en: It can also RETURN a value (a switch expression), so you choose a number in a single statement.
+en: You can group several cases with commas. If a case is missing, default covers it.
+codigo:
+    double huida = switch (g.arma()) {
+        case "misil" -> 200;
+        case "laser", "bala" -> 120;
+        default -> 60;
+    };
+    avanzar(huida);
+--- tarea
+ejercicio: t04_puntos_por_puesto
+es: Reparte los puntos del torneo con un switch de flechas (Java 14).
+de: Verteile die Turnierpunkte mit einem Pfeil-switch (Java 14).
+en: Hand out tournament points with an arrow switch (Java 14).
+--- tarea
+ejercicio: t04_coste_de_arma
+es: La lista de precios del taller: cada arma, su coste.
+de: Die Preisliste der Werkstatt: jede Waffe, ihr Preis.
+en: The workshop's price list: each weapon, its cost.

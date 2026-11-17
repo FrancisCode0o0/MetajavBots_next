@@ -14,6 +14,14 @@ public enum Idioma {
         return name().toLowerCase(java.util.Locale.ROOT);
     }
 
+    public java.util.Locale locale() {
+        switch (this) {
+            case DE: return java.util.Locale.GERMAN;
+            case EN: return java.util.Locale.ENGLISH;
+            default: return java.util.Locale.forLanguageTag("es");
+        }
+    }
+
     public static Idioma de(String codigo) {
         for (Idioma i : values()) if (i.codigo().equalsIgnoreCase(codigo == null ? "" : codigo.trim())) return i;
         return ES;

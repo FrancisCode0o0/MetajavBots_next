@@ -1,0 +1,247 @@
+# Tema 22: pruebas (JUnit), estilo y diseño.
+=== l22_pruebas
+tema: 22
+orden: 1
+titulo.es: Pruebas que vigilan por ti
+titulo.de: Tests, die für dich wachen
+titulo.en: Tests that keep watch for you
+--- pagina
+es: Probar a mano en la arena es lento: cambias una línea, peleas, miras. Una prueba automática es código
+es: que comprueba tu código: «si le paso esto, debe devolver aquello». Se ejecuta en un segundo, cada vez
+es: que cambias algo, y te avisa si has roto lo que antes funcionaba. Los ejercicios de este juego son justo eso:
+es: cada caso es una prueba.
+de: Von Hand in der Arena zu testen ist langsam: Zeile ändern, kämpfen, schauen. Ein automatischer Test ist
+de: Code, der deinen Code prüft: „Gebe ich ihm das, muss jenes herauskommen.“ Er läuft in einer Sekunde, bei
+de: jeder Änderung, und meldet, wenn du kaputt gemacht hast, was vorher lief. Die Aufgaben in diesem Spiel
+de: sind genau das: Jeder Fall ist ein Test.
+en: Testing by hand in the arena is slow: change a line, fight, watch. An automated test is code
+en: that checks your code: "if I give it this, it must return that". It runs in a second, every time
+en: you change something, and warns you if you've broken what used to work. This game's exercises are exactly that:
+en: every case is a test.
+--- pagina
+es: En Java, la herramienta estándar es JUnit. Cada prueba es un método con @Test, y assertEquals(esperado,
+es: obtenido) compara. assertThrows comprueba que algo lanza la excepción que debe. Prueba los casos normales,
+es: pero sobre todo los bordes: cero, vacío, justo en el límite, negativo. Ahí se esconden los bichos.
+de: In Java ist JUnit das Standardwerkzeug. Jeder Test ist eine Methode mit @Test, und assertEquals(erwartet,
+de: tatsaechlich) vergleicht. assertThrows prüft, ob etwas die richtige Ausnahme wirft. Teste die normalen Fälle,
+de: aber vor allem die Ränder: null, leer, genau an der Grenze, negativ. Dort verstecken sich die Käfer.
+en: In Java, the standard tool is JUnit. Each test is a method with @Test, and assertEquals(expected,
+en: actual) compares. assertThrows checks that something throws the exception it should. Test the normal cases,
+en: but above all the edges: zero, empty, exactly on the limit, negative. That's where the bugs hide.
+codigo:
+    @Test
+    void elDanoNoDejaLaVidaEnNegativo() {
+        assertEquals(70, vidaTrasGolpe(100, 30));
+        assertEquals(0, vidaTrasGolpe(50, 50));     // justo en el borde
+        assertEquals(0, vidaTrasGolpe(20, 90));     // pasarse
+        assertThrows(IllegalArgumentException.class, () -> vidaTrasGolpe(10, -5));
+    }
+--- pagina
+es: Para probar algo, tiene que ser probable. Un método que mira la hora del sistema por dentro no se puede
+es: probar bien: cada vez da otra cosa. Si en lugar de eso le PASAS el reloj (inyección de dependencias),
+es: en la prueba le das un reloj falso que marca lo que tú quieras. Lo mismo vale para el azar:
+es: por eso tu robot usa azar(), que da los mismos números si repites la misma pelea.
+de: Um etwas zu testen, muss es testbar sein. Eine Methode, die intern die Systemzeit abfragt, lässt sich schlecht
+de: testen: Jedes Mal kommt etwas anderes heraus. GIBST du ihr stattdessen die Uhr mit (Dependency Injection),
+de: bekommt sie im Test eine falsche Uhr, die anzeigt, was du willst. Dasselbe gilt für Zufall:
+de: Darum benutzt dein Roboter zufall(), das bei derselben Kampfwiederholung dieselben Zahlen liefert.
+en: To test something, it has to be testable. A method that reads the system clock inside can't be tested
+en: properly: it gives something different every time. If instead you PASS it the clock (dependency injection),
+en: in the test you give it a fake clock showing whatever you like. The same goes for randomness:
+en: that's why your robot uses random(), which gives the same numbers if you replay the same fight.
+--- tarea
+ejercicio: t22_escribir_pruebas
+es: Ahora te toca a ti: escribe las pruebas que pillan a una función tramposa.
+de: Jetzt bist du dran: Schreib die Tests, die eine schummelnde Funktion erwischen.
+en: Your turn now: write the tests that catch a cheating function.
+--- tarea
+ejercicio: t22_reloj_inyectado
+es: Un enfriamiento que se puede probar, gracias a un reloj inyectado.
+de: Eine Abkühlzeit, die sich testen lässt, dank einer injizierten Uhr.
+en: A cooldown you can test, thanks to an injected clock.
+
+=== l22_codigo_limpio
+tema: 22
+orden: 2
+titulo.es: Código que se lee solo
+titulo.de: Code, der sich selbst erklärt
+titulo.en: Code that reads itself
+--- pagina
+es: El código se escribe una vez y se lee cien. Nombres que digan lo que son (distanciaAlEnemigo, no d2),
+es: métodos cortos que hagan una cosa, y números mágicos convertidos en constantes con nombre:
+es: if (e.distancia() < 150) no explica nada; if (e.distancia() < ALCANCE_CUERPO_A_CUERPO) lo explica todo.
+de: Code wird einmal geschrieben und hundertmal gelesen. Namen, die sagen, was sie sind (abstandZumGegner,
+de: nicht d2), kurze Methoden, die eine Sache tun, und magische Zahlen als benannte Konstanten: if
+de: (g.entfernung() < 150) erklärt nichts; if (g.entfernung() < NAHKAMPF_REICHWEITE) erklärt alles.
+en: Code is written once and read a hundred times. Names that say what things are (distanceToEnemy, not d2),
+en: short methods that do one thing, and magic numbers turned into named constants:
+en: if (e.distance() < 150) explains nothing; if (e.distance() < MELEE_RANGE) explains everything.
+--- pagina
+es: Una pirámide de ifs (if dentro de if dentro de if) es difícil de seguir. Las cláusulas de guarda la aplanan:
+es: comprueba primero los casos que te hacen salir y sal con return. Lo que queda debajo es el camino feliz,
+es: sin sangría de más. Y si copias y pegas un bloque, para: ese bloque quiere ser un método.
+de: Eine if-Pyramide (if in if in if) ist schwer zu verfolgen. Guard Clauses machen sie flach: Prüf zuerst
+de: die Fälle, die zum Aussteigen führen, und steig mit return aus. Was darunter bleibt, ist der Normalfall,
+de: ohne überflüssige Einrückung. Und wenn du einen Block kopierst und einfügst: Halt, der will eine Methode
+de: werden.
+en: A pyramid of ifs (if inside if inside if) is hard to follow. Guard clauses flatten it:
+en: check the cases that make you leave first and leave with return. What's left below is the happy path,
+en: with no extra indentation. And if you copy and paste a block, stop: that block wants to be a method.
+codigo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        if (e.blindaje() <= 0) {
+            return;                    // ya está fuera
+        }
+        if (!listoDerecha()) {
+            return;                    // aún recargando
+        }
+        apuntarHacia(e.angulo());
+        atacarDerecha();
+    }
+--- pagina
+es: Si un método puede no encontrar nada, devolver null es tender una trampa: quien lo llame tiene que
+es: acordarse de comprobarlo, y algún día se olvidará. Optional (Java 8) lo deja escrito en la firma:
+es: Optional<Enemigo> masCercano() avisa de que puede venir vacío y obliga a decidir qué hacer entonces.
+de: Kann eine Methode nichts finden, ist null eine Falle: Der Aufrufer muss an die Prüfung denken,
+de: und irgendwann vergisst er es. Optional (Java 8) schreibt es in die Signatur:
+de: Optional<Gegner> naechster() warnt, dass es leer sein kann, und zwingt zur Entscheidung, was dann passiert.
+en: If a method might find nothing, returning null is setting a trap: whoever calls it has to
+en: remember to check, and one day they'll forget. Optional (Java 8) writes it into the signature:
+en: Optional<Enemy> nearest() warns that it may come back empty and forces a decision about what to do then.
+--- tarea
+ejercicio: t22_clausulas_de_guarda
+es: Fuera la pirámide de ifs: reescríbela con cláusulas de guarda.
+de: Weg mit der if-Pyramide: Schreib sie mit Guard Clauses neu.
+en: Down with the pyramid of ifs: rewrite it with guard clauses.
+--- tarea
+ejercicio: t22_optional_en_vez_de_null
+es: Optional mejor que null: que la firma diga la verdad.
+de: Optional statt null: Die Signatur soll die Wahrheit sagen.
+en: Optional instead of null: let the signature tell the truth.
+
+=== l22_patrones
+tema: 22
+orden: 3
+titulo.es: Patrones: soluciones con nombre
+titulo.de: Entwurfsmuster: Lösungen mit Namen
+titulo.en: Patterns: solutions with names
+--- pagina
+es: Un patrón de diseño es una solución que funciona tan a menudo que le han puesto nombre. Ya has usado varios:
+es: Estrategia (la Punteria intercambiable), Método plantilla (Metajavbot llamando a tu cadaTurno),
+es: Builder (montar robots paso a paso) y Estado (el cerebro con estados). Saber su nombre te permite
+es: hablar de diseño en una frase: «aquí haría falta una Estrategia».
+de: Ein Entwurfsmuster ist eine Lösung, die so oft funktioniert, dass sie einen Namen bekommen hat. Einige
+de: kennst du: Strategie (das austauschbare Punteria), Schablonenmethode (Metajavbot ruft dein jedenZug
+de: auf), Builder (Roboter Schritt für Schritt bauen) und Zustand (das Gehirn mit Zuständen). Mit den Namen
+de: redest du über Entwurf in einem Satz: „Hier bräuchte es eine Strategie.“
+en: A design pattern is a solution that works so often it has been given a name. You've already used several:
+en: Strategy (the swappable Punteria), Template method (Metajavbot calling your onTick),
+en: Builder (assembling robots step by step) and State (the brain with states). Knowing their names lets you
+en: talk about design in one sentence: "this needs a Strategy".
+--- pagina
+es: Otro clásico: Orden (Command). Cada acción es un objeto con hacer() y deshacer(), y guardas las hechas
+es: en una pila. Así deshacer es sacar la última y llamar a su deshacer(). Así funciona el Ctrl+Z de casi
+es: cualquier editor.
+de: Noch ein Klassiker: Befehl (Command). Jede Aktion ist ein Objekt mit hacer() und deshacer(), und die erledigten
+de: kommen auf einen Stapel. Rückgängig heißt: den letzten nehmen und sein deshacer() aufrufen.
+de: So funktioniert Strg+Z in fast jedem Editor.
+en: Another classic: Command. Each action is an object with hacer() and deshacer(), and you keep the done
+en: ones on a stack. Undo is just taking the last one and calling its deshacer(). That's how Ctrl+Z works in
+en: almost any editor.
+codigo:
+    interface Orden {
+        void hacer();
+        void deshacer();
+    }
+    Deque<Orden> hechas = new ArrayDeque<>();
+    void ejecutar(Orden o) {
+        o.hacer();
+        hechas.push(o);
+    }
+    void deshacerUltima() {
+        if (!hechas.isEmpty()) {
+            hechas.pop().deshacer();
+        }
+    }
+--- pagina
+es: Los patrones son herramientas, no medallas. Un robot de 40 líneas no necesita cinco interfaces.
+es: Empieza simple; cuando el código te duela (cambias algo y se rompe en tres sitios), ese dolor te dice
+es: qué patrón hace falta. Y un consejo de los buenos: prefiere composición a herencia, y programa contra
+es: interfaces, no contra clases concretas.
+de: Muster sind Werkzeuge, keine Orden. Ein Roboter mit 40 Zeilen braucht keine fünf Interfaces.
+de: Fang einfach an; wenn der Code wehtut (du änderst etwas, und es bricht an drei Stellen), sagt dir der Schmerz,
+de: welches Muster fehlt. Und ein Rat der Profis: lieber Komposition als Vererbung, und programmier gegen
+de: Interfaces, nicht gegen konkrete Klassen.
+en: Patterns are tools, not medals. A 40-line robot doesn't need five interfaces.
+en: Start simple; when the code starts to hurt (you change one thing and it breaks in three places), that pain
+en: tells you which pattern is missing. And some sound advice: prefer composition over inheritance, and program
+en: against interfaces, not concrete classes.
+--- tarea
+ejercicio: t22_estrategia_de_tiro
+es: Estrategias de tiro intercambiables, sin un solo if para elegirlas.
+de: Austauschbare Schießstrategien, ohne ein einziges if zur Auswahl.
+en: Swappable shooting strategies, without a single if to choose between them.
+--- tarea
+ejercicio: t22_ordenes_con_deshacer
+es: Órdenes que se pueden deshacer: el patrón Command.
+de: Befehle, die sich rückgängig machen lassen: das Command-Muster.
+en: Orders that can be undone: the Command pattern.
+
+=== l22_robot_final
+tema: 22
+orden: 4
+titulo.es: Tu obra maestra
+titulo.de: Dein Meisterstück
+titulo.en: Your masterpiece
+--- pagina
+es: Es hora de juntarlo todo. Un robot de nivel Master suele tener la misma forma: un record para lo que sabe
+es: del enemigo, una Punteria intercambiable (directa o adelantada), un enum de estados para decidir qué hacer,
+es: esquiva perpendicular hacia el lado con más sitio y memoria() para aprender de ronda en ronda.
+es: Cada pieza es pequeña y probada; juntas, dan miedo.
+de: Zeit, alles zusammenzubringen. Ein Master-Roboter hat meist dieselbe Form: ein Record für das, was er
+de: über den Gegner weiß, ein austauschbares Punteria (direkt oder vorhaltend), ein enum mit Zuständen für
+de: die Entscheidungen, seitliches Ausweichen zur Seite mit mehr Platz und gedaechtnis(), um von Runde zu
+de: Runde zu lernen. Jedes Teil ist klein und getestet; zusammen machen sie Angst.
+en: Time to put it all together. A Master-level robot usually has the same shape: a record for what it knows
+en: about the enemy, a swappable Punteria (direct or leading), an enum of states to decide what to do,
+en: perpendicular dodging towards the roomier side and memory() to learn from round to round.
+en: Each piece is small and tested; together, they're terrifying.
+codigo:
+    public class MiRobot extends Metajavbot {
+        record Visto(double x, double y, double rumbo, double velocidad, int turno) {}
+        enum Estado { BUSCAR, ATACAR, HUIR }
+        private Visto ultimo;
+        private Estado estado = Estado.BUSCAR;
+        @Override
+        public void cadaTurno() {
+            estado = decidir();
+            switch (estado) {
+                case BUSCAR -> buscar();
+                case ATACAR -> atacarConPrediccion();
+                case HUIR -> huir();
+            }
+        }
+        // decidir, buscar, atacarConPrediccion y huir: cada uno, pocas líneas
+    }
+--- pagina
+es: Y ahora, a pulir con datos. Escribe en la consola tus aciertos y el daño recibido por ronda, cambia UNA
+es: cosa cada vez y compara. Los grandes robots no se escriben de una sentada: se afinan pelea a pelea.
+es: Has llegado desde no saber qué era un punto y coma hasta diseñar sistemas. Eso ya es programar en serio.
+de: Und jetzt wird mit Daten poliert. Gib deine Treffer und den erlittenen Schaden pro Runde aus, ändere
+de: immer nur EINE Sache und vergleiche. Große Roboter entstehen nicht in einem Rutsch: Sie werden Kampf für
+de: Kampf geschliffen. Du bist von „Was ist ein Semikolon?“ bis zum Entwerfen von Systemen gekommen. Das ist
+de: ernsthaftes Programmieren.
+en: And now, polish with data. Print your hits and the damage taken per round, change ONE thing at a time
+en: and compare. Great robots aren't written in one sitting: they're tuned fight after fight.
+en: You've gone from not knowing what a semicolon was to designing systems. That's real programming.
+--- tarea
+robot: aciertos>=12
+es: Con tu robot completo (estados, predicción y esquiva), acierta al muñeco 12 veces en una ronda.
+de: Mit deinem fertigen Roboter (Zustände, Vorhersage, Ausweichen): Triff die Puppe 12-mal in einer Runde.
+en: With your complete robot (states, prediction and dodging), hit the dummy 12 times in one round.
+--- tarea
+robot: dano<=15
+es: Y a la vez, que casi no te toquen: termina la ronda con 15 de daño o menos.
+de: Und gleichzeitig sollst du kaum etwas abbekommen: höchstens 15 Schaden in der Runde.
+en: And at the same time, barely get touched: end the round with 15 damage or less.

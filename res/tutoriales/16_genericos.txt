@@ -1,0 +1,156 @@
+# Tema 16: genéricos.
+=== l16_cajas_de_cualquier_cosa
+tema: 16
+orden: 1
+titulo.es: Cajas para cualquier cosa
+titulo.de: Kisten für alles
+titulo.en: Boxes for anything
+--- pagina
+es: Antes de Java 5 las listas guardaban Object, es decir, cualquier cosa. Al sacar algo tenías que hacer
+es: un cast y rezar: si dentro había un String y tú esperabas un Enemigo, ClassCastException en plena pelea.
+es: Los genéricos ponen el tipo entre < > y el compilador lo vigila por ti: List<Enemigo> solo admite enemigos,
+es: y lo que sacas ya es un Enemigo, sin cast. El error se mueve de la arena al taller, que es donde lo quieres.
+de: Vor Java 5 speicherten Listen Object, also irgendetwas. Beim Herausholen musstest du casten und beten:
+de: War ein String drin und du erwartetest einen Gegner, gab es mitten im Kampf eine ClassCastException.
+de: Generics schreiben den Typ in < >, und der Compiler passt für dich auf: List<Gegner> nimmt nur Gegner,
+de: und was du herausholst, ist schon einer, ohne Cast. Der Fehler wandert von der Arena in die Werkstatt.
+en: Before Java 5, lists stored Object, meaning anything at all. Taking something out meant a cast and a
+en: prayer: if there was a String inside and you expected an Enemy, ClassCastException in the middle of the
+en: fight. Generics put the type between < > and the compiler guards it for you: List<Enemy> only accepts
+en: enemies, and what comes out is already an Enemy, no cast. The error moves from the arena to the
+en: workshop, where you want it.
+--- pagina
+es: memoria() es un Map<String, Object>, así que ahí sí vuelves a los casts: es el precio de guardar
+es: cualquier cosa. Tus propias clases también pueden ser genéricas: class Caja<T> funciona para T =
+es: Integer, String, Enemigo… La T es un hueco que se rellena al usarla: new Caja<String>("laser"). Escribes
+es: el código una vez y vale para todo.
+de: gedaechtnis() ist eine Map<String, Object>, dort brauchst du also wieder Casts: der Preis für „alles
+de: speichern“. Auch deine eigenen Klassen können generisch sein: class Caja<T> funktioniert für T =
+de: Integer, String, Gegner … Das T ist eine Lücke, die beim Benutzen gefüllt wird: new
+de: Caja<String>("laser"). Einmal geschrieben, passt für alles.
+en: memory() is a Map<String, Object>, so there you're back to casts: the price of storing anything. Your
+en: own classes can be generic too: class Caja<T> works for T = Integer, String, Enemy… The T is a gap that
+en: gets filled when you use it: new Caja<String>("laser"). Write the code once and it fits everything.
+codigo:
+    class Ultimos<T> {
+        private final List<T> datos = new ArrayList<>();
+        private final int tope;
+        Ultimos(int tope) {
+            this.tope = tope;
+        }
+        void meter(T x) {
+            datos.add(x);
+            if (datos.size() > tope) {
+                datos.remove(0);
+            }
+        }
+        List<T> todos() {
+            return List.copyOf(datos);
+        }
+    }
+    Ultimos<Golpe> golpes = new Ultimos<>(5);
+    Ultimos<Double> distancias = new Ultimos<>(30);
+--- tarea
+ejercicio: t16_caja_de_piezas
+es: Una caja que vale para cualquier pieza: tu primera clase genérica.
+de: Eine Kiste für jedes Bauteil: deine erste generische Klasse.
+en: A box that works for any part: your first generic class.
+--- tarea
+ejercicio: t16_par_de_valores
+es: Un par de cualquier cosa, con dos tipos genéricos a la vez.
+de: Ein Paar aus irgendwas, mit zwei generischen Typen gleichzeitig.
+en: A pair of anything, with two generic types at once.
+
+=== l16_metodos_genericos
+tema: 16
+orden: 2
+titulo.es: Métodos genéricos y límites
+titulo.de: Generische Methoden und Schranken
+titulo.en: Generic methods and bounds
+--- pagina
+es: Un método también puede ser genérico sin que lo sea su clase: static <T> T ultimo(List<T> lista).
+es: El <T> delante del tipo de retorno avisa: «aquí hay un tipo por decidir». Java lo deduce de lo que le pasas,
+es: así que llamas a ultimo(golpes) y te devuelve un Golpe, o ultimo(nombres) y te devuelve un String.
+de: Auch eine Methode kann generisch sein, ohne dass ihre Klasse es ist: static <T> T ultimo(List<T> liste).
+de: Das <T> vor dem Rückgabetyp kündigt an: „Hier kommt ein noch offener Typ“. Java leitet ihn aus dem Argument ab,
+de: also gibt ultimo(treffer) einen Treffer zurück und ultimo(namen) einen String.
+en: A method can be generic without its class being generic: static <T> T ultimo(List<T> list).
+en: The <T> before the return type announces: "there's a type still to be decided here". Java infers it from
+en: what you pass, so ultimo(hits) returns a Hit and ultimo(names) returns a String.
+--- pagina
+es: A veces T no puede ser cualquier cosa. Para buscar el mayor necesitas poder comparar, así que pones un límite:
+es: <T extends Comparable<T>>. Ahora el compilador solo acepta tipos comparables y, a cambio, dentro del método
+es: puedes llamar a compareTo. Es un trato: tú pides menos tipos, el compilador te da más poderes.
+de: Manchmal darf T nicht beliebig sein. Um das Größte zu finden, musst du vergleichen können, also setzt du
+de: eine Schranke: <T extends Comparable<T>>. Jetzt nimmt der Compiler nur vergleichbare Typen, und dafür
+de: darfst du in der Methode compareTo aufrufen. Ein Handel: Du verlangst weniger Typen, der Compiler gibt
+de: dir mehr Macht.
+en: Sometimes T can't be just anything. To find the largest you need to compare, so you add a bound:
+en: <T extends Comparable<T>>. Now the compiler only accepts comparable types and, in exchange, inside the method
+en: you can call compareTo. It's a deal: you ask for fewer types, the compiler gives you more powers.
+codigo:
+    static <T extends Comparable<T>> T mayor(List<T> lista) {
+        T mejor = lista.get(0);
+        for (T x : lista) {
+            if (x.compareTo(mejor) > 0) {
+                mejor = x;
+            }
+        }
+        return mejor;
+    }
+--- tarea
+ejercicio: t16_ultimo_de_la_lista
+es: El último de cualquier lista, con un método genérico.
+de: Das Letzte aus jeder Liste, mit einer generischen Methode.
+en: The last of any list, with a generic method.
+--- tarea
+ejercicio: t16_maximo_acotado
+es: El mayor de cualquier cosa que se pueda comparar: un límite con extends.
+de: Das Größte von allem, was sich vergleichen lässt: eine Schranke mit extends.
+en: The largest of anything comparable: a bound with extends.
+
+=== l16_comodines
+tema: 16
+orden: 3
+titulo.es: Comodines: ? extends y ? super
+titulo.de: Wildcards: ? extends und ? super
+titulo.en: Wildcards: ? extends and ? super
+--- pagina
+es: Sorpresa: una List<Integer> NO es una List<Number>, aunque un Integer sea un Number. Si lo fuera,
+es: podrías meter un Double en una lista de Integer por la puerta de atrás. Para «una lista de algo que sea Number»
+es: está el comodín: List<? extends Number>. De ella puedes LEER Numbers, pero no puedes añadir nada.
+de: Überraschung: Eine List<Integer> ist KEINE List<Number>, obwohl ein Integer ein Number ist. Sonst könntest du
+de: durch die Hintertür ein Double in eine Integer-Liste schmuggeln. Für „eine Liste von irgendwas, das Number ist“
+de: gibt es die Wildcard: List<? extends Number>. Daraus kannst du Numbers LESEN, aber nichts hinzufügen.
+en: Surprise: a List<Integer> is NOT a List<Number>, even though an Integer is a Number. If it were, you
+en: could sneak a Double into a list of Integers through the back door. For "a list of something that's a
+en: Number" there's the wildcard: List<? extends Number>. You can READ Numbers from it, but you can't add
+en: anything.
+--- pagina
+es: La regla para recordarlo se llama PECS: Producer Extends, Consumer Super. Si la lista te DA cosas, extends;
+es: si la lista RECIBE cosas, super: List<? super Integer> acepta que le metas Integer. Y un detalle de los
+es: genéricos de Java: el tipo se borra al compilar (type erasure), por eso no puedes hacer new T() ni new T[10].
+de: Die Merkregel heißt PECS: Producer Extends, Consumer Super. GIBT dir die Liste etwas, extends; NIMMT sie
+de: etwas, super: In List<? super Integer> darfst du Integer hineinlegen. Und ein Detail der Java-Generics:
+de: Der Typ wird beim Kompilieren gelöscht (Type Erasure), deshalb geht weder new T() noch new T[10].
+en: The rule to remember it is PECS: Producer Extends, Consumer Super. If the list GIVES you things, extends;
+en: if the list TAKES things, super: List<? super Integer> lets you put Integers in. And a quirk of Java generics:
+en: the type is erased when compiling (type erasure), which is why you can't do new T() or new T[10].
+codigo:
+    static double suma(List<? extends Number> numeros) {
+        double total = 0;
+        for (Number n : numeros) {
+            total += n.doubleValue();
+        }
+        return total;
+    }
+--- tarea
+ejercicio: t16_suma_con_comodin
+es: Suma números de cualquier tipo con un comodín.
+de: Summiere Zahlen jedes Typs mit einer Wildcard.
+en: Add up numbers of any type with a wildcard.
+--- tarea
+ejercicio: t16_inventario_seguro
+es: Un inventario a prueba de trampas, con tipos que el compilador vigila.
+de: Ein schummelsicheres Inventar mit Typen, die der Compiler überwacht.
+en: A cheat-proof inventory with types the compiler keeps an eye on.

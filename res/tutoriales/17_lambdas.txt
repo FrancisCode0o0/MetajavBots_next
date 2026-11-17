@@ -1,0 +1,152 @@
+# Tema 17: lambdas e interfaces funcionales.
+=== l17_funciones_como_valores
+tema: 17
+orden: 1
+titulo.es: Comportamiento en una variable
+titulo.de: Verhalten in einer Variablen
+titulo.en: Behaviour in a variable
+--- pagina
+es: En el tema 13 escribiste una clase entera (Directa) solo para un método. Desde Java 8 hay un atajo:
+es: la lambda, una función sin nombre que cabe en una línea: e -> e.blindaje() < 30.
+es: A la izquierda de la flecha, los parámetros; a la derecha, lo que devuelve. Se puede guardar en una variable,
+es: pasar a un método o devolver, como cualquier otro valor.
+de: In Thema 13 hast du eine ganze Klasse (Directa) für eine einzige Methode geschrieben. Seit Java 8 geht
+de: es kürzer: mit dem Lambda, einer namenlosen Funktion in einer Zeile: g -> g.panzerung() < 30. Links vom
+de: Pfeil die Parameter, rechts das Ergebnis. Du kannst es in einer Variablen speichern, einer Methode
+de: übergeben oder zurückgeben wie jeden anderen Wert.
+en: In topic 13 you wrote a whole class (Directa) just for one method. Since Java 8 there's a shortcut:
+en: the lambda, a nameless function that fits on one line: e -> e.armor() < 30.
+en: Left of the arrow, the parameters; right of it, what it returns. You can store it in a variable,
+en: pass it to a method or return it, like any other value.
+--- pagina
+es: Una lambda necesita una interfaz funcional: una interfaz con UN solo método abstracto. Tu Punteria lo es,
+es: y Java trae muchas en java.util.function. Predicate<T> responde sí o no; con él defines qué es
+es: «un blanco fácil» en un sitio y lo usas en todos los demás.
+de: Ein Lambda braucht ein funktionales Interface: ein Interface mit GENAU einer abstrakten Methode. Deine Punteria
+de: ist eins, und Java bringt viele in java.util.function mit. Predicate<T> antwortet mit Ja oder Nein;
+de: damit legst du an einer Stelle fest, was „ein leichtes Ziel“ ist, und benutzt es überall.
+en: A lambda needs a functional interface: an interface with ONE single abstract method. Your Punteria is one,
+en: and Java ships plenty in java.util.function. Predicate<T> answers yes or no; with it you define what
+en: "an easy target" means in one place and use it everywhere else.
+codigo:
+    Predicate<Enemigo> facil = e -> e.blindaje() < 30 || Math.abs(e.velocidad()) < 1;
+    Punteria directa = (yo, e) -> e.angulo();
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        apuntarHacia(directa.angulo(this, e));
+        if (facil.test(e) || e.distancia() < 150) {
+            atacar();
+        }
+    }
+--- tarea
+robot: usa:Predicate
+es: Define con un Predicate qué es para ti un blanco fácil y úsalo para decidir cuándo atacar durante una ronda.
+de: Leg mit einem Predicate fest, was für dich ein leichtes Ziel ist, und entscheide damit eine Runde lang
+de: über Angriffe.
+en: Use a Predicate to define what an easy target is for you and use it to decide when to attack for a round.
+--- tarea
+ejercicio: t17_filtro_mayor_que
+es: Un filtro de golpes fuertes escrito como lambda.
+de: Ein Filter für harte Treffer, als Lambda geschrieben.
+en: A filter for heavy hits written as a lambda.
+
+=== l17_la_familia_funcional
+tema: 17
+orden: 2
+titulo.es: La familia funcional
+titulo.de: Die funktionale Familie
+titulo.en: The functional family
+--- pagina
+es: Las interfaces funcionales más útiles: Function<T, R> transforma un T en un R, Supplier<T> da algo sin pedir
+es: nada, Consumer<T> recibe algo y no devuelve nada, BiFunction recibe dos cosas y UnaryOperator<T> transforma
+es: un T en otro T. Si no recuerdas cuál es cuál, piensa en lo que entra y lo que sale.
+de: Die nützlichsten funktionalen Interfaces: Function<T, R> macht aus einem T ein R, Supplier<T> liefert
+de: etwas, ohne etwas zu verlangen, Consumer<T> nimmt etwas und gibt nichts zurück, BiFunction nimmt zwei
+de: Dinge, und UnaryOperator<T> macht aus einem T ein anderes T. Wenn du sie verwechselst: Denk daran, was
+de: hineingeht und was herauskommt.
+en: The most useful functional interfaces: Function<T, R> turns a T into an R, Supplier<T> gives something without
+en: asking for anything, Consumer<T> takes something and returns nothing, BiFunction takes two things and
+en: UnaryOperator<T> turns a T into another T. If you mix them up, think about what goes in and what comes out.
+--- pagina
+es: Cuando la lambda solo llama a un método que ya existe, una referencia a método lo dice aún más corto:
+es: Enemigo::distancia es lo mismo que e -> e.distancia(). Con Comparator.comparingDouble(Enemigo::distancia)
+es: ordenas por distancia sin escribir ni un compareTo. Y .reversed() le da la vuelta.
+de: Ruft das Lambda nur eine vorhandene Methode auf, sagt es eine Methodenreferenz noch kürzer:
+de: Gegner::entfernung ist dasselbe wie g -> g.entfernung(). Mit Comparator.comparingDouble(Gegner::entfernung)
+de: sortierst du nach Abstand, ohne ein einziges compareTo zu schreiben. Und .reversed() dreht es um.
+en: When the lambda just calls a method that already exists, a method reference says it even shorter:
+en: Enemy::distance is the same as e -> e.distance(). With Comparator.comparingDouble(Enemy::distance)
+en: you sort by distance without writing a single compareTo. And .reversed() flips it.
+codigo:
+    List<Enemigo> vistos = enemigosVistos();
+    vistos.sort(Comparator.comparingDouble(Enemigo::blindaje));   // el más tocado, primero
+    if (!vistos.isEmpty()) {
+        apuntarHacia(vistos.getFirst().angulo());
+        atacar();
+    }
+--- tarea
+ejercicio: t17_ordenar_por_largo
+es: Ordena nombres de robots con un Comparator hecho de lambdas.
+de: Sortiere Roboternamen mit einem Comparator aus Lambdas.
+en: Sort robot names with a Comparator built from lambdas.
+--- tarea
+ejercicio: t17_aplicar_a_todos
+es: Aplica el mismo efecto a todos los golpes con una Function.
+de: Wende denselben Effekt mit einer Function auf alle Treffer an.
+en: Apply the same effect to every hit with a Function.
+
+=== l17_componer
+tema: 17
+orden: 3
+titulo.es: Encadenar y recordar
+titulo.de: Verketten und sich erinnern
+titulo.en: Chaining and remembering
+--- pagina
+es: Las funciones se pueden enchufar entre sí: f.andThen(g) hace f y luego g; p.and(q) y p.negate()
+es: combinan predicados. Así montas comportamientos complejos con piezas pequeñas y probadas,
+es: como un robot hecho de módulos.
+de: Funktionen lassen sich zusammenstecken: f.andThen(g) macht erst f, dann g; p.and(q) und p.negate()
+de: verknüpfen Prädikate. So baust du komplexes Verhalten aus kleinen, getesteten Teilen,
+de: wie einen Roboter aus Modulen.
+en: Functions can be plugged into each other: f.andThen(g) does f and then g; p.and(q) and p.negate()
+en: combine predicates. That way you build complex behaviour from small, tested pieces,
+en: like a robot made of modules.
+--- pagina
+es: Un Map de nombres a Runnable es un menú de maniobras: tacticas.get("huir").run(). Puedes elegir
+es: la maniobra con un dato que guardaste en memoria(), sin un solo if.
+de: Eine Map von Namen auf Runnables ist ein Manöver-Menü: tacticas.get("huir").run(). Du kannst
+de: das Manöver über einen Wert aus gedaechtnis() wählen, ganz ohne if.
+en: A Map from names to Runnables is a menu of manoeuvres: tacticas.get("huir").run(). You can pick
+en: the manoeuvre with a value you saved in memory(), without a single if.
+codigo:
+    Map<String, Runnable> tacticas = Map.of(
+            "huir", () -> { girar(180); avanzar(200); },
+            "rodear", () -> { girar(15); avanzar(90); },
+            "embestir", () -> avanzar(250));
+    @Override
+    public void cadaTurno() {
+        tacticas.get(blindaje() < 30 ? "huir" : "rodear").run();
+    }
+--- pagina
+es: Una lambda puede usar variables de fuera, pero solo si no cambian (efectivamente final). Si intentas
+es: hacer contador++ dentro de una lambda con una variable local, Java dice «must be final or effectively final».
+es: El motivo: la lambda puede ejecutarse mucho después, cuando esa variable ya no existe. Usa un campo
+es: o un contenedor como int[] o AtomicInteger.
+de: Ein Lambda darf Variablen von außen benutzen, aber nur, wenn sie sich nicht ändern (effectively final).
+de: Versuchst du zaehler++ mit einer lokalen Variablen im Lambda, sagt Java „must be final or effectively final“.
+de: Der Grund: Das Lambda läuft vielleicht viel später, wenn es die Variable gar nicht mehr gibt.
+de: Nimm ein Feld oder einen Behälter wie int[] oder AtomicInteger.
+en: A lambda can use variables from outside, but only if they don't change (effectively final). Try
+en: counter++ inside a lambda on a local variable and Java says "must be final or effectively final".
+en: The reason: the lambda may run much later, when that variable no longer exists. Use a field
+en: or a holder like int[] or AtomicInteger.
+--- tarea
+ejercicio: t17_encadenar_pasos
+es: Una cadena de efectos montada con andThen.
+de: Eine Kette von Effekten, gebaut mit andThen.
+en: A chain of effects built with andThen.
+--- tarea
+ejercicio: t17_arma_funcional
+es: Tu propia interfaz funcional para un arma, usada con lambdas.
+de: Dein eigenes funktionales Interface für eine Waffe, benutzt mit Lambdas.
+en: Your own functional interface for a weapon, used with lambdas.

@@ -44,6 +44,8 @@ public final class Pelea {
     public long nanosPorTurno = 30_000_000L;
     /** Si no es 0, el tope de pasos de todos (el modo especial «tope de cálculo»); si es 0, el de cada núcleo. */
     public long topeDePasos;
+    /** Cuánto daño le llega a cada uno (1 = todo). Los jefes del modo especial ponen 0.1 si el código no usa su tema. */
+    public final double[] resistencia = {1, 1};
     /** El ganador (0 o 1), -1 si empate, -2 si no ha acabado. */
     private int ganador = -2;
 
@@ -67,6 +69,9 @@ public final class Pelea {
     public Pelea(Combatiente a, Combatiente b, long semilla) {
         this(a, b, semilla, 1000, 700, 1200);
     }
+
+    /** Las rondas de esta pelea (4; 1 en las prácticas y los tutoriales). */
+    public int rondas = RONDAS;
 
     public Pelea(Combatiente a, Combatiente b, long semilla, double ancho, double alto, int turnosPorRonda) {
         combatientes[0] = a;
@@ -204,7 +209,7 @@ public final class Pelea {
             if (c.combatiente.robot != null) ejecutar(c, () -> Puente.finDeRonda(c.combatiente.robot), 500_000);
         }
         suceso(Suceso.Tipo.RONDA_ACABA, -1, ancho / 2, alto / 2, 0, ronda, "");
-        if (ronda >= RONDAS) {
+        if (ronda >= rondas) {
             estado = Estado.TERMINADA;
             double da = combatientes[0].danoTotalRecibido, db = combatientes[1].danoTotalRecibido;
             if (Math.abs(da - db) < 0.5) ganador = -1;
@@ -530,6 +535,7 @@ public final class Pelea {
             suceso(Suceso.Tipo.ESQUIVA, e.indice, e.x, e.y, desde, dano, arma);
             return false;
         }
+        dano *= resistencia[e.indice];
         double bloqueo = 0;
         if (e.escudoBrazo > 0 && Math.abs(normal(desde - e.mira)) <= e.conoEscudo / 2) bloqueo = e.bloqueoBrazo;
         if (e.escudoCabeza > 0) bloqueo = Math.max(bloqueo, e.bloqueoCabeza);

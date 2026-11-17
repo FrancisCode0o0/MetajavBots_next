@@ -1,0 +1,271 @@
+# Tema 01: primeros pasos (programa, sentencias y comentarios). Cero absoluto: nadie ha programado nunca.
+=== l01_hola_arena
+tema: 01
+orden: 1
+titulo.es: Hola, arena
+titulo.de: Hallo, Arena
+titulo.en: Hello, arena
+--- pagina
+es: Programar es escribir instrucciones para una máquina que obedece al pie de la letra.
+es: Tu robot no piensa por sí mismo: hace EXACTAMENTE lo que le escribas, ni más ni menos.
+es: Es como una receta de cocina para un cocinero muy rápido y muy literal. Si pones «sal» en vez de «azúcar»,
+es: no te lo va a discutir: te hará la tarta salada. En esta arena, la receta se escribe en Java.
+de: Programmieren heißt, Anweisungen für eine Maschine zu schreiben, die aufs Wort gehorcht.
+de: Dein Roboter denkt nicht selbst: Er tut GENAU das, was du schreibst, nicht mehr und nicht weniger.
+de: Stell dir ein Rezept für einen blitzschnellen, sehr wörtlichen Koch vor. Steht da „Salz“ statt „Zucker“,
+de: diskutiert er nicht, sondern backt dir einen salzigen Kuchen. In dieser Arena schreibst du Rezepte in Java.
+en: Programming means writing instructions for a machine that obeys you to the letter.
+en: Your robot does not think for itself: it does EXACTLY what you write, no more and no less.
+en: Think of a recipe for a lightning-fast, very literal cook. Write "salt" instead of "sugar" and it won't argue,
+en: it will just bake you a salty cake. In this arena, the recipes are written in Java.
+--- pagina
+es: En el taller verás un código ya escrito. De momento no te asustes por las palabras raras (class, extends,
+es: @Override, public void): las entenderás en los temas 9 a 11. Por ahora solo importa una cosa:
+es: lo que escribas entre las llaves { } de cadaTurno, el robot lo hace en cada turno de la pelea,
+es: unas 30 veces por segundo. Ese hueco es tu primer campo de pruebas.
+de: In der Werkstatt siehst du schon fertigen Code. Lass dich von den komischen Wörtern (class, extends,
+de: @Override, public void) nicht abschrecken: Die verstehst du in den Themen 9 bis 11. Wichtig ist nur:
+de: Was du zwischen die geschweiften Klammern { } von cadaTurno (onTick, jedenZug) schreibst,
+de: macht der Roboter in jedem Zug des Kampfes, etwa 30-mal pro Sekunde. Das ist dein erstes Testgelände.
+en: In the workshop you will see some code already written. Don't let the strange words (class, extends,
+en: @Override, public void) scare you: you'll understand them in topics 9 to 11. For now only one thing matters:
+en: whatever you write between the braces { } of cadaTurno (onTick in English), the robot does on every turn
+en: of the fight, about 30 times per second. That gap is your first testing ground.
+codigo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            // aquí van tus órdenes
+        }
+    }
+--- pagina
+es: Una orden en Java se llama sentencia, y termina SIEMPRE con punto y coma. El punto y coma es el punto
+es: final de la frase: sin él, Java no sabe dónde acaba tu orden y te lo dirá con un error en rojo.
+es: Es el error número uno de todo el que empieza, así que si algo no compila, busca primero el ; que falta.
+es: Prueba esta: el texto entre comillas es lo que dirá tu robot en un bocadillo.
+de: Ein Befehl heißt in Java Anweisung und endet IMMER mit einem Semikolon. Das Semikolon ist der Punkt
+de: am Satzende: Ohne ihn weiß Java nicht, wo dein Befehl aufhört, und meldet sich mit einem roten Fehler.
+de: Das ist der Anfängerfehler Nummer eins. Wenn etwas nicht kompiliert, such zuerst das fehlende ;.
+de: Probier diese hier (auf Deutsch heißt die Methode sagen):
+de: Der Text in Anführungszeichen erscheint in einer Sprechblase.
+en: An order in Java is called a statement, and it ALWAYS ends with a semicolon. The semicolon is the full stop
+en: of the sentence: without it, Java can't tell where your order ends, and it will complain in red.
+en: It's the number one beginner mistake, so when something won't compile, look for the missing ; first.
+en: Try this one (in English the method is called say): the text in quotes appears in a speech bubble.
+codigo:
+    decir("¡Hola, arena!");
+--- pagina
+es: Además del bocadillo, tu robot tiene una consola debajo del código. System.out.println escribe una línea
+es: en ella: es la forma clásica de Java para mostrar texto, la que usan todos los programas de consola.
+es: Desde Java 25 un programa entero puede ser tan corto como void main() { IO.println("Hola"); },
+es: pero aún verás System.out.println por todas partes, así que conviene conocerlo.
+de: Neben der Sprechblase hat dein Roboter eine Konsole unter dem Code. System.out.println schreibt eine Zeile
+de: hinein: der klassische Java-Weg, Text auszugeben, den jedes Konsolenprogramm benutzt.
+de: Seit Java 25 kann ein ganzes Programm so kurz sein wie void main() { IO.println("Hallo"); },
+de: aber System.out.println begegnet dir trotzdem überall, also lohnt es sich, es zu kennen.
+en: Besides the speech bubble, your robot has a console under the code. System.out.println writes one line
+en: into it: the classic Java way to show text, used by every console program out there.
+en: Since Java 25 a whole program can be as short as void main() { IO.println("Hello"); },
+en: but you'll still see System.out.println everywhere, so it's worth knowing.
+codigo:
+    System.out.println("Sistemas en línea");
+    decir("¡A pelear!");
+--- tarea
+robot: ronda_sin_errores
+es: Haz que tu robot diga algo en cada turno con decir(...) y aguanta una ronda de práctica sin ningún error.
+de: Lass deinen Roboter in jedem Zug etwas mit sagen(...) sagen und überstehe eine Übungsrunde ganz ohne Fehler.
+en: Make your robot say something every turn with say(...) and get through a practice round without any errors.
+--- tarea
+ejercicio: t01_encender
+es: Tu primer programa de verdad: enciende el robot escribiendo el texto exacto en su pantalla.
+de: Dein erstes echtes Programm: Schalte den Roboter ein, indem du genau den Text auf seinen Bildschirm schreibst.
+en: Your first real program: switch the robot on by writing the exact text on its screen.
+
+=== l01_ordenes_en_fila
+tema: 01
+orden: 2
+titulo.es: Órdenes en fila
+titulo.de: Befehle der Reihe nach
+titulo.en: Orders in a row
+--- pagina
+es: Las sentencias se ejecutan de arriba abajo, una detrás de otra, como las fichas de un dominó.
+es: El orden importa: «avanzar y luego girar» no deja al robot en el mismo sitio que «girar y luego avanzar».
+es: Para moverte tienes avanzar(distancia), girar(grados), retroceder(distancia) y detener().
+es: Los números van entre paréntesis: son los datos que le das a cada orden.
+de: Anweisungen laufen von oben nach unten, eine nach der anderen, wie fallende Dominosteine.
+de: Die Reihenfolge zählt: „vorwärts, dann drehen“ bringt dich woanders hin als „drehen, dann vorwärts“.
+de: Zum Bewegen gibt es vorwaerts(strecke), drehen(grad), rueckwaerts(strecke) und anhalten()
+de: (im spanischen Code: avanzar, girar, retroceder, detener).
+de: Die Zahlen in Klammern sind die Angaben für den Befehl.
+en: Statements run from top to bottom, one after another, like falling dominoes.
+en: Order matters: "move, then turn" doesn't leave you where "turn, then move" does.
+en: To move you have ahead(distance), turn(degrees), back(distance) and stop()
+en: (in the Spanish code: avanzar, girar, retroceder, detener). The numbers in parentheses are the order's data.
+codigo:
+    avanzar(60);   // hacia delante
+    girar(4);      // un poco a la izquierda: da vueltas en círculo
+--- pagina
+es: Truco importante: las órdenes no esperan. avanzar(60) no frena el programa hasta llegar; solo dice
+es: «quiero avanzar 60» y el robot lo va haciendo turno a turno. Como cadaTurno se repite 30 veces por segundo,
+es: cada avanzar nuevo sustituye al anterior. Por eso con avanzar(60) en cada turno el robot nunca se para.
+de: Wichtiger Trick: Befehle warten nicht. vorwaerts(60) hält das Programm nicht an, bis du angekommen bist;
+de: es sagt nur „ich will 60 vorwärts“, und der Roboter erledigt das Zug für Zug. Weil jedenZug 30-mal pro Sekunde
+de: läuft, ersetzt jeder neue Fahrbefehl den alten. Deshalb hält ein Roboter mit vorwaerts(60) in jedem Zug nie an.
+en: Important trick: orders don't wait. ahead(60) doesn't freeze the program until you arrive; it just says
+en: "I want to move 60" and the robot does it turn by turn. Since onTick runs 30 times per second,
+en: each new movement order replaces the last. That's why a robot with ahead(60) every turn never stops.
+--- pagina
+es: Java distingue mayúsculas y minúsculas: Avanzar(60) o AVANZAR(60) no existen, solo avanzar(60).
+es: Tampoco perdona los paréntesis: avanzar 60; es un error. Si el compilador te subraya algo,
+es: lee la PRIMERA línea de error: suele ser la de verdad, y las siguientes son su eco.
+de: Java unterscheidet Groß- und Kleinschreibung: Vorwaerts(60) oder VORWAERTS(60) gibt es nicht,
+de: nur vorwaerts(60).
+de: Auch Klammern sind Pflicht: vorwaerts 60; ist ein Fehler. Wenn der Compiler etwas unterstreicht,
+de: lies die ERSTE Fehlermeldung: Die ist meist die echte, die übrigen sind nur ihr Echo.
+en: Java is case-sensitive: Ahead(60) or AHEAD(60) don't exist, only ahead(60).
+en: It's strict about parentheses too: ahead 60; is an error. When the compiler underlines something,
+en: read the FIRST error message: it's usually the real one, and the rest are just its echo.
+--- pagina
+es: Para pelear hace falta ver. alVerEnemigo se llama cada vez que tu radar ve a un rival, y dentro tienes
+es: a e, el enemigo. Apunta a su ángulo y ataca. Para que el radar barra la arena, gira la mira en cada turno
+es: con apuntar(25). Copia esto tal cual: entenderás cada pieza poco a poco, y ya muerde.
+de: Zum Kämpfen musst du sehen. beiSicht (onSeeEnemy) wird aufgerufen, wann immer dein Radar einen Gegner sieht,
+de: und darin hast du g, den Gegner. Ziel auf seinen Winkel und greif an. Damit das Radar die Arena absucht,
+de: dreh das Visier in jedem Zug mit zielen(25). Kopier das einfach: Du verstehst jedes Teil nach und nach.
+en: To fight you need to see. alVerEnemigo (onSeeEnemy) is called whenever your radar spots a rival,
+en: and inside it you have e, the enemy. Aim at its angle and attack. To sweep the arena with the radar,
+en: turn your aim every turn with aim(25). Just copy this: you'll understand each piece bit by bit, and it bites.
+codigo:
+    @Override
+    public void cadaTurno() {
+        avanzar(60);
+        girar(4);
+        apuntar(25);
+    }
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        apuntarHacia(e.angulo());
+        atacar();
+    }
+--- tarea
+robot: aciertos>=3
+es: Con el radar girando y alVerEnemigo atacando, acierta al muñeco de entrenamiento al menos 3 veces.
+de: Mit drehendem Radar und Angriff in beiSicht: Triff die Trainingspuppe mindestens 3-mal.
+en: With the radar sweeping and onSeeEnemy attacking, hit the training dummy at least 3 times.
+--- tarea
+ejercicio: t01_cuenta_atras
+es: Las líneas de esta cuenta atrás están desordenadas. Ponlas en su sitio: el orden es todo.
+de: Die Zeilen dieses Countdowns sind durcheinander. Bring sie in Ordnung: Die Reihenfolge ist alles.
+en: The lines of this countdown are shuffled. Put them back in place: order is everything.
+
+=== l01_comentarios
+tema: 01
+orden: 3
+titulo.es: Notas para humanos
+titulo.de: Notizen für Menschen
+titulo.en: Notes for humans
+--- pagina
+es: Un comentario es texto que Java ignora por completo: es para ti y para quien lea tu código.
+es: Con // el comentario va hasta el final de la línea. Con /* y */ puede ocupar varias líneas.
+es: ¿Para qué sirve algo que la máquina no lee? Para recordar POR QUÉ hiciste algo. Dentro de una semana
+es: no te acordarás de por qué giras 4 grados, y tu yo del futuro te lo agradecerá.
+de: Ein Kommentar ist Text, den Java komplett ignoriert: Er ist für dich und für alle, die deinen Code lesen.
+de: Mit // geht der Kommentar bis zum Zeilenende. Mit /* und */ kann er mehrere Zeilen lang sein.
+de: Wozu etwas, das die Maschine nicht liest? Um festzuhalten, WARUM du etwas gemacht hast. In einer Woche
+de: weißt du nicht mehr, warum du um 4 Grad drehst, und dein zukünftiges Ich wird dir danken.
+en: A comment is text Java ignores completely: it's for you and for anyone who reads your code.
+en: With // the comment runs to the end of the line. With /* and */ it can span several lines.
+en: Why bother with something the machine never reads? To remember WHY you did something. In a week
+en: you won't remember why you turn 4 degrees, and your future self will thank you.
+codigo:
+    // Círculos amplios: así es más difícil acertarme.
+    avanzar(60);
+    girar(4);
+    /* Probé girar(15), pero
+       chocaba con las paredes. */
+--- pagina
+es: Los comentarios tienen un superpoder secreto: apagar líneas sin borrarlas. Pon // delante de una orden
+es: y el robot deja de hacerla; quítalo y vuelve. Es la forma más rápida de probar «¿y si no hiciera esto?».
+es: Un buen comentario explica el porqué; uno malo repite lo que ya dice el código (// avanza 60).
+de: Kommentare haben eine geheime Superkraft: Zeilen ausschalten, ohne sie zu löschen. Setz // vor einen Befehl,
+de: und der Roboter lässt ihn weg; nimm es weg, und er ist zurück.
+de: So testest du am schnellsten: „Was wäre, wenn nicht?“
+de: Ein guter Kommentar erklärt das Warum; ein schlechter wiederholt nur den Code (// fährt 60 vorwärts).
+en: Comments have a secret superpower: switching lines off without deleting them. Put // in front of an order
+en: and the robot stops doing it; remove it and it's back.
+en: It's the fastest way to test "what if I didn't do this?".
+en: A good comment explains the why; a bad one repeats what the code already says (// moves 60 ahead).
+codigo:
+    avanzar(60);
+    // girar(4);    apagado: ¿voy mejor en línea recta?
+--- pagina
+es: Errores de compilación y errores en marcha no son lo mismo. Los primeros los encuentra Java antes de pelear
+es: (falta un ;, una llave sin cerrar, un nombre mal escrito) y el robot ni arranca. Los segundos pasan en plena
+es: pelea: el código es válido, pero hace algo imposible, y el locutor se ríe de ti. Ambos son normales:
+es: hasta los profesionales ven rojo varias veces al día. Lo importante es leer el mensaje con calma.
+de: Kompilierfehler und Laufzeitfehler sind nicht dasselbe. Die ersten findet Java vor dem Kampf (fehlendes ;,
+de: offene Klammer, falsch geschriebener Name), und der Roboter startet gar nicht. Die zweiten passieren mitten
+de: im Kampf: Der Code ist gültig, tut aber etwas Unmögliches, und der Sprecher lacht dich aus. Beides ist normal:
+de: Auch Profis sehen mehrmals am Tag rot. Wichtig ist, die Meldung in Ruhe zu lesen.
+en: Compile errors and runtime errors are not the same thing. Java finds the first kind before the fight
+en: (a missing ;, an unclosed brace, a misspelled name) and the robot won't even start. The second kind happens
+en: mid-fight: the code is valid but does something impossible, and the announcer laughs at you. Both are normal:
+en: even professionals see red several times a day. What matters is reading the message calmly.
+--- tarea
+ejercicio: t01_comentar_linea
+es: Una línea sobra. No la borres: apágala con un comentario.
+de: Eine Zeile ist zu viel. Lösch sie nicht: Schalte sie mit einem Kommentar aus.
+en: One line is too many. Don't delete it: switch it off with a comment.
+--- tarea
+ejercicio: t01_presentarse
+es: Antes del combate, todo robot que se precie se presenta. Escribe su presentación línea a línea.
+de: Vor dem Kampf stellt sich jeder anständige Roboter vor. Schreib seine Vorstellung Zeile für Zeile.
+en: Before a fight, every self-respecting robot introduces itself. Write its introduction line by line.
+
+=== l01_texto_con_estilo
+tema: 01
+orden: 4
+titulo.es: Texto con estilo
+titulo.de: Text mit Stil
+titulo.en: Text with style
+--- pagina
+es: Dentro de las comillas, algunos caracteres son especiales. \n es un salto de línea y \" son unas comillas
+es: que no cierran el texto. La barra \ avisa a Java: «lo que viene ahora no es lo que parece».
+es: println escribe y salta de línea; print escribe y se queda en la misma línea.
+de: In Anführungszeichen sind manche Zeichen besonders. \n ist ein Zeilenumbruch, und \" sind Anführungszeichen,
+de: die den Text nicht beenden. Der Backslash \ warnt Java: „Was jetzt kommt, ist nicht, wonach es aussieht.“
+de: println schreibt und springt in die nächste Zeile; print schreibt und bleibt in derselben Zeile.
+en: Inside quotes, some characters are special. \n is a line break and \" is a quote that doesn't end the text.
+en: The backslash \ warns Java: "what comes next is not what it looks like".
+en: println writes and moves to a new line; print writes and stays on the same line.
+codigo:
+    System.out.print("Blindaje: ");
+    System.out.println("OK");
+    System.out.println("El robot dijo: \"¡Bip!\"");
+--- pagina
+es: Con printf puedes dar forma a los números: %d para enteros, %.1f para decimales con una cifra y %n para
+es: saltar de línea. Y desde Java 15 existen los bloques de texto: tres comillas """ que dejan escribir
+es: varias líneas tal cual, perfectas para carteles y dibujos con letras.
+de: Mit printf bringst du Zahlen in Form: %d für ganze Zahlen, %.1f für Kommazahlen mit einer Stelle und %n für
+de: einen Zeilenumbruch. Und seit Java 15 gibt es Textblöcke: drei Anführungszeichen """, zwischen denen du
+de: mehrere Zeilen einfach so schreibst, ideal für Schilder und Bilder aus Buchstaben.
+en: With printf you can shape numbers: %d for whole numbers, %.1f for decimals with one digit and %n for a line
+en: break. And since Java 15 there are text blocks: three quotes """ that let you write several lines as they are,
+en: perfect for banners and pictures made of letters.
+codigo:
+    System.out.printf("Energía: %.1f%n", energia());
+    System.out.println("""
+         [o_o]
+        /|___|\\
+          d b
+        """);
+--- tarea
+ejercicio: t01_citar
+es: Haz que el robot cite una frase con sus comillas, sin que Java crea que el texto se ha acabado.
+de: Lass den Roboter einen Satz mit Anführungszeichen zitieren, ohne dass Java denkt, der Text sei zu Ende.
+en: Make the robot quote a sentence, quotes included, without Java thinking the text has ended.
+--- tarea
+ejercicio: t01_cartel_bloque_texto
+es: Monta el cartel de la arena con un bloque de texto (Java 15).
+de: Bau das Arena-Schild mit einem Textblock (Java 15).
+en: Build the arena banner with a text block (Java 15).

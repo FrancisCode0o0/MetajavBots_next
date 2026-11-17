@@ -1,0 +1,153 @@
+# Tema 18: streams.
+=== l18_tuberias
+tema: 18
+orden: 1
+titulo.es: Tuberías de datos
+titulo.de: Datenpipelines
+titulo.en: Data pipelines
+--- pagina
+es: Un stream es una cadena de montaje: los datos entran por un lado, pasan por estaciones y sale un resultado.
+es: filter deja pasar solo lo que cumple una condición, map transforma cada elemento y al final
+es: una operación terminal (toList, count, min…) recoge el resultado. Llegaron en Java 8, junto con las lambdas,
+es: y en vez de decir CÓMO recorrer la lista, dices QUÉ quieres de ella.
+de: Ein Stream ist ein Fließband: Daten kommen auf einer Seite hinein, laufen durch Stationen, und heraus
+de: kommt ein Ergebnis. filter lässt nur durch, was eine Bedingung erfüllt, map verwandelt jedes Element,
+de: und am Ende sammelt eine terminale Operation (toList, count, min …) das Ergebnis ein. Sie kamen mit Java
+de: 8, zusammen mit Lambdas, und statt zu sagen, WIE du die Liste durchläufst, sagst du, WAS du von ihr
+de: willst.
+en: A stream is an assembly line: data goes in one end, passes through stations and a result comes out.
+en: filter only lets through what meets a condition, map transforms each element and at the end
+en: a terminal operation (toList, count, min…) collects the result. They arrived in Java 8 along with lambdas,
+en: and instead of saying HOW to walk the list, you say WHAT you want from it.
+--- pagina
+es: El bucle del tema 15 para elegir al enemigo más cercano cabe en una tubería. min devuelve un Optional,
+es: una caja que puede estar vacía (si no ves a nadie). ifPresentOrElse decide qué hacer en cada caso
+es: sin que tengas que tocar un solo null.
+de: Die Schleife aus Thema 15, die den nächsten Gegner wählt, passt in eine Pipeline. min liefert ein Optional,
+de: eine Schachtel, die leer sein kann (wenn du niemanden siehst). ifPresentOrElse entscheidet für beide Fälle,
+de: ohne dass du ein einziges null anfasst.
+en: The loop from topic 15 that picks the nearest enemy fits in a pipeline. min returns an Optional,
+en: a box that may be empty (if you can't see anyone). ifPresentOrElse decides what to do in each case
+en: without you touching a single null.
+codigo:
+    @Override
+    public void cadaTurno() {
+        enemigosVistos().stream()
+                .filter(e -> e.blindaje() > 0)
+                .min(Comparator.comparingDouble(Enemigo::distancia))
+                .ifPresentOrElse(e -> {
+                    apuntarHacia(e.angulo());
+                    atacar();
+                }, () -> apuntar(25));
+        avanzar(70);
+    }
+--- pagina
+es: Los streams son perezosos: nada se ejecuta hasta la operación terminal. Si escribes solo
+es: lista.stream().filter(...) y no lo terminas, no pasa nada de nada. Y un stream se usa UNA vez:
+es: reutilizarlo lanza IllegalStateException. Si necesitas otro recorrido, pide otro stream().
+de: Streams sind faul: Nichts läuft vor der terminalen Operation. Schreibst du nur
+de: liste.stream().filter(...) und schließt es nicht ab, passiert rein gar nichts. Und ein Stream wird
+de: EINMAL benutzt: Ihn wiederzuverwenden wirft eine IllegalStateException. Brauchst du einen zweiten
+de: Durchlauf, hol dir ein neues stream().
+en: Streams are lazy: nothing runs until the terminal operation. If you write just list.stream().filter(...)
+en: and don't finish it, nothing at all happens. And a stream is used ONCE:
+en: reusing it throws IllegalStateException. If you need another pass, ask for another stream().
+--- tarea
+robot: usa:stream
+es: Elige a quién disparar con un stream sobre enemigosVistos() y pelea una ronda con él.
+de: Wähle dein Ziel mit einem Stream über gesehen() aus und kämpf eine Runde damit.
+en: Choose your target with a stream over seenEnemies() and fight a round with it.
+--- tarea
+ejercicio: t18_robots_en_pie
+es: ¿Quién sigue en pie? Filtra y recoge.
+de: Wer steht noch? Filtern und einsammeln.
+en: Who's still standing? Filter and collect.
+
+=== l18_numeros
+tema: 18
+orden: 2
+titulo.es: Cuentas en cadena
+titulo.de: Rechnen am Fließband
+titulo.en: Number crunching on the line
+--- pagina
+es: Para números hay streams especiales: mapToDouble convierte en DoubleStream, que sabe hacer sum(),
+es: average(), max() y summaryStatistics(), que lo calcula todo de una pasada. average() devuelve un
+es: OptionalDouble, porque la media de nada no existe: usa orElse(0) para decir qué quieres en ese caso.
+de: Für Zahlen gibt es eigene Streams: mapToDouble macht einen DoubleStream, der sum(), average(), max()
+de: und summaryStatistics() kann, das alles in einem Durchgang berechnet. average() liefert ein OptionalDouble,
+de: denn den Durchschnitt von nichts gibt es nicht: Mit orElse(0) sagst du, was du dann haben willst.
+en: Numbers get special streams: mapToDouble turns it into a DoubleStream, which can do sum(), average(), max()
+en: and summaryStatistics(), which works everything out in one pass. average() returns an OptionalDouble,
+en: because the average of nothing doesn't exist: use orElse(0) to say what you want in that case.
+codigo:
+    List<Golpe> recibidos = new ArrayList<>();
+    @Override
+    public void alRecibirGolpe(Golpe g) {
+        recibidos.add(g);
+        double media = recibidos.stream().mapToDouble(Golpe::dano).average().orElse(0);
+        if (media > 8) {
+            decir("¡Esto duele de media " + Math.round(media) + "!");
+        }
+    }
+--- pagina
+es: IntStream.range(0, 5) da 0, 1, 2, 3 y 4: un for en forma de stream. Y desde Java 16 basta con .toList()
+es: al final para tener una lista (que no se puede modificar); antes había que escribir
+es: collect(Collectors.toList()).
+de: IntStream.range(0, 5) liefert 0, 1, 2, 3 und 4: ein for als Stream. Und seit Java 16 reicht ein .toList()
+de: am Ende für eine (unveränderliche) Liste; vorher musste man collect(Collectors.toList()) schreiben.
+en: IntStream.range(0, 5) gives 0, 1, 2, 3 and 4: a for loop in stream form. And since Java 16 a plain .toList()
+en: at the end gets you a list (an unmodifiable one); before, you had to write collect(Collectors.toList()).
+--- tarea
+ejercicio: t18_dano_total
+es: El daño de toda la ronda en una sola tubería.
+de: Der Schaden der ganzen Runde in einer einzigen Pipeline.
+en: The whole round's damage in a single pipeline.
+--- tarea
+ejercicio: t18_media_de_danos
+es: El daño medio, con cuidado de cuando no hay golpes.
+de: Der durchschnittliche Schaden, mit Vorsicht, wenn es keine Treffer gibt.
+en: The average damage, taking care of the case with no hits.
+
+=== l18_agrupar
+tema: 18
+orden: 3
+titulo.es: Agrupar, partir y ventanas
+titulo.de: Gruppieren, aufteilen und Fenster
+titulo.en: Grouping, splitting and windows
+--- pagina
+es: Collectors.groupingBy reparte los elementos en grupos según una clave y te da un Map:
+es: groupingBy(Golpe::arma, Collectors.counting()) responde «¿cuántos golpes de cada arma?».
+es: partitioningBy divide en dos, true y false. Y Collectors.teeing (Java 12) manda cada elemento
+es: a dos colectores a la vez y luego junta sus resultados.
+de: Collectors.groupingBy verteilt die Elemente nach einem Schlüssel auf Gruppen und liefert eine Map:
+de: groupingBy(Treffer::waffe, Collectors.counting()) beantwortet „Wie viele Treffer pro Waffe?“.
+de: partitioningBy teilt in zwei, true und false. Und Collectors.teeing (Java 12) schickt jedes Element
+de: an zwei Kollektoren gleichzeitig und fügt deren Ergebnisse danach zusammen.
+en: Collectors.groupingBy splits elements into groups by a key and gives you a Map:
+en: groupingBy(Hit::weapon, Collectors.counting()) answers "how many hits from each weapon?".
+en: partitioningBy splits into two, true and false. And Collectors.teeing (Java 12) sends each element
+en: to two collectors at once and then merges their results.
+codigo:
+    Map<String, Long> porArma = recibidos.stream()
+            .collect(Collectors.groupingBy(Golpe::arma, Collectors.counting()));
+    escribir(porArma);                 // por ejemplo {laser=7, misil=2}
+--- pagina
+es: Java 24 añadió los gatherers: operaciones intermedias a medida con stream.gather(...). Los que trae
+es: Gatherers son muy de arena: windowFixed(3) agrupa de tres en tres y windowSliding(3) da ventanas
+es: que se solapan (1-2-3, 2-3-4…), perfectas para detectar ráfagas de golpes seguidos.
+de: Java 24 brachte Gatherers: eigene Zwischenoperationen mit stream.gather(...). Die mitgelieferten
+de: Gatherers passen gut in die Arena: windowFixed(3) bildet Dreiergruppen, windowSliding(3) überlappende Fenster
+de: (1-2-3, 2-3-4 …), ideal, um Salven aufeinanderfolgender Treffer zu erkennen.
+en: Java 24 added gatherers: custom intermediate operations with stream.gather(...). The ready-made ones
+en: in Gatherers are very arena-friendly: windowFixed(3) groups in threes and windowSliding(3) gives overlapping
+en: windows (1-2-3, 2-3-4…), perfect for spotting bursts of back-to-back hits.
+--- tarea
+ejercicio: t18_contar_por_arma
+es: Disparos por arma, con groupingBy.
+de: Schüsse pro Waffe, mit groupingBy.
+en: Shots per weapon, with groupingBy.
+--- tarea
+ejercicio: t18_sumas_de_tres
+es: Ráfagas de tres disparos con Gatherers.windowSliding (Java 24).
+de: Dreier-Salven mit Gatherers.windowSliding (Java 24).
+en: Three-shot bursts with Gatherers.windowSliding (Java 24).

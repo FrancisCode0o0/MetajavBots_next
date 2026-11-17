@@ -1,0 +1,176 @@
+# Tema 10: encapsulación (private, getters y constructores).
+=== l10_private
+tema: 10
+orden: 1
+titulo.es: Lo de dentro es privado
+titulo.de: Das Innere ist privat
+titulo.en: The insides are private
+--- pagina
+es: ¿Te has preguntado por qué tienes blindaje() pero no puedes escribir blindaje = 1000? Porque la arena
+es: lo tiene escondido: el campo es private y solo te deja LEER su valor con un método. Si cualquiera pudiera
+es: cambiarlo, el juego se rompería. Eso es encapsular: proteger los datos para que siempre tengan sentido.
+de: Hast du dich gefragt, warum es panzerung() gibt, du aber nicht panzerung = 1000 schreiben kannst? Weil
+de: die Arena es versteckt: Das Feld ist private, und du darfst seinen Wert nur über eine Methode LESEN.
+de: Könnte jeder es ändern, wäre das Spiel kaputt. Das ist Kapselung: Daten schützen, damit sie immer einen
+de: Sinn ergeben.
+en: Ever wondered why you have armor() but can't write armor = 1000? Because the arena keeps it hidden:
+en: the field is private and you can only READ its value through a method. If anyone could change it,
+en: the game would break. That's encapsulation: protecting data so it always makes sense.
+--- pagina
+es: Haz lo mismo con tus clases. Campos private y métodos públicos que hacen cosas con reglas:
+es: un Medidor de amenaza solo sube y baja dentro de 0 a 100, se pase lo que se pase.
+es: Un getter (amenaza()) deja mirar; en lugar de un setter que acepta cualquier cosa, ofrece acciones
+es: con sentido (subir, bajar). Así el error no puede entrar ni queriendo.
+de: Mach es mit deinen Klassen genauso: private Felder und öffentliche Methoden mit Regeln:
+de: Ein Bedrohungsmesser bewegt sich immer nur zwischen 0 und 100, egal was passiert.
+de: Ein Getter (amenaza()) erlaubt das Ansehen; statt eines Setters, der alles schluckt, gibt es sinnvolle
+de: Aktionen (subir, bajar). So kommt der Fehler nicht einmal absichtlich hinein.
+en: Do the same with your classes. Private fields and public methods that act with rules:
+en: a threat meter only goes up and down between 0 and 100, whatever happens.
+en: A getter (amenaza()) lets you look; instead of a setter that accepts anything, offer actions
+en: that make sense (subir, bajar). That way the error can't get in even on purpose.
+codigo:
+    class Medidor {
+        private double amenaza = 0;
+        double amenaza() {
+            return amenaza;
+        }
+        void subir(double cuanto) {
+            amenaza = Math.min(100, amenaza + cuanto);
+        }
+        void bajar(double cuanto) {
+            amenaza = Math.max(0, amenaza - cuanto);
+        }
+    }
+--- pagina
+es: En el robot: cada golpe recibido sube la amenaza y cada turno tranquilo la baja un poco.
+es: Cuando pasa de 50, el robot se pone a la defensiva. Lo bonito es que cadaTurno ya no tiene
+es: que preocuparse de los límites: el Medidor se encarga, y nadie puede dejarlo en -7 por error.
+de: Im Roboter: Jeder erhaltene Treffer erhöht die Bedrohung, jeder ruhige Zug senkt sie ein wenig.
+de: Über 50 geht der Roboter in die Defensive. Das Schöne: jedenZug muss sich nicht mehr um die Grenzen kümmern.
+de: Das erledigt der Medidor, und niemand kann ihn aus Versehen auf -7 setzen.
+en: In the robot: each hit taken raises the threat and each quiet turn lowers it a little.
+en: Above 50, the robot goes defensive. The nice part is that onTick no longer has to worry about
+en: limits: the Medidor takes care of it, and nobody can leave it at -7 by mistake.
+codigo:
+    private final Medidor medidor = new Medidor();
+    @Override
+    public void alRecibirGolpe(Golpe g) {
+        medidor.subir(g.dano() * 3);
+    }
+    @Override
+    public void cadaTurno() {
+        medidor.bajar(0.5);
+        avanzar(medidor.amenaza() > 50 ? 150 : 60);
+        girar(medidor.amenaza() > 50 ? 12 : 3);
+    }
+--- tarea
+robot: usa:private
+es: Escribe una clase con campos private y métodos que respeten sus reglas, y úsala en tu robot durante una ronda.
+de: Schreib eine Klasse mit private Feldern und Methoden, die ihre Regeln einhalten, und nutz sie eine Runde lang.
+en: Write a class with private fields and methods that keep its rules, and use it in your robot for a round.
+--- tarea
+ejercicio: t10_barra_de_vida
+es: Una barra de vida que nunca se sale de sus límites, por mucho que la empujen.
+de: Ein Lebensbalken, der nie aus seinen Grenzen fällt, egal wie sehr man drückt.
+en: A health bar that never leaves its limits, however hard it's pushed.
+
+=== l10_constructores_que_vigilan
+tema: 10
+orden: 2
+titulo.es: Constructores que vigilan la puerta
+titulo.de: Konstruktoren als Türsteher
+titulo.en: Constructors that guard the door
+--- pagina
+es: El constructor es la puerta de entrada del objeto: si compruebas allí los datos, ningún objeto
+es: nace roto. Si te dan un alcance negativo, lanza un error en el acto (lo verás a fondo en el tema 14):
+es: es mucho mejor fallar al construir que descubrirlo veinte turnos después en mitad de la pelea.
+de: Der Konstruktor ist die Eingangstür des Objekts: Prüfst du dort die Daten, wird kein Objekt kaputt geboren.
+de: Bekommst du eine negative Reichweite, wirf sofort einen Fehler (mehr dazu in Thema 14):
+de: Lieber beim Bauen scheitern als es zwanzig Züge später mitten im Kampf zu merken.
+en: The constructor is the object's front door: if you check the data there, no object is born broken.
+en: If you're given a negative range, throw an error right away (topic 14 covers it in depth):
+en: failing at construction is far better than finding out twenty turns later in the middle of a fight.
+codigo:
+    class Arma {
+        private final String nombre;
+        private final double alcance;
+        Arma(String nombre, double alcance) {
+            if (alcance <= 0) {
+                throw new IllegalArgumentException("alcance: " + alcance);
+            }
+            this.nombre = nombre;
+            this.alcance = alcance;
+        }
+        Arma(String nombre) {
+            this(nombre, 100);         // un constructor llama a otro
+        }
+    }
+--- pagina
+es: Si todos los campos son final y no hay métodos que los cambien, el objeto es INMUTABLE: tal como nace
+es: se queda. Parece una limitación, pero es una tranquilidad enorme: puedes pasarlo a cualquier método
+es: sin miedo a que te lo devuelvan cambiado. Para «modificarlo», devuelves uno nuevo, como hace String.
+de: Sind alle Felder final und ändert keine Methode sie, ist das Objekt UNVERÄNDERLICH: So wie es geboren wird,
+de: bleibt es. Klingt nach Einschränkung, ist aber eine enorme Beruhigung: Du kannst es an jede Methode geben,
+de: ohne Angst, es verändert zurückzubekommen. Zum „Ändern“ gibst du ein neues zurück, so wie String.
+en: If every field is final and no method changes them, the object is IMMUTABLE: it stays as it was born.
+en: Sounds limiting, but it's a huge relief: you can pass it to any method without fear of getting it back
+en: changed. To "modify" it, you return a new one, just like String does.
+--- tarea
+ejercicio: t10_numero_de_serie
+es: Números de serie que siempre son válidos: que el constructor no deje pasar ni uno malo.
+de: Seriennummern, die immer gültig sind: Der Konstruktor lässt keine schlechte durch.
+en: Serial numbers that are always valid: the constructor lets no bad one through.
+--- tarea
+ejercicio: t10_cronometro
+es: Un cronómetro inmutable: cada cambio devuelve un cronómetro nuevo.
+de: Eine unveränderliche Stoppuhr: Jede Änderung liefert eine neue Stoppuhr.
+en: An immutable stopwatch: every change returns a new stopwatch.
+
+=== l10_sin_fugas
+tema: 10
+orden: 3
+titulo.es: Sin fugas: copias y constructores por pasos
+titulo.de: Keine Lecks: Kopien und schrittweises Bauen
+titulo.en: No leaks: copies and step-by-step building
+--- pagina
+es: Cuidado con las fugas: si un getter devuelve tu lista o tu array interno, quien lo reciba puede
+es: cambiarlo por dentro y saltarse todas tus reglas. La solución es la copia defensiva: devuelve
+es: una copia, o una lista que no se puede modificar con List.copyOf (Java 10).
+de: Vorsicht vor Lecks: Gibt ein Getter deine interne Liste oder dein Array heraus, kann der Empfänger
+de: es von innen ändern und alle Regeln umgehen. Die Lösung ist die defensive Kopie: Gib eine Kopie zurück
+de: oder eine unveränderliche Liste mit List.copyOf (Java 10).
+en: Beware of leaks: if a getter returns your internal list or array, whoever gets it can change it
+en: from the inside and bypass all your rules. The fix is a defensive copy: return a copy,
+en: or a list that can't be modified, with List.copyOf (Java 10).
+codigo:
+    private final List<String> piezas = new ArrayList<>();
+    List<String> piezas() {
+        return List.copyOf(piezas);    // mira, pero no toques
+    }
+--- pagina
+es: Cuando un objeto tiene muchos datos opcionales, un constructor con ocho parámetros es ilegible
+es: (¿el quinto era el peso o la velocidad?). El patrón Builder lo resuelve: un ayudante que va
+es: recogiendo los datos con nombre, paso a paso, y al final construye el objeto ya comprobado.
+de: Hat ein Objekt viele optionale Daten, ist ein Konstruktor mit acht Parametern unlesbar
+de: (war der fünfte das Gewicht oder die Geschwindigkeit?). Das Builder-Muster löst das: ein Helfer,
+de: der die Daten Schritt für Schritt mit Namen einsammelt und am Ende das geprüfte Objekt baut.
+en: When an object has lots of optional data, an eight-parameter constructor is unreadable
+en: (was the fifth one weight or speed?). The Builder pattern solves it: a helper that collects
+en: the data by name, step by step, and at the end builds the already-checked object.
+codigo:
+    Robot r = new Robot.Builder()
+            .nombre("Chispas")
+            .blindaje(120)
+            .arma("laser")
+            .build();
+--- tarea
+ejercicio: t10_inventario_copia
+es: Un inventario que no se deja tocar desde fuera: copias defensivas.
+de: Ein Inventar, das sich von außen nicht anfassen lässt: defensive Kopien.
+en: An inventory that can't be touched from outside: defensive copies.
+--- tarea
+ejercicio: t10_robot_builder
+es: Monta robots con el patrón Builder.
+de: Bau Roboter mit dem Builder-Muster.
+en: Build robots with the Builder pattern.
