@@ -1,0 +1,780 @@
+# Tema 12 — Polimorfismo y clases abstractas (docs/FORMATOS.md, sección «Ejercicios»).
+
+=== t12_sonido_de_armas
+tema: 12
+dificultad: 1
+java: 8
+tipo: clase
+titulo.es: Cada arma suena a su manera
+titulo.de: Jede Waffe klingt anders
+titulo.en: Every weapon sounds its own way
+enunciado.es: La clase abstracta Arma tiene el método abstracto String sonido() y String rafaga(), que repite el sonido tres veces separado por espacios. Escribe Laser y Canon, las dos extends Arma: el sonido del láser es "piu" y el del cañón, "bum".
+enunciado.de: Die abstrakte Klasse Arma hat die abstrakte Methode String sonido() und String rafaga(), die den Klang dreimal mit Leerzeichen wiederholt. Schreibe Laser und Canon, beide extends Arma: Der Laser macht "piu", die Kanone "bum".
+enunciado.en: The abstract class Arma has the abstract method String sonido() and String rafaga(), which repeats the sound three times separated by spaces. Write Laser and Canon, both extends Arma: the laser's sound is "piu" and the cannon's is "bum".
+pista.es: Una clase hija de una abstracta tiene que implementar sus métodos abstractos: @Override String sonido() { return "piu"; }. rafaga() ya la heredan.
+pista.de: Eine Unterklasse einer abstrakten Klasse muss deren abstrakte Methoden implementieren: @Override String sonido() { return "piu"; }. rafaga() erben sie schon.
+pista.en: A subclass of an abstract class must implement its abstract methods: @Override String sonido() { return "piu"; }. They already inherit rafaga().
+plantilla:
+    public abstract class Arma {
+        abstract String sonido();
+
+        String rafaga() {
+            return sonido() + " " + sonido() + " " + sonido();
+        }
+    }
+
+    class Laser extends Arma {
+    }
+
+    class Canon extends Arma {
+    }
+solucion:
+    public abstract class Arma {
+        abstract String sonido();
+
+        String rafaga() {
+            return sonido() + " " + sonido() + " " + sonido();
+        }
+    }
+
+    class Laser extends Arma {
+        @Override
+        String sonido() {
+            return "piu";
+        }
+    }
+
+    class Canon extends Arma {
+        @Override
+        String sonido() {
+            return "bum";
+        }
+    }
+casos:
+    new Laser().sonido() => "piu"
+    new Canon().sonido() => "bum"
+    new Laser().rafaga() => "piu piu piu"
+    ((Arma) new Canon()).rafaga() => "bum bum bum"
+    new Canon() instanceof Arma => true
+
+=== t12_robot_abstracto
+tema: 12
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Una clase abstracta con constructor
+titulo.de: Eine abstrakte Klasse mit Konstruktor
+titulo.en: An abstract class with a constructor
+enunciado.es: Escribe la clase abstracta Robot con Robot(String nombre, int vida), int getVida(), el método abstracto int ataque() y String ficha(), que da "<nombre> (vida <vida>, ataque <ataque>)". Después, Tanque(String nombre) (vida 100, ataque 8) y Explorador(String nombre) (vida 40, ataque 3), extends Robot.
+enunciado.de: Schreibe die abstrakte Klasse Robot mit Robot(String nombre, int vida), int getVida(), der abstrakten Methode int ataque() und String ficha(), das "<nombre> (vida <vida>, ataque <ataque>)" liefert. Danach Tanque(String nombre) (Leben 100, Angriff 8) und Explorador(String nombre) (Leben 40, Angriff 3), extends Robot.
+enunciado.en: Write the abstract class Robot with Robot(String nombre, int vida), int getVida(), the abstract method int ataque() and String ficha(), which gives "<nombre> (vida <vida>, ataque <ataque>)". Then Tanque(String nombre) (health 100, attack 8) and Explorador(String nombre) (health 40, attack 3), extends Robot.
+pista.es: No se puede hacer new Robot(...), pero sus hijas sí llaman a su constructor: Tanque(String nombre) { super(nombre, 100); }. ficha() llama a ataque(), que pone cada hija.
+pista.de: new Robot(...) geht nicht, aber die Unterklassen rufen seinen Konstruktor auf: Tanque(String nombre) { super(nombre, 100); }. ficha() ruft ataque() auf, das jede Unterklasse liefert.
+pista.en: You can't do new Robot(...), but its subclasses do call its constructor: Tanque(String nombre) { super(nombre, 100); }. ficha() calls ataque(), which each subclass provides.
+plantilla:
+    public abstract class Robot {
+        // nombre, vida, constructor, getVida, ataque() abstracto y ficha()
+    }
+
+    // Tanque y Explorador
+solucion:
+    public abstract class Robot {
+        private final String nombre;
+        private final int vida;
+
+        protected Robot(String nombre, int vida) {
+            this.nombre = nombre;
+            this.vida = vida;
+        }
+
+        public int getVida() {
+            return vida;
+        }
+
+        public abstract int ataque();
+
+        public String ficha() {
+            return nombre + " (vida " + vida + ", ataque " + ataque() + ")";
+        }
+    }
+
+    class Tanque extends Robot {
+        Tanque(String nombre) {
+            super(nombre, 100);
+        }
+
+        @Override
+        public int ataque() {
+            return 8;
+        }
+    }
+
+    class Explorador extends Robot {
+        Explorador(String nombre) {
+            super(nombre, 40);
+        }
+
+        @Override
+        public int ataque() {
+            return 3;
+        }
+    }
+casos:
+    new Tanque("Bum").ficha() => "Bum (vida 100, ataque 8)"
+    new Explorador("Zip").ficha() => "Zip (vida 40, ataque 3)"
+    new Tanque("Bum").ataque() => 8
+    ((Robot) new Explorador("Zip")).getVida() => 40
+    new Robot[]{new Tanque("A"), new Explorador("B")}[1].ataque() => 3
+
+=== t12_zonas
+tema: 12
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Zonas de la arena
+titulo.de: Zonen der Arena
+titulo.en: Arena zones
+enunciado.es: Escribe la clase abstracta Zona con el método abstracto double area() y static double areaTotal(Zona[] zonas), que suma las áreas de todas. Después, Circulo(double radio) y Rectangulo(double ancho, double alto), extends Zona.
+enunciado.de: Schreibe die abstrakte Klasse Zona mit der abstrakten Methode double area() und static double areaTotal(Zona[] zonas), das die Flächen aller addiert. Danach Circulo(double radio) und Rectangulo(double ancho, double alto), extends Zona.
+enunciado.en: Write the abstract class Zona with the abstract method double area() and static double areaTotal(Zona[] zonas), which adds up all their areas. Then Circulo(double radio) and Rectangulo(double ancho, double alto), extends Zona.
+pista.es: En areaTotal no te importa qué zona es cada una: z.area() llama a la versión de cada objeto. El área del círculo es Math.PI * radio * radio.
+pista.de: In areaTotal ist egal, welche Zone es ist: z.area() ruft die Version des jeweiligen Objekts auf. Die Kreisfläche ist Math.PI * radio * radio.
+pista.en: In areaTotal you don't care which zone each one is: z.area() calls each object's version. The circle's area is Math.PI * radio * radio.
+plantilla:
+    public abstract class Zona {
+        // area() abstracto y areaTotal
+    }
+
+    // Circulo y Rectangulo
+solucion:
+    public abstract class Zona {
+        public abstract double area();
+
+        public static double areaTotal(Zona[] zonas) {
+            double total = 0;
+            for (Zona z : zonas) {
+                total += z.area();
+            }
+            return total;
+        }
+    }
+
+    class Circulo extends Zona {
+        private final double radio;
+
+        Circulo(double radio) {
+            this.radio = radio;
+        }
+
+        @Override
+        public double area() {
+            return Math.PI * radio * radio;
+        }
+    }
+
+    class Rectangulo extends Zona {
+        private final double ancho;
+        private final double alto;
+
+        Rectangulo(double ancho, double alto) {
+            this.ancho = ancho;
+            this.alto = alto;
+        }
+
+        @Override
+        public double area() {
+            return ancho * alto;
+        }
+    }
+casos:
+    new Rectangulo(2, 3).area() => 6.0
+    new Circulo(1).area() => Math.PI
+    Zona.areaTotal(new Zona[]{new Rectangulo(2, 3), new Circulo(2)}) => 6 + 4 * Math.PI
+    Zona.areaTotal(new Zona[]{new Rectangulo(0, 5)}) => 0.0
+    Zona.areaTotal(new Zona[0]) => 0.0
+
+=== t12_revision
+tema: 12
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: La revisión del taller
+titulo.de: Die Werkstattprüfung
+titulo.en: The workshop check-up
+enunciado.es: Escribe la clase abstracta Pieza con Pieza(String nombre), el método abstracto String estado(), String informe() ("<nombre>: <estado>") y static String revisar(Pieza[] piezas), que junta los informes con "; ". Después, Rueda(int desgaste) (nombre "rueda"; "gastada" si el desgaste pasa de 50, si no "bien") y Laser(int disparos) (nombre "laser"; "recargar" sin disparos, si no "listo").
+enunciado.de: Schreibe die abstrakte Klasse Pieza mit Pieza(String nombre), der abstrakten Methode String estado(), String informe() ("<nombre>: <estado>") und static String revisar(Pieza[] piezas), das die Berichte mit "; " verbindet. Danach Rueda(int desgaste) (Name "rueda"; "gastada", wenn der Verschleiß über 50 liegt, sonst "bien") und Laser(int disparos) (Name "laser"; "recargar" ohne Schüsse, sonst "listo").
+enunciado.en: Write the abstract class Pieza with Pieza(String nombre), the abstract method String estado(), String informe() ("<nombre>: <estado>") and static String revisar(Pieza[] piezas), which joins the reports with "; ". Then Rueda(int desgaste) (name "rueda"; "gastada" if the wear is over 50, otherwise "bien") and Laser(int disparos) (name "laser"; "recargar" with no shots, otherwise "listo").
+pista.es: Rueda(int desgaste) { super("rueda"); this.desgaste = desgaste; }. En revisar, un StringBuilder y pon "; " delante de todos menos del primero.
+pista.de: Rueda(int desgaste) { super("rueda"); this.desgaste = desgaste; }. In revisar ein StringBuilder, und "; " vor alle außer dem ersten.
+pista.en: Rueda(int desgaste) { super("rueda"); this.desgaste = desgaste; }. In revisar, use a StringBuilder and put "; " before all but the first.
+plantilla:
+    public abstract class Pieza {
+        // nombre, constructor, estado() abstracto, informe() y revisar
+    }
+
+    // Rueda y Laser
+solucion:
+    public abstract class Pieza {
+        private final String nombre;
+
+        protected Pieza(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public abstract String estado();
+
+        public String informe() {
+            return nombre + ": " + estado();
+        }
+
+        public static String revisar(Pieza[] piezas) {
+            StringBuilder texto = new StringBuilder();
+            for (Pieza p : piezas) {
+                if (texto.length() > 0) {
+                    texto.append("; ");
+                }
+                texto.append(p.informe());
+            }
+            return texto.toString();
+        }
+    }
+
+    class Rueda extends Pieza {
+        private final int desgaste;
+
+        Rueda(int desgaste) {
+            super("rueda");
+            this.desgaste = desgaste;
+        }
+
+        @Override
+        public String estado() {
+            return desgaste > 50 ? "gastada" : "bien";
+        }
+    }
+
+    class Laser extends Pieza {
+        private final int disparos;
+
+        Laser(int disparos) {
+            super("laser");
+            this.disparos = disparos;
+        }
+
+        @Override
+        public String estado() {
+            return disparos == 0 ? "recargar" : "listo";
+        }
+    }
+casos:
+    new Rueda(70).informe() => "rueda: gastada"
+    new Rueda(50).informe() => "rueda: bien"
+    new Laser(0).informe() => "laser: recargar"
+    Pieza.revisar(new Pieza[]{new Rueda(10), new Laser(3)}) => "rueda: bien; laser: listo"
+    Pieza.revisar(new Pieza[]{new Laser(0)}) => "laser: recargar"
+    Pieza.revisar(new Pieza[0]) => ""
+
+=== t12_misiones
+tema: 12
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Misiones y recompensas
+titulo.de: Missionen und Belohnungen
+titulo.en: Missions and rewards
+enunciado.es: Escribe la clase abstracta Mision con el método abstracto int recompensa(), boolean esDificil() (recompensa de más de 100) y static int total(Mision[] misiones). Después, tres misiones extends Mision: Escolta(int robots) da 30 por robot, Asalto(int torres) da 50 por torre más 20, y Rescate() siempre da 120.
+enunciado.de: Schreibe die abstrakte Klasse Mision mit der abstrakten Methode int recompensa(), boolean esDificil() (Belohnung über 100) und static int total(Mision[] misiones). Danach drei Missionen extends Mision: Escolta(int robots) bringt 30 pro Roboter, Asalto(int torres) 50 pro Turm plus 20, und Rescate() immer 120.
+enunciado.en: Write the abstract class Mision with the abstract method int recompensa(), boolean esDificil() (a reward over 100) and static int total(Mision[] misiones). Then three missions extends Mision: Escolta(int robots) pays 30 per robot, Asalto(int torres) pays 50 per tower plus 20, and Rescate() always pays 120.
+pista.es: esDificil() se escribe una sola vez, en Mision, y llama a recompensa(): cada hija pone su cálculo y todas heredan esDificil.
+pista.de: esDificil() schreibst du nur einmal, in Mision, und es ruft recompensa() auf: Jede Unterklasse liefert ihre Rechnung, und alle erben esDificil.
+pista.en: esDificil() is written just once, in Mision, and calls recompensa(): each subclass provides its calculation and they all inherit esDificil.
+plantilla:
+    public abstract class Mision {
+        // recompensa() abstracto, esDificil() y total
+    }
+
+    // Escolta, Asalto y Rescate
+solucion:
+    public abstract class Mision {
+        public abstract int recompensa();
+
+        public boolean esDificil() {
+            return recompensa() > 100;
+        }
+
+        public static int total(Mision[] misiones) {
+            int total = 0;
+            for (Mision m : misiones) {
+                total += m.recompensa();
+            }
+            return total;
+        }
+    }
+
+    class Escolta extends Mision {
+        private final int robots;
+
+        Escolta(int robots) {
+            this.robots = robots;
+        }
+
+        @Override
+        public int recompensa() {
+            return 30 * robots;
+        }
+    }
+
+    class Asalto extends Mision {
+        private final int torres;
+
+        Asalto(int torres) {
+            this.torres = torres;
+        }
+
+        @Override
+        public int recompensa() {
+            return 50 * torres + 20;
+        }
+    }
+
+    class Rescate extends Mision {
+        @Override
+        public int recompensa() {
+            return 120;
+        }
+    }
+casos:
+    new Escolta(3).recompensa() => 90
+    new Asalto(2).recompensa() => 120
+    new Rescate().esDificil() => true
+    new Escolta(3).esDificil() => false
+    new Escolta(4).esDificil() => true
+    Mision.total(new Mision[]{new Escolta(1), new Asalto(1), new Rescate()}) => 220
+    Mision.total(new Mision[0]) => 0
+
+=== t12_metodo_plantilla
+tema: 12
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Los pasos de un ataque (método plantilla)
+titulo.de: Die Schritte eines Angriffs (Schablonenmethode)
+titulo.en: The steps of an attack (template method)
+enunciado.es: Escribe la clase abstracta Ataque con public final String ejecutar(), que da preparar() + " > " + golpe() + " > " + recuperar(); los métodos abstractos protected String preparar() y protected String golpe(); y protected String recuperar(), que por defecto da "descanso". Después, Punetazo ("cerrar puno", "puno") y Misil ("fijar blanco", "boom", y se recupera con "recargar").
+enunciado.de: Schreibe die abstrakte Klasse Ataque mit public final String ejecutar(), das preparar() + " > " + golpe() + " > " + recuperar() liefert; den abstrakten Methoden protected String preparar() und protected String golpe(); und protected String recuperar(), das standardmäßig "descanso" liefert. Danach Punetazo ("cerrar puno", "puno") und Misil ("fijar blanco", "boom", und es erholt sich mit "recargar").
+enunciado.en: Write the abstract class Ataque with public final String ejecutar(), which gives preparar() + " > " + golpe() + " > " + recuperar(); the abstract methods protected String preparar() and protected String golpe(); and protected String recuperar(), which gives "descanso" by default. Then Punetazo ("cerrar puno", "puno") and Misil ("fijar blanco", "boom", and it recovers with "recargar").
+pista.es: El orden de los pasos lo fija la madre (final: nadie lo cambia); las hijas solo rellenan los huecos. Punetazo no sobrescribe recuperar().
+pista.de: Die Reihenfolge legt die Elternklasse fest (final: niemand ändert sie); die Unterklassen füllen nur die Lücken. Punetazo überschreibt recuperar() nicht.
+pista.en: The parent fixes the order of the steps (final: nobody changes it); the subclasses only fill in the gaps. Punetazo doesn't override recuperar().
+plantilla:
+    public abstract class Ataque {
+        public final String ejecutar() {
+            return preparar() + " > " + golpe() + " > " + recuperar();
+        }
+
+        // preparar, golpe y recuperar
+    }
+
+    // Punetazo y Misil
+solucion:
+    public abstract class Ataque {
+        public final String ejecutar() {
+            return preparar() + " > " + golpe() + " > " + recuperar();
+        }
+
+        protected abstract String preparar();
+
+        protected abstract String golpe();
+
+        protected String recuperar() {
+            return "descanso";
+        }
+    }
+
+    class Punetazo extends Ataque {
+        @Override
+        protected String preparar() {
+            return "cerrar puno";
+        }
+
+        @Override
+        protected String golpe() {
+            return "puno";
+        }
+    }
+
+    class Misil extends Ataque {
+        @Override
+        protected String preparar() {
+            return "fijar blanco";
+        }
+
+        @Override
+        protected String golpe() {
+            return "boom";
+        }
+
+        @Override
+        protected String recuperar() {
+            return "recargar";
+        }
+    }
+casos:
+    new Punetazo().ejecutar() => "cerrar puno > puno > descanso"
+    new Misil().ejecutar() => "fijar blanco > boom > recargar"
+    ((Ataque) new Misil()).ejecutar() => "fijar blanco > boom > recargar"
+    new Punetazo() instanceof Ataque => true
+
+=== t12_instanceof_patron
+tema: 12
+dificultad: 3
+java: 17
+tipo: clase
+titulo.es: Clasificar piezas con instanceof (Java 16)
+titulo.de: Teile sortieren mit instanceof (Java 16)
+titulo.en: Sorting parts with instanceof (Java 16)
+enunciado.es: Escribe Pieza(String nombre) con String getNombre(), Arma(String nombre, int dano) y Blindaje(String nombre, int defensa), las dos extends Pieza, y la clase Hangar con static int danoTotal(Pieza[] piezas), static int defensaTotal(Pieza[] piezas) y static String describir(Pieza p): "arma laser 5", "blindaje placa 3" o, para otra pieza, "pieza tuerca". Usa el patrón de instanceof de Java 16: if (p instanceof Arma a) declara a de una vez, sin cast.
+enunciado.de: Schreibe Pieza(String nombre) mit String getNombre(), Arma(String nombre, int dano) und Blindaje(String nombre, int defensa), beide extends Pieza, und die Klasse Hangar mit static int danoTotal(Pieza[] piezas), static int defensaTotal(Pieza[] piezas) und static String describir(Pieza p): "arma laser 5", "blindaje placa 3" oder, bei anderen Teilen, "pieza tuerca". Benutze das instanceof-Muster aus Java 16: if (p instanceof Arma a) deklariert a gleich mit, ohne Cast.
+enunciado.en: Write Pieza(String nombre) with String getNombre(), Arma(String nombre, int dano) and Blindaje(String nombre, int defensa), both extends Pieza, and the class Hangar with static int danoTotal(Pieza[] piezas), static int defensaTotal(Pieza[] piezas) and static String describir(Pieza p): "arma laser 5", "blindaje placa 3" or, for any other part, "pieza tuerca". Use the instanceof pattern from Java 16: if (p instanceof Arma a) declares a in one go, without a cast.
+pista.es: for (Pieza p : piezas) { if (p instanceof Arma a) { total += a.getDano(); } } — antes de Java 16 había que escribir ((Arma) p).getDano().
+pista.de: for (Pieza p : piezas) { if (p instanceof Arma a) { total += a.getDano(); } } — vor Java 16 musste man ((Arma) p).getDano() schreiben.
+pista.en: for (Pieza p : piezas) { if (p instanceof Arma a) { total += a.getDano(); } } — before Java 16 you had to write ((Arma) p).getDano().
+plantilla:
+    class Pieza {
+        // nombre, constructor y getNombre
+    }
+
+    // Arma y Blindaje
+
+    public class Hangar {
+        // danoTotal, defensaTotal y describir
+    }
+solucion:
+    class Pieza {
+        private final String nombre;
+
+        Pieza(String nombre) {
+            this.nombre = nombre;
+        }
+
+        String getNombre() {
+            return nombre;
+        }
+    }
+
+    class Arma extends Pieza {
+        private final int dano;
+
+        Arma(String nombre, int dano) {
+            super(nombre);
+            this.dano = dano;
+        }
+
+        int getDano() {
+            return dano;
+        }
+    }
+
+    class Blindaje extends Pieza {
+        private final int defensa;
+
+        Blindaje(String nombre, int defensa) {
+            super(nombre);
+            this.defensa = defensa;
+        }
+
+        int getDefensa() {
+            return defensa;
+        }
+    }
+
+    public class Hangar {
+        public static int danoTotal(Pieza[] piezas) {
+            int total = 0;
+            for (Pieza p : piezas) {
+                if (p instanceof Arma a) {
+                    total += a.getDano();
+                }
+            }
+            return total;
+        }
+
+        public static int defensaTotal(Pieza[] piezas) {
+            int total = 0;
+            for (Pieza p : piezas) {
+                if (p instanceof Blindaje b) {
+                    total += b.getDefensa();
+                }
+            }
+            return total;
+        }
+
+        public static String describir(Pieza p) {
+            if (p instanceof Arma a) {
+                return "arma " + a.getNombre() + " " + a.getDano();
+            }
+            if (p instanceof Blindaje b) {
+                return "blindaje " + b.getNombre() + " " + b.getDefensa();
+            }
+            return "pieza " + p.getNombre();
+        }
+    }
+casos:
+    Hangar.danoTotal(new Pieza[]{new Arma("laser", 5), new Blindaje("placa", 3), new Arma("misil", 9)}) => 14
+    Hangar.defensaTotal(new Pieza[]{new Arma("laser", 5), new Blindaje("placa", 3), new Pieza("tuerca")}) => 3
+    Hangar.danoTotal(new Pieza[0]) => 0
+    Hangar.describir(new Arma("laser", 5)) => "arma laser 5"
+    Hangar.describir(new Blindaje("placa", 3)) => "blindaje placa 3"
+    Hangar.describir(new Pieza("tuerca")) => "pieza tuerca"
+
+=== t12_sensor_anonimo
+tema: 12
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Sensores a medida (clases anónimas)
+titulo.de: Sensoren nach Maß (anonyme Klassen)
+titulo.en: Custom-made sensors (anonymous classes)
+enunciado.es: Escribe la clase abstracta Sensor con el método abstracto boolean detecta(int distancia), int contar(int[] distancias) (cuántas detecta) y tres métodos de fábrica que devuelven clases anónimas: static Sensor deAlcance(int alcance) (detecta hasta alcance, incluido), static Sensor entre(int minimo, int maximo) (de minimo a maximo, incluidos) y static Sensor ciego() (nunca detecta).
+enunciado.de: Schreibe die abstrakte Klasse Sensor mit der abstrakten Methode boolean detecta(int distancia), int contar(int[] distancias) (wie viele erkannt werden) und drei Fabrikmethoden, die anonyme Klassen zurückgeben: static Sensor deAlcance(int alcance) (erkennt bis einschließlich alcance), static Sensor entre(int minimo, int maximo) (von minimo bis maximo, einschließlich) und static Sensor ciego() (erkennt nie etwas).
+enunciado.en: Write the abstract class Sensor with the abstract method boolean detecta(int distancia), int contar(int[] distancias) (how many it detects) and three factory methods that return anonymous classes: static Sensor deAlcance(int alcance) (detects up to alcance, inclusive), static Sensor entre(int minimo, int maximo) (from minimo to maximo, inclusive) and static Sensor ciego() (never detects).
+pista.es: return new Sensor() { @Override boolean detecta(int distancia) { return distancia <= alcance; } }; — la clase anónima puede usar los parámetros del método.
+pista.de: return new Sensor() { @Override boolean detecta(int distancia) { return distancia <= alcance; } }; — die anonyme Klasse darf die Parameter der Methode benutzen.
+pista.en: return new Sensor() { @Override boolean detecta(int distancia) { return distancia <= alcance; } }; — the anonymous class can use the method's parameters.
+plantilla:
+    public abstract class Sensor {
+        abstract boolean detecta(int distancia);
+
+        // contar, deAlcance, entre y ciego
+    }
+solucion:
+    public abstract class Sensor {
+        abstract boolean detecta(int distancia);
+
+        int contar(int[] distancias) {
+            int cuantas = 0;
+            for (int d : distancias) {
+                if (detecta(d)) {
+                    cuantas++;
+                }
+            }
+            return cuantas;
+        }
+
+        static Sensor deAlcance(int alcance) {
+            return new Sensor() {
+                @Override
+                boolean detecta(int distancia) {
+                    return distancia <= alcance;
+                }
+            };
+        }
+
+        static Sensor entre(int minimo, int maximo) {
+            return new Sensor() {
+                @Override
+                boolean detecta(int distancia) {
+                    return distancia >= minimo && distancia <= maximo;
+                }
+            };
+        }
+
+        static Sensor ciego() {
+            return new Sensor() {
+                @Override
+                boolean detecta(int distancia) {
+                    return false;
+                }
+            };
+        }
+    }
+casos:
+    Sensor.deAlcance(10).detecta(7) => true
+    Sensor.deAlcance(10).detecta(11) => false
+    Sensor.ciego().detecta(0) => false
+    Sensor.entre(3, 6).contar(new int[]{1, 3, 5, 6, 9}) => 3
+    Sensor.deAlcance(0).contar(new int[]{0, 0, 1}) => 2
+    Sensor.ciego().contar(new int[0]) => 0
+
+=== t12_efectos_combinados
+tema: 12
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Efectos que se combinan (patrón Composite)
+titulo.de: Effekte, die sich kombinieren (Kompositum)
+titulo.en: Effects that combine (Composite pattern)
+enunciado.es: Escribe la clase abstracta Efecto con el método abstracto int aplicar(int dano) y cuatro efectos extends Efecto: Duplicar() (dano * 2), Reducir(int cantidad) (resta, sin bajar de 0), Tope(int maximo) (no deja pasar de maximo) y Combinado(Efecto... efectos), que aplica sus efectos en orden, uno tras otro. Un Combinado también es un Efecto, así que puede ir dentro de otro.
+enunciado.de: Schreibe die abstrakte Klasse Efecto mit der abstrakten Methode int aplicar(int dano) und vier Effekte extends Efecto: Duplicar() (dano * 2), Reducir(int cantidad) (zieht ab, nicht unter 0), Tope(int maximo) (lässt nichts über maximo durch) und Combinado(Efecto... efectos), das seine Effekte der Reihe nach anwendet. Ein Combinado ist selbst ein Efecto und kann also in einem anderen stecken.
+enunciado.en: Write the abstract class Efecto with the abstract method int aplicar(int dano) and four effects extends Efecto: Duplicar() (dano * 2), Reducir(int cantidad) (subtracts, not below 0), Tope(int maximo) (never lets more than maximo through) and Combinado(Efecto... efectos), which applies its effects in order, one after another. A Combinado is an Efecto too, so it can go inside another one.
+pista.es: Efecto... efectos llega como un array Efecto[]. En Combinado: for (Efecto e : efectos) { dano = e.aplicar(dano); } return dano;
+pista.de: Efecto... efectos kommt als Array Efecto[] an. In Combinado: for (Efecto e : efectos) { dano = e.aplicar(dano); } return dano;
+pista.en: Efecto... efectos arrives as an Efecto[] array. In Combinado: for (Efecto e : efectos) { dano = e.aplicar(dano); } return dano;
+plantilla:
+    public abstract class Efecto {
+        abstract int aplicar(int dano);
+    }
+
+    // Duplicar, Reducir, Tope y Combinado
+solucion:
+    public abstract class Efecto {
+        abstract int aplicar(int dano);
+    }
+
+    class Duplicar extends Efecto {
+        @Override
+        int aplicar(int dano) {
+            return dano * 2;
+        }
+    }
+
+    class Reducir extends Efecto {
+        private final int cantidad;
+
+        Reducir(int cantidad) {
+            this.cantidad = cantidad;
+        }
+
+        @Override
+        int aplicar(int dano) {
+            return Math.max(0, dano - cantidad);
+        }
+    }
+
+    class Tope extends Efecto {
+        private final int maximo;
+
+        Tope(int maximo) {
+            this.maximo = maximo;
+        }
+
+        @Override
+        int aplicar(int dano) {
+            return Math.min(dano, maximo);
+        }
+    }
+
+    class Combinado extends Efecto {
+        private final Efecto[] efectos;
+
+        Combinado(Efecto... efectos) {
+            this.efectos = efectos.clone();
+        }
+
+        @Override
+        int aplicar(int dano) {
+            for (Efecto e : efectos) {
+                dano = e.aplicar(dano);
+            }
+            return dano;
+        }
+    }
+casos:
+    new Duplicar().aplicar(5) => 10
+    new Reducir(3).aplicar(2) => 0
+    new Tope(8).aplicar(20) => 8
+    new Combinado(new Duplicar(), new Reducir(3)).aplicar(5) => 7
+    new Combinado(new Reducir(3), new Duplicar()).aplicar(5) => 4
+    new Combinado().aplicar(9) => 9
+    new Combinado(new Combinado(new Duplicar(), new Duplicar()), new Tope(30)).aplicar(10) => 30
+
+=== t12_maquina_de_estados
+tema: 12
+dificultad: 5
+java: 8
+tipo: clase
+titulo.es: El cerebro del rival (máquina de estados)
+titulo.de: Das Gehirn des Gegners (Zustandsautomat)
+titulo.en: The rival's brain (state machine)
+enunciado.es: La IA de un robot rival cambia de estado según lo que pasa. Escribe la clase abstracta Estado con los métodos abstractos String nombre() y Estado siguiente(String evento), static Estado inicial() (patrullando) y Estado procesar(String... eventos), que aplica los eventos en orden y devuelve el estado final. Estados: "patrullando" (con "enemigo" pasa a atacando, con "herido" a huyendo), "atacando" (con "herido" a huyendo, con "victoria" a patrullando) y "huyendo" (con "reparado" a patrullando). Cualquier otro evento deja el estado igual.
+enunciado.de: Die KI eines gegnerischen Roboters wechselt je nach Ereignis den Zustand. Schreibe die abstrakte Klasse Estado mit den abstrakten Methoden String nombre() und Estado siguiente(String evento), static Estado inicial() (patrullando) und Estado procesar(String... eventos), das die Ereignisse der Reihe nach anwendet und den Endzustand zurückgibt. Zustände: "patrullando" (bei "enemigo" nach atacando, bei "herido" nach huyendo), "atacando" (bei "herido" nach huyendo, bei "victoria" nach patrullando) und "huyendo" (bei "reparado" nach patrullando). Jedes andere Ereignis lässt den Zustand, wie er ist.
+enunciado.en: A rival robot's AI changes state depending on what happens. Write the abstract class Estado with the abstract methods String nombre() and Estado siguiente(String evento), static Estado inicial() (patrullando) and Estado procesar(String... eventos), which applies the events in order and returns the final state. States: "patrullando" (on "enemigo" goes to atacando, on "herido" to huyendo), "atacando" (on "herido" to huyendo, on "victoria" to patrullando) and "huyendo" (on "reparado" to patrullando). Any other event leaves the state as it is.
+pista.es: Una subclase por estado (Patrullando, Atacando, Huyendo), cada una con su siguiente(); un switch sobre el texto del evento y default: return this;. procesar va en Estado: Estado actual = this; y actual = actual.siguiente(e) por cada evento.
+pista.de: Eine Unterklasse pro Zustand (Patrullando, Atacando, Huyendo), jede mit ihrem siguiente(); ein switch über den Ereignistext und default: return this;. procesar gehört in Estado: Estado actual = this; und actual = actual.siguiente(e) für jedes Ereignis.
+pista.en: One subclass per state (Patrullando, Atacando, Huyendo), each with its own siguiente(); a switch on the event text and default: return this;. procesar goes in Estado: Estado actual = this; and actual = actual.siguiente(e) for each event.
+plantilla:
+    public abstract class Estado {
+        abstract String nombre();
+
+        abstract Estado siguiente(String evento);
+
+        // inicial() y procesar(String... eventos)
+    }
+
+    // un estado por clase
+solucion:
+    public abstract class Estado {
+        abstract String nombre();
+
+        abstract Estado siguiente(String evento);
+
+        static Estado inicial() {
+            return new Patrullando();
+        }
+
+        Estado procesar(String... eventos) {
+            Estado actual = this;
+            for (String evento : eventos) {
+                actual = actual.siguiente(evento);
+            }
+            return actual;
+        }
+    }
+
+    class Patrullando extends Estado {
+        @Override
+        String nombre() {
+            return "patrullando";
+        }
+
+        @Override
+        Estado siguiente(String evento) {
+            switch (evento) {
+                case "enemigo":
+                    return new Atacando();
+                case "herido":
+                    return new Huyendo();
+                default:
+                    return this;
+            }
+        }
+    }
+
+    class Atacando extends Estado {
+        @Override
+        String nombre() {
+            return "atacando";
+        }
+
+        @Override
+        Estado siguiente(String evento) {
+            switch (evento) {
+                case "herido":
+                    return new Huyendo();
+                case "victoria":
+                    return new Patrullando();
+                default:
+                    return this;
+            }
+        }
+    }
+
+    class Huyendo extends Estado {
+        @Override
+        String nombre() {
+            return "huyendo";
+        }
+
+        @Override
+        Estado siguiente(String evento) {
+            return evento.equals("reparado") ? new Patrullando() : this;
+        }
+    }
+casos:
+    Estado.inicial().nombre() => "patrullando"
+    Estado.inicial().siguiente("enemigo").nombre() => "atacando"
+    Estado.inicial().siguiente("enemigo").siguiente("herido").nombre() => "huyendo"
+    Estado.inicial().siguiente("reparado").nombre() => "patrullando"
+    Estado.inicial().procesar("enemigo", "victoria", "herido", "enemigo").nombre() => "huyendo"
+    Estado.inicial().procesar("herido", "reparado", "enemigo").nombre() => "atacando"
+    Estado.inicial().procesar().nombre() => "patrullando"

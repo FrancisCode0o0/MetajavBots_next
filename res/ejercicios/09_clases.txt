@@ -1,0 +1,695 @@
+# Tema 09 — Clases y objetos (docs/FORMATOS.md, sección «Ejercicios»).
+
+=== t09_robot_listo
+tema: 09
+dificultad: 1
+java: 8
+tipo: clase
+titulo.es: Tu primer robot de verdad
+titulo.de: Dein erster echter Roboter
+titulo.en: Your first real robot
+enunciado.es: Escribe la clase Robot con un campo para el nombre, un constructor Robot(String nombre) que lo guarda y un método String presentarse() que devuelve "Robot <nombre> listo".
+enunciado.de: Schreibe die Klasse Robot mit einem Feld für den Namen, einem Konstruktor Robot(String nombre), der ihn speichert, und einer Methode String presentarse(), die "Robot <nombre> listo" zurückgibt.
+enunciado.en: Write the class Robot with a field for the name, a constructor Robot(String nombre) that stores it and a method String presentarse() that returns "Robot <nombre> listo".
+pista.es: En el constructor, this.nombre = nombre; copia el parámetro en el campo del objeto.
+pista.de: Im Konstruktor kopiert this.nombre = nombre; den Parameter in das Feld des Objekts.
+pista.en: In the constructor, this.nombre = nombre; copies the parameter into the object's field.
+plantilla:
+    public class Robot {
+        private String nombre;
+
+        // escribe aquí el constructor Robot(String nombre)
+
+        public String presentarse() {
+            return "";
+        }
+    }
+solucion:
+    public class Robot {
+        private final String nombre;
+
+        public Robot(String nombre) {
+            this.nombre = nombre;
+        }
+
+        public String presentarse() {
+            return "Robot " + nombre + " listo";
+        }
+    }
+casos:
+    new Robot("Rex").presentarse() => "Robot Rex listo"
+    new Robot("Tita").presentarse() => "Robot Tita listo"
+    new Robot("Mk-2").presentarse() => "Robot Mk-2 listo"
+    new Robot("").presentarse() => "Robot  listo"
+
+=== t09_pieza_ficha
+tema: 09
+dificultad: 1
+java: 8
+tipo: clase
+titulo.es: La ficha de una pieza (toString)
+titulo.de: Das Datenblatt eines Bauteils (toString)
+titulo.en: A part's label (toString)
+enunciado.es: Escribe la clase Pieza con el constructor Pieza(String nombre, int peso) y sobrescribe String toString() para que devuelva "<nombre> (<peso> kg)". Java usa toString al juntar el objeto con + o al imprimirlo.
+enunciado.de: Schreibe die Klasse Pieza mit dem Konstruktor Pieza(String nombre, int peso) und überschreibe String toString() so, dass es "<nombre> (<peso> kg)" liefert. Java benutzt toString, wenn man das Objekt mit + verbindet oder ausgibt.
+enunciado.en: Write the class Pieza with the constructor Pieza(String nombre, int peso) and override String toString() so it returns "<nombre> (<peso> kg)". Java uses toString when you join the object with + or print it.
+pista.es: @Override public String toString() { return nombre + " (" + peso + " kg)"; }
+pista.de: @Override public String toString() { return nombre + " (" + peso + " kg)"; }
+pista.en: @Override public String toString() { return nombre + " (" + peso + " kg)"; }
+plantilla:
+    public class Pieza {
+        private final String nombre;
+        private final int peso;
+
+        public Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+        }
+
+        // sobrescribe toString()
+    }
+solucion:
+    public class Pieza {
+        private final String nombre;
+        private final int peso;
+
+        public Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + peso + " kg)";
+        }
+    }
+casos:
+    new Pieza("laser", 6).toString() => "laser (6 kg)"
+    "" + new Pieza("escudo", 12) => "escudo (12 kg)"
+    String.valueOf(new Pieza("tuerca", 0)) => "tuerca (0 kg)"
+    new Pieza("", 1).toString() => " (1 kg)"
+
+=== t09_arena
+tema: 09
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Las medidas de la arena
+titulo.de: Die Maße der Arena
+titulo.en: The arena's measurements
+enunciado.es: Escribe la clase Arena con el constructor Arena(int ancho, int alto) y los métodos int area(), int perimetro() y boolean dentro(int x, int y), que dice si la casilla (x, y) está en la arena: x de 0 a ancho - 1 e y de 0 a alto - 1.
+enunciado.de: Schreibe die Klasse Arena mit dem Konstruktor Arena(int ancho, int alto) und den Methoden int area(), int perimetro() und boolean dentro(int x, int y), die sagt, ob das Feld (x, y) in der Arena liegt: x von 0 bis ancho - 1 und y von 0 bis alto - 1.
+enunciado.en: Write the class Arena with the constructor Arena(int ancho, int alto) and the methods int area(), int perimetro() and boolean dentro(int x, int y), which tells whether the square (x, y) is inside the arena: x from 0 to ancho - 1 and y from 0 to alto - 1.
+pista.es: Los métodos usan los campos del objeto: return ancho * alto; para el área, 2 * (ancho + alto) para el perímetro.
+pista.de: Die Methoden benutzen die Felder des Objekts: return ancho * alto; für die Fläche, 2 * (ancho + alto) für den Umfang.
+pista.en: The methods use the object's fields: return ancho * alto; for the area, 2 * (ancho + alto) for the perimeter.
+plantilla:
+    public class Arena {
+        // campos, constructor y métodos
+    }
+solucion:
+    public class Arena {
+        private final int ancho;
+        private final int alto;
+
+        public Arena(int ancho, int alto) {
+            this.ancho = ancho;
+            this.alto = alto;
+        }
+
+        public int area() {
+            return ancho * alto;
+        }
+
+        public int perimetro() {
+            return 2 * (ancho + alto);
+        }
+
+        public boolean dentro(int x, int y) {
+            return x >= 0 && x < ancho && y >= 0 && y < alto;
+        }
+    }
+casos:
+    new Arena(10, 5).area() => 50
+    new Arena(10, 5).perimetro() => 30
+    new Arena(10, 5).dentro(9, 4) => true
+    new Arena(10, 5).dentro(10, 0) => false
+    new Arena(10, 5).dentro(-1, 2) => false
+    new Arena(0, 0).area() => 0
+
+=== t09_arma_constructores
+tema: 09
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Armas con varios constructores
+titulo.de: Waffen mit mehreren Konstruktoren
+titulo.en: Weapons with several constructors
+enunciado.es: Escribe la clase Arma con tres constructores: Arma(String nombre, int dano, int alcance), Arma(String nombre, int dano) con alcance 1, y Arma(String nombre) con daño 1 y alcance 1. Añade String ficha(), que devuelve "<nombre> <dano>/<alcance>". Los cortos llaman al largo con this(...).
+enunciado.de: Schreibe die Klasse Arma mit drei Konstruktoren: Arma(String nombre, int dano, int alcance), Arma(String nombre, int dano) mit Reichweite 1 und Arma(String nombre) mit Schaden 1 und Reichweite 1. Dazu String ficha(), das "<nombre> <dano>/<alcance>" liefert. Die kurzen rufen den langen mit this(...) auf.
+enunciado.en: Write the class Arma with three constructors: Arma(String nombre, int dano, int alcance), Arma(String nombre, int dano) with range 1, and Arma(String nombre) with damage 1 and range 1. Add String ficha(), which returns "<nombre> <dano>/<alcance>". The short ones call the long one with this(...).
+pista.es: public Arma(String nombre) { this(nombre, 1, 1); } — this(...) tiene que ser la primera línea del constructor.
+pista.de: public Arma(String nombre) { this(nombre, 1, 1); } — this(...) muss die erste Zeile des Konstruktors sein.
+pista.en: public Arma(String nombre) { this(nombre, 1, 1); } — this(...) must be the first line of the constructor.
+plantilla:
+    public class Arma {
+        private final String nombre;
+        private final int dano;
+        private final int alcance;
+
+        public Arma(String nombre, int dano, int alcance) {
+            this.nombre = nombre;
+            this.dano = dano;
+            this.alcance = alcance;
+        }
+
+        // los otros dos constructores y ficha()
+    }
+solucion:
+    public class Arma {
+        private final String nombre;
+        private final int dano;
+        private final int alcance;
+
+        public Arma(String nombre, int dano, int alcance) {
+            this.nombre = nombre;
+            this.dano = dano;
+            this.alcance = alcance;
+        }
+
+        public Arma(String nombre, int dano) {
+            this(nombre, dano, 1);
+        }
+
+        public Arma(String nombre) {
+            this(nombre, 1, 1);
+        }
+
+        public String ficha() {
+            return nombre + " " + dano + "/" + alcance;
+        }
+    }
+casos:
+    new Arma("laser", 5, 3).ficha() => "laser 5/3"
+    new Arma("espada", 4).ficha() => "espada 4/1"
+    new Arma("puno").ficha() => "puno 1/1"
+    new Arma("misil", 9, 10).ficha() => "misil 9/10"
+
+=== t09_chasis_numerado
+tema: 09
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Chasis con número de serie (static)
+titulo.de: Fahrgestelle mit Seriennummer (static)
+titulo.en: Chassis with serial numbers (static)
+enunciado.es: La fábrica numera sus chasis: el primero que se crea es el 1, el siguiente el 2… Escribe la clase Chasis con el constructor Chasis(), el método int numero() y el método static int fabricados(), que dice cuántos se han creado. Los casos se prueban en orden.
+enunciado.de: Die Fabrik nummeriert ihre Fahrgestelle: Das erste ist die 1, das nächste die 2 … Schreibe die Klasse Chasis mit dem Konstruktor Chasis(), der Methode int numero() und der Methode static int fabricados(), die sagt, wie viele schon gebaut wurden. Die Fälle laufen der Reihe nach.
+enunciado.en: The factory numbers its chassis: the first one created is 1, the next one 2… Write the class Chasis with the constructor Chasis(), the method int numero() and the method static int fabricados(), which tells how many have been made. The cases run in order.
+pista.es: Un campo static lo comparten todos los objetos de la clase: private static int creados; en el constructor, creados++ y numero = creados.
+pista.de: Ein static-Feld teilen sich alle Objekte der Klasse: private static int creados; im Konstruktor creados++ und numero = creados.
+pista.en: A static field is shared by every object of the class: private static int creados; in the constructor, creados++ and numero = creados.
+plantilla:
+    public class Chasis {
+        private int numero;
+
+        public Chasis() {
+            numero = 1;
+        }
+
+        public int numero() {
+            return numero;
+        }
+
+        public static int fabricados() {
+            return 0;
+        }
+    }
+solucion:
+    public class Chasis {
+        private static int creados;
+
+        private final int numero;
+
+        public Chasis() {
+            creados++;
+            numero = creados;
+        }
+
+        public int numero() {
+            return numero;
+        }
+
+        public static int fabricados() {
+            return creados;
+        }
+    }
+casos:
+    new Chasis().numero() => 1
+    new Chasis().numero() => 2
+    Chasis.fabricados() => 2
+    new Chasis().numero() + new Chasis().numero() => 7
+    Chasis.fabricados() => 4
+
+=== t09_taller_fluido
+tema: 09
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: El taller encadenado
+titulo.de: Die verkettete Werkstatt
+titulo.en: The chained workshop
+enunciado.es: Escribe la clase Pieza con Pieza(String nombre, int peso), String getNombre() e int getPeso(), y la clase pública Taller con Taller(), Taller anadir(Pieza pieza) (devuelve this para poder encadenar), int total() (peso total), int cuantas() y String masPesada() (nombre de la más pesada; la primera si empatan; "" si no hay).
+enunciado.de: Schreibe die Klasse Pieza mit Pieza(String nombre, int peso), String getNombre() und int getPeso() und die öffentliche Klasse Taller mit Taller(), Taller anadir(Pieza pieza) (gibt this zurück, damit man verketten kann), int total() (Gesamtgewicht), int cuantas() und String masPesada() (Name des schwersten Teils; bei Gleichstand das erste; "" wenn keins da ist).
+enunciado.en: Write the class Pieza with Pieza(String nombre, int peso), String getNombre() and int getPeso(), and the public class Taller with Taller(), Taller anadir(Pieza pieza) (returns this so calls can be chained), int total() (total weight), int cuantas() and String masPesada() (name of the heaviest; the first one on a tie; "" if there are none).
+pista.es: No hace falta guardar todas las piezas: basta con el peso total, la cuenta y una referencia a la más pesada hasta ahora (null al principio).
+pista.de: Du musst nicht alle Teile speichern: Gesamtgewicht, Anzahl und ein Verweis auf das bisher schwerste (am Anfang null) genügen.
+pista.en: You don't need to keep every part: the total weight, the count and a reference to the heaviest so far (null at first) are enough.
+plantilla:
+    class Pieza {
+        // nombre, peso, constructor y getters
+    }
+
+    public class Taller {
+        // anadir, total, cuantas y masPesada
+    }
+solucion:
+    class Pieza {
+        private final String nombre;
+        private final int peso;
+
+        Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+        }
+
+        String getNombre() {
+            return nombre;
+        }
+
+        int getPeso() {
+            return peso;
+        }
+    }
+
+    public class Taller {
+        private int total;
+        private int cuantas;
+        private Pieza masPesada;
+
+        public Taller anadir(Pieza pieza) {
+            total += pieza.getPeso();
+            cuantas++;
+            if (masPesada == null || pieza.getPeso() > masPesada.getPeso()) {
+                masPesada = pieza;
+            }
+            return this;
+        }
+
+        public int total() {
+            return total;
+        }
+
+        public int cuantas() {
+            return cuantas;
+        }
+
+        public String masPesada() {
+            return masPesada == null ? "" : masPesada.getNombre();
+        }
+    }
+casos:
+    new Taller().total() => 0
+    new Taller().anadir(new Pieza("laser", 6)).total() => 6
+    new Taller().anadir(new Pieza("laser", 6)).anadir(new Pieza("escudo", 12)).cuantas() => 2
+    new Taller().anadir(new Pieza("laser", 6)).anadir(new Pieza("escudo", 12)).total() => 18
+    new Taller().anadir(new Pieza("laser", 6)).anadir(new Pieza("escudo", 12)).anadir(new Pieza("motor", 12)).masPesada() => "escudo"
+    new Taller().masPesada() => ""
+
+=== t09_escuadron
+tema: 09
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Un escuadrón de robots (array de objetos)
+titulo.de: Eine Roboterstaffel (Array von Objekten)
+titulo.en: A robot squad (array of objects)
+enunciado.es: Escribe la clase Robot con Robot(String nombre, int potencia), String getNombre() e int getPotencia(), y la clase pública Escuadron con Escuadron(Robot[] miembros), int potenciaTotal(), String masFuerte() (el nombre del más potente; el primero si empatan; "" si no hay nadie) e int cuantosSuperan(int umbral) (cuántos tienen más potencia que umbral).
+enunciado.de: Schreibe die Klasse Robot mit Robot(String nombre, int potencia), String getNombre() und int getPotencia() und die öffentliche Klasse Escuadron mit Escuadron(Robot[] miembros), int potenciaTotal(), String masFuerte() (Name des stärksten; bei Gleichstand der erste; "" wenn niemand da ist) und int cuantosSuperan(int umbral) (wie viele mehr Leistung als umbral haben).
+enunciado.en: Write the class Robot with Robot(String nombre, int potencia), String getNombre() and int getPotencia(), and the public class Escuadron with Escuadron(Robot[] miembros), int potenciaTotal(), String masFuerte() (the name of the strongest; the first on a tie; "" if nobody is there) and int cuantosSuperan(int umbral) (how many have more power than umbral).
+pista.es: Recorre el array con for (Robot r : miembros) y llama a los getters de cada robot.
+pista.de: Geh das Array mit for (Robot r : miembros) durch und ruf die Getter jedes Roboters auf.
+pista.en: Loop over the array with for (Robot r : miembros) and call each robot's getters.
+plantilla:
+    class Robot {
+        // nombre, potencia, constructor y getters
+    }
+
+    public class Escuadron {
+        // el array de miembros, el constructor y los métodos
+    }
+solucion:
+    class Robot {
+        private final String nombre;
+        private final int potencia;
+
+        Robot(String nombre, int potencia) {
+            this.nombre = nombre;
+            this.potencia = potencia;
+        }
+
+        String getNombre() {
+            return nombre;
+        }
+
+        int getPotencia() {
+            return potencia;
+        }
+    }
+
+    public class Escuadron {
+        private final Robot[] miembros;
+
+        public Escuadron(Robot[] miembros) {
+            this.miembros = miembros;
+        }
+
+        public int potenciaTotal() {
+            int total = 0;
+            for (Robot r : miembros) {
+                total += r.getPotencia();
+            }
+            return total;
+        }
+
+        public String masFuerte() {
+            Robot mejor = null;
+            for (Robot r : miembros) {
+                if (mejor == null || r.getPotencia() > mejor.getPotencia()) {
+                    mejor = r;
+                }
+            }
+            return mejor == null ? "" : mejor.getNombre();
+        }
+
+        public int cuantosSuperan(int umbral) {
+            int cuantos = 0;
+            for (Robot r : miembros) {
+                if (r.getPotencia() > umbral) {
+                    cuantos++;
+                }
+            }
+            return cuantos;
+        }
+    }
+casos:
+    new Escuadron(new Robot[]{new Robot("Rex", 5), new Robot("Tita", 9), new Robot("Zap", 9)}).masFuerte() => "Tita"
+    new Escuadron(new Robot[]{new Robot("Rex", 5), new Robot("Tita", 9), new Robot("Zap", 9)}).potenciaTotal() => 23
+    new Escuadron(new Robot[]{new Robot("Rex", 5), new Robot("Tita", 9)}).cuantosSuperan(5) => 1
+    new Escuadron(new Robot[0]).masFuerte() => ""
+    new Escuadron(new Robot[0]).potenciaTotal() => 0
+
+=== t09_vector
+tema: 09
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Vectores de movimiento que no cambian
+titulo.de: Bewegungsvektoren, die sich nicht ändern
+titulo.en: Movement vectors that never change
+enunciado.es: Escribe la clase Vector2 con Vector2(double x, double y), Vector2 mas(Vector2 otro), Vector2 por(double factor), double longitud() y String toString() que da "(<x>, <y>)". mas y por no cambian el vector: devuelven uno nuevo.
+enunciado.de: Schreibe die Klasse Vector2 mit Vector2(double x, double y), Vector2 mas(Vector2 otro), Vector2 por(double factor), double longitud() und String toString(), das "(<x>, <y>)" liefert. mas und por ändern den Vektor nicht: Sie geben einen neuen zurück.
+enunciado.en: Write the class Vector2 with Vector2(double x, double y), Vector2 mas(Vector2 otro), Vector2 por(double factor), double longitud() and String toString(), which gives "(<x>, <y>)". mas and por do not change the vector: they return a new one.
+pista.es: return new Vector2(x + otro.x, y + otro.y); — dentro de la clase puedes leer los campos privados de otro objeto Vector2. La longitud es Math.hypot(x, y).
+pista.de: return new Vector2(x + otro.x, y + otro.y); — in der Klasse darfst du die privaten Felder eines anderen Vector2 lesen. Die Länge ist Math.hypot(x, y).
+pista.en: return new Vector2(x + otro.x, y + otro.y); — inside the class you may read another Vector2's private fields. The length is Math.hypot(x, y).
+plantilla:
+    public class Vector2 {
+        private double x;
+        private double y;
+
+        // constructor, mas, por, longitud y toString
+    }
+solucion:
+    public class Vector2 {
+        private final double x;
+        private final double y;
+
+        public Vector2(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public Vector2 mas(Vector2 otro) {
+            return new Vector2(x + otro.x, y + otro.y);
+        }
+
+        public Vector2 por(double factor) {
+            return new Vector2(x * factor, y * factor);
+        }
+
+        public double longitud() {
+            return Math.hypot(x, y);
+        }
+
+        @Override
+        public String toString() {
+            return "(" + x + ", " + y + ")";
+        }
+    }
+casos:
+    new Vector2(1, 2).mas(new Vector2(3, 4)).toString() => "(4.0, 6.0)"
+    new Vector2(3, 4).longitud() => 5.0
+    new Vector2(1, -2).por(3).toString() => "(3.0, -6.0)"
+    new Vector2(3, 4).por(0.5).mas(new Vector2(0.5, 1)).longitud() => Math.sqrt(13)
+    ((Supplier<String>) () -> { Vector2 v = new Vector2(1, 1); v.mas(new Vector2(5, 5)); v.por(9); return v.toString(); }).get() => "(1.0, 1.0)"
+
+=== t09_duelo
+tema: 09
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Duelo entre dos objetos
+titulo.de: Duell zwischen zwei Objekten
+titulo.en: Duel between two objects
+enunciado.es: Escribe la clase Robot con Robot(String nombre, int vida, int ataque), String getNombre(), int getVida(), boolean sigueVivo() (vida mayor que 0), void recibir(int dano) (la vida nunca baja de 0) y static Robot duelo(Robot a, Robot b): golpea a, luego b, luego a… cada uno quita su ataque al otro, hasta que uno cae; devuelve el ganador. Si uno ya empieza sin vida, gana el otro sin luchar. El ataque siempre es al menos 1.
+enunciado.de: Schreibe die Klasse Robot mit Robot(String nombre, int vida, int ataque), String getNombre(), int getVida(), boolean sigueVivo() (Leben größer als 0), void recibir(int dano) (das Leben fällt nie unter 0) und static Robot duelo(Robot a, Robot b): Erst schlägt a zu, dann b, dann a … jeder zieht dem anderen seinen Angriff ab, bis einer fällt; gib den Sieger zurück. Hat einer schon am Anfang kein Leben, gewinnt der andere kampflos. Der Angriff ist immer mindestens 1.
+enunciado.en: Write the class Robot with Robot(String nombre, int vida, int ataque), String getNombre(), int getVida(), boolean sigueVivo() (health above 0), void recibir(int dano) (health never drops below 0) and static Robot duelo(Robot a, Robot b): a strikes, then b, then a… each takes its attack off the other, until one falls; return the winner. If one starts with no health, the other wins without fighting. The attack is always at least 1.
+pista.es: while (a.sigueVivo() && b.sigueVivo()) { b.recibir(a.ataque); if (b.sigueVivo()) a.recibir(b.ataque); } y al final devuelve el que sigue vivo.
+pista.de: while (a.sigueVivo() && b.sigueVivo()) { b.recibir(a.ataque); if (b.sigueVivo()) a.recibir(b.ataque); } und am Ende gib den zurück, der noch lebt.
+pista.en: while (a.sigueVivo() && b.sigueVivo()) { b.recibir(a.ataque); if (b.sigueVivo()) a.recibir(b.ataque); } and at the end return the one still alive.
+plantilla:
+    public class Robot {
+        private final String nombre;
+        private int vida;
+        private final int ataque;
+
+        // constructor, getters, sigueVivo, recibir y duelo
+    }
+solucion:
+    public class Robot {
+        private final String nombre;
+        private int vida;
+        private final int ataque;
+
+        public Robot(String nombre, int vida, int ataque) {
+            this.nombre = nombre;
+            this.vida = vida;
+            this.ataque = ataque;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public int getVida() {
+            return vida;
+        }
+
+        public boolean sigueVivo() {
+            return vida > 0;
+        }
+
+        public void recibir(int dano) {
+            vida = Math.max(0, vida - dano);
+        }
+
+        public static Robot duelo(Robot a, Robot b) {
+            while (a.sigueVivo() && b.sigueVivo()) {
+                b.recibir(a.ataque);
+                if (b.sigueVivo()) {
+                    a.recibir(b.ataque);
+                }
+            }
+            return a.sigueVivo() ? a : b;
+        }
+    }
+casos:
+    Robot.duelo(new Robot("Rex", 10, 3), new Robot("Tita", 6, 4)).getNombre() => "Rex"
+    Robot.duelo(new Robot("Rex", 10, 3), new Robot("Tita", 6, 4)).getVida() => 6
+    Robot.duelo(new Robot("Rex", 5, 2), new Robot("Tita", 9, 3)).getNombre() => "Tita"
+    Robot.duelo(new Robot("Rex", 1, 1), new Robot("Zap", 1, 1)).getNombre() => "Rex"
+    Robot.duelo(new Robot("Rex", 0, 5), new Robot("Tita", 3, 1)).getNombre() => "Tita"
+    new Robot("Zap", 0, 1).sigueVivo() => false
+    ((Supplier<Integer>) () -> { Robot r = new Robot("Zap", 5, 1); r.recibir(8); return r.getVida(); }).get() => 0
+
+=== t09_coordenada_equals
+tema: 09
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Dos casillas iguales (equals y hashCode)
+titulo.de: Zwei gleiche Felder (equals und hashCode)
+titulo.en: Two equal squares (equals and hashCode)
+enunciado.es: Escribe la clase Coordenada con Coordenada(int x, int y) y sobrescribe boolean equals(Object otro) (iguales si tienen la misma x y la misma y) y int hashCode() (igual para coordenadas iguales), para que, por ejemplo, un HashSet no guarde dos veces la misma casilla. == sigue comparando si son el mismo objeto.
+enunciado.de: Schreibe die Klasse Coordenada mit Coordenada(int x, int y) und überschreibe boolean equals(Object otro) (gleich bei gleichem x und gleichem y) und int hashCode() (gleich für gleiche Koordinaten), damit z. B. ein HashSet dasselbe Feld nicht zweimal speichert. == prüft weiterhin, ob es dasselbe Objekt ist.
+enunciado.en: Write the class Coordenada with Coordenada(int x, int y) and override boolean equals(Object otro) (equal when x and y are the same) and int hashCode() (the same for equal coordinates), so that, for example, a HashSet doesn't store the same square twice. == still checks whether they are the same object.
+pista.es: En equals: si otro no es una Coordenada (instanceof), false; si lo es, conviértelo y compara x e y. Para hashCode vale Objects.hash(x, y).
+pista.de: In equals: Ist otro keine Coordenada (instanceof), false; sonst umwandeln und x und y vergleichen. Für hashCode reicht Objects.hash(x, y).
+pista.en: In equals: if otro is not a Coordenada (instanceof), false; otherwise cast it and compare x and y. For hashCode, Objects.hash(x, y) will do.
+plantilla:
+    public class Coordenada {
+        private final int x;
+        private final int y;
+
+        public Coordenada(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        // sobrescribe equals y hashCode
+    }
+solucion:
+    import java.util.Objects;
+
+    public class Coordenada {
+        private final int x;
+        private final int y;
+
+        public Coordenada(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        @Override
+        public boolean equals(Object otro) {
+            if (this == otro) {
+                return true;
+            }
+            if (!(otro instanceof Coordenada)) {
+                return false;
+            }
+            Coordenada c = (Coordenada) otro;
+            return x == c.x && y == c.y;
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(x, y);
+        }
+    }
+casos:
+    new Coordenada(1, 2).equals(new Coordenada(1, 2)) => true
+    new Coordenada(1, 2).equals(new Coordenada(2, 1)) => false
+    new Coordenada(1, 2).equals(null) => false
+    new Coordenada(1, 2).equals("(1, 2)") => false
+    new Coordenada(1, 2) == new Coordenada(1, 2) => false
+    new Coordenada(4, 5).hashCode() == new Coordenada(4, 5).hashCode() => true
+    new HashSet<>(Arrays.asList(new Coordenada(1, 2), new Coordenada(1, 2), new Coordenada(3, 3))).size() => 2
+
+=== t09_cadena_de_piezas
+tema: 09
+dificultad: 5
+java: 8
+tipo: clase
+titulo.es: Una cadena de eslabones propia
+titulo.de: Eine eigene Gliederkette
+titulo.en: A chain of links of your own
+enunciado.es: Sin arrays ni listas de Java, escribe la clase Cadena: una lista enlazada de piezas, donde cada eslabón (un objeto de otra clase) guarda una pieza y una referencia al siguiente. Métodos: Cadena anadir(String pieza) (al final; devuelve this), int tamano(), String get(int indice) (IndexOutOfBoundsException si no existe), Cadena invertir() (da la vuelta a la cadena misma y devuelve this) y String toString() con el formato "[a, b, c]" ("[]" si está vacía).
+enunciado.de: Ohne Arrays und ohne Java-Listen: Schreibe die Klasse Cadena, eine verkettete Liste von Teilen, in der jedes Glied (ein Objekt einer anderen Klasse) ein Teil und einen Verweis auf das nächste speichert. Methoden: Cadena anadir(String pieza) (ans Ende; gibt this zurück), int tamano(), String get(int indice) (IndexOutOfBoundsException, wenn es ihn nicht gibt), Cadena invertir() (dreht die Kette selbst um und gibt this zurück) und String toString() im Format "[a, b, c]" ("[]" wenn leer).
+enunciado.en: Without arrays or Java lists, write the class Cadena: a linked list of parts, where each link (an object of another class) holds a part and a reference to the next one. Methods: Cadena anadir(String pieza) (at the end; returns this), int tamano(), String get(int indice) (IndexOutOfBoundsException if it doesn't exist), Cadena invertir() (reverses the chain itself and returns this) and String toString() in the format "[a, b, c]" ("[]" when empty).
+pista.es: Una clase anidada private static class Eslabon { String pieza; Eslabon siguiente; }. Para invertir, recorre la cadena dándole la vuelta a cada flecha: anterior, actual y siguiente.
+pista.de: Eine verschachtelte Klasse private static class Eslabon { String pieza; Eslabon siguiente; }. Zum Umdrehen läufst du die Kette ab und drehst jeden Pfeil um: vorheriges, aktuelles und nächstes Glied.
+pista.en: A nested class private static class Eslabon { String pieza; Eslabon siguiente; }. To reverse, walk along the chain turning each arrow around: previous, current and next.
+plantilla:
+    public class Cadena {
+        // la clase de los eslabones, el primero y los métodos
+    }
+solucion:
+    public class Cadena {
+        private static class Eslabon {
+            private final String pieza;
+            private Eslabon siguiente;
+
+            Eslabon(String pieza) {
+                this.pieza = pieza;
+            }
+        }
+
+        private Eslabon primero;
+        private int tamano;
+
+        public Cadena anadir(String pieza) {
+            Eslabon nuevo = new Eslabon(pieza);
+            if (primero == null) {
+                primero = nuevo;
+            } else {
+                Eslabon ultimo = primero;
+                while (ultimo.siguiente != null) {
+                    ultimo = ultimo.siguiente;
+                }
+                ultimo.siguiente = nuevo;
+            }
+            tamano++;
+            return this;
+        }
+
+        public int tamano() {
+            return tamano;
+        }
+
+        public String get(int indice) {
+            if (indice < 0 || indice >= tamano) {
+                throw new IndexOutOfBoundsException("indice " + indice);
+            }
+            Eslabon actual = primero;
+            for (int i = 0; i < indice; i++) {
+                actual = actual.siguiente;
+            }
+            return actual.pieza;
+        }
+
+        public Cadena invertir() {
+            Eslabon anterior = null;
+            Eslabon actual = primero;
+            while (actual != null) {
+                Eslabon siguiente = actual.siguiente;
+                actual.siguiente = anterior;
+                anterior = actual;
+                actual = siguiente;
+            }
+            primero = anterior;
+            return this;
+        }
+
+        @Override
+        public String toString() {
+            StringBuilder texto = new StringBuilder("[");
+            for (Eslabon e = primero; e != null; e = e.siguiente) {
+                if (e != primero) {
+                    texto.append(", ");
+                }
+                texto.append(e.pieza);
+            }
+            return texto.append(']').toString();
+        }
+    }
+casos:
+    new Cadena().toString() => "[]"
+    new Cadena().anadir("laser").anadir("escudo").toString() => "[laser, escudo]"
+    new Cadena().anadir("a").anadir("b").anadir("c").get(2) => "c"
+    new Cadena().anadir("a").anadir("b").tamano() => 2
+    new Cadena().anadir("a").get(1) => !IndexOutOfBoundsException
+    new Cadena().get(-1) => !IndexOutOfBoundsException
+    new Cadena().anadir("a").anadir("b").anadir("c").invertir().toString() => "[c, b, a]"
+    new Cadena().invertir().anadir("x").get(0) => "x"

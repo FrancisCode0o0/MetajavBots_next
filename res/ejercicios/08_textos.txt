@@ -1,0 +1,403 @@
+# Tema 08 — Textos: String y StringBuilder (docs/FORMATOS.md, sección «Ejercicios»).
+
+=== t08_placa_del_robot
+tema: 08
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: La placa del robot
+titulo.de: Das Namensschild des Roboters
+titulo.en: The robot's name plate
+enunciado.es: Cada robot lleva su nombre en una placa, en mayúsculas y entre << y >>. Devuelve la placa de nombre: placa("rex") da "<<REX>>".
+enunciado.de: Jeder Roboter trägt seinen Namen auf einem Schild, in Großbuchstaben und zwischen << und >>. Gib das Schild für nombre zurück: placa("rex") ergibt "<<REX>>".
+enunciado.en: Every robot wears its name on a plate, in capitals and between << and >>. Return the plate for nombre: placa("rex") gives "<<REX>>".
+pista.es: nombre.toUpperCase() devuelve un texto nuevo en mayúsculas; júntalo con + a "<<" y ">>".
+pista.de: nombre.toUpperCase() liefert einen neuen Text in Großbuchstaben; verbinde ihn mit + mit "<<" und ">>".
+pista.en: nombre.toUpperCase() returns a new upper-case string; join it to "<<" and ">>" with +.
+firma: static String placa(String nombre)
+plantilla:
+    return nombre;
+solucion:
+    return "<<" + nombre.toUpperCase() + ">>";
+casos:
+    placa("rex") => "<<REX>>"
+    placa("Tita") => "<<TITA>>"
+    placa("mk2") => "<<MK2>>"
+    placa("") => "<<>>"
+
+=== t08_ultima_letra
+tema: 08
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: La última letra del código
+titulo.de: Das letzte Zeichen des Codes
+titulo.en: The last character of the code
+enunciado.es: Devuelve el último carácter del código de un robot. Si el código está vacío, deja que Java lance la StringIndexOutOfBoundsException.
+enunciado.de: Gib das letzte Zeichen des Roboter-Codes zurück. Ist der Code leer, lass Java die StringIndexOutOfBoundsException werfen.
+enunciado.en: Return the last character of a robot's code. If the code is empty, let Java throw the StringIndexOutOfBoundsException.
+pista.es: Las posiciones van de 0 a length() - 1: codigo.charAt(codigo.length() - 1).
+pista.de: Die Positionen laufen von 0 bis length() - 1: codigo.charAt(codigo.length() - 1).
+pista.en: Positions go from 0 to length() - 1: codigo.charAt(codigo.length() - 1).
+firma: static char ultimaLetra(String codigo)
+plantilla:
+    return codigo.charAt(0);
+solucion:
+    return codigo.charAt(codigo.length() - 1);
+casos:
+    ultimaLetra("R2D2") => '2'
+    ultimaLetra("Zap") => 'p'
+    ultimaLetra("x") => 'x'
+    ultimaLetra("") => !StringIndexOutOfBoundsException
+
+=== t08_misma_clave
+tema: 08
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: ¿La misma clave?
+titulo.de: Dasselbe Passwort?
+titulo.en: The same password?
+enunciado.es: La puerta del hangar se abre si el intento tiene exactamente el mismo texto que la clave. La plantilla usa ==, que solo mira si son el mismo objeto, y a veces falla: arréglala. Si intento es null, devuelve false.
+enunciado.de: Das Hangartor geht auf, wenn der Versuch genau denselben Text wie das Passwort hat. Die Vorlage benutzt ==, das nur prüft, ob es dasselbe Objekt ist, und manchmal danebenliegt: Repariere sie. Ist intento null, gib false zurück.
+enunciado.en: The hangar door opens if the attempt has exactly the same text as the password. The template uses ==, which only checks whether they are the same object, and sometimes gets it wrong: fix it. If intento is null, return false.
+pista.es: Los textos se comparan con equals: clave.equals(intento). Con null, equals devuelve false.
+pista.de: Texte vergleicht man mit equals: clave.equals(intento). Mit null liefert equals false.
+pista.en: Compare strings with equals: clave.equals(intento). With null, equals returns false.
+firma: static boolean mismaClave(String clave, String intento)
+plantilla:
+    return clave == intento;
+solucion:
+    return clave.equals(intento);
+casos:
+    mismaClave("abc", "abc") => true
+    mismaClave("abc", new String("abc")) => true
+    mismaClave("abc", "ABC") => false
+    mismaClave("abc", null) => false
+    mismaClave("laser", "lase" + "r".toLowerCase()) => true
+
+=== t08_barra_de_vida
+tema: 08
+dificultad: 2
+java: 11
+tipo: metodo
+titulo.es: Barra de vida con repeat
+titulo.de: Lebensbalken mit repeat
+titulo.en: Health bar with repeat
+enunciado.es: Dibuja la barra de vida: un # por cada punto de vida y un . por cada punto que falta hasta el máximo, entre corchetes. barraDeVida(3, 5) da "[###..]". Usa String.repeat, que llegó en Java 11.
+enunciado.de: Zeichne den Lebensbalken: ein # pro Lebenspunkt und ein . für jeden fehlenden Punkt bis zum Maximum, in eckigen Klammern. barraDeVida(3, 5) ergibt "[###..]". Benutze String.repeat, das es seit Java 11 gibt.
+enunciado.en: Draw the health bar: one # per health point and one . for each point missing up to the maximum, inside square brackets. barraDeVida(3, 5) gives "[###..]". Use String.repeat, which arrived in Java 11.
+pista.es: "#".repeat(vida) repite el texto vida veces; lo que falta es maximo - vida.
+pista.de: "#".repeat(vida) wiederholt den Text vida-mal; es fehlen maximo - vida Punkte.
+pista.en: "#".repeat(vida) repeats the text vida times; the missing part is maximo - vida.
+firma: static String barraDeVida(int vida, int maximo)
+plantilla:
+    return "[" + "]";
+solucion:
+    return "[" + "#".repeat(vida) + ".".repeat(maximo - vida) + "]";
+casos:
+    barraDeVida(3, 5) => "[###..]"
+    barraDeVida(0, 3) => "[...]"
+    barraDeVida(4, 4) => "[####]"
+    barraDeVida(1, 10) => "[#.........]"
+    barraDeVida(0, 0) => "[]"
+
+=== t08_nombre_limpio
+tema: 08
+dificultad: 2
+java: 11
+tipo: metodo
+titulo.es: Un nombre sin espacios de sobra
+titulo.de: Ein Name ohne überflüssige Leerzeichen
+titulo.en: A name without extra spaces
+enunciado.es: El jugador escribe el nombre de su robot con espacios de más. Devuelve el nombre sin los espacios del principio y del final; si solo hay espacios (o nada), devuelve "SIN NOMBRE". Usa isBlank() y strip(), de Java 11: strip() quita también los espacios Unicode que trim() no ve.
+enunciado.de: Der Spieler tippt den Namen seines Roboters mit zu vielen Leerzeichen. Gib den Namen ohne Leerzeichen am Anfang und Ende zurück; besteht er nur aus Leerzeichen (oder ist leer), gib "SIN NOMBRE" zurück. Benutze isBlank() und strip() aus Java 11: strip() entfernt auch Unicode-Leerzeichen, die trim() übersieht.
+enunciado.en: The player types the robot's name with extra spaces. Return the name without leading and trailing spaces; if it is only spaces (or nothing), return "SIN NOMBRE". Use isBlank() and strip(), from Java 11: strip() also removes the Unicode spaces that trim() misses.
+pista.es: Primero if (entrada.isBlank()) return "SIN NOMBRE"; y después return entrada.strip();
+pista.de: Zuerst if (entrada.isBlank()) return "SIN NOMBRE"; danach return entrada.strip();
+pista.en: First if (entrada.isBlank()) return "SIN NOMBRE"; then return entrada.strip();
+firma: static String nombreLimpio(String entrada)
+plantilla:
+    return entrada.trim();
+solucion:
+    if (entrada.isBlank()) {
+        return "SIN NOMBRE";
+    }
+    return entrada.strip();
+casos:
+    nombreLimpio("  Tita ") => "Tita"
+    nombreLimpio("\tAda\n") => "Ada"
+    nombreLimpio("   ") => "SIN NOMBRE"
+    nombreLimpio("") => "SIN NOMBRE"
+    nombreLimpio(" Zap") => "Zap"
+    nombreLimpio("Rex") => "Rex"
+
+=== t08_al_reves
+tema: 08
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: El mensaje al revés
+titulo.de: Die Nachricht rückwärts
+titulo.en: The message backwards
+enunciado.es: El rival manda sus órdenes escritas al revés para despistar. Devuelve el mensaje dado la vuelta, con la ayuda de un StringBuilder.
+enunciado.de: Der Gegner schickt seine Befehle rückwärts, um uns zu verwirren. Gib die Nachricht umgedreht zurück, mit Hilfe eines StringBuilder.
+enunciado.en: The rival sends its orders written backwards to confuse us. Return the message reversed, with the help of a StringBuilder.
+pista.es: new StringBuilder(mensaje).reverse().toString()
+pista.de: new StringBuilder(mensaje).reverse().toString()
+pista.en: new StringBuilder(mensaje).reverse().toString()
+firma: static String alReves(String mensaje)
+plantilla:
+    return mensaje;
+solucion:
+    return new StringBuilder(mensaje).reverse().toString();
+casos:
+    alReves("hola") => "aloh"
+    alReves("Rex 3") => "3 xeR"
+    alReves("atacar ya") => "ay racata"
+    alReves("a") => "a"
+    alReves("") => ""
+
+=== t08_cartel_de_combate
+tema: 08
+dificultad: 2
+java: 17
+tipo: metodo
+titulo.es: El cartel del combate (bloque de texto)
+titulo.de: Das Kampfplakat (Textblock)
+titulo.en: The fight poster (text block)
+enunciado.es: Devuelve el cartel de tres líneas, cada una terminada en salto de línea: "RONDA <ronda>", "Robot: <robot>" y "Listo para luchar". Escríbelo con un bloque de texto (tres comillas """) y rellénalo con formatted: las dos cosas son de Java 15.
+enunciado.de: Gib das dreizeilige Plakat zurück, jede Zeile mit Zeilenumbruch am Ende: "RONDA <ronda>", "Robot: <robot>" und "Listo para luchar". Schreib es als Textblock (drei Anführungszeichen """) und fülle es mit formatted: Beides gibt es seit Java 15.
+enunciado.en: Return the three-line poster, each line ending with a line break: "RONDA <ronda>", "Robot: <robot>" and "Listo para luchar". Write it as a text block (three quotes """) and fill it in with formatted: both arrived in Java 15.
+pista.es: Un bloque de texto empieza con """ y un salto de línea. Pon %d y %s donde van los datos y termina con .formatted(ronda, robot).
+pista.de: Ein Textblock beginnt mit """ und einem Zeilenumbruch. Setze %d und %s an die Stellen der Daten und hänge .formatted(ronda, robot) an.
+pista.en: A text block starts with """ and a line break. Put %d and %s where the data goes and finish with .formatted(ronda, robot).
+firma: static String cartel(String robot, int ronda)
+plantilla:
+    return "RONDA " + ronda;
+solucion:
+    return """
+            RONDA %d
+            Robot: %s
+            Listo para luchar
+            """.formatted(ronda, robot);
+casos:
+    cartel("Rex", 2) => "RONDA 2\nRobot: Rex\nListo para luchar\n"
+    cartel("Tita", 10) => "RONDA 10\nRobot: Tita\nListo para luchar\n"
+    cartel("", 1) => "RONDA 1\nRobot: \nListo para luchar\n"
+    cartel("Mk-V", 4).lines().count() => 3L
+
+=== t08_iniciales
+tema: 08
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Las iniciales del equipo
+titulo.de: Die Initialen des Teams
+titulo.en: The team's initials
+enunciado.es: Devuelve las iniciales en mayúsculas de las palabras de nombreCompleto. Puede haber varios espacios entre palabras y también al principio o al final. "Robot Rojo Veloz" da "RRV".
+enunciado.de: Gib die Anfangsbuchstaben der Wörter von nombreCompleto in Großbuchstaben zurück. Zwischen den Wörtern, am Anfang und am Ende können mehrere Leerzeichen stehen. "Robot Rojo Veloz" ergibt "RRV".
+enunciado.en: Return the upper-case initials of the words in nombreCompleto. There may be several spaces between words and also at the start or the end. "Robot Rojo Veloz" gives "RRV".
+pista.es: trim() y después split("\\s+") parte por uno o más espacios. Para cada palabra no vacía, añade Character.toUpperCase(palabra.charAt(0)) a un StringBuilder.
+pista.de: trim() und danach split("\\s+") trennt an einem oder mehreren Leerzeichen. Hänge für jedes nicht leere Wort Character.toUpperCase(palabra.charAt(0)) an einen StringBuilder.
+pista.en: trim() and then split("\\s+") splits on one or more spaces. For each non-empty word, append Character.toUpperCase(palabra.charAt(0)) to a StringBuilder.
+firma: static String iniciales(String nombreCompleto)
+plantilla:
+    return "";
+solucion:
+    StringBuilder resultado = new StringBuilder();
+    for (String palabra : nombreCompleto.trim().split("\\s+")) {
+        if (!palabra.isEmpty()) {
+            resultado.append(Character.toUpperCase(palabra.charAt(0)));
+        }
+    }
+    return resultado.toString();
+casos:
+    iniciales("Robot Rojo Veloz") => "RRV"
+    iniciales("  ada   lovelace ") => "AL"
+    iniciales("zap") => "Z"
+    iniciales("") => ""
+    iniciales("   ") => ""
+
+=== t08_veces_que_aparece
+tema: 08
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: ¿Cuántas veces sale en el registro?
+titulo.de: Wie oft steht es im Protokoll?
+titulo.en: How often is it in the log?
+enunciado.es: Cuenta cuántas veces aparece palabra dentro de registro, sin solapar las apariciones (en "aaaa", "aa" sale 2 veces) y distinguiendo mayúsculas. palabra nunca está vacía.
+enunciado.de: Zähle, wie oft palabra in registro vorkommt, ohne Überlappung (in "aaaa" kommt "aa" 2-mal vor) und mit Unterscheidung von Groß- und Kleinschreibung. palabra ist nie leer.
+enunciado.en: Count how many times palabra appears inside registro, without overlapping (in "aaaa", "aa" appears 2 times) and case-sensitive. palabra is never empty.
+pista.es: indexOf(palabra, desde) busca a partir de una posición y da -1 si ya no hay más. Tras encontrarla, sigue buscando desde la posición + palabra.length().
+pista.de: indexOf(palabra, desde) sucht ab einer Position und liefert -1, wenn nichts mehr kommt. Nach einem Fund suchst du ab Position + palabra.length() weiter.
+pista.en: indexOf(palabra, desde) searches from a position and returns -1 when there are no more. After a match, keep searching from the position + palabra.length().
+firma: static int vecesQueAparece(String registro, String palabra)
+plantilla:
+    return 0;
+solucion:
+    int veces = 0;
+    int posicion = registro.indexOf(palabra);
+    while (posicion >= 0) {
+        veces++;
+        posicion = registro.indexOf(palabra, posicion + palabra.length());
+    }
+    return veces;
+casos:
+    vecesQueAparece("golpe fallo golpe golpe", "golpe") => 3
+    vecesQueAparece("aaaa", "aa") => 2
+    vecesQueAparece("laser", "misil") => 0
+    vecesQueAparece("", "x") => 0
+    vecesQueAparece("Golpe golpe", "golpe") => 1
+
+=== t08_tabla_de_danos
+tema: 08
+dificultad: 3
+java: 8
+tipo: salida
+titulo.es: La tabla de daños
+titulo.de: Die Schadenstabelle
+titulo.en: The damage table
+enunciado.es: Imprime una línea por robot: su nombre alineado a la izquierda en 6 caracteres y su daño alineado a la derecha en 4. Al final, una línea igual con "TOTAL" y la suma. Los dos arrays tienen la misma longitud.
+enunciado.de: Gib eine Zeile pro Roboter aus: den Namen linksbündig in 6 Zeichen und den Schaden rechtsbündig in 4. Am Ende eine gleich aufgebaute Zeile mit "TOTAL" und der Summe. Beide Arrays sind gleich lang.
+enunciado.en: Print one line per robot: its name left-aligned in 6 characters and its damage right-aligned in 4. At the end, a line in the same format with "TOTAL" and the sum. Both arrays have the same length.
+pista.es: System.out.printf("%-6s%4d%n", nombre, dano); el - alinea a la izquierda y %n es el salto de línea.
+pista.de: System.out.printf("%-6s%4d%n", nombre, dano); das - richtet links aus und %n ist der Zeilenumbruch.
+pista.en: System.out.printf("%-6s%4d%n", nombre, dano); the - aligns left and %n is the line break.
+firma: static void tabla(String[] robots, int[] danos)
+plantilla:
+    for (int i = 0; i < robots.length; i++) {
+        System.out.println(robots[i] + " " + danos[i]);
+    }
+solucion:
+    int total = 0;
+    for (int i = 0; i < robots.length; i++) {
+        System.out.printf("%-6s%4d%n", robots[i], danos[i]);
+        total += danos[i];
+    }
+    System.out.printf("%-6s%4d%n", "TOTAL", total);
+casos:
+    tabla(new String[]{"Rex", "Tita"}, new int[]{12, 7}); => "Rex     12\nTita     7\nTOTAL   19\n"
+    tabla(new String[]{"Zap"}, new int[]{100}); => "Zap    100\nTOTAL  100\n"
+    tabla(new String[]{"Megatron"}, new int[]{5}); => "Megatron   5\nTOTAL    5\n"
+    tabla(new String[0], new int[0]); => "TOTAL    0\n"
+
+=== t08_comprimir_senal
+tema: 08
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Comprimir la señal del radar
+titulo.de: Das Radarsignal komprimieren
+titulo.en: Compress the radar signal
+enunciado.es: El radar manda señales con muchos caracteres repetidos seguidos. Comprime cada grupo de caracteres iguales seguidos en el carácter y cuántas veces sale: "...***.." da ".3*3.2" y "x" da "x1".
+enunciado.de: Das Radar sendet Signale mit vielen gleichen Zeichen hintereinander. Fasse jede Gruppe gleicher, aufeinanderfolgender Zeichen zu dem Zeichen und seiner Anzahl zusammen: "...***.." ergibt ".3*3.2" und "x" ergibt "x1".
+enunciado.en: The radar sends signals with many repeated characters in a row. Compress each run of equal consecutive characters into the character and how many times it appears: "...***.." gives ".3*3.2" and "x" gives "x1".
+pista.es: Recorre el texto; para cada posición, avanza otro índice mientras el carácter sea el mismo. La longitud del grupo es fin - inicio.
+pista.de: Geh den Text durch; schiebe für jede Position einen zweiten Index weiter, solange das Zeichen gleich bleibt. Die Gruppenlänge ist Ende - Anfang.
+pista.en: Walk through the text; for each position, move a second index forward while the character stays the same. The run length is end - start.
+firma: static String comprimir(String senal)
+plantilla:
+    return senal;
+solucion:
+    StringBuilder resultado = new StringBuilder();
+    int inicio = 0;
+    while (inicio < senal.length()) {
+        char actual = senal.charAt(inicio);
+        int fin = inicio;
+        while (fin < senal.length() && senal.charAt(fin) == actual) {
+            fin++;
+        }
+        resultado.append(actual).append(fin - inicio);
+        inicio = fin;
+    }
+    return resultado.toString();
+casos:
+    comprimir("...***..") => ".3*3.2"
+    comprimir("x") => "x1"
+    comprimir("") => ""
+    comprimir("aaaaaaaaaaaa") => "a12"
+    comprimir("abab") => "a1b1a1b1"
+
+=== t08_a_serpiente
+tema: 08
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: De camelCase a snake_case
+titulo.de: Von camelCase zu snake_case
+titulo.en: From camelCase to snake_case
+enunciado.es: El archivo de configuración del robot quiere las claves en snake_case. Convierte un nombre en camelCase: cada mayúscula pasa a minúscula y, si no es el primer carácter, lleva un _ delante. "velocidadMaxima" da "velocidad_maxima".
+enunciado.de: Die Konfigurationsdatei des Roboters will die Schlüssel in snake_case. Wandle einen Namen in camelCase um: Jeder Großbuchstabe wird klein und bekommt, wenn er nicht das erste Zeichen ist, ein _ davor. "velocidadMaxima" ergibt "velocidad_maxima".
+enunciado.en: The robot's config file wants its keys in snake_case. Convert a camelCase name: every capital becomes lower case and, unless it is the first character, gets a _ in front. "velocidadMaxima" gives "velocidad_maxima".
+pista.es: Character.isUpperCase(c) y Character.toLowerCase(c); ve añadiendo a un StringBuilder.
+pista.de: Character.isUpperCase(c) und Character.toLowerCase(c); sammle alles in einem StringBuilder.
+pista.en: Character.isUpperCase(c) and Character.toLowerCase(c); build the result in a StringBuilder.
+firma: static String aSerpiente(String camello)
+plantilla:
+    return camello.toLowerCase();
+solucion:
+    StringBuilder resultado = new StringBuilder();
+    for (int i = 0; i < camello.length(); i++) {
+        char c = camello.charAt(i);
+        if (Character.isUpperCase(c)) {
+            if (i > 0) {
+                resultado.append('_');
+            }
+            resultado.append(Character.toLowerCase(c));
+        } else {
+            resultado.append(c);
+        }
+    }
+    return resultado.toString();
+casos:
+    aSerpiente("velocidadMaxima") => "velocidad_maxima"
+    aSerpiente("LaserRojo") => "laser_rojo"
+    aSerpiente("armaMkII") => "arma_mk_i_i"
+    aSerpiente("vida2Max") => "vida2_max"
+    aSerpiente("x") => "x"
+    aSerpiente("") => ""
+
+=== t08_ajustar_mensaje
+tema: 08
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Ajustar el mensaje a la pantalla
+titulo.de: Die Nachricht an den Bildschirm anpassen
+titulo.en: Wrap the message to the screen
+enunciado.es: La pantallita del robot tiene ancho columnas. Reparte las palabras de texto en líneas separadas por "\n" con un espacio entre palabras, metiendo en cada línea todas las que quepan. Una palabra más larga que ancho va sola en su línea. Los espacios de sobra se ignoran; sin palabras, devuelve "".
+enunciado.de: Das kleine Display des Roboters ist ancho Spalten breit. Verteile die Wörter von texto auf Zeilen, getrennt durch "\n", mit einem Leerzeichen zwischen den Wörtern, und pack in jede Zeile so viele, wie passen. Ein Wort, das länger als ancho ist, steht allein in seiner Zeile. Überflüssige Leerzeichen werden ignoriert; ohne Wörter gib "" zurück.
+enunciado.en: The robot's little screen is ancho columns wide. Spread the words of texto over lines separated by "\n", with one space between words, fitting as many words as possible on each line. A word longer than ancho goes alone on its line. Extra spaces are ignored; with no words, return "".
+pista.es: Lleva la cuenta del largo de la línea actual. Antes de añadir una palabra, mira si largo + 1 + palabra.length() se pasa de ancho: entonces toca "\n" en lugar del espacio.
+pista.de: Merk dir die Länge der aktuellen Zeile. Prüfe vor jedem Wort, ob Länge + 1 + palabra.length() über ancho kommt: Dann kommt "\n" statt des Leerzeichens.
+pista.en: Keep track of the current line's length. Before adding a word, check whether length + 1 + palabra.length() goes over ancho: then write "\n" instead of the space.
+firma: static String ajustar(String texto, int ancho)
+plantilla:
+    return texto;
+solucion:
+    StringBuilder resultado = new StringBuilder();
+    int largoDeLinea = 0;
+    for (String palabra : texto.trim().split("\\s+")) {
+        if (palabra.isEmpty()) {
+            continue;
+        }
+        if (largoDeLinea > 0 && largoDeLinea + 1 + palabra.length() > ancho) {
+            resultado.append('\n');
+            largoDeLinea = 0;
+        } else if (largoDeLinea > 0) {
+            resultado.append(' ');
+            largoDeLinea++;
+        }
+        resultado.append(palabra);
+        largoDeLinea += palabra.length();
+    }
+    return resultado.toString();
+casos:
+    ajustar("el robot rojo gana", 9) => "el robot\nrojo gana"
+    ajustar("a b c", 1) => "a\nb\nc"
+    ajustar("misil", 3) => "misil"
+    ajustar("  uno   dos ", 20) => "uno dos"
+    ajustar("", 5) => ""
+    ajustar("ok megalaser ok", 4) => "ok\nmegalaser\nok"

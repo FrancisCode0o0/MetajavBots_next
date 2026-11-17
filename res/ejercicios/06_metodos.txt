@@ -1,0 +1,398 @@
+# Tema 06: métodos (parámetros y retorno). Los de tipo clase dejan escribir varios métodos que se llaman entre sí.
+=== t06_area_escudo
+tema: 06
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: El área del escudo redondo
+titulo.de: Die Fläche des runden Schilds
+titulo.en: The area of the round shield
+enunciado.es: El escudo es un círculo. Devuelve su área, π · radio · radio. Ejemplo: areaEscudo(1.0) devuelve 3.141592653589793.
+enunciado.de: Der Schild ist ein Kreis. Gib seine Fläche zurück, π · radio · radio. Beispiel: areaEscudo(1.0) gibt 3.141592653589793 zurück.
+enunciado.en: The shield is a circle. Return its area, π · radio · radio. Example: areaEscudo(1.0) returns 3.141592653589793.
+pista.es: Un método recibe datos (parámetros) y devuelve un resultado con return. π ya existe en Java: Math.PI.
+pista.de: Eine Methode bekommt Daten (Parameter) und liefert mit return ein Ergebnis. π gibt es in Java schon: Math.PI.
+pista.en: A method takes data (parameters) and hands back a result with return. π already exists in Java: Math.PI.
+firma: static double areaEscudo(double radio)
+plantilla:
+    return 0.0;
+solucion:
+    return Math.PI * radio * radio;
+casos:
+    areaEscudo(1.0) => 3.141592653589793
+    areaEscudo(2.0) => 12.566370614359172
+    areaEscudo(0.5) => 0.7853981633974483
+    areaEscudo(0.0) => 0.0
+
+=== t06_segundos_totales
+tema: 06
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Duración de la ronda en segundos
+titulo.de: Rundendauer in Sekunden
+titulo.en: Round length in seconds
+enunciado.es: Recibes los minutos y los segundos que duró una ronda. Devuelve la duración total en segundos. Ejemplo: segundosTotales(1, 30) devuelve 90.
+enunciado.de: Du bekommst die Minuten und Sekunden, die eine Runde gedauert hat. Gib die Gesamtdauer in Sekunden zurück. Beispiel: segundosTotales(1, 30) gibt 90 zurück.
+enunciado.en: You get the minutes and seconds a round lasted. Return the total length in seconds. Example: segundosTotales(1, 30) returns 90.
+pista.es: Los parámetros van separados por comas y se usan como variables: minutos * 60 + segundos.
+pista.de: Parameter werden durch Kommas getrennt und wie Variablen benutzt: minutos * 60 + segundos.
+pista.en: Parameters are separated by commas and used like variables: minutos * 60 + segundos.
+firma: static int segundosTotales(int minutos, int segundos)
+plantilla:
+    return 0;
+solucion:
+    return minutos * 60 + segundos;
+casos:
+    segundosTotales(1, 30) => 90
+    segundosTotales(0, 45) => 45
+    segundosTotales(10, 5) => 605
+    segundosTotales(0, 0) => 0
+
+=== t06_distancia
+tema: 06
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Distancia hasta el enemigo
+titulo.de: Abstand zum Gegner
+titulo.en: Distance to the enemy
+enunciado.es: Tu robot está en (x1, y1) y el enemigo en (x2, y2). Devuelve la distancia en línea recta entre los dos. Ejemplo: distancia(0, 0, 3, 4) devuelve 5.0.
+enunciado.de: Dein Roboter steht bei (x1, y1), der Gegner bei (x2, y2). Gib den direkten Abstand zwischen beiden zurück. Beispiel: distancia(0, 0, 3, 4) gibt 5.0 zurück.
+enunciado.en: Your robot is at (x1, y1) and the enemy at (x2, y2). Return the straight-line distance between them. Example: distancia(0, 0, 3, 4) returns 5.0.
+pista.es: Pitágoras: la raíz de dx² + dy², con dx = x2 - x1 y dy = y2 - y1. Llama a Math.sqrt(...) para la raíz cuadrada.
+pista.de: Pythagoras: die Wurzel aus dx² + dy², mit dx = x2 - x1 und dy = y2 - y1. Für die Quadratwurzel rufst du Math.sqrt(...) auf.
+pista.en: Pythagoras: the root of dx² + dy², with dx = x2 - x1 and dy = y2 - y1. Call Math.sqrt(...) for the square root.
+firma: static double distancia(double x1, double y1, double x2, double y2)
+plantilla:
+    return 0.0;
+solucion:
+    double dx = x2 - x1;
+    double dy = y2 - y1;
+    return Math.sqrt(dx * dx + dy * dy);
+casos:
+    distancia(0, 0, 3, 4) => 5.0
+    distancia(-1, 0, 2, 4) => 5.0
+    distancia(1, 1, 1, 1) => 0.0
+    distancia(0, 0, 1, 1) => 1.4142135623730951
+
+=== t06_taller
+tema: 06
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Los precios del taller
+titulo.de: Die Preise der Werkstatt
+titulo.en: The workshop prices
+enunciado.es: Completa la clase Taller: precio(piezas) devuelve 15 por pieza, y precioFinal(piezas) devuelve precio(piezas) más 10 de envío, que es gratis a partir de 10 piezas. precioFinal tiene que llamar a precio. Ejemplo: Taller.precioFinal(3) devuelve 55.
+enunciado.de: Vervollständige die Klasse Taller: precio(piezas) gibt 15 pro Teil zurück, und precioFinal(piezas) gibt precio(piezas) plus 10 Versand zurück – ab 10 Teilen ist der Versand gratis. precioFinal muss precio aufrufen. Beispiel: Taller.precioFinal(3) gibt 55 zurück.
+enunciado.en: Complete the class Taller: precio(piezas) returns 15 per part, and precioFinal(piezas) returns precio(piezas) plus 10 for delivery, which is free from 10 parts on. precioFinal must call precio. Example: Taller.precioFinal(3) returns 55.
+pista.es: Un método puede llamar a otro de la misma clase por su nombre: int base = precio(piezas); y luego decide el envío con un if.
+pista.de: Eine Methode kann eine andere derselben Klasse einfach beim Namen aufrufen: int base = precio(piezas); danach entscheidest du mit einem if über den Versand.
+pista.en: A method can call another one in the same class just by its name: int base = precio(piezas); then decide the delivery with an if.
+plantilla:
+    public class Taller {
+
+        public static int precio(int piezas) {
+            return 0;
+        }
+
+        public static int precioFinal(int piezas) {
+            return 0;
+        }
+    }
+solucion:
+    public class Taller {
+
+        public static int precio(int piezas) {
+            return piezas * 15;
+        }
+
+        public static int precioFinal(int piezas) {
+            int base = precio(piezas);
+            if (piezas >= 10) {
+                return base;
+            }
+            return base + 10;
+        }
+    }
+casos:
+    Taller.precio(3) => 45
+    Taller.precio(0) => 0
+    Taller.precioFinal(3) => 55
+    Taller.precioFinal(9) => 145
+    Taller.precioFinal(10) => 150
+    Taller.precioFinal(20) => 300
+
+=== t06_diagnostico
+tema: 06
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Diagnóstico con salidas rápidas
+titulo.de: Diagnose mit frühem Ausstieg
+titulo.en: Diagnosis with early exits
+enunciado.es: Devuelve el diagnóstico: "KO" si la vida es 0 o menos (aunque tenga energía); si no, "ALARM" si la vida es menor que 25 o la energía menor que 10; y si no, "OK". Ejemplo: diagnostico(20, 50) devuelve "ALARM".
+enunciado.de: Gib die Diagnose zurück: "KO", wenn das Leben 0 oder weniger ist (auch mit Energie); sonst "ALARM", wenn das Leben unter 25 oder die Energie unter 10 liegt; und sonst "OK". Beispiel: diagnostico(20, 50) gibt "ALARM" zurück.
+enunciado.en: Return the diagnosis: "KO" if life is 0 or less (even with energy left); otherwise "ALARM" if life is below 25 or energy below 10; otherwise "OK". Example: diagnostico(20, 50) returns "ALARM".
+pista.es: return termina el método en el acto. Pon primero el caso más grave con su return; lo de debajo ya no tiene que volver a comprobarlo.
+pista.de: return beendet die Methode sofort. Schreib den schlimmsten Fall mit seinem return zuerst; was darunter steht, muss ihn nicht mehr prüfen.
+pista.en: return ends the method on the spot. Put the most serious case first with its own return; the code below no longer has to check it.
+firma: static String diagnostico(int vida, int energia)
+plantilla:
+    return "OK";
+solucion:
+    if (vida <= 0) {
+        return "KO";
+    }
+    if (vida < 25 || energia < 10) {
+        return "ALARM";
+    }
+    return "OK";
+casos:
+    diagnostico(100, 50) => "OK"
+    diagnostico(25, 10) => "OK"
+    diagnostico(20, 50) => "ALARM"
+    diagnostico(50, 5) => "ALARM"
+    diagnostico(0, 100) => "KO"
+    diagnostico(-5, 0) => "KO"
+
+=== t06_tiempo_de_ronda
+tema: 06
+dificultad: 3
+java: 15
+tipo: metodo
+titulo.es: El reloj de la ronda (formatted, Java 15)
+titulo.de: Die Rundenuhr (formatted, Java 15)
+titulo.en: The round clock (formatted, Java 15)
+enunciado.es: Devuelve el tiempo como minutos:segundos, con los segundos siempre en dos cifras. Java 15 trajo el método formatted de String: "%02d".formatted(7) da "07". Ejemplo: tiempoDeRonda(75) devuelve "1:15" y tiempoDeRonda(0), "0:00".
+enunciado.de: Gib die Zeit als Minuten:Sekunden zurück, die Sekunden immer zweistellig. Java 15 hat die String-Methode formatted eingeführt: "%02d".formatted(7) ergibt "07". Beispiel: tiempoDeRonda(75) gibt "1:15" zurück, tiempoDeRonda(0) "0:00".
+enunciado.en: Return the time as minutes:seconds, with the seconds always two digits. Java 15 introduced String's formatted method: "%02d".formatted(7) gives "07". Example: tiempoDeRonda(75) returns "1:15" and tiempoDeRonda(0) returns "0:00".
+pista.es: Los minutos son segundos / 60 y lo que sobra, segundos % 60. Luego: "%d:%02d".formatted(minutos, resto). Antes de Java 15: String.format(...).
+pista.de: Die Minuten sind segundos / 60, der Rest segundos % 60. Dann: "%d:%02d".formatted(minutos, resto). Vor Java 15: String.format(...).
+pista.en: The minutes are segundos / 60 and what's left over is segundos % 60. Then: "%d:%02d".formatted(minutos, resto). Before Java 15: String.format(...).
+firma: static String tiempoDeRonda(int segundos)
+plantilla:
+    return String.valueOf(segundos);
+solucion:
+    int minutos = segundos / 60;
+    int resto = segundos % 60;
+    return "%d:%02d".formatted(minutos, resto);
+casos:
+    tiempoDeRonda(75) => "1:15"
+    tiempoDeRonda(0) => "0:00"
+    tiempoDeRonda(59) => "0:59"
+    tiempoDeRonda(600) => "10:00"
+    tiempoDeRonda(3599) => "59:59"
+
+=== t06_reparar_sobrecarga
+tema: 06
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Dos formas de reparar (sobrecarga)
+titulo.de: Zwei Arten zu reparieren (Überladung)
+titulo.en: Two ways to repair (overloading)
+enunciado.es: En la clase Reparacion, reparar(vida, cantidad) suma cantidad a la vida sin pasar nunca de 100. Añade otro reparar(vida), con un solo parámetro, que repara 10 llamando al primero. Ejemplo: Reparacion.reparar(95) devuelve 100.
+enunciado.de: In der Klasse Reparacion addiert reparar(vida, cantidad) die cantidad zum Leben, aber nie über 100. Füge ein zweites reparar(vida) mit nur einem Parameter hinzu, das um 10 repariert, indem es das erste aufruft. Beispiel: Reparacion.reparar(95) gibt 100 zurück.
+enunciado.en: In the class Reparacion, reparar(vida, cantidad) adds cantidad to the life but never goes over 100. Add a second reparar(vida), with just one parameter, that repairs 10 by calling the first one. Example: Reparacion.reparar(95) returns 100.
+pista.es: Dos métodos pueden llamarse igual si sus parámetros son distintos: es la sobrecarga. Java elige cuál según lo que le pases. Para el tope: Math.min(100, vida + cantidad).
+pista.de: Zwei Methoden dürfen gleich heißen, wenn ihre Parameter verschieden sind: das ist Überladung. Java wählt je nach Argumenten die passende. Für die Obergrenze: Math.min(100, vida + cantidad).
+pista.en: Two methods can share a name if their parameters differ: that's overloading. Java picks one based on what you pass. For the cap: Math.min(100, vida + cantidad).
+plantilla:
+    public class Reparacion {
+
+        public static int reparar(int vida, int cantidad) {
+            return vida;
+        }
+
+        // escribe aquí otro reparar, con un solo parámetro
+    }
+solucion:
+    public class Reparacion {
+
+        public static int reparar(int vida, int cantidad) {
+            return Math.min(100, vida + cantidad);
+        }
+
+        public static int reparar(int vida) {
+            return reparar(vida, 10);
+        }
+    }
+casos:
+    Reparacion.reparar(50, 30) => 80
+    Reparacion.reparar(90, 30) => 100
+    Reparacion.reparar(0, 0) => 0
+    Reparacion.reparar(50) => 60
+    Reparacion.reparar(95) => 100
+    Reparacion.reparar(0) => 10
+
+=== t06_suma_de_golpes
+tema: 06
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Tantos golpes como quieras (varargs)
+titulo.de: So viele Treffer, wie du willst (Varargs)
+titulo.en: As many hits as you like (varargs)
+enunciado.es: Con int... el método acepta cualquier cantidad de enteros, también ninguno; dentro, golpes es un array. Devuelve la suma de todos los golpes. Ejemplo: sumaDeGolpes(1, 2, 3) devuelve 6 y sumaDeGolpes(), 0.
+enunciado.de: Mit int... nimmt die Methode beliebig viele Ganzzahlen an, auch gar keine; drinnen ist golpes ein Array. Gib die Summe aller Treffer zurück. Beispiel: sumaDeGolpes(1, 2, 3) gibt 6 zurück, sumaDeGolpes() 0.
+enunciado.en: With int... the method accepts any number of ints, including none; inside, golpes is an array. Return the sum of all the hits. Example: sumaDeGolpes(1, 2, 3) returns 6 and sumaDeGolpes() returns 0.
+pista.es: Recorre golpes como un array: for (int golpe : golpes) { suma += golpe; }
+pista.de: Geh golpes wie ein Array durch: for (int golpe : golpes) { suma += golpe; }
+pista.en: Walk through golpes like an array: for (int golpe : golpes) { suma += golpe; }
+firma: static int sumaDeGolpes(int... golpes)
+plantilla:
+    return 0;
+solucion:
+    int suma = 0;
+    for (int golpe : golpes) {
+        suma += golpe;
+    }
+    return suma;
+casos:
+    sumaDeGolpes(1, 2, 3) => 6
+    sumaDeGolpes(5) => 5
+    sumaDeGolpes() => 0
+    sumaDeGolpes(10, -4) => 6
+    sumaDeGolpes(1, 1, 1, 1, 1, 1, 1) => 7
+
+=== t06_redondear
+tema: 06
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Redondear a unos decimales
+titulo.de: Auf Nachkommastellen runden
+titulo.en: Round to some decimals
+enunciado.es: Devuelve valor redondeado a tantos decimales como diga decimales (0 o más). Ejemplo: redondear(3.14159, 2) devuelve 3.14 y redondear(2.5, 0), 3.0.
+enunciado.de: Gib valor auf so viele Nachkommastellen gerundet zurück, wie decimales angibt (0 oder mehr). Beispiel: redondear(3.14159, 2) gibt 3.14 zurück, redondear(2.5, 0) 3.0.
+enunciado.en: Return valor rounded to as many decimal places as decimales says (0 or more). Example: redondear(3.14159, 2) returns 3.14 and redondear(2.5, 0) returns 3.0.
+pista.es: Math.round redondea al entero más cercano. Corre la coma: multiplica por Math.pow(10, decimales), redondea y vuelve a dividir por lo mismo.
+pista.de: Math.round rundet auf die nächste ganze Zahl. Verschieb das Komma: mal Math.pow(10, decimales), runden und wieder durch dasselbe teilen.
+pista.en: Math.round rounds to the nearest whole number. Shift the decimal point: multiply by Math.pow(10, decimales), round, then divide by the same again.
+firma: static double redondear(double valor, int decimales)
+plantilla:
+    return valor;
+solucion:
+    double factor = Math.pow(10, decimales);
+    return Math.round(valor * factor) / factor;
+casos:
+    redondear(3.14159, 2) => 3.14
+    redondear(2.5, 0) => 3.0
+    redondear(12.3456, 3) => 12.346
+    redondear(7.0, 2) => 7.0
+    redondear(0.0, 1) => 0.0
+
+=== t06_numero_capicua
+tema: 06
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Números de serie capicúa
+titulo.de: Palindrom-Seriennummern
+titulo.en: Palindrome serial numbers
+enunciado.es: Escribe la clase Cifras con dos métodos: invertir(n), que da la vuelta a las cifras de n (n >= 0), y esCapicua(n), que devuelve true si n se lee igual al revés. esCapicua tiene que usar invertir. Ejemplo: Cifras.invertir(123) devuelve 321 y Cifras.esCapicua(121), true.
+enunciado.de: Schreib die Klasse Cifras mit zwei Methoden: invertir(n), das die Ziffern von n umdreht (n >= 0), und esCapicua(n), das true zurückgibt, wenn n rückwärts gleich gelesen wird. esCapicua muss invertir benutzen. Beispiel: Cifras.invertir(123) gibt 321 zurück, Cifras.esCapicua(121) true.
+enunciado.en: Write the class Cifras with two methods: invertir(n), which reverses the digits of n (n >= 0), and esCapicua(n), which returns true if n reads the same backwards. esCapicua must use invertir. Example: Cifras.invertir(123) returns 321 and Cifras.esCapicua(121) returns true.
+pista.es: Dividir el problema en métodos pequeños lo hace fácil: si ya tienes invertir, esCapicua es una sola línea: return invertir(n) == n;
+pista.de: Teilt man das Problem in kleine Methoden, wird es leicht: Hast du invertir schon, ist esCapicua nur eine Zeile: return invertir(n) == n;
+pista.en: Splitting the problem into small methods makes it easy: once you have invertir, esCapicua is a single line: return invertir(n) == n;
+plantilla:
+    public class Cifras {
+
+        public static int invertir(int n) {
+            return 0;
+        }
+
+        public static boolean esCapicua(int n) {
+            return false;
+        }
+    }
+solucion:
+    public class Cifras {
+
+        public static int invertir(int n) {
+            int resultado = 0;
+            while (n > 0) {
+                resultado = resultado * 10 + n % 10;
+                n /= 10;
+            }
+            return resultado;
+        }
+
+        public static boolean esCapicua(int n) {
+            return invertir(n) == n;
+        }
+    }
+casos:
+    Cifras.invertir(123) => 321
+    Cifras.invertir(0) => 0
+    Cifras.invertir(4500) => 54
+    Cifras.esCapicua(121) => true
+    Cifras.esCapicua(123) => false
+    Cifras.esCapicua(7) => true
+    Cifras.esCapicua(10) => false
+    Cifras.esCapicua(0) => true
+
+=== t06_calculadora_de_combate
+tema: 06
+dificultad: 5
+java: 8
+tipo: clase
+titulo.es: La calculadora de combate
+titulo.de: Der Kampfrechner
+titulo.en: The combat calculator
+enunciado.es: Escribe la clase Combate con tres métodos static: danioBase(nivel) da 5 + 3 · nivel; multiplicador(arma) da 1.5 para "laser", 2.0 para "misil" y 1.0 para cualquier otra; y danioTotal(nivel, arma, armadura) multiplica los dos anteriores, lo redondea con Math.round, le resta la armadura y nunca baja de 0. Ejemplo: Combate.danioTotal(1, "laser", 2) devuelve 10.
+enunciado.de: Schreib die Klasse Combate mit drei static-Methoden: danioBase(nivel) liefert 5 + 3 · nivel; multiplicador(arma) liefert 1.5 für "laser", 2.0 für "misil" und 1.0 für alles andere; und danioTotal(nivel, arma, armadura) multipliziert die beiden, rundet mit Math.round, zieht die Panzerung ab und fällt nie unter 0. Beispiel: Combate.danioTotal(1, "laser", 2) gibt 10 zurück.
+enunciado.en: Write the class Combate with three static methods: danioBase(nivel) gives 5 + 3 · nivel; multiplicador(arma) gives 1.5 for "laser", 2.0 for "misil" and 1.0 for anything else; and danioTotal(nivel, arma, armadura) multiplies those two, rounds with Math.round, subtracts the armor and never drops below 0. Example: Combate.danioTotal(1, "laser", 2) returns 10.
+pista.es: Escribe y prueba primero los dos métodos pequeños. Math.round de un double da un long: haz (int) Math.round(...). Para el suelo de 0, Math.max(0, ...).
+pista.de: Schreib und teste zuerst die beiden kleinen Methoden. Math.round auf einem double liefert einen long: also (int) Math.round(...). Für die Untergrenze 0: Math.max(0, ...).
+pista.en: Write and test the two small methods first. Math.round on a double gives a long: so (int) Math.round(...). For the floor of 0, Math.max(0, ...).
+plantilla:
+    public class Combate {
+
+        public static int danioBase(int nivel) {
+            return 0;
+        }
+
+        public static double multiplicador(String arma) {
+            return 1.0;
+        }
+
+        public static int danioTotal(int nivel, String arma, int armadura) {
+            return 0;
+        }
+    }
+solucion:
+    public class Combate {
+
+        public static int danioBase(int nivel) {
+            return 5 + 3 * nivel;
+        }
+
+        public static double multiplicador(String arma) {
+            if (arma.equals("laser")) {
+                return 1.5;
+            }
+            if (arma.equals("misil")) {
+                return 2.0;
+            }
+            return 1.0;
+        }
+
+        public static int danioTotal(int nivel, String arma, int armadura) {
+            int bruto = (int) Math.round(danioBase(nivel) * multiplicador(arma));
+            return Math.max(0, bruto - armadura);
+        }
+    }
+casos:
+    Combate.danioBase(1) => 8
+    Combate.danioBase(0) => 5
+    Combate.multiplicador("laser") => 1.5
+    Combate.multiplicador("misil") => 2.0
+    Combate.multiplicador("bala") => 1.0
+    Combate.danioTotal(1, "laser", 2) => 10
+    Combate.danioTotal(5, "misil", 10) => 30
+    Combate.danioTotal(2, "laser", 0) => 17
+    Combate.danioTotal(0, "bala", 9) => 0

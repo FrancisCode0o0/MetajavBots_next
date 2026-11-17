@@ -1,0 +1,376 @@
+# Tema 05: bucles (while, do-while y for).
+=== t05_cuenta_atras
+tema: 05
+dificultad: 1
+java: 8
+tipo: salida
+titulo.es: Cuenta atrás para el combate
+titulo.de: Countdown zum Kampf
+titulo.en: Countdown to the fight
+enunciado.es: Imprime los números de n a 1, cada uno en su línea, y al final GO!. Ejemplo: cuentaAtras(3) imprime 3, 2, 1 y GO!. Con n = 0, solo GO!.
+enunciado.de: Gib die Zahlen von n bis 1 aus, jede in einer eigenen Zeile, und zum Schluss GO!. Beispiel: cuentaAtras(3) gibt 3, 2, 1 und GO! aus. Bei n = 0 nur GO!.
+enunciado.en: Print the numbers from n down to 1, each on its own line, and then GO!. Example: cuentaAtras(3) prints 3, 2, 1 and GO!. With n = 0, just GO!.
+pista.es: Un for que baja: for (int i = n; i >= 1; i--) { ... }. El GO! va después del bucle, no dentro.
+pista.de: Eine for-Schleife, die abwärts zählt: for (int i = n; i >= 1; i--) { ... }. Das GO! kommt nach der Schleife, nicht hinein.
+pista.en: A for loop that counts down: for (int i = n; i >= 1; i--) { ... }. The GO! goes after the loop, not inside it.
+firma: static void cuentaAtras(int n)
+plantilla:
+    System.out.println("GO!");
+solucion:
+    for (int i = n; i >= 1; i--) {
+        System.out.println(i);
+    }
+    System.out.println("GO!");
+casos:
+    cuentaAtras(3); => "3\n2\n1\nGO!\n"
+    cuentaAtras(1); => "1\nGO!\n"
+    cuentaAtras(5); => "5\n4\n3\n2\n1\nGO!\n"
+    cuentaAtras(0); => "GO!\n"
+
+=== t05_sumar_hasta
+tema: 05
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Sumar todas las piezas
+titulo.de: Alle Teile zusammenzählen
+titulo.en: Add up all the parts
+enunciado.es: En el estante 1 hay 1 pieza, en el 2 hay 2… y en el n hay n. Devuelve cuántas piezas hay en total, 1 + 2 + … + n (0 si n es 0 o negativo). Ejemplo: sumarHasta(4) devuelve 10.
+enunciado.de: Im Regal 1 liegt 1 Teil, im Regal 2 liegen 2 … und im Regal n liegen n. Gib zurück, wie viele Teile es insgesamt sind, 1 + 2 + … + n (0, wenn n 0 oder negativ ist). Beispiel: sumarHasta(4) gibt 10 zurück.
+enunciado.en: Shelf 1 has 1 part, shelf 2 has 2… and shelf n has n. Return how many parts there are in total, 1 + 2 + … + n (0 if n is 0 or negative). Example: sumarHasta(4) returns 10.
+pista.es: Empieza con int suma = 0; y un for de 1 a n que haga suma += i;
+pista.de: Fang mit int suma = 0; an und nimm eine for-Schleife von 1 bis n mit suma += i;
+pista.en: Start with int suma = 0; and a for loop from 1 to n that does suma += i;
+firma: static int sumarHasta(int n)
+plantilla:
+    return n;
+solucion:
+    int suma = 0;
+    for (int i = 1; i <= n; i++) {
+        suma += i;
+    }
+    return suma;
+casos:
+    sumarHasta(4) => 10
+    sumarHasta(1) => 1
+    sumarHasta(10) => 55
+    sumarHasta(0) => 0
+    sumarHasta(-4) => 0
+
+=== t05_tabla_de_danio
+tema: 05
+dificultad: 2
+java: 8
+tipo: salida
+titulo.es: Tabla de daño acumulado
+titulo.de: Tabelle des Gesamtschadens
+titulo.en: Running damage table
+enunciado.es: Cada golpe hace danio. Imprime una línea por golpe con su número, dos puntos, un espacio y el daño acumulado hasta ese golpe. Ejemplo: tablaDeDanio(5, 3) imprime 1: 5, 2: 10 y 3: 15.
+enunciado.de: Jeder Treffer macht danio Schaden. Gib pro Treffer eine Zeile aus: seine Nummer, Doppelpunkt, Leerzeichen und den bis dahin angesammelten Schaden. Beispiel: tablaDeDanio(5, 3) gibt 1: 5, 2: 10 und 3: 15 aus.
+enunciado.en: Each hit does danio damage. Print one line per hit: its number, a colon, a space and the damage added up so far. Example: tablaDeDanio(5, 3) prints 1: 5, 2: 10 and 3: 15.
+pista.es: for (int golpe = 1; golpe <= golpes; golpe++) e imprime golpe + ": " + golpe * danio.
+pista.de: for (int golpe = 1; golpe <= golpes; golpe++) und gib golpe + ": " + golpe * danio aus.
+pista.en: for (int golpe = 1; golpe <= golpes; golpe++) and print golpe + ": " + golpe * danio.
+firma: static void tablaDeDanio(int danio, int golpes)
+plantilla:
+    System.out.println("1: " + danio);
+solucion:
+    for (int golpe = 1; golpe <= golpes; golpe++) {
+        System.out.println(golpe + ": " + golpe * danio);
+    }
+casos:
+    tablaDeDanio(5, 3); => "1: 5\n2: 10\n3: 15\n"
+    tablaDeDanio(7, 1); => "1: 7\n"
+    tablaDeDanio(0, 2); => "1: 0\n2: 0\n"
+    tablaDeDanio(4, 0); => ""
+
+=== t05_factorial
+tema: 05
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: ¿De cuántas formas se montan?
+titulo.de: Auf wie viele Arten lässt es sich bauen?
+titulo.en: How many ways to assemble it?
+enunciado.es: n piezas distintas se pueden montar en n! órdenes: n! = 1 · 2 · … · n, y 0! vale 1. Devuelve n! como long. Ejemplo: factorial(5) devuelve 120.
+enunciado.de: n verschiedene Teile lassen sich in n! Reihenfolgen einbauen: n! = 1 · 2 · … · n, und 0! ist 1. Gib n! als long zurück. Beispiel: factorial(5) gibt 120 zurück.
+enunciado.en: n different parts can be fitted in n! orders: n! = 1 · 2 · … · n, and 0! is 1. Return n! as a long. Example: factorial(5) returns 120.
+pista.es: Como sumar, pero multiplicando: empieza en long resultado = 1; y haz resultado *= i; para i de 2 a n.
+pista.de: Wie beim Addieren, nur mit Malnehmen: fang mit long resultado = 1; an und rechne resultado *= i; für i von 2 bis n.
+pista.en: Like adding up, but multiplying: start with long resultado = 1; and do resultado *= i; for i from 2 to n.
+firma: static long factorial(int n)
+plantilla:
+    return 1;
+solucion:
+    long resultado = 1;
+    for (int i = 2; i <= n; i++) {
+        resultado *= i;
+    }
+    return resultado;
+casos:
+    factorial(5) => 120L
+    factorial(0) => 1L
+    factorial(1) => 1L
+    factorial(10) => 3628800L
+    factorial(20) => 2432902008176640000L
+
+=== t05_barra_de_vida
+tema: 05
+dificultad: 2
+java: 11
+tipo: salida
+titulo.es: Barra de vida (String.repeat, Java 11)
+titulo.de: Lebensbalken (String.repeat, Java 11)
+titulo.en: Health bar (String.repeat, Java 11)
+enunciado.es: Imprime la barra de vida entre corchetes: tantas # como vida y el resto hasta 10 con -. vida va de 0 a 10. Ejemplo: barraDeVida(3) imprime [###-------]. Java 11 trajo String.repeat, que repite un texto sin escribir el bucle.
+enunciado.de: Gib den Lebensbalken in eckigen Klammern aus: so viele # wie vida und den Rest bis 10 mit -. vida liegt zwischen 0 und 10. Beispiel: barraDeVida(3) gibt [###-------] aus. Java 11 hat String.repeat eingeführt, das einen Text wiederholt, ohne dass du die Schleife schreibst.
+enunciado.en: Print the health bar between square brackets: as many # as vida and the rest up to 10 with -. vida goes from 0 to 10. Example: barraDeVida(3) prints [###-------]. Java 11 introduced String.repeat, which repeats a text without you writing the loop.
+pista.es: "#".repeat(vida) da vida almohadillas y "-".repeat(10 - vida) los guiones. Pégalos con + entre "[" y "]".
+pista.de: "#".repeat(vida) ergibt vida Rautenzeichen und "-".repeat(10 - vida) die Striche. Kleb sie mit + zwischen "[" und "]".
+pista.en: "#".repeat(vida) gives vida hash signs and "-".repeat(10 - vida) the dashes. Glue them with + between "[" and "]".
+firma: static void barraDeVida(int vida)
+plantilla:
+    System.out.println("[" + vida + "]");
+solucion:
+    System.out.println("[" + "#".repeat(vida) + "-".repeat(10 - vida) + "]");
+casos:
+    barraDeVida(3); => "[###-------]\n"
+    barraDeVida(10); => "[##########]\n"
+    barraDeVida(0); => "[----------]\n"
+    barraDeVida(7); => "[#######---]\n"
+
+=== t05_cuantas_cifras
+tema: 05
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: ¿Cuántas cifras tiene? (do-while)
+titulo.de: Wie viele Ziffern hat sie? (do-while)
+titulo.en: How many digits? (do-while)
+enunciado.es: Devuelve cuántas cifras tiene n. El 0 tiene una cifra y el signo no cuenta. Ejemplo: cuantasCifras(12345) devuelve 5 y cuantasCifras(-42), 2.
+enunciado.de: Gib zurück, wie viele Ziffern n hat. Die 0 hat eine Ziffer, und das Vorzeichen zählt nicht. Beispiel: cuantasCifras(12345) gibt 5 zurück, cuantasCifras(-42) 2.
+enunciado.en: Return how many digits n has. 0 has one digit and the sign doesn't count. Example: cuantasCifras(12345) returns 5 and cuantasCifras(-42) returns 2.
+pista.es: Cada / 10 quita una cifra. Un do { ... } while (resto != 0); se ejecuta al menos una vez, justo lo que hace falta para el 0.
+pista.de: Jedes / 10 entfernt eine Ziffer. Ein do { ... } while (resto != 0); läuft mindestens einmal – genau das, was du für die 0 brauchst.
+pista.en: Each / 10 removes a digit. A do { ... } while (resto != 0); runs at least once, which is exactly what 0 needs.
+firma: static int cuantasCifras(int n)
+plantilla:
+    return 0;
+solucion:
+    int cifras = 0;
+    int resto = n;
+    do {
+        cifras++;
+        resto /= 10;
+    } while (resto != 0);
+    return cifras;
+casos:
+    cuantasCifras(12345) => 5
+    cuantasCifras(7) => 1
+    cuantasCifras(0) => 1
+    cuantasCifras(-42) => 2
+    cuantasCifras(1000) => 4
+
+=== t05_es_primo
+tema: 05
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Números de serie primos
+titulo.de: Primzahl-Seriennummern
+titulo.en: Prime serial numbers
+enunciado.es: Los robots de edición limitada tienen un número de serie primo: mayor que 1 y solo divisible entre 1 y él mismo. Devuelve true si n es primo. Ejemplo: esPrimo(17) devuelve true y esPrimo(21), false.
+enunciado.de: Roboter in limitierter Auflage haben eine Primzahl als Seriennummer: größer als 1 und nur durch 1 und sich selbst teilbar. Gib true zurück, wenn n eine Primzahl ist. Beispiel: esPrimo(17) gibt true zurück, esPrimo(21) false.
+enunciado.en: Limited-edition robots have a prime serial number: greater than 1 and only divisible by 1 and itself. Return true if n is prime. Example: esPrimo(17) returns true and esPrimo(21) false.
+pista.es: Descarta antes los menores que 2. Luego prueba divisores desde 2; basta con llegar a i * i <= n. En cuanto uno divida, return false.
+pista.de: Sortier zuerst alles unter 2 aus. Dann probier Teiler ab 2; es reicht bis i * i <= n. Sobald einer teilt: return false.
+pista.en: Rule out anything below 2 first. Then try divisors from 2; going up to i * i <= n is enough. As soon as one divides, return false.
+firma: static boolean esPrimo(int n)
+plantilla:
+    return false;
+solucion:
+    if (n < 2) {
+        return false;
+    }
+    for (int i = 2; i * i <= n; i++) {
+        if (n % i == 0) {
+            return false;
+        }
+    }
+    return true;
+casos:
+    esPrimo(17) => true
+    esPrimo(2) => true
+    esPrimo(97) => true
+    esPrimo(21) => false
+    esPrimo(1) => false
+    esPrimo(0) => false
+    esPrimo(-7) => false
+    esPrimo(49) => false
+
+=== t05_engranajes
+tema: 05
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Dientes de engranaje (máximo común divisor)
+titulo.de: Zahnräder (größter gemeinsamer Teiler)
+titulo.en: Gear teeth (greatest common divisor)
+enunciado.es: Dos engranajes tienen a y b dientes. Devuelve su máximo común divisor, el número más grande que divide a los dos. Ejemplo: mcd(12, 18) devuelve 6. Si uno es 0, el mcd es el otro.
+enunciado.de: Zwei Zahnräder haben a und b Zähne. Gib ihren größten gemeinsamen Teiler zurück, die größte Zahl, die beide teilt. Beispiel: mcd(12, 18) gibt 6 zurück. Ist eine der Zahlen 0, ist der ggT die andere.
+enunciado.en: Two gears have a and b teeth. Return their greatest common divisor, the biggest number that divides both. Example: mcd(12, 18) returns 6. If one of them is 0, the gcd is the other one.
+pista.es: El algoritmo de Euclides: mientras b no sea 0, cambia (a, b) por (b, a % b). Cuando b llega a 0, la respuesta es a.
+pista.de: Der euklidische Algorithmus: Solange b nicht 0 ist, ersetze (a, b) durch (b, a % b). Wenn b bei 0 ankommt, ist a die Antwort.
+pista.en: Euclid's algorithm: while b isn't 0, replace (a, b) with (b, a % b). When b reaches 0, the answer is a.
+firma: static int mcd(int a, int b)
+plantilla:
+    return 1;
+solucion:
+    while (b != 0) {
+        int resto = a % b;
+        a = b;
+        b = resto;
+    }
+    return a;
+casos:
+    mcd(12, 18) => 6
+    mcd(100, 75) => 25
+    mcd(7, 5) => 1
+    mcd(10, 10) => 10
+    mcd(0, 9) => 9
+    mcd(9, 0) => 9
+
+=== t05_invertir_cifras
+tema: 05
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: El código del revés
+titulo.de: Der Code rückwärts
+titulo.en: The code backwards
+enunciado.es: La cerradura del taller se abre con el código al revés. Devuelve n con sus cifras en orden inverso (n es 0 o positivo; los ceros que quedan delante desaparecen). Ejemplo: invertirCifras(1230) devuelve 321.
+enunciado.de: Das Werkstattschloss öffnet sich mit dem Code rückwärts. Gib n mit umgekehrter Ziffernfolge zurück (n ist 0 oder positiv; Nullen, die vorne landen, fallen weg). Beispiel: invertirCifras(1230) gibt 321 zurück.
+enunciado.en: The workshop lock opens with the code reversed. Return n with its digits in reverse order (n is 0 or positive; zeros that end up at the front disappear). Example: invertirCifras(1230) returns 321.
+pista.es: Mientras n > 0: coge la última cifra con n % 10, ponla al final del resultado (resultado * 10 + cifra) y quítasela a n con n / 10.
+pista.de: Solange n > 0: nimm die letzte Ziffer mit n % 10, häng sie ans Ergebnis an (resultado * 10 + cifra) und entferne sie mit n / 10 aus n.
+pista.en: While n > 0: take the last digit with n % 10, append it to the result (resultado * 10 + cifra) and remove it from n with n / 10.
+firma: static int invertirCifras(int n)
+plantilla:
+    return n;
+solucion:
+    int resultado = 0;
+    while (n > 0) {
+        int cifra = n % 10;
+        resultado = resultado * 10 + cifra;
+        n /= 10;
+    }
+    return resultado;
+casos:
+    invertirCifras(1230) => 321
+    invertirCifras(12345) => 54321
+    invertirCifras(100) => 1
+    invertirCifras(7) => 7
+    invertirCifras(0) => 0
+
+=== t05_marco
+tema: 05
+dificultad: 4
+java: 8
+tipo: salida
+titulo.es: El marco de la arena
+titulo.de: Der Rand der Arena
+titulo.en: The arena border
+enunciado.es: Dibuja el borde de una arena rectangular de ancho por alto con #, hueca por dentro (con espacios). Ejemplo: marco(4, 3) imprime ####, luego #  # y luego ####.
+enunciado.de: Zeichne den Rand einer rechteckigen Arena mit Breite ancho und Höhe alto aus #, innen hohl (mit Leerzeichen). Beispiel: marco(4, 3) gibt ####, dann #  # und dann #### aus.
+enunciado.en: Draw the border of a rectangular arena, ancho wide and alto high, with #, hollow inside (filled with spaces). Example: marco(4, 3) prints ####, then #  # and then ####.
+pista.es: Dos bucles anidados: filas y columnas. Una casilla es borde si está en la primera o la última fila, o en la primera o la última columna.
+pista.de: Zwei verschachtelte Schleifen: Zeilen und Spalten. Ein Feld gehört zum Rand, wenn es in der ersten oder letzten Zeile oder in der ersten oder letzten Spalte liegt.
+pista.en: Two nested loops: rows and columns. A cell is on the border if it's in the first or last row, or the first or last column.
+firma: static void marco(int ancho, int alto)
+plantilla:
+    // dos bucles, uno dentro del otro
+solucion:
+    for (int fila = 0; fila < alto; fila++) {
+        for (int columna = 0; columna < ancho; columna++) {
+            boolean borde = fila == 0 || fila == alto - 1 || columna == 0 || columna == ancho - 1;
+            System.out.print(borde ? "#" : " ");
+        }
+        System.out.println();
+    }
+casos:
+    marco(4, 3); => "####\n#  #\n####\n"
+    marco(5, 4); => "#####\n#   #\n#   #\n#####\n"
+    marco(2, 2); => "##\n##\n"
+    marco(3, 1); => "###\n"
+    marco(1, 1); => "#\n"
+    marco(0, 0); => ""
+
+=== t05_a_binario
+tema: 05
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Hablar en binario
+titulo.de: Binär sprechen
+titulo.en: Speaking binary
+enunciado.es: Los robots hablan en binario. Devuelve n (0 o positivo) escrito en base 2, como texto, sin usar Integer.toBinaryString. Ejemplo: aBinario(5) devuelve "101" y aBinario(0), "0".
+enunciado.de: Roboter sprechen binär. Gib n (0 oder positiv) im Zweiersystem als Text zurück, ohne Integer.toBinaryString. Beispiel: aBinario(5) gibt "101" zurück, aBinario(0) "0".
+enunciado.en: Robots speak binary. Return n (0 or positive) written in base 2 as a text, without using Integer.toBinaryString. Example: aBinario(5) returns "101" and aBinario(0) returns "0".
+pista.es: n % 2 es la última cifra binaria y n / 2 quita esa cifra. Ve poniendo cada cifra DELANTE del texto. El 0 es un caso aparte.
+pista.de: n % 2 ist die letzte Binärziffer, und n / 2 entfernt sie. Setz jede Ziffer VOR den bisherigen Text. Die 0 ist ein Sonderfall.
+pista.en: n % 2 is the last binary digit and n / 2 removes it. Put each digit IN FRONT of the text so far. 0 is a special case.
+firma: static String aBinario(int n)
+plantilla:
+    return "";
+solucion:
+    if (n == 0) {
+        return "0";
+    }
+    String binario = "";
+    while (n > 0) {
+        binario = (n % 2) + binario;
+        n /= 2;
+    }
+    return binario;
+casos:
+    aBinario(5) => "101"
+    aBinario(0) => "0"
+    aBinario(1) => "1"
+    aBinario(8) => "1000"
+    aBinario(255) => "11111111"
+    aBinario(1000) => "1111101000"
+
+=== t05_rombo
+tema: 05
+dificultad: 5
+java: 8
+tipo: salida
+titulo.es: El rombo del emblema
+titulo.de: Die Raute im Wappen
+titulo.en: The emblem diamond
+enunciado.es: Dibuja un rombo de asteriscos cuya fila del medio tiene 2·n - 1. Cada fila está centrada con espacios a la izquierda (no a la derecha). Ejemplo: rombo(2) imprime " *", "***" y " *". Con n = 0, nada.
+enunciado.de: Zeichne eine Raute aus Sternchen, deren mittlere Zeile 2·n - 1 hat. Jede Zeile wird mit Leerzeichen links (nicht rechts) zentriert. Beispiel: rombo(2) gibt " *", "***" und " *" aus. Bei n = 0 nichts.
+enunciado.en: Draw a diamond of asterisks whose middle row has 2·n - 1 of them. Each row is centred with spaces on the left (not on the right). Example: rombo(2) prints " *", "***" and " *". With n = 0, nothing.
+pista.es: Recorre las filas con i de -(n - 1) a n - 1. En cada una van Math.abs(i) espacios y 2 * (n - Math.abs(i)) - 1 asteriscos.
+pista.de: Lauf mit i von -(n - 1) bis n - 1 über die Zeilen. In jede Zeile kommen Math.abs(i) Leerzeichen und 2 * (n - Math.abs(i)) - 1 Sternchen.
+pista.en: Loop over the rows with i from -(n - 1) to n - 1. Each row gets Math.abs(i) spaces and 2 * (n - Math.abs(i)) - 1 asterisks.
+firma: static void rombo(int n)
+plantilla:
+    System.out.println("*");
+solucion:
+    for (int i = 1 - n; i < n; i++) {
+        int espacios = Math.abs(i);
+        int asteriscos = 2 * (n - espacios) - 1;
+        for (int k = 0; k < espacios; k++) {
+            System.out.print(" ");
+        }
+        for (int k = 0; k < asteriscos; k++) {
+            System.out.print("*");
+        }
+        System.out.println();
+    }
+casos:
+    rombo(2); => " *\n***\n *\n"
+    rombo(3); => "  *\n ***\n*****\n ***\n  *\n"
+    rombo(1); => "*\n"
+    rombo(0); => ""

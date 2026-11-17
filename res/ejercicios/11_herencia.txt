@@ -1,0 +1,829 @@
+# Tema 11 — Herencia: extends, super y @Override (docs/FORMATOS.md, sección «Ejercicios»).
+
+=== t11_robot_volador
+tema: 11
+dificultad: 1
+java: 8
+tipo: clase
+titulo.es: Un robot que vuela
+titulo.de: Ein Roboter, der fliegt
+titulo.en: A robot that flies
+enunciado.es: La clase Robot ya está hecha: Robot(String nombre), String getNombre() y String moverse(), que da "<nombre> camina". Completa RobotVolador extends Robot, con el constructor RobotVolador(String nombre), para que moverse() dé "<nombre> vuela". Usa @Override.
+enunciado.de: Die Klasse Robot ist fertig: Robot(String nombre), String getNombre() und String moverse(), das "<nombre> camina" liefert. Vervollständige RobotVolador extends Robot mit dem Konstruktor RobotVolador(String nombre), sodass moverse() "<nombre> vuela" liefert. Benutze @Override.
+enunciado.en: The class Robot is done: Robot(String nombre), String getNombre() and String moverse(), which gives "<nombre> camina". Complete RobotVolador extends Robot, with the constructor RobotVolador(String nombre), so that moverse() gives "<nombre> vuela". Use @Override.
+pista.es: @Override public String moverse() { return getNombre() + " vuela"; } — el campo nombre es privado de Robot, pero el getter se hereda.
+pista.de: @Override public String moverse() { return getNombre() + " vuela"; } — das Feld nombre ist privat in Robot, aber der Getter wird vererbt.
+pista.en: @Override public String moverse() { return getNombre() + " vuela"; } — the nombre field is private to Robot, but the getter is inherited.
+plantilla:
+    class Robot {
+        private final String nombre;
+
+        Robot(String nombre) {
+            this.nombre = nombre;
+        }
+
+        String getNombre() {
+            return nombre;
+        }
+
+        String moverse() {
+            return nombre + " camina";
+        }
+    }
+
+    public class RobotVolador extends Robot {
+        public RobotVolador(String nombre) {
+            super(nombre);
+        }
+
+        // sobrescribe moverse()
+    }
+solucion:
+    class Robot {
+        private final String nombre;
+
+        Robot(String nombre) {
+            this.nombre = nombre;
+        }
+
+        String getNombre() {
+            return nombre;
+        }
+
+        String moverse() {
+            return nombre + " camina";
+        }
+    }
+
+    public class RobotVolador extends Robot {
+        public RobotVolador(String nombre) {
+            super(nombre);
+        }
+
+        @Override
+        String moverse() {
+            return getNombre() + " vuela";
+        }
+    }
+casos:
+    new Robot("Rex").moverse() => "Rex camina"
+    new RobotVolador("Zap").moverse() => "Zap vuela"
+    ((Robot) new RobotVolador("Zap")).moverse() => "Zap vuela"
+    new RobotVolador("Zap").getNombre() => "Zap"
+    new RobotVolador("Zap") instanceof Robot => true
+
+=== t11_arma_super
+tema: 11
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Un arma es una pieza (super)
+titulo.de: Eine Waffe ist ein Bauteil (super)
+titulo.en: A weapon is a part (super)
+enunciado.es: La clase Pieza ya está: Pieza(String nombre, int peso), getNombre(), getPeso() y toString() con "<nombre> (<peso> kg)". Escribe Arma extends Pieza con Arma(String nombre, int peso, int dano), int getDano() y un toString() que añada " dano <dano>" al de Pieza: "laser (6 kg) dano 5".
+enunciado.de: Die Klasse Pieza gibt es schon: Pieza(String nombre, int peso), getNombre(), getPeso() und toString() mit "<nombre> (<peso> kg)". Schreibe Arma extends Pieza mit Arma(String nombre, int peso, int dano), int getDano() und einem toString(), das " dano <dano>" an das von Pieza anhängt: "laser (6 kg) dano 5".
+enunciado.en: The class Pieza is ready: Pieza(String nombre, int peso), getNombre(), getPeso() and toString() with "<nombre> (<peso> kg)". Write Arma extends Pieza with Arma(String nombre, int peso, int dano), int getDano() and a toString() that adds " dano <dano>" to Pieza's: "laser (6 kg) dano 5".
+pista.es: super(nombre, peso); llama al constructor de Pieza (primera línea), y super.toString() a su toString.
+pista.de: super(nombre, peso); ruft den Konstruktor von Pieza auf (erste Zeile), und super.toString() dessen toString.
+pista.en: super(nombre, peso); calls Pieza's constructor (first line), and super.toString() calls its toString.
+plantilla:
+    class Pieza {
+        private final String nombre;
+        private final int peso;
+
+        Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+        }
+
+        String getNombre() {
+            return nombre;
+        }
+
+        int getPeso() {
+            return peso;
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + peso + " kg)";
+        }
+    }
+
+    public class Arma extends Pieza {
+        // constructor, getDano() y toString()
+    }
+solucion:
+    class Pieza {
+        private final String nombre;
+        private final int peso;
+
+        Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+        }
+
+        String getNombre() {
+            return nombre;
+        }
+
+        int getPeso() {
+            return peso;
+        }
+
+        @Override
+        public String toString() {
+            return nombre + " (" + peso + " kg)";
+        }
+    }
+
+    public class Arma extends Pieza {
+        private final int dano;
+
+        public Arma(String nombre, int peso, int dano) {
+            super(nombre, peso);
+            this.dano = dano;
+        }
+
+        public int getDano() {
+            return dano;
+        }
+
+        @Override
+        public String toString() {
+            return super.toString() + " dano " + dano;
+        }
+    }
+casos:
+    new Arma("laser", 6, 5).toString() => "laser (6 kg) dano 5"
+    new Arma("misil", 9, 12).getPeso() => 9
+    new Arma("misil", 9, 12).getDano() => 12
+    new Arma("misil", 9, 12).getNombre() => "misil"
+    new Pieza("tuerca", 1).toString() => "tuerca (1 kg)"
+    ((Pieza) new Arma("hacha", 4, 3)).toString() => "hacha (4 kg) dano 3"
+
+=== t11_escudo_reforzado
+tema: 11
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: El escudo reforzado
+titulo.de: Der verstärkte Schild
+titulo.en: The reinforced shield
+enunciado.es: Un Escudo deja pasar la mitad del daño: int danoQuePasa(int dano) da dano / 2. Escribe EscudoReforzado extends Escudo, que deja pasar lo mismo que un escudo normal menos 2, pero nunca menos de 0. Reutiliza el cálculo del padre con super.
+enunciado.de: Ein Escudo lässt den halben Schaden durch: int danoQuePasa(int dano) liefert dano / 2. Schreibe EscudoReforzado extends Escudo, der so viel durchlässt wie ein normaler Schild minus 2, aber nie weniger als 0. Benutze die Rechnung der Elternklasse mit super.
+enunciado.en: An Escudo lets half the damage through: int danoQuePasa(int dano) gives dano / 2. Write EscudoReforzado extends Escudo, which lets through what a normal shield does minus 2, but never less than 0. Reuse the parent's calculation with super.
+pista.es: return Math.max(0, super.danoQuePasa(dano) - 2);
+pista.de: return Math.max(0, super.danoQuePasa(dano) - 2);
+pista.en: return Math.max(0, super.danoQuePasa(dano) - 2);
+plantilla:
+    class Escudo {
+        int danoQuePasa(int dano) {
+            return dano / 2;
+        }
+    }
+
+    public class EscudoReforzado extends Escudo {
+        // sobrescribe danoQuePasa
+    }
+solucion:
+    class Escudo {
+        int danoQuePasa(int dano) {
+            return dano / 2;
+        }
+    }
+
+    public class EscudoReforzado extends Escudo {
+        @Override
+        int danoQuePasa(int dano) {
+            return Math.max(0, super.danoQuePasa(dano) - 2);
+        }
+    }
+casos:
+    new Escudo().danoQuePasa(10) => 5
+    new EscudoReforzado().danoQuePasa(10) => 3
+    new EscudoReforzado().danoQuePasa(3) => 0
+    new EscudoReforzado().danoQuePasa(0) => 0
+    ((Escudo) new EscudoReforzado()).danoQuePasa(20) => 8
+
+=== t11_chasis_ligero
+tema: 11
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Chasis ligero y pesado (super con argumentos)
+titulo.de: Leichtes und schweres Fahrgestell (super mit Argumenten)
+titulo.en: Light and heavy chassis (super with arguments)
+enunciado.es: Chasis(int blindaje) no tiene constructor sin parámetros, así que sus hijas tienen que llamar a super(...). Escribe ChasisLigero() (blindaje 2) y ChasisPesado() (blindaje 10), las dos extends Chasis, y sobrescribe String tipo() para que den "ligero" y "pesado". La velocidad, 12 - blindaje, la heredan sin tocarla.
+enunciado.de: Chasis(int blindaje) hat keinen parameterlosen Konstruktor, also müssen die Unterklassen super(...) aufrufen. Schreibe ChasisLigero() (Panzerung 2) und ChasisPesado() (Panzerung 10), beide extends Chasis, und überschreibe String tipo(), sodass sie "ligero" und "pesado" liefern. Das Tempo, 12 - blindaje, erben sie unverändert.
+enunciado.en: Chasis(int blindaje) has no constructor without parameters, so its subclasses must call super(...). Write ChasisLigero() (armour 2) and ChasisPesado() (armour 10), both extends Chasis, and override String tipo() so they give "ligero" and "pesado". The speed, 12 - blindaje, is inherited untouched.
+pista.es: ChasisLigero() { super(2); } — si no escribes el constructor, Java busca un Chasis() que no existe y no compila.
+pista.de: ChasisLigero() { super(2); } — schreibst du keinen Konstruktor, sucht Java ein Chasis(), das es nicht gibt, und es kompiliert nicht.
+pista.en: ChasisLigero() { super(2); } — if you don't write the constructor, Java looks for a Chasis() that doesn't exist and it won't compile.
+plantilla:
+    public class Chasis {
+        private final int blindaje;
+
+        public Chasis(int blindaje) {
+            this.blindaje = blindaje;
+        }
+
+        public int getBlindaje() {
+            return blindaje;
+        }
+
+        public int velocidad() {
+            return 12 - blindaje;
+        }
+
+        public String tipo() {
+            return "normal";
+        }
+    }
+
+    class ChasisLigero extends Chasis {
+        // un constructor sin parámetros y tipo()
+    }
+
+    // y ChasisPesado
+solucion:
+    public class Chasis {
+        private final int blindaje;
+
+        public Chasis(int blindaje) {
+            this.blindaje = blindaje;
+        }
+
+        public int getBlindaje() {
+            return blindaje;
+        }
+
+        public int velocidad() {
+            return 12 - blindaje;
+        }
+
+        public String tipo() {
+            return "normal";
+        }
+    }
+
+    class ChasisLigero extends Chasis {
+        ChasisLigero() {
+            super(2);
+        }
+
+        @Override
+        public String tipo() {
+            return "ligero";
+        }
+    }
+
+    class ChasisPesado extends Chasis {
+        ChasisPesado() {
+            super(10);
+        }
+
+        @Override
+        public String tipo() {
+            return "pesado";
+        }
+    }
+casos:
+    new ChasisLigero().getBlindaje() => 2
+    new ChasisLigero().velocidad() => 10
+    new ChasisPesado().velocidad() => 2
+    new ChasisPesado().tipo() => "pesado"
+    new ChasisLigero().tipo() => "ligero"
+    new Chasis(5).tipo() => "normal"
+    new ChasisLigero() instanceof Chasis => true
+
+=== t11_linaje
+tema: 11
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Tres generaciones de máquinas
+titulo.de: Drei Generationen von Maschinen
+titulo.en: Three generations of machines
+enunciado.es: Escribe Maquina(String nombre), Robot(String nombre, int vida) extends Maquina y Tanque(String nombre, int vida, int canon) extends Robot. String ficha() da "Bum" en una Maquina, "Bum, vida 80" en un Robot y "Bum, vida 80, canon 12" en un Tanque; String linaje() da "Maquina", "Maquina > Robot" y "Maquina > Robot > Tanque". Cada clase añade lo suyo a lo del padre con super.
+enunciado.de: Schreibe Maquina(String nombre), Robot(String nombre, int vida) extends Maquina und Tanque(String nombre, int vida, int canon) extends Robot. String ficha() liefert "Bum" bei einer Maquina, "Bum, vida 80" bei einem Robot und "Bum, vida 80, canon 12" bei einem Tanque; String linaje() liefert "Maquina", "Maquina > Robot" und "Maquina > Robot > Tanque". Jede Klasse hängt ihren Teil mit super an den der Elternklasse.
+enunciado.en: Write Maquina(String nombre), Robot(String nombre, int vida) extends Maquina and Tanque(String nombre, int vida, int canon) extends Robot. String ficha() gives "Bum" for a Maquina, "Bum, vida 80" for a Robot and "Bum, vida 80, canon 12" for a Tanque; String linaje() gives "Maquina", "Maquina > Robot" and "Maquina > Robot > Tanque". Each class adds its part to the parent's with super.
+pista.es: En Tanque: return super.ficha() + ", canon " + canon; — super.ficha() es la de Robot, que a su vez llama a la de Maquina.
+pista.de: In Tanque: return super.ficha() + ", canon " + canon; — super.ficha() ist die von Robot, die wiederum die von Maquina aufruft.
+pista.en: In Tanque: return super.ficha() + ", canon " + canon; — super.ficha() is Robot's, which in turn calls Maquina's.
+plantilla:
+    class Maquina {
+        // nombre, constructor, ficha() y linaje()
+    }
+
+    class Robot extends Maquina {
+    }
+
+    public class Tanque extends Robot {
+    }
+solucion:
+    class Maquina {
+        private final String nombre;
+
+        Maquina(String nombre) {
+            this.nombre = nombre;
+        }
+
+        String ficha() {
+            return nombre;
+        }
+
+        String linaje() {
+            return "Maquina";
+        }
+    }
+
+    class Robot extends Maquina {
+        private final int vida;
+
+        Robot(String nombre, int vida) {
+            super(nombre);
+            this.vida = vida;
+        }
+
+        @Override
+        String ficha() {
+            return super.ficha() + ", vida " + vida;
+        }
+
+        @Override
+        String linaje() {
+            return super.linaje() + " > Robot";
+        }
+    }
+
+    public class Tanque extends Robot {
+        private final int canon;
+
+        public Tanque(String nombre, int vida, int canon) {
+            super(nombre, vida);
+            this.canon = canon;
+        }
+
+        @Override
+        String ficha() {
+            return super.ficha() + ", canon " + canon;
+        }
+
+        @Override
+        String linaje() {
+            return super.linaje() + " > Tanque";
+        }
+    }
+casos:
+    new Maquina("M1").ficha() => "M1"
+    new Robot("Rex", 30).ficha() => "Rex, vida 30"
+    new Tanque("Bum", 80, 12).ficha() => "Bum, vida 80, canon 12"
+    new Maquina("M1").linaje() => "Maquina"
+    new Robot("Rex", 30).linaje() => "Maquina > Robot"
+    ((Maquina) new Tanque("Bum", 1, 1)).linaje() => "Maquina > Robot > Tanque"
+
+=== t11_bateria_solar
+tema: 11
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: La batería solar (protected y retorno covariante)
+titulo.de: Die Solarbatterie (protected und kovarianter Rückgabetyp)
+titulo.en: The solar battery (protected and covariant return)
+enunciado.es: Bateria(int capacidad) tiene el campo protected int carga (empieza en 0), int getCarga() y Bateria cargar(int puntos), que suma sin pasar de la capacidad y devuelve this. Escribe BateriaSolar extends Bateria con BateriaSolar(int capacidad), BateriaSolar alSol(int horas) (5 puntos por hora, sin pasar de la capacidad), boolean llena(), y sobrescribe cargar para que devuelva BateriaSolar y así se pueda encadenar new BateriaSolar(20).cargar(3).alSol(1).
+enunciado.de: Bateria(int capacidad) hat das Feld protected int carga (beginnt bei 0), int getCarga() und Bateria cargar(int puntos), das bis höchstens zur Kapazität addiert und this zurückgibt. Schreibe BateriaSolar extends Bateria mit BateriaSolar(int capacidad), BateriaSolar alSol(int horas) (5 Punkte pro Stunde, höchstens bis zur Kapazität), boolean llena(), und überschreibe cargar so, dass es BateriaSolar zurückgibt; dann kann man new BateriaSolar(20).cargar(3).alSol(1) verketten.
+enunciado.en: Bateria(int capacidad) has the field protected int carga (starts at 0), int getCarga() and Bateria cargar(int puntos), which adds without going over the capacity and returns this. Write BateriaSolar extends Bateria with BateriaSolar(int capacidad), BateriaSolar alSol(int horas) (5 points per hour, without going over the capacity), boolean llena(), and override cargar so it returns BateriaSolar, so you can chain new BateriaSolar(20).cargar(3).alSol(1).
+pista.es: Una subclase puede leer y cambiar un campo protected del padre. Al sobrescribir, el tipo devuelto puede ser más concreto: @Override BateriaSolar cargar(int puntos) { super.cargar(puntos); return this; }
+pista.de: Eine Unterklasse darf ein protected-Feld der Elternklasse lesen und ändern. Beim Überschreiben darf der Rückgabetyp spezieller sein: @Override BateriaSolar cargar(int puntos) { super.cargar(puntos); return this; }
+pista.en: A subclass may read and change a protected field of its parent. When overriding, the return type may be more specific: @Override BateriaSolar cargar(int puntos) { super.cargar(puntos); return this; }
+plantilla:
+    class Bateria {
+        protected final int capacidad;
+        protected int carga;
+
+        Bateria(int capacidad) {
+            this.capacidad = capacidad;
+        }
+
+        int getCarga() {
+            return carga;
+        }
+
+        Bateria cargar(int puntos) {
+            carga = Math.min(capacidad, carga + puntos);
+            return this;
+        }
+    }
+
+    public class BateriaSolar extends Bateria {
+        // constructor, alSol, llena y cargar
+    }
+solucion:
+    class Bateria {
+        protected final int capacidad;
+        protected int carga;
+
+        Bateria(int capacidad) {
+            this.capacidad = capacidad;
+        }
+
+        int getCarga() {
+            return carga;
+        }
+
+        Bateria cargar(int puntos) {
+            carga = Math.min(capacidad, carga + puntos);
+            return this;
+        }
+    }
+
+    public class BateriaSolar extends Bateria {
+        private static final int PUNTOS_POR_HORA = 5;
+
+        public BateriaSolar(int capacidad) {
+            super(capacidad);
+        }
+
+        public BateriaSolar alSol(int horas) {
+            carga = Math.min(capacidad, carga + horas * PUNTOS_POR_HORA);
+            return this;
+        }
+
+        public boolean llena() {
+            return carga == capacidad;
+        }
+
+        @Override
+        public BateriaSolar cargar(int puntos) {
+            super.cargar(puntos);
+            return this;
+        }
+    }
+casos:
+    new Bateria(10).cargar(4).getCarga() => 4
+    new Bateria(10).cargar(40).getCarga() => 10
+    new BateriaSolar(20).alSol(2).getCarga() => 10
+    new BateriaSolar(20).alSol(10).getCarga() => 20
+    new BateriaSolar(20).cargar(3).alSol(1).getCarga() => 8
+    new BateriaSolar(20).alSol(4).llena() => true
+    new BateriaSolar(30).alSol(0).llena() => false
+
+=== t11_arma_perforante
+tema: 11
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Armas que perforan y armas de área
+titulo.de: Durchschlagende Waffen und Flächenwaffen
+titulo.en: Piercing weapons and area weapons
+enunciado.es: Escribe Arma(String nombre, int dano) con int danoContra(int blindaje), que da dano - blindaje (nunca menos de 0). Después, dos hijas que lo sobrescriben: ArmaPerforante(String nombre, int dano) ignora la mitad del blindaje (dano - blindaje / 2, sin bajar de 0), y ArmaDeArea(String nombre, int dano, int objetivos) hace el daño de un Arma normal multiplicado por objetivos.
+enunciado.de: Schreibe Arma(String nombre, int dano) mit int danoContra(int blindaje), das dano - blindaje liefert (nie weniger als 0). Dann zwei Unterklassen, die es überschreiben: ArmaPerforante(String nombre, int dano) ignoriert die Hälfte der Panzerung (dano - blindaje / 2, nicht unter 0), und ArmaDeArea(String nombre, int dano, int objetivos) macht den Schaden einer normalen Arma mal objetivos.
+enunciado.en: Write Arma(String nombre, int dano) with int danoContra(int blindaje), which gives dano - blindaje (never below 0). Then two subclasses that override it: ArmaPerforante(String nombre, int dano) ignores half the armour (dano - blindaje / 2, not below 0), and ArmaDeArea(String nombre, int dano, int objetivos) does a normal Arma's damage times objetivos.
+pista.es: ArmaDeArea: return super.danoContra(blindaje) * objetivos; ArmaPerforante necesita el daño: dale a Arma un getter int getDano().
+pista.de: ArmaDeArea: return super.danoContra(blindaje) * objetivos; ArmaPerforante braucht den Schaden: Gib Arma einen Getter int getDano().
+pista.en: ArmaDeArea: return super.danoContra(blindaje) * objetivos; ArmaPerforante needs the damage: give Arma a getter int getDano().
+plantilla:
+    public class Arma {
+        // nombre, dano, constructor y danoContra
+    }
+
+    // ArmaPerforante y ArmaDeArea
+solucion:
+    public class Arma {
+        private final String nombre;
+        private final int dano;
+
+        public Arma(String nombre, int dano) {
+            this.nombre = nombre;
+            this.dano = dano;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public int getDano() {
+            return dano;
+        }
+
+        public int danoContra(int blindaje) {
+            return Math.max(0, dano - blindaje);
+        }
+    }
+
+    class ArmaPerforante extends Arma {
+        ArmaPerforante(String nombre, int dano) {
+            super(nombre, dano);
+        }
+
+        @Override
+        public int danoContra(int blindaje) {
+            return Math.max(0, getDano() - blindaje / 2);
+        }
+    }
+
+    class ArmaDeArea extends Arma {
+        private final int objetivos;
+
+        ArmaDeArea(String nombre, int dano, int objetivos) {
+            super(nombre, dano);
+            this.objetivos = objetivos;
+        }
+
+        @Override
+        public int danoContra(int blindaje) {
+            return super.danoContra(blindaje) * objetivos;
+        }
+    }
+casos:
+    new Arma("espada", 10).danoContra(4) => 6
+    new Arma("espada", 3).danoContra(5) => 0
+    new ArmaPerforante("lanza", 10).danoContra(4) => 8
+    new ArmaPerforante("lanza", 1).danoContra(9) => 0
+    new ArmaDeArea("granada", 5, 3).danoContra(2) => 9
+    new ArmaDeArea("granada", 2, 4).danoContra(6) => 0
+    ((Arma) new ArmaPerforante("lanza", 10)).danoContra(5) => 8
+
+=== t11_contador_doble
+tema: 11
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: El contador que cuenta doble (enlace dinámico)
+titulo.de: Der doppelt zählende Zähler (dynamische Bindung)
+titulo.en: The counter that counts double (dynamic binding)
+enunciado.es: Contador ya está hecho: void incrementar(), void incrementarVarios(int veces) (que llama veces a incrementar()) e int getValor(). Escribe ContadorDoble extends Contador sobrescribiendo SOLO incrementar(), para que sume 2. Verás que incrementarVarios también cuenta doble sin tocarlo: Java llama a la versión del objeto real.
+enunciado.de: Contador ist fertig: void incrementar(), void incrementarVarios(int veces) (ruft veces-mal incrementar() auf) und int getValor(). Schreibe ContadorDoble extends Contador und überschreibe NUR incrementar(), sodass es 2 addiert. Du wirst sehen, dass incrementarVarios auch doppelt zählt, ohne dass du es anfasst: Java ruft die Version des tatsächlichen Objekts auf.
+enunciado.en: Contador is done: void incrementar(), void incrementarVarios(int veces) (which calls incrementar() veces times) and int getValor(). Write ContadorDoble extends Contador overriding ONLY incrementar(), so it adds 2. You'll see that incrementarVarios counts double too without touching it: Java calls the real object's version.
+pista.es: El campo valor es privado de Contador: en tu incrementar() llama dos veces a super.incrementar().
+pista.de: Das Feld valor ist privat in Contador: Ruf in deinem incrementar() zweimal super.incrementar() auf.
+pista.en: The valor field is private to Contador: in your incrementar() call super.incrementar() twice.
+plantilla:
+    class Contador {
+        private int valor;
+
+        void incrementar() {
+            valor++;
+        }
+
+        void incrementarVarios(int veces) {
+            for (int i = 0; i < veces; i++) {
+                incrementar();
+            }
+        }
+
+        int getValor() {
+            return valor;
+        }
+    }
+
+    public class ContadorDoble extends Contador {
+        // sobrescribe incrementar()
+    }
+solucion:
+    class Contador {
+        private int valor;
+
+        void incrementar() {
+            valor++;
+        }
+
+        void incrementarVarios(int veces) {
+            for (int i = 0; i < veces; i++) {
+                incrementar();
+            }
+        }
+
+        int getValor() {
+            return valor;
+        }
+    }
+
+    public class ContadorDoble extends Contador {
+        @Override
+        void incrementar() {
+            super.incrementar();
+            super.incrementar();
+        }
+    }
+casos:
+    ((Supplier<Integer>) () -> { Contador c = new Contador(); c.incrementarVarios(3); return c.getValor(); }).get() => 3
+    ((Supplier<Integer>) () -> { ContadorDoble c = new ContadorDoble(); c.incrementar(); return c.getValor(); }).get() => 2
+    ((Supplier<Integer>) () -> { Contador c = new ContadorDoble(); c.incrementarVarios(3); return c.getValor(); }).get() => 6
+    ((Supplier<Integer>) () -> { Contador c = new ContadorDoble(); c.incrementarVarios(0); return c.getValor(); }).get() => 0
+    new ContadorDoble().getValor() => 0
+
+=== t11_equals_heredado
+tema: 11
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: equals con herencia (getClass)
+titulo.de: equals mit Vererbung (getClass)
+titulo.en: equals with inheritance (getClass)
+enunciado.es: Escribe Pieza(String nombre, int peso) y PiezaMk(String nombre, int peso, int nivel) extends Pieza, las dos con equals(Object) y hashCode(). Dos piezas son iguales si son de la misma clase exacta y tienen los mismos datos; una Pieza nunca es igual a una PiezaMk, se mire desde donde se mire (equals tiene que ser simétrico).
+enunciado.de: Schreibe Pieza(String nombre, int peso) und PiezaMk(String nombre, int peso, int nivel) extends Pieza, beide mit equals(Object) und hashCode(). Zwei Teile sind gleich, wenn sie von genau derselben Klasse sind und dieselben Daten haben; eine Pieza ist nie gleich einer PiezaMk, egal von welcher Seite (equals muss symmetrisch sein).
+enunciado.en: Write Pieza(String nombre, int peso) and PiezaMk(String nombre, int peso, int nivel) extends Pieza, both with equals(Object) and hashCode(). Two parts are equal if they are of exactly the same class and have the same data; a Pieza is never equal to a PiezaMk, whichever way you look at it (equals must be symmetric).
+pista.es: En Pieza: if (otro == null || getClass() != otro.getClass()) return false; con instanceof, una Pieza diría que es igual a una PiezaMk. PiezaMk llama a super.equals(otro) y compara además el nivel.
+pista.de: In Pieza: if (otro == null || getClass() != otro.getClass()) return false; mit instanceof hielte sich eine Pieza für gleich einer PiezaMk. PiezaMk ruft super.equals(otro) auf und vergleicht zusätzlich das Niveau.
+pista.en: In Pieza: if (otro == null || getClass() != otro.getClass()) return false; with instanceof, a Pieza would claim to equal a PiezaMk. PiezaMk calls super.equals(otro) and also compares the level.
+plantilla:
+    class Pieza {
+        private final String nombre;
+        private final int peso;
+
+        Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+        }
+
+        // equals y hashCode
+    }
+
+    public class PiezaMk extends Pieza {
+        // nivel, constructor, equals y hashCode
+    }
+solucion:
+    import java.util.Objects;
+
+    class Pieza {
+        private final String nombre;
+        private final int peso;
+
+        Pieza(String nombre, int peso) {
+            this.nombre = nombre;
+            this.peso = peso;
+        }
+
+        @Override
+        public boolean equals(Object otro) {
+            if (this == otro) {
+                return true;
+            }
+            if (otro == null || getClass() != otro.getClass()) {
+                return false;
+            }
+            Pieza p = (Pieza) otro;
+            return peso == p.peso && nombre.equals(p.nombre);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(nombre, peso);
+        }
+    }
+
+    public class PiezaMk extends Pieza {
+        private final int nivel;
+
+        public PiezaMk(String nombre, int peso, int nivel) {
+            super(nombre, peso);
+            this.nivel = nivel;
+        }
+
+        @Override
+        public boolean equals(Object otro) {
+            return super.equals(otro) && nivel == ((PiezaMk) otro).nivel;
+        }
+
+        @Override
+        public int hashCode() {
+            return 31 * super.hashCode() + nivel;
+        }
+    }
+casos:
+    new Pieza("laser", 6).equals(new Pieza("laser", 6)) => true
+    new PiezaMk("laser", 6, 2).equals(new PiezaMk("laser", 6, 2)) => true
+    new PiezaMk("laser", 6, 2).equals(new PiezaMk("laser", 6, 3)) => false
+    new Pieza("laser", 6).equals(new PiezaMk("laser", 6, 2)) => false
+    new PiezaMk("laser", 6, 2).equals(new Pieza("laser", 6)) => false
+    new Pieza("laser", 6).equals(null) => false
+    new PiezaMk("x", 1, 1).hashCode() == new PiezaMk("x", 1, 1).hashCode() => true
+
+=== t11_pila_con_minimo
+tema: 11
+dificultad: 5
+java: 8
+tipo: clase
+titulo.es: Una pila que recuerda el golpe más flojo
+titulo.de: Ein Stapel, der sich den schwächsten Treffer merkt
+titulo.en: A stack that remembers the weakest hit
+enunciado.es: Pila ya está hecha: Pila apilar(int valor) (devuelve this), int desapilar() e int cima() (el de arriba, sin quitarlo; las dos con IllegalStateException si está vacía), int tamano() y boolean estaVacia(). Escribe PilaConMinimo extends Pila con int minimo(), que da el menor valor de la pila al momento (IllegalStateException si está vacía) sin recorrerla. Sobrescribe PilaConMinimo apilar(int valor) e int desapilar() llamando a super.
+enunciado.de: Pila ist fertig: Pila apilar(int valor) (gibt this zurück), int desapilar() und int cima() (das oberste, ohne es wegzunehmen; beide mit IllegalStateException, wenn leer), int tamano() und boolean estaVacia(). Schreibe PilaConMinimo extends Pila mit int minimo(), das sofort den kleinsten Wert im Stapel liefert (IllegalStateException, wenn leer), ohne ihn zu durchlaufen. Überschreibe PilaConMinimo apilar(int valor) und int desapilar() mit Aufrufen von super.
+enunciado.en: Pila is done: Pila apilar(int valor) (returns this), int desapilar() and int cima() (the top one, without removing it; both throw IllegalStateException if empty), int tamano() and boolean estaVacia(). Write PilaConMinimo extends Pila with int minimo(), which gives the smallest value in the stack right away (IllegalStateException if empty) without walking through it. Override PilaConMinimo apilar(int valor) and int desapilar() by calling super.
+pista.es: Guarda dentro otra Pila con los mínimos: al apilar, si el valor es menor o igual que el mínimo actual, apílalo también allí; al desapilar, si sale el que está en la cima de los mínimos, quítalo de allí también.
+pista.de: Halte intern einen zweiten Stapel mit den Minima: Beim Ablegen kommt der Wert auch dorthin, wenn er kleiner oder gleich dem aktuellen Minimum ist; kommt beim Abheben das oberste Minimum heraus, nimm es dort auch weg.
+pista.en: Keep a second Pila of minimums inside: when pushing, if the value is less than or equal to the current minimum, push it there too; when popping, if the top minimum comes out, remove it from there as well.
+plantilla:
+    class Pila {
+        private int[] datos = new int[4];
+        private int tamano;
+
+        Pila apilar(int valor) {
+            if (tamano == datos.length) {
+                datos = java.util.Arrays.copyOf(datos, tamano * 2);
+            }
+            datos[tamano++] = valor;
+            return this;
+        }
+
+        int desapilar() {
+            if (tamano == 0) {
+                throw new IllegalStateException("pila vacia");
+            }
+            return datos[--tamano];
+        }
+
+        int cima() {
+            if (tamano == 0) {
+                throw new IllegalStateException("pila vacia");
+            }
+            return datos[tamano - 1];
+        }
+
+        int tamano() {
+            return tamano;
+        }
+
+        boolean estaVacia() {
+            return tamano == 0;
+        }
+    }
+
+    public class PilaConMinimo extends Pila {
+        // minimo(), apilar y desapilar
+    }
+solucion:
+    class Pila {
+        private int[] datos = new int[4];
+        private int tamano;
+
+        Pila apilar(int valor) {
+            if (tamano == datos.length) {
+                datos = java.util.Arrays.copyOf(datos, tamano * 2);
+            }
+            datos[tamano++] = valor;
+            return this;
+        }
+
+        int desapilar() {
+            if (tamano == 0) {
+                throw new IllegalStateException("pila vacia");
+            }
+            return datos[--tamano];
+        }
+
+        int cima() {
+            if (tamano == 0) {
+                throw new IllegalStateException("pila vacia");
+            }
+            return datos[tamano - 1];
+        }
+
+        int tamano() {
+            return tamano;
+        }
+
+        boolean estaVacia() {
+            return tamano == 0;
+        }
+    }
+
+    public class PilaConMinimo extends Pila {
+        private final Pila minimos = new Pila();
+
+        @Override
+        PilaConMinimo apilar(int valor) {
+            if (minimos.estaVacia() || valor <= minimos.cima()) {
+                minimos.apilar(valor);
+            }
+            super.apilar(valor);
+            return this;
+        }
+
+        @Override
+        int desapilar() {
+            int valor = super.desapilar();
+            if (valor == minimos.cima()) {
+                minimos.desapilar();
+            }
+            return valor;
+        }
+
+        int minimo() {
+            if (estaVacia()) {
+                throw new IllegalStateException("pila vacia");
+            }
+            return minimos.cima();
+        }
+    }
+casos:
+    new Pila().apilar(3).apilar(7).desapilar() => 7
+    new Pila().desapilar() => !IllegalStateException
+    new PilaConMinimo().apilar(5).apilar(2).apilar(8).minimo() => 2
+    ((Supplier<Integer>) () -> { PilaConMinimo p = new PilaConMinimo(); p.apilar(5).apilar(2).apilar(8); p.desapilar(); p.desapilar(); return p.minimo(); }).get() => 5
+    ((Supplier<Integer>) () -> { PilaConMinimo p = new PilaConMinimo(); p.apilar(4).apilar(6).apilar(4); p.desapilar(); return p.minimo(); }).get() => 4
+    new PilaConMinimo().minimo() => !IllegalStateException
+    new PilaConMinimo().apilar(1).apilar(2).apilar(3).apilar(4).apilar(5).tamano() => 5
+    new PilaConMinimo().apilar(9).desapilar() => 9

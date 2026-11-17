@@ -1,0 +1,423 @@
+# Tema 07: arrays.
+=== t07_primera_pieza
+tema: 07
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: La primera pieza del estante
+titulo.de: Das erste Teil im Regal
+titulo.en: The first part on the shelf
+enunciado.es: El array piezas guarda el peso de cada pieza del estante. Devuelve el de la primera. Ejemplo: primera(new int[]{4, 8, 15}) devuelve 4. Si el estante está vacío, Java lanza ArrayIndexOutOfBoundsException, y aquí está bien que lo haga.
+enunciado.de: Das Array piezas enthält das Gewicht jedes Teils im Regal. Gib das des ersten zurück. Beispiel: primera(new int[]{4, 8, 15}) gibt 4 zurück. Ist das Regal leer, wirft Java eine ArrayIndexOutOfBoundsException, und das ist hier in Ordnung.
+enunciado.en: The array piezas holds the weight of each part on the shelf. Return the first one. Example: primera(new int[]{4, 8, 15}) returns 4. If the shelf is empty, Java throws an ArrayIndexOutOfBoundsException, and that's fine here.
+pista.es: Las posiciones de un array empiezan en 0, no en 1: piezas[0] es la primera.
+pista.de: Die Positionen in einem Array beginnen bei 0, nicht bei 1: piezas[0] ist das erste.
+pista.en: Array positions start at 0, not 1: piezas[0] is the first one.
+firma: static int primera(int[] piezas)
+plantilla:
+    return 0;
+solucion:
+    return piezas[0];
+casos:
+    primera(new int[]{4, 8, 15}) => 4
+    primera(new int[]{-2}) => -2
+    primera(new int[]{0, 1}) => 0
+    primera(new int[]{}) => !ArrayIndexOutOfBoundsException
+
+=== t07_ultima_pieza
+tema: 07
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: La última pieza
+titulo.de: Das letzte Teil
+titulo.en: The last part
+enunciado.es: Devuelve el último elemento del array (nunca está vacío). Ejemplo: ultima(new int[]{4, 8, 15}) devuelve 15.
+enunciado.de: Gib das letzte Element des Arrays zurück (es ist nie leer). Beispiel: ultima(new int[]{4, 8, 15}) gibt 15 zurück.
+enunciado.en: Return the last element of the array (it's never empty). Example: ultima(new int[]{4, 8, 15}) returns 15.
+pista.es: piezas.length dice cuántos hay. Como se empieza en 0, el último está en piezas.length - 1.
+pista.de: piezas.length sagt, wie viele es sind. Weil bei 0 begonnen wird, liegt das letzte bei piezas.length - 1.
+pista.en: piezas.length tells you how many there are. Since counting starts at 0, the last one is at piezas.length - 1.
+firma: static int ultima(int[] piezas)
+plantilla:
+    return piezas[0];
+solucion:
+    return piezas[piezas.length - 1];
+casos:
+    ultima(new int[]{4, 8, 15}) => 15
+    ultima(new int[]{7}) => 7
+    ultima(new int[]{3, 0}) => 0
+    ultima(new int[]{-1, -2, -3}) => -3
+
+=== t07_danio_total
+tema: 07
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Todo el daño de la ronda
+titulo.de: Der ganze Schaden der Runde
+titulo.en: All the damage of the round
+enunciado.es: El array golpes tiene el daño de cada golpe de la ronda. Devuelve la suma de todos (0 si no hubo golpes). Ejemplo: danioTotal(new int[]{3, 5, 2}) devuelve 10.
+enunciado.de: Das Array golpes enthält den Schaden jedes Treffers der Runde. Gib die Summe aller zurück (0, wenn es keine Treffer gab). Beispiel: danioTotal(new int[]{3, 5, 2}) gibt 10 zurück.
+enunciado.en: The array golpes holds the damage of each hit in the round. Return the sum of them all (0 if there were no hits). Example: danioTotal(new int[]{3, 5, 2}) returns 10.
+pista.es: El for-each recorre todos los elementos sin índices: for (int golpe : golpes) { total += golpe; }
+pista.de: Die for-each-Schleife geht alle Elemente ohne Index durch: for (int golpe : golpes) { total += golpe; }
+pista.en: The for-each loop goes through every element without indexes: for (int golpe : golpes) { total += golpe; }
+firma: static int danioTotal(int[] golpes)
+plantilla:
+    int total = 0;
+    return total;
+solucion:
+    int total = 0;
+    for (int golpe : golpes) {
+        total += golpe;
+    }
+    return total;
+casos:
+    danioTotal(new int[]{3, 5, 2}) => 10
+    danioTotal(new int[]{100}) => 100
+    danioTotal(new int[]{-1, 1}) => 0
+    danioTotal(new int[]{}) => 0
+
+=== t07_golpe_maximo
+tema: 07
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: El golpe más fuerte de la ronda
+titulo.de: Der stärkste Treffer der Runde
+titulo.en: The hardest hit of the round
+enunciado.es: Devuelve el valor más grande del array (nunca está vacío; puede tener negativos). Ejemplo: golpeMaximo(new int[]{3, 9, 2}) devuelve 9 y golpeMaximo(new int[]{-5, -2, -8}), -2.
+enunciado.de: Gib den größten Wert im Array zurück (es ist nie leer, kann aber negative Zahlen enthalten). Beispiel: golpeMaximo(new int[]{3, 9, 2}) gibt 9 zurück, golpeMaximo(new int[]{-5, -2, -8}) -2.
+enunciado.en: Return the biggest value in the array (it's never empty; it may contain negatives). Example: golpeMaximo(new int[]{3, 9, 2}) returns 9 and golpeMaximo(new int[]{-5, -2, -8}) returns -2.
+pista.es: No empieces el máximo en 0: si todos son negativos, saldría mal. Empieza con el primero, golpes[0], y compara con los demás.
+pista.de: Fang das Maximum nicht bei 0 an: Sind alle negativ, käme Falsches heraus. Starte mit dem ersten, golpes[0], und vergleich mit den übrigen.
+pista.en: Don't start the maximum at 0: if they're all negative, you'd get it wrong. Start with the first one, golpes[0], and compare with the rest.
+firma: static int golpeMaximo(int[] golpes)
+plantilla:
+    int maximo = 0;
+    for (int golpe : golpes) {
+        if (golpe > maximo) {
+            maximo = golpe;
+        }
+    }
+    return maximo;
+solucion:
+    int maximo = golpes[0];
+    for (int golpe : golpes) {
+        if (golpe > maximo) {
+            maximo = golpe;
+        }
+    }
+    return maximo;
+casos:
+    golpeMaximo(new int[]{3, 9, 2}) => 9
+    golpeMaximo(new int[]{7}) => 7
+    golpeMaximo(new int[]{4, 4}) => 4
+    golpeMaximo(new int[]{-5, -2, -8}) => -2
+
+=== t07_contar_fuertes
+tema: 07
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Golpes que superan el umbral
+titulo.de: Treffer über der Schwelle
+titulo.en: Hits over the threshold
+enunciado.es: Devuelve cuántos golpes del array son mayores o iguales que umbral. Ejemplo: contarFuertes(new int[]{5, 12, 8, 20}, 10) devuelve 2.
+enunciado.de: Gib zurück, wie viele Treffer im Array größer oder gleich umbral sind. Beispiel: contarFuertes(new int[]{5, 12, 8, 20}, 10) gibt 2 zurück.
+enunciado.en: Return how many hits in the array are greater than or equal to umbral. Example: contarFuertes(new int[]{5, 12, 8, 20}, 10) returns 2.
+pista.es: Un contador que empieza en 0 y un if dentro del bucle: if (golpe >= umbral) { cuenta++; }
+pista.de: Ein Zähler, der bei 0 beginnt, und ein if in der Schleife: if (golpe >= umbral) { cuenta++; }
+pista.en: A counter starting at 0 and an if inside the loop: if (golpe >= umbral) { cuenta++; }
+firma: static int contarFuertes(int[] golpes, int umbral)
+plantilla:
+    return golpes.length;
+solucion:
+    int cuenta = 0;
+    for (int golpe : golpes) {
+        if (golpe >= umbral) {
+            cuenta++;
+        }
+    }
+    return cuenta;
+casos:
+    contarFuertes(new int[]{5, 12, 8, 20}, 10) => 2
+    contarFuertes(new int[]{10, 10}, 10) => 2
+    contarFuertes(new int[]{-1, 0}, 0) => 1
+    contarFuertes(new int[]{1, 2, 3}, 50) => 0
+    contarFuertes(new int[]{}, 10) => 0
+
+=== t07_media_de_vida
+tema: 07
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: La vida media del equipo
+titulo.de: Das Durchschnittsleben des Teams
+titulo.en: The team's average life
+enunciado.es: Devuelve la media de las vidas del equipo, con decimales. Si el equipo está vacío, devuelve 0.0 (no se puede dividir entre 0). Ejemplo: mediaDeVida(new int[]{1, 2}) devuelve 1.5.
+enunciado.de: Gib das durchschnittliche Leben des Teams mit Nachkommastellen zurück. Ist das Team leer, gib 0.0 zurück (durch 0 teilen geht nicht). Beispiel: mediaDeVida(new int[]{1, 2}) gibt 1.5 zurück.
+enunciado.en: Return the average life of the team, with decimals. If the team is empty, return 0.0 (you can't divide by 0). Example: mediaDeVida(new int[]{1, 2}) returns 1.5.
+pista.es: Mira primero si vidas.length == 0. Suma todo y divide como double: (double) suma / vidas.length.
+pista.de: Prüf zuerst, ob vidas.length == 0 ist. Addiere alles und teile als double: (double) suma / vidas.length.
+pista.en: First check whether vidas.length == 0. Add everything up and divide as a double: (double) suma / vidas.length.
+firma: static double mediaDeVida(int[] vidas)
+plantilla:
+    return 0.0;
+solucion:
+    if (vidas.length == 0) {
+        return 0.0;
+    }
+    int suma = 0;
+    for (int vida : vidas) {
+        suma += vida;
+    }
+    return (double) suma / vidas.length;
+casos:
+    mediaDeVida(new int[]{1, 2}) => 1.5
+    mediaDeVida(new int[]{50, 100}) => 75.0
+    mediaDeVida(new int[]{-10, 10, 30}) => 10.0
+    mediaDeVida(new int[]{7}) => 7.0
+    mediaDeVida(new int[]{}) => 0.0
+
+=== t07_cuenta_atras_array
+tema: 07
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Un array de cuenta atrás
+titulo.de: Ein Countdown-Array
+titulo.en: A countdown array
+enunciado.es: Crea y devuelve un array con los números de n a 1. Ejemplo: cuentaAtras(3) devuelve {3, 2, 1}. Con n = 0, un array vacío.
+enunciado.de: Erzeuge ein Array mit den Zahlen von n bis 1 und gib es zurück. Beispiel: cuentaAtras(3) gibt {3, 2, 1} zurück. Bei n = 0 ein leeres Array.
+enunciado.en: Create and return an array with the numbers from n down to 1. Example: cuentaAtras(3) returns {3, 2, 1}. With n = 0, an empty array.
+pista.es: new int[n] crea un array de n ceros. Rellena la posición i con n - i.
+pista.de: new int[n] erzeugt ein Array mit n Nullen. Füll Position i mit n - i.
+pista.en: new int[n] creates an array of n zeros. Fill position i with n - i.
+firma: static int[] cuentaAtras(int n)
+plantilla:
+    return new int[n];
+solucion:
+    int[] numeros = new int[n];
+    for (int i = 0; i < n; i++) {
+        numeros[i] = n - i;
+    }
+    return numeros;
+casos:
+    cuentaAtras(3) => new int[]{3, 2, 1}
+    cuentaAtras(1) => new int[]{1}
+    cuentaAtras(5) => new int[]{5, 4, 3, 2, 1}
+    cuentaAtras(0) => new int[]{}
+
+=== t07_contiene_pieza
+tema: 07
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: ¿Está la pieza en el inventario?
+titulo.de: Ist das Teil im Lager?
+titulo.en: Is the part in stock?
+enunciado.es: Devuelve true si buscada está en el array piezas. Ahora a veces falla porque compara los textos con ==. Ejemplo: contiene(new String[]{"brazo", "pinza"}, "pinza") devuelve true.
+enunciado.de: Gib true zurück, wenn buscada im Array piezas vorkommt. Im Moment klappt das manchmal nicht, weil die Texte mit == verglichen werden. Beispiel: contiene(new String[]{"brazo", "pinza"}, "pinza") gibt true zurück.
+enunciado.en: Return true if buscada is in the array piezas. Right now it sometimes fails because it compares the texts with ==. Example: contiene(new String[]{"brazo", "pinza"}, "pinza") returns true.
+pista.es: == mira si son el mismo objeto, no si dicen lo mismo. Para comparar el contenido de dos String: pieza.equals(buscada).
+pista.de: == prüft, ob es dasselbe Objekt ist, nicht, ob derselbe Text drinsteht. Den Inhalt zweier Strings vergleichst du mit pieza.equals(buscada).
+pista.en: == checks whether they are the same object, not whether they say the same thing. To compare the content of two Strings: pieza.equals(buscada).
+firma: static boolean contiene(String[] piezas, String buscada)
+plantilla:
+    for (String pieza : piezas) {
+        if (pieza == buscada) {
+            return true;
+        }
+    }
+    return false;
+solucion:
+    for (String pieza : piezas) {
+        if (pieza.equals(buscada)) {
+            return true;
+        }
+    }
+    return false;
+casos:
+    contiene(new String[]{"brazo", "pinza"}, "pinza") => true
+    contiene(new String[]{"brazo"}, "rueda") => false
+    contiene(new String[]{}, "brazo") => false
+    contiene(new String[]{"laser", "motor"}, new String("laser")) => true
+    contiene(new String[]{"motor"}, new String("Motor")) => false
+
+=== t07_invertir
+tema: 07
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: La fila al revés
+titulo.de: Die Reihe rückwärts
+titulo.en: The row in reverse
+enunciado.es: Devuelve un array NUEVO con los mismos elementos en orden inverso. Ejemplo: invertir(new int[]{1, 2, 3}) devuelve {3, 2, 1}.
+enunciado.de: Gib ein NEUES Array mit denselben Elementen in umgekehrter Reihenfolge zurück. Beispiel: invertir(new int[]{1, 2, 3}) gibt {3, 2, 1} zurück.
+enunciado.en: Return a NEW array with the same elements in reverse order. Example: invertir(new int[]{1, 2, 3}) returns {3, 2, 1}.
+pista.es: Crea int[] alreves = new int[fila.length]; La posición i del nuevo es la fila.length - 1 - i del original.
+pista.de: Leg int[] alreves = new int[fila.length]; an. Position i im neuen Array ist Position fila.length - 1 - i im alten.
+pista.en: Create int[] alreves = new int[fila.length]; Position i in the new one is position fila.length - 1 - i in the original.
+firma: static int[] invertir(int[] fila)
+plantilla:
+    return fila;
+solucion:
+    int[] alreves = new int[fila.length];
+    for (int i = 0; i < fila.length; i++) {
+        alreves[i] = fila[fila.length - 1 - i];
+    }
+    return alreves;
+casos:
+    invertir(new int[]{1, 2, 3}) => new int[]{3, 2, 1}
+    invertir(new int[]{1, 2}) => new int[]{2, 1}
+    invertir(new int[]{7}) => new int[]{7}
+    invertir(new int[]{}) => new int[]{}
+    invertir(new int[]{5, -1, 0, 9}) => new int[]{9, 0, -1, 5}
+
+=== t07_apartar_rotas
+tema: 07
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Las piezas rotas, al final
+titulo.de: Kaputte Teile nach hinten
+titulo.en: Broken parts to the back
+enunciado.es: En el array, 0 es una pieza rota. Devuelve un array nuevo con las piezas buenas primero (en el mismo orden) y todas las rotas al final. Ejemplo: apartarRotas(new int[]{0, 3, 0, 5}) devuelve {3, 5, 0, 0}.
+enunciado.de: Im Array steht 0 für ein kaputtes Teil. Gib ein neues Array zurück, mit den guten Teilen zuerst (in derselben Reihenfolge) und allen kaputten am Ende. Beispiel: apartarRotas(new int[]{0, 3, 0, 5}) gibt {3, 5, 0, 0} zurück.
+enunciado.en: In the array, 0 is a broken part. Return a new array with the good parts first (in the same order) and all the broken ones at the end. Example: apartarRotas(new int[]{0, 3, 0, 5}) returns {3, 5, 0, 0}.
+pista.es: Un array nuevo ya viene lleno de ceros. Basta con copiar las piezas que no son 0, una tras otra, llevando aparte la siguiente posición libre.
+pista.de: Ein neues Array ist schon mit Nullen gefüllt. Es reicht, die Teile, die nicht 0 sind, nacheinander hineinzukopieren und dir die nächste freie Position zu merken.
+pista.en: A new array already comes filled with zeros. Just copy the parts that aren't 0, one after another, keeping track of the next free position.
+firma: static int[] apartarRotas(int[] piezas)
+plantilla:
+    return piezas;
+solucion:
+    int[] ordenadas = new int[piezas.length];
+    int libre = 0;
+    for (int pieza : piezas) {
+        if (pieza != 0) {
+            ordenadas[libre] = pieza;
+            libre++;
+        }
+    }
+    return ordenadas;
+casos:
+    apartarRotas(new int[]{0, 3, 0, 5}) => new int[]{3, 5, 0, 0}
+    apartarRotas(new int[]{4, 0, -2}) => new int[]{4, -2, 0}
+    apartarRotas(new int[]{1, 2}) => new int[]{1, 2}
+    apartarRotas(new int[]{0, 0}) => new int[]{0, 0}
+    apartarRotas(new int[]{}) => new int[]{}
+
+=== t07_racha_mas_larga
+tema: 07
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: La mejor racha de aciertos
+titulo.de: Die längste Trefferserie
+titulo.en: The longest hit streak
+enunciado.es: Cada número del array es un disparo: mayor que 0 es un acierto y 0 un fallo. Devuelve la racha más larga de aciertos seguidos. Ejemplo: rachaMasLarga(new int[]{5, 3, 0, 2, 8, 1, 0}) devuelve 3.
+enunciado.de: Jede Zahl im Array ist ein Schuss: größer als 0 ist ein Treffer, 0 ein Fehlschuss. Gib die längste Serie von Treffern hintereinander zurück. Beispiel: rachaMasLarga(new int[]{5, 3, 0, 2, 8, 1, 0}) gibt 3 zurück.
+enunciado.en: Each number in the array is a shot: greater than 0 is a hit and 0 is a miss. Return the longest run of hits in a row. Example: rachaMasLarga(new int[]{5, 3, 0, 2, 8, 1, 0}) returns 3.
+pista.es: Lleva dos variables: la racha actual (sube con cada acierto y vuelve a 0 con un fallo) y la mejor vista hasta ahora.
+pista.de: Merk dir zwei Werte: die aktuelle Serie (steigt bei jedem Treffer, fällt bei einem Fehlschuss auf 0) und die beste bisher.
+pista.en: Keep two variables: the current streak (goes up with each hit, back to 0 on a miss) and the best one seen so far.
+firma: static int rachaMasLarga(int[] disparos)
+plantilla:
+    return 0;
+solucion:
+    int actual = 0;
+    int mejor = 0;
+    for (int disparo : disparos) {
+        if (disparo > 0) {
+            actual++;
+            mejor = Math.max(mejor, actual);
+        } else {
+            actual = 0;
+        }
+    }
+    return mejor;
+casos:
+    rachaMasLarga(new int[]{5, 3, 0, 2, 8, 1, 0}) => 3
+    rachaMasLarga(new int[]{2, 2, 2, 2}) => 4
+    rachaMasLarga(new int[]{4}) => 1
+    rachaMasLarga(new int[]{0, 0}) => 0
+    rachaMasLarga(new int[]{}) => 0
+
+=== t07_suma_por_fila
+tema: 07
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: El daño de cada ronda (arrays de dos dimensiones)
+titulo.de: Der Schaden jeder Runde (zweidimensionale Arrays)
+titulo.en: The damage of each round (two-dimensional arrays)
+enunciado.es: danio[r] es el array de golpes de la ronda r, y cada ronda puede tener un número distinto de golpes. Devuelve un array con el daño total de cada ronda. Ejemplo: sumaPorFila(new int[][]{{1, 2}, {3, 4, 5}}) devuelve {3, 12}.
+enunciado.de: danio[r] ist das Array der Treffer von Runde r, und jede Runde kann unterschiedlich viele Treffer haben. Gib ein Array mit dem Gesamtschaden jeder Runde zurück. Beispiel: sumaPorFila(new int[][]{{1, 2}, {3, 4, 5}}) gibt {3, 12} zurück.
+enunciado.en: danio[r] is the array of hits in round r, and each round can have a different number of hits. Return an array with the total damage of each round. Example: sumaPorFila(new int[][]{{1, 2}, {3, 4, 5}}) returns {3, 12}.
+pista.es: Un int[][] es un array de arrays: danio.length es el número de rondas y danio[r].length los golpes de la ronda r. Usa dos bucles anidados.
+pista.de: Ein int[][] ist ein Array aus Arrays: danio.length ist die Zahl der Runden, danio[r].length die Treffer in Runde r. Nimm zwei verschachtelte Schleifen.
+pista.en: An int[][] is an array of arrays: danio.length is the number of rounds and danio[r].length the hits in round r. Use two nested loops.
+firma: static int[] sumaPorFila(int[][] danio)
+plantilla:
+    return new int[danio.length];
+solucion:
+    int[] totales = new int[danio.length];
+    for (int ronda = 0; ronda < danio.length; ronda++) {
+        for (int golpe : danio[ronda]) {
+            totales[ronda] += golpe;
+        }
+    }
+    return totales;
+casos:
+    sumaPorFila(new int[][]{{1, 2}, {3, 4, 5}}) => new int[]{3, 12}
+    sumaPorFila(new int[][]{{}, {7}}) => new int[]{0, 7}
+    sumaPorFila(new int[][]{{-1, 1}}) => new int[]{0}
+    sumaPorFila(new int[][]{{10}, {20}, {30, 1}}) => new int[]{10, 20, 31}
+    sumaPorFila(new int[][]{}) => new int[]{}
+
+=== t07_mezclar_rankings
+tema: 07
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Juntar dos clasificaciones ordenadas
+titulo.de: Zwei sortierte Ranglisten zusammenführen
+titulo.en: Merge two sorted rankings
+enunciado.es: a y b son dos clasificaciones de puntos, cada una ordenada de menor a mayor. Devuelve un array con todos los puntos de las dos, también ordenado, sin ordenar al final: recórrelas a la vez. Ejemplo: mezclar(new int[]{1, 4, 9}, new int[]{2, 3, 10}) devuelve {1, 2, 3, 4, 9, 10}.
+enunciado.de: a und b sind zwei Punkteranglisten, jede aufsteigend sortiert. Gib ein Array mit allen Punkten aus beiden zurück, ebenfalls sortiert, ohne am Ende zu sortieren: geh beide gleichzeitig durch. Beispiel: mezclar(new int[]{1, 4, 9}, new int[]{2, 3, 10}) gibt {1, 2, 3, 4, 9, 10} zurück.
+enunciado.en: a and b are two point rankings, each sorted from lowest to highest. Return an array with all the points from both, also sorted, without sorting at the end: walk through both at the same time. Example: mezclar(new int[]{1, 4, 9}, new int[]{2, 3, 10}) returns {1, 2, 3, 4, 9, 10}.
+pista.es: Un índice para a, otro para b y otro para el resultado. Copia siempre el menor de a[i] y b[j]; cuando uno se acabe, copia lo que quede del otro.
+pista.de: Ein Index für a, einer für b und einer für das Ergebnis. Kopier immer den kleineren von a[i] und b[j]; ist eines zu Ende, kopier den Rest des anderen.
+pista.en: One index for a, one for b and one for the result. Always copy the smaller of a[i] and b[j]; when one runs out, copy whatever is left of the other.
+firma: static int[] mezclar(int[] a, int[] b)
+plantilla:
+    return a;
+solucion:
+    int[] juntos = new int[a.length + b.length];
+    int i = 0;
+    int j = 0;
+    int k = 0;
+    while (i < a.length && j < b.length) {
+        if (a[i] <= b[j]) {
+            juntos[k++] = a[i++];
+        } else {
+            juntos[k++] = b[j++];
+        }
+    }
+    while (i < a.length) {
+        juntos[k++] = a[i++];
+    }
+    while (j < b.length) {
+        juntos[k++] = b[j++];
+    }
+    return juntos;
+casos:
+    mezclar(new int[]{1, 4, 9}, new int[]{2, 3, 10}) => new int[]{1, 2, 3, 4, 9, 10}
+    mezclar(new int[]{}, new int[]{1, 2}) => new int[]{1, 2}
+    mezclar(new int[]{5}, new int[]{}) => new int[]{5}
+    mezclar(new int[]{1, 1}, new int[]{1}) => new int[]{1, 1, 1}
+    mezclar(new int[]{-3, 0}, new int[]{-5, 7}) => new int[]{-5, -3, 0, 7}
+    mezclar(new int[]{}, new int[]{}) => new int[]{}

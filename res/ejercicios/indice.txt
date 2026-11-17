@@ -1,2 +1,17 @@
 # Los archivos de ejercicios, uno por línea (docs/FORMATOS.md). Las pruebas avisan si falta alguno.
 00_muestra.txt
+01_primeros_pasos.txt
+02_variables.txt
+03_operadores.txt
+04_condicionales.txt
+05_bucles.txt
+06_metodos.txt
+07_arrays.txt
+08_textos.txt
+09_clases.txt
+10_encapsulacion.txt
+11_herencia.txt
+12_polimorfismo.txt
+13_interfaces.txt
+14_excepciones.txt
+15_colecciones.txt

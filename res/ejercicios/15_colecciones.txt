@@ -1,0 +1,444 @@
+# Tema 15 — Colecciones: List, Set y Map (docs/FORMATOS.md, sección «Ejercicios»).
+
+=== t15_peso_total
+tema: 15
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: El peso de la carga (List)
+titulo.de: Das Gewicht der Ladung (List)
+titulo.en: The weight of the cargo (List)
+enunciado.es: Devuelve la suma de todos los pesos de la lista. Una List crece y encoge sola, al contrario que un array.
+enunciado.de: Gib die Summe aller Gewichte der Liste zurück. Eine List wächst und schrumpft von selbst, anders als ein Array.
+enunciado.en: Return the sum of all the weights in the list. A List grows and shrinks by itself, unlike an array.
+pista.es: for (int peso : pesos) { total += peso; } — el for-each también recorre listas.
+pista.de: for (int peso : pesos) { total += peso; } — die for-each-Schleife läuft auch über Listen.
+pista.en: for (int peso : pesos) { total += peso; } — the for-each loop works on lists too.
+firma: static int pesoTotal(List<Integer> pesos)
+plantilla:
+    return pesos.size();
+solucion:
+    int total = 0;
+    for (int peso : pesos) {
+        total += peso;
+    }
+    return total;
+casos:
+    pesoTotal(Arrays.asList(3, 4, 5)) => 12
+    pesoTotal(Arrays.asList(7)) => 7
+    pesoTotal(Arrays.asList(-2, 2)) => 0
+    pesoTotal(new ArrayList<>()) => 0
+
+=== t15_modelos_distintos
+tema: 15
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: ¿Cuántos modelos distintos? (Set)
+titulo.de: Wie viele verschiedene Modelle? (Set)
+titulo.en: How many different models? (Set)
+enunciado.es: En la lista de inscritos al torneo hay modelos repetidos. Devuelve cuántos modelos distintos hay (distinguiendo mayúsculas). Un Set no guarda dos veces lo mismo.
+enunciado.de: In der Anmeldeliste des Turniers kommen Modelle mehrfach vor. Gib zurück, wie viele verschiedene Modelle es gibt (mit Unterscheidung von Groß- und Kleinschreibung). Ein Set speichert nichts doppelt.
+enunciado.en: The tournament sign-up list has repeated models. Return how many different models there are (case-sensitive). A Set never stores the same thing twice.
+pista.es: new HashSet<>(modelos) crea un conjunto con los elementos de la lista; su size() es la respuesta.
+pista.de: new HashSet<>(modelos) erzeugt eine Menge mit den Elementen der Liste; ihr size() ist die Antwort.
+pista.en: new HashSet<>(modelos) creates a set with the list's elements; its size() is the answer.
+firma: static int modelosDistintos(List<String> modelos)
+plantilla:
+    return modelos.size();
+solucion:
+    return new HashSet<>(modelos).size();
+casos:
+    modelosDistintos(Arrays.asList("Rex", "Tita", "Rex")) => 2
+    modelosDistintos(Arrays.asList("Zap", "Zap", "Zap")) => 1
+    modelosDistintos(Arrays.asList("a", "A")) => 2
+    modelosDistintos(new ArrayList<>()) => 0
+
+=== t15_arsenal_fijo
+tema: 15
+dificultad: 2
+java: 11
+tipo: metodo
+titulo.es: El arsenal que no se toca (List.of, Java 9)
+titulo.de: Das unantastbare Arsenal (List.of, Java 9)
+titulo.en: The untouchable arsenal (List.of, Java 9)
+enunciado.es: Devuelve las armas con las que empieza todo robot: "puno", "laser" y "escudo", en una lista que nadie pueda cambiar: ni añadir, ni quitar, ni sustituir. List.of, que llegó en Java 9, crea justo eso; si alguien lo intenta, salta UnsupportedOperationException.
+enunciado.de: Gib die Waffen zurück, mit denen jeder Roboter startet: "puno", "laser" und "escudo", in einer Liste, die niemand ändern kann: nichts hinzufügen, entfernen oder ersetzen. List.of, das mit Java 9 kam, erzeugt genau das; wer es versucht, bekommt eine UnsupportedOperationException.
+enunciado.en: Return the weapons every robot starts with: "puno", "laser" and "escudo", in a list nobody can change: no adding, removing or replacing. List.of, which arrived in Java 9, creates exactly that; anyone who tries gets an UnsupportedOperationException.
+pista.es: return List.of("puno", "laser", "escudo"); — Arrays.asList no deja añadir, pero sí cambiar con set.
+pista.de: return List.of("puno", "laser", "escudo"); — Arrays.asList verbietet add, erlaubt aber set.
+pista.en: return List.of("puno", "laser", "escudo"); — Arrays.asList forbids add, but still allows set.
+firma: static List<String> armasIniciales()
+plantilla:
+    return new ArrayList<>(Arrays.asList("puno", "laser", "escudo"));
+solucion:
+    return List.of("puno", "laser", "escudo");
+casos:
+    armasIniciales() => Arrays.asList("puno", "laser", "escudo")
+    armasIniciales().get(1) => "laser"
+    armasIniciales().add("misil") => !UnsupportedOperationException
+    armasIniciales().set(0, "garra") => !UnsupportedOperationException
+    armasIniciales().remove("laser") => !UnsupportedOperationException
+
+=== t15_primero_y_ultimo
+tema: 15
+dificultad: 2
+java: 21
+tipo: metodo
+titulo.es: El primero y el último de la cola (Java 21)
+titulo.de: Der Erste und der Letzte der Schlange (Java 21)
+titulo.en: First and last in the queue (Java 21)
+enunciado.es: Devuelve el primero y el último robot de la cola, separados por "-". Usa getFirst() y getLast(), que las listas tienen desde Java 21 (colecciones secuenciadas); con la cola vacía lanzan NoSuchElementException, y así debe ser.
+enunciado.de: Gib den ersten und den letzten Roboter der Schlange zurück, getrennt durch "-". Benutze getFirst() und getLast(), die Listen seit Java 21 haben (Sequenced Collections); bei leerer Schlange werfen sie NoSuchElementException, und so soll es sein.
+enunciado.en: Return the first and the last robot in the queue, separated by "-". Use getFirst() and getLast(), which lists have had since Java 21 (sequenced collections); with an empty queue they throw NoSuchElementException, and that's how it should be.
+pista.es: return cola.getFirst() + "-" + cola.getLast(); — también existe reversed(), que da la lista al revés.
+pista.de: return cola.getFirst() + "-" + cola.getLast(); — es gibt auch reversed(), das die Liste umgedreht liefert.
+pista.en: return cola.getFirst() + "-" + cola.getLast(); — there is also reversed(), which gives the list backwards.
+firma: static String primeroYUltimo(List<String> cola)
+plantilla:
+    return cola.get(0) + "-" + cola.get(0);
+solucion:
+    return cola.getFirst() + "-" + cola.getLast();
+casos:
+    primeroYUltimo(List.of("Rex", "Tita", "Zap")) => "Rex-Zap"
+    primeroYUltimo(List.of("Ada")) => "Ada-Ada"
+    primeroYUltimo(new LinkedList<>(List.of("x", "y", "z"))) => "x-z"
+    primeroYUltimo(List.of()) => !NoSuchElementException
+
+=== t15_golpes_fuertes
+tema: 15
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Quitar golpes flojos sin romper la lista (Iterator)
+titulo.de: Schwache Treffer entfernen, ohne die Liste kaputtzumachen (Iterator)
+titulo.en: Removing weak hits without breaking the list (Iterator)
+enunciado.es: Quita de la lista golpes (la misma, no una copia) los que sean menores que minimo y devuélvela. La plantilla quita dentro de un for-each y Java lanza ConcurrentModificationException: no se puede cambiar una lista mientras se recorre así. Arréglala con un Iterator.
+enunciado.de: Entferne aus der Liste golpes (derselben, keiner Kopie) alle Treffer unter minimo und gib sie zurück. Die Vorlage entfernt in einer for-each-Schleife, und Java wirft ConcurrentModificationException: Eine Liste darf man nicht ändern, während man sie so durchläuft. Repariere sie mit einem Iterator.
+enunciado.en: Remove from the list golpes (the same one, not a copy) the hits below minimo and return it. The template removes inside a for-each and Java throws ConcurrentModificationException: you can't change a list while looping over it like that. Fix it with an Iterator.
+pista.es: Iterator<Integer> it = golpes.iterator(); while (it.hasNext()) { if (it.next() < minimo) { it.remove(); } } — o, desde Java 8, golpes.removeIf(g -> g < minimo).
+pista.de: Iterator<Integer> it = golpes.iterator(); while (it.hasNext()) { if (it.next() < minimo) { it.remove(); } } — oder seit Java 8 golpes.removeIf(g -> g < minimo).
+pista.en: Iterator<Integer> it = golpes.iterator(); while (it.hasNext()) { if (it.next() < minimo) { it.remove(); } } — or, since Java 8, golpes.removeIf(g -> g < minimo).
+firma: static List<Integer> soloFuertes(List<Integer> golpes, int minimo)
+plantilla:
+    for (Integer golpe : golpes) {
+        if (golpe < minimo) {
+            golpes.remove(golpe);
+        }
+    }
+    return golpes;
+solucion:
+    Iterator<Integer> it = golpes.iterator();
+    while (it.hasNext()) {
+        if (it.next() < minimo) {
+            it.remove();
+        }
+    }
+    return golpes;
+casos:
+    soloFuertes(new ArrayList<>(Arrays.asList(5, 1, 7, 2)), 3) => Arrays.asList(5, 7)
+    soloFuertes(new ArrayList<>(Arrays.asList(1, 2)), 3) => new ArrayList<>()
+    soloFuertes(new ArrayList<>(Arrays.asList(4, 4)), 4) => Arrays.asList(4, 4)
+    soloFuertes(new ArrayList<>(Arrays.asList(0, 9, 0, 9, 0)), 1) => Arrays.asList(9, 9)
+    soloFuertes(new ArrayList<>(), 1) => new ArrayList<>()
+
+=== t15_piezas_comunes
+tema: 15
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Las piezas que tienen los dos (intersección)
+titulo.de: Die Teile, die beide haben (Schnittmenge)
+titulo.en: The parts both of them have (intersection)
+enunciado.es: Devuelve las piezas que están en a y también en b, ordenadas alfabéticamente (un TreeSet). No cambies ni a ni b.
+enunciado.de: Gib die Teile zurück, die in a und auch in b sind, alphabetisch sortiert (ein TreeSet). Ändere weder a noch b.
+enunciado.en: Return the parts that are in a and also in b, sorted alphabetically (a TreeSet). Don't change a or b.
+pista.es: Copia a en un TreeSet nuevo y quédate solo con lo que está en b: comunes.retainAll(b).
+pista.de: Kopiere a in ein neues TreeSet und behalte nur, was in b ist: comunes.retainAll(b).
+pista.en: Copy a into a new TreeSet and keep only what's in b: comunes.retainAll(b).
+firma: static Set<String> piezasComunes(Set<String> a, Set<String> b)
+plantilla:
+    return a;
+solucion:
+    Set<String> comunes = new TreeSet<>(a);
+    comunes.retainAll(b);
+    return comunes;
+casos:
+    piezasComunes(new HashSet<>(Arrays.asList("laser", "motor", "rueda")), new HashSet<>(Arrays.asList("rueda", "laser", "misil"))) => new HashSet<>(Arrays.asList("laser", "rueda"))
+    piezasComunes(new HashSet<>(Arrays.asList("zeta", "beta", "alfa")), new HashSet<>(Arrays.asList("zeta", "alfa"))).toString() => "[alfa, zeta]"
+    piezasComunes(new HashSet<>(Arrays.asList("x")), new HashSet<>(Arrays.asList("y"))).isEmpty() => true
+    ((Supplier<Integer>) () -> { Set<String> a = new HashSet<>(Arrays.asList("x", "y")); piezasComunes(a, new HashSet<>(Arrays.asList("x"))); return a.size(); }).get() => 2
+
+=== t15_contar_armas
+tema: 15
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: ¿Qué armas se usaron? (Map)
+titulo.de: Welche Waffen wurden benutzt? (Map)
+titulo.en: Which weapons were used? (Map)
+enunciado.es: El registro del combate apunta cada disparo con el nombre del arma. Devuelve un Map que diga, para cada arma, cuántas veces aparece.
+enunciado.de: Das Kampfprotokoll notiert jeden Schuss mit dem Namen der Waffe. Gib eine Map zurück, die für jede Waffe sagt, wie oft sie vorkommt.
+enunciado.en: The fight log notes every shot with the weapon's name. Return a Map that says, for each weapon, how many times it appears.
+pista.es: cuenta.put(arma, cuenta.getOrDefault(arma, 0) + 1); — o, más corto, cuenta.merge(arma, 1, Integer::sum).
+pista.de: cuenta.put(arma, cuenta.getOrDefault(arma, 0) + 1); — oder kürzer cuenta.merge(arma, 1, Integer::sum).
+pista.en: cuenta.put(arma, cuenta.getOrDefault(arma, 0) + 1); — or, shorter, cuenta.merge(arma, 1, Integer::sum).
+firma: static Map<String, Integer> contarArmas(List<String> registro)
+plantilla:
+    return new HashMap<>();
+solucion:
+    Map<String, Integer> cuenta = new HashMap<>();
+    for (String arma : registro) {
+        cuenta.put(arma, cuenta.getOrDefault(arma, 0) + 1);
+    }
+    return cuenta;
+casos:
+    contarArmas(Arrays.asList("laser", "misil", "laser")).get("laser") => 2
+    new TreeMap<>(contarArmas(Arrays.asList("laser", "misil", "laser"))).toString() => "{laser=2, misil=1}"
+    contarArmas(Arrays.asList("x", "x", "x", "x")).size() => 1
+    contarArmas(Arrays.asList("puno")).containsKey("laser") => false
+    contarArmas(new ArrayList<>()).isEmpty() => true
+
+=== t15_clasificacion
+tema: 15
+dificultad: 3
+java: 11
+tipo: metodo
+titulo.es: La clasificación en orden (TreeMap)
+titulo.de: Die Tabelle in Ordnung (TreeMap)
+titulo.en: The standings in order (TreeMap)
+enunciado.es: puntos dice cuántos puntos tiene cada robot, sin orden. Devuelve la clasificación como texto, con los nombres en su orden natural ("Ada 3, Rex 5"): las mayúsculas van antes que las minúsculas. Sin robots, "". Los casos crean los mapas con Map.of, de Java 9.
+enunciado.de: puntos sagt, wie viele Punkte jeder Roboter hat, ohne Ordnung. Gib die Tabelle als Text zurück, mit den Namen in ihrer natürlichen Ordnung ("Ada 3, Rex 5"): Großbuchstaben kommen vor Kleinbuchstaben. Ohne Roboter "". Die Fälle erzeugen die Maps mit Map.of aus Java 9.
+enunciado.en: puntos says how many points each robot has, in no order. Return the standings as text, with the names in their natural order ("Ada 3, Rex 5"): capitals come before lower case. With no robots, "". The cases create the maps with Map.of, from Java 9.
+pista.es: new TreeMap<>(puntos) ordena por la clave. Recorre su entrySet() y junta "nombre puntos" con un StringJoiner(", ").
+pista.de: new TreeMap<>(puntos) sortiert nach dem Schlüssel. Geh durch sein entrySet() und verbinde "Name Punkte" mit einem StringJoiner(", ").
+pista.en: new TreeMap<>(puntos) sorts by key. Walk through its entrySet() and join "name points" with a StringJoiner(", ").
+firma: static String clasificacion(Map<String, Integer> puntos)
+plantilla:
+    return puntos.toString();
+solucion:
+    StringJoiner texto = new StringJoiner(", ");
+    for (Map.Entry<String, Integer> e : new TreeMap<>(puntos).entrySet()) {
+        texto.add(e.getKey() + " " + e.getValue());
+    }
+    return texto.toString();
+casos:
+    clasificacion(Map.of("Rex", 5, "Ada", 3)) => "Ada 3, Rex 5"
+    clasificacion(Map.of("b", 1, "a", 2, "c", 3)) => "a 2, b 1, c 3"
+    clasificacion(Map.of("ada", 1, "Zap", 2)) => "Zap 2, ada 1"
+    clasificacion(Map.of("Zap", 0)) => "Zap 0"
+    clasificacion(Map.of()) => ""
+
+=== t15_cola_de_reparacion
+tema: 15
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: La cola del taller (Deque)
+titulo.de: Die Warteschlange der Werkstatt (Deque)
+titulo.en: The workshop queue (Deque)
+enunciado.es: Escribe la clase Taller con Taller(), Taller llega(String robot) (se pone al final de la cola), Taller urgente(String robot) (se cuela al principio), String atender() (saca y devuelve el primero; "nadie" si no hay), String siguiente() (lo mira sin sacarlo; "nadie" si no hay) e int enEspera(). llega y urgente devuelven this.
+enunciado.de: Schreibe die Klasse Taller mit Taller(), Taller llega(String robot) (stellt sich hinten an), Taller urgente(String robot) (drängelt sich vorne rein), String atender() (nimmt den Ersten heraus und gibt ihn zurück; "nadie", wenn keiner da ist), String siguiente() (schaut ihn an, ohne ihn herauszunehmen; "nadie", wenn keiner da ist) und int enEspera(). llega und urgente geben this zurück.
+enunciado.en: Write the class Taller with Taller(), Taller llega(String robot) (joins the back of the queue), Taller urgente(String robot) (jumps to the front), String atender() (takes out and returns the first; "nadie" if there's nobody), String siguiente() (looks at it without taking it out; "nadie" if there's nobody) and int enEspera(). llega and urgente return this.
+pista.es: Un ArrayDeque<String> sirve por los dos lados: addLast, addFirst, pollFirst y peekFirst (los dos últimos dan null si está vacío).
+pista.de: Eine ArrayDeque<String> funktioniert an beiden Enden: addLast, addFirst, pollFirst und peekFirst (die letzten beiden liefern null, wenn sie leer ist).
+pista.en: An ArrayDeque<String> works at both ends: addLast, addFirst, pollFirst and peekFirst (the last two give null when it's empty).
+plantilla:
+    import java.util.ArrayDeque;
+    import java.util.Deque;
+
+    public class Taller {
+        private final Deque<String> cola = new ArrayDeque<>();
+
+        // llega, urgente, atender, siguiente y enEspera
+    }
+solucion:
+    import java.util.ArrayDeque;
+    import java.util.Deque;
+
+    public class Taller {
+        private static final String NADIE = "nadie";
+
+        private final Deque<String> cola = new ArrayDeque<>();
+
+        public Taller llega(String robot) {
+            cola.addLast(robot);
+            return this;
+        }
+
+        public Taller urgente(String robot) {
+            cola.addFirst(robot);
+            return this;
+        }
+
+        public String atender() {
+            String primero = cola.pollFirst();
+            return primero == null ? NADIE : primero;
+        }
+
+        public String siguiente() {
+            String primero = cola.peekFirst();
+            return primero == null ? NADIE : primero;
+        }
+
+        public int enEspera() {
+            return cola.size();
+        }
+    }
+casos:
+    new Taller().llega("Rex").llega("Tita").atender() => "Rex"
+    new Taller().llega("Rex").urgente("Zap").atender() => "Zap"
+    new Taller().atender() => "nadie"
+    new Taller().llega("Rex").siguiente() => "Rex"
+    new Taller().llega("Rex").llega("Tita").enEspera() => 2
+    ((Supplier<String>) () -> { Taller t = new Taller().llega("A").llega("B").urgente("C"); t.atender(); return t.atender() + t.atender() + t.atender(); }).get() => "ABnadie"
+    ((Supplier<Integer>) () -> { Taller t = new Taller().llega("A"); t.siguiente(); return t.enEspera(); }).get() => 1
+
+=== t15_por_nivel
+tema: 15
+dificultad: 4
+java: 11
+tipo: metodo
+titulo.es: Agrupar robots por nivel (Map de listas)
+titulo.de: Roboter nach Stufe gruppieren (Map von Listen)
+titulo.en: Grouping robots by level (Map of lists)
+enunciado.es: Cada ficha es "<nombre>:<nivel>", como "Rex:3". Devuelve un Map que, para cada nivel, guarde la lista de nombres en el orden en que aparecen, con los niveles de menor a mayor (un TreeMap).
+enunciado.de: Jeder Eintrag ist "<nombre>:<nivel>", etwa "Rex:3". Gib eine Map zurück, die für jede Stufe die Liste der Namen in der Reihenfolge ihres Auftretens speichert, mit den Stufen aufsteigend (eine TreeMap).
+enunciado.en: Each entry is "<nombre>:<nivel>", like "Rex:3". Return a Map that, for each level, keeps the list of names in the order they appear, with the levels from lowest to highest (a TreeMap).
+pista.es: Parte con split(":"). Si el nivel aún no está en el mapa, mete una lista nueva con put; después añade el nombre a la lista de ese nivel. computeIfAbsent hace las dos cosas de una vez.
+pista.de: Trenne mit split(":"). Ist die Stufe noch nicht in der Map, leg mit put eine neue Liste an; dann füge den Namen zur Liste dieser Stufe hinzu. computeIfAbsent erledigt beides auf einmal.
+pista.en: Split with split(":"). If the level isn't in the map yet, put a new list in; then add the name to that level's list. computeIfAbsent does both in one go.
+firma: static Map<Integer, List<String>> porNivel(List<String> fichas)
+plantilla:
+    return new HashMap<>();
+solucion:
+    Map<Integer, List<String>> grupos = new TreeMap<>();
+    for (String ficha : fichas) {
+        String[] partes = ficha.split(":");
+        int nivel = Integer.parseInt(partes[1]);
+        List<String> nombres = grupos.get(nivel);
+        if (nombres == null) {
+            nombres = new ArrayList<>();
+            grupos.put(nivel, nombres);
+        }
+        nombres.add(partes[0]);
+    }
+    return grupos;
+casos:
+    porNivel(List.of("Rex:3", "Zap:1", "Ada:3")) => Map.of(1, List.of("Zap"), 3, List.of("Rex", "Ada"))
+    porNivel(List.of("Rex:3", "Zap:1", "Ada:3")).toString() => "{1=[Zap], 3=[Rex, Ada]}"
+    porNivel(List.of("Bo:10", "Al:2")).keySet().iterator().next() => 2
+    porNivel(List.of("Uno:7")) => Map.of(7, List.of("Uno"))
+    porNivel(List.of()) => Map.of()
+
+=== t15_inventario
+tema: 15
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: El inventario del taller (Map dentro de una clase)
+titulo.de: Das Inventar der Werkstatt (Map in einer Klasse)
+titulo.en: The workshop inventory (a Map inside a class)
+enunciado.es: Escribe la clase Inventario con Inventario(), Inventario meter(String pieza, int cantidad) (devuelve this; IllegalArgumentException si cantidad no es positiva), boolean sacar(String pieza, int cantidad) (false sin cambiar nada si no hay bastantes; la pieza desaparece al llegar a 0), int cantidad(String pieza) (0 si no hay), int total() y Set<String> piezas(): las que hay, en orden alfabético y sin que se puedan cambiar desde fuera.
+enunciado.de: Schreibe die Klasse Inventario mit Inventario(), Inventario meter(String pieza, int cantidad) (gibt this zurück; IllegalArgumentException, wenn cantidad nicht positiv ist), boolean sacar(String pieza, int cantidad) (false ohne Änderung, wenn nicht genug da sind; bei 0 verschwindet das Teil), int cantidad(String pieza) (0, wenn keins da ist), int total() und Set<String> piezas(): die vorhandenen, alphabetisch sortiert und von außen nicht änderbar.
+enunciado.en: Write the class Inventario with Inventario(), Inventario meter(String pieza, int cantidad) (returns this; IllegalArgumentException if cantidad isn't positive), boolean sacar(String pieza, int cantidad) (false without changing anything if there aren't enough; the part disappears when it reaches 0), int cantidad(String pieza) (0 if there are none), int total() and Set<String> piezas(): the ones there are, in alphabetical order and impossible to change from outside.
+pista.es: Un TreeMap<String, Integer> ya guarda las claves ordenadas. Para piezas(): Collections.unmodifiableSet(new TreeSet<>(mapa.keySet())).
+pista.de: Eine TreeMap<String, Integer> hält die Schlüssel schon sortiert. Für piezas(): Collections.unmodifiableSet(new TreeSet<>(mapa.keySet())).
+pista.en: A TreeMap<String, Integer> already keeps its keys sorted. For piezas(): Collections.unmodifiableSet(new TreeSet<>(mapa.keySet())).
+plantilla:
+    import java.util.Map;
+    import java.util.Set;
+    import java.util.TreeMap;
+
+    public class Inventario {
+        private final Map<String, Integer> piezas = new TreeMap<>();
+
+        // meter, sacar, cantidad, total y piezas
+    }
+solucion:
+    import java.util.Collections;
+    import java.util.Map;
+    import java.util.Set;
+    import java.util.TreeMap;
+    import java.util.TreeSet;
+
+    public class Inventario {
+        private final Map<String, Integer> piezas = new TreeMap<>();
+
+        public Inventario meter(String pieza, int cantidad) {
+            if (cantidad <= 0) {
+                throw new IllegalArgumentException("cantidad no positiva: " + cantidad);
+            }
+            piezas.put(pieza, cantidad(pieza) + cantidad);
+            return this;
+        }
+
+        public boolean sacar(String pieza, int cantidad) {
+            int hay = cantidad(pieza);
+            if (cantidad > hay) {
+                return false;
+            }
+            if (cantidad == hay) {
+                piezas.remove(pieza);
+            } else {
+                piezas.put(pieza, hay - cantidad);
+            }
+            return true;
+        }
+
+        public int cantidad(String pieza) {
+            return piezas.getOrDefault(pieza, 0);
+        }
+
+        public int total() {
+            int total = 0;
+            for (int n : piezas.values()) {
+                total += n;
+            }
+            return total;
+        }
+
+        public Set<String> piezas() {
+            return Collections.unmodifiableSet(new TreeSet<>(piezas.keySet()));
+        }
+    }
+casos:
+    new Inventario().meter("tuerca", 5).meter("tuerca", 3).cantidad("tuerca") => 8
+    new Inventario().cantidad("laser") => 0
+    new Inventario().meter("tuerca", 5).sacar("tuerca", 6) => false
+    ((Supplier<Integer>) () -> { Inventario i = new Inventario().meter("tuerca", 5); i.sacar("tuerca", 2); return i.cantidad("tuerca"); }).get() => 3
+    ((Supplier<String>) () -> { Inventario i = new Inventario().meter("tuerca", 2).meter("laser", 1).meter("muelle", 4); i.sacar("tuerca", 2); return i.piezas().toString(); }).get() => "[laser, muelle]"
+    new Inventario().meter("a", 2).meter("b", 3).total() => 5
+    new Inventario().meter("laser", 0) => !IllegalArgumentException
+    new Inventario().meter("laser", 1).piezas().add("misil") => !UnsupportedOperationException
+
+=== t15_mejores
+tema: 15
+dificultad: 5
+java: 11
+tipo: metodo
+titulo.es: Los mejores del torneo (ordenar con un Comparator)
+titulo.de: Die Besten des Turniers (Sortieren mit einem Comparator)
+titulo.en: The tournament's best (sorting with a Comparator)
+enunciado.es: victorias dice cuántos combates ha ganado cada robot. Devuelve una lista con los nombres de los n que más han ganado, de más a menos; si empatan, por orden alfabético. Si hay menos de n robots, todos.
+enunciado.de: victorias sagt, wie viele Kämpfe jeder Roboter gewonnen hat. Gib eine Liste mit den Namen der n Roboter mit den meisten Siegen zurück, absteigend; bei Gleichstand alphabetisch. Gibt es weniger als n Roboter, alle.
+enunciado.en: victorias says how many fights each robot has won. Return a list with the names of the n robots with the most wins, from most to fewest; on a tie, alphabetically. If there are fewer than n robots, all of them.
+pista.es: Copia las claves en un ArrayList y ordénalo con nombres.sort((a, b) -> ...): primero Integer.compare(victorias.get(b), victorias.get(a)) y, si da 0, a.compareTo(b). Después, subList(0, Math.min(n, nombres.size())).
+pista.de: Kopiere die Schlüssel in eine ArrayList und sortiere sie mit nombres.sort((a, b) -> ...): zuerst Integer.compare(victorias.get(b), victorias.get(a)) und, wenn das 0 ist, a.compareTo(b). Danach subList(0, Math.min(n, nombres.size())).
+pista.en: Copy the keys into an ArrayList and sort it with nombres.sort((a, b) -> ...): first Integer.compare(victorias.get(b), victorias.get(a)) and, if that's 0, a.compareTo(b). Then subList(0, Math.min(n, nombres.size())).
+firma: static List<String> mejores(Map<String, Integer> victorias, int n)
+plantilla:
+    return new ArrayList<>(victorias.keySet());
+solucion:
+    List<String> nombres = new ArrayList<>(victorias.keySet());
+    nombres.sort((a, b) -> {
+        int porVictorias = Integer.compare(victorias.get(b), victorias.get(a));
+        return porVictorias != 0 ? porVictorias : a.compareTo(b);
+    });
+    return new ArrayList<>(nombres.subList(0, Math.min(n, nombres.size())));
+casos:
+    mejores(Map.of("Rex", 5, "Tita", 9, "Zap", 7), 2) => List.of("Tita", "Zap")
+    mejores(Map.of("Rex", 5, "Ada", 5, "Zap", 7), 3) => List.of("Zap", "Ada", "Rex")
+    mejores(Map.of("Rex", 1), 5) => List.of("Rex")
+    mejores(Map.of("Rex", 5, "Tita", 9), 0) => List.of()
+    mejores(Map.of(), 3) => List.of()

@@ -1,0 +1,345 @@
+# Tema 02: variables y tipos primitivos.
+=== t02_horas_de_bateria
+tema: 02
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Horas de batería
+titulo.de: Akkustunden
+titulo.en: Battery hours
+enunciado.es: La batería de tu robot dura dias días. Guarda en la variable horas cuántas horas son (un día tiene 24) y devuélvela. Ejemplo: horasDeBateria(2) devuelve 48.
+enunciado.de: Der Akku deines Roboters hält dias Tage. Speichere in der Variablen horas, wie viele Stunden das sind (ein Tag hat 24), und gib sie zurück. Beispiel: horasDeBateria(2) gibt 48 zurück.
+enunciado.en: Your robot's battery lasts dias days. Store in the variable horas how many hours that is (a day has 24) and return it. Example: horasDeBateria(2) returns 48.
+pista.es: Una variable guarda un valor: int horas = dias * 24; El * multiplica.
+pista.de: Eine Variable speichert einen Wert: int horas = dias * 24; Das * multipliziert.
+pista.en: A variable stores a value: int horas = dias * 24; The * multiplies.
+firma: static int horasDeBateria(int dias)
+plantilla:
+    int horas = 0;
+    return horas;
+solucion:
+    int horas = dias * 24;
+    return horas;
+casos:
+    horasDeBateria(2) => 48
+    horasDeBateria(1) => 24
+    horasDeBateria(0) => 0
+    horasDeBateria(10) => 240
+
+=== t02_danio_con_bonus
+tema: 02
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Una constante para el bonus
+titulo.de: Eine Konstante für den Bonus
+titulo.en: A constant for the bonus
+enunciado.es: La constante BONUS vale 1.5. Devuelve el daño multiplicado por BONUS. Ejemplo: danioConBonus(10.0) devuelve 15.0.
+enunciado.de: Die Konstante BONUS ist 1.5. Gib den Schaden mal BONUS zurück. Beispiel: danioConBonus(10.0) gibt 15.0 zurück.
+enunciado.en: The constant BONUS is 1.5. Return the damage multiplied by BONUS. Example: danioConBonus(10.0) returns 15.0.
+pista.es: final quiere decir que la variable no puede cambiar: es una constante. Úsala como cualquier otra: danio * BONUS.
+pista.de: final bedeutet, dass sich die Variable nicht mehr ändern kann: Sie ist eine Konstante. Du benutzt sie wie jede andere: danio * BONUS.
+pista.en: final means the variable can never change: it is a constant. Use it like any other: danio * BONUS.
+firma: static double danioConBonus(double danio)
+plantilla:
+    final double BONUS = 1.5;
+    return danio;
+solucion:
+    final double BONUS = 1.5;
+    return danio * BONUS;
+casos:
+    danioConBonus(10.0) => 15.0
+    danioConBonus(3.0) => 4.5
+    danioConBonus(2.5) => 3.75
+    danioConBonus(0.0) => 0.0
+
+=== t02_codigo_de_letra
+tema: 02
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: El número secreto de cada letra
+titulo.de: Die Geheimzahl jedes Buchstabens
+titulo.en: The secret number of each letter
+enunciado.es: Para Java, un char es también un número (su código Unicode). Devuelve el código de la letra. Ejemplo: codigo('A') devuelve 65.
+enunciado.de: Für Java ist ein char auch eine Zahl (sein Unicode-Code). Gib den Code des Zeichens zurück. Beispiel: codigo('A') gibt 65 zurück.
+enunciado.en: To Java, a char is also a number (its Unicode code). Return the code of the letter. Example: codigo('A') returns 65.
+pista.es: Un char cabe en un int sin perder nada, así que basta con devolverlo: Java lo convierte solo.
+pista.de: Ein char passt ohne Verlust in einen int, also gib ihn einfach zurück: Java wandelt ihn selbst um.
+pista.en: A char fits into an int without losing anything, so just return it: Java converts it for you.
+firma: static int codigo(char letra)
+plantilla:
+    return 0;
+solucion:
+    int codigo = letra;
+    return codigo;
+casos:
+    codigo('A') => 65
+    codigo('a') => 97
+    codigo('0') => 48
+    codigo(' ') => 32
+
+=== t02_media_de_dos
+tema: 02
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: La media que perdía decimales
+titulo.de: Der Durchschnitt, der Nachkommastellen verlor
+titulo.en: The average that lost its decimals
+enunciado.es: Devuelve la media de a y b con decimales. Ejemplo: media(3, 4) devuelve 3.5 (y no 3.0, que es lo que sale ahora).
+enunciado.de: Gib den Durchschnitt von a und b mit Nachkommastellen zurück. Beispiel: media(3, 4) gibt 3.5 zurück (und nicht 3.0, wie jetzt).
+enunciado.en: Return the average of a and b with decimals. Example: media(3, 4) returns 3.5 (not 3.0, which is what you get now).
+pista.es: Entero entre entero da entero: 7 / 2 es 3. Si uno de los dos es double, el resultado también: 7 / 2.0 es 3.5.
+pista.de: Ganzzahl durch Ganzzahl ergibt eine Ganzzahl: 7 / 2 ist 3. Ist einer der beiden ein double, wird es auch das Ergebnis: 7 / 2.0 ist 3.5.
+pista.en: Integer divided by integer gives an integer: 7 / 2 is 3. If either one is a double, so is the result: 7 / 2.0 is 3.5.
+firma: static double media(int a, int b)
+plantilla:
+    return (a + b) / 2;
+solucion:
+    return (a + b) / 2.0;
+casos:
+    media(3, 4) => 3.5
+    media(2, 4) => 3.0
+    media(0, 0) => 0.0
+    media(-1, 0) => -0.5
+    media(10, 5) => 7.5
+
+=== t02_quitar_decimales
+tema: 02
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Potencia sin decimales
+titulo.de: Leistung ohne Nachkommastellen
+titulo.en: Power without decimals
+enunciado.es: El medidor solo enseña números enteros. Convierte la potencia a int quitándole los decimales (sin redondear). Ejemplo: potenciaEntera(7.9) devuelve 7.
+enunciado.de: Die Anzeige kann nur ganze Zahlen. Wandle die Leistung in einen int um, indem du die Nachkommastellen abschneidest (nicht runden). Beispiel: potenciaEntera(7.9) gibt 7 zurück.
+enunciado.en: The gauge can only show whole numbers. Convert the power to an int by cutting off the decimals (no rounding). Example: potenciaEntera(7.9) returns 7.
+pista.es: Un double no cabe solo en un int: hay que pedirlo con un cast, (int) potencia. Corta hacia el cero: (int) -2.5 es -2.
+pista.de: Ein double passt nicht von allein in einen int: du brauchst einen Cast, (int) potencia. Er schneidet Richtung null ab: (int) -2.5 ist -2.
+pista.en: A double won't go into an int by itself: you need a cast, (int) potencia. It cuts towards zero: (int) -2.5 is -2.
+firma: static int potenciaEntera(double potencia)
+plantilla:
+    return 0;
+solucion:
+    return (int) potencia;
+casos:
+    potenciaEntera(7.9) => 7
+    potenciaEntera(3.0) => 3
+    potenciaEntera(-2.5) => -2
+    potenciaEntera(0.4) => 0
+
+=== t02_etiqueta_con_var
+tema: 02
+dificultad: 2
+java: 10
+tipo: metodo
+titulo.es: La etiqueta del modelo (var, Java 10)
+titulo.de: Das Modellschild (var, Java 10)
+titulo.en: The model label (var, Java 10)
+enunciado.es: Desde Java 10 puedes escribir var en lugar del tipo de una variable local, y Java lo deduce. Usa var para formar la etiqueta modelo + " Mk " + serie y devuélvela. Ejemplo: etiqueta("Titan", 3) devuelve "Titan Mk 3".
+enunciado.de: Seit Java 10 darfst du bei lokalen Variablen var statt des Typs schreiben, und Java leitet ihn ab. Bilde mit var das Schild modelo + " Mk " + serie und gib es zurück. Beispiel: etiqueta("Titan", 3) gibt "Titan Mk 3" zurück.
+enunciado.en: Since Java 10 you can write var instead of a local variable's type, and Java works it out. Use var to build the label modelo + " Mk " + serie and return it. Example: etiqueta("Titan", 3) returns "Titan Mk 3".
+pista.es: var texto = modelo + " Mk " + serie; El tipo sigue existiendo (aquí, String); solo te ahorras escribirlo.
+pista.de: var texto = modelo + " Mk " + serie; Der Typ ist trotzdem da (hier String), du sparst dir nur das Hinschreiben.
+pista.en: var texto = modelo + " Mk " + serie; The type is still there (String, here); you just don't have to write it.
+firma: static String etiqueta(String modelo, int serie)
+plantilla:
+    var texto = modelo;
+    return texto;
+solucion:
+    var texto = modelo + " Mk " + serie;
+    return texto;
+casos:
+    etiqueta("Titan", 3) => "Titan Mk 3"
+    etiqueta("Bit", 1) => "Bit Mk 1"
+    etiqueta("Z", 0) => "Z Mk 0"
+    etiqueta("", 5) => " Mk 5"
+
+=== t02_siguiente_letra
+tema: 02
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: La letra siguiente
+titulo.de: Der nächste Buchstabe
+titulo.en: The next letter
+enunciado.es: Los robots se nombran por letras. Devuelve el char que va justo después de c en Unicode. Ejemplo: siguienteLetra('a') devuelve 'b'.
+enunciado.de: Die Roboter werden mit Buchstaben benannt. Gib das char zurück, das in Unicode direkt nach c kommt. Beispiel: siguienteLetra('a') gibt 'b' zurück.
+enunciado.en: Robots are named with letters. Return the char that comes right after c in Unicode. Example: siguienteLetra('a') returns 'b'.
+pista.es: c + 1 da un int (98 para 'a'). Para volver a tenerlo como char, haz un cast: (char) (c + 1).
+pista.de: c + 1 ergibt einen int (98 für 'a'). Um wieder ein char zu bekommen, brauchst du einen Cast: (char) (c + 1).
+pista.en: c + 1 gives an int (98 for 'a'). To get a char back, use a cast: (char) (c + 1).
+firma: static char siguienteLetra(char c)
+plantilla:
+    return c;
+solucion:
+    return (char) (c + 1);
+casos:
+    siguienteLetra('a') => 'b'
+    siguienteLetra('Y') => 'Z'
+    siguienteLetra('0') => '1'
+    siguienteLetra('z') => '{'
+
+=== t02_valor_de_cifra
+tema: 02
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: De carácter a número
+titulo.de: Vom Zeichen zur Zahl
+titulo.en: From character to number
+enunciado.es: El teclado del robot da cifras como char. Devuelve su valor como número. Ejemplo: valorDeCifra('7') devuelve 7 (no 55, que es el código de '7').
+enunciado.de: Die Tastatur des Roboters liefert Ziffern als char. Gib ihren Zahlenwert zurück. Beispiel: valorDeCifra('7') gibt 7 zurück (nicht 55, den Code von '7').
+enunciado.en: The robot's keypad gives digits as chars. Return their value as a number. Example: valorDeCifra('7') returns 7 (not 55, the code of '7').
+pista.es: Las cifras '0' a '9' van seguidas en Unicode, así que basta con restar el código de '0': cifra - '0'.
+pista.de: Die Ziffern '0' bis '9' stehen in Unicode hintereinander, also zieh einfach den Code von '0' ab: cifra - '0'.
+pista.en: The digits '0' to '9' come one after another in Unicode, so just subtract the code of '0': cifra - '0'.
+firma: static int valorDeCifra(char cifra)
+plantilla:
+    return cifra;
+solucion:
+    return cifra - '0';
+casos:
+    valorDeCifra('7') => 7
+    valorDeCifra('0') => 0
+    valorDeCifra('9') => 9
+    valorDeCifra('3') => 3
+
+=== t02_cabe_en_byte
+tema: 02
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: ¿Cabe en un byte?
+titulo.de: Passt es in ein byte?
+titulo.en: Does it fit in a byte?
+enunciado.es: El chip viejo guarda los números en un byte. Devuelve true si n cabe en un byte (entre Byte.MIN_VALUE y Byte.MAX_VALUE, ambos incluidos). Ejemplo: cabeEnByte(127) devuelve true y cabeEnByte(128), false.
+enunciado.de: Der alte Chip speichert Zahlen in einem byte. Gib true zurück, wenn n in ein byte passt (zwischen Byte.MIN_VALUE und Byte.MAX_VALUE, beide eingeschlossen). Beispiel: cabeEnByte(127) gibt true zurück, cabeEnByte(128) false.
+enunciado.en: The old chip stores numbers in a byte. Return true if n fits in a byte (between Byte.MIN_VALUE and Byte.MAX_VALUE, both included). Example: cabeEnByte(127) returns true and cabeEnByte(128) false.
+pista.es: Un byte va de -128 a 127. Comprueba las dos cosas a la vez con &&: n >= Byte.MIN_VALUE && n <= Byte.MAX_VALUE.
+pista.de: Ein byte reicht von -128 bis 127. Prüfe beides zugleich mit &&: n >= Byte.MIN_VALUE && n <= Byte.MAX_VALUE.
+pista.en: A byte goes from -128 to 127. Check both at once with &&: n >= Byte.MIN_VALUE && n <= Byte.MAX_VALUE.
+firma: static boolean cabeEnByte(int n)
+plantilla:
+    return false;
+solucion:
+    return n >= Byte.MIN_VALUE && n <= Byte.MAX_VALUE;
+casos:
+    cabeEnByte(100) => true
+    cabeEnByte(127) => true
+    cabeEnByte(128) => false
+    cabeEnByte(-128) => true
+    cabeEnByte(-129) => false
+    cabeEnByte(0) => true
+
+=== t02_misma_energia
+tema: 02
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Decimales que casi coinciden
+titulo.de: Kommazahlen, die fast gleich sind
+titulo.en: Decimals that almost match
+enunciado.es: Los double no son exactos: 0.1 + 0.2 no es exactamente 0.3. Devuelve true si a y b se diferencian en menos de 0.000001. Ejemplo: mismaEnergia(0.1 + 0.2, 0.3) devuelve true.
+enunciado.de: double-Werte sind nicht exakt: 0.1 + 0.2 ist nicht genau 0.3. Gib true zurück, wenn sich a und b um weniger als 0.000001 unterscheiden. Beispiel: mismaEnergia(0.1 + 0.2, 0.3) gibt true zurück.
+enunciado.en: doubles are not exact: 0.1 + 0.2 is not exactly 0.3. Return true if a and b differ by less than 0.000001. Example: mismaEnergia(0.1 + 0.2, 0.3) returns true.
+pista.es: Nunca compares decimales con ==. Mira la distancia entre ellos: Math.abs(a - b) < 0.000001 (o 1e-6).
+pista.de: Vergleiche Kommazahlen nie mit ==. Schau dir ihren Abstand an: Math.abs(a - b) < 0.000001 (oder 1e-6).
+pista.en: Never compare decimals with ==. Look at the distance between them: Math.abs(a - b) < 0.000001 (or 1e-6).
+firma: static boolean mismaEnergia(double a, double b)
+plantilla:
+    return a == b;
+solucion:
+    final double TOLERANCIA = 1e-6;
+    return Math.abs(a - b) < TOLERANCIA;
+casos:
+    mismaEnergia(0.1 + 0.2, 0.3) => true
+    mismaEnergia(1.0, 1.0) => true
+    mismaEnergia(1.0, 1.1) => false
+    mismaEnergia(-0.5, 0.5) => false
+    mismaEnergia(2.0000000001, 2.0) => true
+
+=== t02_energia_maxima
+tema: 02
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Mil millones por reactor
+titulo.de: Eine Milliarde pro Reaktor
+titulo.en: A billion per reactor
+enunciado.es: Cada reactor da 1_000_000_000 de energía (desde Java 7 puedes separar las cifras con _). Devuelve la energía de todos los reactores. Ojo: con 3 reactores ya no cabe en un int. Ejemplo: energiaMaxima(3) devuelve 3000000000.
+enunciado.de: Jeder Reaktor liefert 1_000_000_000 Energie (seit Java 7 darfst du Ziffern mit _ trennen). Gib die Energie aller Reaktoren zurück. Achtung: Bei 3 Reaktoren passt das nicht mehr in einen int. Beispiel: energiaMaxima(3) gibt 3000000000 zurück.
+enunciado.en: Each reactor gives 1_000_000_000 energy (since Java 7 you can split digits with _). Return the energy of all reactors. Careful: with 3 reactors it no longer fits in an int. Example: energiaMaxima(3) returns 3000000000.
+pista.es: int * int se calcula como int y se desborda, aunque luego lo guardes en un long. Haz que uno sea long con la L: 1_000_000_000L.
+pista.de: int * int wird als int gerechnet und läuft über, auch wenn du es danach in einem long speicherst. Mach einen davon mit L zum long: 1_000_000_000L.
+pista.en: int * int is computed as an int and overflows, even if you store it in a long afterwards. Make one of them a long with L: 1_000_000_000L.
+firma: static long energiaMaxima(int reactores)
+plantilla:
+    return reactores * 1_000_000_000;
+solucion:
+    final long ENERGIA_POR_REACTOR = 1_000_000_000L;
+    return reactores * ENERGIA_POR_REACTOR;
+casos:
+    energiaMaxima(1) => 1_000_000_000L
+    energiaMaxima(3) => 3_000_000_000L
+    energiaMaxima(10) => 10_000_000_000L
+    energiaMaxima(0) => 0L
+
+=== t02_a_byte
+tema: 02
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: El cuentakilómetros que da la vuelta
+titulo.de: Der Zähler, der überläuft
+titulo.en: The counter that wraps around
+enunciado.es: El chip viejo solo tiene un byte (de -128 a 127): al pasarse, da la vuelta. Devuelve lo que queda de n al meterlo en un byte. Ejemplo: aByte(200) devuelve -56 y aByte(128), -128.
+enunciado.de: Der alte Chip hat nur ein byte (von -128 bis 127): Wird es zu groß, läuft es über. Gib zurück, was von n übrig bleibt, wenn man es in ein byte steckt. Beispiel: aByte(200) gibt -56 zurück, aByte(128) -128.
+enunciado.en: The old chip only has a byte (from -128 to 127): when it overflows, it wraps around. Return what is left of n when you squeeze it into a byte. Example: aByte(200) returns -56 and aByte(128) returns -128.
+pista.es: Un cast a un tipo más pequeño se queda con los últimos bits: (byte) n. Luego Java lo vuelve a convertir en int al devolverlo.
+pista.de: Ein Cast in einen kleineren Typ behält nur die letzten Bits: (byte) n. Beim Zurückgeben macht Java wieder einen int daraus.
+pista.en: A cast to a smaller type keeps only the last bits: (byte) n. Java turns it back into an int when you return it.
+firma: static int aByte(int n)
+plantilla:
+    return n;
+solucion:
+    byte pequeno = (byte) n;
+    return pequeno;
+casos:
+    aByte(200) => -56
+    aByte(127) => 127
+    aByte(128) => -128
+    aByte(-1) => -1
+    aByte(256) => 0
+    aByte(-129) => 127
+
+=== t02_suma_saturada
+tema: 02
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Una suma que se queda en el tope
+titulo.de: Eine Summe, die am Anschlag stehen bleibt
+titulo.en: A sum that stops at the limit
+enunciado.es: Suma a y b, pero si el resultado no cabe en un int, devuelve el tope: Integer.MAX_VALUE si se pasa por arriba e Integer.MIN_VALUE si se pasa por abajo. Ejemplo: sumaSaturada(Integer.MAX_VALUE, 1) devuelve Integer.MAX_VALUE.
+enunciado.de: Addiere a und b, aber wenn das Ergebnis nicht in einen int passt, gib die Grenze zurück: Integer.MAX_VALUE, wenn es oben überläuft, und Integer.MIN_VALUE, wenn es unten überläuft. Beispiel: sumaSaturada(Integer.MAX_VALUE, 1) gibt Integer.MAX_VALUE zurück.
+enunciado.en: Add a and b, but if the result doesn't fit in an int, return the limit: Integer.MAX_VALUE if it goes over the top and Integer.MIN_VALUE if it goes below the bottom. Example: sumaSaturada(Integer.MAX_VALUE, 1) returns Integer.MAX_VALUE.
+pista.es: Suma en un long, donde sí cabe: long suma = (long) a + b; Luego recórtala con Math.min y Math.max y vuelve a int con un cast.
+pista.de: Rechne in einem long, da passt es: long suma = (long) a + b; Dann begrenze mit Math.min und Math.max und mach mit einem Cast wieder einen int daraus.
+pista.en: Add in a long, where it fits: long suma = (long) a + b; Then clip it with Math.min and Math.max and cast it back to int.
+firma: static int sumaSaturada(int a, int b)
+plantilla:
+    return a + b;
+solucion:
+    long suma = (long) a + b;
+    long recortada = Math.max(Integer.MIN_VALUE, Math.min(Integer.MAX_VALUE, suma));
+    return (int) recortada;
+casos:
+    sumaSaturada(2, 3) => 5
+    sumaSaturada(Integer.MAX_VALUE, 1) => Integer.MAX_VALUE
+    sumaSaturada(Integer.MIN_VALUE, -1) => Integer.MIN_VALUE
+    sumaSaturada(Integer.MAX_VALUE, Integer.MAX_VALUE) => Integer.MAX_VALUE
+    sumaSaturada(-7, 7) => 0
+    sumaSaturada(Integer.MAX_VALUE, -1) => 2147483646

@@ -1,0 +1,440 @@
+# Tema 04: condicionales (if, else y switch).
+=== t04_golpe_mayor
+tema: 04
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: El golpe más fuerte
+titulo.de: Der stärkere Treffer
+titulo.en: The stronger hit
+enunciado.es: El robot puede pegar con el brazo izquierdo (a) o con el derecho (b). Devuelve el daño mayor de los dos. Ejemplo: golpeMayor(3, 7) devuelve 7.
+enunciado.de: Der Roboter kann mit dem linken (a) oder dem rechten Arm (b) zuschlagen. Gib den größeren Schaden zurück. Beispiel: golpeMayor(3, 7) gibt 7 zurück.
+enunciado.en: The robot can hit with its left arm (a) or its right arm (b). Return the bigger damage of the two. Example: golpeMayor(3, 7) returns 7.
+pista.es: if (a > b) { return a; } y, si no, return b;
+pista.de: if (a > b) { return a; } und sonst return b;
+pista.en: if (a > b) { return a; } and otherwise return b;
+firma: static int golpeMayor(int a, int b)
+plantilla:
+    return a;
+solucion:
+    if (a > b) {
+        return a;
+    }
+    return b;
+casos:
+    golpeMayor(3, 7) => 7
+    golpeMayor(9, 2) => 9
+    golpeMayor(5, 5) => 5
+    golpeMayor(-1, -8) => -1
+
+=== t04_sentido_de_marcha
+tema: 04
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: ¿Hacia dónde va?
+titulo.de: Wohin fährt er?
+titulo.en: Which way is it going?
+enunciado.es: Según la velocidad, devuelve 1 si el robot va hacia delante (velocidad positiva), -1 si va hacia atrás (negativa) y 0 si está parado. Ejemplo: sentido(5) devuelve 1.
+enunciado.de: Gib je nach Geschwindigkeit 1 zurück, wenn der Roboter vorwärts fährt (positiv), -1, wenn er rückwärts fährt (negativ), und 0, wenn er steht. Beispiel: sentido(5) gibt 1 zurück.
+enunciado.en: Depending on the speed, return 1 if the robot moves forward (positive speed), -1 if it moves backward (negative) and 0 if it stands still. Example: sentido(5) returns 1.
+pista.es: Encadena: if (velocidad > 0) { ... } else if (velocidad < 0) { ... } else { ... }
+pista.de: Verkette: if (velocidad > 0) { ... } else if (velocidad < 0) { ... } else { ... }
+pista.en: Chain them: if (velocidad > 0) { ... } else if (velocidad < 0) { ... } else { ... }
+firma: static int sentido(int velocidad)
+plantilla:
+    return 0;
+solucion:
+    if (velocidad > 0) {
+        return 1;
+    } else if (velocidad < 0) {
+        return -1;
+    } else {
+        return 0;
+    }
+casos:
+    sentido(5) => 1
+    sentido(-3) => -1
+    sentido(0) => 0
+    sentido(1000) => 1
+
+=== t04_estado_ternario
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: OK o KO en una línea
+titulo.de: OK oder KO in einer Zeile
+titulo.en: OK or KO in one line
+enunciado.es: Devuelve "OK" si al robot le queda vida (más de 0) y "KO" si no. Hazlo en una sola línea con el operador ternario. Ejemplo: estado(30) devuelve "OK".
+enunciado.de: Gib "OK" zurück, wenn der Roboter noch Leben hat (mehr als 0), sonst "KO". Mach es in einer einzigen Zeile mit dem ternären Operator. Beispiel: estado(30) gibt "OK" zurück.
+enunciado.en: Return "OK" if the robot still has life left (more than 0) and "KO" otherwise. Do it in a single line with the ternary operator. Example: estado(30) returns "OK".
+pista.es: condición ? valorSiSí : valorSiNo es un if que devuelve un valor: return vida > 0 ? "OK" : "KO";
+pista.de: bedingung ? wertWennJa : wertWennNein ist ein if, das einen Wert liefert: return vida > 0 ? "OK" : "KO";
+pista.en: condition ? valueIfYes : valueIfNo is an if that produces a value: return vida > 0 ? "OK" : "KO";
+firma: static String estado(int vida)
+plantilla:
+    return "OK";
+solucion:
+    return vida > 0 ? "OK" : "KO";
+casos:
+    estado(30) => "OK"
+    estado(1) => "OK"
+    estado(0) => "KO"
+    estado(-15) => "KO"
+
+=== t04_puede_disparar
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: ¿Puede disparar el láser?
+titulo.de: Kann der Laser feuern?
+titulo.en: Can the laser fire?
+enunciado.es: El láser dispara si hay al menos coste de energía y el cañón no está sobrecalentado. Devuelve true si puede disparar. Ejemplo: puedeDisparar(50, 30, false) devuelve true.
+enunciado.de: Der Laser feuert, wenn mindestens coste Energie da ist und das Rohr nicht überhitzt ist. Gib true zurück, wenn er feuern kann. Beispiel: puedeDisparar(50, 30, false) gibt true zurück.
+enunciado.en: The laser fires if there is at least coste energy and the barrel isn't overheated. Return true if it can fire. Example: puedeDisparar(50, 30, false) returns true.
+pista.es: ! le da la vuelta a un boolean: !sobrecalentado es «no está sobrecalentado». Júntalo con && a la condición de la energía.
+pista.de: ! dreht einen boolean um: !sobrecalentado heißt «nicht überhitzt». Verbinde es mit && mit der Bedingung für die Energie.
+pista.en: ! flips a boolean: !sobrecalentado means "not overheated". Join it with && to the energy condition.
+firma: static boolean puedeDisparar(int energia, int coste, boolean sobrecalentado)
+plantilla:
+    return energia >= coste;
+solucion:
+    return energia >= coste && !sobrecalentado;
+casos:
+    puedeDisparar(50, 30, false) => true
+    puedeDisparar(30, 30, false) => true
+    puedeDisparar(20, 30, false) => false
+    puedeDisparar(50, 30, true) => false
+    puedeDisparar(0, 0, false) => true
+
+=== t04_danio_recibido
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: La armadura frena el golpe
+titulo.de: Die Panzerung bremst den Treffer
+titulo.en: The armor softens the blow
+enunciado.es: La armadura resta su valor al daño, pero el daño nunca puede ser negativo (una armadura fuerte no cura). Devuelve el daño que llega. Ejemplo: danioRecibido(10, 3) devuelve 7 y danioRecibido(3, 10), 0.
+enunciado.de: Die Panzerung zieht ihren Wert vom Schaden ab, aber der Schaden kann nie negativ werden (starke Panzerung heilt nicht). Gib den Schaden zurück, der durchkommt. Beispiel: danioRecibido(10, 3) gibt 7 zurück, danioRecibido(3, 10) 0.
+enunciado.en: The armor takes its value off the damage, but damage can never be negative (strong armor doesn't heal). Return the damage that gets through. Example: danioRecibido(10, 3) returns 7 and danioRecibido(3, 10) returns 0.
+pista.es: if (danio > armadura) { return danio - armadura; } y si no, 0.
+pista.de: if (danio > armadura) { return danio - armadura; } und sonst 0.
+pista.en: if (danio > armadura) { return danio - armadura; } and otherwise 0.
+firma: static int danioRecibido(int danio, int armadura)
+plantilla:
+    return danio - armadura;
+solucion:
+    if (danio > armadura) {
+        return danio - armadura;
+    }
+    return 0;
+casos:
+    danioRecibido(10, 3) => 7
+    danioRecibido(3, 10) => 0
+    danioRecibido(5, 5) => 0
+    danioRecibido(8, 0) => 8
+
+=== t04_mayor_de_tres
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: El mejor de tres sensores
+titulo.de: Der beste von drei Sensoren
+titulo.en: The best of three sensors
+enunciado.es: Tres sensores miden la temperatura del motor. Devuelve la lectura más alta. Ejemplo: mayorDeTres(4, 9, 2) devuelve 9.
+enunciado.de: Drei Sensoren messen die Motortemperatur. Gib den höchsten Messwert zurück. Beispiel: mayorDeTres(4, 9, 2) gibt 9 zurück.
+enunciado.en: Three sensors measure the engine temperature. Return the highest reading. Example: mayorDeTres(4, 9, 2) returns 9.
+pista.es: Guarda el mayor hasta ahora en una variable: int mayor = a; y luego mira si b o c lo superan, cada uno con su if.
+pista.de: Merk dir den bisher größten in einer Variablen: int mayor = a; und prüf dann mit je einem if, ob b oder c größer sind.
+pista.en: Keep the biggest so far in a variable: int mayor = a; then check with one if each whether b or c beat it.
+firma: static int mayorDeTres(int a, int b, int c)
+plantilla:
+    return a;
+solucion:
+    int mayor = a;
+    if (b > mayor) {
+        mayor = b;
+    }
+    if (c > mayor) {
+        mayor = c;
+    }
+    return mayor;
+casos:
+    mayorDeTres(4, 9, 2) => 9
+    mayorDeTres(1, 2, 3) => 3
+    mayorDeTres(3, 2, 1) => 3
+    mayorDeTres(-5, -2, -9) => -2
+    mayorDeTres(4, 4, 4) => 4
+
+=== t04_nivel_de_alarma
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Nivel de alarma
+titulo.de: Alarmstufe
+titulo.en: Alarm level
+enunciado.es: Devuelve el nivel de alarma según la vida: 0 si es mayor que 60, 1 si está entre 21 y 60, 2 si está entre 1 y 20, y 3 si es 0 o menos. Ejemplo: nivelDeAlarma(45) devuelve 1.
+enunciado.de: Gib die Alarmstufe je nach Leben zurück: 0 bei mehr als 60, 1 zwischen 21 und 60, 2 zwischen 1 und 20 und 3 bei 0 oder weniger. Beispiel: nivelDeAlarma(45) gibt 1 zurück.
+enunciado.en: Return the alarm level based on life: 0 if it's above 60, 1 if it's between 21 and 60, 2 if it's between 1 and 20, and 3 if it's 0 or less. Example: nivelDeAlarma(45) returns 1.
+pista.es: Con if / else if de mayor a menor no hace falta comprobar los dos extremos: si llegas al segundo if, ya sabes que vida <= 60.
+pista.de: Mit if / else if von groß nach klein musst du nicht beide Grenzen prüfen: Kommst du beim zweiten if an, weißt du schon, dass vida <= 60 ist.
+pista.en: With if / else if from high to low you don't need to check both ends: if you reach the second if, you already know vida <= 60.
+firma: static int nivelDeAlarma(int vida)
+plantilla:
+    return 0;
+solucion:
+    if (vida > 60) {
+        return 0;
+    } else if (vida > 20) {
+        return 1;
+    } else if (vida > 0) {
+        return 2;
+    } else {
+        return 3;
+    }
+casos:
+    nivelDeAlarma(100) => 0
+    nivelDeAlarma(61) => 0
+    nivelDeAlarma(60) => 1
+    nivelDeAlarma(21) => 1
+    nivelDeAlarma(20) => 2
+    nivelDeAlarma(1) => 2
+    nivelDeAlarma(0) => 3
+    nivelDeAlarma(-5) => 3
+
+=== t04_coste_de_arma
+tema: 04
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: La lista de precios de las armas
+titulo.de: Die Preisliste der Waffen
+titulo.en: The weapon price list
+enunciado.es: Con un switch, devuelve cuánta energía gasta cada arma: "laser" 30, "misil" 50 y "bala" 5. Cualquier otro texto (también "LASER", en mayúsculas) gasta 0. Ejemplo: costeDeArma("misil") devuelve 50.
+enunciado.de: Gib mit einem switch zurück, wie viel Energie jede Waffe verbraucht: "laser" 30, "misil" 50 und "bala" 5. Jeder andere Text (auch "LASER" in Großbuchstaben) kostet 0. Beispiel: costeDeArma("misil") gibt 50 zurück.
+enunciado.en: Using a switch, return how much energy each weapon uses: "laser" 30, "misil" 50 and "bala" 5. Any other text (including "LASER" in capitals) costs 0. Example: costeDeArma("misil") returns 50.
+pista.es: switch (arma) { case "laser": coste = 30; break; ... default: coste = 0; } Sin el break, sigue con el caso siguiente.
+pista.de: switch (arma) { case "laser": coste = 30; break; ... default: coste = 0; } Ohne break geht es mit dem nächsten Fall weiter.
+pista.en: switch (arma) { case "laser": coste = 30; break; ... default: coste = 0; } Without break, it carries on into the next case.
+firma: static int costeDeArma(String arma)
+plantilla:
+    int coste = 0;
+    // switch (arma) { case "laser": ... }
+    return coste;
+solucion:
+    int coste;
+    switch (arma) {
+        case "laser":
+            coste = 30;
+            break;
+        case "misil":
+            coste = 50;
+            break;
+        case "bala":
+            coste = 5;
+            break;
+        default:
+            coste = 0;
+            break;
+    }
+    return coste;
+casos:
+    costeDeArma("laser") => 30
+    costeDeArma("misil") => 50
+    costeDeArma("bala") => 5
+    costeDeArma("rayo") => 0
+    costeDeArma("LASER") => 0
+    costeDeArma("") => 0
+
+=== t04_puntos_por_puesto
+tema: 04
+dificultad: 3
+java: 14
+tipo: metodo
+titulo.es: Puntos del torneo (switch con flechas, Java 14)
+titulo.de: Turnierpunkte (switch mit Pfeilen, Java 14)
+titulo.en: Tournament points (arrow switch, Java 14)
+enunciado.es: Java 14 trajo las expresiones switch: con -> no hace falta break y el switch entero da un valor. Devuelve los puntos del puesto: 1º 10, 2º 6, 3º 4, 4º y 5º 1, y cualquier otro 0. Ejemplo: puntos(2) devuelve 6.
+enunciado.de: Java 14 hat switch-Ausdrücke eingeführt: Mit -> braucht man kein break, und der ganze switch liefert einen Wert. Gib die Punkte für die Platzierung zurück: Platz 1 bekommt 10, Platz 2 6, Platz 3 4, Platz 4 und 5 je 1, alle anderen 0. Beispiel: puntos(2) gibt 6 zurück.
+enunciado.en: Java 14 introduced switch expressions: with -> you don't need break and the whole switch produces a value. Return the points for the position: 1st 10, 2nd 6, 3rd 4, 4th and 5th 1, anything else 0. Example: puntos(2) returns 6.
+pista.es: return switch (puesto) { case 1 -> 10; case 4, 5 -> 1; ... default -> 0; }; Varios valores van en el mismo case, separados por comas.
+pista.de: return switch (puesto) { case 1 -> 10; case 4, 5 -> 1; ... default -> 0; }; Mehrere Werte stehen im selben case, durch Kommas getrennt.
+pista.en: return switch (puesto) { case 1 -> 10; case 4, 5 -> 1; ... default -> 0; }; Several values share one case, separated by commas.
+firma: static int puntos(int puesto)
+plantilla:
+    return 0;
+solucion:
+    return switch (puesto) {
+        case 1 -> 10;
+        case 2 -> 6;
+        case 3 -> 4;
+        case 4, 5 -> 1;
+        default -> 0;
+    };
+casos:
+    puntos(1) => 10
+    puntos(2) => 6
+    puntos(3) => 4
+    puntos(4) => 1
+    puntos(5) => 1
+    puntos(6) => 0
+    puntos(0) => 0
+    puntos(-1) => 0
+
+=== t04_anio_bisiesto
+tema: 04
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: El calendario del taller
+titulo.de: Der Werkstattkalender
+titulo.en: The workshop calendar
+enunciado.es: El taller abre el 29 de febrero solo en los años bisiestos: los divisibles entre 4, salvo los divisibles entre 100, que solo lo son si también son divisibles entre 400. Devuelve true si el año es bisiesto. Ejemplo: esBisiesto(2024) devuelve true y esBisiesto(1900), false.
+enunciado.de: Die Werkstatt öffnet am 29. Februar nur in Schaltjahren: durch 4 teilbar, außer durch 100 teilbar – die sind es nur, wenn sie auch durch 400 teilbar sind. Gib true zurück, wenn das Jahr ein Schaltjahr ist. Beispiel: esBisiesto(2024) gibt true zurück, esBisiesto(1900) false.
+enunciado.en: The workshop opens on 29 February only in leap years: those divisible by 4, except those divisible by 100, which only count if they are also divisible by 400. Return true if the year is a leap year. Example: esBisiesto(2024) returns true and esBisiesto(1900) false.
+pista.es: Empieza por la regla más especial: si es divisible entre 400, true; si no, si es divisible entre 100, false; si no, mira el 4.
+pista.de: Fang mit der speziellsten Regel an: durch 400 teilbar, dann true; sonst durch 100 teilbar, dann false; sonst schau auf die 4.
+pista.en: Start with the most special rule: divisible by 400 means true; otherwise divisible by 100 means false; otherwise check 4.
+firma: static boolean esBisiesto(int anio)
+plantilla:
+    return anio % 4 == 0;
+solucion:
+    if (anio % 400 == 0) {
+        return true;
+    } else if (anio % 100 == 0) {
+        return false;
+    } else {
+        return anio % 4 == 0;
+    }
+casos:
+    esBisiesto(2024) => true
+    esBisiesto(2023) => false
+    esBisiesto(1900) => false
+    esBisiesto(2000) => true
+    esBisiesto(2100) => false
+
+=== t04_duelo
+tema: 04
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Láser, misil, escudo
+titulo.de: Laser, Rakete, Schild
+titulo.en: Laser, missile, shield
+enunciado.es: Dos robots eligen arma a la vez: "laser" derriba al "misil", el "misil" revienta el "escudo" y el "escudo" refleja el "laser". Devuelve 1 si gana a, 2 si gana b y 0 si empatan (eligen la misma). Ejemplo: duelo("laser", "misil") devuelve 1.
+enunciado.de: Zwei Roboter wählen gleichzeitig eine Waffe: "laser" schießt "misil" (die Rakete) ab, "misil" sprengt "escudo" (den Schild), und "escudo" wirft "laser" zurück. Gib 1 zurück, wenn a gewinnt, 2, wenn b gewinnt, und 0 bei Gleichstand (gleiche Wahl). Beispiel: duelo("laser", "misil") gibt 1 zurück.
+enunciado.en: Two robots pick a weapon at the same time: "laser" shoots down "misil" (the missile), "misil" blows up "escudo" (the shield) and "escudo" reflects "laser". Return 1 if a wins, 2 if b wins and 0 for a draw (same pick). Example: duelo("laser", "misil") returns 1.
+pista.es: Los textos se comparan con equals, no con ==. Mira primero el empate; luego junta con || los tres casos en que gana a.
+pista.de: Texte vergleicht man mit equals, nicht mit ==. Prüf zuerst den Gleichstand; dann verbinde mit || die drei Fälle, in denen a gewinnt.
+pista.en: Compare texts with equals, not ==. Check the draw first; then join with || the three cases where a wins.
+firma: static int duelo(String a, String b)
+plantilla:
+    return 0;
+solucion:
+    if (a.equals(b)) {
+        return 0;
+    }
+    boolean ganaA = (a.equals("laser") && b.equals("misil"))
+            || (a.equals("misil") && b.equals("escudo"))
+            || (a.equals("escudo") && b.equals("laser"));
+    if (ganaA) {
+        return 1;
+    }
+    return 2;
+casos:
+    duelo("laser", "misil") => 1
+    duelo("misil", "laser") => 2
+    duelo("misil", "escudo") => 1
+    duelo("escudo", "laser") => 1
+    duelo("laser", "escudo") => 2
+    duelo("escudo", "misil") => 2
+    duelo("laser", "laser") => 0
+
+=== t04_armadura_por_nivel
+tema: 04
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Placas que se acumulan
+titulo.de: Platten, die sich addieren
+titulo.en: Plates that stack up
+enunciado.es: Cada nivel de blindaje añade sus placas a las de los niveles de abajo: el nivel 1 da 10, el 2 añade 20 y el 3 añade 30. Devuelve la armadura total del nivel (fuera de 1 a 3, 0). Ejemplo: armaduraPorNivel(3) devuelve 60. Hazlo con un switch sin break.
+enunciado.de: Jede Panzerstufe legt ihre Platten auf die der Stufen darunter: Stufe 1 gibt 10, Stufe 2 legt 20 drauf und Stufe 3 noch 30. Gib die gesamte Panzerung der Stufe zurück (außerhalb von 1 bis 3: 0). Beispiel: armaduraPorNivel(3) gibt 60 zurück. Löse es mit einem switch ohne break.
+enunciado.en: Each armor level adds its plates on top of the levels below: level 1 gives 10, level 2 adds 20 and level 3 adds 30. Return the total armor of the level (outside 1 to 3: 0). Example: armaduraPorNivel(3) returns 60. Do it with a switch without break.
+pista.es: Sin break, el switch «se cae» al caso de abajo. Ordena los casos de 3 a 1 y suma en cada uno: case 3 suma 30 y sigue al case 2…
+pista.de: Ohne break «fällt» der switch in den nächsten Fall durch. Ordne die Fälle von 3 bis 1 und addiere in jedem: case 3 addiert 30 und läuft weiter zu case 2 …
+pista.en: Without break, the switch "falls through" into the case below. Order the cases from 3 down to 1 and add in each: case 3 adds 30 and carries on to case 2…
+firma: static int armaduraPorNivel(int nivel)
+plantilla:
+    int armadura = 0;
+    switch (nivel) {
+        case 1:
+            armadura += 10;
+            break;
+        default:
+            break;
+    }
+    return armadura;
+solucion:
+    int armadura = 0;
+    switch (nivel) {
+        case 3:
+            armadura += 30;
+            // sin break: sigue al caso 2
+        case 2:
+            armadura += 20;
+            // sin break: sigue al caso 1
+        case 1:
+            armadura += 10;
+            break;
+        default:
+            break;
+    }
+    return armadura;
+casos:
+    armaduraPorNivel(3) => 60
+    armaduraPorNivel(2) => 30
+    armaduraPorNivel(1) => 10
+    armaduraPorNivel(0) => 0
+    armaduraPorNivel(4) => 0
+
+=== t04_danio_final
+tema: 04
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: El cálculo completo del daño
+titulo.de: Die komplette Schadensberechnung
+titulo.en: The full damage calculation
+enunciado.es: Calcula el daño de un golpe con estas reglas, en orden: con el escudo puesto, o si danio es 0 o menos, el daño es 0. Si es crítico, danio se duplica. Luego se resta la armadura, pero un golpe que llega siempre hace al menos 1. Ejemplo: danioFinal(10, 3, true, false) devuelve 17.
+enunciado.de: Berechne den Schaden eines Treffers nach diesen Regeln, der Reihe nach: Ist der Schild aktiv oder danio 0 oder weniger, ist der Schaden 0. Bei einem kritischen Treffer verdoppelt sich danio. Dann wird die Panzerung abgezogen, aber ein Treffer, der durchkommt, macht immer mindestens 1. Beispiel: danioFinal(10, 3, true, false) gibt 17 zurück.
+enunciado.en: Work out a hit's damage with these rules, in order: with the shield up, or if danio is 0 or less, the damage is 0. On a critical hit, danio doubles. Then the armor is subtracted, but a hit that gets through always does at least 1. Example: danioFinal(10, 3, true, false) returns 17.
+pista.es: Sal pronto con return 0 en el primer caso. Después, una variable total: dóblala si critico, réstale la armadura y devuelve Math.max(total, 1).
+pista.de: Steig im ersten Fall mit return 0 früh aus. Danach eine Variable total: verdoppeln, wenn critico, die Panzerung abziehen und Math.max(total, 1) zurückgeben.
+pista.en: Leave early with return 0 in the first case. After that, a variable total: double it if critico, subtract the armor and return Math.max(total, 1).
+firma: static int danioFinal(int danio, int armadura, boolean critico, boolean escudo)
+plantilla:
+    return danio - armadura;
+solucion:
+    if (escudo || danio <= 0) {
+        return 0;
+    }
+    int total = danio;
+    if (critico) {
+        total *= 2;
+    }
+    total -= armadura;
+    return Math.max(total, 1);
+casos:
+    danioFinal(10, 3, false, false) => 7
+    danioFinal(10, 3, true, false) => 17
+    danioFinal(10, 3, true, true) => 0
+    danioFinal(2, 5, false, false) => 1
+    danioFinal(4, 4, false, false) => 1
+    danioFinal(0, 5, true, false) => 0
+    danioFinal(-3, 0, false, false) => 0

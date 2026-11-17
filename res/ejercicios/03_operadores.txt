@@ -1,0 +1,315 @@
+# Tema 03: operadores y expresiones.
+=== t03_doble_danio
+tema: 03
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Golpe doble
+titulo.de: Doppelter Treffer
+titulo.en: Double hit
+enunciado.es: El martillo pega dos veces seguidas. Devuelve el doble del daño. Ejemplo: dobleDanio(5) devuelve 10.
+enunciado.de: Der Hammer schlägt zweimal hintereinander zu. Gib den doppelten Schaden zurück. Beispiel: dobleDanio(5) gibt 10 zurück.
+enunciado.en: The hammer strikes twice in a row. Return double the damage. Example: dobleDanio(5) returns 10.
+pista.es: El operador * multiplica: danio * 2.
+pista.de: Der Operator * multipliziert: danio * 2.
+pista.en: The * operator multiplies: danio * 2.
+firma: static int dobleDanio(int danio)
+plantilla:
+    return danio;
+solucion:
+    return danio * 2;
+casos:
+    dobleDanio(5) => 10
+    dobleDanio(21) => 42
+    dobleDanio(0) => 0
+    dobleDanio(-3) => -6
+
+=== t03_es_par
+tema: 03
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: ¿Número de serie par?
+titulo.de: Gerade Seriennummer?
+titulo.en: Even serial number?
+enunciado.es: Los robots con número de serie par van al equipo azul. Devuelve true si n es par. Ejemplo: esPar(4) devuelve true y esPar(7), false.
+enunciado.de: Roboter mit gerader Seriennummer kommen ins blaue Team. Gib true zurück, wenn n gerade ist. Beispiel: esPar(4) gibt true zurück, esPar(7) false.
+enunciado.en: Robots with an even serial number join the blue team. Return true if n is even. Example: esPar(4) returns true and esPar(7) false.
+pista.es: El operador % da el resto de dividir: un número es par si n % 2 == 0.
+pista.de: Der Operator % liefert den Rest einer Division: Eine Zahl ist gerade, wenn n % 2 == 0.
+pista.en: The % operator gives the remainder of a division: a number is even if n % 2 == 0.
+firma: static boolean esPar(int n)
+plantilla:
+    return false;
+solucion:
+    return n % 2 == 0;
+casos:
+    esPar(4) => true
+    esPar(7) => false
+    esPar(0) => true
+    esPar(-6) => true
+    esPar(-3) => false
+
+=== t03_mejoras_en_cadena
+tema: 03
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Tres mejoras seguidas
+titulo.de: Drei Verbesserungen hintereinander
+titulo.en: Three upgrades in a row
+enunciado.es: El taller mejora la armadura en tres pasos: suma 10, luego la duplica y luego le quita 5. Devuelve el resultado. Ejemplo: aplicarMejoras(5) devuelve 25.
+enunciado.de: Die Werkstatt verbessert die Panzerung in drei Schritten: plus 10, dann verdoppeln, dann minus 5. Gib das Ergebnis zurück. Beispiel: aplicarMejoras(5) gibt 25 zurück.
+enunciado.en: The workshop upgrades the armor in three steps: add 10, then double it, then take away 5. Return the result. Example: aplicarMejoras(5) returns 25.
+pista.es: Los operadores compuestos cambian la variable: armadura += 10; armadura *= 2; armadura -= 5;
+pista.de: Die zusammengesetzten Operatoren ändern die Variable: armadura += 10; armadura *= 2; armadura -= 5;
+pista.en: Compound operators change the variable itself: armadura += 10; armadura *= 2; armadura -= 5;
+firma: static int aplicarMejoras(int armadura)
+plantilla:
+    return armadura;
+solucion:
+    armadura += 10;
+    armadura *= 2;
+    armadura -= 5;
+    return armadura;
+casos:
+    aplicarMejoras(5) => 25
+    aplicarMejoras(0) => 15
+    aplicarMejoras(100) => 215
+    aplicarMejoras(-10) => -5
+
+=== t03_en_alcance
+tema: 03
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: ¿Está a tiro?
+titulo.de: In Reichweite?
+titulo.en: Within range?
+enunciado.es: Devuelve true si la distancia está entre 0 y el alcance del arma, ambos incluidos. Una distancia negativa es un error del radar: false. Ejemplo: enAlcance(5, 10) devuelve true.
+enunciado.de: Gib true zurück, wenn die Entfernung zwischen 0 und der Reichweite der Waffe liegt, beide eingeschlossen. Eine negative Entfernung ist ein Radarfehler: false. Beispiel: enAlcance(5, 10) gibt true zurück.
+enunciado.en: Return true if the distance is between 0 and the weapon's range, both included. A negative distance is a radar error: false. Example: enAlcance(5, 10) returns true.
+pista.es: && es «y»: las dos condiciones tienen que cumplirse. distancia >= 0 && distancia <= alcance.
+pista.de: && heißt «und»: beide Bedingungen müssen stimmen. distancia >= 0 && distancia <= alcance.
+pista.en: && means "and": both conditions must hold. distancia >= 0 && distancia <= alcance.
+firma: static boolean enAlcance(int distancia, int alcance)
+plantilla:
+    return distancia < alcance;
+solucion:
+    return distancia >= 0 && distancia <= alcance;
+casos:
+    enAlcance(5, 10) => true
+    enAlcance(10, 10) => true
+    enAlcance(11, 10) => false
+    enAlcance(-1, 10) => false
+    enAlcance(0, 0) => true
+
+=== t03_ultima_cifra
+tema: 03
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: La última cifra
+titulo.de: Die letzte Ziffer
+titulo.en: The last digit
+enunciado.es: Devuelve la última cifra de n, siempre como número positivo. Ejemplo: ultimaCifra(123) devuelve 3 y ultimaCifra(-45), 5.
+enunciado.de: Gib die letzte Ziffer von n zurück, immer als positive Zahl. Beispiel: ultimaCifra(123) gibt 3 zurück, ultimaCifra(-45) 5.
+enunciado.en: Return the last digit of n, always as a positive number. Example: ultimaCifra(123) returns 3 and ultimaCifra(-45) returns 5.
+pista.es: n % 10 da la última cifra, pero con un número negativo sale negativa (-45 % 10 es -5). Math.abs le quita el signo.
+pista.de: n % 10 liefert die letzte Ziffer, bei einer negativen Zahl aber negativ (-45 % 10 ist -5). Math.abs entfernt das Vorzeichen.
+pista.en: n % 10 gives the last digit, but for a negative number it comes out negative (-45 % 10 is -5). Math.abs removes the sign.
+firma: static int ultimaCifra(int n)
+plantilla:
+    return n % 10;
+solucion:
+    return Math.abs(n % 10);
+casos:
+    ultimaCifra(123) => 3
+    ultimaCifra(7) => 7
+    ultimaCifra(1000) => 0
+    ultimaCifra(-45) => 5
+    ultimaCifra(0) => 0
+
+=== t03_media_de_tres
+tema: 03
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Paréntesis para la media
+titulo.de: Klammern für den Durchschnitt
+titulo.en: Brackets for the average
+enunciado.es: Devuelve la media de los tres sensores con decimales. Ahora sale mal porque / va antes que +. Ejemplo: mediaDeTres(1, 2, 3) devuelve 2.0.
+enunciado.de: Gib den Durchschnitt der drei Sensoren mit Nachkommastellen zurück. Gerade kommt Unsinn heraus, weil / vor + gerechnet wird. Beispiel: mediaDeTres(1, 2, 3) gibt 2.0 zurück.
+enunciado.en: Return the average of the three sensors with decimals. Right now it comes out wrong because / goes before +. Example: mediaDeTres(1, 2, 3) returns 2.0.
+pista.es: Como en matemáticas, * y / se hacen antes que + y -. Usa paréntesis y divide entre 3.0: (a + b + c) / 3.0.
+pista.de: Wie in Mathe kommen * und / vor + und -. Setz Klammern und teile durch 3.0: (a + b + c) / 3.0.
+pista.en: As in maths, * and / come before + and -. Use brackets and divide by 3.0: (a + b + c) / 3.0.
+firma: static double mediaDeTres(int a, int b, int c)
+plantilla:
+    return a + b + c / 3;
+solucion:
+    return (a + b + c) / 3.0;
+casos:
+    mediaDeTres(1, 2, 3) => 2.0
+    mediaDeTres(3, 3, 3) => 3.0
+    mediaDeTres(0, 0, 1) => 0.3333333333333333
+    mediaDeTres(-3, 0, 0) => -1.0
+    mediaDeTres(10, 20, 0) => 10.0
+
+=== t03_cargadores_necesarios
+tema: 03
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: ¿Cuántos cargadores?
+titulo.de: Wie viele Magazine?
+titulo.en: How many magazines?
+enunciado.es: Cada cargador lleva tamano balas. Devuelve cuántos cargadores hacen falta para todas las balas (el último puede ir a medias). Ejemplo: cargadoresNecesarios(11, 5) devuelve 3.
+enunciado.de: In jedes Magazin passen tamano Kugeln. Gib zurück, wie viele Magazine du für alle Kugeln brauchst (das letzte darf halb voll sein). Beispiel: cargadoresNecesarios(11, 5) gibt 3 zurück.
+enunciado.en: Each magazine holds tamano bullets. Return how many magazines you need for all the bullets (the last one may be half full). Example: cargadoresNecesarios(11, 5) returns 3.
+pista.es: balas / tamano redondea hacia abajo. Un truco para redondear hacia arriba con enteros: (balas + tamano - 1) / tamano.
+pista.de: balas / tamano rundet ab. Ein Trick zum Aufrunden mit Ganzzahlen: (balas + tamano - 1) / tamano.
+pista.en: balas / tamano rounds down. A trick to round up with integers: (balas + tamano - 1) / tamano.
+firma: static int cargadoresNecesarios(int balas, int tamano)
+plantilla:
+    return balas / tamano;
+solucion:
+    return (balas + tamano - 1) / tamano;
+casos:
+    cargadoresNecesarios(11, 5) => 3
+    cargadoresNecesarios(10, 5) => 2
+    cargadoresNecesarios(0, 5) => 0
+    cargadoresNecesarios(1, 30) => 1
+    cargadoresNecesarios(30, 30) => 1
+
+=== t03_un_solo_escudo
+tema: 03
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Un escudo, y solo uno
+titulo.de: Ein Schild, und nur einer
+titulo.en: One shield, and only one
+enunciado.es: El generador se quema si se encienden los dos escudos, y no protege si no hay ninguno. Devuelve true solo si está encendido exactamente uno. Ejemplo: unSoloEscudo(true, false) devuelve true y unSoloEscudo(true, true), false.
+enunciado.de: Der Generator brennt durch, wenn beide Schilde an sind, und schützt nicht, wenn keiner an ist. Gib nur dann true zurück, wenn genau einer an ist. Beispiel: unSoloEscudo(true, false) gibt true zurück, unSoloEscudo(true, true) false.
+enunciado.en: The generator burns out if both shields are on, and gives no protection if neither is. Return true only if exactly one is on. Example: unSoloEscudo(true, false) returns true and unSoloEscudo(true, true) false.
+pista.es: || es «o» (vale también si están los dos). El «o exclusivo» es ^, o, lo que es lo mismo con booleanos, !=.
+pista.de: || heißt «oder» (gilt auch, wenn beide an sind). Das «exklusive Oder» ist ^, bei booleans dasselbe wie !=.
+pista.en: || means "or" (also true when both are on). "Exclusive or" is ^, which for booleans is the same as !=.
+firma: static boolean unSoloEscudo(boolean delante, boolean detras)
+plantilla:
+    return delante || detras;
+solucion:
+    return delante ^ detras;
+casos:
+    unSoloEscudo(true, false) => true
+    unSoloEscudo(false, true) => true
+    unSoloEscudo(true, true) => false
+    unSoloEscudo(false, false) => false
+
+=== t03_limitar_energia
+tema: 03
+dificultad: 3
+java: 21
+tipo: metodo
+titulo.es: Energía entre 0 y 100 (Math.clamp, Java 21)
+titulo.de: Energie zwischen 0 und 100 (Math.clamp, Java 21)
+titulo.en: Energy between 0 and 100 (Math.clamp, Java 21)
+enunciado.es: La energía no puede bajar de 0 ni pasar de 100. Devuelve la energía recortada a ese margen. Java 21 trajo Math.clamp(valor, min, max), que hace justo eso. Ejemplo: limitarEnergia(150) devuelve 100.
+enunciado.de: Die Energie darf nicht unter 0 fallen und nicht über 100 steigen. Gib die auf diesen Bereich begrenzte Energie zurück. Java 21 hat Math.clamp(wert, min, max) eingeführt, das genau das tut. Beispiel: limitarEnergia(150) gibt 100 zurück.
+enunciado.en: Energy can't drop below 0 or go above 100. Return the energy clipped to that range. Java 21 introduced Math.clamp(value, min, max), which does exactly that. Example: limitarEnergia(150) returns 100.
+pista.es: return Math.clamp(energia, 0, 100); Antes de Java 21 se escribía Math.max(0, Math.min(100, energia)).
+pista.de: return Math.clamp(energia, 0, 100); Vor Java 21 schrieb man Math.max(0, Math.min(100, energia)).
+pista.en: return Math.clamp(energia, 0, 100); Before Java 21 you wrote Math.max(0, Math.min(100, energia)).
+firma: static int limitarEnergia(int energia)
+plantilla:
+    return energia;
+solucion:
+    return Math.clamp(energia, 0, 100);
+casos:
+    limitarEnergia(50) => 50
+    limitarEnergia(150) => 100
+    limitarEnergia(-20) => 0
+    limitarEnergia(0) => 0
+    limitarEnergia(100) => 100
+
+=== t03_posicion_circular
+tema: 03
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: La arena circular
+titulo.de: Die kreisförmige Arena
+titulo.en: The circular arena
+enunciado.es: La arena es un anillo de casillas numeradas de 0 a tamano - 1: si te pasas del final, vuelves al principio, y por debajo de 0 sigues desde el final. Devuelve la casilla real. Ejemplo: posicionCircular(12, 10) devuelve 2 y posicionCircular(-1, 10), 9.
+enunciado.de: Die Arena ist ein Ring aus Feldern von 0 bis tamano - 1: Wer über das Ende hinausläuft, kommt vorne wieder an, und unter 0 geht es am Ende weiter. Gib das echte Feld zurück. Beispiel: posicionCircular(12, 10) gibt 2 zurück, posicionCircular(-1, 10) 9.
+enunciado.en: The arena is a ring of cells numbered 0 to tamano - 1: go past the end and you're back at the start; go below 0 and you continue from the end. Return the real cell. Example: posicionCircular(12, 10) returns 2 and posicionCircular(-1, 10) returns 9.
+pista.es: Con números negativos, % da un resto negativo (-1 % 10 es -1). Math.floorMod(posicion, tamano) da siempre un resultado entre 0 y tamano - 1.
+pista.de: Bei negativen Zahlen liefert % einen negativen Rest (-1 % 10 ist -1). Math.floorMod(posicion, tamano) liefert immer etwas zwischen 0 und tamano - 1.
+pista.en: With negative numbers, % gives a negative remainder (-1 % 10 is -1). Math.floorMod(posicion, tamano) always gives a result between 0 and tamano - 1.
+firma: static int posicionCircular(int posicion, int tamano)
+plantilla:
+    return posicion % tamano;
+solucion:
+    return Math.floorMod(posicion, tamano);
+casos:
+    posicionCircular(12, 10) => 2
+    posicionCircular(5, 10) => 5
+    posicionCircular(-1, 10) => 9
+    posicionCircular(-23, 10) => 7
+    posicionCircular(0, 10) => 0
+    posicionCircular(10, 10) => 0
+
+=== t03_sumar_vida_seguro
+tema: 03
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Una suma que avisa si se desborda
+titulo.de: Eine Summe, die bei Überlauf Alarm schlägt
+titulo.en: A sum that warns when it overflows
+enunciado.es: Si sumas dos int muy grandes, el resultado «da la vuelta» y sale un negativo sin avisar. Devuelve a + b, pero lanza una ArithmeticException si no cabe en un int. Ejemplo: sumarVida(2, 3) devuelve 5; sumarVida(Integer.MAX_VALUE, 1) lanza ArithmeticException.
+enunciado.de: Addierst du zwei sehr große int, läuft das Ergebnis über und wird ohne Warnung negativ. Gib a + b zurück, aber wirf eine ArithmeticException, wenn es nicht in einen int passt. Beispiel: sumarVida(2, 3) gibt 5 zurück; sumarVida(Integer.MAX_VALUE, 1) wirft eine ArithmeticException.
+enunciado.en: If you add two very large ints, the result wraps around and turns negative without warning. Return a + b, but throw an ArithmeticException if it doesn't fit in an int. Example: sumarVida(2, 3) returns 5; sumarVida(Integer.MAX_VALUE, 1) throws an ArithmeticException.
+pista.es: Math.addExact(a, b) suma igual que +, pero lanza ArithmeticException si se desborda.
+pista.de: Math.addExact(a, b) addiert wie +, wirft aber eine ArithmeticException, wenn es überläuft.
+pista.en: Math.addExact(a, b) adds just like +, but throws an ArithmeticException if it overflows.
+firma: static int sumarVida(int a, int b)
+plantilla:
+    return a + b;
+solucion:
+    return Math.addExact(a, b);
+casos:
+    sumarVida(2, 3) => 5
+    sumarVida(-5, 5) => 0
+    sumarVida(Integer.MAX_VALUE, 0) => Integer.MAX_VALUE
+    sumarVida(Integer.MAX_VALUE, 1) => !ArithmeticException
+    sumarVida(Integer.MIN_VALUE, -1) => !ArithmeticException
+
+=== t03_tiene_mejora
+tema: 03
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Mejoras guardadas en bits
+titulo.de: In Bits gespeicherte Upgrades
+titulo.en: Upgrades stored in bits
+enunciado.es: El robot guarda sus mejoras en los bits de un int: el bit 0 (valor 1) es el láser, el bit 1 (valor 2) el escudo, el bit 2 (valor 4) el turbo… Devuelve true si el bit numero está a 1. Ejemplo: tieneMejora(5, 2) devuelve true, porque 5 es 101 en binario.
+enunciado.de: Der Roboter speichert seine Upgrades in den Bits eines int: Bit 0 (Wert 1) ist der Laser, Bit 1 (Wert 2) der Schild, Bit 2 (Wert 4) der Turbo … Gib true zurück, wenn Bit numero auf 1 steht. Beispiel: tieneMejora(5, 2) gibt true zurück, denn 5 ist binär 101.
+enunciado.en: The robot stores its upgrades in the bits of an int: bit 0 (value 1) is the laser, bit 1 (value 2) the shield, bit 2 (value 4) the turbo… Return true if bit numero is set to 1. Example: tieneMejora(5, 2) returns true, because 5 is 101 in binary.
+pista.es: 1 << numero es un número con solo ese bit encendido. & deja los bits que están en los dos: (mejoras & (1 << numero)) != 0.
+pista.de: 1 << numero ist eine Zahl, bei der nur dieses Bit gesetzt ist. & behält die Bits, die in beiden gesetzt sind: (mejoras & (1 << numero)) != 0.
+pista.en: 1 << numero is a number with only that bit set. & keeps the bits that are set in both: (mejoras & (1 << numero)) != 0.
+firma: static boolean tieneMejora(int mejoras, int numero)
+plantilla:
+    return false;
+solucion:
+    int mascara = 1 << numero;
+    return (mejoras & mascara) != 0;
+casos:
+    tieneMejora(5, 0) => true
+    tieneMejora(5, 1) => false
+    tieneMejora(5, 2) => true
+    tieneMejora(8, 3) => true
+    tieneMejora(0, 3) => false
+    tieneMejora(-1, 31) => true

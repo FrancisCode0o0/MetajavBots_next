@@ -1,0 +1,634 @@
+# Tema 13 — Interfaces (docs/FORMATOS.md, sección «Ejercicios»).
+
+=== t13_disparable
+tema: 13
+dificultad: 1
+java: 8
+tipo: clase
+titulo.es: Todo lo que dispara
+titulo.de: Alles, was schießt
+titulo.en: Everything that shoots
+enunciado.es: La interfaz Disparable tiene un solo método: int disparar(), que devuelve el daño. Escribe Pistola (daño 2) y Canon (daño 9), las dos implements Disparable.
+enunciado.de: Das Interface Disparable hat nur eine Methode: int disparar(), die den Schaden zurückgibt. Schreibe Pistola (Schaden 2) und Canon (Schaden 9), beide implements Disparable.
+enunciado.en: The interface Disparable has a single method: int disparar(), which returns the damage. Write Pistola (damage 2) and Canon (damage 9), both implements Disparable.
+pista.es: Los métodos de una interfaz son public, así que al implementarlos también: @Override public int disparar() { return 2; }
+pista.de: Die Methoden eines Interfaces sind public, also auch beim Implementieren: @Override public int disparar() { return 2; }
+pista.en: An interface's methods are public, so they must be public when you implement them too: @Override public int disparar() { return 2; }
+plantilla:
+    public interface Disparable {
+        int disparar();
+    }
+
+    class Pistola implements Disparable {
+    }
+
+    class Canon implements Disparable {
+    }
+solucion:
+    public interface Disparable {
+        int disparar();
+    }
+
+    class Pistola implements Disparable {
+        @Override
+        public int disparar() {
+            return 2;
+        }
+    }
+
+    class Canon implements Disparable {
+        @Override
+        public int disparar() {
+            return 9;
+        }
+    }
+casos:
+    new Pistola().disparar() => 2
+    new Canon().disparar() => 9
+    ((Disparable) new Canon()).disparar() => 9
+    new Disparable[]{new Pistola(), new Canon()}[0].disparar() => 2
+    new Pistola() instanceof Disparable => true
+
+=== t13_patorobot
+tema: 13
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Un robot que nada y vuela
+titulo.de: Ein Roboter, der schwimmt und fliegt
+titulo.en: A robot that swims and flies
+enunciado.es: Una clase solo puede tener un padre, pero puede implementar varias interfaces. Escribe las interfaces Nadador (String nadar()) y Volador (String volar()), la clase Patorobot, que implementa las dos ("chap chap" al nadar, "zum" al volar), y la clase Dron, que solo vuela ("bzzz").
+enunciado.de: Eine Klasse kann nur eine Elternklasse haben, aber mehrere Interfaces implementieren. Schreibe die Interfaces Nadador (String nadar()) und Volador (String volar()), die Klasse Patorobot, die beide implementiert ("chap chap" beim Schwimmen, "zum" beim Fliegen), und die Klasse Dron, die nur fliegt ("bzzz").
+enunciado.en: A class can only have one parent, but it can implement several interfaces. Write the interfaces Nadador (String nadar()) and Volador (String volar()), the class Patorobot, which implements both ("chap chap" when swimming, "zum" when flying), and the class Dron, which only flies ("bzzz").
+pista.es: class Patorobot implements Nadador, Volador { ... } — las interfaces van separadas por comas.
+pista.de: class Patorobot implements Nadador, Volador { ... } — die Interfaces stehen durch Kommas getrennt.
+pista.en: class Patorobot implements Nadador, Volador { ... } — the interfaces are separated by commas.
+plantilla:
+    interface Nadador {
+    }
+
+    interface Volador {
+    }
+
+    public class Patorobot {
+    }
+
+    class Dron {
+    }
+solucion:
+    interface Nadador {
+        String nadar();
+    }
+
+    interface Volador {
+        String volar();
+    }
+
+    public class Patorobot implements Nadador, Volador {
+        @Override
+        public String nadar() {
+            return "chap chap";
+        }
+
+        @Override
+        public String volar() {
+            return "zum";
+        }
+    }
+
+    class Dron implements Volador {
+        @Override
+        public String volar() {
+            return "bzzz";
+        }
+    }
+casos:
+    new Patorobot().nadar() => "chap chap"
+    ((Volador) new Patorobot()).volar() => "zum"
+    new Patorobot() instanceof Nadador => true
+    new Dron().volar() => "bzzz"
+    new Dron() instanceof Nadador => false
+    new Volador[]{new Dron(), new Patorobot()}[1].volar() => "zum"
+
+=== t13_reparable_default
+tema: 13
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Métodos default: ¿necesita reparación?
+titulo.de: default-Methoden: Muss repariert werden?
+titulo.en: Default methods: does it need repairs?
+enunciado.es: Desde Java 8, una interfaz puede traer métodos ya escritos con default. Escribe la interfaz Reparable con int vida(), int vidaMaxima(), default boolean necesitaReparacion() (vida por debajo de la mitad del máximo) y default int puntosQueFaltan(). Después, Torreta(int vida) (máximo 80), que usa los default tal cual, y Muro(int vida) (máximo 200), que sobrescribe necesitaReparacion: un muro se repara por debajo de 150.
+enunciado.de: Seit Java 8 kann ein Interface fertige Methoden mit default mitbringen. Schreibe das Interface Reparable mit int vida(), int vidaMaxima(), default boolean necesitaReparacion() (Leben unter der Hälfte des Maximums) und default int puntosQueFaltan(). Danach Torreta(int vida) (Maximum 80), die die default-Methoden unverändert benutzt, und Muro(int vida) (Maximum 200), die necesitaReparacion überschreibt: Eine Mauer wird unter 150 repariert.
+enunciado.en: Since Java 8, an interface can bring ready-made methods with default. Write the interface Reparable with int vida(), int vidaMaxima(), default boolean necesitaReparacion() (health below half the maximum) and default int puntosQueFaltan(). Then Torreta(int vida) (maximum 80), which uses the defaults as they are, and Muro(int vida) (maximum 200), which overrides necesitaReparacion: a wall is repaired below 150.
+pista.es: default boolean necesitaReparacion() { return vida() < vidaMaxima() / 2; } — el default llama a los métodos abstractos, que pone cada clase.
+pista.de: default boolean necesitaReparacion() { return vida() < vidaMaxima() / 2; } — die default-Methode ruft die abstrakten Methoden auf, die jede Klasse liefert.
+pista.en: default boolean necesitaReparacion() { return vida() < vidaMaxima() / 2; } — the default calls the abstract methods, which each class provides.
+plantilla:
+    public interface Reparable {
+        int vida();
+
+        int vidaMaxima();
+
+        // los dos métodos default
+    }
+
+    // Torreta y Muro
+solucion:
+    public interface Reparable {
+        int vida();
+
+        int vidaMaxima();
+
+        default boolean necesitaReparacion() {
+            return vida() < vidaMaxima() / 2;
+        }
+
+        default int puntosQueFaltan() {
+            return vidaMaxima() - vida();
+        }
+    }
+
+    class Torreta implements Reparable {
+        private final int vida;
+
+        Torreta(int vida) {
+            this.vida = vida;
+        }
+
+        @Override
+        public int vida() {
+            return vida;
+        }
+
+        @Override
+        public int vidaMaxima() {
+            return 80;
+        }
+    }
+
+    class Muro implements Reparable {
+        private final int vida;
+
+        Muro(int vida) {
+            this.vida = vida;
+        }
+
+        @Override
+        public int vida() {
+            return vida;
+        }
+
+        @Override
+        public int vidaMaxima() {
+            return 200;
+        }
+
+        @Override
+        public boolean necesitaReparacion() {
+            return vida < 150;
+        }
+    }
+casos:
+    new Torreta(30).necesitaReparacion() => true
+    new Torreta(40).necesitaReparacion() => false
+    new Torreta(30).puntosQueFaltan() => 50
+    new Muro(160).necesitaReparacion() => false
+    new Muro(149).necesitaReparacion() => true
+    ((Reparable) new Muro(200)).puntosQueFaltan() => 0
+
+=== t13_sensor_estrategia
+tema: 13
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Cambiar de sensor en marcha
+titulo.de: Den Sensor im Betrieb wechseln
+titulo.en: Swapping sensors on the go
+enunciado.es: Escribe la interfaz Sensor con boolean detecta(int distancia); Radar(int alcance) (detecta hasta alcance, incluido) y Camara() (de 2 a 15, incluidos), que la implementan; y la clase Robot con Robot(Sensor sensor), int cuantosDetecta(int[] distancias) y Robot cambiarSensor(Sensor nuevo) (devuelve this). Robot no sabe qué sensor lleva: solo que es un Sensor.
+enunciado.de: Schreibe das Interface Sensor mit boolean detecta(int distancia); Radar(int alcance) (erkennt bis einschließlich alcance) und Camara() (von 2 bis 15, einschließlich), die es implementieren; und die Klasse Robot mit Robot(Sensor sensor), int cuantosDetecta(int[] distancias) und Robot cambiarSensor(Sensor nuevo) (gibt this zurück). Robot weiß nicht, welchen Sensor er trägt, nur dass es ein Sensor ist.
+enunciado.en: Write the interface Sensor with boolean detecta(int distancia); Radar(int alcance) (detects up to alcance, inclusive) and Camara() (from 2 to 15, inclusive), which implement it; and the class Robot with Robot(Sensor sensor), int cuantosDetecta(int[] distancias) and Robot cambiarSensor(Sensor nuevo) (returns this). Robot doesn't know which sensor it carries: only that it's a Sensor.
+pista.es: El campo de Robot es de tipo Sensor, la interfaz. En el último caso el sensor es una lambda: vale porque Sensor tiene un solo método abstracto.
+pista.de: Das Feld von Robot hat den Typ Sensor, das Interface. Im letzten Fall ist der Sensor ein Lambda: Das klappt, weil Sensor nur eine abstrakte Methode hat.
+pista.en: Robot's field has the type Sensor, the interface. In the last case the sensor is a lambda: that works because Sensor has a single abstract method.
+plantilla:
+    interface Sensor {
+        boolean detecta(int distancia);
+    }
+
+    // Radar y Camara
+
+    public class Robot {
+        // el sensor, el constructor, cuantosDetecta y cambiarSensor
+    }
+solucion:
+    interface Sensor {
+        boolean detecta(int distancia);
+    }
+
+    class Radar implements Sensor {
+        private final int alcance;
+
+        Radar(int alcance) {
+            this.alcance = alcance;
+        }
+
+        @Override
+        public boolean detecta(int distancia) {
+            return distancia <= alcance;
+        }
+    }
+
+    class Camara implements Sensor {
+        @Override
+        public boolean detecta(int distancia) {
+            return distancia >= 2 && distancia <= 15;
+        }
+    }
+
+    public class Robot {
+        private Sensor sensor;
+
+        public Robot(Sensor sensor) {
+            this.sensor = sensor;
+        }
+
+        public Robot cambiarSensor(Sensor nuevo) {
+            sensor = nuevo;
+            return this;
+        }
+
+        public int cuantosDetecta(int[] distancias) {
+            int cuantos = 0;
+            for (int d : distancias) {
+                if (sensor.detecta(d)) {
+                    cuantos++;
+                }
+            }
+            return cuantos;
+        }
+    }
+casos:
+    new Robot(new Radar(10)).cuantosDetecta(new int[]{3, 10, 12}) => 2
+    new Robot(new Camara()).cuantosDetecta(new int[]{1, 2, 15, 16}) => 2
+    new Robot(new Radar(10)).cambiarSensor(new Camara()).cuantosDetecta(new int[]{1, 5}) => 1
+    new Robot(new Radar(0)).cuantosDetecta(new int[0]) => 0
+    new Robot(d -> d % 2 == 0).cuantosDetecta(new int[]{1, 2, 4}) => 2
+
+=== t13_comparable
+tema: 13
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Ordenar robots (Comparable)
+titulo.de: Roboter sortieren (Comparable)
+titulo.en: Sorting robots (Comparable)
+enunciado.es: Escribe Robot implements Comparable<Robot> con Robot(String nombre, int potencia), String getNombre(), String toString() (el nombre) e int compareTo(Robot otro): primero por potencia de menor a mayor y, si empatan, por nombre en orden alfabético; 0 si son iguales en las dos cosas. Así Arrays.sort y Collections.max saben ordenarlos.
+enunciado.de: Schreibe Robot implements Comparable<Robot> mit Robot(String nombre, int potencia), String getNombre(), String toString() (der Name) und int compareTo(Robot otro): zuerst nach Leistung aufsteigend und bei Gleichstand alphabetisch nach Namen; 0, wenn beides gleich ist. Dann können Arrays.sort und Collections.max sie sortieren.
+enunciado.en: Write Robot implements Comparable<Robot> with Robot(String nombre, int potencia), String getNombre(), String toString() (the name) and int compareTo(Robot otro): first by power from lowest to highest and, on a tie, by name in alphabetical order; 0 if both are equal. That way Arrays.sort and Collections.max know how to order them.
+pista.es: int porPotencia = Integer.compare(potencia, otro.potencia); si no es 0, devuélvelo; si no, nombre.compareTo(otro.nombre).
+pista.de: int porPotencia = Integer.compare(potencia, otro.potencia); ist das nicht 0, gib es zurück; sonst nombre.compareTo(otro.nombre).
+pista.en: int porPotencia = Integer.compare(potencia, otro.potencia); if it isn't 0, return it; otherwise nombre.compareTo(otro.nombre).
+plantilla:
+    public class Robot implements Comparable<Robot> {
+        private final String nombre;
+        private final int potencia;
+
+        public Robot(String nombre, int potencia) {
+            this.nombre = nombre;
+            this.potencia = potencia;
+        }
+
+        // getNombre, toString y compareTo
+    }
+solucion:
+    public class Robot implements Comparable<Robot> {
+        private final String nombre;
+        private final int potencia;
+
+        public Robot(String nombre, int potencia) {
+            this.nombre = nombre;
+            this.potencia = potencia;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        @Override
+        public String toString() {
+            return nombre;
+        }
+
+        @Override
+        public int compareTo(Robot otro) {
+            int porPotencia = Integer.compare(potencia, otro.potencia);
+            if (porPotencia != 0) {
+                return porPotencia;
+            }
+            return nombre.compareTo(otro.nombre);
+        }
+    }
+casos:
+    new Robot("Rex", 5).compareTo(new Robot("Tita", 9)) < 0 => true
+    new Robot("Rex", 9).compareTo(new Robot("Ada", 9)) > 0 => true
+    new Robot("Rex", 9).compareTo(new Robot("Rex", 9)) => 0
+    Collections.max(Arrays.asList(new Robot("Rex", 5), new Robot("Tita", 9), new Robot("Zap", 2))).getNombre() => "Tita"
+    ((Supplier<String>) () -> { Robot[] r = {new Robot("Zap", 7), new Robot("Ada", 3), new Robot("Bo", 7)}; Arrays.sort(r); return Arrays.toString(r); }).get() => "[Ada, Bo, Zap]"
+
+=== t13_arma_static
+tema: 13
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Métodos static en una interfaz
+titulo.de: static-Methoden in einem Interface
+titulo.en: Static methods in an interface
+enunciado.es: Desde Java 8, una interfaz también puede tener métodos static. Escribe la interfaz Arma con int dano(), default int danoCritico() (el doble), static Arma de(int dano) (un arma con ese daño; IllegalArgumentException si es negativo) y static Arma mejor(Arma a, Arma b) (la de más daño; a si empatan). Escribe también Martillo implements Arma, con daño 6.
+enunciado.de: Seit Java 8 kann ein Interface auch static-Methoden haben. Schreibe das Interface Arma mit int dano(), default int danoCritico() (das Doppelte), static Arma de(int dano) (eine Waffe mit diesem Schaden; IllegalArgumentException, wenn negativ) und static Arma mejor(Arma a, Arma b) (die mit mehr Schaden; bei Gleichstand a). Schreibe auch Martillo implements Arma mit Schaden 6.
+enunciado.en: Since Java 8, an interface can also have static methods. Write the interface Arma with int dano(), default int danoCritico() (double), static Arma de(int dano) (a weapon with that damage; IllegalArgumentException if negative) and static Arma mejor(Arma a, Arma b) (the one with more damage; a on a tie). Also write Martillo implements Arma, with damage 6.
+pista.es: Los static se llaman con el nombre de la interfaz: Arma.de(4). Dentro de de puedes devolver una clase anónima, new Arma() { ... }, o una lambda: () -> dano.
+pista.de: static-Methoden ruft man über den Namen des Interfaces auf: Arma.de(4). In de kannst du eine anonyme Klasse new Arma() { ... } oder ein Lambda () -> dano zurückgeben.
+pista.en: Static methods are called with the interface's name: Arma.de(4). Inside de you can return an anonymous class, new Arma() { ... }, or a lambda: () -> dano.
+plantilla:
+    public interface Arma {
+        int dano();
+
+        // danoCritico, de y mejor
+    }
+
+    // Martillo
+solucion:
+    public interface Arma {
+        int dano();
+
+        default int danoCritico() {
+            return dano() * 2;
+        }
+
+        static Arma de(int dano) {
+            if (dano < 0) {
+                throw new IllegalArgumentException("dano negativo: " + dano);
+            }
+            return () -> dano;
+        }
+
+        static Arma mejor(Arma a, Arma b) {
+            return b.dano() > a.dano() ? b : a;
+        }
+    }
+
+    class Martillo implements Arma {
+        @Override
+        public int dano() {
+            return 6;
+        }
+    }
+casos:
+    Arma.de(4).dano() => 4
+    Arma.de(4).danoCritico() => 8
+    new Martillo().danoCritico() => 12
+    Arma.mejor(new Martillo(), Arma.de(10)).dano() => 10
+    Arma.mejor(Arma.de(6), new Martillo()) instanceof Martillo => false
+    Arma.mejor(new Martillo(), Arma.de(2)) instanceof Martillo => true
+    Arma.de(-1) => !IllegalArgumentException
+
+=== t13_conflicto_default
+tema: 13
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Dos default con el mismo nombre
+titulo.de: Zwei default-Methoden mit demselben Namen
+titulo.en: Two defaults with the same name
+enunciado.es: Volador y Nadador traen los dos default String moverse() ("vuela" y "nada"). La clase Anfibio implementa las dos y Java no sabe cuál elegir: no compila. Sobrescribe moverse() en Anfibio para que dé "vuela y nada", usando los dos default. Escribe también Gaviota, que solo implementa Volador y no sobrescribe nada.
+enunciado.de: Volador und Nadador bringen beide default String moverse() mit ("vuela" und "nada"). Die Klasse Anfibio implementiert beide, und Java weiß nicht, welche es nehmen soll: Es kompiliert nicht. Überschreibe moverse() in Anfibio so, dass es "vuela y nada" liefert, mit beiden default-Methoden. Schreibe auch Gaviota, die nur Volador implementiert und nichts überschreibt.
+enunciado.en: Volador and Nadador both bring default String moverse() ("vuela" and "nada"). The class Anfibio implements both and Java can't tell which to pick: it doesn't compile. Override moverse() in Anfibio so it gives "vuela y nada", using both defaults. Also write Gaviota, which only implements Volador and overrides nothing.
+pista.es: Volador.super.moverse() llama al default de Volador; Nadador.super.moverse(), al de Nadador.
+pista.de: Volador.super.moverse() ruft die default-Methode von Volador auf, Nadador.super.moverse() die von Nadador.
+pista.en: Volador.super.moverse() calls Volador's default; Nadador.super.moverse() calls Nadador's.
+plantilla:
+    interface Volador {
+        default String moverse() {
+            return "vuela";
+        }
+    }
+
+    interface Nadador {
+        default String moverse() {
+            return "nada";
+        }
+    }
+
+    public class Anfibio implements Volador, Nadador {
+    }
+
+    // Gaviota
+solucion:
+    interface Volador {
+        default String moverse() {
+            return "vuela";
+        }
+    }
+
+    interface Nadador {
+        default String moverse() {
+            return "nada";
+        }
+    }
+
+    public class Anfibio implements Volador, Nadador {
+        @Override
+        public String moverse() {
+            return Volador.super.moverse() + " y " + Nadador.super.moverse();
+        }
+    }
+
+    class Gaviota implements Volador {
+    }
+casos:
+    new Anfibio().moverse() => "vuela y nada"
+    ((Nadador) new Anfibio()).moverse() => "vuela y nada"
+    ((Volador) new Anfibio()).moverse() => "vuela y nada"
+    new Gaviota().moverse() => "vuela"
+
+=== t13_private_en_interfaz
+tema: 13
+dificultad: 4
+java: 11
+tipo: clase
+titulo.es: Métodos private en una interfaz (Java 9)
+titulo.de: private-Methoden in einem Interface (Java 9)
+titulo.en: Private methods in an interface (Java 9)
+enunciado.es: Escribe la interfaz Registrable con String nombre() y dos default, String info(String texto) y String alerta(String texto), que dan "[INFO] <nombre>: <texto>" y "[ALERTA] <nombre>: <texto>". Para no repetir código, los dos llaman a un método private de la interfaz, algo que se puede desde Java 9. Después, Torreta (nombre "torreta") y Robot(String nombre), que implementan Registrable.
+enunciado.de: Schreibe das Interface Registrable mit String nombre() und zwei default-Methoden, String info(String texto) und String alerta(String texto), die "[INFO] <nombre>: <texto>" und "[ALERTA] <nombre>: <texto>" liefern. Damit sich nichts wiederholt, rufen beide eine private-Methode des Interfaces auf, was seit Java 9 geht. Danach Torreta (Name "torreta") und Robot(String nombre), die Registrable implementieren.
+enunciado.en: Write the interface Registrable with String nombre() and two defaults, String info(String texto) and String alerta(String texto), which give "[INFO] <nombre>: <texto>" and "[ALERTA] <nombre>: <texto>". To avoid repeating code, both call a private method of the interface, which is allowed since Java 9. Then Torreta (name "torreta") and Robot(String nombre), which implement Registrable.
+pista.es: private String formatear(String nivel, String texto) { return "[" + nivel + "] " + nombre() + ": " + texto; } — las clases que implementan la interfaz no lo ven.
+pista.de: private String formatear(String nivel, String texto) { return "[" + nivel + "] " + nombre() + ": " + texto; } — die implementierenden Klassen sehen sie nicht.
+pista.en: private String formatear(String nivel, String texto) { return "[" + nivel + "] " + nombre() + ": " + texto; } — the implementing classes can't see it.
+plantilla:
+    public interface Registrable {
+        String nombre();
+
+        // info, alerta y un método private que los dos usen
+    }
+
+    // Torreta y Robot
+solucion:
+    public interface Registrable {
+        String nombre();
+
+        default String info(String texto) {
+            return formatear("INFO", texto);
+        }
+
+        default String alerta(String texto) {
+            return formatear("ALERTA", texto);
+        }
+
+        private String formatear(String nivel, String texto) {
+            return "[" + nivel + "] " + nombre() + ": " + texto;
+        }
+    }
+
+    class Torreta implements Registrable {
+        @Override
+        public String nombre() {
+            return "torreta";
+        }
+    }
+
+    class Robot implements Registrable {
+        private final String nombre;
+
+        Robot(String nombre) {
+            this.nombre = nombre;
+        }
+
+        @Override
+        public String nombre() {
+            return nombre;
+        }
+    }
+casos:
+    new Torreta().info("lista") => "[INFO] torreta: lista"
+    new Torreta().alerta("sin balas") => "[ALERTA] torreta: sin balas"
+    new Robot("Rex").info("") => "[INFO] Rex: "
+    new Robot("Tita").alerta("herida") => "[ALERTA] Tita: herida"
+
+=== t13_escuadron_iterable
+tema: 13
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Un escuadrón que se recorre con for-each (Iterable)
+titulo.de: Eine Staffel für die for-each-Schleife (Iterable)
+titulo.en: A squad you can loop over with for-each (Iterable)
+enunciado.es: Escribe Escuadron implements Iterable<String> con Escuadron(String... nombres), int tamano() e Iterator<String> iterator(). Así se puede recorrer con for (String n : escuadron) y hasta pasárselo a String.join. Guarda una copia de los nombres: cambiar después el array original no cambia el escuadrón.
+enunciado.de: Schreibe Escuadron implements Iterable<String> mit Escuadron(String... nombres), int tamano() und Iterator<String> iterator(). Dann kann man es mit for (String n : escuadron) durchlaufen und sogar an String.join übergeben. Speichere eine Kopie der Namen: Wird das ursprüngliche Array später geändert, ändert sich die Staffel nicht.
+enunciado.en: Write Escuadron implements Iterable<String> with Escuadron(String... nombres), int tamano() and Iterator<String> iterator(). Then it can be looped over with for (String n : escuadron) and even passed to String.join. Keep a copy of the names: changing the original array afterwards doesn't change the squad.
+pista.es: Basta con return Arrays.asList(nombres).iterator(); sobre tu copia (nombres.clone()). Importa java.util.Arrays y java.util.Iterator.
+pista.de: Es genügt return Arrays.asList(nombres).iterator(); auf deiner Kopie (nombres.clone()). Importiere java.util.Arrays und java.util.Iterator.
+pista.en: return Arrays.asList(nombres).iterator(); on your copy (nombres.clone()) is enough. Import java.util.Arrays and java.util.Iterator.
+plantilla:
+    import java.util.Iterator;
+
+    public class Escuadron implements Iterable<String> {
+        // los nombres, el constructor, tamano e iterator
+    }
+solucion:
+    import java.util.Arrays;
+    import java.util.Iterator;
+
+    public class Escuadron implements Iterable<String> {
+        private final String[] nombres;
+
+        public Escuadron(String... nombres) {
+            this.nombres = nombres.clone();
+        }
+
+        public int tamano() {
+            return nombres.length;
+        }
+
+        @Override
+        public Iterator<String> iterator() {
+            return Arrays.asList(nombres).iterator();
+        }
+    }
+casos:
+    String.join(", ", new Escuadron("Rex", "Tita")) => "Rex, Tita"
+    String.join("", new Escuadron()) => ""
+    new Escuadron("Rex").iterator().next() => "Rex"
+    new Escuadron("a", "b", "c").tamano() => 3
+    ((Supplier<Integer>) () -> { int letras = 0; for (String n : new Escuadron("Rex", "Ada", "Bo")) { letras += n.length(); } return letras; }).get() => 8
+    ((Supplier<String>) () -> { String[] mios = {"a", "b"}; Escuadron e = new Escuadron(mios); mios[0] = "x"; return String.join("", e); }).get() => "ab"
+
+=== t13_cuenta_atras
+tema: 13
+dificultad: 5
+java: 8
+tipo: clase
+titulo.es: La cuenta atrás del combate (Iterator propio)
+titulo.de: Der Countdown zum Kampf (eigener Iterator)
+titulo.en: The fight countdown (your own Iterator)
+enunciado.es: Escribe CuentaAtras implements Iterable<Integer> con CuentaAtras(int desde) (IllegalArgumentException si es negativo) e Iterator<Integer> iterator(), que da desde, desde - 1, …, 1. Escribe tú el Iterator (hasNext y next), sin listas: next sin más elementos lanza NoSuchElementException. Cada llamada a iterator() empieza de nuevo, así que dos for anidados sobre la misma cuenta funcionan.
+enunciado.de: Schreibe CuentaAtras implements Iterable<Integer> mit CuentaAtras(int desde) (IllegalArgumentException, wenn negativ) und Iterator<Integer> iterator(), der desde, desde - 1, …, 1 liefert. Schreib den Iterator selbst (hasNext und next), ohne Listen: next ohne weitere Elemente wirft NoSuchElementException. Jeder Aufruf von iterator() fängt neu an, also funktionieren zwei verschachtelte for-Schleifen über denselben Countdown.
+enunciado.en: Write CuentaAtras implements Iterable<Integer> with CuentaAtras(int desde) (IllegalArgumentException if negative) and Iterator<Integer> iterator(), which gives desde, desde - 1, …, 1. Write the Iterator yourself (hasNext and next), without lists: next with no more elements throws NoSuchElementException. Each call to iterator() starts over, so two nested for loops over the same countdown work.
+pista.es: iterator() devuelve un objeto nuevo de una clase privada (o anónima) con su propio campo actual: hasNext() es actual > 0 y next() devuelve actual--.
+pista.de: iterator() gibt ein neues Objekt einer privaten (oder anonymen) Klasse mit eigenem Feld actual zurück: hasNext() ist actual > 0, und next() liefert actual--.
+pista.en: iterator() returns a new object of a private (or anonymous) class with its own actual field: hasNext() is actual > 0 and next() returns actual--.
+plantilla:
+    import java.util.Iterator;
+    import java.util.NoSuchElementException;
+
+    public class CuentaAtras implements Iterable<Integer> {
+        // desde, el constructor e iterator()
+    }
+solucion:
+    import java.util.Iterator;
+    import java.util.NoSuchElementException;
+
+    public class CuentaAtras implements Iterable<Integer> {
+        private final int desde;
+
+        public CuentaAtras(int desde) {
+            if (desde < 0) {
+                throw new IllegalArgumentException("cuenta negativa: " + desde);
+            }
+            this.desde = desde;
+        }
+
+        @Override
+        public Iterator<Integer> iterator() {
+            return new Paso(desde);
+        }
+
+        private static class Paso implements Iterator<Integer> {
+            private int actual;
+
+            Paso(int desde) {
+                this.actual = desde;
+            }
+
+            @Override
+            public boolean hasNext() {
+                return actual > 0;
+            }
+
+            @Override
+            public Integer next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                return actual--;
+            }
+        }
+    }
+casos:
+    ((Supplier<String>) () -> { StringBuilder s = new StringBuilder(); for (int n : new CuentaAtras(3)) { s.append(n); } return s.toString(); }).get() => "321"
+    new CuentaAtras(5).iterator().next() => 5
+    new CuentaAtras(0).iterator().hasNext() => false
+    new CuentaAtras(0).iterator().next() => !NoSuchElementException
+    new CuentaAtras(-1) => !IllegalArgumentException
+    ((Supplier<Integer>) () -> { CuentaAtras c = new CuentaAtras(4); int suma = 0; for (int a : c) { for (int b : c) { suma += a * b; } } return suma; }).get() => 100

@@ -1,0 +1,660 @@
+# Tema 10 — Encapsulación: private, getters y constructores (docs/FORMATOS.md, sección «Ejercicios»).
+
+=== t10_motor_this
+tema: 10
+dificultad: 1
+java: 8
+tipo: clase
+titulo.es: El motor que no guardaba nada (this)
+titulo.de: Der Motor, der nichts speicherte (this)
+titulo.en: The engine that stored nothing (this)
+enunciado.es: La clase Motor de la plantilla compila, pero getModelo() da null y getPotencia() da 0: en el constructor, los parámetros tapan a los campos y modelo = modelo; no hace nada. Arréglala para que Motor(String modelo, int potencia) guarde los datos.
+enunciado.de: Die Klasse Motor in der Vorlage kompiliert, aber getModelo() liefert null und getPotencia() 0: Im Konstruktor verdecken die Parameter die Felder, und modelo = modelo; bewirkt nichts. Repariere sie, damit Motor(String modelo, int potencia) die Daten speichert.
+enunciado.en: The Motor class in the template compiles, but getModelo() gives null and getPotencia() gives 0: in the constructor the parameters hide the fields, and modelo = modelo; does nothing. Fix it so Motor(String modelo, int potencia) stores the data.
+pista.es: this.modelo es el campo del objeto; modelo, a secas, es el parámetro: this.modelo = modelo;
+pista.de: this.modelo ist das Feld des Objekts; modelo allein ist der Parameter: this.modelo = modelo;
+pista.en: this.modelo is the object's field; plain modelo is the parameter: this.modelo = modelo;
+plantilla:
+    public class Motor {
+        private String modelo;
+        private int potencia;
+
+        public Motor(String modelo, int potencia) {
+            modelo = modelo;
+            potencia = potencia;
+        }
+
+        public String getModelo() {
+            return modelo;
+        }
+
+        public int getPotencia() {
+            return potencia;
+        }
+    }
+solucion:
+    public class Motor {
+        private final String modelo;
+        private final int potencia;
+
+        public Motor(String modelo, int potencia) {
+            this.modelo = modelo;
+            this.potencia = potencia;
+        }
+
+        public String getModelo() {
+            return modelo;
+        }
+
+        public int getPotencia() {
+            return potencia;
+        }
+    }
+casos:
+    new Motor("V8", 300).getModelo() => "V8"
+    new Motor("V8", 300).getPotencia() => 300
+    new Motor("Mini", 0).getPotencia() => 0
+    new Motor("", 5).getModelo() => ""
+
+=== t10_piloto
+tema: 10
+dificultad: 1
+java: 8
+tipo: clase
+titulo.es: La tarjeta del piloto
+titulo.de: Der Pilotenausweis
+titulo.en: The pilot's card
+enunciado.es: Escribe la clase Piloto con los campos privados nombre y nivel, el constructor Piloto(String nombre, int nivel), los getters String getNombre() e int getNivel(), y boolean esVeterano(), que es true desde el nivel 10.
+enunciado.de: Schreibe die Klasse Piloto mit den privaten Feldern nombre und nivel, dem Konstruktor Piloto(String nombre, int nivel), den Gettern String getNombre() und int getNivel() und boolean esVeterano(), das ab Stufe 10 true ist.
+enunciado.en: Write the class Piloto with the private fields nombre and nivel, the constructor Piloto(String nombre, int nivel), the getters String getNombre() and int getNivel(), and boolean esVeterano(), which is true from level 10 on.
+pista.es: Un getter solo devuelve el campo: public int getNivel() { return nivel; }
+pista.de: Ein Getter gibt nur das Feld zurück: public int getNivel() { return nivel; }
+pista.en: A getter just returns the field: public int getNivel() { return nivel; }
+plantilla:
+    public class Piloto {
+        private String nombre;
+        private int nivel;
+
+        // constructor, getters y esVeterano()
+    }
+solucion:
+    public class Piloto {
+        private final String nombre;
+        private final int nivel;
+
+        public Piloto(String nombre, int nivel) {
+            this.nombre = nombre;
+            this.nivel = nivel;
+        }
+
+        public String getNombre() {
+            return nombre;
+        }
+
+        public int getNivel() {
+            return nivel;
+        }
+
+        public boolean esVeterano() {
+            return nivel >= 10;
+        }
+    }
+casos:
+    new Piloto("Ada", 3).getNombre() => "Ada"
+    new Piloto("Ada", 3).getNivel() => 3
+    new Piloto("Ada", 3).esVeterano() => false
+    new Piloto("Lin", 10).esVeterano() => true
+    new Piloto("Lin", 25).esVeterano() => true
+
+=== t10_barra_de_vida
+tema: 10
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Una vida que no se sale de sus límites
+titulo.de: Leben, das in seinen Grenzen bleibt
+titulo.en: Health that stays within its limits
+enunciado.es: Escribe la clase BarraDeVida: BarraDeVida(int maximo) empieza llena (IllegalArgumentException si maximo no es positivo); int getVida(); int danar(int dano) y int curar(int puntos) devuelven la vida que queda, que nunca baja de 0 ni pasa de maximo (IllegalArgumentException si dano o puntos son negativos); boolean estaVacia(). Nadie de fuera puede tocar la vida directamente.
+enunciado.de: Schreibe die Klasse BarraDeVida: BarraDeVida(int maximo) startet voll (IllegalArgumentException, wenn maximo nicht positiv ist); int getVida(); int danar(int dano) und int curar(int puntos) geben das verbleibende Leben zurück, das nie unter 0 fällt und nie über maximo steigt (IllegalArgumentException bei negativem dano oder puntos); boolean estaVacia(). Von außen kann niemand das Leben direkt ändern.
+enunciado.en: Write the class BarraDeVida: BarraDeVida(int maximo) starts full (IllegalArgumentException if maximo is not positive); int getVida(); int danar(int dano) and int curar(int puntos) return the remaining health, which never drops below 0 or goes above maximo (IllegalArgumentException if dano or puntos are negative); boolean estaVacia(). Nobody outside can touch the health directly.
+pista.es: Math.max(0, vida - dano) y Math.min(maximo, vida + puntos) mantienen la vida dentro de sus límites.
+pista.de: Math.max(0, vida - dano) und Math.min(maximo, vida + puntos) halten das Leben in seinen Grenzen.
+pista.en: Math.max(0, vida - dano) and Math.min(maximo, vida + puntos) keep the health within its limits.
+plantilla:
+    public class BarraDeVida {
+        private final int maximo;
+        private int vida;
+
+        // constructor, getVida, danar, curar y estaVacia
+    }
+solucion:
+    public class BarraDeVida {
+        private final int maximo;
+        private int vida;
+
+        public BarraDeVida(int maximo) {
+            if (maximo <= 0) {
+                throw new IllegalArgumentException("el maximo tiene que ser positivo");
+            }
+            this.maximo = maximo;
+            this.vida = maximo;
+        }
+
+        public int getVida() {
+            return vida;
+        }
+
+        public int danar(int dano) {
+            if (dano < 0) {
+                throw new IllegalArgumentException("dano negativo");
+            }
+            vida = Math.max(0, vida - dano);
+            return vida;
+        }
+
+        public int curar(int puntos) {
+            if (puntos < 0) {
+                throw new IllegalArgumentException("curacion negativa");
+            }
+            vida = Math.min(maximo, vida + puntos);
+            return vida;
+        }
+
+        public boolean estaVacia() {
+            return vida == 0;
+        }
+    }
+casos:
+    new BarraDeVida(50).getVida() => 50
+    new BarraDeVida(50).danar(20) => 30
+    new BarraDeVida(50).danar(80) => 0
+    new BarraDeVida(50).curar(10) => 50
+    ((Supplier<Integer>) () -> { BarraDeVida b = new BarraDeVida(50); b.danar(30); return b.curar(10); }).get() => 30
+    ((Supplier<Boolean>) () -> { BarraDeVida b = new BarraDeVida(5); b.danar(5); return b.estaVacia(); }).get() => true
+    new BarraDeVida(0) => !IllegalArgumentException
+    new BarraDeVida(10).danar(-5) => !IllegalArgumentException
+
+=== t10_monedero
+tema: 10
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: El monedero de créditos
+titulo.de: Die Kreditbörse
+titulo.en: The credit purse
+enunciado.es: Escribe la clase Monedero: Monedero(int creditos) (IllegalArgumentException si es negativo), int getCreditos(), boolean pagar(int precio) (si no llega, devuelve false y no cambia nada; si llega, resta y devuelve true; precio negativo: IllegalArgumentException, para que nadie se haga rico pagando -100) y void ingresar(int cantidad) (IllegalArgumentException si no es positiva).
+enunciado.de: Schreibe die Klasse Monedero: Monedero(int creditos) (IllegalArgumentException, wenn negativ), int getCreditos(), boolean pagar(int precio) (reicht es nicht, gib false zurück und ändere nichts; reicht es, zieh ab und gib true zurück; negativer Preis: IllegalArgumentException, damit niemand durch Zahlen von -100 reich wird) und void ingresar(int cantidad) (IllegalArgumentException, wenn nicht positiv).
+enunciado.en: Write the class Monedero: Monedero(int creditos) (IllegalArgumentException if negative), int getCreditos(), boolean pagar(int precio) (if there's not enough, return false and change nothing; otherwise subtract and return true; a negative price throws IllegalArgumentException, so nobody gets rich paying -100) and void ingresar(int cantidad) (IllegalArgumentException if not positive).
+pista.es: Comprueba los argumentos al principio de cada método y lanza la excepción con throw new IllegalArgumentException("...").
+pista.de: Prüfe die Argumente am Anfang jeder Methode und wirf die Ausnahme mit throw new IllegalArgumentException("...").
+pista.en: Check the arguments at the start of each method and throw the exception with throw new IllegalArgumentException("...").
+plantilla:
+    public class Monedero {
+        private int creditos;
+
+        // constructor, getCreditos, pagar e ingresar
+    }
+solucion:
+    public class Monedero {
+        private int creditos;
+
+        public Monedero(int creditos) {
+            if (creditos < 0) {
+                throw new IllegalArgumentException("creditos negativos");
+            }
+            this.creditos = creditos;
+        }
+
+        public int getCreditos() {
+            return creditos;
+        }
+
+        public boolean pagar(int precio) {
+            if (precio < 0) {
+                throw new IllegalArgumentException("precio negativo");
+            }
+            if (precio > creditos) {
+                return false;
+            }
+            creditos -= precio;
+            return true;
+        }
+
+        public void ingresar(int cantidad) {
+            if (cantidad <= 0) {
+                throw new IllegalArgumentException("cantidad no positiva");
+            }
+            creditos += cantidad;
+        }
+    }
+casos:
+    new Monedero(10).pagar(4) => true
+    new Monedero(3).pagar(4) => false
+    ((Supplier<Integer>) () -> { Monedero m = new Monedero(10); m.pagar(4); m.pagar(20); return m.getCreditos(); }).get() => 6
+    ((Supplier<Integer>) () -> { Monedero m = new Monedero(0); m.ingresar(7); return m.getCreditos(); }).get() => 7
+    new Monedero(-1) => !IllegalArgumentException
+    new Monedero(5).pagar(-100) => !IllegalArgumentException
+    ((Supplier<Integer>) () -> { new Monedero(5).ingresar(0); return 0; }).get() => !IllegalArgumentException
+
+=== t10_cronometro
+tema: 10
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: El cronómetro de la ronda (inmutable)
+titulo.de: Die Rundenuhr (unveränderlich)
+titulo.en: The round clock (immutable)
+enunciado.es: Escribe la clase inmutable Cronometro: Cronometro(int minutos, int segundos) (IllegalArgumentException si alguno es negativo; los segundos de más pasan a minutos: (0, 75) es 01:15), int getMinutos(), int getSegundos(), Cronometro mas(int segundos) (devuelve uno nuevo; si el tiempo queda negativo, IllegalArgumentException) y String toString() en formato "mm:ss".
+enunciado.de: Schreibe die unveränderliche Klasse Cronometro: Cronometro(int minutos, int segundos) (IllegalArgumentException, wenn etwas negativ ist; überzählige Sekunden werden zu Minuten: (0, 75) ist 01:15), int getMinutos(), int getSegundos(), Cronometro mas(int segundos) (gibt eine neue zurück; wird die Zeit negativ, IllegalArgumentException) und String toString() im Format "mm:ss".
+enunciado.en: Write the immutable class Cronometro: Cronometro(int minutos, int segundos) (IllegalArgumentException if either is negative; extra seconds roll over into minutes: (0, 75) is 01:15), int getMinutos(), int getSegundos(), Cronometro mas(int segundos) (returns a new one; if the time becomes negative, IllegalArgumentException) and String toString() in the format "mm:ss".
+pista.es: Guarda solo el total de segundos en un campo private final. String.format("%02d:%02d", m, s) rellena con ceros. mas puede ser new Cronometro(0, total + segundos).
+pista.de: Speichere nur die Gesamtsekunden in einem private final-Feld. String.format("%02d:%02d", m, s) füllt mit Nullen auf. mas kann new Cronometro(0, total + segundos) sein.
+pista.en: Store only the total seconds in a private final field. String.format("%02d:%02d", m, s) pads with zeros. mas can be new Cronometro(0, total + segundos).
+plantilla:
+    public class Cronometro {
+        // un campo private final con el total de segundos
+    }
+solucion:
+    public class Cronometro {
+        private final int totalSegundos;
+
+        public Cronometro(int minutos, int segundos) {
+            if (minutos < 0 || segundos < 0) {
+                throw new IllegalArgumentException("tiempo negativo");
+            }
+            this.totalSegundos = minutos * 60 + segundos;
+        }
+
+        public int getMinutos() {
+            return totalSegundos / 60;
+        }
+
+        public int getSegundos() {
+            return totalSegundos % 60;
+        }
+
+        public Cronometro mas(int segundos) {
+            return new Cronometro(0, totalSegundos + segundos);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%02d:%02d", getMinutos(), getSegundos());
+        }
+    }
+casos:
+    new Cronometro(1, 5).toString() => "01:05"
+    new Cronometro(0, 75).toString() => "01:15"
+    new Cronometro(0, 50).mas(20).toString() => "01:10"
+    new Cronometro(0, 130).getMinutos() => 2
+    new Cronometro(2, 0).getSegundos() => 0
+    new Cronometro(0, -1) => !IllegalArgumentException
+    new Cronometro(0, 10).mas(-20) => !IllegalArgumentException
+    ((Supplier<String>) () -> { Cronometro c = new Cronometro(0, 10); c.mas(30); return c.toString(); }).get() => "00:10"
+
+=== t10_reactor
+tema: 10
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Reactor en dos escalas (constructor privado)
+titulo.de: Reaktor in zwei Skalen (privater Konstruktor)
+titulo.en: Reactor in two scales (private constructor)
+enunciado.es: Escribe la clase Reactor con un constructor private y dos métodos de fábrica: static Reactor enCelsius(double grados) y static Reactor enFahrenheit(double grados). Por dentro guarda solo los grados Celsius. Añade double getCelsius() y double getFahrenheit() (F = C * 9 / 5 + 32). Por debajo de -273.15 °C, IllegalArgumentException.
+enunciado.de: Schreibe die Klasse Reactor mit einem private-Konstruktor und zwei Fabrikmethoden: static Reactor enCelsius(double grados) und static Reactor enFahrenheit(double grados). Intern speichert sie nur Grad Celsius. Dazu double getCelsius() und double getFahrenheit() (F = C * 9 / 5 + 32). Unter -273.15 °C: IllegalArgumentException.
+enunciado.en: Write the class Reactor with a private constructor and two factory methods: static Reactor enCelsius(double grados) and static Reactor enFahrenheit(double grados). Inside, it stores only degrees Celsius. Add double getCelsius() and double getFahrenheit() (F = C * 9 / 5 + 32). Below -273.15 °C, IllegalArgumentException.
+pista.es: enFahrenheit convierte primero: new Reactor((grados - 32) * 5 / 9). Haz la comprobación en el constructor privado, que es por donde pasan los dos.
+pista.de: enFahrenheit rechnet zuerst um: new Reactor((grados - 32) * 5 / 9). Prüfe im privaten Konstruktor, denn da kommen beide vorbei.
+pista.en: enFahrenheit converts first: new Reactor((grados - 32) * 5 / 9). Do the check in the private constructor, since both go through it.
+plantilla:
+    public class Reactor {
+        private final double celsius;
+
+        private Reactor(double celsius) {
+            this.celsius = celsius;
+        }
+
+        // enCelsius, enFahrenheit, getCelsius y getFahrenheit
+    }
+solucion:
+    public class Reactor {
+        private static final double CERO_ABSOLUTO = -273.15;
+
+        private final double celsius;
+
+        private Reactor(double celsius) {
+            if (celsius < CERO_ABSOLUTO) {
+                throw new IllegalArgumentException("por debajo del cero absoluto");
+            }
+            this.celsius = celsius;
+        }
+
+        public static Reactor enCelsius(double grados) {
+            return new Reactor(grados);
+        }
+
+        public static Reactor enFahrenheit(double grados) {
+            return new Reactor((grados - 32) * 5 / 9);
+        }
+
+        public double getCelsius() {
+            return celsius;
+        }
+
+        public double getFahrenheit() {
+            return celsius * 9 / 5 + 32;
+        }
+    }
+casos:
+    Reactor.enCelsius(100).getFahrenheit() => 212.0
+    Reactor.enFahrenheit(32).getCelsius() => 0.0
+    Reactor.enFahrenheit(-40).getCelsius() => -40.0
+    Reactor.enCelsius(-273.15).getCelsius() => -273.15
+    Reactor.enCelsius(-300) => !IllegalArgumentException
+    Reactor.enFahrenheit(-500) => !IllegalArgumentException
+
+=== t10_candado
+tema: 10
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: El candado del arsenal
+titulo.de: Das Schloss des Arsenals
+titulo.en: The armoury lock
+enunciado.es: Escribe la clase Candado: Candado(String clave), boolean abrir(String intento) (true si el intento es la clave), boolean estaBloqueado() e int intentosRestantes() (empieza en 3). Cada intento fallido gasta uno; con 0, el candado se bloquea para siempre y abrir siempre da false. La clave no tiene getter: no sale de la clase.
+enunciado.de: Schreibe die Klasse Candado: Candado(String clave), boolean abrir(String intento) (true, wenn der Versuch das Passwort ist), boolean estaBloqueado() und int intentosRestantes() (beginnt bei 3). Jeder Fehlversuch verbraucht einen; bei 0 sperrt das Schloss für immer, und abrir liefert nur noch false. Das Passwort hat keinen Getter: Es verlässt die Klasse nicht.
+enunciado.en: Write the class Candado: Candado(String clave), boolean abrir(String intento) (true if the attempt is the password), boolean estaBloqueado() and int intentosRestantes() (starts at 3). Each failed attempt uses one up; at 0 the lock is blocked forever and abrir always returns false. The password has no getter: it never leaves the class.
+pista.es: Primero, si está bloqueado, false. Después compara con clave.equals(intento) (vale aunque intento sea null); si falla, resta un intento.
+pista.de: Zuerst: Ist es gesperrt, false. Dann vergleiche mit clave.equals(intento) (klappt auch, wenn intento null ist); bei Fehlschlag zieh einen Versuch ab.
+pista.en: First, if it's blocked, false. Then compare with clave.equals(intento) (works even if intento is null); on failure, take away one attempt.
+plantilla:
+    public class Candado {
+        private final String clave;
+        private int intentosRestantes = 3;
+
+        public Candado(String clave) {
+            this.clave = clave;
+        }
+
+        public boolean abrir(String intento) {
+            return clave.equals(intento);
+        }
+
+        // estaBloqueado() e intentosRestantes()
+    }
+solucion:
+    public class Candado {
+        private final String clave;
+        private int intentosRestantes = 3;
+
+        public Candado(String clave) {
+            this.clave = clave;
+        }
+
+        public boolean abrir(String intento) {
+            if (estaBloqueado()) {
+                return false;
+            }
+            if (clave.equals(intento)) {
+                return true;
+            }
+            intentosRestantes--;
+            return false;
+        }
+
+        public boolean estaBloqueado() {
+            return intentosRestantes == 0;
+        }
+
+        public int intentosRestantes() {
+            return intentosRestantes;
+        }
+    }
+casos:
+    new Candado("1234").abrir("1234") => true
+    new Candado("1234").abrir("0000") => false
+    new Candado("1234").estaBloqueado() => false
+    new Candado("1234").abrir(null) => false
+    ((Supplier<Integer>) () -> { Candado c = new Candado("1234"); c.abrir("1"); return c.intentosRestantes(); }).get() => 2
+    ((Supplier<Boolean>) () -> { Candado c = new Candado("1234"); c.abrir("1"); c.abrir("2"); return c.abrir("1234"); }).get() => true
+    ((Supplier<Boolean>) () -> { Candado c = new Candado("1234"); c.abrir("1"); c.abrir("2"); c.abrir("3"); return c.abrir("1234"); }).get() => false
+    ((Supplier<Integer>) () -> { Candado c = new Candado("1"); for (int i = 0; i < 5; i++) { c.abrir("x"); } return c.intentosRestantes(); }).get() => 0
+
+=== t10_inventario_copia
+tema: 10
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Un inventario que no se deja tocar (copias defensivas)
+titulo.de: Ein Inventar, das sich nicht anfassen lässt (defensive Kopien)
+titulo.en: An inventory that can't be tampered with (defensive copies)
+enunciado.es: La clase Inventario de la plantilla funciona, pero tiene un agujero: guarda el mismo array que le pasan y getPiezas() devuelve su propio array, así que cualquiera puede cambiar las piezas desde fuera. Arréglala sin cambiar sus métodos: Inventario(String[] piezas), String[] getPiezas(), int cuantas() y boolean tiene(String pieza).
+enunciado.de: Die Klasse Inventario in der Vorlage funktioniert, hat aber ein Loch: Sie speichert dasselbe Array, das man ihr gibt, und getPiezas() gibt ihr eigenes Array heraus, also kann jeder die Teile von außen ändern. Repariere sie, ohne ihre Methoden zu ändern: Inventario(String[] piezas), String[] getPiezas(), int cuantas() und boolean tiene(String pieza).
+enunciado.en: The Inventario class in the template works, but it has a hole: it keeps the very array it is given and getPiezas() hands out its own array, so anyone can change the parts from outside. Fix it without changing its methods: Inventario(String[] piezas), String[] getPiezas(), int cuantas() and boolean tiene(String pieza).
+pista.es: Copia al entrar y al salir: piezas.clone() o Arrays.copyOf(piezas, piezas.length).
+pista.de: Kopiere beim Hereinkommen und beim Herausgeben: piezas.clone() oder Arrays.copyOf(piezas, piezas.length).
+pista.en: Copy on the way in and on the way out: piezas.clone() or Arrays.copyOf(piezas, piezas.length).
+plantilla:
+    public class Inventario {
+        private final String[] piezas;
+
+        public Inventario(String[] piezas) {
+            this.piezas = piezas;
+        }
+
+        public String[] getPiezas() {
+            return piezas;
+        }
+
+        public int cuantas() {
+            return piezas.length;
+        }
+
+        public boolean tiene(String pieza) {
+            for (String p : piezas) {
+                if (p.equals(pieza)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+solucion:
+    public class Inventario {
+        private final String[] piezas;
+
+        public Inventario(String[] piezas) {
+            this.piezas = piezas.clone();
+        }
+
+        public String[] getPiezas() {
+            return piezas.clone();
+        }
+
+        public int cuantas() {
+            return piezas.length;
+        }
+
+        public boolean tiene(String pieza) {
+            for (String p : piezas) {
+                if (p.equals(pieza)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+casos:
+    new Inventario(new String[]{"laser", "escudo"}).cuantas() => 2
+    new Inventario(new String[]{"laser", "escudo"}).tiene("escudo") => true
+    new Inventario(new String[]{"laser", "escudo"}).tiene("misil") => false
+    new Inventario(new String[0]).getPiezas() => new String[0]
+    ((Supplier<String>) () -> { String[] mias = {"laser", "escudo"}; Inventario inv = new Inventario(mias); mias[0] = "roto"; return inv.getPiezas()[0]; }).get() => "laser"
+    ((Supplier<String>) () -> { Inventario inv = new Inventario(new String[]{"laser"}); inv.getPiezas()[0] = "roto"; return inv.getPiezas()[0]; }).get() => "laser"
+
+=== t10_numero_de_serie
+tema: 10
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Números de serie que siempre son válidos
+titulo.de: Seriennummern, die immer gültig sind
+titulo.en: Serial numbers that are always valid
+enunciado.es: Escribe la clase inmutable NumeroDeSerie, con constructor privado y el método de fábrica static NumeroDeSerie de(String texto), que acepta dos o más letras mayúsculas, un guion y cuatro cifras ("MK-0042"); si no, IllegalArgumentException. Métodos: String getSerie() ("MK"), int getNumero() (42), NumeroDeSerie siguiente() (el número + 1; tras 9999, IllegalStateException) y String toString() ("MK-0042").
+enunciado.de: Schreibe die unveränderliche Klasse NumeroDeSerie mit privatem Konstruktor und der Fabrikmethode static NumeroDeSerie de(String texto), die zwei oder mehr Großbuchstaben, einen Bindestrich und vier Ziffern annimmt ("MK-0042"); sonst IllegalArgumentException. Methoden: String getSerie() ("MK"), int getNumero() (42), NumeroDeSerie siguiente() (Nummer + 1; nach 9999 IllegalStateException) und String toString() ("MK-0042").
+enunciado.en: Write the immutable class NumeroDeSerie, with a private constructor and the factory method static NumeroDeSerie de(String texto), which accepts two or more capital letters, a hyphen and four digits ("MK-0042"); otherwise IllegalArgumentException. Methods: String getSerie() ("MK"), int getNumero() (42), NumeroDeSerie siguiente() (the number + 1; after 9999, IllegalStateException) and String toString() ("MK-0042").
+pista.es: texto.matches("[A-Z]{2,}-[0-9]{4}") comprueba el formato. Para volver a escribirlo: String.format("%s-%04d", serie, numero).
+pista.de: texto.matches("[A-Z]{2,}-[0-9]{4}") prüft das Format. Zum Zurückschreiben: String.format("%s-%04d", serie, numero).
+pista.en: texto.matches("[A-Z]{2,}-[0-9]{4}") checks the format. To write it back: String.format("%s-%04d", serie, numero).
+plantilla:
+    public class NumeroDeSerie {
+        private final String serie;
+        private final int numero;
+
+        private NumeroDeSerie(String serie, int numero) {
+            this.serie = serie;
+            this.numero = numero;
+        }
+
+        // de, getSerie, getNumero, siguiente y toString
+    }
+solucion:
+    public class NumeroDeSerie {
+        private static final int MAXIMO = 9999;
+
+        private final String serie;
+        private final int numero;
+
+        private NumeroDeSerie(String serie, int numero) {
+            this.serie = serie;
+            this.numero = numero;
+        }
+
+        public static NumeroDeSerie de(String texto) {
+            if (texto == null || !texto.matches("[A-Z]{2,}-[0-9]{4}")) {
+                throw new IllegalArgumentException("numero de serie mal escrito: " + texto);
+            }
+            int guion = texto.indexOf('-');
+            return new NumeroDeSerie(texto.substring(0, guion), Integer.parseInt(texto.substring(guion + 1)));
+        }
+
+        public String getSerie() {
+            return serie;
+        }
+
+        public int getNumero() {
+            return numero;
+        }
+
+        public NumeroDeSerie siguiente() {
+            if (numero == MAXIMO) {
+                throw new IllegalStateException("la serie " + serie + " se ha acabado");
+            }
+            return new NumeroDeSerie(serie, numero + 1);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("%s-%04d", serie, numero);
+        }
+    }
+casos:
+    NumeroDeSerie.de("MK-0042").getNumero() => 42
+    NumeroDeSerie.de("MK-0042").getSerie() => "MK"
+    NumeroDeSerie.de("ZX-0009").siguiente().toString() => "ZX-0010"
+    NumeroDeSerie.de("ABC-0001").toString() => "ABC-0001"
+    NumeroDeSerie.de("mk-0042") => !IllegalArgumentException
+    NumeroDeSerie.de("MK-42") => !IllegalArgumentException
+    NumeroDeSerie.de("M-0042") => !IllegalArgumentException
+    NumeroDeSerie.de("MK-9999").siguiente() => !IllegalStateException
+
+=== t10_robot_builder
+tema: 10
+dificultad: 5
+java: 8
+tipo: clase
+titulo.es: Montar robots con el patrón Builder
+titulo.de: Roboter bauen mit dem Builder-Muster
+titulo.en: Assembling robots with the Builder pattern
+enunciado.es: Un Robot tiene nombre, blindaje (0 a 10, por defecto 0), velocidad (1 a 10, por defecto 5) y arma (por defecto "puno"), y no cambia nunca. Escribe la clase Robot con constructor privado, int getVelocidad(), String toString() ("Rex[blindaje=5, velocidad=3, arma=laser]") y la clase anidada static Robot.Builder con Builder(String nombre), Builder blindaje(int), Builder velocidad(int), Builder arma(String) y Robot build(), que lanza IllegalStateException si algún valor se sale de su rango.
+enunciado.de: Ein Robot hat Name, Panzerung (0 bis 10, Standard 0), Tempo (1 bis 10, Standard 5) und Waffe (Standard "puno") und ändert sich nie. Schreibe die Klasse Robot mit privatem Konstruktor, int getVelocidad(), String toString() ("Rex[blindaje=5, velocidad=3, arma=laser]") und der verschachtelten Klasse static Robot.Builder mit Builder(String nombre), Builder blindaje(int), Builder velocidad(int), Builder arma(String) und Robot build(), das IllegalStateException wirft, wenn ein Wert außerhalb seines Bereichs liegt.
+enunciado.en: A Robot has a name, armour (0 to 10, default 0), speed (1 to 10, default 5) and a weapon (default "puno"), and it never changes. Write the class Robot with a private constructor, int getVelocidad(), String toString() ("Rex[blindaje=5, velocidad=3, arma=laser]") and the nested class static Robot.Builder with Builder(String nombre), Builder blindaje(int), Builder velocidad(int), Builder arma(String) and Robot build(), which throws IllegalStateException if any value is out of range.
+pista.es: Los métodos del Builder guardan el valor y devuelven this. build() comprueba los rangos y llama a new Robot(this): el constructor privado copia los campos del Builder.
+pista.de: Die Builder-Methoden speichern den Wert und geben this zurück. build() prüft die Bereiche und ruft new Robot(this) auf: Der private Konstruktor kopiert die Felder des Builders.
+pista.en: The Builder's methods store the value and return this. build() checks the ranges and calls new Robot(this): the private constructor copies the Builder's fields.
+plantilla:
+    public class Robot {
+        private final String nombre;
+        private final int blindaje;
+        private final int velocidad;
+        private final String arma;
+
+        // el constructor privado, getVelocidad, toString y la clase static Builder
+    }
+solucion:
+    public class Robot {
+        private final String nombre;
+        private final int blindaje;
+        private final int velocidad;
+        private final String arma;
+
+        private Robot(Builder b) {
+            this.nombre = b.nombre;
+            this.blindaje = b.blindaje;
+            this.velocidad = b.velocidad;
+            this.arma = b.arma;
+        }
+
+        public int getVelocidad() {
+            return velocidad;
+        }
+
+        @Override
+        public String toString() {
+            return nombre + "[blindaje=" + blindaje + ", velocidad=" + velocidad + ", arma=" + arma + "]";
+        }
+
+        public static class Builder {
+            private final String nombre;
+            private int blindaje = 0;
+            private int velocidad = 5;
+            private String arma = "puno";
+
+            public Builder(String nombre) {
+                this.nombre = nombre;
+            }
+
+            public Builder blindaje(int blindaje) {
+                this.blindaje = blindaje;
+                return this;
+            }
+
+            public Builder velocidad(int velocidad) {
+                this.velocidad = velocidad;
+                return this;
+            }
+
+            public Builder arma(String arma) {
+                this.arma = arma;
+                return this;
+            }
+
+            public Robot build() {
+                if (blindaje < 0 || blindaje > 10) {
+                    throw new IllegalStateException("blindaje fuera de rango: " + blindaje);
+                }
+                if (velocidad < 1 || velocidad > 10) {
+                    throw new IllegalStateException("velocidad fuera de rango: " + velocidad);
+                }
+                return new Robot(this);
+            }
+        }
+    }
+casos:
+    new Robot.Builder("Rex").build().toString() => "Rex[blindaje=0, velocidad=5, arma=puno]"
+    new Robot.Builder("Rex").blindaje(5).velocidad(3).arma("laser").build().toString() => "Rex[blindaje=5, velocidad=3, arma=laser]"
+    new Robot.Builder("Tita").velocidad(10).build().getVelocidad() => 10
+    new Robot.Builder("Zap").arma("misil").blindaje(10).build().toString() => "Zap[blindaje=10, velocidad=5, arma=misil]"
+    new Robot.Builder("Zap").velocidad(0).build() => !IllegalStateException
+    new Robot.Builder("Zap").blindaje(11).build() => !IllegalStateException
+    new Robot.Builder("Zap").blindaje(-1).velocidad(4).build() => !IllegalStateException
