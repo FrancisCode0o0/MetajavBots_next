@@ -63,7 +63,9 @@ public final class PantallaLeccion implements Pantalla {
         float arriba = Comun.cabecera(j, l.titulo(T.idioma), true);
         Cerebro cerebro = CerebroDelJuego.de(jug);
         float lado = cerebro != null ? 440 : 0;
-        float x = 40, y = arriba + 20, w = p.ancho - 80 - (lado > 0 ? lado + 20 : 0), h = p.alto - y - 110;
+        float w = Math.min(1100, p.ancho - 80 - (lado > 0 ? lado + 20 : 0));
+        // El texto, de un ancho cómodo de leer (y centrado si sobra sitio).
+        float x = lado > 0 ? 40 : (p.ancho - w) / 2, y = arriba + 20, h = p.alto - y - 110;
         int total = l.paginas.size() + 1;
         ui.barra(x, y, w, 8, (pagina + 1f) / total, ui.tema.acento, null);
         float cy = y + 30;

@@ -32,6 +32,26 @@ final class PruebasDelCerebro {
             igual("", Claves.tapada(""));
         });
 
+        caso("cerebro: el local se arranca solo al preguntar y se apaga (solo con METAJAVBOTS_PROBAR_CEREBRO)", () -> {
+            if (System.getenv("METAJAVBOTS_PROBAR_CEREBRO") == null) {
+                System.out.println("            (se salta: arranca KoboldCpp, tarda)");
+                return;
+            }
+            java.nio.file.Path carpeta = CerebroLocal.carpeta(null);
+            Cerebro c = new metajavbots.cerebro.CerebroLocalPerezoso("http://localhost:" + CerebroLocal.PUERTO_DEL_JUEGO, carpeta,
+                    "google_gemma-3-4b-it-Q4_K_M.gguf");
+            long t0 = System.currentTimeMillis();
+            String r = c.preguntar(CerebroDelJuego.sistemaPullas(Idioma.EN, "sarcastico", 0.7), "Opponent robot: Bolt.", 20);
+            long arranque = System.currentTimeMillis() - t0;
+            t0 = System.currentTimeMillis();
+            String r2 = c.preguntar(CerebroDelJuego.sistemaLocutor(Idioma.ES), "Round 1. Player robot took 40 damage, dealt 70.", 25);
+            long segunda = System.currentTimeMillis() - t0;
+            System.out.println("            arranque + primera: " + arranque + " ms → " + r);
+            System.out.println("            segunda: " + segunda + " ms → " + r2);
+            CerebroLocal.parar();
+            cierto(!r.isBlank() && !r2.isBlank(), "contesta");
+        });
+
         caso("cerebro: si hay un KoboldCpp escuchando, contesta (pulla moderada y tutor)", () -> {
             String d = "http://localhost:" + CerebroLocal.PUERTO_DEL_JUEGO;
             if (!CerebroLocal.escucha(d)) {
