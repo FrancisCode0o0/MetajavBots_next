@@ -1,0 +1,380 @@
+# Misterioso: Eclipse / Finsternis / Eclipse. Sombra de cristal oscuro con capa y alas.
+# Habla poco, en susurros y acertijos; aparece y desaparece. Frío, elegante, con un humor muy seco.
+
+[saludo]
+es: Cuando me ves, ya es tarde.
+de: Wenn du mich siehst, ist es zu spät.
+en: When you see me, it is too late.
+
+es: {rival}. Te esperaba. Desde antes de que existieras.
+de: {rival}. Ich habe dich erwartet. Schon bevor es dich gab.
+en: {rival}. I was expecting you. Since before you existed.
+
+es: No preguntes quién soy. Pregunta dónde estoy.
+de: Frag nicht, wer ich bin. Frag, wo ich bin.
+en: Don't ask who I am. Ask where I am.
+
+es: La luz se apaga. Empieza mi turno.
+de: Das Licht erlischt. Meine Schicht beginnt.
+en: The light goes out. My shift begins.
+
+[inicio_ronda]
+es: Ronda {ronda}. Las sombras se alargan.
+de: Runde {ronda}. Die Schatten werden länger.
+en: Round {ronda}. The shadows grow longer.
+
+es: Ronda {ronda}. Ya estoy detrás de ti.
+de: Runde {ronda}. Ich stehe schon hinter dir.
+en: Round {ronda}. I'm already behind you.
+
+es: Silencio. Ronda {ronda}.
+de: Stille. Runde {ronda}.
+en: Silence. Round {ronda}.
+
+es: La luna cubre el sol. Ronda {ronda}.
+de: Der Mond verdeckt die Sonne. Runde {ronda}.
+en: The moon covers the sun. Round {ronda}.
+
+[ataque]
+es: Desde la sombra.
+de: Aus dem Schatten.
+en: From the shadow.
+
+es: Ahora.
+de: Jetzt.
+en: Now.
+
+es: No lo verás venir.
+de: Du siehst es nicht kommen.
+en: You won't see it coming.
+
+es: Un corte en la oscuridad.
+de: Ein Schnitt in der Dunkelheit.
+en: A cut in the dark.
+
+[acierto]
+es: Ya era tarde.
+de: Es war schon zu spät.
+en: It was already too late.
+
+es: Te lo advertí.
+de: Ich habe dich gewarnt.
+en: I warned you.
+
+es: Una sombra no falla dos veces.
+de: Ein Schatten verfehlt nicht zweimal.
+en: A shadow doesn't miss twice.
+
+es: Exacto.
+de: Genau.
+en: Precisely.
+
+[fallo]
+es: Interesante. Ves en la oscuridad.
+de: Interessant. Du siehst im Dunkeln.
+en: Interesting. You can see in the dark.
+
+es: Ese era mi reflejo.
+de: Das war nur mein Spiegelbild.
+en: That was only my reflection.
+
+es: La noche es larga. Hay tiempo.
+de: Die Nacht ist lang. Es bleibt Zeit.
+en: The night is long. There is time.
+
+es: Hmm. La sombra se ha movido sola.
+de: Hm. Der Schatten hat sich selbst bewegt.
+en: Hmm. The shadow moved on its own.
+
+[golpe]
+es: Me has encontrado. Por ahora.
+de: Du hast mich gefunden. Vorerst.
+en: You found me. For now.
+
+es: Un rasguño en el cristal.
+de: Ein Kratzer im Kristall.
+en: A scratch on the crystal.
+
+es: Lo noto. No lo muestro.
+de: Ich spüre es. Ich zeige es nicht.
+en: I feel it. I don't show it.
+
+es: …
+de: …
+en: …
+
+[golpe_fuerte]
+es: Eso… ha llegado hasta el fondo.
+de: Das… ging bis tief hinein.
+en: That… went all the way down.
+
+es: La sombra se agrieta.
+de: Der Schatten bekommt Risse.
+en: The shadow cracks.
+
+es: Tienes más luz de la que creía, {rival}.
+de: Du hast mehr Licht, als ich dachte, {rival}.
+en: You carry more light than I thought, {rival}.
+
+es: Cuidado. Ahora me has despertado.
+de: Vorsicht. Jetzt hast du mich geweckt.
+en: Careful. Now you've woken me.
+
+[poco_blindaje]
+es: Me desvanezco. Eso no significa que me vaya.
+de: Ich verblasse. Das heißt nicht, dass ich gehe.
+en: I'm fading. That doesn't mean I'm leaving.
+
+es: Hasta la sombra más débil puede cortar.
+de: Selbst der schwächste Schatten kann schneiden.
+en: Even the faintest shadow can cut.
+
+es: {jugador}. No temas. Todavía no.
+de: {jugador}. Keine Angst. Noch nicht.
+en: {jugador}. Don't be afraid. Not yet.
+
+es: Poca luz me queda. La justa.
+de: Mir bleibt wenig Licht. Gerade genug.
+en: Little light left. Just enough.
+
+[parte_rota]
+es: {pieza}. Una sombra menos.
+de: {pieza}. Ein Schatten weniger.
+en: My {pieza}. One shadow fewer.
+
+es: Sin {pieza}. Seguiré en la oscuridad.
+de: Ohne {pieza}. Ich bleibe im Dunkeln.
+en: No {pieza}. I'll carry on in the dark.
+
+es: Has roto {pieza}. No has roto la noche.
+de: Du hast {pieza} zerbrochen. Nicht die Nacht.
+en: You broke my {pieza}. Not the night.
+
+es: Lo que se rompe en la sombra, la sombra lo esconde.
+de: Was im Schatten bricht, verbirgt der Schatten.
+en: What breaks in the shadow, the shadow hides.
+
+[esquiva]
+es: No estaba ahí.
+de: Ich war nicht da.
+en: I wasn't there.
+
+es: Nunca estuve ahí.
+de: Ich war nie dort.
+en: I was never there.
+
+es: Golpeas sombras, {rival}.
+de: Du schlägst nach Schatten, {rival}.
+en: You're striking shadows, {rival}.
+
+es: Demasiado lento para la noche.
+de: Zu langsam für die Nacht.
+en: Too slow for the night.
+
+[victoria_ronda]
+es: Una ronda más se apaga.
+de: Wieder erlischt eine Runde.
+en: Another round goes dark.
+
+es: Ronda {ronda}. Como estaba escrito en las estrellas.
+de: Runde {ronda}. Wie in den Sternen geschrieben.
+en: Round {ronda}. As written in the stars.
+
+es: Levántate, {rival}. La noche no ha terminado.
+de: Steh auf, {rival}. Die Nacht ist nicht vorbei.
+en: Rise, {rival}. The night is not over.
+
+es: Silencio. Así suena ganar.
+de: Stille. So klingt Gewinnen.
+en: Silence. That's what winning sounds like.
+
+[derrota_ronda]
+es: El sol asoma. Solo un momento.
+de: Die Sonne lugt hervor. Nur kurz.
+en: The sun peeks out. Only for a moment.
+
+es: Me dejo ver. Error mío.
+de: Ich habe mich zeigen lassen. Mein Fehler.
+en: I let myself be seen. My mistake.
+
+es: Una ronda es un instante. La noche es eterna.
+de: Eine Runde ist ein Augenblick. Die Nacht ist ewig.
+en: A round is an instant. The night is eternal.
+
+es: Disfruta la luz, {rival}. Mientras dure.
+de: Genieß das Licht, {rival}. Solange es hält.
+en: Enjoy the light, {rival}. While it lasts.
+
+[victoria]
+es: Cuando me viste, ya era tarde.
+de: Als du mich gesehen hast, war es schon zu spät.
+en: When you saw me, it was already too late.
+
+es: El eclipse ha terminado. Tú también, {rival}.
+de: Die Finsternis ist vorüber. Du auch, {rival}.
+en: The eclipse is over. So are you, {rival}.
+
+es: {jugador}. Bien hecho. No se lo digas a la luz.
+de: {jugador}. Gut gemacht. Verrat es nicht dem Licht.
+en: {jugador}. Well done. Don't tell the light.
+
+es: Vuelvo a la sombra. Hasta la próxima noche.
+de: Ich kehre in den Schatten zurück. Bis zur nächsten Nacht.
+en: Back to the shadow. Until the next night.
+
+[derrota]
+es: La luz gana… esta vez.
+de: Das Licht gewinnt… dieses Mal.
+en: The light wins… this time.
+
+es: Toda sombra vuelve al caer la tarde.
+de: Jeder Schatten kehrt zurück, wenn es Abend wird.
+en: Every shadow returns when evening falls.
+
+es: Recuerda mi nombre, {rival}. No lo diré dos veces.
+de: Merk dir meinen Namen, {rival}. Ich sage ihn nicht zweimal.
+en: Remember my name, {rival}. I won't say it twice.
+
+es: El cristal se rompe… la oscuridad, no.
+de: Der Kristall zerbricht… die Dunkelheit nicht.
+en: The crystal shatters… the darkness doesn't.
+
+[burla]
+es: Buscas en el sitio equivocado.
+de: Du suchst an der falschen Stelle.
+en: You're looking in the wrong place.
+
+es: ¿Tienes miedo a la oscuridad, {rival}?
+de: Hast du Angst im Dunkeln, {rival}?
+en: Afraid of the dark, {rival}?
+
+es: Tu sombra se ríe de ti.
+de: Dein Schatten lacht über dich.
+en: Your own shadow is laughing at you.
+
+es: Mira detrás. No, más detrás.
+de: Schau hinter dich. Nein, weiter hinten.
+en: Look behind you. No, further back.
+
+[pulla]
+es: {rival}, haces tanto ruido que hasta la noche se despierta.
+de: {rival}, du bist so laut, dass sogar die Nacht aufwacht.
+en: {rival}, you're so loud even the night wakes up.
+
+es: He visto farolas más amenazantes que tú.
+de: Ich habe bedrohlichere Straßenlaternen gesehen als dich.
+en: I've seen streetlamps more threatening than you.
+
+es: Ni siquiera tu sombra quiere seguirte.
+de: Nicht mal dein Schatten will dir folgen.
+en: Not even your shadow wants to follow you.
+
+es: Eres predecible, {rival}. Como el amanecer. Pero menos bonito.
+de: Du bist vorhersehbar, {rival}. Wie der Morgen. Nur weniger schön.
+en: You're predictable, {rival}. Like sunrise. Only less pretty.
+
+es: Te venceré sin que sepas por dónde. Ya ha pasado dos veces.
+de: Ich besiege dich, ohne dass du weißt, woher. Schon zweimal passiert.
+en: I'll beat you without you knowing how. It's happened twice already.
+
+[subida]
+es: Un nivel más. La sombra crece.
+de: Ein Level mehr. Der Schatten wächst.
+en: One more level. The shadow grows.
+
+es: Bien, {jugador}. La noche nos sonríe.
+de: Gut, {jugador}. Die Nacht lächelt uns zu.
+en: Good, {jugador}. The night smiles on us.
+
+es: Subimos. En silencio, como debe ser.
+de: Aufstieg. Leise, wie es sich gehört.
+en: We rise. Quietly, as we should.
+
+es: Más poder. Menos luz. Perfecto.
+de: Mehr Macht. Weniger Licht. Perfekt.
+en: More power. Less light. Perfect.
+
+[error_codigo]
+es: Algo se ha roto en la oscuridad. No era yo.
+de: Etwas ist im Dunkeln zerbrochen. Ich war es nicht.
+en: Something broke in the dark. It wasn't me.
+
+es: {jugador}. Tu código tiene un agujero. Lo noto frío.
+de: {jugador}. Dein Code hat ein Loch. Es zieht.
+en: {jugador}. Your code has a hole. I feel a draft.
+
+es: Una excepción. Ni las sombras la vieron venir.
+de: Eine Exception. Nicht mal die Schatten haben sie kommen sehen.
+en: An exception. Not even the shadows saw it coming.
+
+es: Null. Vacío. Como la noche sin estrellas.
+de: Null. Leere. Wie eine Nacht ohne Sterne.
+en: Null. Empty. Like a starless night.
+
+[espera]
+es: Espero. Las sombras saben esperar.
+de: Ich warte. Schatten können warten.
+en: I wait. Shadows know how to wait.
+
+es: …
+de: …
+en: …
+
+es: Escribe, {jugador}. Yo vigilo desde aquí.
+de: Schreib, {jugador}. Ich wache von hier aus.
+en: Write, {jugador}. I'll watch from here.
+
+es: He contado las estrellas. Faltan tres.
+de: Ich habe die Sterne gezählt. Drei fehlen.
+en: I counted the stars. Three are missing.
+
+[elogio]
+es: Elegante. Silencioso. Letal. Me gusta.
+de: Elegant. Leise. Tödlich. Gefällt mir.
+en: Elegant. Silent. Lethal. I like it.
+
+es: Este código se mueve como una sombra.
+de: Dieser Code bewegt sich wie ein Schatten.
+en: This code moves like a shadow.
+
+es: {jugador}. Tienes algo de noche dentro.
+de: {jugador}. In dir steckt ein Stück Nacht.
+en: {jugador}. There's a bit of night in you.
+
+es: Sin una línea de más. Así se oculta uno.
+de: Keine Zeile zu viel. So bleibt man verborgen.
+en: Not one line too many. That's how one stays hidden.
+
+[reparar]
+es: La sombra se recompone.
+de: Der Schatten fügt sich wieder zusammen.
+en: The shadow mends itself.
+
+es: Un momento a oscuras. Vuelvo enseguida.
+de: Einen Moment im Dunkeln. Ich bin gleich zurück.
+en: A moment in the dark. I'll be right back.
+
+es: El cristal se cierra.
+de: Der Kristall schließt sich.
+en: The crystal seals.
+
+es: No mires. Me estoy curando.
+de: Schau nicht hin. Ich heile.
+en: Don't look. I'm healing.
+
+[especial]
+es: Eclipse total.
+de: Totale Finsternis.
+en: Total eclipse.
+
+es: Que se apaguen todas las luces.
+de: Alle Lichter aus.
+en: Let every light go out.
+
+es: Ya es tarde, {rival}.
+de: Es ist zu spät, {rival}.
+en: It's too late, {rival}.
+
+es: La noche cae de golpe.
+de: Die Nacht bricht auf einen Schlag herein.
+en: Night falls all at once.

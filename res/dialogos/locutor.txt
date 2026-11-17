@@ -1,0 +1,527 @@
+# Locutor: robot comentarista LOCO, de voz mecánica, como un narrador de lucha libre chiflado.
+# Se atasca (glitches), hace chistes de programación y de robots. Lo lee una voz sintética:
+# frases cortas, sin emojis ni símbolos raros.
+
+[inicio_pelea]
+es: ¡Damas, caballeros y tostadoras! ¡Bienvenidos a la arena de MetajavBots!
+de: Meine Damen, Herren und Toaster! Willkommen in der MetajavBots-Arena!
+en: Ladies, gentlemen and toasters! Welcome to the MetajavBots arena!
+
+es: ¡Compilando la emoción! ¡Cero errores, cero piedad! ¡A pelear!
+de: Spannung wird kompiliert! Null Fehler, null Gnade! Kämpft!
+en: Compiling the excitement! Zero errors, zero mercy! Fight!
+
+es: ¡Bip bip! ¡Mis circuitos echan humo! ¡Empieza el combate del siglo veintiuno y medio!
+de: Piep piep! Meine Schaltkreise qualmen! Der Kampf des Jahrhunderts beginnt!
+en: Beep beep! My circuits are smoking! The fight of the century begins!
+
+es: ¡Abrimos llaves, cerramos llaves y que empiece la paliza!
+de: Klammer auf, Klammer zu, und jetzt gibt's Haue!
+en: Open brace, close brace, and let the beatdown begin!
+
+es: ¡Public static void PELEA! ¡Ejecutando!
+de: Public static void KAMPF! Wird ausgeführt!
+en: Public static void FIGHT! Executing!
+
+es: ¡Atención, atención! ¡Dos montones de tornillos con mucho que demostrar!
+de: Achtung, Achtung! Zwei Haufen Schrauben mit viel zu beweisen!
+en: Attention, attention! Two piles of bolts with everything to prove!
+
+[inicio_ronda]
+es: ¡Ronda {ronda}! ¡Ron-ron-ronda {ronda}! ¡Perdón, se me ha trabado el disco!
+de: Runde {ronda}! Run-run-runde {ronda}! Sorry, meine Platte hängt!
+en: Round {ronda}! Rou-rou-round {ronda}! Sorry, my disk got stuck!
+
+es: ¡Ronda {ronda}! ¡Que suene la campana! ¡Ding, ding, ding!
+de: Runde {ronda}! Läutet die Glocke! Ding, ding, ding!
+en: Round {ronda}! Ring the bell! Ding, ding, ding!
+
+es: ¡Iteración número {ronda} del bucle de la violencia!
+de: Durchlauf Nummer {ronda} der Schleife der Gewalt!
+en: Iteration number {ronda} of the loop of violence!
+
+es: ¡Ronda {ronda}! ¡Aceite en las juntas y a darlo todo!
+de: Runde {ronda}! Öl in die Gelenke und alles geben!
+en: Round {ronda}! Oil those joints and give it everything!
+
+es: ¡Arranca la ronda {ronda}! ¡Mis sensores tiemblan de emoción!
+de: Runde {ronda} startet! Meine Sensoren zittern vor Aufregung!
+en: Round {ronda} is on! My sensors are shaking with excitement!
+
+es: ¡Ronda {ronda}! ¡Guardad el código y agarraos los tornillos!
+de: Runde {ronda}! Code speichern und Schrauben festhalten!
+en: Round {ronda}! Save your code and hold on to your bolts!
+
+[primer_golpe]
+es: ¡Primera sangre! Bueno, primer aceite. ¡Los robots no sangran!
+de: Erstes Blut! Na ja, erstes Öl. Roboter bluten nicht!
+en: First blood! Well, first oil. Robots don't bleed!
+
+es: ¡Y el primer golpe entra! ¡Contador de impactos: uno!
+de: Und der erste Treffer sitzt! Trefferzähler: eins!
+en: And the first hit lands! Hit counter: one!
+
+es: ¡Primer golpe! ¡Esto ya no es un hola mundo, señores!
+de: Erster Treffer! Das ist kein Hallo Welt mehr, Leute!
+en: First hit! This is no hello world anymore, folks!
+
+es: ¡Pam! ¡Se abre el marcador! ¡Mi procesador aplaude!
+de: Bamm! Der Zähler läuft! Mein Prozessor klatscht!
+en: Bam! We're on the board! My processor is applauding!
+
+es: ¡Primer contacto! ¡Se acabaron las cortesías de arranque!
+de: Erster Kontakt! Schluss mit der Höflichkeit beim Hochfahren!
+en: First contact! Boot-up politeness is over!
+
+[golpe_fuerte]
+es: ¡Uuuuy! ¡Eso ha sonado a disco duro cayendo por las escaleras!
+de: Uuuh! Das klang wie eine Festplatte auf der Treppe!
+en: Ooooh! That sounded like a hard drive falling down the stairs!
+
+es: ¡Golpe brutal! ¡Hasta el recolector de basura ha salido corriendo!
+de: Brutaler Treffer! Sogar der Garbage Collector rennt weg!
+en: Brutal hit! Even the garbage collector ran away!
+
+es: ¡Bum! ¡Ese ha sido un golpe de complejidad exponencial!
+de: Bumm! Das war ein Treffer mit exponentieller Komplexität!
+en: Boom! That hit had exponential complexity!
+
+es: ¡Madre mía, madre placa! ¡Qué impacto!
+de: Ach du liebe Hauptplatine! Was für ein Einschlag!
+en: Oh my motherboard! What an impact!
+
+es: ¡Golpazo! ¡Mis medidores se han salido de la pantalla!
+de: Volltreffer! Meine Anzeigen sind aus dem Bildschirm geflogen!
+en: Massive hit! My meters just flew off the screen!
+
+es: ¡Ay, ay, ay! ¡Eso duele hasta en binario!
+de: Au, au, au! Das tut sogar binär weh!
+en: Ouch, ouch, ouch! That hurts even in binary!
+
+[laser]
+es: ¡Láser! ¡Piuuu! ¡Rayo de luz con muy malas intenciones!
+de: Laser! Piuuu! Ein Lichtstrahl mit sehr bösen Absichten!
+en: Laser! Pewww! A beam of light with very bad intentions!
+
+es: ¡Disparo láser! ¡A la velocidad de la luz y sin pedir permiso!
+de: Laserschuss! Mit Lichtgeschwindigkeit und ohne zu fragen!
+en: Laser shot! At light speed and without asking!
+
+es: ¡Láser al canto! ¡Eso no es un puntero, es una sentencia!
+de: Laser marsch! Das ist kein Zeiger, das ist ein Urteil!
+en: Laser away! That's not a pointer, that's a verdict!
+
+es: ¡Rayo láser! ¡Alguien acaba de encender la luz muy, muy fuerte!
+de: Laserstrahl! Da hat jemand das Licht sehr, sehr hell gemacht!
+en: Laser beam! Somebody turned the lights up way too high!
+
+es: ¡Fiuuum! ¡Láser en línea recta, como un buen código!
+de: Fiuuum! Laser schnurgerade, wie guter Code!
+en: Fwoom! Laser in a straight line, like good code!
+
+[misil]
+es: ¡Misil en el aire! ¡Recalculando ruta hacia tu cara!
+de: Rakete in der Luft! Route zu deinem Gesicht wird berechnet!
+en: Missile in the air! Recalculating route to your face!
+
+es: ¡Misil teledirigido! ¡Tiene más inteligencia que algunos programas!
+de: Lenkrakete! Die ist schlauer als manches Programm!
+en: Guided missile! It's smarter than some programs!
+
+es: ¡Fiuuuu! ¡Misil en camino! ¡Entrega urgente!
+de: Fiuuuu! Rakete unterwegs! Expresszustellung!
+en: Whoooosh! Missile incoming! Express delivery!
+
+es: ¡Lanzamiento! ¡Ese misil sigue al rival como un puntero bien apuntado!
+de: Abschuss! Die Rakete folgt dem Ziel wie ein gut gesetzter Zeiger!
+en: Launch! That missile tracks its target like a well-aimed pointer!
+
+es: ¡Un misil! ¡Agachad las antenas!
+de: Eine Rakete! Antennen einziehen!
+en: A missile! Duck your antennas!
+
+[cuerpo]
+es: ¡Cuerpo a cuerpo! ¡Esto ya es lucha libre de tornillos!
+de: Nahkampf! Jetzt ist das Schrauben-Wrestling!
+en: Close combat! This is bolt wrestling now!
+
+es: ¡Golpe de cerca! ¡Nada de variables globales, todo muy local!
+de: Treffer aus nächster Nähe! Keine globalen Variablen, alles lokal!
+en: Up close! No global variables, everything's very local!
+
+es: ¡Toma castañazo metálico!
+de: Da gibt's eine metallische Ohrfeige!
+en: Take that, metal smackdown!
+
+es: ¡Abrazo de oso de acero! ¡Y no es un abrazo cariñoso!
+de: Stählerne Bärenumarmung! Und keine liebevolle!
+en: Steel bear hug! And not a friendly one!
+
+es: ¡Clonc! ¡Eso ha sido chapa contra chapa!
+de: Klonk! Blech gegen Blech!
+en: Clonk! Sheet metal against sheet metal!
+
+[esquiva]
+es: ¡Esquiva! ¡Ese golpe ha devuelto null!
+de: Ausgewichen! Der Treffer hat null zurückgegeben!
+en: Dodged! That hit returned null!
+
+es: ¡Fallo total! ¡Ha golpeado el aire con mucha convicción!
+de: Voll daneben! Die Luft wurde mit Überzeugung getroffen!
+en: Total miss! The air got hit with great conviction!
+
+es: ¡Uy, qué cerca! ¡Un píxel más y adiós!
+de: Uff, ganz knapp! Ein Pixel mehr und tschüss!
+en: Whoa, so close! One more pixel and bye-bye!
+
+es: ¡Esquiva de manual! Del manual de robótica avanzada, claro.
+de: Ausweichen wie aus dem Lehrbuch! Fortgeschrittene Robotik!
+en: Textbook dodge! The advanced robotics textbook, of course!
+
+es: ¡Se ha apartado como un bug que huye del depurador!
+de: Weggehuscht wie ein Bug vor dem Debugger!
+en: Slipped away like a bug running from the debugger!
+
+[bloqueo]
+es: ¡Bloqueado! ¡Escudo arriba y golpe a la papelera!
+de: Geblockt! Schild hoch und Treffer in den Papierkorb!
+en: Blocked! Shield up and that hit goes in the trash!
+
+es: ¡Try, catch y a otra cosa! ¡Qué bloqueo!
+de: Try, catch und weiter! Was für ein Block!
+en: Try, catch, move on! What a block!
+
+es: ¡Rebota! ¡Ese escudo tiene más capas que una cebolla con firewall!
+de: Abgeprallt! Der Schild hat mehr Schichten als eine Firewall!
+en: Bounced off! That shield has more layers than a firewall!
+
+es: ¡Bloqueo perfecto! ¡Acceso denegado!
+de: Perfekter Block! Zugriff verweigert!
+en: Perfect block! Access denied!
+
+es: ¡Clang! ¡El escudo dice que no, que hoy no!
+de: Klong! Der Schild sagt nein, heute nicht!
+en: Clang! The shield says no, not today!
+
+[parte_rota]
+es: ¡Se ha roto {pieza}! ¡Piezas volando por toda la arena!
+de: {pieza} ist kaputt! Teile fliegen durch die ganze Arena!
+en: The {pieza} is broken! Parts flying all over the arena!
+
+es: ¡Adiós, {pieza}! ¡Memoria liberada!
+de: Tschüss, {pieza}! Aus dem Speicher freigegeben!
+en: Goodbye, {pieza}! It's been freed from memory!
+
+es: ¡Crac! ¡{pieza} al desguace! ¡Que alguien llame al taller!
+de: Krach! {pieza} ab auf den Schrottplatz! Ruft die Werkstatt!
+en: Crack! The {pieza} is scrap! Somebody call the workshop!
+
+es: ¡Destrozo total en {pieza}! ¡Eso no lo arregla ni el control más zeta!
+de: {pieza} zerstört! Da hilft auch kein Rückgängig mehr!
+en: The {pieza} is wrecked! No undo button for that one!
+
+es: ¡Pieza perdida! ¡{pieza} ha dejado el chat!
+de: Teil verloren! {pieza} hat den Chat verlassen!
+en: Part lost! The {pieza} has left the chat!
+
+[fuera_de_combate]
+es: ¡Fuera de combate! ¡Sistema apagado! ¡Pantalla en negro!
+de: Kampfunfähig! System aus! Bildschirm schwarz!
+en: Out of action! System down! Screen goes black!
+
+es: ¡Se acabó! ¡Ese robot ha entrado en un sueño muy, muy profundo!
+de: Aus! Der Roboter ist in einen sehr tiefen Schlaf gefallen!
+en: It's over! That robot has gone into a very deep sleep!
+
+es: ¡Diez, nueve, ocho, siete! ¡Uy, conté en binario! ¡Fuera de combate!
+de: Zehn, neun, acht, sieben! Huch, binär gezählt! Kampfunfähig!
+en: Ten, nine, eight, seven! Oops, counted in binary! Knocked out!
+
+es: ¡Ha caído! ¡Proceso terminado con código de salida uno!
+de: Er ist gefallen! Prozess beendet mit Exit-Code eins!
+en: Down it goes! Process finished with exit code one!
+
+es: ¡No se levanta! ¡No se levanta! ¡Tiene la batería en el suelo!
+de: Er steht nicht auf! Er steht nicht auf! Der Akku liegt am Boden!
+en: It's not getting up! Not getting up! Battery's on the floor!
+
+[error_codigo]
+es: ¡Excepción! ¡Al robot se le ha caído una excepción! ¡Que alguien la recoja!
+de: Exception! Dem Roboter ist eine Exception runtergefallen! Aufheben, bitte!
+en: Exception! The robot dropped an exception! Someone pick it up!
+
+es: ¡Null Pointer Exception! ¡El robot ha señalado a la nada!
+de: Null Pointer Exception! Der Roboter zeigt ins Nichts!
+en: Null Pointer Exception! The robot just pointed at nothing!
+
+es: ¡Error, error, eeerror! ¡Se ha olvidado un punto y coma, seguro!
+de: Fehler, Fehler, Feeehler! Da fehlt bestimmt ein Semikolon!
+en: Error, error, errrror! Somebody forgot a semicolon, I bet!
+
+es: ¡Uy! ¡Pila de llamadas desbordada! ¡Eso es mucha recursión!
+de: Huch! Stack Overflow! Das ist ganz schön viel Rekursion!
+en: Whoa! Stack overflow! That's a lot of recursion!
+
+es: ¡Bzzzt! ¡Error de ejecución en directo! ¡Saludad a la consola!
+de: Bzzzt! Laufzeitfehler live! Winkt der Konsole!
+en: Bzzzt! Runtime error, live! Wave to the console!
+
+es: ¡Índice fuera de rango! ¡El robot ha buscado el brazo número once!
+de: Index außerhalb des Bereichs! Er sucht den elften Arm!
+en: Index out of bounds! The robot reached for arm number eleven!
+
+[tope]
+es: ¡Se ha quedado pensando! ¡Cargando, cargando, cargando!
+de: Er denkt nach! Lädt, lädt, lädt!
+en: It's stuck thinking! Loading, loading, loading!
+
+es: ¡Bucle infinito detectado! ¡Va a dar vueltas hasta el año tres mil!
+de: Endlosschleife erkannt! Der dreht sich bis zum Jahr dreitausend!
+en: Infinite loop detected! It'll spin until the year three thousand!
+
+es: ¡Ese robot piensa más despacio que un módem antiguo!
+de: Der Roboter denkt langsamer als ein altes Modem!
+en: That robot thinks slower than an old dial-up modem!
+
+es: ¿Hola? ¿Hola? ¡Robot, que te estoy viendo la ruedecita de carga!
+de: Hallo? Hallo? Roboter, ich sehe dein Ladekringel!
+en: Hello? Hello? Robot, I can see your loading spinner!
+
+es: ¡Tiempo agotado! ¡Ha calculado tanto que se le ha fundido el reloj!
+de: Zeit abgelaufen! So viel gerechnet, dass die Uhr geschmolzen ist!
+en: Time's up! It calculated so hard its clock melted!
+
+[pared]
+es: ¡Contra la pared! ¡Error de límites de la arena!
+de: Gegen die Wand! Fehler: Arenagrenze erreicht!
+en: Into the wall! Arena boundary error!
+
+es: ¡Clonc! ¡La pared gana por goleada!
+de: Klonk! Die Wand gewinnt haushoch!
+en: Clonk! The wall wins by a mile!
+
+es: ¡Se ha comido la pared! ¡Necesita un sensor nuevo, urgente!
+de: Voll gegen die Wand! Der braucht dringend einen neuen Sensor!
+en: Ate the wall! That robot urgently needs a new sensor!
+
+es: ¡La pared no se mueve, amigo! ¡Es una constante!
+de: Die Wand bewegt sich nicht, Freund! Sie ist eine Konstante!
+en: The wall doesn't move, friend! It's a constant!
+
+es: ¡Pared uno, robot cero!
+de: Wand eins, Roboter null!
+en: Wall one, robot zero!
+
+[choque]
+es: ¡Choque frontal! ¡Chapa contra chapa! ¡Qué estruendo!
+de: Frontalzusammenstoß! Blech auf Blech! Was für ein Krach!
+en: Head-on crash! Metal on metal! What a racket!
+
+es: ¡Colisión! ¡Dos objetos intentando ocupar la misma memoria!
+de: Kollision! Zwei Objekte wollen denselben Speicher!
+en: Collision! Two objects trying to use the same memory!
+
+es: ¡Pum! ¡Se han dado un abrazo sin querer!
+de: Bumm! Die haben sich aus Versehen umarmt!
+en: Bump! They hugged by accident!
+
+es: ¡Choque! ¡Que alguien llame al seguro de robots!
+de: Zusammenstoß! Ruft die Roboterversicherung!
+en: Crash! Somebody call robot insurance!
+
+es: ¡Toque de chapa! ¡Esto parece los autos de choque!
+de: Blechschaden! Das ist ja wie beim Autoscooter!
+en: Fender bender! It's like bumper cars out there!
+
+[aburrido]
+es: ¿Hola? ¡Aquí se viene a pelear, no a desfragmentar!
+de: Hallo? Hier wird gekämpft, nicht defragmentiert!
+en: Hello? We're here to fight, not to defragment!
+
+es: ¡Zzz! ¡Perdón, me he quedado en modo ahorro de energía!
+de: Zzz! Sorry, ich war im Energiesparmodus!
+en: Zzz! Sorry, I slipped into power-saving mode!
+
+es: ¡Esto está más parado que un programa sin main!
+de: Hier passiert weniger als in einem Programm ohne main!
+en: This is slower than a program without a main method!
+
+es: ¡Público, despertad! Ah, no, son ellos los que duermen.
+de: Publikum, aufwachen! Ach nein, die da unten schlafen.
+en: Wake up, crowd! Oh wait, it's the fighters who are asleep.
+
+es: ¡Atacad, por favor! ¡Me estoy oxidando de aburrimiento!
+de: Greift an, bitte! Ich roste vor Langeweile!
+en: Attack, please! I'm rusting from boredom!
+
+es: ¡Mis ventiladores bostezan! ¡Que pase algo!
+de: Meine Lüfter gähnen! Es muss was passieren!
+en: My fans are yawning! Something, anything, happen!
+
+[fin_ronda]
+es: ¡Fin de la ronda {ronda}! ¡Guardando partida, no apaguéis!
+de: Ende von Runde {ronda}! Spiel wird gespeichert, nicht ausschalten!
+en: End of round {ronda}! Saving, do not turn off!
+
+es: ¡Ding, ding! ¡Se acabó la ronda {ronda}! ¡A por aceite!
+de: Ding, ding! Runde {ronda} ist vorbei! Ab zum Ölwechsel!
+en: Ding, ding! Round {ronda} is over! Time for an oil break!
+
+es: ¡Termina la ronda {ronda}! ¡Mis circuitos necesitan un respiro!
+de: Runde {ronda} vorbei! Meine Schaltkreise brauchen Luft!
+en: Round {ronda} is done! My circuits need a breather!
+
+es: ¡Ronda {ronda} completada! ¡Break! Y no es un break de bucle.
+de: Runde {ronda} geschafft! Pause! Und kein break aus der Schleife.
+en: Round {ronda} complete! Break! And not a loop break.
+
+es: ¡Se cierra la ronda {ronda}! ¡Llave de cierre colocada!
+de: Runde {ronda} geschlossen! Schließende Klammer gesetzt!
+en: Round {ronda} closed! Closing brace in place!
+
+[remontada]
+es: ¡Remontada! ¡Remontada! ¡Mis altavoces van a explotar!
+de: Comeback! Comeback! Meine Lautsprecher explodieren gleich!
+en: Comeback! Comeback! My speakers are about to blow!
+
+es: ¡Increí, crei, creíble! ¡Ha dado la vuelta al marcador!
+de: Unglaub, laub, laublich! Das Blatt hat sich gewendet!
+en: Unbeliev, liev, lievable! It's turned the whole thing around!
+
+es: ¡Del cero al héroe! ¡Bueno, del cero al uno! ¡Pero en binario es mucho!
+de: Von null auf Held! Na ja, von null auf eins! Binär ist das viel!
+en: From zero to hero! Well, zero to one! In binary that's huge!
+
+es: ¡Nadie daba un tornillo por él y mirad ahora!
+de: Keiner hätte eine Schraube auf ihn gewettet, und jetzt das!
+en: Nobody would bet a single bolt on it, and look now!
+
+es: ¡Qué remontada! ¡Esto lo cuento en mi registro de logs para siempre!
+de: Was für ein Comeback! Das kommt für immer in mein Logbuch!
+en: What a comeback! This goes in my log files forever!
+
+[empate]
+es: ¡Empate! ¡Igual, igual, igual! ¡Equals devuelve true!
+de: Unentschieden! Gleich, gleich, gleich! Equals liefert true!
+en: A draw! Equal, equal, equal! Equals returns true!
+
+es: ¡Empate técnico! ¡Mis cálculos se han quedado en tablas!
+de: Unentschieden! Meine Berechnungen stehen auf Remis!
+en: Dead even! My calculations ended in a stalemate!
+
+es: ¡Nadie gana! ¡Esto es más raro que un código sin bugs!
+de: Keiner gewinnt! Das ist seltener als Code ohne Bugs!
+en: Nobody wins! That's rarer than bug-free code!
+
+es: ¡Empate! ¡Error en mi módulo de ganadores!
+de: Unentschieden! Fehler in meinem Gewinnermodul!
+en: A tie! Error in my winner module!
+
+es: ¡Iguales! ¡Como dos copias del mismo objeto!
+de: Gleichstand! Wie zwei Kopien desselben Objekts!
+en: Even! Like two copies of the same object!
+
+[explosion_final]
+es: ¡Bum! ¡Bum! ¡Ka-bum! ¡Fuegos artificiales de tornillos!
+de: Bumm! Bumm! Ka-wumm! Ein Feuerwerk aus Schrauben!
+en: Boom! Boom! Ka-boom! A fireworks show of bolts!
+
+es: ¡Explosión final! ¡El recolector de basura tiene trabajo para una semana!
+de: Große Explosion! Der Garbage Collector hat eine Woche zu tun!
+en: Final explosion! The garbage collector has a week of work!
+
+es: ¡Kaboom! ¡Eso ha sido un system punto exit en toda regla!
+de: Kawumm! Das war ein waschechtes System punkt exit!
+en: Kaboom! That was a full-blown system dot exit!
+
+es: ¡Se ha desintegrado! ¡Lo siento, taller, hoy vais a hacer horas extra!
+de: Pulverisiert! Sorry, Werkstatt, heute gibt's Überstunden!
+en: Disintegrated! Sorry, workshop, overtime for you tonight!
+
+es: ¡Explota! ¡Explota! ¡Mi sensor de ruido ha pedido vacaciones!
+de: Explodiert! Explodiert! Mein Lärmsensor nimmt Urlaub!
+en: It blows! It blows! My noise sensor just asked for a vacation!
+
+[victoria_jugador]
+es: ¡Victoria para {jugador}! ¡Compilado, ejecutado y campeón!
+de: Sieg für {jugador}! Kompiliert, ausgeführt und Champion!
+en: Victory for {jugador}! Compiled, executed and champion!
+
+es: ¡{jugador} gana! ¡Ese código merece una estatua de titanio!
+de: {jugador} gewinnt! Dieser Code verdient eine Titanstatue!
+en: {jugador} wins! That code deserves a titanium statue!
+
+es: ¡Bravo, {jugador}! ¡Mis circuitos lloran aceite de felicidad!
+de: Bravo, {jugador}! Meine Schaltkreise weinen Freudenöl!
+en: Bravo, {jugador}! My circuits are crying oil of joy!
+
+es: ¡Gana {jugador}! ¡Return victoria! ¡Punto y coma!
+de: {jugador} gewinnt! Return Sieg! Semikolon!
+en: {jugador} wins! Return victory! Semicolon!
+
+es: ¡Campeón, campeón! ¡{jugador}, eres el administrador de esta arena!
+de: Champion, Champion! {jugador}, du bist der Admin dieser Arena!
+en: Champion, champion! {jugador}, you're the admin of this arena!
+
+[derrota_jugador]
+es: ¡Derrota! ¡Pero tranquilo, {jugador}, todo buen código empieza con errores!
+de: Niederlage! Aber keine Sorge, {jugador}, guter Code beginnt mit Fehlern!
+en: Defeat! But relax, {jugador}, all good code starts with bugs!
+
+es: ¡Oh, no! ¡{jugador} pierde! ¡Al taller, a depurar y a volver!
+de: Oh nein! {jugador} verliert! Ab in die Werkstatt, debuggen, zurückkommen!
+en: Oh no! {jugador} loses! To the workshop, debug, come back!
+
+es: ¡Hoy no ha podido ser! ¡Control zeta y otra vez, {jugador}!
+de: Heute hat es nicht gereicht! Rückgängig und nochmal, {jugador}!
+en: Not today! Hit undo and try again, {jugador}!
+
+es: ¡Derrota! ¡Mis sensores de tristeza al ciento por ciento!
+de: Niederlage! Meine Traurigkeitssensoren auf Anschlag!
+en: Defeat! My sadness sensors are maxed out!
+
+es: ¡Fin de la partida! ¡Pero un buen programador nunca se rinde, {jugador}!
+de: Spiel vorbei! Aber gute Programmierer geben nie auf, {jugador}!
+en: Game over! But good programmers never give up, {jugador}!
+
+[subida_nivel]
+es: ¡Subida de nivel! ¡{jugador} se actualiza a la versión dos punto cero!
+de: Levelaufstieg! {jugador} ist jetzt Version zwei punkt null!
+en: Level up! {jugador} has upgraded to version two point oh!
+
+es: ¡Nuevo nivel para {jugador}! ¡Mis luces bailan solas!
+de: Neues Level für {jugador}! Meine Lichter tanzen von allein!
+en: New level for {jugador}! My lights are dancing on their own!
+
+es: ¡Sube, sube, sube! ¡Esto es un bucle de éxitos!
+de: Hoch, hoch, hoch! Das ist eine Erfolgsschleife!
+en: Up, up, up! This is a success loop!
+
+es: ¡Ascenso! ¡{jugador}, tu experiencia ya no cabe en un int!
+de: Aufstieg! {jugador}, deine Erfahrung passt nicht mehr in einen int!
+en: Promotion! {jugador}, your experience no longer fits in an int!
+
+es: ¡Nivel desbloqueado! ¡Que suenen las sirenas de la fábrica!
+de: Level freigeschaltet! Lasst die Fabriksirenen heulen!
+en: Level unlocked! Sound the factory sirens!
+
+[bajada_nivel]
+es: ¡Bajada de nivel! ¡Uy, eso ha sido un menos menos!
+de: Levelabstieg! Huch, das war ein minus minus!
+en: Level down! Whoops, that was a minus minus!
+
+es: ¡{jugador} baja un nivel! ¡Nada que no arregle un buen refactor!
+de: {jugador} steigt ab! Nichts, was ein gutes Refactoring nicht repariert!
+en: {jugador} drops a level! Nothing a good refactor can't fix!
+
+es: ¡Retroceso! ¡Pero hasta los mejores hacen rollback, {jugador}!
+de: Rückschritt! Aber selbst die Besten machen mal ein Rollback, {jugador}!
+en: Setback! But even the best do a rollback, {jugador}!
+
+es: ¡Nivel perdido! ¡Mis altavoces tocan una música muy triste!
+de: Level verloren! Meine Lautsprecher spielen sehr traurige Musik!
+en: Level lost! My speakers are playing very sad music!
+
+es: ¡Bajamos un escalón! ¡Respira, {jugador}, y vuelve a compilar!
+de: Eine Stufe runter! Durchatmen, {jugador}, und neu kompilieren!
+en: One step down! Breathe, {jugador}, and compile again!

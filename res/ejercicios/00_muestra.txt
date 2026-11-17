@@ -1,0 +1,86 @@
+# Tres ejercicios de muestra, uno de cada tipo (los usan las pruebas del comprobador).
+=== muestra_sumar
+tema: 03
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Sumar el daño de dos golpes
+titulo.de: Den Schaden zweier Treffer addieren
+titulo.en: Add the damage of two hits
+enunciado.es: Tu robot recibe dos golpes. Devuelve el daño total: la suma de a y b.
+enunciado.de: Dein Roboter wird zweimal getroffen. Gib den Gesamtschaden zurück: die Summe von a und b.
+enunciado.en: Your robot takes two hits. Return the total damage: the sum of a and b.
+pista.es: El operador + suma dos números: return a + b;
+pista.de: Der Operator + addiert zwei Zahlen: return a + b;
+pista.en: The + operator adds two numbers: return a + b;
+firma: static int danoTotal(int a, int b)
+plantilla:
+    return 0;
+solucion:
+    return a + b;
+casos:
+    danoTotal(1, 2) => 3
+    danoTotal(10, 0) => 10
+    danoTotal(-3, 3) => 0
+
+=== muestra_escalera
+tema: 05
+dificultad: 2
+java: 8
+tipo: salida
+titulo.es: Escalera de asteriscos
+titulo.de: Sternchentreppe
+titulo.en: Asterisk staircase
+enunciado.es: Imprime n líneas: la primera con un asterisco, la segunda con dos… hasta n.
+enunciado.de: Gib n Zeilen aus: die erste mit einem Sternchen, die zweite mit zwei … bis n.
+enunciado.en: Print n lines: the first with one asterisk, the second with two… up to n.
+pista.es: Dos bucles: uno para las líneas y otro dentro para los asteriscos.
+pista.de: Zwei Schleifen: eine für die Zeilen, eine innere für die Sternchen.
+pista.en: Two loops: one for the lines and an inner one for the asterisks.
+firma: static void escalera(int n)
+plantilla:
+    System.out.println("*");
+solucion:
+    for (int i = 1; i <= n; i++) {
+        System.out.println("*".repeat(i));
+    }
+casos:
+    escalera(3); => "*\n**\n***\n"
+    escalera(1); => "*\n"
+    escalera(0); => ""
+
+=== muestra_punto
+tema: 09
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Un punto de la arena
+titulo.de: Ein Punkt der Arena
+titulo.en: A point in the arena
+enunciado.es: Escribe la clase Punto con un constructor Punto(double x, double y) y un método double distancia(Punto otro).
+enunciado.de: Schreibe die Klasse Punto mit einem Konstruktor Punto(double x, double y) und einer Methode double distancia(Punto otro).
+enunciado.en: Write the class Punto with a constructor Punto(double x, double y) and a method double distancia(Punto otro).
+pista.es: La distancia es Math.hypot(otro.x - x, otro.y - y).
+pista.de: Der Abstand ist Math.hypot(otro.x - x, otro.y - y).
+pista.en: The distance is Math.hypot(otro.x - x, otro.y - y).
+plantilla:
+    public class Punto {
+        // tus campos, tu constructor y tu método
+    }
+solucion:
+    public class Punto {
+        private final double x, y;
+
+        public Punto(double x, double y) {
+            this.x = x;
+            this.y = y;
+        }
+
+        public double distancia(Punto otro) {
+            return Math.hypot(otro.x - x, otro.y - y);
+        }
+    }
+casos:
+    new Punto(0, 0).distancia(new Punto(3, 4)) => 5.0
+    new Punto(1, 1).distancia(new Punto(1, 1)) => 0.0
+    new Punto(-2, 0).distancia(new Punto(2, 0)) => 4.0

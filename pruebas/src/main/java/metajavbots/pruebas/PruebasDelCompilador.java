@@ -173,8 +173,8 @@ final class PruebasDelCompilador {
         caso("compilador: el inyector no cambia lo que hace el código", () -> {
             String prog = "public class Cuenta { public static int f() { int s = 0; for (int i = 0; i < 10; i++) { int j = 0; while (j < i) { s += j; j++; } } do { s--; } while (s > 100); for (int k : new int[]{1,2,3}) s += k; return s; } }";
             Inyector.Inyectado in = Inyector.inyectar(prog);
-            cierto(in.cuantos() >= 6, "mete pasos: " + in.cuantos());
-            cierto(in.fuente.contains("Tope.paso() && ( i < 10)"), "en el for: " + in.fuente);
+            cierto(in.cuantos() >= 4, "mete pasos: " + in.cuantos());
+            cierto(in.fuente.contains("i++) { metajavbots.api.Tope.paso();"), "en el for: " + in.fuente);
             Compilador.Resultado r = Compilador.compilar(prog, true, Vigilante.Modo.EJERCICIO, Locale.ROOT);
             cierto(r.bien, "compila: " + r.errores);
             metajavbots.codigo.Cargador cg = new metajavbots.codigo.Cargador(r.clases, Vigilante.Modo.EJERCICIO);

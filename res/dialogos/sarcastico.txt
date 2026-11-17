@@ -1,0 +1,380 @@
+# Diálogos de la personalidad «sarcastico» (Avispa: zumbo, pico y me voy).
+# Avispa con mucha guasa. Ironía seca, falsa admiración, aburrimiento fingido. Rápida y picante.
+
+[saludo]
+es: Oh, {rival}. Qué ilusión. De verdad. Mucha.
+de: Oh, {rival}. Was für eine Freude. Ehrlich. Riesig.
+en: Oh, {rival}. What a thrill. Really. Huge.
+
+es: {yo} ha llegado. Contened la emoción.
+de: {yo} ist da. Bitte nicht alle gleichzeitig jubeln.
+en: {yo} is here. Try to contain your excitement.
+
+es: Zumbo, pico y me voy. Lo de siempre.
+de: Summen, stechen, weg. Das Übliche.
+en: Buzz, sting, gone. The usual.
+
+es: {jugador}, ¿seguro que has compilado? Era broma. O no.
+de: {jugador}, sicher, dass du kompiliert hast? War nur Spaß. Oder nicht.
+en: {jugador}, sure you compiled? Just kidding. Or am I?
+
+[inicio_ronda]
+es: Ronda {ronda}. Uy, qué nervios. Fíjate cómo tiemblo.
+de: Runde {ronda}. Oh, wie aufregend. Schau, wie ich zittere.
+en: Round {ronda}. Oh, the suspense. Look at me tremble.
+
+es: Ronda {ronda}. Que empiece el espectáculo. Supongo.
+de: Runde {ronda}. Die Show kann beginnen. Schätze ich.
+en: Round {ronda}. Let the show begin. I guess.
+
+es: Otra ronda. Justo lo que pedí. Nunca.
+de: Noch eine Runde. Genau das, was ich mir gewünscht hab. Nie.
+en: Another round. Just what I asked for. Never.
+
+es: Bzzz. Ronda {ronda}. Intenta no aburrirme.
+de: Bzzz. Runde {ronda}. Versuch, mich nicht zu langweilen.
+en: Bzzz. Round {ronda}. Try not to bore me.
+
+[ataque]
+es: Picadura de cortesía.
+de: Ein Stich aufs Haus.
+en: Complimentary sting.
+
+es: Bzzz. Ups.
+de: Bzzz. Hoppla.
+en: Bzzz. Oops.
+
+es: {arma}, que ya iba siendo hora.
+de: {arma}, wurde auch Zeit.
+en: {arma}, about time.
+
+es: Esto te va a picar un poquito. O mucho.
+de: Das piekst jetzt ein bisschen. Oder sehr.
+en: This'll sting a little. Or a lot.
+
+[acierto]
+es: Vaya, le he dado. Qué sorpresa. Para ti.
+de: Oh, getroffen. Wie überraschend. Für dich.
+en: Oh, I hit. How surprising. For you.
+
+es: Pinchado. Siguiente.
+de: Gestochen. Der Nächste.
+en: Stung. Next.
+
+es: ¿Te ha dolido? Era la idea.
+de: Hat's wehgetan? Das war der Plan.
+en: Did that hurt? That was the plan.
+
+es: Clavado. Como tus errores de compilación.
+de: Sitzt. Wie deine Compilerfehler.
+en: Nailed it. Like your compile errors.
+
+[fallo]
+es: He fallado a propósito. Para que te sientas especial.
+de: Absichtlich daneben. Damit du dich besonders fühlst.
+en: Missed on purpose. To make you feel special.
+
+es: Ah, mira, el aire. Qué bien defendido.
+de: Ah, sieh an, die Luft. Gut verteidigt.
+en: Ah, look, the air. Very well defended.
+
+es: Fallo. Lo apunto en mi lista de cosas que no me importan.
+de: Daneben. Kommt auf meine Liste von Dingen, die mir egal sind.
+en: Miss. Adding it to my list of things I don't care about.
+
+es: Vale, ese no contaba.
+de: Okay, der zählt nicht.
+en: Okay, that one didn't count.
+
+[golpe]
+es: Au. Qué original.
+de: Au. Wie originell.
+en: Ow. How original.
+
+es: Me has dado. Felicidades. ¿Quieres un trofeo?
+de: Du hast mich getroffen. Glückwunsch. Willst du einen Pokal?
+en: You hit me. Congrats. Want a trophy?
+
+es: Oh, no. Un rasguño. Llamad a una ambulancia. O no.
+de: Oh nein. Ein Kratzer. Ruft einen Krankenwagen. Oder nicht.
+en: Oh no. A scratch. Call an ambulance. Or don't.
+
+es: Eso me ha rayado las rayas.
+de: Das hat meine Streifen zerkratzt.
+en: That scratched my stripes.
+
+[golpe_fuerte]
+es: ¡Vale! Eso sí ha dolido. No te acostumbres.
+de: Okay! Das tat echt weh. Gewöhn dich nicht dran.
+en: Okay! That actually hurt. Don't get used to it.
+
+es: Mis antenas acaban de ver su vida pasar.
+de: Meine Antennen haben gerade ihr Leben vorbeiziehen sehen.
+en: My antennas just saw their life flash before them.
+
+es: Bonito golpe. Lo odio.
+de: Schöner Schlag. Ich hasse ihn.
+en: Nice hit. I hate it.
+
+es: Bzzz... brrr... vale, ahora estoy enfadada.
+de: Bzzz... brrr... okay, jetzt bin ich sauer.
+en: Bzzz... brrr... okay, now I'm annoyed.
+
+[poco_blindaje]
+es: Blindaje bajo. Mi cosa favorita. Después de todas las demás.
+de: Panzerung niedrig. Mein Lieblingszustand. Nach allen anderen.
+en: Low armor. My favorite thing. After everything else.
+
+es: Todo según el plan. El plan era terrible.
+de: Alles nach Plan. Der Plan war furchtbar.
+en: All according to plan. The plan was terrible.
+
+es: Tranquilos, solo me caigo a trozos.
+de: Keine Panik, ich falle nur auseinander.
+en: Relax, I'm just falling apart.
+
+es: Sigo aquí. Por desgracia para ti.
+de: Ich bin noch da. Pech für dich.
+en: Still here. Unfortunately for you.
+
+[parte_rota]
+es: Oh, genial. {pieza}. Justo la que me gustaba.
+de: Na super. {pieza}. Ausgerechnet das, was ich mochte.
+en: Oh, great. {pieza}. My favorite one, of course.
+
+es: {pieza} rota. Siempre quise ir más ligera.
+de: {pieza} kaputt. Wollte eh schon immer leichter sein.
+en: {pieza} broken. Always wanted to travel light.
+
+es: Perdí: {pieza}. Seguro que no era importante.
+de: Verloren: {pieza}. War sicher nicht wichtig.
+en: Lost: {pieza}. Surely it wasn't important.
+
+es: ¿Alguien ha visto mi {pieza}? Ah, sí, ahí, en pedazos.
+de: Hat jemand {pieza} gesehen? Ah ja, da. In Stücken.
+en: Anyone seen my {pieza}? Ah, yes, there. In pieces.
+
+[esquiva]
+es: Bzzz. Fallaste.
+de: Bzzz. Daneben.
+en: Bzzz. Missed.
+
+es: ¿Me buscabas? Qué tierno.
+de: Hast du mich gesucht? Wie süß.
+en: Looking for me? How cute.
+
+es: Casi. Bueno, no. Ni casi.
+de: Fast. Na ja, nein. Nicht mal fast.
+en: Almost. Well, no. Not even almost.
+
+es: Zumbo por aquí, zumbo por allá...
+de: Hier ein Summen, da ein Summen...
+en: Buzzing here, buzzing there...
+
+[victoria_ronda]
+es: Ronda mía. Qué inesperado. Para nadie.
+de: Runde an mich. Wie unerwartet. Für niemanden.
+en: My round. How unexpected. For nobody.
+
+es: Bien, {jugador}. Casi parece que sabes lo que haces.
+de: Gut, {jugador}. Fast so, als wüsstest du, was du tust.
+en: Nice, {jugador}. It almost looks like you know what you're doing.
+
+es: Uy, {rival}, ¿necesitas un pañuelo?
+de: Oh, {rival}, brauchst du ein Taschentuch?
+en: Aww, {rival}, need a tissue?
+
+es: Zumbé, piqué. Y la ronda, para mí.
+de: Gesummt, gestochen. Und die Runde gehört mir.
+en: Buzzed, stung. And the round is mine.
+
+[derrota_ronda]
+es: Ah. Perfecto. Me encanta perder. Dijo nadie nunca.
+de: Ah. Perfekt. Ich liebe Verlieren. Sagte niemand jemals.
+en: Ah. Perfect. I love losing. Said no one ever.
+
+es: Te he dejado ganar. Por pena. Mucha pena.
+de: Ich hab dich gewinnen lassen. Aus Mitleid. Viel Mitleid.
+en: I let you win. Out of pity. Lots of pity.
+
+es: Esta ronda no la cuento. Me pilló bostezando.
+de: Die Runde zählt nicht. Ich hab gerade gegähnt.
+en: That round doesn't count. I was mid-yawn.
+
+es: Vale, {rival}, tú ganas esta. Disfrútala. Será la única.
+de: Okay, {rival}, die geht an dich. Genieß sie. Es bleibt die einzige.
+en: Fine, {rival}, you get this one. Enjoy it. It's your only one.
+
+[victoria]
+es: Gané. Qué sorpresa. Que alguien finja estar sorprendido.
+de: Gewonnen. Welche Überraschung. Bitte tut alle überrascht.
+en: I won. Shocking. Somebody pretend to be surprised.
+
+es: Zumbo, pico y me voy. Adiós, {rival}.
+de: Summen, stechen, weg. Tschüss, {rival}.
+en: Buzz, sting, gone. Bye, {rival}.
+
+es: Buen trabajo, {jugador}. No se lo digas a nadie, pero me ha gustado.
+de: Gute Arbeit, {jugador}. Verrat's keinem, aber es hat mir gefallen.
+en: Good job, {jugador}. Don't tell anyone, but I liked it.
+
+es: ¿Ya está? Pensaba que esto iba a ser difícil.
+de: Schon vorbei? Ich dachte, das wird schwierig.
+en: That's it? I thought this was going to be hard.
+
+[derrota]
+es: Genial. Simplemente genial. ¡Bum!
+de: Großartig. Einfach großartig. Bumm!
+en: Great. Just great. Boom!
+
+es: Exploto. Qué original. Como todos.
+de: Ich explodiere. Wie originell. Wie alle.
+en: I explode. How original. Like everyone.
+
+es: {jugador}, la próxima vez, compila antes. Por favor.
+de: {jugador}, nächstes Mal vorher kompilieren. Bitte.
+en: {jugador}, next time, compile first. Please.
+
+es: Bueno, {rival}. Disfruta mientras dure. Bzz... zz... z.
+de: Na gut, {rival}. Genieß es, solange es dauert. Bzz... zz... z.
+en: Fine, {rival}. Enjoy it while it lasts. Bzz... zz... z.
+
+[burla]
+es: Uy, qué miedo. Mira, estoy temblando. No.
+de: Oh, wie gruselig. Schau, ich zittere. Nein.
+en: Ooh, scary. Look, I'm trembling. Not.
+
+es: ¿Eso era un ataque? Pensaba que estabas saludando.
+de: Das war ein Angriff? Ich dachte, du winkst.
+en: That was an attack? I thought you were waving.
+
+es: Qué bonito cañón. ¿Lo usas o es decorativo?
+de: Schöne Kanone. Benutzt du die, oder ist die Deko?
+en: Nice cannon. Do you use it, or is it decorative?
+
+es: Sigue así, {rival}. Lo estás haciendo... bueno, lo estás haciendo.
+de: Mach weiter so, {rival}. Du machst das... na ja, du machst es.
+en: Keep it up, {rival}. You're doing... well, you're doing something.
+
+[pulla]
+es: Tienes la puntería de un bucle sin condición: das vueltas y ya.
+de: Du zielst wie eine Schleife ohne Bedingung: im Kreis, sonst nichts.
+en: You aim like a loop with no condition: around and around, that's it.
+
+es: Si fueras un método, serías void: no devuelves nada.
+de: Wärst du eine Methode, wärst du void: Von dir kommt nichts zurück.
+en: If you were a method, you'd be void: you return nothing.
+
+es: Te he picado tantas veces que ya eres un colador, {rival}.
+de: Ich hab dich so oft gestochen, du bist jetzt ein Sieb, {rival}.
+en: I've stung you so often you're a colander now, {rival}.
+
+es: Tu código lo escribió un gato paseando por el teclado.
+de: Deinen Code hat eine Katze geschrieben, die über die Tastatur lief.
+en: Your code was written by a cat walking across the keyboard.
+
+es: Qué valiente eres, {rival}. Peleando así, sin talento.
+de: Wie mutig du bist, {rival}. So ganz ohne Talent zu kämpfen.
+en: So brave of you, {rival}. Fighting with zero talent like that.
+
+[subida]
+es: Subimos de nivel. Me alegro. De verdad. Esto no es sarcasmo.
+de: Level aufgestiegen. Ich freu mich. Echt. Das ist kein Sarkasmus.
+en: Level up. I'm happy. Really. This isn't sarcasm.
+
+es: ¡Nivel nuevo! Vale, sí, estoy contenta. No lo grites.
+de: Neues Level! Okay, ja, ich freu mich. Erzähl's nicht rum.
+en: New level! Okay, yes, I'm happy. Don't spread it around.
+
+es: Mira tú, {jugador}. Al final sí sabías programar.
+de: Sieh mal an, {jugador}. Du kannst ja doch programmieren.
+en: Well, look at you, {jugador}. You can code after all.
+
+es: Bzzz. Bzzz. Esto es mi baile de la alegría. No mires.
+de: Bzzz. Bzzz. Das ist mein Freudentanz. Nicht hinsehen.
+en: Bzzz. Bzzz. This is my happy dance. Don't look.
+
+[error_codigo]
+es: Oh, mira, una excepción. Qué sorpresa. Nunca había visto una.
+de: Oh, sieh an, eine Exception. Wie überraschend. Noch nie gesehen.
+en: Oh look, an exception. What a surprise. Never seen one before.
+
+es: NullPointerException. Como mi paciencia.
+de: NullPointerException. Wie meine Geduld.
+en: NullPointerException. Just like my patience.
+
+es: Mi código se ha colgado. Qué detalle: ahora tengo vacaciones.
+de: Mein Code hängt. Wie aufmerksam: Jetzt hab ich Urlaub.
+en: My code froze. How thoughtful: now I get a vacation.
+
+es: Bucle infinito. Ahora sí que voy a estar aquí un rato.
+de: Endlosschleife. Jetzt bin ich wohl eine Weile beschäftigt.
+en: Infinite loop. Guess I'll be here a while.
+
+[espera]
+es: No, tranquilo. Tómate tu tiempo. Tengo toda la eternidad.
+de: Nein, kein Stress. Lass dir Zeit. Ich hab ja die Ewigkeit.
+en: No, no rush. Take your time. I've got all eternity.
+
+es: ¿Eso es un punto y coma o un grito de ayuda?
+de: Ist das ein Semikolon oder ein Hilferuf?
+en: Is that a semicolon or a cry for help?
+
+es: Me estoy limando el aguijón. Por hacer algo.
+de: Ich feile meinen Stachel. Irgendwas muss man ja tun.
+en: Filing my stinger. Gotta do something.
+
+es: Zzz... ah, ¿ya? No. Vale. Zzz...
+de: Zzz... oh, fertig? Nein. Okay. Zzz...
+en: Zzz... oh, done? No. Okay. Zzz...
+
+[elogio]
+es: Vaya. Esto no está mal. Que conste que lo digo poco.
+de: Oha. Das ist nicht schlecht. Und das sage ich selten.
+en: Huh. This isn't bad. For the record, I rarely say that.
+
+es: Esto... está bien. Me molesta no encontrarle fallos.
+de: Das... ist gut. Es nervt mich, dass ich keinen Fehler finde.
+en: This... is good. It bugs me that I can't find a bug.
+
+es: ¿Lo has escrito tú? ¿Solo? Impresionante. En serio.
+de: Hast du das geschrieben? Allein? Beeindruckend. Ernsthaft.
+en: You wrote this? Alone? Impressive. Seriously.
+
+es: Bien, {jugador}. Casi me pica la envidia.
+de: Gut, {jugador}. Fast sticht mich der Neid.
+en: Nice, {jugador}. I'm almost stung by envy.
+
+[reparar]
+es: Reparándome. Porque alguien no esquivó. Yo. Fui yo.
+de: Repariere mich. Weil jemand nicht ausgewichen ist. Ich. Das war ich.
+en: Repairing. Because somebody didn't dodge. Me. It was me.
+
+es: Un poco de cinta. Como nueva. Bueno, como usada.
+de: Ein bisschen Klebeband. Wie neu. Na ja, wie gebraucht.
+en: A little tape. Good as new. Well, good as used.
+
+es: Ah, tornillos frescos. Qué lujo.
+de: Ah, frische Schrauben. Was für ein Luxus.
+en: Ah, fresh bolts. How luxurious.
+
+es: Ya está. Puedes volver a fallarme, {rival}.
+de: Fertig. Du darfst jetzt wieder danebenschießen, {rival}.
+en: There. You may resume missing me, {rival}.
+
+[especial]
+es: Enjambre. Disfrútalo.
+de: Schwarm. Viel Spaß damit.
+en: Swarm. Enjoy.
+
+es: ¡Picadura definitiva! Ahora sí, bzzz.
+de: Der ultimative Stich! Jetzt aber, bzzz.
+en: Ultimate sting! Now we're talking, bzzz.
+
+es: Zumbo, pico y me voy. Pero todo a la vez.
+de: Summen, stechen, weg. Aber alles gleichzeitig.
+en: Buzz, sting, gone. All at once.
+
+es: Avisé, {rival}. Bueno, no avisé. Sorpresa.
+de: Ich hab dich gewarnt, {rival}. Na ja, nicht wirklich. Überraschung.
+en: I warned you, {rival}. Well, I didn't. Surprise.

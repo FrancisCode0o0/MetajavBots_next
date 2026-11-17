@@ -1,0 +1,380 @@
+# Gruñón: Chatarra / Schrotti / Scrapper. Robot viejo de chatarra, remendado y con tubos.
+# Se queja de todo, echa de menos los tornillos de antes y refunfuña, pero en el fondo es un trozo de pan.
+
+[saludo]
+es: ¿Otro robot nuevo? Bah. En mis tiempos los hacíamos con tornillos.
+de: Noch so ein neuer Roboter? Pah. Zu meiner Zeit gab's noch Schrauben.
+en: Another shiny new robot? Bah. In my day we used bolts.
+
+es: {rival}, ¿quién te ha dejado entrar en mi arena? Limpia las ruedas.
+de: {rival}, wer hat dich in meine Arena gelassen? Räder abtreten!
+en: {rival}, who let you into my arena? Wipe your wheels.
+
+es: Vamos a acabar pronto, que a las ocho me engraso.
+de: Machen wir's kurz, um acht werde ich geölt.
+en: Let's make it quick, I get oiled at eight.
+
+es: {jugador}, ¿otra pelea? Mis orugas crujen solo de pensarlo.
+de: {jugador}, schon wieder kämpfen? Meine Ketten knarzen schon beim Gedanken.
+en: {jugador}, another fight? My treads creak just thinking about it.
+
+[inicio_ronda]
+es: Ronda {ronda}. Ya era hora.
+de: Runde {ronda}. Wurde auch Zeit.
+en: Round {ronda}. About time.
+
+es: Ronda {ronda}… ¿cuántas quedan? Siempre son demasiadas.
+de: Runde {ronda}… wie viele noch? Es sind immer zu viele.
+en: Round {ronda}… how many left? There's always too many.
+
+es: Venga, venga, que se me enfría el aceite.
+de: Los, los, mein Öl wird kalt.
+en: Come on, come on, my oil's getting cold.
+
+es: Ronda {ronda}. Que nadie me hable de actualizaciones.
+de: Runde {ronda}. Keiner redet mir von Updates.
+en: Round {ronda}. Nobody mention updates to me.
+
+[ataque]
+es: ¡Toma perdigones a la antigua!
+de: Schrot wie früher!
+en: Old-school buckshot, coming up!
+
+es: ¡A ver si así te callas!
+de: Mal sehen, ob du dann still bist!
+en: Let's see if that shuts you up!
+
+es: ¡Esto antes funcionaba a la primera!
+de: Das hat früher beim ersten Mal geklappt!
+en: This used to work on the first try!
+
+es: Grrr… ¡ahí va!
+de: Grrr… da hast du!
+en: Grrr… there you go!
+
+[acierto]
+es: ¡Ja! Lo viejo sigue funcionando.
+de: Ha! Altes Zeug funktioniert noch.
+en: Ha! The old stuff still works.
+
+es: Eso es calidad de antes.
+de: Das ist noch Qualität von früher.
+en: That's quality like they used to make.
+
+es: Acierto. Y sin tanta pantallita.
+de: Treffer. Und ganz ohne Bildschirmchen.
+en: Hit. And without all those fancy screens.
+
+es: Hmpf. Como debe ser.
+de: Hmpf. So gehört sich das.
+en: Hmph. As it should be.
+
+[fallo]
+es: Esta mira está torcida desde el año del cometa.
+de: Das Visier ist schief, seit der Komet da war.
+en: This sight's been crooked since the year of the comet.
+
+es: ¡Bah! Antes los rivales se estaban quietos.
+de: Pah! Früher haben Gegner noch stillgehalten.
+en: Bah! Opponents used to hold still.
+
+es: Se me ha metido óxido en el ojo.
+de: Ich hab Rost im Auge.
+en: Got rust in my eye.
+
+es: Fallo. Culpa del gobierno de los tornillos.
+de: Daneben. Schuld ist die Schraubenregierung.
+en: Missed. Blame the bolt government.
+
+[golpe]
+es: ¡Eh! ¡Respeta a tus mayores!
+de: He! Respekt vor dem Alter!
+en: Hey! Respect your elders!
+
+es: ¡Ay, mis remaches!
+de: Au, meine Nieten!
+en: Ow, my rivets!
+
+es: Uf. Otro parche más.
+de: Uff. Noch ein Flicken mehr.
+en: Ugh. Another patch.
+
+es: ¿Para esto me sacaron del desguace?
+de: Hat man mich dafür vom Schrottplatz geholt?
+en: Did they pull me out of the junkyard for this?
+
+[golpe_fuerte]
+es: ¡Por todos los engranajes oxidados!
+de: Bei allen rostigen Zahnrädern!
+en: By all the rusty gears!
+
+es: ¡Eso me ha movido hasta los tornillos de la jubilación!
+de: Das hat sogar meine Rentenschrauben gelockert!
+en: That loosened even my retirement bolts!
+
+es: ¡Uuuh, mi espalda! Bueno, mi barril.
+de: Uuuh, mein Rücken! Na ja, mein Fass.
+en: Oooh, my back! Well, my barrel.
+
+es: ¡Esto no pasaba en la versión 1.0!
+de: Das gab's in Version 1.0 nicht!
+en: This never happened in version 1.0!
+
+[poco_blindaje]
+es: Me caigo a trozos. Más que de costumbre.
+de: Ich falle auseinander. Mehr als sonst.
+en: I'm falling apart. More than usual.
+
+es: Sigo aquí. Por fastidiar, sobre todo.
+de: Ich bin noch da. Hauptsächlich aus Trotz.
+en: Still here. Mostly out of spite.
+
+es: {jugador}, si me desmonto, guarda los tornillos. Son buenos.
+de: {jugador}, falls ich zerfalle, heb die Schrauben auf. Die sind gut.
+en: {jugador}, if I fall apart, keep the bolts. They're good ones.
+
+es: Aguanto. Llevo aguantando desde antes de que existieras.
+de: Ich halte durch. Mach ich schon, seit es dich gibt.
+en: I'll hold. I've been holding since before you existed.
+
+[parte_rota]
+es: ¡Mi {pieza}! ¡Con lo que me costó encontrar esa pieza en el desguace!
+de: {pieza}! Und ich hab so lange danach auf dem Schrottplatz gesucht!
+en: My {pieza}! It took ages to find that at the junkyard!
+
+es: Sin {pieza}. Ya buscaré otra en la basura. Como siempre.
+de: Ohne {pieza}. Find ich halt wieder im Müll. Wie immer.
+en: No {pieza}. I'll dig another out of the trash. As usual.
+
+es: Adiós, {pieza}. Nunca te gustó trabajar.
+de: Tschüss, {pieza}. Du wolltest eh nie arbeiten.
+en: Bye, {pieza}. You never liked working anyway.
+
+es: Ya no hacen piezas como antes. Mira cómo ha quedado {pieza}.
+de: Sowas baut man heute nicht mehr. Nicht mal {pieza}.
+en: They don't make them like they used to. Not even {pieza}.
+
+[esquiva]
+es: Ja. Lento, pero no tonto.
+de: Ha. Langsam, aber nicht dumm.
+en: Ha. Slow, but not stupid.
+
+es: Me he agachado a por un tornillo. Qué suerte.
+de: Ich hab mich nach einer Schraube gebückt. Glück gehabt.
+en: Bent down for a bolt. Lucky.
+
+es: Experiencia, chaval. Experiencia.
+de: Erfahrung, Kleiner. Erfahrung.
+en: Experience, kid. Experience.
+
+es: ¿Eso era para mí? Pues no me ha llegado.
+de: War das für mich? Ist nicht angekommen.
+en: Was that for me? Never got delivered.
+
+[victoria_ronda]
+es: Ronda {ronda}. Para el viejo. Apúntalo.
+de: Runde {ronda}. Für den Alten. Schreib's auf.
+en: Round {ronda}. To the old-timer. Write it down.
+
+es: ¿Lo ves? Tornillos. Siempre tornillos.
+de: Siehst du? Schrauben. Immer Schrauben.
+en: See? Bolts. Always bolts.
+
+es: Hmpf. No ha estado mal. Para mí, claro.
+de: Hmpf. Nicht schlecht. Für mich, natürlich.
+en: Hmph. Not bad. For me, that is.
+
+es: Una ronda menos. Ya queda menos para la siesta.
+de: Eine Runde weniger. Bald ist Mittagsschlaf.
+en: One round down. Getting closer to nap time.
+
+[derrota_ronda]
+es: Bah. Me ha dado un tirón en la oruga.
+de: Pah. Ich hab mir die Kette gezerrt.
+en: Bah. Pulled a tread.
+
+es: Esto es por culpa de los robots modernos y sus prisas.
+de: Schuld sind diese modernen Roboter mit ihrer Hektik.
+en: This is the fault of modern robots and their rushing.
+
+es: Ya, ya. Pierdo una ronda y todo el mundo se pone contento.
+de: Ja, ja. Ich verliere eine Runde, und alle freuen sich.
+en: Yeah, yeah. I lose a round and everyone's thrilled.
+
+es: Me estaba calentando. A mi edad cuesta.
+de: Ich war noch am Aufwärmen. In meinem Alter dauert das.
+en: I was still warming up. Takes a while at my age.
+
+[victoria]
+es: He ganado. ¿Ahora me dejáis en paz?
+de: Gewonnen. Lasst ihr mich jetzt in Ruhe?
+en: I won. Now will you leave me alone?
+
+es: {rival}, vuelve cuando lleves tornillos de verdad.
+de: {rival}, komm wieder, wenn du echte Schrauben hast.
+en: {rival}, come back when you've got real bolts.
+
+es: Bien, {jugador}. No se lo digas a nadie, pero estoy contento.
+de: Gut, {jugador}. Sag's keinem, aber ich freu mich.
+en: Good, {jugador}. Don't tell anyone, but I'm happy.
+
+es: Lo viejo gana. Como debe ser.
+de: Das Alte gewinnt. Wie es sich gehört.
+en: Old beats new. As it should.
+
+[derrota]
+es: Lo sabía. Hoy no me tenía que haber levantado.
+de: Ich wusste es. Ich hätte heute im Bett bleiben sollen.
+en: I knew it. I should've stayed in bed today.
+
+es: Al desguace otra vez… al menos allí hay tranquilidad.
+de: Zurück auf den Schrottplatz… da ist wenigstens Ruhe.
+en: Back to the junkyard… at least it's quiet there.
+
+es: Esto en mis tiempos no pasaba… ¡boom!
+de: Das gab's zu meiner Zeit nicht… bumm!
+en: This never happened in my day… boom!
+
+es: {jugador}, recoge mis tornillos. Todos. Y cuéntalos.
+de: {jugador}, sammel meine Schrauben ein. Alle. Und zähl nach.
+en: {jugador}, pick up my bolts. All of them. And count them.
+
+[burla]
+es: ¿A eso le llamas puñetazo? Mi plancha vieja pega más.
+de: Das nennst du einen Schlag? Mein altes Bügeleisen haut fester.
+en: You call that a punch? My old iron hits harder.
+
+es: Muy bonito, muy brillante, muy flojito.
+de: Sehr hübsch, sehr glänzend, sehr schlapp.
+en: Very pretty, very shiny, very weak.
+
+es: Ponte las pilas, chaval. Literalmente.
+de: Lad mal deine Akkus, Kleiner. Wörtlich.
+en: Charge up, kid. Literally.
+
+es: Tanta pantallita y no sabes ni apuntar.
+de: So viele Bildschirmchen und kannst nicht mal zielen.
+en: All those fancy screens and you can't even aim.
+
+[pulla]
+es: {rival}, he visto latas de sardinas con más blindaje.
+de: {rival}, ich hab Sardinendosen mit mehr Panzerung gesehen.
+en: {rival}, I've seen sardine cans with better armor.
+
+es: En mis tiempos, a robots como tú los usábamos de pisapapeles.
+de: Zu meiner Zeit nahm man Roboter wie dich als Briefbeschwerer.
+en: In my day, robots like you were used as paperweights.
+
+es: Tienes más actualizaciones que ideas, {rival}.
+de: Du hast mehr Updates als Ideen, {rival}.
+en: You've got more updates than ideas, {rival}.
+
+es: Te desmonto con una llave inglesa y me sobra tiempo para la siesta.
+de: Ich zerleg dich mit einem Schraubenschlüssel und mach danach Pause.
+en: I'd take you apart with one wrench and still make my nap.
+
+es: Eres brillante, {rival}. Por fuera. Solo por fuera.
+de: Du glänzt, {rival}. Von außen. Nur von außen.
+en: You're shiny, {rival}. On the outside. Only the outside.
+
+[subida]
+es: ¿Subimos de nivel? Hmpf. Ya era hora.
+de: Levelaufstieg? Hmpf. Wurde auch Zeit.
+en: Level up? Hmph. About time.
+
+es: Bien, {jugador}. No lloro, es aceite.
+de: Gut, {jugador}. Ich weine nicht, das ist Öl.
+en: Good, {jugador}. I'm not crying, it's oil.
+
+es: Un nivel más. Me compraré un tornillo nuevo. Uno.
+de: Ein Level mehr. Ich gönn mir eine neue Schraube. Eine.
+en: One more level. I'll treat myself to a new bolt. One.
+
+es: Ya era hora de que alguien reconociera mi talento.
+de: Wurde Zeit, dass jemand mein Talent erkennt.
+en: About time somebody recognized my talent.
+
+[error_codigo]
+es: ¿Una excepción? En mis tiempos el código no se caía. Ni existía.
+de: Eine Exception? Zu meiner Zeit stürzte Code nicht ab. Es gab keinen.
+en: An exception? In my day code didn't crash. There was no code.
+
+es: {jugador}, tu código hace más ruido que mis orugas.
+de: {jugador}, dein Code klappert lauter als meine Ketten.
+en: {jugador}, your code rattles louder than my treads.
+
+es: ¡Ya está! ¡Ya se ha roto algo! Lo sabía.
+de: Da haben wir's! Schon ist was kaputt! Wusste ich's doch.
+en: There it is! Something broke! I knew it.
+
+es: Esto lo arreglaba yo antes con un golpe. ¿Pruebo?
+de: Das hab ich früher mit einem Schlag repariert. Soll ich?
+en: I used to fix this with one good whack. Should I?
+
+[espera]
+es: Tómate tu tiempo. Yo no tengo prisa. Bueno, sí.
+de: Lass dir Zeit. Ich hab keine Eile. Na ja, doch.
+en: Take your time. I'm in no hurry. Well, I am.
+
+es: Cuando yo era joven, programábamos con dos ceros y un uno.
+de: Als ich jung war, programmierten wir mit zwei Nullen und einer Eins.
+en: When I was young, we coded with two zeros and a one.
+
+es: Me engraso las juntas mientras tanto. Ñiic, ñiic.
+de: Ich öle so lange meine Gelenke. Quietsch, quietsch.
+en: I'll oil my joints meanwhile. Squeak, squeak.
+
+es: ¿Otra vez escribiendo? Antes bastaba con darle una patada.
+de: Schon wieder am Tippen? Früher reichte ein Tritt.
+en: Typing again? We used to just give it a kick.
+
+[elogio]
+es: Hmpf. No está mal. Nada mal. No te emociones.
+de: Hmpf. Nicht schlecht. Gar nicht schlecht. Bild dir nichts ein.
+en: Hmph. Not bad. Not bad at all. Don't let it go to your head.
+
+es: Esto es código de los de antes. Sólido. Me gusta.
+de: Das ist Code wie früher. Solide. Gefällt mir.
+en: This is code like they used to write. Solid. I like it.
+
+es: {jugador}, por fin algo que no cruje.
+de: {jugador}, endlich mal was, das nicht knarzt.
+en: {jugador}, finally something that doesn't creak.
+
+es: Bueno… vale. Es bueno. Ya lo he dicho, ¿contento?
+de: Na gut… okay. Es ist gut. Hab's gesagt, zufrieden?
+en: Fine… okay. It's good. There, I said it. Happy?
+
+[reparar]
+es: Cinta americana. La solución de toda la vida.
+de: Panzertape. Die Lösung seit jeher.
+en: Duct tape. The solution since forever.
+
+es: Un parche más. Ya casi soy todo parches.
+de: Noch ein Flicken. Ich bin fast nur noch Flicken.
+en: One more patch. I'm nearly all patches by now.
+
+es: Martillazo, martillazo… listo. Como nuevo. Como viejo.
+de: Hammerschlag, Hammerschlag… fertig. Wie neu. Wie alt.
+en: Whack, whack… done. Good as new. Good as old.
+
+es: No miréis, que me estoy apretando los tornillos.
+de: Nicht hinsehen, ich zieh grad meine Schrauben nach.
+en: Don't look, I'm tightening my bolts.
+
+[especial]
+es: ¡Escopetazo de la vieja escuela!
+de: Schrotschuss der alten Schule!
+en: Old-school scattershot!
+
+es: ¡Toda la chatarra de golpe!
+de: Der ganze Schrott auf einmal!
+en: All the scrap at once!
+
+es: ¡Esto sí que es tecnología de verdad!
+de: Das nenn ich echte Technik!
+en: Now this is real technology!
+
+es: ¡Fuera de mi arena, {rival}!
+de: Raus aus meiner Arena, {rival}!
+en: Out of my arena, {rival}!

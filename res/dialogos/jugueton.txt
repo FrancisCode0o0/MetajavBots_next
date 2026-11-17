@@ -142,7 +142,7 @@ es: ¡Has roto {pieza}! ¡Eso era de edición limitada!
 de: {pieza} kaputt! Das war eine limitierte Edition!
 en: You broke my {pieza}! That was a limited edition!
 
-es: {pieza} perdida. Bueno, en el nivel siguiente hay otra.
+es: Se fue {pieza}. Bueno, en el nivel siguiente hay recambio.
 de: {pieza} verloren. Egal, im nächsten Level gibt's eine neue.
 en: {pieza} lost. Eh, there's another one next level.
 

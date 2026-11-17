@@ -62,14 +62,23 @@ public final class Inyector {
         int[] pareja = new int[t.size()];
         java.util.Arrays.fill(pareja, -1);
         Deque<Integer> abiertos = new ArrayDeque<>();
+        Deque<Integer> llavesAbiertas = new ArrayDeque<>();
         for (int i = 0; i < t.size(); i++) {
             if (t.get(i).es("(")) abiertos.push(i);
             else if (t.get(i).es(")") && !abiertos.isEmpty()) {
                 int a = abiertos.pop();
                 pareja[a] = i;
                 pareja[i] = a;
+            } else if (t.get(i).es("{")) {
+                llavesAbiertas.push(i);
+            } else if (t.get(i).es("}") && !llavesAbiertas.isEmpty()) {
+                int a = llavesAbiertas.pop();
+                pareja[a] = i;
+                pareja[i] = a;
             }
         }
+        // Los «while» que cierran un do-while (su paso ya va dentro del cuerpo del do).
+        java.util.Set<Integer> whileDeDo = new java.util.HashSet<>();
         Deque<Llave> llaves = new ArrayDeque<>();
         Deque<String> clases = new ArrayDeque<>();
         boolean esperaClase = false, esperaEnum = false;
@@ -119,33 +128,36 @@ public final class Inyector {
                 if ((cerrada == Llave.CLASE || cerrada == Llave.ENUM) && !clases.isEmpty()) clases.pop();
             } else if (x.es(";") && llaves.peek() == Llave.ENUM) {
                 enConstantesDeEnum = false;
-            } else if (x.es("while") && i + 1 < t.size() && t.get(i + 1).es("(") && pareja[i + 1] > 0) {
-                Lexico.Trozo abre = t.get(i + 1), cierra = t.get(pareja[i + 1]);
-                metidos.add(new int[]{abre.fin, 0});
-                textos.add(PASO + " && (");
-                metidos.add(new int[]{cierra.inicio, 0});
-                textos.add(")");
-            } else if (x.es("for") && i + 1 < t.size() && t.get(i + 1).es("(") && pareja[i + 1] > 0) {
+            } else if (x.es("do") && i + 1 < t.size() && t.get(i + 1).es("{") && pareja[i + 1] > 0) {
+                // do { paso(); … } while (…);
+                meter(metidos, textos, t.get(i + 1).fin, " " + PASO + ";");
+                int cierre = pareja[i + 1];
+                if (cierre + 1 < t.size() && t.get(cierre + 1).es("while")) whileDeDo.add(cierre + 1);
+            } else if ((x.es("while") || x.es("for")) && !whileDeDo.contains(i) && i + 1 < t.size() && t.get(i + 1).es("(")
+                    && pareja[i + 1] > 0) {
                 int fin = pareja[i + 1];
-                int primero = -1, segundo = -1, nivel = 0;
-                for (int k = i + 2; k < fin; k++) {
-                    Lexico.Trozo y = t.get(k);
-                    if (y.es("(") || y.es("[") || y.es("{")) nivel++;
-                    else if (y.es(")") || y.es("]") || y.es("}")) nivel--;
-                    else if (nivel == 0 && y.es(";")) {
-                        if (primero < 0) primero = k;
-                        else if (segundo < 0) segundo = k;
+                if (fin + 1 < t.size() && t.get(fin + 1).es("{")) {
+                    // Con llaves (lo normal): el paso, lo primero del cuerpo. Así «while (true)» sigue siendo un bucle sin fin
+                    // para javac (si no, pediría un return detrás).
+                    meter(metidos, textos, t.get(fin + 1).fin, " " + PASO + ";");
+                } else if (x.es("while")) {
+                    meter(metidos, textos, t.get(i + 1).fin, PASO + " && (");
+                    meter(metidos, textos, t.get(fin).inicio, ")");
+                } else {
+                    // for sin llaves: el paso, en la condición (si es un for clásico con condición).
+                    int primero = -1, segundo = -1, nivel = 0;
+                    for (int k = i + 2; k < fin; k++) {
+                        Lexico.Trozo y = t.get(k);
+                        if (y.es("(") || y.es("[") || y.es("{")) nivel++;
+                        else if (y.es(")") || y.es("]") || y.es("}")) nivel--;
+                        else if (nivel == 0 && y.es(";")) {
+                            if (primero < 0) primero = k;
+                            else if (segundo < 0) segundo = k;
+                        }
                     }
-                }
-                if (primero >= 0 && segundo >= 0) {
-                    if (segundo == primero + 1) {
-                        metidos.add(new int[]{t.get(primero).fin, 0});
-                        textos.add(" " + PASO);
-                    } else {
-                        metidos.add(new int[]{t.get(primero).fin, 0});
-                        textos.add(" " + PASO + " && (");
-                        metidos.add(new int[]{t.get(segundo).inicio, 0});
-                        textos.add(")");
+                    if (primero >= 0 && segundo > primero + 1) {
+                        meter(metidos, textos, t.get(primero).fin, " " + PASO + " && (");
+                        meter(metidos, textos, t.get(segundo).inicio, ")");
                     }
                 }
             }
@@ -163,6 +175,11 @@ public final class Inyector {
         }
         for (Integer o : orden) ordenados.add(new int[]{metidos.get(o)[0], textos.get(o).length()});
         return new Inyectado(b.toString(), ordenados);
+    }
+
+    private static void meter(List<int[]> metidos, List<String> textos, int pos, String texto) {
+        metidos.add(new int[]{pos, 0});
+        textos.add(texto);
     }
 
     /** «) {» o «) throws A, B {» justo antes de la llave: el cuerpo de un método o de un constructor. */

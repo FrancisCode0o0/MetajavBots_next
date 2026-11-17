@@ -1,0 +1,2 @@
+# Los archivos de ejercicios, uno por línea (docs/FORMATOS.md). Las pruebas avisan si falta alguno.
+00_muestra.txt

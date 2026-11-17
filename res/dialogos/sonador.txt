@@ -150,7 +150,7 @@ es: Adiós, {pieza}. Que descanses.
 de: Gute Nacht, {pieza}. Schlaf gut.
 en: Goodnight, {pieza}. Rest well.
 
-es: ¿{pieza}? Mmm, no la necesitaba para dormir.
+es: ¿Sin {pieza}? Mmm, para dormir no hace falta.
 de: {pieza}? Hmm, zum Schlafen brauch ich das nicht.
 en: My {pieza}? Hmm, I don't need it to sleep.
 

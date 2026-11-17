@@ -1,0 +1,26 @@
+# TEMAS de Java y de la programación orientada a objetos (docs/TEMAS.md). Ordenan la API, los
+# ejercicios, los tutoriales y el manual. Una línea por tema:
+#   id | bloque | etiqueta en que se aprende | Java desde | español | Deutsch | English
+# Bloques: FUNDAMENTOS, CONTROL, DATOS, POO, AVANZADO, PROFESIONAL.
+01 | FUNDAMENTOS | NOOB_1   | 1  | Primeros pasos: programa, sentencias y comentarios | Erste Schritte: Programm, Anweisungen, Kommentare | First steps: program, statements and comments
+02 | FUNDAMENTOS | NOOB_1   | 1  | Variables y tipos primitivos | Variablen und primitive Typen | Variables and primitive types
+03 | FUNDAMENTOS | NOOB_2   | 1  | Operadores y expresiones | Operatoren und Ausdrücke | Operators and expressions
+04 | CONTROL     | NOOB_2   | 1  | Condicionales: if, else y switch | Bedingungen: if, else und switch | Conditionals: if, else and switch
+05 | CONTROL     | NOOB_3   | 1  | Bucles: while, do-while y for | Schleifen: while, do-while und for | Loops: while, do-while and for
+06 | CONTROL     | NOOB_4   | 1  | Métodos: parámetros y retorno | Methoden: Parameter und Rückgabe | Methods: parameters and return
+07 | DATOS       | NOOB_4   | 1  | Arrays | Arrays | Arrays
+08 | DATOS       | JUNIOR_1 | 1  | Textos: String y StringBuilder | Texte: String und StringBuilder | Text: String and StringBuilder
+09 | POO         | JUNIOR_1 | 1  | Clases y objetos | Klassen und Objekte | Classes and objects
+10 | POO         | JUNIOR_2 | 1  | Encapsulación: private, getters y constructores | Kapselung: private, Getter und Konstruktoren | Encapsulation: private, getters and constructors
+11 | POO         | JUNIOR_2 | 1  | Herencia: extends, super y @Override | Vererbung: extends, super und @Override | Inheritance: extends, super and @Override
+12 | POO         | JUNIOR_3 | 1  | Polimorfismo y clases abstractas | Polymorphie und abstrakte Klassen | Polymorphism and abstract classes
+13 | POO         | JUNIOR_3 | 8  | Interfaces | Interfaces | Interfaces
+14 | AVANZADO    | JUNIOR_4 | 7  | Excepciones: try, catch, throw y las propias | Ausnahmen: try, catch, throw und eigene | Exceptions: try, catch, throw and your own
+15 | DATOS       | JUNIOR_4 | 5  | Colecciones: List, Set y Map | Collections: List, Set und Map | Collections: List, Set and Map
+16 | AVANZADO    | SENIOR_1 | 5  | Genéricos | Generics | Generics
+17 | AVANZADO    | SENIOR_1 | 8  | Lambdas e interfaces funcionales | Lambdas und funktionale Interfaces | Lambdas and functional interfaces
+18 | AVANZADO    | SENIOR_2 | 8  | Streams | Streams | Streams
+19 | AVANZADO    | SENIOR_2 | 17 | Java moderno: enum, record, sealed y pattern matching | Modernes Java: enum, record, sealed und Pattern Matching | Modern Java: enum, record, sealed and pattern matching
+20 | AVANZADO    | SENIOR_3 | 5  | Hilos y concurrencia | Threads und Nebenläufigkeit | Threads and concurrency
+21 | PROFESIONAL | SENIOR_3 | 1  | Recursión y algoritmos | Rekursion und Algorithmen | Recursion and algorithms
+22 | PROFESIONAL | SENIOR_4 | 1  | Pruebas (JUnit), estilo y diseño | Tests (JUnit), Stil und Entwurf | Testing (JUnit), style and design

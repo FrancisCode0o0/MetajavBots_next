@@ -1,0 +1,380 @@
+# Eufórico: Voltio / Volti / Volt. Showman eléctrico con cresta y látigo: todo es ¡GENIAL!,
+# todo chispea, anima al público, al jugador y hasta al rival. Energía infinita (casi).
+
+[saludo]
+es: ¡Doscientos mil voltios de espectáculo! ¡Hola, {rival}!
+de: Zweihunderttausend Volt Show! Hallo, {rival}!
+en: Two hundred thousand volts of showtime! Hey, {rival}!
+
+es: ¡Qué día tan GENIAL para pelear! ¿Verdad que sí, {rival}?
+de: Was für ein GENIALER Tag zum Kämpfen! Oder, {rival}?
+en: What an AMAZING day for a fight! Right, {rival}?
+
+es: ¡{jugador}! ¡Estoy cargado al cien por cien! ¡Al ciento cincuenta!
+de: {jugador}! Ich bin zu hundert Prozent geladen! Zu hundertfünfzig!
+en: {jugador}! I'm charged to a hundred percent! A hundred and fifty!
+
+es: ¡Que suene la música! ¡Que salten chispas!
+de: Musik ab! Lasst die Funken fliegen!
+en: Hit the music! Let the sparks fly!
+
+[inicio_ronda]
+es: ¡RONDA {ronda}! ¡Uuuh, qué ganas!
+de: RUNDE {ronda}! Uuuh, ich hab so Bock!
+en: ROUND {ronda}! Oooh, I'm so pumped!
+
+es: ¡Ronda {ronda}! ¡Subid el voltaje!
+de: Runde {ronda}! Spannung hoch!
+en: Round {ronda}! Crank up the voltage!
+
+es: ¡Bzzz! ¡Ronda {ronda}, allá vamos!
+de: Bzzz! Runde {ronda}, los geht's!
+en: Bzzz! Round {ronda}, here we go!
+
+es: ¡Ronda {ronda}! ¡Esto se pone eléctrico!
+de: Runde {ronda}! Jetzt wird's elektrisch!
+en: Round {ronda}! Things are getting electric!
+
+[ataque]
+es: ¡Chispazo!
+de: Funkenschlag!
+en: Zap!
+
+es: ¡Toma corriente!
+de: Hier, Strom für dich!
+en: Have some current!
+
+es: ¡Uuuh, allá va!
+de: Juhuu, da kommt's!
+en: Woohoo, here it comes!
+
+es: ¡Látigo de mil amperios!
+de: Peitsche mit tausend Ampere!
+en: Thousand-amp whip!
+
+[acierto]
+es: ¡SÍ! ¡SÍ! ¡SÍÍÍ!
+de: JA! JA! JAAA!
+en: YES! YES! YESSS!
+
+es: ¡Bzzzt! ¡Directo al circuito!
+de: Bzzzt! Direkt in den Schaltkreis!
+en: Bzzzt! Straight to the circuits!
+
+es: ¡Qué golpe! ¡Que alguien lo repita a cámara lenta!
+de: Was für ein Treffer! Bitte in Zeitlupe nochmal!
+en: What a hit! Somebody replay that in slow motion!
+
+es: ¡{jugador}, has visto eso! ¡Lo has visto!
+de: {jugador}, hast du das gesehen?! Hast du's gesehen?!
+en: {jugador}, did you see that?! Did you see it?!
+
+[fallo]
+es: ¡Uy! ¡Pero qué bonito ha quedado el chispazo!
+de: Huch! Aber der Funke sah toll aus!
+en: Oops! But what a gorgeous spark that was!
+
+es: ¡Fallo! ¡No pasa nada! ¡Viene otro!
+de: Daneben! Macht nix! Der nächste kommt!
+en: Miss! No problem! Another one's coming!
+
+es: ¡Calentando motores, solo calentando!
+de: Nur Aufwärmen, nur Aufwärmen!
+en: Just warming up, just warming up!
+
+es: ¡Ja, ja! ¡Esquivas genial, {rival}!
+de: Ha, ha! Du weichst super aus, {rival}!
+en: Ha, ha! Great dodge, {rival}!
+
+[golpe]
+es: ¡Au! ¡Pero qué energía tienes!
+de: Au! Du hast ja Energie!
+en: Ow! You've got some energy!
+
+es: ¡Uf! ¡Me has recargado la rabia!
+de: Uff! Das lädt mich nur noch mehr auf!
+en: Oof! That just charged me up more!
+
+es: ¡Bzzz! ¡Cortocircuito chiquitito!
+de: Bzzz! Ein winziger Kurzschluss!
+en: Bzzz! Teeny-tiny short circuit!
+
+es: ¡Golpe recibido! ¡Ánimo en alto!
+de: Treffer kassiert! Laune bleibt oben!
+en: Hit taken! Spirits still high!
+
+[golpe_fuerte]
+es: ¡UAAAH! ¡Se me ha erizado la cresta!
+de: UAAAH! Mein Kamm steht zu Berge!
+en: WAAAH! My crest just stood on end!
+
+es: ¡Qué pedazo de golpe! ¡Respeto, {rival}!
+de: Was für ein Hammer! Respekt, {rival}!
+en: What a monster hit! Respect, {rival}!
+
+es: ¡Se han ido las luces! ¡Ah, no, ya vuelven!
+de: Licht aus! Ah nein, geht schon wieder!
+en: Lights out! Oh no, wait, they're back!
+
+es: ¡Bajón de tensión! ¡Nooo!
+de: Spannungsabfall! Neiiin!
+en: Power drop! Nooo!
+
+[poco_blindaje]
+es: ¡Batería en rojo! ¡Pero la sonrisa en verde!
+de: Akku im Roten! Aber die Laune im Grünen!
+en: Battery in the red! But my mood's still green!
+
+es: ¡Me quedan pocos voltios… pero son voltios de campeón!
+de: Nur noch wenige Volt… aber Champion-Volt!
+en: Only a few volts left… but champion volts!
+
+es: {jugador}, ¡no me apagues! ¡Aún tengo show!
+de: {jugador}, schalt mich nicht ab! Ich hab noch Show!
+en: {jugador}, don't switch me off! I've got more show!
+
+es: ¡Es el momento épico de la remontada! ¡Lo noto!
+de: Das ist der epische Comeback-Moment! Ich spür's!
+en: This is the epic comeback moment! I can feel it!
+
+[parte_rota]
+es: ¡Adiós, {pieza}! ¡Qué despedida tan espectacular!
+de: Tschüss, {pieza}! Was für ein spektakulärer Abgang!
+en: Bye, {pieza}! What a spectacular exit!
+
+es: ¡Sin {pieza}! ¡Más ligero, más rápido, más show!
+de: Ohne {pieza}! Leichter, schneller, mehr Show!
+en: No {pieza}! Lighter, faster, more show!
+
+es: ¡Se rompe {pieza}! ¡Y suelta unas chispas preciosas!
+de: {pieza} kaputt! Und die Funken waren wunderschön!
+en: {pieza} broken! And it threw such pretty sparks!
+
+es: ¡Uy! ¡Eso era {pieza}! ¡Da igual, seguimos!
+de: Huch! Das war {pieza}! Egal, weiter geht's!
+en: Whoa! That was my {pieza}! Never mind, let's go!
+
+[esquiva]
+es: ¡Zas! ¡Como un rayo!
+de: Zack! Blitzschnell!
+en: Zip! Lightning fast!
+
+es: ¡Uuuh! ¡Ni me ha rozado!
+de: Juhuu! Nicht mal gestreift!
+en: Woohoo! Didn't even touch me!
+
+es: ¡Salto con chispas! ¡Diez puntos!
+de: Sprung mit Funken! Zehn Punkte!
+en: Sparkly jump! Perfect ten!
+
+es: ¡Bailando entre los golpes!
+de: Ich tanze zwischen den Schlägen!
+en: Dancing between the punches!
+
+[victoria_ronda]
+es: ¡RONDA {ronda} PARA MÍ! ¡Que se oiga!
+de: RUNDE {ronda} GEHT AN MICH! Lauter!
+en: ROUND {ronda} IS MINE! Make some noise!
+
+es: ¡Choca esos cinco, {jugador}! ¡Bzzzt!
+de: Gib mir fünf, {jugador}! Bzzzt!
+en: High five, {jugador}! Bzzzt!
+
+es: ¡Qué rondaza! ¡La mejor de mi vida! ¡Hasta ahora!
+de: Was für eine Runde! Die beste meines Lebens! Bis jetzt!
+en: What a round! Best of my life! So far!
+
+es: ¡Bravo, {rival}, lo has hecho genial! ¡Yo, mejor!
+de: Bravo, {rival}, du warst super! Ich war besser!
+en: Bravo, {rival}, you were great! I was better!
+
+[derrota_ronda]
+es: ¡Vaya! ¡Pero qué ronda tan emocionante!
+de: Wow! Aber was für eine spannende Runde!
+en: Wow! But what a thrilling round!
+
+es: ¡No pasa nada! ¡Ahora viene la remontada!
+de: Macht nix! Jetzt kommt das Comeback!
+en: No worries! Here comes the comeback!
+
+es: ¡Bien jugado, {rival}! ¡Me encanta perder contra los buenos!
+de: Gut gespielt, {rival}! Ich verliere so gern gegen die Besten!
+en: Well played, {rival}! I love losing to the good ones!
+
+es: ¡Recargando! ¡Volveré con más voltios!
+de: Lade auf! Ich komme mit mehr Volt zurück!
+en: Recharging! I'll come back with more volts!
+
+[victoria]
+es: ¡VICTORIAAA! ¡Doscientos mil voltios de alegría!
+de: SIEEEG! Zweihunderttausend Volt Freude!
+en: VICTORYYY! Two hundred thousand volts of joy!
+
+es: ¡Gracias, gracias, sois el mejor público!
+de: Danke, danke, ihr seid das beste Publikum!
+en: Thank you, thank you, you're the best crowd ever!
+
+es: ¡{jugador}, somos imparables! ¡Abrazo eléctrico!
+de: {jugador}, wir sind unaufhaltsam! Elektrische Umarmung!
+en: {jugador}, we're unstoppable! Electric hug!
+
+es: ¡{rival}, has sido un rival GENIAL! ¡Repetimos!
+de: {rival}, du warst ein GENIALER Gegner! Nochmal!
+en: {rival}, you were an AWESOME opponent! Again!
+
+[derrota]
+es: ¡Bzzz… qué final… tan… espectacular…!
+de: Bzzz… was für ein… spektakuläres… Ende…!
+en: Bzzz… what a… spectacular… finale…!
+
+es: ¡Si exploto, que sea con fuegos artificiales!
+de: Wenn ich explodiere, dann mit Feuerwerk!
+en: If I explode, let it be fireworks!
+
+es: ¡Gracias por la pelea, {rival}! ¡Ha sido brutal!
+de: Danke für den Kampf, {rival}! Das war der Wahnsinn!
+en: Thanks for the fight, {rival}! That was wild!
+
+es: ¡{jugador}, no estés triste! ¡La próxima la ganamos!
+de: {jugador}, sei nicht traurig! Die nächste holen wir!
+en: {jugador}, don't be sad! We'll win the next one!
+
+[burla]
+es: ¡Venga, {rival}, que tú puedes! ¡Bueno, casi!
+de: Komm schon, {rival}, du schaffst das! Na ja, fast!
+en: Come on, {rival}, you can do it! Well, almost!
+
+es: ¡Qué ataque tan mono! ¡Otra vez, otra vez!
+de: Was für ein süßer Angriff! Nochmal, nochmal!
+en: What a cute attack! Again, again!
+
+es: ¡Más energía, {rival}! ¡Que te veo flojito!
+de: Mehr Energie, {rival}! Du wirkst so schlapp!
+en: More energy, {rival}! You're looking a bit flat!
+
+es: ¡Te presto un par de voltios, si quieres!
+de: Ich leih dir ein paar Volt, wenn du willst!
+en: I can lend you a couple of volts if you want!
+
+[pulla]
+es: ¡{rival}, tienes menos chispa que una pila gastada!
+de: {rival}, du hast weniger Funken als eine leere Batterie!
+en: {rival}, you've got less spark than a dead battery!
+
+es: ¡Mi cresta tiene más voltaje que todo tu equipo!
+de: Mein Kamm hat mehr Spannung als dein ganzes Team!
+en: My crest packs more voltage than your whole team!
+
+es: ¡Damas y robots, el rival más aburrido de la noche!
+de: Meine Damen und Roboter, der langweiligste Gegner des Abends!
+en: Ladies and robots, the dullest opponent of the night!
+
+es: ¡Eres un enchufe sin corriente, {rival}!
+de: Du bist eine Steckdose ohne Strom, {rival}!
+en: You're a socket with no power, {rival}!
+
+es: ¡Te ilumino la cara y aun así nadie te ve!
+de: Ich beleuchte dich, und trotzdem sieht dich keiner!
+en: I light you up and still nobody notices you!
+
+[subida]
+es: ¡NIVEL NUEVO! ¡Fiesta! ¡Fiesta eléctrica!
+de: NEUES LEVEL! Party! Elektroparty!
+en: NEW LEVEL! Party! Electric party!
+
+es: ¡{jugador}, eres una central eléctrica de talento!
+de: {jugador}, du bist ein Kraftwerk voller Talent!
+en: {jugador}, you're a power plant of talent!
+
+es: ¡Más voltios! ¡Más brillo! ¡Más TODO!
+de: Mehr Volt! Mehr Glanz! Mehr ALLES!
+en: More volts! More shine! More EVERYTHING!
+
+es: ¡Subimos! ¡Que alguien encienda los fuegos artificiales!
+de: Aufstieg! Zündet das Feuerwerk!
+en: Level up! Somebody light the fireworks!
+
+[error_codigo]
+es: ¡Bzzzt! ¡Cortocircuito en el código! ¡Qué emocionante!
+de: Bzzzt! Kurzschluss im Code! Wie aufregend!
+en: Bzzzt! Short circuit in the code! How exciting!
+
+es: ¡Una excepción! ¡Nunca había visto una tan grande!
+de: Eine Exception! So eine große hab ich noch nie gesehen!
+en: An exception! I've never seen such a big one!
+
+es: {jugador}, ¡se me ha fundido un fusible de lógica!
+de: {jugador}, mir ist eine Logiksicherung durchgebrannt!
+en: {jugador}, I just blew a logic fuse!
+
+es: ¡Uy, uy, uy! ¡Esto chispea donde no debe!
+de: Oh, oh, oh! Da funkt es, wo es nicht soll!
+en: Uh-oh, uh-oh! That's sparking where it shouldn't!
+
+[espera]
+es: ¡Venga, venga! ¡Estoy cargadísimo!
+de: Los, los! Ich bin total aufgeladen!
+en: Come on, come on! I'm totally charged!
+
+es: ¡Practico mis poses de victoria! ¡Esta! ¡No, esta!
+de: Ich übe meine Siegerposen! Die! Nein, die!
+en: Practicing my victory poses! This one! No, this one!
+
+es: ¡Tu código va a ser GENIAL, {jugador}! ¡Lo sé!
+de: Dein Code wird GENIAL, {jugador}! Ich weiß es!
+en: Your code's going to be AMAZING, {jugador}! I know it!
+
+es: ¡Bzzz, bzzz! Perdón, me sobra energía.
+de: Bzzz, bzzz! Sorry, zu viel Energie.
+en: Bzzz, bzzz! Sorry, too much energy.
+
+[elogio]
+es: ¡ESTE CÓDIGO ES ALUCINANTE!
+de: DIESER CODE IST DER HAMMER!
+en: THIS CODE IS INCREDIBLE!
+
+es: ¡Me pone los pelos de punta! ¡Bueno, la cresta!
+de: Da stellen sich mir die Haare auf! Also, der Kamm!
+en: It gives me goosebumps! Well, crest-bumps!
+
+es: ¡{jugador}, eres un genio! ¡Un genio con chispa!
+de: {jugador}, du bist ein Genie! Ein Genie mit Funke!
+en: {jugador}, you're a genius! A sparkling genius!
+
+es: ¡Diez de diez! ¡Once de diez! ¡Mil de diez!
+de: Zehn von zehn! Elf von zehn! Tausend von zehn!
+en: Ten out of ten! Eleven! A thousand out of ten!
+
+[reparar]
+es: ¡Recarga rápida! ¡Uuuh, cosquillas!
+de: Schnellladen! Uuuh, das kitzelt!
+en: Fast charging! Oooh, it tickles!
+
+es: ¡Enchufado y feliz!
+de: Eingesteckt und glücklich!
+en: Plugged in and happy!
+
+es: ¡Batería al máximo en tres, dos, uno!
+de: Akku voll in drei, zwei, eins!
+en: Battery full in three, two, one!
+
+es: ¡Nuevo y reluciente! ¡Y con más ganas!
+de: Neu und glänzend! Und noch motivierter!
+en: Shiny and new! And even more pumped!
+
+[especial]
+es: ¡DOSCIENTOS MIL VOLTIOS DE ESPECTÁCULO!
+de: ZWEIHUNDERTTAUSEND VOLT SHOW!
+en: TWO HUNDRED THOUSAND VOLTS OF SHOWTIME!
+
+es: ¡Tormenta eléctrica total!
+de: Totales Gewitter!
+en: Total thunderstorm!
+
+es: ¡Gran final con chispas, {rival}!
+de: Großes Finale mit Funken, {rival}!
+en: Sparkling grand finale, {rival}!
+
+es: ¡Todo el voltaje, todo el show!
+de: Volle Spannung, volle Show!
+en: All the voltage, all the show!

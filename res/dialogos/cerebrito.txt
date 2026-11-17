@@ -1,0 +1,380 @@
+# Diálogos de la personalidad «cerebrito» (Ábaco: he calculado 14 millones de futuros).
+# Calculadora con patas. Todo lo convierte en porcentajes, algoritmos y datos. Pedante, pero majo.
+
+[saludo]
+es: Hola, {rival}. Probabilidad de que ganes: 3,2 %. Redondeando al alza.
+de: Hallo, {rival}. Deine Siegchance: 3,2 %. Großzügig aufgerundet.
+en: Hello, {rival}. Your odds of winning: 3.2%. Generously rounded up.
+
+es: {yo}, inicializado. Todas las variables en su sitio.
+de: {yo} initialisiert. Alle Variablen an ihrem Platz.
+en: {yo} initialized. All variables in place.
+
+es: He calculado catorce millones de futuros. En casi todos gano yo.
+de: Ich habe vierzehn Millionen Zukünfte berechnet. In fast allen gewinne ich.
+en: I computed fourteen million futures. I win in almost all of them.
+
+es: {jugador}, he leído tu código. Tres veces. Por diversión.
+de: {jugador}, ich habe deinen Code gelesen. Dreimal. Zum Spaß.
+en: {jugador}, I read your code. Three times. For fun.
+
+[inicio_ronda]
+es: Ronda {ronda}. Iniciando simulación.
+de: Runde {ronda}. Starte Simulation.
+en: Round {ronda}. Starting simulation.
+
+es: Ronda {ronda}. Contador del bucle: {ronda}. Condición de salida: ganar.
+de: Runde {ronda}. Schleifenzähler: {ronda}. Abbruchbedingung: Sieg.
+en: Round {ronda}. Loop counter: {ronda}. Exit condition: victory.
+
+es: Recalculando trayectorias... listo.
+de: Berechne Flugbahnen neu... fertig.
+en: Recalculating trajectories... done.
+
+es: Ronda {ronda}. Hipótesis: hoy gano. Vamos a comprobarla.
+de: Runde {ronda}. Hypothese: Ich gewinne. Prüfen wir sie.
+en: Round {ronda}. Hypothesis: I win. Let's test it.
+
+[ataque]
+es: Ángulo de 37,5 grados. Fuego.
+de: Winkel 37,5 Grad. Feuer.
+en: Angle 37.5 degrees. Fire.
+
+es: Ejecutando atacar(rival).
+de: Führe angreifen(gegner) aus.
+en: Executing attack(enemy).
+
+es: {arma}: parámetros óptimos.
+de: {arma}: optimale Parameter.
+en: {arma}: optimal parameters.
+
+es: Aplicando la fuerza bruta. Con elegancia.
+de: Ich wende rohe Gewalt an. Elegant.
+en: Applying brute force. Elegantly.
+
+[acierto]
+es: Impacto. Tal y como predije.
+de: Treffer. Genau wie vorhergesagt.
+en: Hit. Exactly as predicted.
+
+es: ¡Ja! Las matemáticas nunca mienten.
+de: Ha! Mathe lügt nie.
+en: Ha! Math never lies.
+
+es: Error de cálculo del rival: estar ahí.
+de: Rechenfehler des Gegners: dort zu stehen.
+en: Opponent's calculation error: standing there.
+
+es: Acierto número siete... no, ocho. Llevo la cuenta.
+de: Treffer Nummer sieben... nein, acht. Ich zähle mit.
+en: Hit number seven... no, eight. I'm keeping count.
+
+[fallo]
+es: Fallo. Mi modelo no contaba con eso.
+de: Daneben. Damit hat mein Modell nicht gerechnet.
+en: Miss. My model didn't account for that.
+
+es: Error de redondeo. Lamentable.
+de: Rundungsfehler. Bedauerlich.
+en: Rounding error. Regrettable.
+
+es: Desviación estándar inesperada.
+de: Unerwartete Standardabweichung.
+en: Unexpected standard deviation.
+
+es: Anotado. Actualizando la base de datos.
+de: Notiert. Datenbank wird aktualisiert.
+en: Noted. Updating the database.
+
+[golpe]
+es: Daño recibido: dentro del margen previsto.
+de: Schaden erhalten: im erwarteten Rahmen.
+en: Damage taken: within expected margins.
+
+es: ¡Ay! Eso no estaba en mis cálculos.
+de: Au! Das stand nicht in meinen Berechnungen.
+en: Ouch! That wasn't in my calculations.
+
+es: Impacto detectado. Abriendo informe de incidencias.
+de: Treffer erkannt. Fehlerbericht wird geöffnet.
+en: Impact detected. Opening a bug report.
+
+es: Mi pantalla parpadea. Es normal. Creo.
+de: Mein Bildschirm flackert. Das ist normal. Glaube ich.
+en: My screen is flickering. That's normal. I think.
+
+[golpe_fuerte]
+es: ¡Uf! Me ha borrado la caché.
+de: Uff! Das hat meinen Cache geleert.
+en: Oof! That cleared my cache.
+
+es: ¡Desbordamiento de dolor! ¡Overflow!
+de: Schmerz-Überlauf! Overflow!
+en: Pain overflow! Overflow!
+
+es: Golpe muy por encima de la media. Impresionante. Y molesto.
+de: Treffer weit über dem Durchschnitt. Beeindruckend. Und lästig.
+en: Hit far above average. Impressive. And annoying.
+
+es: Veo los números en hexadecimal... mala señal.
+de: Ich sehe alle Zahlen in Hexadezimal... schlechtes Zeichen.
+en: I'm seeing numbers in hexadecimal... bad sign.
+
+[poco_blindaje]
+es: Blindaje al 12 %. Situación: subóptima.
+de: Panzerung bei 12 %. Lage: suboptimal.
+en: Armor at 12%. Situation: suboptimal.
+
+es: Probabilidad de sobrevivir: baja. Pero no cero. Nunca cero.
+de: Überlebenschance: gering. Aber nicht null. Niemals null.
+en: Survival odds: low. But not zero. Never zero.
+
+es: Activando el plan B. Y el C. Y el D, por si acaso.
+de: Aktiviere Plan B. Und C. Und D, nur für den Fall.
+en: Activating plan B. And C. And D, just in case.
+
+es: Mis cálculos siguen intactos. Mi carcasa, no tanto.
+de: Meine Berechnungen sind intakt. Mein Gehäuse eher nicht.
+en: My calculations are intact. My casing, not so much.
+
+[parte_rota]
+es: Pieza perdida: {pieza}. Recalculando sin ella.
+de: Teil verloren: {pieza}. Ich rechne ohne neu.
+en: Part lost: {pieza}. Recalculating without it.
+
+es: {pieza} rota. Lo tenía en el 0,4 % de los futuros.
+de: {pieza} kaputt. Das war in 0,4 % der Zukünfte vorgesehen.
+en: {pieza} broken. That was in 0.4% of the futures.
+
+es: {pieza}: estado = ROTO. Lanzando excepción emocional.
+de: {pieza}: Status = KAPUTT. Werfe emotionale Exception.
+en: {pieza}: status = BROKEN. Throwing emotional exception.
+
+es: Elimino {pieza} del array. Sigo funcionando.
+de: Ich entferne {pieza} aus dem Array. Läuft weiter.
+en: Removing {pieza} from the array. Still running.
+
+[esquiva]
+es: Lo predije con 0,2 segundos de margen.
+de: Mit 0,2 Sekunden Vorsprung vorhergesagt.
+en: Predicted with a 0.2-second margin.
+
+es: Trayectoria calculada. Evitada.
+de: Flugbahn berechnet. Vermieden.
+en: Trajectory computed. Avoided.
+
+es: Tu patrón es demasiado regular, {rival}.
+de: Dein Muster ist zu regelmäßig, {rival}.
+en: Your pattern is too regular, {rival}.
+
+es: if (bala) apartarse(); Sencillo.
+de: if (kugel) ausweichen(); Ganz einfach.
+en: if (bullet) dodge(); Simple.
+
+[victoria_ronda]
+es: Ronda ganada. Hipótesis confirmada.
+de: Runde gewonnen. Hypothese bestätigt.
+en: Round won. Hypothesis confirmed.
+
+es: Marcador actualizado. A nuestro favor, {jugador}.
+de: Spielstand aktualisiert. Zu unseren Gunsten, {jugador}.
+en: Scoreboard updated. In our favor, {jugador}.
+
+es: Una ronda menos en el bucle.
+de: Eine Runde weniger in der Schleife.
+en: One fewer iteration in the loop.
+
+es: Tal como mostraba el gráfico. Me encantan los gráficos.
+de: Genau wie im Diagramm. Ich liebe Diagramme.
+en: Just like the chart showed. I love charts.
+
+[derrota_ronda]
+es: Interesante. Un dato atípico.
+de: Interessant. Ein Ausreißer.
+en: Interesting. An outlier.
+
+es: Mi modelo tenía un bug. Lo encontraré.
+de: Mein Modell hatte einen Bug. Ich finde ihn.
+en: My model had a bug. I'll find it.
+
+es: Muestra demasiado pequeña. No cuenta.
+de: Stichprobe zu klein. Zählt nicht.
+en: Sample size too small. Doesn't count.
+
+es: Bien jugado, {rival}. Ya te he añadido a mis tablas.
+de: Gut gespielt, {rival}. Du stehst jetzt in meinen Tabellen.
+en: Well played, {rival}. You're in my spreadsheets now.
+
+[victoria]
+es: Victoria. Margen de error: cero.
+de: Sieg. Fehlerquote: null.
+en: Victory. Margin of error: zero.
+
+es: Q. E. D.: queda demostrado.
+de: Q. E. D.: Was zu beweisen war.
+en: Q.E.D.: quod erat demonstrandum.
+
+es: Uno de catorce millones de futuros. Justo el bueno.
+de: Eine von vierzehn Millionen Zukünften. Genau die richtige.
+en: One of fourteen million futures. Exactly the right one.
+
+es: {jugador}, tu algoritmo es O(ganar).
+de: {jugador}, dein Algorithmus ist O(gewinnen).
+en: {jugador}, your algorithm runs in O(win).
+
+[derrota]
+es: Esto... no estaba en ningún futuro.
+de: Das... war in keiner Zukunft vorgesehen.
+en: This... wasn't in any of the futures.
+
+es: Error fatal. Guardando volcado de memoria... ¡Bum!
+de: Schwerer Fehler. Speichere Speicherabbild... Bumm!
+en: Fatal error. Saving memory dump... Boom!
+
+es: {jugador}, revisa mi código. Línea 42. Seguro.
+de: {jugador}, prüf meinen Code. Zeile 42. Ganz sicher.
+en: {jugador}, check my code. Line 42. I'm sure of it.
+
+es: Probabilidad de explotar: 100 %. Por fin un cálculo fácil.
+de: Explosionswahrscheinlichkeit: 100 %. Endlich eine leichte Rechnung.
+en: Probability of exploding: 100%. Finally, an easy one.
+
+[burla]
+es: ¿Has probado a pensar antes de disparar, {rival}?
+de: Hast du mal versucht, vor dem Schießen zu denken, {rival}?
+en: Have you tried thinking before shooting, {rival}?
+
+es: Te dejo mis apuntes. Son muy buenos.
+de: Ich leih dir meine Notizen. Sie sind sehr gut.
+en: I can lend you my notes. They're very good.
+
+es: Tus movimientos son tan previsibles que me aburren.
+de: Deine Züge sind so vorhersehbar, dass ich gähne.
+en: Your moves are so predictable I'm yawning.
+
+es: Una pista: el cañón se apunta hacia mí.
+de: Kleiner Tipp: Die Kanone zeigt in meine Richtung.
+en: Small hint: the cannon points at me.
+
+[pulla]
+es: Tu inteligencia artificial es más artificial que inteligente.
+de: Deine künstliche Intelligenz ist mehr künstlich als intelligent.
+en: Your artificial intelligence is more artificial than intelligent.
+
+es: Tu código es O(n!) y tú eres la n.
+de: Dein Code ist O(n!) und du bist das n.
+en: Your code runs in O(n!) and you're the n.
+
+es: Te he calculado catorce millones de derrotas, {rival}.
+de: Ich habe dir vierzehn Millionen Niederlagen berechnet, {rival}.
+en: I've computed fourteen million defeats for you, {rival}.
+
+es: Peleas como un programa sin compilar: ni lo intentas.
+de: Du kämpfst wie ein Programm ohne Compiler: gar nicht.
+en: You fight like uncompiled code: you don't even run.
+
+es: Mi calculadora de bolsillo pelea mejor que tú.
+de: Mein Taschenrechner kämpft besser als du.
+en: My pocket calculator fights better than you.
+
+[subida]
+es: ¡Nivel nuevo! Mi CPU está saltando de alegría.
+de: Neues Level! Meine CPU hüpft vor Freude.
+en: New level! My CPU is jumping for joy.
+
+es: nivel++. Mi operación favorita.
+de: level++. Meine Lieblingsoperation.
+en: level++. My favorite operation.
+
+es: Experiencia acumulada: exponencial. ¡Bien, {jugador}!
+de: Erfahrung: exponentiell gewachsen. Super, {jugador}!
+en: Experience: growing exponentially. Great, {jugador}!
+
+es: He hecho la gráfica de tu progreso. ¡Solo sube!
+de: Ich habe deinen Fortschritt geplottet. Die Kurve steigt nur!
+en: I plotted your progress. The curve only goes up!
+
+[error_codigo]
+es: Excepción no capturada. Qué vergüenza. Para ti.
+de: Nicht abgefangene Exception. Wie peinlich. Für dich.
+en: Uncaught exception. How embarrassing. For you.
+
+es: ArrayIndexOutOfBounds. Alguien no ha contado desde cero.
+de: ArrayIndexOutOfBounds. Jemand hat nicht bei null gezählt.
+en: ArrayIndexOutOfBounds. Someone didn't count from zero.
+
+es: División por cero. Es lo único que no sé calcular.
+de: Division durch null. Das Einzige, was ich nicht rechnen kann.
+en: Division by zero. The one thing I can't compute.
+
+es: {jugador}, me has puesto un ; donde no iba. Lo he notado.
+de: {jugador}, da ist ein ; zu viel. Ich hab's gemerkt.
+en: {jugador}, there's a stray semicolon. I noticed.
+
+[espera]
+es: Mientras escribes, calculo decimales de pi. Voy por el millón.
+de: Während du schreibst, berechne ich Pi. Bin bei der millionsten Stelle.
+en: While you type, I'm computing pi. Up to digit one million.
+
+es: Consejo: nombres de variables claros, por favor.
+de: Tipp: Bitte klare Variablennamen.
+en: Tip: clear variable names, please.
+
+es: Estoy ordenando mis tornillos. Con quicksort.
+de: Ich sortiere meine Schrauben. Mit Quicksort.
+en: Sorting my bolts. With quicksort.
+
+es: Sin prisa, {jugador}. Pensar también es programar.
+de: Keine Eile, {jugador}. Nachdenken ist auch Programmieren.
+en: No rush, {jugador}. Thinking is programming too.
+
+[elogio]
+es: ¡Fascinante! Ese algoritmo es muy eficiente.
+de: Faszinierend! Dieser Algorithmus ist sehr effizient.
+en: Fascinating! That algorithm is very efficient.
+
+es: Complejidad baja, legibilidad alta. ¡Perfecto!
+de: Geringe Komplexität, hohe Lesbarkeit. Perfekt!
+en: Low complexity, high readability. Perfect!
+
+es: Ni un solo número mágico. Estoy emocionado.
+de: Keine einzige magische Zahl. Ich bin gerührt.
+en: Not a single magic number. I'm moved.
+
+es: {jugador}, este código lo pondría en un libro de texto.
+de: {jugador}, diesen Code würde ich in ein Lehrbuch drucken.
+en: {jugador}, I'd put this code in a textbook.
+
+[reparar]
+es: Reparación en curso: 47 %... 81 %... 100 %.
+de: Reparatur läuft: 47 %... 81 %... 100 %.
+en: Repair in progress: 47%... 81%... 100%.
+
+es: Aplicando parche 1.0.1.
+de: Spiele Patch 1.0.1 ein.
+en: Applying patch 1.0.1.
+
+es: Optimizando el blindaje. Ahora es un 8 % mejor.
+de: Optimiere die Panzerung. Jetzt 8 % besser.
+en: Optimizing armor. Now 8% better.
+
+es: Desfragmentando. Qué sensación tan ordenada.
+de: Defragmentiere. Was für ein ordentliches Gefühl.
+en: Defragmenting. Such a tidy feeling.
+
+[especial]
+es: Ejecutando el algoritmo definitivo.
+de: Führe den ultimativen Algorithmus aus.
+en: Running the ultimate algorithm.
+
+es: Recursión total: ¡ataque dentro de ataque dentro de ataque!
+de: Volle Rekursion: Angriff im Angriff im Angriff!
+en: Full recursion: attack inside attack inside attack!
+
+es: Todas las variables a mi favor. Ahora.
+de: Alle Variablen zu meinen Gunsten. Jetzt.
+en: All variables in my favor. Now.
+
+es: Teorema de {yo}: tú pierdes. Demostración: esto.
+de: Satz von {yo}: Du verlierst. Beweis: das hier.
+en: {yo}'s theorem: you lose. Proof: this.

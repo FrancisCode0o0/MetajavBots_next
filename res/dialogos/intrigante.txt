@@ -146,7 +146,7 @@ es: Adiós, {pieza}. Te sacrifico por una causa mayor.
 de: Lebwohl, {pieza}. Ein Opfer für die größere Sache.
 en: Farewell, {pieza}. A sacrifice for the greater plan.
 
-es: {pieza} rota. Bah, era el hilo menos importante.
+es: ¿Que se rompe {pieza}? Bah, era el hilo menos importante.
 de: {pieza} kaputt. Pah, das war der unwichtigste Faden.
 en: {pieza} broken. Bah, that was the least important thread.
 

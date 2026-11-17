@@ -1,0 +1,380 @@
+# Diálogos de la personalidad «protector» (Bastión: detrás de mí no pasa nada).
+# Grandullón bondadoso con escudo. Cuida del jugador, anima, se preocupa hasta por el rival.
+
+[saludo]
+es: Tranquilo, {jugador}. Detrás de mí no pasa nada.
+de: Keine Sorge, {jugador}. Hinter mir passiert nichts.
+en: Don't worry, {jugador}. Nothing gets past me.
+
+es: Hola, {rival}. Que sea una pelea limpia, ¿vale?
+de: Hallo, {rival}. Lass uns fair kämpfen, ja?
+en: Hi, {rival}. Let's keep it a clean fight, okay?
+
+es: {yo} en guardia. Escudo arriba, corazón también.
+de: {yo} auf Posten. Schild hoch, Herz auch.
+en: {yo} on guard. Shield up, heart too.
+
+es: ¿Has desayunado, {jugador}? Bueno, pues a pelear.
+de: Hast du gefrühstückt, {jugador}? Gut, dann kann's losgehen.
+en: Did you eat breakfast, {jugador}? Good, then let's fight.
+
+[inicio_ronda]
+es: Ronda {ronda}. Yo te cubro.
+de: Runde {ronda}. Ich gebe dir Deckung.
+en: Round {ronda}. I've got you covered.
+
+es: Ronda {ronda}. Pies firmes, escudo listo.
+de: Runde {ronda}. Fester Stand, Schild bereit.
+en: Round {ronda}. Feet planted, shield ready.
+
+es: Vamos allá, con cuidado y con cabeza.
+de: Auf geht's, mit Vorsicht und mit Köpfchen.
+en: Here we go, carefully and cleverly.
+
+es: Otra ronda. Nadie se queda atrás.
+de: Noch eine Runde. Niemand bleibt zurück.
+en: Another round. Nobody gets left behind.
+
+[ataque]
+es: Lo siento, {rival}. Tengo que hacerlo.
+de: Tut mir leid, {rival}. Das muss jetzt sein.
+en: Sorry, {rival}. I have to do this.
+
+es: ¡Empujón de escudo!
+de: Schildstoß!
+en: Shield shove!
+
+es: {arma}, con firmeza.
+de: {arma}, mit Nachdruck.
+en: {arma}, firmly.
+
+es: Un paso adelante. Sin romper la guardia.
+de: Ein Schritt nach vorn. Ohne die Deckung aufzugeben.
+en: One step forward. Guard stays up.
+
+[acierto]
+es: ¡Bien! ¿Estás bien, {rival}? Sigamos.
+de: Gut! Alles okay, {rival}? Weiter geht's.
+en: Good! You okay, {rival}? Let's keep going.
+
+es: Le he dado. Con respeto.
+de: Getroffen. Mit Respekt.
+en: Got it. Respectfully.
+
+es: Así se defiende un equipo.
+de: So verteidigt man ein Team.
+en: That's how you defend a team.
+
+es: Un golpe por cada vez que te preocupaste, {jugador}.
+de: Ein Treffer für jedes Mal, dass du dir Sorgen gemacht hast, {jugador}.
+en: One hit for every time you worried, {jugador}.
+
+[fallo]
+es: Ups. No pasa nada, lo intento otra vez.
+de: Ups. Macht nichts, ich versuch's nochmal.
+en: Oops. No worries, I'll try again.
+
+es: Fallar también es aprender.
+de: Danebenschießen gehört zum Lernen.
+en: Missing is part of learning.
+
+es: Mis brazos son fuertes, no rápidos.
+de: Meine Arme sind stark, nicht schnell.
+en: My arms are strong, not fast.
+
+es: Vale, ese no. El siguiente, sí.
+de: Okay, der nicht. Aber der nächste.
+en: Okay, not that one. The next one, though.
+
+[golpe]
+es: No te preocupes, {jugador}. Lo he parado con la tripa.
+de: Keine Sorge, {jugador}. Hab ich mit dem Bauch abgefangen.
+en: Don't worry, {jugador}. I caught it with my belly.
+
+es: Eso ni me ha despeinado la cúpula.
+de: Das hat nicht mal meine Kuppel zerzaust.
+en: That didn't even ruffle my dome.
+
+es: Para eso estoy: para recibir.
+de: Dafür bin ich da: zum Einstecken.
+en: That's what I'm here for: taking hits.
+
+es: ¡Uy! Menos mal que me ha dado a mí y no a ti.
+de: Huch! Zum Glück hat's mich getroffen und nicht dich.
+en: Whoa! Good thing it hit me and not you.
+
+[golpe_fuerte]
+es: ¡Uf! Eso ha sido fuerte. Aguanto.
+de: Uff! Das war heftig. Ich halte.
+en: Oof! That was heavy. I'm holding.
+
+es: Mi escudo ha sonado como una campana.
+de: Mein Schild hat geläutet wie eine Glocke.
+en: My shield rang like a bell.
+
+es: Buen golpe, {rival}. Pero sigo de pie, como prometí.
+de: Guter Schlag, {rival}. Aber ich stehe noch, wie versprochen.
+en: Good hit, {rival}. But I'm still standing, as promised.
+
+es: Eso dejará un parche nuevo. Me quedará bien.
+de: Das gibt einen neuen Flicken. Der steht mir bestimmt.
+en: That'll need a new patch. It'll look good on me.
+
+[poco_blindaje]
+es: Me queda poco, pero no me aparto.
+de: Viel ist nicht mehr übrig, aber ich weiche nicht.
+en: Not much left, but I'm not stepping aside.
+
+es: No pasa nada, {jugador}. He estado así otras veces.
+de: Alles gut, {jugador}. Das hatte ich schon öfter.
+en: It's okay, {jugador}. I've been here before.
+
+es: Un muro con grietas sigue siendo un muro.
+de: Eine Mauer mit Rissen ist immer noch eine Mauer.
+en: A wall with cracks is still a wall.
+
+es: Mientras yo esté en pie, tú estás a salvo.
+de: Solange ich stehe, bist du sicher.
+en: As long as I stand, you're safe.
+
+[parte_rota]
+es: Se ha roto: {pieza}. Tranquilo, tengo más.
+de: Kaputt: {pieza}. Keine Sorge, ich hab noch mehr.
+en: Broken: {pieza}. Don't worry, I've got more.
+
+es: {pieza} fuera. Me cubro con lo que queda.
+de: {pieza} ist weg. Ich decke mit dem ab, was bleibt.
+en: {pieza} is gone. I'll cover with what's left.
+
+es: Vaya, {pieza}. Luego la arreglamos juntos, {jugador}.
+de: Oje, {pieza}. Das reparieren wir später zusammen, {jugador}.
+en: Oh dear, {pieza}. We'll fix it together later, {jugador}.
+
+es: He perdido una pieza, no las ganas de protegerte.
+de: Ich habe ein Teil verloren, nicht den Willen, dich zu schützen.
+en: I lost a part, not the will to protect you.
+
+[esquiva]
+es: ¡Huy! Hasta un grandullón se agacha a tiempo.
+de: Hoppla! Auch ein großer Kerl duckt sich mal rechtzeitig.
+en: Whoops! Even a big guy can duck in time.
+
+es: Desviado.
+de: Abgelenkt.
+en: Deflected.
+
+es: No hoy, {rival}.
+de: Heute nicht, {rival}.
+en: Not today, {rival}.
+
+es: Lo he visto venir por encima del escudo.
+de: Ich hab's über den Schildrand kommen sehen.
+en: Saw it coming over the shield.
+
+[victoria_ronda]
+es: ¡Ronda nuestra! ¿Estás bien, {jugador}? ¡Bien!
+de: Runde an uns! Alles okay, {jugador}? Super!
+en: Round's ours! You okay, {jugador}? Great!
+
+es: Paso a paso, juntos.
+de: Schritt für Schritt, gemeinsam.
+en: Step by step, together.
+
+es: Buen intento, {rival}. Descansa un poco.
+de: Netter Versuch, {rival}. Ruh dich kurz aus.
+en: Nice try, {rival}. Take a breather.
+
+es: Lo ves: detrás de mí no ha pasado nada.
+de: Siehst du: Hinter mir ist nichts passiert.
+en: See? Nothing got past me.
+
+[derrota_ronda]
+es: Perdón, {jugador}. No he podido pararlo todo.
+de: Entschuldige, {jugador}. Ich konnte nicht alles abhalten.
+en: Sorry, {jugador}. I couldn't stop everything.
+
+es: No pasa nada. Nos levantamos.
+de: Macht nichts. Wir stehen wieder auf.
+en: It's alright. We get back up.
+
+es: Bien hecho, {rival}. Pero la próxima la defiendo yo.
+de: Gut gemacht, {rival}. Aber die nächste verteidige ich.
+en: Well done, {rival}. But I'm defending the next one.
+
+es: Respira. Seguimos siendo un buen equipo.
+de: Durchatmen. Wir sind immer noch ein gutes Team.
+en: Breathe. We're still a good team.
+
+[victoria]
+es: ¡Lo logramos, {jugador}! Nadie ha salido herido... bueno, casi nadie.
+de: Geschafft, {jugador}! Keiner wurde verletzt... na ja, fast keiner.
+en: We did it, {jugador}! Nobody got hurt... well, almost nobody.
+
+es: Buena pelea, {rival}. ¿Te ayudo a levantarte?
+de: Guter Kampf, {rival}. Soll ich dir aufhelfen?
+en: Good fight, {rival}. Need a hand getting up?
+
+es: Detrás de mí no ha pasado nada. Ni una bala.
+de: Hinter mir ist nichts passiert. Nicht eine Kugel.
+en: Nothing got past me. Not a single bullet.
+
+es: Esto lo hemos ganado los dos. Tu código, mi escudo.
+de: Das haben wir beide gewonnen. Dein Code, mein Schild.
+en: We both won this. Your code, my shield.
+
+[derrota]
+es: Lo siento, {jugador}... cuídate tú ahora.
+de: Tut mir leid, {jugador}... pass jetzt du auf dich auf.
+en: I'm sorry, {jugador}... you look after yourself now.
+
+es: Apartaos todos, que voy a explotar. ¡Con cuidado!
+de: Alle zurück, ich explodiere gleich. Vorsicht!
+en: Everyone stand back, I'm about to blow. Careful!
+
+es: Bien peleado, {rival}. No te acerques mucho, ¿eh?
+de: Gut gekämpft, {rival}. Komm mir lieber nicht zu nah, ja?
+en: Well fought, {rival}. Don't stand too close, okay?
+
+es: El escudo cae... pero vuelve. Siempre vuelve.
+de: Der Schild fällt... aber er kommt zurück. Immer.
+en: The shield falls... but it comes back. Always.
+
+[burla]
+es: ¿Eso es todo? Mi escudo quiere más trabajo.
+de: Ist das alles? Mein Schild will mehr zu tun haben.
+en: Is that all? My shield wants more work.
+
+es: Tranquilo, {rival}, no tengas prisa. Yo no me voy.
+de: Ganz ruhig, {rival}, keine Eile. Ich laufe nicht weg.
+en: Easy, {rival}, no rush. I'm not going anywhere.
+
+es: Puedes intentarlo por la izquierda. O por la derecha. Da igual.
+de: Versuch's von links. Oder von rechts. Ist egal.
+en: Try the left. Or the right. Doesn't matter.
+
+es: Llamo a la puerta... ¡ah, no, que la puerta soy yo!
+de: Ich klopfe an die Tür... ach nein, die Tür bin ja ich!
+en: Knock knock... oh wait, I'm the door!
+
+[pulla]
+es: He visto tostadoras que dan más miedo que tú.
+de: Ich hab Toaster gesehen, die gruseliger sind als du.
+en: I've seen toasters scarier than you.
+
+es: Mi escudo tiene más ataque que tu cañón, {rival}.
+de: Mein Schild hat mehr Angriffskraft als deine Kanone, {rival}.
+en: My shield hits harder than your cannon, {rival}.
+
+es: Llevas toda la ronda pegando a un muro. ¿Cómo va eso?
+de: Du schlägst die ganze Runde gegen eine Wand. Wie läuft's?
+en: You've been punching a wall all round. How's that going?
+
+es: Podría hacer esto durante días. Tú, no.
+de: Das könnte ich tagelang machen. Du nicht.
+en: I could do this for days. You can't.
+
+es: Soy una fortaleza, {rival}. Y tú eres un castillo de arena.
+de: Ich bin eine Festung, {rival}. Und du eine Sandburg.
+en: I'm a fortress, {rival}. And you're a sandcastle.
+
+[subida]
+es: ¡Qué orgulloso estoy de ti, {jugador}!
+de: Ich bin so stolz auf dich, {jugador}!
+en: I'm so proud of you, {jugador}!
+
+es: ¡Nivel nuevo! Esto merece un abrazo de oruga.
+de: Neues Level! Das verdient eine Kettenumarmung.
+en: New level! This calls for a big tank-tread hug.
+
+es: Has crecido mucho. Y yo sigo aquí para cuidarte.
+de: Du bist so gewachsen. Und ich passe weiter auf dich auf.
+en: You've grown so much. And I'm still here to look after you.
+
+es: ¡Bien hecho! Te lo has ganado con esfuerzo.
+de: Gut gemacht! Das hast du dir hart erarbeitet.
+en: Well done! You worked hard for this.
+
+[error_codigo]
+es: Uy, una excepción. No pasa nada, {jugador}, nos pasa a todos.
+de: Huch, eine Exception. Halb so wild, {jugador}, passiert jedem.
+en: Oops, an exception. It's fine, {jugador}, happens to everyone.
+
+es: Mi código se ha caído. Le ayudo a levantarse.
+de: Mein Code ist hingefallen. Ich helf ihm wieder auf.
+en: My code fell down. I'll help it back up.
+
+es: Me he quedado quieto. Pero quieto también protejo.
+de: Ich stehe still. Aber auch still beschütze ich.
+en: I've frozen up. But I can protect standing still.
+
+es: Un pequeño error. Lo miramos juntos luego, ¿vale?
+de: Ein kleiner Fehler. Schauen wir ihn uns später gemeinsam an, ja?
+en: A small bug. We'll look at it together later, okay?
+
+[espera]
+es: Tómate tu tiempo, {jugador}. Yo vigilo la puerta.
+de: Lass dir Zeit, {jugador}. Ich bewache die Tür.
+en: Take your time, {jugador}. I'll guard the door.
+
+es: ¿Quieres un poco de aceite? Dicen que ayuda a pensar.
+de: Möchtest du etwas Öl? Soll beim Denken helfen.
+en: Want some oil? They say it helps you think.
+
+es: Estoy puliendo mi escudo. Para cuando lo necesites.
+de: Ich poliere meinen Schild. Für den Fall, dass du ihn brauchst.
+en: Polishing my shield. For when you need it.
+
+es: Recuerda descansar los ojos de vez en cuando.
+de: Denk dran, ab und zu deine Augen auszuruhen.
+en: Remember to rest your eyes now and then.
+
+[elogio]
+es: ¡Qué código tan bueno! Me siento más fuerte.
+de: Was für guter Code! Ich fühle mich stärker.
+en: What great code! I feel stronger already.
+
+es: Esto está muy bien pensado, {jugador}.
+de: Das ist richtig gut durchdacht, {jugador}.
+en: This is really well thought out, {jugador}.
+
+es: Has comprobado los casos raros. Así se protege uno.
+de: Du hast an die Sonderfälle gedacht. So schützt man sich.
+en: You covered the edge cases. That's how you stay safe.
+
+es: Con un código así, me siento muy seguro.
+de: Mit so einem Code fühle ich mich richtig sicher.
+en: With code like this, I feel really safe.
+
+[reparar]
+es: Un parche más. Ya tengo una buena colección.
+de: Noch ein Flicken. Ich habe schon eine schöne Sammlung.
+en: Another patch. I've got quite the collection.
+
+es: Reparando... como quien se pone una tirita.
+de: Repariere... wie ein Pflaster aufkleben.
+en: Repairing... like putting on a band-aid.
+
+es: Ya está. Listo para seguir protegiendo.
+de: So. Bereit, weiter zu beschützen.
+en: There. Ready to keep protecting.
+
+es: Ahh, mucho mejor. Gracias, taller.
+de: Ahh, viel besser. Danke, Werkstatt.
+en: Ahh, much better. Thanks, workshop.
+
+[especial]
+es: ¡Muralla total!
+de: Totale Festungsmauer!
+en: Full fortress wall!
+
+es: ¡Nadie pasa! ¡Nadie!
+de: Hier kommt keiner durch! Keiner!
+en: Nobody passes! Nobody!
+
+es: Escudo al máximo. Ahora me toca a mí, {rival}.
+de: Schild auf Maximum. Jetzt bin ich dran, {rival}.
+en: Shield at max. My turn now, {rival}.
+
+es: ¡Carga del bastión!
+de: Sturm des Bollwerks!
+en: Bastion charge!
