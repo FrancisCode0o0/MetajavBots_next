@@ -40,6 +40,19 @@ public final class Rivales {
         return combatiente(modelo.nombre.es, m, nivel, agresividad, estiloPara(m, azar), azar);
     }
 
+    /** El muñeco de entrenamiento de los tutoriales (no cuenta para nada). */
+    public static Combatiente muneco() {
+        Montaje m = new Montaje(Modelo.de("chatarra"));
+        Combatiente c = new Combatiente("Muñeco", m, new Fabrica() {
+            @Override
+            public RobotBase crear() {
+                return new Muneco();
+            }
+        });
+        c.computadora = true;
+        return c;
+    }
+
     /** El modo azar: modelo, piezas y estilo al azar (de todas las piezas del juego, también las que el jugador no tiene). */
     public static Combatiente alAzar(double nivel, double agresividad, Random azar) {
         List<Modelo> modelos = Modelo.todos();

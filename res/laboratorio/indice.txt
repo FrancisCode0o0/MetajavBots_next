@@ -1,0 +1,4 @@
+# Los retos del laboratorio de pruebas (docs/MODO_ESPECIAL.md), uno por línea.
+trayectoria.txt
+blindaje.txt
+punteria.txt

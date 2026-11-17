@@ -112,7 +112,7 @@ public final class VozRobot {
         return b.toString().replaceAll(" +", " ").strip();
     }
 
-    static String numeroEnLetras(int n, Idioma i) {
+    public static String numeroEnLetras(int n, Idioma i) {
         String[][] u = {
                 {"cero", "uno", "dos", "tres", "cuatro", "cinco", "seis", "siete", "ocho", "nueve", "diez", "once", "doce", "trece", "catorce",
                         "quince", "dieciseis", "diecisiete", "dieciocho", "diecinueve"},

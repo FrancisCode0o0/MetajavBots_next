@@ -59,7 +59,7 @@ public final class PantallaPelea implements Pantalla {
     private boolean explotado;
     private final Ui.Desplazable desplConsola = new Ui.Desplazable(), desplVariables = new Ui.Desplazable(), desplInforme = new Ui.Desplazable();
     private int pestanaEntreRondas;
-    private boolean ganoElJugador;
+    private boolean ganoElJugador, objetivoCumplido;
     private Revisor.Informe revision;
 
     public PantallaPelea(Encuentro e) {
@@ -255,6 +255,9 @@ public final class PantallaPelea implements Pantalla {
         int segundos = (int) Math.ceil((pelea.turnosPorRonda - pelea.turno()) / (double) Pelea.TURNOS_POR_SEGUNDO);
         p.textoCentrado(String.format("%d:%02d", Math.max(0, segundos) / 60, Math.max(0, segundos) % 60), cx, 38, ui.letra * 1.6f, true,
                 segundos <= 10 ? ui.tema.mal : ui.tema.texto, 1);
+        if (encuentro.objetivo != null) {
+            p.textoCentrado(Objetivo.texto(encuentro.objetivo), cx, 70, ui.letra * 0.7f, false, ui.tema.aviso, 1);
+        }
         if (encuentro.jefe != null) {
             boolean vulnerable = pelea.resistencia[1] >= 1;
             p.textoCentrado(vulnerable ? T.t("pelea.jefe_vulnerable") : T.t("pelea.jefe_inmune"), cx, 70, ui.letra * 0.7f, false,
@@ -477,7 +480,9 @@ public final class PantallaPelea implements Pantalla {
                     yo.montaje.modelo.id, encuentro.nivelRival, res, yo.danoTotalRecibido, yo.danoTotalHecho, pelea.ronda(), jug.etiqueta.name());
             cambio = Progreso.despuesDeLaPelea(jug, r, encuentro.rival.montaje.modelo.naturaleza.name(), new Random());
         }
-        if (encuentro.alAcabar != null) encuentro.alAcabar.accept(ganoElJugador);
+        objetivoCumplido = encuentro.objetivo == null ? ganoElJugador
+                : Objetivo.cumple(encuentro.objetivo, yo, robot.listo() ? robot.fuente() : editor.doc.texto());
+        if (encuentro.alAcabar != null) encuentro.alAcabar.accept(objetivoCumplido);
         j.guardar();
         narrador.locutor("explosion_final", true, null);
     }
@@ -530,6 +535,13 @@ public final class PantallaPelea implements Pantalla {
         p.textoCentrado(T.f("final.danos", Math.round(yo.danoTotalRecibido), Math.round(encuentro.rival.danoTotalRecibido)), x + w / 2, y + 90,
                 ui.letra, false, ui.tema.textoSuave, 1);
         float yy = y + 140;
+        if (encuentro.objetivo != null) {
+            p.textoCentrado(Objetivo.texto(encuentro.objetivo), x + w / 2, yy, ui.letra, false, ui.tema.texto, 1);
+            yy += 36;
+            p.textoCentrado(objetivoCumplido ? T.t("objetivo.cumplido") : T.t("objetivo.no_cumplido"), x + w / 2, yy, ui.letra * 1.3f, true,
+                    objetivoCumplido ? ui.tema.bien : ui.tema.mal, 1);
+            yy += 44;
+        }
         if (cambio != null) {
             p.textoCentrado(T.f("final.experiencia", cambio.experiencia), x + w / 2, yy, ui.letra, false, ui.tema.texto, 1);
             yy += 36;

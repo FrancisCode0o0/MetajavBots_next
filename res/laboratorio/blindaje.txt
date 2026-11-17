@@ -1,0 +1,113 @@
+# Laboratorio: pruebas para Blindaje. Gana el «Núcleo verificado» (pruebas:blindaje).
+=== blindaje
+titulo.es: Pruebas para el blindaje
+titulo.de: Tests für die Panzerung
+titulo.en: Tests for the armor
+enunciado.es: Blindaje(int maximo) empieza lleno; quitar(int dano) resta, pero nunca baja de 0, y devuelve lo que queda; roto() es true cuando queda 0. Con un máximo de 0 o menos, el constructor lanza IllegalArgumentException. Escribe al menos 3 pruebas que cacen a los tres mutantes. Pista: assertThrows(IllegalArgumentException.class, () -> new Blindaje(0)).
+enunciado.de: Blindaje(int maximo) beginnt voll; quitar(int dano) zieht ab, aber nie unter 0, und gibt den Rest zurück; roto() ist true, wenn 0 übrig ist. Bei einem Maximum von 0 oder weniger wirft der Konstruktor eine IllegalArgumentException. Schreibe mindestens 3 Tests, die die drei Mutanten fangen. Tipp: assertThrows(IllegalArgumentException.class, () -> new Blindaje(0)).
+enunciado.en: Blindaje(int maximo) starts full; quitar(int dano) subtracts but never goes below 0, and returns what is left; roto() is true when 0 is left. With a maximum of 0 or less, the constructor throws IllegalArgumentException. Write at least 3 tests that catch the three mutants. Hint: assertThrows(IllegalArgumentException.class, () -> new Blindaje(0)).
+clase:
+    public class Blindaje {
+        private int queda;
+
+        public Blindaje(int maximo) {
+            if (maximo <= 0) throw new IllegalArgumentException("máximo: " + maximo);
+            queda = maximo;
+        }
+
+        public int quitar(int dano) {
+            queda = Math.max(0, queda - dano);
+            return queda;
+        }
+
+        public boolean roto() {
+            return queda == 0;
+        }
+    }
+mutante:
+    public class Blindaje {
+        private int queda;
+
+        public Blindaje(int maximo) {
+            if (maximo <= 0) throw new IllegalArgumentException("máximo: " + maximo);
+            queda = maximo;
+        }
+
+        public int quitar(int dano) {
+            queda = queda - dano;
+            return queda;
+        }
+
+        public boolean roto() {
+            return queda <= 0;
+        }
+    }
+mutante:
+    public class Blindaje {
+        private int queda;
+
+        public Blindaje(int maximo) {
+            if (maximo <= 0) throw new IllegalArgumentException("máximo: " + maximo);
+            queda = maximo;
+        }
+
+        public int quitar(int dano) {
+            queda = Math.max(0, queda - dano);
+            return queda;
+        }
+
+        public boolean roto() {
+            return queda < 0;
+        }
+    }
+mutante:
+    public class Blindaje {
+        private int queda;
+
+        public Blindaje(int maximo) {
+            queda = maximo;
+        }
+
+        public int quitar(int dano) {
+            queda = Math.max(0, queda - dano);
+            return queda;
+        }
+
+        public boolean roto() {
+            return queda == 0;
+        }
+    }
+plantilla:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.*;
+
+    public class PruebasBlindaje {
+
+        @Test
+        void empiezaEntero() {
+            assertFalse(new Blindaje(10).roto());
+        }
+    }
+solucion:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.*;
+
+    public class PruebasBlindaje {
+
+        @Test
+        void noBajaDeCero() {
+            assertEquals(0, new Blindaje(10).quitar(25));
+        }
+
+        @Test
+        void seRompeJustoEnCero() {
+            Blindaje b = new Blindaje(10);
+            b.quitar(10);
+            assertTrue(b.roto());
+        }
+
+        @Test
+        void maximoCeroNoVale() {
+            assertThrows(IllegalArgumentException.class, () -> new Blindaje(0));
+        }
+    }

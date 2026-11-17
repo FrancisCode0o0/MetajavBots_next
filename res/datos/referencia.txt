@@ -1,0 +1,1964 @@
+# REFERENCIA rápida de Java para el buscador de la API, ordenada por los 22 temas (res/datos/temas.txt).
+# Una entrada por bloque:
+#   === id        «sintaxis.…» para lo que es del lenguaje; «Clase.miembro» para la biblioteca estándar
+#   tema: NN      el tema en que se aprende
+#   firma:        la forma general o la firma del método
+#   es: de: en:   qué hace, en una línea por idioma
+#   ejemplo:      una línea de código; «// …» muestra el resultado
+# Las novedades dicen desde qué versión de Java existen. Los ejemplos usan la API del robot (Metajavbot).
+
+# ==================================================================== 01 Primeros pasos
+
+=== sintaxis.main
+tema: 01
+firma: public static void main(String[] args) { ... }
+es: El punto de entrada de un programa: Java empieza por aquí. Los robots no lo necesitan.
+de: Der Einstiegspunkt eines Programms: Hier startet Java. Roboter brauchen ihn nicht.
+en: A program's entry point: Java starts here. Robots don't need one.
+ejemplo: public static void main(String[] args) { System.out.println("Hola"); }
+
+=== sintaxis.sentencia
+tema: 01
+firma: sentencia;   { sentencia1; sentencia2; }
+es: Cada orden termina en «;». Las llaves agrupan varias sentencias en un bloque.
+de: Jeder Befehl endet mit „;“. Geschweifte Klammern fassen mehrere Anweisungen zu einem Block zusammen.
+en: Every command ends with ";". Curly braces group several statements into a block.
+ejemplo: { girar(10); avanzar(50); }
+
+=== sintaxis.comentario
+tema: 01
+firma: // una línea      /* varias líneas */      /** Javadoc */
+es: Texto para personas que Java ignora. Explica el porqué, no lo evidente.
+de: Text für Menschen, den Java ignoriert. Erkläre das Warum, nicht das Offensichtliche.
+en: Text for people that Java ignores. Explain the why, not the obvious.
+ejemplo: avanzar(50);  // me alejo de la pared
+
+=== System.out.println
+tema: 01
+firma: void println(Object x)
+es: Escribe el valor en la consola y salta de línea. En el robot también vale escribir(...).
+de: Schreibt den Wert in die Konsole und beginnt eine neue Zeile. Im Roboter geht auch ausgeben(...).
+en: Prints the value to the console and ends the line. In a robot you can also use print(...).
+ejemplo: System.out.println("Blindaje: " + blindaje());
+
+=== System.out.print
+tema: 01
+firma: void print(Object x)
+es: Como println, pero sin saltar de línea.
+de: Wie println, aber ohne Zeilenumbruch.
+en: Like println, but without a line break.
+ejemplo: System.out.print("a"); System.out.print("b");  // ab
+
+=== System.out.printf
+tema: 01
+firma: PrintStream printf(String formato, Object... args)
+es: Escribe con formato: %d entero, %.2f decimal con 2 cifras, %s texto, %n salto de línea.
+de: Formatierte Ausgabe: %d Ganzzahl, %.2f Kommazahl mit 2 Stellen, %s Text, %n Zeilenumbruch.
+en: Formatted output: %d integer, %.2f decimal with 2 digits, %s text, %n line break.
+ejemplo: System.out.printf("x=%.1f y=%.1f%n", x(), y());
+
+=== sintaxis.escape
+tema: 01
+firma: \n   \t   \"   \'   \\
+es: Caracteres especiales dentro de un texto: salto de línea, tabulador, comillas y barra invertida.
+de: Sonderzeichen in einem Text: Zeilenumbruch, Tabulator, Anführungszeichen und Backslash.
+en: Special characters inside a string: new line, tab, quotes and backslash.
+ejemplo: System.out.println("Dijo \"¡fuego!\"\ny disparó");
+
+# ==================================================================== 02 Variables y tipos primitivos
+
+=== sintaxis.variable
+tema: 02
+firma: tipo nombre = valor;
+es: Una caja con nombre que guarda un valor. Se declara una vez y luego se puede cambiar.
+de: Eine benannte Kiste, die einen Wert speichert. Einmal deklariert, später änderbar.
+en: A named box that holds a value. Declared once, it can be changed later.
+ejemplo: int vueltas = 0; vueltas = vueltas + 1;
+
+=== sintaxis.tipos.primitivos
+tema: 02
+firma: byte  short  int  long  float  double  char  boolean
+es: Los 8 tipos básicos. Los más usados: int (enteros), double (decimales), boolean (true/false), char ('a').
+de: Die 8 Grundtypen. Am häufigsten: int (Ganzzahlen), double (Kommazahlen), boolean (true/false), char ('a').
+en: The 8 basic types. Most used: int (whole numbers), double (decimals), boolean (true/false), char ('a').
+ejemplo: int n = 3; double d = 2.5; boolean listo = true; char c = 'x';
+
+=== sintaxis.literales
+tema: 02
+firma: 42   3.14   1e3   10L   2.5f   'a'   "texto"   true   0xFF   0b101   1_000_000
+es: Formas de escribir valores en el código. Los guiones bajos separan cifras para leerlas mejor.
+de: Schreibweisen für Werte im Code. Unterstriche trennen Ziffern, damit man sie besser liest.
+en: Ways to write values in code. Underscores separate digits to make them easier to read.
+ejemplo: long distancia = 1_000_000L; int mascara = 0b1010;  // 10
+
+=== sintaxis.var
+tema: 02
+firma: var nombre = valor;
+es: Java deduce el tipo por el valor. Solo en variables locales con valor inicial. Desde Java 10.
+de: Java leitet den Typ aus dem Wert ab. Nur für lokale Variablen mit Startwert. Seit Java 10.
+en: Java infers the type from the value. Only for local variables with an initial value. Since Java 10.
+ejemplo: var enemigos = enemigosVistos();  // List<Enemigo>
+
+=== sintaxis.final
+tema: 02
+firma: final tipo nombre = valor;      static final tipo CONSTANTE = valor;
+es: Una variable que no se puede reasignar. Las constantes de clase van en MAYÚSCULAS con static final.
+de: Eine Variable, die nicht neu zugewiesen werden kann. Klassenkonstanten: static final, in GROSSBUCHSTABEN.
+en: A variable that can't be reassigned. Class constants use static final and UPPER_CASE names.
+ejemplo: static final double DISTANCIA_SEGURA = 150;
+
+=== sintaxis.cast
+tema: 02
+firma: (tipo) expresion
+es: Convierte un valor a otro tipo. De double a int corta los decimales (no redondea).
+de: Wandelt einen Wert in einen anderen Typ um. Von double nach int werden Nachkommastellen abgeschnitten.
+en: Converts a value to another type. From double to int the decimals are cut off (not rounded).
+ejemplo: int pasos = (int) 7.9;  // 7
+
+=== Integer.MAX_VALUE
+tema: 02
+firma: static final int MAX_VALUE   // 2147483647   (y MIN_VALUE: -2147483648)
+es: El int más grande. Si te pasas, da la vuelta a negativo (desbordamiento). Para más, usa long.
+de: Der größte int. Gehst du darüber, springt er ins Negative (Überlauf). Für mehr nimm long.
+en: The largest int. Go past it and it wraps around to negative (overflow). For more, use long.
+ejemplo: int x = Integer.MAX_VALUE + 1;  // -2147483648
+
+# ==================================================================== 03 Operadores y expresiones
+
+=== sintaxis.aritmetica
+tema: 03
+firma: a + b   a - b   a * b   a / b   a % b
+es: Suma, resta, multiplicación, división y resto. Entre dos int, «/» descarta los decimales.
+de: Addition, Subtraktion, Multiplikation, Division und Rest. Zwischen zwei int verwirft „/“ die Nachkommastellen.
+en: Addition, subtraction, multiplication, division and remainder. Between two ints, "/" drops the decimals.
+ejemplo: 7 / 2  // 3      7 / 2.0  // 3.5      7 % 2  // 1
+
+=== sintaxis.incremento
+tema: 03
+firma: x++   x--   ++x   --x   x += n   x -= n   x *= n   x /= n
+es: Atajos para cambiar una variable: x++ suma 1, x += 5 suma 5.
+de: Abkürzungen zum Ändern einer Variable: x++ addiert 1, x += 5 addiert 5.
+en: Shortcuts to change a variable: x++ adds 1, x += 5 adds 5.
+ejemplo: int turnos = 0; turnos++; turnos += 10;  // 11
+
+=== sintaxis.comparacion
+tema: 03
+firma: a == b   a != b   a < b   a <= b   a > b   a >= b
+es: Comparan dos valores y dan un boolean. Para textos y objetos usa equals, no ==.
+de: Vergleichen zwei Werte und liefern einen boolean. Für Texte und Objekte nimm equals, nicht ==.
+en: Compare two values and give a boolean. For strings and objects use equals, not ==.
+ejemplo: boolean cerca = e.distancia() < 100;
+
+=== sintaxis.logicos
+tema: 03
+firma: a && b   a || b   !a
+es: Y, O y NO. && y || no miran la parte derecha si ya saben el resultado (cortocircuito).
+de: UND, ODER und NICHT. && und || werten rechts nicht aus, wenn das Ergebnis schon feststeht (Kurzschluss).
+en: AND, OR and NOT. && and || skip the right side when the result is already known (short-circuit).
+ejemplo: if (listoDerecha() && energia() > 10) atacarDerecha();
+
+=== sintaxis.ternario
+tema: 03
+firma: condicion ? valorSiTrue : valorSiFalse
+es: Un if en forma de expresión: elige entre dos valores.
+de: Ein if als Ausdruck: wählt zwischen zwei Werten.
+en: An if as an expression: picks one of two values.
+ejemplo: double paso = blindaje() < 30 ? -50 : 50;
+
+=== sintaxis.precedencia
+tema: 03
+firma: ()   !  ++  --   * / %   + -   < > <= >=   == !=   &&   ||   ?:   = +=
+es: El orden en que se calculan los operadores, de primero a último. En caso de duda, paréntesis.
+de: Die Reihenfolge, in der Operatoren ausgewertet werden, von zuerst bis zuletzt. Im Zweifel Klammern.
+en: The order in which operators are evaluated, first to last. When in doubt, use brackets.
+ejemplo: 2 + 3 * 4  // 14      (2 + 3) * 4  // 20
+
+=== Math.abs
+tema: 03
+firma: static double abs(double a)   // también int y long
+es: El valor absoluto: el número sin signo.
+de: Der Betrag: die Zahl ohne Vorzeichen.
+en: The absolute value: the number without its sign.
+ejemplo: Math.abs(-15.5)  // 15.5
+
+=== Math.max
+tema: 03
+firma: static double max(double a, double b)   // también int y long
+es: El mayor de dos números.
+de: Die größere von zwei Zahlen.
+en: The larger of two numbers.
+ejemplo: Math.max(3, 8)  // 8
+
+=== Math.min
+tema: 03
+firma: static double min(double a, double b)   // también int y long
+es: El menor de dos números.
+de: Die kleinere von zwei Zahlen.
+en: The smaller of two numbers.
+ejemplo: double paso = Math.min(restanteAvance(), 20);
+
+=== Math.pow
+tema: 03
+firma: static double pow(double base, double exponente)
+es: La potencia: base elevada al exponente. Para un cuadrado, x * x es más rápido.
+de: Die Potenz: Basis hoch Exponent. Für ein Quadrat ist x * x schneller.
+en: The power: base raised to the exponent. For a square, x * x is faster.
+ejemplo: Math.pow(2, 10)  // 1024.0
+
+=== Math.sqrt
+tema: 03
+firma: static double sqrt(double a)
+es: La raíz cuadrada.
+de: Die Quadratwurzel.
+en: The square root.
+ejemplo: Math.sqrt(dx * dx + dy * dy)
+
+=== Math.round
+tema: 03
+firma: static long round(double a)
+es: Redondea al entero más cercano (0,5 hacia arriba). Devuelve long: haz cast a int si lo necesitas.
+de: Rundet zur nächsten Ganzzahl (0,5 nach oben). Liefert long: Bei Bedarf nach int casten.
+en: Rounds to the nearest whole number (0.5 goes up). Returns long: cast to int if you need one.
+ejemplo: int r = (int) Math.round(2.5);  // 3
+
+=== Math.floor
+tema: 03
+firma: static double floor(double a)      static double ceil(double a)
+es: floor redondea hacia abajo y ceil hacia arriba. Ambos devuelven double.
+de: floor rundet ab, ceil rundet auf. Beide liefern double.
+en: floor rounds down and ceil rounds up. Both return a double.
+ejemplo: Math.floor(2.7)  // 2.0      Math.ceil(2.1)  // 3.0
+
+=== Math.random
+tema: 03
+firma: static double random()
+es: Un decimal al azar en [0, 1). En el robot mejor azar(): la misma pelea repetida da lo mismo.
+de: Eine Zufallszahl in [0, 1). Im Roboter lieber zufall(): Derselbe Kampf ergibt dasselbe.
+en: A random decimal in [0, 1). In a robot prefer random(): replaying the same fight gives the same result.
+ejemplo: int dado = (int) (Math.random() * 6) + 1;  // 1..6
+
+=== Math.sin
+tema: 03
+firma: static double sin(double radianes)      static double cos(double radianes)      Math.PI
+es: Seno y coseno de un ángulo en radianes. Pasa los grados del robot con Math.toRadians.
+de: Sinus und Kosinus eines Winkels im Bogenmaß. Rechne die Grad des Roboters mit Math.toRadians um.
+en: Sine and cosine of an angle in radians. Convert the robot's degrees with Math.toRadians.
+ejemplo: double dx = Math.cos(Math.toRadians(rumbo())) * 50;
+
+=== Math.toRadians
+tema: 03
+firma: static double toRadians(double grados)      static double toDegrees(double radianes)
+es: Pasa de grados a radianes; toDegrees hace lo contrario. 180 grados son Math.PI radianes.
+de: Rechnet Grad in Bogenmaß um; toDegrees macht das Gegenteil. 180 Grad sind Math.PI.
+en: Converts degrees to radians; toDegrees does the opposite. 180 degrees are Math.PI radians.
+ejemplo: Math.toDegrees(Math.PI / 2)  // 90.0
+
+=== Math.atan2
+tema: 03
+firma: static double atan2(double y, double x)
+es: El ángulo (en radianes) del punto (x, y) visto desde el origen. Ojo: primero y, después x.
+de: Der Winkel (im Bogenmaß) des Punkts (x, y) vom Ursprung aus. Achtung: erst y, dann x.
+en: The angle (in radians) of the point (x, y) seen from the origin. Careful: y first, then x.
+ejemplo: double grados = Math.toDegrees(Math.atan2(e.y() - y(), e.x() - x()));
+
+=== Math.hypot
+tema: 03
+firma: static double hypot(double x, double y)
+es: La distancia raíz(x² + y²), sin desbordarse con números grandes.
+de: Der Abstand Wurzel(x² + y²), ohne Überlauf bei großen Zahlen.
+en: The distance sqrt(x² + y²), without overflowing on big numbers.
+ejemplo: Math.hypot(3, 4)  // 5.0
+
+=== Math.clamp
+tema: 03
+firma: static double clamp(double valor, double min, double max)
+es: Encierra el valor entre min y max. Desde Java 21.
+de: Begrenzt den Wert auf den Bereich von min bis max. Seit Java 21.
+en: Clamps the value between min and max. Since Java 21.
+ejemplo: Math.clamp(130.0, 0.0, 100.0)  // 100.0
+
+# ==================================================================== 04 Condicionales
+
+=== sintaxis.if
+tema: 04
+firma: if (condicion) { ... } else { ... }
+es: Ejecuta un bloque solo si la condición es true; el else, si es false. El else es opcional.
+de: Führt einen Block nur aus, wenn die Bedingung true ist; den else-Block, wenn sie false ist. else ist optional.
+en: Runs a block only if the condition is true; the else block if it's false. The else is optional.
+ejemplo: if (blindaje() < 30) { retroceder(80); } else { avanzar(40); }
+
+=== sintaxis.else.if
+tema: 04
+firma: if (c1) { ... } else if (c2) { ... } else { ... }
+es: Encadena varias condiciones: se ejecuta solo la primera que se cumpla.
+de: Verkettet mehrere Bedingungen: Nur die erste zutreffende wird ausgeführt.
+en: Chains several conditions: only the first one that holds runs.
+ejemplo: if (d < 100) atacar(); else if (d < 300) avanzar(50); else girar(20);
+
+=== sintaxis.switch
+tema: 04
+firma: switch (valor) { case A: ...; break; default: ...; }
+es: Elige un camino según el valor (int, char, String o enum). Sin break, sigue con el case siguiente.
+de: Wählt einen Weg nach dem Wert (int, char, String oder enum). Ohne break geht es beim nächsten case weiter.
+en: Picks a path by value (int, char, String or enum). Without break it falls through to the next case.
+ejemplo: switch (ronda()) { case 1: decir("¡Hola!"); break; default: decir("Otra vez"); }
+
+=== sintaxis.switch.flecha
+tema: 04
+firma: switch (valor) { case A, B -> ...; default -> ...; }
+es: Switch moderno: sin break ni caídas, varios valores por case, y puede dar un valor. Desde Java 14.
+de: Modernes switch: kein break, kein Durchfallen, mehrere Werte pro case, kann einen Wert liefern. Seit Java 14.
+en: Modern switch: no break, no fall-through, several values per case, and it can yield a value. Since Java 14.
+ejemplo: String plan = switch (ronda()) { case 1, 2 -> "tantear"; default -> "atacar"; };
+
+=== sintaxis.yield
+tema: 04
+firma: case X -> { ...; yield valor; }
+es: Da el valor de un switch-expresión desde un bloque con llaves. Desde Java 14.
+de: Liefert den Wert eines switch-Ausdrucks aus einem Block mit Klammern. Seit Java 14.
+en: Gives the value of a switch expression from a braced block. Since Java 14.
+ejemplo: int v = switch (n) { case 0 -> 0; default -> { int t = n * 2; yield t + 1; } };
+
+# ==================================================================== 05 Bucles
+
+=== sintaxis.while
+tema: 05
+firma: while (condicion) { ... }
+es: Repite el bloque mientras la condición sea true. Si al principio es false, no se ejecuta nunca.
+de: Wiederholt den Block, solange die Bedingung true ist. Ist sie anfangs false, läuft er nie.
+en: Repeats the block while the condition is true. If it's false at the start, it never runs.
+ejemplo: int n = 10; while (n > 0) { n -= 3; }  // n = -2
+
+=== sintaxis.do.while
+tema: 05
+firma: do { ... } while (condicion);
+es: Como while, pero comprueba al final: se ejecuta al menos una vez. Lleva «;» al final.
+de: Wie while, prüft aber am Ende: läuft mindestens einmal. Endet mit „;“.
+en: Like while, but checks at the end: it runs at least once. Ends with ";".
+ejemplo: int n; do { n = azar().nextInt(10); } while (n == 0);
+
+=== sintaxis.for
+tema: 05
+firma: for (inicio; condicion; paso) { ... }
+es: El bucle con contador: empieza, comprueba y avanza en una sola línea.
+de: Die Zählschleife: Start, Prüfung und Schritt in einer Zeile.
+en: The counting loop: start, check and step in a single line.
+ejemplo: for (int i = 0; i < 4; i++) { System.out.println(i); }  // 0 1 2 3
+
+=== sintaxis.break
+tema: 05
+firma: break;
+es: Sale al instante del bucle o del switch en el que está.
+de: Verlässt sofort die Schleife oder das switch, in dem es steht.
+en: Leaves the loop or switch it's in immediately.
+ejemplo: for (Enemigo e : enemigosVistos()) { if (e.distancia() < 50) { atacar(); break; } }
+
+=== sintaxis.continue
+tema: 05
+firma: continue;
+es: Salta el resto de esta vuelta y pasa a la siguiente.
+de: Überspringt den Rest dieser Runde und macht mit der nächsten weiter.
+en: Skips the rest of this round and moves on to the next.
+ejemplo: for (int i = 0; i < 6; i++) { if (i % 2 == 0) continue; System.out.print(i); }  // 135
+
+=== sintaxis.etiqueta
+tema: 05
+firma: nombre: for (...) { ... break nombre; ... continue nombre; }
+es: Un nombre para un bucle: break o continue con ese nombre actúan sobre el bucle exterior.
+de: Ein Name für eine Schleife: break oder continue mit diesem Namen wirken auf die äußere Schleife.
+en: A name for a loop: break or continue with that name act on the outer loop.
+ejemplo: fuera: for (int[] fila : m) for (int v : fila) if (v < 0) break fuera;
+
+# ==================================================================== 06 Métodos
+
+=== sintaxis.metodo
+tema: 06
+firma: modificadores tipoRetorno nombre(tipo param, ...) { ... }
+es: Un bloque de código con nombre que recibe parámetros y puede devolver un valor.
+de: Ein benannter Codeblock, der Parameter bekommt und einen Wert zurückgeben kann.
+en: A named block of code that takes parameters and can return a value.
+ejemplo: double mitad(double d) { return d / 2; }
+
+=== sintaxis.return
+tema: 06
+firma: return valor;      return;
+es: Termina el método. Si el método no es void, devuelve el valor indicado.
+de: Beendet die Methode. Ist sie nicht void, gibt sie den angegebenen Wert zurück.
+en: Ends the method. If the method isn't void, it returns the given value.
+ejemplo: boolean peligro() { return blindaje() < 25; }
+
+=== sintaxis.void
+tema: 06
+firma: void nombre(...) { ... }
+es: El método no devuelve nada: solo hace algo.
+de: Die Methode gibt nichts zurück: Sie tut nur etwas.
+en: The method returns nothing: it just does something.
+ejemplo: void huir() { girar(180); avanzar(100); }
+
+=== sintaxis.sobrecarga
+tema: 06
+firma: tipo nombre(int a)      tipo nombre(double a)      tipo nombre(int a, int b)
+es: Varios métodos con el mismo nombre y distintos parámetros. Java elige según los argumentos.
+de: Mehrere Methoden mit gleichem Namen und verschiedenen Parametern. Java wählt nach den Argumenten.
+en: Several methods with the same name and different parameters. Java picks by the arguments.
+ejemplo: int doble(int x) { return 2 * x; }   String doble(String s) { return s + s; }
+
+=== sintaxis.static
+tema: 06
+firma: static tipo nombre ...
+es: Pertenece a la clase y no a cada objeto. Se usa como Clase.nombre, sin crear objetos.
+de: Gehört zur Klasse, nicht zu jedem Objekt. Aufruf als Klasse.name, ohne ein Objekt zu erzeugen.
+en: Belongs to the class, not to each object. Used as Class.name, without creating objects.
+ejemplo: static int cuadrado(int x) { return x * x; }   // Util.cuadrado(4) = 16
+
+=== sintaxis.varargs
+tema: 06
+firma: tipo nombre(tipo... valores)
+es: Acepta cualquier número de argumentos, que llegan como un array. Va el último. Desde Java 5.
+de: Nimmt beliebig viele Argumente, die als Array ankommen. Muss zuletzt stehen. Seit Java 5.
+en: Takes any number of arguments, which arrive as an array. Must come last. Since Java 5.
+ejemplo: int suma(int... n) { int s = 0; for (int x : n) s += x; return s; }   // suma(1, 2, 3) = 6
+
+=== sintaxis.paso.por.valor
+tema: 06
+firma: metodo(valor)   // se copia el valor (o la referencia al objeto)
+es: Java copia los argumentos: cambiar un parámetro no cambia la variable de fuera; el objeto apuntado, sí.
+de: Java kopiert die Argumente: Ein geänderter Parameter ändert die äußere Variable nicht, das Objekt schon.
+en: Java copies arguments: changing a parameter doesn't change the outside variable; the object it points to, yes.
+ejemplo: void f(int x) { x = 9; }   int a = 1; f(a);  // a sigue valiendo 1
+
+# ==================================================================== 07 Arrays
+
+=== sintaxis.array
+tema: 07
+firma: tipo[] nombre = new tipo[tamaño];
+es: Una fila de valores del mismo tipo con tamaño fijo. Las posiciones van de 0 a length - 1.
+de: Eine Reihe von Werten gleichen Typs mit fester Größe. Die Positionen gehen von 0 bis length - 1.
+en: A row of values of the same type with a fixed size. Positions go from 0 to length - 1.
+ejemplo: double[] distancias = new double[5]; distancias[0] = 120.5;
+
+=== sintaxis.array.literal
+tema: 07
+firma: tipo[] nombre = { v1, v2, v3 };      new tipo[] { v1, v2 }
+es: Crea el array y lo rellena a la vez.
+de: Erzeugt das Array und füllt es gleichzeitig.
+en: Creates the array and fills it at once.
+ejemplo: int[] danos = { 10, 25, 40 };
+
+=== sintaxis.array.length
+tema: 07
+firma: array.length
+es: Cuántas posiciones tiene el array. Es un campo, sin paréntesis (en String es length()).
+de: Wie viele Positionen das Array hat. Ein Feld, ohne Klammern (bei String ist es length()).
+en: How many positions the array has. It's a field, without brackets (on a String it's length()).
+ejemplo: for (int i = 0; i < a.length; i++) suma += a[i];
+
+=== sintaxis.array.2d
+tema: 07
+firma: tipo[][] m = new tipo[filas][columnas];
+es: Un array de arrays: una tabla. Se accede con m[fila][columna].
+de: Ein Array aus Arrays: eine Tabelle. Zugriff mit m[zeile][spalte].
+en: An array of arrays: a table. Access it with m[row][column].
+ejemplo: int[][] mapa = new int[3][4]; mapa[1][2] = 7;
+
+=== sintaxis.for.each
+tema: 07
+firma: for (tipo elemento : arrayOColeccion) { ... }
+es: Recorre todos los elementos de un array o una colección, sin índice. Desde Java 5.
+de: Durchläuft alle Elemente eines Arrays oder einer Collection, ohne Index. Seit Java 5.
+en: Walks through every element of an array or collection, with no index. Since Java 5.
+ejemplo: for (Enemigo e : enemigosVistos()) escribir(e.nombre());
+
+=== Arrays.toString
+tema: 07
+firma: static String toString(int[] a)   // y para cualquier tipo de array
+es: Convierte el array en un texto legible, como [1, 2, 3]. Imprimir el array tal cual da algo raro.
+de: Macht aus dem Array einen lesbaren Text wie [1, 2, 3]. Das Array direkt auszugeben ergibt Kauderwelsch.
+en: Turns the array into readable text like [1, 2, 3]. Printing the array directly gives gibberish.
+ejemplo: Arrays.toString(new int[] {3, 1, 2})  // "[3, 1, 2]"
+
+=== Arrays.sort
+tema: 07
+firma: static void sort(int[] a)   // y para cualquier tipo de array
+es: Ordena el array de menor a mayor, en el mismo array.
+de: Sortiert das Array aufsteigend, direkt im selben Array.
+en: Sorts the array from smallest to largest, in place.
+ejemplo: int[] a = {3, 1, 2}; Arrays.sort(a);  // [1, 2, 3]
+
+=== Arrays.fill
+tema: 07
+firma: static void fill(int[] a, int valor)
+es: Pone el mismo valor en todas las posiciones.
+de: Setzt denselben Wert in alle Positionen.
+en: Puts the same value in every position.
+ejemplo: double[] d = new double[4]; Arrays.fill(d, -1);  // [-1.0, -1.0, -1.0, -1.0]
+
+=== Arrays.copyOf
+tema: 07
+firma: static int[] copyOf(int[] original, int nuevaLongitud)
+es: Copia el array con otra longitud: rellena con ceros o corta lo que sobra.
+de: Kopiert das Array mit neuer Länge: füllt mit Nullen auf oder schneidet ab.
+en: Copies the array with a new length: pads with zeros or cuts off the rest.
+ejemplo: Arrays.copyOf(new int[] {1, 2}, 4)  // [1, 2, 0, 0]
+
+# ==================================================================== 08 Textos: String y StringBuilder
+
+=== sintaxis.concatenacion
+tema: 08
+firma: texto + valor
+es: «+» une textos; si un lado es String, el otro se convierte a texto. Se evalúa de izquierda a derecha.
+de: „+“ verbindet Texte; ist eine Seite ein String, wird die andere zu Text. Ausgewertet von links nach rechts.
+en: "+" joins strings; if one side is a String, the other becomes text. Evaluated left to right.
+ejemplo: "Ronda " + ronda()  // "Ronda 2"      1 + 2 + "a"  // "3a"
+
+=== String.length
+tema: 08
+firma: int length()
+es: Devuelve cuántos caracteres tiene el texto.
+de: Gibt zurück, wie viele Zeichen der Text hat.
+en: Returns how many characters the text has.
+ejemplo: "laser".length()  // 5
+
+=== String.charAt
+tema: 08
+firma: char charAt(int indice)
+es: El carácter de esa posición (empieza en 0).
+de: Das Zeichen an dieser Position (beginnt bei 0).
+en: The character at that position (starting at 0).
+ejemplo: "robot".charAt(0)  // 'r'
+
+=== String.substring
+tema: 08
+firma: String substring(int desde, int hasta)      String substring(int desde)
+es: Un trozo del texto, de desde (incluido) a hasta (excluido). Con un número, hasta el final.
+de: Ein Teil des Textes, von (einschließlich) bis (ausschließlich). Mit einer Zahl bis zum Ende.
+en: A piece of the text, from (inclusive) to (exclusive). With one number, up to the end.
+ejemplo: "metajavbot".substring(4, 7)  // "jav"
+
+=== String.indexOf
+tema: 08
+firma: int indexOf(String buscado)      int indexOf(char c)
+es: La posición donde aparece por primera vez, o -1 si no está.
+de: Die Position des ersten Vorkommens, oder -1, wenn es nicht vorkommt.
+en: The position of the first occurrence, or -1 if it's not there.
+ejemplo: "laser rojo".indexOf("rojo")  // 6
+
+=== String.contains
+tema: 08
+firma: boolean contains(CharSequence s)
+es: Dice si el texto contiene ese trozo.
+de: Sagt, ob der Text dieses Stück enthält.
+en: Tells whether the text contains that piece.
+ejemplo: if (e.nombre().contains("Jefe")) retroceder(100);
+
+=== String.equals
+tema: 08
+firma: boolean equals(Object otro)      boolean equalsIgnoreCase(String otro)
+es: Compara el contenido de dos textos. Usa esto y no ==, que mira si son el mismo objeto.
+de: Vergleicht den Inhalt zweier Texte. Nimm das statt ==, das nur prüft, ob es dasselbe Objekt ist.
+en: Compares the content of two strings. Use this, not ==, which checks whether they're the same object.
+ejemplo: if (armaDerecha().equals("LASER")) atacarDerecha();
+
+=== String.compareTo
+tema: 08
+firma: int compareTo(String otro)
+es: Compara por orden alfabético: negativo si va antes, 0 si es igual, positivo si va después.
+de: Vergleicht alphabetisch: negativ, wenn davor, 0 bei Gleichheit, positiv, wenn danach.
+en: Compares alphabetically: negative if it comes first, 0 if equal, positive if it comes after.
+ejemplo: "ana".compareTo("bea")  // negativo
+
+=== String.toUpperCase
+tema: 08
+firma: String toUpperCase()      String toLowerCase()
+es: Devuelve una copia en mayúsculas (o en minúsculas). El original no cambia.
+de: Gibt eine Kopie in Groß- (oder Klein-)buchstaben zurück. Das Original bleibt gleich.
+en: Returns an upper-case (or lower-case) copy. The original doesn't change.
+ejemplo: "Laser".toUpperCase()  // "LASER"
+
+=== String.strip
+tema: 08
+firma: String strip()      String trim()
+es: Quita los espacios del principio y del final. strip (Java 11) entiende también espacios Unicode.
+de: Entfernt Leerzeichen am Anfang und Ende. strip (Java 11) kennt auch Unicode-Leerzeichen.
+en: Removes spaces at the start and end. strip (Java 11) also understands Unicode spaces.
+ejemplo: "  hola  ".strip()  // "hola"
+
+=== String.split
+tema: 08
+firma: String[] split(String regex)
+es: Parte el texto por el separador y da un array de trozos. El separador es una expresión regular.
+de: Teilt den Text am Trenner und liefert ein Array von Stücken. Der Trenner ist ein regulärer Ausdruck.
+en: Splits the text at the separator and gives an array of pieces. The separator is a regular expression.
+ejemplo: "10,20,30".split(",")  // ["10", "20", "30"]
+
+=== String.replace
+tema: 08
+firma: String replace(CharSequence viejo, CharSequence nuevo)
+es: Devuelve una copia con todas las apariciones cambiadas.
+de: Gibt eine Kopie zurück, in der alle Vorkommen ersetzt sind.
+en: Returns a copy with every occurrence replaced.
+ejemplo: "a-b-c".replace("-", "+")  // "a+b+c"
+
+=== String.startsWith
+tema: 08
+firma: boolean startsWith(String prefijo)      boolean endsWith(String sufijo)
+es: Dice si el texto empieza (o termina) por ese trozo.
+de: Sagt, ob der Text mit diesem Stück beginnt (oder endet).
+en: Tells whether the text starts (or ends) with that piece.
+ejemplo: "MISIL_2".startsWith("MISIL")  // true
+
+=== String.isBlank
+tema: 08
+firma: boolean isBlank()      boolean isEmpty()
+es: isEmpty: longitud 0. isBlank: vacío o solo espacios (Java 11).
+de: isEmpty: Länge 0. isBlank: leer oder nur Leerzeichen (Java 11).
+en: isEmpty: length 0. isBlank: empty or only whitespace (Java 11).
+ejemplo: "   ".isEmpty()  // false      "   ".isBlank()  // true
+
+=== String.repeat
+tema: 08
+firma: String repeat(int veces)
+es: Repite el texto ese número de veces. Desde Java 11.
+de: Wiederholt den Text so oft. Seit Java 11.
+en: Repeats the text that many times. Since Java 11.
+ejemplo: "=".repeat(5)  // "====="
+
+=== String.valueOf
+tema: 08
+firma: static String valueOf(Object x)   // también int, double, char, boolean...
+es: Convierte cualquier valor en texto.
+de: Wandelt jeden Wert in Text um.
+en: Turns any value into text.
+ejemplo: String.valueOf(3.5)  // "3.5"
+
+=== String.format
+tema: 08
+firma: static String format(String formato, Object... args)      String formatted(Object... args)
+es: Crea un texto con formato, como printf. formatted (Java 15) se usa sobre el propio texto.
+de: Erzeugt formatierten Text wie printf. formatted (Java 15) wird auf dem Text selbst aufgerufen.
+en: Builds formatted text, like printf. formatted (Java 15) is called on the format string itself.
+ejemplo: String.format("%d de %d", 3, 4)  // "3 de 4"      "%s!".formatted("Hola")  // "Hola!"
+
+=== String.join
+tema: 08
+firma: static String join(CharSequence separador, Iterable<String> partes)
+es: Une varios textos poniendo el separador entre ellos. Desde Java 8.
+de: Verbindet mehrere Texte mit dem Trenner dazwischen. Seit Java 8.
+en: Joins several strings with the separator between them. Since Java 8.
+ejemplo: String.join(", ", List.of("laser", "bala"))  // "laser, bala"
+
+=== sintaxis.bloque.texto
+tema: 08
+firma: """ + salto de línea, las líneas del texto, y """ para cerrar
+es: Texto de varias líneas entre tres comillas; la sangría común se quita sola. Desde Java 15.
+de: Mehrzeiliger Text zwischen drei Anführungszeichen; gemeinsame Einrückung fällt weg. Seit Java 15.
+en: Multi-line text between triple quotes; common indentation is removed. Since Java 15.
+ejemplo: String s = """ [salto de línea] Hola [salto de línea] arena""";  // igual que "Hola\narena"
+
+=== StringBuilder.append
+tema: 08
+firma: StringBuilder append(Object x)
+es: Añade al final y devuelve el mismo StringBuilder. En un bucle es mucho más rápido que «+».
+de: Hängt ans Ende an und gibt denselben StringBuilder zurück. In Schleifen viel schneller als „+“.
+en: Appends to the end and returns the same StringBuilder. In a loop it's much faster than "+".
+ejemplo: StringBuilder sb = new StringBuilder(); sb.append("x=").append(x());
+
+=== StringBuilder.reverse
+tema: 08
+firma: StringBuilder reverse()
+es: Da la vuelta al contenido.
+de: Kehrt den Inhalt um.
+en: Reverses the content.
+ejemplo: new StringBuilder("abc").reverse().toString()  // "cba"
+
+=== StringBuilder.insert
+tema: 08
+firma: StringBuilder insert(int posicion, Object x)      StringBuilder deleteCharAt(int posicion)
+es: Mete algo en una posición, o borra el carácter de esa posición.
+de: Fügt etwas an einer Position ein oder löscht das Zeichen an einer Position.
+en: Inserts something at a position, or deletes the character at a position.
+ejemplo: new StringBuilder("ac").insert(1, "b")  // "abc"
+
+=== StringBuilder.toString
+tema: 08
+firma: String toString()
+es: Devuelve el texto construido como String.
+de: Gibt den aufgebauten Text als String zurück.
+en: Returns the built text as a String.
+ejemplo: String informe = sb.toString();
+
+=== Character.isDigit
+tema: 08
+firma: static boolean isDigit(char c)      static boolean isLetter(char c)
+es: Dice si el carácter es una cifra (o una letra). También: isWhitespace, isUpperCase, toUpperCase.
+de: Sagt, ob das Zeichen eine Ziffer (oder ein Buchstabe) ist. Auch: isWhitespace, isUpperCase, toUpperCase.
+en: Tells whether the char is a digit (or a letter). Also: isWhitespace, isUpperCase, toUpperCase.
+ejemplo: Character.isDigit('7')  // true
+
+=== Integer.parseInt
+tema: 08
+firma: static int parseInt(String texto)      static double Double.parseDouble(String texto)
+es: Convierte un texto como "42" en el número 42. Si no es un número, lanza NumberFormatException.
+de: Wandelt einen Text wie "42" in die Zahl 42 um. Ist es keine Zahl, kommt eine NumberFormatException.
+en: Turns text like "42" into the number 42. If it isn't a number, it throws NumberFormatException.
+ejemplo: int n = Integer.parseInt("42");      double d = Double.parseDouble("2.5");
+
+# ==================================================================== 09 Clases y objetos
+
+=== sintaxis.class
+tema: 09
+firma: public class Nombre { campos; constructores; métodos }
+es: El plano para crear objetos: qué datos tienen (campos) y qué saben hacer (métodos).
+de: Der Bauplan für Objekte: welche Daten sie haben (Felder) und was sie können (Methoden).
+en: The blueprint for objects: what data they have (fields) and what they can do (methods).
+ejemplo: class Objetivo { double x, y; double distancia() { return Math.hypot(x, y); } }
+
+=== sintaxis.new
+tema: 09
+firma: new Clase(argumentos)
+es: Crea un objeto nuevo de esa clase llamando a su constructor.
+de: Erzeugt ein neues Objekt dieser Klasse und ruft seinen Konstruktor auf.
+en: Creates a new object of that class by calling its constructor.
+ejemplo: Objetivo o = new Objetivo();
+
+=== sintaxis.campo
+tema: 09
+firma: tipo nombre;   // dentro de la clase, fuera de los métodos
+es: Una variable que pertenece al objeto y vive lo que él. En el robot guarda datos de un turno a otro.
+de: Eine Variable, die zum Objekt gehört und so lange lebt wie es. Im Roboter merkt sie sich Daten zwischen Zügen.
+en: A variable that belongs to the object and lives as long as it does. In a robot it keeps data between ticks.
+ejemplo: public class MiRobot extends Metajavbot { int disparos = 0; ... }
+
+=== sintaxis.punto
+tema: 09
+firma: objeto.campo      objeto.metodo(args)
+es: El punto accede a lo que tiene un objeto.
+de: Der Punkt greift auf das zu, was ein Objekt hat.
+en: The dot accesses what an object has.
+ejemplo: e.distancia()      "hola".length()
+
+=== sintaxis.null
+tema: 09
+firma: null
+es: Una referencia que no apunta a ningún objeto. Usarla con un punto lanza NullPointerException.
+de: Eine Referenz, die auf kein Objekt zeigt. Mit einem Punkt benutzt, gibt es eine NullPointerException.
+en: A reference pointing to no object. Using it with a dot throws a NullPointerException.
+ejemplo: String s = null; if (s != null) System.out.println(s.length());
+
+=== Object.toString
+tema: 09
+firma: public String toString()
+es: El texto que representa al objeto. Sobrescríbelo para que println muestre algo útil.
+de: Der Text, der das Objekt darstellt. Überschreib ihn, damit println etwas Sinnvolles zeigt.
+en: The text that represents the object. Override it so println shows something useful.
+ejemplo: @Override public String toString() { return "Objetivo(" + x + ", " + y + ")"; }
+
+=== Object.equals
+tema: 09
+firma: public boolean equals(Object otro)
+es: Dice si dos objetos son iguales por contenido. Si lo sobrescribes, sobrescribe también hashCode.
+de: Sagt, ob zwei Objekte inhaltlich gleich sind. Überschreibst du es, dann auch hashCode.
+en: Tells whether two objects are equal in content. If you override it, override hashCode too.
+ejemplo: a.equals(b)
+
+=== Objects.equals
+tema: 09
+firma: static boolean equals(Object a, Object b)
+es: Compara dos objetos sin fallar si alguno es null.
+de: Vergleicht zwei Objekte, ohne abzustürzen, wenn eins null ist.
+en: Compares two objects without failing if either is null.
+ejemplo: Objects.equals(null, null)  // true
+
+# ==================================================================== 10 Encapsulación
+
+=== sintaxis.modificadores.acceso
+tema: 10
+firma: public      protected      (sin nada: paquete)      private
+es: Quién puede ver algo: todos; subclases y paquete; solo el paquete; solo la propia clase.
+de: Wer etwas sehen darf: alle; Unterklassen und Paket; nur das Paket; nur die eigene Klasse.
+en: Who can see something: everyone; subclasses and package; only the package; only the class itself.
+ejemplo: private int vida = 100;
+
+=== sintaxis.getter.setter
+tema: 10
+firma: public tipo getX() { return x; }      public void setX(tipo x) { this.x = x; }
+es: Métodos para leer y cambiar un campo privado. El setter puede comprobar que el valor vale.
+de: Methoden, um ein privates Feld zu lesen und zu ändern. Der Setter kann den Wert prüfen.
+en: Methods to read and change a private field. The setter can check the value is valid.
+ejemplo: public void setVida(int v) { if (v >= 0) this.vida = v; }
+
+=== sintaxis.constructor
+tema: 10
+firma: public NombreClase(parametros) { ... }
+es: Prepara el objeto al crearlo con new. Se llama como la clase y no tiene tipo de retorno.
+de: Bereitet das Objekt beim Erzeugen mit new vor. Heißt wie die Klasse und hat keinen Rückgabetyp.
+en: Sets up the object when created with new. Named like the class, with no return type.
+ejemplo: public Objetivo(double x, double y) { this.x = x; this.y = y; }
+
+=== sintaxis.this
+tema: 10
+firma: this.campo      this.metodo()      this(args)
+es: El objeto actual. Distingue el campo del parámetro de igual nombre; this(...) llama a otro constructor.
+de: Das aktuelle Objekt. Trennt Feld und gleichnamigen Parameter; this(...) ruft einen anderen Konstruktor.
+en: The current object. Tells a field from a same-named parameter; this(...) calls another constructor.
+ejemplo: public Objetivo() { this(0, 0); }
+
+=== sintaxis.campo.static
+tema: 10
+firma: static tipo nombre;
+es: Un campo compartido por todos los objetos de la clase, no uno por objeto.
+de: Ein Feld, das sich alle Objekte der Klasse teilen, statt eins pro Objekt.
+en: A field shared by every object of the class, rather than one per object.
+ejemplo: static int creados = 0;   public Objetivo() { creados++; }
+
+=== Objects.requireNonNull
+tema: 10
+firma: static <T> T requireNonNull(T obj, String mensaje)
+es: Lanza NullPointerException con tu mensaje si obj es null; si no, lo devuelve. Útil en constructores.
+de: Wirft eine NullPointerException mit deiner Meldung, wenn obj null ist; sonst gibt es obj zurück.
+en: Throws a NullPointerException with your message if obj is null; otherwise returns it. Handy in constructors.
+ejemplo: this.nombre = Objects.requireNonNull(nombre, "falta el nombre");
+
+# ==================================================================== 11 Herencia
+
+=== sintaxis.extends
+tema: 11
+firma: class Hija extends Madre { ... }
+es: La hija hereda campos y métodos de la madre y puede añadir o cambiar. Solo se hereda de una clase.
+de: Die Unterklasse erbt Felder und Methoden und kann ergänzen oder ändern. Man erbt nur von einer Klasse.
+en: The subclass inherits fields and methods and can add or change them. You can extend only one class.
+ejemplo: public class MiRobot extends Metajavbot { ... }
+
+=== sintaxis.super
+tema: 11
+firma: super(args)      super.metodo()
+es: super(...) llama al constructor de la madre; super.metodo() llama a la versión de la madre.
+de: super(...) ruft den Konstruktor der Oberklasse; super.methode() ruft deren Version der Methode.
+en: super(...) calls the parent's constructor; super.method() calls the parent's version of the method.
+ejemplo: @Override public String toString() { return "Jefe " + super.toString(); }
+
+=== sintaxis.override
+tema: 11
+firma: @Override tipo metodo(...) { ... }
+es: Marca que sustituyes un método de la madre o de una interfaz. Si el nombre no coincide, javac avisa.
+de: Markiert, dass du eine Methode der Oberklasse oder eines Interfaces ersetzt. Passt der Name nicht, meckert javac.
+en: Marks that you replace a method of the parent or an interface. If the name doesn't match, javac complains.
+ejemplo: @Override public void cadaTurno() { avanzar(50); }
+
+=== sintaxis.final.clase
+tema: 11
+firma: final class X { }      final tipo metodo() { }
+es: Una clase final no tiene hijas; un método final no se puede sobrescribir (como avanzar).
+de: Eine final-Klasse hat keine Unterklassen; eine final-Methode kann man nicht überschreiben (wie vorwaerts).
+en: A final class has no subclasses; a final method can't be overridden (like ahead).
+ejemplo: public final void avanzar(double distancia)   // en Metajavbot
+
+=== Object
+tema: 11
+firma: public class Object
+es: La madre de todas las clases. Por eso cualquier objeto tiene toString, equals y hashCode.
+de: Die Oberklasse aller Klassen. Deshalb hat jedes Objekt toString, equals und hashCode.
+en: The parent of every class. That's why every object has toString, equals and hashCode.
+ejemplo: Object o = "texto"; System.out.println(o.toString());
+
+# ==================================================================== 12 Polimorfismo y clases abstractas
+
+=== sintaxis.abstract
+tema: 12
+firma: abstract class X { abstract tipo metodo(); }
+es: Una clase incompleta: no se crea con new y sus hijas deben implementar los métodos abstractos.
+de: Eine unvollständige Klasse: kein new möglich, Unterklassen müssen die abstrakten Methoden implementieren.
+en: An incomplete class: it can't be created with new, and subclasses must implement its abstract methods.
+ejemplo: abstract class Arma { abstract double danio(); }
+
+=== sintaxis.polimorfismo
+tema: 12
+firma: Madre ref = new Hija();
+es: Una variable de la madre guarda cualquier hija; al llamar a un método se usa la versión de la hija.
+de: Eine Variable vom Obertyp hält jede Unterklasse; beim Aufruf läuft die Version der Unterklasse.
+en: A parent-typed variable holds any subclass; calling a method runs the subclass's version.
+ejemplo: Arma a = new Laser(); a.danio();  // el danio() de Laser
+
+=== sintaxis.instanceof
+tema: 12
+firma: objeto instanceof Tipo
+es: Pregunta si el objeto es de ese tipo (o de una hija). Con null da false.
+de: Fragt, ob das Objekt von diesem Typ (oder einer Unterklasse) ist. Mit null ergibt es false.
+en: Asks whether the object is of that type (or a subclass). With null it gives false.
+ejemplo: if (a instanceof Laser) { ... }
+
+=== sintaxis.cast.referencia
+tema: 12
+firma: (Tipo) objeto
+es: Trata una referencia como un tipo más concreto. Si no lo es, lanza ClassCastException.
+de: Behandelt eine Referenz als spezielleren Typ. Ist sie es nicht, gibt es eine ClassCastException.
+en: Treats a reference as a more specific type. If it isn't one, it throws ClassCastException.
+ejemplo: Laser l = (Laser) a;
+
+# ==================================================================== 13 Interfaces
+
+=== sintaxis.interface
+tema: 13
+firma: interface Nombre { tipo metodo(params); }
+es: Un contrato: los métodos que una clase promete tener. Enemigo, en el juego, es una interfaz.
+de: Ein Vertrag: die Methoden, die eine Klasse verspricht. Gegner ist im Spiel ein Interface.
+en: A contract: the methods a class promises to have. In the game, Enemy is an interface.
+ejemplo: interface Estrategia { void decidir(Metajavbot r); }
+
+=== sintaxis.implements
+tema: 13
+firma: class X implements I1, I2 { ... }
+es: La clase cumple el contrato de una o varias interfaces implementando todos sus métodos.
+de: Die Klasse erfüllt den Vertrag eines oder mehrerer Interfaces, indem sie alle Methoden implementiert.
+en: The class fulfils the contract of one or more interfaces by implementing all their methods.
+ejemplo: class Agresiva implements Estrategia { public void decidir(Metajavbot r) { r.atacar(); } }
+
+=== sintaxis.default
+tema: 13
+firma: default tipo metodo() { ... }
+es: Un método de interfaz con código propio; las clases lo heredan si no lo sobrescriben. Desde Java 8.
+de: Eine Interface-Methode mit eigenem Code; Klassen erben sie, wenn sie sie nicht überschreiben. Seit Java 8.
+en: An interface method with its own code; classes inherit it unless they override it. Since Java 8.
+ejemplo: default String nombre() { return "sin nombre"; }
+
+=== sintaxis.interface.static
+tema: 13
+firma: static tipo metodo() { ... }      private tipo ayuda() { ... }
+es: Las interfaces pueden tener métodos static (Java 8) y private para ayudarse (Java 9).
+de: Interfaces können static-Methoden (Java 8) und private Hilfsmethoden (Java 9) haben.
+en: Interfaces can have static methods (Java 8) and private helper methods (Java 9).
+ejemplo: interface Estrategia { static Estrategia quieta() { return r -> r.detener(); } }
+
+=== Comparable.compareTo
+tema: 13
+firma: int compareTo(T otro)
+es: Da a una clase su orden natural (negativo, 0 o positivo). Lo usan Collections.sort y TreeSet.
+de: Gibt einer Klasse ihre natürliche Ordnung (negativ, 0 oder positiv). Genutzt von Collections.sort und TreeSet.
+en: Gives a class its natural order (negative, 0 or positive). Used by Collections.sort and TreeSet.
+ejemplo: public int compareTo(Objetivo o) { return Double.compare(distancia(), o.distancia()); }
+
+=== Integer.compare
+tema: 13
+firma: static int compare(int a, int b)      static int Double.compare(double a, double b)
+es: Compara dos números sin restar (restar puede desbordarse). Ideal dentro de compareTo.
+de: Vergleicht zwei Zahlen ohne Subtraktion (die überlaufen kann). Ideal in compareTo.
+en: Compares two numbers without subtracting (which can overflow). Ideal inside compareTo.
+ejemplo: Integer.compare(3, 7)  // negativo
+
+# ==================================================================== 14 Excepciones
+
+=== sintaxis.try.catch
+tema: 14
+firma: try { ... } catch (TipoExcepcion e) { ... }
+es: Ejecuta el try; si salta una excepción de ese tipo, en vez de romperse ejecuta el catch.
+de: Führt try aus; tritt eine Ausnahme dieses Typs auf, läuft statt des Absturzes der catch-Block.
+en: Runs the try; if an exception of that type occurs, the catch runs instead of crashing.
+ejemplo: try { n = Integer.parseInt(s); } catch (NumberFormatException e) { n = 0; }
+
+=== sintaxis.finally
+tema: 14
+firma: try { ... } catch (...) { ... } finally { ... }
+es: El bloque finally se ejecuta siempre, haya error o no. Sirve para limpiar.
+de: Der finally-Block läuft immer, mit oder ohne Fehler. Gut zum Aufräumen.
+en: The finally block always runs, error or not. Good for cleaning up.
+ejemplo: try { trabajar(); } finally { escribir("fin"); }
+
+=== sintaxis.multi.catch
+tema: 14
+firma: catch (TipoA | TipoB e) { ... }
+es: Un solo catch para varios tipos de excepción. Desde Java 7.
+de: Ein catch für mehrere Ausnahmetypen. Seit Java 7.
+en: One catch for several exception types. Since Java 7.
+ejemplo: catch (NumberFormatException | NullPointerException e) { n = 0; }
+
+=== sintaxis.throw
+tema: 14
+firma: throw new TipoExcepcion("mensaje");
+es: Lanza una excepción: el método se corta y el error sube hasta un catch.
+de: Wirft eine Ausnahme: Die Methode bricht ab, und der Fehler steigt bis zu einem catch auf.
+en: Throws an exception: the method stops and the error travels up to a catch.
+ejemplo: if (v < 0) throw new IllegalArgumentException("v negativo: " + v);
+
+=== sintaxis.throws
+tema: 14
+firma: tipo metodo(...) throws TipoExcepcion { ... }
+es: Avisa de que el método puede lanzar esa excepción comprobada; quien lo llame debe tratarla.
+de: Kündigt an, dass die Methode diese geprüfte Ausnahme werfen kann; der Aufrufer muss sie behandeln.
+en: Declares that the method can throw that checked exception; the caller must handle it.
+ejemplo: int leer(String s) throws IOException { ... }
+
+=== sintaxis.comprobadas
+tema: 14
+firma: Exception (comprobadas)      RuntimeException (no comprobadas)
+es: Las comprobadas hay que capturarlas o declararlas con throws; las de RuntimeException, no.
+de: Geprüfte Ausnahmen muss man fangen oder mit throws deklarieren; RuntimeExceptions nicht.
+en: Checked exceptions must be caught or declared with throws; RuntimeExceptions needn't be.
+ejemplo: IOException (comprobada)      IllegalStateException (no comprobada)
+
+=== sintaxis.excepcion.propia
+tema: 14
+firma: class MiError extends Exception { MiError(String m) { super(m); } }
+es: Tu propia excepción. Hereda de Exception (comprobada) o de RuntimeException (no comprobada).
+de: Deine eigene Ausnahme. Erbt von Exception (geprüft) oder RuntimeException (ungeprüft).
+en: Your own exception. Extends Exception (checked) or RuntimeException (unchecked).
+ejemplo: class SinEnergia extends RuntimeException { SinEnergia() { super("sin energía"); } }
+
+=== sintaxis.try.with.resources
+tema: 14
+firma: try (Recurso r = ...) { ... }
+es: Cierra solo el recurso (AutoCloseable) al acabar, aunque haya error. Desde Java 7.
+de: Schließt die Ressource (AutoCloseable) am Ende automatisch, auch bei Fehlern. Seit Java 7.
+en: Closes the resource (AutoCloseable) automatically at the end, even on error. Since Java 7.
+ejemplo: try (Scanner sc = new Scanner("1 2 3")) { System.out.println(sc.nextInt()); }  // 1
+
+=== Throwable.getMessage
+tema: 14
+firma: String getMessage()
+es: El mensaje con el que se creó la excepción.
+de: Die Meldung, mit der die Ausnahme erzeugt wurde.
+en: The message the exception was created with.
+ejemplo: catch (Exception e) { escribir("Fallo: " + e.getMessage()); }
+
+=== excepciones.comunes
+tema: 14
+firma: NullPointerException  ArrayIndexOutOfBoundsException  NumberFormatException  ArithmeticException
+es: Las más habituales: usar null, índice fuera del array, texto que no es número, dividir un int entre 0.
+de: Die häufigsten: null benutzt, Index außerhalb des Arrays, Text ist keine Zahl, int durch 0 geteilt.
+en: The most common: using null, index outside the array, text that isn't a number, dividing an int by 0.
+ejemplo: int[] a = new int[3]; a[3] = 1;  // ArrayIndexOutOfBoundsException
+
+=== IllegalArgumentException
+tema: 14
+firma: new IllegalArgumentException(String mensaje)      new IllegalStateException(String mensaje)
+es: Para avisar de un argumento no válido (o de que el objeto no está en un estado que lo permita).
+de: Meldet ein ungültiges Argument (oder dass das Objekt gerade nicht im passenden Zustand ist).
+en: Signals an invalid argument (or that the object isn't in a state that allows the call).
+ejemplo: if (n < 0) throw new IllegalArgumentException("n debe ser >= 0");
+
+# ==================================================================== 15 Colecciones: List, Set y Map
+
+=== ArrayList
+tema: 15
+firma: List<E> lista = new ArrayList<>();
+es: Una lista que crece sola, con acceso rápido por posición. Lo más usado para guardar varios objetos.
+de: Eine Liste, die von selbst wächst, mit schnellem Zugriff per Position. Am häufigsten für mehrere Objekte.
+en: A list that grows by itself, with fast access by position. The usual choice for holding several objects.
+ejemplo: List<String> armas = new ArrayList<>();
+
+=== List.of
+tema: 15
+firma: static <E> List<E> of(E... elementos)
+es: Crea una lista fija (no se puede cambiar). Desde Java 9. También Set.of y Map.of.
+de: Erzeugt eine unveränderliche Liste. Seit Java 9. Ebenso Set.of und Map.of.
+en: Creates a fixed list (it can't be changed). Since Java 9. Also Set.of and Map.of.
+ejemplo: List<Integer> danos = List.of(10, 25, 40);
+
+=== List.add
+tema: 15
+firma: boolean add(E e)      void add(int indice, E e)
+es: Añade un elemento al final (o en esa posición).
+de: Fügt ein Element am Ende (oder an dieser Position) hinzu.
+en: Adds an element at the end (or at that position).
+ejemplo: armas.add("LASER");
+
+=== List.get
+tema: 15
+firma: E get(int indice)
+es: El elemento de esa posición (desde 0). Fuera de rango lanza IndexOutOfBoundsException.
+de: Das Element an dieser Position (ab 0). Außerhalb des Bereichs: IndexOutOfBoundsException.
+en: The element at that position (from 0). Out of range throws IndexOutOfBoundsException.
+ejemplo: Enemigo primero = enemigosVistos().get(0);
+
+=== List.set
+tema: 15
+firma: E set(int indice, E e)
+es: Sustituye el elemento de esa posición y devuelve el que había.
+de: Ersetzt das Element an dieser Position und gibt das alte zurück.
+en: Replaces the element at that position and returns the old one.
+ejemplo: armas.set(0, "MISIL");
+
+=== List.remove
+tema: 15
+firma: E remove(int indice)      boolean remove(Object o)
+es: Quita por posición o por valor. Ojo con List<Integer>: remove(1) quita la posición 1.
+de: Entfernt per Position oder per Wert. Vorsicht bei List<Integer>: remove(1) entfernt Position 1.
+en: Removes by position or by value. Careful with List<Integer>: remove(1) removes position 1.
+ejemplo: numeros.remove(Integer.valueOf(7));  // quita el valor 7
+
+=== List.size
+tema: 15
+firma: int size()      boolean isEmpty()
+es: Cuántos elementos tiene la colección; isEmpty dice si no tiene ninguno.
+de: Wie viele Elemente die Collection hat; isEmpty sagt, ob sie leer ist.
+en: How many elements the collection has; isEmpty tells whether it has none.
+ejemplo: if (!enemigosVistos().isEmpty()) atacar();
+
+=== List.contains
+tema: 15
+firma: boolean contains(Object o)      int indexOf(Object o)
+es: Dice si la colección tiene ese elemento (usa equals); indexOf da su posición o -1.
+de: Sagt, ob die Collection das Element enthält (per equals); indexOf liefert die Position oder -1.
+en: Tells whether the collection has that element (using equals); indexOf gives its position or -1.
+ejemplo: armas.contains("LASER")  // true
+
+=== HashMap
+tema: 15
+firma: Map<K, V> mapa = new HashMap<>();
+es: Un diccionario: guarda pares clave → valor y busca por clave muy rápido. Sin orden fijo.
+de: Ein Wörterbuch: speichert Paare Schlüssel → Wert und findet per Schlüssel sehr schnell. Ohne feste Ordnung.
+en: A dictionary: stores key → value pairs and looks up by key very fast. No fixed order.
+ejemplo: Map<String, Integer> golpes = new HashMap<>();
+
+=== Map.put
+tema: 15
+firma: V put(K clave, V valor)
+es: Guarda el valor con esa clave; si la clave ya estaba, sustituye el valor antiguo.
+de: Speichert den Wert unter dem Schlüssel; gab es ihn schon, wird der alte Wert ersetzt.
+en: Stores the value under that key; if the key was already there, the old value is replaced.
+ejemplo: memoria().put("victorias", 3);
+
+=== Map.get
+tema: 15
+firma: V get(Object clave)
+es: El valor guardado con esa clave, o null si no hay ninguno.
+de: Der Wert unter diesem Schlüssel, oder null, wenn es keinen gibt.
+en: The value stored under that key, or null if there's none.
+ejemplo: Object v = memoria().get("victorias");
+
+=== Map.getOrDefault
+tema: 15
+firma: V getOrDefault(Object clave, V porDefecto)
+es: Como get, pero si la clave no está devuelve el valor por defecto. Desde Java 8.
+de: Wie get, liefert aber den Standardwert, wenn der Schlüssel fehlt. Seit Java 8.
+en: Like get, but returns the default value if the key is missing. Since Java 8.
+ejemplo: int n = golpes.getOrDefault(e.nombre(), 0);
+
+=== Map.containsKey
+tema: 15
+firma: boolean containsKey(Object clave)      V remove(Object clave)
+es: Dice si existe esa clave; remove la quita junto con su valor.
+de: Sagt, ob es den Schlüssel gibt; remove entfernt ihn samt Wert.
+en: Tells whether that key exists; remove deletes it along with its value.
+ejemplo: if (!memoria().containsKey("inicio")) memoria().put("inicio", turnoActual());
+
+=== Map.merge
+tema: 15
+firma: V merge(K clave, V valor, BiFunction<V, V, V> combinar)
+es: Si la clave no está, guarda el valor; si está, los combina. Perfecto para contar. Desde Java 8.
+de: Fehlt der Schlüssel, wird der Wert gespeichert; sonst kombiniert. Perfekt zum Zählen. Seit Java 8.
+en: If the key is missing, stores the value; otherwise combines them. Perfect for counting. Since Java 8.
+ejemplo: golpes.merge(g.arma(), 1, Integer::sum);
+
+=== Map.entrySet
+tema: 15
+firma: Set<Map.Entry<K, V>> entrySet()      Set<K> keySet()      Collection<V> values()
+es: Para recorrer un mapa: los pares (getKey, getValue), solo las claves o solo los valores.
+de: Zum Durchlaufen einer Map: die Paare (getKey, getValue), nur die Schlüssel oder nur die Werte.
+en: To walk through a map: the pairs (getKey, getValue), only the keys, or only the values.
+ejemplo: for (var par : golpes.entrySet()) escribir(par.getKey() + ": " + par.getValue());
+
+=== HashSet
+tema: 15
+firma: Set<E> conjunto = new HashSet<>();
+es: Un conjunto sin repetidos: add devuelve false si el elemento ya estaba. contains es muy rápido.
+de: Eine Menge ohne Duplikate: add liefert false, wenn das Element schon drin ist. contains ist sehr schnell.
+en: A set without duplicates: add returns false if the element was already there. contains is very fast.
+ejemplo: Set<String> vistos = new HashSet<>(); vistos.add(e.nombre());
+
+=== TreeMap
+tema: 15
+firma: Map<K, V> mapa = new TreeMap<>();      Set<E> s = new TreeSet<>();
+es: Mapa (o conjunto) que mantiene las claves ordenadas. Algo más lento que HashMap.
+de: Map (oder Menge), die die Schlüssel sortiert hält. Etwas langsamer als HashMap.
+en: A map (or set) that keeps its keys sorted. Somewhat slower than HashMap.
+ejemplo: new TreeMap<>(Map.of("b", 2, "a", 1))  // {a=1, b=2}
+
+=== Object.hashCode
+tema: 15
+firma: public int hashCode()
+es: Un número que resume el objeto; lo usan HashMap y HashSet. Objetos iguales deben dar el mismo.
+de: Eine Zahl, die das Objekt zusammenfasst; genutzt von HashMap und HashSet. Gleiche Objekte, gleicher Wert.
+en: A number summarizing the object; used by HashMap and HashSet. Equal objects must give the same one.
+ejemplo: @Override public int hashCode() { return Objects.hash(x, y); }
+
+=== sintaxis.autoboxing
+tema: 15
+firma: int <-> Integer   double <-> Double   boolean <-> Boolean   char <-> Character
+es: Las colecciones guardan objetos: int se convierte solo en Integer y al revés. Compara Integer con equals.
+de: Collections speichern Objekte: int wird automatisch zu Integer und zurück. Integer mit equals vergleichen.
+en: Collections hold objects: int turns into Integer automatically and back. Compare Integers with equals.
+ejemplo: List<Integer> l = new ArrayList<>(); l.add(5); int x = l.get(0);
+
+=== Collections.sort
+tema: 15
+firma: static <T extends Comparable<T>> void sort(List<T> lista)
+es: Ordena la lista según su orden natural (números de menor a mayor, textos alfabéticamente).
+de: Sortiert die Liste nach ihrer natürlichen Ordnung (Zahlen aufsteigend, Texte alphabetisch).
+en: Sorts the list by its natural order (numbers ascending, strings alphabetically).
+ejemplo: Collections.sort(nombres);
+
+=== Collections.max
+tema: 15
+firma: static T max(Collection<T> c)      static T min(Collection<T> c)
+es: El mayor (o el menor) elemento de la colección. Con un Comparator, según ese criterio.
+de: Das größte (oder kleinste) Element der Collection. Mit einem Comparator nach dessen Kriterium.
+en: The largest (or smallest) element in the collection. With a Comparator, by that criterion.
+ejemplo: Collections.max(List.of(4, 9, 2))  // 9
+
+=== Collections.shuffle
+tema: 15
+firma: static void shuffle(List<?> lista, Random azar)      static void reverse(List<?> lista)
+es: Desordena la lista al azar; reverse le da la vuelta.
+de: Mischt die Liste zufällig; reverse kehrt sie um.
+en: Shuffles the list randomly; reverse turns it around.
+ejemplo: Collections.shuffle(planes, azar());
+
+=== Iterator
+tema: 15
+firma: Iterator<E> it = coleccion.iterator();   it.hasNext()   it.next()   it.remove()
+es: Recorre una colección y permite borrar mientras recorres sin ConcurrentModificationException.
+de: Durchläuft eine Collection und erlaubt Löschen beim Durchlaufen ohne ConcurrentModificationException.
+en: Walks a collection and lets you delete while iterating without a ConcurrentModificationException.
+ejemplo: for (var it = lista.iterator(); it.hasNext();) if (it.next() < 0) it.remove();
+
+# ==================================================================== 16 Genéricos
+
+=== sintaxis.clase.generica
+tema: 16
+firma: class Nombre<T> { T valor; }
+es: Una clase que funciona con cualquier tipo, que se elige al usarla. Desde Java 5.
+de: Eine Klasse, die mit jedem Typ funktioniert; der Typ wird bei der Verwendung gewählt. Seit Java 5.
+en: A class that works with any type, chosen when you use it. Since Java 5.
+ejemplo: class Caja<T> { T dentro; }   Caja<String> c = new Caja<>();
+
+=== sintaxis.metodo.generico
+tema: 16
+firma: static <T> tipoRetorno nombre(T param)
+es: Un método con su propio tipo variable; Java lo deduce por los argumentos.
+de: Eine Methode mit eigener Typvariable; Java leitet sie aus den Argumenten ab.
+en: A method with its own type variable; Java infers it from the arguments.
+ejemplo: static <T> T primero(List<T> l) { return l.get(0); }
+
+=== sintaxis.diamante
+tema: 16
+firma: Tipo<X> v = new Tipo<>();
+es: El rombo «<>» deja que Java deduzca los tipos al crear el objeto. Desde Java 7.
+de: Die Raute „<>“ lässt Java die Typen beim Erzeugen ableiten. Seit Java 7.
+en: The diamond "<>" lets Java infer the types when creating the object. Since Java 7.
+ejemplo: Map<String, List<Integer>> m = new HashMap<>();
+
+=== sintaxis.limite.generico
+tema: 16
+firma: <T extends Tipo>
+es: Limita T a ese tipo o sus hijos, para poder usar sus métodos dentro.
+de: Beschränkt T auf diesen Typ oder seine Untertypen, damit du dessen Methoden nutzen kannst.
+en: Restricts T to that type or its subtypes, so you can use its methods inside.
+ejemplo: static <T extends Comparable<T>> T mayor(T a, T b) { return a.compareTo(b) >= 0 ? a : b; }
+
+=== sintaxis.comodin.extends
+tema: 16
+firma: List<? extends Tipo>
+es: Una lista de algún subtipo de Tipo: se lee como Tipo pero no se puede añadir. Es un «productor».
+de: Eine Liste irgendeines Untertyps: Lesen als Tipo geht, Hinzufügen nicht. Ein „Produzent“.
+en: A list of some subtype of Type: you can read as Type but not add. A "producer".
+ejemplo: double suma(List<? extends Number> l) { double s = 0; for (Number n : l) s += n.doubleValue(); return s; }
+
+=== sintaxis.comodin.super
+tema: 16
+firma: List<? super Tipo>
+es: Una lista que admite Tipo o una madre suya: se puede añadir Tipo. Es un «consumidor» (regla PECS).
+de: Eine Liste für Tipo oder einen Obertyp: Tipo hinzufügen geht. Ein „Konsument“ (PECS-Regel).
+en: A list of Type or a supertype: you can add Type. A "consumer" (the PECS rule).
+ejemplo: void rellenar(List<? super Integer> l) { l.add(1); l.add(2); }
+
+=== sintaxis.borrado.tipos
+tema: 16
+firma: List<int> (no)   new T() (no)   new T[n] (no)   x instanceof List<String> (no)
+es: Los genéricos solo existen al compilar: no admiten primitivos ni se pueden crear con new T().
+de: Generics gibt es nur beim Kompilieren: keine primitiven Typen, kein new T().
+en: Generics exist only at compile time: no primitive types and no new T().
+ejemplo: List<Integer> bien = new ArrayList<>();   // List<int> no compila
+
+# ==================================================================== 17 Lambdas e interfaces funcionales
+
+=== sintaxis.lambda
+tema: 17
+firma: (params) -> expresion      (params) -> { sentencias; }
+es: Una función sin nombre que se puede guardar o pasar como argumento. Desde Java 8.
+de: Eine namenlose Funktion, die man speichern oder als Argument übergeben kann. Seit Java 8.
+en: A nameless function you can store or pass as an argument. Since Java 8.
+ejemplo: Predicate<Enemigo> cerca = e -> e.distancia() < 150;
+
+=== sintaxis.interfaz.funcional
+tema: 17
+firma: @FunctionalInterface interface X { un solo método abstracto }
+es: Una interfaz con un único método abstracto. Cualquier lambda puede ser de ese tipo.
+de: Ein Interface mit genau einer abstrakten Methode. Jede passende Lambda kann diesen Typ haben.
+en: An interface with exactly one abstract method. Any matching lambda can have that type.
+ejemplo: @FunctionalInterface interface Puntuar { double valor(Enemigo e); }
+
+=== Function
+tema: 17
+firma: interface Function<T, R> { R apply(T t); }
+es: Recibe un valor y devuelve otro. andThen encadena dos funciones.
+de: Nimmt einen Wert und gibt einen anderen zurück. andThen verkettet zwei Funktionen.
+en: Takes a value and returns another. andThen chains two functions.
+ejemplo: Function<String, Integer> largo = String::length; largo.apply("bala")  // 4
+
+=== Predicate
+tema: 17
+firma: interface Predicate<T> { boolean test(T t); }
+es: Una condición sobre un valor. Se combinan con and, or y negate.
+de: Eine Bedingung über einen Wert. Kombinierbar mit and, or und negate.
+en: A condition on a value. Combine them with and, or and negate.
+ejemplo: Predicate<Enemigo> facil = x -> x.blindaje() < 20; facil.test(e)
+
+=== Consumer
+tema: 17
+firma: interface Consumer<T> { void accept(T t); }
+es: Recibe un valor y hace algo con él, sin devolver nada.
+de: Nimmt einen Wert und macht etwas damit, ohne etwas zurückzugeben.
+en: Takes a value and does something with it, returning nothing.
+ejemplo: Consumer<String> hablar = this::decir; hablar.accept("¡Ahí voy!");
+
+=== Supplier
+tema: 17
+firma: interface Supplier<T> { T get(); }
+es: No recibe nada y entrega un valor cada vez que se le pide.
+de: Nimmt nichts und liefert bei jedem Aufruf einen Wert.
+en: Takes nothing and hands out a value each time it's asked.
+ejemplo: Supplier<Double> giro = () -> azar().nextDouble() * 90;
+
+=== BiFunction
+tema: 17
+firma: interface BiFunction<T, U, R> { R apply(T t, U u); }      BinaryOperator<T>
+es: Recibe dos valores y devuelve uno. BinaryOperator es el caso en que los tres son del mismo tipo.
+de: Nimmt zwei Werte und gibt einen zurück. BinaryOperator: alle drei vom selben Typ.
+en: Takes two values and returns one. BinaryOperator is the case where all three share a type.
+ejemplo: BinaryOperator<Integer> suma = (a, b) -> a + b; suma.apply(2, 3)  // 5
+
+=== sintaxis.referencia.metodo
+tema: 17
+firma: Clase::metodoEstatico   objeto::metodo   Clase::metodoDeInstancia   Clase::new
+es: Una forma corta de escribir una lambda que solo llama a un método existente. Desde Java 8.
+de: Eine Kurzform für eine Lambda, die nur eine vorhandene Methode aufruft. Seit Java 8.
+en: A short way to write a lambda that just calls an existing method. Since Java 8.
+ejemplo: nombres.forEach(System.out::println);      // igual que n -> System.out.println(n)
+
+=== sintaxis.efectivamente.final
+tema: 17
+firma: variable local que no cambia tras su asignación
+es: Una lambda solo puede usar variables locales que no cambian (final o «efectivamente final»).
+de: Eine Lambda darf nur lokale Variablen nutzen, die sich nicht ändern (final oder „effektiv final“).
+en: A lambda can only use local variables that never change (final or "effectively final").
+ejemplo: double limite = 100; Predicate<Enemigo> p = e -> e.distancia() < limite;
+
+=== Comparator.comparing
+tema: 17
+firma: static <T, U extends Comparable<U>> Comparator<T> comparing(Function<T, U> clave)
+es: Crea un comparador que ordena por la clave que extraes. También comparingInt y comparingDouble.
+de: Erzeugt einen Comparator, der nach dem extrahierten Schlüssel sortiert. Auch comparingInt, comparingDouble.
+en: Creates a comparator that orders by the key you extract. Also comparingInt and comparingDouble.
+ejemplo: lista.sort(Comparator.comparingDouble(Enemigo::distancia));
+
+=== Comparator.thenComparing
+tema: 17
+firma: Comparator<T> thenComparing(Comparator<T> otro)      Comparator<T> reversed()
+es: thenComparing desempata con un segundo criterio; reversed invierte el orden.
+de: thenComparing entscheidet Gleichstände mit einem zweiten Kriterium; reversed kehrt die Ordnung um.
+en: thenComparing breaks ties with a second criterion; reversed flips the order.
+ejemplo: Comparator.comparing(Enemigo::blindaje).thenComparing(Enemigo::nombre).reversed()
+
+=== List.sort
+tema: 17
+firma: void sort(Comparator<? super E> c)
+es: Ordena la lista con ese comparador; con null usa el orden natural. Desde Java 8.
+de: Sortiert die Liste mit diesem Comparator; mit null nach natürlicher Ordnung. Seit Java 8.
+en: Sorts the list with that comparator; with null it uses the natural order. Since Java 8.
+ejemplo: nombres.sort(Comparator.reverseOrder());
+
+=== Collection.removeIf
+tema: 17
+firma: boolean removeIf(Predicate<? super E> condicion)
+es: Borra todos los elementos que cumplen la condición. Desde Java 8.
+de: Entfernt alle Elemente, die die Bedingung erfüllen. Seit Java 8.
+en: Removes every element that matches the condition. Since Java 8.
+ejemplo: objetivos.removeIf(e -> e.blindaje() <= 0);
+
+=== Iterable.forEach
+tema: 17
+firma: void forEach(Consumer<? super T> accion)
+es: Ejecuta la acción con cada elemento. Desde Java 8.
+de: Führt die Aktion für jedes Element aus. Seit Java 8.
+en: Runs the action on every element. Since Java 8.
+ejemplo: enemigosVistos().forEach(e -> escribir(e.nombre()));
+
+# ==================================================================== 18 Streams
+
+=== Collection.stream
+tema: 18
+firma: Stream<E> stream()
+es: Abre una cadena de operaciones sobre los elementos. No cambia la colección original. Desde Java 8.
+de: Startet eine Kette von Operationen über die Elemente. Die Collection bleibt unverändert. Seit Java 8.
+en: Starts a pipeline of operations over the elements. The original collection is unchanged. Since Java 8.
+ejemplo: enemigosVistos().stream().filter(e -> e.vuela()).count()
+
+=== Stream.filter
+tema: 18
+firma: Stream<T> filter(Predicate<? super T> condicion)
+es: Deja pasar solo los elementos que cumplen la condición.
+de: Lässt nur die Elemente durch, die die Bedingung erfüllen.
+en: Lets through only the elements that match the condition.
+ejemplo: lista.stream().filter(n -> n > 0)
+
+=== Stream.map
+tema: 18
+firma: <R> Stream<R> map(Function<? super T, R> f)
+es: Transforma cada elemento en otro.
+de: Verwandelt jedes Element in ein anderes.
+en: Transforms each element into another.
+ejemplo: enemigosVistos().stream().map(Enemigo::nombre).toList()
+
+=== Stream.mapToInt
+tema: 18
+firma: IntStream mapToInt(ToIntFunction<? super T> f)      DoubleStream mapToDouble(...)
+es: Pasa a un stream de números, que tiene sum, average, max y min.
+de: Wechselt zu einem Zahlen-Stream mit sum, average, max und min.
+en: Switches to a stream of numbers, which has sum, average, max and min.
+ejemplo: palabras.stream().mapToInt(String::length).sum()
+
+=== IntStream.sum
+tema: 18
+firma: int sum()      OptionalDouble average()      OptionalInt max()
+es: Suma (o media, o máximo) de un stream de números. average y max dan Optional por si está vacío.
+de: Summe (oder Durchschnitt, Maximum) eines Zahlen-Streams. average und max liefern Optional, falls leer.
+en: Sum (or average, or max) of a number stream. average and max return an Optional in case it's empty.
+ejemplo: IntStream.of(4, 6).average().orElse(0)  // 5.0
+
+=== IntStream.range
+tema: 18
+firma: static IntStream range(int desde, int hasta)      rangeClosed(desde, hasta)
+es: Los enteros de desde a hasta (excluido); rangeClosed incluye el último.
+de: Die Ganzzahlen von bis (ausschließlich); rangeClosed schließt die letzte ein.
+en: The integers from start to end (exclusive); rangeClosed includes the last one.
+ejemplo: IntStream.rangeClosed(1, 5).sum()  // 15
+
+=== Arrays.stream
+tema: 18
+firma: static IntStream stream(int[] a)      static <T> Stream<T> stream(T[] a)
+es: Abre un stream sobre un array.
+de: Öffnet einen Stream über einem Array.
+en: Opens a stream over an array.
+ejemplo: Arrays.stream(new int[] {3, 8, 1}).max().getAsInt()  // 8
+
+=== Stream.count
+tema: 18
+firma: long count()
+es: Cuántos elementos llegan al final de la cadena.
+de: Wie viele Elemente am Ende der Kette ankommen.
+en: How many elements reach the end of the pipeline.
+ejemplo: long voladores = enemigosVistos().stream().filter(Enemigo::vuela).count();
+
+=== Stream.sorted
+tema: 18
+firma: Stream<T> sorted()      Stream<T> sorted(Comparator<? super T> c)
+es: Ordena los elementos (por orden natural o con un comparador).
+de: Sortiert die Elemente (natürlich oder mit einem Comparator).
+en: Sorts the elements (naturally or with a comparator).
+ejemplo: nombres.stream().sorted().toList()
+
+=== Stream.distinct
+tema: 18
+firma: Stream<T> distinct()      Stream<T> limit(long n)      Stream<T> skip(long n)
+es: distinct quita repetidos; limit se queda con los n primeros; skip se salta los n primeros.
+de: distinct entfernt Duplikate; limit behält die ersten n; skip überspringt die ersten n.
+en: distinct removes duplicates; limit keeps the first n; skip skips the first n.
+ejemplo: Stream.of(1, 1, 2, 3, 3).distinct().limit(2).toList()  // [1, 2]
+
+=== Stream.anyMatch
+tema: 18
+firma: boolean anyMatch(Predicate<T> p)      boolean allMatch(...)      boolean noneMatch(...)
+es: Dice si alguno, todos o ninguno de los elementos cumple la condición.
+de: Sagt, ob irgendein, jedes oder kein Element die Bedingung erfüllt.
+en: Tells whether any, all or none of the elements match the condition.
+ejemplo: boolean peligro = enemigosVistos().stream().anyMatch(e -> e.distancia() < 80);
+
+=== Stream.findFirst
+tema: 18
+firma: Optional<T> findFirst()
+es: El primer elemento que llega, dentro de un Optional (vacío si no hay ninguno).
+de: Das erste ankommende Element, in einem Optional (leer, wenn keins da ist).
+en: The first element to arrive, inside an Optional (empty if there is none).
+ejemplo: Optional<Enemigo> volador = enemigosVistos().stream().filter(Enemigo::vuela).findFirst();
+
+=== Stream.max
+tema: 18
+firma: Optional<T> max(Comparator<? super T> c)      Optional<T> min(Comparator<? super T> c)
+es: El mayor (o el menor) según el comparador, dentro de un Optional.
+de: Das größte (oder kleinste) Element nach dem Comparator, in einem Optional.
+en: The largest (or smallest) element by the comparator, inside an Optional.
+ejemplo: enemigosVistos().stream().min(Comparator.comparingDouble(Enemigo::distancia))
+
+=== Stream.reduce
+tema: 18
+firma: T reduce(T inicial, BinaryOperator<T> combinar)
+es: Combina todos los elementos en uno solo, empezando por el valor inicial.
+de: Fasst alle Elemente zu einem zusammen, beginnend mit dem Startwert.
+en: Combines all elements into one, starting from the initial value.
+ejemplo: Stream.of(1, 2, 3, 4).reduce(0, Integer::sum)  // 10
+
+=== Stream.toList
+tema: 18
+firma: List<T> toList()
+es: Recoge los elementos en una lista que no se puede cambiar. Desde Java 16.
+de: Sammelt die Elemente in einer unveränderlichen Liste. Seit Java 16.
+en: Collects the elements into an unmodifiable list. Since Java 16.
+ejemplo: List<String> nombres = enemigosVistos().stream().map(Enemigo::nombre).toList();
+
+=== Stream.collect
+tema: 18
+firma: <R> R collect(Collector<? super T, A, R> collector)
+es: Recoge los elementos en una colección, un mapa o un texto, según el Collector.
+de: Sammelt die Elemente in einer Collection, einer Map oder einem Text, je nach Collector.
+en: Gathers the elements into a collection, a map or a string, depending on the Collector.
+ejemplo: Set<String> s = lista.stream().collect(Collectors.toSet());
+
+=== Stream.forEach
+tema: 18
+firma: void forEach(Consumer<? super T> accion)
+es: Ejecuta la acción con cada elemento al final de la cadena.
+de: Führt am Ende der Kette die Aktion für jedes Element aus.
+en: Runs the action on each element at the end of the pipeline.
+ejemplo: IntStream.range(0, 3).forEach(i -> escribir("vuelta " + i));
+
+=== Collectors.toList
+tema: 18
+firma: static Collector<T, ?, List<T>> toList()      toSet()
+es: Recoge en una lista (o un conjunto) que sí se puede cambiar después.
+de: Sammelt in eine Liste (oder Menge), die man danach ändern kann.
+en: Collects into a list (or set) that can be changed afterwards.
+ejemplo: List<Integer> l = Stream.of(3, 1).collect(Collectors.toList());
+
+=== Collectors.joining
+tema: 18
+firma: static Collector<CharSequence, ?, String> joining(CharSequence separador)
+es: Une los textos en uno solo, con el separador entre ellos.
+de: Verbindet die Texte zu einem, mit dem Trenner dazwischen.
+en: Joins the strings into one, with the separator between them.
+ejemplo: Stream.of("a", "b", "c").collect(Collectors.joining(", "))  // "a, b, c"
+
+=== Collectors.groupingBy
+tema: 18
+firma: static Collector<T, ?, Map<K, List<T>>> groupingBy(Function<T, K> clave)
+es: Agrupa en un mapa: cada clave con la lista de elementos que la comparten.
+de: Gruppiert in eine Map: jeder Schlüssel mit der Liste seiner Elemente.
+en: Groups into a map: each key with the list of elements sharing it.
+ejemplo: Map<String, List<Enemigo>> porModelo = lista.stream().collect(Collectors.groupingBy(Enemigo::modelo));
+
+=== Collectors.counting
+tema: 18
+firma: static Collector<T, ?, Long> counting()
+es: Cuenta elementos; suele ir dentro de groupingBy para contar por grupo.
+de: Zählt Elemente; steht meist in groupingBy, um pro Gruppe zu zählen.
+en: Counts elements; usually used inside groupingBy to count per group.
+ejemplo: Stream.of("a", "b", "a").collect(Collectors.groupingBy(s -> s, Collectors.counting()))  // {a=2, b=1}
+
+=== Collectors.toMap
+tema: 18
+firma: static Collector<T, ?, Map<K, U>> toMap(Function<T, K> clave, Function<T, U> valor)
+es: Recoge en un mapa con la clave y el valor que extraes. Claves repetidas lanzan una excepción.
+de: Sammelt in eine Map mit extrahiertem Schlüssel und Wert. Doppelte Schlüssel werfen eine Ausnahme.
+en: Collects into a map with the key and value you extract. Duplicate keys throw an exception.
+ejemplo: Map<String, Double> vida = lista.stream().collect(Collectors.toMap(Enemigo::nombre, Enemigo::blindaje));
+
+=== Optional
+tema: 18
+firma: Optional<T>   Optional.of(x)   Optional.empty()   isPresent()   isEmpty()   get()
+es: Una caja que tiene un valor o está vacía. Evita devolver null. Desde Java 8.
+de: Eine Kiste, die einen Wert enthält oder leer ist. Vermeidet null als Rückgabe. Seit Java 8.
+en: A box that either holds a value or is empty. Avoids returning null. Since Java 8.
+ejemplo: Optional<String> o = Optional.of("bala"); o.isPresent()  // true
+
+=== Optional.orElse
+tema: 18
+firma: T orElse(T otro)      T orElseGet(Supplier<T> s)      T orElseThrow()
+es: El valor de dentro, o el que das si está vacío.
+de: Der enthaltene Wert, oder der angegebene, wenn sie leer ist.
+en: The value inside, or the one you give if it's empty.
+ejemplo: String n = volador.map(Enemigo::nombre).orElse("nadie");
+
+=== Optional.ifPresent
+tema: 18
+firma: void ifPresent(Consumer<? super T> accion)
+es: Ejecuta la acción solo si hay valor.
+de: Führt die Aktion nur aus, wenn ein Wert da ist.
+en: Runs the action only if there is a value.
+ejemplo: volador.ifPresent(v -> apuntarHacia(v.angulo()));
+
+# ==================================================================== 19 Java moderno
+
+=== sintaxis.enum
+tema: 19
+firma: enum Nombre { VALOR1, VALOR2, VALOR3 }
+es: Un tipo con un conjunto fijo de valores con nombre. Se compara con == y funciona en switch. Desde Java 5.
+de: Ein Typ mit fester Menge benannter Werte. Vergleich mit ==, funktioniert im switch. Seit Java 5.
+en: A type with a fixed set of named values. Compared with ==, works in switch. Since Java 5.
+ejemplo: enum Modo { ATAQUE, HUIDA, BUSQUEDA }   Modo m = Modo.ATAQUE;
+
+=== Enum.values
+tema: 19
+firma: static E[] values()      int ordinal()      String name()      static E valueOf(String nombre)
+es: values da todos los valores; ordinal, la posición; name, el nombre; valueOf busca por nombre.
+de: values liefert alle Werte; ordinal die Position; name den Namen; valueOf sucht per Name.
+en: values gives every value; ordinal the position; name the name; valueOf looks one up by name.
+ejemplo: Modo.valueOf("HUIDA").ordinal()  // 1
+
+=== sintaxis.enum.campos
+tema: 19
+firma: enum X { A(1), B(2); final int v; X(int v) { this.v = v; } }
+es: Un enum puede tener campos, constructor y métodos, como una clase.
+de: Ein enum kann Felder, Konstruktor und Methoden haben, wie eine Klasse.
+en: An enum can have fields, a constructor and methods, like a class.
+ejemplo: enum Arma { LASER(8), MISIL(25); final int dano; Arma(int d) { dano = d; } }
+
+=== sintaxis.record
+tema: 19
+firma: record Nombre(tipo a, tipo b) { }
+es: Una clase de datos inmutable en una línea: crea constructor, getters a(), equals, hashCode y toString. Java 16.
+de: Eine unveränderliche Datenklasse in einer Zeile: Konstruktor, Getter a(), equals, hashCode, toString. Java 16.
+en: An immutable data class in one line: constructor, getters a(), equals, hashCode and toString. Java 16.
+ejemplo: record Punto(double x, double y) { }   new Punto(1, 2).x()  // 1.0
+
+=== sintaxis.record.compacto
+tema: 19
+firma: record Nombre(tipo a) { Nombre { validaciones } }
+es: Un constructor compacto, sin parámetros escritos, para comprobar los valores antes de guardarlos.
+de: Ein kompakter Konstruktor ohne ausgeschriebene Parameter, um die Werte vor dem Speichern zu prüfen.
+en: A compact constructor, with no written parameters, to check the values before they're stored.
+ejemplo: record Vida(int v) { Vida { if (v < 0) throw new IllegalArgumentException(); } }
+
+=== sintaxis.sealed
+tema: 19
+firma: sealed interface X permits A, B { }      final class A implements X { }
+es: Limita quién puede heredar: solo las clases de permits (final, sealed o non-sealed). Desde Java 17.
+de: Begrenzt, wer erben darf: nur die Klassen in permits (final, sealed oder non-sealed). Seit Java 17.
+en: Limits who may inherit: only the classes in permits (final, sealed or non-sealed). Since Java 17.
+ejemplo: sealed interface Orden permits Mover, Disparar { }
+
+=== sintaxis.instanceof.patron
+tema: 19
+firma: if (objeto instanceof Tipo nombre) { ... usar nombre ... }
+es: Comprueba el tipo y a la vez crea una variable ya convertida, sin cast. Desde Java 16.
+de: Prüft den Typ und legt gleichzeitig eine schon umgewandelte Variable an, ohne Cast. Seit Java 16.
+en: Checks the type and at the same time creates an already-cast variable, no cast needed. Since Java 16.
+ejemplo: if (o instanceof String s && !s.isBlank()) decir(s);
+
+=== sintaxis.switch.patrones
+tema: 19
+firma: switch (objeto) { case Tipo nombre -> ...; case null -> ...; default -> ...; }
+es: Un switch que elige por el tipo del objeto y le pone nombre. Desde Java 21.
+de: Ein switch, das nach dem Typ des Objekts wählt und ihm einen Namen gibt. Seit Java 21.
+en: A switch that chooses by the object's type and names it. Since Java 21.
+ejemplo: String d = switch (o) { case Integer i -> "int " + i; case String s -> s; default -> "?"; };
+
+=== sintaxis.when
+tema: 19
+firma: case Tipo nombre when condicion -> ...
+es: Añade una condición a un case con patrón. Desde Java 21.
+de: Fügt einem case mit Muster eine Bedingung hinzu. Seit Java 21.
+en: Adds a condition to a pattern case. Since Java 21.
+ejemplo: case Integer i when i > 100 -> "mucho";
+
+=== sintaxis.patron.record
+tema: 19
+firma: case NombreRecord(tipo a, tipo b) -> ...
+es: Desmonta un record en sus componentes dentro de un switch o un instanceof. Desde Java 21.
+de: Zerlegt einen record in seine Komponenten, in switch oder instanceof. Seit Java 21.
+en: Takes a record apart into its components inside a switch or instanceof. Since Java 21.
+ejemplo: if (o instanceof Punto(double x, double y)) apuntarA(x, y);
+
+=== sintaxis.guion.bajo
+tema: 19
+firma: case Punto(double x, _) ->      catch (Exception _)      (a, _) -> a
+es: «_» marca una variable o un componente que no vas a usar. Desde Java 22.
+de: „_“ markiert eine Variable oder Komponente, die du nicht brauchst. Seit Java 22.
+en: "_" marks a variable or component you won't use. Since Java 22.
+ejemplo: try { n = Integer.parseInt(s); } catch (NumberFormatException _) { n = 0; }
+
+# ==================================================================== 20 Hilos y concurrencia
+
+=== Thread
+tema: 20
+firma: new Thread(Runnable tarea)      Runnable: void run()
+es: Un hilo ejecuta una tarea a la vez que el resto del programa. Los robots no pueden crear hilos.
+de: Ein Thread führt eine Aufgabe parallel zum restlichen Programm aus. Roboter dürfen keine Threads starten.
+en: A thread runs a task alongside the rest of the program. Robots aren't allowed to create threads.
+ejemplo: Thread t = new Thread(() -> System.out.println("hola desde otro hilo"));
+
+=== Thread.start
+tema: 20
+firma: void start()
+es: Arranca el hilo. Llamar a run() directamente NO crea un hilo nuevo.
+de: Startet den Thread. run() direkt aufzurufen erzeugt KEINEN neuen Thread.
+en: Starts the thread. Calling run() directly does NOT create a new thread.
+ejemplo: t.start();
+
+=== Thread.join
+tema: 20
+firma: void join() throws InterruptedException
+es: Espera a que el hilo termine.
+de: Wartet, bis der Thread fertig ist.
+en: Waits for the thread to finish.
+ejemplo: t.start(); t.join();
+
+=== Thread.sleep
+tema: 20
+firma: static void sleep(long milisegundos) throws InterruptedException
+es: Duerme el hilo actual ese tiempo. Pide tratar InterruptedException.
+de: Lässt den aktuellen Thread so lange schlafen. InterruptedException muss behandelt werden.
+en: Puts the current thread to sleep for that long. You must handle InterruptedException.
+ejemplo: try { Thread.sleep(100); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
+
+=== Thread.ofVirtual
+tema: 20
+firma: Thread.ofVirtual().start(Runnable tarea)      Thread.startVirtualThread(Runnable tarea)
+es: Hilos virtuales: muy ligeros, puedes crear miles. Desde Java 21.
+de: Virtuelle Threads: sehr leicht, du kannst Tausende erzeugen. Seit Java 21.
+en: Virtual threads: very lightweight, you can create thousands. Since Java 21.
+ejemplo: Thread v = Thread.ofVirtual().start(() -> calcular());
+
+=== sintaxis.synchronized
+tema: 20
+firma: synchronized tipo metodo() { ... }      synchronized (objeto) { ... }
+es: Solo un hilo a la vez puede estar dentro. Evita que dos hilos estropeen los mismos datos.
+de: Nur ein Thread gleichzeitig darf hinein. Verhindert, dass zwei Threads dieselben Daten beschädigen.
+en: Only one thread at a time can be inside. Stops two threads from corrupting the same data.
+ejemplo: synchronized void sumar() { total++; }
+
+=== sintaxis.volatile
+tema: 20
+firma: volatile tipo campo;
+es: Hace que todos los hilos vean al momento el último valor del campo. No hace atómico x++.
+de: Sorgt dafür, dass alle Threads sofort den neuesten Wert sehen. Macht x++ nicht atomar.
+en: Makes every thread see the field's latest value right away. It doesn't make x++ atomic.
+ejemplo: volatile boolean parar = false;
+
+=== Executors.newFixedThreadPool
+tema: 20
+firma: static ExecutorService newFixedThreadPool(int hilos)      newVirtualThreadPerTaskExecutor()
+es: Un grupo de hilos que reparte las tareas. Ciérralo con shutdown (o úsalo en try-with-resources, Java 19).
+de: Ein Thread-Pool, der Aufgaben verteilt. Mit shutdown schließen (oder in try-with-resources, Java 19).
+en: A pool of threads that shares out tasks. Close it with shutdown (or use try-with-resources, Java 19).
+ejemplo: ExecutorService pool = Executors.newFixedThreadPool(4);
+
+=== ExecutorService.submit
+tema: 20
+firma: <T> Future<T> submit(Callable<T> tarea)      Future<?> submit(Runnable tarea)
+es: Manda una tarea al grupo de hilos y devuelve un Future para recoger el resultado.
+de: Schickt eine Aufgabe an den Pool und liefert ein Future, um das Ergebnis abzuholen.
+en: Sends a task to the pool and returns a Future to collect the result.
+ejemplo: Future<Integer> f = pool.submit(() -> 6 * 7);
+
+=== Future.get
+tema: 20
+firma: T get() throws InterruptedException, ExecutionException
+es: Espera a que la tarea termine y devuelve su resultado.
+de: Wartet, bis die Aufgabe fertig ist, und liefert ihr Ergebnis.
+en: Waits for the task to finish and returns its result.
+ejemplo: int r = f.get();  // 42
+
+=== AtomicInteger
+tema: 20
+firma: int incrementAndGet()   int getAndIncrement()   int addAndGet(int d)   int get()
+es: Un entero que varios hilos pueden cambiar sin perder cuentas y sin synchronized.
+de: Eine Ganzzahl, die mehrere Threads ändern können, ohne Zählungen zu verlieren, ohne synchronized.
+en: An integer several threads can change without losing counts and without synchronized.
+ejemplo: AtomicInteger cuenta = new AtomicInteger(); cuenta.incrementAndGet();  // 1
+
+=== ConcurrentHashMap
+tema: 20
+firma: Map<K, V> m = new ConcurrentHashMap<>();
+es: Un HashMap seguro para varios hilos. merge y compute son atómicos.
+de: Eine thread-sichere HashMap. merge und compute sind atomar.
+en: A HashMap that is safe for several threads. merge and compute are atomic.
+ejemplo: m.merge("aciertos", 1, Integer::sum);
+
+=== CompletableFuture.supplyAsync
+tema: 20
+firma: static <T> CompletableFuture<T> supplyAsync(Supplier<T> tarea)
+es: Lanza una tarea en segundo plano y da un futuro al que se le pueden encadenar pasos. Desde Java 8.
+de: Startet eine Aufgabe im Hintergrund und liefert ein Future, an das man Schritte hängen kann. Seit Java 8.
+en: Runs a task in the background and gives a future you can chain steps onto. Since Java 8.
+ejemplo: CompletableFuture<Integer> cf = CompletableFuture.supplyAsync(() -> 20);
+
+=== CompletableFuture.thenApply
+tema: 20
+firma: <U> CompletableFuture<U> thenApply(Function<T, U> f)      thenCombine(otro, BiFunction)
+es: Cuando el resultado esté listo, lo transforma; thenCombine junta dos futuros.
+de: Wandelt das Ergebnis um, sobald es fertig ist; thenCombine verbindet zwei Futures.
+en: Transforms the result once it's ready; thenCombine merges two futures.
+ejemplo: cf.thenApply(n -> n * 2)
+
+=== CompletableFuture.join
+tema: 20
+firma: T join()
+es: Espera el resultado, como get, pero sin excepciones comprobadas.
+de: Wartet auf das Ergebnis wie get, aber ohne geprüfte Ausnahmen.
+en: Waits for the result like get, but without checked exceptions.
+ejemplo: int r = cf.thenApply(n -> n * 2).join();  // 40
+
+# ==================================================================== 21 Recursión y algoritmos
+
+=== sintaxis.recursion
+tema: 21
+firma: tipo f(n) { if (casoBase) return valor; return ... f(nMasPequeño) ...; }
+es: Un método que se llama a sí mismo con un problema más pequeño. Sin caso base, StackOverflowError.
+de: Eine Methode, die sich selbst mit einem kleineren Problem aufruft. Ohne Basisfall: StackOverflowError.
+en: A method that calls itself on a smaller problem. Without a base case: StackOverflowError.
+ejemplo: int fact(int n) { return n <= 1 ? 1 : n * fact(n - 1); }   // fact(5) = 120
+
+=== Random
+tema: 21
+firma: new Random()      new Random(long semilla)
+es: Generador de números al azar. Con la misma semilla da siempre la misma serie. En el robot: azar().
+de: Zufallszahlengenerator. Mit demselben Startwert kommt immer dieselbe Folge. Im Roboter: zufall().
+en: Random number generator. The same seed always gives the same sequence. In a robot: random().
+ejemplo: Random r = new Random(42);
+
+=== Random.nextInt
+tema: 21
+firma: int nextInt(int limite)      int nextInt(int desde, int hasta)   // Java 17
+es: Un entero al azar de 0 a limite - 1 (o de desde a hasta - 1).
+de: Eine zufällige Ganzzahl von 0 bis limite - 1 (oder von desde bis hasta - 1).
+en: A random integer from 0 to bound - 1 (or from origin to bound - 1).
+ejemplo: girar(azar().nextInt(-45, 46));
+
+=== Random.nextDouble
+tema: 21
+firma: double nextDouble()      boolean nextBoolean()      double nextGaussian()
+es: Un decimal al azar en [0, 1); nextBoolean, true o false; nextGaussian, una curva normal.
+de: Eine zufällige Kommazahl in [0, 1); nextBoolean true oder false; nextGaussian normalverteilt.
+en: A random decimal in [0, 1); nextBoolean true or false; nextGaussian a normal distribution.
+ejemplo: if (azar().nextDouble() < 0.3) especial();
+
+=== Arrays.binarySearch
+tema: 21
+firma: static int binarySearch(int[] ordenado, int buscado)      Collections.binarySearch(lista, x)
+es: Busca partiendo por la mitad cada vez (muy rápido). El array tiene que estar ordenado.
+de: Sucht durch wiederholtes Halbieren (sehr schnell). Das Array muss sortiert sein.
+en: Searches by halving each time (very fast). The array must be sorted.
+ejemplo: Arrays.binarySearch(new int[] {1, 4, 9, 16}, 9)  // 2
+
+=== Map.computeIfAbsent
+tema: 21
+firma: V computeIfAbsent(K clave, Function<K, V> calcular)
+es: Si la clave no está, calcula el valor y lo guarda. Útil para memoización y mapas de listas.
+de: Fehlt der Schlüssel, wird der Wert berechnet und gespeichert. Gut für Memoisierung und Listen-Maps.
+en: If the key is missing, computes the value and stores it. Useful for memoization and maps of lists.
+ejemplo: grupos.computeIfAbsent(e.modelo(), k -> new ArrayList<>()).add(e);
+
+=== ArrayDeque
+tema: 21
+firma: Deque<E> d = new ArrayDeque<>();   push   pop   peek   offer   poll
+es: Pila (push, pop) o cola (offer, poll) rápida. Mejor que Stack y que LinkedList.
+de: Schneller Stapel (push, pop) oder Warteschlange (offer, poll). Besser als Stack und LinkedList.
+en: A fast stack (push, pop) or queue (offer, poll). Better than Stack and LinkedList.
+ejemplo: Deque<Integer> pila = new ArrayDeque<>(); pila.push(1); pila.push(2); pila.pop()  // 2
+
+=== PriorityQueue
+tema: 21
+firma: new PriorityQueue<>(Comparator<E> c)   offer   poll   peek
+es: Una cola que siempre saca primero el menor (o el que diga el comparador).
+de: Eine Warteschlange, die immer das kleinste Element (oder nach Comparator) zuerst liefert.
+en: A queue that always hands out the smallest element first (or by the comparator).
+ejemplo: var cola = new PriorityQueue<>(List.of(5, 1, 3)); cola.poll()  // 1
+
+=== Math.floorMod
+tema: 21
+firma: static int floorMod(int a, int b)
+es: Resto siempre positivo (con b positivo), al contrario que %. Bueno para dar la vuelta a ángulos o índices.
+de: Immer positiver Rest (bei positivem b), anders als %. Gut für umlaufende Winkel oder Indizes.
+en: A remainder that's always positive (for positive b), unlike %. Good for wrapping angles or indexes.
+ejemplo: Math.floorMod(-30, 360)  // 330      -30 % 360  // -30
+
+=== System.nanoTime
+tema: 21
+firma: static long nanoTime()      static long currentTimeMillis()
+es: Un reloj en nanosegundos para medir cuánto tarda algo; currentTimeMillis da la hora en milisegundos.
+de: Eine Uhr in Nanosekunden, um Laufzeiten zu messen; currentTimeMillis liefert die Uhrzeit in ms.
+en: A nanosecond clock to measure how long something takes; currentTimeMillis gives the time in ms.
+ejemplo: long t0 = System.nanoTime(); ordenar(a); long ns = System.nanoTime() - t0;
+
+# ==================================================================== 22 Pruebas, estilo y diseño
+
+=== JUnit.Test
+tema: 22
+firma: @Test void nombreDeLaPrueba() { ... }
+es: Marca un método como prueba de JUnit 5. Cada prueba comprueba un comportamiento concreto.
+de: Markiert eine Methode als JUnit-5-Test. Jeder Test prüft ein bestimmtes Verhalten.
+en: Marks a method as a JUnit 5 test. Each test checks one specific behaviour.
+ejemplo: @Test void sumaDosNumeros() { assertEquals(5, suma(2, 3)); }
+
+=== Assertions.assertEquals
+tema: 22
+firma: static void assertEquals(esperado, real)      assertEquals(double e, double r, double margen)
+es: Falla si los dos valores no son iguales. Con decimales, da un margen de error.
+de: Schlägt fehl, wenn die Werte nicht gleich sind. Bei Kommazahlen eine Toleranz angeben.
+en: Fails if the two values aren't equal. With decimals, give a tolerance.
+ejemplo: assertEquals(0.5, mitad(1.0), 1e-9);
+
+=== Assertions.assertTrue
+tema: 22
+firma: static void assertTrue(boolean c)      assertFalse(boolean c)      assertNull(Object o)
+es: Falla si la condición no es true (o false, o null).
+de: Schlägt fehl, wenn die Bedingung nicht true (oder false, oder null) ist.
+en: Fails if the condition isn't true (or false, or null).
+ejemplo: assertTrue(lista.isEmpty());
+
+=== Assertions.assertThrows
+tema: 22
+firma: static <T extends Throwable> T assertThrows(Class<T> tipo, Executable codigo)
+es: Falla si el código NO lanza esa excepción. Devuelve la excepción para mirar su mensaje.
+de: Schlägt fehl, wenn der Code diese Ausnahme NICHT wirft. Liefert sie zurück, um die Meldung zu prüfen.
+en: Fails if the code does NOT throw that exception. Returns it so you can inspect the message.
+ejemplo: assertThrows(IllegalArgumentException.class, () -> new Vida(-1));
+
+=== JUnit.BeforeEach
+tema: 22
+firma: @BeforeEach void preparar() { ... }      @AfterEach      @DisplayName("…")
+es: Se ejecuta antes de cada prueba, para empezar siempre desde el mismo estado.
+de: Läuft vor jedem Test, damit jeder vom gleichen Zustand startet.
+en: Runs before each test, so every test starts from the same state.
+ejemplo: @BeforeEach void preparar() { lista = new ArrayList<>(); }
+
+=== sintaxis.assert
+tema: 22
+firma: assert condicion : "mensaje";
+es: Comprueba algo que debería ser cierto siempre. Solo actúa si Java se arranca con -ea.
+de: Prüft etwas, das immer stimmen sollte. Wirkt nur, wenn Java mit -ea gestartet wird.
+en: Checks something that should always be true. Only active when Java runs with -ea.
+ejemplo: assert blindaje() >= 0 : "blindaje negativo";
+
+=== sintaxis.nombres
+tema: 22
+firma: ClaseYRecord   metodoYVariable   CONSTANTE   paquete.en.minusculas
+es: Convenciones: clases en MayúsculaInicial, métodos y variables en camelCase, constantes en MAYÚSCULAS.
+de: Konventionen: Klassen mit Großbuchstaben, Methoden und Variablen in camelCase, Konstanten in GROSSBUCHSTABEN.
+en: Conventions: classes in PascalCase, methods and variables in camelCase, constants in UPPER_CASE.
+ejemplo: class Vigia { static final int ALCANCE_MAXIMO = 400; double distanciaSegura; }
+
+=== sintaxis.javadoc
+tema: 22
+firma: /** Descripción. @param nombre qué es  @return qué devuelve */
+es: Comentario de documentación antes de una clase o un método; se convierte en páginas de ayuda.
+de: Dokumentationskommentar vor Klasse oder Methode; daraus werden Hilfeseiten erzeugt.
+en: A documentation comment before a class or method; it's turned into help pages.
+ejemplo: /** Distancia al punto. @param x coordenada x @return la distancia */
+
+=== sintaxis.composicion
+tema: 22
+firma: class A { private final B ayudante; }   // «tiene un» en vez de «es un»
+es: Diseño: mejor guardar un objeto que hace el trabajo (composición) que heredar solo para reutilizar.
+de: Entwurf: lieber ein Objekt halten, das die Arbeit macht (Komposition), als nur zur Wiederverwendung erben.
+en: Design: prefer holding an object that does the work (composition) over inheriting just to reuse code.
+ejemplo: public class MiRobot extends Metajavbot { private final Estrategia plan = new Agresiva(); }
