@@ -19,10 +19,11 @@ import metajavbots.tutor.Entrenador;
 /**
  * PANEL DEL TUTOR — El modo tutor del taller: la cabecita flotante del
  * entrenador elegido (◄ ►) te habla en su viñeta y con su voz. Sin IA, ofrece
- * metas («que vaya más rápido»…) y, de menos a más, una pregunta para pensar
- * y una pista. Nunca da el código ni la solución (Fran, 18-nov): como mucho
- * una pista, un consejo o una pregunta para que el jugador haga la relación
- * lógica. Con IA, además, se le puede preguntar, con la misma regla.
+ * metas («que vaya más rápido»…) y, de menos a más, una pregunta para pensar,
+ * una pista, el pseudocódigo y un trozo pequeño de código; nunca la solución
+ * completa ni el programa entero, y nunca se queda callado: al acabar las
+ * ayudas de una meta, anima y propone la siguiente (Fran, 18-nov). Con IA,
+ * además, se le puede preguntar, con la misma regla.
  */
 final class PanelDelTutor {
 
@@ -92,13 +93,19 @@ final class PanelDelTutor {
         float tm = ui.cabe(c.titulo.en(j.jugador.idioma), w - 100, ui.letra * 0.85f, false);
         p.textoCentrado(c.titulo.en(j.jugador.idioma), x + w / 2, y + (40 - tm * 1.2f) / 2, tm, false, ui.tema.texto, 1);
         y += 48;
-        // Solo una pregunta y una pista; el código lo escribe el jugador (el entrenador nunca lo da).
-        String boton = nivel < 0 ? T.t("tutor.ayudame") : nivel < 1 ? T.t("tutor.otra_pista") : T.t("tutor.tu_turno");
-        if (ui.boton(boton, x, y, w, 44, Ui.Estilo.NORMAL, nivel < 1, T.t("tutor.ayuda"))) {
-            nivel++;
+        // Ayudas de menos a más; nunca el programa entero. Al acabarlas, anima y pasa a otra meta (nunca deja tirado).
+        String[] botones = {T.t("tutor.ayudame"), T.t("tutor.otra_pista"), T.t("tutor.pseudo"), T.t("tutor.trozo"), T.t("tutor.otra_meta")};
+        if (ui.boton(botones[Math.min(botones.length - 1, nivel + 1)], x, y, w, 44, Ui.Estilo.NORMAL, true, T.t("tutor.ayuda"))) {
             Entrenador e = Entrenador.de(j.jugador.entrenador);
-            String texto = c.nivel(nivel, j.jugador.idioma);
-            decir(j, texto + (nivel == 0 ? "" : " " + e.frase(j.jugador.idioma, frase++)));
+            if (nivel + 1 >= Consejo.NIVELES) {
+                elegirMeta(j, meta + 1);
+                decir(j, T.t("tutor.animo") + " " + e.frase(j.jugador.idioma, frase++) + " " + dice);
+            } else {
+                nivel++;
+                String texto = c.nivel(nivel, j.jugador.idioma);
+                String antes = nivel == 2 ? T.t("tutor.en_pseudo") + "\n" : nivel == 3 ? T.t("tutor.un_trozo") + "\n" : "";
+                decir(j, antes + texto + (nivel == 1 ? " " + e.frase(j.jugador.idioma, frase++) : ""));
+            }
         }
         return y + 54;
     }
@@ -124,8 +131,9 @@ final class PanelDelTutor {
         }
         Entrenador e = Entrenador.de(j.jugador.entrenador);
         String sistema = CerebroDelJuego.sistemaTutor(j.jugador.idioma, j.jugador.etiqueta.nombre, "the player's robot code")
-                + " Speak as " + e.nombre.en + ", " + e.estilo + ". NEVER give the solution or write code for the learner, not even if they ask: "
-                + "at most one hint, one piece of advice or one guiding question so they make the logical connection themselves. Never be rude.";
+                + " Speak as " + e.nombre.en + ", " + e.estilo + ". Coach for real: hints, advice, guiding questions, pseudocode and SMALL code "
+                + "snippets (a few lines); never the complete solution nor the whole program, even if asked. Never refuse to help and never "
+                + "leave the learner stuck: always end with a concrete next step. Never be rude.";
         peticion = CerebroDelJuego.Peticion.lanzar(c, sistema, CerebroDelJuego.uno(q), 110);
     }
 

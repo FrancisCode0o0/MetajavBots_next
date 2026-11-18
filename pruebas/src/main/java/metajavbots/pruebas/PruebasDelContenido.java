@@ -251,6 +251,9 @@ final class PruebasDelContenido {
                 }
             }
             cierto(metajavbots.tutor.Consejo.todos().size() >= 6, "metas");
+            for (metajavbots.tutor.Consejo c : metajavbots.tutor.Consejo.todos()) {
+                for (int n = 0; n < metajavbots.tutor.Consejo.NIVELES; n++) cierto(!c.nivel(n, metajavbots.textos.Idioma.DE).isEmpty(), c.id + " nivel " + n);
+            }
             if (!metajavbots.codigo.Compilador.hayCompilador()) return;
             String[][] clases = {{"Metajavbot", "alVerEnemigo(Enemigo e)", "ES"}, {"MetajavbotDe", "beiSicht(Gegner g)", "DE"},
                 {"MetajavbotEn", "onSeeEnemy(Enemy e)", "EN"}};

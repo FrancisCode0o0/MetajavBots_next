@@ -15,14 +15,14 @@ import metajavbots.textos.Trilingue;
 
 /**
  * CONSEJO — Una meta del modo tutor sin IA (res/datos/consejos.txt): «que
- * vaya más rápido», «que apunte mejor»… con tres pistas de menos a más: una
- * pregunta para que el jugador piense, una ayuda concreta y, solo si la pide,
- * un trozo de código en la API de su idioma.
+ * vaya más rápido», «que apunte mejor»… con ayudas de menos a más: una
+ * pregunta para que el jugador piense, una pista, el pseudocódigo y un trozo
+ * pequeño de código en la API de su idioma (nunca el programa entero).
  */
 public final class Consejo {
 
     public final String id;
-    public final Trilingue titulo, pregunta, pista;
+    public final Trilingue titulo, pregunta, pista, pseudo;
     private final Map<Idioma, String> codigo;
 
     private Consejo(String id, Map<String, String> v) {
@@ -30,6 +30,7 @@ public final class Consejo {
         this.titulo = trilingue(v.getOrDefault("titulo", id));
         this.pregunta = trilingue(v.getOrDefault("pregunta", ""));
         this.pista = trilingue(v.getOrDefault("pista", ""));
+        this.pseudo = trilingue(v.getOrDefault("pseudo", ""));
         this.codigo = new HashMap<>();
         for (Idioma i : Idioma.values()) codigo.put(i, v.getOrDefault("codigo." + i.codigo(), "").replace("\\n", "\n"));
     }
@@ -44,11 +45,15 @@ public final class Consejo {
         return codigo.getOrDefault(i, "");
     }
 
-    /** La pista de ese nivel (0 la pregunta, 1 la ayuda, 2 el código). */
+    /** Cuántos niveles de ayuda hay: la pregunta, la pista, el pseudocódigo y un trozo pequeño de código. */
+    public static final int NIVELES = 4;
+
+    /** La ayuda de ese nivel (0 la pregunta, 1 la pista, 2 el pseudocódigo, 3 un trozo pequeño de código). */
     public String nivel(int n, Idioma i) {
         switch (n) {
             case 0: return pregunta.en(i);
             case 1: return pista.en(i);
+            case 2: return pseudo.en(i);
             default: return codigo(i);
         }
     }
