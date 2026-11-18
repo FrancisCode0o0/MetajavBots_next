@@ -24,6 +24,26 @@ final class AnimacionDelCaso {
     /** Lo que se anima, según la forma de la respuesta. */
     enum Forma { CAJAS, PUERTAS, PIZARRA, ESTANTERIA, PAPEL, ALARMA }
 
+    /** El escenario del robotito según el tema del ejercicio. */
+    enum Escena { COCINA, OBRA, APARCAMIENTO, BIBLIOTECA, ESTUDIO, LABERINTO, FABRICA }
+
+    /** El escenario de un tema: cocinar, construir, aparcar, ordenar libros, pintar, laberintos o clasificar en la fábrica. */
+    static Escena escena(String tema) {
+        switch (tema) {
+            case "01": case "02": case "06": return Escena.COCINA;
+            case "03": case "05": case "20": return Escena.OBRA;
+            case "04": case "14": return Escena.APARCAMIENTO;
+            case "07": case "15": case "16": case "18": return Escena.BIBLIOTECA;
+            case "08": case "19": return Escena.ESTUDIO;
+            case "21": case "17": return Escena.LABERINTO;
+            default: return Escena.FABRICA;
+        }
+    }
+
+    /** Los segundos desde que empezó el caso (para que el robotito baile o se caiga al acabar); solo se dibuja de uno en uno. */
+    private static float reloj;
+    private static Escena escenaActual = Escena.FABRICA;
+
     /** Cuánto dura la animación de un caso (s). */
     static final float DURACION = 3.2f;
     private static final int ROJO = 0xFF5E5B, VERDE = 0x5BD685, CAJA = 0xC98B4A;
@@ -45,10 +65,14 @@ final class AnimacionDelCaso {
     }
 
     /** Dibuja el caso con el robot; f: lo que lleva hecho (de 0 a 1, al ritmo de las líneas que ejecuta el código). */
-    static void dibujar(Ui ui, float x, float y, float w, float h, Ejercicio.Tipo tipo, Comprobador.Resultado r, float f) {
+    static void dibujar(Ui ui, float x, float y, float w, float h, Ejercicio e, Comprobador.Resultado r, float f, float segundos) {
         Pincel p = ui.p;
+        Ejercicio.Tipo tipo = e.tipo;
+        reloj = segundos;
+        escenaActual = escena(e.tema);
         p.caja(x, y, w, h, 10, ui.tema.fondo, 1);
         p.recortar(x, y, w, h);
+        fondo(p, escenaActual, x, y, w, h);
         String esperado = r.caso.esperado;
         String obtenido = r.obtenido == null ? "" : r.obtenido;
         float suelo = y + h - 26;
@@ -62,7 +86,7 @@ final class AnimacionDelCaso {
         }
         p.sinRecorte();
         String veredicto = r.bien ? "✔ " + T.t("animacion.bien") : "✘ " + T.t("animacion.mal");
-        p.textoDerecha(veredicto, x + w - 12, y + h - ui.letra * 1.6f, ui.letra * 0.9f, true, r.bien ? VERDE : ROJO, 1);
+        p.textoDerecha(veredicto, x + w - 250, y + 8, ui.letra * 0.9f, true, r.bien ? VERDE : ROJO, 1);
     }
 
     // ================================================================ el robotito
@@ -85,6 +109,107 @@ final class AnimacionDelCaso {
         p.linea(bx, by, bx + 12 * k, by - (12 * brazo - 6 * (1 - brazo)) * k, 3 * k, Pincel.oscurecer(color, 0.2f), 1);
     }
 
+    /** El robotito trabajando; al acabar, si acertó, salta y baila; si no, se marea y se sienta de culo (con humo). */
+    static void robot(Pincel p, float x, float suelo, float brazo, float f, boolean bien) {
+        if (f < 1) {
+            robotito(p, x, suelo, brazo, true, 0x3FA9F5);
+            return;
+        }
+        if (bien) {
+            float salto = Math.abs((float) Math.sin(reloj * 8)) * 16;
+            float baile = (float) Math.sin(reloj * 6) * 8;
+            robotito(p, x + baile, suelo - salto, (float) (Math.sin(reloj * 12) + 1) / 2, true, 0x3FA9F5);
+            int[] colores = {0xFFD23F, 0x5BD685, 0xFF5E5B, 0x7B61FF};
+            for (int i = 0; i < 6; i++) {
+                double a = reloj * 3 + i * Math.PI / 3;
+                p.circulo(x + baile + (float) Math.cos(a) * 46, suelo - 60 - salto + (float) Math.sin(a) * 22, 3.5f, colores[i % 4], 1);
+            }
+            return;
+        }
+        // Se ha equivocado: tiembla, se hunde un poco, con estrellitas girando y una nube de humo que sube.
+        float temblor = (float) Math.sin(reloj * 40) * 2;
+        robotito(p, x + temblor, suelo + 6, 0, false, 0x6E8FAF);
+        for (int i = 0; i < 3; i++) {
+            double a = reloj * 5 + i * 2 * Math.PI / 3;
+            p.texto("★", x + (float) Math.cos(a) * 26 - 6, suelo - 100 + (float) Math.sin(a) * 8, 16, true, 0xFFD23F, 1);
+        }
+        float humo = (reloj * 20) % 30;
+        p.circulo(x + 14, suelo - 90 - humo, 6 + humo * 0.2f, 0x8A919C, Math.max(0, 0.5f - humo / 60));
+    }
+
+    /** El fondo del escenario: lo justo para que se reconozca (fogones, grúa, plazas de aparcar, estanterías, caballete, muros, cinta). */
+    private static void fondo(Pincel p, Escena escena, float x, float y, float w, float h) {
+        float suelo = y + h - 26;
+        switch (escena) {
+            case COCINA:
+                p.rect(x, suelo, w, 26, 0x6B4F33, 1);
+                p.caja(x + w - 150, suelo - 70, 120, 70, 6, 0x9AA0A6, 1);
+                for (int i = 0; i < 2; i++) p.aro(x + w - 120 + i * 60, suelo - 70, 14, 3, 0xFF7A45, 0.9f);
+                break;
+            case OBRA:
+                p.rect(x, suelo, w, 26, 0x8C6A43, 1);
+                p.linea(x + w - 60, y + 60, x + w - 60, suelo, 6, 0xFFB000, 1);
+                p.linea(x + w - 180, y + 66, x + w - 30, y + 66, 5, 0xFFB000, 1);
+                for (int i = 0; i < 8; i++) p.linea(x + w - 180 + i * 20, y + 62, x + w - 170 + i * 20, y + 70, 2, 0x111111, 0.8f);
+                break;
+            case APARCAMIENTO:
+                p.rect(x, suelo - 40, w, 66, 0x3A3F46, 1);
+                for (int i = 0; i < 10; i++) p.rect(x + 20 + i * w / 10, suelo + 6, w / 20, 4, 0xFFFFFF, 0.7f);
+                break;
+            case BIBLIOTECA:
+                p.rect(x, suelo, w, 26, 0x5A4632, 1);
+                for (int i = 0; i < 12; i++) p.rect(x + 20 + i * 14, y + 34, 10, 46, new int[]{0xB33A3A, 0x3A6EB3, 0x3AB36E, 0xB3A13A}[i % 4], 0.35f);
+                break;
+            case ESTUDIO:
+                p.rect(x, suelo, w, 26, 0x7A5A3A, 1);
+                for (int i = 0; i < 5; i++) p.circulo(x + w - 40 - i * 18, y + 30, 6, new int[]{0xFF5E5B, 0xFFD23F, 0x5BD685, 0x3FA9F5, 0xB07CFF}[i], 1);
+                break;
+            case LABERINTO:
+                for (int i = 0; i < 6; i++) p.rect(x + 100 + i * (w - 140) / 6f, y + 40 + (i % 2) * 40, 8, h - 110, 0x4A5A6E, 0.35f);
+                p.rect(x, suelo, w, 26, 0x2C3646, 1);
+                break;
+            default:
+                // La fábrica: una cinta transportadora que se mueve.
+                p.rect(x, suelo, w, 26, 0x2A2F38, 1);
+                for (int i = 0; i < 30; i++) p.rect(x + ((i * 40 + reloj * 60) % w), suelo + 8, 20, 4, 0x5B6067, 1);
+                break;
+        }
+    }
+
+    /** Un objeto del escenario (lo que el robotito apila o coloca): tortita, ladrillo, coche, libro, bote de pintura, piedra o caja. */
+    static void objeto(Pincel p, float cx, float cy, float lado, int color, float alfa) {
+        switch (escenaActual) {
+            case COCINA:
+                p.elipse(cx + lado / 2, cy + lado * 0.6f, lado * 0.55f, lado * 0.3f, 0, color == CAJA ? 0xE8B04A : color, alfa);
+                p.elipse(cx + lado / 2, cy + lado * 0.5f, lado * 0.45f, lado * 0.18f, 0, 0xF6D27A, alfa * 0.8f);
+                break;
+            case OBRA:
+                p.caja(cx, cy + lado * 0.3f, lado, lado * 0.6f, 1, color == CAJA ? 0xC0533A : color, alfa);
+                p.rect(cx, cy + lado * 0.58f, lado, 1.5f, 0xE6DED0, alfa);
+                break;
+            case BIBLIOTECA:
+                p.caja(cx + lado * 0.2f, cy, lado * 0.6f, lado, 1, color == CAJA ? 0x3A6EB3 : color, alfa);
+                p.rect(cx + lado * 0.2f, cy + lado * 0.2f, lado * 0.6f, 2, 0xF2EEE3, alfa);
+                break;
+            case ESTUDIO:
+                p.caja(cx + lado * 0.15f, cy + lado * 0.2f, lado * 0.7f, lado * 0.8f, 3, 0xDDE3EA, alfa);
+                p.caja(cx + lado * 0.15f, cy + lado * 0.2f, lado * 0.7f, lado * 0.3f, 3, color == CAJA ? 0xB07CFF : color, alfa);
+                break;
+            case APARCAMIENTO:
+                p.caja(cx, cy + lado * 0.35f, lado, lado * 0.45f, 4, color == CAJA ? 0xFF7A45 : color, alfa);
+                p.circulo(cx + lado * 0.25f, cy + lado * 0.85f, lado * 0.13f, 0x111111, alfa);
+                p.circulo(cx + lado * 0.75f, cy + lado * 0.85f, lado * 0.13f, 0x111111, alfa);
+                break;
+            case LABERINTO:
+                p.circulo(cx + lado / 2, cy + lado / 2, lado * 0.45f, color == CAJA ? 0x9AA0A6 : color, alfa);
+                break;
+            default:
+                p.caja(cx, cy, lado, lado, 2, color, alfa);
+                if (alfa >= 1) p.rect(cx + 2, cy + lado / 2 - 1, lado - 4, 2, Pincel.oscurecer(color, 0.25f), 1);
+                break;
+        }
+    }
+
     // ================================================================ las formas
 
     private static void cajas(Ui ui, float x, float suelo, float w, long esperado, long obtenido, float f, boolean bien) {
@@ -102,7 +227,7 @@ final class AnimacionDelCaso {
         float fase = puestas >= nObt ? 1 : viajes - puestas;
         for (int i = 0; i < puestas; i++) caja(p, x0, suelo, i, porFila, lado, i >= nEsp ? ROJO : CAJA, 1);
         float monton = x + 40;
-        if (puestas < nObt) p.caja(monton - lado / 2, suelo - lado - 2, lado, lado, 2, CAJA, 1);
+        if (puestas < nObt) objeto(p, monton - lado / 2, suelo - lado - 2, lado, CAJA, 1);
         float destino = x0 + (puestas % porFila) * (lado + 2) - 30;
         float rx;
         boolean llevando = puestas < nObt && fase >= 0.3f && fase < 0.85f;
@@ -110,8 +235,8 @@ final class AnimacionDelCaso {
         else if (fase < 0.3f) rx = monton + 26;
         else if (fase < 0.85f) rx = monton + 26 + (destino - monton - 26) * ((fase - 0.3f) / 0.55f);
         else rx = destino - (destino - monton - 26) * ((fase - 0.85f) / 0.15f);
-        robotito(p, rx, suelo, llevando ? 1 : 0.2f, f < 1 || bien, 0x3FA9F5);
-        if (llevando) p.caja(rx + 14, suelo - 70, lado, lado, 2, CAJA, 1);
+        robot(p, rx, suelo, llevando ? 1 : 0.2f, f, bien);
+        if (llevando) objeto(p, rx + 14, suelo - 70, lado, CAJA, 1);
         String cuenta = obtenido + (valor > 1 ? "  (" + T.f("animacion.cada_caja", valor) + ")" : "");
         p.texto(T.f("animacion.cajas", cuenta, esperado), x + 14, suelo - 150, ui.letra * 0.85f, false, ui.tema.texto, 1);
         if (obtenido < 0 || esperado < 0) p.texto(T.t("animacion.negativo"), x + 14, suelo - 126, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
@@ -119,8 +244,7 @@ final class AnimacionDelCaso {
 
     private static void caja(Pincel p, float x0, float suelo, int i, int porFila, float lado, int color, float alfa) {
         float cx = x0 + (i % porFila) * (lado + 2), cy = suelo - (i / porFila + 1) * (lado + 2);
-        p.caja(cx, cy, lado, lado, 2, color, alfa);
-        if (alfa >= 1) p.rect(cx + 2, cy + lado / 2 - 1, lado - 4, 2, Pincel.oscurecer(color, 0.25f), 1);
+        objeto(p, cx, cy, lado, color, alfa);
     }
 
     private static void puertas(Ui ui, float x, float suelo, float w, float h, boolean esperado, boolean obtenido, float f, boolean bien) {
@@ -136,7 +260,7 @@ final class AnimacionDelCaso {
         }
         float destino = obtenido ? px[0] : px[1];
         float rx = x + 50 + (destino - x - 50) * Math.min(1, f * 1.3f);
-        robotito(p, rx, suelo, f >= 0.77f ? 1 : 0, f < 0.77f || bien, 0x3FA9F5);
+        robot(p, rx, suelo, f >= 0.77f ? 1 : 0, f, bien);
         if (f >= 0.77f && !bien) p.textoCentrado("✘", destino, suelo - ph - 30, ui.letra * 1.4f, true, ROJO, 1);
     }
 
@@ -163,7 +287,7 @@ final class AnimacionDelCaso {
         }
         if (n == 0) p.textoCentrado(T.t("animacion.vacia"), x + w / 2, ey - 30, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
         float rx = x + 40 + Math.max(0, puestos - 0.5f) * hueco;
-        robotito(p, Math.min(x + w - 30, rx), suelo, 0.6f, f < 1 || bien, 0x3FA9F5);
+        robot(p, Math.min(x + w - 30, rx), suelo, 0.6f, f, bien);
     }
 
     private static void pizarra(Ui ui, float x, float y, float w, float h, String esperado, String obtenido, float f, boolean bien) {
@@ -182,7 +306,7 @@ final class AnimacionDelCaso {
         float cx = bx + 12 + p.ancho(escrito.substring(0, igual), t, true);
         p.texto(ui.recortarTexto(escrito.substring(igual), bx + bw - 20 - cx, t, true), cx, ty, t, true, ROJO, 1);
         if (igual < escrito.length() || letras == obtenido.length() && !bien) p.rect(cx, ty + t * 1.25f, Math.max(12, bw - 24 - (cx - bx)) * 0.3f, 3, ROJO, 1);
-        robotito(p, x + 60, y + h - 26, letras < obtenido.length() ? (float) Math.abs(Math.sin(f * 30)) : 0.3f, f < 1 || bien, 0x3FA9F5);
+        robot(p, x + 60, y + h - 26, letras < obtenido.length() ? (float) Math.abs(Math.sin(f * 30)) : 0.3f, f, bien);
     }
 
     private static void papel(Ui ui, float x, float y, float w, float h, String esperado, String obtenido, float f, boolean bien) {
@@ -205,7 +329,7 @@ final class AnimacionDelCaso {
             boolean igual = i < esp.length && esp[i].equals(obt[i]);
             p.texto(ui.recortarTexto(obt[i], bw - 16, t, false), bx + 8, py + 6 + i * alto, t, false, igual ? 0x1E1E1E : ROJO, 1);
         }
-        robotito(p, x + 60, y + h - 26, lineas < obt.length ? (float) Math.abs(Math.sin(f * 30)) : 0.3f, f < 1 || bien, 0x3FA9F5);
+        robot(p, x + 60, y + h - 26, lineas < obt.length ? (float) Math.abs(Math.sin(f * 30)) : 0.3f, f, bien);
     }
 
     private static void alarma(Ui ui, float x, float suelo, float w, float h, String esperado, String obtenido, float f, boolean bien) {
@@ -215,7 +339,7 @@ final class AnimacionDelCaso {
         p.texto(T.f("animacion.alarma", esperado), x + 110, suelo - 70, ui.letra * 0.85f, false, ui.tema.texto, 1);
         p.texto(ui.recortarTexto(T.t("animacion.salio") + " " + obtenido, w - 130, ui.letra * 0.85f, false), x + 110, suelo - 44, ui.letra * 0.85f,
                 false, bien ? VERDE : ROJO, 1);
-        robotito(p, x + 60, suelo, luz ? 1 : 0, bien, 0x3FA9F5);
+        robot(p, x + 60, suelo, luz ? 1 : 0, f, bien);
     }
 
     // ================================================================ leer las respuestas

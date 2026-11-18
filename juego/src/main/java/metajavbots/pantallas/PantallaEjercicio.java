@@ -319,9 +319,9 @@ public final class PantallaEjercicio implements Pantalla {
         } else {
             avance = Math.min(1, (tiempoAnimacion % (AnimacionDelCaso.DURACION + 1.2f)) / AnimacionDelCaso.DURACION);
         }
-        AnimacionDelCaso.dibujar(ui, x, y, w, h, e.tipo, r, avance);
+        AnimacionDelCaso.dibujar(ui, x, y, w, h, e, r, avance, tiempoAnimacion);
         String titulo = T.f("animacion.caso", casoAnimado + 1, inf.casos.size()) + "  " + r.caso.llamada;
-        j.pincel.texto(ui.recortarTexto(titulo, w - 340, ui.letra * 0.85f, true), x + 12, y + 8, ui.letra * 0.85f, true, ui.tema.texto, 1);
+        j.pincel.texto(ui.recortarTexto(titulo, w - 560, ui.letra * 0.85f, true), x + 12, y + 8, ui.letra * 0.85f, true, ui.tema.texto, 1);
         if (ui.boton("◄", x + w - 230, y + 6, 46, 38, Ui.Estilo.PLANO, casoAnimado > 0, null)) elegirCaso(casoAnimado - 1);
         if (ui.boton("►", x + w - 178, y + 6, 46, 38, Ui.Estilo.PLANO, casoAnimado < inf.casos.size() - 1, null)) elegirCaso(casoAnimado + 1);
     }
