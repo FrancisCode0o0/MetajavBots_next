@@ -25,7 +25,7 @@ import metajavbots.textos.T;
 final class PanelDeCerebros {
 
     private static final int RANURAS = 3;
-    private static final String[] PROVEEDORES = {"anthropic", "openai", "otro"};
+    private static final String[] PROVEEDORES = {"anthropic", "gemini", "openai", "otro"};
 
     private final CampoDeTexto[] clave = campos(true), modelo = campos(false), direccion = campos(false);
     private final CampoDeTexto carpeta = new CampoDeTexto();
@@ -173,7 +173,8 @@ final class PanelDeCerebros {
             }
         }
         y += 58;
-        String porDefecto = r.proveedor.equals("anthropic") ? "claude-haiku-5-5" : r.proveedor.equals("openai") ? "gpt-4o-mini" : "…";
+        String porDefecto = r.proveedor.equals("anthropic") ? "claude-haiku-5-5" : r.proveedor.equals("openai") ? "gpt-4o-mini"
+                : r.proveedor.equals("gemini") ? CerebroDelJuego.MODELO_GEMINI : "…";
         modelo[i].dibujar(ui, x, y, w, 46, T.t("ajustes.modelo") + ": " + porDefecto);
         r.modeloEnLinea = modelo[i].texto().strip();
         y += 58;

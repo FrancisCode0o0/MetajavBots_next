@@ -95,6 +95,9 @@ public final class CerebroDelJuego {
         return new CerebroLocalPerezoso(d, CerebroLocal.carpeta(j.carpetaModelos), modeloDe(j, i));
     }
 
+    /** El modelo de Gemini si no se elige otro (el alias de Google al «flash» más nuevo; TODO-FRAN: fijar uno). */
+    public static final String MODELO_GEMINI = "gemini-flash-latest";
+
     static Cerebro enLinea(Ranura r) {
         String clave = Claves.leer(r.proveedor);
         if (clave.isEmpty()) return null;
@@ -102,6 +105,9 @@ public final class CerebroDelJuego {
             case "anthropic":
                 return new CerebroHttp(CerebroHttp.Forma.ANTHROPIC, "https://api.anthropic.com", clave,
                         r.modeloEnLinea.isBlank() ? "claude-haiku-5-5" : r.modeloEnLinea, "Claude");
+            case "gemini":
+                return new CerebroHttp(CerebroHttp.Forma.GEMINI, "https://generativelanguage.googleapis.com", clave,
+                        r.modeloEnLinea.isBlank() ? MODELO_GEMINI : r.modeloEnLinea, "Gemini");
             case "openai":
                 return new CerebroHttp(CerebroHttp.Forma.OPENAI, "https://api.openai.com", clave,
                         r.modeloEnLinea.isBlank() ? "gpt-4o-mini" : r.modeloEnLinea, "OpenAI");

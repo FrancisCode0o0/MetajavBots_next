@@ -20,8 +20,8 @@ import com.badlogic.gdx.utils.JsonValue;
  */
 public final class CerebroHttp implements Cerebro {
 
-    /** Cómo se habla con el modelo: la API de Anthropic, la compatible con OpenAI o la propia de KoboldCpp. */
-    public enum Forma { ANTHROPIC, OPENAI, KOBOLD }
+    /** Cómo se habla con el modelo: la API de Anthropic, la de Gemini (Google), la compatible con OpenAI o la propia de KoboldCpp. */
+    public enum Forma { ANTHROPIC, GEMINI, OPENAI, KOBOLD }
 
     private final Forma forma;
     private final String direccion, clave, modelo, nombre;
@@ -47,6 +47,7 @@ public final class CerebroHttp implements Cerebro {
         int fichas = Math.max(64, (int) (maximoDePalabras * 1.8));
         switch (forma) {
             case ANTHROPIC: return anthropic(sistema, conversacion, fichas);
+            case GEMINI: return gemini(sistema, conversacion, fichas);
             case KOBOLD: return kobold(sistema, conversacion, fichas);
             default:
                 try {
@@ -79,6 +80,45 @@ public final class CerebroHttp implements Cerebro {
         if (contenido != null) for (JsonValue c = contenido.child; c != null; c = c.next) if ("text".equals(c.getString("type",
                 ""))) texto.append(c.getString("text", ""));
         return texto.toString().strip();
+    }
+
+    /**
+     * Gemini (Google AI Studio): generateContent con la clave en la cabecera x-goog-api-key. El asistente se llama
+     * «model»; a los «flash» se les pide que no piensen antes (gastaría las fichas en pensar y no contestaría).
+     */
+    private String gemini(String sistema, List<Mensaje> conv, int fichas) throws Exception {
+        try {
+            return gemini(sistema, conv, fichas, modelo.contains("flash"));
+        } catch (IllegalStateException e) {
+            // Hay modelos que no admiten «no pensar» (contestan 400): otra vez, sin pedirlo.
+            if (modelo.contains("flash") && String.valueOf(e.getMessage()).startsWith("HTTP 400")) return gemini(sistema, conv, fichas, false);
+            throw e;
+        }
+    }
+
+    private String gemini(String sistema, List<Mensaje> conv, int fichas, boolean sinPensar) throws Exception {
+        StringBuilder b = new StringBuilder("{\"systemInstruction\":{\"parts\":[{\"text\":").append(Json.texto(sistema)).append("}]},\"contents\":[");
+        boolean primero = true;
+        for (Mensaje m : conv) {
+            if (!primero) b.append(',');
+            primero = false;
+            b.append("{\"role\":").append(Json.texto(m.rol.equals("assistant") ? "model" : "user")).append(",\"parts\":[{\"text\":")
+                    .append(Json.texto(m.texto)).append("}]}");
+        }
+        b.append("],\"generationConfig\":{\"maxOutputTokens\":").append(fichas).append(",\"temperature\":0.8");
+        if (sinPensar) b.append(",\"thinkingConfig\":{\"thinkingBudget\":0}");
+        b.append("}}");
+        HttpRequest r = HttpRequest.newBuilder(URI.create(direccion + "/v1beta/models/" + modelo + ":generateContent")).timeout(espera)
+                .header("content-type", "application/json").header("x-goog-api-key", clave)
+                .POST(HttpRequest.BodyPublishers.ofString(b.toString(), StandardCharsets.UTF_8)).build();
+        JsonValue v = enviar(r);
+        JsonValue cand = v.get("candidates");
+        if (cand == null || cand.child == null) throw new IllegalStateException("respuesta sin candidates");
+        JsonValue contenido = cand.child.get("content");
+        JsonValue partes = contenido == null ? null : contenido.get("parts");
+        StringBuilder texto = new StringBuilder();
+        if (partes != null) for (JsonValue p = partes.child; p != null; p = p.next) texto.append(p.getString("text", ""));
+        return limpiar(texto.toString());
     }
 
     private String openai(String sistema, List<Mensaje> conv, int fichas) throws Exception {
