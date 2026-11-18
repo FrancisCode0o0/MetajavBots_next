@@ -118,6 +118,31 @@ final class PruebasDeLaPelea {
         apuntarParte2();
         apuntarParte3();
         apuntarParte4();
+        apuntarArenas();
+    }
+
+    private static void apuntarArenas() {
+        caso("arenas con trampas: se pelea entero en cada una, las trampas hacen daño y la API las ve; las de siempre no tienen nada", () -> {
+            igual(0, metajavbots.combate.Arena.de("HANGAR", 1000, 700).trampas().size(), "las de siempre, sin trampas");
+            int trampas = 0;
+            java.util.List<Modelo> ms = Modelo.todos();
+            for (String a : new String[]{"CHATARRERIA", "COCINA", "HIELO", "TEJADO"}) {
+                for (int k = 0; k < 3; k++) {
+                    Pelea p = new Pelea(Rivales.crear(ms.get(k * 5 % ms.size()), 0.5, 0.8, new Random(k)), Rivales.crear(ms.get((k * 7 + 3) % ms.size()), 0.5,
+                            0.8, new Random(k + 9)), 100 + k);
+                    p.arena = metajavbots.combate.Arena.de(a, p.ancho, p.alto);
+                    cierto(!p.arena.trampas().isEmpty(), a + " tiene trampas");
+                    p.jugarEntera();
+                    cierto(p.estado() == Pelea.Estado.TERMINADA, a + " acaba");
+                    for (metajavbots.combate.Suceso su : p.historia()) if (su.tipo == metajavbots.combate.Suceso.Tipo.TRAMPA) trampas++;
+                }
+            }
+            cierto(trampas > 0, "alguna trampa hizo daño");
+            Pelea p = new Pelea(Rivales.crear(ms.get(0), 0.5, 0.5, new Random(1)), Rivales.crear(ms.get(1), 0.5, 0.5, new Random(2)), 7);
+            p.arena = metajavbots.combate.Arena.de("CHATARRERIA", p.ancho, p.alto);
+            p.empezarRonda();
+            igual(p.arena.trampas().size(), p.cuerpo(0).obstaculos().size(), "obstaculos() las ve todas");
+        });
     }
 
     private static void apuntarParte1() {

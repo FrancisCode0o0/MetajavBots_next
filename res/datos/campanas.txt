@@ -4,7 +4,7 @@
 #   entrenador: quién la cuenta (res/datos/entrenadores.txt); musica: el tema (res/musica/temas.txt; en la pelea, el oriental y el drama pasan a uno con energía);
 #   requiere: la campaña que hay que acabar antes (las secuelas, en orden).
 #   Cada capítulo N: N.rival (su nombre, en tres idiomas o en uno), N.modelo (res/datos/modelos.txt), N.nivel (0 a 1), N.escenario
-#   (HANGAR, DESIERTO, NEON, LABORATORIO, LUNA), N.rondas, N.texto (lo que se cuenta antes) y N.victoria (al ganar).
+#   (HANGAR, DESIERTO, NEON, LABORATORIO, LUNA; con trampas: CHATARRERIA, COCINA, HIELO, TEJADO), N.rondas, N.texto (lo que se cuenta antes) y N.victoria (al ganar).
 # Fran: para añadir una, copia un bloque y cambia el id; el juego la enseña sin tocar Java.
 
 [rocko]
@@ -110,7 +110,7 @@ requiere: rocko3
 2.rival: Trineo Rebelde | Rebellischer Schlitten | Rebel Sled
 2.modelo: galapago
 2.nivel: 0.5
-2.escenario: LUNA
+2.escenario: HIELO
 2.rondas: 3
 2.texto: Rocko corta leña, arrastra trineos y sube montañas sin cinta de correr. Tundrov, en su laboratorio, tiene 400 sensores. Rocko tiene un trineo que no quiere moverse. | Rocko hackt Holz, zieht Schlitten und erklimmt Berge ohne Laufband. Tundrov hat im Labor 400 Sensoren. Rocko hat einen Schlitten, der nicht will. | Rocko chops wood, drags sleds and climbs mountains with no treadmill. Tundrov has 400 sensors in his lab. Rocko has a sled that won't budge.
 2.victoria: En la cima grita «¡TUNDROOOV!». Le contesta el eco y un alce muy molesto. | Auf dem Gipfel schreit er «TUNDROOOV!». Es antworten das Echo und ein sehr genervter Elch. | At the summit he shouts «TUNDROOOV!». The echo answers, and a very annoyed moose.
@@ -146,7 +146,7 @@ requiere: rocko4
 3.rival: Tomi Cañón | Tomi Kanone | Tommy Cannon
 3.modelo: vigia
 3.nivel: 0.6
-3.escenario: HANGAR
+3.escenario: TEJADO
 3.rondas: 4
 3.texto: En la calle, sin cuerdas ni árbitro. Don Tuercas le habla desde el recuerdo: «Levántate, que todavía te debo una lección». | Auf der Straße, ohne Seile und ohne Ringrichter. Don Mutter spricht aus der Erinnerung: «Steh auf, ich schulde dir noch eine Lektion.» | In the street, no ropes, no referee. Don Bolts speaks from memory: «Get up, I still owe you a lesson.»
 3.victoria: Rocko gana en su barrio, delante de sus vecinos. Tomi se va con el chasis entre las piernas. | Rocko gewinnt in seinem Viertel, vor seinen Nachbarn. Tomi zieht mit eingezogenem Chassis ab. | Rocko wins on his own block, in front of his neighbours. Tommy leaves with his chassis between his legs.
@@ -196,7 +196,7 @@ musica: oriental
 2.rival: Coche Encerado | Gewachstes Auto | Waxed Car
 2.modelo: galapago
 2.nivel: 0.3
-2.escenario: HANGAR
+2.escenario: CHATARRERIA
 2.rondas: 3
 2.texto: «Dar aceite, quitar aceite.» Dani encera coches durante semanas sin saber por qué. Hoy, uno de los coches se ha cansado de tanto brillo y quiere pelea. | «Öl drauf, Öl runter.» Dani wachst wochenlang Autos, ohne zu wissen, warum. Heute hat eins der Autos genug vom Glanz und will kämpfen. | «Oil on, oil off.» Dani waxes cars for weeks without knowing why. Today one of the cars has had enough shine and wants a fight.
 2.victoria: ¡Dar aceite, quitar aceite era para parar golpes! Dani lo entiende todo. El coche, reluciente, se va a una boda. | Öl drauf, Öl runter war zum Blocken! Dani versteht alles. Das Auto glänzt und fährt zu einer Hochzeit. | Oil on, oil off was for blocking! Dani understands everything. The gleaming car leaves for a wedding.
@@ -334,7 +334,7 @@ requiere: kungbit
 1.rival: Repartidor Turbo | Turbo-Lieferant | Turbo Courier
 1.modelo: avispa
 1.nivel: 0.45
-1.escenario: NEON
+1.escenario: COCINA
 1.rondas: 3
 1.texto: Li-bit se muda a la gran ciudad y ayuda en la pizzería de su amiga. El repartidor de la competencia llega antes a todas partes. A todas. | Li-Bit zieht in die große Stadt und hilft in der Pizzeria seiner Freundin. Der Lieferroboter der Konkurrenz ist überall zuerst. Überall. | Li-bit moves to the big city and helps at his friend's pizzeria. The rival delivery bot gets everywhere first. Everywhere.
 1.victoria: La pizza llega caliente. El repartidor turbo llega frío y con la caja aplastada. | Die Pizza kommt heiß an. Der Turbo-Lieferant kommt kalt und mit zerquetschter Schachtel. | The pizza arrives hot. The turbo courier arrives cold, with a squashed box.
@@ -369,7 +369,7 @@ musica: drama
 2.rival: Báscula Implacable | Gnadenlose Waage | Ruthless Scales
 2.modelo: galapago
 2.nivel: 0.5
-2.escenario: LABORATORIO
+2.escenario: COCINA
 2.rondas: 2
 2.texto: Para pelear por el título tiene que dar el peso. La báscula del gimnasio dice que no. LaMota decide pelearse con la báscula. | Für den Titelkampf muss er das Gewicht schaffen. Die Waage sagt nein. LaMotte beschließt, sich mit der Waage zu prügeln. | To fight for the title he has to make weight. The gym scales say no. LaMote decides to fight the scales.
 2.victoria: La báscula marca el peso justo, por miedo. Hay pelea por el título. | Die Waage zeigt aus Angst das richtige Gewicht. Es gibt einen Titelkampf. | The scales show the right weight, out of fear. There's a title fight.
@@ -446,7 +446,7 @@ musica: combate
 1.rival: Toro de Feria | Jahrmarktsstier | Fair Bull
 1.modelo: galapago
 1.nivel: 0.25
-1.escenario: DESIERTO
+1.escenario: CHATARRERIA
 1.rondas: 3
 1.texto: Charli Quemado debe dinero en todas las ferias. Su hijo Max encuentra en el barro a Chispín, un robot viejo con modo sombra: repite cada movimiento que le enseñas. Primera pelea, en la feria, contra un toro mecánico de rodeo. | Charli Verbrannt schuldet auf jedem Jahrmarkt Geld. Sein Sohn Max findet im Schlamm Funki, einen alten Roboter mit Schattenmodus: Er wiederholt jede Bewegung, die man ihm zeigt. Erster Kampf auf dem Jahrmarkt gegen einen mechanischen Rodeostier. | Charlie Burnt owes money at every fair. His son Max finds Sparky in the mud, an old robot with shadow mode: it repeats every move you show it. First fight, at the fair, against a mechanical rodeo bull.
 1.victoria: El toro acaba dando vueltas sin jinete. Max baila delante de Chispín, y Chispín baila igual. El público se vuelve loco. | Der Stier dreht sich ohne Reiter im Kreis. Max tanzt vor Funki, und Funki tanzt genauso. Das Publikum flippt aus. | The bull ends up spinning riderless. Max dances in front of Sparky, and Sparky dances just the same. The crowd goes wild.

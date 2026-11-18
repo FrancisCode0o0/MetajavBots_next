@@ -231,6 +231,11 @@ public final class Cuerpo implements Mando {
     }
 
     @Override
+    public List<? extends metajavbots.api.Cosa> obstaculos() {
+        return pelea.arena.vistas(this);
+    }
+
+    @Override
     public void avisarAlEquipo(String mensaje) {
         if (mensaje == null) return;
         String m = mensaje.length() > 200 ? mensaje.substring(0, 200) : mensaje;

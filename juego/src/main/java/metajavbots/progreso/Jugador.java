@@ -111,6 +111,8 @@ public final class Jugador {
     /** La música de fondo: si suena y a qué volumen. */
     public boolean musicaActiva = true;
     public float volumenMusica = 0.45f;
+    /** Si las peleas al azar pueden salir en arenas con trampas (pinchos, sierras, foso…). */
+    public boolean arenasConTrampas = true;
     public int victoriasExtrema;
 
     public Jugador(String nombre) {

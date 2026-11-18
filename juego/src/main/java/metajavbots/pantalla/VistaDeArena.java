@@ -20,8 +20,8 @@ import metajavbots.sonido.Sonidos;
  */
 public final class VistaDeArena {
 
-    /** Los escenarios de la arena. */
-    public enum Escenario { HANGAR, DESIERTO, NEON, LABORATORIO, LUNA }
+    /** Los escenarios: los cinco de siempre y, detrás, los de las arenas con trampas (combate.Arena). */
+    public enum Escenario { HANGAR, DESIERTO, NEON, LABORATORIO, LUNA, CHATARRERIA, COCINA, HIELO, TEJADO }
 
     public Escenario escenario = Escenario.HANGAR;
     /** Lo averiado que está el robot del jugador sin contar los golpes (un robot roto a medio reparar): humo y chispas. */
@@ -78,6 +78,16 @@ public final class VistaDeArena {
         return (float) (ax + aw / 2 + (x - ancho / 2) * escalaX * f(y));
     }
 
+    /** Píxeles por unidad de la arena, a lo ancho, a esa profundidad. */
+    public float escala(double y) {
+        return escalaX * f(y);
+    }
+
+    /** Píxeles por unidad de la arena, en profundidad (el suelo se ve aplastado). */
+    public float escalaY() {
+        return (float) (ah * 0.62f / alto);
+    }
+
     public float sy(double y) {
         float suelo = ah * 0.62f;
         return (float) (ay + ah * 0.3f + (1 - y / alto) * suelo);
@@ -116,6 +126,11 @@ public final class VistaDeArena {
                 case BLOQUEO:
                     efectos.chispas(px, py, 10, 0x9FE7FF);
                     if (sonidos != null) sonidos.tocar("escudo", 0.5f);
+                    break;
+                case TRAMPA:
+                    efectos.chispas(px, sy(s.y) - 20, s.texto.equals("sierra") ? 10 : 6, s.texto.equals("rayo") ? 0xBFE6FF : 0xFFE38A);
+                    if (s.texto.equals("foso")) efectos.anadir(Efectos.Tipo.ONDA, sx(s.x, s.y), sy(s.y), 0, 0, 0.6f, 120 * escalaX, 0x101722);
+                    if (sonidos != null) sonidos.tocar(s.texto.equals("foso") ? "pared" : "choque", 0.7f);
                     break;
                 case PARED: case CHOQUE:
                     efectos.chispas(px, sy(s.y) - 10, 6, 0xFFFFFF);
@@ -166,13 +181,23 @@ public final class VistaDeArena {
         p.recortar(x, y, w, h);
         fondo(p);
         suelo(p);
+        DibujoDeArenas.delSuelo(p, this, pelea.arena, tiempo);
         // Lo que está más lejos (y mayor), antes.
         cuantos(pelea.combatientes.length);
         // Lo que está más lejos (y mayor), antes.
         java.util.List<Cuerpo> orden = new java.util.ArrayList<>();
         for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.cuerpo(i) != null) orden.add(pelea.cuerpo(i));
         orden.sort((u, v) -> Double.compare(v.y, u.y));
-        for (Cuerpo c : orden) sombraYRobot(p, c, pelea, dt);
+        // Los objetos sólidos (barriles, chimeneas, el carrito) van entre los robots, por profundidad.
+        java.util.List<metajavbots.combate.Arena.Trampa> solidos = new java.util.ArrayList<>();
+        for (metajavbots.combate.Arena.Trampa t : pelea.arena.trampas()) if (t.solido) solidos.add(t);
+        solidos.sort((u, v) -> Double.compare(v.y, u.y));
+        int s = 0;
+        for (Cuerpo c : orden) {
+            while (s < solidos.size() && solidos.get(s).y >= c.y) DibujoDeArenas.solido(p, this, solidos.get(s++), tiempo);
+            sombraYRobot(p, c, pelea, dt);
+        }
+        while (s < solidos.size()) DibujoDeArenas.solido(p, this, solidos.get(s++), tiempo);
         if (!orden.isEmpty()) {
             proyectiles(p, pelea);
             rayos(p, pelea);
@@ -180,11 +205,16 @@ public final class VistaDeArena {
         }
         efectos.avanzar(dt);
         efectos.dibujar(p);
+        DibujoDeArenas.lluvia(p, escenario, ax, ay, aw, ah, tiempo);
         rotulos(p, orden, pelea, dt);
         p.sinRecorte();
     }
 
     private void fondo(Pincel p) {
+        if (DibujoDeArenas.esNueva(escenario)) {
+            DibujoDeArenas.fondo(p, escenario, ax, ay, aw, ah, tiempo);
+            return;
+        }
         float cielo = ay + ah * 0.32f;
         switch (escenario) {
             case DESIERTO: {
@@ -256,7 +286,12 @@ public final class VistaDeArena {
 
     private void suelo(Pincel p) {
         int suelo1, suelo2, linea;
-        switch (escenario) {
+        int[] nuevo = DibujoDeArenas.suelo(escenario);
+        if (nuevo != null) {
+            suelo1 = nuevo[0];
+            suelo2 = nuevo[1];
+            linea = nuevo[2];
+        } else switch (escenario) {
             case DESIERTO: suelo1 = 0xD8A066; suelo2 = 0xC4884E; linea = 0xB27740; break;
             case NEON: suelo1 = 0x150B2E; suelo2 = 0x0B0618; linea = 0x2DE2E6; break;
             case LABORATORIO: suelo1 = 0xE9EEF2; suelo2 = 0xCDD6DE; linea = 0xA5B3C0; break;

@@ -319,8 +319,9 @@ public final class Capturas extends Juego {
                 List<Modelo> ms = Modelo.todos();
                 pelea = new Pelea(Rivales.crear(ms.get(r.nextInt(ms.size())), 0.6, 0.5, r), Rivales.crear(ms.get(r.nextInt(ms.size())), 0.6, 0.5, r),
                         r.nextLong());
+                pelea.arena = metajavbots.combate.Arena.de(escenario.name(), pelea.ancho, pelea.alto);
                 pelea.empezarRonda();
-                for (int i = 0; i < 500; i++) pelea.avanzar();
+                for (int i = 0; i < 160; i++) pelea.avanzar();
             }
             pelea.avanzar();
             vista.sucesos(pelea, null);

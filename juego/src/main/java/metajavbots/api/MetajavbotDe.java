@@ -296,6 +296,11 @@ public abstract class MetajavbotDe extends RobotBase {
         return new ArrayList<>(m().vistos());
     }
 
+    /** Die Fallen und Gegenstände der Arena: Stacheln, Sägen, Grube, Fässer … (leer, wenn es keine gibt; Thema 15). */
+    public final List<Hindernis> hindernisse() {
+        return new ArrayList<>(m().obstaculos());
+    }
+
     /** Deine Teamkameraden (in Teamkämpfen; leer, wenn du allein kämpfst). */
     public final List<Gegner> kameraden() {
         return new ArrayList<>(m().companeros());

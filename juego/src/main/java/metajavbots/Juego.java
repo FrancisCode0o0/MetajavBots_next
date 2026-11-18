@@ -113,6 +113,7 @@ public class Juego extends ApplicationAdapter {
             voz.volumen = j.volumenVoz;
             musica.activa = j.musicaActiva;
             musica.volumen = j.volumenMusica;
+            metajavbots.pantallas.PrepararPelea.conTrampas = j.arenasConTrampas;
         }
     }
 

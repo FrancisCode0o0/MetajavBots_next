@@ -58,6 +58,9 @@ public final class Ajustes implements Pantalla {
                 T.t("ajustes.letra_ayuda"));
         jug.tamanoDeLetra = Math.round(14 + letra * 14);
         y += 76;
+        jug.arenasConTrampas = ui.casilla(T.t("ajustes.trampas"), jug.arenasConTrampas, x, y, T.t("ajustes.trampas_ayuda"));
+        PrepararPelea.conTrampas = jug.arenasConTrampas;
+        y += 50;
         boolean claro = ui.casilla(T.t("ajustes.tema_claro"), jug.temaClaro, x, y, null);
         if (claro != jug.temaClaro) {
             jug.temaClaro = claro;

@@ -70,9 +70,14 @@ public final class PrepararPelea implements Pantalla {
         return new PantallaPelea(encuentro(j, anterior.modo));
     }
 
+    /** Si las peleas al azar pueden salir en arenas con trampas (Ajustes; de fábrica, sí). */
+    public static boolean conTrampas = true;
+
     static VistaDeArena.Escenario escenarioAlAzar() {
         VistaDeArena.Escenario[] e = VistaDeArena.Escenario.values();
-        return e[new Random().nextInt(e.length)];
+        // Sin trampas, solo los cinco de siempre (los primeros).
+        int n = conTrampas ? e.length : VistaDeArena.Escenario.CHATARRERIA.ordinal();
+        return e[new Random().nextInt(n)];
     }
 
     /** Monta el encuentro de un modo: ADAPTADA, una Dificultad, AZAR, DESAFIO o PRACTICA. */

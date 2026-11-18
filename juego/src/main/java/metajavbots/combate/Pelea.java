@@ -74,6 +74,9 @@ public final class Pelea {
         this(a, b, semilla, 1000, 700, 1200);
     }
 
+    /** Las trampas y los objetos de la arena (NINGUNA en las de siempre). */
+    public Arena arena = Arena.NINGUNA;
+
     /** Las rondas de esta pelea (4; 1 en las prácticas y los tutoriales). */
     public int rondas = RONDAS;
 
@@ -231,6 +234,7 @@ public final class Pelea {
         for (Cuerpo c : cuerpos) atacar(c, objetivo(c));
         for (Cuerpo c : cuerpos) mover(c);
         for (int i = 0; i < n; i++) for (int k = i + 1; k < n; k++) chocar(cuerpos[i], cuerpos[k]);
+        arena.turno(this);
         for (Cuerpo c : cuerpos) efectosContinuos(c, objetivo(c));
         moverProyectiles();
         for (Rayo r : rayos) r.vida--;
@@ -605,7 +609,8 @@ public final class Pelea {
         c.giroMira -= gm;
         // Avanzar: acelera hacia lo que falta, y frena para llegar justo.
         double deseada = Math.max(-vmax, Math.min(vmax, c.avance));
-        double acel = c.cifras.aceleracion * (Math.signum(deseada) != Math.signum(c.velocidad) || Math.abs(deseada) < Math.abs(c.velocidad) ? 2 : 1);
+        double acel = c.cifras.aceleracion * (Math.signum(deseada) != Math.signum(c.velocidad) || Math.abs(deseada) < Math.abs(c.velocidad) ? 2 : 1)
+                * (c.vuela() ? 1 : arena.agarre);
         if (c.velocidad < deseada) c.velocidad = Math.min(deseada, c.velocidad + acel);
         else if (c.velocidad > deseada) c.velocidad = Math.max(deseada, c.velocidad - acel);
         double rad = Math.toRadians(c.rumbo);

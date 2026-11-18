@@ -70,6 +70,9 @@ public interface Mando {
     /** Los compañeros de equipo (vivos), estén donde estén: el equipo comparte su posición. */
     List<? extends Avistado> companeros();
 
+    /** Las trampas y los objetos de la arena (vacía en las arenas sin nada). */
+    List<? extends Cosa> obstaculos();
+
     /** Manda un mensaje a los compañeros (les llega el turno siguiente, en alOirAlEquipo). */
     void avisarAlEquipo(String mensaje);
 

@@ -3,6 +3,7 @@ package metajavbots.rivales;
 import metajavbots.api.Enemigo;
 import metajavbots.api.Golpe;
 import metajavbots.api.Metajavbot;
+import metajavbots.api.Obstaculo;
 
 /**
  * RIVAL — El robot de la computadora. Es un Metajavbot como el tuyo, escrito
@@ -90,8 +91,25 @@ public class Rival extends Metajavbot {
         }
         apuntarAlEnemigo();
         moverseSegunEstilo();
+        apartarseDeLasTrampas();
         usarArmas();
         usarEspecial();
+    }
+
+    /**
+     * Si va derecho a una trampa que hace daño (foso, pinchos fuera, sierra…), gira para rodearla. En las arenas sin
+     * trampas, obstaculos() está vacía y no hace nada.
+     */
+    private void apartarseDeLasTrampas() {
+        for (Obstaculo o : obstaculos()) {
+            if (!o.peligroso() && !o.solido()) continue;
+            double delante = Math.abs(normalizar(o.angulo() - rumbo()));
+            if (o.distancia() < o.radio() + 70 && delante < 50) {
+                girar(normalizar(o.angulo() - rumbo()) > 0 ? -60 : 60);
+                avanzar(90);
+                return;
+            }
+        }
     }
 
     /** Sin el enemigo a la vista: gira la mira y el cuerpo hasta encontrarlo. */

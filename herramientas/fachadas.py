@@ -33,7 +33,7 @@ metodos = {
     'altoArena': ('arenaHoehe', 'arenaHeight'),
     'restanteAvance': ('restStrecke', 'remainingDistance'), 'restanteGiro': ('restDrehung', 'remainingTurn'),
     'restanteMira': ('restZielen', 'remainingAim'),
-    'enemigosVistos': ('gesehen', 'seenEnemies'),
+    'enemigosVistos': ('gesehen', 'seenEnemies'), 'obstaculos': ('hindernisse', 'obstacles'),
     'companeros': ('kameraden', 'teammates'), 'avisarAlEquipo': ('teamMelden', 'tellTeam'),
     'anguloHacia': ('winkelZu', 'angleTo'), 'distanciaA': ('abstandZu', 'distanceTo'),
     'normalizar': ('normalisieren', 'normalize'),
@@ -105,6 +105,7 @@ doc = {
         'restStrecke': 'Was vom letzten Fahrbefehl noch fehlt.',
         'restDrehung': 'Was vom letzten Drehbefehl noch fehlt.',
         'gesehen': 'Die Gegner, die du gerade siehst (Thema 15: Collections).',
+        'hindernisse': 'Die Fallen und Gegenstände der Arena: Stacheln, Sägen, Grube, Fässer … (leer, wenn es keine gibt; Thema 15).',
         'winkelZu': 'Der absolute Winkel von dir zu diesem Punkt.',
         'abstandZu': 'Der Abstand von dir zu diesem Punkt.',
         'normalisieren': 'Bringt einen Winkel nach (-180, 180]: normalisieren(350) ergibt -10.',
@@ -177,6 +178,7 @@ doc = {
         'remainingDistance': 'What is left of the last move order.',
         'remainingTurn': 'What is left of the last turn order.',
         'seenEnemies': 'The enemies you can see right now (topic 15: collections).',
+        'obstacles': 'The traps and objects in the arena: spikes, saws, pit, barrels… (empty if there are none; topic 15).',
         'angleTo': 'The absolute angle from you to that point.',
         'distanceTo': 'The distance from you to that point.',
         'normalize': 'Brings an angle into (-180, 180]: normalize(350) gives -10.',
@@ -185,7 +187,7 @@ doc = {
         'print': "Writes to your robot's console (below the code).",
         'memory': 'Whatever you want to remember from round to round (topic 15: Map). It survives code changes.',
     }}
-tipos = {'de': {'Enemigo': 'Gegner', 'Golpe': 'Treffer'}, 'en': {'Enemigo': 'Enemy', 'Golpe': 'Hit'}}
+tipos = {'de': {'Enemigo': 'Gegner', 'Golpe': 'Treffer', 'Obstaculo': 'Hindernis'}, 'en': {'Enemigo': 'Enemy', 'Golpe': 'Hit', 'Obstaculo': 'Obstacle'}}
 params = {'de': {'distancia': 'strecke', 'grados': 'grad', 'angulo': 'winkel', 'texto': 'text', 'mensaje': 'nachricht', 'de': 'von', 'g': 't', 'e': 'g'},
           'en': {'distancia': 'distance', 'grados': 'degrees', 'angulo': 'angle', 'texto': 'text', 'mensaje': 'message', 'de': 'from', 'e': 'e', 'g': 'h'}}
 secciones = [('lo que sobrescribes', ('was du überschreibst', 'what you override')), ('moverse', ('fahren', 'moving')),

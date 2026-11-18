@@ -296,6 +296,11 @@ public abstract class MetajavbotEn extends RobotBase {
         return new ArrayList<>(m().vistos());
     }
 
+    /** The traps and objects in the arena: spikes, saws, pit, barrels… (empty if there are none; topic 15). */
+    public final List<Obstacle> obstacles() {
+        return new ArrayList<>(m().obstaculos());
+    }
+
     /** Your teammates (in team fights; empty when you fight alone). */
     public final List<Enemy> teammates() {
         return new ArrayList<>(m().companeros());

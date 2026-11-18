@@ -14,7 +14,9 @@ public final class Suceso {
         LASER, DISPARO, MISIL, LLAMA, GOLPE_CUERPO, FALLO_CUERPO,
         IMPACTO, ESQUIVA, BLOQUEO, EXPLOSION, PARED, CHOQUE,
         PARTE_ROTA, FUERA_DE_COMBATE, ESPECIAL, REPARACION, ATURDIDO,
-        DECIR, ERROR_CODIGO, TOPE
+        DECIR, ERROR_CODIGO, TOPE,
+        /** Una trampa de la arena (el texto dice cuál: pinchos, sierra, foso…). */
+        TRAMPA
     }
 
     public final Tipo tipo;

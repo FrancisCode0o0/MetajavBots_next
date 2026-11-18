@@ -116,6 +116,7 @@ public final class PantallaPelea implements Pantalla {
             pelea = new Pelea(cs, eq, new Random().nextLong());
         }
         pelea.rondas = encuentro.rondas;
+        pelea.arena = metajavbots.combate.Arena.de(encuentro.escenario.name(), pelea.ancho, pelea.alto);
         pelea.topeDePasos = encuentro.topeDePasos;
         narrador = new Narrador(pelea.combatientes, pelea.equipo);
         narrador.idioma = jug.idioma;

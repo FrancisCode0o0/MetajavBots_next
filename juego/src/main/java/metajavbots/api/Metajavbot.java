@@ -297,6 +297,11 @@ public abstract class Metajavbot extends RobotBase {
         return new ArrayList<>(m().vistos());
     }
 
+    /** Las trampas y los objetos de la arena: pinchos, sierras, foso, barriles… (vacía si no hay; tema 15). */
+    public final List<Obstaculo> obstaculos() {
+        return new ArrayList<>(m().obstaculos());
+    }
+
     /** Tus compañeros de equipo (en las peleas por equipos; vacía si peleas solo). */
     public final List<Enemigo> companeros() {
         return new ArrayList<>(m().companeros());
