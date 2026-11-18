@@ -117,7 +117,8 @@ public final class Capturas extends Juego {
             sonidos.tocar("explosion", 0.1f);
             voz.decir("Prueba", metajavbots.textos.Idioma.ES);
         }
-        if (fotogramas == (nombres.get(actual).startsWith("08") || nombres.get(actual).startsWith("20") || nombres.get(actual).startsWith("2") && nombres.get(actual).compareTo("21") >= 0 ? 400 : 45)) {
+        if (fotogramas == (nombres.get(actual).startsWith("08") || nombres.get(actual).startsWith("20") || nombres.get(actual).startsWith("2")
+                && nombres.get(actual).compareTo("21") >= 0 ? 400 : 45)) {
             Pixmap pm = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
             // La imagen sale del revés (OpenGL empieza abajo): se da la vuelta.
             Pixmap derecha = new Pixmap(pm.getWidth(), pm.getHeight(), Pixmap.Format.RGBA8888);
@@ -187,7 +188,8 @@ public final class Capturas extends Juego {
                 vista.escenario = escenario;
                 Random r = new Random(escenario.ordinal());
                 List<Modelo> ms = Modelo.todos();
-                pelea = new Pelea(Rivales.crear(ms.get(r.nextInt(ms.size())), 0.6, 0.5, r), Rivales.crear(ms.get(r.nextInt(ms.size())), 0.6, 0.5, r), r.nextLong());
+                pelea = new Pelea(Rivales.crear(ms.get(r.nextInt(ms.size())), 0.6, 0.5, r), Rivales.crear(ms.get(r.nextInt(ms.size())), 0.6, 0.5, r),
+                        r.nextLong());
                 pelea.empezarRonda();
                 for (int i = 0; i < 500; i++) pelea.avanzar();
             }

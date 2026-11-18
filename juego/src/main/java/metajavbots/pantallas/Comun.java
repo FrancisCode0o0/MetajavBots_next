@@ -51,7 +51,8 @@ public final class Comun {
             Progreso.Requisitos r = Progreso.requisitos(jug);
             float parte = jug.etiqueta == Etiqueta.MASTER ? 1 : (float) (0.5 * Math.min(1, (double) r.victoriasQueTiene / Math.max(1, r.victorias))
                     + 0.5 * (r.ejercicios == 0 ? 1 : Math.min(1, (double) r.ejerciciosQueTiene / r.ejercicios)));
-            String texto = jug.etiqueta == Etiqueta.MASTER ? "MASTER" : T.f("comun.progreso", r.victoriasQueTiene, r.victorias, r.ejerciciosQueTiene, r.ejercicios);
+            String texto = jug.etiqueta == Etiqueta.MASTER ? "MASTER" : T.f("comun.progreso", r.victoriasQueTiene, r.victorias, r.ejerciciosQueTiene,
+                    r.ejercicios);
             ui.barra(ex + 150, 22, 290, 20, parte, ui.tema.acento, null);
             p.texto(texto, ex + 150, 46, ui.letra * 0.72f, false, ui.tema.textoSuave, 1);
             if (ui.e.dentro(ex, 10, 450, 60)) ui.avisar(T.f("comun.progreso_ayuda", jug.etiqueta.nombre, jug.etiqueta.siguiente().nombre));
@@ -83,7 +84,8 @@ public final class Comun {
         float w = 136 * escala, h = 50 * escala;
         p.caja(x, y, w, h, 10 * escala, Pincel.oscurecer(color, 0.55f), 1);
         p.bordeRedondeado(x, y, w, h, 10 * escala, color, 1, 2 * escala);
-        for (int i = 0; i < e.escalon() && e != Etiqueta.MASTER; i++) p.circulo(x + w - 14 * escala - i * 12 * escala, y + h - 11 * escala, 4 * escala, color, 1);
+        for (int i = 0; i < e.escalon() && e != Etiqueta.MASTER; i++) p.circulo(x + w - 14 * escala - i * 12 * escala, y + h - 11 * escala, 4 * escala, color,
+                1);
         p.textoCentrado(e.nombre, x + w / 2, y + 8 * escala, 20 * escala, true, 0xFFFFFF, 1);
     }
 

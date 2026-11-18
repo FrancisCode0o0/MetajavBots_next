@@ -94,7 +94,7 @@ doc = {
         'spezial': 'Benutzt das Spezielle des Kopfes (Schild, Turbo, Reparatur…, je nach Teil).',
         'angreifen': 'Greift mit dem Arm an, der bereit ist (zuerst der rechte).',
         'waffeLinks': 'Die Waffe des linken Arms: "LASER", "BALA" (Kugel), "MISIL" (Rakete), "CUERPO" (Nahkampf), "ESCUDO" (Schild), "REPARAR"… ("" wenn keine).',
-        'spezialKopf': 'Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO" (Puls), "SOBRECARGA" (Überladung) ("" wenn keins).',
+        'spezialKopf': 'Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO", "SOBRECARGA" ("" wenn keins).',
         'reichweiteLinks': 'Wie weit die Waffe des linken Arms reicht.',
         'richtung': 'Wohin der Körper schaut (Grad).',
         'blick': 'Wohin das Visier schaut (Grad).',

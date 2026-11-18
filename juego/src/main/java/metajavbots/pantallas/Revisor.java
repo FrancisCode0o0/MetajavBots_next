@@ -18,6 +18,7 @@ import metajavbots.textos.T;
  */
 public final class Revisor {
 
+    /** Lo que dice el Revisor: los consejos sobre la ronda y sobre el estilo del código. */
     public static final class Informe {
         public final List<String> consejos = new ArrayList<>();
     }

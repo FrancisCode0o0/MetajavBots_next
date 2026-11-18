@@ -23,7 +23,6 @@ import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VentanaDeCodigo;
 import metajavbots.pantalla.VistaDeArena;
-import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Pieza;
 import metajavbots.progreso.Jugador;
 import metajavbots.progreso.Progreso;
@@ -287,7 +286,7 @@ public final class PantallaPelea implements Pantalla {
         bandaDelLocutor(j, dt);
         if (!terminada && !entreRondas) controles(j);
         if (entreRondas) entreRondas(j);
-        if (terminada) final_(j, dt);
+        if (terminada) pantallaFinal(j, dt);
         dialogo.dibujar(ui);
     }
 
@@ -619,7 +618,7 @@ public final class PantallaPelea implements Pantalla {
         narrador.locutor("explosion_final", true, null);
     }
 
-    private void final_(Juego j, float dt) {
+    private void pantallaFinal(Juego j, float dt) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         tiempoFinal += dt;
@@ -703,7 +702,8 @@ public final class PantallaPelea implements Pantalla {
             }
         }
         if (encuentro.modo.equals("DESAFIO") && ganoElJugador && !premioElegido) {
-            if (ui.boton(T.t("final.premio"), x + w / 2 - 170, y + h - 140, 340, 50, Ui.Estilo.PRINCIPAL)) j.ir(new PremioDelDesafio(() -> premioElegido = true));
+            if (ui.boton(T.t("final.premio"), x + w / 2 - 170, y + h - 140, 340, 50,
+                    Ui.Estilo.PRINCIPAL)) j.ir(new PremioDelDesafio(() -> premioElegido = true));
         }
         if (ui.boton(T.t("final.revancha"), x + 30, y + h - 74, 200, 54, Ui.Estilo.NORMAL)) {
             j.volver();

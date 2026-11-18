@@ -176,7 +176,8 @@ public final class GeneradorDePreguntas {
         int n = 0;
         for (int i = desde; incluido ? i <= hasta : i < hasta; i += paso) n++;
         String cond = incluido ? "i <= " + hasta : "i < " + hasta;
-        return g(Etiqueta.NOOB_4, "int vueltas = 0;\nfor (int i = " + desde + "; " + cond + "; i += " + paso + ") {\n    vueltas++;\n}\nSystem.out.println(vueltas);",
+        return g(Etiqueta.NOOB_4, "int vueltas = 0;\nfor (int i = " + desde + "; " + cond + "; i += " + paso
+                + ") {\n    vueltas++;\n}\nSystem.out.println(vueltas);",
                 n, n + 1, n - 1, hasta - desde);
     }
 
@@ -189,7 +190,8 @@ public final class GeneradorDePreguntas {
     static Generada mitades(Random r) {
         int v = entre(r, 9, 120), pasos = 0;
         for (int x = v; x > 1; x /= 2) pasos++;
-        return g(Etiqueta.NOOB_4, "int vida = " + v + ";\nint pasos = 0;\nwhile (vida > 1) {\n    vida = vida / 2;\n    pasos++;\n}\nSystem.out.println(pasos);",
+        return g(Etiqueta.NOOB_4, "int vida = " + v
+                + ";\nint pasos = 0;\nwhile (vida > 1) {\n    vida = vida / 2;\n    pasos++;\n}\nSystem.out.println(pasos);",
                 pasos, pasos + 1, pasos - 1, v / 2);
     }
 
@@ -279,7 +281,8 @@ public final class GeneradorDePreguntas {
     static Generada excepcion(Random r) {
         int n = entre(r, 2, 5), i = entre(r, 0, 6);
         boolean falla = i >= n;
-        String cuerpo = "int[] a = new int[" + n + "];\ntry {\n    a[" + i + "] = 1;\n    System.out.print(\"A\");\n} catch (ArrayIndexOutOfBoundsException e) {\n"
+        String cuerpo = "int[] a = new int[" + n + "];\ntry {\n    a[" + i
+                + "] = 1;\n    System.out.print(\"A\");\n} catch (ArrayIndexOutOfBoundsException e) {\n"
                 + "    System.out.print(\"B\");\n} finally {\n    System.out.print(\"C\");\n}\nSystem.out.println();";
         return g(Etiqueta.SENIOR_1, cuerpo, falla ? "BC" : "AC", falla ? "AC" : "BC", falla ? "B" : "A", "ABC");
     }
@@ -304,7 +307,8 @@ public final class GeneradorDePreguntas {
                 cuantos++;
             }
         }
-        return g(Etiqueta.SENIOR_2, "int s = List.of(" + lista(a) + ").stream()\n        .filter(x -> x > " + limite + ")\n        .mapToInt(x -> x)\n        .sum();\n"
+        return g(Etiqueta.SENIOR_2, "int s = List.of(" + lista(a) + ").stream()\n        .filter(x -> x > " + limite
+                + ")\n        .mapToInt(x -> x)\n        .sum();\n"
                 + "System.out.println(s);", suma, cuantos, todo, todo - suma);
     }
 
@@ -318,7 +322,8 @@ public final class GeneradorDePreguntas {
     static Generada contarPares(Random r) {
         int n = entre(r, 5, 14), m = entre(r, 2, 3), cuenta = 0;
         for (int k = 1; k <= n; k++) if (k * m % 4 == 0) cuenta++;
-        return g(Etiqueta.SENIOR_2, "long c = IntStream.rangeClosed(1, " + n + ")\n        .map(x -> x * " + m + ")\n        .filter(x -> x % 4 == 0)\n        .count();\n"
+        return g(Etiqueta.SENIOR_2, "long c = IntStream.rangeClosed(1, " + n + ")\n        .map(x -> x * " + m
+                + ")\n        .filter(x -> x % 4 == 0)\n        .count();\n"
                 + "System.out.println(c);", cuenta, n / 4, n / 2, n);
     }
 }

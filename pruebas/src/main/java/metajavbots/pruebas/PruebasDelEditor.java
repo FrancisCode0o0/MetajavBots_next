@@ -22,6 +22,13 @@ final class PruebasDelEditor {
     }
 
     static void apuntar() {
+        apuntarParte1();
+        apuntarParte2();
+        apuntarParte3();
+        apuntarParte4();
+    }
+
+    private static void apuntarParte1() {
         caso("editor: escribir y leer líneas", () -> {
             Documento d = new Documento("uno\ndos\r\ntres\tcuatro");
             igual(3, d.lineas());
@@ -74,7 +81,9 @@ final class PruebasDelEditor {
             d.borrarAtras();
             igual("    x", d.texto());
         });
+    }
 
+    private static void apuntarParte2() {
         caso("editor: deshacer junta lo escrito seguido y rehacer lo devuelve", () -> {
             Documento d = new Documento();
             long[] hora = {1000};
@@ -138,7 +147,9 @@ final class PruebasDelEditor {
             d.pegar("if (x) {\n    y();\n}");
             igual("void f() {\n    if (x) {\n        y();\n    }\n}", d.texto());
         });
+    }
 
+    private static void apuntarParte3() {
         caso("editor: Inicio va tras la sangría y luego al principio", () -> {
             Documento d = new Documento("    abc");
             d.finalDelTexto(false);
@@ -198,7 +209,9 @@ final class PruebasDelEditor {
             Random azar = new Random(7);
             for (int i = 0; i < 300; i++) Lexico.trozos(textoAlAzar(azar, 80));
         });
+    }
 
+    private static void apuntarParte4() {
         caso("editor: miles de pulsaciones al azar, sin romperse y con deshacer exacto", () -> {
             Random azar = new Random(20261117);
             for (int vuelta = 0; vuelta < 40; vuelta++) {

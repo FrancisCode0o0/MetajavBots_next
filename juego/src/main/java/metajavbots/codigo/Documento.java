@@ -45,26 +45,6 @@ public final class Documento {
     /** El reloj (se cambia en las pruebas). */
     public java.util.function.LongSupplier reloj = System::currentTimeMillis;
 
-    /** Un cambio: en pos se quitó «quitado» y se puso «puesto». */
-    private static final class Cambio {
-        final int pos;
-        String quitado, puesto;
-        final int cursorAntes, anclaAntes;
-        int cursorDespues, anclaDespues;
-        final String tipo;
-        long hora;
-
-        Cambio(int pos, String quitado, String puesto, int cursorAntes, int anclaAntes, String tipo, long hora) {
-            this.pos = pos;
-            this.quitado = quitado;
-            this.puesto = puesto;
-            this.cursorAntes = cursorAntes;
-            this.anclaAntes = anclaAntes;
-            this.tipo = tipo;
-            this.hora = hora;
-        }
-    }
-
     public Documento() {
     }
 
@@ -198,21 +178,9 @@ public final class Documento {
         }
     }
 
-    /** Saltos de Windows y Mac a «\n», tabuladores a espacios y nada de letras de control. */
+    /** Saltos de Windows y Mac a «\n», tabuladores a espacios y nada de letras de control (TextoDeCodigo.normalizar). */
     public static String normalizar(String s) {
-        StringBuilder b = new StringBuilder(s.length());
-        for (int i = 0; i < s.length(); i++) {
-            char c = s.charAt(i);
-            if (c == '\r') {
-                if (i + 1 < s.length() && s.charAt(i + 1) == '\n') continue;
-                b.append('\n');
-            } else if (c == '\t') {
-                b.append("    ");
-            } else if (c == '\n' || c >= ' ' && c != 0x7f || Character.isSurrogate(c)) {
-                b.append(c);
-            }
-        }
-        return b.toString();
+        return TextoDeCodigo.normalizar(s);
     }
 
     // ------------------------------------------------------------------ el corazón: un solo sitio cambia el texto
@@ -330,18 +298,7 @@ public final class Documento {
             return;
         }
         // Se pega al principio de una línea (o tras su sangría): todas las líneas se mueven igual.
-        String[] filas = s.split("\n", -1);
-        int menor = Integer.MAX_VALUE;
-        for (String f : filas) if (!f.isBlank()) menor = Math.min(menor, sangriaDe(f));
-        if (menor == Integer.MAX_VALUE) menor = 0;
-        StringBuilder b = new StringBuilder();
-        for (int i = 0; i < filas.length; i++) {
-            String f = filas[i];
-            String sin = f.isBlank() ? "" : f.substring(Math.min(menor, sangriaDe(f)));
-            if (i == 0) b.append(sin);
-            else b.append('\n').append(sin.isEmpty() ? "" : antes + sin);
-        }
-        reemplazar(ini, finDeSeleccion(), b.toString(), "pegar");
+        reemplazar(ini, finDeSeleccion(), TextoDeCodigo.conSangria(s, antes), "pegar");
     }
 
     /** Una letra tecleada, con las ayudas del editor: cerrar paréntesis y comillas, pisar el cierre, bajar la «}». */
@@ -361,7 +318,7 @@ public final class Documento {
             cierreAutomatico = -1;
             return;
         }
-        String cierre = cierreDe(c);
+        String cierre = TextoDeCodigo.cierreDe(c);
         if (haySeleccion() && cierre != null && c != '\'' ) {
             // Con algo seleccionado, «(» lo rodea: (seleccionado).
             int ini = inicioDeSeleccion(), fin = finDeSeleccion();
@@ -398,44 +355,9 @@ public final class Documento {
         }
     }
 
-    private static String cierreDe(char c) {
-        switch (c) {
-            case '(':
-                return ")";
-            case '[':
-                return "]";
-            case '{':
-                return "}";
-            case '"':
-                return "\"";
-            case '\'':
-                return "'";
-            default:
-                return null;
-        }
-    }
-
-    /** ¿Se cierra solo? Solo si detrás no hay una palabra pegada (para no estorbar al reescribir). */
+    /** ¿Se cierra solo? (TextoDeCodigo.debeCerrar). */
     private boolean debeCerrar(char c) {
-        char despues = letra(cursor);
-        if (Character.isLetterOrDigit(despues) || despues == '_') return false;
-        if (c == '"' || c == '\'') {
-            char antes = letra(cursor - 1);
-            if (Character.isLetterOrDigit(antes) || antes == c) return false;
-            // Dentro de un texto no se abren comillas nuevas.
-            if (dentroDeTexto(cursor)) return false;
-        }
-        if (c == '{') return false;   // la «{» se cierra al pulsar Intro (más cómodo)
-        return true;
-    }
-
-    private boolean dentroDeTexto(int pos) {
-        int ini = inicioDeLinea(lineaDe(pos));
-        for (Lexico.Trozo t : Lexico.trozos(texto.substring(ini, finDeLinea(lineaDe(pos))))) {
-            if (t.inicio + ini < pos && t.fin + ini > pos
-                    && (t.clase == Lexico.Clase.TEXTO || t.clase == Lexico.Clase.LETRA)) return true;
-        }
-        return false;
+        return TextoDeCodigo.debeCerrar(texto, cursor, c);
     }
 
     /** Intro: la línea nueva con la sangría que toca; entre «{» y «}», la «}» baja a su propia línea. */
@@ -445,9 +367,9 @@ public final class Documento {
         String antes = texto.substring(inicioDeLinea(linea), ini);
         int sangria = sangriaDe(linea(linea));
         if (antes.isBlank()) sangria = Math.min(sangria, antes.length());
-        String recortado = sinComentario(antes).stripTrailing();
+        String recortado = TextoDeCodigo.sinComentario(antes).stripTrailing();
         boolean abre = recortado.endsWith("{") || recortado.endsWith("(") || recortado.endsWith("[")
-                || recortado.endsWith("->") || esEtiquetaDeCaso(recortado);
+                || recortado.endsWith("->") || TextoDeCodigo.esEtiquetaDeCaso(recortado);
         int fin = finDeSeleccion();
         // Lo que queda tras el cursor pierde los espacios del principio.
         int saltar = 0;
@@ -474,11 +396,6 @@ public final class Documento {
         cierreAutomatico = -1;
     }
 
-    private static boolean esEtiquetaDeCaso(String s) {
-        String t = s.trim();
-        return (t.startsWith("case ") || t.startsWith("default")) && t.endsWith(":");
-    }
-
     /** ¿La «{» que está justo antes de pos se ha quedado sin cerrar? (cuenta las llaves de todo el texto). */
     private boolean llaveSinCerrar(int pos) {
         int balance = 0;
@@ -489,18 +406,9 @@ public final class Documento {
         return balance > 0;
     }
 
-    /** La línea sin su comentario de final («x = 1; // uno» → «x = 1; »). */
-    private static String sinComentario(String linea) {
-        for (Lexico.Trozo t : Lexico.trozos(linea)) {
-            if (t.clase == Lexico.Clase.COMENTARIO) return linea.substring(0, t.inicio);
-        }
-        return linea;
-    }
-
+    /** Los espacios con que empieza una línea (TextoDeCodigo.sangriaDe). */
     public static int sangriaDe(String linea) {
-        int i = 0;
-        while (i < linea.length() && linea.charAt(i) == ' ') i++;
-        return i;
+        return TextoDeCodigo.sangriaDe(linea);
     }
 
     /** Tabulador: con varias líneas elegidas, las mete todas; si no, espacios hasta el siguiente múltiplo de 4. */
@@ -524,14 +432,7 @@ public final class Documento {
         int cambioPrimera = 0, cambioTotal = 0;
         for (int l = l0; l <= l1; l++) {
             String f = linea(l);
-            String nueva;
-            if (sentido > 0) {
-                nueva = f.isBlank() ? f : " ".repeat(SANGRIA) + f;
-            } else {
-                int quitar = Math.min(SANGRIA, sangriaDe(f));
-                if (quitar == 0 || (sangriaDe(f) % SANGRIA != 0)) quitar = Math.min(quitar, Math.max(1, sangriaDe(f) % SANGRIA));
-                nueva = f.substring(Math.min(quitar, f.length()));
-            }
+            String nueva = TextoDeCodigo.sangrar(f, sentido, SANGRIA);
             if (l == l0) cambioPrimera = nueva.length() - f.length();
             cambioTotal += nueva.length() - f.length();
             if (l > l0) b.append('\n');
@@ -549,6 +450,11 @@ public final class Documento {
         } else {
             cursor = recortar(c + cambioPrimera, ini, texto.length());
         }
+        apuntarCursorDelCambio();
+    }
+
+    /** El último cambio recuerda dónde quedan el cursor y la selección (para rehacerlo igual). */
+    private void apuntarCursorDelCambio() {
         Cambio u = deshacer.peek();
         if (u != null) {
             u.cursorDespues = cursor;
@@ -566,7 +472,7 @@ public final class Documento {
         }
         if (cursor == 0) return;
         char a = letra(cursor - 1), d = letra(cursor);
-        String par = cierreDe(a);
+        String par = TextoDeCodigo.cierreDe(a);
         if (par != null && par.charAt(0) == d && cierreAutomatico == cursor) {
             reemplazar(cursor - 1, cursor + 1, "", "borrar");
             cierreAutomatico = -1;
@@ -600,7 +506,7 @@ public final class Documento {
             borrarAtras();
             return;
         }
-        int desde = saltoDePalabra(cursor, -1);
+        int desde = TextoDeCodigo.saltoDePalabra(texto, cursor, -1);
         reemplazar(desde, cursor, "", "cortar");
     }
 
@@ -609,7 +515,7 @@ public final class Documento {
             borrarDelante();
             return;
         }
-        int hasta = saltoDePalabra(cursor, 1);
+        int hasta = TextoDeCodigo.saltoDePalabra(texto, cursor, 1);
         reemplazar(cursor, hasta, "", "cortar");
     }
 
@@ -652,8 +558,8 @@ public final class Documento {
     }
 
     public void borrarLinea() {
-        int l0 = lineaDe(inicioDeSeleccion()), l1 = lineaDe(finDeSeleccion());
-        if (haySeleccion() && l1 > l0 && columnaDe(finDeSeleccion()) == 0) l1--;
+        int[] elegidas = lineasElegidas();
+        int l0 = elegidas[0], l1 = elegidas[1];
         int col = columnaDelCursor();
         int ini = inicioDeLinea(l0), fin = finDeLinea(l1);
         if (fin < texto.length()) fin++;
@@ -662,10 +568,17 @@ public final class Documento {
         moverA(posicion(Math.min(l0, lineas - 1), col), false);
     }
 
-    /** Alt+Arriba / Alt+Abajo: sube o baja las líneas elegidas. */
-    public void moverLineas(int sentido) {
+    /** La primera y la última línea elegidas (si la selección acaba al principio de una línea, esa no cuenta). */
+    private int[] lineasElegidas() {
         int l0 = lineaDe(inicioDeSeleccion()), l1 = lineaDe(finDeSeleccion());
         if (haySeleccion() && l1 > l0 && columnaDe(finDeSeleccion()) == 0) l1--;
+        return new int[]{l0, l1};
+    }
+
+    /** Alt+Arriba / Alt+Abajo: sube o baja las líneas elegidas. */
+    public void moverLineas(int sentido) {
+        int[] elegidas = lineasElegidas();
+        int l0 = elegidas[0], l1 = elegidas[1];
         if (sentido < 0 && l0 == 0 || sentido > 0 && l1 >= lineas - 1) return;
         int a = ancla, c = cursor;
         int ini, fin;
@@ -683,56 +596,30 @@ public final class Documento {
         reemplazar(ini, fin, nuevo, "moverLineas");
         cursor = recortar(c + desplazamiento, 0, texto.length());
         ancla = a >= 0 ? recortar(a + desplazamiento, 0, texto.length()) : -1;
-        Cambio u = deshacer.peek();
-        if (u != null) {
-            u.cursorDespues = cursor;
-            u.anclaDespues = ancla;
-        }
+        apuntarCursorDelCambio();
     }
 
     /** Ctrl+/: pone o quita «// » a las líneas elegidas (todas a la misma columna). */
     public void comentar() {
-        int l0 = lineaDe(inicioDeSeleccion()), l1 = lineaDe(finDeSeleccion());
-        if (haySeleccion() && l1 > l0 && columnaDe(finDeSeleccion()) == 0) l1--;
-        boolean todas = true;
-        int menor = Integer.MAX_VALUE;
-        for (int l = l0; l <= l1; l++) {
-            String f = linea(l);
-            if (f.isBlank()) continue;
-            menor = Math.min(menor, sangriaDe(f));
-            if (!f.trim().startsWith("//")) todas = false;
-        }
-        if (menor == Integer.MAX_VALUE) return;
-        StringBuilder b = new StringBuilder();
-        for (int l = l0; l <= l1; l++) {
-            String f = linea(l);
-            if (l > l0) b.append('\n');
-            if (f.isBlank()) {
-                b.append(f);
-            } else if (todas) {
-                int i = f.indexOf("//");
-                int j = i + 2;
-                if (j < f.length() && f.charAt(j) == ' ') j++;
-                b.append(f, 0, i).append(f.substring(j));
-            } else {
-                b.append(f, 0, menor).append("// ").append(f.substring(menor));
-            }
-        }
+        int[] elegidas = lineasElegidas();
+        int l0 = elegidas[0], l1 = elegidas[1];
+        List<String> lineas = new ArrayList<>();
+        for (int l = l0; l <= l1; l++) lineas.add(linea(l));
+        TextoDeCodigo.Comentado hecho = TextoDeCodigo.comentar(lineas);
+        if (hecho == null) return;
+        boolean todas = hecho.quitado();
+        String b = hecho.texto();
         boolean habia = haySeleccion();
         int ini = inicioDeLinea(l0), fin = finDeLinea(l1);
         int col = columnaDelCursor(), lc = lineaDelCursor();
-        reemplazar(ini, fin, b.toString(), "comentar");
+        reemplazar(ini, fin, b, "comentar");
         if (habia) {
             ancla = ini;
             cursor = recortar(ini + b.length(), 0, texto.length());
         } else {
             moverA(posicion(lc, col + (todas ? -3 : 3)), false);
         }
-        Cambio u = deshacer.peek();
-        if (u != null) {
-            u.cursorDespues = cursor;
-            u.anclaDespues = ancla;
-        }
+        apuntarCursorDelCambio();
     }
 
     // ------------------------------------------------------------------ mover el cursor
@@ -757,7 +644,7 @@ public final class Documento {
             moverA(inicioDeSeleccion(), false);
             return;
         }
-        moverA(palabra ? saltoDePalabra(cursor, -1) : cursor - pasoDeLetra(-1), extender);
+        moverA(palabra ? TextoDeCodigo.saltoDePalabra(texto, cursor, -1) : cursor - pasoDeLetra(-1), extender);
     }
 
     public void derecha(boolean extender, boolean palabra) {
@@ -765,7 +652,7 @@ public final class Documento {
             moverA(finDeSeleccion(), false);
             return;
         }
-        moverA(palabra ? saltoDePalabra(cursor, 1) : cursor + pasoDeLetra(1), extender);
+        moverA(palabra ? TextoDeCodigo.saltoDePalabra(texto, cursor, 1) : cursor + pasoDeLetra(1), extender);
     }
 
     private int pasoDeLetra(int sentido) {
@@ -833,8 +720,8 @@ public final class Documento {
     public void seleccionarPalabra(int pos) {
         pos = recortar(pos, 0, texto.length());
         int a = pos, b = pos;
-        while (a > 0 && esDePalabra(texto.charAt(a - 1))) a--;
-        while (b < texto.length() && esDePalabra(texto.charAt(b))) b++;
+        while (a > 0 && TextoDeCodigo.esDePalabra(texto.charAt(a - 1))) a--;
+        while (b < texto.length() && TextoDeCodigo.esDePalabra(texto.charAt(b))) b++;
         if (a == b && b < texto.length() && texto.charAt(b) != '\n') b++;
         seleccionar(a, b);
     }
@@ -848,18 +735,12 @@ public final class Documento {
 
     /** La palabra (nombre) en la que está pos, o "". */
     public String palabraEn(int pos) {
-        pos = recortar(pos, 0, texto.length());
-        int a = pos, b = pos;
-        while (a > 0 && esDePalabra(texto.charAt(a - 1))) a--;
-        while (b < texto.length() && esDePalabra(texto.charAt(b))) b++;
-        return texto.substring(a, b);
+        return TextoDeCodigo.palabraEn(texto, recortar(pos, 0, texto.length()));
     }
 
     /** El trozo de palabra que hay justo antes del cursor (para el autocompletado). */
     public String prefijoDelCursor() {
-        int a = cursor;
-        while (a > 0 && esDePalabra(texto.charAt(a - 1))) a--;
-        return texto.substring(a, cursor);
+        return TextoDeCodigo.prefijo(texto, cursor);
     }
 
     /** Cambia el prefijo de antes del cursor por la palabra entera (al elegir del autocompletado). */
@@ -868,88 +749,23 @@ public final class Documento {
         reemplazar(cursor - p.length(), cursor, palabra, "completar");
     }
 
-    private static boolean esDePalabra(char c) {
-        return Character.isJavaIdentifierPart(c) && c != '\0';
-    }
-
-    private int saltoDePalabra(int pos, int sentido) {
-        int n = texto.length();
-        if (sentido < 0) {
-            int i = pos;
-            while (i > 0 && texto.charAt(i - 1) == ' ') i--;
-            if (i > 0 && texto.charAt(i - 1) == '\n') return i == pos ? i - 1 : i;
-            if (i > 0 && esDePalabra(texto.charAt(i - 1))) {
-                while (i > 0 && esDePalabra(texto.charAt(i - 1))) i--;
-            } else if (i > 0) {
-                i--;
-            }
-            return i;
-        }
-        int i = pos;
-        if (i < n && texto.charAt(i) == '\n') return i + 1;
-        if (i < n && esDePalabra(texto.charAt(i))) {
-            while (i < n && esDePalabra(texto.charAt(i))) i++;
-        } else if (i < n && texto.charAt(i) != ' ') {
-            i++;
-        }
-        while (i < n && texto.charAt(i) == ' ') i++;
-        return i;
-    }
-
     // ------------------------------------------------------------------ llaves y búsqueda
 
     /** La pareja de la llave, paréntesis o corchete que hay en pos (sin contar los de textos y comentarios); -1 si no hay. */
     public int parejaDe(int pos) {
-        char c = letra(pos);
-        String abre = "([{", cierra = ")]}";
-        int k = abre.indexOf(c), m = cierra.indexOf(c);
-        if (k < 0 && m < 0) return -1;
-        List<Lexico.Trozo> codigo = Lexico.codigo(texto);
-        int indice = -1;
-        for (int i = 0; i < codigo.size(); i++) {
-            if (codigo.get(i).inicio == pos && codigo.get(i).fin == pos + 1) {
-                indice = i;
-                break;
-            }
-        }
-        if (indice < 0) return -1;
-        char a = k >= 0 ? c : abre.charAt(m), b = k >= 0 ? cierra.charAt(k) : c;
-        int sentido = k >= 0 ? 1 : -1;
-        int nivel = 0;
-        for (int i = indice; i >= 0 && i < codigo.size(); i += sentido) {
-            Lexico.Trozo t = codigo.get(i);
-            if (t.texto.length() != 1) continue;
-            char x = t.texto.charAt(0);
-            if (x == a) nivel += sentido;
-            else if (x == b) nivel -= sentido;
-            if (nivel == 0) return t.inicio;
-        }
-        return -1;
+        return TextoDeCodigo.pareja(texto.toString(), pos);
     }
 
     /** Busca desde pos (hacia delante o atrás, dando la vuelta); -1 si no está. */
     public int buscar(String que, int desde, boolean adelante, boolean mayusculas) {
-        if (que == null || que.isEmpty()) return -1;
-        String t = mayusculas ? texto.toString() : texto.toString().toLowerCase(java.util.Locale.ROOT);
-        String q = mayusculas ? que : que.toLowerCase(java.util.Locale.ROOT);
-        desde = recortar(desde, 0, t.length());
-        if (adelante) {
-            int i = t.indexOf(q, desde);
-            return i >= 0 ? i : t.indexOf(q);
-        }
-        int i = desde - 1 < 0 ? -1 : t.lastIndexOf(q, desde - 1);
-        return i >= 0 ? i : t.lastIndexOf(q);
+        return TextoDeCodigo.buscar(texto.toString(), que, desde, adelante, mayusculas);
     }
 
     /** Todas las apariciones (para marcarlas). */
     public List<Integer> apariciones(String que, boolean mayusculas) {
-        List<Integer> lista = new ArrayList<>();
-        if (que == null || que.isEmpty()) return lista;
-        String t = mayusculas ? texto.toString() : texto.toString().toLowerCase(java.util.Locale.ROOT);
-        String q = mayusculas ? que : que.toLowerCase(java.util.Locale.ROOT);
-        for (int i = t.indexOf(q); i >= 0 && lista.size() < 10000; i = t.indexOf(q, i + Math.max(1, q.length()))) lista.add(i);
-        return lista;
+        return TextoDeCodigo.apariciones(texto.toString(), que, mayusculas);
     }
+
 
     /** Cambia lo elegido si es lo buscado, y busca el siguiente. */
     public boolean reemplazarSiguiente(String que, String por, boolean mayusculas) {

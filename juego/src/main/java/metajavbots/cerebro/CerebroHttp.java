@@ -20,6 +20,7 @@ import com.badlogic.gdx.utils.JsonValue;
  */
 public final class CerebroHttp implements Cerebro {
 
+    /** Cómo se habla con el modelo: la API de Anthropic, la compatible con OpenAI o la propia de KoboldCpp. */
     public enum Forma { ANTHROPIC, OPENAI, KOBOLD }
 
     private final Forma forma;
@@ -75,7 +76,8 @@ public final class CerebroHttp implements Cerebro {
         JsonValue v = enviar(r.build());
         StringBuilder texto = new StringBuilder();
         JsonValue contenido = v.get("content");
-        if (contenido != null) for (JsonValue c = contenido.child; c != null; c = c.next) if ("text".equals(c.getString("type", ""))) texto.append(c.getString("text", ""));
+        if (contenido != null) for (JsonValue c = contenido.child; c != null; c = c.next) if ("text".equals(c.getString("type",
+                ""))) texto.append(c.getString("text", ""));
         return texto.toString().strip();
     }
 

@@ -61,6 +61,7 @@ public final class Ui {
 
     // ================================================================ botones
 
+    /** El aspecto de un botón: normal, el principal de la pantalla, peligroso, plano o elegido. */
     public enum Estilo { NORMAL, PRINCIPAL, PELIGRO, PLANO, ELEGIDO }
 
     public boolean boton(String texto, float x, float y, float w, float h) {

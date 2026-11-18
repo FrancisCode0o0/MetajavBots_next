@@ -24,6 +24,7 @@ public enum Etiqueta {
         this.nombre = nombre;
     }
 
+    /** Las cuatro categorías de etiquetas (cada una con sus escalones). */
     public enum Categoria { NOOB, JUNIOR, SENIOR, MASTER }
 
     public Categoria categoria() {

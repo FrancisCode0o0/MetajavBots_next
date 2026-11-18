@@ -54,7 +54,8 @@ public final class Ajustes implements Pantalla {
             }
         }
         y += 74;
-        float letra = ui.deslizador(T.f("ajustes.letra", Math.round(jug.tamanoDeLetra)), (jug.tamanoDeLetra - 14) / 14f, x, y, w, 50, T.t("ajustes.letra_ayuda"));
+        float letra = ui.deslizador(T.f("ajustes.letra", Math.round(jug.tamanoDeLetra)), (jug.tamanoDeLetra - 14) / 14f, x, y, w, 50,
+                T.t("ajustes.letra_ayuda"));
         jug.tamanoDeLetra = Math.round(14 + letra * 14);
         y += 76;
         boolean claro = ui.casilla(T.t("ajustes.tema_claro"), jug.temaClaro, x, y, null);

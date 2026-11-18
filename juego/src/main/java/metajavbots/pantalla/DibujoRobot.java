@@ -43,19 +43,21 @@ public final class DibujoRobot {
         this.p = p;
     }
 
-    private float X(float lx) {
+    /** De la x local del robot (en unidades de su dibujo) a la de la pantalla. */
+    private float enX(float lx) {
         return x0 + lx * u * lado;
     }
 
-    private float Y(float ly) {
+    /** De la y local del robot (hacia arriba) a la de la pantalla (hacia abajo). */
+    private float enY(float ly) {
         return y0 - ly * u;
     }
 
     private float[] pts(float... local) {
         float[] v = new float[local.length];
         for (int i = 0; i < local.length; i += 2) {
-            v[i] = X(local[i]);
-            v[i + 1] = Y(local[i + 1]);
+            v[i] = enX(local[i]);
+            v[i + 1] = enY(local[i + 1]);
         }
         return v;
     }
@@ -74,21 +76,21 @@ public final class DibujoRobot {
     }
 
     private void bola(float lx, float ly, float r, int rgb) {
-        p.circulo(X(lx), Y(ly), r * u, rgb, alfa);
+        p.circulo(enX(lx), enY(ly), r * u, rgb, alfa);
     }
 
     private void ovalo(float lx, float ly, float rx, float ry, int rgb) {
-        p.elipse(X(lx), Y(ly), rx * u, ry * u, 0, rgb, alfa);
+        p.elipse(enX(lx), enY(ly), rx * u, ry * u, 0, rgb, alfa);
     }
 
     private void caja(float lx, float ly, float w, float h, float radio, int rgb) {
         // (lx, ly) es la esquina de abajo a la izquierda en unidades; se dibuja según el lado.
-        float sx = lado > 0 ? X(lx) : X(lx + w);
-        p.caja(sx, Y(ly + h), w * u, h * u, radio * u, rgb, alfa);
+        float sx = lado > 0 ? enX(lx) : enX(lx + w);
+        p.caja(sx, enY(ly + h), w * u, h * u, radio * u, rgb, alfa);
     }
 
     private void raya(float ax, float ay, float bx, float by, float grosor, int rgb) {
-        p.linea(X(ax), Y(ay), X(bx), Y(by), grosor * u, rgb, alfa);
+        p.linea(enX(ax), enY(ay), enX(bx), enY(by), grosor * u, rgb, alfa);
     }
 
     /**
@@ -176,7 +178,7 @@ public final class DibujoRobot {
                 break;
             }
             case FLOTANTE: {
-                p.brillo(X(0), Y(-2), 14 * u, c3, 0.6f * alfa);
+                p.brillo(enX(0), enY(-2), 14 * u, c3, 0.6f * alfa);
                 ovalo(0, 3, 20, 5.5f, oscuro);
                 ovalo(0, 4.5f, 17, 3.5f, metal);
                 ovalo(0, 1.5f, 12, 2, c3);
@@ -187,7 +189,7 @@ public final class DibujoRobot {
                 float aleteo = (float) Math.sin(e.tiempo * 18) * 6;
                 forma(Pincel.aclarar(c2, 0.2f), -4, 30, -34, 42 + aleteo, -30, 30 + aleteo * 0.5f, -6, 22);
                 forma(Pincel.aclarar(c2, 0.3f), 4, 30, 34, 42 - aleteo, 30, 30 - aleteo * 0.5f, 6, 22);
-                p.brillo(X(0), Y(0), 9 * u, c3, 0.5f * alfa);
+                p.brillo(enX(0), enY(0), 9 * u, c3, 0.5f * alfa);
                 caja(-5, 0, 10, 8, 3, metal);
                 bola(0, -1, 3, c3);
                 break;
@@ -229,7 +231,7 @@ public final class DibujoRobot {
                 bola(0, cy, w, sombra);
                 bola(-1.5f, cy + 1.5f, w - 1.5f, c1);
                 bola(-w * 0.35f, cy + w * 0.35f, w * 0.35f, luz);
-                p.aro(X(0), Y(cy), w * u, 1.5f * u, linea, alfa);
+                p.aro(enX(0), enY(cy), w * u, 1.5f * u, linea, alfa);
                 ovalo(0, cy - w * 0.15f, w * 0.75f, w * 0.2f, c2);
                 break;
             case CUNA:
@@ -302,7 +304,7 @@ public final class DibujoRobot {
         if (m.tiene("tubos")) {
             raya(-w * 0.7f, base + 3, -w * 0.9f, base + alto - 4, 2.4f, Pincel.mezcla(c2, 0xB0B0B0, 0.4f));
         }
-        if (e.sobrecarga) p.brillo(X(0), Y(base + alto / 2), ancho * 0.6f * u, 0xFF3B30, 0.5f * alfa);
+        if (e.sobrecarga) p.brillo(enX(0), enY(base + alto / 2), ancho * 0.6f * u, 0xFF3B30, 0.5f * alfa);
     }
 
     private void cabeza(Modelo m, float cima, int c1, int c2, int c3, Estado e) {
@@ -314,8 +316,8 @@ public final class DibujoRobot {
         switch (m.cabeza) {
             case CUPULA:
                 ovalo(0, hy + 2, 12, 3, c2);
-                p.elipse(X(0), Y(hy + 7), 11 * u, 10 * u, 0, Pincel.mezcla(c3, 0x9FE7FF, 0.5f), 0.45f * alfa);
-                p.aro(X(0), Y(hy + 7), 11 * u, 1.2f * u, Pincel.aclarar(c2, 0.3f), alfa);
+                p.elipse(enX(0), enY(hy + 7), 11 * u, 10 * u, 0, Pincel.mezcla(c3, 0x9FE7FF, 0.5f), 0.45f * alfa);
+                p.aro(enX(0), enY(hy + 7), 11 * u, 1.2f * u, Pincel.aclarar(c2, 0.3f), alfa);
                 bola(2, hy + 8, 3, ojo);
                 bola(-3, hy + 11, 2, 0xFFFFFF);
                 break;
@@ -325,7 +327,7 @@ public final class DibujoRobot {
                 bola(3, hy + 8, 6, 0x111318);
                 bola(3.5f, hy + 8, 4, ojo);
                 bola(4.5f, hy + 9, 1.4f, 0xFFFFFF);
-                p.aro(X(3), Y(hy + 8), 6 * u, 1.2f * u, Pincel.aclarar(c2, 0.4f), alfa);
+                p.aro(enX(3), enY(hy + 8), 6 * u, 1.2f * u, Pincel.aclarar(c2, 0.4f), alfa);
                 break;
             case ANTENAS:
                 caja(-8, hy, 16, 12, 3, c1);
@@ -385,7 +387,7 @@ public final class DibujoRobot {
             case FAROL:
                 caja(-7, hy, 14, 13, 2, c2);
                 caja(-6, hy + 2, 12, 9, 2, Pincel.aclarar(c3, rota ? 0 : 0.3f));
-                if (!rota) p.brillo(X(3), Y(hy + 6.5f), 9 * u, c3, 0.5f * alfa);
+                if (!rota) p.brillo(enX(3), enY(hy + 6.5f), 9 * u, c3, 0.5f * alfa);
                 forma(c1, -9, hy + 13, 9, hy + 13, 0, hy + 20);
                 bola(0, hy + 20.5f, 1.8f, c3);
                 break;
@@ -410,10 +412,10 @@ public final class DibujoRobot {
                 caja(-8, hy + 7, 8, 4, 2, luz);
                 caja(-6, hy + 3.5f, 15, 4, 2, 0x111318);
                 caja(-5, hy + 4.2f, 13, 2.6f, 1.3f, ojo);
-                if (!rota) p.brillo(X(5), Y(hy + 5.5f), 5 * u, ojo, 0.35f * alfa);
+                if (!rota) p.brillo(enX(5), enY(hy + 5.5f), 5 * u, ojo, 0.35f * alfa);
                 break;
         }
-        if (m.tiene("aro")) p.elipse(X(0), Y(hy + 22), 9 * u, 2.4f * u, 0, c3, 0.8f * alfa);
+        if (m.tiene("aro")) p.elipse(enX(0), enY(hy + 22), 9 * u, 2.4f * u, 0, c3, 0.8f * alfa);
         if (rota) {
             raya(-6, hy + 2, 3, hy + 10, 1, 0x111111);
         }
@@ -449,7 +451,7 @@ public final class DibujoRobot {
                 raya(manoX, manoY, manoX + ca * l, manoY + sa * l, grosor * 1.1f, colArma);
                 raya(manoX + ca * 2, manoY + sa * 2, manoX + ca * (l - 2), manoY + sa * (l - 2), grosor * 0.4f, c3);
                 bola(manoX + ca * l, manoY + sa * l, grosor * 0.55f, rota ? 0x333333 : 0x9FF7FF);
-                if (!rota) p.brillo(X(manoX + ca * l), Y(manoY + sa * l), grosor * 0.8f * u, 0x5FE8FF, 0.5f * alfa);
+                if (!rota) p.brillo(enX(manoX + ca * l), enY(manoY + sa * l), grosor * 0.8f * u, 0x5FE8FF, 0.5f * alfa);
                 break;
             }
             case BALA: {
@@ -471,8 +473,8 @@ public final class DibujoRobot {
                 if (id.startsWith("espada") || id.startsWith("herencia")) {
                     raya(manoX, manoY, manoX + ca * 4, manoY + sa * 4, grosor, Pincel.oscurecer(colArma, 0.3f));
                     raya(manoX + ca * 4, manoY + sa * 4, manoX + ca * 30, manoY + sa * 30, grosor * 0.7f, 0xFF4FA3);
-                    p.linea(X(manoX + ca * 4), Y(manoY + sa * 4), X(manoX + ca * 30), Y(manoY + sa * 30), grosor * 0.25f * u, 0xFFFFFF, alfa);
-                    if (!rota) p.brillo(X(manoX + ca * 18), Y(manoY + sa * 18), 6 * u, 0xFF4FA3, 0.35f * alfa);
+                    p.linea(enX(manoX + ca * 4), enY(manoY + sa * 4), enX(manoX + ca * 30), enY(manoY + sa * 30), grosor * 0.25f * u, 0xFFFFFF, alfa);
+                    if (!rota) p.brillo(enX(manoX + ca * 18), enY(manoY + sa * 18), 6 * u, 0xFF4FA3, 0.35f * alfa);
                 } else if (id.startsWith("martillo")) {
                     raya(manoX, manoY, manoX + ca * 10, manoY + sa * 10, grosor * 0.6f, 0x5A4632);
                     float hx2 = manoX + ca * 12, hy2 = manoY + sa * 12;
@@ -497,7 +499,7 @@ public final class DibujoRobot {
                         ox = nx;
                         oy = ny;
                     }
-                    if (!rota) p.brillo(X(ox), Y(oy), 3 * u, 0x9BE7FF, 0.6f * alfa);
+                    if (!rota) p.brillo(enX(ox), enY(oy), 3 * u, 0x9BE7FF, 0.6f * alfa);
                 } else {
                     // Puños.
                     bola(manoX + ca * 4, manoY + sa * 4, grosor * 1.2f, colArma);
@@ -592,11 +594,11 @@ public final class DibujoRobot {
             }
             if (a.parte == Montaje.PIERNAS && a.v < 0.35f) ly = 2 + a.v * piernas * 2;
             if (a.quemadura) {
-                p.elipse(X(lx), Y(ly), r * 1.4f * u, r * u, 0, 0x1A1410, 0.55f * alfa);
-                p.elipse(X(lx), Y(ly), r * 0.7f * u, r * 0.5f * u, 0, 0x3B2A1A, 0.6f * alfa);
+                p.elipse(enX(lx), enY(ly), r * 1.4f * u, r * u, 0, 0x1A1410, 0.55f * alfa);
+                p.elipse(enX(lx), enY(ly), r * 0.7f * u, r * 0.5f * u, 0, 0x3B2A1A, 0.6f * alfa);
             } else {
-                p.circulo(X(lx), Y(ly), r * u, 0x000000, 0.32f * alfa);
-                p.circulo(X(lx - r * 0.3f), Y(ly + r * 0.3f), r * 0.55f * u, 0xFFFFFF, 0.12f * alfa);
+                p.circulo(enX(lx), enY(ly), r * u, 0x000000, 0.32f * alfa);
+                p.circulo(enX(lx - r * 0.3f), enY(ly + r * 0.3f), r * 0.55f * u, 0xFFFFFF, 0.12f * alfa);
                 if (a.tamano > 0.7f) raya(lx - r, ly + r * 0.3f, lx + r * 0.8f, ly - r * 0.5f, 0.5f, 0x111111);
             }
         }
@@ -606,19 +608,19 @@ public final class DibujoRobot {
         float cy = (base + cima) / 2 + 4;
         if (e.escudo) {
             float pulso = 1 + 0.04f * (float) Math.sin(e.tiempo * 8);
-            p.elipse(X(0), Y(cy), (ancho * 0.75f + 10) * u * pulso, (cima - base + 26) * 0.62f * u * pulso, 0, 0x59C3FF, 0.16f);
+            p.elipse(enX(0), enY(cy), (ancho * 0.75f + 10) * u * pulso, (cima - base + 26) * 0.62f * u * pulso, 0, 0x59C3FF, 0.16f);
             p.formas.setColor(p.color(0x9FE7FF, 0.7f));
-            p.formas.ellipse(X(0), Y(cy), (ancho * 0.75f + 10) * u * pulso, (cima - base + 26) * 0.62f * u * pulso, 0, 1.6f * u);
+            p.formas.ellipse(enX(0), enY(cy), (ancho * 0.75f + 10) * u * pulso, (cima - base + 26) * 0.62f * u * pulso, 0, 1.6f * u);
         }
         if (e.aturdido) {
             for (int i = 0; i < 3; i++) {
                 double a = e.tiempo * 5 + i * Math.PI * 2 / 3;
                 float sx = (float) Math.cos(a) * 12, sy = cima + 24 + (float) Math.sin(a) * 3;
-                p.circulo(X(sx), Y(sy), 2.2f * u, 0xFFE066, 1);
+                p.circulo(enX(sx), enY(sy), 2.2f * u, 0xFFE066, 1);
             }
             for (int i = 0; i < 2; i++) {
                 float ax = (float) (Math.random() * 20 - 10), ay = (float) (base + Math.random() * (cima - base));
-                p.linea(X(ax), Y(ay), X(ax + 5), Y(ay + 6), 1.2f * u, 0x9BE7FF, 0.9f);
+                p.linea(enX(ax), enY(ay), enX(ax + 5), enY(ay + 6), 1.2f * u, 0x9BE7FF, 0.9f);
             }
         }
     }

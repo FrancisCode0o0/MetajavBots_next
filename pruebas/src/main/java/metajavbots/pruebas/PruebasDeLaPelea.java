@@ -114,6 +114,13 @@ final class PruebasDeLaPelea {
     }
 
     static void apuntar() {
+        apuntarParte1();
+        apuntarParte2();
+        apuntarParte3();
+        apuntarParte4();
+    }
+
+    private static void apuntarParte1() {
         caso("piezas: el catálogo se lee sin avisos y tiene cientos", () -> {
             CatalogoDePiezas c = CatalogoDePiezas.delJuego();
             igual("[]", c.avisos().toString(), "avisos del catálogo");
@@ -165,7 +172,9 @@ final class PruebasDeLaPelea {
             igual(p1.combatientes[1].danoTotalRecibido, p2.combatientes[1].danoTotalRecibido, "alemán e inglés, lo mismo");
             cierto(p1.combatientes[0].danoTotalHecho > 0, "atacan de verdad");
         });
+    }
 
+    private static void apuntarParte2() {
         caso("pelea: un robot que falla no rompe nada y apunta la línea", () -> {
             Modelo m = Modelo.de("cobalto");
             Fabrica rota = new Fabrica() {
@@ -222,8 +231,9 @@ final class PruebasDeLaPelea {
                 cierto(victorias[i] < peleas * 0.25, "demasiadas victorias de " + todos.get(i).id + ": " + b);
             }
         });
+    }
 
-
+    private static void apuntarParte3() {
         caso("royale: seis robots todos contra todos acaban la pelea con un ganador", () -> {
             Combatiente[] cs = new Combatiente[6];
             int[] eq = new int[6];
@@ -292,7 +302,9 @@ final class PruebasDeLaPelea {
             int g = p.equipoGanador();
             cierto(g == 0 || g == 1 || g == -1, "gana un equipo: " + g);
         });
+    }
 
+    private static void apuntarParte4() {
         caso("equipos: el código del jugador oye a su equipo (alOirAlEquipo)", () -> {
             Pelea p = new Pelea(new Combatiente[]{con("a", Modelo.de("vigia"), de(Avisador::new)), con("b", Modelo.de("vigia"), de(Sencillo::new)),
                     con("c", Modelo.de("vigia"), de(Oyente::new))}, new int[]{0, 1, 0}, 3);

@@ -1,4 +1,12 @@
 // Configuración común a los cuatro módulos (motor, juego, lwjgl3, pruebas).
+
+// Dentro de una carpeta de OneDrive, lo compilado va fuera (en %LOCALAPPDATA%/MetajavBots/build): OneDrive convierte los
+// .class en «archivos en la nube» y Gradle deja de poder compilar («not a regular file», «Failed to clean up stale outputs»).
+if (rootDir.absolutePath.contains('OneDrive')) {
+    def fuera = new File(System.getenv('LOCALAPPDATA') ?: System.getProperty('java.io.tmpdir'), 'MetajavBots/build')
+    allprojects { layout.buildDirectory = new File(fuera, project.name) }
+}
+
 subprojects {
     apply plugin: 'java'
 
@@ -16,5 +24,31 @@ subprojects {
     tasks.withType(JavaCompile).configureEach {
         options.release = 17
         options.encoding = 'UTF-8'
+        // Sin avisos del compilador en el código del juego (el motor es una copia tal cual de CastillaFantasX).
+        if (project.name != 'motor') options.compilerArgs += ['-Xlint:all', '-Xlint:-serial', '-Xlint:-options']
     }
+}
+
+// ESTILO: "gradlew estilo" (o "jugar.bat estilo") revisa el código del juego con Checkstyle (config/checkstyle/checkstyle.xml).
+// Checkstyle (LGPL-2.1) solo se usa para revisar: Gradle lo baja de Maven Central y no va dentro del juego.
+configure(subprojects.findAll { it.name != 'motor' }) {
+    apply plugin: 'checkstyle'
+    checkstyle {
+        toolVersion = '10.21.1'
+        configFile = rootProject.file('config/checkstyle/checkstyle.xml')
+        ignoreFailures = false
+        maxWarnings = 0
+    }
+    tasks.withType(Checkstyle).configureEach {
+        reports {
+            xml.required = false
+            html.required = true
+        }
+    }
+}
+
+tasks.register('estilo') {
+    group = 'verification'
+    description = 'Revisa el estilo del código del juego con Checkstyle.'
+    dependsOn subprojects.findAll { it.name != 'motor' }.collect { "${it.path}:checkstyleMain" }
 }

@@ -19,6 +19,7 @@ import metajavbots.textos.Trilingue;
  */
 public final class Leccion {
 
+    /** Una página de la lección: su texto y, si hay, un trozo de código. */
     public static final class Pagina {
         public final Trilingue texto;
         public final String codigo;
@@ -29,6 +30,7 @@ public final class Leccion {
         }
     }
 
+    /** Una tarea de la lección: un ejercicio que resolver o una prueba con el robot en la arena. */
     public static final class Tarea {
         /** El id de un ejercicio, o null. */
         public final String ejercicio;

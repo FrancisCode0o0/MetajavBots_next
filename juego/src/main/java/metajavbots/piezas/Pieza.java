@@ -16,6 +16,7 @@ import metajavbots.textos.Trilingue;
  */
 public final class Pieza {
 
+    /** Dónde se monta una pieza. */
     public enum Ranura { CABEZA, BRAZO, PIERNAS, NUCLEO, NATURALEZA }
 
     /** Las armas de los brazos. */
@@ -27,6 +28,7 @@ public final class Pieza {
     /** Cómo se mueven. */
     public enum Locomocion { BIPEDO, ORUGAS, RUEDAS, FLOTANTE, VUELO, PATAS }
 
+    /** Lo difícil que es de conseguir. */
     public enum Rareza { COMUN, RARA, EPICA, LEGENDARIA }
 
     public final String id;

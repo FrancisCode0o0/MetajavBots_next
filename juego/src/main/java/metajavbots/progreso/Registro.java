@@ -8,6 +8,7 @@ import java.util.Locale;
  */
 public final class Registro {
 
+    /** Cómo acabó la pelea para el jugador. */
     public enum Resultado { VICTORIA, DERROTA, EMPATE }
 
     public final long fecha;

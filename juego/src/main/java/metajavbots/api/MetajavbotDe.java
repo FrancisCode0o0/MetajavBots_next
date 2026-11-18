@@ -211,7 +211,7 @@ public abstract class MetajavbotDe extends RobotBase {
         return m().arma(Mando.DERECHA);
     }
 
-    /** Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO" (Puls), "SOBRECARGA" (Überladung) ("" wenn keins). */
+    /** Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO", "SOBRECARGA" ("" wenn keins). */
     public final String spezialKopf() {
         return m().arma(Mando.CABEZA);
     }

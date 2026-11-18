@@ -23,6 +23,7 @@ import metajavbots.textos.Trilingue;
  */
 public final class Ejercicio {
 
+    /** Cómo se comprueba: un método que devuelve algo, lo que escribe, o una clase entera. */
     public enum Tipo { METODO, SALIDA, CLASE }
 
     /** Un caso: lo que se llama y lo que se espera. */

@@ -21,6 +21,7 @@ import metajavbots.textos.Trilingue;
  */
 public final class PruebaDeNivel {
 
+    /** Una pregunta de la prueba: su escalón, el enunciado, el código, las opciones y cuál es la buena. */
     public static final class Pregunta {
         public final Etiqueta nivel;
         public final Trilingue pregunta;

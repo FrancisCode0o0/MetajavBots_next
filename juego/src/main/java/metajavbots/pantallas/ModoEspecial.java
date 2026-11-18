@@ -78,7 +78,8 @@ public final class ModoEspecial implements Pantalla {
                 }
                 yy += 20;
                 yy += p.parrafo(T.t("especial.depurador_ayuda"), x + 24, yy, w - 48, ui.letra * 0.95f, ui.tema.texto, 1) + 16;
-                if (ui.boton(T.t("especial.practicar_depurador"), x + 24, yy, 420, 56, Ui.Estilo.NORMAL)) j.ir(new PantallaPelea(PrepararPelea.encuentro(j, "PRACTICA")));
+                if (ui.boton(T.t("especial.practicar_depurador"), x + 24, yy, 420, 56, Ui.Estilo.NORMAL)) j.ir(new PantallaPelea(PrepararPelea.encuentro(j,
+                        "PRACTICA")));
                 yy += 80;
                 yy += p.parrafo(T.t("especial.errores_ayuda"), x + 24, yy, w - 48, ui.letra * 0.9f, ui.tema.textoSuave, 1) + 16;
                 break;
@@ -87,7 +88,8 @@ public final class ModoEspecial implements Pantalla {
                 for (Laboratorio l : Laboratorio.todos()) {
                     boolean hecho = jug.laboratoriosHechos.contains(l.id);
                     p.texto((hecho ? "✔ " : "") + l.titulo(T.idioma), x + 24, yy + 10, ui.letra * 1.1f, true, hecho ? ui.tema.bien : ui.tema.texto, 1);
-                    if (ui.boton(T.t("especial.abrir"), x + w - 320, yy, 280, 54, hecho ? Ui.Estilo.PLANO : Ui.Estilo.PRINCIPAL)) j.ir(new PantallaLaboratorio(l));
+                    if (ui.boton(T.t("especial.abrir"), x + w - 320, yy, 280, 54, hecho ? Ui.Estilo.PLANO
+                            : Ui.Estilo.PRINCIPAL)) j.ir(new PantallaLaboratorio(l));
                     yy += 74;
                 }
                 break;
@@ -97,7 +99,8 @@ public final class ModoEspecial implements Pantalla {
                     if (e.desbloquea.isEmpty()) continue;
                     boolean hecho = jug.ejerciciosResueltos.contains(e.id);
                     p.texto((hecho ? "✔ " : "") + e.titulo(T.idioma), x + 24, yy + 10, ui.letra * 1.1f, true, hecho ? ui.tema.bien : ui.tema.texto, 1);
-                    if (ui.boton(T.t("especial.abrir"), x + w - 320, yy, 280, 54, hecho ? Ui.Estilo.PLANO : Ui.Estilo.PRINCIPAL)) j.ir(new PantallaEjercicio(e));
+                    if (ui.boton(T.t("especial.abrir"), x + w - 320, yy, 280, 54, hecho ? Ui.Estilo.PLANO
+                            : Ui.Estilo.PRINCIPAL)) j.ir(new PantallaEjercicio(e));
                     yy += 74;
                 }
                 break;

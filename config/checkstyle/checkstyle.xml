@@ -1,0 +1,64 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Checkstyle//DTD Checkstyle Configuration 1.3//EN" "https://checkstyle.org/dtds/configuration_1_3.dtd">
+<!--
+  ESTILO de MetajavBots: lo que comprueba "gradlew estilo" (o "jugar.bat estilo") en el código del juego.
+  Es un juego para aprender Java, así que su propio código tiene que ser un buen ejemplo: nombres claros,
+  Javadoc en lo público, métodos y clases de tamaño razonable, nada de imports sin usar ni de comparaciones
+  de textos con ==. Las reglas y sus límites se explican en docs/ESTADO.md. No se exige una sola sentencia
+  por línea: las tablas de reglas (la pronunciación de la voz, las teclas del editor) se leen mejor en una línea.
+-->
+<module name="Checker">
+    <property name="charset" value="UTF-8"/>
+    <property name="severity" value="error"/>
+    <module name="FileLength">
+        <property name="max" value="800"/>
+    </module>
+    <module name="LineLength">
+        <property name="max" value="160"/>
+    </module>
+    <module name="FileTabCharacter"/>
+    <module name="NewlineAtEndOfFile">
+        <property name="lineSeparator" value="lf_cr_crlf"/>
+    </module>
+    <module name="TreeWalker">
+        <!-- Nombres -->
+        <module name="TypeName"/>
+        <module name="MethodName"/>
+        <module name="MemberName"/>
+        <module name="ParameterName"/>
+        <module name="LocalVariableName"/>
+        <module name="ConstantName"/>
+        <module name="StaticVariableName"/>
+        <!-- Javadoc en lo público -->
+        <module name="MissingJavadocType">
+            <property name="scope" value="public"/>
+        </module>
+        <module name="InvalidJavadocPosition"/>
+        <!-- Tamaños -->
+        <module name="MethodLength">
+            <property name="max" value="80"/>
+            <property name="countEmpty" value="false"/>
+        </module>
+        <module name="ParameterNumber">
+            <property name="max" value="11"/>
+        </module>
+        <!-- Imports -->
+        <module name="UnusedImports"/>
+        <module name="RedundantImport"/>
+        <!-- Errores típicos -->
+        <module name="StringLiteralEquality"/>
+        <module name="EqualsHashCode"/>
+        <module name="SimplifyBooleanExpression"/>
+        <module name="SimplifyBooleanReturn"/>
+        <module name="MissingSwitchDefault"/>
+        <module name="FallThrough"/>
+        <module name="EmptyStatement"/>
+        <module name="EmptyCatchBlock">
+            <property name="commentFormat" value=".+"/>
+        </module>
+        <module name="UpperEll"/>
+        <module name="ArrayTypeStyle"/>
+        <module name="HideUtilityClassConstructor"/>
+        <module name="FinalClass"/>
+    </module>
+</module>

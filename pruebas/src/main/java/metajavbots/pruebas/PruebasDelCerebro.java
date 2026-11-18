@@ -19,6 +19,12 @@ final class PruebasDelCerebro {
     }
 
     static void apuntar() {
+        apuntarParte1();
+        apuntarParte2();
+        apuntarParte3();
+    }
+
+    private static void apuntarParte1() {
         caso("cerebro: sin cerebro elegido no hay cerebro (y el juego sigue)", () -> {
             Jugador j = new Jugador("x");
             igual(null, CerebroDelJuego.de(j));
@@ -74,7 +80,9 @@ final class PruebasDelCerebro {
             igual("sk-…cdef", Claves.tapada("sk-1234567890abcdef"));
             igual("", Claves.tapada(""));
         });
+    }
 
+    private static void apuntarParte2() {
         caso("cerebro: el local se arranca solo al preguntar y se apaga (solo con METAJAVBOTS_PROBAR_CEREBRO)", () -> {
             if (System.getenv("METAJAVBOTS_PROBAR_CEREBRO") == null) {
                 System.out.println("            (se salta: arranca KoboldCpp, tarda)");
@@ -95,7 +103,8 @@ final class PruebasDelCerebro {
             cierto(!r.isBlank() && !r2.isBlank(), "contesta");
         });
 
-        caso("cerebro: arranca varios cerebros locales a la vez, Gemma (rápido) y Qwen3.5 (pesado), sin pasar de la memoria (solo con METAJAVBOTS_PROBAR_CEREBRO)", () -> {
+        caso("cerebro: varios cerebros locales a la vez, Gemma (rápido) y Qwen3.5 (pesado), sin pasar de la memoria "
+                + "(solo con METAJAVBOTS_PROBAR_CEREBRO)", () -> {
             if (System.getenv("METAJAVBOTS_PROBAR_CEREBRO") == null) {
                 System.out.println("            (se salta: arranca dos KoboldCpp, tarda)");
                 return;
@@ -104,15 +113,19 @@ final class PruebasDelCerebro {
             for (int i = 0; i < 2; i++) j.cerebros[i].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
             try {
                 long t0 = System.currentTimeMillis();
-                String r = CerebroDelJuego.rapido(j).preguntar(CerebroDelJuego.sistemaLocutor(Idioma.ES), "Round 1. Player robot took 40 damage, dealt 70.", 25);
+                String r = CerebroDelJuego.rapido(j).preguntar(CerebroDelJuego.sistemaLocutor(Idioma.ES), "Round 1. Player robot took 40 damage, dealt 70.",
+                        25);
                 System.out.println("            rápido (" + CerebroDelJuego.modeloDe(j, 0) + "): " + (System.currentTimeMillis() - t0) + " ms → " + r);
                 t0 = System.currentTimeMillis();
-                String r2 = CerebroDelJuego.pesado(j).preguntar(CerebroDelJuego.sistemaTutor(Idioma.ES, "Noob I", "Loops"), "¿Qué es un bucle for? Una frase.", 40);
-                System.out.println("            pesado (" + CerebroDelJuego.modeloDe(j, 1) + "): " + (System.currentTimeMillis() - t0) + " ms → " + r2.replace('\n', ' '));
+                String r2 = CerebroDelJuego.pesado(j).preguntar(CerebroDelJuego.sistemaTutor(Idioma.ES, "Noob I", "Loops"),
+                        "¿Qué es un bucle for? Una frase.", 40);
+                System.out.println("            pesado (" + CerebroDelJuego.modeloDe(j, 1) + "): " + (System.currentTimeMillis() - t0) + " ms → "
+                        + r2.replace('\n', ' '));
                 t0 = System.currentTimeMillis();
                 String r3 = CerebroDelJuego.pesado(j).preguntar(CerebroDelJuego.sistemaTutor(Idioma.ES, "Noob I", "Loops"), "¿Y un while? Una frase.", 40);
                 System.out.println("            pesado, segunda: " + (System.currentTimeMillis() - t0) + " ms → " + r3.replace('\n', ' '));
-                System.out.println("            en marcha: " + CerebroLocal.enMarchaDelJuego() + ", " + CerebroLocal.memoriaEnUsoMb() + " MB de " + CerebroLocal.presupuestoMb());
+                System.out.println("            en marcha: " + CerebroLocal.enMarchaDelJuego() + ", " + CerebroLocal.memoriaEnUsoMb() + " MB de "
+                        + CerebroLocal.presupuestoMb());
                 igual(2, CerebroLocal.enMarchaDelJuego().size(), "los dos a la vez");
                 cierto(!r.isBlank() && !r2.isBlank(), "contestan");
                 // El tercero (el de Jarvis, 6,3 GB) no cabe con los otros dos: se apaga el que lleva más rato sin usarse.
@@ -120,13 +133,16 @@ final class PruebasDelCerebro {
                 t0 = System.currentTimeMillis();
                 String r4 = CerebroDelJuego.deLaRanura(j, 2).preguntar("Answer with one word.", "Say OK.", 4);
                 System.out.println("            tercero (" + CerebroDelJuego.modeloDe(j, 2) + "): " + (System.currentTimeMillis() - t0) + " ms → " + r4);
-                System.out.println("            en marcha: " + CerebroLocal.enMarchaDelJuego() + ", " + CerebroLocal.memoriaEnUsoMb() + " MB de " + CerebroLocal.presupuestoMb());
+                System.out.println("            en marcha: " + CerebroLocal.enMarchaDelJuego() + ", " + CerebroLocal.memoriaEnUsoMb() + " MB de "
+                        + CerebroLocal.presupuestoMb());
                 cierto(CerebroLocal.memoriaEnUsoMb() <= CerebroLocal.presupuestoMb(), "nunca pasan del presupuesto");
             } finally {
                 CerebroLocal.parar();
             }
         });
+    }
 
+    private static void apuntarParte3() {
         caso("cerebro: si hay un KoboldCpp escuchando, contesta (pulla moderada y tutor)", () -> {
             String d = "http://localhost:" + CerebroLocal.PUERTO_DEL_JUEGO;
             if (!CerebroLocal.escucha(d)) {

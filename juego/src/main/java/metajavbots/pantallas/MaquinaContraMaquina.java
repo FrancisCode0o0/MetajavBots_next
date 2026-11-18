@@ -152,7 +152,8 @@ public final class MaquinaContraMaquina implements Pantalla {
         p.textoCentrado(T.f("pelea.ronda", pelea.ronda(), pelea.rondas), p.ancho / 2 + 200, by + 12, ui.letra, true, ui.tema.texto, 1);
         if (pelea.estado() == Pelea.Estado.TERMINADA) {
             int g = pelea.ganador();
-            p.textoCentrado(g < 0 ? T.t("final.empate") : T.f("mcm.gana", pelea.combatientes[g].nombre), p.ancho / 2, arriba + 20, ui.letra * 1.6f, true, 0xFFC857, 1);
+            p.textoCentrado(g < 0 ? T.t("final.empate") : T.f("mcm.gana", pelea.combatientes[g].nombre), p.ancho / 2, arriba + 20, ui.letra * 1.6f, true,
+                    0xFFC857, 1);
             if (ui.boton(T.t("mcm.otra"), p.ancho - 230, by, 210, 46, Ui.Estilo.PRINCIPAL)) pelea = null;
         } else if (ui.boton(T.t("mcm.otra"), p.ancho - 230, by, 210, 46, Ui.Estilo.PLANO)) {
             pelea = null;

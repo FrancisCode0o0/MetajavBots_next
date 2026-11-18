@@ -23,6 +23,7 @@ import metajavbots.textos.Idioma;
  */
 public final class Referencia {
 
+    /** Una entrada del buscador: su firma, su tema, su explicación en tres idiomas y un ejemplo. */
     public static final class Entrada {
         public final String id, tema, ejemplo;
         final Map<String, String> v;

@@ -20,6 +20,7 @@ import metajavbots.sonido.Sonidos;
  */
 public final class VistaDeArena {
 
+    /** Los escenarios de la arena. */
     public enum Escenario { HANGAR, DESIERTO, NEON, LABORATORIO, LUNA }
 
     public Escenario escenario = Escenario.HANGAR;

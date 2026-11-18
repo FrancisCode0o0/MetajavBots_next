@@ -32,6 +32,13 @@ final class PruebasDelProgreso {
     }
 
     static void apuntar() {
+        apuntarParte1();
+        apuntarParte2();
+        apuntarParte3();
+        apuntarParte4();
+    }
+
+    private static void apuntarParte1() {
         caso("progreso: doce etiquetas y Master, con los robots que permite cada categoría", () -> {
             igual(13, Etiqueta.values().length);
             igual(1, Etiqueta.NOOB_4.robotsPermitidos());
@@ -98,7 +105,9 @@ final class PruebasDelProgreso {
             cierto(Progreso.piezaDisponible(j, c.pieza("laser_aurora")), "la legendaria del desafío, sí");
             cierto(Progreso.piezaUsable(j, c.pieza("canon_riel"), Modelo.de("eclipse")), "las de fábrica de su modelo, siempre");
         });
+    }
 
+    private static void apuntarParte2() {
         caso("progreso: el botín de una victoria es un núcleo de la naturaleza del rival", () -> {
             Jugador j = new Jugador("x");
             Progreso.Cambio c = Progreso.despuesDeLaPelea(j, pelea(Registro.Resultado.VICTORIA, 0.2), "FURIA", new Random(2));
@@ -144,7 +153,8 @@ final class PruebasDelProgreso {
                         texto.append("    C").append(semilla).append(".q(); => \"").append(g.respuesta.replace("\"", "\\\"")).append("\\n\"\n");
                     }
                     String ej = "=== generada\ntema: 01\ndificultad: 1\njava: 17\ntipo: salida\ntitulo.es: x\ntitulo.de: x\ntitulo.en: x\n"
-                            + "enunciado.es: x\nenunciado.de: x\nenunciado.en: x\nfirma: static void q0()\nplantilla:\n    return;\nsolucion:\n    return;\ncasos:\n" + texto;
+                            + "enunciado.es: x\nenunciado.de: x\nenunciado.en: x\nfirma: static void q0()\n"
+                            + "plantilla:\n    return;\nsolucion:\n    return;\ncasos:\n" + texto;
                     metajavbots.ejercicios.Ejercicio e = metajavbots.ejercicios.Ejercicio.leer(
                             new java.io.ByteArrayInputStream(ej.getBytes(java.nio.charset.StandardCharsets.UTF_8)), "generada").get(0);
                     metajavbots.ejercicios.Comprobador.Informe inf = metajavbots.ejercicios.Comprobador.comprobar(e, codigo.toString(), java.util.Locale.ROOT);
@@ -157,7 +167,9 @@ final class PruebasDelProgreso {
             }
             System.out.println("            " + n + " plantillas, 12 azares cada una");
         });
+    }
 
+    private static void apuntarParte3() {
         caso("progreso: las partidas se cambian de nombre y se borran (a partidas/_borradas)", () -> {
             Path antes = Guardado.carpeta;
             Path tmp = Files.createTempDirectory("metajavbots");
@@ -206,7 +218,9 @@ final class PruebasDelProgreso {
             igual(Etiqueta.SENIOR_2, PruebaDeNivel.resultado(todo));
             igual(Etiqueta.NOOB_4, PruebaDeNivel.resultado(mitad));
         });
+    }
 
+    private static void apuntarParte4() {
         caso("progreso: la partida se guarda y se lee igual (robots, código, historial)", () -> {
             Path antes = Guardado.carpeta;
             Path tmp = Files.createTempDirectory("metajavbots");

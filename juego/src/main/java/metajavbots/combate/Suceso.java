@@ -8,6 +8,7 @@ package metajavbots.combate;
  */
 public final class Suceso {
 
+    /** Qué ha pasado (cada tipo tiene su sonido, su efecto y sus frases). */
     public enum Tipo {
         RONDA_EMPIEZA, RONDA_ACABA, PELEA_ACABA,
         LASER, DISPARO, MISIL, LLAMA, GOLPE_CUERPO, FALLO_CUERPO,

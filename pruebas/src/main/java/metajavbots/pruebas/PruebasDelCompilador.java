@@ -64,6 +64,13 @@ final class PruebasDelCompilador {
     }
 
     static void apuntar() {
+        apuntarParte1();
+        apuntarParte2();
+        apuntarParte3();
+        apuntarParte4();
+    }
+
+    private static void apuntarParte1() {
         caso("compilador: hay JDK (javac) para compilar los robots", () -> cierto(Compilador.hayCompilador(), "sin JDK"));
 
         caso("compilador: un robot compila, pelea y escribe en su consola", () -> {
@@ -130,7 +137,9 @@ final class PruebasDelCompilador {
                 cierto(prohibido, "dice que está prohibido: " + m[0] + " → " + r.errores);
             }
         });
+    }
 
+    private static void apuntarParte2() {
         caso("compilador: Java moderno compila sin falsos avisos (lambdas, records, switch, text blocks, var, streams)", () -> {
             String moderno = String.join("\n",
                     "import metajavbots.api.*;",
@@ -173,7 +182,8 @@ final class PruebasDelCompilador {
         });
 
         caso("compilador: el inyector no cambia lo que hace el código", () -> {
-            String prog = "public class Cuenta { public static int f() { int s = 0; for (int i = 0; i < 10; i++) { int j = 0; while (j < i) { s += j; j++; } } do { s--; } while (s > 100); for (int k : new int[]{1,2,3}) s += k; return s; } }";
+            String prog = "public class Cuenta { public static int f() { int s = 0; for (int i = 0; i < 10; i++) { int j = 0; "
+                    + "while (j < i) { s += j; j++; } } do { s--; } while (s > 100); for (int k : new int[]{1,2,3}) s += k; return s; } }";
             Inyector.Inyectado in = Inyector.inyectar(prog);
             cierto(in.cuantos() >= 4, "mete pasos: " + in.cuantos());
             cierto(in.fuente.contains("i++) { metajavbots.api.Tope.paso();"), "en el for: " + in.fuente);
@@ -183,7 +193,9 @@ final class PruebasDelCompilador {
             Object v = cg.loadClass("Cuenta").getMethod("f").invoke(null);
             igual(106, v, "mismo resultado (120, baja a 100, +6)");
         });
+    }
 
+    private static void apuntarParte3() {
         caso("compilador: constructores, clases anónimas y enums con cuerpo no se rompen al inyectar", () -> {
             String prog = String.join("\n",
                     "import java.util.*;",
@@ -191,7 +203,8 @@ final class PruebasDelCompilador {
                     "    private int x;",
                     "    public Varios(int x) { this.x = x; }",
                     "    public Varios() { this(3); }",
-                    "    enum Op { SUMA(1) { int f(int a) { return a + 1; } }, RESTA(2) { int f(int a) { return a - 1; } }; final int c; Op(int c) { this.c = c; } abstract int f(int a); }",
+                    "    enum Op { SUMA(1) { int f(int a) { return a + 1; } }, RESTA(2) { int f(int a) { return a - 1; } }; "
+                            + "final int c; Op(int c) { this.c = c; } abstract int f(int a); }",
                     "    static class Hijo extends Varios { Hijo() { super(5); } }",
                     "    public static int g() {",
                     "        Comparator<Integer> c = new Comparator<Integer>() { public int compare(Integer a, Integer b) { return b - a; } };",
@@ -240,7 +253,9 @@ final class PruebasDelCompilador {
             System.out.println("            " + n + " soluciones compiladas con traza");
             cierto(mal.isEmpty(), String.join("\n  ", mal));
         });
+    }
 
+    private static void apuntarParte4() {
         caso("compilador: cambiar el código entre rondas estrena el robot y conserva la memoria", () -> {
             RobotDelJugador r = new RobotDelJugador();
             String v1 = robotCon("        memoria().merge(\"turnos\", 1, (a, b) -> (Integer) a + (Integer) b);", "");

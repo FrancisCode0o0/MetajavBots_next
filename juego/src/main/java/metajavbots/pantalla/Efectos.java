@@ -9,6 +9,7 @@ import java.util.Random;
  */
 public final class Efectos {
 
+    /** Las clases de partícula, cada una con su forma de moverse y de dibujarse. */
     public enum Tipo { CHISPA, HUMO, FUEGO, TROZO, CONFETI, DESTELLO, ONDA, COHETE, BRASA }
 
     private static final int MAXIMO = 3000;
@@ -56,7 +57,8 @@ public final class Efectos {
         for (int k = 0; k < 30 * fuerza; k++) {
             double a = azar.nextDouble() * Math.PI * 2;
             float v = 60 + azar.nextFloat() * 220 * fuerza;
-            anadir(Tipo.FUEGO, px, py, (float) Math.cos(a) * v, (float) Math.sin(a) * v - 40, 0.4f + azar.nextFloat() * 0.5f, 8 + azar.nextFloat() * 10 * fuerza,
+            anadir(Tipo.FUEGO, px, py, (float) Math.cos(a) * v, (float) Math.sin(a) * v - 40, 0.4f + azar.nextFloat() * 0.5f, 8
+                    + azar.nextFloat() * 10 * fuerza,
                     azar.nextBoolean() ? 0xFF6B1A : 0xFFC145);
         }
         for (int k = 0; k < 12 * fuerza; k++) {

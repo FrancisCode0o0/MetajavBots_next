@@ -3,7 +3,6 @@ package metajavbots.pantallas;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -177,7 +176,8 @@ public final class Temario implements Pantalla {
                 yy += 48;
             }
             String det = temaDelDetector(id);
-            if (det != null && ui.boton(T.t("temario.combate"), rx + rw - 310, yy - 48 * Math.min(3, n), 270, 46, Ui.Estilo.NORMAL, true, T.t("temario.combate_ayuda"))) {
+            if (det != null && ui.boton(T.t("temario.combate"), rx + rw - 310, yy - 48 * Math.min(3, n), 270, 46, Ui.Estilo.NORMAL, true,
+                    T.t("temario.combate_ayuda"))) {
                 j.ir(new PantallaPelea(combateTematico(j, tm, det)));
             }
             yy += 14;

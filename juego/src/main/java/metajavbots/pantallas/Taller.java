@@ -339,7 +339,8 @@ public final class Taller implements Pantalla {
 
     static String cifras(Pieza p) {
         StringBuilder b = new StringBuilder();
-        String[] claves = {"dano", "alcance", "enfriamiento", "energia", "radar", "cono", "velocidad", "giro", "pasos", "energiaMax", "blindaje", "peso", "refuerzo"};
+        String[] claves = {"dano", "alcance", "enfriamiento", "energia", "radar", "cono", "velocidad", "giro", "pasos", "energiaMax", "blindaje", "peso",
+                "refuerzo"};
         for (String k : claves) {
             double v = p.valor(k);
             if (v == 0) continue;

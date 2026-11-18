@@ -150,7 +150,8 @@ public final class PantallaEjercicio implements Pantalla {
         if (inf != null && !inf.salida.isEmpty() && e.tipo != Ejercicio.Tipo.SALIDA) {
             p.texto(T.t("ejercicio.salida"), x + 20, yy, ui.letra * 0.8f, true, ui.tema.textoSuave, 1);
             yy += ui.letra * 1.3f;
-            yy += p.parrafo(inf.salida.length() > 600 ? inf.salida.substring(0, 600) + "…" : inf.salida, x + 24, yy, w - 50, ui.letra * 0.72f, ui.tema.texto, 1);
+            yy += p.parrafo(inf.salida.length() > 600 ? inf.salida.substring(0, 600) + "…" : inf.salida, x + 24, yy, w - 50, ui.letra * 0.72f, ui.tema.texto,
+                    1);
         }
         ui.finDesplazable(despl, yy + d - cy);
         float by = p.alto - 84;
@@ -268,7 +269,8 @@ public final class PantallaEjercicio implements Pantalla {
         boolean intro = pregunta.dibujar(ui, x + 12, y + h - 58, w - 24, 46, T.t("ejercicio.pregunta_al_tutor"));
         if (intro && !pregunta.texto().isBlank() && peticion == null) {
             String contexto = "Exercise: " + e.titulo.en + " — " + e.enunciado.en + "\nMy code:\n" + editor.doc.texto()
-                    + (informe != null ? "\nLast check: " + informe.bien() + "/" + informe.casos.size() + " cases OK" : "") + "\nMy question:\n" + pregunta.texto();
+                    + (informe != null ? "\nLast check: " + informe.bien() + "/" + informe.casos.size() + " cases OK" : "") + "\nMy question:\n"
+                            + pregunta.texto();
             chat.add(new Cerebro.Mensaje("user", contexto));
             Tema tm = Tema.de(e.tema);
             peticion = CerebroDelJuego.Peticion.lanzar(c, CerebroDelJuego.sistemaTutor(jug.idioma, jug.etiqueta.nombre, tm == null ? "" : tm.nombre.en),

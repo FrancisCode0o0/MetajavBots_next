@@ -34,6 +34,13 @@ final class PruebasDelContenido {
     }
 
     static void apuntar() {
+        apuntarParte1();
+        apuntarParte2();
+        apuntarParte3();
+        apuntarParte4();
+    }
+
+    private static void apuntarParte1() {
         caso("contenido: los temas están en los tres idiomas y en orden", () -> {
             List<Tema> t = Tema.todos();
             cierto(t.size() >= 20, "hay " + t.size() + " temas");
@@ -101,7 +108,9 @@ final class PruebasDelContenido {
             falso(k.compila(), "no compila");
             igual(2L, k.errores.get(0).linea, "el error, en la línea del jugador");
         });
+    }
 
+    private static void apuntarParte2() {
         caso("textos: cada texto de la interfaz que usa el código está en los tres idiomas", () -> {
             List<String> faltan = new ArrayList<>();
             java.util.regex.Pattern pat = java.util.regex.Pattern.compile("T\\.[tf]\\(\"([a-z_.0-9]+)\"");
@@ -160,7 +169,9 @@ final class PruebasDelContenido {
             }
             igual(22, temas.size(), "todos los temas tienen lecciones");
         });
+    }
 
+    private static void apuntarParte3() {
         caso("laboratorio: la solución de cada reto pasa y caza a todos los mutantes; la plantilla no", () -> {
             List<metajavbots.ejercicios.Laboratorio> ls = metajavbots.ejercicios.Laboratorio.todos();
             igual(3, ls.size());
@@ -169,7 +180,8 @@ final class PruebasDelContenido {
                 cierto(r.todoBien(), l.id + ": la solución " + r.pruebas + " cazados " + r.cazados + " " + r.errores);
                 cierto(!l.comprobar(l.plantilla, Locale.ROOT).todoBien(), l.id + ": la plantilla no basta");
                 boolean pieza = false;
-                for (metajavbots.piezas.Pieza p : metajavbots.piezas.CatalogoDePiezas.delJuego().todas()) if (p.desbloqueo.equals("pruebas:" + l.id)) pieza = true;
+                for (metajavbots.piezas.Pieza p : metajavbots.piezas.CatalogoDePiezas.delJuego().todas()) if (p.desbloqueo.equals("pruebas:"
+                        + l.id)) pieza = true;
                 cierto(pieza, l.id + " da una pieza");
             }
         });
@@ -222,7 +234,9 @@ final class PruebasDelContenido {
             igual("Das Teil {pieza} sind hin.", metajavbots.dialogos.Concordancia.ajustar("Das Teil {pieza} ist hin.", "Beine", metajavbots.textos.Idioma.DE));
             igual("{pieza} rota.", metajavbots.dialogos.Concordancia.ajustar("{pieza} rota.", "cabeza", es), "la cabeza ya concordaba");
         });
+    }
 
+    private static void apuntarParte4() {
         caso("voz clara: el audio de Piper se lee, cambia de frecuencia y lleva el efecto suave (sin arrancar Piper)", () -> {
             byte[] b = new byte[44100];
             for (int i = 0; i < b.length / 2; i++) {
