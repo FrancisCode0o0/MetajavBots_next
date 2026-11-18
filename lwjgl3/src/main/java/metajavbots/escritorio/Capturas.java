@@ -40,6 +40,16 @@ public final class Capturas extends Juego {
 
     /** Las pantallas de lo último: los aparatos de la arena. */
     private void nuevas() {
+        pantallas.put("09f_finales", () -> new Pantalla() {
+            private float t = 1.0f;
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                t += dt;
+                metajavbots.pantallas.Comun.fondo(j, 0);
+                metajavbots.pantallas.FinalesDelRobotito.muestra(j.pincel, 100, 100, j.pincel.ancho - 200, Math.min(t, 1.9f));
+            }
+        });
         pantallas.put("08b_aparato_suelo", () -> new Arena(VistaDeArena.Escenario.HANGAR, 1));
         pantallas.put("08c_aparato_montado", () -> new Arena(VistaDeArena.Escenario.LABORATORIO, 2));
         pantallas.put("08d_aparato_codigo", () -> new Pantalla() {

@@ -30,7 +30,11 @@ final class AnimacionDelCaso {
 
     /** Cuánto dura la animación de un caso (s). */
     static final float DURACION = 3.2f;
-    private static final int ROJO = 0xFF5E5B, VERDE = 0x5BD685, CAJA = 0xC98B4A;
+    static final int ROJO = 0xFF5E5B, VERDE = 0x5BD685;
+    private static final int CAJA = 0xC98B4A;
+    /** Cuándo acabó el caso (en el reloj; -1 si aún no) y qué final le toca (FinalesDelRobotito). */
+    private static float acabo = -1;
+    private static int variante;
 
     private AnimacionDelCaso() {
     }
@@ -77,6 +81,11 @@ final class AnimacionDelCaso {
 
     /** El robotito, con sus ruedas, su cabeza y un brazo (alzado de 0 a 1). Contento si acierta. */
     static void robotito(Pincel p, float x, float suelo, float brazo, boolean contento, int color) {
+        robotito(p, x, suelo, brazo, contento ? VERDE : ROJO, color);
+    }
+
+    /** El robotito con los ojos de ese color (rojo brillante, la máquina malvada). */
+    static void robotito(Pincel p, float x, float suelo, float brazo, int ojo, int color) {
         float k = 1.6f;   // su tamaño
         p.elipse(x, suelo + 2, 16 * k, 4 * k, 0, 0x000000, 0.3f);
         p.circulo(x - 9 * k, suelo - 5 * k, 5 * k, 0x2A2F38, 1);
@@ -84,7 +93,6 @@ final class AnimacionDelCaso {
         p.caja(x - 13 * k, suelo - 34 * k, 26 * k, 26 * k, 5 * k, color, 1);
         p.caja(x - 9 * k, suelo - 52 * k, 18 * k, 16 * k, 4 * k, Pincel.aclarar(color, 0.15f), 1);
         p.caja(x - 6 * k, suelo - 47 * k, 12 * k, 6 * k, 2 * k, 0x111318, 1);
-        int ojo = contento ? VERDE : ROJO;
         p.circulo(x - 2.5f * k, suelo - 44 * k, 1.6f * k, ojo, 1);
         p.circulo(x + 2.5f * k, suelo - 44 * k, 1.6f * k, ojo, 1);
         p.linea(x, suelo - 52 * k, x + 3 * k, suelo - 59 * k, 1.5f * k, 0xAAB0BA, 1);
@@ -93,8 +101,13 @@ final class AnimacionDelCaso {
         p.linea(bx, by, bx + 12 * k, by - (12 * brazo - 6 * (1 - brazo)) * k, 3 * k, Pincel.oscurecer(color, 0.2f), 1);
     }
 
-    /** El robotito trabajando; al acabar, si acertó, salta y baila; si no, se marea y se sienta de culo (con humo). */
+    /** El robotito trabajando; al acabar, uno de sus finales (FinalesDelRobotito), alegre si acertó y desastroso si no. */
     static void robot(Pincel p, float x, float suelo, float brazo, float f, boolean bien) {
+        if (f < 1) acabo = -1;
+        else if (acabo < 0) {
+            acabo = reloj;
+            variante = (int) (Math.random() * FinalesDelRobotito.VARIANTES);
+        }
         if (f < 1) {
             // En las excepciones, a media tarea tropieza (lanza), se tambalea y se recupera (catch): sigue con lo suyo.
             float tropiezo = EscenasDelRobotito.tropiezo(escenaActual, f);
@@ -102,26 +115,8 @@ final class AnimacionDelCaso {
             if (tropiezo > 0.3f) p.texto("!", x - 6, suelo - 120, 24, true, 0xFFD23F, 1);
             return;
         }
-        if (bien) {
-            float salto = Math.abs((float) Math.sin(reloj * 8)) * 16;
-            float baile = (float) Math.sin(reloj * 6) * 8;
-            robotito(p, x + baile, suelo - salto, (float) (Math.sin(reloj * 12) + 1) / 2, true, 0x3FA9F5);
-            int[] colores = {0xFFD23F, 0x5BD685, 0xFF5E5B, 0x7B61FF};
-            for (int i = 0; i < 6; i++) {
-                double a = reloj * 3 + i * Math.PI / 3;
-                p.circulo(x + baile + (float) Math.cos(a) * 46, suelo - 60 - salto + (float) Math.sin(a) * 22, 3.5f, colores[i % 4], 1);
-            }
-            return;
-        }
-        // Se ha equivocado: tiembla, se hunde un poco, con estrellitas girando y una nube de humo que sube.
-        float temblor = (float) Math.sin(reloj * 40) * 2;
-        robotito(p, x + temblor, suelo + 6, 0, false, 0x6E8FAF);
-        for (int i = 0; i < 3; i++) {
-            double a = reloj * 5 + i * 2 * Math.PI / 3;
-            p.texto("★", x + (float) Math.cos(a) * 26 - 6, suelo - 100 + (float) Math.sin(a) * 8, 16, true, 0xFFD23F, 1);
-        }
-        float humo = (reloj * 20) % 30;
-        p.circulo(x + 14, suelo - 90 - humo, 6 + humo * 0.2f, 0x8A919C, Math.max(0, 0.5f - humo / 60));
+        if (bien) FinalesDelRobotito.bien(p, x, suelo, reloj - acabo, variante);
+        else FinalesDelRobotito.mal(p, x, suelo, reloj - acabo, variante);
     }
 
     /** Un objeto del escenario (lo que el robotito apila o coloca), según la escena. */
