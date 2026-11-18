@@ -39,7 +39,7 @@ final class PanelDelTutor {
     private void decir(Juego j, String texto) {
         dice = texto;
         hablando = Math.min(6, 0.6f + texto.length() * 0.045f);
-        j.voz.decir(texto.replace("\n", " "), j.jugador.idioma);
+        j.voz.decir(texto.replace("\n", " "), j.jugador.idioma, Entrenador.de(j.jugador.entrenador).timbre);
     }
 
     /** Lo que dijo el compilador del taller (para notar si el jugador se atasca). */
@@ -52,6 +52,11 @@ final class PanelDelTutor {
      * menos si ya sabe más (su etiqueta) y más si se atasca (compilaciones fallidas seguidas).
      */
     float ayuda(Jugador jug) {
+        return ayuda(jug, fallosSeguidos);
+    }
+
+    /** Lo mismo, para quien no lleva la cuenta de fallos (el entrenador flotante usa la misma barra «Dame menos / Dame más»). */
+    static float ayuda(Jugador jug, int fallosSeguidos) {
         float sabe = jug.etiqueta.ordinal() / (float) (metajavbots.progreso.Etiqueta.values().length - 1);
         // Con el ajuste a la mitad: un Noob, 0,8 (trozos enseguida); un Junior, ~0,55; un Senior, ~0,35; un Master, 0,2 (una pregunta).
         return Math.max(0, Math.min(1, jug.ayudaDelTutor + 0.3f - sabe * 0.6f + Math.min(3, fallosSeguidos) * 0.12f));

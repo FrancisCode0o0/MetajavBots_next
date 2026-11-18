@@ -41,6 +41,8 @@ public class Juego extends ApplicationAdapter {
     public float sacudida;
     private float tiempoSacudida;
     private int fallosSeguidos;
+    /** El entrenador flotante: asoma en todas las pantallas y explica cualquier concepto (F2). */
+    public final metajavbots.pantallas.EntrenadorFlotante entrenadorFlotante = new metajavbots.pantallas.EntrenadorFlotante();
     /** La primera pantalla (Capturas pone otras). */
     protected Pantalla primera;
 
@@ -139,10 +141,13 @@ public class Juego extends ApplicationAdapter {
         pincel.empezar();
         ui.empezarFotograma();
         try {
+            entrenadorFlotante.antes(this);
             pantalla.fotograma(this, dt);
+            entrenadorFlotante.dibujar(this, dt);
             ui.acabarFotograma();
             fallosSeguidos = 0;
         } catch (Throwable e) {
+            entrada.bloqueada = false;
             fallosSeguidos++;
             Cierre.apuntar(e, null);
             if (fallosSeguidos > 3) {
@@ -157,6 +162,8 @@ public class Juego extends ApplicationAdapter {
                 // el lote ya estaba cerrado
             }
         }
+        // La voz suena en cualquier pantalla (el locutor, el tutor del taller, el entrenador flotante).
+        voz.fotograma(sonidos);
         sonidos.fotograma(dt);
         musica.tocar(pantalla.musica());
         musica.fotograma();

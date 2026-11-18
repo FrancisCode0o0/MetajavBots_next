@@ -98,11 +98,12 @@ public final class Ajustes implements Pantalla {
         y += 76;
         jug.ayudaDelTutor = ui.deslizador(T.t("ajustes.ayuda_tutor"), jug.ayudaDelTutor, x, y, w, 50, T.t("ajustes.ayuda_tutor_ayuda"));
         y += 76;
+        jug.entrenadorActivo = ui.casilla(T.t("ajustes.entrenador"), jug.entrenadorActivo, x, y, T.t("ajustes.entrenador_ayuda"));
+        y += 50;
         if (ui.boton(T.t("ajustes.probar_voz"), x, y, 260, 50, Ui.Estilo.NORMAL)) {
             j.voz.decir(metajavbots.dialogos.Dialogos.de("locutor").frase("inicio_pelea", jug.idioma, java.util.Map.of("jugador", jug.nombre)), jug.idioma);
         }
         ui.finDesplazable(izquierda, y + 70 + d - zona);
-        j.voz.fotograma(j.sonidos);
         // A la derecha: los cerebros de IA.
         cerebros.dibujar(j, x + w + 40, arriba + 16, w, p.alto - arriba - 40);
     }

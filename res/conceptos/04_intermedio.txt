@@ -1,0 +1,1441 @@
+# 04_intermedio.txt: excepciones, colecciones, genéricos, lambdas y streams, recursión y algoritmos, y pruebas con JUnit
+
+=== excepcion
+nivel: 3
+tema: 14
+titulo.es: Excepción
+titulo.de: Ausnahme
+titulo.en: Exception
+claves.es: excepcion, excepciones, que es una excepcion, exception, stack trace, traza de la pila, el programa peta, salta una excepcion
+claves.de: ausnahme, ausnahmen, exception, was ist eine exception, stack trace, programm stürzt ab, eine exception fliegt
+claves.en: exception, exceptions, what is an exception, stack trace, program crashes, an exception is thrown, throwable
+ver: try_catch, throw_throws, error_en_ejecucion, checked_unchecked
+es:
+    Una excepción es el aviso de «algo ha salido mal» que Java lanza en plena ejecución: dividir un entero entre cero, pedir la posición 10 de un array de 5, usar algo que es null. Si nadie la atiende, ese trozo del programa se corta y Java enseña qué pasó y dónde.
+    Es la bengala roja que dispara el robot cuando se le cae un brazo en mitad del combate: sube por la cadena de mando (el piloto, el mecánico, el entrenador) hasta que alguien la recoge. Si llega al árbitro sin que nadie la coja, el árbitro para el asalto y el locutor lee en voz alta el parte entero de averías.
+    En Java una excepción es un objeto: ArithmeticException, ArrayIndexOutOfBoundsException, NullPointerException o la NumberFormatException de Integer.parseInt("hola"). Trae un mensaje (getMessage()) y la traza de la pila (printStackTrace()), la lista de métodos por los que pasó, del más reciente al más antiguo. En el juego la pelea no se para: si salta dentro de cadaTurno, la consola dice «⚠ NullPointerException (línea 12)» y a tu robot se le cruzan los cables unos turnos.
+    El fallo típico es leer solo la primera línea de la traza: busca la primera que nombra TU clase (MiRobot) y su número de línea, ahí está el fallo. Y no la confundas con un error de compilación: la excepción solo aparece al ejecutar, con el código ya compilado.
+de:
+    Eine Ausnahme (Exception) ist die Meldung „hier ist etwas schiefgelaufen“, die Java mitten im Programmlauf auslöst: eine ganze Zahl durch null teilen, Platz 10 in einem Array mit 5 Plätzen verlangen, etwas benutzen, das null ist. Kümmert sich niemand darum, bricht dieser Teil des Programms ab, und Java zeigt, was passiert ist und wo.
+    Sie ist die rote Leuchtrakete, die der Roboter abfeuert, wenn ihm mitten im Kampf ein Arm abfällt: Sie steigt die Befehlskette hoch (Pilot, Mechaniker, Trainer), bis jemand sie auffängt. Kommt sie ungefangen beim Schiedsrichter an, unterbricht er die Runde, und der Sprecher liest den kompletten Schadensbericht laut vor.
+    In Java ist eine Ausnahme ein Objekt: ArithmeticException, ArrayIndexOutOfBoundsException, NullPointerException oder die NumberFormatException von Integer.parseInt("hallo"). Sie bringt eine Nachricht mit (getMessage()) und den Stack Trace (printStackTrace()), die Liste der Methoden, durch die sie gekommen ist, von der neuesten zur ältesten. Im Spiel läuft der Kampf weiter: Fliegt sie in cadaTurno (jedenZug), steht in der Konsole „⚠ NullPointerException (Zeile 12)“, und deinem Roboter brennen ein paar Züge lang die Sicherungen durch.
+    Der typische Fehler: nur die erste Zeile des Stack Trace zu lesen. Such die erste Zeile, die DEINE Klasse (MiRobot) nennt, mit ihrer Zeilennummer: Dort steckt der Fehler. Und verwechsle sie nicht mit einem Kompilierfehler: Eine Ausnahme tritt erst beim Ausführen auf, wenn der Code längst kompiliert ist.
+en:
+    An exception is Java's "something went wrong" signal, raised while the program is running: dividing an integer by zero, asking for slot 10 of a 5-slot array, using something that is null. If nobody deals with it, that part of the program stops and Java shows what happened and where.
+    It is the red flare your robot fires when an arm falls off mid-fight: it travels up the chain of command (pilot, mechanic, coach) until someone catches it. If it reaches the referee uncaught, the referee stops the round and the announcer reads out the entire damage report.
+    In Java an exception is an object: ArithmeticException, ArrayIndexOutOfBoundsException, NullPointerException, or the NumberFormatException you get from Integer.parseInt("hello"). It carries a message (getMessage()) and a stack trace (printStackTrace()), the list of methods it passed through, newest first. In the game the fight goes on: if one is thrown inside cadaTurno (onTick), the console shows "⚠ NullPointerException (line 12)" and your robot's wires get crossed for a few ticks.
+    The classic mistake is reading only the first line of the stack trace: look for the first line that names YOUR class (MiRobot) and its line number, that is where the bug is. And don't confuse it with a compile error: an exception only shows up when the code runs, long after it compiled.
+pseudo.es:
+    CADA TURNO:
+        golpes ← una fila de 3 casillas (0, 1 y 2)
+        apuntar en la casilla 3              (¡no existe!)
+        → salta una EXCEPCIÓN y el resto del turno no se hace
+    SI nadie la recoge:
+        la consola dice cuál fue y en qué línea
+pseudo.de:
+    JEDEN ZUG:
+        treffer ← eine Reihe mit 3 Plätzen (0, 1 und 2)
+        in Platz 3 schreiben                 (gibt es nicht!)
+        → eine AUSNAHME fliegt, der Rest des Zuges entfällt
+    WENN niemand sie fängt:
+        die Konsole sagt, welche es war und in welcher Zeile
+pseudo.en:
+    EVERY TICK:
+        hits ← a row of 3 slots (0, 1 and 2)
+        write into slot 3                    (it doesn't exist!)
+        → an EXCEPTION is thrown and the rest of the tick is skipped
+    IF nobody catches it:
+        the console says which one and on which line
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            int[] golpes = new int[3];      // casillas 0, 1 y 2 || Plätze 0, 1 und 2 || slots 0, 1 and 2
+            golpes[3] = 1;                  // ¡no existe!: ArrayIndexOutOfBoundsException || gibt es nicht: ArrayIndexOutOfBoundsException || doesn't exist: ArrayIndexOutOfBoundsException
+            avanzar(50);                    // esta línea ya no llega a ejecutarse || diese Zeile wird nie erreicht || this line is never reached
+        }
+    }
+
+=== try_catch
+nivel: 3
+tema: 14
+titulo.es: try-catch
+titulo.de: try-catch
+titulo.en: try-catch
+claves.es: try catch, try-catch, capturar una excepcion, atrapar una excepcion, manejar excepciones, bloque catch, multicatch
+claves.de: try catch, try-catch, ausnahme fangen, exception abfangen, ausnahmen behandeln, catch-block, multicatch
+claves.en: try catch, try-catch, catch an exception, handle an exception, exception handling, catch block, multi-catch
+ver: excepcion, finally, throw_throws, excepciones_bien_disenadas
+es:
+    try-catch es la red de seguridad de Java: en el bloque try pones lo que puede fallar y en el bloque catch, lo que hay que hacer si falla. Si no falla nada, el catch ni se mira.
+    Imagina un robot trapecista haciendo el triple mortal sobre el ring: el try es el salto y el catch es la red que sujeta debajo el mecánico, con cara de resignación. Si cae, la red lo recoge y el espectáculo sigue; si no cae, la red se queda ahí, aburrida.
+    Se escribe try { ... } catch (NumberFormatException e) { ... }: entre paréntesis va el tipo de excepción que atrapas y una variable para mirarla (e.getMessage()). Puedes poner varios catch, del más concreto al más general, o juntar tipos con | desde Java 7: catch (IllegalArgumentException | IllegalStateException e). En el robot, por ejemplo, envuelve el Double.parseDouble de un mensaje de alOirAlEquipo para que un texto raro de un compañero no te deje aturdido.
+    El fallo típico es el catch vacío (catch (Exception e) {}): el error desaparece en silencio y luego nadie sabe por qué el robot hace cosas raras. Atrapa solo lo que sabes arreglar y, como poco, escríbelo con escribir(e.getMessage()). Y no uses try-catch para lo que se evita con un if: mirar antes que la lista no está vacía es mejor que atrapar la excepción después.
+de:
+    try-catch ist das Sicherheitsnetz von Java: In den try-Block kommt, was schiefgehen kann, in den catch-Block, was dann zu tun ist. Geht nichts schief, wird der catch-Block gar nicht angeschaut.
+    Stell dir einen Trapez-Roboter vor, der über dem Ring einen dreifachen Salto wagt: try ist der Sprung, catch das Netz, das der Mechaniker mit resigniertem Blick darunter hält. Stürzt er, fängt ihn das Netz, und die Show geht weiter; stürzt er nicht, hängt das Netz eben gelangweilt herum.
+    Man schreibt try { ... } catch (NumberFormatException e) { ... }: In die Klammern kommt der Ausnahmetyp, den du fängst, und eine Variable, um sie anzusehen (e.getMessage()). Du kannst mehrere catch-Blöcke schreiben, vom speziellsten zum allgemeinsten, oder seit Java 7 Typen mit | zusammenfassen: catch (IllegalArgumentException | IllegalStateException e). Beim Roboter kannst du zum Beispiel das Double.parseDouble einer Nachricht in alOirAlEquipo (beiTeamNachricht) einpacken, damit dich ein seltsamer Text eines Teamkameraden nicht lahmlegt.
+    Der typische Fehler ist der leere catch-Block (catch (Exception e) {}): Der Fehler verschwindet lautlos, und keiner weiß, warum der Roboter später Unsinn macht. Fang nur, was du auch beheben kannst, und gib es mindestens mit escribir (ausgeben) aus: escribir(e.getMessage()). Und nimm try-catch nicht für etwas, das ein if verhindert: Vorher prüfen, ob die Liste leer ist, ist besser als hinterher die Ausnahme zu fangen.
+en:
+    try-catch is Java's safety net: in the try block you put what might fail, and in the catch block what to do if it does. If nothing fails, the catch block is never even looked at.
+    Picture a trapeze robot attempting a triple somersault over the ring: try is the jump and catch is the net the mechanic holds underneath with a resigned look. If it falls, the net catches it and the show goes on; if it doesn't, the net just hangs there, bored.
+    You write try { ... } catch (NumberFormatException e) { ... }: inside the parentheses goes the exception type you catch and a variable to inspect it (e.getMessage()). You can stack several catch blocks, most specific first, or since Java 7 join types with |: catch (IllegalArgumentException | IllegalStateException e). In your robot, for example, wrap the Double.parseDouble of a message in alOirAlEquipo (onTeamMessage) so a weird text from a teammate doesn't leave you stunned.
+    The classic mistake is the empty catch (catch (Exception e) {}): the error vanishes silently and later nobody knows why the robot behaves strangely. Only catch what you know how to fix, and at the very least print it with escribir (print): escribir(e.getMessage()). And don't use try-catch for something an if prevents: checking that the list isn't empty beforehand beats catching the exception afterwards.
+pseudo.es:
+    AL OÍR un mensaje del equipo:
+        INTENTAR:
+            pasos ← convertir el mensaje en número
+            avanzar pasos
+        SI FALLA (no era un número):
+            escribir "mensaje raro, lo ignoro"
+pseudo.de:
+    BEI einer Teamnachricht:
+        VERSUCHEN:
+            schritte ← die Nachricht in eine Zahl umwandeln
+            vorwärts schritte
+        FALLS FEHLER (es war keine Zahl):
+            schreibe "seltsame Nachricht, ignoriert"
+pseudo.en:
+    ON a team message:
+        TRY:
+            steps ← turn the message into a number
+            move ahead steps
+        IF IT FAILS (it wasn't a number):
+            write "weird message, ignoring it"
+ejemplo:
+    @Override
+    public void alOirAlEquipo(String de, String mensaje) {
+        try {
+            double pasos = Double.parseDouble(mensaje);    // puede fallar si no es un número || scheitert, wenn es keine Zahl ist || fails if it isn't a number
+            avanzar(pasos);
+        } catch (NumberFormatException e) {
+            escribir("mensaje raro de " + de + ": " + e.getMessage());   // la red: seguimos peleando || das Netz: weiterkämpfen || the net: keep fighting
+        }
+    }
+
+=== throw_throws
+nivel: 3
+tema: 14
+titulo.es: throw y throws
+titulo.de: throw und throws
+titulo.en: throw and throws
+claves.es: throw, throws, lanzar una excepcion, throw new, declarar una excepcion, propagar una excepcion, relanzar
+claves.de: throw, throws, ausnahme werfen, exception werfen, throw new, ausnahme deklarieren, weiterreichen
+claves.en: throw, throws, throw an exception, throw new, declare an exception, propagate an exception, rethrow
+ver: excepcion, try_catch, excepcion_propia, checked_unchecked
+es:
+    throw lanza tú mismo una excepción, a propósito, cuando descubres algo que no tiene sentido. throws (con s) va en la cabecera de un método y avisa de qué excepciones pueden salir de él sin que las atrape.
+    throw es el robot que tira la toalla al centro del ring gritando «¡esto no puede ser!». throws es el cartel colgado en la puerta del taller: «Cuidado: este soldador a veces escupe chispas». El cartel no apaga las chispas; solo avisa a quien entra.
+    Se escribe throw new IllegalArgumentException("velocidad imposible: " + v); y el método se corta ahí mismo, como con un return. En la cabecera: String leerPlano(String texto) throws IOException. Si llamas a un método que declara una excepción comprobada, o la atrapas con try-catch o la declaras tú también con throws. En tus clases del juego (una Rueda, un Arma) usa throw para negarte a recibir valores imposibles.
+    Fallos típicos: confundir las dos palabras (throw lanza una; throws declara), olvidar el new (throw IllegalStateException(); no compila) y lanzar sin mensaje. Pon siempre en el mensaje qué valor era el malo: quien lea la consola te lo agradecerá.
+de:
+    Mit throw wirfst du selbst eine Ausnahme, mit Absicht, wenn du etwas Unsinniges entdeckst. throws (mit s) steht im Kopf einer Methode und kündigt an, welche Ausnahmen aus ihr herauskommen können, ohne dass sie sie fängt.
+    throw ist der Roboter, der das Handtuch in die Ringmitte wirft und brüllt: „Das kann doch nicht sein!“ throws ist das Schild an der Werkstatttür: „Vorsicht, dieses Schweißgerät spuckt manchmal Funken.“ Das Schild löscht keine Funken, es warnt nur, wer hereinkommt.
+    Man schreibt throw new IllegalArgumentException("unmögliche Geschwindigkeit: " + v); und die Methode ist an dieser Stelle zu Ende, wie bei einem return. Im Methodenkopf: String leerPlano(String texto) throws IOException. Rufst du eine Methode auf, die eine geprüfte Ausnahme deklariert, musst du sie entweder mit try-catch fangen oder selbst mit throws weitermelden. In deinen eigenen Spielklassen (eine Rueda, eine Arma) lehnst du mit throw unmögliche Werte ab.
+    Typische Fehler: die beiden Wörter verwechseln (throw wirft, throws deklariert), das new vergessen (throw IllegalStateException(); kompiliert nicht) und ohne Nachricht werfen. Schreib immer hinein, welcher Wert falsch war: Wer die Konsole liest, wird es dir danken.
+en:
+    throw lets you raise an exception yourself, on purpose, when you spot something that makes no sense. throws (with an s) goes in a method's header and warns which exceptions may come out of it without being caught there.
+    throw is the robot hurling the towel into the middle of the ring and shouting "this cannot be!". throws is the sign on the workshop door: "Careful, this welder sometimes spits sparks." The sign doesn't put out any sparks; it just warns whoever walks in.
+    You write throw new IllegalArgumentException("impossible speed: " + v); and the method stops right there, like with a return. In the header: String leerPlano(String texto) throws IOException. If you call a method that declares a checked exception, you either catch it with try-catch or declare it yourself with throws. In your own game classes (a Rueda, an Arma) use throw to refuse impossible values.
+    Classic mistakes: mixing up the two words (throw raises one, throws declares), forgetting the new (throw IllegalStateException(); does not compile), and throwing without a message. Always say which value was wrong: whoever reads the console will thank you.
+pseudo.es:
+    FUNCIÓN ponerVelocidad(v):
+        SI v < 0 O v > 8:
+            LANZAR error "velocidad imposible: v"
+        velocidad ← v
+    FUNCIÓN leerPlano(texto) PUEDE LANZAR un error de lectura
+pseudo.de:
+    FUNKTION setzeTempo(v):
+        WENN v < 0 ODER v > 8:
+            WERFEN Fehler "unmögliches Tempo: v"
+        tempo ← v
+    FUNKTION leseBauplan(text) KANN einen Lesefehler WERFEN
+pseudo.en:
+    FUNCTION setSpeed(v):
+        IF v < 0 OR v > 8:
+            THROW error "impossible speed: v"
+        speed ← v
+    FUNCTION readBlueprint(text) MAY THROW a read error
+ejemplo:
+    public class Rueda {
+        private double velocidad;
+
+        public void ponerVelocidad(double v) {
+            if (v < 0 || v > 8) throw new IllegalArgumentException("velocidad imposible: " + v);   // se corta aquí || hier ist Schluss || it stops right here
+            velocidad = v;
+        }
+
+        public String leerPlano(String texto) throws java.io.IOException {   // avisa: puede salir IOException || warnt: IOException möglich || warns: IOException may escape
+            if (texto.isBlank()) throw new java.io.IOException("plano vacío");
+            return texto.strip();
+        }
+    }
+
+=== excepcion_propia
+nivel: 3
+tema: 14
+titulo.es: Excepción propia
+titulo.de: Eigene Ausnahme
+titulo.en: Custom exception
+claves.es: excepcion propia, excepcion personalizada, crear una excepcion, mi propia excepcion, custom exception, extends exception, extends runtimeexception
+claves.de: eigene ausnahme, eigene exception, benutzerdefinierte exception, exception-klasse schreiben, custom exception, extends exception, extends runtimeexception
+claves.en: custom exception, own exception, create an exception class, user-defined exception, extends exception, extends runtimeexception
+ver: throw_throws, checked_unchecked, herencia, excepciones_bien_disenadas
+es:
+    Una excepción propia es una clase de excepción que te inventas tú para un problema de tu programa que las de Java no nombran bien: PiezaRotaException, SinEnergiaException…
+    Es como bordar tu propia bandera de auxilio: en vez de la toalla blanca de siempre, sacas una que dice «SE ME HA ROTO EL BRAZO IZQUIERDO Y ME DA VERGÜENZA». El árbitro entiende al instante qué pasa, y tu entrenador puede tener un plan solo para esa bandera.
+    Se hace heredando: public class PiezaRotaException extends RuntimeException, con un constructor que pasa el mensaje a super(mensaje). Luego la lanzas con throw new PiezaRotaException("brazo izquierdo") y la atrapas por su nombre: catch (PiezaRotaException e). Si heredas de Exception será comprobada (obliga a throws o a try-catch); si heredas de RuntimeException, no.
+    Fallos típicos: crear una excepción para cada tontería (si IllegalArgumentException o IllegalStateException ya lo dicen, úsalas) y olvidar llamar a super(mensaje), con lo que getMessage() devuelve null. Por convenio, el nombre acaba en Exception; y si nace de otra excepción, pásala como causa: super(mensaje, causa).
+de:
+    Eine eigene Ausnahme ist eine Ausnahmeklasse, die du dir selbst ausdenkst, für ein Problem deines Programms, das die Java-Ausnahmen nicht treffend benennen: PiezaRotaException, SinEnergiaException …
+    Das ist, als würdest du deine eigene Notflagge besticken: Statt des üblichen weißen Handtuchs zeigst du eine, auf der steht: „MEIN LINKER ARM IST AB, UND ES IST MIR PEINLICH“. Der Schiedsrichter versteht sofort, was los ist, und dein Trainer kann für genau diese Flagge einen eigenen Plan haben.
+    Das geht über Vererbung: public class PiezaRotaException extends RuntimeException, mit einem Konstruktor, der die Nachricht an super(mensaje) weitergibt. Dann wirfst du sie mit throw new PiezaRotaException("linker Arm") und fängst sie über ihren Namen: catch (PiezaRotaException e). Erbst du von Exception, ist sie geprüft (verlangt throws oder try-catch); erbst du von RuntimeException, nicht.
+    Typische Fehler: für jede Kleinigkeit eine eigene Ausnahme bauen (wenn IllegalArgumentException oder IllegalStateException es schon sagen, nimm die) und vergessen, super(mensaje) aufzurufen; dann liefert getMessage() null. Nach Konvention endet der Name auf Exception, und entsteht sie aus einer anderen Ausnahme, gib diese als Ursache mit: super(mensaje, causa).
+en:
+    A custom exception is an exception class you invent yourself for a problem in your program that Java's own exceptions don't name well: PiezaRotaException, SinEnergiaException…
+    It is like embroidering your own distress flag: instead of the usual white towel, you raise one that reads "MY LEFT ARM FELL OFF AND I AM EMBARRASSED". The referee understands instantly, and your coach can have a plan just for that flag.
+    You make one by inheriting: public class PiezaRotaException extends RuntimeException, with a constructor that passes the message to super(mensaje). Then you throw it with throw new PiezaRotaException("left arm") and catch it by name: catch (PiezaRotaException e). Extend Exception and it is checked (forcing throws or try-catch); extend RuntimeException and it isn't.
+    Classic mistakes: creating an exception for every little thing (if IllegalArgumentException or IllegalStateException already say it, use them) and forgetting to call super(mensaje), so getMessage() returns null. By convention the name ends in Exception, and if it is caused by another exception, pass that along as the cause: super(mensaje, causa).
+pseudo.es:
+    TIPO DE ERROR PiezaRota (es un error de ejecución, con mensaje)
+    FUNCIÓN golpear():
+        SI el brazo está roto:
+            LANZAR PiezaRota "brazo izquierdo"
+        pegar
+pseudo.de:
+    FEHLERART TeilKaputt (ein Laufzeitfehler, mit Nachricht)
+    FUNKTION zuschlagen():
+        WENN der Arm kaputt ist:
+            WERFEN TeilKaputt "linker Arm"
+        zuschlagen
+pseudo.en:
+    ERROR TYPE PartBroken (a runtime error, with a message)
+    FUNCTION punch():
+        IF the arm is broken:
+            THROW PartBroken "left arm"
+        hit
+ejemplo:
+    public class PiezaRotaException extends RuntimeException {
+        public PiezaRotaException(String mensaje) {
+            super(mensaje);                     // sin esto, getMessage() da null || ohne das liefert getMessage() null || without this, getMessage() returns null
+        }
+    }
+
+    class Brazo {
+        boolean roto = false;
+
+        void golpear() {
+            if (roto) throw new PiezaRotaException("brazo izquierdo");   // nuestra propia bandera || unsere eigene Flagge || our own flag
+            System.out.println("¡zas!");
+        }
+    }
+
+=== finally
+nivel: 3
+tema: 14
+titulo.es: finally y recursos
+titulo.de: finally und Ressourcen
+titulo.en: finally and resources
+claves.es: finally, bloque finally, try-with-resources, try con recursos, cerrar recursos, autocloseable, pase lo que pase
+claves.de: finally, finally-block, try-with-resources, ressourcen schliessen, autocloseable, auf jeden fall ausführen
+claves.en: finally, finally block, try-with-resources, close resources, autocloseable, always runs, cleanup code
+ver: try_catch, excepcion, interfaz, excepciones_bien_disenadas
+es:
+    finally es un bloque que va detrás de try (y de sus catch) y se ejecuta SIEMPRE: haya ido bien, haya saltado una excepción o se haya hecho un return. Sirve para recoger: cerrar, apagar, dejar las cosas como estaban.
+    Es el robot barrendero del ring: gane quien gane, haya KO, empate o el locutor se haya desmayado de la emoción, al final sale y barre los tornillos. Nadie le aplaude, pero si un día no sale, en la pelea siguiente todos resbalan.
+    Se escribe try { ... } catch (...) { ... } finally { ... }. Para lo que hay que cerrar (lectores, archivos, conexiones) existe desde Java 7 el try-with-resources: try (BufferedReader r = new BufferedReader(new StringReader(texto))) { ... } cierra r solo al salir, porque implementa AutoCloseable; admite varios recursos separados por ; y los cierra en orden inverso. En el robot puedes usar finally para escribir un resumen del turno aunque algo falle por el camino.
+    Fallos típicos: poner un return dentro de finally (se traga la excepción y el return del try; no lo hagas nunca) y cerrar a mano en finally lo que try-with-resources cierra mejor. Si al cerrar también falla algo, try-with-resources guarda ese segundo error como «suprimido» (getSuppressed()) en vez de perder el primero.
+de:
+    finally ist ein Block nach try (und seinen catch-Blöcken), der IMMER ausgeführt wird: ob alles gut ging, eine Ausnahme flog oder ein return kam. Er ist zum Aufräumen da: schließen, abschalten, alles so hinterlassen, wie es war.
+    Er ist der Kehrroboter des Rings: Egal wer gewinnt, ob K. o., Unentschieden oder der Sprecher vor Aufregung in Ohnmacht fällt, am Ende kommt er raus und fegt die Schrauben zusammen. Keiner klatscht, aber wenn er einmal nicht kommt, rutschen beim nächsten Kampf alle aus.
+    Man schreibt try { ... } catch (...) { ... } finally { ... }. Für Dinge, die geschlossen werden müssen (Leser, Dateien, Verbindungen), gibt es seit Java 7 try-with-resources: try (BufferedReader r = new BufferedReader(new StringReader(texto))) { ... } schließt r beim Verlassen von selbst, weil es AutoCloseable implementiert; mehrere Ressourcen trennst du mit ; und sie werden in umgekehrter Reihenfolge geschlossen. Beim Roboter kannst du mit finally eine Zugübersicht ausgeben, auch wenn unterwegs etwas schiefgeht.
+    Typische Fehler: ein return in finally (es verschluckt die Ausnahme und das return aus try; niemals machen) und in finally von Hand schließen, was try-with-resources besser schließt. Schlägt auch das Schließen fehl, hebt try-with-resources diesen zweiten Fehler als „unterdrückt“ auf (getSuppressed()), statt den ersten zu verlieren.
+en:
+    finally is a block that comes after try (and its catch blocks) and ALWAYS runs: whether things went well, an exception was thrown or a return happened. It is for tidying up: closing, switching off, leaving things as they were.
+    It is the ring's sweeper robot: whoever wins, KO, draw, or the announcer fainting with excitement, at the end it rolls out and sweeps up the bolts. Nobody applauds, but the day it doesn't show up, everyone slips in the next fight.
+    You write try { ... } catch (...) { ... } finally { ... }. For things that must be closed (readers, files, connections), Java 7 brought try-with-resources: try (BufferedReader r = new BufferedReader(new StringReader(texto))) { ... } closes r on its own when leaving, because it implements AutoCloseable; several resources are separated by ; and closed in reverse order. In your robot you can use finally to print a summary of the tick even if something fails along the way.
+    Classic mistakes: a return inside finally (it swallows the exception and the try's return; never do it) and closing by hand in finally what try-with-resources closes better. If closing fails too, try-with-resources keeps that second error as "suppressed" (getSuppressed()) instead of losing the first one.
+pseudo.es:
+    INTENTAR:
+        abrir el plano y leer la primera línea
+    SI FALLA:
+        quedarse con un texto vacío
+    AL FINAL, SIEMPRE:
+        escribir "plano leído"        (y el plano se cierra solo)
+pseudo.de:
+    VERSUCHEN:
+        Bauplan öffnen und erste Zeile lesen
+    FALLS FEHLER:
+        einen leeren Text nehmen
+    AM ENDE, IMMER:
+        schreibe "Bauplan gelesen"    (und der Bauplan schließt sich selbst)
+pseudo.en:
+    TRY:
+        open the blueprint and read the first line
+    IF IT FAILS:
+        settle for an empty text
+    FINALLY, ALWAYS:
+        write "blueprint read"        (and the blueprint closes itself)
+ejemplo:
+    String leerPrimeraLinea(String plano) {
+        try (java.io.BufferedReader r = new java.io.BufferedReader(new java.io.StringReader(plano))) {
+            return r.readLine();                // r se cierra solo al salir || r schließt sich beim Verlassen selbst || r closes itself on the way out
+        } catch (java.io.IOException e) {
+            return "";
+        } finally {
+            escribir("plano leído");            // pase lo que pase || egal, was passiert || whatever happens
+        }
+    }
+
+=== checked_unchecked
+nivel: 4
+tema: 14
+titulo.es: Comprobadas y no comprobadas
+titulo.de: Checked und unchecked
+titulo.en: Checked and unchecked
+claves.es: checked, unchecked, excepcion comprobada, excepcion no comprobada, runtimeexception, ioexception, unreported exception, must be caught or declared
+claves.de: checked exception, unchecked exception, geprüfte ausnahme, ungeprüfte ausnahme, runtimeexception, ioexception, must be caught or declared
+claves.en: checked exception, unchecked exception, runtimeexception, ioexception, must be caught or declared, unreported exception, error vs exception
+ver: excepcion, throw_throws, excepcion_propia, excepciones_bien_disenadas
+es:
+    En Java hay dos familias de excepciones. Con las comprobadas (checked), como IOException, el compilador te obliga a hacer algo: o try-catch o throws. Con las no comprobadas (unchecked), las que heredan de RuntimeException, como NullPointerException o IllegalArgumentException, no te obliga.
+    Las comprobadas son la lluvia en un combate al aire libre: es previsible, no es culpa de nadie, y el reglamento te obliga a traer paraguas antes de salir al ring. Las no comprobadas son tropezar con tus propios cordones: el reglamento no te pide un plan para eso; te pide que te ates bien los cordones.
+    El árbol: Throwable se parte en Error (OutOfMemoryError, StackOverflowError: no se atrapan, el programa está mal o se ha quedado sin recursos) y Exception, de la que cuelga RuntimeException. Si llamas a un método con throws IOException sin atenderla, el compilador dice «unreported exception IOException; must be caught or declared to be thrown». En el juego casi todo lo que verás será no comprobado: fallos de lógica de tu robot.
+    Regla práctica: comprobada para lo que quien llama puede remediar (un archivo que no está, una red caída); no comprobada para errores de programación (un argumento imposible, un null donde no debía). El fallo típico es «arreglar» el aviso del compilador con un catch vacío o con throws Exception en todas partes, que no informa de nada.
+    Para un senior: las comprobadas no casan con lambdas ni streams, porque Function.apply no declara throws; dentro de un map() tendrás que envolverlas (UncheckedIOException, desde Java 8) y desenvolverlas fuera. Kotlin, C# y Scala no tienen comprobadas, y muchas API modernas de Java las evitan. No atrapes Throwable salvo en el borde del sistema, como hace el árbitro del juego con el código de tu robot para que la pelea siga.
+de:
+    In Java gibt es zwei Familien von Ausnahmen. Bei den geprüften (checked), etwa IOException, zwingt dich der Compiler, etwas zu tun: try-catch oder throws. Bei den ungeprüften (unchecked), die von RuntimeException erben, etwa NullPointerException oder IllegalArgumentException, zwingt er dich nicht.
+    Geprüfte Ausnahmen sind der Regen bei einem Kampf unter freiem Himmel: absehbar, niemandes Schuld, und das Reglement schreibt vor, einen Schirm mitzubringen, bevor du in den Ring gehst. Ungeprüfte sind das Stolpern über die eigenen Schnürsenkel: Dafür verlangt das Reglement keinen Plan, sondern ordentlich gebundene Schuhe.
+    Der Baum: Throwable teilt sich in Error (OutOfMemoryError, StackOverflowError: werden nicht gefangen, das Programm ist kaputt oder ohne Ressourcen) und Exception, an der RuntimeException hängt. Rufst du eine Methode mit throws IOException auf, ohne dich darum zu kümmern, meldet der Compiler „unreported exception IOException; must be caught or declared to be thrown“. Im Spiel wirst du fast nur ungeprüfte sehen: Logikfehler deines Roboters.
+    Faustregel: geprüft für das, was der Aufrufer beheben kann (eine fehlende Datei, ein ausgefallenes Netz); ungeprüft für Programmierfehler (ein unmögliches Argument, ein null an falscher Stelle). Der typische Fehler: die Compilermeldung mit einem leeren catch-Block oder überall throws Exception „wegzumachen“, was niemandem etwas sagt.
+    Für Profis: Geprüfte Ausnahmen vertragen sich nicht mit Lambdas und Streams, weil Function.apply kein throws deklariert; in einem map() musst du sie einpacken (UncheckedIOException, seit Java 8) und draußen wieder auspacken. Kotlin, C# und Scala kennen keine geprüften Ausnahmen, und viele moderne Java-APIs meiden sie. Fang Throwable nur am Rand des Systems, so wie der Schiedsrichter des Spiels den Code deines Roboters abschirmt, damit der Kampf weitergeht.
+en:
+    Java has two families of exceptions. With checked ones, like IOException, the compiler forces you to do something: try-catch or throws. With unchecked ones, those that extend RuntimeException, like NullPointerException or IllegalArgumentException, it doesn't.
+    Checked exceptions are rain at an open-air fight: predictable, nobody's fault, and the rulebook makes you bring an umbrella before you step into the ring. Unchecked ones are tripping over your own shoelaces: the rulebook doesn't ask for a plan, it asks you to tie your laces properly.
+    The tree: Throwable splits into Error (OutOfMemoryError, StackOverflowError: not caught, the program is broken or out of resources) and Exception, under which hangs RuntimeException. Call a method declaring throws IOException without handling it and the compiler says "unreported exception IOException; must be caught or declared to be thrown". In the game nearly everything you'll see is unchecked: logic bugs in your robot.
+    Rule of thumb: checked for what the caller can actually remedy (a missing file, a dropped network); unchecked for programming errors (an impossible argument, a null where it shouldn't be). The classic mistake is "fixing" the compiler's complaint with an empty catch or with throws Exception everywhere, which tells nobody anything.
+    For seniors: checked exceptions don't play well with lambdas and streams, because Function.apply declares no throws; inside a map() you have to wrap them (UncheckedIOException, since Java 8) and unwrap them outside. Kotlin, C# and Scala have no checked exceptions, and many modern Java APIs avoid them. Only catch Throwable at the edge of the system, the way the game's referee shields the fight from your robot's code so the match goes on.
+pseudo.es:
+    FUNCIÓN leerPlano() PUEDE LANZAR ErrorDeLectura     (comprobada: hay que avisar)
+    FUNCIÓN pegar(fuerza):
+        SI fuerza < 0:
+            LANZAR ArgumentoImposible                    (no comprobada: es un fallo tuyo)
+    AL LLAMAR a leerPlano:
+        INTENTAR leerPlano() SI FALLA envolver el error y seguir
+pseudo.de:
+    FUNKTION leseBauplan() KANN Lesefehler WERFEN        (geprüft: muss angekündigt werden)
+    FUNKTION zuschlagen(kraft):
+        WENN kraft < 0:
+            WERFEN UnmöglichesArgument                   (ungeprüft: dein eigener Fehler)
+    BEIM AUFRUF von leseBauplan:
+        VERSUCHEN leseBauplan() FALLS FEHLER den Fehler einpacken und weiter
+pseudo.en:
+    FUNCTION readBlueprint() MAY THROW ReadError         (checked: must be announced)
+    FUNCTION punch(force):
+        IF force < 0:
+            THROW ImpossibleArgument                     (unchecked: your own bug)
+    WHEN CALLING readBlueprint:
+        TRY readBlueprint() CATCH wrap the error and carry on
+ejemplo:
+    void leer() throws java.io.IOException {           // comprobada: hay que declararla || geprüft: muss deklariert werden || checked: must be declared
+        throw new java.io.IOException("no hay plano");
+    }
+
+    void pegar(int fuerza) {                           // no comprobada: sin throws || ungeprüft: kein throws nötig || unchecked: no throws needed
+        if (fuerza < 0) throw new IllegalArgumentException("fuerza " + fuerza);
+    }
+
+    void usar() {
+        try { leer(); } catch (java.io.IOException e) { throw new java.io.UncheckedIOException(e); }   // envolverla || einpacken || wrap it
+        pegar(5);
+    }
+
+=== colecciones
+nivel: 3
+tema: 15
+titulo.es: Colecciones
+titulo.de: Collections
+titulo.en: Collections
+claves.es: colecciones, coleccion, collections framework, java.util, que coleccion uso, list set map queue, estructuras de datos, collection
+claves.de: collections, sammlungen, collection framework, java.util, welche collection, list set map queue, datenstrukturen
+claves.en: collections, collection, collections framework, java.util, which collection, list set map queue, data structures
+ver: list, set, map, complejidad
+es:
+    Una colección es un objeto que guarda muchos objetos a la vez y crece o encoge según haga falta, al contrario que un array, que tiene tamaño fijo. Java trae varias en java.util, cada una buena para una cosa.
+    Piensa en el taller del robot: la List es la estantería de piezas en fila y numeradas, donde se pueden repetir tornillos; el Set es la vitrina de trofeos (cada trofeo, una sola vez); el Map es el muro de taquillas con nombre («Cobalto» → su ficha); y la Queue es la cola de robots esperando turno para la ducha de aceite.
+    Las grandes interfaces son List (ArrayList), Set (HashSet, TreeSet), Map (HashMap, TreeMap) y Queue/Deque (ArrayDeque). Se declaran con la interfaz y se crean con la clase: List<Enemigo> vistos = new ArrayList<>();. Casi todas comparten size(), isEmpty() y contains(), y se recorren con for-each. En el juego, enemigosVistos() y obstaculos() te dan una List.
+    El fallo típico es elegir mal: buscar por nombre en una List recorriéndola entera cuando un Map lo encontraría al momento, o usar List cuando no quieres repetidos. Pregúntate: ¿importa el orden?, ¿se puede repetir?, ¿busco por una clave? Y recuerda que List.of(...) y Map.of(...) crean colecciones que no se pueden cambiar.
+de:
+    Eine Collection ist ein Objekt, das viele Objekte auf einmal aufnimmt und nach Bedarf wächst oder schrumpft, anders als ein Array mit fester Größe. Java bringt in java.util mehrere mit, jede für einen anderen Zweck.
+    Denk an die Roboterwerkstatt: Die List ist das Regal mit nummerierten Teilen in einer Reihe, in dem Schrauben auch doppelt liegen dürfen; das Set ist die Pokalvitrine (jeder Pokal nur einmal); die Map ist die Wand mit beschrifteten Spinden („Cobalto“ → sein Steckbrief); und die Queue ist die Schlange der Roboter, die auf die Öldusche warten.
+    Die großen Interfaces sind List (ArrayList), Set (HashSet, TreeSet), Map (HashMap, TreeMap) und Queue/Deque (ArrayDeque). Deklariert wird mit dem Interface, erzeugt mit der Klasse: List<Enemigo> vistos = new ArrayList<>();. Fast alle haben size(), isEmpty() und contains() und lassen sich mit for-each durchlaufen. Im Spiel liefern dir enemigosVistos (gesehen) und obstaculos (hindernisse) eine List.
+    Der typische Fehler ist die falsche Wahl: in einer List nach einem Namen suchen und sie ganz durchgehen, wo eine Map ihn sofort fände, oder eine List nehmen, obwohl du keine Doppelten willst. Frag dich: Zählt die Reihenfolge? Darf sich etwas wiederholen? Suche ich über einen Schlüssel? Und denk daran: List.of(...) und Map.of(...) erzeugen Collections, die man nicht ändern kann.
+en:
+    A collection is an object that holds many objects at once and grows or shrinks as needed, unlike an array, whose size is fixed. Java ships several in java.util, each good at something different.
+    Think of the robot workshop: the List is the shelf of numbered parts in a row, where the same bolt may appear twice; the Set is the trophy cabinet (each trophy only once); the Map is the wall of named lockers ("Cobalto" → his file); and the Queue is the line of robots waiting for the oil shower.
+    The big interfaces are List (ArrayList), Set (HashSet, TreeSet), Map (HashMap, TreeMap) and Queue/Deque (ArrayDeque). Declare with the interface, create with the class: List<Enemigo> vistos = new ArrayList<>();. Nearly all share size(), isEmpty() and contains(), and you walk through them with for-each. In the game, enemigosVistos (seenEnemies) and obstaculos (obstacles) hand you a List.
+    The classic mistake is picking the wrong one: searching a List by name, scanning it all, when a Map would find it at once, or using a List when you don't want duplicates. Ask yourself: does order matter? Can things repeat? Am I looking things up by a key? And remember that List.of(...) and Map.of(...) create collections that cannot be changed.
+pseudo.es:
+    SI importa el orden y se puede repetir:
+        usar una LISTA          (la estantería de piezas)
+    SI NO, SI nada se puede repetir:
+        usar un CONJUNTO        (la vitrina de trofeos)
+    SI busco algo por su nombre:
+        usar un MAPA            (nombre → ficha)
+    SI atiendo por orden de llegada:
+        usar una COLA           (la ducha de aceite)
+pseudo.de:
+    WENN die Reihenfolge zählt und sich etwas wiederholen darf:
+        eine LISTE nehmen       (das Teileregal)
+    SONST, WENN sich nichts wiederholen darf:
+        eine MENGE nehmen       (die Pokalvitrine)
+    WENN ich etwas über seinen Namen suche:
+        eine MAP nehmen         (Name → Steckbrief)
+    WENN ich nach Ankunft bediene:
+        eine WARTESCHLANGE      (die Öldusche)
+pseudo.en:
+    IF order matters and things may repeat:
+        use a LIST              (the parts shelf)
+    ELSE IF nothing may repeat:
+        use a SET               (the trophy cabinet)
+    IF I look things up by name:
+        use a MAP               (name → file)
+    IF I serve in order of arrival:
+        use a QUEUE             (the oil shower)
+ejemplo:
+    import java.util.*;
+
+    public class Taller {
+        List<String> piezas = new ArrayList<>(List.of("brazo", "brazo", "rueda"));   // orden y repetidos || Reihenfolge und Doppelte || order and duplicates
+        Set<String> trofeos = new HashSet<>(Set.of("oro", "plata"));               // sin repetidos || keine Doppelten || no duplicates
+        Map<String, Integer> victorias = new HashMap<>(Map.of("Cobalto", 3));       // nombre → valor || Name → Wert || name → value
+        Deque<String> colaDucha = new ArrayDeque<>();                               // por orden de llegada || nach Ankunft || first come, first served
+    }
+
+=== list
+nivel: 3
+tema: 15
+titulo.es: List
+titulo.de: List
+titulo.en: List
+claves.es: list, lista, listas, arraylist, linkedlist, list.add, list.get, lista de enemigos, list.of
+claves.de: list, liste, listen, arraylist, linkedlist, list.add, list.get, liste von gegnern, list.of
+claves.en: list, lists, arraylist, linkedlist, list.add, list.get, list of enemies, list.of
+ver: colecciones, array, iterator, complejidad
+es:
+    Una List es una fila ordenada de elementos, cada uno en su posición (0, 1, 2…), que crece y encoge y admite repetidos. Es un array que se estira solo.
+    Es la fila de robots ante la báscula antes del torneo: cada uno tiene su número, pueden colarse dos clones idénticos y, si uno se marcha llorando al vestuario, los de detrás avanzan un puesto.
+    Se crea con List<String> nombres = new ArrayList<>(); y se usa con add(x), get(i), set(i, x), remove(i), size(), contains(x) e indexOf(x). En el juego, enemigosVistos() devuelve una List<Enemigo> nueva en cada llamada: enemigosVistos().get(0) es el primero, si lo hay. ArrayList guarda todo en un array por dentro (get rapidísimo); LinkedList es una cadena de eslabones y casi nunca compensa.
+    Fallos típicos: get(0) de una lista vacía (IndexOutOfBoundsException: mira antes isEmpty()), recorrer con i hasta size() incluido, y la trampa de List<Integer>: remove(1) borra la POSICIÓN 1, no el número 1 (para eso, remove(Integer.valueOf(1))).
+de:
+    Eine List ist eine geordnete Reihe von Elementen, jedes an seinem Platz (0, 1, 2 …), die wächst und schrumpft und Doppelte erlaubt. Ein Array, das sich von selbst dehnt.
+    Sie ist die Schlange der Roboter vor der Waage vor dem Turnier: Jeder hat seine Nummer, zwei identische Klone können sich hineinmogeln, und geht einer heulend in die Kabine, rücken alle dahinter einen Platz auf.
+    Man erzeugt sie mit List<String> nombres = new ArrayList<>(); und benutzt add(x), get(i), set(i, x), remove(i), size(), contains(x) und indexOf(x). Im Spiel liefert enemigosVistos (gesehen) bei jedem Aufruf eine neue List<Enemigo>: enemigosVistos().get(0) ist der Erste, falls es einen gibt. ArrayList speichert alles intern in einem Array (get ist blitzschnell); LinkedList ist eine Kette aus Gliedern und lohnt sich fast nie.
+    Typische Fehler: get(0) auf einer leeren Liste (IndexOutOfBoundsException: vorher isEmpty() prüfen), mit i bis einschließlich size() laufen, und die Falle bei List<Integer>: remove(1) löscht den PLATZ 1, nicht die Zahl 1 (dafür remove(Integer.valueOf(1))).
+en:
+    A List is an ordered row of elements, each in its own position (0, 1, 2…), that grows and shrinks and allows duplicates. An array that stretches by itself.
+    It is the line of robots at the weigh-in before the tournament: each has its number, two identical clones can sneak in, and if one storms off crying to the locker room, everyone behind moves up a place.
+    You create one with List<String> nombres = new ArrayList<>(); and use add(x), get(i), set(i, x), remove(i), size(), contains(x) and indexOf(x). In the game, enemigosVistos (seenEnemies) returns a fresh List<Enemigo> on every call: enemigosVistos().get(0) is the first one, if there is one. ArrayList keeps everything in an array inside (get is lightning fast); LinkedList is a chain of links and almost never pays off.
+    Classic mistakes: get(0) on an empty list (IndexOutOfBoundsException: check isEmpty() first), looping with i up to and including size(), and the List<Integer> trap: remove(1) removes POSITION 1, not the number 1 (for that, remove(Integer.valueOf(1))).
+pseudo.es:
+    lista ← los enemigos que veo
+    SI la lista no está vacía:
+        primero ← lista[0]
+        apuntar hacia primero
+    nombres ← lista vacía
+    PARA CADA e EN lista:
+        añadir el nombre de e a nombres
+    escribir cuántos hay y sus nombres
+pseudo.de:
+    liste ← die Gegner, die ich sehe
+    WENN die Liste nicht leer ist:
+        erster ← liste[0]
+        auf erster zielen
+    namen ← leere Liste
+    FÜR JEDES g IN liste:
+        den Namen von g zu namen hinzufügen
+    schreibe, wie viele es sind und ihre Namen
+pseudo.en:
+    list ← the enemies I can see
+    IF the list is not empty:
+        first ← list[0]
+        aim at first
+    names ← empty list
+    FOR EACH e IN list:
+        add the name of e to names
+    write how many there are and their names
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        List<Enemigo> vistos = enemigosVistos();
+        if (!vistos.isEmpty()) {                            // nunca get(0) de una lista vacía || nie get(0) auf leerer Liste || never get(0) on an empty list
+            Enemigo primero = vistos.get(0);
+            apuntarHacia(primero.angulo());
+        }
+        List<String> nombres = new ArrayList<>();
+        for (Enemigo e : vistos) nombres.add(e.nombre());   // crece sola || wächst von selbst || grows by itself
+        escribir(nombres.size() + " a la vista: " + nombres);
+    }
+
+=== set
+nivel: 3
+tema: 15
+titulo.es: Set
+titulo.de: Set
+titulo.en: Set
+claves.es: set, conjunto, conjuntos, hashset, treeset, linkedhashset, sin repetidos, elementos unicos, set.add
+claves.de: set, menge, hashset, treeset, linkedhashset, keine duplikate, ohne doppelte, eindeutige elemente
+claves.en: set, sets, hashset, treeset, linkedhashset, no duplicates, unique elements, set.add
+ver: colecciones, equals_hashcode, map, hashmap_por_dentro
+es:
+    Un Set es una colección que no admite repetidos: si metes algo que ya está, no pasa nada, simplemente no se añade. No tiene posiciones; lo que importa es si algo está o no está.
+    Es el libro de firmas de los rivales que ya has tumbado: si vuelves a tumbar a Cobalto, el libro no apunta «Cobalto» otra vez, porque ya está. Y por mucho que lo sacudas, no te dirá quién firmó el tercero.
+    Se crea con Set<String> vencidos = new HashSet<>(); y se usa con add(x) (devuelve true si era nuevo), contains(x), remove(x) y size(). HashSet no guarda ningún orden; LinkedHashSet guarda el orden de llegada; TreeSet los tiene ordenados (alfabético, o de menor a mayor). En el robot sirve para saber cuántos rivales distintos has visto, con alVerEnemigo y e.nombre().
+    El fallo típico: meter objetos de una clase tuya en un HashSet sin escribir equals y hashCode; entonces dos piezas «iguales» cuentan como distintas. Y no cambies un objeto que ya está dentro de un HashSet de forma que cambie su hashCode: se pierde dentro del conjunto y contains deja de encontrarlo.
+de:
+    Ein Set ist eine Collection ohne Doppelte: Steckst du etwas hinein, das schon drin ist, passiert nichts, es wird einfach nicht hinzugefügt. Es gibt keine Plätze; wichtig ist nur, ob etwas drin ist oder nicht.
+    Es ist das Unterschriftenbuch der Gegner, die du schon umgehauen hast: Haust du Cobalto noch einmal um, trägt das Buch „Cobalto“ nicht erneut ein, er steht ja schon drin. Und egal wie sehr du es schüttelst, es verrät dir nicht, wer als Dritter unterschrieben hat.
+    Man erzeugt es mit Set<String> vencidos = new HashSet<>(); und benutzt add(x) (liefert true, wenn es neu war), contains(x), remove(x) und size(). HashSet merkt sich keine Reihenfolge; LinkedHashSet merkt sich die Reihenfolge des Einfügens; TreeSet hält alles sortiert (alphabetisch oder aufsteigend). Beim Roboter erfährst du damit, wie viele verschiedene Gegner du gesehen hast, mit alVerEnemigo (beiSicht) und e.nombre().
+    Der typische Fehler: Objekte einer eigenen Klasse in ein HashSet stecken, ohne equals und hashCode zu schreiben; dann zählen zwei „gleiche“ Teile als verschieden. Und ändere ein Objekt im HashSet nicht so, dass sich sein hashCode ändert: Es geht in der Menge verloren, und contains findet es nicht mehr.
+en:
+    A Set is a collection with no duplicates: put in something that is already there and nothing happens, it simply isn't added. There are no positions; all that matters is whether something is in or not.
+    It is the autograph book of the rivals you have already knocked down: knock Cobalto down again and the book won't write "Cobalto" a second time, he's already there. And however hard you shake it, it won't tell you who signed third.
+    You create one with Set<String> vencidos = new HashSet<>(); and use add(x) (returns true if it was new), contains(x), remove(x) and size(). HashSet keeps no order; LinkedHashSet keeps insertion order; TreeSet keeps everything sorted (alphabetically, or smallest first). In your robot it tells you how many different rivals you have seen, with alVerEnemigo (onSeeEnemy) and e.nombre().
+    The classic mistake: putting objects of your own class into a HashSet without writing equals and hashCode; then two "equal" parts count as different. And never change an object inside a HashSet in a way that changes its hashCode: it gets lost in the set and contains stops finding it.
+pseudo.es:
+    conocidos ← conjunto vacío
+    AL VER un enemigo:
+        SI añadir su nombre a conocidos dice «era nuevo»:
+            decir "¡hola, nombre!"
+        escribir cuántos distintos he visto
+pseudo.de:
+    bekannte ← leere Menge
+    BEI SICHT eines Gegners:
+        WENN das Hinzufügen seines Namens „war neu“ meldet:
+            sage "Hallo, Name!"
+        schreibe, wie viele verschiedene ich gesehen habe
+pseudo.en:
+    known ← empty set
+    ON SEEING an enemy:
+        IF adding its name to known says "it was new":
+            say "hello, name!"
+        write how many different ones I've seen
+ejemplo:
+    Set<String> conocidos = new HashSet<>();                // fuera: dura toda la ronda || außen: hält die ganze Runde || outside: lasts the whole round
+
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        if (conocidos.add(e.nombre())) {                    // true solo la primera vez || true nur beim ersten Mal || true only the first time
+            decir("¡Hola, " + e.nombre() + "!");
+        }
+        escribir(conocidos.size() + " rivales distintos");
+    }
+
+=== map
+nivel: 3
+tema: 15
+titulo.es: Map
+titulo.de: Map
+titulo.en: Map
+claves.es: map, mapa, hashmap, treemap, linkedhashmap, clave valor, diccionario, map.put, map.get, getordefault
+claves.de: map, hashmap, treemap, linkedhashmap, schlüssel wert, wörterbuch, map.put, map.get, getordefault
+claves.en: map, hashmap, treemap, linkedhashmap, key value, dictionary, map.put, map.get, getordefault
+ver: colecciones, memoria_entre_rondas, hashmap_por_dentro, set
+es:
+    Un Map guarda parejas clave → valor: le das la clave y te devuelve su valor, sin recorrer nada. Cada clave aparece una sola vez; si vuelves a guardar con la misma clave, el valor viejo se sustituye.
+    Es la libreta del ojeador del torneo: busca «Cobalto» y lee «pega fuerte con la izquierda, odia las paredes, llora con las baladas». No hojea la libreta entera; va directo a la pestaña de la C.
+    Se crea con Map<String, Double> blindajes = new HashMap<>(); y se usa con put(clave, valor), get(clave) (null si no está), getOrDefault(clave, otro), containsKey(clave) y remove(clave), y se recorre con for (var par : blindajes.entrySet()), usando par.getKey() y par.getValue(). El robot ya trae uno: memoria(), un Map<String, Object> que dura entre rondas.
+    Fallos típicos: get de una clave que no está devuelve null y, si lo guardas en un double o un int, salta NullPointerException (usa getOrDefault). HashMap no guarda el orden (LinkedHashMap guarda el de llegada; TreeMap ordena las claves). Y como en el Set, las claves de una clase tuya necesitan equals y hashCode.
+de:
+    Eine Map speichert Paare Schlüssel → Wert: Du gibst den Schlüssel und bekommst den Wert, ohne etwas durchzugehen. Jeder Schlüssel kommt nur einmal vor; speicherst du unter demselben Schlüssel erneut, wird der alte Wert ersetzt.
+    Sie ist das Notizbuch des Turnier-Scouts: Er schlägt „Cobalto“ nach und liest „schlägt hart mit links, hasst Wände, weint bei Balladen“. Er blättert nicht das ganze Buch durch, sondern geht direkt zum Reiter C.
+    Man erzeugt sie mit Map<String, Double> blindajes = new HashMap<>(); und benutzt put(schlüssel, wert), get(schlüssel) (null, wenn er fehlt), getOrDefault(schlüssel, ersatz), containsKey(schlüssel) und remove(schlüssel); durchlaufen wird sie mit for (var par : blindajes.entrySet()) und par.getKey() bzw. par.getValue(). Der Roboter hat schon eine: memoria (gedaechtnis), eine Map<String, Object>, die über die Runden hinweg bleibt.
+    Typische Fehler: get mit einem fehlenden Schlüssel liefert null, und speicherst du das in einem double oder int, gibt es eine NullPointerException (nimm getOrDefault). HashMap merkt sich keine Reihenfolge (LinkedHashMap die des Einfügens; TreeMap sortiert die Schlüssel). Und wie beim Set brauchen Schlüssel aus eigenen Klassen equals und hashCode.
+en:
+    A Map stores key → value pairs: you hand it the key and it gives you the value, without scanning anything. Each key appears only once; store again under the same key and the old value is replaced.
+    It is the tournament scout's notebook: he looks up "Cobalto" and reads "hits hard with the left, hates walls, cries at ballads". He doesn't leaf through the whole notebook; he goes straight to the C tab.
+    You create one with Map<String, Double> blindajes = new HashMap<>(); and use put(key, value), get(key) (null if missing), getOrDefault(key, fallback), containsKey(key) and remove(key), and walk through it with for (var par : blindajes.entrySet()), using par.getKey() and par.getValue(). Your robot already has one: memoria (memory), a Map<String, Object> that survives between rounds.
+    Classic mistakes: get with a missing key returns null, and storing that in a double or int throws a NullPointerException (use getOrDefault). HashMap keeps no order (LinkedHashMap keeps insertion order; TreeMap sorts the keys). And as with Set, keys of your own classes need equals and hashCode.
+pseudo.es:
+    blindajeDe ← mapa vacío (nombre → blindaje)
+    AL VER un enemigo e:
+        antes ← blindajeDe[nombre de e], o 100 si no está
+        SI su blindaje es menor que antes:
+            decir "¡está perdiendo!"
+        blindajeDe[nombre de e] ← su blindaje de ahora
+pseudo.de:
+    panzerungVon ← leere Map (Name → Panzerung)
+    BEI SICHT eines Gegners g:
+        vorher ← panzerungVon[Name von g], oder 100, falls er fehlt
+        WENN seine Panzerung kleiner ist als vorher:
+            sage "er verliert!"
+        panzerungVon[Name von g] ← seine jetzige Panzerung
+pseudo.en:
+    armorOf ← empty map (name → armor)
+    ON SEEING an enemy e:
+        before ← armorOf[name of e], or 100 if missing
+        IF its armor is lower than before:
+            say "it's losing!"
+        armorOf[name of e] ← its current armor
+ejemplo:
+    Map<String, Double> blindajes = new HashMap<>();                    // nombre → blindaje || Name → Panzerung || name → armor
+
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        double antes = blindajes.getOrDefault(e.nombre(), 100.0);        // si no está, 100 (nunca null) || fehlt er, 100 (nie null) || if missing, 100 (never null)
+        if (e.blindaje() < antes) decir("¡" + e.nombre() + " está perdiendo!");
+        blindajes.put(e.nombre(), e.blindaje());                         // misma clave: se sustituye || gleicher Schlüssel: wird ersetzt || same key: replaced
+        for (var par : blindajes.entrySet()) escribir(par.getKey() + ": " + par.getValue());
+    }
+
+=== iterator
+nivel: 3
+tema: 15
+titulo.es: Iterator
+titulo.de: Iterator
+titulo.en: Iterator
+claves.es: iterator, iterador, hasnext, it.next, it.remove, concurrentmodificationexception, borrar mientras recorro, removeif, iterable
+claves.de: iterator, hasnext, it.next, it.remove, concurrentmodificationexception, beim durchlaufen löschen, removeif, iterable
+claves.en: iterator, hasnext, it.next, it.remove, concurrentmodificationexception, remove while iterating, removeif, iterable
+ver: list, recorrer_array, lambda, colecciones
+es:
+    Un Iterator es un señalador que recorre una colección elemento a elemento: hasNext() pregunta si queda alguno y next() te da el siguiente. El for-each (for (Enemigo e : lista)) usa uno por dentro sin que lo veas.
+    Es el robot acomodador que recorre la grada fila a fila con su linterna: «¿queda alguien? Sí. El siguiente». Si mientras cuenta tú le quitas sillas a escondidas, tropieza, se le cae la linterna y grita ConcurrentModificationException.
+    Se pide con lista.iterator() y se usa en un while (it.hasNext()) { var x = it.next(); ... }. Es la forma segura de borrar mientras recorres: it.remove() quita el último que te dio next(). Más corto aún, desde Java 8: lista.removeIf(o -> !o.peligroso()). Y cualquier clase tuya que implemente Iterable puede ir en un for-each. En el juego, obstaculos() y enemigosVistos() te dan una copia nueva cada vez: puedes borrar de ella sin cambiar la arena.
+    El fallo típico es borrar con lista.remove(x) dentro de un for-each: en la vuelta siguiente salta ConcurrentModificationException (o, peor aún, a veces se salta un elemento sin avisar). Usa it.remove() o removeIf, o recorre una copia.
+de:
+    Ein Iterator ist ein Zeiger, der eine Collection Element für Element durchläuft: hasNext() fragt, ob noch eins übrig ist, next() liefert das nächste. Die for-each-Schleife (for (Enemigo e : lista)) benutzt intern einen, ohne dass du ihn siehst.
+    Er ist der Platzanweiser-Roboter, der mit seiner Taschenlampe Reihe für Reihe die Tribüne abgeht: „Noch jemand da? Ja. Der Nächste.“ Klaust du ihm heimlich Stühle, während er zählt, stolpert er, lässt die Lampe fallen und brüllt ConcurrentModificationException.
+    Man holt ihn mit lista.iterator() und benutzt ihn in while (it.hasNext()) { var x = it.next(); ... }. So löschst du sicher beim Durchlaufen: it.remove() entfernt das Element, das next() zuletzt geliefert hat. Noch kürzer, seit Java 8: lista.removeIf(o -> !o.peligroso()). Und jede eigene Klasse, die Iterable implementiert, passt in eine for-each-Schleife. Im Spiel geben dir obstaculos (hindernisse) und enemigosVistos (gesehen) jedes Mal eine neue Kopie: Du kannst daraus löschen, ohne die Arena zu verändern.
+    Der typische Fehler: mit lista.remove(x) innerhalb einer for-each-Schleife löschen. In der nächsten Runde fliegt eine ConcurrentModificationException (oder, schlimmer, manchmal wird lautlos ein Element übersprungen). Nimm it.remove() oder removeIf oder durchlaufe eine Kopie.
+en:
+    An Iterator is a pointer that walks through a collection one element at a time: hasNext() asks whether any are left and next() hands you the next one. The for-each loop (for (Enemigo e : lista)) uses one behind the scenes.
+    It is the usher robot walking the stands row by row with a flashlight: "anyone left? Yes. Next one." If you sneakily remove chairs while it is counting, it trips, drops the flashlight and yells ConcurrentModificationException.
+    You get one with lista.iterator() and use it in while (it.hasNext()) { var x = it.next(); ... }. It is the safe way to remove while iterating: it.remove() removes the last element next() gave you. Shorter still, since Java 8: lista.removeIf(o -> !o.peligroso()). And any class of yours that implements Iterable can go in a for-each. In the game, obstaculos (obstacles) and enemigosVistos (seenEnemies) give you a fresh copy every time: you can remove from it without changing the arena.
+    The classic mistake is removing with lista.remove(x) inside a for-each: on the next pass you get a ConcurrentModificationException (or, worse, an element is sometimes silently skipped). Use it.remove() or removeIf, or loop over a copy.
+pseudo.es:
+    peligro ← copia de los obstáculos
+    MIENTRAS quede alguno por mirar en peligro:
+        o ← el siguiente
+        SI o no es peligroso:
+            quitarlo A TRAVÉS del propio recorrido
+    escribir los que quedan
+pseudo.de:
+    gefahr ← Kopie der Hindernisse
+    SOLANGE in gefahr noch eines übrig ist:
+        h ← das nächste
+        WENN h nicht gefährlich ist:
+            es ÜBER den Durchlauf selbst entfernen
+    schreibe, was übrig bleibt
+pseudo.en:
+    danger ← copy of the obstacles
+    WHILE there is another one left in danger:
+        o ← the next one
+        IF o is not dangerous:
+            remove it THROUGH the iteration itself
+    write the ones that are left
+ejemplo:
+    List<Obstaculo> peligro = obstaculos();                   // una copia: se puede tocar || eine Kopie: darf geändert werden || a copy: safe to change
+    Iterator<Obstaculo> it = peligro.iterator();
+    while (it.hasNext()) {
+        Obstaculo o = it.next();
+        if (!o.peligroso()) it.remove();                      // borrar bien: con el iterador || richtig löschen: über den Iterator || safe removal: through the iterator
+    }
+    peligro.removeIf(o -> o.distancia() > 300);               // lo mismo, en una línea || dasselbe in einer Zeile || the same, in one line
+    escribir(peligro.size() + " trampas cerca");
+
+=== comparator
+nivel: 3
+tema: 15
+titulo.es: Comparator
+titulo.de: Comparator
+titulo.en: Comparator
+claves.es: comparator, comparable, compareto, comparator.comparing, ordenar una lista, ordenar por distancia, list.sort, thencomparing, reversed
+claves.de: comparator, comparable, compareto, comparator.comparing, liste sortieren, nach entfernung sortieren, list.sort, thencomparing, reversed
+claves.en: comparator, comparable, compareto, comparator.comparing, sort a list, sort by distance, list.sort, thencomparing, reversed
+ver: busqueda_y_ordenacion, lambda, referencia_a_metodo, interfaz
+es:
+    Para ordenar, Java necesita saber cuál va antes. Comparable es el orden «natural» que una clase trae de serie (los números de menor a mayor, los textos por orden alfabético); un Comparator es un criterio aparte que eliges tú para la ocasión.
+    Es el robot juez de la báscula: por defecto pone en fila a los rivales por peso (Comparable), pero si el locutor grita «¡ahora por lo feos que son!», le das otro reglamento (un Comparator) y los recoloca sin rechistar.
+    compareTo y compare devuelven un número negativo si el primero va antes, 0 si empatan y positivo si va después. Lo cómodo es construirlo: lista.sort(Comparator.comparingDouble(Enemigo::distancia)) ordena del más cercano al más lejano; .reversed() le da la vuelta y .thenComparing(Enemigo::nombre) desempata. Collections.sort(lista) usa el orden natural.
+    El fallo típico es escribir compare a mano con una resta (a.vida - b.vida): con números grandes desborda y da el signo al revés, y con double ni compila. Usa Integer.compare(a, b), Double.compare(a, b) o Comparator.comparing. Y una List.of(...) no se puede ordenar: cópiala antes en un ArrayList.
+de:
+    Zum Sortieren muss Java wissen, was zuerst kommt. Comparable ist die „natürliche“ Ordnung, die eine Klasse von Haus aus mitbringt (Zahlen aufsteigend, Texte alphabetisch); ein Comparator ist ein eigenes Kriterium, das du für den Anlass wählst.
+    Er ist der Kampfrichter-Roboter an der Waage: Normalerweise stellt er die Gegner nach Gewicht auf (Comparable), aber wenn der Sprecher brüllt „Jetzt nach Hässlichkeit!“, gibst du ihm ein anderes Reglement (einen Comparator), und er stellt sie ohne Murren um.
+    compareTo und compare liefern eine negative Zahl, wenn das erste davor kommt, 0 bei Gleichstand und eine positive, wenn es danach kommt. Bequemer ist es, ihn zusammenzubauen: lista.sort(Comparator.comparingDouble(Enemigo::distancia)) sortiert vom nächsten zum fernsten; .reversed() dreht es um, und .thenComparing(Enemigo::nombre) entscheidet bei Gleichstand. Collections.sort(lista) nimmt die natürliche Ordnung.
+    Der typische Fehler: compare von Hand mit einer Subtraktion schreiben (a.vida - b.vida). Bei großen Zahlen läuft das über und liefert das falsche Vorzeichen, mit double kompiliert es nicht einmal. Nimm Integer.compare(a, b), Double.compare(a, b) oder Comparator.comparing. Und eine List.of(...) lässt sich nicht sortieren: Kopiere sie vorher in eine ArrayList.
+en:
+    To sort things, Java needs to know which comes first. Comparable is the "natural" order a class comes with (numbers smallest first, text alphabetically); a Comparator is a separate rule you choose for the occasion.
+    It is the robot judge at the weigh-in: by default it lines rivals up by weight (Comparable), but if the announcer yells "now by how ugly they are!", you hand it a different rulebook (a Comparator) and it rearranges them without a word of complaint.
+    compareTo and compare return a negative number if the first goes before, 0 for a tie and a positive number if it goes after. The comfortable way is to build one: lista.sort(Comparator.comparingDouble(Enemigo::distancia)) sorts nearest to farthest; .reversed() flips it and .thenComparing(Enemigo::nombre) breaks ties. Collections.sort(lista) uses the natural order.
+    The classic mistake is hand-writing compare with a subtraction (a.vida - b.vida): with big numbers it overflows and flips the sign, and with doubles it doesn't even compile. Use Integer.compare(a, b), Double.compare(a, b) or Comparator.comparing. And a List.of(...) cannot be sorted: copy it into an ArrayList first.
+pseudo.es:
+    rivales ← copia de los enemigos que veo
+    ordenar rivales POR distancia, de menor a mayor
+        y, SI empatan, POR nombre
+    SI rivales no está vacía:
+        apuntar hacia rivales[0]         (el más cercano)
+        atacar
+pseudo.de:
+    gegner ← Kopie der Gegner, die ich sehe
+    gegner sortieren NACH Entfernung, aufsteigend
+        und, WENN gleich, NACH Name
+    WENN gegner nicht leer ist:
+        auf gegner[0] zielen             (der Nächste)
+        angreifen
+pseudo.en:
+    rivals ← copy of the enemies I can see
+    sort rivals BY distance, smallest first
+        and, IF tied, BY name
+    IF rivals is not empty:
+        aim at rivals[0]                 (the closest)
+        attack
+ejemplo:
+    List<Enemigo> rivales = enemigosVistos();                     // ya es una copia nueva || schon eine neue Kopie || already a fresh copy
+    rivales.sort(Comparator.comparingDouble(Enemigo::distancia)   // el más cerca, primero || der Nächste zuerst || closest first
+            .thenComparing(Enemigo::nombre));                      // si empatan, por nombre || bei Gleichstand nach Name || ties broken by name
+    if (!rivales.isEmpty()) {
+        apuntarHacia(rivales.get(0).angulo());
+        atacar();
+    }
+
+=== genericos
+nivel: 4
+tema: 16
+titulo.es: Genéricos
+titulo.de: Generics
+titulo.en: Generics
+claves.es: genericos, generics, tipo generico, clase generica, metodo generico, parametro de tipo, <t>, list<string>, operador diamante
+claves.de: generics, generische typen, generische klasse, generische methode, typparameter, <t>, list<string>, diamond-operator
+claves.en: generics, generic type, generic class, generic method, type parameter, <t>, list<string>, diamond operator
+ver: colecciones, comodines, borrado_de_tipos, interfaz
+es:
+    Los genéricos permiten escribir una clase o un método «para cualquier tipo» y decir cuál al usarlo: List<String> es una lista de textos y List<Enemigo>, una de enemigos. El tipo entre < > se comprueba al compilar, así que no puedes colar un Enemigo en una lista de String por despiste.
+    Es el soporte de herramientas del taller con una ranura para la etiqueta: Soporte<Brazo>, Soporte<Rueda>. El mismo molde sirve para todo, pero el robot mozo de almacén lee la etiqueta y te para en la puerta si intentas colgar una tostadora en el Soporte<Brazo>.
+    Una clase genérica se declara con un parámetro de tipo, class Soporte<T> { void colgar(T cosa) ... }, y un método genérico pone <E> antes del tipo que devuelve: static <E> E alAzar(List<E> lista, Random azar). Al crear, el operador diamante (Java 7) deduce el tipo: Map<String, List<Golpe>> golpes = new HashMap<>();. Llegaron en Java 5; antes todo era Object y casts que reventaban en ejecución.
+    Trampas: no admiten primitivos (List<int> no existe; se usa List<Integer> con autoboxing, que gasta memoria y da NullPointerException al desempaquetar un null). Por el borrado de tipos, en ejecución List<String> y List<Integer> son la misma clase: no puedes hacer new T(), ni instanceof List<String>, ni crear un T[]. Y una List<Enemigo> NO es una List<Object> aunque todo Enemigo sea un Object: para eso están los comodines.
+    Para un senior: no uses tipos crudos (List a secas, sin < >). El compilador lo deja pasar con un aviso «unchecked» y el ClassCastException aparece lejos de donde está el fallo. Los nombres de una letra (T, E, K, V) van bien en genéricos cortos; en una API grande, un nombre claro (TPieza) se agradece. Y si un método solo usa su parámetro de tipo una vez, quizá no necesita ser genérico.
+de:
+    Mit Generics schreibst du eine Klasse oder Methode „für jeden Typ“ und legst beim Benutzen fest, für welchen: List<String> ist eine Liste von Texten, List<Enemigo> eine von Gegnern. Der Typ in < > wird beim Kompilieren geprüft, also kannst du nicht aus Versehen einen Enemigo in eine Liste von Strings schmuggeln.
+    Es ist der Werkzeughalter in der Werkstatt mit einem Schlitz fürs Etikett: Soporte<Brazo>, Soporte<Rueda>. Dieselbe Form passt für alles, aber der Lagerroboter liest das Etikett und hält dich an der Tür auf, wenn du einen Toaster an den Soporte<Brazo> hängen willst.
+    Eine generische Klasse deklariert einen Typparameter, class Soporte<T> { void colgar(T cosa) ... }, und eine generische Methode setzt <E> vor ihren Rückgabetyp: static <E> E alAzar(List<E> lista, Random azar). Beim Erzeugen leitet der Diamond-Operator (Java 7) den Typ ab: Map<String, List<Golpe>> golpes = new HashMap<>();. Generics kamen mit Java 5; vorher war alles Object, mit Casts, die erst zur Laufzeit platzten.
+    Fallen: Primitive gehen nicht (List<int> gibt es nicht; man nimmt List<Integer> mit Autoboxing, das Speicher kostet und beim Auspacken eines null eine NullPointerException wirft). Wegen der Typlöschung sind List<String> und List<Integer> zur Laufzeit dieselbe Klasse: kein new T(), kein instanceof List<String>, kein T[]. Und eine List<Enemigo> ist KEINE List<Object>, obwohl jeder Enemigo ein Object ist: Dafür gibt es Wildcards.
+    Für Profis: Keine Raw Types (ein nacktes List ohne < >). Der Compiler lässt es mit einer „unchecked“-Warnung durch, und die ClassCastException taucht weit weg vom eigentlichen Fehler auf. Ein-Buchstaben-Namen (T, E, K, V) passen zu kurzen Generics; in einer großen API ist ein klarer Name (TPieza) eine Wohltat. Und benutzt eine Methode ihren Typparameter nur ein einziges Mal, muss sie vielleicht gar nicht generisch sein.
+en:
+    Generics let you write a class or method "for any type" and say which one when you use it: List<String> is a list of text, List<Enemigo> a list of enemies. The type in < > is checked at compile time, so you can't sneak an Enemigo into a list of Strings by accident.
+    It is the workshop's tool rack with a slot for a label: Soporte<Brazo>, Soporte<Rueda>. The same mould works for everything, but the storeroom robot reads the label and stops you at the door if you try to hang a toaster on the Soporte<Brazo>.
+    A generic class declares a type parameter, class Soporte<T> { void colgar(T cosa) ... }, and a generic method puts <E> before its return type: static <E> E alAzar(List<E> lista, Random azar). When creating one, the diamond operator (Java 7) infers the type: Map<String, List<Golpe>> golpes = new HashMap<>();. Generics arrived in Java 5; before that everything was Object, with casts that blew up at run time.
+    Traps: no primitives (there is no List<int>; you use List<Integer> with autoboxing, which costs memory and throws a NullPointerException when unboxing a null). Because of type erasure, List<String> and List<Integer> are the same class at run time: no new T(), no instanceof List<String>, no T[]. And a List<Enemigo> is NOT a List<Object>, even though every Enemigo is an Object: that is what wildcards are for.
+    For seniors: avoid raw types (a bare List with no < >). The compiler lets it through with an "unchecked" warning and the ClassCastException shows up far away from the real bug. One-letter names (T, E, K, V) suit short generics; in a large API a clear name (TPieza) is a kindness. And if a method uses its type parameter only once, it may not need to be generic at all.
+pseudo.es:
+    MOLDE Soporte DE algo:
+        colgados: lista DE algo
+        colgar(cosa: algo): añadir cosa a colgados
+    brazos ← nuevo Soporte DE Brazo
+    colgar un Brazo en brazos         (bien)
+    colgar una Rueda en brazos        (¡no compila!)
+pseudo.de:
+    FORM Soporte VON etwas:
+        aufgehängt: Liste VON etwas
+        aufhängen(ding: etwas): ding zu aufgehängt hinzufügen
+    arme ← neuer Soporte VON Brazo
+    einen Brazo an arme hängen        (gut)
+    eine Rueda an arme hängen         (kompiliert nicht!)
+pseudo.en:
+    MOULD Soporte OF something:
+        hanging: list OF something
+        hang(thing: something): add thing to hanging
+    arms ← new Soporte OF Brazo
+    hang a Brazo on arms              (fine)
+    hang a Rueda on arms              (doesn't compile!)
+ejemplo:
+    import java.util.*;
+
+    public class Soporte<T> {                                       // T: el tipo se dice al usarlo || T: der Typ kommt beim Benutzen || T: the type is chosen on use
+        private final List<T> colgados = new ArrayList<>();
+
+        public void colgar(T cosa) { colgados.add(cosa); }
+        public int cuantos() { return colgados.size(); }
+
+        public static <E> E alAzar(List<E> lista, Random azar) {    // método genérico: <E> delante || generische Methode: <E> davor || generic method: <E> in front
+            return lista.get(azar.nextInt(lista.size()));
+        }
+    }
+
+=== comodines
+nivel: 4
+tema: 16
+titulo.es: Comodines
+titulo.de: Wildcards
+titulo.en: Wildcards
+claves.es: comodines, comodin, ? extends, ? super, pecs, wildcard, list<?>, producer extends consumer super
+claves.de: wildcards, wildcard, platzhalter, ? extends, ? super, pecs, list<?>, producer extends consumer super
+claves.en: wildcards, wildcard, bounded wildcard, ? extends, ? super, pecs, list<?>, producer extends consumer super
+ver: genericos, borrado_de_tipos, herencia, polimorfismo
+es:
+    Un comodín es el ? de los genéricos: List<?> significa «una lista de algo, no sé de qué». Con un límite se vuelve útil: List<? extends Pieza> es una lista de Pieza o de cualquier subclase suya; List<? super Brazo> es una lista de Brazo o de algo más general que admita brazos.
+    Imagina dos ventanillas en el taller. La de «? extends Pieza» es la de RECOGIDA: de ahí salen brazos, ruedas o antenas, y sabes que todo es una Pieza, pero no te dejan meter nada, porque esa caja podría ser solo de antenas. La de «? super Brazo» es el buzón de ENTREGA: puedes echar brazos sin miedo, pero de lo que saques solo sabes que es «algo» (un Object).
+    La regla PECS (Producer Extends, Consumer Super): si de la colección solo LEES, usa ? extends; si solo ESCRIBES en ella, ? super. La propia JDK lo hace: Collections.copy(List<? super T> destino, List<? extends T> origen), o List.sort(Comparator<? super E>). Así, double pesoTotal(List<? extends Pieza> piezas) acepta una List<Brazo> y una List<Rueda>, cosa que con List<Pieza> no podría.
+    Fallos típicos: intentar add() en una List<? extends Pieza> (no compila, salvo con null) y poner comodines en el tipo que devuelve un método, lo que obliga a quien llama a cargar con ellos. Úsalos en los parámetros, no en los retornos.
+    Para un senior: los arrays son covariantes (un Brazo[] ES un Pieza[], y meter en él una Rueda revienta en ejecución con ArrayStoreException); los genéricos son invariantes precisamente para atrapar eso al compilar, y los comodines devuelven la flexibilidad sin perder seguridad. List<?> no es el tipo crudo List: el crudo apaga las comprobaciones y List<?> las mantiene. Si necesitas escribir en una lista de tipo desconocido, un método auxiliar genérico «captura» el comodín (wildcard capture). Llegaron con los genéricos, en Java 5.
+de:
+    Eine Wildcard ist das ? der Generics: List<?> heißt „eine Liste von irgendwas, keine Ahnung wovon“. Mit einer Grenze wird sie nützlich: List<? extends Pieza> ist eine Liste von Pieza oder irgendeiner Unterklasse; List<? super Brazo> ist eine Liste von Brazo oder von etwas Allgemeinerem, das Arme aufnimmt.
+    Stell dir zwei Schalter in der Werkstatt vor. „? extends Pieza“ ist die ABHOLUNG: Heraus kommen Arme, Räder oder Antennen, und du weißt, alles ist ein Pieza, aber hineinlegen darfst du nichts, denn die Kiste könnte nur für Antennen sein. „? super Brazo“ ist der ABGABE-Briefkasten: Arme kannst du bedenkenlos einwerfen, aber von dem, was du herausholst, weißt du nur, dass es „irgendwas“ ist (ein Object).
+    Die PECS-Regel (Producer Extends, Consumer Super): LIEST du nur aus der Collection, nimm ? extends; SCHREIBST du nur hinein, ? super. Das JDK macht es selbst so: Collections.copy(List<? super T> ziel, List<? extends T> quelle) oder List.sort(Comparator<? super E>). So nimmt double pesoTotal(List<? extends Pieza> piezas) eine List<Brazo> und eine List<Rueda>, was mit List<Pieza> nicht ginge.
+    Typische Fehler: add() auf einer List<? extends Pieza> versuchen (kompiliert nicht, außer mit null) und Wildcards in den Rückgabetyp einer Methode setzen, womit sich jeder Aufrufer damit herumschlagen muss. Nimm sie für Parameter, nicht für Rückgabewerte.
+    Für Profis: Arrays sind kovariant (ein Brazo[] IST ein Pieza[], und eine Rueda hineinzulegen platzt zur Laufzeit mit ArrayStoreException); Generics sind invariant, genau damit so etwas schon beim Kompilieren auffällt, und Wildcards holen die Flexibilität sicher zurück. List<?> ist nicht der Raw Type List: Der schaltet die Prüfungen ab, List<?> behält sie. Musst du in eine Liste unbekannten Typs schreiben, „fängt“ eine generische Hilfsmethode die Wildcard ein (Wildcard Capture). Sie kamen mit den Generics in Java 5.
+en:
+    A wildcard is the ? of generics: List<?> means "a list of something, no idea what". With a bound it becomes useful: List<? extends Pieza> is a list of Pieza or of any subclass; List<? super Brazo> is a list of Brazo or of something more general that accepts arms.
+    Picture two counters in the workshop. "? extends Pieza" is the PICK-UP counter: out come arms, wheels or antennas, and you know they are all a Pieza, but you may not hand anything in, because that crate might be antennas only. "? super Brazo" is the DROP-OFF box: you can drop arms in without worry, but whatever you take out, you only know it's "something" (an Object).
+    The PECS rule (Producer Extends, Consumer Super): if you only READ from the collection, use ? extends; if you only WRITE to it, ? super. The JDK does it itself: Collections.copy(List<? super T> dest, List<? extends T> src), or List.sort(Comparator<? super E>). That way double pesoTotal(List<? extends Pieza> piezas) accepts a List<Brazo> and a List<Rueda>, which a List<Pieza> parameter could not.
+    Classic mistakes: trying to add() to a List<? extends Pieza> (doesn't compile, except with null) and putting wildcards in a method's return type, which forces every caller to deal with them. Use them in parameters, not in return types.
+    For seniors: arrays are covariant (a Brazo[] IS a Pieza[], and storing a Rueda in it blows up at run time with ArrayStoreException); generics are invariant precisely to catch that at compile time, and wildcards give the flexibility back safely. List<?> is not the raw type List: the raw type switches the checks off, List<?> keeps them. If you need to write into a list of unknown type, a generic helper method "captures" the wildcard (wildcard capture). They arrived with generics, in Java 5.
+pseudo.es:
+    FUNCIÓN pesoTotal(piezas: lista DE algo que ES una Pieza):      (solo leo: EXTENDS)
+        total ← 0
+        PARA CADA p EN piezas:
+            total ← total + peso de p
+        DEVOLVER total
+    FUNCIÓN guardarBrazo(caja: lista DE algo que ADMITE un Brazo):  (solo escribo: SUPER)
+        meter un Brazo nuevo en caja
+pseudo.de:
+    FUNKTION gesamtgewicht(teile: Liste VON etwas, das ein Pieza IST):   (nur lesen: EXTENDS)
+        summe ← 0
+        FÜR JEDES t IN teile:
+            summe ← summe + Gewicht von t
+        ZURÜCKGEBEN summe
+    FUNKTION armAblegen(kiste: Liste VON etwas, das einen Brazo AUFNIMMT): (nur schreiben: SUPER)
+        einen neuen Brazo in kiste legen
+pseudo.en:
+    FUNCTION totalWeight(parts: list OF something that IS a Pieza):      (read only: EXTENDS)
+        total ← 0
+        FOR EACH p IN parts:
+            total ← total + weight of p
+        RETURN total
+    FUNCTION storeArm(crate: list OF something that ACCEPTS a Brazo):    (write only: SUPER)
+        put a new Brazo into crate
+ejemplo:
+    class Pieza { double peso = 1; }
+    class Brazo extends Pieza { }
+
+    class Almacen {
+        static double pesoTotal(List<? extends Pieza> piezas) {    // productora: solo leo || Produzent: nur lesen || producer: read only
+            double total = 0;
+            for (Pieza p : piezas) total += p.peso;
+            return total;
+        }
+        static void guardarBrazo(List<? super Brazo> caja) {       // consumidora: solo escribo || Konsument: nur schreiben || consumer: write only
+            caja.add(new Brazo());
+        }
+    }
+
+=== lambda
+nivel: 4
+tema: 17
+titulo.es: Lambda
+titulo.de: Lambda
+titulo.en: Lambda
+claves.es: lambda, lambdas, expresion lambda, ->, funcion anonima, funcion flecha, pasar una funcion, closure
+claves.de: lambda, lambdas, lambda-ausdruck, ->, anonyme funktion, pfeilfunktion, funktion übergeben, closure
+claves.en: lambda, lambdas, lambda expression, ->, anonymous function, arrow function, pass a function, closure
+ver: interfaz_funcional, referencia_a_metodo, stream, clase_interna
+es:
+    Una lambda es un trozo de código que se pasa de un sitio a otro como si fuera un valor: «toma, haz esto con cada uno». Se escribe con una flecha: parámetros -> lo que hace.
+    Es la nota que le pasas al robot ayudante de tu esquina: «a cada rival que entre, si es más bajito que tú, ¡muérdele la antena!». No le das un manual entero (una clase), solo la orden escrita en una servilleta, y él la aplica cuando toca.
+    Ejemplos: e -> e.distancia() < 100 (recibe un enemigo y dice sí o no); (a, b) -> a + b; y con llaves si son varias líneas: e -> { apuntarHacia(e.angulo()); atacar(); }. Se usan allí donde se espera una interfaz funcional: lista.removeIf(o -> !o.peligroso()), lista.forEach(e -> escribir(e.nombre())), lista.sort((a, b) -> Double.compare(a.distancia(), b.distancia())). Llegaron en Java 8.
+    Fallos típicos: querer cambiar una variable local desde dentro (solo puede leer variables «efectivamente finales»: int cuenta = 0; lista.forEach(e -> cuenta++); no compila; usa un bucle normal o count() de un stream). Y dentro de una lambda, this es el objeto de fuera (tu robot), no la lambda, al revés que en una clase anónima.
+    Para un senior: una lambda no genera un .class en disco; se compila con invokedynamic y LambdaMetafactory fabrica la implementación la primera vez que se evalúa. Las que no capturan nada suelen reutilizar una única instancia; las que capturan variables crean un objeto nuevo cada vez, y en un bucle caliente eso se nota. Si pasa de tres líneas, sácala a un método con nombre y usa una referencia a método: se lee, se prueba y se depura mejor (las trazas de pila de las lambdas son crípticas: lambda$cadaTurno$0).
+de:
+    Eine Lambda ist ein Stück Code, das man wie einen Wert herumreichen kann: „Hier, mach das mit jedem.“ Man schreibt sie mit einem Pfeil: Parameter -> was sie tut.
+    Sie ist der Zettel, den du dem Helfer-Roboter in deiner Ringecke zusteckst: „Bei jedem Gegner, der reinkommt und kleiner ist als du: Beiß ihm in die Antenne!“ Du gibst ihm kein ganzes Handbuch (eine Klasse), nur den Befehl auf einer Serviette, und er wendet ihn an, wenn es so weit ist.
+    Beispiele: e -> e.distancia() < 100 (nimmt einen Gegner und sagt ja oder nein); (a, b) -> a + b; und mit geschweiften Klammern bei mehreren Zeilen: e -> { apuntarHacia(e.angulo()); atacar(); }, also apuntarHacia (zielenNach) und atacar (angreifen). Man setzt sie überall dort ein, wo ein funktionales Interface erwartet wird: lista.removeIf(o -> !o.peligroso()), lista.forEach(e -> escribir(e.nombre())), lista.sort((a, b) -> Double.compare(a.distancia(), b.distancia())). Sie kamen mit Java 8.
+    Typische Fehler: von innen eine lokale Variable ändern wollen (eine Lambda darf nur „effektiv finale“ Variablen lesen: int cuenta = 0; lista.forEach(e -> cuenta++); kompiliert nicht; nimm eine normale Schleife oder count() eines Streams). Und in einer Lambda ist this das äußere Objekt (dein Roboter), nicht die Lambda, anders als in einer anonymen Klasse.
+    Für Profis: Eine Lambda erzeugt keine .class-Datei; sie wird mit invokedynamic übersetzt, und LambdaMetafactory baut die Implementierung bei der ersten Auswertung. Lambdas ohne Captures teilen sich meist eine einzige Instanz; solche, die Variablen einfangen, erzeugen jedes Mal ein neues Objekt, was in einer heißen Schleife auffällt. Ist sie länger als drei Zeilen, lagere sie in eine benannte Methode aus und nimm eine Methodenreferenz: lesbarer, testbarer und leichter zu debuggen (Stack Traces von Lambdas sind kryptisch: lambda$cadaTurno$0).
+en:
+    A lambda is a piece of code you can pass around as if it were a value: "here, do this with each one". You write it with an arrow: parameters -> what it does.
+    It is the note you slip to the helper robot in your corner: "every rival who comes in, if they're shorter than you, bite their antenna!". You don't hand it a whole manual (a class), just the order scribbled on a napkin, and it applies it when the moment comes.
+    Examples: e -> e.distancia() < 100 (takes an enemy and says yes or no); (a, b) -> a + b; and with braces for several lines: e -> { apuntarHacia(e.angulo()); atacar(); }, that is, apuntarHacia (aimTo) and atacar (attack). You use them wherever a functional interface is expected: lista.removeIf(o -> !o.peligroso()), lista.forEach(e -> escribir(e.nombre())), lista.sort((a, b) -> Double.compare(a.distancia(), b.distancia())). They arrived in Java 8.
+    Classic mistakes: trying to change a local variable from inside (a lambda can only read "effectively final" variables: int cuenta = 0; lista.forEach(e -> cuenta++); doesn't compile; use a plain loop or a stream's count()). And inside a lambda, this is the outer object (your robot), not the lambda, unlike in an anonymous class.
+    For seniors: a lambda produces no .class file; it compiles to invokedynamic and LambdaMetafactory builds the implementation the first time it is evaluated. Non-capturing lambdas usually share a single instance; capturing ones allocate a new object on every evaluation, which shows in a hot loop. If it grows past three lines, move it into a named method and use a method reference: easier to read, test and debug (lambda stack traces are cryptic: lambda$cadaTurno$0).
+pseudo.es:
+    cerca ← (enemigo) → ¿está a menos de 100?      (una regla guardada en una variable)
+    PARA CADA e EN enemigos vistos:
+        SI cerca(e):
+            apuntar hacia e
+            atacar
+    a cada enemigo visto, aplicarle: escribir su nombre
+pseudo.de:
+    nah ← (gegner) → ist er näher als 100?         (eine Regel in einer Variable)
+    FÜR JEDES g IN gesehene Gegner:
+        WENN nah(g):
+            auf g zielen
+            angreifen
+    auf jeden gesehenen Gegner anwenden: seinen Namen schreiben
+pseudo.en:
+    close ← (enemy) → is it nearer than 100?       (a rule kept in a variable)
+    FOR EACH e IN seen enemies:
+        IF close(e):
+            aim at e
+            attack
+    apply to every seen enemy: write its name
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        Predicate<Enemigo> cerca = e -> e.distancia() < 100;        // la nota de la servilleta || der Zettel auf der Serviette || the note on the napkin
+        for (Enemigo e : enemigosVistos()) {
+            if (cerca.test(e)) {
+                apuntarHacia(e.angulo());
+                atacar();
+            }
+        }
+        enemigosVistos().forEach(e -> escribir(e.nombre()));         // una lambda para cada uno || eine Lambda für jeden || one lambda for each
+    }
+
+=== interfaz_funcional
+nivel: 4
+tema: 17
+titulo.es: Interfaz funcional
+titulo.de: Funktionales Interface
+titulo.en: Functional interface
+claves.es: interfaz funcional, functional interface, @functionalinterface, function, predicate, consumer, supplier, bifunction, unaryoperator, java.util.function
+claves.de: funktionales interface, functional interface, @functionalinterface, function, predicate, consumer, supplier, bifunction, java.util.function
+claves.en: functional interface, @functionalinterface, function, predicate, consumer, supplier, bifunction, unaryoperator, sam interface, java.util.function
+ver: lambda, referencia_a_metodo, interfaz, metodo_default
+es:
+    Una interfaz funcional es una interfaz con un solo método abstracto. Es el «enchufe» donde encaja una lambda: la lambda es, sin más, la implementación de ese único método.
+    Es el reglamento de enchufes del taller: cada enchufe solo acepta herramientas de su forma. Predicate es el de los detectores (dicen sí o no), Consumer el de las trituradoras (se lo comen y no devuelven nada), Supplier el de las máquinas de chicles (te dan algo sin pedirte nada) y Function el de los transformadores (entra una cosa y sale otra).
+    Las de java.util.function: Function<T,R> (apply), Predicate<T> (test), Consumer<T> (accept), Supplier<T> (get), BiFunction<T,U,R>, UnaryOperator<T>, BinaryOperator<T>, y versiones para primitivos (IntPredicate, ToDoubleFunction…) que evitan cajas Integer y Double. Runnable y Comparator también son funcionales. Puedes hacer la tuya y marcarla con @FunctionalInterface: el compilador protesta si alguien le añade un segundo método abstracto.
+    El fallo típico es llamar a la variable como si fuera un método (cerca(e) no compila): hay que llamar a su método, cerca.test(e) o ficha.apply(e). Y no confundas cuál usar: si no devuelve nada es Consumer; si no recibe nada, Supplier.
+    Para un senior: se combinan sin escribir clases (cerca.and(debil), cerca.negate(), f.andThen(g), Comparator.comparing(...).reversed()); los métodos default y static de la interfaz no cuentan para el «uno solo». En código caliente prefiere la variante primitiva (ToDoubleFunction<Enemigo> en vez de Function<Enemigo, Double>). No inventes tu interfaz si una estándar encaja, pero una con nombre del dominio (Estrategia, Disparador) cuenta la intención mejor que un Function<Enemigo, Double>. Todo esto llegó en Java 8.
+de:
+    Ein funktionales Interface ist ein Interface mit genau einer abstrakten Methode. Es ist die „Steckdose“, in die eine Lambda passt: Die Lambda ist schlicht die Implementierung dieser einen Methode.
+    Es ist die Steckdosenordnung der Werkstatt: Jede Dose nimmt nur Werkzeuge mit passendem Stecker. Predicate ist die Dose für Detektoren (sagen ja oder nein), Consumer die für Schredder (schlucken etwas und geben nichts zurück), Supplier die für Kaugummiautomaten (geben dir etwas, ohne etwas zu verlangen) und Function die für Umformer (rein kommt eins, raus kommt ein anderes).
+    Die aus java.util.function: Function<T,R> (apply), Predicate<T> (test), Consumer<T> (accept), Supplier<T> (get), BiFunction<T,U,R>, UnaryOperator<T>, BinaryOperator<T> sowie Varianten für Primitive (IntPredicate, ToDoubleFunction …), die Integer- und Double-Boxen vermeiden. Auch Runnable und Comparator sind funktional. Du kannst eigene schreiben und mit @FunctionalInterface markieren: Dann beschwert sich der Compiler, wenn jemand eine zweite abstrakte Methode hinzufügt.
+    Der typische Fehler: die Variable aufrufen, als wäre sie eine Methode (cerca(e) kompiliert nicht); man ruft ihre Methode auf, cerca.test(e) oder ficha.apply(e). Und verwechsle sie nicht: Gibt sie nichts zurück, ist es ein Consumer; nimmt sie nichts entgegen, ein Supplier.
+    Für Profis: Man kombiniert sie ohne eigene Klassen (cerca.and(debil), cerca.negate(), f.andThen(g), Comparator.comparing(...).reversed()); default- und static-Methoden des Interfaces zählen für das „genau eine“ nicht mit. In heißem Code lieber die primitive Variante (ToDoubleFunction<Enemigo> statt Function<Enemigo, Double>). Erfinde kein eigenes Interface, wenn ein Standard-Interface passt, aber eines mit Fachnamen (Estrategia, Disparador) erzählt die Absicht besser als ein Function<Enemigo, Double>. All das kam mit Java 8.
+en:
+    A functional interface is an interface with exactly one abstract method. It is the "socket" a lambda plugs into: the lambda is simply the implementation of that one method.
+    It is the workshop's socket rulebook: each socket only takes tools with the matching plug. Predicate is the socket for detectors (they say yes or no), Consumer the one for shredders (they swallow it and return nothing), Supplier the one for gumball machines (they give you something without asking for anything) and Function the one for converters (one thing goes in, another comes out).
+    The ones in java.util.function: Function<T,R> (apply), Predicate<T> (test), Consumer<T> (accept), Supplier<T> (get), BiFunction<T,U,R>, UnaryOperator<T>, BinaryOperator<T>, plus primitive versions (IntPredicate, ToDoubleFunction…) that avoid Integer and Double boxes. Runnable and Comparator are functional too. You can write your own and mark it @FunctionalInterface: the compiler complains if someone adds a second abstract method.
+    The classic mistake is calling the variable as if it were a method (cerca(e) doesn't compile): you call its method, cerca.test(e) or ficha.apply(e). And don't mix them up: if it returns nothing it's a Consumer; if it takes nothing, a Supplier.
+    For seniors: you combine them without writing classes (cerca.and(debil), cerca.negate(), f.andThen(g), Comparator.comparing(...).reversed()); the interface's default and static methods don't count towards the "exactly one". In hot code prefer the primitive variant (ToDoubleFunction<Enemigo> instead of Function<Enemigo, Double>). Don't invent your own interface when a standard one fits, but one with a domain name (Estrategia, Disparador) tells the intent better than a Function<Enemigo, Double>. All of this arrived in Java 8.
+pseudo.es:
+    debil    ← (enemigo) → ¿blindaje menor que 30?        (detector: sí o no)
+    ficha    ← (enemigo) → «nombre (modelo)»              (transformador: entra uno, sale otro)
+    anunciar ← (texto) → decirlo en voz alta               (trituradora: no devuelve nada)
+    PARA CADA e EN enemigos vistos:
+        SI debil(e) Y está cerca:
+            anunciar(ficha(e))
+pseudo.de:
+    schwach    ← (gegner) → Panzerung unter 30?           (Detektor: ja oder nein)
+    steckbrief ← (gegner) → „Name (Modell)“               (Umformer: rein eins, raus ein anderes)
+    ansagen    ← (text) → laut sagen                      (Schredder: gibt nichts zurück)
+    FÜR JEDES g IN gesehene Gegner:
+        WENN schwach(g) UND er nah ist:
+            ansagen(steckbrief(g))
+pseudo.en:
+    weak     ← (enemy) → armor below 30?                  (detector: yes or no)
+    card     ← (enemy) → "name (model)"                   (converter: one in, another out)
+    announce ← (text) → say it out loud                   (shredder: returns nothing)
+    FOR EACH e IN seen enemies:
+        IF weak(e) AND it is close:
+            announce(card(e))
+ejemplo:
+    Predicate<Enemigo> debil = e -> e.blindaje() < 30;                      // sí o no: test || ja oder nein: test || yes or no: test
+    Function<Enemigo, String> ficha = e -> e.nombre() + " (" + e.modelo() + ")";   // entra uno, sale otro: apply || rein eins, raus ein anderes: apply || one in, another out: apply
+    Consumer<String> anunciar = t -> decir(t);                              // se lo come: accept || schluckt es: accept || swallows it: accept
+    Supplier<Double> miBlindaje = () -> blindaje();                         // da sin pedir: get || gibt, ohne zu fragen: get || gives without asking: get
+
+    for (Enemigo e : enemigosVistos()) {
+        if (debil.and(x -> x.distancia() < 150).test(e)) {                 // se combinan con and || kombinieren mit and || combined with and
+            anunciar.accept(ficha.apply(e) + " está débil; yo tengo " + miBlindaje.get());
+        }
+    }
+
+=== referencia_a_metodo
+nivel: 4
+tema: 17
+titulo.es: Referencia a método
+titulo.de: Methodenreferenz
+titulo.en: Method reference
+claves.es: referencia a metodo, referencias a metodos, method reference, dos puntos dobles, system.out::println, enemigo::distancia, integer::sum, referencia a constructor
+claves.de: methodenreferenz, methodenreferenzen, method reference, doppelter doppelpunkt, system.out::println, enemigo::distancia, konstruktorreferenz
+claves.en: method reference, method references, double colon, system.out::println, enemigo::distancia, integer::sum, constructor reference
+ver: lambda, interfaz_funcional, stream, comparator
+es:
+    Una referencia a método es una lambda abreviada: en vez de escribir e -> e.nombre(), escribes Enemigo::nombre. Los dos puntos dobles :: quieren decir «el método tal, sin llamarlo todavía».
+    Es señalar al robot especialista en vez de explicarle la tarea: no le dices al ayudante «coge a cada rival y mídele la distancia con la cinta»; le dices «que lo haga el Medidor» y apuntas con el dedo. El Medidor ya sabe hacer su trabajo.
+    Hay cuatro formas: de un método estático (Math::abs, Integer::sum), de un objeto concreto (System.out::println, this::decir), de cualquier objeto de un tipo (Enemigo::distancia, String::length: el objeto es el primer parámetro) y de un constructor (ArrayList::new). Encajan en cualquier interfaz funcional compatible: lista.forEach(this::decir), Comparator.comparingDouble(Enemigo::distancia), stream.map(Enemigo::nombre). Llegaron en Java 8, con las lambdas.
+    Fallos típicos: poner paréntesis (Enemigo::nombre() no compila) y querer usarla cuando la lambda hace algo más que llamar al método (e -> e.distancia() * 2 no tiene atajo: déjala como lambda).
+    Para un senior: con métodos sobrecargados la inferencia puede volverse ambigua (Integer::toString encaja como estático y como de instancia en Function<Integer, String>) y hay que volver a la lambda. Y en objeto::metodo el objeto se evalúa UNA vez, al crear la referencia: si es null, el NullPointerException salta en ese momento, no al usarla, al contrario que en la lambda equivalente, que lo lee cada vez.
+de:
+    Eine Methodenreferenz ist eine abgekürzte Lambda: Statt e -> e.nombre() schreibst du Enemigo::nombre. Der doppelte Doppelpunkt :: bedeutet „die Methode soundso, aber noch nicht aufrufen“.
+    Das ist, als würdest du auf den Spezialroboter zeigen, statt die Aufgabe zu erklären: Du sagst dem Helfer nicht „nimm jeden Gegner und miss mit dem Maßband seine Entfernung“, sondern „das macht der Vermesser“ und zeigst mit dem Finger. Der Vermesser weiß schon, wie es geht.
+    Es gibt vier Formen: eine statische Methode (Math::abs, Integer::sum), eine Methode eines bestimmten Objekts (System.out::println, this::decir, also decir (sagen)), eine Methode irgendeines Objekts eines Typs (Enemigo::distancia, String::length: das Objekt ist der erste Parameter) und ein Konstruktor (ArrayList::new). Sie passen in jedes kompatible funktionale Interface: lista.forEach(this::decir), Comparator.comparingDouble(Enemigo::distancia), stream.map(Enemigo::nombre). Sie kamen mit Java 8, zusammen mit den Lambdas.
+    Typische Fehler: Klammern setzen (Enemigo::nombre() kompiliert nicht) und sie benutzen wollen, wenn die Lambda mehr tut, als die Methode aufzurufen (e -> e.distancia() * 2 hat keine Abkürzung: Lass es eine Lambda).
+    Für Profis: Bei überladenen Methoden kann die Typinferenz mehrdeutig werden (Integer::toString passt in Function<Integer, String> als statische und als Instanzmethode), dann hilft nur die Lambda. Und bei objekt::methode wird das Objekt EINMAL ausgewertet, beim Erzeugen der Referenz: Ist es null, fliegt die NullPointerException sofort und nicht erst beim Benutzen, anders als bei der gleichwertigen Lambda, die es jedes Mal neu liest.
+en:
+    A method reference is a shorthand lambda: instead of e -> e.nombre() you write Enemigo::nombre. The double colon :: means "that method, but don't call it yet".
+    It is pointing at the specialist robot instead of explaining the job: you don't tell your helper "take each rival and measure its distance with the tape"; you say "let the Measurer do it" and point. The Measurer already knows how.
+    There are four kinds: a static method (Math::abs, Integer::sum), a method of one particular object (System.out::println, this::decir, that is, decir (say)), a method of any object of a type (Enemigo::distancia, String::length: the object is the first parameter) and a constructor (ArrayList::new). They fit any compatible functional interface: lista.forEach(this::decir), Comparator.comparingDouble(Enemigo::distancia), stream.map(Enemigo::nombre). They arrived in Java 8, alongside lambdas.
+    Classic mistakes: adding parentheses (Enemigo::nombre() doesn't compile) and trying to use one when the lambda does more than call the method (e -> e.distancia() * 2 has no shortcut: leave it as a lambda).
+    For seniors: with overloaded methods inference can become ambiguous (Integer::toString fits Function<Integer, String> both as a static and as an instance method), and you have to fall back to the lambda. And in object::method the object is evaluated ONCE, when the reference is created: if it is null, the NullPointerException fires right then, not when it is used, unlike the equivalent lambda, which reads it every time.
+pseudo.es:
+    medir ← el método «distancia» de Enemigo        (señalado, aún sin llamar)
+    rivales ← enemigos vistos, ordenados POR medir
+    nombres ← a cada rival, aplicarle su método «nombre»
+    PARA CADA n EN nombres:
+        usar mi propio método «decir» con n
+pseudo.de:
+    messen ← die Methode „distancia“ von Enemigo   (gezeigt, noch nicht aufgerufen)
+    gegner ← gesehene Gegner, sortiert NACH messen
+    namen ← auf jeden Gegner seine Methode „nombre“ anwenden
+    FÜR JEDES n IN namen:
+        meine eigene Methode „decir“ mit n benutzen
+pseudo.en:
+    measure ← Enemigo's "distancia" method          (pointed at, not called yet)
+    rivals ← seen enemies, sorted BY measure
+    names ← apply each rival's "nombre" method
+    FOR EACH n IN names:
+        use my own "decir" method with n
+ejemplo:
+    List<Enemigo> rivales = enemigosVistos();
+    rivales.sort(Comparator.comparingDouble(Enemigo::distancia));         // = e -> e.distancia() || = e -> e.distancia() || = e -> e.distancia()
+    List<String> nombres = rivales.stream().map(Enemigo::nombre).toList(); // de cualquier Enemigo || von irgendeinem Enemigo || of any Enemigo
+    nombres.forEach(this::decir);                                         // de este objeto: mi robot || von diesem Objekt: mein Roboter || of this object: my robot
+    int suma = List.of(3, 4, 5).stream().reduce(0, Integer::sum);       // estática || statisch || static
+    Supplier<List<String>> nueva = ArrayList::new;                        // de constructor || Konstruktorreferenz || constructor reference
+    escribir(suma + " " + nueva.get().isEmpty());
+
+=== stream
+nivel: 4
+tema: 18
+titulo.es: Stream
+titulo.de: Stream
+titulo.en: Stream
+claves.es: stream, streams, api de streams, .stream(), filter, map y filter, intstream, tuberia de datos, operacion terminal
+claves.de: stream, streams, stream-api, .stream(), filter, map und filter, intstream, pipeline, terminaloperation
+claves.en: stream, streams, stream api, .stream(), filter, map and filter, intstream, pipeline, terminal operation
+ver: lambda, collectors, optional, referencia_a_metodo
+es:
+    Un stream es una cadena de pasos para procesar una colección: coges los datos, los filtras, los transformas y sacas un resultado, todo seguido, como una frase. No guarda datos: los hace pasar.
+    Es la cinta transportadora de la chatarrería del torneo: por un lado entran todos los robots derrotados, un brazo mecánico aparta los oxidados (filter), una prensa convierte cada uno en un cubo (map) y al final un robot contable apunta cuántos cubos han salido (count). Y nada se mueve hasta que el contable pulsa su botón.
+    Se empieza con lista.stream(), se encadenan operaciones intermedias (filter, map, sorted, distinct, limit) y se acaba con una terminal (toList(), count(), findFirst(), anyMatch(), forEach(), collect(...)). Por ejemplo, enemigosVistos().stream().filter(e -> !e.vuela()).mapToDouble(Enemigo::distancia).min() da la distancia al rival de tierra más cercano. Para números, IntStream y DoubleStream traen sum(), average() y max(). Llegaron en Java 8; toList(), en Java 16.
+    Fallos típicos: olvidar la operación terminal (sin ella no pasa nada, porque es perezoso), reutilizar un stream ya gastado (IllegalStateException) y cambiar la lista de origen desde dentro del stream.
+    Para un senior: un stream no sale gratis. Para cinco enemigos, un for normal es igual de claro, algo más rápido y más fácil de depurar, y dentro de cadaTurno, que corre unas 30 veces por segundo con un tope de pasos, se nota. No metas efectos secundarios en map o filter, y no uses parallelStream() por costumbre: solo compensa con muchos datos, trabajo caro por elemento y nada de estado compartido.
+de:
+    Ein Stream ist eine Kette von Schritten, um eine Collection zu verarbeiten: Daten nehmen, filtern, umwandeln und ein Ergebnis herausholen, alles in einem Zug, wie ein Satz. Er speichert keine Daten, er lässt sie durchlaufen.
+    Er ist das Förderband auf dem Schrottplatz des Turniers: Vorne kommen alle besiegten Roboter rein, ein Greifarm sortiert die verrosteten aus (filter), eine Presse macht aus jedem einen Würfel (map), und am Ende notiert ein Buchhalter-Roboter, wie viele Würfel herausgekommen sind (count). Und nichts bewegt sich, bevor der Buchhalter auf seinen Knopf drückt.
+    Man beginnt mit lista.stream(), hängt Zwischenoperationen an (filter, map, sorted, distinct, limit) und endet mit einer Terminaloperation (toList(), count(), findFirst(), anyMatch(), forEach(), collect(...)). Zum Beispiel liefert enemigosVistos().stream().filter(e -> !e.vuela()).mapToDouble(Enemigo::distancia).min() die Entfernung zum nächsten Gegner am Boden; enemigosVistos heißt auf Deutsch gesehen. Für Zahlen haben IntStream und DoubleStream sum(), average() und max(). Streams kamen mit Java 8, toList() mit Java 16.
+    Typische Fehler: die Terminaloperation vergessen (ohne sie passiert nichts, weil Streams faul sind), einen verbrauchten Stream wiederverwenden (IllegalStateException) und die Quell-Liste aus dem Stream heraus ändern.
+    Für Profis: Ein Stream ist nicht gratis. Bei fünf Gegnern ist eine normale for-Schleife genauso klar, etwas schneller und leichter zu debuggen, und in cadaTurno (jedenZug), das etwa 30-mal pro Sekunde mit einer Schrittgrenze läuft, merkt man das. Keine Seiteneffekte in map oder filter, und parallelStream() nicht aus Gewohnheit: Es lohnt sich nur bei vielen Daten, teurer Arbeit pro Element und ohne gemeinsamen Zustand.
+en:
+    A stream is a chain of steps for processing a collection: take the data, filter it, transform it and get a result, all in one go, like a sentence. It stores no data; it lets data flow through.
+    It is the conveyor belt at the tournament's scrapyard: in come all the defeated robots, a mechanical arm picks out the rusty ones (filter), a press turns each into a cube (map), and at the end an accountant robot writes down how many cubes came out (count). And nothing moves until the accountant presses its button.
+    You start with lista.stream(), chain intermediate operations (filter, map, sorted, distinct, limit) and finish with a terminal one (toList(), count(), findFirst(), anyMatch(), forEach(), collect(...)). For example, enemigosVistos().stream().filter(e -> !e.vuela()).mapToDouble(Enemigo::distancia).min() gives the distance to the closest ground rival; enemigosVistos is seenEnemies in English. For numbers, IntStream and DoubleStream bring sum(), average() and max(). Streams arrived in Java 8; toList() in Java 16.
+    Classic mistakes: forgetting the terminal operation (without it nothing happens, because streams are lazy), reusing a stream that is already used up (IllegalStateException), and modifying the source list from inside the stream.
+    For seniors: a stream isn't free. For five enemies a plain for loop is just as clear, a bit faster and easier to debug, and inside cadaTurno (onTick), which runs about 30 times a second under a step limit, it shows. Keep side effects out of map and filter, and don't reach for parallelStream() out of habit: it only pays off with lots of data, expensive per-element work and no shared state.
+pseudo.es:
+    masCerca ← enemigos vistos
+        → QUEDARSE CON los que no vuelan
+        → CONVERTIR cada uno en su distancia
+        → EL MÍNIMO                     (aquí empieza a moverse la cinta)
+    SI hay masCerca Y es menor que 80:
+        atacar
+pseudo.de:
+    amNächsten ← gesehene Gegner
+        → BEHALTEN, die nicht fliegen
+        → UMWANDELN jeden in seine Entfernung
+        → DAS MINIMUM                   (erst jetzt läuft das Band)
+    WENN es amNächsten gibt UND es kleiner als 80 ist:
+        angreifen
+pseudo.en:
+    closest ← seen enemies
+        → KEEP the ones that don't fly
+        → TURN each one into its distance
+        → THE MINIMUM                   (only now does the belt start moving)
+    IF there is a closest AND it is below 80:
+        attack
+ejemplo:
+    OptionalDouble masCerca = enemigosVistos().stream()
+            .filter(e -> !e.vuela())                          // aparta los que vuelan || die Fliegenden aussortieren || drop the flyers
+            .mapToDouble(Enemigo::distancia)                  // cada uno → su distancia || jeder → seine Entfernung || each → its distance
+            .min();                                           // terminal: solo ahora se mueve || terminal: erst jetzt läuft es || terminal: only now it runs
+    if (masCerca.isPresent() && masCerca.getAsDouble() < 80) atacar();
+
+    long voladores = enemigosVistos().stream().filter(Enemigo::vuela).count();
+    escribir(voladores + " vuelan");
+
+=== optional
+nivel: 4
+tema: 18
+titulo.es: Optional
+titulo.de: Optional
+titulo.en: Optional
+claves.es: optional, opcional, optional.empty, optional.of, orelse, orelsethrow, ifpresent, puede no haber resultado, evitar null
+claves.de: optional, optional.empty, optional.of, orelse, orelsethrow, ifpresent, vielleicht kein ergebnis, null vermeiden
+claves.en: optional, optional.empty, optional.of, orelse, orelsethrow, ifpresent, maybe no result, avoid null
+ver: null, stream, excepciones_bien_disenadas, lambda
+es:
+    Optional es una cajita que puede traer un valor o venir vacía. Sirve para que un método diga bien claro «a lo mejor no hay resultado», en vez de devolver null y esperar que nadie tropiece con él.
+    Es el sobre sorpresa que el árbitro entrega antes del combate: dentro puede venir el rival que te toca o un papel que dice «hoy descansas». Lo que nunca te dará es un sobre que te estalla en la mano (null) cuando lo abres sin mirar.
+    Se crea con Optional.of(x), Optional.ofNullable(x) u Optional.empty(), y muchos streams lo devuelven (findFirst(), min(), max()). Para usarlo: ifPresent(e -> ...), ifPresentOrElse(..., ...) (Java 9), orElse(valorPorDefecto), orElseGet(() -> ...), orElseThrow(), map(...), isPresent() e isEmpty() (Java 11). Llegó en Java 8.
+    Fallos típicos: llamar a get() sin mirar antes (es el mismo null de siempre con otro nombre: usa orElse u orElseThrow) y devolver null en un método que promete un Optional, que es lo peor de los dos mundos.
+    Para un senior: Optional está pensado para valores de RETORNO. No lo uses en campos, parámetros ni colecciones (List<Optional<X>> casi siempre es un error de diseño: filtra los vacíos), y para primitivos existen OptionalInt y OptionalDouble, sin cajas. Ojo: orElse(calcular()) calcula SIEMPRE, haya valor o no; si es caro, orElseGet(() -> calcular()). Y Optional no es Serializable, otra razón para no guardarlo en campos.
+de:
+    Optional ist eine kleine Schachtel, die einen Wert enthält oder leer ist. Damit sagt eine Methode klar und deutlich „vielleicht gibt es kein Ergebnis“, statt null zurückzugeben und zu hoffen, dass niemand darüber stolpert.
+    Es ist der Überraschungsumschlag, den der Schiedsrichter vor dem Kampf verteilt: Drin steht entweder dein Gegner oder ein Zettel mit „Heute hast du frei“. Was er dir nie gibt, ist ein Umschlag, der dir in der Hand explodiert (null), wenn du ihn ungeprüft aufreißt.
+    Man erzeugt es mit Optional.of(x), Optional.ofNullable(x) oder Optional.empty(), und viele Streams liefern eins (findFirst(), min(), max()). Benutzen: ifPresent(e -> ...), ifPresentOrElse(..., ...) (Java 9), orElse(standardwert), orElseGet(() -> ...), orElseThrow(), map(...), isPresent() und isEmpty() (Java 11). Optional kam mit Java 8.
+    Typische Fehler: get() aufrufen, ohne vorher zu prüfen (das ist dasselbe alte null unter anderem Namen: Nimm orElse oder orElseThrow), und in einer Methode, die ein Optional verspricht, null zurückgeben, das Schlechteste aus beiden Welten.
+    Für Profis: Optional ist für RÜCKGABEWERTE gedacht. Nicht für Felder, Parameter oder Collections (List<Optional<X>> ist fast immer ein Entwurfsfehler: Filtere die leeren heraus), und für Primitive gibt es OptionalInt und OptionalDouble ohne Boxing. Achtung: orElse(berechnen()) rechnet IMMER, ob ein Wert da ist oder nicht; ist es teuer, nimm orElseGet(() -> berechnen()). Und Optional ist nicht Serializable, ein weiterer Grund, es nicht in Feldern zu speichern.
+en:
+    Optional is a little box that either holds a value or is empty. It lets a method say loud and clear "there may be no result", instead of returning null and hoping nobody trips over it.
+    It is the surprise envelope the referee hands out before the fight: inside is either your opponent or a slip saying "you're resting today". What it will never give you is an envelope that blows up in your hand (null) when you rip it open without looking.
+    You create one with Optional.of(x), Optional.ofNullable(x) or Optional.empty(), and many streams return one (findFirst(), min(), max()). Using it: ifPresent(e -> ...), ifPresentOrElse(..., ...) (Java 9), orElse(defaultValue), orElseGet(() -> ...), orElseThrow(), map(...), isPresent() and isEmpty() (Java 11). Optional arrived in Java 8.
+    Classic mistakes: calling get() without checking first (that's the same old null under another name: use orElse or orElseThrow), and returning null from a method that promises an Optional, the worst of both worlds.
+    For seniors: Optional is meant for RETURN values. Not for fields, parameters or collections (List<Optional<X>> is nearly always a design mistake: filter out the empty ones), and for primitives there are OptionalInt and OptionalDouble, with no boxing. Watch out: orElse(compute()) ALWAYS computes, value or not; if it's expensive, use orElseGet(() -> compute()). And Optional isn't Serializable, one more reason to keep it out of fields.
+pseudo.es:
+    volador ← el primer enemigo que vuela (o NADA)
+    SI volador trae algo:
+        apuntar hacia él
+    SI NO:
+        girar 10 grados y seguir buscando
+    nombre ← el nombre de volador, o "nadie" si no hay
+pseudo.de:
+    flieger ← der erste Gegner, der fliegt (oder NICHTS)
+    WENN flieger etwas enthält:
+        auf ihn zielen
+    SONST:
+        10 Grad drehen und weitersuchen
+    name ← der Name von flieger, oder "niemand", falls keiner da ist
+pseudo.en:
+    flyer ← the first enemy that flies (or NOTHING)
+    IF flyer holds something:
+        aim at it
+    ELSE:
+        turn 10 degrees and keep looking
+    name ← the name of flyer, or "nobody" if there isn't one
+ejemplo:
+    Optional<Enemigo> volador = enemigosVistos().stream()
+            .filter(Enemigo::vuela)
+            .findFirst();                                         // puede venir vacío || kann leer sein || may be empty
+    volador.ifPresentOrElse(
+            e -> apuntarHacia(e.angulo()),                         // si hay alguien || wenn jemand da ist || if someone is there
+            () -> girar(10));                                      // si no hay nadie || wenn keiner da ist || if nobody is there
+    String nombre = volador.map(Enemigo::nombre).orElse("nadie"); // nunca null || nie null || never null
+    escribir("objetivo: " + nombre);
+
+=== collectors
+nivel: 4
+tema: 18
+titulo.es: Collectors
+titulo.de: Collectors
+titulo.en: Collectors
+claves.es: collectors, collect, groupingby, tomap, joining, counting, partitioningby, averagingdouble, agrupar con streams
+claves.de: collectors, collect, groupingby, tomap, joining, counting, partitioningby, averagingdouble, mit streams gruppieren
+claves.en: collectors, collect, groupingby, tomap, joining, counting, partitioningby, averagingdouble, group with streams
+ver: stream, map, lambda, optional
+es:
+    Collectors es la caja de herramientas para el final de un stream: decide en qué forma recoges los resultados. No solo en una lista: en un Map agrupado, en un texto unido con comas, en una media, en un recuento…
+    Al final de la cinta de la chatarrería esperan los robots empaquetadores: uno mete las piezas en sacos según su modelo (groupingBy), otro las ensarta en un collar separadas por comas (joining), otro les cuelga una etiqueta con su nombre (toMap) y otro solo grita cuántas han pasado (counting). Mismo material, distinto paquete.
+    Se usan con collect: stream.collect(Collectors.joining(", ")) une textos; Collectors.groupingBy(Enemigo::modelo) da un Map<String, List<Enemigo>>; groupingBy(Enemigo::modelo, Collectors.averagingDouble(Enemigo::blindaje)) da el blindaje medio de cada modelo; partitioningBy(Enemigo::vuela) parte en true y false; toMap(Enemigo::nombre, Enemigo::blindaje) hace un mapa nombre → blindaje. Para una simple lista basta stream.toList() (Java 16).
+    El fallo típico: toMap con claves repetidas lanza IllegalStateException («Duplicate key»); pásale un tercer argumento que decida qué hacer, por ejemplo (a, b) -> a para quedarte con el primero.
+    Para un senior: groupingBy devuelve un HashMap sin orden (pasa TreeMap::new como fábrica si lo quieres ordenado); collect(Collectors.toList()) da una lista que se puede cambiar, pero stream.toList() una que no; los recolectores de segundo nivel (counting, mapping, averagingDouble, Java 8) y Collectors.teeing (Java 12) evitan recorrer los datos dos veces.
+de:
+    Collectors ist der Werkzeugkasten für das Ende eines Streams: Er bestimmt, in welcher Form du die Ergebnisse einsammelst. Nicht nur als Liste, sondern als gruppierte Map, als Text mit Kommas, als Mittelwert, als Anzahl …
+    Am Ende des Schrottplatz-Förderbands warten die Packroboter: Einer steckt die Teile nach Modell in Säcke (groupingBy), einer fädelt sie mit Kommas zu einer Kette auf (joining), einer hängt jedem ein Namensschild um (toMap), und einer brüllt nur, wie viele vorbeigekommen sind (counting). Gleiches Material, anderes Paket.
+    Man benutzt sie mit collect: stream.collect(Collectors.joining(", ")) verbindet Texte; Collectors.groupingBy(Enemigo::modelo) liefert eine Map<String, List<Enemigo>>; groupingBy(Enemigo::modelo, Collectors.averagingDouble(Enemigo::blindaje)) die mittlere Panzerung pro Modell; partitioningBy(Enemigo::vuela) teilt in true und false; toMap(Enemigo::nombre, Enemigo::blindaje) baut eine Map Name → Panzerung. Für eine einfache Liste reicht stream.toList() (Java 16).
+    Der typische Fehler: toMap mit doppelten Schlüsseln wirft eine IllegalStateException („Duplicate key“); gib ein drittes Argument mit, das entscheidet, was dann passiert, zum Beispiel (a, b) -> a, um den ersten zu behalten.
+    Für Profis: groupingBy liefert eine ungeordnete HashMap (gib TreeMap::new als Fabrik mit, wenn du sie sortiert willst); collect(Collectors.toList()) liefert eine änderbare Liste, stream.toList() eine unveränderliche; nachgelagerte Collectors (counting, mapping, averagingDouble, Java 8) und Collectors.teeing (Java 12) ersparen einen zweiten Durchlauf.
+en:
+    Collectors is the toolbox for the end of a stream: it decides what shape you gather the results into. Not just a list: a grouped Map, a comma-joined text, an average, a count…
+    At the end of the scrapyard belt wait the packing robots: one bags the parts by model (groupingBy), one strings them on a necklace with commas (joining), one hangs a name tag on each (toMap), and one just yells how many went past (counting). Same material, different package.
+    You use them with collect: stream.collect(Collectors.joining(", ")) joins texts; Collectors.groupingBy(Enemigo::modelo) gives a Map<String, List<Enemigo>>; groupingBy(Enemigo::modelo, Collectors.averagingDouble(Enemigo::blindaje)) the average armor per model; partitioningBy(Enemigo::vuela) splits into true and false; toMap(Enemigo::nombre, Enemigo::blindaje) builds a name → armor map. For a plain list, stream.toList() is enough (Java 16).
+    The classic mistake: toMap with duplicate keys throws IllegalStateException ("Duplicate key"); pass a third argument that decides what to do, for example (a, b) -> a to keep the first one.
+    For seniors: groupingBy returns an unordered HashMap (pass TreeMap::new as the factory if you want it sorted); collect(Collectors.toList()) gives a modifiable list, but stream.toList() an unmodifiable one; downstream collectors (counting, mapping, averagingDouble, Java 8) and Collectors.teeing (Java 12) save you a second pass over the data.
+pseudo.es:
+    medioPorModelo ← enemigos vistos
+        → AGRUPAR POR modelo, con la MEDIA de su blindaje
+    nombres ← enemigos vistos
+        → su nombre
+        → UNIDOS con comas, entre [ ]
+    escribir medioPorModelo y nombres
+pseudo.de:
+    mittelProModell ← gesehene Gegner
+        → GRUPPIEREN NACH Modell, mit dem MITTELWERT der Panzerung
+    namen ← gesehene Gegner
+        → ihr Name
+        → VERBUNDEN mit Kommas, in [ ]
+    schreibe mittelProModell und namen
+pseudo.en:
+    averageByModel ← seen enemies
+        → GROUP BY model, with the AVERAGE of their armor
+    names ← seen enemies
+        → their name
+        → JOINED with commas, inside [ ]
+    write averageByModel and names
+ejemplo:
+    Map<String, Double> medioPorModelo = enemigosVistos().stream()
+            .collect(Collectors.groupingBy(Enemigo::modelo,
+                    Collectors.averagingDouble(Enemigo::blindaje)));         // modelo → blindaje medio || Modell → mittlere Panzerung || model → average armor
+    String nombres = enemigosVistos().stream()
+            .map(Enemigo::nombre)
+            .collect(Collectors.joining(", ", "[", "]"));                   // "[Cobalto, Zinc]" || "[Cobalto, Zinc]" || "[Cobalto, Zinc]"
+    Map<String, Double> porNombre = enemigosVistos().stream()
+            .collect(Collectors.toMap(Enemigo::nombre, Enemigo::blindaje, (a, b) -> a));   // nombre repetido: el primero || doppelter Name: der erste || duplicate name: keep the first
+    escribir(medioPorModelo + " " + nombres + " " + porNombre);
+
+=== recursion
+nivel: 3
+tema: 21
+titulo.es: Recursión
+titulo.de: Rekursion
+titulo.en: Recursion
+claves.es: recursion, recursividad, recursivo, metodo recursivo, caso base, se llama a si mismo, stackoverflowerror
+claves.de: rekursion, rekursiv, rekursive methode, basisfall, abbruchbedingung, ruft sich selbst auf, stackoverflowerror
+claves.en: recursion, recursive, recursive method, base case, calls itself, stackoverflowerror
+ver: metodo, return, pila_y_monton, busqueda_y_ordenacion
+es:
+    Un método recursivo es uno que se llama a sí mismo con una versión un poco más pequeña del problema, hasta llegar a una tan pequeña que se resuelve sin más: el caso base.
+    Es la matrioska de robots: para saber cuántos robots hay dentro del robot gigante, abres la carcasa y le haces la misma pregunta al de dentro, que abre la suya y pregunta al siguiente… hasta llegar al robotito diminuto que no tiene nada dentro y contesta «solo yo: 1». Entonces las respuestas vuelven hacia arriba, sumando.
+    En Java: int sumaHasta(int n) { if (n == 0) return 0; return n + sumaHasta(n - 1); }. Cada llamada espera a que la de dentro le conteste. Brilla con lo que tiene forma de árbol o se parte por la mitad: explorar caminos por la arena, recorrer carpetas, la búsqueda binaria u ordenar por mezcla.
+    El fallo típico es olvidar el caso base o no acercarse a él (llamar con n en vez de n - 1): el método se llama sin fin, cada llamada ocupa un hueco en la pila y salta StackOverflowError. En el juego, el árbitro lo detecta y escribe «recursión sin final (StackOverflowError)». Si la profundidad puede ser enorme, un bucle suele ser más seguro y más rápido (Java no optimiza la recursión de cola).
+de:
+    Eine rekursive Methode ruft sich selbst auf, mit einer etwas kleineren Version des Problems, bis sie bei einer so kleinen ankommt, dass sie sich direkt lösen lässt: dem Basisfall.
+    Sie ist die Roboter-Matroschka: Um zu wissen, wie viele Roboter im Riesenroboter stecken, öffnest du sein Gehäuse und stellst dem Roboter darin dieselbe Frage, der öffnet seins und fragt den nächsten … bis zum winzigen Roboterchen, in dem nichts mehr steckt und das antwortet: „Nur ich: 1.“ Dann wandern die Antworten wieder nach oben und werden zusammengezählt.
+    In Java: int sumaHasta(int n) { if (n == 0) return 0; return n + sumaHasta(n - 1); }. Jeder Aufruf wartet, bis der innere ihm antwortet. Rekursion glänzt bei allem, was wie ein Baum aussieht oder sich halbieren lässt: Wege durch die Arena erkunden, Ordner durchlaufen, binäre Suche oder Sortieren durch Mischen.
+    Der typische Fehler: den Basisfall vergessen oder sich ihm nicht nähern (mit n statt n - 1 aufrufen). Dann ruft sich die Methode endlos auf, jeder Aufruf belegt einen Platz auf dem Stack, und es kommt zum StackOverflowError. Im Spiel erkennt der Schiedsrichter das und schreibt „recursión sin final (StackOverflowError)“, also endlose Rekursion. Kann die Tiefe riesig werden, ist eine Schleife meist sicherer und schneller (Java optimiert Endrekursion nicht).
+en:
+    A recursive method is one that calls itself with a slightly smaller version of the problem, until it reaches one so small it can be solved straight away: the base case.
+    It is the robot matryoshka: to find out how many robots are inside the giant robot, you open its casing and ask the robot inside the same question, which opens its own and asks the next one… until you reach the tiny robot with nothing inside, which answers "just me: 1". Then the answers travel back up, adding up as they go.
+    In Java: int sumaHasta(int n) { if (n == 0) return 0; return n + sumaHasta(n - 1); }. Each call waits for the inner one to answer. Recursion shines with anything shaped like a tree or that splits in half: exploring paths through the arena, walking folders, binary search or merge sort.
+    The classic mistake is forgetting the base case or never getting closer to it (calling with n instead of n - 1): the method calls itself forever, each call takes a slot on the stack, and you get a StackOverflowError. In the game the referee catches it and writes "recursión sin final (StackOverflowError)", endless recursion. If the depth can be huge, a loop is usually safer and faster (Java doesn't optimise tail calls).
+pseudo.es:
+    FUNCIÓN contarRobots(robot):
+        SI robot no tiene nada dentro:
+            DEVOLVER 1                            (caso base)
+        DEVOLVER 1 + contarRobots(el robot de dentro)
+pseudo.de:
+    FUNKTION roboterZählen(roboter):
+        WENN in roboter nichts mehr steckt:
+            ZURÜCKGEBEN 1                         (Basisfall)
+        ZURÜCKGEBEN 1 + roboterZählen(der Roboter darin)
+pseudo.en:
+    FUNCTION countRobots(robot):
+        IF there is nothing inside robot:
+            RETURN 1                              (base case)
+        RETURN 1 + countRobots(the robot inside)
+ejemplo:
+    void cuentaAtras(int n) {
+        if (n == 0) {                                   // caso base: aquí se para || Basisfall: hier ist Schluss || base case: it stops here
+            decir("¡A pelear!");
+            return;
+        }
+        escribir(n);
+        cuentaAtras(n - 1);                             // el mismo problema, más pequeño || dasselbe Problem, nur kleiner || the same problem, smaller
+    }
+
+    int vueltasDe90(double grados) {
+        if (grados <= 0) return 0;
+        return 1 + vueltasDe90(grados - 90);            // sin el «- 90»: StackOverflowError || ohne „- 90“: StackOverflowError || without the "- 90": StackOverflowError
+    }
+
+=== complejidad
+nivel: 4
+tema: 21
+titulo.es: Complejidad
+titulo.de: Komplexität
+titulo.en: Complexity
+claves.es: complejidad, big o, notacion o grande, o(n), o(log n), o(n^2), coste de un algoritmo, complejidad temporal, cuanto tarda un algoritmo
+claves.de: komplexität, laufzeitkomplexität, o-notation, big o, o(n), o(log n), o(n^2), aufwand eines algorithmus
+claves.en: complexity, time complexity, big o, big o notation, o(n), o(log n), o(n^2), algorithm cost
+ver: busqueda_y_ordenacion, colecciones, rendimiento, hashmap_por_dentro
+es:
+    La complejidad dice cuánto crece el trabajo de un algoritmo cuando crecen los datos. Se escribe con la O grande: O(1) tarda lo mismo con 10 datos que con un millón; O(n), el doble con el doble de datos; O(n²), cuatro veces más.
+    Imagina al robot portero de la fiesta del torneo. Si solo mira la pulsera VIP del que llega, es O(1). Si con cada invitado repasa la lista entera de nombres, O(n). Si a cada invitado le presenta a todos los demás uno por uno, O(n²): con 10 invitados va bien; con 10 000, los pilla el amanecer en la puerta.
+    Lo que cuesta cada colección: en ArrayList, get(i) es O(1), pero contains y remove(0) son O(n); en HashMap y HashSet, get, put y contains son O(1) de media; en TreeMap y TreeSet, O(log n), a cambio de ir ordenados; List.sort es O(n log n) y Collections.binarySearch, O(log n). En el juego importa: cada turno tiene un tope de pasos y, si te pasas, tu robot se queda pensando varios turnos.
+    El fallo típico es el bucle dentro de otro bucle sin darse cuenta: un contains de una List dentro de un for ya es O(n²). Cambiar esa List por un HashSet suele bajarlo a O(n).
+    Para un senior: la O esconde las constantes y la memoria. Con n pequeño (cinco enemigos) recorrer un ArrayList gana a un HashMap por la caché del procesador; LinkedList casi nunca gana a ArrayList pese a su inserción O(1), porque saltar de puntero en puntero es lento. Distingue el peor caso del promedio (HashMap degenera si los hashCode chocan; desde Java 8 las cubetas largas se convierten en árboles, O(log n)) y el coste amortizado (ArrayList.add es O(1) amortizado aunque a veces copie todo el array). Y mide antes de optimizar.
+de:
+    Die Komplexität sagt, wie stark der Aufwand eines Algorithmus wächst, wenn die Datenmenge wächst. Man schreibt sie mit dem großen O: O(1) dauert bei 10 Daten so lange wie bei einer Million; O(n) doppelt so lange bei doppelt so vielen Daten; O(n²) viermal so lange.
+    Stell dir den Türsteher-Roboter der Turnierparty vor. Schaut er nur auf das VIP-Armband des Ankommenden, ist das O(1). Geht er bei jedem Gast die ganze Namensliste durch, O(n). Stellt er jedem Gast alle anderen einzeln vor, O(n²): Bei 10 Gästen geht das gut, bei 10 000 stehen sie im Morgengrauen noch an der Tür.
+    Was jede Collection kostet: Bei ArrayList ist get(i) O(1), aber contains und remove(0) sind O(n); bei HashMap und HashSet sind get, put und contains im Mittel O(1); bei TreeMap und TreeSet O(log n), dafür sortiert; List.sort ist O(n log n), Collections.binarySearch O(log n). Im Spiel zählt das: Jeder Zug hat eine Schrittgrenze, und wer sie überschreitet, dessen Roboter bleibt ein paar Züge lang grübelnd stehen.
+    Der typische Fehler ist die Schleife in der Schleife, ohne es zu merken: Ein contains auf einer List innerhalb eines for ist schon O(n²). Ersetzt man diese List durch ein HashSet, wird es meist O(n).
+    Für Profis: Das O verschweigt Konstanten und Speicher. Bei kleinem n (fünf Gegner) schlägt das Durchlaufen einer ArrayList dank Prozessor-Cache eine HashMap; LinkedList schlägt ArrayList trotz O(1)-Einfügen fast nie, weil Zeigerspringen langsam ist. Unterscheide den schlechtesten Fall vom Mittel (eine HashMap entartet, wenn die hashCodes kollidieren; seit Java 8 werden lange Buckets zu Bäumen, O(log n)) und amortisierte Kosten (ArrayList.add ist amortisiert O(1), auch wenn es manchmal das ganze Array kopiert). Und erst messen, dann optimieren.
+en:
+    Complexity says how fast an algorithm's work grows as the data grows. It is written with big O: O(1) takes the same time for 10 items as for a million; O(n) twice as long for twice the data; O(n²) four times as long.
+    Picture the bouncer robot at the tournament party. If it only checks the newcomer's VIP wristband, that's O(1). If it goes through the whole guest list for each guest, O(n). If it introduces every guest to every other guest one by one, O(n²): with 10 guests it's fine; with 10,000, dawn finds them still at the door.
+    What each collection costs: in an ArrayList, get(i) is O(1) but contains and remove(0) are O(n); in HashMap and HashSet, get, put and contains are O(1) on average; in TreeMap and TreeSet, O(log n), in exchange for staying sorted; List.sort is O(n log n) and Collections.binarySearch O(log n). In the game it matters: every tick has a step limit, and if you go over it your robot stands there thinking for several ticks.
+    The classic mistake is a loop inside a loop without noticing: a List's contains inside a for is already O(n²). Swapping that List for a HashSet usually brings it down to O(n).
+    For seniors: big O hides constants and memory. For small n (five enemies), scanning an ArrayList beats a HashMap thanks to the CPU cache; LinkedList almost never beats ArrayList despite its O(1) insertion, because chasing pointers is slow. Tell worst case from average (a HashMap degrades when hashCodes collide; since Java 8 long buckets turn into trees, O(log n)) and from amortised cost (ArrayList.add is amortised O(1) even though it occasionally copies the whole array). And measure before you optimise.
+pseudo.es:
+    O(1):   mirar la pulsera del que llega
+    O(n):   PARA CADA invitado:
+                mirar su nombre en la lista
+    O(n²):  PARA CADA invitado:
+                PARA CADA otro invitado:
+                    presentarlos
+pseudo.de:
+    O(1):   auf das Armband des Ankommenden schauen
+    O(n):   FÜR JEDEN Gast:
+                seinen Namen auf der Liste suchen
+    O(n²):  FÜR JEDEN Gast:
+                FÜR JEDEN anderen Gast:
+                    die beiden vorstellen
+pseudo.en:
+    O(1):   check the newcomer's wristband
+    O(n):   FOR EACH guest:
+                find their name on the list
+    O(n²):  FOR EACH guest:
+                FOR EACH other guest:
+                    introduce them
+ejemplo:
+    List<String> vistosLista = new ArrayList<>();
+    Set<String> vistosSet = new HashSet<>();
+
+    void apuntarNombre(String nombre) {
+        if (!vistosLista.contains(nombre)) vistosLista.add(nombre);   // contains en List: O(n), lo recorre todo || contains auf List: O(n), geht alles durch || contains on a List: O(n), scans it all
+        vistosSet.add(nombre);                                        // en HashSet: O(1) de media || im HashSet: O(1) im Mittel || in a HashSet: O(1) on average
+    }
+
+    boolean hayRepetido(int[] d) {                                     // dos bucles anidados: O(n²) || zwei verschachtelte Schleifen: O(n²) || two nested loops: O(n²)
+        for (int i = 0; i < d.length; i++)
+            for (int j = i + 1; j < d.length; j++)
+                if (d[i] == d[j]) return true;
+        return false;
+    }
+
+=== busqueda_y_ordenacion
+nivel: 4
+tema: 21
+titulo.es: Búsqueda y ordenación
+titulo.de: Suchen und Sortieren
+titulo.en: Searching and sorting
+claves.es: busqueda binaria, busqueda lineal, algoritmos de ordenacion, ordenar un array, binarysearch, arrays.sort, burbuja, quicksort, merge sort, ordenacion por insercion
+claves.de: binäre suche, lineare suche, sortieralgorithmen, array sortieren, binarysearch, arrays.sort, bubblesort, quicksort, mergesort, insertionsort
+claves.en: binary search, linear search, sorting algorithms, sort an array, binarysearch, arrays.sort, bubble sort, quicksort, merge sort, insertion sort
+ver: complejidad, comparator, recursion, array
+es:
+    Buscar es encontrar un elemento en una colección; ordenar es colocarla de menor a mayor (o con el criterio que digas). Van de la mano: en algo ordenado se busca muchísimo más rápido.
+    Búsqueda lineal: el robot ciego que palpa butaca por butaca hasta dar con su entrenador. Búsqueda binaria: el locutor que, con la grada ordenada por estatura, grita «¿más alto o más bajo?», parte la grada por la mitad y encuentra a uno entre cien en siete gritos. Y el método de la burbuja es el robot que intercambia vecinos desordenados una y otra vez, como quien ordena una fila de pingüinos dormidos.
+    En Java no se reinventan: Arrays.sort(array) y List.sort(comparador) ordenan en O(n log n); Arrays.binarySearch(array, x) y Collections.binarySearch(lista, x) buscan en O(log n), pero SOLO si ya está ordenado. Para aprender sí conviene escribirlas a mano: la lineal (un for que compara), la binaria (con izquierda, derecha y medio) y alguna sencilla como inserción o burbuja, que son O(n²).
+    Fallos típicos: binarySearch sobre algo desordenado (devuelve basura sin avisar) y calcular el medio con (izq + der) / 2, que desborda con índices enormes; usa izq + (der - izq) / 2. Ese fallo estuvo nueve años escondido en la propia JDK, hasta Java 6.
+    Para un senior: Arrays.sort de primitivos usa Dual-Pivot Quicksort (no estable, da igual con números); con objetos, List.sort y Arrays.sort usan TimSort, que es estable (dos empatados conservan su orden) y vuela con datos casi ordenados. binarySearch devuelve -(punto de inserción) - 1 si no lo encuentra: ese negativo te dice dónde insertarlo. Y si vas a buscar muchas veces y no necesitas orden, un HashMap (O(1)) puede salir mejor que ordenar.
+de:
+    Suchen heißt, ein Element in einer Collection finden; Sortieren heißt, sie aufsteigend anzuordnen (oder nach dem Kriterium, das du vorgibst). Beides gehört zusammen: In etwas Sortiertem sucht man viel, viel schneller.
+    Lineare Suche: der blinde Roboter, der Sitz für Sitz abtastet, bis er seinen Trainer findet. Binäre Suche: der Sprecher, der auf der nach Größe sortierten Tribüne „größer oder kleiner?“ ruft, die Tribüne halbiert und einen unter hundert mit sieben Rufen findet. Und Bubblesort ist der Roboter, der falsch sortierte Nachbarn immer wieder vertauscht, wie jemand, der eine Reihe schlafender Pinguine ordnet.
+    In Java erfindet man sie nicht neu: Arrays.sort(array) und List.sort(comparator) sortieren in O(n log n); Arrays.binarySearch(array, x) und Collections.binarySearch(lista, x) suchen in O(log n), aber NUR, wenn schon sortiert ist. Zum Lernen lohnt es sich aber, sie selbst zu schreiben: die lineare (ein for, das vergleicht), die binäre (mit links, rechts und Mitte) und eine einfache wie Insertionsort oder Bubblesort, die O(n²) sind.
+    Typische Fehler: binarySearch auf Unsortiertem (liefert ohne Warnung Unsinn) und die Mitte als (izq + der) / 2 berechnen, was bei riesigen Indizes überläuft; nimm izq + (der - izq) / 2. Dieser Fehler steckte neun Jahre lang im JDK selbst, bis Java 6.
+    Für Profis: Arrays.sort für Primitive nutzt Dual-Pivot-Quicksort (nicht stabil, bei Zahlen egal); für Objekte nutzen List.sort und Arrays.sort TimSort, das stabil ist (zwei Gleichrangige behalten ihre Reihenfolge) und bei fast sortierten Daten fliegt. Findet binarySearch nichts, liefert es -(Einfügepunkt) - 1: Diese negative Zahl sagt dir, wo es hingehört. Und wenn du oft suchst und keine Ordnung brauchst, ist eine HashMap (O(1)) oft besser als Sortieren.
+en:
+    Searching means finding an element in a collection; sorting means arranging it smallest first (or by whatever rule you choose). They go together: searching something sorted is much, much faster.
+    Linear search: the blind robot feeling its way seat by seat until it finds its coach. Binary search: the announcer who, with the stands sorted by height, shouts "taller or shorter?", cuts the stands in half and finds one person in a hundred in seven shouts. And bubble sort is the robot that swaps out-of-order neighbours over and over, like someone tidying a row of sleeping penguins.
+    In Java you don't reinvent them: Arrays.sort(array) and List.sort(comparator) sort in O(n log n); Arrays.binarySearch(array, x) and Collections.binarySearch(lista, x) search in O(log n), but ONLY if the data is already sorted. To learn, though, it is worth writing them yourself: linear (a for that compares), binary (with left, right and middle) and a simple sort such as insertion or bubble sort, both O(n²).
+    Classic mistakes: binarySearch on unsorted data (it returns garbage without warning) and computing the middle as (izq + der) / 2, which overflows for huge indexes; use izq + (der - izq) / 2. That bug hid inside the JDK itself for nine years, until Java 6.
+    For seniors: Arrays.sort on primitives uses Dual-Pivot Quicksort (not stable, irrelevant for numbers); for objects, List.sort and Arrays.sort use TimSort, which is stable (two equal elements keep their order) and flies on nearly sorted data. When binarySearch finds nothing it returns -(insertion point) - 1: that negative number tells you where the element belongs. And if you search often and don't need order, a HashMap (O(1)) can beat sorting.
+pseudo.es:
+    BÚSQUEDA BINARIA de x en una fila ordenada:
+        MIENTRAS quede trozo por mirar:
+            mirar el del centro
+            SI es x: DEVOLVER su posición
+            SI es menor que x: quedarse con la mitad derecha
+            SI NO: quedarse con la mitad izquierda
+        DEVOLVER «no está»
+pseudo.de:
+    BINÄRE SUCHE nach x in einer sortierten Reihe:
+        SOLANGE noch ein Stück zu prüfen ist:
+            das mittlere anschauen
+            WENN es x ist: seine Position ZURÜCKGEBEN
+            WENN es kleiner als x ist: die rechte Hälfte behalten
+            SONST: die linke Hälfte behalten
+        „nicht da“ ZURÜCKGEBEN
+pseudo.en:
+    BINARY SEARCH for x in a sorted row:
+        WHILE there is still a stretch left to check:
+            look at the middle one
+            IF it is x: RETURN its position
+            IF it is smaller than x: keep the right half
+            ELSE: keep the left half
+        RETURN "not there"
+ejemplo:
+    int[] danos = {40, 5, 25, 90, 12};
+    Arrays.sort(danos);                                     // ahora: 5, 12, 25, 40, 90 || jetzt: 5, 12, 25, 40, 90 || now: 5, 12, 25, 40, 90
+    int donde = Arrays.binarySearch(danos, 25);             // 2, en muy pocos pasos || 2, in sehr wenigen Schritten || 2, in very few steps
+    int falta = Arrays.binarySearch(danos, 30);             // -4 = -(3) - 1: iría en la posición 3 || -4 = -(3) - 1: gehört an Platz 3 || -4 = -(3) - 1: it belongs at index 3
+
+    int lineal = -1;
+    for (int i = 0; i < danos.length; i++) {                // búsqueda lineal: butaca a butaca || lineare Suche: Sitz für Sitz || linear search: seat by seat
+        if (danos[i] == 40) { lineal = i; break; }
+    }
+    escribir(donde + " " + falta + " " + lineal);
+
+=== junit
+nivel: 4
+tema: 22
+titulo.es: JUnit
+titulo.de: JUnit
+titulo.en: JUnit
+claves.es: junit, @test, assertequals, asserttrue, assertthrows, prueba unitaria, pruebas unitarias, test unitario, pruebas automaticas, laboratorio de pruebas
+claves.de: junit, @test, assertequals, asserttrue, assertthrows, unit-test, unittest, automatisierte tests, testlabor
+claves.en: junit, @test, assertequals, asserttrue, assertthrows, unit test, unit testing, automated tests, test lab
+ver: dobles_de_prueba, codigo_heredado, anotaciones, excepcion
+es:
+    Una prueba unitaria es un programita que comprueba otro: llama a un método con unos datos y verifica que devuelve lo que debería. JUnit es la herramienta estándar de Java para escribirlas y ejecutarlas todas de golpe.
+    Es el muñeco de choque del laboratorio, con casco y cara de no enterarse: le das una orden, mide el resultado y, si no es el esperado, enciende una sirena roja con el nombre exacto de la prueba que ha fallado. No se cansa, no se queja y repite las cien pruebas cada vez que aprietas una tuerca.
+    Cada prueba es un método marcado con @Test; dentro van las aserciones: assertEquals(esperado, real), assertTrue(condición), assertThrows(IllegalArgumentException.class, () -> ...). Con double se pasa un margen: assertEquals(0.5, real, 1e-9). En el laboratorio del juego las pruebas usan un mini-JUnit propio con los mismos nombres que JUnit 5 (import metajavbots.junit.*; e import static metajavbots.junit.Assertions.*;, con @Test, @BeforeEach, assertEquals…): lo que aprendas ahí vale tal cual en un proyecto real cambiando el import por org.junit.jupiter.api.
+    Fallos típicos: poner los argumentos al revés (assertEquals(real, esperado): el mensaje de fallo te engaña), probar solo el caso feliz (prueba también el 0, el negativo, la lista vacía y el borde exacto) y escribir pruebas que dependen unas de otras o del azar.
+    Para un senior: una buena prueba es rápida, aislada, repetible y falla por UNA sola razón, y su nombre cuenta lo que se espera (rechazaPuntosNegativos mejor que test1). @BeforeEach prepara un objeto limpio antes de cada prueba. Una cobertura alta no demuestra que las aserciones sirvan: estropea el código a propósito y comprueba que alguna prueba se pone roja (es lo que automatizan las pruebas de mutación). JUnit 5 (Jupiter) salió en 2017; en JUnit 4 cambian el import y algunas anotaciones.
+de:
+    Ein Unit-Test ist ein kleines Programm, das ein anderes prüft: Es ruft eine Methode mit bestimmten Daten auf und kontrolliert, ob das Richtige herauskommt. JUnit ist das Standardwerkzeug in Java, um solche Tests zu schreiben und alle auf einmal auszuführen.
+    Er ist der Crashtest-Dummy im Labor, mit Helm und ahnungslosem Blick: Du gibst ihm einen Befehl, er misst das Ergebnis, und stimmt es nicht, schaltet er eine rote Sirene mit dem genauen Namen des fehlgeschlagenen Tests ein. Er wird nicht müde, beschwert sich nie und wiederholt alle hundert Tests, sobald du eine Schraube anziehst.
+    Jeder Test ist eine Methode mit @Test; darin stehen Assertions: assertEquals(erwartet, tatsächlich), assertTrue(bedingung), assertThrows(IllegalArgumentException.class, () -> ...). Bei double gibt man eine Toleranz an: assertEquals(0.5, wert, 1e-9). Im Labor des Spiels laufen die Tests mit einem eigenen Mini-JUnit, das dieselben Namen wie JUnit 5 hat (import metajavbots.junit.*; und import static metajavbots.junit.Assertions.*;, mit @Test, @BeforeEach, assertEquals …): Was du dort lernst, gilt unverändert in einem echten Projekt, wenn du den Import durch org.junit.jupiter.api ersetzt.
+    Typische Fehler: die Argumente vertauschen (assertEquals(tatsächlich, erwartet): Dann führt dich die Fehlermeldung in die Irre), nur den Glücksfall testen (teste auch 0, negative Werte, die leere Liste und die genaue Grenze) und Tests schreiben, die voneinander oder vom Zufall abhängen.
+    Für Profis: Ein guter Test ist schnell, isoliert, wiederholbar und schlägt aus GENAU einem Grund fehl, und sein Name sagt, was erwartet wird (rechazaPuntosNegativos statt test1). @BeforeEach baut vor jedem Test ein frisches Objekt. Hohe Abdeckung beweist nicht, dass die Assertions etwas taugen: Mach den Code absichtlich kaputt und prüfe, ob ein Test rot wird (genau das automatisieren Mutationstests). JUnit 5 (Jupiter) erschien 2017; in JUnit 4 sind der Import und einige Annotationen anders.
+en:
+    A unit test is a small program that checks another one: it calls a method with some data and verifies that it returns what it should. JUnit is Java's standard tool for writing them and running them all at once.
+    It is the crash-test dummy in the lab, with a helmet and a clueless face: you give it an order, it measures the result and, if it's not what was expected, it switches on a red siren with the exact name of the failing test. It never gets tired, never complains, and reruns all hundred tests every time you tighten a bolt.
+    Each test is a method marked @Test; inside go the assertions: assertEquals(expected, actual), assertTrue(condition), assertThrows(IllegalArgumentException.class, () -> ...). With doubles you pass a tolerance: assertEquals(0.5, actual, 1e-9). In the game's lab the tests use the game's own mini-JUnit, with the same names as JUnit 5 (import metajavbots.junit.*; and import static metajavbots.junit.Assertions.*;, with @Test, @BeforeEach, assertEquals…): what you learn there works as-is in a real project once you change the import to org.junit.jupiter.api.
+    Classic mistakes: swapping the arguments (assertEquals(actual, expected): the failure message then misleads you), testing only the happy path (also test 0, negatives, the empty list and the exact boundary), and writing tests that depend on each other or on randomness.
+    For seniors: a good test is fast, isolated, repeatable and fails for exactly ONE reason, and its name says what is expected (rechazaPuntosNegativos rather than test1). @BeforeEach builds a fresh object before every test. High coverage doesn't prove the assertions are any good: break the code on purpose and check that some test turns red (that is what mutation testing automates). JUnit 5 (Jupiter) came out in 2017; in JUnit 4 the import and some annotations differ.
+pseudo.es:
+    PRUEBA «un marcador nuevo empieza a cero»:
+        m ← nuevo Marcador
+        COMPROBAR QUE los puntos de m = 0
+    PRUEBA «no admite puntos negativos»:
+        m ← nuevo Marcador
+        COMPROBAR QUE sumar -5 a m LANZA un error
+pseudo.de:
+    TEST „ein neuer Marcador beginnt bei null“:
+        m ← neuer Marcador
+        PRÜFEN, DASS die Punkte von m = 0
+    TEST „negative Punkte sind verboten“:
+        m ← neuer Marcador
+        PRÜFEN, DASS -5 zu m addieren einen Fehler WIRFT
+pseudo.en:
+    TEST "a new Marcador starts at zero":
+        m ← new Marcador
+        CHECK THAT the points of m = 0
+    TEST "negative points are rejected":
+        m ← new Marcador
+        CHECK THAT adding -5 to m THROWS an error
+ejemplo:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.*;
+
+    public class PruebasMarcador {
+        @Test
+        void empiezaACero() {
+            assertEquals(0, new Marcador().puntos());               // esperado primero, real después || erwartet zuerst, dann tatsächlich || expected first, actual second
+        }
+
+        @Test
+        void rechazaPuntosNegativos() {
+            assertThrows(IllegalArgumentException.class, () -> new Marcador().sumar(-5));   // debe lanzar || muss werfen || must throw
+        }
+    }
+
+    class Marcador {                                                // la clase que se prueba || die getestete Klasse || the class under test
+        private int puntos;
+        int puntos() { return puntos; }
+        void sumar(int p) { if (p < 0) throw new IllegalArgumentException("negativo"); puntos += p; }
+    }

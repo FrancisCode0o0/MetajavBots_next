@@ -6,7 +6,8 @@ import java.util.concurrent.Executors;
 import metajavbots.textos.Idioma;
 
 /**
- * VOZ — La voz del locutor robot loco: el texto lo lee Piper si está
+ * VOZ — La voz del locutor robot loco (y la de cada entrenador, con su
+ * Timbre): el texto lo lee Piper si está
  * (VozPiper: voz clara con un efecto robótico suave) y, si no, VozRobot (un
  * sintetizador de formantes hecho aquí, sin internet y sin bibliotecas de
  * fuera, con efecto metálico). Se sintetiza en un hilo aparte para
@@ -41,12 +42,17 @@ public final class Voz {
 
     /** Pide decir un texto (si ya está diciendo otro, este lo sustituye). */
     public void decir(String texto, Idioma idioma) {
+        decir(texto, idioma, Timbre.LOCUTOR);
+    }
+
+    /** Lo mismo, con otra voz (la de cada entrenador: tutor/Entrenador.timbre). */
+    public void decir(String texto, Idioma idioma, Timbre timbre) {
         if (!activa || texto == null || texto.isBlank()) return;
         long yo = ++pedida;
         VozPiper p = clara ? piper : null;
         hilo.submit(() -> {
-            float[] m = p != null ? p.decir(texto, idioma) : null;
-            if (m == null) m = VozRobot.decir(texto, idioma, yo);
+            float[] m = p != null ? p.decir(texto, idioma, timbre) : null;
+            if (m == null) m = Timbre.cambiarTono(VozRobot.decir(texto, idioma, yo), timbre.tono());
             if (yo == pedida) {
                 textoListo = texto;
                 lista = m;

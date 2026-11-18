@@ -27,6 +27,15 @@ public final class PantallaLaboratorio implements Pantalla {
     private volatile Laboratorio.Resultado resultado;
     private volatile boolean probando;
     private boolean premiado;
+    /** La inspección animada (InspeccionDelLaboratorio): de qué resultado y desde cuándo. */
+    private Laboratorio.Resultado inspeccionado;
+    private float tiempoDeInspeccion;
+
+    @Override
+    public String contextoParaElEntrenador() {
+        return EntrenadorFlotante.contextoDeCodigo("The player is in the testing lab, writing JUnit-style tests (@Test, assertEquals) that must pass "
+                + "with the good class and catch the mutants: «" + l.titulo.en + "». " + l.enunciado.en, pruebas);
+    }
 
     public PantallaLaboratorio(Laboratorio l) {
         this.l = l;
@@ -46,6 +55,12 @@ public final class PantallaLaboratorio implements Pantalla {
     public void alSalir(Juego j) {
         j.jugador.codigoDeEjercicios.put("lab_" + l.id, pruebas.doc.texto());
         j.guardar();
+    }
+
+    /** Pone esas pruebas en el editor y las ejecuta (para las capturas: así se ve la inspección). */
+    public void probarCon(Juego j, String codigo) {
+        pruebas.doc.cambiarTodo(codigo);
+        probar(j);
     }
 
     private void probar(Juego j) {
@@ -78,7 +93,7 @@ public final class PantallaLaboratorio implements Pantalla {
         if (r != null && !probando && pruebas.marcas.isEmpty()) {
             for (Compilador.Fallo f : r.errores) {
                 if (f.archivo.equals(Compilador.nombreDeClase(pruebas.doc.texto()))) {
-                    pruebas.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave));
+                    pruebas.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave, f.codigo, f.mensaje));
                 }
             }
         }
@@ -105,19 +120,25 @@ public final class PantallaLaboratorio implements Pantalla {
                     p.texto(ui.recortarTexto(s, w * 0.5f, ui.letra * 0.8f, false), rx, ry, ui.letra * 0.8f, false, bien ? ui.tema.bien : ui.tema.mal, 1);
                     ry += ui.letra * 1.25f;
                 }
-                if (r.pruebas.size() < 3) p.texto(T.t("laboratorio.minimo"), x + w * 0.52f, by + 62, ui.letra * 0.85f, false, ui.tema.aviso, 1);
+                if (inspeccionado != r) {
+                    inspeccionado = r;
+                    tiempoDeInspeccion = 0;
+                }
+                tiempoDeInspeccion += dt;
+                InspeccionDelLaboratorio.dibujar(ui, x + w * 0.52f, by, w * 0.48f, p.alto - by - 12, r, l.mutantes.size(), tiempoDeInspeccion);
+                if (r.pruebas.size() < 3) p.texto(T.t("laboratorio.minimo"), x + w * 0.52f + 12, by + 8, ui.letra * 0.85f, false, ui.tema.aviso, 1);
                 int cazados = 0;
                 for (boolean c : r.cazados) if (c) cazados++;
                 if (r.pasanTodas()) {
-                    p.texto(T.f("laboratorio.mutantes", cazados, l.mutantes.size()), x + w * 0.52f, by + 92, ui.letra, true,
+                    p.texto(T.f("laboratorio.mutantes", cazados, l.mutantes.size()), x + w * 0.52f + 12, by + 36, ui.letra, true,
                             cazados == l.mutantes.size() ? ui.tema.bien : ui.tema.aviso, 1);
                 } else {
-                    p.texto(T.t("laboratorio.no_pasan"), x + w * 0.52f, by + 92, ui.letra * 0.9f, false, ui.tema.mal, 1);
+                    p.texto(T.t("laboratorio.no_pasan"), x + w * 0.52f + 12, by + 36, ui.letra * 0.9f, false, ui.tema.mal, 1);
                 }
                 if (r.todoBien()) {
                     for (Pieza pz : CatalogoDePiezas.delJuego().todas()) {
                         if (pz.desbloqueo.equals("pruebas:" + l.id)) {
-                            p.texto(T.f("final.botin", pz.nombre(T.idioma)), x + w * 0.52f, by + 128, ui.letra, true, 0xFFC857, 1);
+                            p.texto(T.f("final.botin", pz.nombre(T.idioma)), x + w * 0.52f + 12, by + 64, ui.letra, true, 0xFFC857, 1);
                         }
                     }
                 }

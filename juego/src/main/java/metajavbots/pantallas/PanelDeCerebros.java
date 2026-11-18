@@ -76,6 +76,8 @@ final class PanelDeCerebros {
         float ix = x + 20, iw = w - 52;
         float t = ui.letra * 0.85f;
         cy += p.parrafo(T.t("cerebros.ayuda"), ix, cy, iw, t, ui.tema.textoSuave, 1) + 14;
+        if (ui.boton(T.t("guia.abrir"), ix, cy, iw, 46, Ui.Estilo.PLANO, true, T.t("guia.abrir_ayuda"))) j.ir(new GuiaDeCerebros());
+        cy += 56;
         if (ui.boton(T.t("cerebros.recomendado"), ix, cy, iw, 46, Ui.Estilo.NORMAL, true, T.t("cerebros.recomendado_ayuda"))) {
             recomendado(jug);
         }

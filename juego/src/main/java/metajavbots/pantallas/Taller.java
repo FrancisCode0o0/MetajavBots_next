@@ -62,6 +62,16 @@ public final class Taller implements Pantalla {
     }
 
     @Override
+    public String contextoParaElEntrenador() {
+        return EntrenadorFlotante.contextoDeCodigo("The player is in the workshop, programming their fighting robot.", editor);
+    }
+
+    @Override
+    public String codigoParaConsejos() {
+        return editor.doc.texto();
+    }
+
+    @Override
     public void alSalir(Juego j) {
         guardarCodigo(j);
     }
@@ -342,7 +352,7 @@ public final class Taller implements Pantalla {
             resultado = null;
             editor.marcas.clear();
             for (Compilador.Fallo f : r.errores) {
-                editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave));
+                editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave, f.codigo, f.mensaje));
             }
             aviso = r.bien ? T.f("taller.compilado_ok", r.milisegundos) : T.f("pelea.errores", r.graves().size());
             tutor.compilado(r.bien);

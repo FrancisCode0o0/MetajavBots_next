@@ -16,6 +16,29 @@ public interface Pantalla {
     default void alSalir(Juego j) {
     }
 
+    /** El tema de Java del que va (res/datos/temas.txt), si va de uno: el entrenador flotante empieza por él. */
+    default String temaDeJava() {
+        return null;
+    }
+
+    /**
+     * Lo que el jugador tiene delante, para que el entrenador conteste con IA mirándolo («¿qué hace mi código
+     * en esta línea?», «¿por qué pierdo?»): el código con números de línea, los errores, cómo va la pelea…
+     */
+    default String contextoParaElEntrenador() {
+        return null;
+    }
+
+    /** El código que el jugador está escribiendo, si es un robot (el entrenador da tips mirándolo); null si no. */
+    default String codigoParaConsejos() {
+        return null;
+    }
+
+    /** Si el entrenador está en el hospital (contra los jefes no ayuda: tutor/Hospital). */
+    default boolean entrenadorEnElHospital() {
+        return false;
+    }
+
     /** El tema de música que suena en ella (res/musica/temas.txt). */
     default String musica() {
         return "menu";

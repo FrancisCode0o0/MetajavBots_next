@@ -108,6 +108,8 @@ public final class Jugador {
     public String entrenador = "tuercas";
     /** Cuánto ayuda el entrenador, de 0 (lo mínimo: preguntas) a 1 (lo máximo: pseudocódigo y trozos de código enseguida). */
     public float ayudaDelTutor = 0.5f;
+    /** El entrenador flotante (pantallas/EntrenadorFlotante): si asoma, da tips y aconseja en la pelea; F2 lo abre igual. */
+    public boolean entrenadorActivo = true;
     /** La música de fondo: si suena y a qué volumen. */
     public boolean musicaActiva = true;
     public float volumenMusica = 0.45f;

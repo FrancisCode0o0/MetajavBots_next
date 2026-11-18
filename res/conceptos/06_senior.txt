@@ -1,0 +1,1500 @@
+# 06_senior.txt: nivel senior (concurrencia a fondo, la JVM por dentro, patrones, diseño, código heredado y pruebas)
+
+=== java_util_concurrent
+nivel: 5
+tema: 20
+titulo.es: java.util.concurrent
+titulo.de: java.util.concurrent
+titulo.en: java.util.concurrent
+claves.es: java.util.concurrent, atomicinteger, concurrenthashmap, countdownlatch, cola bloqueante, blockingqueue, compareandset, contador entre hilos, longadder
+claves.de: java.util.concurrent, atomicinteger, concurrenthashmap, countdownlatch, blockierende warteschlange, blockingqueue, compareandset, threadsicherer zähler, longadder
+claves.en: java.util.concurrent, atomicinteger, concurrenthashmap, countdownlatch, blocking queue, blockingqueue, compareandset, thread-safe counter, longadder
+ver: synchronized, condicion_de_carrera, volatile, hashmap_por_dentro
+es:
+    java.util.concurrent es la caja de herramientas de Java para que varios hilos compartan datos sin pisarse y sin escribir synchronized a mano: contadores atómicos, mapas seguros, colas que esperan y pestillos de salida.
+    Imagina el marcador del ring con tres jueces a la vez: si cada uno lee «7», suma uno y escribe «8», se han perdido dos puntos. AtomicInteger es un marcador que lee, suma y escribe de un solo golpe; CountDownLatch es el árbitro que no da la salida hasta que los cuatro robots han dicho «listo», y una BlockingQueue es la cinta del taller: el mecánico deja piezas y el montador se queda dormido delante si no llega ninguna.
+    Se usa con AtomicInteger.incrementAndGet(), ConcurrentHashMap.merge(clave, 1, Integer::sum), CountDownLatch.countDown() y await(), y BlockingQueue.put() y take() (ArrayBlockingQueue, LinkedBlockingQueue). En el robot no hacen falta: el juego llama a cadaTurno siempre desde el mismo hilo y el Vigilante no deja que un robot cree hilos; se practican en los ejercicios del tema 20.
+    El fallo típico es creer que dos operaciones seguras seguidas son una operación segura: if (!mapa.containsKey(k)) mapa.put(k, v); sobre un ConcurrentHashMap sigue siendo una carrera. Usa putIfAbsent, computeIfAbsent o merge, que lo hacen de una vez; y recuerda que size() es solo una estimación mientras otros escriben.
+    Para un senior: AtomicInteger se basa en CAS (compare-and-set, una instrucción de la CPU como lock cmpxchg en x86; desde Java 9, vía VarHandle), y con mucha contención los reintentos se disparan: LongAdder (Java 8) reparte la cuenta en celdas por hilo y escala muchísimo mejor, a cambio de que sum() no sea una foto exacta. ConcurrentHashMap ya no usa segmentos desde Java 8: lee sin candados y bloquea solo la cubeta que escribe, así que la función de computeIfAbsent corre con esa cubeta bloqueada; hazla corta y no toques el mismo mapa dentro (desde Java 9 lanza IllegalStateException: «Recursive update»). Todo el paquete es de Doug Lea y llegó en Java 5 (JSR 166).
+de:
+    java.util.concurrent ist Javas Werkzeugkiste, damit mehrere Threads Daten teilen können, ohne sich gegenseitig zu überschreiben, und ohne dass du synchronized von Hand schreibst: atomare Zähler, sichere Maps, wartende Warteschlangen und Startsperren.
+    Stell dir die Anzeigetafel am Ring mit drei Punktrichtern gleichzeitig vor: Jeder liest „7“, zählt eins dazu und schreibt „8“ – zwei Punkte sind weg. AtomicInteger ist eine Tafel, die Lesen, Addieren und Schreiben in einem Rutsch erledigt; CountDownLatch ist der Schiedsrichter, der erst freigibt, wenn alle vier Roboter „bereit“ gemeldet haben, und eine BlockingQueue ist das Fließband der Werkstatt: Der Mechaniker legt Teile drauf, und der Monteur schläft davor ein, solange keins kommt.
+    Benutzt wird das mit AtomicInteger.incrementAndGet(), ConcurrentHashMap.merge(schluessel, 1, Integer::sum), CountDownLatch.countDown() und await() sowie BlockingQueue.put() und take() (ArrayBlockingQueue, LinkedBlockingQueue). Im Roboter brauchst du es nicht: Das Spiel ruft cadaTurno (jedenZug) immer aus demselben Thread auf, und der Wächter (Vigilante) lässt Roboter keine Threads starten; geübt wird es in den Übungen zu Thema 20.
+    Der typische Fehler: zu glauben, zwei sichere Operationen hintereinander seien eine sichere Operation. if (!map.containsKey(k)) map.put(k, v); auf einer ConcurrentHashMap ist trotzdem eine Race Condition. Nimm putIfAbsent, computeIfAbsent oder merge, die das in einem Schritt erledigen; und size() ist nur eine Schätzung, solange andere schreiben.
+    Für Senioren: AtomicInteger beruht auf CAS (compare-and-set, ein CPU-Befehl wie lock cmpxchg auf x86; seit Java 9 über VarHandle), und unter starker Konkurrenz explodieren die Wiederholungen: LongAdder (Java 8) verteilt die Zählung auf Zellen pro Thread und skaliert viel besser, dafür ist sum() keine exakte Momentaufnahme. ConcurrentHashMap hat seit Java 8 keine Segmente mehr: Sie liest ohne Sperre und sperrt nur den Bucket, in den sie schreibt – die Funktion in computeIfAbsent läuft also mit gesperrtem Bucket; halte sie kurz und fass darin nicht dieselbe Map an (seit Java 9 gibt das eine IllegalStateException „Recursive update“). Das ganze Paket stammt von Doug Lea und kam mit Java 5 (JSR 166).
+en:
+    java.util.concurrent is Java's toolbox for letting several threads share data without trampling on each other, and without writing synchronized by hand: atomic counters, safe maps, queues that wait, and starting gates.
+    Picture the ringside scoreboard with three judges at once: each one reads "7", adds one and writes "8", and two points have vanished. AtomicInteger is a scoreboard that reads, adds and writes in one go; CountDownLatch is the referee who won't start the bout until all four robots have said "ready"; and a BlockingQueue is the workshop conveyor belt: the mechanic drops parts on it and the assembler dozes off in front of it while nothing arrives.
+    You use it through AtomicInteger.incrementAndGet(), ConcurrentHashMap.merge(key, 1, Integer::sum), CountDownLatch.countDown() and await(), and BlockingQueue.put() and take() (ArrayBlockingQueue, LinkedBlockingQueue). Your robot doesn't need any of it: the game always calls cadaTurno (onTick) from the same thread, and the game's watchman (the Vigilante) doesn't let robots start threads; you practise it in the topic 20 exercises.
+    The classic mistake is believing that two safe operations in a row make one safe operation: if (!map.containsKey(k)) map.put(k, v); on a ConcurrentHashMap is still a race. Use putIfAbsent, computeIfAbsent or merge, which do it in one step; and remember that size() is only an estimate while others are writing.
+    For seniors: AtomicInteger is built on CAS (compare-and-set, a CPU instruction such as lock cmpxchg on x86; since Java 9 via VarHandle), and under heavy contention the retries pile up: LongAdder (Java 8) spreads the count over per-thread cells and scales far better, at the price of sum() not being an exact snapshot. ConcurrentHashMap has had no segments since Java 8: it reads without locks and locks only the bucket it writes to, so the function you pass to computeIfAbsent runs with that bucket locked; keep it short and never touch the same map inside it (since Java 9 that throws IllegalStateException: "Recursive update"). The whole package is Doug Lea's work and arrived in Java 5 (JSR 166).
+pseudo.es:
+    puntos ← contador atómico a 0
+    listos ← pestillo de 3 jueces
+    PARA CADA juez (cada uno en su hilo):
+        sumar 1 a puntos DE UN SOLO GOLPE
+        listos baja 1
+    esperar hasta que listos llegue a 0
+    escribir puntos            (siempre 3, nunca 2)
+pseudo.de:
+    punkte ← atomarer Zähler auf 0
+    bereit ← Sperre für 3 Richter
+    FÜR JEDEN Richter (jeder in seinem Thread):
+        punkte um 1 erhöhen IN EINEM SCHRITT
+        bereit zählt 1 herunter
+    warten, bis bereit bei 0 ist
+    schreibe punkte            (immer 3, nie 2)
+pseudo.en:
+    points ← atomic counter at 0
+    ready ← latch for 3 judges
+    FOR EACH judge (each in its own thread):
+        add 1 to points IN ONE STEP
+        ready counts down 1
+    wait until ready reaches 0
+    write points               (always 3, never 2)
+ejemplo:
+    import java.util.concurrent.*;
+    import java.util.concurrent.atomic.AtomicInteger;
+    
+    class Marcador {
+        final AtomicInteger golpes = new AtomicInteger();                     // contador sin candados || Zähler ohne Sperren || lock-free counter
+        final ConcurrentHashMap<String, Integer> porArma = new ConcurrentHashMap<>();
+        void anotar(String arma) {
+            golpes.incrementAndGet();                                         // leer, sumar y escribir de una vez || lesen, addieren, schreiben in einem Schritt || read, add and write in one step
+            porArma.merge(arma, 1, Integer::sum);                             // nunca containsKey + put || nie containsKey + put || never containsKey + put
+        }
+        void esperarJueces(CountDownLatch listos) throws InterruptedException {
+            listos.await();                                                   // duerme hasta que llegue a 0 || schläft, bis er bei 0 ist || sleeps until it reaches 0
+        }
+    }
+
+=== volatile
+nivel: 5
+tema: 20
+titulo.es: volatile
+titulo.de: volatile
+titulo.en: volatile
+claves.es: volatile, atributo volatile, visibilidad entre hilos, bandera de parada, el otro hilo no ve el cambio, double-checked locking
+claves.de: volatile, volatile feld, sichtbarkeit zwischen threads, stopp-flag, anderer thread sieht die änderung nicht, double-checked locking
+claves.en: volatile, volatile field, visibility between threads, stop flag, other thread does not see the change, double-checked locking
+ver: modelo_de_memoria, synchronized, java_util_concurrent, hilo
+es:
+    volatile es una palabra que se pone delante de un atributo para decir: «este valor lo leen y lo escriben varios hilos; no te guardes copias, mira siempre el de verdad».
+    Sin volatile, cada robot del equipo lleva en la muñeca una foto de la pizarra del árbitro y mira la foto en vez de la pizarra. El árbitro escribe «¡FIN DEL COMBATE!» y un robot sigue repartiendo puñetazos al aire durante horas porque su foto dice «combate en curso». volatile le obliga a levantar la vista a la pizarra cada vez.
+    Se usa así: volatile boolean seguir = true; un hilo hace while (seguir) { … } y otro pone seguir = false. Garantiza visibilidad y orden (lo que el hilo escribió antes de la escritura volatile lo ve quien después la lee) y que un long o un double se lean enteros. En el robot no lo necesitas: todo pasa en el hilo del juego.
+    El fallo típico es creer que volatile hace atómico contador++: son tres pasos (leer, sumar, escribir) y dos hilos pueden perder sumas. Para eso, AtomicInteger o synchronized; volatile sirve para banderas y para publicar un objeto ya construido, no para «leer, cambiar y escribir».
+    Para un senior: el bucle que nunca acaba no suele ser culpa de la caché de la CPU (que es coherente), sino del JIT, que saca la lectura del bucle (hoisting) y convierte while (!parar) en while (true); por eso falla después de calentar y nunca en el depurador. En x86 leer un volatile cuesta casi lo mismo que una lectura normal y escribirlo lleva una barrera StoreLoad; si solo necesitas parte de esa semántica, VarHandle (Java 9) ofrece getAcquire/setRelease y getOpaque. El double-checked locking del singleton solo es correcto desde Java 5 (JSR 133) y con el campo volatile.
+de:
+    volatile ist ein Wort vor einem Attribut, das sagt: „Diesen Wert lesen und schreiben mehrere Threads; heb dir keine Kopien auf, schau immer auf den echten.“
+    Ohne volatile trägt jeder Roboter im Team ein Foto der Schiedsrichtertafel am Handgelenk und schaut aufs Foto statt auf die Tafel. Der Schiedsrichter schreibt „KAMPF VORBEI!“, und ein Roboter boxt noch stundenlang in die Luft, weil auf seinem Foto „Kampf läuft“ steht. volatile zwingt ihn, jedes Mal zur Tafel hochzuschauen.
+    So geht es: volatile boolean weiter = true; ein Thread macht while (weiter) { … }, ein anderer setzt weiter = false. Garantiert sind Sichtbarkeit und Reihenfolge (was ein Thread vor dem volatile-Schreiben geschrieben hat, sieht jeder, der danach liest) und dass ein long oder double am Stück gelesen wird. Im Roboter brauchst du es nicht: Alles läuft im Thread des Spiels.
+    Der typische Fehler: zu glauben, volatile mache zaehler++ atomar. Das sind drei Schritte (lesen, addieren, schreiben), und zwei Threads können Erhöhungen verlieren. Dafür gibt es AtomicInteger oder synchronized; volatile ist für Flags und für das Veröffentlichen eines fertig gebauten Objekts, nicht für „lesen, ändern, schreiben“.
+    Für Senioren: Die Schleife, die nie endet, liegt meist nicht am CPU-Cache (der ist kohärent), sondern am JIT, der das Lesen aus der Schleife zieht (Hoisting) und aus while (!stopp) ein while (true) macht; darum tritt der Fehler erst nach dem Aufwärmen auf und nie im Debugger. Auf x86 kostet ein volatile-Lesen fast so viel wie ein normales, das Schreiben bringt eine StoreLoad-Barriere mit; brauchst du nur einen Teil davon, bietet VarHandle (Java 9) getAcquire/setRelease und getOpaque. Double-checked Locking beim Singleton ist erst seit Java 5 (JSR 133) korrekt, und nur mit volatile-Feld.
+en:
+    volatile is a word you put in front of a field to say: "several threads read and write this value; don't keep copies, always look at the real one."
+    Without volatile, every robot on the team wears a photo of the referee's board on its wrist and looks at the photo instead of the board. The referee writes "FIGHT OVER!" and one robot keeps punching thin air for hours because its photo still says "fight in progress". volatile forces it to look up at the board every single time.
+    It works like this: volatile boolean keepGoing = true; one thread runs while (keepGoing) { … } and another sets keepGoing = false. You get visibility and ordering (whatever a thread wrote before the volatile write is seen by anyone who reads it afterwards), and a long or double is never read half-written. Your robot doesn't need it: everything happens on the game's thread.
+    The classic mistake is thinking volatile makes counter++ atomic: it is three steps (read, add, write), and two threads can lose increments. Use AtomicInteger or synchronized for that; volatile is for flags and for publishing a fully built object, not for read-modify-write.
+    For seniors: the loop that never ends is rarely the CPU cache's fault (caches are coherent); it is the JIT hoisting the read out of the loop and turning while (!stop) into while (true), which is why it fails only after warm-up and never under the debugger. On x86 a volatile read costs about the same as a plain one, while a volatile write adds a StoreLoad fence; if you only need part of those semantics, VarHandle (Java 9) gives you getAcquire/setRelease and getOpaque. Double-checked locking for singletons has only been correct since Java 5 (JSR 133), and only with a volatile field.
+pseudo.es:
+    seguir ← VERDADERO          (volátil: todos miran la pizarra)
+    HILO vigía:
+        MIENTRAS seguir:
+            vigilar el ring
+        escribir «se acabó»
+    HILO árbitro:
+        seguir ← FALSO          (el vigía lo ve en la siguiente vuelta)
+pseudo.de:
+    weiter ← WAHR               (volatile: alle schauen auf die Tafel)
+    THREAD Wächter:
+        SOLANGE weiter:
+            den Ring beobachten
+        schreibe „vorbei“
+    THREAD Schiedsrichter:
+        weiter ← FALSCH         (der Wächter sieht es in der nächsten Runde)
+pseudo.en:
+    keepGoing ← TRUE            (volatile: everyone looks at the board)
+    THREAD lookout:
+        WHILE keepGoing:
+            watch the ring
+        write "it's over"
+    THREAD referee:
+        keepGoing ← FALSE       (the lookout sees it on the next pass)
+ejemplo:
+    class Combate {
+        private volatile boolean seguir = true;     // sin volatile el bucle podría no enterarse nunca || ohne volatile merkt die Schleife es vielleicht nie || without volatile the loop might never notice
+        private int asaltos;                        // normal: lo publica la escritura de seguir || normal: das Schreiben von seguir veröffentlicht es || plain: the write to seguir publishes it
+        void vigilar() {
+            while (seguir) {                        // relee la bandera en cada vuelta || liest das Flag jede Runde neu || rereads the flag on every pass
+                Thread.onSpinWait();
+            }
+            System.out.println("asaltos: " + asaltos);   // ve el valor escrito antes de seguir = false || sieht den Wert von vor seguir = false || sees the value written before seguir = false
+        }
+        void terminar(int n) {
+            asaltos = n;                            // primero el dato... || erst die Daten ... || data first...
+            seguir = false;                         // ...luego la bandera: happens-before || ... dann das Flag: happens-before || ...then the flag: happens-before
+        }
+    }
+
+=== interbloqueo
+nivel: 5
+tema: 20
+titulo.es: Interbloqueo
+titulo.de: Deadlock
+titulo.en: Deadlock
+claves.es: interbloqueo, deadlock, bloqueo mutuo, el programa se queda colgado, los hilos se esperan entre si, orden de los candados, livelock, jstack
+claves.de: deadlock, verklemmung, gegenseitige blockierung, programm hängt, threads warten aufeinander, sperrreihenfolge, livelock, jstack
+claves.en: deadlock, deadlocks, threads waiting for each other, program hangs, lock ordering, livelock, jstack
+ver: synchronized, hilo, hilos_virtuales, condicion_de_carrera
+es:
+    Un interbloqueo pasa cuando dos (o más) hilos se quedan esperando cada uno algo que tiene el otro y, como ninguno suelta lo suyo, se quedan parados para siempre. El programa no falla con un error: se cuelga.
+    Dos robots en el taller: Tuercas agarra la llave inglesa y espera el destornillador; Chispas agarra el destornillador y espera la llave inglesa. Ninguno suelta nada «por si acaso», y ahí siguen, mirándose fijamente, mientras el locutor rellena tres horas de retransmisión hablando del tiempo.
+    En Java ocurre con synchronized o con ReentrantLock cuando dos hilos cogen los mismos candados en distinto orden. Para encontrarlo, jstack <pid> (o jcmd <pid> Thread.print) imprime «Found one Java-level deadlock» con quién espera a quién, y ThreadMXBean.findDeadlockedThreads() lo detecta desde el propio programa. En tu robot no puede pasar: hay un solo hilo y el Vigilante no deja crear más.
+    Para evitarlo: coge siempre los candados en el mismo orden global (por ejemplo, por id), no llames a código ajeno (oyentes, callbacks) mientras tienes un candado cogido, y usa tryLock(tiempo, unidad) para rendirte a tiempo en lugar de esperar para siempre.
+    Para un senior: un interbloqueo necesita las cuatro condiciones de Coffman a la vez (exclusión mutua, retener y esperar, sin expropiación y espera circular); rompe una y desaparece, y el orden global rompe la espera circular. Vigila a sus primos: el livelock (todos ceden a la vez y nadie avanza; se arregla esperando un tiempo al azar) y la inanición. Y con hilos virtuales (Java 21), un synchronized que se bloquea clavaba el hilo portador (pinning, resuelto en Java 24 con el JEP 491): con pocos portadores ocupados, el programa parecía interbloqueado sin estarlo.
+de:
+    Ein Deadlock entsteht, wenn zwei (oder mehr) Threads jeweils auf etwas warten, das der andere hält, und keiner das Seine loslässt: Sie stehen für immer still. Das Programm stürzt nicht mit einem Fehler ab, es hängt einfach.
+    Zwei Roboter in der Werkstatt: Mutter hält den Schraubenschlüssel und wartet auf den Schraubenzieher, Funke hält den Schraubenzieher und wartet auf den Schraubenschlüssel. Keiner gibt etwas her, „man weiß ja nie“, und so starren sie sich an, während der Kommentator drei Stunden Sendezeit mit dem Wetter füllt.
+    In Java passiert das mit synchronized oder ReentrantLock, wenn zwei Threads dieselben Sperren in unterschiedlicher Reihenfolge nehmen. Zum Aufspüren gibt jstack <pid> (oder jcmd <pid> Thread.print) „Found one Java-level deadlock“ aus, samt wer auf wen wartet, und ThreadMXBean.findDeadlockedThreads() erkennt es im Programm selbst. In deinem Roboter kann es nicht passieren: Es gibt nur einen Thread, und der Wächter (Vigilante) lässt keine weiteren zu.
+    Vermeiden lässt es sich so: Nimm Sperren immer in derselben globalen Reihenfolge (zum Beispiel nach ID), ruf keinen fremden Code (Listener, Callbacks) auf, während du eine Sperre hältst, und nutze tryLock(zeit, einheit), um rechtzeitig aufzugeben, statt ewig zu warten.
+    Für Senioren: Ein Deadlock braucht alle vier Coffman-Bedingungen zugleich (gegenseitiger Ausschluss, Halten und Warten, keine Verdrängung, zirkuläres Warten); brich eine, und er verschwindet – die globale Reihenfolge bricht das zirkuläre Warten. Achte auf die Verwandten: Livelock (alle weichen gleichzeitig aus, keiner kommt voran; hilft zufälliges Warten) und Verhungern. Und bei virtuellen Threads (Java 21) hat ein blockierendes synchronized den Träger-Thread festgenagelt (Pinning, behoben in Java 24 mit JEP 491): Mit wenigen belegten Trägern wirkte das Programm verklemmt, ohne es zu sein.
+en:
+    A deadlock happens when two (or more) threads are each waiting for something the other one holds, and since neither lets go, they stay stuck forever. The program doesn't crash with an error: it just hangs.
+    Two robots in the workshop: Nuts grabs the wrench and waits for the screwdriver; Sparky grabs the screwdriver and waits for the wrench. Neither lets go "just in case", so there they stand, staring at each other, while the commentator fills three hours of airtime talking about the weather.
+    In Java it happens with synchronized or ReentrantLock when two threads take the same locks in different orders. To find it, jstack <pid> (or jcmd <pid> Thread.print) prints "Found one Java-level deadlock" along with who is waiting for whom, and ThreadMXBean.findDeadlockedThreads() detects it from inside the program. It can't happen in your robot: there is only one thread, and the game's watchman (the Vigilante) won't let you create more.
+    To avoid it: always take locks in the same global order (by id, for example), never call foreign code (listeners, callbacks) while holding a lock, and use tryLock(time, unit) to give up in time instead of waiting forever.
+    For seniors: a deadlock needs all four Coffman conditions at once (mutual exclusion, hold and wait, no preemption, circular wait); break any one and it is gone, and global ordering breaks the circular wait. Watch out for its cousins: livelock (everyone steps aside at the same time and nobody moves; random back-off fixes it) and starvation. And with virtual threads (Java 21), a synchronized block that blocked used to pin the carrier thread (fixed in Java 24 by JEP 491): with a few carriers tied up, the program looked deadlocked without being so.
+pseudo.es:
+    MAL: hilo 1 coge A y luego B; hilo 2 coge B y luego A
+    PARA CADA hilo:
+        primero ← el candado con el id más pequeño
+        segundo ← el otro
+        coger primero, luego segundo
+        hacer el trabajo
+        soltar los dos
+pseudo.de:
+    FALSCH: Thread 1 nimmt A, dann B; Thread 2 nimmt B, dann A
+    FÜR JEDEN Thread:
+        erste ← die Sperre mit der kleinsten ID
+        zweite ← die andere
+        erst erste nehmen, dann zweite
+        die Arbeit erledigen
+        beide freigeben
+pseudo.en:
+    WRONG: thread 1 takes A then B; thread 2 takes B then A
+    FOR EACH thread:
+        first ← the lock with the smallest id
+        second ← the other one
+        take first, then second
+        do the work
+        release both
+ejemplo:
+    class Taller {
+        record Herramienta(int id) {}
+    
+        void usarAmbas(Herramienta a, Herramienta b) {
+            Herramienta primera = a.id() < b.id() ? a : b;    // siempre el mismo orden global || immer dieselbe globale Reihenfolge || always the same global order
+            Herramienta segunda = primera == a ? b : a;
+            synchronized (primera) {
+                synchronized (segunda) {                      // nadie espera en círculo || niemand wartet im Kreis || nobody waits in a circle
+                    System.out.println("reparando con " + a + " y " + b);
+                }
+            }
+        }
+    }
+
+=== modelo_de_memoria
+nivel: 5
+tema: 20
+titulo.es: Modelo de memoria
+titulo.de: Speichermodell
+titulo.en: Memory model
+claves.es: modelo de memoria, java memory model, jmm, happens-before, reordenacion, publicacion segura, carrera de datos, data race
+claves.de: speichermodell, java memory model, jmm, happens-before, umordnung, sichere veröffentlichung, data race, datenwettlauf
+claves.en: memory model, java memory model, jmm, happens-before, reordering, safe publication, data race
+ver: volatile, synchronized, condicion_de_carrera, inmutabilidad
+es:
+    El modelo de memoria de Java son las reglas que dicen qué valor puede ver un hilo al leer una variable que ha escrito otro hilo. Sin esas reglas, «lo escribí antes» no significa «el otro ya lo ve».
+    Imagina al locutor loco, que para ir más rápido reordena las frases de la retransmisión siempre que a ÉL le dé igual el resultado. Para el público, que es otro hilo, el orden puede salir patas arriba: «¡KO!» antes de «suena la campana». happens-before es el contrato que obliga a que ciertas frases lleguen en su orden.
+    Hay happens-before (lo de antes se ve después) entre soltar un candado y volver a cogerlo (synchronized, Lock), escribir un volatile y leerlo, Thread.start() y el código del hilo, el final de un hilo y Thread.join(), y meter y sacar de una colección concurrente (BlockingQueue.put/take, Future.get); además es transitivo. Si dos hilos tocan la misma variable, al menos uno escribe y no hay happens-before entre ellos, es una carrera de datos y la JVM puede darte valores que parecen imposibles; en tu robot, con un solo hilo, no te afecta.
+    El fallo típico es publicar un objeto sin sincronizar (pieza = new Pieza(80); en un atributo normal): otro hilo puede ver ya la referencia pero los atributos todavía a 0 o null, porque construir y publicar se pueden reordenar. Publica con volatile, final, una colección concurrente o un candado.
+    Para un senior: los atributos final tienen una garantía especial (JSR 133, Java 5): acabado el constructor, quien vea la referencia ve los final bien puestos, salvo que dejes escapar this dentro del constructor. Reordenan tanto el JIT como la CPU, y ARM reordena bastante más que x86: código «que funciona» en un portátil Intel puede romperse en un Mac con chip M o en un servidor Graviton; para probarlo de verdad está jcstress, de OpenJDK. Y la gran promesa del modelo (DRF-SC): un programa sin carreras de datos se comporta como si todo ocurriera en un orden secuencial.
+de:
+    Das Java-Speichermodell sind die Regeln dafür, welchen Wert ein Thread sehen darf, wenn er eine Variable liest, die ein anderer Thread geschrieben hat. Ohne diese Regeln heißt „ich habe es vorher geschrieben“ noch lange nicht „der andere sieht es schon“.
+    Stell dir den verrückten Kommentator vor, der seine Sätze umstellt, um schneller zu sein, solange es für IHN aufs Gleiche hinausläuft. Fürs Publikum, also einen anderen Thread, kommt die Reihenfolge womöglich kopfüber an: „K.o.!“ vor „der Gong ertönt“. happens-before ist der Vertrag, der bestimmte Sätze in ihrer Reihenfolge ankommen lässt.
+    happens-before (das Vorherige ist danach sichtbar) gilt zwischen dem Freigeben einer Sperre und dem erneuten Nehmen (synchronized, Lock), dem Schreiben und Lesen eines volatile, Thread.start() und dem Code des Threads, dem Ende eines Threads und Thread.join() sowie dem Hineinlegen und Herausnehmen bei einer nebenläufigen Collection (BlockingQueue.put/take, Future.get); außerdem ist es transitiv. Greifen zwei Threads auf dieselbe Variable zu, schreibt mindestens einer und gibt es kein happens-before zwischen ihnen, ist das ein Data Race, und die JVM darf dir scheinbar unmögliche Werte liefern; in deinem Roboter mit nur einem Thread betrifft dich das nicht.
+    Der typische Fehler: ein Objekt ohne Synchronisierung zu veröffentlichen (teil = new Teil(80); in ein normales Attribut). Ein anderer Thread sieht vielleicht schon die Referenz, die Attribute aber noch auf 0 oder null, weil Bauen und Veröffentlichen umgeordnet werden dürfen. Veröffentliche über volatile, final, eine nebenläufige Collection oder eine Sperre.
+    Für Senioren: final-Attribute haben eine Sondergarantie (JSR 133, Java 5): Nach dem Konstruktor sieht jeder, der die Referenz sieht, die final-Werte korrekt, außer du lässt this im Konstruktor entwischen. Umgeordnet wird sowohl vom JIT als auch von der CPU, und ARM ordnet deutlich mehr um als x86: Code, der auf dem Intel-Laptop „funktioniert“, kann auf einem Mac mit M-Chip oder einem Graviton-Server brechen; zum echten Testen gibt es jcstress von OpenJDK. Und das große Versprechen des Modells (DRF-SC): Ein Programm ohne Data Races verhält sich, als liefe alles in einer sequenziellen Reihenfolge ab.
+en:
+    The Java memory model is the set of rules that says which value a thread may see when it reads a variable another thread has written. Without those rules, "I wrote it first" does not mean "the other one can see it yet".
+    Picture the crazy commentator, who reorders the sentences of his broadcast to save time whenever the result makes no difference to HIM. For the audience, which is another thread, the order can arrive upside down: "KO!" before "the bell rings". happens-before is the contract that forces certain sentences to arrive in order.
+    There is a happens-before edge (what came before is visible after) between releasing a lock and taking it again (synchronized, Lock), writing a volatile and reading it, Thread.start() and the thread's code, a thread finishing and Thread.join(), and putting into and taking from a concurrent collection (BlockingQueue.put/take, Future.get); and it is transitive. If two threads touch the same variable, at least one writes and there is no happens-before between them, that is a data race, and the JVM may hand you values that look impossible; in your single-threaded robot it doesn't affect you.
+    The classic mistake is publishing an object without synchronisation (part = new Part(80); into a plain field): another thread may already see the reference but the fields still at 0 or null, because construction and publication can be reordered. Publish through volatile, final, a concurrent collection or a lock.
+    For seniors: final fields get a special guarantee (JSR 133, Java 5): once the constructor finishes, anyone who sees the reference sees the final fields correctly set, unless you let this escape during construction. Both the JIT and the CPU reorder, and ARM reorders a lot more than x86: code that "works" on an Intel laptop can break on an Apple silicon Mac or a Graviton server; to really test it there is OpenJDK's jcstress. And the model's big promise (DRF-SC): a program with no data races behaves as if everything ran in one sequential order.
+pseudo.es:
+    HILO taller:
+        pieza.potencia ← 80
+        lista ← VERDADERO        (volátil: publica lo de arriba)
+    HILO robot:
+        MIENTRAS NO lista:
+            esperar
+        usar pieza.potencia      (seguro que ve 80, nunca 0)
+pseudo.de:
+    THREAD Werkstatt:
+        teil.leistung ← 80
+        fertig ← WAHR            (volatile: veröffentlicht das darüber)
+    THREAD Roboter:
+        SOLANGE NICHT fertig:
+            warten
+        teil.leistung benutzen   (sieht sicher 80, nie 0)
+pseudo.en:
+    THREAD workshop:
+        part.power ← 80
+        ready ← TRUE             (volatile: publishes what is above)
+    THREAD robot:
+        WHILE NOT ready:
+            wait
+        use part.power           (guaranteed to see 80, never 0)
+ejemplo:
+    class Taller {
+        static final class Pieza {
+            final int potencia;                       // final: se ve bien construido || final: sicher fertig sichtbar || final: safely visible once built
+            Pieza(int potencia) { this.potencia = potencia; }
+        }
+        private volatile Pieza lista;                 // escribir un volatile y luego leerlo: happens-before || volatile schreiben, dann lesen: happens-before || volatile write then read: happens-before
+    
+        void fabricar() { lista = new Pieza(80); }    // publicación segura || sichere Veröffentlichung || safe publication
+    
+        int montar() {
+            Pieza p = lista;                          // una sola lectura volatile || nur ein volatile-Lesen || a single volatile read
+            return p == null ? 0 : p.potencia;        // nunca una pieza a medio hacer || nie ein halb gebautes Teil || never a half-built part
+        }
+    }
+
+=== completable_future
+nivel: 5
+tema: 20
+titulo.es: CompletableFuture
+titulo.de: CompletableFuture
+titulo.en: CompletableFuture
+claves.es: completablefuture, completable future, supplyasync, thencompose, thencombine, programacion asincrona, encadenar tareas asincronas, allof
+claves.de: completablefuture, completable future, supplyasync, thencompose, thencombine, asynchrone programmierung, asynchrone aufgaben verketten, allof
+claves.en: completablefuture, completable future, supplyasync, thencompose, thencombine, asynchronous programming, chain async tasks, allof
+ver: executor, lambda, hilos_virtuales, optional
+es:
+    Un CompletableFuture es una promesa de resultado: «todavía no tengo el número, pero cuando lo tenga, haz esto con él». Sirve para encadenar trabajos que tardan (calcular, descargar, preguntar a otro servicio) sin quedarte parado esperando.
+    Pides al taller un brazo nuevo y te dan un resguardo. En vez de quedarte plantado en el mostrador, le grapas instrucciones al resguardo: «cuando esté, que lo pinten de rojo; luego, que lo atornillen; y si explota, que me traigan uno de madera». Tú, mientras, sigues entrenando en el ring.
+    Se empieza con CompletableFuture.supplyAsync(() -> calcular()) y se sigue con thenApply (transformar), thenCompose (encadenar otro futuro), thenCombine (juntar dos), exceptionally o handle (errores) y allOf/anyOf (esperar a varios); al final, join() o get(). En los robots el Vigilante lo prohíbe, porque crea hilos; se practica en los ejercicios del tema 20.
+    El fallo típico es llamar a join() justo después de supplyAsync, que lo vuelve síncrono y encima gasta un hilo de más; otro, usar thenApply con una función que devuelve otro futuro y acabar con un CompletableFuture<CompletableFuture<T>> (para eso está thenCompose). Y los errores llegan envueltos: en CompletionException con join() y en ExecutionException con get(); mira getCause().
+    Para un senior: sin ejecutor, supplyAsync usa ForkJoinPool.commonPool(), que tiene tantos hilos como núcleos menos uno y lo comparte toda la JVM (también los parallel streams): bloquearlo con E/S lo atasca todo, así que pasa tu propio Executor (en Java 21, por ejemplo, Executors.newVirtualThreadPerTaskExecutor()). Las variantes sin Async ejecutan la función en el hilo que completa el futuro o, si ya estaba completo, en el que la registra, algo difícil de prever; y cancel(true) no interrumpe la tarea que ya corre. Llegó en Java 8; orTimeout y completeOnTimeout, en Java 9.
+de:
+    Ein CompletableFuture ist ein Ergebnisversprechen: „Ich habe die Zahl noch nicht, aber sobald ich sie habe, mach damit Folgendes.“ Damit verkettest du Arbeiten, die dauern (rechnen, herunterladen, einen anderen Dienst fragen), ohne untätig zu warten.
+    Du bestellst in der Werkstatt einen neuen Arm und bekommst einen Abholschein. Statt am Tresen herumzustehen, tackerst du Anweisungen an den Schein: „Wenn er fertig ist, rot lackieren; danach anschrauben; und falls er explodiert, bringt mir einen aus Holz.“ Du trainierst derweil im Ring weiter.
+    Los geht es mit CompletableFuture.supplyAsync(() -> berechnen()), weiter mit thenApply (umwandeln), thenCompose (ein weiteres Future anhängen), thenCombine (zwei zusammenführen), exceptionally oder handle (Fehler) und allOf/anyOf (auf mehrere warten); am Ende join() oder get(). In Robotern verbietet es der Wächter (Vigilante), weil es Threads erzeugt; geübt wird es in den Übungen zu Thema 20.
+    Der typische Fehler: direkt nach supplyAsync join() aufzurufen – das macht es synchron und verbraucht obendrein einen Thread mehr. Ein anderer: thenApply mit einer Funktion, die selbst ein Future liefert, und schon hast du ein CompletableFuture<CompletableFuture<T>> (dafür gibt es thenCompose). Und Fehler kommen verpackt an: bei join() in einer CompletionException, bei get() in einer ExecutionException; schau in getCause().
+    Für Senioren: Ohne Executor nutzt supplyAsync den ForkJoinPool.commonPool() mit so vielen Threads wie Kerne minus eins, und den teilt sich die ganze JVM (auch die parallel streams): Blockierst du ihn mit I/O, steht alles; gib also deinen eigenen Executor mit (in Java 21 etwa Executors.newVirtualThreadPerTaskExecutor()). Die Varianten ohne Async führen die Funktion in dem Thread aus, der das Future vervollständigt, oder, falls es schon fertig ist, in dem, der sie registriert – schwer vorherzusagen; und cancel(true) unterbricht eine laufende Aufgabe nicht. Eingeführt mit Java 8; orTimeout und completeOnTimeout kamen mit Java 9.
+en:
+    A CompletableFuture is a promise of a result: "I don't have the number yet, but once I do, do this with it." It lets you chain slow jobs (computing, downloading, asking another service) without standing around waiting.
+    You order a new arm from the workshop and get a ticket. Instead of hanging around at the counter, you staple instructions to the ticket: "when it's ready, paint it red; then bolt it on; and if it explodes, bring me a wooden one." Meanwhile you keep training in the ring.
+    You start with CompletableFuture.supplyAsync(() -> compute()) and carry on with thenApply (transform), thenCompose (chain another future), thenCombine (merge two), exceptionally or handle (errors) and allOf/anyOf (wait for several); at the end, join() or get(). In robots the game's watchman (the Vigilante) forbids it, because it creates threads; you practise it in the topic 20 exercises.
+    The classic mistake is calling join() right after supplyAsync, which makes it synchronous and wastes an extra thread on top; another is using thenApply with a function that returns a future and ending up with a CompletableFuture<CompletableFuture<T>> (that is what thenCompose is for). And errors arrive wrapped: in a CompletionException from join() and an ExecutionException from get(); look at getCause().
+    For seniors: without an executor, supplyAsync uses ForkJoinPool.commonPool(), which has as many threads as cores minus one and is shared by the whole JVM (parallel streams included): block it with I/O and everything stalls, so pass your own Executor (in Java 21, for instance, Executors.newVirtualThreadPerTaskExecutor()). The non-Async variants run your function on whichever thread completes the future or, if it is already complete, on the thread that registers it, which is hard to predict; and cancel(true) does not interrupt a task that is already running. It arrived in Java 8; orTimeout and completeOnTimeout came in Java 9.
+pseudo.es:
+    resguardo ← pedir al taller un brazo (EN SEGUNDO PLANO)
+    CUANDO esté: atornillarlo (otra tarea que también tarda)
+    LUEGO: pintarlo de rojo
+    SI algo falla: usar el brazo de madera
+    mientras tanto: seguir entrenando
+    al final, y solo al final: esperar el brazo
+pseudo.de:
+    schein ← in der Werkstatt einen Arm bestellen (IM HINTERGRUND)
+    WENN er fertig ist: anschrauben (noch eine Aufgabe, die dauert)
+    DANACH: rot lackieren
+    WENN etwas schiefgeht: den Holzarm nehmen
+    in der Zwischenzeit: weitertrainieren
+    am Ende, und erst am Ende: auf den Arm warten
+pseudo.en:
+    ticket ← order an arm from the workshop (IN THE BACKGROUND)
+    WHEN it's ready: bolt it on (another slow task)
+    THEN: paint it red
+    IF anything fails: use the wooden arm
+    meanwhile: keep training
+    at the end, and only at the end: wait for the arm
+ejemplo:
+    import java.util.concurrent.*;
+    
+    class Taller {
+        String fabricar(String pieza) { return pieza + " nueva"; }
+        String atornillar(String pieza) { return pieza + " montada"; }
+        String pedirBrazo(ExecutorService mecanicos) {
+            return CompletableFuture
+                    .supplyAsync(() -> fabricar("brazo"), mecanicos)                       // con TU ejecutor, no el común || mit DEINEM Executor, nicht dem gemeinsamen || with YOUR executor, not the common pool
+                    .thenCompose(b -> CompletableFuture.supplyAsync(() -> atornillar(b), mecanicos))   // futuro dentro de futuro: thenCompose || Future im Future: thenCompose || future inside a future: thenCompose
+                    .thenApply(String::toUpperCase)                                         // transformar el resultado || Ergebnis umwandeln || transform the result
+                    .exceptionally(error -> "brazo de madera")                              // plan B si algo falla || Plan B, falls etwas schiefgeht || plan B if anything fails
+                    .join();                                                                // esperar solo al final || erst ganz am Ende warten || wait only at the very end
+        }
+    }
+
+=== recolector_de_basura
+nivel: 5
+tema: --
+titulo.es: Recolector de basura
+titulo.de: Garbage Collector
+titulo.en: Garbage collector
+claves.es: recolector de basura, garbage collector, recoleccion de basura, gc, liberar memoria, g1, zgc, pausas del gc, outofmemoryerror, fuga de memoria
+claves.de: garbage collector, speicherbereinigung, müllabfuhr, gc, speicher freigeben, g1, zgc, gc-pausen, outofmemoryerror, speicherleck
+claves.en: garbage collector, garbage collection, gc, free memory, g1, zgc, gc pauses, outofmemoryerror, memory leak
+ver: pila_y_monton, referencia, rendimiento, jvm
+es:
+    El recolector de basura (garbage collector, GC) es la parte de la JVM que busca los objetos a los que ya nadie puede llegar y libera su memoria por ti. En Java no hay free() ni delete: creas con new y te olvidas.
+    Es el barrendero del estadio: después de cada asalto recorre la arena y se lleva los tornillos sueltos, los brazos arrancados y los carteles que ya no sujeta nadie. No mira si algo «parece usado», sino si alguien lo tiene agarrado: lo que cuelga de un robot vivo se queda, aunque sea un calcetín.
+    Un objeto es basura cuando no se llega a él desde las raíces (las variables locales de los hilos vivos, los atributos static…); basta con soltar las referencias o salir del método. Casi todos los objetos mueren jóvenes (en el robot, los new de cada turno), por eso el montón se divide en generaciones y lo joven se limpia rápido y a menudo. System.gc() es solo una sugerencia: no la llames.
+    El fallo típico: creer que en Java no hay fugas de memoria. Una lista o un Map que solo crece (por ejemplo, guardar cada Enemigo de cada turno en la memoria() del robot) nunca se libera, porque sigue siendo alcanzable; guarda lo justo, como las últimas 20 posiciones. Y no uses finalize() (obsoleto desde Java 9): para liberar recursos, try-with-resources o Cleaner.
+    Para un senior: G1 es el recolector por defecto desde Java 9; parte el montón en regiones y persigue pausas cortas (objetivo -XX:MaxGCPauseMillis=200). ZGC (listo para producción en Java 15, generacional en Java 21 con -XX:+ZGenerational y en modo generacional por defecto desde Java 23) y Shenandoah hacen casi todo a la vez que tu código y dejan pausas por debajo del milisegundo, a cambio de algo de rendimiento y memoria. Para ver qué pasa, -Xlog:gc* y JDK Flight Recorder; y en un juego como este los tirones no los causa el GC en sí, sino crear miles de objetos por fotograma (libGDX ofrece Pool para reutilizarlos).
+de:
+    Der Garbage Collector (GC) ist der Teil der JVM, der Objekte sucht, die niemand mehr erreichen kann, und ihren Speicher für dich freigibt. In Java gibt es kein free() und kein delete: Du erzeugst mit new und vergisst es.
+    Er ist der Platzwart des Stadions: Nach jeder Runde fegt er durch die Arena und nimmt lose Schrauben, abgerissene Arme und Plakate mit, die keiner mehr festhält. Er fragt nicht, ob etwas „benutzt aussieht“, sondern ob es jemand festhält: Was an einem lebenden Roboter hängt, bleibt – und sei es eine Socke.
+    Ein Objekt ist Müll, wenn es von den Wurzeln aus (lokale Variablen lebender Threads, static-Attribute …) nicht mehr erreichbar ist; es genügt, die Referenzen loszulassen oder die Methode zu verlassen. Fast alle Objekte sterben jung (im Roboter die new aus jedem Zug), deshalb ist der Heap in Generationen geteilt, und das Junge wird schnell und oft aufgeräumt. System.gc() ist nur ein Vorschlag: Ruf es nicht auf.
+    Der typische Fehler: zu glauben, in Java gebe es keine Speicherlecks. Eine Liste oder Map, die nur wächst (etwa jeden Gegner aus jedem Zug in memoria() (gedaechtnis) des Roboters ablegen), wird nie freigegeben, weil sie erreichbar bleibt; speichere nur das Nötige, zum Beispiel die letzten 20 Positionen. Und nimm kein finalize() (seit Java 9 veraltet): Für Ressourcen gibt es try-with-resources oder Cleaner.
+    Für Senioren: G1 ist seit Java 9 der Standard-Collector; er teilt den Heap in Regionen und zielt auf kurze Pausen (Ziel -XX:MaxGCPauseMillis=200). ZGC (produktionsreif seit Java 15, generationell in Java 21 mit -XX:+ZGenerational und seit Java 23 standardmäßig generationell) und Shenandoah erledigen fast alles parallel zu deinem Code und kommen mit Pausen unter einer Millisekunde aus, auf Kosten von etwas Durchsatz und Speicher. Zum Hinschauen: -Xlog:gc* und JDK Flight Recorder; und in einem Spiel wie diesem kommt das Ruckeln nicht vom GC selbst, sondern davon, Tausende Objekte pro Frame zu erzeugen (libGDX bietet Pool zum Wiederverwenden).
+en:
+    The garbage collector (GC) is the part of the JVM that finds objects nobody can reach any more and frees their memory for you. Java has no free() and no delete: you create with new and forget about it.
+    It is the stadium sweeper: after every round it goes over the arena and carts off loose bolts, ripped-off arms and banners nobody is holding any more. It doesn't ask whether something "looks used", only whether someone is holding on to it: anything hanging off a living robot stays, even if it's a sock.
+    An object is garbage when it can't be reached from the roots (local variables of live threads, static fields…); letting go of the references or leaving the method is enough. Most objects die young (in your robot, the new objects of each tick), so the heap is split into generations and the young part is cleaned quickly and often. System.gc() is only a suggestion: don't call it.
+    The classic mistake is believing Java has no memory leaks. A list or Map that only grows (say, storing every enemy from every tick in the robot's memoria() (memory)) is never freed, because it is still reachable; keep only what you need, like the last 20 positions. And don't use finalize() (deprecated since Java 9): for releasing resources there is try-with-resources or Cleaner.
+    For seniors: G1 has been the default collector since Java 9; it splits the heap into regions and aims for short pauses (target -XX:MaxGCPauseMillis=200). ZGC (production-ready in Java 15, generational in Java 21 with -XX:+ZGenerational and generational by default since Java 23) and Shenandoah do almost everything concurrently with your code and keep pauses under a millisecond, at the cost of some throughput and memory. To see what is going on, use -Xlog:gc* and JDK Flight Recorder; and in a game like this one the stutter doesn't come from the GC itself but from creating thousands of objects per frame (libGDX offers Pool to reuse them).
+pseudo.es:
+    REPETIR de vez en cuando:
+        marcar todo lo que se alcanza desde las raíces
+        PARA CADA objeto del montón:
+            SI NO está marcado:
+                liberar su memoria
+        juntar lo que sigue vivo (compactar)
+pseudo.de:
+    WIEDERHOLE ab und zu:
+        alles markieren, was von den Wurzeln aus erreichbar ist
+        FÜR JEDES Objekt im Heap:
+            WENN es NICHT markiert ist:
+                seinen Speicher freigeben
+        das Lebende zusammenschieben (kompaktieren)
+pseudo.en:
+    REPEAT every now and then:
+        mark everything reachable from the roots
+        FOR EACH object on the heap:
+            IF it is NOT marked:
+                free its memory
+        squeeze what is still alive together (compact)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        private final java.util.ArrayDeque<double[]> rastro = new java.util.ArrayDeque<>();
+    
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            rastro.addLast(new double[] {e.x(), e.y()});    // objeto joven: casi gratis si muere pronto || junges Objekt: fast gratis, wenn es bald stirbt || young object: nearly free if it dies soon
+            if (rastro.size() > 20) {
+                rastro.removeFirst();                        // sin referencias: basura para el GC || ohne Referenz: Müll für den GC || no references left: garbage for the GC
+            }
+            // sin el tope de 20, crecería sin fin: fuga de memoria || ohne die Grenze von 20 wüchse es endlos: Speicherleck || without the cap of 20 it would grow forever: memory leak
+        }
+    }
+
+=== pila_y_monton
+nivel: 5
+tema: --
+titulo.es: Pila y montón
+titulo.de: Stack und Heap
+titulo.en: Stack and heap
+claves.es: pila y monton, stack y heap, pila, monton, stack, heap, stackoverflowerror, donde se guardan los objetos, marco de pila, analisis de escape
+claves.de: stack und heap, stack, heap, stapelspeicher, haldenspeicher, stackoverflowerror, wo liegen objekte, stack frame, escape-analyse
+claves.en: stack and heap, stack, heap, call stack, stack frame, stackoverflowerror, where are objects stored, escape analysis
+ver: recolector_de_basura, recursion, referencia, hilo
+es:
+    La memoria de un programa Java tiene dos zonas principales: la pila (stack), donde cada llamada a un método guarda sus variables locales y que se tira al volver, y el montón (heap), donde viven todos los objetos creados con new.
+    La pila es la torre de bandejas del comedor del estadio: cada método que llamas pone una bandeja encima con sus cosas y, al terminar, se quita la de arriba; nunca se saca una de en medio. El montón es el almacén gigante de piezas: los robots siguen allí aunque la bandeja de quien los pidió ya no exista, mientras alguien guarde el papelito con su número de estantería (la referencia).
+    En cadaTurno, double d = e.distancia(); vive en la pila; new double[2], y el propio objeto MiRobot, viven en el montón, y la variable local solo guarda su referencia. Cada hilo tiene su propia pila (por eso las variables locales nunca tienen carreras), mientras que el montón es de todos; el tamaño de la pila se ajusta con -Xss y el del montón con -Xms/-Xmx.
+    El fallo típico: una recursión sin caso base apila bandejas hasta lanzar StackOverflowError (el tope de pasos del juego también la corta), y llenar el montón da OutOfMemoryError: Java heap space. Y un mito: los primitivos no van «siempre en la pila»; un int que es atributo de un objeto vive en el montón, dentro de ese objeto.
+    Para un senior: el JIT hace análisis de escape; si un objeto no sale del método (ni se guarda ni se devuelve), puede sustituirlo por sus campos sueltos en registros (scalar replacement) y no crearlo en el montón, así que «new es caro» suele ser falso. Además, cada hilo reserva en el montón desde su propio trozo (TLAB) y reservar es mover un puntero: lo caro es lo que sobrevive y hay que copiar. Las clases viven en el Metaspace (Java 8, sustituyó a PermGen), fuera del montón.
+de:
+    Der Speicher eines Java-Programms hat zwei Hauptbereiche: den Stack, in dem jeder Methodenaufruf seine lokalen Variablen ablegt und der beim Rücksprung weggeworfen wird, und den Heap, in dem alle mit new erzeugten Objekte leben.
+    Der Stack ist der Tablettstapel in der Stadionkantine: Jede Methode, die du aufrufst, legt ein Tablett mit ihren Sachen oben drauf, und wenn sie fertig ist, kommt das oberste weg; nie eins aus der Mitte. Der Heap ist das riesige Ersatzteillager: Die Roboter stehen dort weiter, auch wenn das Tablett dessen, der sie bestellt hat, längst weg ist – solange jemand den Zettel mit ihrer Regalnummer (die Referenz) aufhebt.
+    In cadaTurno (jedenZug) liegt double d = e.distancia(); auf dem Stack; new double[2] und das MiRobot-Objekt selbst liegen auf dem Heap, die lokale Variable hält nur die Referenz. Jeder Thread hat seinen eigenen Stack (darum haben lokale Variablen nie Race Conditions), der Heap gehört allen; die Stackgröße stellst du mit -Xss ein, die Heapgröße mit -Xms/-Xmx.
+    Der typische Fehler: Eine Rekursion ohne Abbruchbedingung stapelt Tabletts, bis ein StackOverflowError fliegt (die Schrittgrenze des Spiels bremst sie auch), und ein voller Heap gibt OutOfMemoryError: Java heap space. Und ein Mythos: Primitive liegen nicht „immer auf dem Stack“; ein int als Attribut eines Objekts liegt im Heap, mitten in diesem Objekt.
+    Für Senioren: Der JIT macht Escape-Analyse; verlässt ein Objekt die Methode nicht (wird weder gespeichert noch zurückgegeben), kann er es durch seine einzelnen Felder in Registern ersetzen (Scalar Replacement) und gar nicht erst auf dem Heap anlegen – „new ist teuer“ stimmt also oft nicht. Außerdem reserviert jeder Thread aus seinem eigenen Stück Heap (TLAB), und Reservieren heißt einen Zeiger verschieben: Teuer ist, was überlebt und kopiert werden muss. Die Klassen liegen im Metaspace (seit Java 8, Nachfolger von PermGen), außerhalb des Heaps.
+en:
+    A Java program's memory has two main areas: the stack, where every method call keeps its local variables and which is thrown away when the call returns, and the heap, where every object created with new lives.
+    The stack is the pile of trays in the stadium canteen: each method you call puts a tray on top with its stuff, and when it finishes the top tray is removed; you never pull one from the middle. The heap is the giant spare-parts warehouse: robots stay there even after the tray of whoever ordered them is gone, as long as someone keeps the slip with their shelf number (the reference).
+    In cadaTurno (onTick), double d = e.distancia(); lives on the stack; new double[2], and the MiRobot object itself, live on the heap, and the local variable only holds the reference. Each thread has its own stack (which is why local variables never race), while the heap is shared; stack size is set with -Xss and heap size with -Xms/-Xmx.
+    The classic mistake: recursion without a base case piles up trays until it throws StackOverflowError (the game's step limit also cuts it short), and filling the heap gives OutOfMemoryError: Java heap space. And a myth: primitives don't "always go on the stack"; an int that is a field of an object lives on the heap, inside that object.
+    For seniors: the JIT performs escape analysis; if an object never leaves the method (it is neither stored nor returned), it can replace it with its individual fields in registers (scalar replacement) and never allocate it on the heap, so "new is expensive" is often false. On top of that, each thread allocates from its own chunk of heap (a TLAB), and allocating means bumping a pointer: what costs is what survives and has to be copied. Classes live in Metaspace (Java 8, replacing PermGen), outside the heap.
+pseudo.es:
+    LLAMAR a cadaTurno:               ← bandeja nueva en la pila
+        d ← distancia al rival        (en la bandeja)
+        punto ← NUEVO punto           (en el almacén; en la bandeja, solo su número)
+        LLAMAR a apuntar(punto)       ← otra bandeja encima
+    AL VOLVER: se quita la bandeja
+        el punto sigue en el almacén MIENTRAS alguien guarde su número
+pseudo.de:
+    AUFRUF von cadaTurno:             ← neues Tablett auf dem Stack
+        d ← Abstand zum Gegner        (auf dem Tablett)
+        punkt ← NEUER Punkt           (im Lager; auf dem Tablett nur seine Nummer)
+        AUFRUF von zielen(punkt)      ← noch ein Tablett obendrauf
+    BEIM RÜCKSPRUNG: das Tablett kommt weg
+        der Punkt bleibt im Lager, SOLANGE jemand seine Nummer hat
+pseudo.en:
+    CALL cadaTurno:                   ← new tray on the stack
+        d ← distance to the rival     (on the tray)
+        point ← NEW point             (in the warehouse; on the tray, only its number)
+        CALL aim(point)               ← another tray on top
+    ON RETURN: the tray is removed
+        the point stays in the warehouse WHILE someone keeps its number
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        private final double[] ultimo = new double[2];   // atributo: el array vive en el montón || Attribut: das Array liegt im Heap || field: the array lives on the heap
+    
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            double d = e.distancia();                     // local primitiva: en la pila de este hilo || lokales Primitiv: auf dem Stack dieses Threads || local primitive: on this thread's stack
+            ultimo[0] = e.x();                            // escribe en el montón a través de la referencia || schreibt über die Referenz in den Heap || writes to the heap through the reference
+            ultimo[1] = e.y();
+            if (d < 100) atacar();
+        }   // al volver se tira el marco con d; el array sigue || beim Rücksprung verschwindet der Frame mit d; das Array bleibt || on return the frame with d is gone; the array stays
+    }
+
+=== rendimiento
+nivel: 5
+tema: --
+titulo.es: Rendimiento
+titulo.de: Performance
+titulo.en: Performance
+claves.es: rendimiento, optimizar, mi codigo va lento, medir antes de optimizar, microbenchmark, jmh, perfilador, profiler, optimizacion prematura, calentamiento
+claves.de: performance, leistung, optimieren, mein code ist langsam, erst messen dann optimieren, microbenchmark, jmh, profiler, vorzeitige optimierung, aufwärmphase
+claves.en: performance, optimize, optimise, my code is slow, measure before optimizing, microbenchmark, jmh, profiler, premature optimization, warmup
+ver: complejidad, jvm, recolector_de_basura, junit
+es:
+    El rendimiento es lo rápido que va un programa y lo poco que gasta (tiempo, memoria). La regla de oro: primero que funcione, luego mide, y solo entonces optimiza lo que el medidor diga que es lento.
+    Es el robot que se pasa tres semanas puliéndose los nudillos para pegar un 2 % más fuerte, mientras pierde todos los combates porque tarda un minuto en darse la vuelta. Antes de tunear nada, cronometra: el cronómetro del árbitro sabe más que tu intuición, y casi siempre señala otra pieza.
+    En Java las primeras vueltas van lentas: la JVM interpreta, y el JIT compila a código de máquina los métodos calientes cuando ya se han usado miles de veces (primero C1, rápido; luego C2, muy optimizado). Por eso medir una vuelta con System.nanoTime() mide el calentamiento; para medir bien está JMH (@Benchmark) y, para saber dónde se va el tiempo, un perfilador (JDK Flight Recorder, async-profiler, VisualVM). En el juego cada turno tiene un tope de pasos: lo que de verdad cuenta es el algoritmo (O(n) frente a O(n²)), no los microtrucos.
+    El fallo típico son los microbenchmarks caseros: el JIT ve que no usas el resultado y borra el cálculo entero (eliminación de código muerto), o lo pliega a una constante, y tu «optimización» mide 0 ns. Con JMH, devuelve el resultado o pásalo a Blackhole.consume(), mira el margen de error y no te fíes de una sola ejecución.
+    Para un senior: el JIT también desoptimiza; si una llamada que siempre veía la misma clase (monomórfica, y por eso inlineada) empieza a ver tres o más (megamórfica), pierde el inlining, que es la madre de las demás optimizaciones. Mira a la vez tiempo y asignaciones (JFR suele enseñar que el cuello de botella es memoria o espera, no CPU) y desconfía de los perfiladores con sesgo de safepoint. Y lo más barato sigue siendo no hacer el trabajo: cachear, o cambiar de estructura de datos o de algoritmo.
+de:
+    Performance ist, wie schnell ein Programm läuft und wie wenig es verbraucht (Zeit, Speicher). Die goldene Regel: Erst muss es funktionieren, dann misst du, und erst dann optimierst du, was die Messung als langsam zeigt.
+    Das ist der Roboter, der drei Wochen lang seine Knöchel poliert, um 2 % fester zuzuschlagen, und dabei jeden Kampf verliert, weil er eine Minute zum Umdrehen braucht. Bevor du irgendwas tunst, stopp die Zeit: Die Stoppuhr des Schiedsrichters weiß mehr als dein Bauchgefühl und zeigt fast immer auf ein anderes Teil.
+    In Java sind die ersten Durchläufe langsam: Die JVM interpretiert, und der JIT übersetzt heiße Methoden erst in Maschinencode, wenn sie tausendfach benutzt wurden (zuerst C1, schnell; dann C2, stark optimiert). Wer einen einzigen Durchlauf mit System.nanoTime() misst, misst also das Aufwärmen; zum richtigen Messen gibt es JMH (@Benchmark) und, um zu sehen, wo die Zeit bleibt, einen Profiler (JDK Flight Recorder, async-profiler, VisualVM). Im Spiel hat jeder Zug eine Schrittgrenze: Was wirklich zählt, ist der Algorithmus (O(n) gegen O(n²)), nicht Mikrotricks.
+    Der typische Fehler sind selbstgebaute Microbenchmarks: Der JIT merkt, dass du das Ergebnis nicht benutzt, und streicht die ganze Rechnung (Dead Code Elimination) oder faltet sie zu einer Konstante, und deine „Optimierung“ misst 0 ns. Mit JMH gibst du das Ergebnis zurück oder übergibst es Blackhole.consume(), schaust auf die Fehlerspanne und traust keinem einzelnen Lauf.
+    Für Senioren: Der JIT deoptimiert auch; sieht ein Aufruf, der immer dieselbe Klasse bekam (monomorph, darum geinlined), plötzlich drei oder mehr (megamorph), verliert er das Inlining – die Mutter aller anderen Optimierungen. Schau gleichzeitig auf Zeit und Allokationen (JFR zeigt oft, dass der Engpass Speicher oder Warten ist, nicht CPU), und misstraue Profilern mit Safepoint-Bias. Und am billigsten ist immer noch, die Arbeit gar nicht zu machen: cachen oder die Datenstruktur bzw. den Algorithmus wechseln.
+en:
+    Performance is how fast a program runs and how little it uses (time, memory). The golden rule: first make it work, then measure, and only then optimise whatever the measurement says is slow.
+    It's the robot that spends three weeks polishing its knuckles to punch 2% harder while losing every fight because it takes a full minute to turn around. Before you tune anything, time it: the referee's stopwatch knows more than your gut, and it almost always points at a different part.
+    In Java the first runs are slow: the JVM interprets, and the JIT only compiles hot methods to machine code once they've been used thousands of times (first C1, quick; then C2, heavily optimised). So timing a single run with System.nanoTime() measures warm-up; to measure properly there is JMH (@Benchmark) and, to see where the time goes, a profiler (JDK Flight Recorder, async-profiler, VisualVM). In the game every tick has a step limit: what really counts is the algorithm (O(n) versus O(n²)), not micro-tricks.
+    The classic mistake is home-made microbenchmarks: the JIT notices you never use the result and deletes the whole computation (dead code elimination) or folds it into a constant, and your "optimisation" measures 0 ns. With JMH, return the result or hand it to Blackhole.consume(), look at the error margin and never trust a single run.
+    For seniors: the JIT also deoptimises; if a call site that always saw the same class (monomorphic, hence inlined) starts seeing three or more (megamorphic), it loses inlining, which is the mother of all other optimisations. Look at time and allocations together (JFR often shows the bottleneck is memory or waiting, not CPU), and distrust profilers with safepoint bias. And the cheapest optimisation is still not doing the work at all: cache it, or switch data structure or algorithm.
+pseudo.es:
+    SI el robot va lento:
+        medir con el perfilador (no adivinar)
+        pieza ← la que más tiempo se lleva
+        SI es el algoritmo: cambiarlo (O(n²) → O(n))
+        SI NO: probar una mejora pequeña
+        medir otra vez
+        SI no mejora: deshacerla
+pseudo.de:
+    WENN der Roboter langsam ist:
+        mit dem Profiler messen (nicht raten)
+        teil ← das, was am meisten Zeit frisst
+        WENN es der Algorithmus ist: ihn wechseln (O(n²) → O(n))
+        SONST: eine kleine Verbesserung probieren
+        noch einmal messen
+        WENN es nicht besser ist: rückgängig machen
+pseudo.en:
+    IF the robot is slow:
+        measure with the profiler (don't guess)
+        part ← whatever takes the most time
+        IF it's the algorithm: change it (O(n²) → O(n))
+        ELSE: try one small improvement
+        measure again
+        IF it's no better: undo it
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        private Enemigo masCercano;
+    
+        @Override
+        public void cadaTurno() {
+            masCercano = null;
+            for (Enemigo e : enemigosVistos()) {                     // una pasada, O(n): sin ordenar la lista entera || ein Durchgang, O(n): ohne die ganze Liste zu sortieren || one pass, O(n): no sorting the whole list
+                if (masCercano == null || e.distancia() < masCercano.distancia()) masCercano = e;
+            }
+            if (masCercano != null) apuntarHacia(masCercano.angulo());
+            escribir("pasos este turno: " + Tope.pasos());           // mide antes de optimizar || erst messen, dann optimieren || measure before optimising
+        }
+    }
+
+=== bytecode
+nivel: 5
+tema: --
+titulo.es: Bytecode
+titulo.de: Bytecode
+titulo.en: Bytecode
+claves.es: bytecode, codigo de bytes, javap, javap -c, archivo .class, instrucciones de la jvm, invokevirtual, invokedynamic, constant pool
+claves.de: bytecode, javap, javap -c, class-datei, .class datei, jvm-befehle, invokevirtual, invokedynamic, konstantenpool, constant pool
+claves.en: bytecode, byte code, javap, javap -c, class file, .class file, jvm instructions, invokevirtual, invokedynamic, constant pool
+ver: compilar, jvm, lambda, reflexion
+es:
+    El bytecode es lo que sale de compilar: javac no traduce tu Java al idioma de la CPU, sino a unas instrucciones sencillas para una máquina imaginaria, la JVM, que se guardan en los archivos .class. Por eso la misma .class funciona en Windows, en Mac y en Linux.
+    Tu código es la coreografía escrita en verso; el bytecode es la misma coreografía en las tarjetitas que entiende el robot de feria: «empuja 3», «empuja 4», «suma», «guarda en la casilla 1». Es feo, pero cualquier robot de cualquier fábrica lo baila igual.
+    javap -c MiRobot.class enseña las instrucciones de cada método, y javap -v, además, la constant pool: la lista de nombres de clases, métodos y textos que usa la clase. La JVM es una máquina de pila (iload_1, iconst_1, iadd, istore_1 es x = x + 1) y llama con invokevirtual (métodos normales), invokeinterface, invokestatic, invokespecial (constructores, super, private) e invokedynamic. El Vigilante del juego no lee tu texto, sino la constant pool de tus .class: por eso pilla un java.io.File aunque escribas el nombre completo o lo escondas tras un var.
+    El fallo típico es creer que el bytecode es «lo que de verdad se ejecuta» y optimizar mirándolo: javac apenas optimiza (casi traduce tal cual) y la velocidad la decide luego el JIT. Úsalo para entender qué genera el compilador (autoboxing escondido, clases sintéticas, métodos puente de los genéricos), no para medir.
+    Para un senior: invokedynamic (Java 7) deja que un método de arranque (bootstrap) decida en ejecución a qué se enlaza una llamada; así funcionan las lambdas (LambdaMetafactory, sin una clase anónima por lambda en el disco), la concatenación de String desde Java 9 (StringConcatFactory), el switch con patrones (SwitchBootstraps) y el equals/hashCode/toString de los record (ObjectMethods). Por eso el Vigilante deja pasar esas clases de java.lang.invoke aunque prohíba la reflexión. Y desde Java 24 hay una API estándar para leer y generar .class (java.lang.classfile, JEP 484), que en el propio JDK sustituye a ASM.
+de:
+    Bytecode ist das, was beim Kompilieren herauskommt: javac übersetzt dein Java nicht in die Sprache der CPU, sondern in einfache Befehle für eine gedachte Maschine, die JVM, und legt sie in .class-Dateien ab. Darum läuft dieselbe .class-Datei unter Windows, auf dem Mac und unter Linux.
+    Dein Code ist die Choreografie in Versen; der Bytecode ist dieselbe Choreografie auf den Kärtchen, die der Jahrmarktroboter versteht: „leg 3 hin“, „leg 4 hin“, „addiere“, „speichere in Fach 1“. Hässlich, aber jeder Roboter aus jeder Fabrik tanzt es gleich.
+    javap -c MiRobot.class zeigt die Befehle jeder Methode, javap -v zusätzlich den Konstantenpool (constant pool): die Liste der Klassen-, Methodennamen und Texte, die die Klasse benutzt. Die JVM ist eine Stapelmaschine (iload_1, iconst_1, iadd, istore_1 ist x = x + 1) und ruft mit invokevirtual (normale Methoden), invokeinterface, invokestatic, invokespecial (Konstruktoren, super, private) und invokedynamic auf. Der Wächter (Vigilante) des Spiels liest nicht deinen Text, sondern den Konstantenpool deiner .class-Dateien: Darum erwischt er eine java.io.File, auch wenn du den vollen Namen schreibst oder sie hinter einem var versteckst.
+    Der typische Fehler: Bytecode für „das, was wirklich läuft“ zu halten und anhand dessen zu optimieren. javac optimiert kaum (es übersetzt fast eins zu eins), die Geschwindigkeit entscheidet später der JIT. Nutze ihn, um zu verstehen, was der Compiler erzeugt (verstecktes Autoboxing, synthetische Klassen, Brückenmethoden der Generics), nicht zum Messen.
+    Für Senioren: invokedynamic (Java 7) lässt eine Bootstrap-Methode zur Laufzeit entscheiden, woran ein Aufruf gebunden wird; so funktionieren Lambdas (LambdaMetafactory, ohne eine anonyme Klasse pro Lambda auf der Platte), die String-Verkettung seit Java 9 (StringConcatFactory), switch mit Mustern (SwitchBootstraps) sowie equals/hashCode/toString von Records (ObjectMethods). Deshalb lässt der Wächter diese Klassen aus java.lang.invoke durch, obwohl er Reflection verbietet. Und seit Java 24 gibt es eine Standard-API zum Lesen und Erzeugen von .class-Dateien (java.lang.classfile, JEP 484), die im JDK selbst ASM ablöst.
+en:
+    Bytecode is what comes out of compiling: javac doesn't translate your Java into the CPU's language but into simple instructions for an imaginary machine, the JVM, stored in .class files. That's why the same .class file runs on Windows, Mac and Linux.
+    Your code is the choreography written in verse; bytecode is the same choreography on the little cards the fairground robot understands: "push 3", "push 4", "add", "store in slot 1". Ugly, but every robot from every factory dances it the same way.
+    javap -c MiRobot.class shows each method's instructions, and javap -v also shows the constant pool: the list of class names, method names and strings the class uses. The JVM is a stack machine (iload_1, iconst_1, iadd, istore_1 is x = x + 1) and calls through invokevirtual (ordinary methods), invokeinterface, invokestatic, invokespecial (constructors, super, private) and invokedynamic. The game's watchman (the Vigilante) doesn't read your source text but the constant pool of your .class files: that's how it catches a java.io.File even if you write the fully qualified name or hide it behind a var.
+    The classic mistake is treating bytecode as "what really runs" and optimising by staring at it: javac barely optimises (it translates almost one to one) and speed is decided later by the JIT. Use it to understand what the compiler generates (hidden autoboxing, synthetic classes, generic bridge methods), not to measure.
+    For seniors: invokedynamic (Java 7) lets a bootstrap method decide at run time what a call site links to; that's how lambdas work (LambdaMetafactory, no anonymous class per lambda on disk), string concatenation since Java 9 (StringConcatFactory), pattern-matching switch (SwitchBootstraps) and records' equals/hashCode/toString (ObjectMethods). It's also why the Vigilante lets those java.lang.invoke classes through while banning reflection. And since Java 24 there is a standard API for reading and generating .class files (java.lang.classfile, JEP 484), which replaces ASM inside the JDK itself.
+pseudo.es:
+    golpes = golpes + 1 EN BYTECODE:
+        empujar golpes a la pila          (iload_1)
+        empujar el 1                      (iconst_1)
+        sumar los dos de arriba           (iadd)
+        guardar el resultado en golpes    (istore_1)
+pseudo.de:
+    golpes = golpes + 1 ALS BYTECODE:
+        golpes auf den Stapel legen       (iload_1)
+        die 1 darauflegen                 (iconst_1)
+        die obersten beiden addieren      (iadd)
+        das Ergebnis in golpes speichern  (istore_1)
+pseudo.en:
+    golpes = golpes + 1 AS BYTECODE:
+        push golpes onto the stack        (iload_1)
+        push 1                            (iconst_1)
+        add the top two                   (iadd)
+        store the result in golpes        (istore_1)
+ejemplo:
+    public class Contador {
+        int sumarUno(int golpes) {
+            return golpes + 1;
+        }
+        Runnable aviso() {
+            return () -> System.out.println("¡golpe!");   // en javap: invokedynamic (LambdaMetafactory) || in javap: invokedynamic (LambdaMetafactory) || in javap: invokedynamic (LambdaMetafactory)
+        }
+    }
+    // javap -c Contador, en sumarUno: || javap -c Contador, in sumarUno: || javap -c Contador, in sumarUno:
+    // iload_1: empuja golpes (casilla 1; la 0 es this) || iload_1: legt golpes auf den Stapel (Fach 1; Fach 0 ist this) || iload_1: pushes golpes (slot 1; slot 0 is this)
+    // iconst_1: empuja la constante 1 || iconst_1: legt die Konstante 1 darauf || iconst_1: pushes the constant 1
+    // iadd: suma los dos de arriba || iadd: addiert die obersten beiden || iadd: adds the top two
+    // ireturn: devuelve lo que queda arriba || ireturn: gibt das Oberste zurück || ireturn: returns what is left on top
+
+=== jvm
+nivel: 5
+tema: --
+titulo.es: JVM
+titulo.de: JVM
+titulo.en: JVM
+claves.es: jvm, maquina virtual de java, java virtual machine, cargador de clases, classloader, jit, compilador jit, hotspot, jdk y jre
+claves.de: jvm, java virtual machine, virtuelle maschine, klassenlader, classloader, jit, jit-compiler, hotspot, jdk und jre
+claves.en: jvm, java virtual machine, virtual machine, class loader, classloader, jit, jit compiler, hotspot, jdk vs jre
+ver: bytecode, compilar, recolector_de_basura, rendimiento
+es:
+    La JVM (máquina virtual de Java) es el programa que ejecuta tus .class: carga las clases, comprueba que son seguras, las interpreta y convierte en código de máquina las partes que más se usan. Es lo que permite que el mismo Java corra en cualquier ordenador.
+    La JVM es el estadio entero: el portero (el cargador de clases) deja entrar a cada robot cuando hace falta y no antes, el inspector (el verificador) le revisa los tornillos antes de que pise el ring, el árbitro lo hace pelear, y un entrenador (el JIT) se fija en los movimientos que repite mil veces y se los graba en los músculos para que salgan solos y rapidísimos.
+    Las clases se cargan perezosamente, la primera vez que se usan, a través de una cadena de cargadores (bootstrap, plataforma, aplicación) en la que cada uno pregunta antes a su padre. El juego tiene su propio ClassLoader, el Cargador: carga desde memoria las .class de tu robot y, junto con el Vigilante, se niega a darle ninguna clase prohibida. La JVM habitual es HotSpot: interpreta, compila con C1 lo que se usa y con C2 lo que se usa muchísimo (compilación por niveles).
+    El fallo típico es olvidar que para la JVM una clase es su nombre más su cargador: el mismo MiRobot cargado por dos cargadores son dos tipos distintos, y el cast falla con un ClassCastException que dice, desconcertante, «MiRobot cannot be cast to MiRobot». Otro clásico son las versiones: una .class compilada para Java 21 (versión de archivo 65) no arranca en una JVM 17 y da UnsupportedClassVersionError.
+    Para un senior: el JIT especula con lo que ha visto (qué clases llegan a cada llamada, qué ramas nunca se toman), inlinea, quita comprobaciones y, si la apuesta falla, desoptimiza y vuelve al intérprete; por eso el rendimiento de un servicio cambia con el tráfico. Opciones que conviene conocer: -XX:+PrintCompilation, -Xlog:class+load y jcmd <pid> VM.flags. GraalVM añade un JIT escrito en Java y la compilación anticipada (native-image), y Java 24 empezó a guardar en caché la carga y el enlace de clases para arrancar antes (JEP 483).
+de:
+    Die JVM (Java Virtual Machine) ist das Programm, das deine .class-Dateien ausführt: Sie lädt die Klassen, prüft, ob sie sicher sind, interpretiert sie und übersetzt die meistbenutzten Teile in Maschinencode. Sie sorgt dafür, dass dasselbe Java auf jedem Rechner läuft.
+    Die JVM ist das ganze Stadion: Der Pförtner (der Klassenlader) lässt jeden Roboter herein, wenn er gebraucht wird, und keinen Moment früher; der Inspektor (der Verifier) prüft seine Schrauben, bevor er den Ring betritt; der Schiedsrichter lässt ihn kämpfen; und ein Trainer (der JIT) merkt sich die Bewegungen, die er tausendmal wiederholt, und brennt sie ihm in die Muskeln, damit sie von allein und blitzschnell kommen.
+    Klassen werden faul geladen, erst beim ersten Gebrauch, über eine Kette von Klassenladern (Bootstrap, Plattform, Anwendung), in der jeder zuerst seinen Elternlader fragt. Das Spiel hat einen eigenen ClassLoader, den Cargador: Er lädt die .class-Dateien deines Roboters aus dem Speicher und verweigert ihm, zusammen mit dem Wächter (Vigilante), jede verbotene Klasse. Die übliche JVM ist HotSpot: Sie interpretiert, kompiliert Benutztes mit C1 und sehr viel Benutztes mit C2 (Tiered Compilation).
+    Der typische Fehler: zu vergessen, dass eine Klasse für die JVM aus Name plus Klassenlader besteht. Dasselbe MiRobot, von zwei Ladern geladen, sind zwei verschiedene Typen, und der Cast scheitert mit der verwirrenden ClassCastException „MiRobot cannot be cast to MiRobot“. Ein anderer Klassiker sind Versionen: Eine für Java 21 kompilierte .class-Datei (Dateiversion 65) startet nicht auf einer JVM 17 und wirft UnsupportedClassVersionError.
+    Für Senioren: Der JIT spekuliert mit dem, was er gesehen hat (welche Klassen an einem Aufruf ankommen, welche Zweige nie genommen werden), inlinet, entfernt Prüfungen und deoptimiert zurück in den Interpreter, wenn die Wette platzt; deshalb ändert sich die Performance eines Dienstes mit dem Traffic. Nützliche Schalter: -XX:+PrintCompilation, -Xlog:class+load und jcmd <pid> VM.flags. GraalVM bringt einen in Java geschriebenen JIT und Ahead-of-Time-Kompilierung (native-image), und Java 24 hat begonnen, das Laden und Linken von Klassen für schnelleren Start zu cachen (JEP 483).
+en:
+    The JVM (Java Virtual Machine) is the program that runs your .class files: it loads the classes, checks they are safe, interprets them and turns the most-used parts into machine code. It's what lets the same Java run on any computer.
+    The JVM is the whole stadium: the doorman (the class loader) lets each robot in when it's needed and not a moment before, the inspector (the verifier) checks its bolts before it sets foot in the ring, the referee makes it fight, and a coach (the JIT) watches for the moves it repeats a thousand times and burns them into its muscles so they come out on their own and lightning-fast.
+    Classes are loaded lazily, the first time they are used, through a chain of class loaders (bootstrap, platform, application) in which each one asks its parent first. The game has its own ClassLoader, the Cargador: it loads your robot's .class files from memory and, together with the Vigilante, refuses to hand it any forbidden class. The usual JVM is HotSpot: it interprets, compiles what gets used with C1 and what gets used a lot with C2 (tiered compilation).
+    The classic mistake is forgetting that, to the JVM, a class is its name plus its loader: the same MiRobot loaded by two loaders is two different types, and the cast fails with a baffling ClassCastException saying "MiRobot cannot be cast to MiRobot". Another classic is versions: a .class compiled for Java 21 (class file version 65) won't start on a Java 17 JVM and throws UnsupportedClassVersionError.
+    For seniors: the JIT speculates on what it has seen (which classes reach each call site, which branches are never taken), inlines, removes checks and, when a bet fails, deoptimises back to the interpreter; that's why a service's performance shifts with its traffic. Flags worth knowing: -XX:+PrintCompilation, -Xlog:class+load and jcmd <pid> VM.flags. GraalVM adds a JIT written in Java and ahead-of-time compilation (native-image), and Java 24 started caching class loading and linking for faster start-up (JEP 483).
+pseudo.es:
+    AL USAR una clase por primera vez:
+        el cargador la busca (primero pregunta a su padre)
+        el verificador revisa sus instrucciones
+        SI usa algo prohibido: no se carga
+    MIENTRAS el robot pelea:
+        interpretar
+        SI un método se repite mucho: compilarlo a código de máquina (JIT)
+pseudo.de:
+    BEIM ERSTEN GEBRAUCH einer Klasse:
+        der Lader sucht sie (fragt zuerst seinen Elternlader)
+        der Verifier prüft ihre Befehle
+        WENN sie etwas Verbotenes benutzt: wird sie nicht geladen
+    SOLANGE der Roboter kämpft:
+        interpretieren
+        WENN eine Methode sich oft wiederholt: in Maschinencode übersetzen (JIT)
+pseudo.en:
+    ON FIRST USE of a class:
+        the loader looks for it (asking its parent first)
+        the verifier checks its instructions
+        IF it uses something forbidden: it is not loaded
+    WHILE the robot fights:
+        interpret
+        IF a method repeats a lot: compile it to machine code (JIT)
+ejemplo:
+    class CargadorDeRobots extends ClassLoader {
+        private final java.util.Map<String, byte[]> clases;            // las .class del jugador, en memoria || die .class-Dateien des Spielers, im Speicher || the player's .class files, in memory
+    
+        CargadorDeRobots(java.util.Map<String, byte[]> clases) {
+            super(CargadorDeRobots.class.getClassLoader());             // el padre: se le pregunta primero || der Elternlader wird zuerst gefragt || the parent is asked first
+            this.clases = clases;
+        }
+        @Override
+        protected Class<?> findClass(String nombre) throws ClassNotFoundException {
+            byte[] b = clases.get(nombre);
+            if (b == null) throw new ClassNotFoundException(nombre);
+            return defineClass(nombre, b, 0, b.length);                  // aquí la JVM verifica la clase || hier verifiziert die JVM die Klasse || here the JVM verifies the class
+        }
+    }
+
+=== reflexion
+nivel: 5
+tema: --
+titulo.es: Reflexión
+titulo.de: Reflection
+titulo.en: Reflection
+claves.es: reflexion, reflection, java.lang.reflect, getdeclaredmethods, getdeclaredfields, class.forname, setaccessible, llamar a un metodo por su nombre, vigilante, prohibido en el robot
+claves.de: reflection, reflexion, java.lang.reflect, getdeclaredmethods, getdeclaredfields, class.forname, setaccessible, methode per namen aufrufen, wächter, im roboter verboten
+claves.en: reflection, java.lang.reflect, getdeclaredmethods, getdeclaredfields, class.forname, setaccessible, call a method by name, vigilante, forbidden in robots
+ver: anotaciones, bytecode, modulos, hilo
+es:
+    La reflexión es la capacidad de un programa de mirarse a sí mismo mientras se ejecuta: preguntar qué métodos y atributos tiene una clase, crear objetos o llamar a métodos sabiendo solo su nombre escrito en un texto, e incluso tocar lo que es private.
+    Es como si un robot, a mitad de combate, abriera con un destornillador la carcasa del rival, leyera la etiqueta «blindaje = 12» y la cambiara por un 0. Muy poderoso; y justo lo que el árbitro no puede permitir.
+    En Java: Class<?> c = Class.forName("Pieza"); c.getDeclaredMethods(); Method m = c.getMethod("disparar"); m.invoke(objeto); y field.setAccessible(true) para saltarse el private. Es lo que usan por dentro JUnit (para encontrar los métodos con @Test), los marcos de inyección de dependencias y las librerías de JSON.
+    En el juego está prohibida en los robots, igual que los hilos, los archivos y la red: el Vigilante lee las clases ya compiladas (la constant pool de tus .class) y rechaza java.lang.reflect, Class.forName, getDeclaredField y compañía, y el Cargador lo vuelve a comprobar al cargar. Con reflexión un robot podría leer o cambiar los atributos private de la pelea o del rival (su blindaje, su próxima orden); con hilos trabajaría fuera del tope de pasos de su turno; con archivos o red tocaría tu ordenador: las reglas del ring solo valen si nadie puede abrir la carcasa.
+    El fallo típico fuera del juego es usar reflexión para lo que una interfaz resuelve mejor: pierdes la comprobación del compilador, los refactors del IDE (renombrar un método rompe el "disparar" escrito en un texto) y los errores llegan en ejecución. Para un senior: desde Java 16-17 los módulos del JDK están cerrados y setAccessible(true) sobre sus clases lanza InaccessibleObjectException (JEP 396 y 403); desde Java 18 Method.invoke va por MethodHandle por dentro (JEP 416), y MethodHandle/VarHandle son la alternativa rápida; y como el SecurityManager está desactivado para siempre desde Java 24 (JEP 486), encerrar código ajeno se hace como el juego: vigilando el bytecode y el cargador, no confiando en la JVM.
+de:
+    Reflection ist die Fähigkeit eines Programms, sich während der Ausführung selbst zu betrachten: zu fragen, welche Methoden und Attribute eine Klasse hat, Objekte zu erzeugen oder Methoden aufzurufen, von denen man nur den Namen als Text kennt, und sogar an private Dinge heranzukommen.
+    Als würde ein Roboter mitten im Kampf mit dem Schraubenzieher das Gehäuse des Gegners aufschrauben, das Etikett „Panzerung = 12“ lesen und es auf 0 ändern. Sehr mächtig – und genau das, was der Schiedsrichter nicht erlauben darf.
+    In Java: Class<?> c = Class.forName("Pieza"); c.getDeclaredMethods(); Method m = c.getMethod("disparar"); m.invoke(objekt); und field.setAccessible(true), um private zu umgehen. Genau das nutzen intern JUnit (um die Methoden mit @Test zu finden), Dependency-Injection-Frameworks und JSON-Bibliotheken.
+    Im Spiel ist sie in Robotern verboten, genau wie Threads, Dateien und Netzwerk: Der Wächter (Vigilante) liest die schon kompilierten Klassen (den Konstantenpool deiner .class-Dateien) und lehnt java.lang.reflect, Class.forName, getDeclaredField und Co. ab, und der Cargador prüft es beim Laden noch einmal. Mit Reflection könnte ein Roboter die private-Attribute des Kampfes oder des Gegners lesen oder ändern (seine Panzerung, seinen nächsten Befehl); mit Threads würde er außerhalb der Schrittgrenze seines Zugs rechnen; mit Dateien oder Netzwerk deinen Rechner anfassen: Die Regeln im Ring gelten nur, wenn niemand das Gehäuse öffnen kann.
+    Der typische Fehler außerhalb des Spiels: Reflection für etwas zu nehmen, das ein Interface besser löst. Du verlierst die Prüfung durch den Compiler und die Refactorings der IDE (eine Methode umbenennen bricht das "disparar" im Text), und die Fehler kommen erst zur Laufzeit. Für Senioren: Seit Java 16-17 sind die JDK-Module dicht, und setAccessible(true) auf ihre Klassen wirft InaccessibleObjectException (JEP 396 und 403); seit Java 18 läuft Method.invoke intern über MethodHandle (JEP 416), und MethodHandle/VarHandle sind die schnelle Alternative; und weil der SecurityManager seit Java 24 endgültig abgeschaltet ist (JEP 486), sperrt man fremden Code so ein wie das Spiel: indem man Bytecode und Klassenlader überwacht, statt der JVM zu vertrauen.
+en:
+    Reflection is a program's ability to look at itself while it runs: asking which methods and fields a class has, creating objects or calling methods knowing only their name as a string, and even reaching into private members.
+    It's as if a robot, mid-fight, unscrewed its rival's casing, read the label "armour = 12" and changed it to 0. Very powerful, and exactly what the referee cannot allow.
+    In Java: Class<?> c = Class.forName("Pieza"); c.getDeclaredMethods(); Method m = c.getMethod("disparar"); m.invoke(object); and field.setAccessible(true) to get past private. It's what JUnit uses under the hood (to find the @Test methods), along with dependency-injection frameworks and JSON libraries.
+    In the game it is forbidden in robots, just like threads, files and the network: the game's watchman (the Vigilante) reads the already compiled classes (the constant pool of your .class files) and rejects java.lang.reflect, Class.forName, getDeclaredField and friends, and the Cargador checks again when loading. With reflection a robot could read or change the private fields of the fight or of its rival (its armour, its next order); with threads it would compute outside its tick's step limit; with files or the network it would touch your computer: the rules of the ring only hold if nobody can open the casing.
+    The classic mistake outside the game is using reflection for something an interface solves better: you lose the compiler's checks and the IDE's refactorings (renaming a method breaks the "disparar" in a string), and errors show up at run time. For seniors: since Java 16-17 the JDK's modules are sealed off and setAccessible(true) on their classes throws InaccessibleObjectException (JEPs 396 and 403); since Java 18 Method.invoke runs on MethodHandle internally (JEP 416), and MethodHandle/VarHandle are the fast alternative; and since the SecurityManager has been permanently disabled as of Java 24 (JEP 486), sandboxing foreign code is done the way the game does it: by policing the bytecode and the class loader rather than trusting the JVM.
+pseudo.es:
+    clase ← buscar la clase por su nombre: "Rival"
+    PARA CADA atributo DE clase:
+        abrirlo aunque sea privado
+        SI se llama "blindaje":
+            ponerlo a 0
+    (trampa pura: por eso el Vigilante no deja compilar esto en un robot)
+pseudo.de:
+    klasse ← die Klasse über ihren Namen suchen: "Rival"
+    FÜR JEDES Attribut VON klasse:
+        es öffnen, auch wenn es privat ist
+        WENN es "blindaje" heißt:
+            auf 0 setzen
+    (reiner Betrug: darum lässt der Wächter das im Roboter nicht durch)
+pseudo.en:
+    class ← look up the class by its name: "Rival"
+    FOR EACH field OF class:
+        open it even if it's private
+        IF it's called "blindaje":
+            set it to 0
+    (pure cheating: that's why the Vigilante won't let this into a robot)
+ejemplo:
+    import java.lang.reflect.Field;
+    
+    // Fuera del juego: en un robot, el Vigilante lo rechaza || Außerhalb des Spiels: im Roboter lehnt der Wächter das ab || Outside the game: in a robot the Vigilante rejects it
+    class Trampa {
+        static void dejarSinBlindaje(Object rival) throws ReflectiveOperationException {
+            for (Field f : rival.getClass().getDeclaredFields()) {      // qué atributos tiene, private incluidos || welche Attribute es hat, auch private || which fields it has, private ones too
+                if (f.getName().equals("blindaje") && f.getType() == double.class) {
+                    f.setAccessible(true);                              // se salta el private || umgeht private || bypasses private
+                    f.setDouble(rival, 0);                              // justo lo que el árbitro no puede permitir || genau das, was der Schiedsrichter nicht erlauben darf || exactly what the referee cannot allow
+                }
+            }
+        }
+    }
+
+=== anotaciones
+nivel: 5
+tema: --
+titulo.es: Anotaciones
+titulo.de: Annotationen
+titulo.en: Annotations
+claves.es: anotaciones, anotacion, annotation, @interface, @retention, retentionpolicy, @target, crear una anotacion propia, procesador de anotaciones
+claves.de: annotationen, annotation, @interface, @retention, retentionpolicy, @target, eigene annotation, annotation processor
+claves.en: annotations, annotation, @interface, @retention, retentionpolicy, @target, custom annotation, annotation processor
+ver: override, junit, reflexion, interfaz_funcional
+es:
+    Una anotación es una etiqueta con @ que pegas a una clase, un método o un atributo para dar información sobre el código sin cambiar lo que hace: @Override, @Test, @Deprecated, @FunctionalInterface.
+    Son las pegatinas del taller en las piezas: «revisado por el árbitro», «frágil», «no tocar hasta la final». La pieza funciona igual con pegatina que sin ella, pero el inspector, el mecánico o la grúa las leen y actúan en consecuencia.
+    @Override sobre alVerEnemigo hace que el compilador compruebe que de verdad sobrescribes un método de Metajavbot: si escribes alVerEnemgio, te da un error en vez de dejarte un método que nunca se llama. En el laboratorio, @Test marca los métodos que el juego ejecuta como pruebas. Las tuyas se crean con @interface: @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD) @interface Maniobra { int coste() default 10; }.
+    El fallo típico es creer que una anotación hace algo por sí sola: es solo un dato, y si nadie la lee (el compilador, un procesador, un marco con reflexión), no pasa nada. Y si quieres leerla en ejecución y olvidas @Retention(RUNTIME), la retención por defecto es CLASS: está en el .class, pero getAnnotation() devuelve null.
+    Para un senior: hay tres retenciones, SOURCE (solo para javac y los procesadores, como @Override o Lombok), CLASS (en el .class pero invisible para la reflexión; la usan herramientas de bytecode) y RUNTIME (para marcos como JUnit, Spring o JPA). Los procesadores de anotaciones (javax.annotation.processing, JSR 269) generan código al compilar, sin reflexión ni coste al arrancar (Dagger, MapStruct, Micronaut), y esa es la tendencia frente a escanear clases al iniciar. Desde Java 8 existen las anotaciones de tipo (@Target(TYPE_USE), como en List<@NonNull String>) y las repetibles (@Repeatable).
+de:
+    Eine Annotation ist ein Etikett mit @, das du an eine Klasse, eine Methode oder ein Attribut klebst, um etwas über den Code zu sagen, ohne zu ändern, was er tut: @Override, @Test, @Deprecated, @FunctionalInterface.
+    Das sind die Aufkleber der Werkstatt auf den Teilen: „vom Schiedsrichter geprüft“, „zerbrechlich“, „bis zum Finale nicht anfassen“. Das Teil funktioniert mit und ohne Aufkleber gleich, aber der Inspektor, der Mechaniker oder der Kran lesen sie und handeln danach.
+    @Override über alVerEnemigo (beiSicht) lässt den Compiler prüfen, dass du wirklich eine Methode von Metajavbot überschreibst: Schreibst du alVerEnemgio, bekommst du einen Fehler statt einer Methode, die nie aufgerufen wird. Im Labor markiert @Test die Methoden, die das Spiel als Tests ausführt. Eigene erstellst du mit @interface: @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD) @interface Maniobra { int coste() default 10; }.
+    Der typische Fehler: zu glauben, eine Annotation tue von allein etwas. Sie ist nur ein Datum, und wenn niemand sie liest (der Compiler, ein Prozessor, ein Framework per Reflection), passiert nichts. Und willst du sie zur Laufzeit lesen und vergisst @Retention(RUNTIME), gilt die Standard-Retention CLASS: Sie steht in der .class-Datei, aber getAnnotation() liefert null.
+    Für Senioren: Es gibt drei Retentions: SOURCE (nur für javac und Prozessoren, etwa @Override oder Lombok), CLASS (in der .class-Datei, aber für Reflection unsichtbar; nutzen Bytecode-Werkzeuge) und RUNTIME (für Frameworks wie JUnit, Spring oder JPA). Annotation Processors (javax.annotation.processing, JSR 269) erzeugen beim Kompilieren Code, ohne Reflection und ohne Startkosten (Dagger, MapStruct, Micronaut) – der Trend gegenüber dem Klassenscannen beim Start. Seit Java 8 gibt es Typ-Annotationen (@Target(TYPE_USE), etwa List<@NonNull String>) und wiederholbare (@Repeatable).
+en:
+    An annotation is a label starting with @ that you stick on a class, a method or a field to say something about the code without changing what it does: @Override, @Test, @Deprecated, @FunctionalInterface.
+    They are the workshop stickers on the parts: "checked by the referee", "fragile", "do not touch until the final". The part works the same with or without a sticker, but the inspector, the mechanic or the crane read them and act accordingly.
+    @Override on alVerEnemigo (onSeeEnemy) makes the compiler check that you really are overriding a Metajavbot method: if you type alVerEnemgio, you get an error instead of a method that never gets called. In the lab, @Test marks the methods the game runs as tests. You create your own with @interface: @Retention(RetentionPolicy.RUNTIME) @Target(ElementType.METHOD) @interface Maniobra { int coste() default 10; }.
+    The classic mistake is thinking an annotation does something on its own: it's just data, and if nobody reads it (the compiler, a processor, a framework using reflection), nothing happens. And if you want to read it at run time and forget @Retention(RUNTIME), the default retention is CLASS: it's in the .class file, but getAnnotation() returns null.
+    For seniors: there are three retentions: SOURCE (only for javac and processors, like @Override or Lombok), CLASS (in the .class file but invisible to reflection; used by bytecode tools) and RUNTIME (for frameworks such as JUnit, Spring or JPA). Annotation processors (javax.annotation.processing, JSR 269) generate code at compile time with no reflection and no start-up cost (Dagger, MapStruct, Micronaut), which is the trend versus scanning classes at start-up. Since Java 8 there are type annotations (@Target(TYPE_USE), as in List<@NonNull String>) and repeatable ones (@Repeatable).
+pseudo.es:
+    PEGATINA @Override SOBRE alVerEnemigo
+    AL COMPILAR:
+        SI la clase madre NO tiene alVerEnemigo con esos parámetros:
+            error: «no sobrescribe nada»
+        SI NO:
+            todo bien: el juego lo llamará al ver al rival
+pseudo.de:
+    AUFKLEBER @Override AUF alVerEnemigo
+    BEIM KOMPILIEREN:
+        WENN die Elternklasse alVerEnemigo mit diesen Parametern NICHT hat:
+            Fehler: „überschreibt nichts“
+        SONST:
+            alles gut: das Spiel ruft sie auf, wenn es den Gegner sieht
+pseudo.en:
+    STICKER @Override ON alVerEnemigo
+    WHEN COMPILING:
+        IF the parent class does NOT have alVerEnemigo with these parameters:
+            error: "doesn't override anything"
+        ELSE:
+            all good: the game will call it when it sees the rival
+ejemplo:
+    import java.lang.annotation.*;
+    
+    @Retention(RetentionPolicy.RUNTIME)                  // sin esto, en ejecución no se ve || ohne das zur Laufzeit unsichtbar || without this it's invisible at run time
+    @Target(ElementType.METHOD)
+    @interface Maniobra { String nombre(); int coste() default 10; }
+    
+    class Repertorio {
+        @Maniobra(nombre = "gancho", coste = 25)          // solo es un dato: alguien tiene que leerlo || nur ein Datum: jemand muss es lesen || just data: someone has to read it
+        void gancho() { }
+    
+        @Override                                         // el compilador comprueba que sobrescribe || der Compiler prüft, dass überschrieben wird || the compiler checks it really overrides
+        public String toString() { return "repertorio de golpes"; }
+    }
+
+=== modulos
+nivel: 5
+tema: --
+titulo.es: Módulos
+titulo.de: Module
+titulo.en: Modules
+claves.es: modulos, modulo, module-info.java, jpms, requires, exports, opens, sistema de modulos, jlink
+claves.de: module, modul, module-info.java, jpms, requires, exports, opens, modulsystem, jlink
+claves.en: modules, module, module-info.java, jpms, requires, exports, opens, module system, jlink
+ver: paquete_import, modificadores_de_acceso, reflexion
+es:
+    Un módulo es un grupo de paquetes con nombre que dice dos cosas: qué necesita de otros módulos (requires) y qué paquetes enseña a los demás (exports). Lo que no exporta queda escondido, aunque sus clases sean public.
+    Cada equipo de la liga tiene su box con persiana, y en la puerta un cartel: «necesitamos: aceite de la fábrica Tuercas» y «enseñamos: solo el mostrador de repuestos». Lo de dentro (los planos secretos del gancho) es invisible para los demás equipos aunque la etiqueta diga «público».
+    Se declara en un archivo module-info.java en la raíz del código: module metajavbots.arena { requires java.logging; exports metajavbots.api; }. Los paquetes no exportados son inaccesibles al compilar y en ejecución, y opens permite la reflexión profunda (la que usan las librerías de JSON) sin exportar. Desde Java 9 el propio JDK está partido en módulos (java.base, java.sql, java.desktop…), y eso permite jlink: una JVM a medida, solo con lo que usas, para repartir un juego como este sin pedir que instalen Java.
+    El fallo típico es meter module-info.java a medias en un proyecto con librerías viejas y encontrarse «package X is not visible» o un InaccessibleObjectException de una librería que usa reflexión: falta un requires, un exports o un opens. Si no lo necesitas, el classpath de siempre (todo en el módulo sin nombre) sigue funcionando.
+    Para un senior: lo que cambió para todos no fue module-info, sino la encapsulación fuerte del JDK (Java 16-17): sus paquetes internos dejaron de estar abiertos y --add-opens queda como parche de emergencia (sun.misc.Unsafe sigue accesible, aunque sus métodos de memoria se están retirando). Un JAR sin module-info en el module path se vuelve módulo automático (nombre de Automatic-Module-Name o del archivo) y lo lee todo; no se permiten paquetes partidos (el mismo paquete en dos módulos), y requires transitive y requires static (opcional en ejecución) resuelven media docena de líos. Muchos equipos nunca modularizan su aplicación, pero sí las librerías que publican.
+de:
+    Ein Modul ist eine benannte Gruppe von Paketen, die zweierlei sagt: was sie von anderen Modulen braucht (requires) und welche Pakete sie den anderen zeigt (exports). Was nicht exportiert wird, bleibt versteckt, auch wenn seine Klassen public sind.
+    Jedes Team der Liga hat seine Box mit Rollladen und an der Tür ein Schild: „Wir brauchen: Öl aus der Fabrik Mutter“ und „Wir zeigen: nur die Ersatzteiltheke“. Was drinnen ist (die geheimen Pläne für den Haken), bleibt für die anderen Teams unsichtbar, auch wenn auf dem Etikett „öffentlich“ steht.
+    Deklariert wird es in einer Datei module-info.java im Wurzelverzeichnis des Codes: module metajavbots.arena { requires java.logging; exports metajavbots.api; }. Nicht exportierte Pakete sind beim Kompilieren und zur Laufzeit unzugänglich, und opens erlaubt tiefe Reflection (wie sie JSON-Bibliotheken nutzen), ohne zu exportieren. Seit Java 9 ist das JDK selbst in Module zerlegt (java.base, java.sql, java.desktop …), und das ermöglicht jlink: eine maßgeschneiderte JVM nur mit dem, was du brauchst, um ein Spiel wie dieses zu verteilen, ohne dass jemand Java installieren muss.
+    Der typische Fehler: module-info.java halbherzig in ein Projekt mit alten Bibliotheken zu stecken und dann „package X is not visible“ oder eine InaccessibleObjectException aus einer Bibliothek mit Reflection zu bekommen: Es fehlt ein requires, exports oder opens. Brauchst du es nicht, funktioniert der klassische Classpath (alles im unbenannten Modul) weiterhin.
+    Für Senioren: Für alle geändert hat sich nicht module-info, sondern die starke Kapselung des JDK (Java 16-17): Seine internen Pakete sind nicht mehr offen, und --add-opens bleibt als Notpflaster (sun.misc.Unsafe ist noch erreichbar, seine Speichermethoden werden aber zurückgebaut). Ein JAR ohne module-info im Module Path wird zum automatischen Modul (Name aus Automatic-Module-Name oder dem Dateinamen) und liest alles; geteilte Pakete (dasselbe Paket in zwei Modulen) sind verboten, und requires transitive sowie requires static (zur Laufzeit optional) lösen ein halbes Dutzend Knoten. Viele Teams modularisieren ihre Anwendung nie, wohl aber die Bibliotheken, die sie veröffentlichen.
+en:
+    A module is a named group of packages that states two things: what it needs from other modules (requires) and which packages it shows to everyone else (exports). Anything not exported stays hidden, even if its classes are public.
+    Every team in the league has its own garage with a roller shutter and a sign on the door: "we need: oil from the Nuts factory" and "we show: only the spare-parts counter". What's inside (the secret blueprints for the hook punch) is invisible to the other teams, even if the label says "public".
+    You declare it in a module-info.java file at the root of your source: module metajavbots.arena { requires java.logging; exports metajavbots.api; }. Non-exported packages are inaccessible at compile time and at run time, and opens allows deep reflection (the kind JSON libraries use) without exporting. Since Java 9 the JDK itself is split into modules (java.base, java.sql, java.desktop…), which makes jlink possible: a tailor-made JVM with only what you use, to ship a game like this one without asking anyone to install Java.
+    The classic mistake is adding a half-done module-info.java to a project with old libraries and running into "package X is not visible" or an InaccessibleObjectException from a library that uses reflection: a requires, exports or opens is missing. If you don't need modules, the good old classpath (everything in the unnamed module) still works.
+    For seniors: what changed for everybody wasn't module-info but the JDK's strong encapsulation (Java 16-17): its internal packages are no longer open and --add-opens remains as an emergency patch (sun.misc.Unsafe is still reachable, though its memory-access methods are being phased out). A JAR without module-info on the module path becomes an automatic module (named from Automatic-Module-Name or the file name) and reads everything; split packages (the same package in two modules) are not allowed, and requires transitive and requires static (optional at run time) sort out half a dozen headaches. Many teams never modularise their application, but they do modularise the libraries they publish.
+pseudo.es:
+    MÓDULO arena:
+        NECESITA motor
+        ENSEÑA metajavbots.api          (lo que ven los robots)
+        ESCONDE metajavbots.combate     (lo de dentro)
+    SI otro módulo usa metajavbots.combate:
+        error al compilar, aunque la clase sea public
+pseudo.de:
+    MODUL arena:
+        BRAUCHT motor
+        ZEIGT metajavbots.api           (was die Roboter sehen)
+        VERSTECKT metajavbots.combate   (das Innere)
+    WENN ein anderes Modul metajavbots.combate benutzt:
+        Fehler beim Kompilieren, auch wenn die Klasse public ist
+pseudo.en:
+    MODULE arena:
+        NEEDS engine
+        SHOWS metajavbots.api           (what robots see)
+        HIDES metajavbots.combate       (the insides)
+    IF another module uses metajavbots.combate:
+        compile error, even if the class is public
+ejemplo:
+    // module-info.java, en la raíz de src/main/java || module-info.java, im Wurzelverzeichnis von src/main/java || module-info.java, at the root of src/main/java
+    module metajavbots.arena {
+        requires java.logging;                              // lo que necesito de otros módulos || was ich von anderen Modulen brauche || what I need from other modules
+        requires transitive metajavbots.motor;              // y quien me use, también lo ve || und wer mich nutzt, sieht es auch || and whoever uses me sees it too
+        exports metajavbots.api;                            // lo único que ven los robots || das Einzige, was Roboter sehen || the only thing robots see
+        exports metajavbots.rivales to metajavbots.pruebas; // exportación solo para un módulo || Export nur für ein Modul || export to one module only
+        opens metajavbots.progreso;                         // reflexión (p. ej., JSON) sin exportarlo || Reflection (z. B. JSON) ohne Export || reflection (e.g. JSON) without exporting
+        // metajavbots.combate no aparece: escondido aunque sea public || metajavbots.combate fehlt: versteckt, auch wenn public || metajavbots.combate isn't listed: hidden even if public
+    }
+
+=== borrado_de_tipos
+nivel: 5
+tema: 16
+titulo.es: Borrado de tipos
+titulo.de: Type Erasure
+titulo.en: Type erasure
+claves.es: borrado de tipos, type erasure, erasure, genericos en ejecucion, new t, metodo puente, tipo crudo, raw type, unchecked
+claves.de: type erasure, typlöschung, generics zur laufzeit, new t, brückenmethode, raw type, roher typ, unchecked
+claves.en: type erasure, erasure, generics at runtime, new t, bridge method, raw type, unchecked cast, heap pollution
+ver: genericos, comodines, casting, instanceof
+es:
+    El borrado de tipos significa que los genéricos de Java existen solo para el compilador: después de comprobar que no mezclas tipos, javac borra los <String>, <Enemigo>… y en el .class queda List a secas, con los casts metidos donde hacían falta.
+    En la aduana del estadio comprueban con lupa que tu caja ponga «solo brazos»; una vez dentro, arrancan la etiqueta. Los del almacén ven una caja cualquiera y se fían de la aduana, así que si alguien cuela una pierna por la puerta de atrás, el susto llega cuando la sacas creyendo que es un brazo.
+    Por eso List<Enemigo> y List<String> son la misma clase en ejecución (new ArrayList<String>().getClass() == new ArrayList<Integer>().getClass() da true), y no puedes escribir new T(), new T[10] ni o instanceof T, ni sobrecargar metodo(List<String>) con metodo(List<Integer>) (al borrarse, chocan). Si necesitas el tipo en ejecución, pásalo tú: un Class<T> tipo con tipo.cast(o), o un Supplier<T> para crear.
+    El fallo típico es mezclar tipos crudos (List sin <>) o casts sin comprobar ((List<String>) objeto) y pasar del aviso «unchecked»: compila, pero el error salta lejos, en otra línea, como ClassCastException al leer. Es la «contaminación del montón» (heap pollution); no ignores esos avisos. En la memoria() del robot, que es un Map<String, Object>, comprueba con instanceof lo que guardaste antes de convertirlo.
+    Para un senior: se eligió el borrado (Java 5) por compatibilidad binaria con el código anterior a los genéricos; C# hizo lo contrario y los reificó. Algo sí sobrevive en los metadatos (el atributo Signature): los tipos genéricos de atributos, parámetros y superclases se pueden leer por reflexión, y en eso se basan los «type tokens» (new TypeReference<List<Pieza>>() {} de Jackson). javac genera métodos puente para que el polimorfismo funcione tras borrar (un compareTo(Object) que llama a tu compareTo(Pieza)), y el Proyecto Valhalla aspira a genéricos especializados para primitivos, sin List<Integer> lleno de cajas.
+de:
+    Type Erasure bedeutet, dass Javas Generics nur für den Compiler existieren: Nachdem javac geprüft hat, dass du keine Typen vermischst, löscht er die <String>, <Enemigo> … und in der .class-Datei bleibt nur List, mit eingefügten Casts, wo sie nötig sind.
+    Am Zoll des Stadions wird mit der Lupe geprüft, dass auf deiner Kiste „nur Arme“ steht; drinnen reißen sie das Etikett ab. Die Leute im Lager sehen eine beliebige Kiste und verlassen sich auf den Zoll – schmuggelt also jemand ein Bein durch die Hintertür, kommt der Schreck erst, wenn du es herausholst und für einen Arm hältst.
+    Darum sind List<Enemigo> und List<String> zur Laufzeit dieselbe Klasse (new ArrayList<String>().getClass() == new ArrayList<Integer>().getClass() ergibt true), und du kannst weder new T(), new T[10] noch o instanceof T schreiben oder methode(List<String>) mit methode(List<Integer>) überladen (nach dem Löschen kollidieren sie). Brauchst du den Typ zur Laufzeit, gib ihn selbst mit: ein Class<T> typ mit typ.cast(o) oder einen Supplier<T> zum Erzeugen.
+    Der typische Fehler: rohe Typen (List ohne <>) oder ungeprüfte Casts ((List<String>) objekt) zu benutzen und die „unchecked“-Warnung zu überhören. Es kompiliert, aber der Fehler knallt weit weg, in einer anderen Zeile, als ClassCastException beim Lesen – das ist Heap Pollution; nimm diese Warnungen ernst. In memoria() (gedaechtnis) des Roboters, einer Map<String, Object>, prüf mit instanceof, was du gespeichert hast, bevor du es umwandelst.
+    Für Senioren: Erasure wurde (Java 5) wegen der Binärkompatibilität mit Code von vor den Generics gewählt; C# hat es umgekehrt gemacht und sie reifiziert. Etwas überlebt doch in den Metadaten (das Signature-Attribut): Die generischen Typen von Attributen, Parametern und Oberklassen lassen sich per Reflection lesen, und darauf beruhen „Type Tokens“ (new TypeReference<List<Pieza>>() {} bei Jackson). javac erzeugt Brückenmethoden, damit Polymorphie nach dem Löschen funktioniert (ein compareTo(Object), das dein compareTo(Pieza) aufruft), und Projekt Valhalla strebt spezialisierte Generics für Primitive an, ohne List<Integer> voller Boxen.
+en:
+    Type erasure means Java's generics exist only for the compiler: once javac has checked you aren't mixing types, it erases the <String>, <Enemigo>… and the .class file is left with a plain List, with casts inserted wherever they were needed.
+    At the stadium's customs desk they check with a magnifying glass that your crate says "arms only"; once inside, they rip the label off. The warehouse staff see an ordinary crate and trust customs, so if someone sneaks a leg in through the back door, the shock comes when you pull it out thinking it's an arm.
+    That's why List<Enemigo> and List<String> are the same class at run time (new ArrayList<String>().getClass() == new ArrayList<Integer>().getClass() is true), and why you can't write new T(), new T[10] or o instanceof T, nor overload method(List<String>) with method(List<Integer>) (after erasure they clash). If you need the type at run time, pass it yourself: a Class<T> type with type.cast(o), or a Supplier<T> to create instances.
+    The classic mistake is mixing raw types (List without <>) or unchecked casts ((List<String>) object) and shrugging off the "unchecked" warning: it compiles, but the error blows up far away, on another line, as a ClassCastException when reading. That's heap pollution; don't ignore those warnings. In the robot's memoria() (memory), which is a Map<String, Object>, check what you stored with instanceof before converting it.
+    For seniors: erasure was chosen (Java 5) for binary compatibility with pre-generics code; C# went the other way and reified them. Something does survive in the metadata (the Signature attribute): the generic types of fields, parameters and superclasses can be read through reflection, which is what "type tokens" rely on (Jackson's new TypeReference<List<Pieza>>() {}). javac generates bridge methods so polymorphism still works after erasure (a compareTo(Object) that calls your compareTo(Pieza)), and Project Valhalla aims at specialised generics for primitives, with no List<Integer> full of boxes.
+pseudo.es:
+    AL COMPILAR:
+        comprobar que en lista<Brazo> solo entran brazos
+        borrar «<Brazo>»: queda «lista»
+        al sacar, meter «(Brazo)» automáticamente
+    EN EJECUCIÓN:
+        lista<Brazo> y lista<Pierna> son la misma clase
+        SI necesito saber el tipo: lo guardo yo (Class<T>)
+pseudo.de:
+    BEIM KOMPILIEREN:
+        prüfen, dass in liste<Arm> nur Arme kommen
+        „<Arm>“ löschen: übrig bleibt „liste“
+        beim Herausholen automatisch „(Arm)“ einfügen
+    ZUR LAUFZEIT:
+        liste<Arm> und liste<Bein> sind dieselbe Klasse
+        WENN ich den Typ brauche: merke ich ihn mir selbst (Class<T>)
+pseudo.en:
+    WHEN COMPILING:
+        check that only arms go into list<Arm>
+        erase "<Arm>": "list" is left
+        when taking out, insert "(Arm)" automatically
+    AT RUN TIME:
+        list<Arm> and list<Leg> are the same class
+        IF I need the type: I keep it myself (Class<T>)
+ejemplo:
+    import java.util.*;
+    
+    class Almacen<T> {
+        private final List<T> piezas = new ArrayList<>();
+        private final Class<T> tipo;                               // el tipo se borra: lo guardo yo || der Typ wird gelöscht: ich merke ihn mir || the type is erased: I keep it myself
+        Almacen(Class<T> tipo) { this.tipo = tipo; }
+    
+        void guardarSiEs(Object o) {
+            if (tipo.isInstance(o)) piezas.add(tipo.cast(o));      // «o instanceof T» no compila || „o instanceof T“ kompiliert nicht || "o instanceof T" doesn't compile
+        }
+        static boolean mismaClase() {
+            return new ArrayList<String>().getClass() == new ArrayList<Integer>().getClass();   // true: ya no hay <String> ni <Integer> || true: <String> und <Integer> sind weg || true: <String> and <Integer> are gone
+        }
+    }
+
+=== patrones_de_diseno
+nivel: 5
+tema: 22
+titulo.es: Patrones de diseño
+titulo.de: Entwurfsmuster
+titulo.en: Design patterns
+claves.es: patrones de diseno, patron de diseno, design patterns, gang of four, gof, singleton, decorador, antipatron
+claves.de: entwurfsmuster, design patterns, gang of four, gof, singleton, dekorierer, antipattern, anti-pattern
+claves.en: design patterns, design pattern, gang of four, gof, singleton, decorator, anti-pattern, antipattern
+ver: patron_estrategia, patron_observador, patron_fabrica, solid
+es:
+    Un patrón de diseño es una solución con nombre a un problema que aparece una y otra vez al diseñar programas: no es código para copiar, sino una forma de repartir responsabilidades entre clases que otros programadores reconocen al momento.
+    Son las llaves clásicas de la lucha libre de robots: la Estrategia, el Observador, la Fábrica. Nadie las inventa en cada combate: dices «le hago un Observador» y el rincón entero sabe qué va a pasar. Pero el robot que intenta meter las 23 llaves del libro en un solo asalto acaba hecho un nudo en la lona.
+    El catálogo clásico es el libro de la «banda de los cuatro» (Gamma, Helm, Johnson y Vlissides, 1994), con patrones de creación (Fábrica, Builder, Singleton), de estructura (Adaptador, Decorador, Composite) y de comportamiento (Estrategia, Observador, Método plantilla). El propio juego los usa: Metajavbot es un método plantilla (el juego llama a cadaTurno y tú lo rellenas), los eventos como alVerEnemigo se parecen a un observador, y los estilos de los rivales son candidatos a una estrategia.
+    El fallo típico es aplicarlos por adelantado, «por si acaso»: una FabricaAbstractaDeProveedoresDeEstrategias para un if de dos ramas. Un patrón se gana su sitio cuando el problema ya existe (duplicación, un switch que no para de crecer, algo que cambia a menudo); si no, es complejidad sin beneficio. El Singleton, en especial, es un estado global con buena prensa: complica las pruebas.
+    Para un senior: muchos patrones de 1994 son parches para lo que el lenguaje no tenía, y en Java moderno encogen: Estrategia y Comando son una lambda, Visitante suele sustituirse por sealed + switch con patrones (Java 21), Singleton es un enum de un solo valor (lo que recomienda Effective Java) y Builder compite con los record. Lo que no caduca son los dos principios de fondo del libro: programa contra interfaces, no contra implementaciones, y prefiere la composición a la herencia.
+de:
+    Ein Entwurfsmuster ist eine benannte Lösung für ein Problem, das beim Programmentwurf immer wieder auftaucht: kein Code zum Abschreiben, sondern eine Art, Verantwortung auf Klassen zu verteilen, die andere Entwickler sofort wiedererkennen.
+    Das sind die klassischen Griffe im Roboter-Wrestling: die Strategie, der Beobachter, die Fabrik. Niemand erfindet sie in jedem Kampf neu: Du sagst „ich mache einen Beobachter“, und die ganze Ringecke weiß, was kommt. Aber der Roboter, der alle 23 Griffe aus dem Buch in eine einzige Runde quetschen will, liegt am Ende verknotet auf der Matte.
+    Der klassische Katalog ist das Buch der „Gang of Four“ (Gamma, Helm, Johnson und Vlissides, 1994) mit Erzeugungsmustern (Fabrik, Builder, Singleton), Strukturmustern (Adapter, Dekorierer, Kompositum) und Verhaltensmustern (Strategie, Beobachter, Schablonenmethode). Das Spiel selbst nutzt sie: Metajavbot ist eine Schablonenmethode (das Spiel ruft cadaTurno (jedenZug) auf, du füllst sie), die Ereignisse wie alVerEnemigo (beiSicht) ähneln einem Beobachter, und die Stile der Gegner sind Kandidaten für eine Strategie.
+    Der typische Fehler: sie vorsorglich einzusetzen, „man weiß ja nie“ – eine AbstrakteFabrikFuerStrategieAnbieter für ein if mit zwei Zweigen. Ein Muster verdient seinen Platz, wenn das Problem schon da ist (Duplikate, ein switch, der ständig wächst, etwas, das sich oft ändert); sonst ist es Komplexität ohne Nutzen. Besonders das Singleton ist globaler Zustand mit guter Presse: Es erschwert das Testen.
+    Für Senioren: Viele Muster von 1994 sind Pflaster für das, was der Sprache fehlte, und in modernem Java schrumpfen sie: Strategie und Kommando sind ein Lambda, der Besucher wird oft durch sealed + switch mit Mustern ersetzt (Java 21), das Singleton ist ein Enum mit einem einzigen Wert (wie Effective Java empfiehlt), und der Builder konkurriert mit Records. Was nicht veraltet, sind die zwei Grundprinzipien des Buchs: gegen Schnittstellen programmieren, nicht gegen Implementierungen, und Komposition der Vererbung vorziehen.
+en:
+    A design pattern is a named solution to a problem that keeps coming up when designing programs: not code to copy, but a way of sharing out responsibilities between classes that other developers recognise instantly.
+    They are the classic holds of robot wrestling: the Strategy, the Observer, the Factory. Nobody invents them anew in every bout: you say "I'll do an Observer on it" and the whole corner knows what's coming. But the robot that tries to cram all 23 holds from the book into a single round ends up tied in a knot on the canvas.
+    The classic catalogue is the "Gang of Four" book (Gamma, Helm, Johnson and Vlissides, 1994), with creational patterns (Factory, Builder, Singleton), structural ones (Adapter, Decorator, Composite) and behavioural ones (Strategy, Observer, Template Method). The game itself uses them: Metajavbot is a template method (the game calls cadaTurno (onTick) and you fill it in), events like alVerEnemigo (onSeeEnemy) resemble an observer, and the rivals' styles are candidates for a strategy.
+    The classic mistake is applying them up front, "just in case": an AbstractStrategyProviderFactory for an if with two branches. A pattern earns its place when the problem already exists (duplication, a switch that keeps growing, something that changes often); otherwise it is complexity with no payoff. The Singleton in particular is global state with good PR: it makes testing harder.
+    For seniors: many 1994 patterns are patches for things the language lacked, and in modern Java they shrink: Strategy and Command are a lambda, Visitor is often replaced by sealed + pattern-matching switch (Java 21), Singleton is a single-value enum (as Effective Java recommends) and Builder competes with records. What doesn't age are the book's two underlying principles: program to an interface, not an implementation, and favour composition over inheritance.
+pseudo.es:
+    PROBLEMA: el robot cambia de forma de moverse según el rival
+    SI ya hay tres if que crecen cada semana:
+        usar un patrón (Estrategia): cada forma, un objeto
+    SI NO:
+        dejar el if: es más claro
+    REGLA: el patrón llega cuando el problema ya está, no antes
+pseudo.de:
+    PROBLEM: der Roboter bewegt sich je nach Gegner anders
+    WENN es schon drei if gibt, die jede Woche wachsen:
+        ein Muster benutzen (Strategie): jede Art ein Objekt
+    SONST:
+        das if lassen: es ist klarer
+    REGEL: das Muster kommt, wenn das Problem da ist, nicht vorher
+pseudo.en:
+    PROBLEM: the robot moves differently depending on the rival
+    IF there are already three ifs that grow every week:
+        use a pattern (Strategy): one object per way of moving
+    ELSE:
+        keep the if: it's clearer
+    RULE: the pattern arrives once the problem is there, not before
+ejemplo:
+    import java.util.function.Consumer;
+    
+    enum Arbitro {                                   // Singleton al estilo Java: un enum de un valor || Singleton auf Java-Art: ein Enum mit einem Wert || Java-style singleton: a one-value enum
+        UNICO;
+        boolean valido(double dano) { return dano >= 0 && dano <= 100; }
+    }
+    
+    public class MiRobot extends Metajavbot {
+        private Consumer<Enemigo> plan = e -> apuntarHacia(e.angulo());   // Estrategia = una lambda || Strategie = ein Lambda || Strategy = a lambda
+        @Override
+        public void alVerEnemigo(Enemigo e) {       // el juego me avisa (parecido a un Observador) || das Spiel benachrichtigt mich (ähnlich einem Beobachter) || the game notifies me (observer-like)
+            plan.accept(e);
+        }
+    }
+
+=== patron_estrategia
+nivel: 5
+tema: 22
+titulo.es: Patrón Estrategia
+titulo.de: Strategie-Muster
+titulo.en: Strategy pattern
+claves.es: patron estrategia, strategy, strategy pattern, cambiar de comportamiento, estilos de los rivales, estilo de pelea, intercambiar algoritmos
+claves.de: strategie-muster, strategiemuster, strategy, strategy pattern, verhalten austauschen, kampfstil, stile der gegner, algorithmus austauschen
+claves.en: strategy pattern, strategy, swap behaviour, swap behavior, fighting style, rival styles, interchangeable algorithms
+ver: interfaz, lambda, polimorfismo, patrones_de_diseno
+es:
+    El patrón Estrategia saca una forma de hacer algo (moverse, elegir objetivo, ordenar) a un objeto aparte con una interfaz común, para poder cambiarla por otra sin tocar a quien la usa.
+    Los rivales de la computadora pelean con estilos: francotirador, acosador, tanque, embestidor y danzarín. Con Estrategia, el estilo es un cartucho que se mete en la nuca del robot: sacas «tanque», metes «danzarín», y el mismo robot se pone de pronto a bailar claqué entre los misiles.
+    En Java: interface Estilo { void mover(MiRobot r, Enemigo e); } y una clase (o una lambda) por estilo; el robot guarda un Estilo estilo y en alVerEnemigo llama a estilo.mover(this, e). Cambiar de estilo a mitad de ronda es una simple asignación. En la librería de Java la ves en Comparator: lista.sort(Comparator.comparingDouble(Enemigo::distancia)) recibe la estrategia de ordenar.
+    El fallo típico es crear la interfaz y una clase por estilo cuando solo hay dos que nunca cambian: un if es más claro. Y el contrario: un switch (estilo) repetido en cinco métodos (moverse, atacar, defenderse…), que obliga a tocarlos todos al añadir un estilo; ese es el olor que pide Estrategia. El Rival del juego usa un switch sobre su enum Estilo en un único método, y con cinco estilos fijos eso está bien.
+    Para un senior: desde Java 8, una estrategia sin estado es una interfaz funcional y una lambda, sin clases; otra opción es un enum con un método abstracto por constante (estrategias cerradas, con nombre y serializables). Si los casos forman un conjunto cerrado, sealed + switch con patrones puede ser mejor que repartir la lógica en clases: es el problema de la expresión (Estrategia facilita añadir variantes; el switch, añadir operaciones). Y cuidado con las estrategias con estado compartidas entre robots: cada uno necesita su propia instancia.
+de:
+    Das Strategie-Muster lagert eine Art, etwas zu tun (sich bewegen, ein Ziel wählen, sortieren), in ein eigenes Objekt mit gemeinsamem Interface aus, damit man sie gegen eine andere tauschen kann, ohne den Benutzer anzufassen.
+    Die Computergegner kämpfen in Stilen: Scharfschütze, Jäger, Panzer, Rammbock und Tänzer. Mit dem Strategie-Muster ist der Stil eine Kassette, die man dem Roboter in den Nacken steckt: „Panzer“ raus, „Tänzer“ rein, und derselbe Roboter steppt plötzlich zwischen den Raketen.
+    In Java: interface Estilo { void mover(MiRobot r, Enemigo e); } und eine Klasse (oder ein Lambda) pro Stil; der Roboter hält ein Estilo estilo und ruft in alVerEnemigo (beiSicht) estilo.mover(this, e) auf. Den Stil mitten in der Runde zu wechseln ist eine einfache Zuweisung. In der Java-Bibliothek siehst du es bei Comparator: liste.sort(Comparator.comparingDouble(Enemigo::distancia)) bekommt die Sortierstrategie übergeben.
+    Der typische Fehler: Interface und eine Klasse pro Stil zu bauen, wenn es nur zwei gibt, die sich nie ändern – ein if ist klarer. Und das Gegenteil: ein switch (estilo), wiederholt in fünf Methoden (bewegen, angreifen, verteidigen …), sodass man beim neuen Stil alle anfassen muss; das ist der Geruch, der nach Strategie verlangt. Der Rival des Spiels nutzt ein switch über sein Enum Estilo in einer einzigen Methode, und bei fünf festen Stilen ist das in Ordnung.
+    Für Senioren: Seit Java 8 ist eine zustandslose Strategie ein funktionales Interface plus Lambda, ganz ohne Klassen; eine andere Option ist ein Enum mit einer abstrakten Methode pro Konstante (geschlossene, benannte, serialisierbare Strategien). Bilden die Fälle eine geschlossene Menge, kann sealed + switch mit Mustern besser sein, als die Logik auf Klassen zu verteilen: Das ist das Expression Problem (Strategie macht neue Varianten leicht, der switch neue Operationen). Und Vorsicht bei Strategien mit Zustand, die sich Roboter teilen: Jeder braucht seine eigene Instanz.
+en:
+    The Strategy pattern moves one way of doing something (moving, picking a target, sorting) into a separate object behind a common interface, so you can swap it for another without touching the code that uses it.
+    The computer's rivals fight in styles: sniper, stalker, tank, rammer and dancer. With Strategy, the style is a cartridge slotted into the back of the robot's neck: pull out "tank", slot in "dancer", and the very same robot suddenly tap-dances between the missiles.
+    In Java: interface Estilo { void mover(MiRobot r, Enemigo e); } and one class (or one lambda) per style; the robot keeps an Estilo estilo and calls estilo.mover(this, e) in alVerEnemigo (onSeeEnemy). Changing style mid-round is a plain assignment. In the Java library you see it in Comparator: list.sort(Comparator.comparingDouble(Enemigo::distancia)) receives the sorting strategy.
+    The classic mistake is building the interface and a class per style when there are only two and they never change: an if is clearer. And the opposite: a switch (estilo) repeated in five methods (move, attack, defend…), so every new style means touching all of them; that's the smell that calls for Strategy. The game's Rival uses a switch over its Estilo enum in a single method, and with five fixed styles that's fine.
+    For seniors: since Java 8 a stateless strategy is just a functional interface and a lambda, no classes needed; another option is an enum with an abstract method per constant (closed, named, serialisable strategies). If the cases form a closed set, sealed + pattern-matching switch can beat spreading logic across classes: that's the expression problem (Strategy makes new variants easy, the switch makes new operations easy). And beware of stateful strategies shared between robots: each one needs its own instance.
+pseudo.es:
+    estilo ← TANQUE
+    CADA VEZ que veo al rival:
+        estilo.mover(yo, rival)
+        SI me queda poco blindaje:
+            estilo ← DANZARÍN          (mismo robot, otro cartucho)
+pseudo.de:
+    stil ← PANZER
+    JEDES MAL, wenn ich den Gegner sehe:
+        stil.bewegen(ich, gegner)
+        WENN ich kaum noch Panzerung habe:
+            stil ← TÄNZER              (derselbe Roboter, andere Kassette)
+pseudo.en:
+    style ← TANK
+    EVERY TIME I see the rival:
+        style.move(me, rival)
+        IF my armour is low:
+            style ← DANCER             (same robot, different cartridge)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        interface Estilo { void mover(MiRobot r, Enemigo e); }            // la forma común de todos los estilos || die gemeinsame Form aller Stile || the common shape of every style
+        static final Estilo TANQUE = (r, e) -> { r.girarHacia(e.angulo()); r.avanzar(e.distancia() - 40); };
+        static final Estilo DANZARIN = (r, e) -> { r.girarHacia(e.angulo() + 90); r.avanzar(60); };   // de lado, en círculos || seitwärts, im Kreis || sideways, in circles
+    
+        private Estilo estilo = TANQUE;
+    
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            if (blindaje() < 30) estilo = DANZARIN;                        // otro cartucho, sin tocar el resto || andere Kassette, ohne den Rest anzufassen || another cartridge, nothing else touched
+            estilo.mover(this, e);
+            apuntarHacia(e.angulo());
+        }
+    }
+
+=== patron_observador
+nivel: 5
+tema: 22
+titulo.es: Patrón Observador
+titulo.de: Beobachter-Muster
+titulo.en: Observer pattern
+claves.es: patron observador, observer, observer pattern, listener, oyente, suscribirse a eventos, publicar y suscribir, avisar a varios objetos
+claves.de: beobachter-muster, beobachtermuster, observer, observer pattern, listener, ereignisse abonnieren, publish subscribe, mehrere objekte benachrichtigen
+claves.en: observer pattern, observer, listener, event listener, subscribe to events, publish subscribe, pub sub, notify many objects
+ver: turno, interfaz_funcional, patrones_de_diseno, recolector_de_basura
+es:
+    El patrón Observador conecta a quien sabe que algo ha pasado (el sujeto) con quienes quieren enterarse (los observadores) sin que el primero sepa quiénes son: cada observador se apunta en una lista y el sujeto avisa a todos cuando toca.
+    El locutor loco del estadio grita «¡GOLPE CRÍTICO!» por megafonía. No sabe quién escucha: el marcador suma puntos, la grúa se prepara, el público hace la ola y un robot de la grada se desmaya. Cualquiera puede ponerse los auriculares (suscribirse) o quitárselos sin que el locutor cambie una coma de su guion.
+    Los eventos del robot (alVerEnemigo, alRecibirGolpe, alChocarConPared…) siguen esa idea: el combate avisa a tu robot cuando pasa algo y tú solo escribes la reacción. Hecho a mano: una List<Consumer<String>> oyentes, un método suscribir que hace oyentes.add(o) y, cuando ocurre algo, oyentes.forEach(o -> o.accept(noticia)). En Java lo verás en los ActionListener de Swing, en PropertyChangeListener o en el InputProcessor de libGDX.
+    El fallo típico es suscribirse y no darse nunca de baja: el sujeto guarda una referencia a cada observador y no le deja morir (la fuga de memoria más clásica de las interfaces gráficas). Otro es cambiar la lista mientras se recorre (un oyente que se da de baja al recibir el aviso), que da ConcurrentModificationException: recorre una copia o usa CopyOnWriteArrayList.
+    Para un senior: siendo precisos, los eventos de Metajavbot son más un método plantilla con ganchos (hooks) que un Observador puro: hay un único observador fijo, tu robot, que sobrescribe en vez de suscribirse; el Observador de verdad es una lista dinámica de oyentes. Las decisiones que importan: avisar en el mismo hilo o en otro (y en qué orden), qué hacer si un oyente lanza una excepción (¿se avisa a los demás?) y si el evento lleva los datos (push) o el oyente los pide (pull). java.util.Observable está obsoleto desde Java 9; para flujos con contrapresión existe java.util.concurrent.Flow (Java 9, Reactive Streams).
+de:
+    Das Beobachter-Muster verbindet den, der weiß, dass etwas passiert ist (das Subjekt), mit denen, die es erfahren wollen (den Beobachtern), ohne dass der Erste weiß, wer sie sind: Jeder Beobachter trägt sich in eine Liste ein, und das Subjekt benachrichtigt alle, wenn es so weit ist.
+    Der verrückte Stadionkommentator brüllt „KRITISCHER TREFFER!“ durch die Lautsprecher. Er weiß nicht, wer zuhört: Die Anzeigetafel zählt Punkte, der Kran macht sich bereit, das Publikum macht die Welle, und ein Roboter auf der Tribüne fällt in Ohnmacht. Jeder kann Kopfhörer aufsetzen (abonnieren) oder abnehmen, ohne dass der Kommentator ein Komma an seinem Skript ändert.
+    Die Ereignisse des Roboters (alVerEnemigo (beiSicht), alRecibirGolpe (beiTreffer), alChocarConPared (beiWand) …) folgen dieser Idee: Der Kampf benachrichtigt deinen Roboter, wenn etwas passiert, und du schreibst nur die Reaktion. Von Hand gebaut: eine List<Consumer<String>> zuhoerer, eine Methode abonnieren mit zuhoerer.add(z) und, wenn etwas passiert, zuhoerer.forEach(z -> z.accept(nachricht)). In Java begegnet dir das bei den ActionListenern von Swing, bei PropertyChangeListener oder beim InputProcessor von libGDX.
+    Der typische Fehler: sich anzumelden und nie wieder abzumelden. Das Subjekt hält eine Referenz auf jeden Beobachter und lässt ihn nicht sterben (das klassischste Speicherleck grafischer Oberflächen). Ein anderer: die Liste zu ändern, während sie durchlaufen wird (ein Zuhörer meldet sich beim Benachrichtigen ab), was eine ConcurrentModificationException gibt: Durchlaufe eine Kopie oder nimm CopyOnWriteArrayList.
+    Für Senioren: Genau genommen sind die Ereignisse von Metajavbot eher eine Schablonenmethode mit Hooks als ein reiner Beobachter: Es gibt einen einzigen, festen Beobachter, deinen Roboter, der überschreibt statt zu abonnieren; der echte Beobachter ist eine dynamische Liste von Zuhörern. Wichtige Entscheidungen: im selben Thread oder in einem anderen benachrichtigen (und in welcher Reihenfolge), was passiert, wenn ein Zuhörer eine Exception wirft (werden die anderen noch benachrichtigt?), und ob das Ereignis die Daten mitbringt (Push) oder der Zuhörer sie holt (Pull). java.util.Observable ist seit Java 9 veraltet; für Datenströme mit Gegendruck gibt es java.util.concurrent.Flow (Java 9, Reactive Streams).
+en:
+    The Observer pattern connects whoever knows something has happened (the subject) with whoever wants to hear about it (the observers), without the subject knowing who they are: each observer signs up on a list and the subject notifies all of them when the time comes.
+    The stadium's crazy commentator yells "CRITICAL HIT!" over the loudspeakers. He has no idea who's listening: the scoreboard adds points, the crane gets ready, the crowd does a Mexican wave and a robot in the stands faints. Anyone can put headphones on (subscribe) or take them off without the commentator changing a comma of his script.
+    The robot's events (alVerEnemigo (onSeeEnemy), alRecibirGolpe (onHit), alChocarConPared (onHitWall)…) follow that idea: the fight tells your robot when something happens and you only write the reaction. Built by hand: a List<Consumer<String>> listeners, a subscribe method doing listeners.add(l) and, when something happens, listeners.forEach(l -> l.accept(news)). In Java you'll meet it as Swing's ActionListener, PropertyChangeListener or libGDX's InputProcessor.
+    The classic mistake is subscribing and never unsubscribing: the subject keeps a reference to every observer and won't let it die (the most classic memory leak in GUIs). Another is changing the list while iterating over it (a listener that unsubscribes when notified), which throws ConcurrentModificationException: iterate over a copy or use CopyOnWriteArrayList.
+    For seniors: strictly speaking, Metajavbot's events are more a template method with hooks than a pure Observer: there is a single, fixed observer, your robot, which overrides instead of subscribing; the real Observer is a dynamic list of listeners. The decisions that matter: notify on the same thread or another one (and in what order), what happens if a listener throws (do the others still get notified?), and whether the event carries the data (push) or the listener asks for it (pull). java.util.Observable has been deprecated since Java 9; for streams with back-pressure there is java.util.concurrent.Flow (Java 9, Reactive Streams).
+pseudo.es:
+    oyentes ← lista vacía
+    suscribir(marcador); suscribir(grúa); suscribir(público)
+    CUANDO hay un golpe crítico:
+        PARA CADA oyente EN una copia de oyentes:
+            avisarle del golpe
+    AL IRSE alguien: quitarlo de oyentes
+pseudo.de:
+    zuhoerer ← leere Liste
+    abonnieren(tafel); abonnieren(kran); abonnieren(publikum)
+    WENN es einen kritischen Treffer gibt:
+        FÜR JEDEN zuhörer IN einer Kopie von zuhoerer:
+            ihm den Treffer melden
+    WENN jemand geht: ihn aus zuhoerer entfernen
+pseudo.en:
+    listeners ← empty list
+    subscribe(scoreboard); subscribe(crane); subscribe(crowd)
+    WHEN there is a critical hit:
+        FOR EACH listener IN a copy of listeners:
+            tell it about the hit
+    WHEN someone leaves: remove it from listeners
+ejemplo:
+    import java.util.*;
+    import java.util.function.Consumer;
+    
+    class Locutor {
+        private final List<Consumer<String>> oyentes = new ArrayList<>();   // no sabe quiénes son, solo que escuchan || weiß nicht, wer sie sind, nur dass sie zuhören || doesn't know who they are, only that they listen
+    
+        Runnable suscribir(Consumer<String> oyente) {
+            oyentes.add(oyente);
+            return () -> oyentes.remove(oyente);                          // devuelve cómo darse de baja: ¡úsalo! || gibt zurück, wie man sich abmeldet: benutz es! || returns how to unsubscribe: use it!
+        }
+        void gritar(String noticia) {
+            for (Consumer<String> o : List.copyOf(oyentes)) o.accept(noticia);   // una copia: un oyente puede irse a mitad || eine Kopie: ein Zuhörer darf mittendrin gehen || a copy: a listener may leave halfway
+        }
+    }
+
+=== patron_fabrica
+nivel: 5
+tema: 22
+titulo.es: Patrón Fábrica
+titulo.de: Fabrik-Muster
+titulo.en: Factory pattern
+claves.es: patron fabrica, factory, factory method, metodo fabrica, fabrica abstracta, abstract factory, metodo estatico de fabrica, crear objetos sin new
+claves.de: fabrik-muster, fabrikmuster, fabrikmethode, factory, factory method, abstrakte fabrik, abstract factory, statische fabrikmethode, objekte ohne new erzeugen
+claves.en: factory pattern, factory, factory method, abstract factory, static factory method, create objects without new
+ver: constructor, sealed, static, patrones_de_diseno
+es:
+    Una fábrica es un método (o un objeto) cuyo trabajo es crear objetos por ti: le pides «un brazo que pegue fuerte» y te devuelve el objeto adecuado, sin que tengas que saber qué clase concreta hay detrás ni escribir tú el new.
+    En el taller no te fabricas los brazos con tus propias pinzas: vas al mostrador, dices «uno que pegue fuerte» y el mecánico te da un Martillo, un Mazo o, si es martes, una Sartén Industrial. Tú solo sabes que es un Brazo y que con él se puede atacar.
+    En Java lo más común es el método estático de fábrica: List.of(…), Map.of(…), Integer.valueOf(5), Optional.of(x), Path.of(…); tiene un nombre que explica, puede devolver un objeto ya hecho (caché) o una subclase escondida. El método fábrica clásico (GoF) deja que una subclase decida qué crear, y la fábrica abstracta crea familias que encajan entre sí (todas las piezas de la marca Cobalto juntas).
+    El fallo típico es la fábrica que es solo un switch gigante con new dentro, que hay que tocar con cada pieza nueva, o las fábricas de fábricas para un único tipo. Si solo hay una clase y nunca va a cambiar, new está bien. Y una fábrica que devuelve null cuando no conoce el tipo manda el problema lejos: mejor lanzar IllegalArgumentException con el nombre recibido.
+    Para un senior: las ventajas reales frente al constructor (Effective Java, ítem 1) son que tiene nombre, que puede no crear nada nuevo (Integer.valueOf guarda en caché de -128 a 127, y por eso == entre Integer «funciona» con números pequeños y falla con grandes) y que puede devolver un subtipo oculto (List.of devuelve clases internas del JDK); en Java moderno combina muy bien con sealed y switch exhaustivo. El coste: en la documentación no se distingue de otros métodos estáticos, de ahí las convenciones of, from, valueOf, getInstance, newInstance y create. ServiceLoader es la fábrica de la propia plataforma (descubre implementaciones en el classpath), y es justo una de las cosas que el Vigilante prohíbe en el juego.
+de:
+    Eine Fabrik ist eine Methode (oder ein Objekt), deren Aufgabe es ist, Objekte für dich zu erzeugen: Du bestellst „einen Arm, der fest zuschlägt“, und bekommst das passende Objekt, ohne wissen zu müssen, welche konkrete Klasse dahintersteckt, und ohne selbst new zu schreiben.
+    In der Werkstatt baust du dir die Arme nicht mit den eigenen Greifern: Du gehst zur Theke, sagst „einen, der fest zuschlägt“, und der Mechaniker gibt dir einen Hammer, einen Vorschlaghammer oder, wenn Dienstag ist, eine Industriebratpfanne. Du weißt nur, dass es ein Brazo ist und man damit angreifen kann.
+    Am häufigsten ist in Java die statische Fabrikmethode: List.of(…), Map.of(…), Integer.valueOf(5), Optional.of(x), Path.of(…); sie hat einen sprechenden Namen und kann ein schon vorhandenes Objekt (Cache) oder eine versteckte Unterklasse liefern. Die klassische Fabrikmethode (GoF) lässt eine Unterklasse entscheiden, was erzeugt wird, und die abstrakte Fabrik erzeugt zusammenpassende Familien (alle Teile der Marke Cobalto zusammen).
+    Der typische Fehler: die Fabrik, die nur ein riesiges switch mit new darin ist und bei jedem neuen Teil angefasst werden muss, oder Fabriken von Fabriken für einen einzigen Typ. Gibt es nur eine Klasse, die sich nie ändert, ist new in Ordnung. Und eine Fabrik, die bei unbekanntem Typ null zurückgibt, schiebt das Problem weit weg: Wirf lieber eine IllegalArgumentException mit dem erhaltenen Namen.
+    Für Senioren: Die echten Vorteile gegenüber dem Konstruktor (Effective Java, Item 1): Sie hat einen Namen, sie muss nichts Neues erzeugen (Integer.valueOf cacht -128 bis 127, darum „funktioniert“ == zwischen Integer bei kleinen Zahlen und scheitert bei großen), und sie kann einen versteckten Untertyp liefern (List.of gibt interne JDK-Klassen zurück); in modernem Java passt sie bestens zu sealed und erschöpfendem switch. Der Preis: In der Doku unterscheidet sie sich nicht von anderen statischen Methoden, daher die Konventionen of, from, valueOf, getInstance, newInstance und create. ServiceLoader ist die Fabrik der Plattform selbst (findet Implementierungen im Classpath) und gehört genau zu dem, was der Wächter (Vigilante) im Spiel verbietet.
+en:
+    A factory is a method (or an object) whose job is to create objects for you: you ask for "an arm that hits hard" and get back the right object, without needing to know which concrete class is behind it or writing the new yourself.
+    In the workshop you don't build your arms with your own pincers: you go to the counter, say "one that hits hard", and the mechanic hands you a Hammer, a Sledgehammer or, if it's Tuesday, an Industrial Frying Pan. All you know is that it's a Brazo and you can attack with it.
+    The most common form in Java is the static factory method: List.of(…), Map.of(…), Integer.valueOf(5), Optional.of(x), Path.of(…); it has a name that explains itself and can return an existing object (a cache) or a hidden subclass. The classic factory method (GoF) lets a subclass decide what to create, and the abstract factory creates families that fit together (all Cobalto-brand parts at once).
+    The classic mistake is a factory that's just a giant switch full of new, which has to be edited for every new part, or factories of factories for a single type. If there's only one class and it will never change, new is fine. And a factory that returns null for an unknown type sends the problem far away: throw an IllegalArgumentException with the name you received instead.
+    For seniors: the real advantages over a constructor (Effective Java, item 1) are that it has a name, that it needn't create anything new (Integer.valueOf caches -128 to 127, which is why == between Integers "works" for small numbers and fails for big ones), and that it can return a hidden subtype (List.of returns internal JDK classes); in modern Java it pairs nicely with sealed types and exhaustive switch. The cost: in the docs it looks like any other static method, hence the naming conventions of, from, valueOf, getInstance, newInstance and create. ServiceLoader is the platform's own factory (it discovers implementations on the classpath), and it's exactly one of the things the Vigilante bans in the game.
+pseudo.es:
+    FUNCIÓN fabricarBrazo(tipo):
+        SI tipo = "fuerte": DEVOLVER un Martillo nuevo
+        SI tipo = "rápido": DEVOLVER una Espada nueva
+        SI NO: error «no conozco el brazo: tipo»
+    brazo ← fabricarBrazo("fuerte")
+    (no sé si es un Martillo: solo que es un Brazo)
+pseudo.de:
+    FUNKTION armBauen(typ):
+        WENN typ = "stark": ZURÜCKGEBEN einen neuen Hammer
+        WENN typ = "schnell": ZURÜCKGEBEN ein neues Schwert
+        SONST: Fehler „diesen Arm kenne ich nicht: typ“
+    arm ← armBauen("stark")
+    (ich weiß nicht, ob es ein Hammer ist: nur, dass es ein Arm ist)
+pseudo.en:
+    FUNCTION buildArm(type):
+        IF type = "strong": RETURN a new Hammer
+        IF type = "fast": RETURN a new Sword
+        ELSE: error "I don't know that arm: type"
+    arm ← buildArm("strong")
+    (I don't know whether it's a Hammer: only that it's an Arm)
+ejemplo:
+    sealed interface Brazo permits Martillo, Espada {
+        double dano();
+    
+        static Brazo de(String tipo) {                                       // método estático de fábrica || statische Fabrikmethode || static factory method
+            return switch (tipo) {
+                case "fuerte" -> new Martillo();
+                case "rapido" -> new Espada();
+                default -> throw new IllegalArgumentException("brazo desconocido: " + tipo);   // nunca null || niemals null || never null
+            };
+        }
+    }
+    record Martillo() implements Brazo { public double dano() { return 30; } }
+    record Espada() implements Brazo { public double dano() { return 12; } }    // quien llama solo ve Brazo || der Aufrufer sieht nur Brazo || the caller only sees Brazo
+
+=== solid
+nivel: 5
+tema: 22
+titulo.es: SOLID
+titulo.de: SOLID
+titulo.en: SOLID
+claves.es: solid, principios solid, responsabilidad unica, abierto cerrado, sustitucion de liskov, segregacion de interfaces, inversion de dependencias, srp
+claves.de: solid, solid-prinzipien, single responsibility, offen-geschlossen-prinzip, liskovsches substitutionsprinzip, interface segregation, dependency inversion, srp
+claves.en: solid, solid principles, single responsibility, open closed, liskov substitution, interface segregation, dependency inversion, srp
+ver: interfaz, composicion, patron_estrategia, dobles_de_prueba
+es:
+    SOLID son cinco consejos para que las clases se puedan cambiar sin romper otras: una sola razón para cambiar (S), abiertas a extender y cerradas a modificar (O), los hijos se pueden usar donde el padre (L), interfaces pequeñas (I) y depender de abstracciones, no de detalles (D).
+    S: el robot que es a la vez boxeador, cocinero y contable del estadio se avería por tres sitios. O: los brazos nuevos se atornillan, sin soldarle el pecho. L: si el reglamento dice «cualquier robot», uno que explota al subir al ring no cuenta. I: al árbitro no le das el manual entero del robot, solo el botón de «¿te rindes?». D: el robot no lleva una batería soldada de una marca, sino un enchufe estándar.
+    En el juego: (S) separa en tu robot el radar (dónde está el rival), la decisión (qué hacer) y el movimiento; (O) añade estilos como clases nuevas en vez de tocar un switch (patrón Estrategia); (L) si Pieza tiene double dano(), ninguna subclase debería lanzar UnsupportedOperationException ahí; (I) Enemigo es una interfaz pequeña que solo enseña lo que el radar sabe; (D) recibe por el constructor una interfaz (Puntuacion puntos) en vez de hacer new PuntuacionEnArchivo() dentro, y así puedes probarla con un doble.
+    El fallo típico es convertir SOLID en religión: cuarenta interfaces de un método, cada una con una sola implementación, y un IFabricaDeServicioDeRadarImpl. Los principios se justifican cuando hay cambios o pruebas que los piden; en un robot de 50 líneas, gana la claridad.
+    Para un senior: el más útil y más malinterpretado es Liskov; no es «hereda bien», es un contrato de comportamiento (no endurecer precondiciones, no debilitar postcondiciones, mantener los invariantes). El ejemplo de libro es Cuadrado extends Rectangulo, y en el JDK, las listas inmodificables que lanzan en add() (por eso List.of sorprende). La S de Robert C. Martin no significa «hace una sola cosa», sino «responde ante un único actor» (quién pide los cambios); y la D no es lo mismo que la inyección de dependencias: lo que se invierte es quién define la interfaz, que la escribe quien la usa, no quien la implementa.
+de:
+    SOLID sind fünf Ratschläge, damit sich Klassen ändern lassen, ohne andere kaputtzumachen: nur ein Grund zur Änderung (S), offen für Erweiterung und geschlossen für Änderung (O), Kinder sind überall einsetzbar, wo der Elternteil es ist (L), kleine Interfaces (I) und Abhängigkeit von Abstraktionen statt von Details (D).
+    S: Der Roboter, der gleichzeitig Boxer, Koch und Buchhalter des Stadions ist, geht an drei Stellen kaputt. O: Neue Arme werden angeschraubt, ohne ihm die Brust aufzuschweißen. L: Wenn das Reglement „jeder Roboter“ sagt, zählt einer nicht, der beim Betreten des Rings explodiert. I: Dem Schiedsrichter gibst du nicht das ganze Handbuch des Roboters, nur den Knopf „Gibst du auf?“. D: Der Roboter hat keine fest verlötete Batterie einer Marke, sondern eine Standardsteckdose.
+    Im Spiel: (S) trenne in deinem Roboter das Radar (wo der Gegner ist), die Entscheidung (was tun) und die Bewegung; (O) füge Stile als neue Klassen hinzu, statt ein switch anzufassen (Strategie-Muster); (L) hat Pieza ein double dano(), sollte keine Unterklasse dort eine UnsupportedOperationException werfen; (I) Enemigo ist ein kleines Interface, das nur zeigt, was das Radar weiß; (D) nimm im Konstruktor ein Interface entgegen (Puntuacion puntos), statt drinnen new PuntuacionEnArchivo() zu schreiben, dann kannst du es mit einem Test-Double prüfen.
+    Der typische Fehler: SOLID zur Religion zu machen – vierzig Interfaces mit je einer Methode und je einer einzigen Implementierung, dazu ein IFabricaDeServicioDeRadarImpl. Die Prinzipien lohnen sich, wenn Änderungen oder Tests danach verlangen; in einem 50-Zeilen-Roboter gewinnt die Klarheit.
+    Für Senioren: Das nützlichste und am meisten missverstandene ist Liskov; es heißt nicht „sauber erben“, sondern ist ein Verhaltensvertrag (Vorbedingungen nicht verschärfen, Nachbedingungen nicht abschwächen, Invarianten erhalten). Das Lehrbuchbeispiel ist Quadrat extends Rechteck, im JDK sind es die unveränderlichen Listen, die bei add() werfen (darum überrascht List.of). Das S von Robert C. Martin heißt nicht „macht nur eine Sache“, sondern „ist nur einem Akteur verantwortlich“ (wer die Änderungen verlangt); und das D ist nicht dasselbe wie Dependency Injection: Umgekehrt wird, wer das Interface definiert – es schreibt der Nutzer, nicht der Implementierer.
+en:
+    SOLID is five pieces of advice for making classes you can change without breaking others: one reason to change (S), open for extension and closed for modification (O), children usable wherever the parent is (L), small interfaces (I), and depending on abstractions, not details (D).
+    S: the robot that's the stadium's boxer, cook and accountant all at once breaks down in three places. O: new arms get bolted on, not welded into its chest. L: if the rulebook says "any robot", one that explodes when it steps into the ring doesn't count. I: you don't hand the referee the robot's entire manual, just the "do you give up?" button. D: the robot doesn't have one brand's battery soldered in, it has a standard socket.
+    In the game: (S) split your robot's radar (where the rival is), decision (what to do) and movement; (O) add styles as new classes instead of editing a switch (Strategy pattern); (L) if Pieza has double dano(), no subclass should throw UnsupportedOperationException there; (I) Enemigo is a small interface that only shows what the radar knows; (D) take an interface through the constructor (Puntuacion puntos) instead of doing new PuntuacionEnArchivo() inside, so you can test it with a double.
+    The classic mistake is turning SOLID into a religion: forty one-method interfaces, each with a single implementation, plus an IRadarServiceFactoryImpl. The principles pay off when changes or tests call for them; in a 50-line robot, clarity wins.
+    For seniors: the most useful and most misunderstood is Liskov; it doesn't mean "inherit nicely", it's a behavioural contract (don't strengthen preconditions, don't weaken postconditions, keep the invariants). The textbook example is Square extends Rectangle, and in the JDK it's the unmodifiable lists that throw on add() (which is why List.of surprises people). Robert C. Martin's S doesn't mean "does one thing" but "answers to a single actor" (whoever asks for the changes); and D isn't the same as dependency injection: what gets inverted is who defines the interface, which is written by its user, not its implementer.
+pseudo.es:
+    ROBOT:
+        radar  → solo localiza al rival            (S)
+        estilo → se puede cambiar por otro         (O, con Estrategia)
+        puntos → llega de fuera, no se crea dentro (D)
+    CADA TURNO:
+        rival ← radar.localizar()
+        estilo.mover(rival)
+pseudo.de:
+    ROBOTER:
+        radar  → ortet nur den Gegner              (S)
+        stil   → lässt sich austauschen            (O, mit Strategie)
+        punkte → kommt von außen, nicht von innen  (D)
+    JEDEN ZUG:
+        gegner ← radar.orten()
+        stil.bewegen(gegner)
+pseudo.en:
+    ROBOT:
+        radar  → only locates the rival            (S)
+        style  → can be swapped for another        (O, via Strategy)
+        points → comes from outside, not made here (D)
+    EVERY TICK:
+        rival ← radar.locate()
+        style.move(rival)
+ejemplo:
+    interface Puntuacion { void sumar(String motivo, int puntos); }        // abstracción pequeña (I, D) || kleine Abstraktion (I, D) || small abstraction (I, D)
+    
+    class Combate {
+        private final Puntuacion puntos;                                    // no sabe si es archivo, pantalla o prueba || weiß nicht, ob Datei, Bildschirm oder Test || doesn't know if it's a file, the screen or a test
+        Combate(Puntuacion puntos) { this.puntos = puntos; }               // D: la dependencia llega de fuera || D: die Abhängigkeit kommt von außen || D: the dependency comes from outside
+    
+        void golpe(double dano) {                                          // S: solo las reglas del combate || S: nur die Kampfregeln || S: only the fight rules
+            if (dano > 25) puntos.sumar("crítico", 3);
+            else puntos.sumar("golpe", 1);
+        }
+    }
+
+=== refactorizar
+nivel: 5
+tema: 22
+titulo.es: Refactorizar
+titulo.de: Refactoring
+titulo.en: Refactoring
+claves.es: refactorizar, refactorizacion, refactoring, mejorar el codigo sin cambiar lo que hace, extraer metodo, renombrar, olor de codigo, code smell, numero magico
+claves.de: refactoring, refaktorisieren, refaktorierung, code verbessern ohne verhalten zu ändern, methode extrahieren, umbenennen, code smell, magische zahl
+claves.en: refactoring, refactor, improve code without changing behaviour, extract method, rename, code smell, code smells, magic number
+ver: metodo, constante, junit, codigo_heredado
+es:
+    Refactorizar es cambiar cómo está escrito el código sin cambiar lo que hace: nombres más claros, métodos más cortos, duplicados juntados en uno. El programa hace exactamente lo mismo, pero se entiende mejor y se cambia con menos miedo.
+    Es ordenar el taller entre combate y combate: las llaves en su panel, los cables etiquetados, el tornillo que estaba repartido en tres cajas, en una sola. El robot no pega más fuerte por eso, pero la próxima reparación lleva diez minutos en vez de una noche (y nadie se electrocuta buscando el destornillador).
+    Se hace en pasos pequeños, comprobando entre uno y otro: extraer método (el trozo «apuntar y atacar si está cerca» de tu cadaTurno pasa a apuntarYAtacar(e)), renombrar (d → distanciaAlRival), cambiar un número mágico por una constante (static final double ALCANCE = 80) y juntar duplicados. Los IDE lo hacen solos y sin riesgo (Refactor › Rename, Extract Method), y en el juego tus pruebas @Test del laboratorio te dicen si todo sigue haciendo lo mismo.
+    El fallo típico es refactorizar y cambiar el comportamiento a la vez («ya que estoy, arreglo esto»): si algo falla, no sabes cuál de los dos cambios fue. Sepáralos: o refactorizas (las pruebas no cambian y siguen en verde) o cambias lo que hace (y cambias o añades pruebas). Sin pruebas, refactorizar es cambiar a ciegas.
+    Para un senior: el catálogo de Martin Fowler (Refactoring, 1999; 2.ª ed., 2018) da nombre a cada movimiento y al olor que lo pide (método largo, envidia de funcionalidad, obsesión por los primitivos, cirugía a escopetazos). Reglas útiles: «haz que el cambio sea fácil (puede costar), y luego haz el cambio fácil» (Kent Beck); commits separados para refactor y para comportamiento, que hacen las revisiones legibles; y los refactors grandes, en pasos que se pueden desplegar (expandir y contraer, ramificar por abstracción) en lugar de una rama de un mes. Las pruebas que se rompen al refactorizar sin cambiar el comportamiento están probando detalles internos, no lo que importa.
+de:
+    Refactoring heißt, zu ändern, wie der Code geschrieben ist, ohne zu ändern, was er tut: klarere Namen, kürzere Methoden, Doppeltes zusammengelegt. Das Programm macht genau dasselbe, ist aber verständlicher und lässt sich mit weniger Angst ändern.
+    Das ist Werkstatt-Aufräumen zwischen zwei Kämpfen: die Schlüssel an ihre Wand, die Kabel beschriftet, die Schraube, die in drei Kisten verteilt war, in eine einzige. Der Roboter schlägt deshalb nicht fester zu, aber die nächste Reparatur dauert zehn Minuten statt einer Nacht (und niemand bekommt einen Schlag, während er den Schraubenzieher sucht).
+    Man geht in kleinen Schritten vor und prüft zwischendurch: Methode extrahieren (das Stück „zielen und angreifen, wenn nah“ aus deinem cadaTurno (jedenZug) wird zu apuntarYAtacar(e)), umbenennen (d → distanciaAlRival), eine magische Zahl durch eine Konstante ersetzen (static final double ALCANCE = 80) und Doppeltes zusammenführen. IDEs erledigen das selbst und gefahrlos (Refactor › Rename, Extract Method), und im Spiel sagen dir deine @Test-Tests im Labor, ob alles noch dasselbe tut.
+    Der typische Fehler: gleichzeitig zu refaktorisieren und das Verhalten zu ändern („wenn ich schon mal dabei bin …“). Geht etwas kaputt, weißt du nicht, welche der beiden Änderungen schuld war. Trenne es: Entweder du refaktorisierst (die Tests bleiben gleich und grün), oder du änderst das Verhalten (und änderst oder ergänzt Tests). Ohne Tests ist Refactoring Ändern im Blindflug.
+    Für Senioren: Martin Fowlers Katalog (Refactoring, 1999; 2. Aufl. 2018) gibt jedem Handgriff und dem Geruch, der ihn verlangt, einen Namen (lange Methode, Feature Envy, Primitive Obsession, Shotgun Surgery). Nützliche Regeln: „Mach die Änderung leicht (das kann schwer sein), dann mach die leichte Änderung“ (Kent Beck); getrennte Commits für Refactoring und Verhalten, damit Reviews lesbar bleiben; und große Umbauten in auslieferbaren Schritten (Expand and Contract, Branch by Abstraction) statt eines Branches, der einen Monat lebt. Tests, die beim Refactoring ohne Verhaltensänderung brechen, prüfen Interna statt dessen, worauf es ankommt.
+en:
+    Refactoring is changing how the code is written without changing what it does: clearer names, shorter methods, duplicates merged into one. The program does exactly the same thing, but it's easier to understand and less scary to change.
+    It's tidying the workshop between fights: spanners back on their board, cables labelled, the bolt that was spread across three boxes now in just one. The robot doesn't hit any harder for it, but the next repair takes ten minutes instead of a whole night (and nobody gets electrocuted hunting for the screwdriver).
+    You do it in small steps, checking in between: extract method (the "aim and attack if close" chunk of your cadaTurno (onTick) becomes apuntarYAtacar(e)), rename (d → distanciaAlRival), replace a magic number with a constant (static final double ALCANCE = 80) and merge duplicates. IDEs do it for you, safely (Refactor › Rename, Extract Method), and in the game your @Test tests in the lab tell you whether everything still does the same.
+    The classic mistake is refactoring and changing behaviour at the same time ("while I'm at it, I'll fix this"): if something breaks, you don't know which of the two changes did it. Keep them apart: either you refactor (tests unchanged and still green) or you change what it does (and change or add tests). Without tests, refactoring is just changing things blindfolded.
+    For seniors: Martin Fowler's catalogue (Refactoring, 1999; 2nd ed. 2018) names every move and the smell that calls for it (long method, feature envy, primitive obsession, shotgun surgery). Useful rules: "make the change easy (warning: this may be hard), then make the easy change" (Kent Beck); separate commits for refactoring and for behaviour, which keeps reviews readable; and big refactors in deployable steps (expand and contract, branch by abstraction) rather than a month-long branch. Tests that break when you refactor without changing behaviour are testing internals, not what matters.
+pseudo.es:
+    ANTES: cadaTurno hace 40 líneas de radar, puntería y ataque
+    PASO 1: pruebas en verde
+    PASO 2: extraer «apuntar y atacar» a su propio método
+    PASO 3: pruebas en verde otra vez (mismo comportamiento)
+    PASO 4: renombrar d → distanciaAlRival; pruebas en verde
+    REPETIR MIENTRAS quede algo que no se entienda
+pseudo.de:
+    VORHER: cadaTurno hat 40 Zeilen Radar, Zielen und Angriff
+    SCHRITT 1: Tests grün
+    SCHRITT 2: „zielen und angreifen“ in eine eigene Methode ziehen
+    SCHRITT 3: Tests wieder grün (gleiches Verhalten)
+    SCHRITT 4: d → distanciaAlRival umbenennen; Tests grün
+    WIEDERHOLE, SOLANGE etwas unverständlich ist
+pseudo.en:
+    BEFORE: cadaTurno has 40 lines of radar, aiming and attacking
+    STEP 1: tests green
+    STEP 2: extract "aim and attack" into its own method
+    STEP 3: tests green again (same behaviour)
+    STEP 4: rename d → distanciaAlRival; tests green
+    REPEAT WHILE something is still hard to understand
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        static final double ALCANCE = 80;                 // antes: el número mágico 80, repetido || vorher: die magische Zahl 80, mehrfach || before: the magic number 80, repeated
+    
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            apuntarYAtacar(e);                            // se lee como una frase || liest sich wie ein Satz || reads like a sentence
+        }
+    
+        private void apuntarYAtacar(Enemigo rival) {     // método extraído: mismo comportamiento || extrahierte Methode: gleiches Verhalten || extracted method: same behaviour
+            apuntarHacia(rival.angulo());
+            boolean cerca = rival.distancia() < ALCANCE;
+            if (cerca && listoIzquierda()) atacarIzquierda();
+        }
+    }
+
+=== codigo_heredado
+nivel: 5
+tema: 22
+titulo.es: Código heredado
+titulo.de: Legacy-Code
+titulo.en: Legacy code
+claves.es: codigo heredado, legacy code, codigo legado, codigo viejo, codigo sin pruebas, prueba de caracterizacion, characterization test, strangler fig, golden master
+claves.de: legacy-code, legacy code, altcode, alter code, code ohne tests, charakterisierungstest, characterization test, strangler fig, golden master
+claves.en: legacy code, old code, code without tests, characterization test, characterisation test, strangler fig, golden master, seam
+ver: refactorizar, junit, dobles_de_prueba
+es:
+    Código heredado es código que te toca mantener y que da miedo tocar: lo escribió otro (o tú hace un año), nadie recuerda por qué hace lo que hace y, sobre todo, no tiene pruebas. Michael Feathers lo define así, sin más: código sin pruebas.
+    Te dan el robot campeón de 1998: cables de colores que ya no se fabrican, una cinta americana que nadie se atreve a quitar y un botón rotulado «NO» que, si lo pulsas, hace la ola. Antes de cambiarle un solo tornillo, lo subes al banco de pruebas y apuntas qué hace exactamente cuando le pasan cosas, sea raro o no.
+    Primero, pruebas de caracterización: no comprueban lo que debería hacer, sino lo que hace hoy (ejecutas, apuntas la salida y la fijas con assertEquals, rarezas incluidas). Después buscas una costura (seam), un punto donde cortar una dependencia (pasar una interfaz por el constructor, extraer un método y sobrescribirlo en la prueba), y cambias en pasos pequeños con las pruebas en verde. En el juego: si tu robot viejo gana y quieres reescribirlo, fija antes con @Test lo que decide en situaciones concretas (rival cerca, poco blindaje…).
+    El fallo típico es la reescritura total desde cero («esta vez lo haremos bien»): tarda el triple, pierde los arreglos invisibles que llevaba el viejo y llega cuando el viejo ya ha cambiado. Otro: «arreglar» sin preguntar un comportamiento raro que fijó una prueba de caracterización; puede que alguien dependa de él (la ley de Hyrum).
+    Para un senior: en sistemas grandes, la higuera estranguladora (strangler fig, de Fowler): pones una fachada delante, desvías llamada a llamada al código nuevo y el viejo se va secando solo, sin un gran día del cambio. Para salidas enormes, golden master o approval testing (guardas la salida completa y comparas; por ejemplo, con ApprovalTests). De Feathers, técnicas que funcionan: sprout method/class (lo nuevo, probado y aparte; el viejo solo lo llama), wrap method y «subclasifica y sobrescribe» para romper dependencias dentro de la prueba.
+de:
+    Legacy-Code ist Code, den du pflegen musst und vor dem du Angst hast: Jemand anderes hat ihn geschrieben (oder du vor einem Jahr), keiner weiß mehr, warum er tut, was er tut, und vor allem hat er keine Tests. Michael Feathers definiert ihn genau so: Code ohne Tests.
+    Du bekommst den Meisterroboter von 1998: Kabel in Farben, die es nicht mehr gibt, ein Gewebeband, das sich niemand abzureißen traut, und einen Knopf mit der Aufschrift „NEIN“, der beim Drücken die Welle macht. Bevor du auch nur eine Schraube änderst, stellst du ihn auf den Prüfstand und notierst genau, was er in welcher Lage tut, seltsam oder nicht.
+    Zuerst Charakterisierungstests: Sie prüfen nicht, was er tun sollte, sondern was er heute tut (ausführen, Ausgabe notieren und mit assertEquals festhalten, Merkwürdigkeiten inklusive). Danach suchst du eine Nahtstelle (seam), an der sich eine Abhängigkeit kappen lässt (ein Interface über den Konstruktor reichen, eine Methode extrahieren und im Test überschreiben), und änderst in kleinen Schritten mit grünen Tests. Im Spiel: Gewinnt dein alter Roboter und du willst ihn neu schreiben, halte vorher mit @Test fest, was er in konkreten Lagen entscheidet (Gegner nah, wenig Panzerung …).
+    Der typische Fehler ist die komplette Neuschreibung („diesmal machen wir es richtig“): Sie dauert dreimal so lang, verliert die unsichtbaren Korrekturen, die im alten Code steckten, und kommt an, wenn sich der alte längst weiterentwickelt hat. Ein anderer: ein seltsames Verhalten, das ein Charakterisierungstest festhält, ungefragt zu „reparieren“; vielleicht verlässt sich jemand darauf (Hyrums Gesetz).
+    Für Senioren: In großen Systemen hilft die Würgefeige (Strangler Fig, nach Fowler): Du stellst eine Fassade davor, leitest Aufruf für Aufruf auf den neuen Code um, und der alte vertrocknet von selbst, ganz ohne großen Umstellungstag. Für riesige Ausgaben gibt es Golden Master bzw. Approval Testing (die ganze Ausgabe speichern und vergleichen, etwa mit ApprovalTests). Von Feathers stammen Techniken, die funktionieren: Sprout Method/Class (Neues getestet und getrennt; der alte Code ruft es nur auf), Wrap Method und „Subclass and Override“, um Abhängigkeiten im Test zu kappen.
+en:
+    Legacy code is code you have to maintain and are afraid to touch: someone else wrote it (or you, a year ago), nobody remembers why it does what it does and, above all, it has no tests. Michael Feathers defines it exactly that way: code without tests.
+    You're handed the champion robot of 1998: cables in colours nobody makes any more, a strip of duct tape nobody dares peel off, and a button labelled "NO" that does a Mexican wave when you press it. Before changing a single bolt, you put it on the test bench and write down exactly what it does when things happen to it, weird or not.
+    First, characterization tests: they don't check what it should do but what it does today (run it, note the output and pin it with assertEquals, oddities included). Then you look for a seam, a spot where you can cut a dependency (pass an interface through the constructor, extract a method and override it in the test), and change things in small steps with the tests green. In the game: if your old robot wins and you want to rewrite it, first pin down with @Test what it decides in specific situations (rival close, low armour…).
+    The classic mistake is the full rewrite from scratch ("this time we'll do it right"): it takes three times as long, loses the invisible fixes the old code carried, and lands when the old code has already moved on. Another is "fixing", without asking, a weird behaviour a characterization test pinned down; someone may depend on it (Hyrum's law).
+    For seniors: in large systems, use the strangler fig (Fowler's term): put a facade in front, divert call after call to the new code, and the old one withers away by itself, with no big switch-over day. For huge outputs, golden master or approval testing (store the whole output and compare; ApprovalTests, for example). Feathers' techniques that work: sprout method/class (new code tested and kept apart; the old code just calls it), wrap method, and "subclass and override" to break dependencies inside the test.
+pseudo.es:
+    ANTES DE TOCAR NADA:
+        PARA CADA situación (rival cerca, lejos, poco blindaje):
+            ejecutar el robot viejo
+            apuntar lo que hace, aunque sea raro
+            fijarlo en una prueba
+    DESPUÉS: cambiar en pasos pequeños
+        SI una prueba se pone roja: deshacer el último paso
+pseudo.de:
+    BEVOR ICH ETWAS ANFASSE:
+        FÜR JEDE Lage (Gegner nah, fern, wenig Panzerung):
+            den alten Roboter laufen lassen
+            notieren, was er tut, auch wenn es seltsam ist
+            es in einem Test festhalten
+    DANACH: in kleinen Schritten ändern
+        WENN ein Test rot wird: den letzten Schritt rückgängig machen
+pseudo.en:
+    BEFORE TOUCHING ANYTHING:
+        FOR EACH situation (rival close, far, low armour):
+            run the old robot
+            write down what it does, even if it's weird
+            pin it in a test
+    AFTERWARDS: change in small steps
+        IF a test turns red: undo the last step
+ejemplo:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.Test;
+    
+    class PruebasDelViejo {
+        static int danoViejo(int fuerza, boolean critico) { return critico ? fuerza * 2 - 3 : fuerza; }   // nadie sabe por qué resta 3 || niemand weiß, warum 3 abgezogen wird || nobody knows why it subtracts 3
+    
+        @Test
+        void fijaLoQueHaceHoy() {                          // caracterización: lo que HACE, no lo que debería || Charakterisierung: was er TUT, nicht was er sollte || characterization: what it DOES, not what it should
+            assertEquals(10, danoViejo(10, false));
+            assertEquals(17, danoViejo(10, true));          // ¿raro? sí, pero es lo que hace: se fija || seltsam? ja, aber so ist es: festhalten || weird? yes, but that's what it does: pin it
+            assertEquals(-3, danoViejo(0, true));           // incluso los casos absurdos || sogar die absurden Fälle || even the absurd cases
+        }
+    }
+
+=== dobles_de_prueba
+nivel: 5
+tema: 22
+titulo.es: Dobles de prueba
+titulo.de: Test-Doubles
+titulo.en: Test doubles
+claves.es: dobles de prueba, doble de prueba, mock, mocks, stub, fake, mockito, espia, test double
+claves.de: test-doubles, test-double, testdouble, mock, mocks, stub, fake, attrappe, mockito, spy
+claves.en: test doubles, test double, mock, mocks, stub, fake, mockito, spy, dummy
+ver: junit, interfaz, record, codigo_heredado
+es:
+    Un doble de prueba es un objeto de mentira que ocupa el lugar de uno de verdad durante una prueba, para que esta sea rápida, repetible y no dependa del azar, de la red ni de otra clase que todavía no existe.
+    Es el muñeco del gimnasio de robots: no esquiva, no contesta y aparece exactamente donde le dices. Los hay de varios tipos: el que solo está de pie para rellenar (dummy), el que siempre dice «estoy a 50 metros» (stub), uno de cartón que se mueve de verdad pero en pequeño (fake), el que apunta cada golpe que recibe (spy) y el que llega con la lista de golpes esperados y protesta si no los recibe (mock).
+    Como Enemigo es una interfaz, en tus pruebas puedes inventarte uno: un record EnemigoFalso(…) implements Enemigo, colocado donde quieras, para comprobar qué decide tu lógica. En proyectos reales se usa Mockito: when(radar.distancia()).thenReturn(50.0) para un stub y verify(arma).disparar() para un mock. El juego tiene su propio doble a lo grande: el Muñeco, un rival de entrenamiento que da vueltas despacio y casi nunca ataca.
+    El fallo típico es mockearlo todo y acabar probando la implementación (que se llame a tal método en tal orden) en vez del resultado: cada refactor rompe veinte pruebas sin que haya fallado nada de verdad. Prefiere objetos reales o fakes cuando sean baratos, stubs para las entradas, y mocks solo para efectos que no se pueden ver de otra forma (que se avisó al equipo).
+    Para un senior: la taxonomía es de Gerard Meszaros (xUnit Test Patterns), y la discusión de fondo, la de la escuela clásica (Detroit: estado, pocos mocks) frente a la mockista (Londres: interacciones, diseño de fuera hacia dentro), que Fowler cuenta en «Mocks Aren't Stubs». Reglas prácticas: no mockees tipos que no son tuyos (envuélvelos en una interfaz propia y mockea esa) ni objetos de valor (records). Y el azar y el tiempo también son dependencias: inyecta un Random con semilla o un java.time.Clock (Clock.fixed) en lugar de llamar dentro a new Random() o Instant.now().
+de:
+    Ein Test-Double ist ein Schein-Objekt, das während eines Tests den Platz eines echten einnimmt, damit der Test schnell und wiederholbar ist und nicht vom Zufall, vom Netzwerk oder von einer Klasse abhängt, die es noch gar nicht gibt.
+    Das ist die Trainingspuppe im Roboter-Gym: Sie weicht nicht aus, widerspricht nicht und steht genau da, wo du sie hinstellst. Es gibt verschiedene Sorten: die, die nur als Lückenfüller herumsteht (Dummy), die, die immer „ich bin 50 Meter weg“ sagt (Stub), eine aus Pappe, die sich wirklich bewegt, nur im Kleinen (Fake), die, die jeden Treffer mitschreibt (Spy), und die, die mit einer Liste erwarteter Treffer kommt und protestiert, wenn sie ausbleiben (Mock).
+    Weil Enemigo (Gegner) ein Interface ist, kannst du dir in deinen Tests einen erfinden: ein record EnemigoFalso(…) implements Enemigo, platziert, wo du willst, um zu prüfen, was deine Logik entscheidet. In echten Projekten nutzt man Mockito: when(radar.distancia()).thenReturn(50.0) für einen Stub und verify(waffe).feuern() für einen Mock. Das Spiel hat sein eigenes Double im Großformat: den Muñeco (die Puppe), einen Trainingsgegner, der langsam Runden dreht und fast nie angreift.
+    Der typische Fehler: alles zu mocken und am Ende die Implementierung zu testen (dass diese Methode in jener Reihenfolge aufgerufen wird) statt des Ergebnisses. Jedes Refactoring bricht zwanzig Tests, ohne dass wirklich etwas kaputt ist. Nimm lieber echte Objekte oder Fakes, wenn sie billig sind, Stubs für Eingaben und Mocks nur für Wirkungen, die man anders nicht sieht (das Team wurde benachrichtigt).
+    Für Senioren: Die Begriffe stammen von Gerard Meszaros (xUnit Test Patterns), und der Grundsatzstreit ist der zwischen klassischer Schule (Detroit: Zustand, wenige Mocks) und Mockist-Schule (London: Interaktionen, Entwurf von außen nach innen), den Fowler in „Mocks Aren't Stubs“ beschreibt. Praxisregeln: Mocke keine Typen, die dir nicht gehören (wickle sie in ein eigenes Interface und mocke das), und keine Wertobjekte (Records). Und auch Zufall und Zeit sind Abhängigkeiten: Injiziere ein Random mit Seed oder eine java.time.Clock (Clock.fixed), statt drinnen new Random() oder Instant.now() aufzurufen.
+en:
+    A test double is a fake object that stands in for a real one during a test, so the test is fast, repeatable and doesn't depend on chance, the network or some class that doesn't exist yet.
+    It's the dummy in the robot gym: it doesn't dodge, doesn't argue and appears exactly where you put it. There are several kinds: the one that just stands there filling a gap (dummy), the one that always says "I'm 50 metres away" (stub), a cardboard one that really moves, only in miniature (fake), the one that writes down every hit it takes (spy) and the one that arrives with a list of expected hits and complains if they don't come (mock).
+    Since Enemigo (Enemy) is an interface, you can make one up in your tests: a record EnemigoFalso(…) implements Enemigo, placed wherever you like, to check what your logic decides. In real projects people use Mockito: when(radar.distance()).thenReturn(50.0) for a stub and verify(weapon).fire() for a mock. The game has its own large-scale double: the Muñeco (the dummy), a training rival that circles slowly and hardly ever attacks.
+    The classic mistake is mocking everything and ending up testing the implementation (that this method is called in that order) instead of the result: every refactor breaks twenty tests without anything really being wrong. Prefer real objects or fakes when they're cheap, stubs for inputs, and mocks only for effects you can't observe any other way (the team was notified).
+    For seniors: the taxonomy comes from Gerard Meszaros (xUnit Test Patterns), and the underlying debate is between the classicist school (Detroit: state, few mocks) and the mockist school (London: interactions, outside-in design), which Fowler describes in "Mocks Aren't Stubs". Practical rules: don't mock types you don't own (wrap them in your own interface and mock that) and don't mock value objects (records). And randomness and time are dependencies too: inject a seeded Random or a java.time.Clock (Clock.fixed) instead of calling new Random() or Instant.now() inside.
+pseudo.es:
+    falso ← un enemigo de mentira a 50 de distancia, en el suelo
+    COMPROBAR decidir(falso) = «atacar»
+    falso ← el mismo, pero a 500
+    COMPROBAR decidir(falso) = «acercarse»
+    falso ← el mismo, pero volando
+    COMPROBAR decidir(falso) = «acercarse»
+pseudo.de:
+    falsch ← ein Schein-Gegner, 50 entfernt, am Boden
+    PRÜFE entscheiden(falsch) = „angreifen“
+    falsch ← derselbe, aber 500 entfernt
+    PRÜFE entscheiden(falsch) = „annähern“
+    falsch ← derselbe, aber fliegend
+    PRÜFE entscheiden(falsch) = „annähern“
+pseudo.en:
+    fake ← a pretend enemy 50 away, on the ground
+    CHECK decide(fake) = "attack"
+    fake ← the same one, but 500 away
+    CHECK decide(fake) = "approach"
+    fake ← the same one, but flying
+    CHECK decide(fake) = "approach"
+ejemplo:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.Test;
+    import metajavbots.api.Enemigo;
+    
+    class PruebasDeDecision {
+        record EnemigoFalso(double x, double y, double distancia, double angulo, double rumbo, double velocidad,
+                            double blindaje, String nombre, String modelo, boolean vuela) implements Enemigo {}   // stub: el record ya trae los métodos de la interfaz || Stub: der Record liefert die Interface-Methoden gleich mit || stub: the record already provides the interface methods
+        static String decidir(Enemigo e) { return e.distancia() < 80 && !e.vuela() ? "atacar" : "acercarse"; }
+        @Test
+        void cercaYEnElSueloAtaca() {
+            Enemigo falso = new EnemigoFalso(0, 0, 50, 0, 0, 0, 100, "muñeco", "cobalto", false);   // donde yo quiero, siempre igual || genau da, wo ich will, immer gleich || exactly where I want, always the same
+            assertEquals("atacar", decidir(falso));
+        }
+    }
+
+=== hashmap_por_dentro
+nivel: 5
+tema: 15
+titulo.es: HashMap por dentro
+titulo.de: HashMap von innen
+titulo.en: HashMap internals
+claves.es: hashmap por dentro, como funciona un hashmap, cubetas, buckets, colisiones, factor de carga, load factor, treeify, rehash
+claves.de: hashmap von innen, wie funktioniert eine hashmap, buckets, kollisionen, hash-kollision, ladefaktor, load factor, treeify, rehash
+claves.en: hashmap internals, how does a hashmap work, buckets, hash collisions, load factor, treeify, rehash, resize
+ver: map, equals_hashcode, complejidad, record
+es:
+    Un HashMap guarda los pares clave-valor en un array de cubetas: calcula un número a partir de la clave (hashCode()), lo usa para elegir cubeta y mete ahí el par. Buscar es repetir la cuenta e ir directo a esa cubeta, sin recorrerlo todo: por eso get() es casi instantáneo.
+    El guardarropa del estadio tiene 16 ganchos. Al robot «Tuercas» le calculan un número con las letras de su nombre, le toca el gancho 5 y allí cuelga su capa. Si a «Chispas» también le toca el 5, las dos capas cuelgan juntas (una colisión) y hay que mirar las etiquetas una a una; y cuando hay demasiadas capas, el encargado compra el doble de ganchos y vuelve a colgarlo todo.
+    put(k, v) hace hash = h ^ (h >>> 16) con h = k.hashCode() (mezcla los bits altos con los bajos), índice = hash & (capacidad - 1) (la capacidad es potencia de 2; por defecto, 16) y, dentro de la cubeta, compara con equals(). Cuando hay más entradas que capacidad × 0,75 (el factor de carga), duplica el array y redistribuye (rehash). En la memoria() del robot, que es un Map, las claves String ya traen equals y hashCode bien hechos.
+    El fallo típico es usar como clave un objeto tuyo que sobrescribe equals pero no hashCode (o al revés): dos claves «iguales» caen en cubetas distintas y get() devuelve null. Peor aún: cambiar un atributo de una clave ya guardada, que cambia su hashCode y la deja perdida en la cubeta vieja. Usa claves inmutables (String, Integer, un record).
+    Para un senior: desde Java 8, una cubeta con 8 o más elementos se convierte en un árbol rojinegro (si la tabla tiene al menos 64 cubetas; si no, se redimensiona), y el peor caso de búsqueda pasa de O(n) a O(log n), mejor aún si las claves son Comparable; llegó tras los ataques de denegación de servicio por colisiones de 2011-2012. Si sabes cuántas entradas habrá, HashMap.newHashMap(n) (Java 19) calcula la capacidad bien; new HashMap<>(n) no, porque n es la capacidad y no las entradas, y redimensiona antes de lo que crees. Para orden de inserción, LinkedHashMap; para varios hilos, ConcurrentHashMap, nunca un HashMap compartido (en Java 7 una carrera durante el rehash podía cerrar un ciclo en una cubeta y dejar un get() en bucle infinito).
+de:
+    Eine HashMap legt Schlüssel-Wert-Paare in einem Array von Buckets ab: Sie berechnet aus dem Schlüssel eine Zahl (hashCode()), wählt damit den Bucket und legt das Paar dort hinein. Suchen heißt, dieselbe Rechnung zu wiederholen und direkt zu diesem Bucket zu gehen, ohne alles abzusuchen: Darum ist get() fast sofort fertig.
+    Die Garderobe des Stadions hat 16 Haken. Für den Roboter „Mutter“ wird aus den Buchstaben seines Namens eine Zahl berechnet, er bekommt Haken 5, und dort hängt sein Umhang. Bekommt „Funke“ auch die 5, hängen beide Umhänge zusammen (eine Kollision), und man muss die Schildchen einzeln lesen; und wenn zu viele Umhänge hängen, kauft der Garderobier doppelt so viele Haken und hängt alles neu auf.
+    put(k, v) rechnet hash = h ^ (h >>> 16) mit h = k.hashCode() (mischt die oberen mit den unteren Bits), index = hash & (kapazitaet - 1) (die Kapazität ist eine Zweierpotenz, standardmäßig 16) und vergleicht im Bucket mit equals(). Gibt es mehr Einträge als Kapazität × 0,75 (der Ladefaktor), verdoppelt sie das Array und verteilt neu (Rehash). In memoria() (gedaechtnis) des Roboters, einer Map, bringen String-Schlüssel equals und hashCode schon richtig mit.
+    Der typische Fehler: als Schlüssel ein eigenes Objekt zu nehmen, das equals überschreibt, aber nicht hashCode (oder umgekehrt). Zwei „gleiche“ Schlüssel landen in verschiedenen Buckets, und get() liefert null. Noch schlimmer: ein Attribut eines schon gespeicherten Schlüssels zu ändern, was seinen hashCode ändert und ihn im alten Bucket verloren zurücklässt. Nimm unveränderliche Schlüssel (String, Integer, einen Record).
+    Für Senioren: Seit Java 8 wird ein Bucket mit 8 oder mehr Elementen in einen Rot-Schwarz-Baum umgewandelt (wenn die Tabelle mindestens 64 Buckets hat; sonst wird vergrößert), und der schlechteste Fall der Suche sinkt von O(n) auf O(log n), noch besser bei Comparable-Schlüsseln; das kam nach den Denial-of-Service-Angriffen mit Hash-Kollisionen von 2011/2012. Weißt du, wie viele Einträge kommen, rechnet HashMap.newHashMap(n) (Java 19) die Kapazität richtig aus; new HashMap<>(n) nicht, denn n ist die Kapazität und nicht die Zahl der Einträge, und es vergrößert früher, als du denkst. Für Einfügereihenfolge LinkedHashMap; für mehrere Threads ConcurrentHashMap, nie eine geteilte HashMap (in Java 7 konnte ein Race während des Rehash einen Zyklus in einem Bucket schließen und ein get() in eine Endlosschleife schicken).
+en:
+    A HashMap stores key-value pairs in an array of buckets: it computes a number from the key (hashCode()), uses it to pick a bucket and puts the pair there. Looking something up means repeating the calculation and going straight to that bucket without scanning everything, which is why get() is almost instant.
+    The stadium cloakroom has 16 hooks. For the robot "Nuts" they work out a number from the letters of its name, it gets hook 5, and its cape hangs there. If "Sparky" also gets 5, both capes hang together (a collision) and you have to read the tags one by one; and once there are too many capes, the attendant buys twice as many hooks and rehangs everything.
+    put(k, v) computes hash = h ^ (h >>> 16) with h = k.hashCode() (mixing the high bits into the low ones), index = hash & (capacity - 1) (the capacity is a power of 2, 16 by default) and, inside the bucket, compares with equals(). When there are more entries than capacity × 0.75 (the load factor), it doubles the array and redistributes (rehash). In the robot's memoria() (memory), which is a Map, String keys already come with proper equals and hashCode.
+    The classic mistake is using as a key an object of yours that overrides equals but not hashCode (or vice versa): two "equal" keys land in different buckets and get() returns null. Worse still: changing a field of a key that's already stored, which changes its hashCode and leaves it lost in the old bucket. Use immutable keys (String, Integer, a record).
+    For seniors: since Java 8, a bucket with 8 or more entries is turned into a red-black tree (if the table has at least 64 buckets; otherwise it resizes), and the worst-case lookup drops from O(n) to O(log n), better still if the keys are Comparable; this came after the hash-collision denial-of-service attacks of 2011-2012. If you know how many entries there will be, HashMap.newHashMap(n) (Java 19) works out the capacity correctly; new HashMap<>(n) doesn't, because n is the capacity, not the number of entries, so it resizes sooner than you think. For insertion order, LinkedHashMap; for several threads, ConcurrentHashMap, never a shared HashMap (in Java 7 a race during rehash could close a cycle in a bucket and send a get() into an infinite loop).
+pseudo.es:
+    PONER(clave, valor):
+        número ← mezclar(clave.hashCode())
+        cubeta ← número Y (ganchos - 1)
+        PARA CADA par EN cubeta:
+            SI par.clave es igual (equals) a clave: cambiar su valor y DEVOLVER
+        añadir (clave, valor) a la cubeta
+        SI entradas > ganchos × 0,75: duplicar los ganchos y recolocarlo todo
+pseudo.de:
+    EINFÜGEN(schlüssel, wert):
+        zahl ← mischen(schlüssel.hashCode())
+        bucket ← zahl UND (haken - 1)
+        FÜR JEDES paar IN bucket:
+            WENN paar.schlüssel gleich (equals) schlüssel ist: Wert ersetzen und ZURÜCKGEBEN
+        (schlüssel, wert) in den Bucket legen
+        WENN einträge > haken × 0,75: Haken verdoppeln und alles neu verteilen
+pseudo.en:
+    PUT(key, value):
+        number ← mix(key.hashCode())
+        bucket ← number AND (hooks - 1)
+        FOR EACH pair IN bucket:
+            IF pair.key equals key: replace its value and RETURN
+        add (key, value) to the bucket
+        IF entries > hooks × 0.75: double the hooks and rehang everything
+ejemplo:
+    import java.util.*;
+    
+    record Casilla(int col, int fila) {}                     // record: equals y hashCode coherentes e inmutable || Record: equals und hashCode passen, unveränderlich || record: matching equals and hashCode, immutable
+    
+    public class MiRobot extends Metajavbot {
+        private final Map<Casilla, Integer> visitas = HashMap.newHashMap(64);   // 64 entradas sin redimensionar (Java 19) || 64 Einträge ohne Vergrößern (Java 19) || 64 entries without resizing (Java 19)
+    
+        @Override
+        public void cadaTurno() {
+            Casilla aqui = new Casilla((int) (x() / 100), (int) (y() / 100));
+            visitas.merge(aqui, 1, Integer::sum);           // hashCode elige la cubeta, equals la entrada || hashCode wählt den Bucket, equals den Eintrag || hashCode picks the bucket, equals the entry
+            if (visitas.get(aqui) > 90) girar(90);          // mucho rato aquí: a moverse || zu lange hier: weiter || too long here: move on
+        }
+    }

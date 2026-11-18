@@ -96,7 +96,6 @@ public final class MaquinaContraMaquina implements Pantalla {
             return;
         }
         avanzar(j, dt);
-        j.voz.fotograma(j.sonidos);
         float ah = (p.alto - arriba) * 0.5f;
         vista.letra = ui.letra;
         vista.techo = tiempoLocutor > 0 ? arriba + 12 + altoDeLaBanda + 8 : 0;

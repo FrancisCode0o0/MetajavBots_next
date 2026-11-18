@@ -27,6 +27,8 @@ public final class Entrenador {
     public final int cara, ojos, detalle;
     public final List<String> rasgos;
     public final String estilo;
+    /** Su voz: el tono, la velocidad y cuánto suena a robot (cada uno distinto, aunque Piper tenga una voz por idioma). */
+    public final metajavbots.sonido.Timbre timbre;
     private final Map<Idioma, List<String>> frases;
 
     private Entrenador(String id, Map<String, String> v) {
@@ -39,6 +41,7 @@ public final class Entrenador {
         this.detalle = Integer.parseInt(c.length > 2 ? c[2] : "333333", 16);
         this.rasgos = List.of(v.getOrDefault("rasgos", "").trim().split("\\s+"));
         this.estilo = v.getOrDefault("estilo", "a friendly coach");
+        this.timbre = metajavbots.sonido.Timbre.de(v.get("voz"));
         this.frases = new LinkedHashMap<>();
         for (Idioma i : Idioma.values()) {
             List<String> l = new ArrayList<>();

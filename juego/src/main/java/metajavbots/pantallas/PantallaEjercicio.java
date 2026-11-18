@@ -79,6 +79,17 @@ public final class PantallaEjercicio implements Pantalla {
     }
 
     @Override
+    public String temaDeJava() {
+        return e.tema;
+    }
+
+    @Override
+    public String contextoParaElEntrenador() {
+        return EntrenadorFlotante.contextoDeCodigo("The player is solving a short exercise (never give the full solution): «" + e.titulo.en
+                + "». Task: " + e.enunciado.en + (e.firma == null || e.firma.isBlank() ? "" : "\nSignature: " + e.firma), editor);
+    }
+
+    @Override
     public void alSalir(Juego j) {
         j.jugador.codigoDeEjercicios.put(e.id, editor.doc.texto());
         j.guardar();
@@ -197,7 +208,7 @@ public final class PantallaEjercicio implements Pantalla {
         Jugador jug = j.jugador;
         if (inf != null && !comprobando && editor.marcas.isEmpty() && !inf.compila()) {
             for (Compilador.Fallo f : inf.errores) {
-                editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave));
+                editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave, f.codigo, f.mensaje));
             }
         }
         if (inf != null && !comprobando && cambio == null && inf.todoBien()) {

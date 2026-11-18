@@ -1,0 +1,851 @@
+# 05_moderno.txt: Java moderno (var, record, sealed, patrones, switch con flechas, bloques de texto, inmutabilidad) y concurrencia (hilos, executor, synchronized, carreras, hilos virtuales) y excepciones bien diseñadas
+
+=== var
+nivel: 4
+tema: 19
+titulo.es: var
+titulo.de: var
+titulo.en: var
+claves.es: var, inferencia de tipos, palabra var, var en java, deducir el tipo, tipo implicito, local variable type inference
+claves.de: var, typinferenz, var in java, typ ableiten, lokale typinferenz, local variable type inference
+claves.en: var, type inference, var keyword, var in java, infer the type, local variable type inference
+ver: variable, tipo, genericos, lambda
+es:
+    Con var dejas que Java deduzca el tipo de una variable local mirando lo que le asignas: en vez de escribir el tipo, escribes var. La variable sigue teniendo un tipo fijo; solo que lo pone el compilador.
+    Es como el locutor que, en vez de anunciar «¡Llega Robot-de-Combate-Modelo-Cobalto-Con-Martillo, un robot de combate modelo cobalto con martillo!», grita «¡Llega ESE!» y señala: todo el estadio ve qué es. Pero si señala una caja cerrada, nadie sabe qué hay dentro.
+    Llegó en Java 10 y solo vale dentro de los métodos: var enemigos = enemigosVistos(); es una List<Enemigo>, y var d = e.distancia(); un double. También sirve en el for (for (var e : enemigosVistos())) y, desde Java 11, en los parámetros de una lambda ((var a, var b) -> a + b), útil para ponerles anotaciones.
+    El fallo típico: creer que var es «de cualquier tipo», como en JavaScript. No: tras var x = 5; x es un int para siempre, y x = "hola"; no compila. Tampoco vale sin valor (var x;), con null (var x = null;), con un array a pelo (var a = {1, 2};), en atributos ni en parámetros de métodos.
+    La trampa sutil: var lista = new ArrayList<>(); deduce ArrayList<Object> (el diamante no tiene de dónde sacar el tipo), y var siempre deduce el tipo concreto (ArrayList, no List), así que la variable queda atada a la implementación. Úsalo cuando el lado derecho ya diga el tipo (new Pieza(), un literal) y evítalo cuando lo esconda (var r = calcular(); ¿qué es r?). Curiosidad: var no es palabra reservada sino «nombre de tipo reservado», así que var var = 1; compila (no lo hagas).
+de:
+    Mit var lässt du Java den Typ einer lokalen Variablen aus dem ableiten, was du ihr zuweist: Statt den Typ hinzuschreiben, schreibst du var. Die Variable hat trotzdem einen festen Typ, nur setzt ihn der Compiler ein.
+    Wie der Stadionsprecher, der statt „Hier kommt Kampfroboter-Modell-Kobalt-mit-Hammer, ein Kampfroboter Modell Kobalt mit Hammer!“ einfach „Hier kommt DER DA!“ brüllt und hinzeigt: Das ganze Stadion sieht, wer gemeint ist. Zeigt er aber auf eine geschlossene Kiste, weiß keiner, was drin ist.
+    var gibt es seit Java 10, und nur innerhalb von Methoden: Was enemigosVistos (gesehen) liefert, ist mit var feinde = enemigosVistos(); eine List<Enemigo>, und var d = e.distancia(); ist ein double. Es geht auch in der for-Schleife (for (var e : enemigosVistos())) und seit Java 11 bei Lambda-Parametern ((var a, var b) -> a + b), praktisch, um sie zu annotieren.
+    Der typische Fehler: zu glauben, var sei „irgendein Typ“ wie in JavaScript. Nein: Nach var x = 5; ist x für immer ein int, und x = "hallo"; kompiliert nicht. Ohne Wert (var x;), mit null (var x = null;), mit nacktem Array-Initialisierer (var a = {1, 2};), bei Attributen und Methodenparametern geht es ebenfalls nicht.
+    Die feine Falle: var liste = new ArrayList<>(); wird zu ArrayList<Object> (der Diamant hat nichts, woraus er den Typ ableiten könnte), und var nimmt immer den konkreten Typ (ArrayList, nicht List), womit die Variable an die Implementierung gebunden ist. Nimm es, wenn die rechte Seite den Typ schon verrät (new Pieza(), ein Literal), und lass es, wenn es ihn versteckt (var r = berechne(); was ist r?). Kurios: var ist kein Schlüsselwort, sondern ein „reservierter Typname“, also kompiliert var var = 1; (bitte nicht).
+en:
+    With var you let Java work out the type of a local variable from whatever you assign to it: instead of writing the type, you write var. The variable still has one fixed type; the compiler just fills it in.
+    It is like the announcer who, instead of bellowing "Here comes Combat-Robot-Model-Cobalt-With-Hammer, a combat robot, model cobalt, with a hammer!", just yells "Here comes THAT ONE!" and points: the whole stadium can see who he means. But if he points at a closed crate, nobody knows what is inside.
+    It arrived in Java 10 and only works inside methods: what enemigosVistos (seenEnemies) returns is a List<Enemigo> in var enemies = enemigosVistos();, and var d = e.distancia(); is a double. It also works in a for loop (for (var e : enemigosVistos())) and, since Java 11, on lambda parameters ((var a, var b) -> a + b), handy when you want to annotate them.
+    The classic mistake: thinking var means "any type", as in JavaScript. It doesn't: after var x = 5; x is an int forever, and x = "hello"; does not compile. It also fails with no value (var x;), with null (var x = null;), with a bare array initializer (var a = {1, 2};), on fields and on method parameters.
+    The subtle trap: var list = new ArrayList<>(); gives you ArrayList<Object> (the diamond has nothing to infer from), and var always picks the concrete type (ArrayList, not List), which ties the variable to the implementation. Use it when the right-hand side already states the type (new Pieza(), a literal) and avoid it when it hides it (var r = compute(); what is r?). Fun fact: var is not a keyword but a "reserved type name", so var var = 1; compiles (please don't).
+pseudo.es:
+    CADA TURNO:
+        enemigos ← los enemigos vistos          (Java deduce que es una lista de Enemigo)
+        PARA CADA e EN enemigos:
+            cerca ← distancia de e < 100        (Java deduce que es un sí/no)
+            SI cerca:
+                atacar
+pseudo.de:
+    JEDEN ZUG:
+        feinde ← die gesehenen Gegner           (Java leitet ab: eine Liste von Gegnern)
+        FÜR JEDES e IN feinde:
+            nah ← Entfernung von e < 100        (Java leitet ab: ein Ja/Nein)
+            WENN nah:
+                angreifen
+pseudo.en:
+    EVERY TICK:
+        enemies ← the enemies I can see         (Java infers: a list of Enemigo)
+        FOR EACH e IN enemies:
+            close ← distance of e < 100         (Java infers: a yes/no)
+            IF close:
+                attack
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            var enemigos = enemigosVistos();          // es List<Enemigo>: lo deduce Java || ist List<Enemigo>: Java leitet es ab || it is List<Enemigo>: Java infers it
+            for (var e : enemigos) {                  // e es un Enemigo || e ist ein Enemigo || e is an Enemigo
+                var cerca = e.distancia() < 100;      // un boolean || ein boolean || a boolean
+                if (cerca) atacar();
+            }
+            // var x;                                 // no compila: sin valor no hay tipo || kompiliert nicht: ohne Wert kein Typ || does not compile: no value, no type
+        }
+    }
+
+=== record
+nivel: 4
+tema: 19
+titulo.es: Record
+titulo.de: Record
+titulo.en: Record
+claves.es: record, records, record java, clase de datos, ficha de datos, constructor compacto, compact constructor
+claves.de: record, records, record java, datenklasse, datensatz, kompakter konstruktor, compact constructor
+claves.en: record, records, java record, data class, data carrier, compact constructor
+ver: inmutabilidad, equals_hashcode, sealed, pattern_matching
+es:
+    Un record es una clase cortita hecha solo para llevar datos: escribes sus campos entre paréntesis y Java te regala el constructor, los métodos para leerlos, equals, hashCode y toString. Sus campos no se pueden cambiar después.
+    Es la ficha que el árbitro grapa en la puerta del vestuario: «Cobalto, x 120, y 340, turno 312». Nadie la corrige con boli; si algo cambia, se imprime una ficha nueva y la vieja se archiva tal cual.
+    Llegó en Java 16: record Avistamiento(String quien, double x, double y, int turno) {} y ya puedes escribir new Avistamiento(e.nombre(), e.x(), e.y(), turnoActual()). Los campos se leen con a.x() o a.quien() (sin get delante) y dos fichas con los mismos datos son equals, así que sirven de clave en un Map o para no apuntar dos veces lo mismo en un Set.
+    El fallo típico: buscar a.getX() o intentar a.x = 5; (los campos son private final). Para «cambiar» uno, se crea otro: new Avistamiento(a.quien(), nuevaX, a.y(), a.turno()). Y para validar, el constructor compacto: record Pieza(int peso) { Pieza { if (peso < 0) throw new IllegalArgumentException("peso: " + peso); } }.
+    Para el senior: la inmutabilidad es superficial; si un componente es una List, quien te la pasó puede cambiarla por fuera, así que cópiala en el constructor compacto con List.copyOf. Un record no puede heredar de otra clase (ya hereda de java.lang.Record) ni tener más atributos de instancia que sus componentes, pero sí implementar interfaces, tener métodos y miembros static. Los records anidados son static de por sí, y junto con sealed y los record patterns de Java 21 dan a Java sus «tipos de datos algebraicos».
+de:
+    Ein Record ist eine kurze Klasse, die nur Daten trägt: Du schreibst die Felder in Klammern, und Java schenkt dir Konstruktor, Lesemethoden, equals, hashCode und toString. Ändern lassen sich die Felder danach nicht mehr.
+    Es ist die Karteikarte, die der Schiedsrichter an die Kabinentür tackert: „Kobalt, x 120, y 340, Zug 312“. Niemand verbessert sie mit Kuli; ändert sich etwas, wird eine neue Karte gedruckt und die alte unverändert abgeheftet.
+    Records gibt es seit Java 16: record Avistamiento(String quien, double x, double y, int turno) {}, und schon geht new Avistamiento(e.nombre(), e.x(), e.y(), turnoActual()) (e.nombre (name) und turnoActual (zug) kommen von der Roboter-API). Gelesen wird mit a.x() oder a.quien() (ohne get davor), und zwei Karten mit denselben Daten sind equals: Sie taugen als Schlüssel in einer Map oder dazu, in einem Set nichts doppelt zu notieren.
+    Der typische Fehler: a.getX() zu suchen oder a.x = 5; zu versuchen (die Felder sind private final). Um eines zu „ändern“, erzeugst du ein neues: new Avistamiento(a.quien(), neuesX, a.y(), a.turno()). Und zum Prüfen gibt es den kompakten Konstruktor: record Pieza(int peso) { Pieza { if (peso < 0) throw new IllegalArgumentException("peso: " + peso); } }.
+    Für Fortgeschrittene: Die Unveränderlichkeit ist nur flach; ist eine Komponente eine List, kann der Aufrufer sie von außen ändern, also kopiere sie im kompakten Konstruktor mit List.copyOf. Ein Record kann von keiner anderen Klasse erben (er erbt schon von java.lang.Record) und keine Instanzattribute außer seinen Komponenten haben, wohl aber Interfaces implementieren, Methoden und static-Member haben. Verschachtelte Records sind automatisch static, und zusammen mit sealed und den Record Patterns aus Java 21 bekommt Java seine „algebraischen Datentypen“.
+en:
+    A record is a short class made just to carry data: you list its fields in parentheses and Java gives you the constructor, the accessor methods, equals, hashCode and toString for free. The fields cannot be changed afterwards.
+    It is the card the referee staples to the locker-room door: "Cobalt, x 120, y 340, tick 312". Nobody corrects it with a pen; if something changes, a new card is printed and the old one is filed away untouched.
+    Records arrived in Java 16: record Avistamiento(String quien, double x, double y, int turno) {} and you can already write new Avistamiento(e.nombre(), e.x(), e.y(), turnoActual()) (e.nombre (name) and turnoActual (tick) come from the robot API). You read the fields with a.x() or a.quien() (no get in front), and two cards with the same data are equals, so they work as Map keys or to avoid noting the same thing twice in a Set.
+    The classic mistake: looking for a.getX() or trying a.x = 5; (the fields are private final). To "change" one, you create another: new Avistamiento(a.quien(), newX, a.y(), a.turno()). And to validate, use the compact constructor: record Pieza(int peso) { Pieza { if (peso < 0) throw new IllegalArgumentException("peso: " + peso); } }.
+    For seniors: the immutability is shallow; if a component is a List, whoever passed it in can still change it from outside, so copy it in the compact constructor with List.copyOf. A record cannot extend another class (it already extends java.lang.Record) or have instance fields beyond its components, but it can implement interfaces and have methods and static members. Nested records are implicitly static, and together with sealed and Java 21's record patterns they give Java its "algebraic data types".
+pseudo.es:
+    FICHA Avistamiento = (quién, x, y, turno)        (no se puede tachar)
+    AL VER ENEMIGO e:
+        último ← FICHA NUEVA(nombre de e, x de e, y de e, turno actual)
+        apuntar a (x de último, y de último)
+    SI hay que cambiar algo:
+        hacer otra FICHA NUEVA
+pseudo.de:
+    KARTE Avistamiento = (wer, x, y, zug)            (nicht durchstreichbar)
+    BEI SICHT VON e:
+        letzte ← NEUE KARTE(Name von e, x von e, y von e, aktueller Zug)
+        zielen auf (x von letzte, y von letzte)
+    WENN sich etwas ändern soll:
+        noch eine NEUE KARTE machen
+pseudo.en:
+    CARD Avistamiento = (who, x, y, tick)            (no crossing out)
+    ON SEEING ENEMY e:
+        last ← NEW CARD(name of e, x of e, y of e, current tick)
+        aim at (x of last, y of last)
+    IF something must change:
+        make another NEW CARD
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        record Avistamiento(String quien, double x, double y, int turno) {}   // constructor, x(), equals y toString gratis || Konstruktor, x(), equals und toString gratis || constructor, x(), equals and toString for free
+
+        Avistamiento ultimo;
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            ultimo = new Avistamiento(e.nombre(), e.x(), e.y(), turnoActual());
+            escribir(ultimo);                       // imprime Avistamiento[quien=…, x=…, y=…, turno=…] || gibt Avistamiento[quien=…, x=…, y=…, turno=…] aus || prints Avistamiento[quien=…, x=…, y=…, turno=…]
+            apuntarA(ultimo.x(), ultimo.y());       // se lee con x(), no con getX() || gelesen wird mit x(), nicht mit getX() || read with x(), not getX()
+        }
+    }
+
+=== sealed
+nivel: 4
+tema: 19
+titulo.es: Clases selladas (sealed)
+titulo.de: Versiegelte Klassen (sealed)
+titulo.en: Sealed classes
+claves.es: sealed, clase sellada, interfaz sellada, sellada, permits, non-sealed, jerarquia cerrada, sealed interface
+claves.de: sealed, versiegelte klasse, versiegeltes interface, versiegelt, permits, non-sealed, geschlossene hierarchie
+claves.en: sealed, sealed class, sealed interface, permits, non-sealed, closed hierarchy
+ver: herencia, interfaz, pattern_matching, record
+es:
+    Una clase o interfaz sealed («sellada») dice exactamente quién puede heredar de ella, y nadie más. Es una familia con la lista de miembros cerrada.
+    Es el reglamento de la liga: «las armas permitidas son martillo, sierra y láser, punto». Si alguien se presenta con un tirachinas casero, el árbitro (el compilador) no le deja ni pisar el ring.
+    Llegó en Java 17: sealed interface Arma permits Martillo, Sierra, Laser {}. Cada hija tiene que declararse final (no tendrá hijas), sealed (sigue con lista cerrada) o non-sealed (vuelve a abrirse); los record ya son final y encajan de maravilla. La gracia: un switch sobre un Arma puede cubrir los tres casos sin default, y el compilador comprueba que no falta ninguno.
+    El fallo típico: olvidar poner final, sealed o non-sealed en una hija (no compila), o dejar las hijas en otro paquete (tienen que estar en el mismo paquete, o en el mismo módulo si usas módulos). Si están todas en el mismo archivo, puedes omitir permits y Java las encuentra solo.
+    Para el senior: su valor está en el switch exhaustivo; añades una cuarta arma y el compilador te señala cada switch que se ha quedado corto. Por eso poner default en esos switch es una trampa: apaga justo el aviso que querías. Si cambias la jerarquía y no recompilas el código del switch, Java 21 lanza MatchException en ejecución en vez de fallar en silencio. Úsalo para datos de formas conocidas (resultados, mensajes, eventos), no para jerarquías que otros deban ampliar.
+de:
+    Eine sealed („versiegelte“) Klasse oder ein sealed Interface legt genau fest, wer davon erben darf, und sonst niemand. Eine Familie mit geschlossener Mitgliederliste.
+    Es ist das Ligareglement: „Erlaubte Waffen sind Hammer, Säge und Laser, Schluss.“ Taucht einer mit einer selbstgebastelten Steinschleuder auf, lässt ihn der Schiedsrichter (der Compiler) nicht einmal in den Ring.
+    Seit Java 17: sealed interface Arma permits Martillo, Sierra, Laser {}. Jede Unterklasse muss final (keine eigenen Kinder), sealed (wieder mit geschlossener Liste) oder non-sealed (wieder offen) sein; Records sind ohnehin final und passen perfekt. Der Clou: Ein switch über eine Arma kann alle drei Fälle ohne default abdecken, und der Compiler prüft, dass keiner fehlt.
+    Der typische Fehler: bei einer Unterklasse final, sealed oder non-sealed zu vergessen (kompiliert nicht) oder die Unterklassen in ein anderes Paket zu legen (sie müssen im selben Paket stehen, bzw. im selben Modul, wenn du Module benutzt). Stehen alle in derselben Datei, darfst du permits weglassen, Java findet sie selbst.
+    Für Fortgeschrittene: Der eigentliche Wert liegt im erschöpfenden switch; kommt eine vierte Waffe dazu, zeigt dir der Compiler jeden switch, der jetzt zu kurz ist. Deshalb ist ein default in solchen switches eine Falle: Es schaltet genau die Warnung ab, die du wolltest. Änderst du die Hierarchie und kompilierst den switch-Code nicht neu, wirft Java 21 zur Laufzeit eine MatchException, statt still falsch zu rechnen. Nimm es für Daten mit bekannten Formen (Ergebnisse, Nachrichten, Ereignisse), nicht für Hierarchien, die andere erweitern sollen.
+en:
+    A sealed class or interface states exactly who may extend it, and nobody else. It is a family with a closed membership list.
+    It is the league rulebook: "the permitted weapons are hammer, saw and laser, full stop". If someone turns up with a homemade slingshot, the referee (the compiler) won't even let them set foot in the ring.
+    It arrived in Java 17: sealed interface Arma permits Martillo, Sierra, Laser {}. Every subtype must be declared final (no children of its own), sealed (another closed list) or non-sealed (open again); records are already final and fit perfectly. The payoff: a switch over an Arma can cover the three cases with no default, and the compiler checks that none is missing.
+    The classic mistake: forgetting final, sealed or non-sealed on a subtype (it won't compile), or putting the subtypes in another package (they must live in the same package, or the same module if you use modules). If they are all in the same file, you may leave out permits and Java finds them itself.
+    For seniors: the real value is the exhaustive switch; add a fourth weapon and the compiler points at every switch that is now incomplete. That is why a default in those switches is a trap: it silences exactly the warning you wanted. If you change the hierarchy and don't recompile the switch code, Java 21 throws a MatchException at run time instead of silently doing the wrong thing. Use it for data with known shapes (results, messages, events), not for hierarchies others are meant to extend.
+pseudo.es:
+    ARMA puede ser SOLO: Martillo, Sierra o Láser
+    daño(arma):
+        SEGÚN arma:
+            Martillo m → peso de m × 2
+            Sierra s → dientes de s × 0,5
+            Láser l → potencia de l
+        (sin SI NO: no existen más armas)
+pseudo.de:
+    WAFFE darf NUR sein: Hammer, Säge oder Laser
+    schaden(waffe):
+        JE NACH waffe:
+            Hammer h → Gewicht von h × 2
+            Säge s → Zähne von s × 0,5
+            Laser l → Leistung von l
+        (kein SONST: andere Waffen gibt es nicht)
+pseudo.en:
+    WEAPON may ONLY be: Hammer, Saw or Laser
+    damage(weapon):
+        MATCH weapon:
+            Hammer h → weight of h × 2
+            Saw s → teeth of s × 0.5
+            Laser l → power of l
+        (no ELSE: there are no other weapons)
+ejemplo:
+    sealed interface Arma permits Martillo, Sierra, Laser {}     // solo estas tres, ni una más || nur diese drei, keine mehr || only these three, no more
+    record Martillo(double peso) implements Arma {}               // los record ya son final || Records sind schon final || records are already final
+    record Sierra(int dientes) implements Arma {}
+    record Laser(double potencia) implements Arma {}
+
+    class Taller {
+        static double danoDe(Arma a) {
+            return switch (a) {                                   // sin default: el compilador sabe que no hay más || ohne default: der Compiler weiß, dass es keine weiteren gibt || no default: the compiler knows there are no others
+                case Martillo m -> m.peso() * 2;
+                case Sierra s -> s.dientes() * 0.5;
+                case Laser l -> l.potencia();
+            };
+        }
+    }
+
+=== pattern_matching
+nivel: 4
+tema: 19
+titulo.es: Pattern matching
+titulo.de: Pattern Matching
+titulo.en: Pattern matching
+claves.es: pattern matching, coincidencia de patrones, instanceof con patron, record patterns, patron de record, switch con patrones, case when, desestructurar
+claves.de: pattern matching, mustervergleich, musterabgleich, instanceof mit muster, record patterns, switch mit mustern, case when, destrukturieren
+claves.en: pattern matching, instanceof pattern, type pattern, record patterns, switch patterns, case when, guarded pattern, destructuring
+ver: instanceof, sealed, record, switch_expresion
+es:
+    Pattern matching es preguntar «¿esto tiene tal forma?» y, si la tiene, sacar sus piezas con nombre en el mismo paso. Te ahorra el cast y las variables de apaño.
+    Es el escáner de la entrada de la arena: «si es un robot volador, ponle la etiqueta v; si es una ficha de avistamiento, saca su x y su y y apunta». Mira, reconoce y desmonta en un solo gesto, sin preguntar dos veces.
+    Hay tres sabores. instanceof con patrón (Java 16): if (o instanceof String texto) decir(texto); y texto ya es un String, sin cast. Switch con patrones (Java 21): case Martillo m -> …, con guardas como case Enemigo e when e.vuela() -> …. Y record patterns (Java 21): case Avistamiento(String n, double x, double y) -> apuntarA(x, y); desmonta el record de golpe.
+    El fallo típico: poner el caso general antes que el concreto (case Object o antes de case String s); el compilador protesta porque el segundo nunca se alcanzaría (se llama dominancia). Y la variable del patrón solo existe donde el patrón es seguro: después de if (!(o instanceof String t)) return; sí puedes usar t, pero no en la rama en la que el patrón falló.
+    Para el senior: un switch con patrones lanza NullPointerException si le llega null, salvo que añadas case null (Java 21). Los patrones sin nombre con _ (case Avistamiento(var n, _, _) ->) son de Java 22, y los patrones con tipos primitivos siguen en preview desde Java 23. Junto con sealed sustituyen a muchos Visitor: añades operaciones sin tocar las clases y el compilador vigila que no falte ningún caso.
+de:
+    Pattern Matching heißt: fragen „Hat das diese Form?“ und, wenn ja, im selben Schritt seine Teile mit Namen herausholen. Das spart den Cast und die Hilfsvariablen.
+    Es ist der Scanner am Eingang der Arena: „Ist es ein fliegender Roboter, kleb ihm das Etikett F auf; ist es eine Sichtungskarte, nimm x und y heraus und ziel.“ Hinschauen, erkennen und zerlegen in einem Handgriff, ohne zweimal zu fragen.
+    Es gibt drei Sorten. instanceof mit Muster (Java 16): if (o instanceof String text) decir(text); und text ist schon ein String, ohne Cast (decir heißt bei dir sagen). switch mit Mustern (Java 21): case Martillo m -> …, mit Wächtern wie case Enemigo e when e.vuela() -> … (vuela (fliegt)). Und Record Patterns (Java 21): case Avistamiento(String n, double x, double y) -> apuntarA(x, y); zerlegt den Record auf einen Schlag (apuntarA (zielenAuf)).
+    Der typische Fehler: den allgemeinen Fall vor den speziellen zu setzen (case Object o vor case String s); der Compiler beschwert sich, weil der zweite nie erreicht würde (das heißt Dominanz). Und die Mustervariable existiert nur dort, wo das Muster sicher passt: Nach if (!(o instanceof String t)) return; darfst du t benutzen, aber nicht in dem Zweig, in dem das Muster gescheitert ist.
+    Für Fortgeschrittene: Ein switch mit Mustern wirft eine NullPointerException, wenn null ankommt, außer du schreibst case null (Java 21). Unbenannte Muster mit _ (case Avistamiento(var n, _, _) ->) kamen mit Java 22, und Muster mit primitiven Typen sind seit Java 23 noch Preview. Zusammen mit sealed ersetzen sie viele Visitor: Du fügst Operationen hinzu, ohne die Klassen anzufassen, und der Compiler passt auf, dass kein Fall fehlt.
+en:
+    Pattern matching means asking "does this have such-and-such a shape?" and, if it does, pulling out its parts by name in the same step. It saves you the cast and the throwaway variables.
+    It is the scanner at the arena gate: "if it is a flying robot, stick the F label on it; if it is a sighting card, take out its x and y and aim". Look, recognise and take apart in one move, without asking twice.
+    There are three flavours. The instanceof pattern (Java 16): if (o instanceof String text) decir(text); and text is already a String, no cast (decir is say for you). Pattern switch (Java 21): case Martillo m -> …, with guards like case Enemigo e when e.vuela() -> … (vuela (flies)). And record patterns (Java 21): case Avistamiento(String n, double x, double y) -> apuntarA(x, y); takes the record apart in one go (apuntarA (aimAt)).
+    The classic mistake: putting the general case before the specific one (case Object o before case String s); the compiler complains because the second could never be reached (this is called dominance). And the pattern variable only exists where the pattern is guaranteed to have matched: after if (!(o instanceof String t)) return; you can use t, but not in the branch where the pattern failed.
+    For seniors: a pattern switch throws NullPointerException when it gets null, unless you add case null (Java 21). Unnamed patterns with _ (case Avistamiento(var n, _, _) ->) arrived in Java 22, and primitive types in patterns have been in preview since Java 23. Together with sealed they replace many Visitors: you add operations without touching the classes, and the compiler makes sure no case is missing.
+pseudo.es:
+    CADA TURNO:
+        SI la noticia ES un texto t:
+            decir t
+        SEGÚN la noticia:
+            ES Avistamiento(n, x, y) Y n empieza por "Cobalto" → apuntar a (x, y)
+            ES Avistamiento a → escribir "visto: " + quién de a
+            SI NO → nada
+pseudo.de:
+    JEDEN ZUG:
+        WENN die Nachricht ein Text t IST:
+            sage t
+        JE NACH Nachricht:
+            IST Avistamiento(n, x, y) UND n beginnt mit "Cobalto" → zielen auf (x, y)
+            IST Avistamiento a → schreibe "gesehen: " + wer von a
+            SONST → nichts
+pseudo.en:
+    EVERY TICK:
+        IF the news IS a text t:
+            say t
+        MATCH the news:
+            IS Avistamiento(n, x, y) AND n starts with "Cobalto" → aim at (x, y)
+            IS Avistamiento a → write "seen: " + who of a
+            ELSE → nothing
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        record Avistamiento(String quien, double x, double y) {}
+        Object noticia;                                   // puede ser cualquier cosa || kann alles Mögliche sein || can be anything at all
+
+        @Override
+        public void cadaTurno() {
+            if (noticia instanceof String texto) decir(texto);      // instanceof con patrón: sin cast || instanceof mit Muster: ohne Cast || instanceof pattern: no cast
+            switch (noticia) {
+                case Avistamiento(String n, double x, double y) when n.startsWith("Cobalto") -> apuntarA(x, y);   // desmonta el record y filtra || zerlegt den Record und filtert || takes the record apart and filters
+                case Avistamiento a -> escribir("visto: " + a.quien());
+                case null, default -> { }                 // también null, sin NullPointerException || auch null, ohne NullPointerException || null too, no NullPointerException
+            }
+        }
+    }
+
+=== switch_expresion
+nivel: 4
+tema: 19
+titulo.es: Switch como expresión
+titulo.de: Switch-Ausdruck
+titulo.en: Switch expression
+claves.es: switch expresion, switch con flechas, case ->, yield, switch que devuelve valor, switch moderno, switch expression
+claves.de: switch ausdruck, switch-ausdruck, switch mit pfeil, case ->, yield, switch expression, modernes switch
+claves.en: switch expression, arrow switch, case ->, yield, switch that returns a value, modern switch
+ver: switch, enum, pattern_matching, ternario
+es:
+    La switch expresión es un switch que devuelve un valor, con flechas -> en vez de dos puntos y sin break. Cada caso da un resultado, y ya está.
+    Es la ruleta del presentador: cae en «martillo» y suena «¡PUM!», cae en «láser» y suena «¡BZZT!». Cada casilla da su frase y la ruleta no se sigue deslizando a la casilla de al lado (adiós al temido fall-through).
+    Llegó en Java 14: String grito = switch (g.arma()) { case "martillo", "maza" -> "¡PUM!"; default -> "¡ay!"; }; Varias etiquetas van separadas por comas, y si un caso necesita varias líneas, usa un bloque y devuelve con yield: case "laser" -> { retroceder(40); yield "¡BZZT!"; }. Va muy bien con armaIzquierda(), con el arma de un Golpe o con un enum.
+    El fallo típico: escribir return en vez de yield dentro del bloque (no compila: return saldría del método entero), u olvidar el punto y coma tras la llave final (es una expresión, como el 5 de int x = 5;). Tampoco se pueden mezclar : y -> en el mismo switch.
+    Para el senior: una switch expresión tiene que ser exhaustiva. Con un String hace falta default; con un enum o un tipo sealed basta cubrir todos los valores, y entonces es mejor NO poner default, para que el compilador te avise al añadir uno nuevo. Si alguien añade una constante y tu clase no se recompila, el default oculto que puso el compilador lanza un error en ejecución (IncompatibleClassChangeError hasta Java 20, MatchException desde Java 21). Las flechas también valen en el switch de sentencia, sin devolver nada y sin break.
+de:
+    Der Switch-Ausdruck ist ein switch, der einen Wert liefert, mit Pfeilen -> statt Doppelpunkten und ohne break. Jeder Fall liefert ein Ergebnis, fertig.
+    Es ist das Glücksrad des Moderators: Bleibt es bei „Hammer“ stehen, ertönt „BUMM!“, bei „Laser“ ertönt „BZZT!“. Jedes Feld hat seinen Spruch, und das Rad rutscht nicht ins Nachbarfeld weiter (tschüss, gefürchtetes Fall-through).
+    Seit Java 14: String schrei = switch (g.arma()) { case "martillo", "maza" -> "¡PUM!"; default -> "¡ay!"; }; (g.arma (waffe) ist die Waffe des Treffers). Mehrere Labels trennst du mit Kommas, und braucht ein Fall mehrere Zeilen, nimmst du einen Block und lieferst mit yield: case "laser" -> { retroceder(40); yield "¡BZZT!"; } (retroceder (rueckwaerts)). Passt bestens zu armaIzquierda (waffeLinks) oder zu einem enum.
+    Der typische Fehler: im Block return statt yield zu schreiben (kompiliert nicht: return würde die ganze Methode verlassen) oder das Semikolon nach der schließenden Klammer zu vergessen (es ist ein Ausdruck, wie die 5 in int x = 5;). Außerdem darf man : und -> nicht im selben switch mischen.
+    Für Fortgeschrittene: Ein Switch-Ausdruck muss erschöpfend sein. Bei einem String braucht es default; bei einem enum oder einem sealed-Typ reicht es, alle Werte abzudecken, und dann lässt du default besser WEG, damit dich der Compiler warnt, wenn ein neuer Wert dazukommt. Fügt jemand eine Konstante hinzu und deine Klasse wird nicht neu kompiliert, wirft das versteckte default des Compilers zur Laufzeit einen Fehler (bis Java 20 IncompatibleClassChangeError, ab Java 21 MatchException). Pfeile gehen übrigens auch im switch als Anweisung, ohne Rückgabewert und ohne break.
+en:
+    A switch expression is a switch that produces a value, with arrows -> instead of colons and no break. Each case yields a result, and that's it.
+    It is the host's prize wheel: it stops on "hammer" and you hear "BOOM!", it stops on "laser" and you hear "BZZT!". Every slot has its line, and the wheel doesn't slide on into the next slot (goodbye, dreaded fall-through).
+    It arrived in Java 14: String shout = switch (g.arma()) { case "martillo", "maza" -> "¡PUM!"; default -> "¡ay!"; }; (g.arma (weapon) is the weapon of the hit). Several labels are separated by commas, and if a case needs several lines, use a block and hand back the value with yield: case "laser" -> { retroceder(40); yield "¡BZZT!"; } (retroceder (back)). It works nicely with armaIzquierda (weaponLeft) or with an enum.
+    The classic mistake: writing return instead of yield inside the block (it won't compile: return would leave the whole method), or forgetting the semicolon after the closing brace (it is an expression, like the 5 in int x = 5;). You also cannot mix : and -> in the same switch.
+    For seniors: a switch expression must be exhaustive. With a String you need default; with an enum or a sealed type covering every value is enough, and then you had better NOT add default, so that the compiler warns you when a new value appears. If someone adds a constant and your class is not recompiled, the hidden default the compiler inserted throws at run time (IncompatibleClassChangeError up to Java 20, MatchException from Java 21). Arrows also work in a switch statement, returning nothing and needing no break.
+pseudo.es:
+    AL RECIBIR GOLPE g:
+        grito ← SEGÚN el arma de g:
+            "martillo" o "maza" → "¡PUM!"
+            "laser" → retroceder 40 y DEVOLVER "¡BZZT!"
+            SI NO → "¡ay!"
+        decir grito
+pseudo.de:
+    BEI TREFFER t:
+        schrei ← JE NACH Waffe von t:
+            "Hammer" oder "Keule" → "BUMM!"
+            "Laser" → 40 zurück und ZURÜCKGEBEN "BZZT!"
+            SONST → "Au!"
+        sage schrei
+pseudo.en:
+    ON HIT h:
+        shout ← MATCH the weapon of h:
+            "hammer" or "mace" → "BOOM!"
+            "laser" → back off 40 and RETURN "BZZT!"
+            ELSE → "ouch!"
+        say shout
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alRecibirGolpe(Golpe g) {
+            String grito = switch (g.arma()) {           // el switch devuelve un valor || der switch liefert einen Wert || the switch produces a value
+                case "martillo", "maza" -> "¡PUM!";      // varias etiquetas, con coma || mehrere Labels, mit Komma || several labels, with a comma
+                case "laser" -> {
+                    retroceder(40);
+                    yield "¡BZZT!";                      // en un bloque, yield (no return) || im Block yield (nicht return) || inside a block, yield (not return)
+                }
+                default -> "¡ay!";                       // con String, default es obligatorio || bei String ist default Pflicht || with String, default is required
+            };                                           // ojo: punto y coma || Achtung: Semikolon || mind the semicolon
+            decir(grito);
+        }
+    }
+
+=== text_block
+nivel: 4
+tema: 08
+titulo.es: Bloque de texto
+titulo.de: Textblock
+titulo.en: Text block
+claves.es: text block, bloque de texto, bloques de texto, triple comilla, texto de varias lineas, string multilinea, cadena multilinea
+claves.de: text block, textblock, textblöcke, dreifache anführungszeichen, mehrzeiliger text, mehrzeiliger string
+claves.en: text block, text blocks, triple quotes, multiline string, multi-line text, string over several lines
+ver: string, stringbuilder, imprimir
+es:
+    Un bloque de texto es un String de varias líneas escrito tal cual, entre tres comillas dobles """ al principio y otras tres al final. Sin \n ni + en cada línea.
+    Es la pancarta que la hinchada despliega en la grada: se pinta entera de una vez, con sus saltos de línea y su dibujo de robot con corona, en vez de levantar cartulinas sueltas letra a letra.
+    Llegó en Java 15. Tras las """ de apertura hay que saltar de línea; luego escribes el texto y lo cierras con """. Java quita la sangría común (la que comparten todas las líneas, contando la del cierre), así que puedes sangrarlo a gusto con el resto del código. Va de lujo para el cartel de victoria que sacas con escribir() o para un mapa de la arena en ASCII.
+    El fallo típico: poner texto en la misma línea que las """ de apertura (no compila), o sorprenderse de que el texto acabe con un salto de línea: si el cierre """ va en su propia línea, hay un \n al final; si lo pegas a la última palabra, no.
+    Para el senior: los espacios del final de cada línea se borran solos (escribe \s si quieres conservar uno), una \ al final de una línea la une con la siguiente, y los saltos se normalizan a \n aunque el archivo tenga \r\n. Para meter valores, usa "…".formatted(x) (Java 15); las «string templates» (STR."…") se probaron como preview en Java 21 y 22 y se retiraron en Java 23, así que no cuentes con ellas.
+de:
+    Ein Textblock ist ein mehrzeiliger String, so hingeschrieben, wie er ist, zwischen drei doppelten Anführungszeichen """ am Anfang und drei am Ende. Ohne \n und ohne + in jeder Zeile.
+    Es ist das Banner, das die Fans auf der Tribüne entrollen: in einem Stück gemalt, mit Zeilenumbrüchen und einem Roboter mit Krone, statt Buchstabe für Buchstabe einzelne Pappschilder hochzuhalten.
+    Seit Java 15. Nach den öffnenden """ muss eine neue Zeile kommen; dann schreibst du den Text und schließt mit """. Java entfernt die gemeinsame Einrückung (die, die alle Zeilen teilen, die Zeile mit dem Abschluss mitgezählt), du kannst den Block also passend zum übrigen Code einrücken. Ideal für das Siegesplakat, das du mit escribir (ausgeben) ausgibst, oder für eine ASCII-Karte der Arena.
+    Der typische Fehler: Text in dieselbe Zeile wie die öffnenden """ zu schreiben (kompiliert nicht) oder sich zu wundern, dass der Text mit einem Zeilenumbruch endet: Stehen die schließenden """ in einer eigenen Zeile, gibt es am Ende ein \n; klebst du sie ans letzte Wort, nicht.
+    Für Fortgeschrittene: Leerzeichen am Zeilenende verschwinden von selbst (schreib \s, wenn eines bleiben soll), ein \ am Zeilenende verbindet die Zeile mit der nächsten, und Zeilenumbrüche werden zu \n normalisiert, auch wenn die Datei \r\n hat. Für Werte nimmst du "…".formatted(x) (Java 15); die „String Templates“ (STR."…") waren in Java 21 und 22 Preview und wurden in Java 23 wieder gestrichen, also verlass dich nicht darauf.
+en:
+    A text block is a multi-line String written exactly as it looks, between three double quotes """ at the start and three more at the end. No \n and no + on every line.
+    It is the banner the fans unroll in the stands: painted in one piece, line breaks and crowned robot included, instead of holding up loose cardboard letters one at a time.
+    It arrived in Java 15. After the opening """ you must start a new line; then you write the text and close it with """. Java strips the common indentation (whatever all lines share, the closing line included), so you can indent the block to match the rest of your code. Perfect for the victory banner you print with escribir (print) or for an ASCII map of the arena.
+    The classic mistake: putting text on the same line as the opening """ (it won't compile), or being surprised that the text ends with a line break: if the closing """ sits on its own line, there is a \n at the end; if you glue it to the last word, there isn't.
+    For seniors: trailing spaces on each line are removed automatically (write \s to keep one), a \ at the end of a line joins it to the next, and line endings are normalised to \n even if the file uses \r\n. To insert values, use "…".formatted(x) (Java 15); "string templates" (STR."…") were a preview in Java 21 and 22 and were withdrawn in Java 23, so don't count on them.
+pseudo.es:
+    CARTEL ← """
+        +---------------+
+        |  ¡%s GANA!    |
+        +---------------+
+        """                        (la sangría común se va)
+    AL ACABAR LA RONDA:
+        SI me queda blindaje:
+            escribir CARTEL con mi nombre en el %s
+pseudo.de:
+    PLAKAT ← """
+        +---------------+
+        |  %s GEWINNT!  |
+        +---------------+
+        """                        (die gemeinsame Einrückung fällt weg)
+    BEIM RUNDENENDE:
+        WENN ich noch Panzerung habe:
+            schreibe PLAKAT mit meinem Namen statt %s
+pseudo.en:
+    BANNER ← """
+        +---------------+
+        |  %s WINS!     |
+        +---------------+
+        """                        (the common indentation goes away)
+    AT ROUND END:
+        IF I still have armor:
+            write BANNER with my name in place of %s
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        static final String CARTEL = """
+                +---------------+
+                |  ¡%s GANA!    |
+                +---------------+
+                """;                            // la sangría común desaparece || die gemeinsame Einrückung verschwindet || the common indentation is removed
+
+        @Override
+        public void alAcabarRonda() {
+            if (blindaje() > 0) escribir(CARTEL.formatted("MiRobot"));   // formatted rellena el %s || formatted füllt das %s || formatted fills in the %s
+        }
+    }
+
+=== inmutabilidad
+nivel: 4
+tema: 19
+titulo.es: Inmutabilidad
+titulo.de: Unveränderlichkeit
+titulo.en: Immutability
+claves.es: inmutabilidad, inmutable, objeto inmutable, no se puede cambiar, list.of, copia defensiva, immutable, unmodifiable
+claves.de: unveränderlichkeit, unveränderlich, unveränderliches objekt, immutable, list.of, defensive kopie, unmodifiable
+claves.en: immutability, immutable, immutable object, cannot be changed, list.of, defensive copy, unmodifiable
+ver: constante, record, string, condicion_de_carrera
+es:
+    Un objeto inmutable es uno que, una vez construido, ya no cambia nunca. Si quieres otro valor, creas otro objeto.
+    Es el trofeo de la final de 2087: lleva el nombre del campeón grabado en el metal. Nadie lo borra; si el año que viene gana otro, se funde un trofeo nuevo, y el viejo sigue diciendo la verdad en la vitrina.
+    En Java se consigue con atributos private final, sin setters y con la clase final (o, directamente, con un record). String es inmutable: texto.toUpperCase() devuelve otro String y no toca el original. Las colecciones de List.of(…), Set.of(…) y Map.of(…) (Java 9) y de List.copyOf(…) (Java 10) tampoco se pueden cambiar: su add lanza UnsupportedOperationException.
+    El fallo típico: creer que final hace inmutable al objeto. final List<Enemigo> lista solo impide que la variable apunte a otra lista; lista.add(e) sigue funcionando. Y escribir texto.toUpperCase(); sin guardar el resultado no cambia nada.
+    Para el senior: Collections.unmodifiableList(lista) no es una copia sino una vista de solo lectura: si alguien cambia la original, la vista cambia también; para una inmutable de verdad, List.copyOf (que además rechaza los null). Stream.toList() (Java 16) también da una lista no modificable, mientras que Collectors.toList() no promete nada. El gran premio: un objeto inmutable se comparte entre hilos sin candados y sirve de clave en un HashMap sin miedo; el coste, crear objetos nuevos en cada cambio, que casi siempre es barato (mídelo antes de preocuparte).
+de:
+    Ein unveränderliches (immutable) Objekt ändert sich nach dem Bau nie mehr. Brauchst du einen anderen Wert, erzeugst du ein anderes Objekt.
+    Es ist der Pokal vom Finale 2087: Der Name des Champions ist ins Metall graviert. Niemand radiert ihn weg; gewinnt nächstes Jahr ein anderer, wird ein neuer Pokal gegossen, und der alte erzählt in der Vitrine weiter die Wahrheit.
+    In Java erreichst du das mit private final-Attributen, ohne Setter und mit einer final-Klasse (oder gleich mit einem Record). String ist unveränderlich: text.toUpperCase() liefert einen anderen String und lässt das Original in Ruhe. Auch die Collections aus List.of(…), Set.of(…) und Map.of(…) (Java 9) und aus List.copyOf(…) (Java 10) lassen sich nicht ändern: Ihr add wirft eine UnsupportedOperationException.
+    Der typische Fehler: zu glauben, final mache das Objekt unveränderlich. final List<Enemigo> liste verhindert nur, dass die Variable auf eine andere Liste zeigt; liste.add(e) funktioniert weiterhin. Und text.toUpperCase(); hinzuschreiben, ohne das Ergebnis zu speichern, ändert gar nichts.
+    Für Fortgeschrittene: Collections.unmodifiableList(liste) ist keine Kopie, sondern eine Nur-Lese-Ansicht: Ändert jemand das Original, ändert sich die Ansicht mit; wirklich unveränderlich wird es mit List.copyOf (das obendrein null ablehnt). Stream.toList() (Java 16) liefert ebenfalls eine unveränderliche Liste, während Collectors.toList() nichts verspricht. Der große Gewinn: Ein unveränderliches Objekt kann man ohne Schlösser zwischen Threads teilen und bedenkenlos als HashMap-Schlüssel nehmen; der Preis sind neue Objekte bei jeder Änderung, was fast immer billig ist (erst messen, dann sorgen).
+en:
+    An immutable object is one that never changes once it has been built. If you want a different value, you create a different object.
+    It is the trophy from the 2087 final: the champion's name is engraved in the metal. Nobody rubs it out; if someone else wins next year, a new trophy is cast, and the old one keeps telling the truth in the display case.
+    In Java you get it with private final fields, no setters and a final class (or simply a record). String is immutable: text.toUpperCase() returns another String and leaves the original alone. The collections from List.of(…), Set.of(…) and Map.of(…) (Java 9) and from List.copyOf(…) (Java 10) cannot be changed either: their add throws UnsupportedOperationException.
+    The classic mistake: believing final makes the object immutable. final List<Enemigo> list only stops the variable from pointing at another list; list.add(e) still works. And writing text.toUpperCase(); without storing the result changes nothing.
+    For seniors: Collections.unmodifiableList(list) is not a copy but a read-only view: if someone changes the original, the view changes too; for a truly immutable one, use List.copyOf (which also rejects nulls). Stream.toList() (Java 16) also returns an unmodifiable list, whereas Collectors.toList() promises nothing. The big prize: an immutable object can be shared between threads without locks and used as a HashMap key without fear; the price is a new object on every change, which is almost always cheap (measure before you worry).
+pseudo.es:
+    equipo ← Equipo(martillo, sierra)
+    equipo2 ← equipo CON láser            (equipo sigue igual que antes)
+    SI alguien intenta añadir algo a equipo:
+        ERROR: no se puede cambiar
+    DEVOLVER equipo2
+pseudo.de:
+    team ← Team(Hammer, Säge)
+    team2 ← team MIT Laser                (team bleibt, wie es war)
+    WENN jemand etwas zu team hinzufügen will:
+        FEHLER: lässt sich nicht ändern
+    ZURÜCKGEBEN team2
+pseudo.en:
+    team ← Team(hammer, saw)
+    team2 ← team WITH laser               (team stays exactly as it was)
+    IF someone tries to add something to team:
+        ERROR: cannot be changed
+    RETURN team2
+ejemplo:
+    import java.util.ArrayList;
+    import java.util.List;
+    final class Equipo {                                   // final: nadie hereda y lo estropea || final: niemand erbt und macht es kaputt || final: nobody subclasses it and spoils it
+        private final List<String> piezas;
+        Equipo(List<String> piezas) {
+            this.piezas = List.copyOf(piezas);             // copia defensiva: lo de fuera ya no le afecta || defensive Kopie: Änderungen von außen kommen nicht mehr an || defensive copy: outside changes no longer reach it
+        }
+        List<String> piezas() { return piezas; }           // se puede dar sin miedo: nadie puede cambiarla || kann man ruhig herausgeben: niemand kann sie ändern || safe to hand out: nobody can change it
+        Equipo conPieza(String nueva) {                    // «cambiar» = crear otro || „ändern“ = ein neues erzeugen || "changing" = making a new one
+            var todas = new ArrayList<>(piezas);
+            todas.add(nueva);
+            return new Equipo(todas);
+        }
+    }
+
+=== hilo
+nivel: 4
+tema: 20
+titulo.es: Hilo (Thread)
+titulo.de: Thread
+titulo.en: Thread
+claves.es: hilo, hilos, thread, threads, runnable, thread.start, thread.join, hebra, hilos y concurrencia, hacer dos cosas a la vez
+claves.de: thread, threads, nebenläufigkeit, runnable, thread.start, thread.join, faden, zwei dinge gleichzeitig
+claves.en: thread, threads, runnable, thread.start, thread.join, concurrency, two things at once, start vs run
+ver: executor, synchronized, condicion_de_carrera, hilos_virtuales
+es:
+    Un hilo es una línea de trabajo que corre a la vez que las demás dentro del mismo programa. Con dos hilos, tu programa hace dos cosas al mismo tiempo (de verdad, si hay varios núcleos, o turnándose muy deprisa si no).
+    Imagina un robot con dos cerebros: uno conduce y otro apunta, y ninguno espera al otro. Genial… hasta que los dos agarran el mismo brazo a la vez y el robot se arrea un puñetazo a sí mismo delante de todo el público.
+    En Java: Thread t = new Thread(() -> contar()); t.start(); arranca el hilo, y t.join() espera a que acabe. Lo que hace va en un Runnable (una lambda sin parámetros ni resultado). En tus robots el juego no deja usar hilos (el Vigilante los prohíbe: la pelea va turno a turno y debe poder repetirse igual), así que se practica en clases aparte, como un Marcador que apuntan varios jueces.
+    El fallo típico: llamar a t.run() en vez de t.start(). run() ejecuta el código en el hilo actual, como un método cualquiera: no nace ningún hilo, todo «funciona» pero en fila. Otro clásico: no esperar con join() y leer el resultado antes de que esté.
+    Para el senior: Thread existe desde Java 1.0 y cada hilo de plataforma es un hilo del sistema operativo con su propia pila (del orden de 1 MB reservado): miles cuestan caro, y crear uno a mano por tarea es mala idea (para eso están los executor). Una excepción no atrapada mata solo su hilo, no el programa, y la JVM no termina mientras quede un hilo que no sea daemon. Si atrapas InterruptedException, no te la tragues: vuelve a marcar la interrupción con Thread.currentThread().interrupt(). Y olvídate de Thread.stop(): desde Java 20 solo lanza UnsupportedOperationException.
+de:
+    Ein Thread ist ein Arbeitsstrang, der innerhalb desselben Programms gleichzeitig mit den anderen läuft. Mit zwei Threads macht dein Programm zwei Dinge auf einmal (wirklich parallel bei mehreren Kernen, sonst im blitzschnellen Wechsel).
+    Stell dir einen Roboter mit zwei Gehirnen vor: Eines fährt, das andere zielt, und keines wartet auf das andere. Großartig … bis beide gleichzeitig denselben Arm packen und der Roboter sich vor versammeltem Publikum selbst eine verpasst.
+    In Java: Thread t = new Thread(() -> zaehlen()); t.start(); startet den Thread, und t.join() wartet, bis er fertig ist. Was er tut, steckt in einem Runnable (einem Lambda ohne Parameter und ohne Ergebnis). In deinen Robotern sind Threads nicht erlaubt (der Wächter verbietet sie: Der Kampf läuft Zug um Zug und muss sich genau wiederholen lassen), also übst du in eigenen kleinen Klassen, etwa mit einer Anzeigetafel, auf der mehrere Kampfrichter Punkte eintragen.
+    Der typische Fehler: t.run() statt t.start() aufzurufen. run() führt den Code im aktuellen Thread aus wie jede andere Methode: Es entsteht kein neuer Thread, alles „funktioniert“, aber nacheinander. Ebenfalls ein Klassiker: nicht mit join() zu warten und das Ergebnis zu lesen, bevor es da ist.
+    Für Fortgeschrittene: Thread gibt es seit Java 1.0, und jeder Plattform-Thread ist ein Betriebssystem-Thread mit eigenem Stack (größenordnungsmäßig 1 MB reserviert): Tausende davon sind teuer, und pro Aufgabe einen von Hand zu erzeugen ist keine gute Idee (dafür gibt es Executors). Eine nicht gefangene Ausnahme beendet nur ihren Thread, nicht das Programm, und die JVM endet erst, wenn kein Nicht-Daemon-Thread mehr läuft. Fängst du eine InterruptedException, verschluck sie nicht: Setz das Unterbrechungs-Flag mit Thread.currentThread().interrupt() wieder. Und vergiss Thread.stop(): Seit Java 20 wirft es nur noch eine UnsupportedOperationException.
+en:
+    A thread is a strand of work that runs at the same time as the others inside the same program. With two threads your program does two things at once (truly in parallel on several cores, or by taking very quick turns if not).
+    Picture a robot with two brains: one drives and the other aims, and neither waits for the other. Brilliant… until both grab the same arm at the same moment and the robot punches itself in the face in front of the whole crowd.
+    In Java: Thread t = new Thread(() -> count()); t.start(); starts the thread, and t.join() waits for it to finish. What it does goes in a Runnable (a lambda with no parameters and no result). Your robots are not allowed threads (the Watchdog bans them: the fight runs tick by tick and must replay exactly the same), so you practise in small separate classes, like a scoreboard several judges write on.
+    The classic mistake: calling t.run() instead of t.start(). run() executes the code on the current thread like any other method: no new thread is born, everything "works", but one after the other. Another classic: not waiting with join() and reading the result before it is there.
+    For seniors: Thread has existed since Java 1.0, and every platform thread is an operating-system thread with its own stack (on the order of 1 MB reserved): thousands of them are expensive, and creating one by hand per task is a bad idea (that is what executors are for). An uncaught exception only kills its own thread, not the program, and the JVM won't exit while any non-daemon thread is still alive. If you catch InterruptedException, don't swallow it: set the interrupt flag again with Thread.currentThread().interrupt(). And forget Thread.stop(): since Java 20 it only throws UnsupportedOperationException.
+pseudo.es:
+    marcador ← 0
+    juez ← NUEVO HILO:
+        sumar 10 al marcador
+    ARRANCAR juez                 (start, no run: si no, no hay hilo nuevo)
+    ESPERAR A juez                (join)
+    mostrar marcador              (10)
+pseudo.de:
+    tafel ← 0
+    richter ← NEUER THREAD:
+        10 zur Tafel addieren
+    STARTE richter                (start, nicht run: sonst kein neuer Thread)
+    WARTE AUF richter             (join)
+    zeige tafel                   (10)
+pseudo.en:
+    scoreboard ← 0
+    judge ← NEW THREAD:
+        add 10 to the scoreboard
+    START judge                   (start, not run: otherwise no new thread)
+    WAIT FOR judge                (join)
+    show scoreboard               (10)
+ejemplo:
+    class Marcador {                                            // fuera del robot: allí los hilos están prohibidos || außerhalb des Roboters: dort sind Threads verboten || outside the robot: threads are banned there
+        int puntos = 0;
+    }
+
+    class Jueces {
+        public static void main(String[] args) throws InterruptedException {
+            Marcador m = new Marcador();
+            Thread juez = new Thread(() -> m.puntos += 10);     // la tarea es un Runnable (una lambda) || die Aufgabe ist ein Runnable (ein Lambda) || the task is a Runnable (a lambda)
+            juez.start();                                       // start(), no run(): así sí hay hilo nuevo || start(), nicht run(): nur so gibt es einen neuen Thread || start(), not run(): only this makes a new thread
+            juez.join();                                        // espera a que acabe || wartet, bis er fertig ist || waits until it finishes
+            System.out.println(m.puntos);                       // 10 || 10 || 10
+        }
+    }
+
+=== executor
+nivel: 4
+tema: 20
+titulo.es: ExecutorService y Future
+titulo.de: ExecutorService und Future
+titulo.en: ExecutorService and Future
+claves.es: executor, executorservice, executors, future, callable, pool de hilos, thread pool, submit, newfixedthreadpool
+claves.de: executor, executorservice, executors, future, callable, threadpool, thread pool, submit, newfixedthreadpool
+claves.en: executor, executorservice, executors, future, callable, thread pool, submit, newfixedthreadpool
+ver: hilo, completable_future, hilos_virtuales, interbloqueo
+es:
+    Un ExecutorService es un equipo de hilos ya contratados al que le pasas tareas; él decide qué hilo hace cada una. Tú no creas hilos: encargas trabajo y recoges resultados.
+    Es el mostrador del taller: no contratas a un mecánico por cada tornillo. Dejas los encargos en el mostrador, cuatro mecánicos fijos los van cogiendo y a ti te dan un tique (el Future) para recoger la pieza cuando esté lista.
+    ExecutorService ex = Executors.newFixedThreadPool(4); Future<Integer> f = ex.submit(() -> simular(1)); y luego f.get() espera y te da el resultado. submit acepta un Callable (devuelve algo y puede lanzar excepciones) o un Runnable. En los robots no se puede (el Vigilante prohíbe los hilos), pero es justo lo que usaría un torneo para simular cien peleas en paralelo fuera del juego.
+    El fallo típico: olvidar ex.shutdown(), y el programa no termina nunca porque los mecánicos siguen esperando encargos. Otro: una excepción dentro de la tarea no aparece en ningún sitio hasta que llamas a f.get(), que la lanza envuelta en una ExecutionException (la de verdad está en getCause()).
+    Para el senior: llegó en Java 5 (java.util.concurrent) y, desde Java 19, ExecutorService es AutoCloseable: try (var ex = Executors.newFixedThreadPool(4)) { … } espera a las tareas y cierra solo. Ojo con los atajos de Executors: newFixedThreadPool usa una cola sin límite (si encargas más de lo que procesa, se te llena la memoria) y newCachedThreadPool crea hilos sin tope; en producción, un ThreadPoolExecutor con cola acotada. Y nunca hagas que una tarea espere con get() a otra del mismo equipo pequeño: si todos los mecánicos esperan, nadie trabaja (interbloqueo por hambre del pool).
+de:
+    Ein ExecutorService ist eine Mannschaft fest angestellter Threads, der du Aufgaben übergibst; sie entscheidet, welcher Thread welche erledigt. Du erzeugst keine Threads: Du gibst Arbeit in Auftrag und holst Ergebnisse ab.
+    Es ist die Theke der Werkstatt: Du stellst nicht für jede Schraube einen Mechaniker ein. Du legst die Aufträge auf die Theke, vier feste Mechaniker arbeiten sie ab, und du bekommst einen Abholschein (das Future), um das Teil zu holen, sobald es fertig ist.
+    ExecutorService ex = Executors.newFixedThreadPool(4); Future<Integer> f = ex.submit(() -> simulieren(1)); und danach wartet f.get() und liefert das Ergebnis. submit nimmt ein Callable (liefert etwas und darf Ausnahmen werfen) oder ein Runnable. In Robotern geht das nicht (der Wächter verbietet Threads), aber genau das würde ein Turnier außerhalb des Spiels nehmen, um hundert Kämpfe parallel zu simulieren.
+    Der typische Fehler: ex.shutdown() zu vergessen, und das Programm endet nie, weil die Mechaniker weiter auf Aufträge warten. Noch einer: Eine Ausnahme in der Aufgabe taucht nirgends auf, bis du f.get() aufrufst, das sie verpackt in eine ExecutionException wirft (die echte steckt in getCause()).
+    Für Fortgeschrittene: Kam mit Java 5 (java.util.concurrent), und seit Java 19 ist ExecutorService AutoCloseable: try (var ex = Executors.newFixedThreadPool(4)) { … } wartet auf die Aufgaben und schließt von selbst. Vorsicht mit den Abkürzungen von Executors: newFixedThreadPool nutzt eine unbegrenzte Warteschlange (gibst du mehr in Auftrag, als abgearbeitet wird, läuft der Speicher voll), und newCachedThreadPool erzeugt Threads ohne Obergrenze; in Produktion lieber ein ThreadPoolExecutor mit begrenzter Queue. Und lass nie eine Aufgabe per get() auf eine andere derselben kleinen Mannschaft warten: Warten alle Mechaniker, arbeitet keiner mehr (Thread-Starvation-Deadlock).
+en:
+    An ExecutorService is a crew of threads already on the payroll that you hand tasks to; it decides which thread does which. You don't create threads: you order work and collect results.
+    It is the workshop counter: you don't hire a mechanic for every single bolt. You leave your orders on the counter, four permanent mechanics work through them, and you get a ticket (the Future) to collect the part once it is ready.
+    ExecutorService ex = Executors.newFixedThreadPool(4); Future<Integer> f = ex.submit(() -> simulate(1)); and later f.get() waits and gives you the result. submit takes a Callable (returns something and may throw exceptions) or a Runnable. Robots can't do this (the Watchdog bans threads), but it is exactly what a tournament would use outside the game to simulate a hundred fights in parallel.
+    The classic mistake: forgetting ex.shutdown(), so the program never ends because the mechanics keep waiting for orders. Another one: an exception inside the task shows up nowhere until you call f.get(), which throws it wrapped in an ExecutionException (the real one is in getCause()).
+    For seniors: it arrived in Java 5 (java.util.concurrent) and, since Java 19, ExecutorService is AutoCloseable: try (var ex = Executors.newFixedThreadPool(4)) { … } waits for the tasks and shuts down by itself. Beware the Executors shortcuts: newFixedThreadPool uses an unbounded queue (submit faster than it processes and memory fills up) and newCachedThreadPool creates threads without limit; in production, prefer a ThreadPoolExecutor with a bounded queue. And never let a task wait with get() on another task in the same small pool: if every mechanic is waiting, nobody works (thread-starvation deadlock).
+pseudo.es:
+    taller ← EQUIPO DE 4 HILOS
+    PARA CADA pelea DE 1 A 100:
+        guardar el tique de taller.encargar(simular pelea)
+    PARA CADA tique:
+        total ← total + ESPERAR el resultado del tique
+    CERRAR taller                  (si no, el programa no acaba)
+pseudo.de:
+    werkstatt ← MANNSCHAFT AUS 4 THREADS
+    FÜR JEDES kampf VON 1 BIS 100:
+        Abholschein von werkstatt.beauftragen(simuliere kampf) aufheben
+    FÜR JEDES schein:
+        summe ← summe + WARTE AUF das Ergebnis des Scheins
+    SCHLIESSE werkstatt            (sonst endet das Programm nie)
+pseudo.en:
+    workshop ← CREW OF 4 THREADS
+    FOR EACH fight FROM 1 TO 100:
+        keep the ticket from workshop.order(simulate fight)
+    FOR EACH ticket:
+        total ← total + WAIT FOR the ticket's result
+    CLOSE workshop                 (otherwise the program never ends)
+ejemplo:
+    import java.util.*;
+    import java.util.concurrent.*;
+    class Torneo {                                                   // fuera del robot: allí los hilos están prohibidos || außerhalb des Roboters: dort sind Threads verboten || outside the robot: threads are banned there
+        static int simular(int pelea) { return pelea * 7 % 100; }    // finge una pelea y da los puntos || simuliert einen Kampf und liefert die Punkte || fakes a fight and returns the points
+        public static void main(String[] args) throws Exception {
+            try (ExecutorService ex = Executors.newFixedThreadPool(4)) {     // 4 mecánicos fijos; close() espera y cierra (Java 19+) || 4 feste Mechaniker; close() wartet und schließt (Java 19+) || 4 fixed mechanics; close() waits and shuts down (Java 19+)
+                List<Future<Integer>> tiques = new ArrayList<>();
+                for (int i = 1; i <= 100; i++) { int n = i; tiques.add(ex.submit(() -> simular(n))); }   // submit da un tique al momento || submit gibt sofort einen Abholschein || submit hands back a ticket right away
+                int total = 0;
+                for (Future<Integer> f : tiques) total += f.get();   // get() espera al resultado || get() wartet auf das Ergebnis || get() waits for the result
+                System.out.println(total);
+            }
+        }
+    }
+
+=== synchronized
+nivel: 4
+tema: 20
+titulo.es: synchronized
+titulo.de: synchronized
+titulo.en: synchronized
+claves.es: synchronized, sincronizar, sincronizado, candado, cerrojo, monitor, exclusion mutua, mutex, seccion critica
+claves.de: synchronized, synchronisieren, synchronisiert, sperre, schloss, monitor, gegenseitiger ausschluss, mutex, kritischer abschnitt
+claves.en: synchronized, synchronize, lock, intrinsic lock, monitor, mutual exclusion, mutex, critical section
+ver: condicion_de_carrera, volatile, interbloqueo, java_util_concurrent
+es:
+    synchronized pone un candado a un trozo de código: mientras un hilo está dentro, los demás que quieran entrar con el mismo candado esperan en la puerta. Así, solo uno cada vez toca los datos compartidos.
+    Es el micrófono del locutor loco: solo hay uno, y habla quien lo tiene. Los demás comentaristas esperan mordiéndose las uñas a que lo suelte; sin micro único se oiría «¡GOL-PE-ÑA-ZO!» mezclado a tres voces.
+    En un método, synchronized void sumar(int p) { puntos += p; } usa como candado el propio objeto (this). En un bloque, synchronized (candado) { … } usa el objeto que tú elijas. En el Marcador de los jueces, sumar y leer van con candado y ya no se pierde ningún punto. (En los robots no te hace falta: el juego ejecuta tu robot turno a turno, sin hilos.)
+    El fallo típico: proteger la escritura y olvidar la lectura (sin candado, otro hilo puede ver un valor viejo), o que cada hilo use un candado distinto (synchronized (new Object()) no protege nada). Todo lo que lea o escriba ese dato debe pasar por el MISMO candado.
+    Para el senior: existe desde Java 1.0 y, además de exclusión, da visibilidad: soltar el candado «publica» lo escrito para el siguiente que lo coja (happens-before). Es reentrante: el mismo hilo puede volver a entrar sin bloquearse. Nunca sincronices sobre un String literal o un Integer (pueden ser el mismo objeto compartido por todo el programa) ni sobre un campo que reasignas; mejor un private final Object candado = new Object(); que nadie de fuera pueda coger. Y no llames a código ajeno ni esperes cosas lentas con el candado cogido: así nacen los interbloqueos. (Con hilos virtuales, synchronized clavaba el hilo a su portador; Java 24 lo arregló.)
+de:
+    synchronized hängt ein Schloss an ein Stück Code: Solange ein Thread drin ist, warten alle anderen, die mit demselben Schloss hinein wollen, vor der Tür. So fasst immer nur einer die gemeinsamen Daten an.
+    Es ist das Mikrofon des verrückten Kommentators: Es gibt nur eins, und wer es hat, redet. Die anderen Kommentatoren warten nägelkauend, bis er es loslässt; ohne das eine Mikro hörte man „VOLL-TREF-FER!“ dreistimmig durcheinander.
+    An einer Methode nimmt synchronized void sumar(int p) { puntos += p; } das Objekt selbst (this) als Schloss. Als Block nimmt synchronized (schloss) { … } das Objekt, das du aussuchst. Bei der Anzeigetafel der Kampfrichter laufen Addieren und Lesen mit Schloss, und kein Punkt geht mehr verloren. (In Robotern brauchst du es nicht: Das Spiel führt deinen Roboter Zug um Zug aus, ohne Threads.)
+    Der typische Fehler: das Schreiben zu schützen und das Lesen zu vergessen (ohne Schloss sieht ein anderer Thread womöglich einen alten Wert), oder dass jeder Thread ein anderes Schloss benutzt (synchronized (new Object()) schützt gar nichts). Alles, was diesen Wert liest oder schreibt, muss durch DASSELBE Schloss.
+    Für Fortgeschrittene: Gibt es seit Java 1.0 und sorgt neben dem Ausschluss auch für Sichtbarkeit: Das Freigeben des Schlosses „veröffentlicht“ das Geschriebene für den Nächsten, der es nimmt (happens-before). Es ist reentrant: Derselbe Thread kommt erneut hinein, ohne sich zu blockieren. Synchronisiere nie auf ein String-Literal oder einen Integer (das kann im ganzen Programm dasselbe geteilte Objekt sein) und nicht auf ein Feld, das du neu zuweist; besser ein private final Object schloss = new Object();, an das von außen keiner herankommt. Und ruf mit gehaltenem Schloss keinen fremden Code auf und warte auf nichts Langsames: So entstehen Deadlocks. (Bei virtuellen Threads hat synchronized den Thread an seinen Träger genagelt; Java 24 hat das behoben.)
+en:
+    synchronized puts a lock on a piece of code: while one thread is inside, any others wanting in with the same lock wait at the door. That way only one at a time touches the shared data.
+    It is the crazy commentator's microphone: there is only one, and whoever holds it talks. The other commentators wait, biting their nails, for him to let go; without the single mic you would hear "WHAM-BAM-KA-BOOM!" in three voices at once.
+    On a method, synchronized void sumar(int p) { puntos += p; } uses the object itself (this) as the lock. As a block, synchronized (lock) { … } uses whichever object you choose. On the judges' scoreboard, adding and reading both go through the lock and no point gets lost any more. (Robots don't need it: the game runs your robot tick by tick, with no threads.)
+    The classic mistake: guarding the write and forgetting the read (without the lock, another thread may see a stale value), or each thread using a different lock (synchronized (new Object()) protects nothing at all). Everything that reads or writes that data must go through the SAME lock.
+    For seniors: it has been there since Java 1.0 and, besides exclusion, it gives visibility: releasing the lock "publishes" what was written to the next thread that takes it (happens-before). It is reentrant: the same thread can enter again without blocking itself. Never synchronize on a String literal or an Integer (they may be one object shared by the whole program) or on a field you reassign; prefer a private final Object lock = new Object(); that no outsider can grab. And don't call foreign code or wait for anything slow while holding the lock: that is how deadlocks are born. (With virtual threads, synchronized used to pin the thread to its carrier; Java 24 fixed that.)
+pseudo.es:
+    sumar(p):
+        CON EL candado:
+            puntos ← puntos + p
+    leer():
+        CON EL MISMO candado:
+            DEVOLVER puntos
+pseudo.de:
+    addieren(p):
+        MIT DEM schloss:
+            punkte ← punkte + p
+    lesen():
+        MIT DEMSELBEN schloss:
+            ZURÜCKGEBEN punkte
+pseudo.en:
+    add(p):
+        WITH THE lock:
+            points ← points + p
+    read():
+        WITH THE SAME lock:
+            RETURN points
+ejemplo:
+    class Marcador {                                        // compartido por los jueces del combate || von den Kampfrichtern geteilt || shared by the fight's judges
+        private final Object candado = new Object();        // candado privado: nadie de fuera lo coge || privates Schloss: von außen kommt keiner dran || private lock: no outsider can grab it
+        private int puntos = 0;
+
+        void sumar(int p) {
+            synchronized (candado) {                        // uno cada vez || immer nur einer || one at a time
+                puntos += p;
+            }
+        }
+
+        int puntos() {
+            synchronized (candado) { return puntos; }       // leer también con candado, o puede ver un valor viejo || auch Lesen mit Schloss, sonst droht ein alter Wert || read under the lock too, or you may see a stale value
+        }
+    }
+
+=== condicion_de_carrera
+nivel: 4
+tema: 20
+titulo.es: Condición de carrera
+titulo.de: Wettlaufsituation
+titulo.en: Race condition
+claves.es: condicion de carrera, condiciones de carrera, race condition, data race, carrera de datos, contador++ no es atomico, comprobar y luego actuar, check then act
+claves.de: wettlaufsituation, race condition, data race, kritischer wettlauf, datenwettlauf, nicht atomar, check then act, verlorenes update
+claves.en: race condition, race conditions, data race, check then act, read modify write, lost update, not atomic
+ver: synchronized, java_util_concurrent, modelo_de_memoria, inmutabilidad
+es:
+    Una condición de carrera es un fallo que depende de quién llega antes: dos hilos tocan el mismo dato a la vez y el resultado cambia según cómo se intercalen. Unas veces sale bien y otras no.
+    Dos jueces apuntan en la misma pizarra: los dos leen «10», los dos suman uno de cabeza, los dos escriben «11». Hubo dos golpes, pero el marcador cuenta uno; el público abuchea y el robot rival se ríe con todos sus tornillos.
+    En Java, puntos++ parece una sola orden, pero son tres: leer, sumar y escribir. Con dos hilos haciendo 100 000 puntos++ cada uno, el Marcador casi nunca llega a 200 000. Se arregla con synchronized, con AtomicInteger.incrementAndGet() o sin compartir (cada juez su cuenta, y se suman al final). En tus robots no te pasará: el juego no deja usar hilos y ejecuta turno a turno.
+    El fallo típico: «en mi ordenador funciona». Las carreras son raras: salen una vez de cada mil, o solo en la máquina con más núcleos, y desaparecen al añadir un println (que cambia los tiempos). No se cazan probando a ver si hay suerte: se evitan por diseño (candado, atómicos, inmutabilidad, no compartir).
+    Para el senior: distingue dos cosas. Una data race es, según el modelo de memoria de Java, un acceso a la vez sin sincronizar con al menos una escritura; una race condition es un fallo lógico de orden, y puede existir sin data race. Ejemplo: if (!mapa.containsKey(k)) mapa.put(k, v); sobre un ConcurrentHashMap: cada llamada es segura, pero el «comprobar y luego actuar» no lo es; usa putIfAbsent o computeIfAbsent. Y un long o un double sin volatile ni candado puede llegar a leerse a medias (dos mitades de 32 bits, JLS 17.7).
+de:
+    Eine Wettlaufsituation (Race Condition) ist ein Fehler, der davon abhängt, wer zuerst kommt: Zwei Threads greifen gleichzeitig auf denselben Wert zu, und das Ergebnis hängt davon ab, wie sie sich verzahnen. Mal klappt es, mal nicht.
+    Zwei Kampfrichter schreiben auf dieselbe Tafel: Beide lesen „10“, beide rechnen im Kopf plus eins, beide schreiben „11“. Es gab zwei Treffer, die Tafel zählt einen; das Publikum pfeift, und der gegnerische Roboter lacht sich alle Schrauben locker.
+    In Java sieht puntos++ wie ein einziger Befehl aus, sind aber drei: lesen, addieren, schreiben. Machen zwei Threads je 100 000-mal puntos++, kommt die Tafel fast nie auf 200 000. Abhilfe schaffen synchronized, AtomicInteger.incrementAndGet() oder gar nicht teilen (jeder Richter zählt für sich, am Ende wird addiert). In deinen Robotern passiert dir das nicht: Das Spiel erlaubt keine Threads und läuft Zug um Zug.
+    Der typische Fehler: „Bei mir läuft’s.“ Wettläufe sind selten: Sie treten einmal unter tausend auf oder nur auf der Maschine mit mehr Kernen und verschwinden, sobald man ein println einbaut (das das Timing ändert). Man fängt sie nicht durch Glückstests, man verhindert sie im Entwurf (Schloss, Atomics, Unveränderlichkeit, nichts teilen).
+    Für Fortgeschrittene: Unterscheide zweierlei. Ein Data Race ist laut Java-Speichermodell ein gleichzeitiger, nicht synchronisierter Zugriff mit mindestens einem Schreibzugriff; eine Race Condition ist ein logischer Reihenfolgefehler und kann auch ohne Data Race bestehen. Beispiel: if (!mapa.containsKey(k)) mapa.put(k, v); auf einer ConcurrentHashMap: Jeder Aufruf für sich ist sicher, das „erst prüfen, dann handeln“ aber nicht; nimm putIfAbsent oder computeIfAbsent. Und ein long oder double ohne volatile oder Schloss kann sogar halb gelesen werden (zwei 32-Bit-Hälften, JLS 17.7).
+en:
+    A race condition is a bug that depends on who gets there first: two threads touch the same data at the same time and the result changes with how their steps interleave. Sometimes it works, sometimes it doesn't.
+    Two judges write on the same whiteboard: both read "10", both add one in their heads, both write "11". There were two hits, but the board counts one; the crowd boos and the rival robot laughs its bolts off.
+    In Java, puntos++ looks like a single instruction but it is three: read, add, write. With two threads doing puntos++ 100,000 times each, the scoreboard almost never reaches 200,000. The fixes: synchronized, AtomicInteger.incrementAndGet(), or not sharing at all (each judge keeps their own count and you add them up at the end). Your robots won't hit this: the game allows no threads and runs tick by tick.
+    The classic mistake: "it works on my machine". Races are rare: they show up once in a thousand runs, or only on the machine with more cores, and vanish when you add a println (which changes the timing). You don't catch them by testing and hoping; you design them out (locks, atomics, immutability, no sharing).
+    For seniors: tell two things apart. A data race, in the Java memory model, is concurrent unsynchronized access where at least one access is a write; a race condition is a logical ordering bug, and it can exist without any data race. Example: if (!mapa.containsKey(k)) mapa.put(k, v); on a ConcurrentHashMap: each call is safe on its own, but the "check, then act" is not; use putIfAbsent or computeIfAbsent. And a long or double without volatile or a lock can even be read half-written (two 32-bit halves, JLS 17.7).
+pseudo.es:
+    puntos ← 0
+    JUEZ A y JUEZ B, A LA VEZ:
+        REPETIR 100 000 veces:
+            leer puntos
+            escribir puntos + 1          (¡el otro pudo escribir en medio!)
+    mostrar puntos                       (casi nunca 200 000)
+pseudo.de:
+    punkte ← 0
+    RICHTER A und RICHTER B, GLEICHZEITIG:
+        WIEDERHOLE 100 000-mal:
+            punkte lesen
+            punkte + 1 schreiben         (der andere kann dazwischen geschrieben haben!)
+    zeige punkte                         (fast nie 200 000)
+pseudo.en:
+    points ← 0
+    JUDGE A and JUDGE B, AT THE SAME TIME:
+        REPEAT 100,000 times:
+            read points
+            write points + 1             (the other one may have written in between!)
+    show points                          (almost never 200,000)
+ejemplo:
+    class Marcador {
+        int puntos = 0;                                       // compartido y sin candado: peligro || geteilt und ohne Schloss: Gefahr || shared and unlocked: danger
+    }
+
+    class Carrera {                                           // fuera del robot: allí no hay hilos || außerhalb des Roboters: dort gibt es keine Threads || outside the robot: no threads there
+        public static void main(String[] args) throws InterruptedException {
+            Marcador m = new Marcador();
+            Runnable juez = () -> { for (int i = 0; i < 100_000; i++) m.puntos++; };   // leer, sumar, escribir: tres pasos || lesen, addieren, schreiben: drei Schritte || read, add, write: three steps
+            Thread a = new Thread(juez), b = new Thread(juez);
+            a.start(); b.start();
+            a.join(); b.join();
+            System.out.println(m.puntos);                     // casi nunca 200000 || fast nie 200000 || almost never 200000
+        }
+    }
+
+=== hilos_virtuales
+nivel: 5
+tema: 20
+titulo.es: Hilos virtuales
+titulo.de: Virtuelle Threads
+titulo.en: Virtual threads
+claves.es: hilos virtuales, hilo virtual, virtual threads, virtual thread, thread.ofvirtual, newvirtualthreadpertaskexecutor, proyecto loom, hilos ligeros
+claves.de: virtuelle threads, virtueller thread, virtual threads, virtual thread, thread.ofvirtual, newvirtualthreadpertaskexecutor, project loom, leichtgewichtige threads
+claves.en: virtual threads, virtual thread, thread.ofvirtual, startvirtualthread, newvirtualthreadpertaskexecutor, project loom, lightweight threads
+ver: hilo, executor, synchronized, completable_future
+es:
+    Un hilo virtual es un hilo ligerísimo que gestiona la propia Java, no el sistema operativo. Cuesta tan poco que puedes tener un millón a la vez, uno por tarea.
+    Los hilos normales son robots de verdad: caros, pesados, caben pocos en el hangar. Los virtuales son hologramas de robot: cuando uno se queda esperando (a que llegue la carta del rival, por ejemplo), se apaga y deja su sitio en el ring a otro; cuando llega la carta, vuelve a encenderse donde haya hueco.
+    Llegaron en Java 21: Thread.startVirtualThread(tarea), Thread.ofVirtual().start(tarea) o, lo más práctico, try (var ex = Executors.newVirtualThreadPerTaskExecutor()) { … }, que crea un hilo nuevo para cada submit. Se programan como hilos normales, con código que espera tranquilamente (leer de la red, de un archivo, Thread.sleep) sin bloquear a nadie. En los robots tampoco se pueden usar: el Vigilante también los prohíbe.
+    El fallo típico: esperar que aceleren el cálculo puro. No lo hacen: si tu tarea solo calcula (simular peleas, por ejemplo), no hay esperas que aprovechar, y al final todo corre sobre tantos hilos «portadores» como núcleos. Brillan cuando las tareas se pasan la vida esperando: servidores, llamadas a otros servicios, bases de datos.
+    Para el senior: no los metas en un pool (son desechables: uno por tarea); para limitar cuántas cosas se hacen a la vez, usa un Semaphore. Hasta Java 23, esperar dentro de un synchronized dejaba el hilo «clavado» (pinning) a su portador; Java 24 (JEP 491) lo arregló, pero las llamadas a código nativo siguen clavándolo. Cuidado con ThreadLocal: un millón de hilos, un millón de copias; para pasar contexto está ScopedValue (definitivo en Java 25). Fueron preview en Java 19 y 20 (Proyecto Loom) y definitivos en Java 21 con el JEP 444.
+de:
+    Ein virtueller Thread ist ein federleichter Thread, den Java selbst verwaltet, nicht das Betriebssystem. Er kostet so wenig, dass du eine Million gleichzeitig haben kannst, einen pro Aufgabe.
+    Normale Threads sind echte Roboter: teuer, schwer, nur wenige passen in den Hangar. Virtuelle sind Roboter-Hologramme: Muss eines warten (etwa auf den Brief des Gegners), schaltet es sich ab und macht seinen Platz im Ring für ein anderes frei; kommt der Brief, leuchtet es wieder auf, wo gerade Platz ist.
+    Seit Java 21: Thread.startVirtualThread(aufgabe), Thread.ofVirtual().start(aufgabe) oder, am praktischsten, try (var ex = Executors.newVirtualThreadPerTaskExecutor()) { … }, das für jedes submit einen neuen Thread erzeugt. Man programmiert sie wie normale Threads, mit Code, der in aller Ruhe wartet (aus dem Netz lesen, aus einer Datei, Thread.sleep), ohne jemanden zu blockieren. In Robotern sind sie ebenfalls tabu: Der Wächter verbietet auch sie.
+    Der typische Fehler: zu erwarten, dass sie reines Rechnen beschleunigen. Tun sie nicht: Rechnet deine Aufgabe nur (etwa Kämpfe simulieren), gibt es keine Wartezeiten zu nutzen, und am Ende läuft alles auf so vielen „Träger“-Threads, wie es Kerne gibt. Glänzen tun sie, wenn Aufgaben fast nur warten: Server, Aufrufe anderer Dienste, Datenbanken.
+    Für Fortgeschrittene: Steck sie nicht in einen Pool (sie sind Wegwerfware: einer pro Aufgabe); um zu begrenzen, wie viel gleichzeitig passiert, nimm einen Semaphore. Bis Java 23 nagelte Warten in einem synchronized den Thread an seinen Träger (Pinning); Java 24 (JEP 491) hat das behoben, Aufrufe in nativen Code pinnen aber weiterhin. Vorsicht mit ThreadLocal: eine Million Threads, eine Million Kopien; für Kontext gibt es ScopedValue (final seit Java 25). Sie waren in Java 19 und 20 Preview (Project Loom) und wurden mit Java 21 und JEP 444 final.
+en:
+    A virtual thread is a featherweight thread managed by Java itself, not by the operating system. It costs so little that you can have a million at once, one per task.
+    Normal threads are real robots: expensive, heavy, only a few fit in the hangar. Virtual ones are robot holograms: when one has to wait (for the rival's letter to arrive, say), it switches off and gives its spot in the ring to another; when the letter arrives, it lights up again wherever there is room.
+    They arrived in Java 21: Thread.startVirtualThread(task), Thread.ofVirtual().start(task) or, most practical, try (var ex = Executors.newVirtualThreadPerTaskExecutor()) { … }, which creates a fresh thread for every submit. You write them like normal threads, with code that calmly waits (reading from the network, from a file, Thread.sleep) without blocking anyone. Robots can't use them either: the Watchdog bans these too.
+    The classic mistake: expecting them to speed up pure computation. They don't: if your task only computes (simulating fights, say), there is no waiting to exploit, and in the end everything runs on as many "carrier" threads as there are cores. They shine when tasks spend their lives waiting: servers, calls to other services, databases.
+    For seniors: don't pool them (they are disposable: one per task); to limit how much happens at once, use a Semaphore. Up to Java 23, waiting inside a synchronized block pinned the thread to its carrier; Java 24 (JEP 491) fixed that, but calls into native code still pin. Careful with ThreadLocal: a million threads, a million copies; for passing context there is ScopedValue (final in Java 25). They were a preview in Java 19 and 20 (Project Loom) and became final in Java 21 with JEP 444.
+pseudo.es:
+    CON UN HILO VIRTUAL POR TAREA:
+        PARA CADA espectador DE 1 A 100 000:
+            encargar:
+                esperar 1 segundo        (sin ocupar un hilo del sistema)
+                DEVOLVER espectador
+    (al cerrar, ESPERAR a que acaben todos)
+pseudo.de:
+    MIT EINEM VIRTUELLEN THREAD PRO AUFGABE:
+        FÜR JEDES zuschauer VON 1 BIS 100 000:
+            beauftragen:
+                1 Sekunde warten         (ohne einen Systemthread zu belegen)
+                ZURÜCKGEBEN zuschauer
+    (beim Schließen WARTEN, bis alle fertig sind)
+pseudo.en:
+    WITH ONE VIRTUAL THREAD PER TASK:
+        FOR EACH spectator FROM 1 TO 100,000:
+            submit:
+                wait 1 second            (without tying up an OS thread)
+                RETURN spectator
+    (on closing, WAIT until all of them finish)
+ejemplo:
+    import java.util.concurrent.Executors;
+
+    class Retransmision {                                             // fuera del robot: allí no se permiten hilos || außerhalb des Roboters: dort sind keine Threads erlaubt || outside the robot: threads are not allowed there
+        public static void main(String[] args) {
+            try (var ex = Executors.newVirtualThreadPerTaskExecutor()) {   // un hilo virtual por tarea (Java 21) || ein virtueller Thread pro Aufgabe (Java 21) || one virtual thread per task (Java 21)
+                for (int i = 0; i < 100_000; i++) {
+                    int espectador = i;
+                    ex.submit(() -> {
+                        Thread.sleep(1000);                           // espera sin ocupar un hilo del sistema || wartet, ohne einen Systemthread zu belegen || waits without tying up an OS thread
+                        return espectador;
+                    });
+                }
+            }                                                         // close() espera a los 100 000 || close() wartet auf alle 100 000 || close() waits for all 100,000
+        }
+    }
+
+=== excepciones_bien_disenadas
+nivel: 5
+tema: 14
+titulo.es: Excepciones bien diseñadas
+titulo.de: Gut entworfene Ausnahmen
+titulo.en: Well-designed exceptions
+claves.es: buenas practicas excepciones, cuando lanzar una excepcion, illegalargumentexception, illegalstateexception, tragar excepciones, catch vacio, mensaje de error, encadenar la causa, requirenonnull
+claves.de: ausnahmen richtig einsetzen, best practices exceptions, wann ausnahme werfen, illegalargumentexception, illegalstateexception, leerer catch, ausnahme verschlucken, fehlermeldung, ursache verketten
+claves.en: exception best practices, when to throw an exception, illegalargumentexception, illegalstateexception, swallowing exceptions, empty catch, exception message, exception chaining, requirenonnull
+ver: excepcion, checked_unchecked, excepcion_propia, finally
+es:
+    Diseñar bien las excepciones es decidir cuándo lanzar una, de qué tipo, con qué mensaje y quién debe atraparla. Una buena excepción dice qué falló, con qué valores y dónde; una mala lo esconde.
+    Es el parte del árbitro tras un KO: «Cobalto cayó en el turno 312: el brazo izquierdo se desenroscó al atacar con 0 de energía» sirve; «algo pasó» no sirve; y tirar el parte a la papelera (el catch vacío) es lo peor: el robot sigue peleando sin brazo y nadie sabe por qué.
+    Para datos que no valen, IllegalArgumentException; para un momento que no toca, IllegalStateException; para un null prohibido, Objects.requireNonNull(x, "falta x"). Pon los valores en el mensaje (throw new IllegalArgumentException("peso negativo: " + peso)) y, al envolver otra, pásala como causa: new IllegalStateException("no pude cargar la pieza", e). En el juego, si tu robot lanza una excepción, la pelea la atrapa y la escribe en tu consola con su tipo, su mensaje y la línea: un buen mensaje te ahorra media hora.
+    El fallo típico: catch (Exception e) { }, tragársela. El error no desaparece, solo se esconde, y luego falla otra cosa lejos de allí. Atrapa solo lo que sepas arreglar, en el sitio donde sepas hacerlo; si no, déjala subir. (Por eso el tope de cálculo del juego, TopeDeCalculo, es un Error y no una Exception: para que un catch (Exception e) no lo tape sin querer.)
+    Para el senior: checked para lo que quien llama puede remediar (un archivo que no está), unchecked para los errores de programación; y no las uses para controlar el flujo, porque rellenar la traza de pila cuesta. No registres y relances a la vez (sale dos veces en el log), restaura la interrupción si atrapas InterruptedException, y mira getSuppressed(): en un try-with-resources (Java 7), si el cierre también falla, esa segunda excepción se guarda ahí y no se pierde. Desde Java 14 (JEP 358, activado por defecto en Java 15) los NullPointerException dicen qué era null: copia esa idea en tus propios mensajes.
+de:
+    Ausnahmen gut zu entwerfen heißt zu entscheiden, wann man eine wirft, welchen Typ, mit welcher Meldung und wer sie fangen soll. Eine gute Ausnahme sagt, was schiefging, mit welchen Werten und wo; eine schlechte versteckt es.
+    Es ist der Bericht des Schiedsrichters nach einem K.o.: „Kobalt ging in Zug 312 zu Boden: Der linke Arm hat sich beim Angriff mit 0 Energie abgeschraubt“ hilft; „Irgendwas ist passiert“ hilft nicht; und den Bericht in den Papierkorb zu werfen (der leere catch) ist das Schlimmste: Der Roboter kämpft ohne Arm weiter, und keiner weiß, warum.
+    Für unzulässige Daten IllegalArgumentException; für den falschen Zeitpunkt IllegalStateException; für ein verbotenes null Objects.requireNonNull(x, "x fehlt"). Schreib die Werte in die Meldung (throw new IllegalArgumentException("negatives Gewicht: " + peso)) und gib beim Einpacken einer anderen Ausnahme diese als Ursache mit: new IllegalStateException("Teil konnte nicht geladen werden", e). Wirft dein Roboter im Spiel eine Ausnahme, fängt der Kampf sie ab und schreibt sie mit Typ, Meldung und Zeile in deine Konsole: Eine gute Meldung spart dir eine halbe Stunde.
+    Der typische Fehler: catch (Exception e) { }, sie zu verschlucken. Der Fehler verschwindet nicht, er versteckt sich nur, und später geht weit weg etwas anderes kaputt. Fang nur, was du reparieren kannst, und dort, wo du es kannst; sonst lass sie nach oben durch. (Deshalb ist die Rechengrenze des Spiels, TopeDeCalculo, ein Error und keine Exception: damit ein catch (Exception e) sie nicht versehentlich zudeckt.)
+    Für Fortgeschrittene: checked für das, was der Aufrufer beheben kann (eine fehlende Datei), unchecked für Programmierfehler; und steuere damit keinen Programmablauf, denn das Füllen des Stacktrace kostet. Nicht gleichzeitig loggen und weiterwerfen (steht sonst doppelt im Log), bei InterruptedException das Unterbrechungs-Flag wiederherstellen, und schau in getSuppressed(): Scheitert in einem try-with-resources (Java 7) auch das Schließen, landet diese zweite Ausnahme dort und geht nicht verloren. Seit Java 14 (JEP 358, ab Java 15 standardmäßig an) sagen NullPointerExceptions, was null war: Übernimm diese Idee für deine eigenen Meldungen.
+en:
+    Designing exceptions well means deciding when to throw one, of what type, with what message, and who should catch it. A good exception says what went wrong, with which values and where; a bad one hides it.
+    It is the referee's report after a KO: "Cobalt went down on tick 312: the left arm unscrewed itself while attacking with 0 energy" is useful; "something happened" is not; and throwing the report in the bin (the empty catch) is the worst of all: the robot keeps fighting with no arm and nobody knows why.
+    For invalid data, IllegalArgumentException; for the wrong moment, IllegalStateException; for a forbidden null, Objects.requireNonNull(x, "x is missing"). Put the values in the message (throw new IllegalArgumentException("negative weight: " + peso)) and, when wrapping another exception, pass it on as the cause: new IllegalStateException("could not load the part", e). In the game, if your robot throws an exception, the fight catches it and writes it to your console with its type, message and line: a good message saves you half an hour.
+    The classic mistake: catch (Exception e) { }, swallowing it. The error doesn't go away, it just hides, and later something else breaks far from there. Only catch what you know how to fix, at the place where you can fix it; otherwise let it propagate. (That is why the game's compute limit, TopeDeCalculo, is an Error and not an Exception: so that a catch (Exception e) doesn't cover it up by accident.)
+    For seniors: checked for what the caller can recover from (a missing file), unchecked for programming errors; and don't use them for control flow, because filling in the stack trace is costly. Don't log and rethrow (it ends up twice in the log), restore the interrupt flag if you catch InterruptedException, and look at getSuppressed(): in a try-with-resources (Java 7), if closing fails too, that second exception is stored there instead of being lost. Since Java 14 (JEP 358, on by default from Java 15) NullPointerExceptions tell you what was null: borrow that idea for your own messages.
+pseudo.es:
+    CREAR Pieza(nombre, peso):
+        SI falta el nombre: LANZAR error "la pieza necesita nombre"
+        SI peso fuera de 0..500: LANZAR error "peso fuera de 0..500: " + peso
+    leer(línea):
+        SI no tiene la forma nombre:peso: LANZAR error con la línea entera
+        INTENTAR convertir el peso a número
+        SI FALLA: LANZAR error nuevo CON la causa original
+pseudo.de:
+    ERZEUGE Pieza(name, gewicht):
+        WENN der Name fehlt: WIRF Fehler "das Teil braucht einen Namen"
+        WENN gewicht außerhalb 0..500: WIRF Fehler "Gewicht außerhalb 0..500: " + gewicht
+    lesen(zeile):
+        WENN sie nicht die Form name:gewicht hat: WIRF Fehler mit der ganzen Zeile
+        VERSUCHE das Gewicht in eine Zahl umzuwandeln
+        WENN ES SCHEITERT: WIRF neuen Fehler MIT der ursprünglichen Ursache
+pseudo.en:
+    CREATE Pieza(name, weight):
+        IF the name is missing: THROW error "the part needs a name"
+        IF weight outside 0..500: THROW error "weight outside 0..500: " + weight
+    read(line):
+        IF it is not shaped name:weight: THROW error with the whole line
+        TRY to turn the weight into a number
+        IF IT FAILS: THROW a new error WITH the original cause
+ejemplo:
+    record Pieza(String nombre, int peso) {
+        Pieza {                                                       // constructor compacto: valida al crear || kompakter Konstruktor: prüft beim Erzeugen || compact constructor: validates on creation
+            java.util.Objects.requireNonNull(nombre, "la pieza necesita nombre");
+            if (peso < 0 || peso > 500)
+                throw new IllegalArgumentException("peso fuera de 0..500: " + peso + " (" + nombre + ")");   // di el valor que falló || nenne den Wert, der nicht passt || say which value was wrong
+        }
+
+        static Pieza leer(String linea) {                             // «brazo:120» → Pieza || „brazo:120“ → Pieza || "brazo:120" → Pieza
+            String[] partes = linea.split(":");
+            if (partes.length != 2) throw new IllegalArgumentException("se esperaba nombre:peso y llegó «" + linea + "»");
+            try { return new Pieza(partes[0], Integer.parseInt(partes[1])); }
+            catch (NumberFormatException e) { throw new IllegalArgumentException("peso no numérico en «" + linea + "»", e); }   // envuelve y pasa la causa || einpacken und Ursache mitgeben || wrap it and pass the cause on
+        }
+    }

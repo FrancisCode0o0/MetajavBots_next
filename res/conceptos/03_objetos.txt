@@ -1,0 +1,1623 @@
+# 03_objetos.txt: la orientación a objetos, del plano y el robot construido a la composición, el contrato de equals/hashCode y los métodos default
+
+=== clase
+nivel: 2
+tema: 09
+titulo.es: Clase
+titulo.de: Klasse
+titulo.en: Class
+claves.es: clase, que es una clase, plano de un objeto, molde, class, public class, definir una clase
+claves.de: klasse, was ist eine klasse, bauplan, vorlage, class, public class, klasse definieren
+claves.en: class, what is a class, blueprint, template, public class, define a class
+ver: objeto, atributo, metodo, new
+es:
+    Una clase es un plano: describe qué datos tendrá una cosa (sus atributos) y qué sabrá hacer (sus métodos), pero ella misma todavía no es ninguna cosa concreta.
+    Es el plano del robot clavado con chinchetas en la pared del taller: «dos brazos, una cabeza, blindaje 100, sabe dar puñetazos». Ningún rival ha caído KO por un papel, pero con ese único plano el taller puede fabricar cien robots iguales.
+    En Java se escribe class Nombre { … } con los atributos y los métodos dentro de las llaves; por costumbre, el nombre empieza por mayúscula (Pieza, Arma, String). Tu robot ya es una clase: public class MiRobot extends Metajavbot es el plano con el que el juego construye tu luchador al empezar cada pelea.
+    El fallo típico: confundir el plano con lo construido y esperar que la clase Pieza tenga «su» blindaje; el blindaje lo tiene cada pieza fabricada. Y otro: un archivo .java solo admite una clase public, y el archivo se ha de llamar como ella (MiRobot.java).
+    Para un senior: una buena clase tiene una sola razón para cambiar; si su nombre pide un «y» (MotorYRadarYMarcador), está pidiendo partirse en tres.
+de:
+    Eine Klasse ist ein Bauplan: Sie beschreibt, welche Daten ein Ding haben wird (seine Attribute) und was es können wird (seine Methoden), ist selbst aber noch kein konkretes Ding.
+    Sie ist der Roboterbauplan, der in der Werkstatt mit Reißzwecken an der Wand hängt: „zwei Arme, ein Kopf, Panzerung 100, kann boxen“. Von einem Blatt Papier ist noch kein Gegner k. o. gegangen, aber mit diesem einen Plan baut die Werkstatt hundert gleiche Roboter.
+    In Java schreibst du class Name { … }, und Attribute und Methoden kommen zwischen die geschweiften Klammern; der Name beginnt üblicherweise mit einem Großbuchstaben (Pieza, Arma, String). Dein Roboter ist schon eine Klasse: public class MiRobot extends Metajavbot ist der Plan, nach dem das Spiel zu Beginn jedes Kampfes deinen Kämpfer baut.
+    Der typische Fehler: Plan und gebautes Ding zu verwechseln und zu erwarten, dass die Klasse Pieza „ihre“ Panzerung hat – die hat jedes gebaute Teil für sich. Und noch einer: Eine .java-Datei darf nur eine public-Klasse enthalten, und die Datei muss genauso heißen (MiRobot.java).
+    Für Seniors: Eine gute Klasse hat genau einen Grund, sich zu ändern; braucht ihr Name ein „Und“ (MotorUndRadarUndAnzeige), will sie in drei Klassen zerlegt werden.
+en:
+    A class is a blueprint: it describes what data a thing will have (its attributes) and what it will be able to do (its methods), but it is not yet any actual thing itself.
+    It is the robot blueprint pinned to the workshop wall: "two arms, one head, armor 100, can punch". No opponent has ever been knocked out by a sheet of paper, but from that single blueprint the workshop can build a hundred identical robots.
+    In Java you write class Name { … } with the attributes and methods inside the braces; by convention the name starts with a capital letter (Pieza, Arma, String). Your robot is already a class: public class MiRobot extends Metajavbot is the blueprint the game uses to build your fighter at the start of every fight.
+    The classic mistake: confusing the blueprint with what is built from it and expecting the class Pieza to have "its" armor; each part that gets built has its own. Another one: a .java file may hold only one public class, and the file must be named after it (MiRobot.java).
+    For seniors: a good class has exactly one reason to change; if its name needs an "and" (EngineAndRadarAndScoreboard), it is asking to be split in three.
+pseudo.es:
+    PLANO Pieza:
+        TIENE nombre y blindaje
+        SABE recibir daño:
+            blindaje ← blindaje − daño
+pseudo.de:
+    BAUPLAN Teil:
+        HAT name und panzerung
+        KANN schaden nehmen:
+            panzerung ← panzerung − schaden
+pseudo.en:
+    BLUEPRINT Part:
+        HAS name and armor
+        CAN take damage:
+            armor ← armor − damage
+ejemplo:
+    public class Pieza {                    // el plano: aún no hay ninguna pieza || der Bauplan: noch gibt es kein Teil || the blueprint: no part exists yet
+        String nombre;                      // lo que tendrá cada pieza || was jedes Teil haben wird || what every part will have
+        double blindaje = 100;
+
+        void recibirDano(double dano) {     // lo que sabrá hacer || was es können wird || what it will be able to do
+            blindaje = Math.max(0, blindaje - dano);
+        }
+    }
+
+=== objeto
+nivel: 2
+tema: 09
+titulo.es: Objeto
+titulo.de: Objekt
+titulo.en: Object
+claves.es: objeto, objetos, que es un objeto, instancia, ejemplar, crear un objeto
+claves.de: objekt, objekte, was ist ein objekt, instanz, exemplar, objekt erzeugen
+claves.en: object, objects, what is an object, instance, create an object
+ver: clase, new, referencia, null
+es:
+    Un objeto es una cosa concreta construida con el plano de una clase: tiene sus propios datos (este blindaje, este nombre) y sabe hacer lo que el plano dice. También se le llama instancia.
+    Del mismo plano salen tres robots por la cinta del taller: idénticos al nacer, pero si al primero le arrancan un brazo, los otros dos siguen saludando con los dos suyos. Cada robot construido es un objeto, con sus abolladuras propias.
+    En Java se construye con new (Pieza casco = new Pieza();) y se usa con un punto: casco.blindaje, casco.recibirDano(10). Ya los usas sin saberlo: el Enemigo e que te llega en alVerEnemigo es un objeto, y e.distancia() se lo pregunta a ese rival en concreto; hasta "hola" es un objeto String.
+    El fallo típico: usar una variable que todavía no apunta a ningún objeto (vale null) y llevarse un NullPointerException. Otro: creer que dos objetos con los mismos datos son el mismo; son gemelos, no la misma persona (de eso van == y equals).
+    Para un senior: un objeto es identidad, estado y comportamiento; vive en el montón (heap) y el recolector lo retira cuando ya nadie lo referencia, así que crear objetos pequeños en cada turno es barato, pero no gratis.
+de:
+    Ein Objekt ist ein konkretes Ding, gebaut nach dem Bauplan einer Klasse: Es hat seine eigenen Daten (diese Panzerung, diesen Namen) und kann, was der Plan vorsieht. Man nennt es auch Instanz.
+    Aus demselben Plan laufen drei Roboter vom Fließband: bei der Geburt völlig gleich, aber reißt man dem ersten einen Arm ab, winken die anderen beiden weiter mit beiden Armen. Jeder gebaute Roboter ist ein Objekt, mit seinen ganz eigenen Beulen.
+    In Java baust du es mit new (Pieza casco = new Pieza();) und benutzt es mit einem Punkt: casco.blindaje, casco.recibirDano(10). Du benutzt längst welche: Der Enemigo (Gegner) e, den du in alVerEnemigo (beiSicht) bekommst, ist ein Objekt, und e.distancia() (entfernung) fragt genau diesen Gegner; sogar "hallo" ist ein String-Objekt.
+    Der typische Fehler: eine Variable zu benutzen, die noch auf kein Objekt zeigt (sie ist null), und eine NullPointerException zu kassieren. Ein anderer: zu glauben, zwei Objekte mit denselben Daten seien dasselbe – sie sind Zwillinge, nicht dieselbe Person (darum geht es bei == und equals).
+    Für Seniors: Ein Objekt ist Identität, Zustand und Verhalten; es lebt auf dem Heap, und der Garbage Collector räumt es weg, sobald niemand mehr darauf verweist – kleine Objekte in jedem Zug zu erzeugen ist also billig, aber nicht umsonst.
+en:
+    An object is an actual thing built from a class's blueprint: it has its own data (this armor, this name) and can do whatever the blueprint says. It is also called an instance.
+    Three robots roll off the workshop conveyor from the same blueprint: identical at birth, but if the first one loses an arm, the other two keep waving with both of theirs. Each robot built is an object, with its very own dents.
+    In Java you build one with new (Pieza casco = new Pieza();) and use it with a dot: casco.blindaje, casco.recibirDano(10). You already use them: the Enemigo (Enemy) e you get in alVerEnemigo (onSeeEnemy) is an object, and e.distancia() (distance) asks that particular rival; even "hello" is a String object.
+    The classic mistake: using a variable that does not point to any object yet (it is null) and getting a NullPointerException. Another: believing two objects with the same data are the same one; they are twins, not the same person (that is what == versus equals is about).
+    For seniors: an object is identity, state and behavior; it lives on the heap and the garbage collector reclaims it once nobody refers to it, so creating small objects every tick is cheap, but not free.
+pseudo.es:
+    casco ← CONSTRUIR Pieza
+    escudo ← CONSTRUIR Pieza
+    casco recibe 30 de daño
+    escribir casco.blindaje       (70)
+    escribir escudo.blindaje      (100: es otro objeto)
+pseudo.de:
+    helm ← BAUE Teil
+    schild ← BAUE Teil
+    helm nimmt 30 Schaden
+    schreibe helm.panzerung       (70)
+    schreibe schild.panzerung     (100: ein anderes Objekt)
+pseudo.en:
+    helmet ← BUILD Part
+    shield ← BUILD Part
+    helmet takes 30 damage
+    write helmet.armor            (70)
+    write shield.armor            (100: a different object)
+ejemplo:
+    class Pieza {                           // el plano || der Bauplan || the blueprint
+        double blindaje = 100;
+    }
+
+    public class MiRobot extends Metajavbot {
+        Pieza casco = new Pieza();          // un objeto || ein Objekt || one object
+        Pieza escudo = new Pieza();         // otro, del mismo plano || ein zweites, vom selben Plan || another, same blueprint
+
+        @Override
+        public void alRecibirGolpe(Golpe g) {
+            casco.blindaje -= g.dano();     // solo se abolla el casco || nur der Helm bekommt Beulen || only the helmet gets dented
+            escribir(casco.blindaje + " / " + escudo.blindaje);
+        }
+    }
+
+=== new
+nivel: 2
+tema: 09
+titulo.es: new
+titulo.de: new
+titulo.en: new
+claves.es: new, operador new, crear con new, construir un objeto, instanciar, new arraylist
+claves.de: new, operator new, mit new erzeugen, objekt bauen, instanziieren, new arraylist
+claves.en: new, new keyword, new operator, instantiate, build an object, new arraylist
+ver: objeto, constructor, null, recolector_de_basura
+es:
+    new es la palabra que manda fabricar un objeto nuevo a partir de una clase: le reserva memoria, le da sus valores iniciales y te devuelve dónde ha quedado.
+    Es el botón rojo y gordo de la cadena de montaje: metes el plano, lo aporreas y, entre ruido de prensa y algo de humo, sale un robot recién pintado. Cada pulsación, un robot más; aporrearlo dentro de un bucle de mil vueltas llena el taller de robots que nadie ha pedido.
+    Se escribe new, el nombre de la clase y paréntesis, que llaman a su constructor: new Pieza(), new StringBuilder("¡"), new Random(42), new ArrayList<>(). El resultado se guarda en una variable para usarlo después: List<String> vistos = new ArrayList<>();
+    El fallo típico: declarar la variable y olvidar el new, así que vale null y el primer vistos.add() revienta con NullPointerException. El otro: hacer el new dentro de cadaTurno de algo que debía durar toda la ronda, y perder lo guardado porque en cada turno estrenas un objeto vacío.
+    Para un senior: new siempre da un objeto distinto (new String("a") != "a"), mientras que las fábricas como List.of() o Integer.valueOf(5) pueden reutilizar uno; además, la JVM abarata el new (asignación rápida en el TLAB, recolección barata de los de vida corta) y el JIT a veces ni lo crea gracias al análisis de escape.
+de:
+    new ist das Wort, das ein neues Objekt nach dem Plan einer Klasse herstellen lässt: Es reserviert Speicher, setzt die Anfangswerte und gibt dir zurück, wo das Objekt liegt.
+    Es ist der dicke rote Knopf am Fließband: Plan einlegen, draufhauen, und unter Pressengedröhn und etwas Qualm rollt ein frisch lackierter Roboter heraus. Jeder Druck ein Roboter mehr; haust du in einer Schleife mit tausend Runden drauf, steht die Werkstatt voller Roboter, die keiner bestellt hat.
+    Man schreibt new, den Klassennamen und Klammern, die den Konstruktor aufrufen: new Pieza(), new StringBuilder("!"), new Random(42), new ArrayList<>(). Das Ergebnis speicherst du in einer Variablen, um es später zu benutzen: List<String> vistos = new ArrayList<>();
+    Der typische Fehler: die Variable zu deklarieren und das new zu vergessen – sie ist dann null, und das erste vistos.add() kracht mit einer NullPointerException. Der andere: etwas, das die ganze Runde halten soll, in cadaTurno (jedenZug) mit new zu erzeugen und alles Gespeicherte zu verlieren, weil du jeden Zug mit einem leeren Objekt anfängst.
+    Für Seniors: new liefert immer ein eigenes Objekt (new String("a") != "a"), Fabrikmethoden wie List.of() oder Integer.valueOf(5) dürfen dagegen eines wiederverwenden; außerdem macht die JVM new billig (schnelle Allokation im TLAB, kurzlebige Objekte werden günstig eingesammelt), und der JIT spart es dank Escape-Analyse manchmal ganz ein.
+en:
+    new is the word that has a fresh object built from a class: it reserves memory for it, sets its starting values and hands you back where it ended up.
+    It is the big fat red button on the assembly line: slot in the blueprint, slam it, and amid press-machine thumping and a puff of smoke a freshly painted robot rolls out. Every press, one more robot; slam it inside a loop of a thousand laps and the workshop fills up with robots nobody ordered.
+    You write new, the class name and parentheses, which call its constructor: new Pieza(), new StringBuilder("!"), new Random(42), new ArrayList<>(). You store the result in a variable to use it later: List<String> vistos = new ArrayList<>();
+    The classic mistake: declaring the variable and forgetting the new, so it is null and the first vistos.add() blows up with a NullPointerException. The other: creating with new inside cadaTurno (onTick) something that should last the whole round, and losing what you stored because every tick starts with an empty object.
+    For seniors: new always gives a distinct object (new String("a") != "a"), whereas factories like List.of() or Integer.valueOf(5) may reuse one; the JVM also makes new cheap (fast allocation in the TLAB, cheap collection of short-lived objects) and the JIT sometimes skips it entirely thanks to escape analysis.
+pseudo.es:
+    AL EMPEZAR LA RONDA:
+        vistos ← NUEVA lista vacía
+    AL VER un enemigo e:
+        SI e no está en vistos:
+            añadir e a vistos
+pseudo.de:
+    ZU BEGINN DER RUNDE:
+        gesehen ← NEUE leere Liste
+    BEI SICHT eines Gegners g:
+        WENN g nicht in gesehen ist:
+            g zu gesehen hinzufügen
+pseudo.en:
+    AT THE START OF THE ROUND:
+        seen ← NEW empty list
+    ON SEEING an enemy e:
+        IF e is not in seen:
+            add e to seen
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        List<String> vistos;                   // aún no hay lista: vale null || noch keine Liste: null || no list yet: it is null
+
+        @Override
+        public void alEmpezar() {
+            vistos = new ArrayList<>();        // el botón rojo: una lista nueva por ronda || der rote Knopf: eine neue Liste pro Runde || the red button: a new list each round
+        }
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            if (!vistos.contains(e.nombre())) vistos.add(e.nombre());
+            escribir("vistos: " + vistos.size());
+        }
+    }
+
+=== atributo
+nivel: 2
+tema: 09
+titulo.es: Atributo
+titulo.de: Attribut
+titulo.en: Field
+claves.es: atributo, atributos, campo, campos de una clase, estado del objeto, variable de instancia
+claves.de: attribut, attribute, feld, instanzvariable, zustand eines objekts, membervariable
+claves.en: field, fields, attribute, instance variable, object state, member variable
+ver: clase, objeto, encapsulacion, static
+es:
+    Un atributo (o campo) es una variable que pertenece a un objeto: se declara dentro de la clase, fuera de los métodos, y guarda lo que ese objeto es o recuerda.
+    Son las pegatinas del costado del robot: «blindaje 87», «golpes dados 4», «nombre: El Tostadoras». Cada robot lleva las suyas, y el locutor loco las lee a gritos cada vez que uno pasa por delante.
+    Se declaran con tipo y nombre al principio de la clase (int golpesDados = 0; String apodo;) y cualquier método del objeto los lee y los cambia. En MiRobot, un atributo es la forma de recordar algo de un turno al siguiente; las variables declaradas dentro de cadaTurno nacen y mueren en cada turno.
+    El fallo típico: declarar dentro del método lo que debía ser atributo, y que vuelva a 0 cada turno; o al revés, convertir en atributo cualquier cosa hasta no saber quién cambia qué. Si no le das valor, un atributo empieza en 0, false o null (una variable local sin valor, en cambio, ni compila).
+    Para un senior: el conjunto de atributos es el estado del objeto, y cuanto menos estado mutable, menos fallos; hazlos private y final siempre que puedas, y no guardes en un atributo lo que se puede calcular al momento.
+de:
+    Ein Attribut (oder Feld) ist eine Variable, die zu einem Objekt gehört: Es wird in der Klasse, aber außerhalb der Methoden deklariert und speichert, was dieses Objekt ist oder sich merkt.
+    Es sind die Aufkleber an der Seite des Roboters: „Panzerung 87“, „ausgeteilte Treffer 4“, „Name: Der Toaster“. Jeder Roboter trägt seine eigenen, und der verrückte Sprecher brüllt sie vor, sobald einer vorbeirollt.
+    Du deklarierst sie mit Typ und Namen am Anfang der Klasse (int golpesDados = 0; String apodo;), und jede Methode des Objekts kann sie lesen und ändern. In MiRobot ist ein Attribut der Weg, sich etwas von einem Zug zum nächsten zu merken; Variablen, die in cadaTurno (jedenZug) deklariert sind, entstehen und vergehen in jedem Zug.
+    Der typische Fehler: in der Methode zu deklarieren, was ein Attribut sein sollte, sodass es jeden Zug wieder 0 ist; oder umgekehrt alles zum Attribut zu machen, bis keiner mehr weiß, wer was ändert. Ohne Wert beginnt ein Attribut bei 0, false oder null (eine lokale Variable ohne Wert kompiliert dagegen gar nicht).
+    Für Seniors: Die Attribute zusammen sind der Zustand des Objekts, und je weniger veränderlicher Zustand, desto weniger Fehler; mach sie private und final, wo es geht, und speichere nichts in einem Attribut, was sich jederzeit ausrechnen lässt.
+en:
+    An attribute (or field) is a variable that belongs to an object: it is declared inside the class but outside the methods, and it holds what that object is or remembers.
+    They are the stickers on the robot's flank: "armor 87", "hits landed 4", "name: The Toaster". Each robot wears its own, and the crazy announcer bellows them out whenever one rolls past.
+    You declare them with a type and a name at the top of the class (int golpesDados = 0; String apodo;) and any method of the object can read and change them. In MiRobot, a field is how you remember something from one tick to the next; variables declared inside cadaTurno (onTick) are born and die every tick.
+    The classic mistake: declaring inside the method what should be a field, so it is back to 0 every tick; or the opposite, turning everything into a field until nobody knows who changes what. Without a value, a field starts at 0, false or null (a local variable without a value doesn't even compile).
+    For seniors: together the fields are the object's state, and the less mutable state, the fewer bugs; make them private and final whenever you can, and do not store in a field what you can compute on the spot.
+pseudo.es:
+    PLANO MiRobot:
+        TIENE golpesDados ← 0        (dura toda la ronda)
+        AL ACERTAR:
+            golpesDados ← golpesDados + 1
+            decir golpesDados
+pseudo.de:
+    BAUPLAN MeinRoboter:
+        HAT treffer ← 0              (hält die ganze Runde)
+        BEI EIGENEM TREFFER:
+            treffer ← treffer + 1
+            sage treffer
+pseudo.en:
+    BLUEPRINT MyRobot:
+        HAS hitsLanded ← 0           (lasts the whole round)
+        ON HITTING THE ENEMY:
+            hitsLanded ← hitsLanded + 1
+            say hitsLanded
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        int golpesDados;                       // atributo: empieza en 0 solo || Attribut: beginnt von selbst bei 0 || field: starts at 0 on its own
+        String apodo = "El Tostadoras";        // otro atributo, con valor inicial || noch ein Attribut, mit Startwert || another field, with a starting value
+
+        @Override
+        public void alAcertar(Golpe g) {
+            golpesDados++;                     // lo cambia un método y lo recuerda el objeto || eine Methode ändert es, das Objekt merkt es sich || a method changes it, the object remembers it
+            decir(apodo + ": " + golpesDados);
+        }
+    }
+
+=== constructor
+nivel: 3
+tema: 10
+titulo.es: Constructor
+titulo.de: Konstruktor
+titulo.en: Constructor
+claves.es: constructor, constructores, constructor por defecto, constructor con parametros, inicializar un objeto, valores iniciales de un objeto
+claves.de: konstruktor, konstruktoren, standardkonstruktor, konstruktor mit parametern, objekt initialisieren, constructor
+claves.en: constructor, constructors, default constructor, no-arg constructor, constructor with parameters, initialize an object
+ver: new, this, super, inmutabilidad
+es:
+    Un constructor es un método especial que se ejecuta solo al hacer new: deja el objeto recién nacido listo para usarse, con sus atributos ya con valor.
+    Es el técnico que espera al final de la cadena de montaje: antes de soltar al robot en la arena, le atornilla los brazos que pediste, le llena el depósito y le pinta el nombre en la frente. Ningún robot sale del taller sin pasar por sus manos, ni siquiera el que se queja.
+    Se escribe como un método con el mismo nombre que la clase y sin tipo de retorno: Arma(String tipo, double dano) { this.tipo = tipo; this.dano = dano; }, y se llama con new Arma("laser", 12). Si no escribes ninguno, Java pone uno vacío sin parámetros; puedes tener varios (sobrecarga) y uno puede llamar a otro con this(...).
+    El fallo típico: escribirle un tipo de retorno (void Arma(...)), con lo que deja de ser constructor y pasa a ser un método raro que nadie llama. El otro: escribir un constructor con parámetros y descubrir que new Arma() ya no compila, porque el vacío de regalo desaparece en cuanto escribes uno tuyo.
+    Para un senior: valida en el constructor (Objects.requireNonNull, IllegalArgumentException) para que no pueda existir ningún objeto inválido, y nunca llames desde él a métodos que se puedan sobrescribir: la subclase aún no ha inicializado sus atributos y verá nulls. Con muchos parámetros opcionales, mejor un builder o un método de fábrica estático.
+de:
+    Ein Konstruktor ist eine besondere Methode, die nur bei new läuft: Sie macht das frisch geborene Objekt einsatzbereit, mit schon belegten Attributen.
+    Er ist der Techniker am Ende des Fließbands: Bevor der Roboter in die Arena darf, schraubt er ihm die bestellten Arme an, füllt den Tank und malt ihm den Namen auf die Stirn. Kein Roboter verlässt die Werkstatt, ohne durch seine Hände zu gehen – auch nicht der, der sich beschwert.
+    Man schreibt ihn wie eine Methode mit dem Namen der Klasse und ohne Rückgabetyp: Arma(String tipo, double dano) { this.tipo = tipo; this.dano = dano; }, und ruft ihn mit new Arma("laser", 12) auf. Schreibst du keinen, legt Java einen leeren ohne Parameter an; du kannst mehrere haben (Überladung), und einer kann mit this(...) einen anderen aufrufen.
+    Der typische Fehler: ihm einen Rückgabetyp zu geben (void Arma(...)) – dann ist er kein Konstruktor mehr, sondern eine seltsame Methode, die niemand aufruft. Der andere: einen Konstruktor mit Parametern zu schreiben und festzustellen, dass new Arma() nicht mehr kompiliert, weil der geschenkte leere verschwindet, sobald du einen eigenen schreibst.
+    Für Seniors: Prüfe im Konstruktor (Objects.requireNonNull, IllegalArgumentException), damit es gar keine ungültigen Objekte geben kann, und rufe darin nie überschreibbare Methoden auf: Die Unterklasse hat ihre Attribute noch nicht initialisiert und sieht nulls. Bei vielen optionalen Parametern ist ein Builder oder eine statische Fabrikmethode besser.
+en:
+    A constructor is a special method that runs only on new: it gets the newborn object ready to use, with its fields already set.
+    It is the technician waiting at the end of the assembly line: before the robot is let loose in the arena, he bolts on the arms you ordered, fills the tank and paints its name on its forehead. No robot leaves the workshop without passing through his hands, not even the one that complains.
+    You write it like a method named after the class with no return type: Arma(String tipo, double dano) { this.tipo = tipo; this.dano = dano; }, and you call it with new Arma("laser", 12). If you write none, Java adds an empty one with no parameters; you can have several (overloading) and one can call another with this(...).
+    The classic mistake: giving it a return type (void Arma(...)), which turns it into an odd method nobody ever calls. The other: writing a constructor with parameters and finding that new Arma() no longer compiles, because the free empty one disappears as soon as you write your own.
+    For seniors: validate in the constructor (Objects.requireNonNull, IllegalArgumentException) so no invalid object can ever exist, and never call overridable methods from it: the subclass has not initialized its fields yet and will see nulls. With many optional parameters, prefer a builder or a static factory method.
+pseudo.es:
+    PLANO Arma:
+        TIENE tipo y daño
+        AL CONSTRUIRLA CON (t, d):
+            SI d < 0: protestar
+            tipo ← t
+            daño ← d
+    laser ← CONSTRUIR Arma("laser", 12)
+pseudo.de:
+    BAUPLAN Waffe:
+        HAT typ und schaden
+        BEIM BAUEN MIT (t, s):
+            WENN s < 0: protestieren
+            typ ← t
+            schaden ← s
+    laser ← BAUE Waffe("laser", 12)
+pseudo.en:
+    BLUEPRINT Weapon:
+        HAS type and damage
+        WHEN BUILT WITH (t, d):
+            IF d < 0: complain
+            type ← t
+            damage ← d
+    laser ← BUILD Weapon("laser", 12)
+ejemplo:
+    class Arma {
+        final String tipo;
+        final double dano;
+
+        Arma(String tipo, double dano) {           // mismo nombre, sin tipo de retorno || gleicher Name, kein Rückgabetyp || same name, no return type
+            if (dano < 0) throw new IllegalArgumentException("daño negativo");
+            this.tipo = tipo;
+            this.dano = dano;
+        }
+
+        Arma(String tipo) {
+            this(tipo, 10);                        // llama al otro constructor || ruft den anderen Konstruktor auf || calls the other constructor
+        }
+    }
+
+=== this
+nivel: 3
+tema: 10
+titulo.es: this
+titulo.de: this
+titulo.en: this
+claves.es: this, this.atributo, el propio objeto, referencia a si mismo, mismo nombre que el atributo, atributo tapado por un parametro
+claves.de: this, this.attribut, das eigene objekt, verweis auf sich selbst, gleicher name wie das attribut, verdecktes attribut
+claves.en: this, this.field, the current object, reference to itself, same name as the field, shadowed field
+ver: constructor, atributo, ambito, static
+es:
+    this es la palabra con la que un objeto se refiere a sí mismo: «yo, este objeto en concreto», el que está ejecutando el método ahora mismo.
+    Es el robot señalándose el pecho con el pulgar mientras el locutor loco grita nombres: «¿el blindaje de quién? ¡El MÍO!». En un ring con cuatro robots iguales, this es la única forma de no apuntarse el golpe que se llevó otro.
+    El uso más común está en el constructor o en un setter, cuando el parámetro se llama igual que el atributo: this.dano = dano; (a la izquierda, el atributo; a la derecha, el parámetro). También sirve para pasarte a ti mismo a otro objeto (marcador.anotar(this)) o para que un constructor llame a otro: this("laser", 10).
+    El fallo típico: escribir dano = dano; sin this, que copia el parámetro en sí mismo y deja el atributo a 0 sin ningún aviso. Y otro: usar this en un método static, que no compila, porque allí no hay ningún objeto que pueda decir «yo».
+    Para un senior: no dejes que this escape del constructor (registrarse como oyente o arrancar un hilo desde él), porque otro código verá un objeto a medio construir y, con varios hilos, ni siquiera sus atributos final están garantizados.
+de:
+    this ist das Wort, mit dem ein Objekt sich selbst meint: „ich, genau dieses Objekt“, nämlich das, das gerade die Methode ausführt.
+    Es ist der Roboter, der sich mit dem Daumen auf die Brust tippt, während der verrückte Sprecher Namen brüllt: „Wessen Panzerung? MEINE!“ In einem Ring mit vier gleichen Robotern ist this die einzige Möglichkeit, sich nicht den Treffer eines anderen anzurechnen.
+    Am häufigsten steht es im Konstruktor oder in einem Setter, wenn der Parameter so heißt wie das Attribut: this.dano = dano; (links das Attribut, rechts der Parameter). Außerdem kannst du dich damit selbst an ein anderes Objekt übergeben (marcador.anotar(this)) oder in einem Konstruktor einen anderen aufrufen: this("laser", 10).
+    Der typische Fehler: dano = dano; ohne this zu schreiben – das kopiert den Parameter auf sich selbst und lässt das Attribut ohne jede Warnung bei 0. Und noch einer: this in einer static-Methode zu benutzen; das kompiliert nicht, weil es dort kein Objekt gibt, das „ich“ sagen könnte.
+    Für Seniors: Lass this nicht aus dem Konstruktor entkommen (sich dort als Listener registrieren oder einen Thread starten), sonst sieht anderer Code ein halb gebautes Objekt, und mit mehreren Threads sind nicht einmal seine final-Attribute garantiert.
+en:
+    this is the word an object uses to refer to itself: "me, this very object", the one running the method right now.
+    It is the robot jabbing its own chest with a thumb while the crazy announcer shouts names: "Whose armor? MINE!" In a ring with four identical robots, this is the only way not to claim the hit somebody else took.
+    It is most often used in a constructor or setter, when the parameter has the same name as the field: this.dano = dano; (on the left, the field; on the right, the parameter). It also lets you pass yourself to another object (marcador.anotar(this)) or have one constructor call another: this("laser", 10).
+    The classic mistake: writing dano = dano; without this, which copies the parameter onto itself and leaves the field at 0 with no warning at all. Another: using this in a static method, which does not compile, because there is no object there to say "me".
+    For seniors: do not let this escape from the constructor (registering as a listener or starting a thread there), or other code will see a half-built object and, with several threads, not even its final fields are guaranteed.
+pseudo.es:
+    PLANO Arma:
+        TIENE daño
+        AL CONSTRUIRLA CON (daño):
+            MI daño ← el daño que me dan
+        (sin «MI», el daño se copia en sí mismo)
+pseudo.de:
+    BAUPLAN Waffe:
+        HAT schaden
+        BEIM BAUEN MIT (schaden):
+            MEIN schaden ← der schaden, den ich bekomme
+        (ohne „MEIN“ wird schaden auf sich selbst kopiert)
+pseudo.en:
+    BLUEPRINT Weapon:
+        HAS damage
+        WHEN BUILT WITH (damage):
+            MY damage ← the damage I am given
+        (without "MY", damage is copied onto itself)
+ejemplo:
+    class Arma {
+        double dano;
+
+        Arma(double dano) {
+            this.dano = dano;                   // el atributo ← el parámetro || das Attribut ← der Parameter || the field ← the parameter
+        }
+
+        Arma mejorada(double extra) {
+            return new Arma(this.dano + extra); // this: el arma que recibe la llamada || this: die Waffe, die den Aufruf bekommt || this: the weapon receiving the call
+        }
+    }
+
+=== encapsulacion
+nivel: 3
+tema: 10
+titulo.es: Encapsulación
+titulo.de: Kapselung
+titulo.en: Encapsulation
+claves.es: encapsulacion, encapsular, ocultar los datos, atributos privados, proteger el estado, invariante
+claves.de: kapselung, kapseln, daten verbergen, private attribute, zustand schützen, invariante, geheimnisprinzip
+claves.en: encapsulation, encapsulate, information hiding, data hiding, private fields, protect the state, invariant
+ver: modificadores_de_acceso, getter_setter, inmutabilidad, atributo
+es:
+    Encapsular es guardar los datos de un objeto dentro de él, sin que nadie de fuera pueda tocarlos directamente: quien quiera algo se lo pide al objeto con un método, y el objeto decide.
+    Es la caja de fusibles del robot, cerrada con candado: el rival no puede meter la mano y poner tu blindaje a 0, y tú tampoco puedes subírtelo a 9999 entre asalto y asalto. Si quieres reparar, llamas al mecánico (reparar()), que comprueba que no te pases de 100.
+    En Java se hace poniendo los atributos private y ofreciendo métodos public que los leen o cambian con reglas: recibirDano(double d) resta y nunca deja el blindaje por debajo de 0. El juego te lo aplica a ti: no hay ningún atributo blindaje que puedas cambiar, solo el método blindaje() que lo lee.
+    El fallo típico: hacerlo todo private y luego poner un getter y un setter a cada atributo sin ninguna regla; es como el candado con la llave colgada al lado. Encapsular no es esconder por esconder, es que solo el objeto pueda romper sus propias reglas.
+    Para un senior: el getter que devuelve una lista o un array mutable deja la puerta abierta (pieza.getLista().clear()); devuelve List.copyOf(...) o Collections.unmodifiableList(...) y copia lo que te pasan en el constructor. El objetivo son las invariantes: que ningún camino desde fuera pueda dejar al objeto en un estado imposible.
+de:
+    Kapseln heißt, die Daten eines Objekts in ihm einzuschließen, sodass niemand von außen sie direkt anfassen kann: Wer etwas will, bittet das Objekt per Methode darum, und das Objekt entscheidet.
+    Es ist der Sicherungskasten des Roboters, mit Vorhängeschloss: Der Gegner kann nicht hineingreifen und deine Panzerung auf 0 stellen, und du kannst sie dir zwischen zwei Runden auch nicht auf 9999 drehen. Willst du reparieren, rufst du den Mechaniker (reparar()), und der achtet darauf, dass du nicht über 100 kommst.
+    In Java machst du die Attribute private und bietest public-Methoden an, die sie nach Regeln lesen oder ändern: recibirDano(double d) zieht ab und lässt die Panzerung nie unter 0 fallen. Das Spiel macht es mit dir genauso: Es gibt kein Attribut blindaje, das du ändern könntest, nur die Methode blindaje() (panzerung), die es liest.
+    Der typische Fehler: alles private zu machen und dann für jedes Attribut einen Getter und einen Setter ohne jede Regel anzubieten – ein Vorhängeschloss, neben dem der Schlüssel hängt. Kapselung heißt nicht verstecken um des Versteckens willen, sondern dass nur das Objekt selbst seine Regeln brechen kann.
+    Für Seniors: Ein Getter, der eine veränderliche Liste oder ein Array zurückgibt, lässt die Tür offen (pieza.getLista().clear()); gib List.copyOf(...) oder Collections.unmodifiableList(...) zurück und kopiere, was du im Konstruktor bekommst. Ziel sind die Invarianten: Kein Weg von außen darf das Objekt in einen unmöglichen Zustand bringen.
+en:
+    Encapsulating means keeping an object's data inside it, so nobody outside can touch it directly: whoever wants something asks the object through a method, and the object decides.
+    It is the robot's fuse box, padlocked shut: the rival cannot reach in and set your armor to 0, and you cannot crank yours up to 9999 between rounds either. If you want repairs, you call the mechanic (reparar()), who makes sure you do not go over 100.
+    In Java you make the fields private and offer public methods that read or change them by the rules: recibirDano(double d) subtracts and never lets the armor drop below 0. The game does the same to you: there is no blindaje field you could change, only the blindaje() (armor) method that reads it.
+    The classic mistake: making everything private and then adding a getter and a setter for every field with no rules at all; that is a padlock with the key hanging next to it. Encapsulation is not hiding for the sake of hiding, it is making sure only the object can break its own rules.
+    For seniors: a getter that returns a mutable list or array leaves the door open (pieza.getLista().clear()); return List.copyOf(...) or Collections.unmodifiableList(...) and copy what you are given in the constructor. The goal is invariants: no path from outside may leave the object in an impossible state.
+pseudo.es:
+    PLANO Blindaje:
+        TIENE, BAJO LLAVE, puntos ← 100
+        recibir daño d:
+            puntos ← máximo(0, puntos − d)
+        reparar r:
+            puntos ← mínimo(100, puntos + r)
+pseudo.de:
+    BAUPLAN Panzer:
+        HAT, UNTER VERSCHLUSS, punkte ← 100
+        schaden nehmen s:
+            punkte ← maximum(0, punkte − s)
+        reparieren r:
+            punkte ← minimum(100, punkte + r)
+pseudo.en:
+    BLUEPRINT Armor:
+        HAS, UNDER LOCK, points ← 100
+        take damage d:
+            points ← max(0, points − d)
+        repair r:
+            points ← min(100, points + r)
+ejemplo:
+    class Blindaje {
+        private double puntos = 100;            // bajo llave: nadie de fuera lo toca || unter Verschluss: von außen tabu || under lock: no outside access
+
+        public void recibirDano(double d) {
+            puntos = Math.max(0, puntos - d);   // la regla: nunca por debajo de 0 || die Regel: nie unter 0 || the rule: never below 0
+        }
+
+        public void reparar(double r) {
+            puntos = Math.min(100, puntos + r); // ni por encima de 100 || und nie über 100 || nor above 100
+        }
+
+        public double puntos() { return puntos; }
+    }
+
+=== modificadores_de_acceso
+nivel: 3
+tema: 10
+titulo.es: Modificadores de acceso
+titulo.de: Zugriffsmodifikatoren
+titulo.en: Access modifiers
+claves.es: public, private, protected, modificadores de acceso, visibilidad, acceso de paquete, package-private
+claves.de: public, private, protected, zugriffsmodifikatoren, sichtbarkeit, paketsichtbarkeit, package-private
+claves.en: public, private, protected, access modifiers, visibility, package-private, default access
+ver: encapsulacion, paquete_import, herencia, getter_setter
+es:
+    Los modificadores de acceso son las palabras que dicen quién puede usar una clase, un atributo o un método: public (todo el mundo), protected (el paquete y las subclases), sin nada (solo el paquete) y private (solo la propia clase).
+    Son las pulseras de colores del pabellón: public es la grada, donde entra cualquiera con su bocadillo; sin pulsera, solo los del mismo equipo; protected, el equipo y los hijos de los mecánicos; private, la taquilla del vestuario, que solo abre su dueño (y el gato, pero el gato no programa).
+    En Java van delante de la declaración: private double puntos; public void reparar(double r). Tu cadaTurno es public porque el juego, que vive en otro paquete, tiene que poder llamarlo; y los métodos del robot como avanzar son public final: los usas, pero no los puedes cambiar.
+    El fallo típico: hacerlo todo public «para que funcione» y descubrir luego que cualquiera cambia cualquier cosa. La regla: empieza por private y abre solo lo que haga falta; y al sobrescribir no puedes hacer un método más cerrado que el original (un cadaTurno private no compila).
+    Para un senior: protected también abre al paquete entero, no solo a las subclases, y se convierte en API que tendrás que mantener; el «sin nada» (package-private) es ideal para ocultar detalles a otros paquetes y aun así probarlos desde un test del mismo paquete. Desde Java 9, los módulos añaden otra muralla por encima: un tipo public de un paquete no exportado no se ve desde fuera.
+de:
+    Zugriffsmodifikatoren sind die Wörter, die festlegen, wer eine Klasse, ein Attribut oder eine Methode benutzen darf: public (alle), protected (das Paket und die Unterklassen), gar nichts (nur das Paket) und private (nur die Klasse selbst).
+    Sie sind die farbigen Armbänder in der Halle: public ist die Tribüne, auf die jeder mit seinem Pausenbrot darf; ohne Armband nur das eigene Team; protected das Team und die Kinder der Mechaniker; private der Spind in der Kabine, den nur sein Besitzer öffnet (und die Katze, aber die programmiert nicht).
+    In Java stehen sie vor der Deklaration: private double puntos; public void reparar(double r). Dein cadaTurno (jedenZug) ist public, weil das Spiel, das in einem anderen Paket wohnt, es aufrufen können muss; und die Robotermethoden wie avanzar (vorwaerts) sind public final: Du benutzt sie, kannst sie aber nicht ändern.
+    Der typische Fehler: alles public zu machen, „damit es läuft“, und später festzustellen, dass jeder alles ändert. Die Regel: Fang mit private an und öffne nur, was nötig ist; und beim Überschreiben darfst du eine Methode nicht verschlossener machen als das Original (ein private cadaTurno kompiliert nicht).
+    Für Seniors: protected öffnet auch für das ganze Paket, nicht nur für Unterklassen, und wird zu API, die du pflegen musst; „gar nichts“ (package-private) eignet sich, um Details vor anderen Paketen zu verbergen und sie trotzdem aus einem Test im selben Paket zu prüfen. Seit Java 9 kommt mit den Modulen eine weitere Mauer hinzu: Ein public-Typ in einem nicht exportierten Paket ist von außen unsichtbar.
+en:
+    Access modifiers are the words that say who may use a class, a field or a method: public (everyone), protected (the package and subclasses), nothing at all (the package only) and private (the class itself only).
+    They are the coloured wristbands at the venue: public is the stands, where anyone can walk in with a sandwich; no wristband, only your own team; protected, the team plus the mechanics' kids; private, the locker in the dressing room that only its owner opens (and the cat, but the cat does not code).
+    In Java they go in front of the declaration: private double puntos; public void reparar(double r). Your cadaTurno (onTick) is public because the game, which lives in another package, has to be able to call it; and robot methods like avanzar (ahead) are public final: you can use them, but not change them.
+    The classic mistake: making everything public "so it works" and later finding that anyone changes anything. The rule: start with private and open only what is needed; and when overriding, you cannot make a method more closed than the original (a private cadaTurno does not compile).
+    For seniors: protected also opens up to the whole package, not just subclasses, and becomes API you must maintain; package-private (no modifier) is ideal for hiding details from other packages while still testing them from a test in the same package. Since Java 9, modules add another wall on top: a public type in a non-exported package is invisible from outside.
+pseudo.es:
+    PLANO Robot:
+        PARA TODOS: atacar()
+        SOLO EL EQUIPO: plan
+        SOLO YO, BAJO LLAVE: secreto
+    desde fuera: atacar()     (vale)
+    desde fuera: secreto      (prohibido)
+pseudo.de:
+    BAUPLAN Roboter:
+        FÜR ALLE: angreifen()
+        NUR DAS TEAM: plan
+        NUR ICH, UNTER VERSCHLUSS: geheimnis
+    von außen: angreifen()    (erlaubt)
+    von außen: geheimnis      (verboten)
+pseudo.en:
+    BLUEPRINT Robot:
+        FOR EVERYONE: attack()
+        TEAM ONLY: plan
+        ONLY ME, UNDER LOCK: secret
+    from outside: attack()    (fine)
+    from outside: secret      (forbidden)
+ejemplo:
+    public class Marcador {
+        private int golpes;                    // solo esta clase || nur diese Klasse || only this class
+        int rondas;                            // sin nada: solo el paquete || ohne Modifikator: nur das Paket || no modifier: package only
+        protected String piloto = "Fran";      // paquete y subclases || Paket und Unterklassen || package and subclasses
+
+        public void anotar() {                 // cualquiera puede llamarlo || jeder darf es aufrufen || anyone may call it
+            golpes++;
+        }
+
+        public int golpes() { return golpes; }
+    }
+
+=== getter_setter
+nivel: 3
+tema: 10
+titulo.es: Getter y setter
+titulo.de: Getter und Setter
+titulo.en: Getters and setters
+claves.es: getter, setter, getter y setter, get y set, metodo get, metodo set, getnombre, setnombre
+claves.de: getter, setter, getter und setter, get und set, getter methode, setter methode
+claves.en: getter, setter, getters and setters, get and set, accessor, mutator, getname
+ver: encapsulacion, modificadores_de_acceso, record, inmutabilidad
+es:
+    Un getter es un método que devuelve el valor de un atributo privado (getBlindaje()), y un setter, uno que lo cambia (setBlindaje(80)); son la ventanilla por la que se habla con un objeto encapsulado.
+    Son la ventanilla del taller con el mecánico gruñón detrás del cristal: le preguntas «¿cuánto blindaje me queda?» y te lo dice (get); le pides «pónmelo a 150» y te contesta que el máximo es 100 y que no le hagas perder el tiempo (un set con reglas).
+    En Java se escriben a mano o los genera el editor: public double getBlindaje() { return blindaje; } y public void setBlindaje(double b) { … }. La API del robot usa el estilo corto, sin «get»: blindaje(), energia(), x(); igual que los records de Java 16, que crean nombre() solos.
+    El fallo típico: poner un setter a todo sin ninguna comprobación, con lo que el atributo private queda tan abierto como si fuera public. Si un valor no debe cambiar desde fuera, no le pongas setter; y si cambia, que el setter valide (que no sea null, que esté en rango).
+    Para un senior: muchos getters y setters y ninguna lógica es un «modelo anémico»; mejor métodos con intención (recibirDano(d), reparar(r)) que setBlindaje(getBlindaje() - d) desde fuera («tell, don't ask»). Y frameworks como JPA o Jackson piden getters y setters por la convención JavaBeans, que no es lo mismo que buen diseño.
+de:
+    Ein Getter ist eine Methode, die den Wert eines privaten Attributs zurückgibt (getBlindaje()), ein Setter eine, die ihn ändert (setBlindaje(80)); sie sind der Schalter, an dem man mit einem gekapselten Objekt spricht.
+    Sie sind der Werkstattschalter mit dem grantigen Mechaniker hinter der Scheibe: Du fragst „Wie viel Panzerung hab ich noch?“, und er sagt es dir (get); du bittest „Stell sie auf 150“, und er brummt, das Maximum sei 100 und du sollst ihm nicht die Zeit stehlen (ein set mit Regeln).
+    In Java schreibst du sie von Hand oder lässt sie vom Editor erzeugen: public double getBlindaje() { return blindaje; } und public void setBlindaje(double b) { … }. Die Roboter-API benutzt den kurzen Stil ohne „get“: blindaje() (panzerung), energia() (energie), x(); genau wie die Records seit Java 16, die nombre() von selbst anlegen.
+    Der typische Fehler: jedem Attribut einen Setter ohne jede Prüfung zu geben – dann ist das private Attribut genauso offen, als wäre es public. Soll ein Wert von außen nicht geändert werden, gib ihm keinen Setter; und wenn doch, soll der Setter prüfen (nicht null, im erlaubten Bereich).
+    Für Seniors: Viele Getter und Setter ohne Logik ergeben ein „anämisches Modell“; besser Methoden mit Absicht (recibirDano(d), reparar(r)) als von außen setBlindaje(getBlindaje() - d) („Tell, don't ask“). Und Frameworks wie JPA oder Jackson verlangen Getter und Setter aus der JavaBeans-Konvention – das ist nicht dasselbe wie gutes Design.
+en:
+    A getter is a method that returns the value of a private field (getBlindaje()), and a setter one that changes it (setBlindaje(80)); they are the counter window where you talk to an encapsulated object.
+    They are the workshop counter with the grumpy mechanic behind the glass: you ask "how much armor have I got left?" and he tells you (get); you ask "set it to 150" and he grunts that the maximum is 100 and you should stop wasting his time (a set with rules).
+    In Java you write them by hand or let the editor generate them: public double getBlindaje() { return blindaje; } and public void setBlindaje(double b) { … }. The robot API uses the short style without "get": blindaje() (armor), energia() (energy), x(); just like Java 16 records, which create nombre() for you.
+    The classic mistake: giving every field a setter with no checks, so the private field is as open as if it were public. If a value should not change from outside, give it no setter; and if it does change, let the setter validate (not null, within range).
+    For seniors: lots of getters and setters and no logic is an "anemic model"; prefer methods with intent (recibirDano(d), reparar(r)) over setBlindaje(getBlindaje() - d) from outside ("tell, don't ask"). And frameworks like JPA or Jackson want getters and setters by JavaBeans convention, which is not the same as good design.
+pseudo.es:
+    PLANO Pieza:
+        TIENE, BAJO LLAVE, blindaje
+        DAR blindaje:
+            DEVOLVER blindaje
+        PONER blindaje b:
+            SI b está entre 0 y 100:
+                blindaje ← b
+pseudo.de:
+    BAUPLAN Teil:
+        HAT, UNTER VERSCHLUSS, panzerung
+        HOLE panzerung:
+            ZURÜCKGEBEN panzerung
+        SETZE panzerung p:
+            WENN p zwischen 0 und 100 liegt:
+                panzerung ← p
+pseudo.en:
+    BLUEPRINT Part:
+        HAS, UNDER LOCK, armor
+        GET armor:
+            RETURN armor
+        SET armor a:
+            IF a is between 0 and 100:
+                armor ← a
+ejemplo:
+    class Pieza {
+        private double blindaje = 100;
+
+        public double getBlindaje() {              // getter: solo lee || Getter: liest nur || getter: only reads
+            return blindaje;
+        }
+
+        public void setBlindaje(double b) {        // setter con reglas || Setter mit Regeln || setter with rules
+            if (b < 0 || b > 100) throw new IllegalArgumentException("fuera de rango: " + b);
+            blindaje = b;
+        }
+    }
+
+=== static
+nivel: 3
+tema: 09
+titulo.es: static
+titulo.de: static
+titulo.en: static
+claves.es: static, estatico, metodo estatico, atributo estatico, variable de clase, compartido por todos los objetos, contexto estatico
+claves.de: static, statisch, statische methode, statisches attribut, klassenvariable, von allen objekten geteilt
+claves.en: static, static method, static field, class variable, shared by all instances, static context
+ver: atributo, constante, this, math
+es:
+    static marca lo que pertenece a la clase entera y no a cada objeto: un atributo static existe una sola vez, compartido por todos, y un método static se llama sin ningún objeto.
+    El número de robots fabricados está en el marcador gigante del techo del taller, no pintado en cada robot: cuando sale uno nuevo, el marcador sube para todos. Y el reglamento del ring tampoco lo lleva ningún robot encima: está colgado en la pared, haya robots o no.
+    Se usa escribiendo static delante (static int fabricados = 0; static double aRadianes(double g) { … }) y se llama con el nombre de la clase: Math.max(a, b), Math.sqrt(x), Integer.parseInt("42"), List.of(...). Las constantes suelen ser static final: static final double ALCANCE = 120;
+    El fallo típico: llamar desde main o desde otro método static a un método del objeto, y que salga «non-static method cannot be referenced from a static context». El otro: meter en un static algo que debía ser de cada robot, y que todos compartan el mismo blindaje (le pegas a uno y se abollan todos).
+    Para un senior: un static mutable es estado global: dificulta las pruebas, se comparte entre hilos sin protección y vive tanto como su cargador de clases (una fuga de memoria clásica). Úsalo para constantes y funciones puras; y recuerda que los métodos static no se sobrescriben, se ocultan: con ellos no hay polimorfismo.
+de:
+    static kennzeichnet, was zur ganzen Klasse gehört und nicht zu jedem einzelnen Objekt: Ein static-Attribut gibt es nur einmal, für alle gemeinsam, und eine static-Methode ruft man ganz ohne Objekt auf.
+    Die Zahl der gebauten Roboter steht auf der Riesenanzeige unter dem Werkstattdach, nicht auf jeden Roboter gemalt: Rollt ein neuer heraus, springt die Anzeige für alle hoch. Und das Ringreglement trägt auch kein Roboter mit sich herum: Es hängt an der Wand, ob Roboter da sind oder nicht.
+    Du schreibst static davor (static int fabricados = 0; static double aRadianes(double g) { … }) und rufst es über den Klassennamen auf: Math.max(a, b), Math.sqrt(x), Integer.parseInt("42"), List.of(...). Konstanten sind meist static final: static final double ALCANCE = 120;
+    Der typische Fehler: aus main oder einer anderen static-Methode eine Objektmethode aufzurufen und „non-static method cannot be referenced from a static context“ zu bekommen. Der andere: etwas static zu machen, das jedem Roboter einzeln gehören sollte – dann teilen sich alle dieselbe Panzerung (triffst du einen, haben alle Beulen).
+    Für Seniors: Ein veränderliches static ist globaler Zustand: Es erschwert Tests, wird ungeschützt zwischen Threads geteilt und lebt so lange wie sein Classloader (ein klassisches Speicherleck). Nimm es für Konstanten und reine Funktionen; und denk daran, dass static-Methoden nicht überschrieben, sondern verdeckt werden: Polymorphie gibt es mit ihnen nicht.
+en:
+    static marks what belongs to the class as a whole rather than to each object: a static field exists only once, shared by all, and a static method is called with no object at all.
+    The count of robots built is on the giant scoreboard under the workshop roof, not painted on each robot: when a new one rolls out, the number goes up for everyone. And no robot carries the ring rulebook around either: it hangs on the wall, robots or no robots.
+    You write static in front (static int fabricados = 0; static double aRadianes(double g) { … }) and call it through the class name: Math.max(a, b), Math.sqrt(x), Integer.parseInt("42"), List.of(...). Constants are usually static final: static final double ALCANCE = 120;
+    The classic mistake: calling an object's method from main or another static method and getting "non-static method cannot be referenced from a static context". The other: making static something that should belong to each robot, so they all share the same armor (hit one and they all get dented).
+    For seniors: a mutable static is global state: it makes testing harder, is shared between threads without protection and lives as long as its class loader (a classic memory leak). Use it for constants and pure functions; and remember that static methods are not overridden but hidden: there is no polymorphism with them.
+pseudo.es:
+    PLANO Dron:
+        DE LA CLASE: fabricados ← 0      (uno para todos)
+        DE CADA UNO: blindaje ← 100      (uno por dron)
+        AL CONSTRUIR:
+            fabricados ← fabricados + 1
+pseudo.de:
+    BAUPLAN Drohne:
+        DER KLASSE: gebaut ← 0           (einer für alle)
+        JEDER EINZELNEN: panzerung ← 100 (einer pro Drohne)
+        BEIM BAUEN:
+            gebaut ← gebaut + 1
+pseudo.en:
+    BLUEPRINT Drone:
+        OF THE CLASS: built ← 0          (one for all)
+        OF EACH ONE: armor ← 100         (one per drone)
+        WHEN BUILT:
+            built ← built + 1
+ejemplo:
+    class Dron {
+        static int fabricados = 0;                 // uno solo, compartido || nur einer, gemeinsam || just one, shared
+        double blindaje = 100;                     // uno por cada dron || einer pro Drohne || one per drone
+
+        Dron() {
+            fabricados++;
+        }
+
+        static double aRadianes(double grados) {   // sin objeto: Dron.aRadianes(90) || ohne Objekt: Dron.aRadianes(90) || no object: Dron.aRadianes(90)
+            return grados * Math.PI / 180;
+        }
+    }
+
+=== herencia
+nivel: 3
+tema: 11
+titulo.es: Herencia
+titulo.de: Vererbung
+titulo.en: Inheritance
+claves.es: herencia, heredar, extends, subclase, superclase, clase padre, clase hija, relacion es un
+claves.de: vererbung, vererben, erben, extends, unterklasse, oberklasse, elternklasse, ist-ein-beziehung
+claves.en: inheritance, inherit, extends, subclass, superclass, parent class, child class, is-a
+ver: super, override, polimorfismo, composicion
+es:
+    La herencia permite crear una clase nueva a partir de otra que ya existe: la nueva (subclase) recibe todo lo que tenía la vieja (superclase) y puede añadir cosas o cambiar las que hagan falta.
+    Es el robot de serie del catálogo con mejoras de taller: tu MiRobot ya sabe avanzar, girar y atacar porque lo «heredó» del Metajavbot de fábrica, y tú solo le añades el cerebro y unas pegatinas de llamas. Como heredar el coche del abuelo: viene con todo, incluido el olor a puro.
+    En Java se escribe con extends: public class MiRobot extends Metajavbot. La subclase usa directamente lo heredado (avanzar(50), blindaje()), cambia lo que se deja cambiar (cadaTurno, alVerEnemigo, con @Override) y llama a la versión del padre con super. Cada clase solo puede extender a una, y todas acaban, al final, en Object.
+    El fallo típico: heredar solo para reaprovechar código, cuando la relación no es de verdad «es un»: un Robot no es un Brazo, tiene brazos (eso es composición). Pregúntate siempre: ¿puedo decir «MiRobot es un Metajavbot» sin que suene raro? Y lo marcado final (como avanzar en el juego) no se puede cambiar.
+    Para un senior: la herencia ata la subclase a los detalles internos del padre (la «clase base frágil»), y el principio de sustitución de Liskov exige que la hija pueda usarse donde se espera al padre sin sorpresas: un Cuadrado que extiende Rectangulo y rompe setAncho lo viola. Diseña para la herencia o prohíbela (final, sealed), y por defecto prefiere la composición.
+de:
+    Vererbung erlaubt es, eine neue Klasse aus einer bestehenden zu machen: Die neue (Unterklasse) bekommt alles, was die alte (Oberklasse) hatte, und kann Dinge hinzufügen oder ändern, wo es nötig ist.
+    Es ist der Serienroboter aus dem Katalog mit Werkstatt-Tuning: Dein MiRobot kann schon fahren, drehen und angreifen, weil er es vom Werks-Metajavbot „geerbt“ hat, und du fügst nur das Gehirn und ein paar Flammenaufkleber hinzu. Wie Opas Auto zu erben: Es kommt mit allem, auch mit dem Zigarrengeruch.
+    In Java schreibst du extends: public class MiRobot extends Metajavbot. Die Unterklasse benutzt das Geerbte direkt, etwa avanzar (vorwaerts) oder blindaje (panzerung), ändert, was sich ändern lässt (cadaTurno (jedenZug), alVerEnemigo (beiSicht), mit @Override), und ruft die Version der Elternklasse mit super auf. Jede Klasse darf nur eine andere erweitern, und am Ende landen alle bei Object.
+    Der typische Fehler: nur zu erben, um Code wiederzuverwenden, obwohl die Beziehung gar kein echtes „ist ein“ ist: Ein Roboter ist kein Arm, er hat Arme (das ist Komposition). Frag dich immer: Kann ich „MiRobot ist ein Metajavbot“ sagen, ohne dass es schief klingt? Und was final ist (wie avanzar im Spiel), lässt sich nicht ändern.
+    Für Seniors: Vererbung bindet die Unterklasse an die Interna der Elternklasse (das Problem der „fragilen Basisklasse“), und das Liskovsche Substitutionsprinzip verlangt, dass das Kind ohne Überraschungen überall einsetzbar ist, wo das Elternteil erwartet wird: Ein Quadrat, das Rechteck erweitert und setBreite bricht, verletzt es. Entwirf bewusst für Vererbung oder verbiete sie (final, sealed), und nimm im Zweifel Komposition.
+en:
+    Inheritance lets you create a new class from an existing one: the new one (the subclass) gets everything the old one (the superclass) had, and can add things or change whatever needs changing.
+    It is the standard catalogue robot with workshop upgrades: your MiRobot can already move, turn and attack because it "inherited" that from the factory Metajavbot, and you just add the brain and some flame decals. Like inheriting grandpa's car: it comes with everything, cigar smell included.
+    In Java you write extends: public class MiRobot extends Metajavbot. The subclass uses what it inherited directly, such as avanzar (ahead) or blindaje (armor), changes what it is allowed to change (cadaTurno (onTick), alVerEnemigo (onSeeEnemy), with @Override) and calls the parent's version with super. A class can extend only one other class, and in the end they all lead back to Object.
+    The classic mistake: inheriting just to reuse code when the relationship is not a real "is a": a Robot is not an Arm, it has arms (that is composition). Always ask yourself: can I say "MiRobot is a Metajavbot" without it sounding odd? And whatever is final (like avanzar in the game) cannot be changed.
+    For seniors: inheritance ties the subclass to the parent's internals (the "fragile base class" problem), and the Liskov substitution principle requires that the child can be used wherever the parent is expected without surprises: a Square that extends Rectangle and breaks setWidth violates it. Design for inheritance or forbid it (final, sealed), and default to composition.
+pseudo.es:
+    PLANO Metajavbot:
+        SABE avanzar, girar, atacar
+    PLANO MiRobot, QUE ES UN Metajavbot:
+        (hereda avanzar, girar, atacar)
+        CADA TURNO:
+            avanzar 50
+            atacar
+pseudo.de:
+    BAUPLAN Metajavbot:
+        KANN fahren, drehen, angreifen
+    BAUPLAN MeinRoboter, DER EIN Metajavbot IST:
+        (erbt fahren, drehen, angreifen)
+        JEDEN ZUG:
+            fahre 50
+            greife an
+pseudo.en:
+    BLUEPRINT Metajavbot:
+        CAN move, turn, attack
+    BLUEPRINT MyRobot, WHICH IS A Metajavbot:
+        (inherits move, turn, attack)
+        EVERY TICK:
+            move 50
+            attack
+ejemplo:
+    public class MiRobot extends Metajavbot {     // MiRobot ES UN Metajavbot || MiRobot IST EIN Metajavbot || MiRobot IS A Metajavbot
+
+        @Override
+        public void cadaTurno() {                 // lo que se deja cambiar || was man ändern darf || what may be changed
+            avanzar(50);                          // heredado: no lo has escrito tú || geerbt: nicht von dir geschrieben || inherited: you did not write it
+            girar(10);
+            if (blindaje() > 30) atacar();
+        }
+    }
+
+=== super
+nivel: 3
+tema: 11
+titulo.es: super
+titulo.de: super
+titulo.en: super
+claves.es: super, super.metodo, constructor de la superclase, llamar al metodo del padre, version del padre, super con parametros
+claves.de: super, super.methode, konstruktor der oberklasse, methode der elternklasse aufrufen, version der elternklasse
+claves.en: super, super.method, superclass constructor, call the parent method, parent version, call super
+ver: herencia, override, constructor, this
+es:
+    super es la palabra con la que una subclase se refiere a su padre: super.metodo() llama a la versión del padre de ese método, y super(...) llama a su constructor.
+    Es el robot hijo que, antes de su baile de la victoria con purpurina, deja que el robot padre haga el suyo de siempre, el de los brazos rígidos: «primero lo de papá, y luego lo mío». Si no le cede el paso, el baile del padre no lo ve nunca nadie.
+    En un método sobrescrito, super.alAcabarRonda() ejecuta lo del padre y luego tú añades lo tuyo. En un constructor, super(argumentos) tiene que ser la primera línea: class Torreta extends Pieza { Torreta() { super("torreta", 60); } }. Si no lo pones, Java llama solo a super() sin argumentos.
+    El fallo típico: sobrescribir un método que hacía algo importante en el padre y olvidar llamar a super, con lo que ese trabajo deja de hacerse en silencio. Otro: que el padre no tenga constructor sin parámetros y la hija no llame a super(...), lo que da un error de compilación que asusta pero se arregla con una línea.
+    Para un senior: un diseño que obliga a «acordarse de llamar a super» es frágil; mejor el patrón método plantilla (un método final en el padre que llama a un gancho abstracto o vacío). Poner código antes de super(...) que no toque this se permite en pruebas desde Java 22 y de forma definitiva en Java 25 (cuerpos de constructor flexibles); en Java 21, super(...) sigue siendo la primera línea sí o sí.
+de:
+    super ist das Wort, mit dem eine Unterklasse ihre Elternklasse meint: super.methode() ruft die Version der Elternklasse auf, super(...) ihren Konstruktor.
+    Es ist der Roboterjunior, der vor seinem Glitzer-Siegestanz erst den Roboterpapa dessen üblichen Tanz mit den steifen Armen machen lässt: „Erst Papas Teil, dann meiner.“ Lässt er ihm nicht den Vortritt, sieht den Tanz des Vaters nie jemand.
+    In einer überschriebenen Methode führt super.alAcabarRonda() (beiRundenende) erst den Teil der Elternklasse aus, danach fügst du deinen hinzu. In einem Konstruktor muss super(argumente) die erste Zeile sein: class Torreta extends Pieza { Torreta() { super("torreta", 60); } }. Fehlt es, ruft Java von selbst super() ohne Argumente auf.
+    Der typische Fehler: eine Methode zu überschreiben, die in der Elternklasse etwas Wichtiges tat, und den super-Aufruf zu vergessen – dann bleibt diese Arbeit still und leise liegen. Ein anderer: Die Elternklasse hat keinen parameterlosen Konstruktor, und die Kindklasse ruft kein super(...) auf; der Compilerfehler wirkt furchterregend, ist aber mit einer Zeile behoben.
+    Für Seniors: Ein Entwurf, bei dem man „an super denken muss“, ist fragil; besser ist das Schablonenmethoden-Muster (eine final-Methode in der Elternklasse, die einen abstrakten oder leeren Haken aufruft). Code vor super(...), der this nicht anfasst, ist seit Java 22 als Vorschau und seit Java 25 endgültig erlaubt (flexible Konstruktorrümpfe); in Java 21 bleibt super(...) zwingend die erste Zeile.
+en:
+    super is the word a subclass uses to refer to its parent: super.method() calls the parent's version of that method, and super(...) calls its constructor.
+    It is the junior robot who, before its glitter victory dance, lets the parent robot do its usual stiff-armed one: "Dad's bit first, then mine." Skip that courtesy and nobody ever sees Dad's dance.
+    In an overridden method, super.alAcabarRonda() (onRoundEnd) runs the parent's part and then you add yours. In a constructor, super(arguments) must be the first line: class Torreta extends Pieza { Torreta() { super("torreta", 60); } }. If you leave it out, Java calls super() with no arguments by itself.
+    The classic mistake: overriding a method that did something important in the parent and forgetting to call super, so that work silently stops happening. Another: the parent has no no-arg constructor and the child does not call super(...), which gives a scary compile error that one line fixes.
+    For seniors: a design that relies on "remembering to call super" is fragile; prefer the template method pattern (a final method in the parent calling an abstract or empty hook). Code before super(...) that does not touch this is allowed as a preview since Java 22 and for good since Java 25 (flexible constructor bodies); in Java 21, super(...) must still be the first line.
+pseudo.es:
+    PLANO Pieza:
+        AL CONSTRUIRLA CON (nombre, blindaje): …
+    PLANO Torreta, QUE ES UNA Pieza:
+        AL CONSTRUIRLA:
+            PRIMERO lo del padre: ("torreta", 60)
+            LUEGO lo mío: giro ← 0
+pseudo.de:
+    BAUPLAN Teil:
+        BEIM BAUEN MIT (name, panzerung): …
+    BAUPLAN Geschützturm, DER EIN Teil IST:
+        BEIM BAUEN:
+            ZUERST das der Eltern: ("torreta", 60)
+            DANN meins: drehung ← 0
+pseudo.en:
+    BLUEPRINT Part:
+        WHEN BUILT WITH (name, armor): …
+    BLUEPRINT Turret, WHICH IS A Part:
+        WHEN BUILT:
+            FIRST the parent's part: ("torreta", 60)
+            THEN mine: rotation ← 0
+ejemplo:
+    class Pieza {
+        String nombre; double blindaje;
+        Pieza(String nombre, double blindaje) { this.nombre = nombre; this.blindaje = blindaje; }
+        String describir() { return nombre + " (" + blindaje + ")"; }
+    }
+
+    class Torreta extends Pieza {
+        double giro = 0;
+        Torreta() { super("torreta", 60); }        // primero, el constructor del padre || zuerst der Konstruktor der Eltern || first, the parent's constructor
+
+        @Override
+        String describir() { return super.describir() + " girando " + giro; }   // lo del padre y algo más || das der Eltern und noch mehr || the parent's bit plus more
+    }
+
+=== override
+nivel: 3
+tema: 11
+titulo.es: Sobrescribir
+titulo.de: Überschreiben
+titulo.en: Overriding
+claves.es: @override, override, sobrescribir, sobreescribir, sobrescribir un metodo, redefinir un metodo heredado
+claves.de: @override, override, überschreiben, methode überschreiben, geerbte methode ändern
+claves.en: @override, override, overriding, override a method, method overriding, redefine an inherited method
+ver: herencia, super, polimorfismo, sobrecarga
+es:
+    Sobrescribir es dar tu propia versión de un método que tu clase ha heredado: mismo nombre, mismos parámetros, comportamiento nuevo. @Override es la etiqueta que le pones encima para que Java compruebe que de verdad estás sobrescribiendo algo.
+    El Metajavbot de fábrica trae un cadaTurno que no hace nada: se queda quieto en el centro del ring, silbando, mientras le llueven misiles. Tú lo sobrescribes con uno que esquiva y contraataca, y el juego llama al tuyo sin enterarse siquiera de que existía el otro.
+    En Java: @Override public void cadaTurno() { … } dentro de MiRobot; lo mismo con alVerEnemigo(Enemigo e), alRecibirGolpe(Golpe g) o con toString() y equals(Object o) de Object. La firma debe ser idéntica; el tipo de retorno puede ser más concreto y la visibilidad igual o más abierta, nunca más cerrada.
+    El fallo típico: equivocarse en una letra o en el tipo del parámetro (public void alVerEnemgo(Enemigo e)) y no poner @Override: compila, pero has creado un método nuevo que nadie llama, y tu robot ignora a los enemigos. Con @Override el editor lo subraya en rojo al instante, así que ponlo siempre. Y los métodos final, como avanzar, no se pueden sobrescribir.
+    Para un senior: qué método se ejecuta se decide al ejecutar, según el objeto real (despacho dinámico, invokevirtual), y el JIT lo deja casi gratis cuando solo ve una implementación. Los métodos static y private, y los atributos, no se sobrescriben: se ocultan, y eso confunde muchísimo.
+de:
+    Überschreiben heißt, deine eigene Version einer geerbten Methode zu liefern: gleicher Name, gleiche Parameter, neues Verhalten. @Override ist das Etikett darüber, mit dem Java prüft, dass du wirklich etwas überschreibst.
+    Der Werks-Metajavbot bringt ein cadaTurno (jedenZug) mit, das gar nichts tut: Er steht pfeifend mitten im Ring, während es Raketen hagelt. Du überschreibst es mit einem, das ausweicht und kontert, und das Spiel ruft deins auf, ohne überhaupt zu merken, dass es das andere gab.
+    In Java: @Override public void cadaTurno() { … } in MiRobot; genauso mit alVerEnemigo(Enemigo e) (beiSicht), alRecibirGolpe(Golpe g) (beiTreffer) oder mit toString() und equals(Object o) von Object. Die Signatur muss identisch sein; der Rückgabetyp darf spezieller sein, die Sichtbarkeit gleich oder offener, nie verschlossener.
+    Der typische Fehler: sich bei einem Buchstaben oder beim Parametertyp zu vertun (public void alVerEnemgo(Enemigo e)) und kein @Override zu schreiben: Es kompiliert, aber du hast eine neue Methode gebaut, die niemand aufruft, und dein Roboter ignoriert die Gegner. Mit @Override unterstreicht der Editor das sofort rot – schreib es also immer. Und final-Methoden wie avanzar (vorwaerts) lassen sich nicht überschreiben.
+    Für Seniors: Welche Methode läuft, entscheidet sich zur Laufzeit am echten Objekt (dynamischer Dispatch, invokevirtual), und der JIT macht das fast kostenlos, wenn er nur eine Implementierung sieht. static- und private-Methoden sowie Attribute werden nicht überschrieben, sondern verdeckt – und das sorgt für jede Menge Verwirrung.
+en:
+    Overriding means giving your own version of a method your class inherited: same name, same parameters, new behavior. @Override is the label you put above it so Java checks that you really are overriding something.
+    The factory Metajavbot comes with a cadaTurno (onTick) that does nothing: it stands whistling in the middle of the ring while missiles rain down. You override it with one that dodges and strikes back, and the game calls yours without even noticing the other one ever existed.
+    In Java: @Override public void cadaTurno() { … } inside MiRobot; the same with alVerEnemigo(Enemigo e) (onSeeEnemy), alRecibirGolpe(Golpe g) (onHit), or with toString() and equals(Object o) from Object. The signature must be identical; the return type may be more specific and the visibility the same or more open, never more closed.
+    The classic mistake: getting one letter or the parameter type wrong (public void alVerEnemgo(Enemigo e)) and leaving out @Override: it compiles, but you have created a new method nobody calls, and your robot ignores enemies. With @Override the editor underlines it in red at once, so always write it. And final methods like avanzar (ahead) cannot be overridden.
+    For seniors: which method runs is decided at run time by the actual object (dynamic dispatch, invokevirtual), and the JIT makes it almost free when it only ever sees one implementation. Static and private methods, and fields, are not overridden but hidden, which confuses a lot of people.
+pseudo.es:
+    PLANO Metajavbot:
+        CADA TURNO: no hacer nada
+    PLANO MiRobot, QUE ES UN Metajavbot:
+        CADA TURNO, A MI MANERA:
+            girar 15
+            SI veo a alguien: atacar
+pseudo.de:
+    BAUPLAN Metajavbot:
+        JEDEN ZUG: nichts tun
+    BAUPLAN MeinRoboter, DER EIN Metajavbot IST:
+        JEDEN ZUG, AUF MEINE ART:
+            drehe 15
+            WENN ich jemanden sehe: greife an
+pseudo.en:
+    BLUEPRINT Metajavbot:
+        EVERY TICK: do nothing
+    BLUEPRINT MyRobot, WHICH IS A Metajavbot:
+        EVERY TICK, MY WAY:
+            turn 15
+            IF I see someone: attack
+ejemplo:
+    public class MiRobot extends Metajavbot {
+
+        @Override                                  // Java comprueba que el padre lo tiene || Java prüft, dass die Eltern sie haben || Java checks the parent has it
+        public void cadaTurno() {
+            girar(15);
+            if (!enemigosVistos().isEmpty()) atacar();
+        }
+
+        @Override
+        public String toString() {                 // también se sobrescriben los de Object || auch die von Object lassen sich überschreiben || Object's methods can be overridden too
+            return "MiRobot con " + blindaje() + " de blindaje";
+        }
+    }
+
+=== polimorfismo
+nivel: 3
+tema: 12
+titulo.es: Polimorfismo
+titulo.de: Polymorphie
+titulo.en: Polymorphism
+claves.es: polimorfismo, polimorfico, muchas formas, despacho dinamico, misma llamada distinto comportamiento, tipo estatico y dinamico
+claves.de: polymorphie, polymorphismus, polymorph, dynamische bindung, gleicher aufruf anderes verhalten, statischer und dynamischer typ
+claves.en: polymorphism, polymorphic, dynamic dispatch, late binding, same call different behavior, static and dynamic type
+ver: override, interfaz, clase_abstracta, patron_estrategia
+es:
+    Polimorfismo significa «muchas formas»: una misma llamada hace cosas distintas según qué objeto la recibe de verdad. Tú dices atacar() y cada uno ataca a su manera.
+    El árbitro grita «¡ataquen!» a una fila de robots: el del láser dispara un rayo, el del martillo suelta un mamporro y el del pegamento escupe algo pringoso que nadie quiere limpiar. El árbitro ni sabe ni le importa qué lleva cada uno: dice lo mismo a todos y cada uno lo hace a su modo.
+    En Java se consigue con herencia o con interfaces: una variable del tipo general guarda objetos de tipos concretos (Arma a = new Laser();, List<Arma> armas) y al llamar a a.disparar() se ejecuta la versión del objeto real. El juego lo hace contigo: guarda tu robot como un Metajavbot cualquiera, llama a cadaTurno() y se ejecuta el tuyo.
+    El fallo típico: llenar el código de if (arma.tipo().equals("laser")) … else if … en vez de dar a cada clase su propio método; cada arma nueva te obliga a tocar todos esos if. Otro: esperar polimorfismo de un método static o de un atributo, que dependen del tipo declarado y no del objeto.
+    Para un senior: la sobrecarga se decide al compilar, con el tipo declarado, y la sobrescritura al ejecutar, con el tipo real; mezclarlas da sorpresas (un equals(Pieza p) al que un HashSet nunca llama). Y desde Java 21, con sealed y el switch con patrones, a veces conviene el polimorfismo «desde fuera»: un switch exhaustivo que el compilador comprueba.
+de:
+    Polymorphie heißt „Vielgestaltigkeit“: Ein und derselbe Aufruf tut je nach Objekt, das ihn wirklich bekommt, etwas anderes. Du sagst atacar() (angreifen), und jeder greift auf seine Art an.
+    Der Schiedsrichter brüllt einer Reihe Roboter „Angriff!“ zu: Der mit dem Laser feuert einen Strahl, der mit dem Hammer haut einen Schwinger raus, und der mit dem Kleber spuckt etwas Klebriges, das keiner wegwischen will. Wer welche Waffe trägt, weiß der Schiedsrichter nicht und ist ihm egal: Er sagt allen dasselbe, und jeder macht es auf seine Weise.
+    In Java gelingt das mit Vererbung oder Interfaces: Eine Variable des allgemeinen Typs hält Objekte konkreter Typen (Arma a = new Laser();, List<Arma> armas), und beim Aufruf a.disparar() läuft die Version des echten Objekts. Das Spiel macht es mit dir genauso: Es hält deinen Roboter als irgendeinen Metajavbot, ruft cadaTurno() (jedenZug) auf, und deins läuft.
+    Der typische Fehler: den Code mit if (arma.tipo().equals("laser")) … else if … zu pflastern, statt jeder Klasse ihre eigene Methode zu geben; jede neue Waffe zwingt dich dann, all diese ifs anzufassen. Ein anderer: Polymorphie von einer static-Methode oder einem Attribut zu erwarten – die richten sich nach dem deklarierten Typ, nicht nach dem Objekt.
+    Für Seniors: Überladung wird beim Kompilieren anhand des deklarierten Typs entschieden, Überschreibung zur Laufzeit anhand des echten Typs; wer beides verwechselt, erlebt Überraschungen (ein equals(Pieza p), das ein HashSet nie aufruft). Und seit Java 21 ist mit sealed und switch mit Mustern manchmal Polymorphie „von außen“ besser: ein erschöpfendes switch, das der Compiler prüft.
+en:
+    Polymorphism means "many forms": the very same call does different things depending on which object actually receives it. You say atacar() (attack) and each one attacks in its own way.
+    The referee yells "attack!" at a row of robots: the laser one fires a beam, the hammer one throws a haymaker and the glue one spits something gooey nobody wants to clean up. The referee neither knows nor cares who carries what: he says the same thing to everyone and each does it their way.
+    In Java you get it with inheritance or interfaces: a variable of the general type holds objects of concrete types (Arma a = new Laser();, List<Arma> armas) and calling a.disparar() runs the real object's version. The game does it with you: it keeps your robot as just some Metajavbot, calls cadaTurno() (onTick), and yours runs.
+    The classic mistake: filling the code with if (arma.tipo().equals("laser")) … else if … instead of giving each class its own method; every new weapon then forces you to touch all those ifs. Another: expecting polymorphism from a static method or a field, which depend on the declared type, not on the object.
+    For seniors: overloading is resolved at compile time from the declared type, overriding at run time from the actual type; mixing them up brings surprises (an equals(Pieza p) that a HashSet never calls). And since Java 21, with sealed and pattern-matching switch, polymorphism "from the outside" is sometimes better: an exhaustive switch the compiler checks.
+pseudo.es:
+    armas ← [láser, martillo, pegamento]
+    PARA CADA arma EN armas:
+        arma.disparar()
+        (cada una dispara a su manera)
+pseudo.de:
+    waffen ← [Laser, Hammer, Kleber]
+    FÜR JEDES w IN waffen:
+        w.feuern()
+        (jede feuert auf ihre Art)
+pseudo.en:
+    weapons ← [laser, hammer, glue]
+    FOR EACH weapon IN weapons:
+        weapon.fire()
+        (each fires in its own way)
+ejemplo:
+    abstract class Arma {
+        abstract String disparar();
+    }
+    class Laser extends Arma { String disparar() { return "¡ziuuu!"; } }
+    class Martillo extends Arma { String disparar() { return "¡BONK!"; } }
+
+    public class MiRobot extends Metajavbot {
+        List<Arma> armas = List.of(new Laser(), new Martillo());    // tipo general, objetos concretos || allgemeiner Typ, konkrete Objekte || general type, concrete objects
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            for (Arma a : armas) decir(a.disparar());   // misma llamada, cada una a su manera || gleicher Aufruf, jede auf ihre Art || same call, each its own way
+        }
+    }
+
+=== clase_abstracta
+nivel: 3
+tema: 12
+titulo.es: Clase abstracta
+titulo.de: Abstrakte Klasse
+titulo.en: Abstract class
+claves.es: clase abstracta, que es una clase abstracta, abstract, metodo abstracto, abstract class, no se puede instanciar, plano a medias
+claves.de: abstrakte klasse, was ist eine abstrakte klasse, abstract, abstrakte methode, abstract class, nicht instanziierbar, halbfertiger bauplan
+claves.en: abstract class, what is an abstract class, abstract, abstract method, cannot be instantiated, half-finished class, skeletal implementation
+ver: interfaz, herencia, polimorfismo, override
+es:
+    Una clase abstracta es un plano a medias: no se puede construir nada con él directamente, solo sirve para que otras clases lo extiendan y rellenen lo que falta. Los huecos son métodos abstractos: dicen que existen, pero no qué hacen.
+    Es el plano del «robot genérico» del taller, con una nota a lápiz en el brazo: «AQUÍ VA UN ARMA (ya veremos cuál)». Nadie puede fabricar ese robot tal cual, porque saldría con un muñón; pero el robot láser y el robot martillo parten de él y solo dibujan su brazo.
+    En Java: abstract class Arma { abstract double dano(); String nombre() { … } }, y las hijas usan extends e implementan los métodos abstractos con @Override. Puede tener atributos, constructores y métodos completos; tu propia clase base, Metajavbot, es abstracta: el juego nunca construye «un robot cualquiera», siempre el tuyo.
+    El fallo típico: intentar new Arma() («Arma is abstract; cannot be instantiated»), dejar un método sin cuerpo y sin abstract («missing method body, or declare abstract») u olvidar implementar uno de los abstractos en la hija, que entonces también tendría que ser abstracta. Si la clase no tiene estado ni código común, probablemente querías una interfaz.
+    Para un senior: abstracta frente a interfaz: la abstracta comparte estado y constructor, pero solo se puede heredar de una; la interfaz no tiene estado y se pueden implementar muchas. Hoy, con los métodos default, la regla práctica es: interfaz para el tipo público y clase abstracta como «implementación esqueleto» opcional, como hacen List y AbstractList.
+de:
+    Eine abstrakte Klasse ist ein halbfertiger Bauplan: Direkt bauen kann man damit nichts, er dient nur dazu, dass andere Klassen ihn erweitern und das Fehlende ergänzen. Die Lücken sind abstrakte Methoden: Sie sagen, dass es sie gibt, aber nicht, was sie tun.
+    Es ist der Plan des „Allzweckroboters“ in der Werkstatt, mit einer Bleistiftnotiz am Arm: „HIER KOMMT EINE WAFFE HIN (mal sehen, welche)“. So, wie er ist, kann ihn niemand bauen, denn er käme mit einem Stummel heraus; aber der Laserroboter und der Hammerroboter gehen von ihm aus und zeichnen nur ihren Arm.
+    In Java: abstract class Arma { abstract double dano(); String nombre() { … } }, und die Kindklassen schreiben extends und implementieren die abstrakten Methoden mit @Override. Sie darf Attribute, Konstruktoren und fertige Methoden haben; deine eigene Basisklasse Metajavbot ist abstrakt: Das Spiel baut nie „irgendeinen Roboter“, sondern immer deinen.
+    Der typische Fehler: new Arma() zu versuchen („Arma is abstract; cannot be instantiated“), eine Methode ohne Rumpf und ohne abstract stehen zu lassen („missing method body, or declare abstract“) oder in der Kindklasse eine der abstrakten Methoden zu vergessen – dann müsste auch sie abstrakt sein. Hat die Klasse weder Zustand noch gemeinsamen Code, wolltest du wahrscheinlich ein Interface.
+    Für Seniors: Abstrakte Klasse oder Interface? Die abstrakte Klasse teilt Zustand und Konstruktor, aber man erbt nur von einer; ein Interface hat keinen Zustand, und man kann viele implementieren. Heute, mit default-Methoden, gilt als Faustregel: Interface für den öffentlichen Typ, abstrakte Klasse als optionale „Skelettimplementierung“, so wie bei List und AbstractList.
+en:
+    An abstract class is a half-finished blueprint: you cannot build anything from it directly, it only exists for other classes to extend and fill in what is missing. The gaps are abstract methods: they say they exist, but not what they do.
+    It is the workshop's "generic robot" blueprint, with a pencil note on the arm: "WEAPON GOES HERE (we'll see which)". Nobody can build that robot as it is, because it would come out with a stump; but the laser robot and the hammer robot start from it and only draw their own arm.
+    In Java: abstract class Arma { abstract double dano(); String nombre() { … } }, and the children use extends and implement the abstract methods with @Override. It can have fields, constructors and complete methods; your own base class, Metajavbot, is abstract: the game never builds "just some robot", always yours.
+    The classic mistake: trying new Arma() ("Arma is abstract; cannot be instantiated"), leaving a method with no body and no abstract ("missing method body, or declare abstract"), or forgetting to implement one of the abstract methods in the child, which would then have to be abstract too. If the class has no state and no shared code, you probably wanted an interface.
+    For seniors: abstract class or interface? The abstract class shares state and a constructor, but you can extend only one; an interface has no state and you can implement many. Today, with default methods, the rule of thumb is: an interface for the public type, an abstract class as an optional "skeletal implementation", the way List and AbstractList do it.
+pseudo.es:
+    PLANO A MEDIAS Arma:
+        SABE decir su nombre
+        daño: POR RELLENAR
+    PLANO Laser, QUE ES UN Arma:
+        daño: DEVOLVER 12
+pseudo.de:
+    HALBER BAUPLAN Waffe:
+        KANN ihren Namen sagen
+        schaden: NOCH OFFEN
+    BAUPLAN Laser, DER EINE Waffe IST:
+        schaden: ZURÜCKGEBEN 12
+pseudo.en:
+    HALF BLUEPRINT Weapon:
+        CAN say its name
+        damage: TO BE FILLED IN
+    BLUEPRINT Laser, WHICH IS A Weapon:
+        damage: RETURN 12
+ejemplo:
+    abstract class Arma {
+        abstract double dano();                    // el hueco: sin cuerpo || die Lücke: ohne Rumpf || the gap: no body
+
+        String describir() {                       // código común para todas || gemeinsamer Code für alle || shared code for all
+            return getClass().getSimpleName() + " hace " + dano();
+        }
+    }
+
+    class Laser extends Arma {
+        @Override
+        double dano() { return 12; }               // la hija rellena el hueco || die Kindklasse füllt die Lücke || the child fills the gap
+    }
+    // new Arma() no compila; new Laser() sí || new Arma() kompiliert nicht, new Laser() schon || new Arma() won't compile; new Laser() will
+
+=== interfaz
+nivel: 3
+tema: 13
+titulo.es: Interfaz
+titulo.de: Interface
+titulo.en: Interface
+claves.es: interfaz, interface, implements, implementar una interfaz, contrato, varias interfaces
+claves.de: interface, schnittstelle, implements, interface implementieren, vertrag, mehrere interfaces
+claves.en: interface, implements, implement an interface, contract, multiple interfaces, program to an interface
+ver: clase_abstracta, polimorfismo, metodo_default, interfaz_funcional
+es:
+    Una interfaz es un contrato: una lista de métodos que una clase promete tener, sin decir cómo los hace. Quien la usa solo sabe QUÉ puede pedir; el CÓMO lo pone cada clase que la implementa.
+    Es el enchufe estándar del pecho del robot: cualquier aparato con la clavija correcta encaja, sea un lanzallamas, una sombrilla o una tostadora de combate. El robot no sabe qué le han enchufado, solo que tiene un botón «usar»; y la tostadora, por cierto, no ha ganado nunca.
+    En Java: interface Arma { double dano(); } y class Laser implements Arma { public double dano() { return 12; } }. Una clase puede implementar muchas a la vez (implements Arma, Comparable<Laser>). En el juego, Enemigo es una interfaz: en alVerEnemigo te llega «algo que cumple Enemigo» y le preguntas e.distancia() o e.vuela() sin saber qué clase hay detrás.
+    El fallo típico: implementar el método sin public (los de la interfaz son public, y reducir el acceso no compila), o intentar new Enemigo(), que no se puede: una interfaz no se construye, se implementa. Y no declares las variables con la clase concreta si basta la interfaz: List<Enemigo> l = new ArrayList<>(), no ArrayList<Enemigo>.
+    Para un senior: programa contra interfaces y no contra implementaciones, y mantenlas pequeñas (segregación de interfaces: mejor Movible y Atacante que un DiosDelRing con 30 métodos). Desde Java 8 admiten métodos default y static, y desde Java 9 private; y una interfaz con un solo método abstracto ya sirve como destino de una lambda.
+de:
+    Ein Interface ist ein Vertrag: eine Liste von Methoden, die eine Klasse zu haben verspricht, ohne zu sagen, wie sie sie umsetzt. Wer es benutzt, weiß nur, WAS er verlangen kann; das WIE liefert jede Klasse, die es implementiert.
+    Es ist die Normsteckdose an der Brust des Roboters: Jedes Gerät mit dem richtigen Stecker passt hinein, ob Flammenwerfer, Sonnenschirm oder Kampftoaster. Der Roboter weiß nicht, was da steckt, nur dass es einen Knopf „benutzen“ hat; und der Toaster hat übrigens noch nie gewonnen.
+    In Java: interface Arma { double dano(); } und class Laser implements Arma { public double dano() { return 12; } }. Eine Klasse kann viele auf einmal implementieren (implements Arma, Comparable<Laser>). Im Spiel ist Enemigo (Gegner) ein Interface: In alVerEnemigo (beiSicht) bekommst du „irgendetwas, das Enemigo erfüllt“, und fragst e.distancia() (entfernung) oder e.vuela() (fliegt), ohne zu wissen, welche Klasse dahintersteckt.
+    Der typische Fehler: die Methode ohne public zu implementieren (Interface-Methoden sind public, und den Zugriff einzuschränken kompiliert nicht) oder new Enemigo() zu versuchen, was nicht geht: Ein Interface baut man nicht, man implementiert es. Und deklariere Variablen nicht mit der konkreten Klasse, wenn das Interface reicht: List<Enemigo> l = new ArrayList<>(), nicht ArrayList<Enemigo>.
+    Für Seniors: Programmiere gegen Interfaces, nicht gegen Implementierungen, und halte sie klein (Interface Segregation: lieber Movible und Atacante als ein RingGott mit 30 Methoden). Seit Java 8 dürfen sie default- und static-Methoden haben, seit Java 9 private; und ein Interface mit genau einer abstrakten Methode taugt schon als Ziel für ein Lambda.
+en:
+    An interface is a contract: a list of methods a class promises to have, without saying how it does them. Whoever uses it only knows WHAT they can ask for; the HOW comes from each class that implements it.
+    It is the standard socket on the robot's chest: any gadget with the right plug fits, be it a flamethrower, a parasol or a combat toaster. The robot does not know what has been plugged in, only that it has a "use" button; and the toaster, for the record, has never won.
+    In Java: interface Arma { double dano(); } and class Laser implements Arma { public double dano() { return 12; } }. A class can implement many at once (implements Arma, Comparable<Laser>). In the game, Enemigo (Enemy) is an interface: in alVerEnemigo (onSeeEnemy) you get "something that fulfils Enemigo" and you ask it e.distancia() (distance) or e.vuela() (flies) without knowing which class is behind it.
+    The classic mistake: implementing the method without public (interface methods are public, and narrowing access does not compile), or trying new Enemigo(), which you cannot do: an interface is not built, it is implemented. And do not declare variables with the concrete class when the interface will do: List<Enemigo> l = new ArrayList<>(), not ArrayList<Enemigo>.
+    For seniors: program to interfaces, not implementations, and keep them small (interface segregation: Movible and Atacante rather than a RingGod with 30 methods). Since Java 8 they can have default and static methods, since Java 9 private ones; and an interface with a single abstract method is already a valid target for a lambda.
+pseudo.es:
+    CONTRATO Arma:
+        PROMETE daño()
+    Laser CUMPLE Arma:
+        daño(): DEVOLVER 12
+    Martillo CUMPLE Arma:
+        daño(): DEVOLVER 20
+    PARA CADA arma EN armas: sumar arma.daño()
+pseudo.de:
+    VERTRAG Waffe:
+        VERSPRICHT schaden()
+    Laser ERFÜLLT Waffe:
+        schaden(): ZURÜCKGEBEN 12
+    Hammer ERFÜLLT Waffe:
+        schaden(): ZURÜCKGEBEN 20
+    FÜR JEDES w IN waffen: addiere w.schaden()
+pseudo.en:
+    CONTRACT Weapon:
+        PROMISES damage()
+    Laser FULFILS Weapon:
+        damage(): RETURN 12
+    Hammer FULFILS Weapon:
+        damage(): RETURN 20
+    FOR EACH weapon IN weapons: add weapon.damage()
+ejemplo:
+    interface Arma { double dano(); }                        // la promesa, sin cuerpo || das Versprechen, ohne Rumpf || the promise, no body
+    class Laser implements Arma { public double dano() { return 12; } }   // public obligatorio || public ist Pflicht || public is required
+
+    public class MiRobot extends Metajavbot {
+        Arma arma = new Laser();                             // la variable, del tipo de la interfaz || die Variable vom Typ des Interface || the variable typed as the interface
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {                // Enemigo también es una interfaz || Enemigo ist auch ein Interface || Enemigo is an interface too
+            if (e.distancia() < 100) decir("daño posible: " + arma.dano());
+        }
+    }
+
+=== sobrecarga
+nivel: 3
+tema: 06
+titulo.es: Sobrecarga
+titulo.de: Überladung
+titulo.en: Overloading
+claves.es: sobrecarga, sobrecargar, overload, mismo nombre distintos parametros, sobrecarga de metodos, sobrecarga de constructores
+claves.de: überladung, überladen, overload, gleicher name andere parameter, methoden überladen
+claves.en: overloading, overload, method overloading, same name different parameters, overloaded constructor
+ver: override, metodo, parametro, constructor
+es:
+    Sobrecargar es tener varios métodos con el mismo nombre pero distintos parámetros (en número o en tipo); Java elige cuál usar mirando los argumentos que le pasas.
+    El botón «atacar» del mando tiene truco: púlsalo solo y el robot ataca con lo que tenga listo; púlsalo mientras señalas un punto y ataca hacia allí. Es el mismo botón con el mismo dibujito, y el robot te entiende por lo que lo acompaña.
+    Ya lo usas: usarAparato() y usarAparato(double angulo) son dos métodos sobrecargados de la API, igual que System.out.println(int), println(String) y println(double), o Math.max(int, int) y Math.max(double, double). Para escribir los tuyos basta con cambiar la lista de parámetros: void huir() y void huir(double grados).
+    El fallo típico: creer que cambiando solo el tipo de retorno ya es sobrecarga (int dano() y double dano() no compilan juntos). Y no la confundas con sobrescribir: sobrecargar es mismo nombre con otros parámetros en la misma clase; sobrescribir, el mismo método exacto en una subclase.
+    Para un senior: Java elige la sobrecarga al compilar, por el tipo declarado de los argumentos y por fases (exacta, luego con autoboxing, luego varargs), y por eso remove(int) frente a remove(Object) en una List<Integer> muerde a cualquiera. Evita sobrecargas con el mismo número de parámetros y tipos parecidos; mejor nombres distintos (atacarIzquierda, atacarDerecha).
+de:
+    Überladen heißt, mehrere Methoden mit demselben Namen, aber anderen Parametern (in Anzahl oder Typ) zu haben; Java wählt anhand der übergebenen Argumente, welche gemeint ist.
+    Der „Angriff“-Knopf an der Fernbedienung hat einen Trick: Drückst du ihn einfach so, greift der Roboter mit dem an, was bereit ist; drückst du ihn und zeigst dabei auf einen Punkt, greift er dorthin an. Derselbe Knopf mit demselben Bildchen, und der Roboter versteht dich an dem, was du dazu machst.
+    Du benutzt es längst: usarAparato() und usarAparato(double angulo) (geraetBenutzen) sind zwei überladene Methoden der API, genau wie System.out.println(int), println(String) und println(double) oder Math.max(int, int) und Math.max(double, double). Für eigene reicht es, die Parameterliste zu ändern: void huir() und void huir(double grados).
+    Der typische Fehler: zu glauben, ein anderer Rückgabetyp allein sei schon Überladung (int dano() und double dano() kompilieren nicht zusammen). Und verwechsle es nicht mit Überschreiben: Überladen ist gleicher Name mit anderen Parametern in derselben Klasse, Überschreiben genau dieselbe Methode in einer Unterklasse.
+    Für Seniors: Java wählt die Überladung beim Kompilieren, nach dem deklarierten Typ der Argumente und in Phasen (exakt, dann mit Autoboxing, dann Varargs) – darum beißt remove(int) gegen remove(Object) in einer List<Integer> jeden einmal. Vermeide Überladungen mit gleich vielen Parametern und ähnlichen Typen; besser verschiedene Namen wie atacarIzquierda (angriffLinks) und atacarDerecha (angriffRechts).
+en:
+    Overloading means having several methods with the same name but different parameters (in number or type); Java picks which one to use by looking at the arguments you pass.
+    The "attack" button on the controller has a trick: press it on its own and the robot attacks with whatever is ready; press it while pointing at a spot and it attacks over there. Same button, same little icon, and the robot understands you by what comes with it.
+    You already use it: usarAparato() and usarAparato(double angulo) (useGadget) are two overloaded API methods, just like System.out.println(int), println(String) and println(double), or Math.max(int, int) and Math.max(double, double). To write your own, just change the parameter list: void huir() and void huir(double grados).
+    The classic mistake: thinking that changing only the return type is overloading (int dano() and double dano() do not compile together). And do not confuse it with overriding: overloading is the same name with other parameters in the same class; overriding is the exact same method in a subclass.
+    For seniors: Java picks the overload at compile time, from the declared types of the arguments and in phases (exact, then with autoboxing, then varargs), which is why remove(int) versus remove(Object) on a List<Integer> bites everyone once. Avoid overloads with the same number of parameters and similar types; prefer distinct names such as atacarIzquierda (attackLeft) and atacarDerecha (attackRight).
+pseudo.es:
+    huir():
+        huir(90)                 (lo de siempre: de lado)
+    huir(grados):
+        girar grados
+        avanzar 120
+    SI el golpe es fuerte: huir()
+    SI NO: huir(30)
+pseudo.de:
+    fliehen():
+        fliehen(90)              (wie immer: zur Seite)
+    fliehen(grad):
+        drehe grad
+        fahre 120
+    WENN der Treffer hart ist: fliehen()
+    SONST: fliehen(30)
+pseudo.en:
+    flee():
+        flee(90)                 (the usual: sideways)
+    flee(degrees):
+        turn degrees
+        move 120
+    IF the hit is hard: flee()
+    ELSE: flee(30)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        void huir() { huir(90); }              // sin parámetros || ohne Parameter || no parameters
+
+        void huir(double grados) {             // mismo nombre, otro parámetro || gleicher Name, anderer Parameter || same name, other parameter
+            girar(grados);
+            avanzar(120);
+        }
+
+        @Override
+        public void alRecibirGolpe(Golpe g) {
+            if (g.dano() > 10) huir(); else huir(30);   // Java elige por los argumentos || Java wählt nach den Argumenten || Java picks by the arguments
+        }
+    }
+
+=== referencia
+nivel: 3
+tema: 09
+titulo.es: Referencia
+titulo.de: Referenz
+titulo.en: Reference
+claves.es: referencia, referencias, paso por valor, paso por referencia, alias, dos variables el mismo objeto, copiar un objeto
+claves.de: referenz, referenzen, call by value, call by reference, wertübergabe, zwei variablen dasselbe objekt, objekt kopieren
+claves.en: reference, references, pass by value, pass by reference, aliasing, two variables same object, copy an object
+ver: objeto, null, equals_hashcode, pila_y_monton
+es:
+    Una variable de un tipo objeto no guarda el objeto, sino una referencia a él: algo así como su dirección. Copiar la variable copia la dirección, no el objeto.
+    Es el mando a distancia del robot, no el robot: si le das a tu compañera una copia del mando, las dos controláis el MISMO robot, y cuando ella lo estampa contra la pared, la abolladura la ves tú también. Para tener otro robot hay que construirlo (new), no fotocopiar el mando.
+    En Java, Pieza a = new Pieza(); Pieza b = a; deja dos variables apuntando a un solo objeto: b.blindaje = 0 deja también a a sin blindaje. Con los primitivos (int, double) no pasa, porque se copia el valor. Y Java pasa SIEMPRE por valor: a un método le llega una copia de la referencia, así que puede cambiar el objeto, pero no hacer que tu variable apunte a otro.
+    El fallo típico: «guardar una copia» de una lista con List<String> antes = vistos; y descubrir que cambia a la vez que la original; para copiarla de verdad, new ArrayList<>(vistos) o List.copyOf(vistos). El otro: comparar objetos con ==, que compara direcciones; dos objetos distintos con los mismos datos dan false (usa equals).
+    Para un senior: los objetos inmutables (String, records con campos inmutables) hacen inofensivo el aliasing, que es la fuente de muchos fallos y de casi todas las condiciones de carrera. Una referencia ocupa 4 bytes con compressed oops (montones de hasta unos 32 GB) y 8 sin ellas; la referencia vive en la pila o dentro de otro objeto, y el objeto, en el montón.
+de:
+    Eine Variable vom Objekttyp speichert nicht das Objekt selbst, sondern eine Referenz darauf, so etwas wie seine Adresse. Kopierst du die Variable, kopierst du die Adresse, nicht das Objekt.
+    Es ist die Fernbedienung des Roboters, nicht der Roboter: Gibst du deiner Teamkollegin eine Kopie der Fernbedienung, steuert ihr beide DENSELBEN Roboter, und wenn sie ihn gegen die Wand setzt, siehst du die Beule auch. Für einen zweiten Roboter musst du einen bauen (new), nicht die Fernbedienung fotokopieren.
+    In Java lässt Pieza a = new Pieza(); Pieza b = a; zwei Variablen auf ein einziges Objekt zeigen: b.blindaje = 0 nimmt auch a die Panzerung. Bei primitiven Typen (int, double) passiert das nicht, da wird der Wert kopiert. Und Java übergibt IMMER als Wert: Eine Methode bekommt eine Kopie der Referenz, kann also das Objekt ändern, aber deine Variable nicht auf ein anderes zeigen lassen.
+    Der typische Fehler: mit List<String> antes = vistos; „eine Kopie sichern“ und feststellen, dass sie sich zusammen mit dem Original ändert; eine echte Kopie gibt es mit new ArrayList<>(vistos) oder List.copyOf(vistos). Der andere: Objekte mit == zu vergleichen, das Adressen vergleicht; zwei verschiedene Objekte mit gleichen Daten ergeben false (nimm equals).
+    Für Seniors: Unveränderliche Objekte (String, Records mit unveränderlichen Feldern) machen Aliasing harmlos, und Aliasing ist die Quelle vieler Fehler und fast aller Race Conditions. Eine Referenz belegt mit Compressed Oops 4 Byte (Heaps bis etwa 32 GB), sonst 8; die Referenz liegt auf dem Stack oder in einem anderen Objekt, das Objekt selbst auf dem Heap.
+en:
+    A variable of an object type does not hold the object itself but a reference to it, something like its address. Copying the variable copies the address, not the object.
+    It is the robot's remote control, not the robot: give your teammate a copy of the remote and you both drive the SAME robot, and when she smashes it into the wall you see the dent too. To get a second robot you must build one (new), not photocopy the remote.
+    In Java, Pieza a = new Pieza(); Pieza b = a; leaves two variables pointing at a single object: b.blindaje = 0 leaves a without armor too. With primitives (int, double) this does not happen, because the value is copied. And Java ALWAYS passes by value: a method gets a copy of the reference, so it can change the object but cannot make your variable point to another one.
+    The classic mistake: "saving a copy" of a list with List<String> antes = vistos; and finding it changes along with the original; for a real copy use new ArrayList<>(vistos) or List.copyOf(vistos). The other: comparing objects with ==, which compares addresses; two different objects with the same data give false (use equals).
+    For seniors: immutable objects (String, records with immutable fields) make aliasing harmless, and aliasing is the source of many bugs and nearly every race condition. A reference takes 4 bytes with compressed oops (heaps up to about 32 GB) and 8 without; the reference lives on the stack or inside another object, while the object itself lives on the heap.
+pseudo.es:
+    a ← CONSTRUIR Pieza
+    b ← a                    (copia el mando, no el robot)
+    b.blindaje ← 0
+    escribir a.blindaje      (0: es el mismo robot)
+    c ← CONSTRUIR Pieza      (este sí es otro)
+pseudo.de:
+    a ← BAUE Teil
+    b ← a                    (kopiert die Fernbedienung, nicht den Roboter)
+    b.panzerung ← 0
+    schreibe a.panzerung     (0: derselbe Roboter)
+    c ← BAUE Teil            (das ist wirklich ein anderes)
+pseudo.en:
+    a ← BUILD Part
+    b ← a                    (copies the remote, not the robot)
+    b.armor ← 0
+    write a.armor            (0: same robot)
+    c ← BUILD Part           (this one really is another)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        List<String> vistos = new ArrayList<>();
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            List<String> alias = vistos;                   // el mismo objeto, otro nombre || dasselbe Objekt, anderer Name || same object, another name
+            List<String> copia = new ArrayList<>(vistos);  // un objeto nuevo con lo mismo dentro || ein neues Objekt mit gleichem Inhalt || a new object with the same contents
+            alias.add(e.nombre());
+            escribir(vistos.size() + " / " + copia.size());   // la original cambió; la copia, no || das Original hat sich geändert, die Kopie nicht || the original changed; the copy did not
+        }
+    }
+
+=== object_tostring
+nivel: 3
+tema: 11
+titulo.es: Object y toString
+titulo.de: Object und toString
+titulo.en: Object and toString
+claves.es: tostring, la clase object, java.lang.object, clase object, madre de todas las clases, imprimir un objeto, getclass
+claves.de: tostring, die klasse object, java.lang.object, klasse object, mutter aller klassen, objekt ausgeben, getclass
+claves.en: tostring, the object class, java.lang.object, class object, root of all classes, print an object, getclass
+ver: override, herencia, equals_hashcode, imprimir
+es:
+    Object es la clase de la que descienden todas las demás en Java, lo diga extends o no; por eso cualquier objeto trae de serie unos métodos comunes, como toString(), equals(), hashCode() y getClass(). toString() devuelve el objeto convertido en texto.
+    Object es la tatarabuela del taller, la que sale en todas las fotos de familia: todo robot, por moderno que sea, desciende de ella. Y toString() es la frase que suelta el robot cuando el locutor loco le acerca el micrófono; si no le has enseñado nada, balbucea su número de serie: «Pieza@1b6d3586».
+    Java llama a toString() solo cada vez que un objeto se convierte en texto: en escribir(pieza), decir(pieza), System.out.println(pieza) o "casco: " + pieza. Sobrescríbelo con @Override public String toString() { return nombre + " " + blindaje; } y tus mensajes de depuración dirán algo útil.
+    El fallo típico: imprimir un objeto o una lista de objetos y ver «Pieza@1b6d3586» o [Pieza@…, Pieza@…]; no está roto, es que la clase no tiene su propio toString(). Otro: escribir public String tostring() con la s minúscula, que crea un método nuevo; con @Override el editor te avisa.
+    Para un senior: toString() es para personas (registros, depuración), no un formato que otro código deba analizar; para eso, un método propio o un serializador. Que no lance excepciones ni haga trabajo caro, porque el depurador y los logs lo llaman sin avisar; los records y los enums ya traen uno decente.
+de:
+    Object ist die Klasse, von der in Java alle anderen abstammen, ob extends dasteht oder nicht; darum bringt jedes Objekt ein paar gemeinsame Methoden mit, etwa toString(), equals(), hashCode() und getClass(). toString() liefert das Objekt als Text.
+    Object ist die Ururgroßmutter der Werkstatt, die auf jedem Familienfoto auftaucht: Jeder Roboter, so modern er auch ist, stammt von ihr ab. Und toString() ist der Satz, den der Roboter sagt, wenn ihm der verrückte Sprecher das Mikro hinhält; hast du ihm nichts beigebracht, stammelt er seine Seriennummer: „Pieza@1b6d3586“.
+    Java ruft toString() von selbst auf, sobald ein Objekt zu Text wird: in escribir(pieza) (ausgeben), decir(pieza) (sagen), System.out.println(pieza) oder "casco: " + pieza. Überschreib es mit @Override public String toString() { return nombre + " " + blindaje; }, und deine Debug-Ausgaben sagen etwas Brauchbares.
+    Der typische Fehler: ein Objekt oder eine Liste von Objekten auszugeben und „Pieza@1b6d3586“ oder [Pieza@…, Pieza@…] zu sehen; das ist nicht kaputt, der Klasse fehlt nur ihr eigenes toString(). Ein anderer: public String tostring() mit kleinem s zu schreiben, was eine neue Methode anlegt; mit @Override warnt dich der Editor.
+    Für Seniors: toString() ist für Menschen (Logs, Debugging), kein Format, das anderer Code parsen sollte; dafür gibt es eine eigene Methode oder einen Serialisierer. Es sollte keine Ausnahmen werfen und keine teure Arbeit machen, denn Debugger und Logs rufen es ungefragt auf; Records und Enums bringen schon ein ordentliches mit.
+en:
+    Object is the class every other Java class descends from, whether extends says so or not; that is why every object comes with a few shared methods such as toString(), equals(), hashCode() and getClass(). toString() returns the object as text.
+    Object is the workshop's great-great-grandmother, the one who shows up in every family photo: every robot, however modern, descends from her. And toString() is the line the robot blurts out when the crazy announcer shoves a microphone in its face; if you never taught it anything, it mumbles its serial number: "Pieza@1b6d3586".
+    Java calls toString() by itself whenever an object becomes text: in escribir(pieza) (print), decir(pieza) (say), System.out.println(pieza) or "casco: " + pieza. Override it with @Override public String toString() { return nombre + " " + blindaje; } and your debug messages will say something useful.
+    The classic mistake: printing an object or a list of objects and seeing "Pieza@1b6d3586" or [Pieza@…, Pieza@…]; it is not broken, the class just has no toString() of its own. Another: writing public String tostring() with a lowercase s, which creates a new method; with @Override the editor warns you.
+    For seniors: toString() is for humans (logs, debugging), not a format other code should parse; use a dedicated method or a serializer for that. It must not throw or do expensive work, because debuggers and logs call it without asking; records and enums already come with a decent one.
+pseudo.es:
+    PLANO Pieza:
+        TIENE nombre y blindaje
+        AL CONVERTIRTE EN TEXTO:
+            DEVOLVER nombre + " (" + blindaje + ")"
+    decir casco          (dice «casco (70)», no «Pieza@1b6d…»)
+pseudo.de:
+    BAUPLAN Teil:
+        HAT name und panzerung
+        WENN DU ZU TEXT WIRST:
+            ZURÜCKGEBEN name + " (" + panzerung + ")"
+    sage helm            (sagt „helm (70)“, nicht „Pieza@1b6d…“)
+pseudo.en:
+    BLUEPRINT Part:
+        HAS name and armor
+        WHEN TURNED INTO TEXT:
+            RETURN name + " (" + armor + ")"
+    say helmet           (says "helmet (70)", not "Pieza@1b6d…")
+ejemplo:
+    class Pieza {
+        String nombre = "casco";
+        double blindaje = 70;
+
+        @Override
+        public String toString() {                     // heredado de Object y cambiado || von Object geerbt und geändert || inherited from Object and changed
+            return nombre + " (" + blindaje + ")";
+        }
+    }
+
+    // decir(new Pieza()) dice «casco (70.0)» y no «Pieza@1b6d3586» || decir(new Pieza()) sagt „casco (70.0)“ statt „Pieza@1b6d3586“ || decir(new Pieza()) says "casco (70.0)" instead of "Pieza@1b6d3586"
+
+=== equals_hashcode
+nivel: 3
+tema: 15
+titulo.es: equals y hashCode
+titulo.de: equals und hashCode
+titulo.en: equals and hashCode
+claves.es: equals, hashcode, equals y hashcode, comparar objetos, contrato de equals, sobrescribir equals, objetos iguales en un hashset
+claves.de: equals, hashcode, equals und hashcode, objekte vergleichen, equals-vertrag, equals überschreiben, gleiche objekte im hashset
+claves.en: equals, hashcode, equals and hashcode, compare objects, equals contract, override equals, equal objects in a hashset
+ver: referencia, set, map, hashmap_por_dentro
+es:
+    equals() responde «¿estos dos objetos valen lo mismo?», mientras que == responde «¿son el mismo objeto?». hashCode() da un número resumen del objeto que HashMap y HashSet usan para encontrarlo rápido; los dos van siempre juntos.
+    Dos robots salen de la cadena con la misma ficha técnica: == pregunta si son el mismo amasijo de chapa (no, uno está en el ring y el otro en el banquillo), y equals, si son el mismo modelo con las mismas piezas (sí). hashCode() es la taquilla del vestuario que le toca a cada uno según su ficha: dos robots iguales tienen que ir a la misma taquilla, o el utillero no encuentra nunca al gemelo.
+    Por defecto, el equals de Object hace lo mismo que ==. Para comparar por contenido, sobrescribe los dos: equals(Object o) comprueba el tipo y compara los atributos, y hashCode() devuelve Objects.hash(nombre, dano). Con String ya está hecho: "cobalto".equals(e.modelo()) es la forma correcta de comparar textos, nunca ==.
+    El fallo típico: sobrescribir equals y no hashCode, con lo que dos objetos «iguales» acaban duplicados en un HashSet o no se encuentran como clave de un HashMap. Otro: escribir equals(Arma otra) en vez de equals(Object o), que sobrecarga en lugar de sobrescribir y las colecciones ni lo miran (con @Override, el editor te lo dice).
+    Para un senior: el contrato exige que equals sea reflexivo, simétrico, transitivo y coherente, que x.equals(null) dé false y que objetos iguales tengan el mismo hashCode (no al revés). No metas atributos mutables en el hash de algo que vive en un HashSet (si cambian, el objeto se pierde dentro), y heredar añadiendo atributos rompe la simetría sin remedio: por eso los records generan los dos y son finales.
+de:
+    equals() beantwortet „Sind diese beiden Objekte gleichwertig?“, == dagegen „Ist es dasselbe Objekt?“. hashCode() liefert eine Kennzahl des Objekts, mit der HashMap und HashSet es schnell finden; die beiden gehören immer zusammen.
+    Zwei Roboter laufen mit demselben Datenblatt vom Band: == fragt, ob es derselbe Blechhaufen ist (nein, einer steht im Ring, der andere auf der Bank), equals, ob es dasselbe Modell mit denselben Teilen ist (ja). hashCode() ist der Kabinenspind, der jedem nach seinem Datenblatt zusteht: Zwei gleiche Roboter müssen in denselben Spind, sonst findet der Zeugwart den Zwilling nie.
+    Standardmäßig macht equals von Object dasselbe wie ==. Um nach Inhalt zu vergleichen, überschreibst du beide: equals(Object o) prüft den Typ und vergleicht die Attribute, hashCode() gibt Objects.hash(nombre, dano) zurück. Bei String ist das schon erledigt: "cobalto".equals(e.modelo()) (modell) ist der richtige Weg, Texte zu vergleichen, niemals ==.
+    Der typische Fehler: equals zu überschreiben und hashCode nicht – dann landen zwei „gleiche“ Objekte doppelt in einem HashSet oder werden als Schlüssel in einer HashMap nicht gefunden. Ein anderer: equals(Arma otra) statt equals(Object o) zu schreiben; das überlädt, statt zu überschreiben, und die Collections beachten es gar nicht (mit @Override sagt es dir der Editor).
+    Für Seniors: Der Vertrag verlangt, dass equals reflexiv, symmetrisch, transitiv und konsistent ist, dass x.equals(null) false liefert und dass gleiche Objekte denselben hashCode haben (nicht umgekehrt). Nimm keine veränderlichen Attribute in den Hash von etwas, das in einem HashSet liegt (ändern sie sich, geht das Objekt darin verloren), und Vererbung mit zusätzlichen Attributen zerstört die Symmetrie unrettbar: Darum erzeugen Records beides und sind final.
+en:
+    equals() answers "are these two objects worth the same?", while == answers "are they the very same object?". hashCode() gives a summary number for the object that HashMap and HashSet use to find it fast; the two always go together.
+    Two robots roll off the line with the same spec sheet: == asks whether they are the same heap of metal (no, one is in the ring and the other on the bench), equals asks whether they are the same model with the same parts (yes). hashCode() is the locker each one gets according to its spec sheet: two equal robots must go to the same locker, or the kit man will never find the twin.
+    By default, Object's equals does the same as ==. To compare by content, override both: equals(Object o) checks the type and compares the fields, and hashCode() returns Objects.hash(nombre, dano). For String it is already done: "cobalto".equals(e.modelo()) (model) is the right way to compare text, never ==.
+    The classic mistake: overriding equals but not hashCode, so two "equal" objects end up duplicated in a HashSet or are not found as a HashMap key. Another: writing equals(Arma otra) instead of equals(Object o), which overloads instead of overriding, and collections never even look at it (with @Override the editor tells you).
+    For seniors: the contract requires equals to be reflexive, symmetric, transitive and consistent, with x.equals(null) returning false, and equal objects to have the same hashCode (not the other way round). Do not put mutable fields into the hash of something living in a HashSet (if they change, the object is lost inside it), and subclassing that adds fields breaks symmetry beyond repair: that is why records generate both and are final.
+pseudo.es:
+    a ← CONSTRUIR Arma("laser", 12)
+    b ← CONSTRUIR Arma("laser", 12)
+    a == b             → falso   (dos objetos)
+    a.equals(b)        → cierto  (mismo contenido)
+    SI a.equals(b): a.hashCode() DEBE SER b.hashCode()
+pseudo.de:
+    a ← BAUE Waffe("laser", 12)
+    b ← BAUE Waffe("laser", 12)
+    a == b             → falsch  (zwei Objekte)
+    a.equals(b)        → wahr    (gleicher Inhalt)
+    WENN a.equals(b): a.hashCode() MUSS b.hashCode() SEIN
+pseudo.en:
+    a ← BUILD Weapon("laser", 12)
+    b ← BUILD Weapon("laser", 12)
+    a == b             → false   (two objects)
+    a.equals(b)        → true    (same contents)
+    IF a.equals(b): a.hashCode() MUST BE b.hashCode()
+ejemplo:
+    class Arma {
+        final String nombre; final double dano;
+        Arma(String nombre, double dano) { this.nombre = nombre; this.dano = dano; }
+
+        @Override
+        public boolean equals(Object o) {              // Object, no Arma: si no, no sobrescribe || Object, nicht Arma: sonst kein Überschreiben || Object, not Arma: otherwise it doesn't override
+            return o instanceof Arma otra && nombre.equals(otra.nombre) && Double.compare(dano, otra.dano) == 0;
+        }
+
+        @Override
+        public int hashCode() {                        // iguales ⇒ mismo número || gleich ⇒ gleiche Zahl || equal ⇒ same number
+            return Objects.hash(nombre, dano);
+        }
+    }
+
+=== instanceof
+nivel: 3
+tema: 12
+titulo.es: instanceof y cast
+titulo.de: instanceof und Cast
+titulo.en: instanceof and casting
+claves.es: instanceof, cast de objetos, downcast, upcast, classcastexception, comprobar el tipo de un objeto, instanceof con patron
+claves.de: instanceof, cast von objekten, downcast, upcast, classcastexception, typ eines objekts prüfen, instanceof mit muster
+claves.en: instanceof, object cast, downcast, upcast, classcastexception, check the type of an object, instanceof pattern
+ver: casting, polimorfismo, pattern_matching, sealed
+es:
+    instanceof pregunta si un objeto es de cierto tipo (o de una subclase suya), y da true o false. El cast, (Tipo) objeto, le dice a Java «trátalo como este tipo más concreto», para poder usar lo que solo ese tipo tiene.
+    El portero del vestuario mira a cada robot que entra: «¿eres un RobotVolador? Pasa a la zona de hélices». Si no pregunta y mete a la fuerza a un robot de ruedas en la pista de despegue, el robot hace el ridículo, el público se ríe y el árbitro para el combate (ClassCastException).
+    En Java 21 se hace en un solo paso, con patrón: if (pieza instanceof Arma a) { a.disparar(); }, y a ya es de tipo Arma dentro del if. La forma antigua era if (pieza instanceof Arma) { Arma a = (Arma) pieza; … }. Ir hacia arriba (upcast) es automático, Arma a = new Laser(); ir hacia abajo (downcast) necesita la comprobación.
+    El fallo típico: hacer el cast sin preguntar antes y llevarse una ClassCastException al ejecutar, o creer que el cast cambia el objeto: solo cambia cómo lo mira el compilador, y el objeto sigue siendo el mismo. Y null instanceof LoQueSea da false, nunca una excepción.
+    Para un senior: una cascada de instanceof suele ser polimorfismo que falta (cada tipo debería saber hacer lo suyo), salvo con jerarquías sealed, donde un switch exhaustivo con patrones es la herramienta correcta desde Java 21. El patrón en instanceof es definitivo desde Java 16.
+de:
+    instanceof fragt, ob ein Objekt von einem bestimmten Typ ist (oder von einer seiner Unterklassen), und liefert true oder false. Der Cast, (Typ) objekt, sagt Java: „Behandle es als diesen spezielleren Typ“, damit du benutzen kannst, was nur dieser Typ hat.
+    Der Türsteher der Kabine mustert jeden Roboter, der hereinkommt: „Bist du ein RobotVolador? Dann ab in den Propellerbereich.“ Fragt er nicht und schiebt einen Roboter auf Rädern mit Gewalt auf die Startbahn, blamiert der sich, das Publikum lacht, und der Schiedsrichter bricht den Kampf ab (ClassCastException).
+    In Java 21 geht das in einem Schritt, mit Muster: if (pieza instanceof Arma a) { a.disparar(); }, und a ist im if schon vom Typ Arma. Früher schrieb man if (pieza instanceof Arma) { Arma a = (Arma) pieza; … }. Nach oben (Upcast) geht es von selbst, Arma a = new Laser(); nach unten (Downcast) braucht es die Prüfung.
+    Der typische Fehler: ohne vorher zu fragen zu casten und zur Laufzeit eine ClassCastException zu kassieren, oder zu glauben, der Cast verändere das Objekt: Er ändert nur, wie der Compiler es sieht, das Objekt bleibt dasselbe. Und null instanceof Irgendwas ergibt false, nie eine Ausnahme.
+    Für Seniors: Eine Kaskade von instanceof ist meist fehlende Polymorphie (jeder Typ sollte selbst wissen, was er tut), außer bei sealed-Hierarchien, wo seit Java 21 ein erschöpfendes switch mit Mustern das richtige Werkzeug ist. Das Muster bei instanceof ist seit Java 16 endgültig.
+en:
+    instanceof asks whether an object is of a certain type (or one of its subclasses) and gives true or false. A cast, (Type) object, tells Java "treat it as this more specific type", so you can use what only that type has.
+    The dressing-room bouncer eyes every robot coming in: "Are you a RobotVolador? Propeller area, that way." If he doesn't ask and shoves a wheeled robot onto the runway by force, it makes a fool of itself, the crowd laughs and the referee stops the fight (ClassCastException).
+    In Java 21 you do it in one step with a pattern: if (pieza instanceof Arma a) { a.disparar(); }, and a is already of type Arma inside the if. The old way was if (pieza instanceof Arma) { Arma a = (Arma) pieza; … }. Going up (upcast) is automatic, Arma a = new Laser(); going down (downcast) needs the check.
+    The classic mistake: casting without asking first and getting a ClassCastException at run time, or believing the cast changes the object: it only changes how the compiler sees it, and the object stays the same. And null instanceof Whatever gives false, never an exception.
+    For seniors: a cascade of instanceof is usually missing polymorphism (each type should know how to do its own thing), except with sealed hierarchies, where an exhaustive pattern-matching switch is the right tool since Java 21. The instanceof pattern has been final since Java 16.
+pseudo.es:
+    PARA CADA pieza EN piezas:
+        SI pieza ES UN Arma, llamémosla a:
+            a.disparar()
+        SI NO:
+            ignorarla
+pseudo.de:
+    FÜR JEDES teil IN teile:
+        WENN teil EINE Waffe IST, nennen wir sie w:
+            w.feuern()
+        SONST:
+            ignorieren
+pseudo.en:
+    FOR EACH part IN parts:
+        IF part IS A Weapon, call it w:
+            w.fire()
+        ELSE:
+            ignore it
+ejemplo:
+    interface Pieza { String nombre(); }
+    record Escudo(String nombre) implements Pieza { }
+    record Arma(String nombre, double dano) implements Pieza { }
+
+    public class MiRobot extends Metajavbot {
+        List<Pieza> piezas = List.of(new Escudo("tapa"), new Arma("laser", 12));
+
+        @Override
+        public void alEmpezar() {
+            for (Pieza p : piezas) {
+                if (p instanceof Arma a) escribir(a.nombre() + " hace " + a.dano());   // comprueba y convierte a la vez || prüft und castet zugleich || checks and casts at once
+            }
+        }
+    }
+
+=== composicion
+nivel: 3
+tema: 12
+titulo.es: Composición
+titulo.de: Komposition
+titulo.en: Composition
+claves.es: composicion, composicion frente a herencia, composicion o herencia, relacion tiene un, delegacion, delegar en otro objeto, objetos dentro de objetos
+claves.de: komposition, komposition statt vererbung, komposition oder vererbung, hat-ein-beziehung, delegation, an ein anderes objekt delegieren
+claves.en: composition, composition over inheritance, composition vs inheritance, has-a, delegation, delegate to another object
+ver: herencia, interfaz, patron_estrategia, solid
+es:
+    Composición es construir un objeto juntando otros: en vez de «ser» algo por herencia, el objeto «tiene» piezas en sus atributos y les encarga el trabajo (delegar).
+    Tu robot no ES un brazo ni ES un radar: TIENE dos brazos, un radar y una cabeza, atornillados y cambiables. Si mañana quieres un brazo lanzallamas en vez del martillo, cambias la pieza en el taller; con herencia tendrías que fabricar un RobotConLanzallamasYRadarAzul desde el plano, luego un RobotConMartilloYRadarRojo, y así hasta llenar el catálogo de nombres absurdos.
+    En Java: class Robot { private final Arma brazo; private final Radar radar; … void atacar() { brazo.disparar(); } }, recibiendo las piezas por el constructor. El propio juego está hecho así: tu robot hereda de Metajavbot (eso sí es un «es un» de verdad), pero sus brazos, cabeza y piernas son piezas que se combinan en el taller.
+    El fallo típico: heredar de una clase solo para usar dos de sus métodos (class MiLista extends ArrayList), con lo que tu clase arrastra todos los demás y cualquiera puede llamarlos. La prueba rápida: si lo natural es decir «tiene un», es composición; si es «es un» y lo seguirá siendo siempre, quizá herencia.
+    Para un senior: «prefiere la composición a la herencia» (Gang of Four, Effective Java): la composición se cambia en tiempo de ejecución, se prueba con dobles y no depende de las tripas del padre; el caso clásico es una subclase de HashSet que cuenta en add y en addAll y cuenta doble, porque addAll llama a add por dentro. El precio es algo de código de reenvío, que patrones como estrategia o decorador mantienen ordenado.
+de:
+    Komposition heißt, ein Objekt aus anderen zusammenzusetzen: Statt per Vererbung etwas zu „sein“, „hat“ das Objekt Teile in seinen Attributen und überträgt ihnen die Arbeit (Delegation).
+    Dein Roboter IST kein Arm und IST kein Radar: Er HAT zwei Arme, ein Radar und einen Kopf, angeschraubt und austauschbar. Willst du morgen einen Flammenwerferarm statt des Hammers, tauschst du das Teil in der Werkstatt; mit Vererbung müsstest du einen RoboterMitFlammenwerferUndBlauemRadar aus dem Plan bauen, dann einen RoboterMitHammerUndRotemRadar, bis der Katalog voller absurder Namen ist.
+    In Java: class Robot { private final Arma brazo; private final Radar radar; … void atacar() { brazo.disparar(); } }, wobei die Teile über den Konstruktor hereinkommen. Das Spiel selbst ist so gebaut: Dein Roboter erbt von Metajavbot (das ist ein echtes „ist ein“), aber Arme, Kopf und Beine sind Teile, die in der Werkstatt kombiniert werden.
+    Der typische Fehler: von einer Klasse zu erben, nur um zwei ihrer Methoden zu nutzen (class MiLista extends ArrayList) – dann schleppt deine Klasse alle anderen mit, und jeder kann sie aufrufen. Der Schnelltest: Klingt „hat ein“ natürlich, ist es Komposition; ist es „ist ein“ und bleibt es das für immer, vielleicht Vererbung.
+    Für Seniors: „Komposition vor Vererbung“ (Gang of Four, Effective Java): Komposition lässt sich zur Laufzeit austauschen, mit Testdoubles prüfen und hängt nicht an den Interna der Elternklasse; der Klassiker ist eine HashSet-Unterklasse, die in add und addAll zählt und doppelt zählt, weil addAll intern add aufruft. Der Preis ist etwas Weiterleitungscode, den Muster wie Strategie oder Dekorierer ordentlich halten.
+en:
+    Composition means building an object out of others: instead of "being" something through inheritance, the object "has" parts in its fields and hands the work to them (delegation).
+    Your robot IS not an arm and IS not a radar: it HAS two arms, a radar and a head, bolted on and swappable. If tomorrow you want a flamethrower arm instead of the hammer, you swap the part in the workshop; with inheritance you would have to build a RobotWithFlamethrowerAndBlueRadar from the blueprint, then a RobotWithHammerAndRedRadar, until the catalogue is full of absurd names.
+    In Java: class Robot { private final Arma brazo; private final Radar radar; … void atacar() { brazo.disparar(); } }, receiving the parts through the constructor. The game itself is built this way: your robot inherits from Metajavbot (that is a genuine "is a"), but its arms, head and legs are parts combined in the workshop.
+    The classic mistake: inheriting from a class just to use two of its methods (class MiLista extends ArrayList), so your class drags all the others along and anyone can call them. The quick test: if "has a" sounds natural, it is composition; if it is "is a" and always will be, maybe inheritance.
+    For seniors: "favor composition over inheritance" (Gang of Four, Effective Java): composition can be swapped at run time, tested with doubles and does not depend on the parent's internals; the classic case is a HashSet subclass that counts in add and addAll and counts twice, because addAll calls add internally. The price is a bit of forwarding code, which patterns like strategy or decorator keep tidy.
+pseudo.es:
+    PLANO Robot:
+        TIENE un brazo (cualquier Arma)
+        TIENE un radar
+        atacar:
+            pedirle al brazo que dispare
+    robot ← CONSTRUIR Robot CON brazo láser
+    cambiar el brazo por un martillo     (sin tocar el plano)
+pseudo.de:
+    BAUPLAN Roboter:
+        HAT einen arm (irgendeine Waffe)
+        HAT ein radar
+        angreifen:
+            den arm feuern lassen
+    roboter ← BAUE Roboter MIT laserarm
+    den arm gegen einen hammer tauschen   (ohne den Plan anzufassen)
+pseudo.en:
+    BLUEPRINT Robot:
+        HAS an arm (any Weapon)
+        HAS a radar
+        attack:
+            ask the arm to fire
+    robot ← BUILD Robot WITH laser arm
+    swap the arm for a hammer           (without touching the blueprint)
+ejemplo:
+    interface Arma { String disparar(); }
+    class Laser implements Arma { public String disparar() { return "¡ziuuu!"; } }
+    class Martillo implements Arma { public String disparar() { return "¡BONK!"; } }
+
+    class Robot {
+        private Arma brazo;                                // TIENE un arma, no ES un arma || HAT eine Waffe, IST keine || HAS a weapon, IS not one
+
+        Robot(Arma brazo) { this.brazo = brazo; }
+        void cambiarBrazo(Arma nuevo) { brazo = nuevo; }   // se cambia en marcha || im laufenden Betrieb tauschbar || swappable at run time
+        String atacar() { return brazo.disparar(); }       // delega en la pieza || delegiert an das Teil || delegates to the part
+    }
+
+=== paquete_import
+nivel: 3
+tema: 09
+titulo.es: Paquetes e import
+titulo.de: Pakete und import
+titulo.en: Packages and import
+claves.es: paquete, paquetes, package, import, importar una clase, falta el import, import java.util, nombre completo de una clase
+claves.de: paket, pakete, package, import, klasse importieren, import fehlt, import java.util, voll qualifizierter name
+claves.en: package, packages, import, import a class, missing import, import java.util, fully qualified name
+ver: modificadores_de_acceso, clase, modulos, compilar
+es:
+    Un paquete es una carpeta con nombre donde se agrupan clases que van juntas (java.util, metajavbots.api); import es la línea que te deja usar una clase de otro paquete por su nombre corto.
+    Es el almacén del taller, con estanterías rotuladas: «java.util» tiene listas y mapas, «java.lang» lo básico y «metajavbots.api» todo lo del robot. Si pides «una List» sin decir de qué estantería, el mozo del almacén se encoge de hombros y vuelve a su bocadillo (cannot find symbol).
+    Se escribe arriba del archivo: package metajavbots.ejemplo; y debajo import java.util.List; o import java.util.*; para todo el paquete. Lo de java.lang (String, Math, Integer, Object) no hace falta importarlo nunca; tu robot empieza con import metajavbots.api.*; para tener Metajavbot, Enemigo y Golpe.
+    El fallo típico: usar List o ArrayList sin el import y ver «cannot find symbol»; o importar la clase equivocada con el mismo nombre (java.awt.List en vez de java.util.List, culpa del autocompletado). Y el * no trae subpaquetes: import java.util.*; no incluye java.util.function.
+    Para un senior: el import no carga nada ni cuesta nada al ejecutar, es solo una abreviatura para el compilador; el nombre completo (java.util.List) evita choques. Los paquetes marcan fronteras de acceso (package-private) y, desde Java 9, los módulos deciden cuáles se exportan; nómbralos por dominio invertido (com.empresa.producto) y por funcionalidad, no por capa técnica.
+de:
+    Ein Paket ist ein benannter Ordner, in dem zusammengehörige Klassen liegen (java.util, metajavbots.api); import ist die Zeile, mit der du eine Klasse aus einem anderen Paket mit ihrem kurzen Namen benutzen darfst.
+    Es ist das Lager der Werkstatt mit beschrifteten Regalen: „java.util“ hat Listen und Maps, „java.lang“ das Grundlegende und „metajavbots.api“ alles für den Roboter. Verlangst du „eine List“, ohne das Regal zu nennen, zuckt der Lagerist mit den Schultern und widmet sich wieder seinem Pausenbrot (cannot find symbol).
+    Man schreibt es oben in die Datei: package metajavbots.ejemplo; und darunter import java.util.List; oder import java.util.*; für das ganze Paket. Was in java.lang liegt (String, Math, Integer, Object), musst du nie importieren; dein Roboter beginnt mit import metajavbots.api.*;, damit Metajavbot, Enemigo und Golpe da sind.
+    Der typische Fehler: List oder ArrayList ohne import zu benutzen und „cannot find symbol“ zu sehen; oder die falsche gleichnamige Klasse zu importieren (java.awt.List statt java.util.List, dank Autovervollständigung). Und der * holt keine Unterpakete: import java.util.*; bringt java.util.function nicht mit.
+    Für Seniors: Ein import lädt nichts und kostet zur Laufzeit nichts, er ist nur eine Abkürzung für den Compiler; der volle Name (java.util.List) vermeidet Namenskonflikte. Pakete ziehen Zugriffsgrenzen (package-private), und seit Java 9 entscheiden Module, welche exportiert werden; benenne Pakete nach umgekehrter Domain (com.firma.produkt) und nach Fachlichkeit, nicht nach technischer Schicht.
+en:
+    A package is a named folder grouping classes that belong together (java.util, metajavbots.api); import is the line that lets you use a class from another package by its short name.
+    It is the workshop storeroom with labelled shelves: "java.util" has lists and maps, "java.lang" the basics and "metajavbots.api" everything for the robot. Ask for "a List" without saying which shelf and the storekeeper shrugs and goes back to his sandwich (cannot find symbol).
+    It goes at the top of the file: package metajavbots.ejemplo; and below it import java.util.List; or import java.util.*; for the whole package. Anything in java.lang (String, Math, Integer, Object) never needs importing; your robot starts with import metajavbots.api.*; to get Metajavbot, Enemigo and Golpe.
+    The classic mistake: using List or ArrayList without the import and seeing "cannot find symbol"; or importing the wrong class with the same name (java.awt.List instead of java.util.List, thanks to autocomplete). And the * does not bring in subpackages: import java.util.*; does not include java.util.function.
+    For seniors: an import loads nothing and costs nothing at run time, it is just shorthand for the compiler; the fully qualified name (java.util.List) avoids clashes. Packages draw access boundaries (package-private) and, since Java 9, modules decide which ones are exported; name packages by reversed domain (com.company.product) and by feature, not by technical layer.
+pseudo.es:
+    EN LA ESTANTERÍA metajavbots.ejemplo
+    TRAER List DE java.util
+    TRAER TODO DE metajavbots.api
+    PLANO MiRobot:
+        TIENE una List de nombres
+pseudo.de:
+    IM REGAL metajavbots.ejemplo
+    HOLE List AUS java.util
+    HOLE ALLES AUS metajavbots.api
+    BAUPLAN MeinRoboter:
+        HAT eine List von Namen
+pseudo.en:
+    ON THE SHELF metajavbots.ejemplo
+    BRING List FROM java.util
+    BRING EVERYTHING FROM metajavbots.api
+    BLUEPRINT MyRobot:
+        HAS a List of names
+ejemplo:
+    import java.util.ArrayList;                    // de la estantería java.util || aus dem Regal java.util || from the java.util shelf
+    import java.util.List;
+    import metajavbots.api.*;                      // todo lo del robot || alles für den Roboter || everything for the robot
+
+    public class MiRobot extends Metajavbot {
+        List<String> vistos = new ArrayList<>();   // sin los import: cannot find symbol || ohne die imports: cannot find symbol || without the imports: cannot find symbol
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            vistos.add(e.nombre());
+            escribir(Math.max(1, vistos.size()));  // Math es de java.lang: sin import || Math ist aus java.lang: kein import || Math is in java.lang: no import
+        }
+    }
+
+=== enum
+nivel: 3
+tema: 19
+titulo.es: enum
+titulo.de: enum
+titulo.en: enum
+claves.es: enum, enumerado, enumeracion, lista cerrada de valores, constantes con nombre, enum con atributos, switch con enum
+claves.de: enum, aufzählung, aufzählungstyp, feste liste von werten, benannte konstanten, enum mit attributen
+claves.en: enum, enumeration, enum type, fixed set of values, named constants, enum with fields, switch on enum
+ver: switch, constante, switch_expresion, map
+es:
+    Un enum es un tipo con una lista cerrada de valores posibles, cada uno con su nombre: enum Modo { ATACAR, HUIR, BUSCAR }. Una variable de ese tipo solo puede valer uno de ellos (o null).
+    Es la ruleta del cerebro del robot, con solo tres casillas pintadas: ATACAR, HUIR y BUSCAR. No hay casilla «hacer la croqueta» ni «bailar flamenco», por mucho que el locutor loco lo pida a gritos: si no está en la ruleta, el compilador no te deja ni escribirlo.
+    En Java: Modo modo = Modo.BUSCAR; se compara con == y encaja de maravilla en un switch. Un enum es una clase de verdad: puede tener atributos, constructor y métodos (ATACAR(1.0), HUIR(-1.0) con un double velocidad), y trae Modo.values(), modo.name() y modo.ordinal(). Es mucho mejor que guardar el modo en un String «atacar» que un día escribes «atakar».
+    El fallo típico: usar Strings o ints mágicos (modo = 2) en vez de un enum, y equivocarse sin que nadie avise. El otro: guardar o comparar ordinal(), que cambia en cuanto alguien reordena los valores o añade uno en medio; si necesitas un número, ponle tu propio atributo.
+    Para un senior: los valores de un enum son singletons, seguros con hilos y con la serialización (la forma recomendada de hacer un singleton); para mapas y conjuntos con claves enum, EnumMap y EnumSet son mucho más rápidos que HashMap y HashSet. Y un switch con flechas usado como expresión sobre un enum no compila si falta un caso (desde Java 14).
+de:
+    Ein Enum ist ein Typ mit einer festen Liste möglicher Werte, jeder mit Namen: enum Modo { ATACAR, HUIR, BUSCAR }. Eine Variable dieses Typs kann nur einen davon haben (oder null).
+    Es ist das Glücksrad im Gehirn des Roboters, mit genau drei bemalten Feldern: ATACAR, HUIR und BUSCAR (angreifen, fliehen, suchen). Ein Feld „Purzelbaum“ oder „Flamenco tanzen“ gibt es nicht, egal wie laut der verrückte Sprecher danach brüllt: Was nicht auf dem Rad steht, lässt dich der Compiler nicht einmal hinschreiben.
+    In Java: Modo modo = Modo.BUSCAR; verglichen wird mit ==, und im switch passt es wunderbar. Ein Enum ist eine echte Klasse: Es kann Attribute, einen Konstruktor und Methoden haben (ATACAR(1.0), HUIR(-1.0) mit einem double velocidad) und bringt Modo.values(), modo.name() und modo.ordinal() mit. Das ist viel besser, als den Modus in einem String „atacar“ zu speichern, den du eines Tages „atakar“ schreibst.
+    Der typische Fehler: magische Strings oder ints (modo = 2) statt eines Enums zu benutzen und sich zu vertun, ohne dass jemand warnt. Der andere: ordinal() zu speichern oder zu vergleichen – das ändert sich, sobald jemand die Werte umsortiert oder einen in der Mitte einfügt; brauchst du eine Zahl, gib dem Enum ein eigenes Attribut.
+    Für Seniors: Enum-Werte sind Singletons, sicher bei Threads und Serialisierung (der empfohlene Weg zum Singleton); für Maps und Sets mit Enum-Schlüsseln sind EnumMap und EnumSet viel schneller als HashMap und HashSet. Und ein switch-Ausdruck mit Pfeilen über ein Enum kompiliert nicht, wenn ein Fall fehlt (seit Java 14).
+en:
+    An enum is a type with a fixed list of possible values, each with a name: enum Modo { ATACAR, HUIR, BUSCAR }. A variable of that type can only hold one of them (or null).
+    It is the wheel of fortune in the robot's brain, with only three painted slots: ATACAR, HUIR and BUSCAR (attack, flee, search). There is no "roll on the floor" or "flamenco dance" slot, however loudly the crazy announcer demands it: if it is not on the wheel, the compiler won't even let you write it.
+    In Java: Modo modo = Modo.BUSCAR; you compare with == and it fits beautifully in a switch. An enum is a real class: it can have fields, a constructor and methods (ATACAR(1.0), HUIR(-1.0) with a double velocidad), and it comes with Modo.values(), modo.name() and modo.ordinal(). That beats storing the mode in a String "atacar" that one day you type as "atakar".
+    The classic mistake: using magic Strings or ints (modo = 2) instead of an enum, and getting it wrong with no warning. The other: storing or comparing ordinal(), which changes as soon as someone reorders the values or adds one in the middle; if you need a number, give the enum a field of its own.
+    For seniors: enum values are singletons, safe with threads and serialization (the recommended way to make a singleton); for maps and sets keyed by an enum, EnumMap and EnumSet are much faster than HashMap and HashSet. And an arrow switch used as an expression over an enum does not compile if a case is missing (since Java 14).
+pseudo.es:
+    MODOS POSIBLES: ATACAR, HUIR, BUSCAR
+    modo ← BUSCAR
+    CADA TURNO:
+        SI modo es ATACAR: atacar
+        SI modo es HUIR: retroceder 80
+        SI modo es BUSCAR: girar 20
+pseudo.de:
+    MÖGLICHE MODI: ATACAR, HUIR, BUSCAR
+    modus ← BUSCAR
+    JEDEN ZUG:
+        WENN modus ATACAR ist: greife an
+        WENN modus HUIR ist: fahre 80 zurück
+        WENN modus BUSCAR ist: drehe 20
+pseudo.en:
+    POSSIBLE MODES: ATACAR, HUIR, BUSCAR
+    mode ← BUSCAR
+    EVERY TICK:
+        IF mode is ATACAR: attack
+        IF mode is HUIR: back up 80
+        IF mode is BUSCAR: turn 20
+ejemplo:
+    enum Modo { ATACAR, HUIR, BUSCAR }             // solo estos tres, ni uno más || nur diese drei, kein einziger mehr || these three, not one more
+
+    public class MiRobot extends Metajavbot {
+        Modo modo = Modo.BUSCAR;
+
+        @Override
+        public void cadaTurno() {
+            modo = blindaje() < 25 ? Modo.HUIR : enemigosVistos().isEmpty() ? Modo.BUSCAR : Modo.ATACAR;
+            switch (modo) {                        // el compilador conoce todos los casos || der Compiler kennt alle Fälle || the compiler knows every case
+                case ATACAR -> atacar();
+                case HUIR -> retroceder(80);
+                case BUSCAR -> girar(20);
+            }
+        }
+    }
+
+=== clase_interna
+nivel: 4
+tema: 13
+titulo.es: Clase interna
+titulo.de: Innere Klasse
+titulo.en: Inner class
+claves.es: clase interna, que es una clase interna, clase anidada, clase anonima, static class, inner class, clase dentro de otra clase, clase local
+claves.de: innere klasse, was ist eine innere klasse, verschachtelte klasse, anonyme klasse, statische innere klasse, inner class, klasse in einer klasse
+claves.en: inner class, what is an inner class, nested class, anonymous class, static nested class, class inside a class, local class
+ver: interfaz, lambda, static, recolector_de_basura
+es:
+    Una clase interna es una clase declarada dentro de otra. Si no es static, cada objeto suyo va pegado a un objeto de la clase de fuera y puede usar sus atributos; si es static (clase anidada), es una clase normal que solo vive guardada dentro de la otra. Una clase anónima se declara y se construye a la vez, sin nombre, para usarla una sola vez.
+    Es el robotito ayudante que vive dentro del pecho del robot grande: sale, le limpia la lente del radar, le lee el blindaje en voz alta y vuelve a meterse; conoce todas sus tripas porque vive en ellas. La anónima es el doble de acción que se contrata para una sola escena, sin nombre en los créditos.
+    En Java: class Combate { static class Asalto { … } class Arbitro { … } }; la anidada se crea con new Combate.Asalto(), y la interna necesita un objeto de fuera. La anónima: Comparator<Enemigo> c = new Comparator<>() { public int compare(Enemigo a, Enemigo b) { … } }; hoy, para interfaces de un solo método, casi siempre la sustituye una lambda.
+    El fallo típico: hacer una clase interna sin static cuando no necesita al objeto de fuera, y luego no poder crearla desde un método static (main) sin un objeto exterior. El otro: dentro de una clase anónima, this es la anónima, no la de fuera (al revés que en una lambda), y las variables locales que usa deben ser efectivamente final.
+    Para un senior: haz static las anidadas por defecto: la interna no static guarda una referencia oculta al objeto de fuera (Combate.this) que lo mantiene vivo, una fuga de memoria clásica con oyentes y tareas en cola; y serializarla arrastra también al objeto de fuera. Las clases internas y anónimas existen desde Java 1.1; los records, enums e interfaces locales, desde Java 16.
+de:
+    Eine innere Klasse ist eine Klasse, die in einer anderen deklariert wird. Ist sie nicht static, hängt jedes ihrer Objekte an einem Objekt der äußeren Klasse und kann dessen Attribute benutzen; ist sie static (verschachtelte Klasse), ist sie eine normale Klasse, die nur in der anderen aufbewahrt wird. Eine anonyme Klasse wird in einem Atemzug deklariert und erzeugt, ohne Namen, für einen einzigen Einsatz.
+    Sie ist der kleine Helferroboter, der in der Brust des großen wohnt: Er kommt heraus, putzt die Radarlinse, liest laut die Panzerung vor und verkriecht sich wieder; er kennt alle Innereien, weil er darin lebt. Die anonyme Klasse ist das Stuntdouble, das für eine einzige Szene angeheuert wird, ohne Namen im Abspann.
+    In Java: class Combate { static class Asalto { … } class Arbitro { … } }; die verschachtelte erzeugst du mit new Combate.Asalto(), die innere braucht ein äußeres Objekt. Die anonyme: Comparator<Enemigo> c = new Comparator<>() { public int compare(Enemigo a, Enemigo b) { … } }; heute ersetzt man sie bei Interfaces mit nur einer Methode fast immer durch ein Lambda.
+    Der typische Fehler: eine innere Klasse ohne static zu schreiben, obwohl sie das äußere Objekt gar nicht braucht, und sie dann aus einer static-Methode (main) nicht ohne äußeres Objekt erzeugen zu können. Der andere: In einer anonymen Klasse ist this die anonyme Klasse, nicht die äußere (anders als im Lambda), und die benutzten lokalen Variablen müssen effektiv final sein.
+    Für Seniors: Mach verschachtelte Klassen standardmäßig static: Die nicht statische innere hält eine versteckte Referenz auf das äußere Objekt (Combate.this), die es am Leben hält – ein klassisches Speicherleck bei Listenern und Tasks in Warteschlangen; und wer sie serialisiert, zieht das äußere Objekt mit. Innere und anonyme Klassen gibt es seit Java 1.1, lokale Records, Enums und Interfaces seit Java 16.
+en:
+    An inner class is a class declared inside another. If it is not static, each of its objects is tied to an object of the outer class and can use its fields; if it is static (a nested class), it is an ordinary class merely kept inside the other. An anonymous class is declared and built in one go, with no name, to be used just once.
+    It is the little helper robot living inside the big robot's chest: it pops out, wipes the radar lens, reads the armor out loud and tucks itself back in; it knows every bit of the innards because it lives there. The anonymous class is the stunt double hired for a single scene, with no name in the credits.
+    In Java: class Combate { static class Asalto { … } class Arbitro { … } }; the nested one is created with new Combate.Asalto(), while the inner one needs an outer object. The anonymous one: Comparator<Enemigo> c = new Comparator<>() { public int compare(Enemigo a, Enemigo b) { … } }; these days, for single-method interfaces, a lambda almost always replaces it.
+    The classic mistake: making an inner class non-static when it does not need the outer object, and then being unable to create it from a static method (main) without an outer object. The other: inside an anonymous class, this is the anonymous class, not the outer one (unlike in a lambda), and the local variables it uses must be effectively final.
+    For seniors: make nested classes static by default: a non-static inner class keeps a hidden reference to the outer object (Combate.this) that keeps it alive, a classic memory leak with listeners and queued tasks; serializing it drags the outer object along too. Inner and anonymous classes have existed since Java 1.1; local records, enums and interfaces since Java 16.
+pseudo.es:
+    PLANO Combate:
+        TIENE asaltos ← 0
+        PLANO DE DENTRO Arbitro:
+            pitar:
+                asaltos ← asaltos + 1    (toca lo del Combate de fuera)
+    árbitro ← CONSTRUIR Arbitro DE ESTE combate
+pseudo.de:
+    BAUPLAN Kampf:
+        HAT runden ← 0
+        INNERER BAUPLAN Schiri:
+            pfeifen:
+                runden ← runden + 1      (greift auf den äußeren Kampf zu)
+    schiri ← BAUE Schiri DIESES Kampfes
+pseudo.en:
+    BLUEPRINT Fight:
+        HAS rounds ← 0
+        INNER BLUEPRINT Referee:
+            whistle:
+                rounds ← rounds + 1      (touches the outer Fight)
+    referee ← BUILD Referee OF THIS fight
+ejemplo:
+    class Combate {
+        int asaltos = 0;
+
+        static class Marcador { int puntos; }          // anidada: no necesita un Combate || verschachtelt: braucht keinen Kampf || nested: needs no Combate
+
+        class Arbitro {                                // interna: va pegada a un Combate || innere: hängt an einem Kampf || inner: tied to a Combate
+            void pitar() { asaltos++; }                // usa el atributo de fuera || benutzt das äußere Attribut || uses the outer field
+        }
+
+        Runnable campana = new Runnable() {            // anónima: sin nombre, una sola vez || anonym: ohne Namen, einmalig || anonymous: no name, used once
+            public void run() { System.out.println("¡ding! asalto " + asaltos); }
+        };
+    }
+
+=== metodo_default
+nivel: 4
+tema: 13
+titulo.es: Método default
+titulo.de: Default-Methode
+titulo.en: Default method
+claves.es: metodo default, metodos default, default en una interfaz, metodo static en una interfaz, metodo privado en una interfaz, interfaz con codigo
+claves.de: default-methode, default methode, default methoden in interfaces, statische methode im interface, private methode im interface, interface mit code
+claves.en: default method, default methods, default in an interface, static method in an interface, private interface method, interface with code
+ver: interfaz, clase_abstracta, static, interfaz_funcional
+es:
+    Un método default es un método con cuerpo dentro de una interfaz: las clases que la implementan lo reciben hecho y, si quieren, lo sobrescriben. Las interfaces también pueden tener métodos static (de la interfaz, sin objeto) y private (ayudantes internos).
+    El reglamento de los aparatos enchufables dice «todo aparato tiene un botón USAR»; un día la federación añade «y un botón AUTODESTRUCCIÓN, que por defecto hace un pfff triste y suelta confeti». Ningún fabricante tiene que rehacer su aparato: todos reciben el confeti de serie, y el que quiera explosiones de verdad, que lo sobrescriba.
+    En Java: interface Arma { double dano(); default double danoCritico() { return dano() * 2; } static Arma deJuguete() { … } }. La biblioteca está llena: List.sort(c), Map.getOrDefault(k, v), Collection.removeIf(p) e Iterable.forEach(...) son default, y List.of(...) o Comparator.comparing(...) son métodos static de interfaz.
+    El fallo típico: escribir un método con cuerpo en una interfaz sin la palabra default («interface abstract methods cannot have body»), o implementar dos interfaces con el mismo default y que no compile hasta que lo sobrescribes y eliges (Arma.super.danoCritico()). Y no metas estado ni lógica pesada: la interfaz no puede tener atributos de objeto, y una interfaz llena de código es una clase abstracta disfrazada.
+    Para un senior: los default llegaron en Java 8 sobre todo para poder añadir métodos (como stream() o forEach) a interfaces ya publicadas sin romper a quien las implementaba; los private de interfaz, en Java 9. Siempre gana la clase sobre la interfaz, y la interfaz más concreta sobre la más general; y no se puede hacer default de equals, hashCode ni toString.
+de:
+    Eine default-Methode ist eine Methode mit Rumpf in einem Interface: Klassen, die es implementieren, bekommen sie fertig geliefert und können sie bei Bedarf überschreiben. Interfaces dürfen außerdem static-Methoden (gehören dem Interface, ohne Objekt) und private-Methoden (interne Helfer) haben.
+    Das Reglement für Steckgeräte sagt: „Jedes Gerät hat einen BENUTZEN-Knopf“; eines Tages ergänzt der Verband: „und einen SELBSTZERSTÖRUNGS-Knopf, der standardmäßig traurig Pfff macht und Konfetti spuckt“. Kein Hersteller muss sein Gerät neu bauen: Alle bekommen das Konfetti serienmäßig, und wer echte Explosionen will, überschreibt es.
+    In Java: interface Arma { double dano(); default double danoCritico() { return dano() * 2; } static Arma deJuguete() { … } }. Die Bibliothek ist voll davon: List.sort(c), Map.getOrDefault(k, v), Collection.removeIf(p) und Iterable.forEach(...) sind default, List.of(...) oder Comparator.comparing(...) sind static-Methoden von Interfaces.
+    Der typische Fehler: in einem Interface eine Methode mit Rumpf ohne das Wort default zu schreiben („interface abstract methods cannot have body“) oder zwei Interfaces mit derselben default-Methode zu implementieren – das kompiliert erst, wenn du sie überschreibst und dich entscheidest (Arma.super.danoCritico()). Und pack keinen Zustand und keine schwere Logik hinein: Objektattribute sind im Interface nicht erlaubt, und ein Interface voller Code ist eine verkleidete abstrakte Klasse.
+    Für Seniors: default-Methoden kamen mit Java 8 vor allem, um schon veröffentlichten Interfaces Methoden (etwa stream() oder forEach) hinzuzufügen, ohne bestehende Implementierungen zu brechen; private Interface-Methoden kamen mit Java 9. Die Klasse gewinnt immer gegen das Interface, das speziellere Interface gegen das allgemeinere; und equals, hashCode oder toString kann man nicht als default definieren.
+en:
+    A default method is a method with a body inside an interface: classes implementing it get it ready-made and may override it if they want. Interfaces can also have static methods (belonging to the interface, no object needed) and private ones (internal helpers).
+    The rulebook for plug-in gadgets says "every gadget has a USE button"; one day the federation adds "and a SELF-DESTRUCT button, which by default goes pfff sadly and spits confetti". No manufacturer has to rebuild its gadget: they all get the confetti as standard, and whoever wants real explosions overrides it.
+    In Java: interface Arma { double dano(); default double danoCritico() { return dano() * 2; } static Arma deJuguete() { … } }. The library is full of them: List.sort(c), Map.getOrDefault(k, v), Collection.removeIf(p) and Iterable.forEach(...) are default methods, while List.of(...) and Comparator.comparing(...) are static interface methods.
+    The classic mistake: writing a method with a body in an interface without the word default ("interface abstract methods cannot have body"), or implementing two interfaces with the same default method, which won't compile until you override it and choose (Arma.super.danoCritico()). And do not put state or heavy logic in there: an interface cannot have instance fields, and an interface full of code is an abstract class in disguise.
+    For seniors: default methods arrived in Java 8 mainly so methods (such as stream() or forEach) could be added to already published interfaces without breaking existing implementations; private interface methods came in Java 9. The class always wins over the interface, and the more specific interface over the more general one; and you cannot make equals, hashCode or toString a default method.
+pseudo.es:
+    CONTRATO Arma:
+        PROMETE daño()
+        POR DEFECTO, dañoCrítico():
+            DEVOLVER daño() × 2
+    Laser CUMPLE Arma:
+        daño(): DEVOLVER 12
+        (dañoCrítico le llega hecho: 24)
+pseudo.de:
+    VERTRAG Waffe:
+        VERSPRICHT schaden()
+        STANDARDMÄSSIG kritischerSchaden():
+            ZURÜCKGEBEN schaden() × 2
+    Laser ERFÜLLT Waffe:
+        schaden(): ZURÜCKGEBEN 12
+        (kritischerSchaden bekommt er fertig: 24)
+pseudo.en:
+    CONTRACT Weapon:
+        PROMISES damage()
+        BY DEFAULT, criticalDamage():
+            RETURN damage() × 2
+    Laser FULFILS Weapon:
+        damage(): RETURN 12
+        (criticalDamage comes ready-made: 24)
+ejemplo:
+    interface Arma {
+        double dano();                                 // abstracto: cada arma pone el suyo || abstrakt: jede Waffe liefert ihren || abstract: each weapon provides its own
+        default double danoCritico() {                 // con cuerpo: le llega hecho a todas || mit Rumpf: alle bekommen ihn fertig || with a body: all get it ready-made
+            return dano() * 2;
+        }
+        static Arma deJuguete() {                      // de la interfaz: Arma.deJuguete() || gehört dem Interface: Arma.deJuguete() || belongs to the interface: Arma.deJuguete()
+            return () -> 1;
+        }
+    }
+
+    class Laser implements Arma {
+        public double dano() { return 12; }            // danoCritico() da 24 sin escribirlo || danoCritico() ergibt 24, ohne es zu schreiben || danoCritico() gives 24 without writing it
+    }

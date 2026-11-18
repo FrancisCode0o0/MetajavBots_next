@@ -1,0 +1,352 @@
+# 07_juego.txt: preguntas sobre el propio juego (cómo se juega, por qué pierdo, las notas y los cerebros de IA).
+# «guia: N» abre la guía con dibujos (pantallas/GuiaDeCerebros) en su página N (desde 1).
+
+=== como_jugar
+nivel: 1
+tema: --
+guia: 9
+titulo.es: Cómo se juega
+titulo.de: So wird gespielt
+titulo.en: How to play
+claves.es: como se juega, como jugar, jugar, que hago, por donde empiezo, instrucciones
+claves.de: wie spielt man, spielen, was soll ich tun, wo fange ich an, anleitung
+claves.en: how to play, how do i play, what do i do, where do i start, instructions
+ver: programa, turno, compilar
+es:
+    En MetajavBots no mueves tu robot con el mando: le escribes en Java lo que tiene que hacer, y en la pelea lo hace él solo.
+    Es como ser el entrenador de un boxeador muy obediente: en el gimnasio (el Taller) le enseñas los golpes; en el ring (Pelear) solo puedes mirar y gritar desde la esquina; entre asalto y asalto (la pausa entre rondas) le cambias la táctica.
+    Empieza por los Tutoriales: van de cero a senior y cada uno mejora tu robot. Los Ejercicios son cortos y se comprueban solos. Gana la pelea quien menos daño recibe.
+    Y si algo no lo entiendes, pulsa F2 y pregúntamelo: variable, clase, por qué pierdo… lo que sea.
+de:
+    In MetajavBots steuerst du deinen Roboter nicht mit dem Controller: Du schreibst ihm in Java, was er tun soll, und im Kampf macht er es allein.
+    Das ist, als wärst du Trainer eines sehr gehorsamen Boxers: Im Gym (der Werkstatt) bringst du ihm die Schläge bei; im Ring (Kämpfen) kannst du nur zuschauen und aus der Ecke rufen; zwischen den Runden (der Pause) änderst du die Taktik.
+    Fang mit den Tutorials an: Sie gehen von null bis Senior, und jedes verbessert deinen Roboter. Die Übungen sind kurz und prüfen sich selbst. Den Kampf gewinnt, wer weniger Schaden nimmt.
+    Und wenn du etwas nicht verstehst, drück F2 und frag mich: Variable, Klasse, warum ich verliere … egal was.
+en:
+    In MetajavBots you don't steer your robot with a controller: you write in Java what it should do, and in the fight it does it on its own.
+    It's like coaching a very obedient boxer: in the gym (the Workshop) you teach it the punches; in the ring (Fight) you can only watch and shout from the corner; between rounds (the break) you change its tactics.
+    Start with the Tutorials: they go from zero to senior and each one improves your robot. The Exercises are short and check themselves. Whoever takes less damage wins the fight.
+    And if you don't understand something, press F2 and ask me: variable, class, why am I losing… anything.
+pseudo.es:
+    REPETIR:
+        en el Taller, escribir y compilar (Ctrl+S)
+        pelear y mirar
+        en la pausa, mejorar el código
+pseudo.de:
+    WIEDERHOLE:
+        in der Werkstatt schreiben und kompilieren (Strg+S)
+        kämpfen und zuschauen
+        in der Pause den Code verbessern
+pseudo.en:
+    REPEAT:
+        in the Workshop, write and compile (Ctrl+S)
+        fight and watch
+        in the break, improve the code
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            avanzar(5);          // lo primero: que se mueva || zuerst: dass er sich bewegt || first: make it move
+            girar(2);            // y que vaya girando || und dass er sich dreht || and keep turning
+        }
+    }
+
+=== por_que_pierdo
+nivel: 1
+tema: --
+titulo.es: ¿Por qué pierdo?
+titulo.de: Warum verliere ich?
+titulo.en: Why am I losing?
+claves.es: por que pierdo, pierdo, perder, siempre pierdo, no gano, como gano, ganar
+claves.de: warum verliere ich, verliere, verlieren, ich verliere immer, wie gewinne ich, gewinnen
+claves.en: why am i losing, why do i lose, losing, i always lose, how do i win, win
+ver: turno, depurar, if_else
+es:
+    Casi siempre se pierde por una de estas tres cosas: el robot no ve al enemigo, no le apunta, o se queda quieto recibiendo.
+    Piensa en un boxeador con los ojos vendados que lanza puñetazos al aire mientras el otro le zurra: no le falta fuerza, le falta saber dónde está el rival.
+    Mira el informe de la pausa entre rondas: el daño que hiciste y el que recibiste, tu puntería y los errores. En la pelea, haz clic en el enemigo y te diré cómo pelea él (si te rodea, si huye, si vuela) y qué probar.
+    El fallo típico: cambiarlo todo a la vez. Cambia una cosa, pelea y mira si mejora.
+de:
+    Meistens verliert man aus einem von drei Gründen: Der Roboter sieht den Gegner nicht, zielt nicht auf ihn oder bleibt stehen und steckt ein.
+    Stell dir einen Boxer mit verbundenen Augen vor, der in die Luft schlägt, während der andere ihn verprügelt: Ihm fehlt nicht die Kraft, sondern das Wissen, wo der Gegner ist.
+    Schau dir den Bericht in der Pause zwischen den Runden an: ausgeteilter und eingesteckter Schaden, Trefferquote und Fehler. Klick im Kampf den Gegner an, dann sage ich dir, wie er kämpft (ob er dich umkreist, flieht, fliegt) und was du probieren kannst.
+    Der typische Fehler: alles auf einmal zu ändern. Ändere eine Sache, kämpf und schau, ob es besser wird.
+en:
+    You almost always lose for one of three reasons: the robot doesn't see the enemy, doesn't aim at it, or stands still taking hits.
+    Picture a blindfolded boxer punching the air while the other one pummels them: it's not strength they lack, it's knowing where the rival is.
+    Check the report in the break between rounds: damage dealt and taken, accuracy and errors. During the fight, click the enemy and I'll tell you how it fights (whether it circles you, runs, flies) and what to try.
+    The classic mistake: changing everything at once. Change one thing, fight and see whether it gets better.
+pseudo.es:
+    AL VER al enemigo:
+        apuntar hacia él
+        SI está a tiro: atacar
+    AL RECIBIR un golpe:
+        moverse (no quedarse quieto)
+pseudo.de:
+    BEIM SEHEN des Gegners:
+        auf ihn zielen
+        WENN in Reichweite: angreifen
+    BEIM TREFFER:
+        sich bewegen (nicht stehen bleiben)
+pseudo.en:
+    ON SEEING the enemy:
+        aim at it
+        IF in range: attack
+    ON BEING HIT:
+        move (don't stand still)
+ejemplo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        apuntarHacia(e.angulo());      // primero, mirar || zuerst hinschauen || first, look
+        if (e.distancia() < 300) {
+            atacar();                  // luego, pegar || dann zuschlagen || then, hit
+        }
+    }
+
+=== ver_notas
+nivel: 1
+tema: --
+guia: 10
+titulo.es: Ver tus notas
+titulo.de: Deine Ergebnisse
+titulo.en: Your results
+claves.es: notas, mis notas, ver las notas, progreso, estadisticas, historial, nivel, experiencia
+claves.de: ergebnisse, noten, meine noten, fortschritt, statistik, verlauf, stufe, erfahrung
+claves.en: results, grades, my grades, progress, stats, statistics, history, rank, experience
+ver: como_jugar, por_que_pierdo
+es:
+    Tus notas están en tres sitios: arriba del Menú (tu etiqueta, de Noob a Senior, y lo que te falta para subir), en Historial (cada pelea con sus números) y en Ejercicios (los que llevas resueltos de cada tema).
+    Es como el cartel del gimnasio donde se apuntan los combates: quién ganó, por cuánto y con qué golpes.
+    Tras cada pelea, «Revisar el código» le pone nota a tu robot: qué hace bien, qué se puede mejorar y por qué.
+    No te obsesiones con perder: cada derrota dice qué practicar, y el juego te propone repasar lo flojo.
+de:
+    Deine Ergebnisse stehen an drei Stellen: oben im Menü (dein Abzeichen von Noob bis Senior und was dir zum Aufstieg fehlt), im Verlauf (jeder Kampf mit seinen Zahlen) und bei den Übungen (wie viele du pro Thema gelöst hast).
+    Wie die Tafel im Gym, auf der die Kämpfe stehen: wer gewonnen hat, wie deutlich und mit welchen Schlägen.
+    Nach jedem Kampf benotet „Code prüfen“ deinen Roboter: was er gut macht, was besser geht und warum.
+    Lass dich vom Verlieren nicht entmutigen: Jede Niederlage zeigt, was du üben solltest.
+en:
+    Your results are in three places: at the top of the Menu (your rank, from Noob to Senior, and what you need to level up), in History (every fight with its numbers) and in Exercises (how many you've solved per topic).
+    Like the board at the gym where fights are written up: who won, by how much and with which punches.
+    After each fight, «Review code» grades your robot: what it does well, what could be better and why.
+    Don't be put off by losing: every defeat tells you what to practise.
+pseudo.es:
+    Menú → mi etiqueta y lo que falta
+    Historial → cada pelea
+    Ejercicios → los ✓ de cada tema
+pseudo.de:
+    Menü → mein Abzeichen und was fehlt
+    Verlauf → jeder Kampf
+    Übungen → die ✓ pro Thema
+pseudo.en:
+    Menu → my rank and what's missing
+    History → every fight
+    Exercises → the ✓ per topic
+ejemplo:
+    // Tras la pelea: «Revisar el código» || Nach dem Kampf: „Code prüfen“ || After the fight: «Review code»
+    // Puntería 34 %: ¿apuntas antes de atacar? || Trefferquote 34 %: Zielst du vor dem Angriff? || Accuracy 34%: do you aim before attacking?
+
+=== cerebro_ia
+nivel: 1
+tema: --
+guia: 1
+titulo.es: Cerebro de IA
+titulo.de: KI-Gehirn
+titulo.en: AI brain
+claves.es: cerebro, cerebros, ia, inteligencia artificial, cerebro de ia, que es un cerebro
+claves.de: gehirn, gehirne, ki, kunstliche intelligenz, ki-gehirn, was ist ein gehirn
+claves.en: brain, brains, ai, artificial intelligence, ai brain, what is a brain
+ver: cerebro_local, cerebro_en_linea, tres_casillas
+es:
+    Un cerebro de IA es un programa que entiende lo que escribes y contesta con sus palabras. El juego funciona entero sin él; con él, el entrenador responde a cualquier pregunta y la computadora inventa pullas nuevas.
+    Es como contratar a un comentarista que sabe de boxeo: sin él la pelea es igual de buena, pero con él alguien te explica cada golpe.
+    Hay tres casillas para cerebros: cada una puede ser local (en tu ordenador) o en línea (en internet, con tu clave), mezclados como quieras, y los tres trabajan a la vez.
+    Lo de la guía con dibujos lo explica paso a paso: pulsa el botón de abajo.
+de:
+    Ein KI-Gehirn ist ein Programm, das versteht, was du schreibst, und mit eigenen Worten antwortet. Das Spiel funktioniert komplett ohne; mit ihm beantwortet der Trainer jede Frage, und der Computer erfindet neue Sprüche.
+    Wie ein Kommentator, der etwas vom Boxen versteht: Ohne ihn ist der Kampf genauso gut, aber mit ihm erklärt dir jemand jeden Schlag.
+    Es gibt drei Plätze für Gehirne: Jeder kann lokal (auf deinem Rechner) oder online (im Internet, mit deinem Schlüssel) sein, beliebig gemischt, und alle drei arbeiten gleichzeitig.
+    Die bebilderte Anleitung erklärt es Schritt für Schritt: Klick unten auf den Knopf.
+en:
+    An AI brain is a program that understands what you type and answers in its own words. The game works fully without one; with one, the coach answers any question and the computer makes up new taunts.
+    Like hiring a commentator who knows boxing: without them the fight is just as good, but with them someone explains every punch.
+    There are three brain slots: each can be local (on your computer) or online (on the internet, with your key), mixed however you like, and all three work at once.
+    The illustrated guide explains it step by step: press the button below.
+pseudo.es:
+    PARA CADA casilla (1, 2, 3):
+        elegir: ninguno, local o en línea
+        probarla
+pseudo.de:
+    FÜR JEDEN Platz (1, 2, 3):
+        wählen: keins, lokal oder online
+        testen
+pseudo.en:
+    FOR EACH slot (1, 2, 3):
+        choose: none, local or online
+        test it
+ejemplo:
+
+=== cerebro_local
+nivel: 1
+tema: --
+guia: 2
+titulo.es: Cerebro local
+titulo.de: Lokales Gehirn
+titulo.en: Local brain
+claves.es: cerebro local, koboldcpp, kobold, modelo, gguf, instalar cerebro, ia sin internet, carpeta de modelos
+claves.de: lokales gehirn, koboldcpp, kobold, modell, gguf, gehirn installieren, ki ohne internet, ordner der modelle
+claves.en: local brain, koboldcpp, kobold, model, gguf, install brain, offline ai, models folder
+ver: cerebro_ia, despertar_cerebros, tres_casillas
+es:
+    Un cerebro local vive en tu ordenador: no necesita internet ni clave, y es gratis. Hacen falta dos archivos: el programa KoboldCpp (koboldcpp.exe) y un modelo (un archivo grande .gguf).
+    Es como tener al comentarista en tu propio gimnasio en vez de llamarlo por teléfono: no pagas llamadas, pero ocupa sitio (memoria).
+    Pon los dos en una carpeta y elígela en Ajustes › Cerebros de IA › «Carpeta de los modelos». Luego, en una casilla, «Local», el modelo con ◄ ► y «Probar».
+    El fallo típico: bajar un modelo demasiado grande para la memoria del ordenador. En un portátil, empieza por Gemma 3 4B (Q4_K_M, unos 2,5 GB).
+de:
+    Ein lokales Gehirn lebt auf deinem Rechner: Es braucht weder Internet noch Schlüssel und ist kostenlos. Du brauchst zwei Dateien: das Programm KoboldCpp (koboldcpp.exe) und ein Modell (eine große .gguf-Datei).
+    Als hättest du den Kommentator im eigenen Gym, statt ihn anzurufen: keine Telefonkosten, aber er braucht Platz (Speicher).
+    Leg beides in einen Ordner und wähle ihn in Einstellungen › KI-Gehirne › „Ordner der Modelle“. Dann in einem Platz „Lokal“, das Modell mit ◄ ► und „Testen“.
+    Der typische Fehler: ein Modell laden, das für den Speicher des Rechners zu groß ist. Auf einem Laptop fang mit Gemma 3 4B an (Q4_K_M, etwa 2,5 GB).
+en:
+    A local brain lives on your computer: no internet, no key, and it's free. You need two files: the KoboldCpp program (koboldcpp.exe) and a model (a big .gguf file).
+    Like having the commentator in your own gym instead of phoning them: no call charges, but they take up room (memory).
+    Put both in one folder and pick it in Settings › AI brains › «Models folder». Then, in a slot, «Local», the model with ◄ ► and «Test».
+    The classic mistake: downloading a model too big for the computer's memory. On a laptop, start with Gemma 3 4B (Q4_K_M, about 2.5 GB).
+pseudo.es:
+    bajar koboldcpp.exe
+    bajar un modelo .gguf
+    ponerlos juntos en una carpeta
+    Ajustes: carpeta, casilla «Local», modelo, Probar
+pseudo.de:
+    koboldcpp.exe herunterladen
+    ein .gguf-Modell herunterladen
+    beides in einen Ordner legen
+    Einstellungen: Ordner, Platz „Lokal“, Modell, Testen
+pseudo.en:
+    download koboldcpp.exe
+    download a .gguf model
+    put them together in one folder
+    Settings: folder, «Local» slot, model, Test
+ejemplo:
+
+=== cerebro_en_linea
+nivel: 1
+tema: --
+guia: 6
+titulo.es: Cerebro en línea
+titulo.de: Online-Gehirn
+titulo.en: Online brain
+claves.es: cerebro en linea, clave, api key, clave de api, gemini, google, claude, anthropic, openai, chatgpt
+claves.de: online-gehirn, online gehirn, schlussel, api key, api-schlussel, gemini, google, claude, anthropic, openai, chatgpt
+claves.en: online brain, key, api key, gemini, google, claude, anthropic, openai, chatgpt
+ver: cerebro_ia, tres_casillas, cerebro_local
+es:
+    Un cerebro en línea vive en internet (Google Gemini, Claude u OpenAI) y te pide una clave: una contraseña larga que es solo tuya. Suele ser más listo y más rápido que uno local, pero necesita internet.
+    Es como llamar a un comentarista famoso: contesta enseguida y lo sabe todo, pero cada llamada la paga quien tiene la clave (Google tiene uso gratis con límite).
+    Saca la clave en la página del proveedor, pégala en Ajustes › Cerebros de IA › casilla «En línea» y pulsa «Guardar»: se guarda en tu carpeta de usuario, nunca en la partida.
+    El fallo típico: compartir la clave o subirla a internet. Es como dar tu contraseña del banco: nunca.
+de:
+    Ein Online-Gehirn lebt im Internet (Google Gemini, Claude oder OpenAI) und braucht einen Schlüssel: ein langes Passwort, das nur dir gehört. Es ist meist klüger und schneller als ein lokales, braucht aber Internet.
+    Wie ein berühmter Kommentator am Telefon: Er antwortet sofort und weiß alles, aber jeden Anruf bezahlt, wer den Schlüssel hat (Google erlaubt kostenlose Nutzung bis zu einem Limit).
+    Hol dir den Schlüssel auf der Seite des Anbieters, füge ihn in Einstellungen › KI-Gehirne › Platz „Online“ ein und klick „Speichern“: Er landet in deinem Benutzerordner, nie im Spielstand.
+    Der typische Fehler: den Schlüssel weitergeben oder ins Internet hochladen. Das ist wie dein Bankpasswort herzugeben: niemals.
+en:
+    An online brain lives on the internet (Google Gemini, Claude or OpenAI) and needs a key: a long password that's yours alone. It's usually smarter and faster than a local one, but it needs internet.
+    Like phoning a famous commentator: they answer right away and know everything, but every call is paid by whoever holds the key (Google offers free use up to a limit).
+    Get the key from the provider's site, paste it in Settings › AI brains › an «Online» slot and press «Save»: it's stored in your user folder, never in the save file.
+    The classic mistake: sharing the key or uploading it anywhere. That's like handing out your bank password: never.
+pseudo.es:
+    entrar en la página del proveedor
+    crear la clave y copiarla
+    Ajustes: casilla «En línea», proveedor, pegar, Guardar, Probar
+pseudo.de:
+    die Seite des Anbieters öffnen
+    Schlüssel erstellen und kopieren
+    Einstellungen: Platz „Online“, Anbieter, einfügen, Speichern, Testen
+pseudo.en:
+    open the provider's site
+    create the key and copy it
+    Settings: «Online» slot, provider, paste, Save, Test
+ejemplo:
+
+=== tres_casillas
+nivel: 1
+tema: --
+guia: 7
+titulo.es: Las tres casillas
+titulo.de: Die drei Plätze
+titulo.en: The three slots
+claves.es: tres casillas, casillas, llenar las casillas, tres cerebros, varios cerebros, repartir tareas, que hace cada cerebro
+claves.de: drei platze, platze, platze fullen, drei gehirne, mehrere gehirne, aufgaben verteilen, was jedes gehirn macht
+claves.en: three slots, slots, fill the slots, three brains, several brains, share tasks, what each brain does
+ver: cerebro_local, cerebro_en_linea, despertar_cerebros
+es:
+    Hay tres casillas para cerebros, y cada una admite cualquiera: tres locales, tres en línea o cualquier mezcla. Los tres trabajan a la vez.
+    Como un equipo de esquina con tres ayudantes: uno rápido que te da agua y grita ánimos, otro listo que te corrige la guardia, y un tercero de reserva por si alguno falla.
+    En Ajustes › Cerebros de IA, «Qué hace cada cerebro» reparte el trabajo: el rápido para las pullas y el locutor; el más listo para revisar tu código y para el entrenador. «Recomendado» lo reparte solo.
+    Si el cerebro de una tarea falla, contesta otro de los que haya.
+de:
+    Es gibt drei Plätze für Gehirne, und jeder nimmt jedes: drei lokale, drei online oder beliebig gemischt. Alle drei arbeiten gleichzeitig.
+    Wie ein Eckenteam mit drei Helfern: einer, der schnell Wasser reicht und anfeuert, einer, der klug deine Deckung korrigiert, und ein dritter in Reserve, falls einer ausfällt.
+    In Einstellungen › KI-Gehirne verteilt „Was jedes Gehirn macht“ die Arbeit: das schnelle für Sprüche und Sprecher, das klügere für die Code-Prüfung und den Trainer. „Empfohlen“ verteilt alles selbst.
+    Fällt das Gehirn einer Aufgabe aus, antwortet ein anderes.
+en:
+    There are three brain slots, and each takes any kind: three local, three online or any mix. All three work at the same time.
+    Like a corner team with three helpers: a quick one handing you water and cheering, a smart one fixing your guard, and a third in reserve in case one fails.
+    In Settings › AI brains, «What each brain does» shares out the work: the fast one for taunts and the announcer; the smarter one for reviewing your code and for the coach. «Recommended» does it for you.
+    If the brain for a task fails, another one answers.
+pseudo.es:
+    casilla 1 ← local rápido (pullas, locutor)
+    casilla 2 ← en línea listo (revisión, entrenador)
+    casilla 3 ← de reserva
+pseudo.de:
+    Platz 1 ← schnell, lokal (Sprüche, Sprecher)
+    Platz 2 ← klug, online (Prüfung, Trainer)
+    Platz 3 ← Reserve
+pseudo.en:
+    slot 1 ← fast local (taunts, announcer)
+    slot 2 ← smart online (review, coach)
+    slot 3 ← reserve
+ejemplo:
+
+=== despertar_cerebros
+nivel: 1
+tema: --
+guia: 8
+titulo.es: Despertar los cerebros
+titulo.de: Gehirne wecken
+titulo.en: Waking the brains
+claves.es: despertar, despertar los cerebros, no contesta, no responde, tarda mucho, pensando, cerebro dormido
+claves.de: aufwecken, gehirne wecken, antwortet nicht, dauert lange, denke nach, gehirn schlaft
+claves.en: wake up, wake the brains, not answering, doesn't answer, takes long, thinking, brain asleep
+ver: cerebro_local, tres_casillas, cerebro_ia
+es:
+    Los cerebros locales duermen para no gastar memoria y se despiertan solos la primera vez que hacen falta. Despertarse tarda de 20 segundos a un minuto; mientras, sale «Pensando…».
+    Es como el sparring que se echa la siesta en el vestuario: hasta que no lo llamas no sale, y sale bostezando.
+    Para no esperar en mitad de una pelea, despiértalos antes con «Probar el cerebro» en Ajustes. Si pasan 8 minutos sin usarse, se vuelven a dormir.
+    Si uno no despierta: mira la carpeta y el modelo, cierra programas que gasten mucha memoria y vuelve a probar.
+de:
+    Lokale Gehirne schlafen, um keinen Speicher zu verbrauchen, und wachen von selbst auf, wenn sie zum ersten Mal gebraucht werden. Das dauert 20 Sekunden bis eine Minute; so lange steht da „Denke nach …“.
+    Wie der Sparringspartner, der in der Kabine ein Nickerchen macht: Erst wenn du ihn rufst, kommt er, und zwar gähnend.
+    Damit du nicht mitten im Kampf wartest, weck sie vorher mit „Gehirn testen“ in den Einstellungen. Nach 8 Minuten ohne Nutzung schlafen sie wieder ein.
+    Wacht eins nicht auf: Prüf Ordner und Modell, schließ speicherhungrige Programme und probier es noch einmal.
+en:
+    Local brains sleep so as not to use memory and wake up by themselves the first time they're needed. Waking takes 20 seconds to a minute; meanwhile you'll see «Thinking…».
+    Like the sparring partner napping in the locker room: they don't come out until you call, and they come out yawning.
+    So you don't wait mid-fight, wake them beforehand with «Test brain» in Settings. After 8 minutes unused they go back to sleep.
+    If one won't wake: check the folder and the model, close memory-hungry programs and try again.
+pseudo.es:
+    SI el cerebro duerme:
+        despertarlo (20 s - 1 min)
+    contestar
+    SI pasan 8 min sin uso: dormirlo
+pseudo.de:
+    WENN das Gehirn schläft:
+        aufwecken (20 s - 1 min)
+    antworten
+    WENN 8 min ungenutzt: schlafen legen
+pseudo.en:
+    IF the brain is asleep:
+        wake it (20 s - 1 min)
+    answer
+    IF unused for 8 min: put it to sleep
+ejemplo:

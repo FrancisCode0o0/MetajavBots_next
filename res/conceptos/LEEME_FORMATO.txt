@@ -1,0 +1,36 @@
+# CONCEPTOS — Lo que explica el entrenador flotante (sin IA), de lo más básico a lo avanzado.
+# Un archivo por bloque; el juego los lee todos, en este orden:
+#   01_basico.txt · 02_control.txt · 03_objetos.txt · 04_intermedio.txt · 05_moderno.txt · 06_senior.txt · 07_juego.txt (el propio juego y los cerebros de IA)
+# Formato de cada concepto:
+#
+# === id_sin_espacios
+# nivel: 1            (1 = no sabe nada · 2 = primeros programas · 3 = objetos y colecciones · 4 = Java moderno · 5 = senior)
+# tema: 02            (el tema de res/datos/temas.txt que más se le parece, o «--»)
+# titulo.es: Variable
+# titulo.de: Variable
+# titulo.en: Variable
+# claves.es: variable, variables, guardar un valor, int x      (palabras con las que alguien lo preguntaría, separadas por comas)
+# claves.de: ...
+# claves.en: ...
+# guia: 2              (opcional: la página de la guía con dibujos que lo enseña; entonces el ejemplo puede ir vacío)
+# ver: tipo, asignacion          (ids de conceptos relacionados, separados por comas; de cualquier archivo)
+# es:
+#     Cada línea con 4 espacios delante es un párrafo.
+#     Otro párrafo.
+# de:
+#     ...
+# en:
+#     ...
+# pseudo.es:
+#     pseudocódigo en español (con 4 espacios delante; la sangría de más se conserva)
+# pseudo.de:
+#     ...
+# pseudo.en:
+#     ...
+# ejemplo:
+#     // código Java con la API en español (el juego la traduce sola a la del idioma del jugador)
+#     // Los comentarios, en los tres idiomas: «// español || deutsch || english» (el juego enseña el suyo).
+#
+# Cómo explica el entrenador: para quien no sabe nada, con metáforas de peleas de robots, con
+# pseudocódigo y un trocito de Java del propio juego; nunca la solución entera de un ejercicio.
+# Las líneas que empiezan por # son comentarios. Entre conceptos, una línea vacía.

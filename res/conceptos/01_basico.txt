@@ -1,0 +1,1309 @@
+# 01_basico.txt: lo más básico, para quien no ha programado nunca (programa, sentencias, variables, tipos, operadores, if, errores y el turno del juego)
+
+=== programa
+nivel: 1
+tema: 01
+titulo.es: Programa
+titulo.de: Programm
+titulo.en: Program
+claves.es: programa, que es un programa, como se ejecuta un programa, ejecutar, ejecucion, ejecutar un programa, orden de ejecucion, de arriba abajo, programar
+claves.de: programm, was ist ein programm, wie wird ein programm ausgeführt, ausführen, ausführung, programm ausführen, von oben nach unten, programmieren
+claves.en: program, what is a program, how does a program run, run a program, execute, execution order, top to bottom, programming
+ver: sentencia, compilar, turno, algoritmo
+es:
+    Un programa es una lista de instrucciones escritas para que un ordenador las cumpla. El ordenador no adivina ni improvisa: hace exactamente lo que pone, ni más ni menos.
+    Ejecutar un programa es ponerlo en marcha: el ordenador lee la primera instrucción, la cumple, pasa a la siguiente y así, de arriba abajo, una detrás de otra, hasta llegar al final.
+    Imagina a tu robot con la hoja de órdenes pegada en la frente: «avanza, gira, pega». No se salta ninguna ni cambia el orden, aunque el rival le esté bailando un tango delante. Si escribiste «pega» antes de «gira», pegará al aire con toda su alma.
+    En el juego, tu programa es la clase MiRobot. La arena no la lee una sola vez: en cada turno, unas 30 veces por segundo, llama a cadaTurno() y ejecuta lo que hay dentro, de la primera línea a la última; y cuando tu radar ve a un rival, ejecuta además alVerEnemigo(Enemigo e).
+    El fallo típico es creer que el robot entiende lo que querías decir. No: entiende lo que escribiste. Antes de pelear, lee tu código de arriba abajo como lo haría la máquina, una línea cada vez, y sabrás lo que va a hacer de verdad.
+de:
+    Ein Programm ist eine Liste von Anweisungen, die ein Computer ausführen soll. Er rät nicht und improvisiert nicht: Er tut genau das, was dasteht, nicht mehr und nicht weniger.
+    Ein Programm ausführen heißt, es in Gang zu setzen: Der Computer liest die erste Anweisung, erledigt sie, geht zur nächsten und so weiter, von oben nach unten, eine nach der anderen, bis zum Ende.
+    Stell dir deinen Roboter mit dem Befehlszettel auf der Stirn vor: „vorwärts, drehen, zuschlagen“. Er lässt keinen aus und vertauscht nichts, auch wenn der Gegner vor ihm Tango tanzt. Steht „zuschlagen“ vor „drehen“, haut er mit voller Hingabe in die Luft.
+    Im Spiel ist dein Programm die Klasse MiRobot. Die Arena liest sie nicht nur einmal: In jedem Zug, etwa 30-mal pro Sekunde, ruft sie cadaTurno (jedenZug) auf und führt aus, was darin steht, von der ersten bis zur letzten Zeile; sieht dein Radar einen Gegner, kommt noch alVerEnemigo (beiSicht) dazu.
+    Der typische Fehler: zu glauben, der Roboter verstehe, was du gemeint hast. Nein, er versteht, was du geschrieben hast. Lies deinen Code vor dem Kampf wie die Maschine, Zeile für Zeile von oben nach unten, dann weißt du, was er wirklich tun wird.
+en:
+    A program is a list of instructions written for a computer to carry out. The computer doesn't guess or improvise: it does exactly what is written, no more and no less.
+    Running (or executing) a program means setting it going: the computer reads the first instruction, does it, moves on to the next one and so on, top to bottom, one after another, until it reaches the end.
+    Picture your robot with its list of orders taped to its forehead: "move, turn, punch". It never skips one or swaps them, even if the rival is dancing the tango right in front of it. Write "punch" before "turn" and it will punch thin air with all its heart.
+    In the game, your program is the class MiRobot. The arena doesn't read it just once: every tick, about 30 times a second, it calls cadaTurno (onTick) and runs what is inside, from the first line to the last; and when your radar spots a rival, it also runs alVerEnemigo (onSeeEnemy).
+    The classic mistake is believing the robot understands what you meant. It doesn't: it understands what you wrote. Before a fight, read your code top to bottom the way the machine will, one line at a time, and you'll know what it is really going to do.
+pseudo.es:
+    CADA TURNO, de arriba abajo:
+        1. avanzar 50
+        2. girar 10
+        3. SI veo al rival:
+               atacar
+    y vuelta a empezar en el turno siguiente
+pseudo.de:
+    JEDEN ZUG, von oben nach unten:
+        1. vorwärts 50
+        2. drehen 10
+        3. WENN ich den Gegner sehe:
+               angreifen
+    und im nächsten Zug wieder von vorn
+pseudo.en:
+    EVERY TICK, top to bottom:
+        1. move ahead 50
+        2. turn 10
+        3. IF I see the rival:
+               attack
+    and start again on the next tick
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {          // la arena lo ejecuta unas 30 veces por segundo || die Arena führt das etwa 30-mal pro Sekunde aus || the arena runs this about 30 times a second
+            decir("¡En marcha!");          // primero esto || zuerst das || first this
+            avanzar(50);                   // luego esto || dann das || then this
+            girar(10);                     // y por último esto || und zuletzt das || and finally this
+        }
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {   // solo cuando el radar ve a alguien || nur wenn das Radar jemanden sieht || only when the radar sees someone
+            atacar();
+        }
+    }
+
+=== compilar
+nivel: 1
+tema: 01
+titulo.es: Compilar
+titulo.de: Kompilieren
+titulo.en: Compiling
+claves.es: compilar, compilacion, compilador, javac, codigo fuente, archivo .class, por que hay que compilar, que es compilar, boton compilar
+claves.de: kompilieren, kompilierung, compiler, javac, quellcode, .class datei, warum kompilieren, was ist kompilieren, knopf kompilieren
+claves.en: compile, compiling, compiler, javac, source code, .class file, why compile, what is compiling, compile button
+ver: programa, error_de_compilacion, jvm, bytecode
+es:
+    Compilar es traducir lo que tú escribes (el código fuente, en Java, que entienden las personas) a un idioma que la máquina pueda ejecutar. Lo hace un programa llamado compilador.
+    Es el inspector del taller: antes de dejar salir a tu robot al ring, revisa las piezas una a una. Si falta un tornillo (un ;) o una pieza no existe, no hay pelea: te devuelve el robot con una pegatina roja en el sitio exacto del fallo.
+    En Java, el compilador javac convierte MiRobot.java en MiRobot.class, que contiene bytecode: instrucciones sencillas que la máquina virtual de Java (la JVM) ejecuta en cualquier ordenador. En el juego no escribes javac: pulsas Compilar en el taller (o Ctrl+S) y, si compila bien, tu robot pelea con ese código nuevo.
+    El fallo típico es cambiar el código y salir a pelear sin compilar, o con errores: si no compila, tu robot sale en piloto automático, sin tus órdenes. Compila a menudo, después de cada cambio pequeño, y arregla el primer error rojo antes que los demás.
+de:
+    Kompilieren heißt übersetzen: Was du schreibst (der Quellcode in Java, den Menschen lesen können), wird in eine Sprache gebracht, die die Maschine ausführen kann. Das erledigt ein Programm namens Compiler.
+    Er ist der Prüfer in der Werkstatt: Bevor dein Roboter in den Ring darf, kontrolliert er jedes Teil. Fehlt eine Schraube (ein ;) oder gibt es ein Teil gar nicht, wird nicht gekämpft: Du bekommst den Roboter zurück, mit einem roten Aufkleber genau an der kaputten Stelle.
+    In Java macht der Compiler javac aus MiRobot.java eine MiRobot.class mit Bytecode: einfachen Befehlen, die die virtuelle Maschine von Java (die JVM) auf jedem Rechner ausführt. Im Spiel tippst du kein javac: Du drückst in der Werkstatt auf Kompilieren (oder Strg+S), und wenn alles passt, kämpft dein Roboter mit dem neuen Code.
+    Der typische Fehler: Code ändern und ohne Kompilieren oder trotz Fehlern in den Kampf gehen. Kompiliert er nicht, kämpft dein Roboter auf Autopilot, ohne deine Befehle. Kompiliere oft, nach jeder kleinen Änderung, und behebe den ersten roten Fehler vor allen anderen.
+en:
+    Compiling means translating what you write (the source code, in Java, which people can read) into a language the machine can run. A program called a compiler does it.
+    It's the workshop inspector: before your robot is allowed into the ring, it checks every part. If a screw is missing (a ;) or a part doesn't exist, there's no fight: you get the robot back with a red sticker on the exact spot of the problem.
+    In Java, the compiler javac turns MiRobot.java into MiRobot.class, which holds bytecode: simple instructions that the Java virtual machine (the JVM) runs on any computer. In the game you never type javac: you press Compile in the workshop (or Ctrl+S) and, if it compiles, your robot fights with the new code.
+    The classic mistake is changing the code and going to fight without compiling, or with errors: if it doesn't compile, your robot fights on autopilot, without your orders. Compile often, after every small change, and fix the first red error before the others.
+pseudo.es:
+    escribo MiRobot.java            (para personas)
+    pulso Compilar
+    SI hay marcas rojas:
+        arreglo y vuelvo a compilar
+    SI NO:
+        sale MiRobot.class          (para la máquina)
+        la JVM lo ejecuta en la arena
+pseudo.de:
+    ich schreibe MiRobot.java       (für Menschen)
+    ich drücke Kompilieren
+    WENN es rote Markierungen gibt:
+        reparieren und neu kompilieren
+    SONST:
+        heraus kommt MiRobot.class  (für die Maschine)
+        die JVM führt sie in der Arena aus
+pseudo.en:
+    I write MiRobot.java            (for people)
+    I press Compile
+    IF there are red marks:
+        fix them and compile again
+    ELSE:
+        out comes MiRobot.class     (for the machine)
+        the JVM runs it in the arena
+ejemplo:
+    // MiRobot.java: esto es el código fuente || MiRobot.java: das ist der Quellcode || MiRobot.java: this is the source code
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            avanzar(40);   // con su ; el compilador lo acepta || mit seinem ; akzeptiert es der Compiler || with its ; the compiler accepts it
+            girar(5);
+        }
+    }
+    // Compilar (Ctrl+S): MiRobot.java → MiRobot.class (bytecode) || Kompilieren (Strg+S): MiRobot.java → MiRobot.class (Bytecode) || Compile (Ctrl+S): MiRobot.java → MiRobot.class (bytecode)
+
+=== sentencia
+nivel: 1
+tema: 01
+titulo.es: Sentencia
+titulo.de: Anweisung
+titulo.en: Statement
+claves.es: sentencia, sentencias, punto y coma, que es una sentencia, instruccion, instrucciones, falta un punto y coma, orden completa
+claves.de: anweisung, anweisungen, semikolon, strichpunkt, was ist eine anweisung, semikolon vergessen, vollständiger befehl
+claves.en: statement, statements, semicolon, what is a statement, instruction, missing semicolon, complete order
+ver: programa, bloque, error_de_compilacion, llamar_metodo
+es:
+    Una sentencia es una orden completa, como una frase: «avanza 50», «guarda este número», «di hola». En Java casi todas terminan con un punto y coma ;.
+    El punto y coma es el «¡cambio!» del walkie-talkie del entrenador: hasta que no lo oye, el robot no sabe si la orden ha acabado. Sin él, «avanza 50 gira 10» le suena a un único grito raro y se queda quieto rascándose la antena.
+    En el juego, cada línea como avanzar(50); o decir("¡Hola!"); es una sentencia. Puedes poner dos en la misma línea (avanzar(50); girar(10);), pero se lee mejor una por línea. Las que abren llaves, como if (...) { } o el propio cadaTurno() { }, no llevan ; detrás de la llave.
+    El fallo típico es olvidar el ; del final: el compilador marca en rojo «';' expected», a menudo al final de la línea o en la siguiente, porque se da cuenta tarde. El otro, poner un ; justo después de if (...): eso cierra una orden vacía y lo de debajo se hace siempre.
+de:
+    Eine Anweisung ist ein vollständiger Befehl, wie ein Satz: „fahr 50 vorwärts“, „merk dir diese Zahl“, „sag hallo“. In Java enden fast alle mit einem Semikolon ;.
+    Das Semikolon ist das „Over!“ im Funkgerät des Trainers: Bis der Roboter es hört, weiß er nicht, ob der Befehl zu Ende ist. Ohne klingt „fahr 50 dreh 10“ für ihn wie ein einziger seltsamer Schrei, und er bleibt stehen und kratzt sich an der Antenne.
+    Im Spiel ist jede Zeile wie avanzar(50); oder decir("Hallo!"); eine Anweisung (auf Deutsch vorwaerts und sagen). Du kannst zwei in eine Zeile schreiben (avanzar(50); girar(10);, also drehen), lesbarer ist aber eine pro Zeile. Was geschweifte Klammern öffnet, wie if (...) { } oder cadaTurno (jedenZug) selbst, bekommt hinter der Klammer kein ;.
+    Der typische Fehler: das ; am Ende vergessen. Der Compiler markiert dann „';' expected“ in Rot, oft am Zeilenende oder erst in der nächsten Zeile, weil er es spät merkt. Der zweite: ein ; direkt hinter if (...). Das beendet einen leeren Befehl, und das Darunter passiert immer.
+en:
+    A statement is one complete order, like a sentence: "move 50", "remember this number", "say hello". In Java almost all of them end with a semicolon ;.
+    The semicolon is the coach's "over!" on the walkie-talkie: until the robot hears it, it doesn't know whether the order is finished. Without it, "move 50 turn 10" sounds like one strange yell, and the robot just stands there scratching its antenna.
+    In the game, every line like avanzar(50); or decir("Hi!"); is a statement (in English, ahead and say). You can put two on one line (avanzar(50); girar(10);, that is turn), but one per line reads better. Things that open braces, like if (...) { } or cadaTurno (onTick) itself, take no ; after the brace.
+    The classic mistake is forgetting the ; at the end: the compiler shows "';' expected" in red, often at the end of the line or on the next one, because it notices late. The other is putting a ; right after if (...): that ends an empty order, and whatever is below runs every time.
+pseudo.es:
+    CADA TURNO:
+        avanzar 50 ;
+        girar 10 ;
+        decir "¡aquí estoy!" ;
+    (cada ; es el final de una orden)
+pseudo.de:
+    JEDEN ZUG:
+        vorwärts 50 ;
+        drehen 10 ;
+        sagen "Hier bin ich!" ;
+    (jedes ; beendet einen Befehl)
+pseudo.en:
+    EVERY TICK:
+        move ahead 50 ;
+        turn 10 ;
+        say "Here I am!" ;
+    (each ; ends one order)
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        avanzar(50);                             // sentencia 1 || Anweisung 1 || statement 1
+        girar(10);                               // sentencia 2 || Anweisung 2 || statement 2
+        int vistos = enemigosVistos().size();    // también es una sentencia: guarda un número || auch eine Anweisung: speichert eine Zahl || also a statement: stores a number
+        decir("Veo " + vistos);                  // sentencia 4, con su ; al final || Anweisung 4, mit ; am Ende || statement 4, with its ; at the end
+    }
+
+=== comentario
+nivel: 1
+tema: 01
+titulo.es: Comentario
+titulo.de: Kommentar
+titulo.en: Comment
+claves.es: comentario, comentarios, comentar, comentar una linea, comentario de varias lineas, apagar una linea, nota en el codigo, javadoc
+claves.de: kommentar, kommentare, auskommentieren, zeile auskommentieren, mehrzeiliger kommentar, zeile ausschalten, notiz im code, javadoc
+claves.en: comment, comments, comment out, comment out a line, multi-line comment, switch off a line, note in the code, javadoc
+ver: sentencia, depurar, pseudocodigo
+es:
+    Un comentario es un texto dentro del código que Java no lee: es solo para las personas. Sirve para explicar por qué haces algo o para apagar una línea sin borrarla.
+    Son los garabatos del mecánico en la chapa del robot: «ojo, el brazo izquierdo tira a la derecha». El robot no sabe leer, así que no le afectan; pero el mecánico de mañana (tú) los agradecerá cuando no recuerde por qué el brazo va atado con cinta americana.
+    Con // el comentario va hasta el final de la línea; con /* y */ puede ocupar varias líneas o solo un trocito. En el taller, Ctrl+/ comenta o descomenta la línea en la que estás: perfecto para probar «¿y si mi robot no girase?».
+    El fallo típico es abrir /* y olvidarse del */: todo lo de debajo se vuelve comentario y el compilador se queja de cosas rarísimas. Y un comentario malo repite el código (// avanza 50); uno bueno cuenta el porqué (// me muevo para no ser un blanco fácil).
+de:
+    Ein Kommentar ist Text im Code, den Java nicht liest: Er ist nur für Menschen. Damit erklärst du, warum du etwas tust, oder schaltest eine Zeile aus, ohne sie zu löschen.
+    Kommentare sind das Gekritzel des Mechanikers auf dem Blech des Roboters: „Achtung, der linke Arm zieht nach rechts.“ Der Roboter kann nicht lesen, also stört es ihn nicht; aber der Mechaniker von morgen (du) ist dankbar, wenn er nicht mehr weiß, warum der Arm mit Panzerband festgeklebt ist.
+    Mit // geht der Kommentar bis zum Zeilenende; mit /* und */ kann er mehrere Zeilen umfassen oder nur ein Stückchen. In der Werkstatt kommentiert Strg+/ die Zeile, in der du stehst, ein oder aus: perfekt, um zu testen „Was wäre, wenn mein Roboter nicht dreht?“.
+    Der typische Fehler: /* öffnen und */ vergessen. Dann wird alles darunter zum Kommentar, und der Compiler beschwert sich über die seltsamsten Dinge. Und ein schlechter Kommentar wiederholt den Code (// fährt 50 vorwärts); ein guter erklärt das Warum (// ich bewege mich, damit ich kein leichtes Ziel bin).
+en:
+    A comment is text inside the code that Java doesn't read: it's only for people. You use it to explain why you do something, or to switch a line off without deleting it.
+    Comments are the mechanic's scribbles on the robot's bodywork: "careful, the left arm pulls to the right". The robot can't read, so they don't affect it; but tomorrow's mechanic (you) will be grateful when you can't remember why the arm is held on with duct tape.
+    With // the comment runs to the end of the line; with /* and */ it can span several lines or just a little piece. In the workshop, Ctrl+/ comments or uncomments the line you're on: perfect for testing "what if my robot didn't turn?".
+    The classic mistake is opening /* and forgetting the */: everything below becomes a comment and the compiler complains about the strangest things. And a bad comment repeats the code (// moves 50 ahead); a good one tells you why (// I keep moving so I'm not an easy target).
+pseudo.es:
+    CADA TURNO:
+        avanzar 60       (nota: moverme hace que me cueste más que me den)
+        girar 4
+        (apagado: girar 15)
+        girar la mira 25
+pseudo.de:
+    JEDEN ZUG:
+        vorwärts 60      (Notiz: in Bewegung trifft man mich schwerer)
+        drehen 4
+        (ausgeschaltet: drehen 15)
+        Visier drehen 25
+pseudo.en:
+    EVERY TICK:
+        move ahead 60    (note: moving makes me harder to hit)
+        turn 4
+        (switched off: turn 15)
+        turn the aim 25
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        // Círculos amplios: así cuesta más acertarme. || Weite Kreise: So trifft man mich schwerer. || Wide circles: that way I'm harder to hit.
+        avanzar(60);
+        girar(4);
+        // girar(15);   apagada: chocaba con las paredes || drehen(15);   ausgeschaltet: fuhr gegen die Wände || turn(15);   switched off: kept hitting the walls
+        apuntar(25 /* + 10 */);   // lo de entre /* y */ no cuenta: apunta 25 || was zwischen /* und */ steht, zählt nicht: zielt 25 || whatever is between /* and */ doesn't count: aims 25
+    }
+
+=== bloque
+nivel: 1
+tema: 01
+titulo.es: Bloque y llaves
+titulo.de: Block und Klammern
+titulo.en: Blocks and braces
+claves.es: bloque, bloques, llaves, llave, sangria, indentar, falta una llave, abrir y cerrar llaves, bloque de codigo
+claves.de: block, codeblock, geschweifte klammern, geschweifte klammer, einrückung, einrücken, klammer fehlt, klammern öffnen und schließen
+claves.en: block, code block, braces, curly braces, brace, indentation, indent, missing brace, open and close braces
+ver: sentencia, if_else, ambito, error_de_compilacion
+es:
+    Un bloque es un grupo de sentencias metidas entre llaves { y }. Todo lo que hay dentro va junto: se ejecuta entero o no se ejecuta.
+    Las llaves son las cuerdas del ring: lo que está dentro pelea en ese combate y lo de fuera mira desde la grada. Si una cuerda se suelta (falta una llave de cierre), el público se mete en el ring, el árbitro se sube a una silla y se suspende todo.
+    En Java, la clase MiRobot es un bloque, cadaTurno() { } es otro dentro de ella, y un if (...) { } dentro de cadaTurno es otro más, como muñecas rusas. La sangría (los espacios al principio de la línea) a Java le da igual, pero enseña a la vista qué va dentro de qué; en el taller, Tab y Mayús+Tab la ajustan.
+    El fallo típico es dejar una llave sin cerrar o cerrar una de más: el error suele salir al final del archivo («reached end of file while parsing»), lejos del sitio real. Escribe siempre la { y la } a la vez y luego rellena el hueco; y mantén la sangría ordenada, que delata la llave que sobra o falta.
+de:
+    Ein Block ist eine Gruppe von Anweisungen zwischen geschweiften Klammern { und }. Alles darin gehört zusammen: Es wird ganz ausgeführt oder gar nicht.
+    Die Klammern sind die Seile des Rings: Wer drinnen ist, kämpft in diesem Kampf, wer draußen ist, schaut von der Tribüne zu. Reißt ein Seil (fehlt eine schließende Klammer), stürmt das Publikum den Ring, der Ringrichter flüchtet auf einen Stuhl, und alles wird abgebrochen.
+    In Java ist die Klasse MiRobot ein Block, cadaTurno (jedenZug) mit seinen { } ein zweiter darin, und ein if (...) { } in cadaTurno noch einer, wie bei russischen Puppen. Die Einrückung (die Leerzeichen am Zeilenanfang) ist Java egal, zeigt dir aber auf einen Blick, was wo hineingehört; in der Werkstatt richten Tab und Umschalt+Tab sie aus.
+    Der typische Fehler: eine Klammer nicht schließen oder eine zu viel schließen. Der Fehler erscheint dann oft erst am Dateiende („reached end of file while parsing“), weit weg von der echten Stelle. Schreib { und } immer gleichzeitig und füll dann die Lücke; und halte die Einrückung sauber, sie verrät die überzählige oder fehlende Klammer.
+en:
+    A block is a group of statements wrapped in braces { and }. Everything inside belongs together: it runs as a whole or not at all.
+    The braces are the ropes of the ring: whoever is inside fights in that bout, whoever is outside watches from the stands. If a rope snaps (a closing brace is missing), the crowd pours into the ring, the referee climbs onto a chair and the whole thing is called off.
+    In Java, the class MiRobot is a block, cadaTurno (onTick) with its { } is another one inside it, and an if (...) { } inside cadaTurno is yet another, like Russian dolls. Indentation (the spaces at the start of a line) means nothing to Java, but it shows you at a glance what goes inside what; in the workshop, Tab and Shift+Tab adjust it.
+    The classic mistake is leaving a brace unclosed or closing one too many: the error often appears at the end of the file ("reached end of file while parsing"), far from the real spot. Always type the { and the } together and then fill the gap; and keep the indentation tidy, because it gives away the extra or missing brace.
+pseudo.es:
+    ROBOT {
+        CADA TURNO {
+            avanzar 50
+            SI mi blindaje es bajo {
+                retroceder 30
+            }
+        }
+    }
+pseudo.de:
+    ROBOTER {
+        JEDEN ZUG {
+            vorwärts 50
+            WENN meine Panzerung niedrig ist {
+                rückwärts 30
+            }
+        }
+    }
+pseudo.en:
+    ROBOT {
+        EVERY TICK {
+            move ahead 50
+            IF my armor is low {
+                move back 30
+            }
+        }
+    }
+ejemplo:
+    public class MiRobot extends Metajavbot {          // bloque 1: la clase || Block 1: die Klasse || block 1: the class
+        @Override
+        public void cadaTurno() {                      // bloque 2: el turno, dentro de la clase || Block 2: der Zug, in der Klasse || block 2: the tick, inside the class
+            avanzar(50);
+            if (blindaje() < 30) {                     // bloque 3, dentro del turno || Block 3, im Zug || block 3, inside the tick
+                retroceder(30);
+                decir("¡Me retiro!");
+            }                                          // cierra el 3 || schließt Block 3 || closes block 3
+        }                                              // cierra el 2 || schließt Block 2 || closes block 2
+    }                                                  // cierra el 1 || schließt Block 1 || closes block 1
+
+=== variable
+nivel: 1
+tema: 02
+titulo.es: Variable
+titulo.de: Variable
+titulo.en: Variable
+claves.es: variable, variables, que es una variable, guardar un valor, declarar, int x
+claves.de: variable, variablen, was ist eine variable, wert speichern, deklarieren
+claves.en: variable, variables, what is a variable, store a value, declare
+ver: tipo, asignacion, ambito
+es:
+    Una variable es una caja con nombre donde el programa guarda un valor para usarlo después: un número, un texto, un sí o un no.
+    Piensa en la pizarra del rincón del ring: el entrenador apunta «golpes recibidos: 3» y, cada vez que te dan, borra y escribe el número nuevo. La pizarra es la variable; lo escrito, su valor.
+    En Java se dice primero qué tipo de cosa guarda y luego su nombre: int golpes = 0; guarda un entero. Después se cambia con golpes = golpes + 1; y se lee escribiendo su nombre, por ejemplo en escribir(golpes).
+    El fallo típico: usarla antes de darle un valor, o declararla dentro de cadaTurno y extrañarse de que vuelva a 0 en cada turno (la caja se tira y se hace otra nueva). Si tiene que recordar entre turnos, declárala fuera, en la clase.
+de:
+    Eine Variable ist eine Kiste mit Namen, in der das Programm einen Wert für später aufbewahrt: eine Zahl, einen Text, ein Ja oder Nein.
+    Denk an die Tafel in der Ringecke: Der Trainer schreibt „kassierte Treffer: 3“, und bei jedem neuen Treffer wischt er die Zahl weg und schreibt die neue hin. Die Tafel ist die Variable, das Geschriebene ihr Wert.
+    In Java sagst du zuerst, welche Art von Ding hineinkommt, dann den Namen: int treffer = 0; speichert eine ganze Zahl. Ändern kannst du sie mit treffer = treffer + 1; und lesen, indem du ihren Namen schreibst, zum Beispiel in escribir(treffer).
+    Der typische Fehler: sie zu benutzen, bevor sie einen Wert hat, oder sie in cadaTurno (jedenZug) zu deklarieren und sich zu wundern, dass sie jeden Zug wieder 0 ist (die Kiste wird weggeworfen und neu gebaut). Soll sie sich etwas über die Züge hinweg merken, deklariere sie außerhalb, in der Klasse.
+en:
+    A variable is a labelled box where the program keeps a value to use later: a number, some text, a yes or a no.
+    Think of the whiteboard in the corner of the ring: the coach writes "hits taken: 3" and, every time you get hit, wipes it and writes the new number. The whiteboard is the variable; what is written on it is its value.
+    In Java you first say what kind of thing it holds, then its name: int hits = 0; holds a whole number. You change it with hits = hits + 1; and read it by writing its name, for example in escribir(hits).
+    The classic mistake: using it before giving it a value, or declaring it inside cadaTurno (onTick) and being surprised that it is back to 0 every tick (the box is thrown away and a new one is made). If it must remember between ticks, declare it outside, in the class.
+pseudo.es:
+    golpes ← 0
+    CADA TURNO:
+        SI me han dado:
+            golpes ← golpes + 1
+        escribir golpes
+pseudo.de:
+    treffer ← 0
+    JEDEN ZUG:
+        WENN ich getroffen wurde:
+            treffer ← treffer + 1
+        schreibe treffer
+pseudo.en:
+    hits ← 0
+    EVERY TICK:
+        IF I got hit:
+            hits ← hits + 1
+        write hits
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        int golpes = 0;                 // fuera: dura toda la ronda || außen: hält die ganze Runde || outside: lasts the whole round
+
+        @Override
+        public void alRecibirGolpe(Golpe g) {
+            golpes = golpes + 1;        // la pizarra, con el número nuevo || die Tafel mit der neuen Zahl || the whiteboard, with the new number
+            escribir("golpes: " + golpes);
+        }
+    }
+
+=== tipo
+nivel: 1
+tema: 02
+titulo.es: Tipos primitivos
+titulo.de: Primitive Typen
+titulo.en: Primitive types
+claves.es: tipo, tipos, tipos primitivos, tipo de dato, tipos de datos, primitivo, que tipo uso, long, float, byte
+claves.de: typ, typen, primitive typen, datentyp, datentypen, primitiv, welcher typ, long, float, byte
+claves.en: type, types, primitive types, data type, data types, primitive, which type should i use, long, float, byte
+ver: variable, int_y_double, boolean, char
+es:
+    El tipo dice qué clase de valor cabe en una variable: un número entero, uno con decimales, un sí o un no, una letra. Java quiere saberlo antes de guardar nada.
+    Es como el almacén de piezas del taller: el hueco del brazo solo admite brazos, y si intentas encajar una rueda, el mecánico te mira raro y se niega. Una variable int es un hueco con forma de número entero: ahí no entra 3.5 ni «hola».
+    Los tipos primitivos más usados son int (enteros: 3, -7), double (con decimales: 2.5), boolean (true o false) y char (una letra: 'A'). En el juego, energia() y blindaje() devuelven double, turnoActual() devuelve int y listoIzquierda() devuelve boolean. Hay más (long, float, byte, short), pero al principio con esos cuatro basta. El texto, String, no es primitivo: es un objeto.
+    El fallo típico es guardar un double en un int: int vida = blindaje(); no compila («possible lossy conversion from double to int»), porque se perderían los decimales. Usa double vida = blindaje(); o convierte a propósito con (int).
+de:
+    Der Typ sagt, welche Art von Wert in eine Variable passt: eine ganze Zahl, eine Kommazahl, ein Ja oder Nein, ein Buchstabe. Java will das wissen, bevor irgendetwas gespeichert wird.
+    Das ist wie im Teilelager der Werkstatt: In die Halterung für den Arm passt nur ein Arm, und wer ein Rad hineinstopfen will, erntet vom Mechaniker einen schiefen Blick und ein klares Nein. Eine int-Variable ist eine Halterung in Form einer ganzen Zahl: Da passen weder 3.5 noch „hallo“ hinein.
+    Die wichtigsten primitiven Typen sind int (ganze Zahlen: 3, -7), double (Kommazahlen: 2.5), boolean (true oder false) und char (ein Zeichen: 'A'). Im Spiel liefern energia (energie) und blindaje (panzerung) ein double, turnoActual (zug) ein int und listoIzquierda (bereitLinks) ein boolean. Es gibt noch mehr (long, float, byte, short), aber für den Anfang reichen diese vier. Text, also String, ist kein primitiver Typ, sondern ein Objekt.
+    Der typische Fehler: ein double in ein int stecken. int vida = blindaje(); kompiliert nicht („possible lossy conversion from double to int“), weil die Nachkommastellen verloren gingen. Nimm double vida = blindaje(); oder wandle absichtlich mit (int) um.
+en:
+    A type says what kind of value fits in a variable: a whole number, one with decimals, a yes or a no, a letter. Java wants to know before it stores anything.
+    It's like the parts store in the workshop: the arm socket only takes arms, and if you try to jam a wheel in, the mechanic gives you a funny look and refuses. An int variable is a socket shaped like a whole number: neither 3.5 nor "hello" will fit.
+    The most common primitive types are int (whole numbers: 3, -7), double (decimals: 2.5), boolean (true or false) and char (one character: 'A'). In the game, energia (energy) and blindaje (armor) return a double, turnoActual (tick) returns an int and listoIzquierda (readyLeft) returns a boolean. There are more (long, float, byte, short), but those four are enough to start with. Text, String, is not primitive: it's an object.
+    The classic mistake is putting a double into an int: int vida = blindaje(); doesn't compile ("possible lossy conversion from double to int"), because the decimals would be lost. Use double vida = blindaje(); or convert on purpose with (int).
+pseudo.es:
+    entero turno ← número del turno
+    decimal vida ← mi blindaje
+    sí/no listo ← ¿brazo izquierdo listo?
+    letra marca ← 'M'
+    SI listo:
+        atacar con la izquierda
+pseudo.de:
+    ganzzahl zug ← Nummer des Zugs
+    kommazahl leben ← meine Panzerung
+    ja/nein bereit ← linker Arm bereit?
+    zeichen marke ← 'M'
+    WENN bereit:
+        mit links angreifen
+pseudo.en:
+    whole tick ← number of the tick
+    decimal life ← my armor
+    yes/no ready ← left arm ready?
+    letter mark ← 'M'
+    IF ready:
+        attack with the left
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        int turno = turnoActual();           // entero || ganze Zahl || whole number
+        double vida = blindaje();            // con decimales || Kommazahl || with decimals
+        boolean listo = listoIzquierda();    // true o false || true oder false || true or false
+        char marca = 'M';                    // una sola letra, con comillas simples || ein Zeichen, in einfachen Anführungszeichen || one character, in single quotes
+        if (listo) atacarIzquierda();
+        escribir(marca + " turno " + turno + ": " + vida);
+    }
+
+=== asignacion
+nivel: 1
+tema: 02
+titulo.es: Asignación
+titulo.de: Zuweisung
+titulo.en: Assignment
+claves.es: asignacion, asignar, asignar un valor, cambiar el valor, dar un valor, signo igual, un igual o dos, igual igual
+claves.de: zuweisung, zuweisen, wert zuweisen, wert ändern, gleichheitszeichen, ein oder zwei gleichheitszeichen, doppeltes gleichheitszeichen
+claves.en: assignment, assign, assign a value, change the value, equals sign, single or double equals, one equals sign or two
+ver: variable, comparacion, incremento
+es:
+    Asignar es guardar un valor en una variable. En Java se hace con un solo signo =, y se lee «pasa a valer», no «es igual a».
+    Es el árbitro con el marcador: «golpes = golpes + 1» es él borrando el 3 y escribiendo un 4. No está preguntando si golpes vale 4: lo está obligando a valer 4, rotulador en mano y sin aceptar reclamaciones.
+    Java calcula primero lo de la derecha y luego lo mete en la variable de la izquierda: double cerca = e.distancia(); guarda la distancia al rival, y golpes = golpes + 1; suma uno. Para preguntar si dos cosas son iguales se usa ==, con dos signos: if (golpes == 3).
+    El fallo típico es mezclarlos: if (golpes = 3) no compila en Java (por suerte), y golpes == 3; como orden suelta tampoco. Regla: un = guarda, dos == preguntan. Y el orden importa: 0 = golpes; no tiene sentido, la caja va siempre a la izquierda.
+de:
+    Zuweisen heißt, einen Wert in einer Variable zu speichern. In Java geht das mit einem einzigen =, und man liest es als „bekommt den Wert“, nicht als „ist gleich“.
+    Das ist der Ringrichter an der Anzeigetafel: „treffer = treffer + 1“ heißt, er wischt die 3 weg und schreibt eine 4 hin. Er fragt nicht, ob treffer 4 ist: Er zwingt die Zahl dazu, 4 zu sein, Filzstift in der Hand, Einsprüche zwecklos.
+    Java rechnet zuerst die rechte Seite aus und steckt das Ergebnis dann in die Variable links: double nah = e.distancia(); speichert den Abstand zum Gegner (auf Deutsch entfernung), und treffer = treffer + 1; zählt eins dazu. Um zu fragen, ob zwei Dinge gleich sind, nimmt man ==, mit zwei Zeichen: if (treffer == 3).
+    Der typische Fehler: beides verwechseln. if (treffer = 3) kompiliert in Java nicht (zum Glück), und treffer == 3; als einzelner Befehl auch nicht. Merke: ein = speichert, zwei == fragen. Und die Reihenfolge zählt: 0 = treffer; ergibt keinen Sinn, die Kiste steht immer links.
+en:
+    Assigning means storing a value in a variable. In Java you do it with a single = sign, and you read it as "becomes", not "is equal to".
+    It's the referee at the scoreboard: "hits = hits + 1" is him wiping off the 3 and writing a 4. He isn't asking whether hits is 4: he's forcing it to be 4, marker in hand, no appeals accepted.
+    Java works out the right-hand side first and then puts it into the variable on the left: double close = e.distancia(); stores the distance to the rival (distance in English), and hits = hits + 1; adds one. To ask whether two things are equal you use ==, with two signs: if (hits == 3).
+    The classic mistake is mixing them up: if (hits = 3) doesn't compile in Java (luckily), and neither does hits == 3; as a lone order. Rule of thumb: one = stores, two == ask. And order matters: 0 = hits; makes no sense, the box always goes on the left.
+pseudo.es:
+    golpes ← 0                    (guardar)
+    AL RECIBIR GOLPE:
+        golpes ← golpes + 1       (cambiar: borrar y escribir)
+        SI golpes es 3:           (preguntar)
+            decir "¡Ya basta!"
+pseudo.de:
+    treffer ← 0                   (speichern)
+    BEI TREFFER:
+        treffer ← treffer + 1     (ändern: wegwischen und neu schreiben)
+        WENN treffer 3 ist:       (fragen)
+            sagen "Jetzt reicht's!"
+pseudo.en:
+    hits ← 0                      (store)
+    ON HIT:
+        hits ← hits + 1           (change: wipe and rewrite)
+        IF hits is 3:             (ask)
+            say "That's enough!"
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        int golpes = 0;                     // = guarda el primer valor || = speichert den ersten Wert || = stores the first value
+
+        @Override
+        public void alRecibirGolpe(Golpe g) {
+            golpes = golpes + 1;            // primero calcula la derecha, luego guarda || erst rechts ausrechnen, dann speichern || first works out the right side, then stores
+            if (golpes == 3) {              // == pregunta, no guarda || == fragt, speichert nicht || == asks, doesn't store
+                decir("¡Ya basta!");
+            }
+        }
+    }
+
+=== int_y_double
+nivel: 1
+tema: 02
+titulo.es: int y double
+titulo.de: int und double
+titulo.en: int and double
+claves.es: int, double, entero, numero entero, decimales, numero con decimales, division entera, 7/2, 7/2 da 3
+claves.de: int, double, ganze zahl, kommazahl, nachkommastellen, dezimalzahl, ganzzahlige division, 7/2
+claves.en: int, double, integer, whole number, decimal number, floating point, integer division, 7/2
+ver: tipo, operadores, casting, math
+es:
+    Java guarda los números de dos formas principales: int para los enteros (3, -12, 100) y double para los que llevan decimales (2.5, 0.75). Los decimales se escriben con punto, no con coma.
+    Un int es el contador de rondas: no existe la «ronda dos y media». Un double es la báscula del pesaje: 87.3 kilos de chatarra orgullosa. Si al contador de rondas le das media ronda, la tira a la papelera sin mirarla.
+    En el juego, turnoActual() y ronda() son int; energia(), blindaje(), x(), y() y e.distancia() son double. Cuidado con la división: 7 / 2 entre dos int da 3 (se tira la parte decimal), pero 7.0 / 2 da 3.5. Y % da el resto: 7 % 2 es 1.
+    El fallo típico es calcular una media o un porcentaje con int y que salga 0: int mitad = 1 / 2; vale 0. Pon algún double en la cuenta (1.0 / 2) o guarda el resultado en un double desde el principio. Y no compares double con == exacto: 0.1 + 0.2 no da justo 0.3.
+de:
+    Java speichert Zahlen hauptsächlich auf zwei Arten: int für ganze Zahlen (3, -12, 100) und double für Zahlen mit Nachkommastellen (2.5, 0.75). Die Nachkommastellen schreibt man mit Punkt, nicht mit Komma.
+    Ein int ist der Rundenzähler: Eine „Runde zweieinhalb“ gibt es nicht. Ein double ist die Waage beim Wiegen: 87.3 Kilo stolzer Schrott. Gibst du dem Rundenzähler eine halbe Runde, wirft er sie ungesehen in den Papierkorb.
+    Im Spiel sind turnoActual (zug) und ronda (runde) int; energia (energie), blindaje (panzerung), x(), y() und e.distancia() (entfernung) sind double. Vorsicht beim Teilen: 7 / 2 mit zwei int ergibt 3 (die Nachkommastellen fliegen raus), 7.0 / 2 dagegen 3.5. Und % liefert den Rest: 7 % 2 ist 1.
+    Der typische Fehler: einen Durchschnitt oder Prozentsatz mit int ausrechnen, und heraus kommt 0. int haelfte = 1 / 2; ist 0. Nimm ein double in die Rechnung (1.0 / 2) oder speichere das Ergebnis gleich in einem double. Und vergleiche double nicht mit exaktem ==: 0.1 + 0.2 ergibt nicht genau 0.3.
+en:
+    Java mainly stores numbers in two ways: int for whole numbers (3, -12, 100) and double for numbers with decimals (2.5, 0.75). Decimals are written with a point, never a comma.
+    An int is the round counter: there's no such thing as "round two and a half". A double is the weigh-in scale: 87.3 kilos of proud scrap metal. Hand the round counter half a round and it bins it without a second glance.
+    In the game, turnoActual (tick) and ronda (round) are int; energia (energy), blindaje (armor), x(), y() and e.distancia() (distance) are double. Careful with division: 7 / 2 between two ints gives 3 (the decimal part is dropped), but 7.0 / 2 gives 3.5. And % gives the remainder: 7 % 2 is 1.
+    The classic mistake is working out an average or a percentage with ints and getting 0: int half = 1 / 2; is 0. Put a double into the sum (1.0 / 2) or store the result in a double from the start. And don't compare doubles with an exact ==: 0.1 + 0.2 is not exactly 0.3.
+pseudo.es:
+    entero turnos ← 7
+    entero mitad ← turnos / 2          (da 3: se pierde el ,5)
+    decimal mitadBien ← turnos / 2.0   (da 3,5)
+    SI mi blindaje < 50.5:
+        retroceder
+pseudo.de:
+    ganzzahl zuege ← 7
+    ganzzahl haelfte ← zuege / 2         (ergibt 3: die ,5 geht verloren)
+    kommazahl haelfteGut ← zuege / 2.0   (ergibt 3,5)
+    WENN meine Panzerung < 50.5:
+        rückwärts
+pseudo.en:
+    whole ticks ← 7
+    whole half ← ticks / 2             (gives 3: the .5 is lost)
+    decimal goodHalf ← ticks / 2.0     (gives 3.5)
+    IF my armor < 50.5:
+        move back
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        int turno = turnoActual();           // entero: 0, 1, 2… || ganze Zahl: 0, 1, 2 … || whole number: 0, 1, 2…
+        double vida = blindaje();            // con decimales: 87.5 || mit Nachkommastellen: 87.5 || with decimals: 87.5
+        int mal = 7 / 2;                     // 3: int entre int tira los decimales || 3: int durch int wirft die Nachkommastellen weg || 3: int divided by int drops the decimals
+        double bien = 7 / 2.0;               // 3.5: con un double ya hay decimales || 3.5: ein double reicht für Nachkommastellen || 3.5: one double is enough to get decimals
+        if (turno % 100 == 0) escribir(vida + " " + mal + " " + bien);
+    }
+
+=== boolean
+nivel: 1
+tema: 02
+titulo.es: Boolean: sí o no
+titulo.de: Boolean: ja oder nein
+titulo.en: Boolean: yes or no
+claves.es: boolean, booleano, booleanos, true, false, verdadero, falso, verdadero o falso, valor logico
+claves.de: boolean, wahrheitswert, true, false, wahr, falsch, wahr oder falsch, ja oder nein
+claves.en: boolean, booleans, bool, true, false, true or false, yes or no, truth value
+ver: comparacion, operadores_logicos, if_else
+es:
+    Un boolean es un valor que solo puede ser una de dos cosas: true (verdadero) o false (falso). Es la respuesta a una pregunta de sí o no.
+    Es la lucecita del brazo del robot: verde, listo para pegar; roja, recargando. No hay luz «medio verde» ni «verde con matices»: el robot, poco amigo de la filosofía, solo entiende encendido o apagado.
+    En Java se declara con boolean listo = true;. Muchas cosas del juego lo devuelven: listoIzquierda() dice si el brazo izquierdo puede atacar, e.vuela() si el rival vuela y atacar() si el golpe ha salido. Las comparaciones también dan boolean: blindaje() < 30 vale true o false, y se usa directamente en un if.
+    El fallo típico es escribir if (listo == true): funciona, pero sobra; basta if (listo), y para lo contrario if (!listo). Y ojo: en Java true y false van en minúsculas y sin comillas; "true" entre comillas es un texto, no un boolean.
+de:
+    Ein boolean ist ein Wert, der nur eines von zwei Dingen sein kann: true (wahr) oder false (falsch). Er ist die Antwort auf eine Ja-oder-Nein-Frage.
+    Er ist das Lämpchen am Arm des Roboters: grün heißt schlagbereit, rot heißt Nachladen. Ein „halbgrünes“ oder „grün mit Nuancen“ gibt es nicht: Der Roboter hält nichts von Philosophie und kennt nur an oder aus.
+    In Java deklarierst du ihn mit boolean bereit = true;. Vieles im Spiel liefert einen: listoIzquierda (bereitLinks) sagt, ob der linke Arm angreifen kann, e.vuela() (fliegt), ob der Gegner fliegt, und atacar (angreifen), ob der Schlag rausging. Auch Vergleiche ergeben ein boolean: blindaje() < 30 (panzerung) ist true oder false und kommt direkt in ein if.
+    Der typische Fehler: if (bereit == true) schreiben. Das funktioniert, ist aber überflüssig; if (bereit) reicht, und fürs Gegenteil if (!bereit). Und Achtung: true und false schreibt man in Java klein und ohne Anführungszeichen; "true" in Anführungszeichen ist ein Text, kein boolean.
+en:
+    A boolean is a value that can only be one of two things: true or false. It's the answer to a yes-or-no question.
+    It's the little light on the robot's arm: green, ready to punch; red, reloading. There's no "half green" or "green with nuances": the robot has no time for philosophy and only understands on or off.
+    In Java you declare one with boolean ready = true;. Lots of things in the game return one: listoIzquierda (readyLeft) tells you whether the left arm can attack, e.vuela() (flies) whether the rival flies, and atacar (attack) whether the strike went out. Comparisons give booleans too: blindaje() < 30 (armor) is true or false, and goes straight into an if.
+    The classic mistake is writing if (ready == true): it works, but it's redundant; if (ready) is enough, and for the opposite, if (!ready). And watch out: in Java true and false are lowercase and have no quotes; "true" in quotes is text, not a boolean.
+pseudo.es:
+    sí/no listo ← ¿brazo izquierdo listo?
+    sí/no enApuros ← mi blindaje < 30
+    SI listo Y NO enApuros:
+        atacar con la izquierda
+    SI NO, SI enApuros:
+        retroceder
+pseudo.de:
+    ja/nein bereit ← linker Arm bereit?
+    ja/nein inNot ← meine Panzerung < 30
+    WENN bereit UND NICHT inNot:
+        mit links angreifen
+    SONST, WENN inNot:
+        rückwärts
+pseudo.en:
+    yes/no ready ← left arm ready?
+    yes/no inTrouble ← my armor < 30
+    IF ready AND NOT inTrouble:
+        attack with the left
+    ELSE, IF inTrouble:
+        move back
+ejemplo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        boolean listo = listoIzquierda();      // true: el brazo puede pegar || true: der Arm kann zuschlagen || true: the arm can strike
+        boolean enApuros = blindaje() < 30;    // una comparación también da boolean || ein Vergleich ergibt auch ein boolean || a comparison gives a boolean too
+        if (listo && !enApuros) {              // sin == true: basta el nombre || ohne == true: der Name reicht || no == true: the name is enough
+            apuntarHacia(e.angulo());
+            atacarIzquierda();
+        } else if (enApuros) {
+            retroceder(40);
+        }
+    }
+
+=== operadores
+nivel: 1
+tema: 03
+titulo.es: Operadores aritméticos
+titulo.de: Rechenoperatoren
+titulo.en: Arithmetic operators
+claves.es: operadores, operadores aritmeticos, suma, resta, multiplicacion, division, resto, modulo, hacer cuentas, prioridad de operadores
+claves.de: operatoren, rechenoperatoren, arithmetische operatoren, addition, subtraktion, multiplikation, division, rest, modulo, punkt vor strich
+claves.en: operators, arithmetic operators, addition, subtraction, multiplication, division, remainder, modulo, modulus, operator precedence
+ver: int_y_double, incremento, math, comparacion
+es:
+    Los operadores son los signos para hacer cuentas: + suma, - resta, * multiplica, / divide y % da el resto de una división. Con ellos se escriben expresiones, como 2 + 3 * 4.
+    Son las teclas de la calculadora que el entrenador lleva en el bolsillo del chándal: «la distancia, menos el alcance del brazo, por dos». El robot no sabe contar con los dedos (tiene pinzas), pero con estas cinco teclas resuelve cualquier cuenta de la pelea.
+    Como en el colegio, * / y % van antes que + y -: 2 + 3 * 4 da 14, y (2 + 3) * 4 da 20. En el juego, avanzar(e.distancia() - 50); se acerca hasta quedarse a 50, y turnoActual() % 30 == 0 es cierto una vez de cada 30 turnos, más o menos una vez por segundo. El + también pega textos: "vida: " + blindaje().
+    El fallo típico es olvidar la prioridad: e.distancia() - 50 / 2 resta 25, no la mitad de todo. Ante la duda, pon paréntesis. El otro: "1" + 2 da "12" (texto pegado), no 3.
+de:
+    Operatoren sind die Zeichen zum Rechnen: + addiert, - subtrahiert, * multipliziert, / teilt, und % liefert den Rest einer Division. Damit baust du Ausdrücke wie 2 + 3 * 4.
+    Sie sind die Tasten des Taschenrechners, den der Trainer in der Trainingsjacke trägt: „Abstand minus Armreichweite, mal zwei.“ Der Roboter kann nicht an den Fingern abzählen (er hat Zangen), aber mit diesen fünf Tasten löst er jede Rechnung im Kampf.
+    Wie in der Schule gilt Punkt vor Strich: * / und % kommen vor + und -. 2 + 3 * 4 ergibt 14, (2 + 3) * 4 ergibt 20. Im Spiel fährt avanzar(e.distancia() - 50); (vorwaerts, entfernung) heran, bis noch 50 fehlen, und turnoActual() % 30 == 0 (zug) ist einmal alle 30 Züge wahr, also etwa einmal pro Sekunde. Das + klebt auch Texte zusammen: "Leben: " + blindaje() (panzerung).
+    Der typische Fehler: den Vorrang vergessen. e.distancia() - 50 / 2 zieht 25 ab, nicht die Hälfte von allem. Im Zweifel: Klammern setzen. Der andere: "1" + 2 ergibt "12" (zusammengeklebter Text), nicht 3.
+en:
+    Operators are the signs for doing sums: + adds, - subtracts, * multiplies, / divides and % gives the remainder of a division. With them you write expressions, like 2 + 3 * 4.
+    They're the keys on the calculator the coach keeps in his tracksuit pocket: "the distance, minus the arm's reach, times two". The robot can't count on its fingers (it has pincers), but with these five keys it solves every sum in the fight.
+    Just like at school, * / and % come before + and -: 2 + 3 * 4 gives 14, and (2 + 3) * 4 gives 20. In the game, avanzar(e.distancia() - 50); (ahead, distance) closes in until it's 50 away, and turnoActual() % 30 == 0 (tick) is true once every 30 ticks, roughly once a second. The + also glues text together: "life: " + blindaje() (armor).
+    The classic mistake is forgetting precedence: e.distancia() - 50 / 2 subtracts 25, not half of the whole thing. When in doubt, add brackets. The other one: "1" + 2 gives "12" (glued text), not 3.
+pseudo.es:
+    AL VER AL RIVAL:
+        falta ← su distancia - 50
+        SI falta > 0:
+            avanzar falta
+        SI turno % 30 es 0:            (una vez por segundo)
+            escribir la media de blindajes
+pseudo.de:
+    BEI SICHT DES GEGNERS:
+        fehlt ← sein Abstand - 50
+        WENN fehlt > 0:
+            vorwärts um fehlt
+        WENN zug % 30 gleich 0 ist:    (einmal pro Sekunde)
+            Durchschnitt der Panzerungen ausgeben
+pseudo.en:
+    ON SEEING THE RIVAL:
+        gap ← their distance - 50
+        IF gap > 0:
+            move ahead by gap
+        IF tick % 30 is 0:             (once a second)
+            print the average armor
+ejemplo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        double falta = e.distancia() - 50;                 // resta: lo que falta para quedar a 50 || Minus: was fehlt, bis ich bei 50 bin || minus: how far until I'm 50 away
+        if (falta > 0) avanzar(falta);
+        double media = (blindaje() + e.blindaje()) / 2;    // paréntesis: primero suma, luego divide || Klammern: erst addieren, dann teilen || brackets: add first, then divide
+        if (turnoActual() % 30 == 0) {                     // resto 0: una vez cada 30 turnos || Rest 0: einmal alle 30 Züge || remainder 0: once every 30 ticks
+            escribir("media de blindaje: " + media);
+        }
+    }
+
+=== comparacion
+nivel: 1
+tema: 03
+titulo.es: Comparaciones
+titulo.de: Vergleiche
+titulo.en: Comparisons
+claves.es: comparacion, comparaciones, comparar, comparar numeros, mayor que, menor que, mayor o igual, menor o igual, distinto de, operadores de comparacion
+claves.de: vergleich, vergleiche, vergleichen, zahlen vergleichen, größer als, kleiner als, größer gleich, kleiner gleich, ungleich, vergleichsoperatoren
+claves.en: comparison, comparisons, compare, compare numbers, greater than, less than, greater or equal, less or equal, not equal, comparison operators
+ver: boolean, asignacion, if_else, operadores_logicos
+es:
+    Comparar es preguntar cómo es un valor frente a otro: ¿es mayor?, ¿menor?, ¿igual?, ¿distinto? La respuesta siempre es true o false.
+    Es el pesaje antes del combate: «¿pesa más el Destructor 3000 que la Tostadora Furiosa?». El juez no da opiniones ni hace chistes: solo dice sí o no, y luego se va a merendar.
+    En Java: < menor, > mayor, <= menor o igual, >= mayor o igual, == igual y != distinto. En el juego, if (e.distancia() < 80) atacar(); pega solo si el rival está cerca, e if (blindaje() <= 20) retroceder(50); huye cuando queda poco blindaje.
+    El fallo típico es usar = en vez de == (eso guarda, no compara) y comparar textos con ==: para String usa equals, como e.nombre().equals("Tostadora"). Ojo también con 0 < x < 10, que en Java no vale: hay que escribir x > 0 && x < 10.
+de:
+    Vergleichen heißt fragen, wie ein Wert im Verhältnis zu einem anderen steht: größer? kleiner? gleich? verschieden? Die Antwort ist immer true oder false.
+    Das ist das Wiegen vor dem Kampf: „Ist der Zerstörer 3000 schwerer als der Wütende Toaster?“ Der Kampfrichter äußert keine Meinung und macht keine Witze: Er sagt nur ja oder nein und geht dann Kaffee trinken.
+    In Java: < kleiner, > größer, <= kleiner oder gleich, >= größer oder gleich, == gleich und != ungleich. Im Spiel schlägt if (e.distancia() < 80) atacar(); (entfernung, angreifen) nur zu, wenn der Gegner nah ist, und if (blindaje() <= 20) retroceder(50); (panzerung, rueckwaerts) flieht, wenn kaum noch Panzerung übrig ist.
+    Der typische Fehler: = statt == benutzen (das speichert, statt zu vergleichen) und Texte mit == vergleichen. Für String nimmst du equals, etwa e.nombre().equals("Toaster") (name). Vorsicht auch bei 0 < x < 10: Das geht in Java nicht, du musst x > 0 && x < 10 schreiben.
+en:
+    Comparing means asking how one value stands against another: is it bigger? smaller? equal? different? The answer is always true or false.
+    It's the weigh-in before the fight: "does the Destroyer 3000 weigh more than the Furious Toaster?". The judge gives no opinions and cracks no jokes: just yes or no, and then off to lunch.
+    In Java: < less than, > greater than, <= less or equal, >= greater or equal, == equal and != not equal. In the game, if (e.distancia() < 80) atacar(); (distance, attack) only strikes when the rival is close, and if (blindaje() <= 20) retroceder(50); (armor, back) runs away when armor is running out.
+    The classic mistake is using = instead of == (that stores, it doesn't compare) and comparing text with ==: for a String use equals, as in e.nombre().equals("Toaster") (name). Also beware of 0 < x < 10, which isn't valid Java: you have to write x > 0 && x < 10.
+pseudo.es:
+    AL VER AL RIVAL:
+        SI su distancia < 80:
+            atacar
+        SI mi blindaje ≤ 20:
+            retroceder 50
+        SI su blindaje > el mío:
+            decir "¡Me lleva ventaja!"
+pseudo.de:
+    BEI SICHT DES GEGNERS:
+        WENN sein Abstand < 80:
+            angreifen
+        WENN meine Panzerung ≤ 20:
+            rückwärts 50
+        WENN seine Panzerung > meine:
+            sagen "Er liegt vorn!"
+pseudo.en:
+    ON SEEING THE RIVAL:
+        IF their distance < 80:
+            attack
+        IF my armor ≤ 20:
+            move back 50
+        IF their armor > mine:
+            say "They're ahead!"
+ejemplo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        if (e.distancia() < 80) {                     // < menor que || < kleiner als || < less than
+            apuntarHacia(e.angulo());
+            atacar();
+        }
+        if (blindaje() <= 20) retroceder(50);         // <= menor o igual || <= kleiner oder gleich || <= less than or equal
+        if (e.blindaje() > blindaje()) {              // > mayor que: él va mejor || > größer als: er steht besser da || > greater than: they're doing better
+            decir("¡Me lleva ventaja!");
+        }
+        if (e.blindaje() == blindaje()) escribir("empate");   // == compara y da true o false || == vergleicht und ergibt true oder false || == compares and gives true or false
+    }
+
+=== operadores_logicos
+nivel: 1
+tema: 04
+titulo.es: Y, O, NO lógicos
+titulo.de: Logisches UND, ODER, NICHT
+titulo.en: Logical AND, OR, NOT
+claves.es: operadores logicos, y logico, o logico, no logico, negacion, varias condiciones, dos condiciones a la vez, combinar condiciones
+claves.de: logische operatoren, logisches und, logisches oder, logisches nicht, negation, mehrere bedingungen, bedingungen verknüpfen, zwei bedingungen
+claves.en: logical operators, logical and, logical or, logical not, negation, several conditions, combine conditions, two conditions at once
+ver: boolean, comparacion, if_else
+es:
+    Los operadores lógicos juntan varias preguntas de sí o no en una sola: && es «y» (tienen que cumplirse las dos), || es «o» (basta con una) y ! es «no» (le da la vuelta).
+    Es el reglamento del árbitro: «solo puedes pegar si ha sonado la campana Y el rival está delante». «Puedes pedir tiempo si estás roto O si el rival se ha dormido». Y el «NO» es lo que te grita cuando vas a morder la antena del contrario.
+    En el juego, if (listoIzquierda() && e.distancia() < 80) atacarIzquierda(); pega solo si el brazo está listo y el rival está cerca; if (blindaje() < 20 || enemigosVistos().size() > 2) retroceder(60); huye por cualquiera de los dos motivos; y if (!e.vuela()) se fija solo en los que van por el suelo.
+    El fallo típico es usar || cuando querías &&: if (d > 10 || d < 50) es verdad casi siempre. Léelo en voz alta con «y» y «o» y piensa si de verdad pides las dos cosas. Un detalle útil: Java no mira la segunda parte si la primera ya decide (si la primera de un && es false, se para ahí).
+de:
+    Logische Operatoren fassen mehrere Ja-oder-Nein-Fragen zu einer zusammen: && heißt „und“ (beides muss stimmen), || heißt „oder“ (eins reicht), und ! heißt „nicht“ (dreht es um).
+    Das ist das Regelbuch des Ringrichters: „Zuschlagen nur, wenn der Gong ertönt ist UND der Gegner vor dir steht.“ „Auszeit nur, wenn du kaputt bist ODER der Gegner eingeschlafen ist.“ Und das „NICHT“ brüllt er, wenn du gerade in die Antenne des Gegners beißen willst.
+    Im Spiel schlägt if (listoIzquierda() && e.distancia() < 80) atacarIzquierda(); (bereitLinks, entfernung, angriffLinks) nur zu, wenn der Arm bereit und der Gegner nah ist; if (blindaje() < 20 || enemigosVistos().size() > 2) retroceder(60); (panzerung, gesehen, rueckwaerts) flieht aus einem der beiden Gründe; und if (!e.vuela()) (fliegt) achtet nur auf die, die am Boden fahren.
+    Der typische Fehler: || nehmen, wo du && meinst. if (d > 10 || d < 50) ist fast immer wahr. Lies es laut mit „und“ und „oder“ vor und überleg, ob du wirklich beides verlangst. Nützlich zu wissen: Java prüft den zweiten Teil gar nicht, wenn der erste schon entscheidet (ist bei && der erste false, ist dort Schluss).
+en:
+    Logical operators join several yes-or-no questions into one: && means "and" (both must hold), || means "or" (one is enough) and ! means "not" (it flips the answer).
+    It's the referee's rulebook: "you may only punch once the bell has rung AND the rival is in front of you". "You may call a time-out if you're broken OR the rival has fallen asleep". And the "NOT" is what he yells when you're about to bite your opponent's antenna.
+    In the game, if (listoIzquierda() && e.distancia() < 80) atacarIzquierda(); (readyLeft, distance, attackLeft) only strikes if the arm is ready and the rival is close; if (blindaje() < 20 || enemigosVistos().size() > 2) retroceder(60); (armor, seenEnemies, back) runs away for either reason; and if (!e.vuela()) (flies) only cares about the ones on the ground.
+    The classic mistake is using || when you meant &&: if (d > 10 || d < 50) is true almost always. Read it out loud with "and" and "or" and ask yourself whether you really want both. A handy detail: Java doesn't look at the second part if the first one already decides (if the first half of an && is false, it stops there).
+pseudo.es:
+    AL VER AL RIVAL:
+        SI brazo listo Y rival cerca:
+            atacar con la izquierda
+        SI blindaje bajo O más de 2 rivales:
+            retroceder 60
+        SI el rival NO vuela:
+            decir "ese va por el suelo"
+pseudo.de:
+    BEI SICHT DES GEGNERS:
+        WENN Arm bereit UND Gegner nah:
+            mit links angreifen
+        WENN Panzerung niedrig ODER mehr als 2 Gegner:
+            rückwärts 60
+        WENN der Gegner NICHT fliegt:
+            sagen "der fährt am Boden"
+pseudo.en:
+    ON SEEING THE RIVAL:
+        IF arm ready AND rival close:
+            attack with the left
+        IF armor low OR more than 2 rivals:
+            move back 60
+        IF the rival does NOT fly:
+            say "that one's on the ground"
+ejemplo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        if (listoIzquierda() && e.distancia() < 80) {           // y: las dos a la vez || und: beides zugleich || and: both at once
+            apuntarHacia(e.angulo());
+            atacarIzquierda();
+        }
+        if (blindaje() < 20 || enemigosVistos().size() > 2) {   // o: basta con una || oder: eins reicht || or: one is enough
+            retroceder(60);
+        }
+        if (!e.vuela()) decir("Ese va por el suelo");           // no: le da la vuelta || nicht: dreht es um || not: flips it
+    }
+
+=== if_else
+nivel: 1
+tema: 04
+titulo.es: if y else
+titulo.de: if und else
+titulo.en: if and else
+claves.es: if, else, if else, else if, condicional, condicionales, si pasa esto haz aquello, tomar decisiones
+claves.de: if, else, if else, else if, bedingung, wenn dann, verzweigung, entscheidungen treffen
+claves.en: if, else, if else, else if, conditional, if statement, if then, make decisions
+ver: comparacion, boolean, bloque, switch
+es:
+    if es la forma de que el programa decida: «si pasa esto, haz aquello». Con else añades lo que hay que hacer cuando no pasa.
+    Es el robot en su esquina del ring, mirando de reojo: si el rival está cerca, puñetazo; si no, a dar vueltas silbando como si nada. Con else if encadenas más casos, como un portero de discoteca con una lista de normas muy larga y muy rara.
+    En Java: if (condición) { … } else { … }. La condición va entre paréntesis y tiene que dar true o false. En el juego: if (e.distancia() < 80) { atacar(); } else { avanzar(e.distancia()); }. Con else if, Java prueba los casos en orden y hace solo el primero que se cumple.
+    El fallo típico es poner un ; tras el paréntesis: if (blindaje() < 30); retroceder(50); retrocede SIEMPRE, porque el ; cierra un if vacío. Otro: olvidar las llaves y creer que dos líneas van dentro cuando solo va la primera. Usa siempre { }, aunque sea una sola línea.
+de:
+    Mit if trifft das Programm Entscheidungen: „Wenn das passiert, tu jenes.“ Mit else ergänzt du, was zu tun ist, wenn es nicht passiert.
+    Das ist der Roboter in seiner Ringecke, der aus dem Augenwinkel schaut: Ist der Gegner nah, gibt's einen Haken; sonst dreht er pfeifend seine Runden, als wäre nichts. Mit else if hängst du weitere Fälle an, wie ein Türsteher mit einer sehr langen und sehr seltsamen Regelliste.
+    In Java: if (Bedingung) { … } else { … }. Die Bedingung steht in Klammern und muss true oder false ergeben. Im Spiel: if (e.distancia() < 80) { atacar(); } else { avanzar(e.distancia()); } (entfernung, angreifen, vorwaerts). Bei else if prüft Java die Fälle der Reihe nach und führt nur den ersten aus, der zutrifft.
+    Der typische Fehler: ein ; hinter der Klammer. if (blindaje() < 30); retroceder(50); (panzerung, rueckwaerts) fährt IMMER zurück, weil das ; ein leeres if abschließt. Ein anderer: die geschweiften Klammern weglassen und glauben, zwei Zeilen gehörten dazu, obwohl nur die erste dazugehört. Setz immer { }, auch bei einer einzigen Zeile.
+en:
+    if is how a program makes decisions: "if this happens, do that". With else you add what to do when it doesn't happen.
+    It's the robot in its corner of the ring, watching out of the corner of its eye: if the rival is close, punch; otherwise, wander around whistling as if nothing were going on. With else if you chain more cases, like a nightclub bouncer with a very long and very strange list of rules.
+    In Java: if (condition) { … } else { … }. The condition goes in brackets and must give true or false. In the game: if (e.distancia() < 80) { atacar(); } else { avanzar(e.distancia()); } (distance, attack, ahead). With else if, Java tries the cases in order and only runs the first one that holds.
+    The classic mistake is putting a ; after the bracket: if (blindaje() < 30); retroceder(50); (armor, back) ALWAYS moves back, because the ; closes an empty if. Another is leaving out the braces and thinking two lines are inside when only the first is. Always use { }, even for a single line.
+pseudo.es:
+    AL VER AL RIVAL:
+        SI está cerca:
+            atacar
+        SI NO, SI mi blindaje es bajo:
+            retroceder
+        SI NO:
+            avanzar hacia él
+pseudo.de:
+    BEI SICHT DES GEGNERS:
+        WENN er nah ist:
+            angreifen
+        SONST, WENN meine Panzerung niedrig ist:
+            rückwärts
+        SONST:
+            auf ihn zufahren
+pseudo.en:
+    ON SEEING THE RIVAL:
+        IF they're close:
+            attack
+        ELSE, IF my armor is low:
+            move back
+        ELSE:
+            move towards them
+ejemplo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        apuntarHacia(e.angulo());
+        if (e.distancia() < 80) {             // si está cerca… || wenn er nah ist … || if they're close…
+            atacar();
+        } else if (blindaje() < 30) {         // …si no, si voy mal… || … sonst, wenn es mir schlecht geht … || …else, if I'm in trouble…
+            retroceder(50);
+        } else {                              // …y si no pasa nada de eso, adelante || … und sonst: vorwärts || …and otherwise, forward
+            girarHacia(e.angulo());
+            avanzar(e.distancia());
+        }
+    }
+
+=== llamar_metodo
+nivel: 1
+tema: 06
+titulo.es: Llamar a un método
+titulo.de: Methode aufrufen
+titulo.en: Calling a method
+claves.es: llamar a un metodo, llamar un metodo, llamada a un metodo, invocar, avanzar(50), parentesis, para que son los parentesis, como se usa una orden
+claves.de: methode aufrufen, methodenaufruf, aufruf, aufrufen, vorwaerts(50), klammern, wozu die klammern, befehl benutzen
+claves.en: call a method, calling a method, method call, invoke, ahead(50), parentheses, what are the parentheses for, how to use an order
+ver: metodo, parametro, return, sentencia
+es:
+    Llamar a un método es pedirle a un trozo de código ya hecho que haga su trabajo. Se escribe su nombre seguido de paréntesis, y dentro van los datos que necesita: avanzar(50).
+    Es pulsar un botón del mando del robot: «avanzar», «girar», «pegar». No necesitas saber qué engranajes se mueven por dentro; solo pulsar el botón correcto y decirle cuánto. Gritarle «¡avanza!» sin paréntesis es como pulsar el aire con mucha convicción.
+    El juego te da un montón: avanzar(50) avanza 50, girar(90) gira 90 grados, apuntarHacia(e.angulo()) apunta al rival y atacar() pega (sin datos, pero con sus paréntesis vacíos). Algunos además contestan algo y puedes guardarlo: double vida = blindaje();, o e.distancia(), con un punto, para preguntárselo al rival. Java también tiene los suyos: Math.max(3, 7) da 7.
+    El fallo típico es olvidar los paréntesis (atacar; no compila), escribir mal el nombre o las mayúsculas (Avanzar(50) no existe) o darle datos que no espera (avanzar("mucho")). En el taller, F1 sobre una palabra te enseña qué pide cada método.
+de:
+    Eine Methode aufrufen heißt, ein fertiges Stück Code zu bitten, seine Arbeit zu machen. Du schreibst ihren Namen, dahinter Klammern, und in die Klammern kommen die Angaben, die sie braucht: avanzar(50) (auf Deutsch vorwaerts(50)).
+    Das ist wie ein Knopf auf der Fernbedienung des Roboters: „vorwärts“, „drehen“, „zuschlagen“. Welche Zahnräder sich drinnen drehen, musst du nicht wissen; du drückst nur den richtigen Knopf und sagst, wie viel. „Vorwärts!“ ohne Klammern zu brüllen ist, als würdest du sehr überzeugt in die Luft drücken.
+    Das Spiel gibt dir jede Menge davon: girar(90) (drehen) dreht um 90 Grad, apuntarHacia(e.angulo()) (zielenNach, winkel) zielt auf den Gegner, und atacar() (angreifen) schlägt zu, ganz ohne Angaben, aber mit leeren Klammern. Manche antworten auch, und du kannst die Antwort speichern: double vida = blindaje(); (panzerung), oder e.distancia() (entfernung) mit Punkt, um den Gegner zu fragen. Java hat auch eigene: Math.max(3, 7) ergibt 7.
+    Der typische Fehler: die Klammern vergessen (atacar; kompiliert nicht), den Namen oder die Großschreibung falsch tippen (Avanzar(50) gibt es nicht) oder Angaben übergeben, die sie nicht erwartet (avanzar("viel")). In der Werkstatt zeigt dir F1 auf einem Wort, was jede Methode verlangt.
+en:
+    Calling a method means asking a ready-made piece of code to do its job. You write its name followed by brackets, and inside go the values it needs: avanzar(50) (ahead(50) in English).
+    It's pressing a button on the robot's remote: "move", "turn", "punch". You don't need to know which cogs spin inside; you just press the right button and say how much. Yelling "move!" without brackets is like jabbing at thin air with great conviction.
+    The game gives you loads of them: girar(90) (turn) turns 90 degrees, apuntarHacia(e.angulo()) (aimTo, angle) aims at the rival and atacar() (attack) strikes, with no values but still with its empty brackets. Some also give you an answer you can keep: double vida = blindaje(); (armor), or e.distancia() (distance), with a dot, to ask the rival. Java has its own too: Math.max(3, 7) gives 7.
+    The classic mistake is forgetting the brackets (atacar; doesn't compile), misspelling the name or its capitals (Avanzar(50) doesn't exist) or giving it values it doesn't expect (avanzar("lots")). In the workshop, F1 on a word shows you what each method needs.
+pseudo.es:
+    CADA TURNO:
+        avanzar(50)               (botón + cuánto)
+        girar(10)
+        vida ← blindaje()         (botón que contesta)
+        SI vida < 30:
+            decir("¡Socorro!")
+pseudo.de:
+    JEDEN ZUG:
+        vorwärts(50)              (Knopf + wie viel)
+        drehen(10)
+        leben ← panzerung()       (Knopf, der antwortet)
+        WENN leben < 30:
+            sagen("Hilfe!")
+pseudo.en:
+    EVERY TICK:
+        ahead(50)                 (button + how much)
+        turn(10)
+        life ← armor()            (a button that answers)
+        IF life < 30:
+            say("Help!")
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        avanzar(50);                                 // nombre + paréntesis + dato || Name + Klammern + Angabe || name + brackets + value
+        girar(10);
+        apuntar(25);
+        double vida = blindaje();                    // este contesta: guardo lo que dice || diese antwortet: ich speichere die Antwort || this one answers: I keep what it says
+        if (vida < 30) decir("¡Socorro!");
+        double mayor = Math.max(vida, energia());    // también los de Java, como Math.max || auch die von Java, wie Math.max || Java's own too, like Math.max
+        escribir(mayor);
+    }
+
+=== pseudocodigo
+nivel: 1
+tema: 01
+titulo.es: Pseudocódigo
+titulo.de: Pseudocode
+titulo.en: Pseudocode
+claves.es: pseudocodigo, pseudo codigo, que es el pseudocodigo, de pseudocodigo a java, pasar el pseudocodigo a java, escribir la idea en castellano, plan antes de programar
+claves.de: pseudocode, pseudo code, was ist pseudocode, von pseudocode zu java, pseudocode in java übersetzen, idee auf deutsch aufschreiben, plan vor dem programmieren
+claves.en: pseudocode, pseudo code, what is pseudocode, from pseudocode to java, turn pseudocode into java, write the idea in plain english, plan before coding
+ver: algoritmo, programa, if_else, comentario
+es:
+    El pseudocódigo es escribir los pasos de un programa en tu propio idioma, sin preocuparte de puntos y comas ni de palabras exactas. Es el borrador de la idea, antes de pasarla a Java.
+    Es la estrategia que el entrenador garabatea en una servilleta antes del combate: «SI el rival se acerca: pégale; SI NO: da vueltas». La servilleta no pelea, pero sin ella el robot sale al ring a improvisar, y un robot improvisando da bastante pena.
+    Para pasarlo a Java, cada línea se convierte en una sentencia: «CADA TURNO» es cadaTurno() { }, «SI … SI NO …» es if (…) { } else { }, «avanzar 50» es avanzar(50);, y lo que va sangrado debajo va entre llaves. Este entrenador te enseña siempre el pseudocódigo al lado del Java para que veas cómo se corresponden.
+    El fallo típico es saltarse el pseudocódigo y pelearse a la vez con la idea y con Java. Otro, escribirlo tan vago («ganar la pelea») que no hay forma de traducirlo: cada línea debe ser una orden o una pregunta que el robot sepa hacer.
+de:
+    Pseudocode heißt, die Schritte eines Programms in deiner eigenen Sprache aufzuschreiben, ohne dich um Semikolons oder exakte Wörter zu kümmern. Er ist der Entwurf der Idee, bevor sie in Java übersetzt wird.
+    Das ist die Taktik, die der Trainer vor dem Kampf auf eine Serviette kritzelt: „WENN der Gegner näher kommt: zuschlagen; SONST: Kreise drehen.“ Die Serviette kämpft nicht, aber ohne sie improvisiert der Roboter im Ring, und ein improvisierender Roboter ist ein trauriger Anblick.
+    Beim Übersetzen in Java wird jede Zeile zu einer Anweisung: „JEDEN ZUG“ wird zu cadaTurno (jedenZug) mit { }, „WENN … SONST …“ wird zu if (…) { } else { }, „vorwärts 50“ wird zu avanzar(50); (vorwaerts), und was eingerückt darunter steht, kommt zwischen die geschweiften Klammern. Dieser Trainer zeigt dir den Pseudocode immer neben dem Java, damit du siehst, was zu was gehört.
+    Der typische Fehler: den Pseudocode überspringen und gleichzeitig mit der Idee und mit Java ringen. Ein anderer: ihn so vage schreiben („den Kampf gewinnen“), dass man ihn nicht übersetzen kann. Jede Zeile sollte ein Befehl oder eine Frage sein, die der Roboter beherrscht.
+en:
+    Pseudocode means writing the steps of a program in your own language, without worrying about semicolons or exact words. It's the rough draft of the idea, before you turn it into Java.
+    It's the game plan the coach scribbles on a napkin before the fight: "IF the rival comes closer: hit them; ELSE: run in circles". The napkin doesn't fight, but without it the robot goes into the ring to improvise, and an improvising robot is a sorry sight.
+    To turn it into Java, each line becomes a statement: "EVERY TICK" becomes cadaTurno (onTick) with its { }, "IF … ELSE …" becomes if (…) { } else { }, "move ahead 50" becomes avanzar(50); (ahead), and whatever is indented underneath goes between the braces. This coach always shows you the pseudocode next to the Java so you can see what matches what.
+    The classic mistake is skipping the pseudocode and wrestling with the idea and with Java at the same time. Another is writing it so vaguely ("win the fight") that it can't be translated: every line should be an order or a question the robot knows how to do.
+pseudo.es:
+    CADA TURNO:
+        girar la mira 25
+    AL VER AL RIVAL:
+        SI está a menos de 80:
+            atacar
+        SI NO:
+            girar hacia él
+            avanzar hasta él
+pseudo.de:
+    JEDEN ZUG:
+        Visier um 25 drehen
+    BEI SICHT DES GEGNERS:
+        WENN er näher als 80 ist:
+            angreifen
+        SONST:
+            zu ihm drehen
+            bis zu ihm fahren
+pseudo.en:
+    EVERY TICK:
+        turn the aim 25
+    ON SEEING THE RIVAL:
+        IF they're closer than 80:
+            attack
+        ELSE:
+            turn towards them
+            move up to them
+ejemplo:
+    @Override
+    public void cadaTurno() {                  // CADA TURNO: || JEDEN ZUG: || EVERY TICK:
+        apuntar(25);                           // girar la mira 25 || Visier um 25 drehen || turn the aim 25
+    }
+    @Override
+    public void alVerEnemigo(Enemigo e) {      // AL VER AL RIVAL: || BEI SICHT DES GEGNERS: || ON SEEING THE RIVAL:
+        if (e.distancia() < 80) {              // SI está a menos de 80: || WENN er näher als 80 ist: || IF they're closer than 80:
+            atacar();                          // atacar || angreifen || attack
+        } else {                               // SI NO: || SONST: || ELSE:
+            girarHacia(e.angulo());            // girar hacia él || zu ihm drehen || turn towards them
+            avanzar(e.distancia());            // avanzar hasta él || bis zu ihm fahren || move up to them
+        }
+    }
+
+=== algoritmo
+nivel: 1
+tema: 01
+titulo.es: Algoritmo
+titulo.de: Algorithmus
+titulo.en: Algorithm
+claves.es: algoritmo, algoritmos, que es un algoritmo, pasos para resolver un problema, receta, secuencia de pasos, estrategia de pelea
+claves.de: algorithmus, algorithmen, was ist ein algorithmus, schritte zur lösung, rezept, abfolge von schritten, kampfstrategie
+claves.en: algorithm, algorithms, what is an algorithm, steps to solve a problem, recipe, sequence of steps, fighting strategy
+ver: pseudocodigo, programa, busqueda_y_ordenacion, complejidad
+es:
+    Un algoritmo es una lista de pasos ordenados y precisos para resolver un problema. Una receta de cocina es un algoritmo; las instrucciones para montar un mueble, también (aunque siempre sobre un tornillo).
+    Para tu robot: «1. Gira el radar hasta ver a alguien. 2. Si lo ves, apunta. 3. Si está cerca, pega; si no, acércate. 4. Vuelve al paso 1.» Eso es un algoritmo de pelea. El de la Tostadora Furiosa es más corto: «1. Grita. 2. Choca con la pared.»
+    Un algoritmo no es Java: es la idea. Primero lo piensas (en pseudocódigo o en un papel) y luego lo escribes en Java con sentencias, if y métodos como apuntarHacia(e.angulo()) o atacar(). Java ya trae algunos famosos hechos, como Collections.sort(lista) para ordenar o Math.max(a, b) para quedarse con el mayor.
+    El fallo típico es dejar pasos ambiguos («acércate un poco») o casos sin pensar (¿y si no veo a nadie?, ¿y si hay dos?). Un buen algoritmo termina, no se olvida de ningún caso y cada paso lo podría seguir alguien sin tener que preguntar.
+de:
+    Ein Algorithmus ist eine Folge geordneter, genauer Schritte, um ein Problem zu lösen. Ein Kochrezept ist ein Algorithmus, eine Aufbauanleitung für ein Möbelstück auch (auch wenn am Ende immer eine Schraube übrig bleibt).
+    Für deinen Roboter: „1. Dreh das Radar, bis du jemanden siehst. 2. Siehst du ihn, ziel auf ihn. 3. Ist er nah, schlag zu; sonst fahr näher ran. 4. Zurück zu Schritt 1.“ Das ist ein Kampfalgorithmus. Der des Wütenden Toasters ist kürzer: „1. Schreien. 2. Gegen die Wand fahren.“
+    Ein Algorithmus ist nicht Java, sondern die Idee. Zuerst denkst du ihn dir aus (in Pseudocode oder auf Papier), dann schreibst du ihn in Java mit Anweisungen, if und Methoden wie apuntarHacia(e.angulo()) (zielenNach, winkel) oder atacar() (angreifen). Java bringt einige berühmte schon fertig mit, etwa Collections.sort(liste) zum Sortieren oder Math.max(a, b) für den größeren Wert.
+    Der typische Fehler: unklare Schritte („fahr ein bisschen näher“) oder Fälle, an die keiner gedacht hat (Und wenn ich niemanden sehe? Und wenn es zwei sind?). Ein guter Algorithmus endet, vergisst keinen Fall, und jeden Schritt könnte jemand ohne Nachfragen befolgen.
+en:
+    An algorithm is a list of ordered, precise steps to solve a problem. A cooking recipe is an algorithm; so are the instructions for flat-pack furniture (even if there's always one screw left over).
+    For your robot: "1. Turn the radar until you see someone. 2. If you see them, aim. 3. If they're close, hit; otherwise, get closer. 4. Back to step 1." That's a fighting algorithm. The Furious Toaster's is shorter: "1. Scream. 2. Crash into the wall."
+    An algorithm isn't Java: it's the idea. First you think it through (in pseudocode or on paper) and then you write it in Java with statements, ifs and methods like apuntarHacia(e.angulo()) (aimTo, angle) or atacar() (attack). Java already ships some famous ones, like Collections.sort(list) to sort or Math.max(a, b) to keep the larger one.
+    The classic mistake is leaving steps vague ("get a bit closer") or cases unthought-of (what if I can't see anyone? what if there are two?). A good algorithm finishes, forgets no case, and every step could be followed by someone without having to ask.
+pseudo.es:
+    CADA TURNO:
+        girar el radar 25
+    AL VER AL RIVAL:
+        apuntar hacia él
+        SI está cerca:
+            atacar
+        SI NO:
+            acercarme
+pseudo.de:
+    JEDEN ZUG:
+        Radar um 25 drehen
+    BEI SICHT DES GEGNERS:
+        auf ihn zielen
+        WENN er nah ist:
+            angreifen
+        SONST:
+            näher ranfahren
+pseudo.en:
+    EVERY TICK:
+        turn the radar 25
+    ON SEEING THE RIVAL:
+        aim at them
+        IF they're close:
+            attack
+        ELSE:
+            get closer
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        apuntar(25);                           // paso 1: barrer con el radar || Schritt 1: mit dem Radar absuchen || step 1: sweep with the radar
+    }
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        apuntarHacia(e.angulo());              // paso 2: apuntar || Schritt 2: zielen || step 2: aim
+        if (e.distancia() < 80) {
+            atacar();                          // paso 3a: cerca, pegar || Schritt 3a: nah, zuschlagen || step 3a: close, hit
+        } else {
+            girarHacia(e.angulo());            // paso 3b: lejos, acercarse || Schritt 3b: weit weg, näher ran || step 3b: far, close in
+            avanzar(e.distancia() - 60);
+        }
+    }
+
+=== error_de_compilacion
+nivel: 1
+tema: 01
+titulo.es: Error de compilación
+titulo.de: Kompilierfehler
+titulo.en: Compile error
+claves.es: error de compilacion, no compila, subrayado rojo, marca roja, linea roja, cannot find symbol, expected, por que no compila
+claves.de: kompilierfehler, kompiliert nicht, rot unterstrichen, rote markierung, rote zeile, cannot find symbol, expected, warum kompiliert es nicht
+claves.en: compile error, compilation error, does not compile, red underline, red mark, cannot find symbol, expected, syntax error
+ver: compilar, sentencia, bloque, error_en_ejecucion
+es:
+    Un error de compilación es algo de tu código que Java no entiende, y por eso se niega a convertirlo en programa. El robot ni siquiera llega a pisar la arena con ese código.
+    Es el inspector del taller devolviéndote el robot con una pegatina roja: «Aquí falta un tornillo». No es un drama: el inspector es un quisquilloso, pero también tu mejor amigo, porque te avisa ANTES de que el brazo se caiga en mitad del combate.
+    En el taller, al compilar (Ctrl+S), la línea con el problema sale marcada en rojo; pasa el ratón por encima y el juego te lo explica. Los más típicos: «';' expected» (falta un punto y coma), «cannot find symbol» (un nombre mal escrito, como avanzr(50) o Blindaje()) e «incompatible types» (un texto donde va un número).
+    El fallo típico es intentar arreglar todos los errores a la vez: arregla solo el PRIMERO y vuelve a compilar, porque los demás suelen ser su eco. Y mira también la línea de antes: si a una le falta el ;, Java a veces se queja en la siguiente.
+de:
+    Ein Kompilierfehler ist etwas in deinem Code, das Java nicht versteht, und deshalb weigert es sich, daraus ein Programm zu machen. Mit diesem Code betritt der Roboter die Arena gar nicht erst.
+    Das ist der Prüfer in der Werkstatt, der dir den Roboter mit rotem Aufkleber zurückgibt: „Hier fehlt eine Schraube.“ Kein Drama: Der Prüfer ist ein Pedant, aber auch dein bester Freund, denn er warnt dich, BEVOR dir mitten im Kampf der Arm abfällt.
+    In der Werkstatt wird beim Kompilieren (Strg+S) die Zeile mit dem Problem rot markiert; fahr mit der Maus darüber, und das Spiel erklärt es dir. Die häufigsten: „';' expected“ (ein Semikolon fehlt), „cannot find symbol“ (ein falsch geschriebener Name, etwa vorwaerz(50) oder Panzerung()) und „incompatible types“ (ein Text, wo eine Zahl hingehört).
+    Der typische Fehler: alle Fehler auf einmal beheben wollen. Behebe nur den ERSTEN und kompiliere neu, denn die übrigen sind oft nur sein Echo. Und schau auch in die Zeile davor: Fehlt dort das ;, meckert Java manchmal erst in der nächsten.
+en:
+    A compile error is something in your code that Java doesn't understand, so it refuses to turn it into a program. With that code, the robot never even sets foot in the arena.
+    It's the workshop inspector handing your robot back with a red sticker: "there's a screw missing here". No drama: the inspector is a nitpicker, but also your best friend, because they warn you BEFORE the arm falls off in the middle of the fight.
+    In the workshop, when you compile (Ctrl+S), the line with the problem is marked in red; hover over it and the game explains it. The usual suspects: "';' expected" (a semicolon is missing), "cannot find symbol" (a misspelled name, like ahaed(50) or Armor()) and "incompatible types" (text where a number should go).
+    The classic mistake is trying to fix every error at once: fix only the FIRST one and compile again, because the rest are often just its echo. And check the line before too: if that one is missing its ;, Java sometimes complains on the next.
+pseudo.es:
+    pulso Compilar
+    MIENTRAS haya marcas rojas:
+        leo el PRIMER error
+        miro esa línea y la de antes
+        arreglo y vuelvo a compilar
+    ¡a la arena!
+pseudo.de:
+    ich drücke Kompilieren
+    SOLANGE es rote Markierungen gibt:
+        den ERSTEN Fehler lesen
+        diese Zeile und die davor anschauen
+        reparieren und neu kompilieren
+    ab in die Arena!
+pseudo.en:
+    I press Compile
+    WHILE there are red marks:
+        read the FIRST error
+        look at that line and the one before
+        fix it and compile again
+    off to the arena!
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        avanzar(50);                 // sin el ; saldría: ';' expected || ohne das ; käme: ';' expected || without the ; you'd get: ';' expected
+        girar(10);                   // girr(10) daría: cannot find symbol || drehn(10) gäbe: cannot find symbol || trun(10) would give: cannot find symbol
+        double vida = blindaje();    // int vida = blindaje() daría: possible lossy conversion || int vida = panzerung() gäbe: possible lossy conversion || int vida = armor() would give: possible lossy conversion
+        decir("vida: " + vida);      // sin la comilla final: unclosed string literal || ohne schließendes Anführungszeichen: unclosed string literal || without the closing quote: unclosed string literal
+    }
+
+=== error_en_ejecucion
+nivel: 1
+tema: 14
+titulo.es: Error en ejecución
+titulo.de: Laufzeitfehler
+titulo.en: Runtime error
+claves.es: error en ejecucion, error de ejecucion, compila pero falla, falla en plena pelea, se rompe al ejecutar, runtime error, division por cero, mi robot falla en la pelea
+claves.de: laufzeitfehler, fehler zur laufzeit, kompiliert aber stürzt ab, absturz im kampf, runtime error, division durch null, mein roboter stürzt im kampf ab
+claves.en: runtime error, run time error, compiles but fails, crashes during the fight, division by zero, my robot crashes in the fight, error while running
+ver: excepcion, error_de_compilacion, depurar, null
+es:
+    Un error en ejecución pasa cuando el código está bien escrito (compila), pero al ponerse en marcha intenta algo imposible, como dividir entre cero o usar algo que no existe. En Java se llama excepción.
+    Es el robot que pasa la inspección del taller con matrícula de honor y, ya en el ring, intenta pegar con el brazo que se dejó en la mesa. El locutor loco lo cuenta a gritos, el público se ríe y el robot se queda mirando su hombro vacío.
+    Ejemplos clásicos: 100 / 0 con int lanza ArithmeticException; usar una variable que vale null lanza NullPointerException; y pedir un elemento que no hay, como enemigosVistos().get(0) cuando no ves a nadie, lanza IndexOutOfBoundsException. En el juego, la pelea sigue, pero en ese turno tu método se corta en la línea del fallo, y la consola de tu robot te dice qué excepción fue.
+    El fallo típico es suponer que siempre habrá algo: un rival a la vista, un número distinto de cero. Antes de usarlo, compruébalo con un if, como if (!enemigosVistos().isEmpty()) o if (vistos > 0). Y lee el nombre de la excepción: casi siempre dice exactamente qué pasó.
+de:
+    Ein Laufzeitfehler passiert, wenn der Code korrekt geschrieben ist (er kompiliert), aber beim Ausführen etwas Unmögliches versucht, etwa durch null teilen oder etwas benutzen, das es nicht gibt. In Java heißt das Ausnahme (Exception).
+    Das ist der Roboter, der die Werkstattprüfung mit Bestnote besteht und dann im Ring mit dem Arm zuschlagen will, den er auf der Werkbank liegen gelassen hat. Der verrückte Sprecher brüllt es durch die Halle, das Publikum lacht, und der Roboter starrt auf seine leere Schulter.
+    Klassische Beispiele: 100 / 0 mit int wirft eine ArithmeticException; eine Variable benutzen, die null ist, wirft eine NullPointerException; und ein Element verlangen, das es nicht gibt, etwa enemigosVistos().get(0) (gesehen), wenn du niemanden siehst, wirft eine IndexOutOfBoundsException. Im Spiel geht der Kampf weiter, aber in diesem Zug bricht deine Methode an der fehlerhaften Zeile ab, und die Konsole deines Roboters sagt dir, welche Ausnahme es war.
+    Der typische Fehler: davon ausgehen, dass immer etwas da ist: ein Gegner in Sicht, eine Zahl ungleich null. Prüf es vorher mit einem if, etwa if (!enemigosVistos().isEmpty()) oder if (vistos > 0). Und lies den Namen der Ausnahme: Er sagt fast immer genau, was passiert ist.
+en:
+    A runtime error happens when the code is written correctly (it compiles), but once running it tries something impossible, like dividing by zero or using something that isn't there. In Java it's called an exception.
+    It's the robot that passes the workshop inspection with top marks and then, in the ring, tries to punch with the arm it left on the workbench. The crazy announcer screams it to the whole arena, the crowd laughs, and the robot stares at its empty shoulder.
+    Classic examples: 100 / 0 with ints throws ArithmeticException; using a variable that is null throws NullPointerException; and asking for an element that isn't there, like enemigosVistos().get(0) (seenEnemies) when you can't see anyone, throws IndexOutOfBoundsException. In the game the fight goes on, but on that tick your method stops at the failing line, and your robot's console tells you which exception it was.
+    The classic mistake is assuming something will always be there: a rival in sight, a number that isn't zero. Check before you use it, with an if such as if (!enemigosVistos().isEmpty()) or if (seen > 0). And read the exception's name: it almost always says exactly what happened.
+pseudo.es:
+    CADA TURNO:
+        vistos ← cuántos rivales veo
+        SI vistos > 0:
+            reparto ← 100 / vistos       (sin el SI, con 0: ¡excepción!)
+            escribir el primero que veo
+        SI NO:
+            girar el radar 25
+pseudo.de:
+    JEDEN ZUG:
+        gesehen ← wie viele Gegner ich sehe
+        WENN gesehen > 0:
+            anteil ← 100 / gesehen       (ohne das WENN, bei 0: Ausnahme!)
+            den ersten ausgeben, den ich sehe
+        SONST:
+            Radar um 25 drehen
+pseudo.en:
+    EVERY TICK:
+        seen ← how many rivals I can see
+        IF seen > 0:
+            share ← 100 / seen           (without the IF, with 0: exception!)
+            print the first one I see
+        ELSE:
+            turn the radar 25
+ejemplo:
+    @Override
+    public void cadaTurno() {
+        int vistos = enemigosVistos().size();
+        if (vistos > 0) {                                // sin este if, con 0 rivales: ArithmeticException || ohne dieses if, bei 0 Gegnern: ArithmeticException || without this if, with 0 rivals: ArithmeticException
+            int reparto = 100 / vistos;                  // compila siempre, pero solo funciona si vistos no es 0 || kompiliert immer, klappt aber nur, wenn vistos nicht 0 ist || always compiles, but only works if vistos isn't 0
+            Enemigo primero = enemigosVistos().get(0);   // seguro: sé que hay al menos uno || sicher: es gibt mindestens einen || safe: I know there's at least one
+            escribir(primero.nombre() + " / " + reparto);
+        } else {
+            apuntar(25);
+        }
+    }
+
+=== depurar
+nivel: 1
+tema: 01
+titulo.es: Depurar
+titulo.de: Debuggen
+titulo.en: Debugging
+claves.es: depurar, depuracion, depurador, debug, debugger, buscar el fallo, encontrar un error, paso a paso, f9, mi robot no hace lo que quiero
+claves.de: debuggen, debugger, fehlersuche, fehler finden, fehler suchen, schritt für schritt, f9, mein roboter macht nicht was ich will
+claves.en: debug, debugging, debugger, find the bug, find a mistake, step by step, f9, my robot doesn't do what i want
+ver: imprimir, error_en_ejecucion, comentario, turno
+es:
+    Depurar es buscar por qué un programa no hace lo que esperabas y arreglarlo. No es adivinar: es mirar qué pasa de verdad, paso a paso, hasta pillar a la línea culpable.
+    Es el detective del taller, con lupa y gabardina: «¿Por qué el robot gira a la izquierda si le pedí la derecha?». Interroga a cada línea, revisa las coartadas de las variables y, al final, el culpable suele ser un signo menos con cara de no haber roto nunca un plato.
+    Tres herramientas: imprimir lo que vale cada cosa con escribir("distancia: " + e.distancia()) o System.out.println; apagar líneas con // para ver cuál causa el problema; y el depurador del juego: en cualquier pelea, Espacio pausa, F9 enseña las variables de tu robot en vivo, sus pasos y su consola, y → avanza un turno.
+    El fallo típico es cambiar cosas al azar «a ver si va». Haz al revés: primero mira (imprime o pausa), luego piensa por qué pasa y cambia una sola cosa cada vez. Y quita los escribir de prueba cuando acabes, que llenan la consola 30 veces por segundo.
+de:
+    Debuggen heißt herausfinden, warum ein Programm nicht tut, was du erwartest, und es reparieren. Das ist kein Raten: Du schaust dir Schritt für Schritt an, was wirklich passiert, bis du die schuldige Zeile erwischst.
+    Das ist der Detektiv der Werkstatt, mit Lupe und Trenchcoat: „Warum dreht der Roboter nach links, wenn ich rechts verlangt habe?“ Er verhört jede Zeile, prüft die Alibis der Variablen, und am Ende ist der Täter meist ein Minuszeichen, das aussieht, als könnte es kein Wässerchen trüben.
+    Drei Werkzeuge: ausgeben, was jedes Ding gerade wert ist, mit escribir("Abstand: " + e.distancia()) (ausgeben, entfernung) oder System.out.println; Zeilen mit // ausschalten, um zu sehen, welche das Problem verursacht; und der Debugger des Spiels: In jedem Kampf pausiert die Leertaste, F9 zeigt die Variablen deines Roboters live, seine Schritte und seine Konsole, und → geht einen Zug weiter.
+    Der typische Fehler: wahllos Dinge ändern, „mal sehen, ob's geht“. Mach es umgekehrt: erst hinschauen (ausgeben oder pausieren), dann überlegen, warum es passiert, und immer nur eine Sache ändern. Und entferne die Test-Ausgaben am Ende wieder, sonst füllen sie die Konsole 30-mal pro Sekunde.
+en:
+    Debugging means finding out why a program doesn't do what you expected, and fixing it. It isn't guessing: it's looking at what really happens, step by step, until you catch the guilty line.
+    It's the workshop detective, magnifying glass and trench coat: "why does the robot turn left when I asked for right?". They question every line, check the variables' alibis and, in the end, the culprit is usually a minus sign that looks as if butter wouldn't melt in its mouth.
+    Three tools: print what each thing is worth with escribir("distance: " + e.distancia()) (print, distance) or System.out.println; switch lines off with // to see which one causes the trouble; and the game's debugger: in any fight, Space pauses, F9 shows your robot's variables live, its steps and its console, and → steps one tick.
+    The classic mistake is changing things at random "to see if it works". Do it the other way round: look first (print or pause), then think about why it happens, and change only one thing at a time. And remove your test prints when you're done, or they'll flood the console 30 times a second.
+pseudo.es:
+    MIENTRAS el robot haga algo raro:
+        pausar y mirar sus variables (F9)
+        escribir lo que vale cada cosa
+        pensar: ¿qué esperaba?, ¿qué pasa?
+        cambiar UNA sola cosa
+        volver a probar
+pseudo.de:
+    SOLANGE der Roboter etwas Seltsames tut:
+        pausieren und seine Variablen ansehen (F9)
+        ausgeben, was jedes Ding wert ist
+        überlegen: Was habe ich erwartet? Was passiert?
+        NUR EINE Sache ändern
+        neu testen
+pseudo.en:
+    WHILE the robot does something odd:
+        pause and look at its variables (F9)
+        print what each thing is worth
+        think: what did I expect? what happens?
+        change just ONE thing
+        test again
+ejemplo:
+    @Override
+    public void alVerEnemigo(Enemigo e) {
+        escribir("dist=" + e.distancia() + " ang=" + e.angulo());   // ¿qué ve de verdad? || was sieht er wirklich? || what does it really see?
+        apuntarHacia(e.angulo());
+        if (e.distancia() < 80) {
+            escribir("¡pego!");                  // ¿llega a entrar aquí? || kommt er hier überhaupt an? || does it ever get in here?
+            atacar();
+        }
+        // avanzar(-50);   apagada: ¿era esta la culpable? || vorwaerts(-50);   ausgeschaltet: war das die Schuldige? || ahead(-50);   switched off: was this the culprit?
+    }
+
+=== imprimir
+nivel: 1
+tema: 01
+titulo.es: Imprimir y decir
+titulo.de: Ausgeben und sagen
+titulo.en: Printing and saying
+claves.es: imprimir, system.out.println, println, printf, imprimir por pantalla, escribir en la consola, consola del robot, bocadillo, mostrar un texto
+claves.de: ausgeben, ausgabe, system.out.println, println, printf, auf der konsole ausgeben, konsole des roboters, sprechblase, text anzeigen
+claves.en: print, printing, system.out.println, println, printf, print to the console, robot console, speech bubble, show some text
+ver: depurar, string, sentencia, llamar_metodo
+es:
+    Imprimir es hacer que el programa enseñe un texto o un número en la pantalla. Sirve para saludar, para avisar y, sobre todo, para ver qué está pasando por dentro.
+    Tu robot tiene dos bocas: el bocadillo, con el que fanfarronea en el ring para que lo vea todo el público («¡Soy el terror de las tostadoras!»), y la libreta de la consola, donde apunta en voz baja lo que piensa, solo para ti.
+    En Java, System.out.println("Hola") escribe una línea en la consola; print escribe sin saltar de línea, y printf da formato a los números: System.out.printf("%.1f%n", energia()). En el juego, escribir(...) también va a la consola de tu robot (debajo del código) y decir(...) lo muestra en un bocadillo encima de él. El + pega textos y números: escribir("vida: " + blindaje()).
+    El fallo típico es imprimir en cadaTurno sin control: 30 líneas por segundo y la consola se vuelve ilegible. Imprime solo cuando pase algo (al recibir un golpe) o de vez en cuando, con if (turnoActual() % 30 == 0). Y no olvides las comillas: escribir(hola) busca una variable llamada hola.
+de:
+    Ausgeben heißt, das Programm einen Text oder eine Zahl auf dem Bildschirm zeigen zu lassen. Damit grüßt du, warnst du und vor allem siehst du, was drinnen gerade passiert.
+    Dein Roboter hat zwei Münder: die Sprechblase, mit der er im Ring vor dem ganzen Publikum angibt („Ich bin der Schrecken aller Toaster!“), und das Notizbuch der Konsole, in das er leise schreibt, was er denkt, nur für dich.
+    In Java schreibt System.out.println("Hallo") eine Zeile in die Konsole; print schreibt ohne Zeilenumbruch, und printf bringt Zahlen in Form: System.out.printf("%.1f%n", energia()) (energie). Im Spiel landet escribir(...) (ausgeben) ebenfalls in der Konsole deines Roboters (unter dem Code), und decir(...) (sagen) zeigt es in einer Sprechblase über ihm. Das + klebt Texte und Zahlen zusammen: escribir("Leben: " + blindaje()) (panzerung).
+    Der typische Fehler: in cadaTurno (jedenZug) ungebremst ausgeben. 30 Zeilen pro Sekunde, und die Konsole ist unlesbar. Gib nur etwas aus, wenn etwas passiert (bei einem Treffer), oder ab und zu, mit if (turnoActual() % 30 == 0) (zug). Und vergiss die Anführungszeichen nicht: escribir(hallo) sucht eine Variable namens hallo.
+en:
+    Printing means making the program show some text or a number on the screen. It's for saying hello, for warnings and, above all, for seeing what's going on inside.
+    Your robot has two mouths: the speech bubble, for showing off in the ring in front of the whole crowd ("I am the terror of toasters!"), and the console notebook, where it quietly jots down what it's thinking, just for you.
+    In Java, System.out.println("Hello") writes one line to the console; print writes without starting a new line, and printf formats numbers: System.out.printf("%.1f%n", energia()) (energy). In the game, escribir(...) (print) also goes to your robot's console (under the code), and decir(...) (say) shows it in a speech bubble above it. The + glues text and numbers together: escribir("life: " + blindaje()) (armor).
+    The classic mistake is printing in cadaTurno (onTick) with no limit: 30 lines a second and the console becomes unreadable. Print only when something happens (when you get hit) or now and then, with if (turnoActual() % 30 == 0) (tick). And don't forget the quotes: escribir(hello) looks for a variable called hello.
+pseudo.es:
+    AL EMPEZAR:
+        decir "¡Hola, arena!"                 (bocadillo, para el público)
+    AL RECIBIR GOLPE:
+        escribir "me han dado; me queda " + blindaje   (consola, para mí)
+    CADA TURNO:
+        SI turno % 30 es 0:
+            escribir "sigo aquí"
+pseudo.de:
+    BEIM START:
+        sagen "Hallo, Arena!"                 (Sprechblase, fürs Publikum)
+    BEI TREFFER:
+        ausgeben "getroffen; übrig: " + panzerung   (Konsole, für mich)
+    JEDEN ZUG:
+        WENN zug % 30 gleich 0 ist:
+            ausgeben "bin noch da"
+pseudo.en:
+    AT THE START:
+        say "Hello, arena!"                   (speech bubble, for the crowd)
+    ON HIT:
+        print "got hit; armor left: " + armor   (console, for me)
+    EVERY TICK:
+        IF tick % 30 is 0:
+            print "still here"
+ejemplo:
+    @Override
+    public void alEmpezar() {
+        decir("¡Hola, arena!");                                  // bocadillo encima del robot || Sprechblase über dem Roboter || speech bubble above the robot
+        System.out.println("Ronda " + ronda());                  // consola, al estilo clásico de Java || Konsole, klassischer Java-Stil || console, classic Java style
+    }
+    @Override
+    public void alRecibirGolpe(Golpe g) {
+        escribir("Me ha dado " + g.arma() + ", quedan " + blindaje());   // a la consola de mi robot || in die Konsole meines Roboters || to my robot's console
+        System.out.printf("Energía: %.1f%n", energia());        // con formato: un decimal || formatiert: eine Nachkommastelle || formatted: one decimal
+    }
+
+=== turno
+nivel: 1
+tema: 01
+titulo.es: El turno
+titulo.de: Der Zug
+titulo.en: The tick
+claves.es: turno, turnos, cadaturno, cada turno, eventos, alverenemigo, alrecibirgolpe, alempezar, 30 veces por segundo, como funciona la pelea
+claves.de: zug, züge, jedenzug, jeden zug, ereignisse, beisicht, beitreffer, beimstart, 30 mal pro sekunde, wie läuft der kampf ab
+claves.en: tick, ticks, ontick, every tick, events, onseeenemy, onhit, onstart, 30 times per second, how does the fight work
+ver: programa, imprimir, variable, patron_observador
+es:
+    Un turno es un instante de la pelea. La arena avanza a golpe de turnos, unos 30 por segundo, y en cada uno le pregunta a tu robot qué quiere hacer.
+    Es como un árbitro con muchísima prisa que da 30 palmadas por segundo: en cada palmada todos los robots dicen qué hacen y la arena mueve, gira y reparte tortas. Tu robot no tiene un plan para toda la pelea: solo contesta, una y otra vez, «¿y ahora qué?».
+    En cada turno, el juego llama primero a los avisos que tocan (alRecibirGolpe si te han dado, alChocarConPared si te has estampado contra la pared…), luego a alVerEnemigo(Enemigo e) por cada rival que ve tu radar y, al final, a cadaTurno(). Tú solo escribes qué hacer en cada caso; la arena decide cuándo llamarlo. alEmpezar() va una vez, antes del primer turno, y turnoActual() te dice por qué turno vas.
+    El fallo típico es esperar que una orden acabe antes de seguir: avanzar(200) no frena el programa hasta llegar; solo dice «quiero avanzar 200» y el robot lo va haciendo turno a turno. Otro: declarar dentro de cadaTurno una variable que debía recordar algo, y que vuelva a empezar en cada turno: ponla en la clase.
+de:
+    Ein Zug ist ein Augenblick im Kampf. Die Arena läuft Zug um Zug, etwa 30 pro Sekunde, und in jedem fragt sie deinen Roboter, was er tun will.
+    Stell dir einen Ringrichter mit sehr großer Eile vor, der 30-mal pro Sekunde in die Hände klatscht: Bei jedem Klatschen sagen alle Roboter, was sie tun, und die Arena bewegt, dreht und verteilt Schläge. Dein Roboter hat keinen Plan für den ganzen Kampf: Er beantwortet nur immer wieder die Frage „Und jetzt?“.
+    In jedem Zug ruft das Spiel zuerst die fälligen Meldungen auf (alRecibirGolpe (beiTreffer), wenn du getroffen wurdest, alChocarConPared (beiWand), wenn du gegen die Wand gekracht bist …), dann alVerEnemigo (beiSicht) für jeden Gegner, den dein Radar sieht, und zum Schluss cadaTurno (jedenZug). Du schreibst nur, was in jedem Fall zu tun ist; wann es aufgerufen wird, entscheidet die Arena. alEmpezar (beimStart) läuft einmal vor dem ersten Zug, und turnoActual (zug) sagt dir, in welchem Zug du bist.
+    Der typische Fehler: erwarten, dass ein Befehl fertig ist, bevor es weitergeht. avanzar(200) (vorwaerts) hält das Programm nicht an, bis du angekommen bist; es sagt nur „ich will 200 vorwärts“, und der Roboter erledigt das Zug für Zug. Ein anderer: eine Variable, die sich etwas merken soll, in cadaTurno zu deklarieren, sodass sie jeden Zug neu anfängt. Sie gehört in die Klasse.
+en:
+    A tick is one instant of the fight. The arena moves forward tick by tick, about 30 a second, and on each one it asks your robot what it wants to do.
+    Picture a referee in a tremendous hurry clapping 30 times a second: on every clap all the robots say what they're doing, and the arena moves, turns and hands out the punches. Your robot has no plan for the whole fight: it just answers, over and over, "and now what?".
+    Every tick, the game first calls whatever notices apply (alRecibirGolpe (onHit) if you got hit, alChocarConPared (onHitWall) if you slammed into the wall…), then alVerEnemigo (onSeeEnemy) for each rival your radar sees and, last of all, cadaTurno (onTick). You only write what to do in each case; the arena decides when to call it. alEmpezar (onStart) runs once, before the first tick, and turnoActual (tick) tells you which tick you're on.
+    The classic mistake is expecting an order to finish before moving on: avanzar(200) (ahead) doesn't freeze the program until you get there; it just says "I want to move 200" and the robot does it tick by tick. Another is declaring a variable that should remember something inside cadaTurno, so it starts over every tick: put it in the class.
+pseudo.es:
+    REPETIR unas 30 veces por segundo:
+        SI me han dado:
+            al recibir golpe
+        PARA CADA rival que veo:
+            al ver enemigo
+        cada turno
+pseudo.de:
+    WIEDERHOLE etwa 30-mal pro Sekunde:
+        WENN ich getroffen wurde:
+            bei Treffer
+        FÜR JEDEN Gegner, den ich sehe:
+            bei Sicht
+        jeden Zug
+pseudo.en:
+    REPEAT about 30 times a second:
+        IF I got hit:
+            on hit
+        FOR EACH rival I can see:
+            on see enemy
+        on tick
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alRecibirGolpe(Golpe g) {     // 1.º, si te han dado || 1., wenn du getroffen wurdest || 1st, if you got hit
+            retroceder(40);
+        }
+        @Override
+        public void alVerEnemigo(Enemigo e) {     // 2.º, por cada rival a la vista || 2., für jeden sichtbaren Gegner || 2nd, for each rival in sight
+            atacar();
+        }
+        @Override
+        public void cadaTurno() {                 // 3.º, siempre, al final del turno || 3., immer, am Ende des Zugs || 3rd, always, at the end of the tick
+            avanzar(50);
+        }
+    }

@@ -65,10 +65,16 @@ public final class VozPiper {
 
     /** Lee el texto: el audio (mono, a la frecuencia del juego) con el efecto robótico, o null si no ha podido. */
     public float[] decir(String texto, Idioma idioma) {
+        return decir(texto, idioma, Timbre.LOCUTOR);
+    }
+
+    /** Lee el texto con ese timbre (el tono se cambia después; Piper lee más despacio o más deprisa para compensarlo). */
+    public float[] decir(String texto, Idioma idioma, Timbre timbre) {
         Path exe = programa(), voz = voz(idioma);
         if (exe == null || voz == null) return null;
         try {
-            Process p = new ProcessBuilder(exe.toString(), "--model", voz.toString(), "--output_raw", "--length_scale", "0.95",
+            String largo = String.format(java.util.Locale.ROOT, "%.3f", 0.95 * timbre.tono() / timbre.velocidad());
+            Process p = new ProcessBuilder(exe.toString(), "--model", voz.toString(), "--output_raw", "--length_scale", largo,
                     "--sentence_silence", "0.15").directory(carpeta.toFile()).redirectError(ProcessBuilder.Redirect.DISCARD).start();
             try (OutputStream entrada = p.getOutputStream()) {
                 entrada.write(texto.replace('\n', ' ').getBytes(StandardCharsets.UTF_8));
@@ -83,7 +89,7 @@ public final class VozPiper {
             }
             byte[] b = bytes.toByteArray();
             if (b.length < 2000) return null;
-            return robotico(aFrecuenciaDelJuego(muestras(b), frecuencia(voz)));
+            return robotico(Timbre.cambiarTono(aFrecuenciaDelJuego(muestras(b), frecuencia(voz)), timbre.tono()), timbre.robot());
         } catch (Exception e) {
             return null;
         }
@@ -126,6 +132,11 @@ public final class VozPiper {
      * metálico muy corto. Mucho más ligero que el de la voz propia, que tapaba las consonantes.
      */
     public static float[] robotico(float[] a) {
+        return robotico(a, 1);
+    }
+
+    /** El aire robótico, con más o menos efecto (0: la voz limpia, solo igualada de volumen; 1: el del locutor). */
+    public static float[] robotico(float[] a, double cuanto) {
         int f = Sintetizador.FRECUENCIA;
         float maximo = 1e-6f;
         for (float x : a) maximo = Math.max(maximo, Math.abs(x));
@@ -133,9 +144,9 @@ public final class VozPiper {
         int d1 = (int) (f * 0.006), d2 = (int) (f * 0.013);
         for (int i = 0; i < a.length; i++) {
             double x = a[i] / maximo;
-            double y = x * (0.84 + 0.16 * Math.sin(2 * Math.PI * 55 * i / f));
-            if (i >= d1) y += s[i - d1] * 0.22;
-            if (i >= d2) y += s[i - d2] * 0.1;
+            double y = x * (1 - 0.16 * cuanto + 0.16 * cuanto * Math.sin(2 * Math.PI * 55 * i / f));
+            if (i >= d1) y += s[i - d1] * 0.22 * cuanto;
+            if (i >= d2) y += s[i - d2] * 0.1 * cuanto;
             s[i] = (float) Math.tanh(y * 1.1) * 0.85f;
         }
         return s;

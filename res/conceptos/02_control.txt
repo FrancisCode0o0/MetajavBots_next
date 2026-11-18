@@ -1,0 +1,1396 @@
+# 02_control.txt: primeros programas (bucles, switch, métodos propios, arrays, textos, Math, azar, null y la memoria del robot)
+
+=== while
+nivel: 2
+tema: 05
+titulo.es: Bucle while
+titulo.de: While-Schleife
+titulo.en: While loop
+claves.es: while, bucle while, que es un while, repetir mientras, mientras se cumpla, while loop
+claves.de: while, while-schleife, while schleife, solange, wiederholen solange, kopfgesteuerte schleife
+claves.en: while, while loop, what is a while loop, repeat while, loop until, as long as
+ver: do_while, for, bucle_infinito, comparacion
+es:
+    Un bucle while repite un trozo de código una y otra vez mientras una condición sea verdad. Antes de cada vuelta pregunta «¿sigue siendo verdad?»; en cuanto la respuesta es no, sale y sigue con lo de abajo.
+    Es el árbitro que cuenta en voz alta mientras el robot está en la lona: «uno, dos, tres…». Mientras el robot siga tumbado, cuenta otro número; en cuanto se levanta, se calla. Si el robot nunca se cae, el árbitro no cuenta ni uno.
+    En Java se escribe while (condición) { … } y dentro va lo que se repite. Algo de dentro tiene que cambiar la condición, por ejemplo cuenta = cuenta - 1; o se repetiría para siempre. En el juego sirve para cálculos dentro de un turno: contar, buscar, ir partiendo una distancia.
+    El fallo típico: esperar con un while a que el robot llegue a un sitio, como while (x() < 300) avanzar(10);. Dentro de un turno el robot no se mueve (se mueve entre turno y turno), así que x() nunca cambia y el bucle no acaba. Para «poco a poco» usa un if en cadaTurno: el propio juego repite cadaTurno.
+de:
+    Eine while-Schleife wiederholt ein Stück Code immer wieder, solange eine Bedingung wahr ist. Vor jeder Runde fragt sie „Stimmt das noch?“; sobald die Antwort Nein ist, hört sie auf und macht unten weiter.
+    Sie ist der Ringrichter, der laut zählt, während der Roboter auf der Matte liegt: „eins, zwei, drei …“. Solange der Roboter liegen bleibt, zählt er weiter; steht er auf, verstummt der Richter. Geht der Roboter nie zu Boden, zählt er keine einzige Zahl.
+    In Java schreibst du while (Bedingung) { … }, und hinein kommt, was sich wiederholt. Irgendetwas darin muss die Bedingung ändern, etwa zahl = zahl - 1;, sonst läuft es ewig. Im Spiel nimmst du sie für Rechnungen innerhalb eines Zugs: zählen, suchen, eine Strecke immer weiter halbieren.
+    Der typische Fehler: mit einem while darauf warten, dass der Roboter irgendwo ankommt, etwa mit avanzar (vorwaerts): while (x() < 300) avanzar(10);. Innerhalb eines Zugs bewegt sich der Roboter nicht (er fährt erst zwischen den Zügen), also ändert sich x() nie und die Schleife endet nicht. Für „nach und nach“ nimm ein if in cadaTurno (jedenZug): Den wiederholt das Spiel sowieso.
+en:
+    A while loop repeats a piece of code again and again as long as a condition is true. Before every lap it asks "is it still true?"; as soon as the answer is no, it stops and carries on with what comes after.
+    It is the referee counting out loud while the robot is down on the canvas: "one, two, three…". As long as the robot stays down, he says another number; the moment it gets up, he goes quiet. If the robot never falls, he doesn't count a single number.
+    In Java you write while (condition) { … } with the repeated part inside. Something in there has to change the condition, for example count = count - 1;, or it would repeat forever. In the game it is for calculations within one tick: counting, searching, halving a distance again and again.
+    The classic mistake: using a while to wait for the robot to reach a spot, like this one with avanzar (ahead): while (x() < 300) avanzar(10);. Within a tick the robot doesn't move (it moves between ticks), so x() never changes and the loop never ends. For "bit by bit", use an if in cadaTurno (onTick): the game repeats cadaTurno for you.
+pseudo.es:
+    cuenta ← 3
+    MIENTRAS cuenta > 0:
+        escribir cuenta
+        cuenta ← cuenta - 1
+    decir "¡Al ataque!"
+pseudo.de:
+    zahl ← 3
+    SOLANGE zahl > 0:
+        schreibe zahl
+        zahl ← zahl - 1
+    sage "Angriff!"
+pseudo.en:
+    count ← 3
+    WHILE count > 0:
+        write count
+        count ← count - 1
+    say "Attack!"
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alEmpezar() {
+            int cuenta = 3;
+            while (cuenta > 0) {             // ¿aún quedan? otra vuelta || noch welche übrig? noch eine Runde || any left? one more lap
+                escribir(cuenta + "...");
+                cuenta = cuenta - 1;         // sin esto no acaba nunca || ohne das endet es nie || without this it never ends
+            }
+            decir("¡Al ataque!");
+        }
+    }
+
+=== for
+nivel: 2
+tema: 05
+titulo.es: Bucle for
+titulo.de: For-Schleife
+titulo.en: For loop
+claves.es: for, bucle for, que es un for, for loop, repetir n veces, contar de 1 a 10, for int i
+claves.de: for, for-schleife, for schleife, zahlschleife, n-mal wiederholen, von 1 bis 10 zählen
+claves.en: for, for loop, what is a for loop, repeat n times, loop n times, counting loop, for int i
+ver: while, recorrer_array, incremento, break_continue
+es:
+    Un bucle for repite un trozo de código un número de veces que sabes de antemano: 3 veces, 10 veces, una vez por cada casilla. Lleva su propio contador, que va subiendo solo en cada vuelta.
+    Es el entrenador del gimnasio del taller: «¡diez flexiones!». Empieza en la uno, cuenta cada una en voz alta y, al llegar a la diez, para. No hace falta que nadie le diga cuándo parar: lo sabía desde el principio.
+    En Java: for (int i = 1; i <= 10; i++) { … }. Son tres partes separadas por punto y coma: dónde empieza el contador (int i = 1), hasta cuándo sigue (i <= 10) y cómo avanza (i++, sumar uno). En el juego sirve para repetir algo un número fijo de veces o recorrer un array con sus índices.
+    El fallo típico: equivocarse en uno, el famoso «uno de más o de menos». for (int i = 0; i < 10; i++) da 10 vueltas (de 0 a 9) y con i <= 10 da 11. Decide si empiezas en 0 o en 1 y comprueba la última vuelta con un escribir(i).
+de:
+    Eine for-Schleife wiederholt ein Stück Code so oft, wie du vorher schon weißt: 3-mal, 10-mal, einmal pro Feld. Sie bringt ihren eigenen Zähler mit, der in jeder Runde von selbst hochzählt.
+    Sie ist der Trainer im Werkstatt-Fitnessraum: „Zehn Liegestütze!“ Er fängt bei eins an, zählt jede laut mit und hört bei zehn auf. Niemand muss ihm sagen, wann Schluss ist: Das wusste er von Anfang an.
+    In Java: for (int i = 1; i <= 10; i++) { … }. Drei Teile, getrennt durch Semikolons: wo der Zähler anfängt (int i = 1), wie lange es weitergeht (i <= 10) und wie er weiterzählt (i++, plus eins). Im Spiel wiederholst du damit etwas eine feste Anzahl von Malen oder läufst mit Indizes durch ein Array.
+    Der typische Fehler: sich um eins verzählen, der berühmte „Off-by-one“. for (int i = 0; i < 10; i++) macht 10 Runden (0 bis 9), mit i <= 10 sind es 11. Entscheide, ob du bei 0 oder 1 anfängst, und prüf die letzte Runde mit escribir (ausgeben): escribir(i).
+en:
+    A for loop repeats a piece of code a number of times you know in advance: 3 times, 10 times, once per square. It carries its own counter, which goes up by itself on every lap.
+    It is the coach in the workshop gym: "ten push-ups!". He starts at one, counts each one out loud and stops at ten. Nobody has to tell him when to stop: he knew from the very start.
+    In Java: for (int i = 1; i <= 10; i++) { … }. Three parts separated by semicolons: where the counter starts (int i = 1), how long it keeps going (i <= 10) and how it moves on (i++, add one). In the game you use it to repeat something a fixed number of times or to walk through an array by index.
+    The classic mistake: being off by one. for (int i = 0; i < 10; i++) does 10 laps (0 to 9), and with i <= 10 it does 11. Decide whether you start at 0 or 1, and check the last lap with escribir (print): escribir(i).
+pseudo.es:
+    PARA i DESDE 1 HASTA 3:
+        escribir "flexión número " + i
+    decir "calentamiento hecho"
+pseudo.de:
+    FÜR i VON 1 BIS 3:
+        schreibe "Liegestütz Nummer " + i
+    sage "Aufwärmen erledigt"
+pseudo.en:
+    FOR i FROM 1 TO 3:
+        write "push-up number " + i
+    say "warm-up done"
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alEmpezar() {
+            for (int i = 1; i <= 3; i++) {        // empieza en 1, sigue hasta 3, suma 1 || ab 1, bis 3, plus 1 || start at 1, up to 3, add 1
+                escribir("flexión número " + i);
+            }
+            decir("calentamiento hecho");         // esto va después de las 3 vueltas || das kommt nach den 3 Runden || this comes after the 3 laps
+        }
+    }
+
+=== do_while
+nivel: 2
+tema: 05
+titulo.es: Bucle do while
+titulo.de: Do-while-Schleife
+titulo.en: Do-while loop
+claves.es: do while, do-while, bucle do while, al menos una vez, hacer mientras, repetir hasta que
+claves.de: do while, do-while, do-while-schleife, mindestens einmal, fußgesteuerte schleife, wiederholen bis
+claves.en: do while, do-while, do-while loop, at least once, repeat until, run once then check
+ver: while, for, azar
+es:
+    Un bucle do while es como un while, pero al revés: primero hace la vuelta y después pregunta si repite. Por eso se ejecuta siempre al menos una vez, aunque la condición sea falsa desde el principio.
+    Es el robot que tira el dado de la suerte antes del combate: «tiro, y si no sale un seis, vuelvo a tirar». No tiene sentido preguntar «¿ha salido un seis?» antes de tirar la primera vez: hay que tirar sí o sí.
+    En Java: do { … } while (condición); con la condición al final y un punto y coma detrás. Sirve cuando hay que hacer algo para saber si hay que repetirlo, como sacar un número con azar().nextInt(6) hasta que salga el que quieres.
+    El fallo típico: olvidar el punto y coma final de while (…); o no cambiar nada dentro que haga falsa la condición. Y si puede pasar que no haga falta hacerlo ni una vez, no es un do while: usa un while normal.
+de:
+    Eine do-while-Schleife ist wie ein while, nur andersherum: Erst macht sie die Runde, dann fragt sie, ob sie wiederholt. Deshalb läuft sie immer mindestens einmal, selbst wenn die Bedingung von Anfang an falsch ist.
+    Sie ist der Roboter, der vor dem Kampf den Glückswürfel wirft: „Ich werfe, und wenn keine Sechs kommt, werfe ich nochmal.“ Vor dem ersten Wurf zu fragen „Ist eine Sechs gefallen?“ ergibt keinen Sinn: Geworfen wird auf jeden Fall.
+    In Java: do { … } while (Bedingung); mit der Bedingung am Ende und einem Semikolon dahinter. Du brauchst sie, wenn du erst etwas tun musst, um zu wissen, ob es wiederholt wird, etwa mit azar (zufall) eine Zahl ziehen, azar().nextInt(6), bis die gewünschte kommt.
+    Der typische Fehler: das Semikolon nach while (…); vergessen oder darin nichts ändern, was die Bedingung falsch macht. Und wenn es sein kann, dass es gar nicht nötig ist, ist es kein do-while: Nimm ein normales while.
+en:
+    A do-while loop is like a while, but the other way round: it does the lap first and only then asks whether to repeat. That's why it always runs at least once, even if the condition is false from the start.
+    It is the robot rolling the lucky die before the fight: "I roll, and if it isn't a six, I roll again". Asking "did I get a six?" before the first roll makes no sense: you have to roll no matter what.
+    In Java: do { … } while (condition); with the condition at the end and a semicolon after it. Use it when you have to do something to find out whether to repeat it, like drawing a number with azar (random), azar().nextInt(6), until you get the one you want.
+    The classic mistake: forgetting the semicolon after while (…); or not changing anything inside that makes the condition false. And if it may not be needed even once, it isn't a do-while: use a normal while.
+pseudo.es:
+    tiradas ← 0
+    REPETIR:
+        dado ← número al azar del 1 al 6
+        tiradas ← tiradas + 1
+    MIENTRAS dado ≠ 6
+    escribir "seis en " + tiradas + " tiradas"
+pseudo.de:
+    wuerfe ← 0
+    WIEDERHOLE:
+        wuerfel ← Zufallszahl von 1 bis 6
+        wuerfe ← wuerfe + 1
+    SOLANGE wuerfel ≠ 6
+    schreibe "Sechs nach " + wuerfe + " Würfen"
+pseudo.en:
+    rolls ← 0
+    REPEAT:
+        die ← random number from 1 to 6
+        rolls ← rolls + 1
+    WHILE die ≠ 6
+    write "six after " + rolls + " rolls"
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alEmpezar() {
+            int tiradas = 0;
+            int dado;
+            do {
+                dado = azar().nextInt(6) + 1;        // un dado de 1 a 6 || ein Würfel von 1 bis 6 || a die from 1 to 6
+                tiradas++;
+            } while (dado != 6);                     // la pregunta va al final, con ; || die Frage steht am Ende, mit ; || the question goes last, with ;
+            escribir("seis en " + tiradas + " tiradas");
+        }
+    }
+
+=== break_continue
+nivel: 2
+tema: 05
+titulo.es: Break y continue
+titulo.de: Break und continue
+titulo.en: Break and continue
+claves.es: break, continue, break y continue, salir del bucle, saltar una vuelta, romper el bucle, cortar el bucle
+claves.de: break, continue, break und continue, schleife verlassen, schleife abbrechen, runde überspringen
+claves.en: break, continue, break and continue, exit a loop, leave the loop, skip an iteration, skip to next
+ver: for, while, anidar, switch
+es:
+    break y continue son dos palabras para cambiar la marcha de un bucle desde dentro. break sale del bucle en el acto; continue se salta lo que queda de esta vuelta y pasa a la siguiente.
+    Imagina al robot repasando la fila de rivales en la arena: «este vuela, no me sirve, ¡siguiente!» (eso es continue). «Este está a tiro: le pego y dejo de mirar a los demás» (eso es break). Ni uno ni otro sale del ring: solo dejan la fila.
+    En Java se escriben solos, con punto y coma: break; y continue;, casi siempre dentro de un if. En el juego van muy bien al recorrer enemigosVistos(): continue para descartar a los que no valen y break en cuanto has encontrado el que buscabas.
+    El fallo típico: creer que break sale de todo. Solo sale del bucle (o del switch) más cercano: si hay un bucle dentro de otro, el de fuera sigue dando vueltas. Y un continue en un while antes de cambiar el contador deja el bucle atascado para siempre.
+de:
+    break und continue sind zwei Wörter, mit denen du den Lauf einer Schleife von innen änderst. break verlässt die Schleife sofort; continue überspringt den Rest dieser Runde und macht mit der nächsten weiter.
+    Stell dir den Roboter vor, der die Reihe der Gegner in der Arena durchgeht: „Der fliegt, nützt mir nichts, nächster!“ (das ist continue). „Der ist in Reichweite: zuschlagen und die anderen gar nicht mehr anschauen“ (das ist break). Keins von beiden verlässt den Ring, nur die Reihe.
+    In Java stehen sie allein mit Semikolon: break; und continue;, fast immer in einem if. Im Spiel passen sie prima beim Durchlaufen von enemigosVistos (gesehen): continue, um Unpassende auszusortieren, und break, sobald du den Gesuchten gefunden hast.
+    Der typische Fehler: zu glauben, break verlasse alles. Es verlässt nur die nächste Schleife (oder das nächste switch): Steckt eine Schleife in einer anderen, dreht die äußere weiter. Und ein continue in einem while, bevor der Zähler geändert wird, lässt die Schleife ewig hängen.
+en:
+    break and continue are two words for changing how a loop runs from the inside. break leaves the loop on the spot; continue skips the rest of this lap and moves on to the next one.
+    Picture the robot going down the line of rivals in the arena: "this one flies, no use to me, next!" (that's continue). "This one is in range: hit it and stop looking at the rest" (that's break). Neither leaves the ring, only the line.
+    In Java they stand alone with a semicolon: break; and continue;, nearly always inside an if. In the game they fit nicely when walking through enemigosVistos (seenEnemies): continue to skip the ones that don't fit, and break as soon as you have found the one you wanted.
+    The classic mistake: thinking break leaves everything. It only leaves the nearest loop (or switch): if one loop is inside another, the outer one keeps going. And a continue in a while before the counter changes leaves the loop stuck forever.
+pseudo.es:
+    PARA CADA rival QUE veo:
+        SI rival vuela:
+            SIGUIENTE (continue)
+        SI rival está a menos de 80:
+            apuntar y atacar
+            SALIR DEL BUCLE (break)
+pseudo.de:
+    FÜR JEDEN gegner, DEN ich sehe:
+        WENN gegner fliegt:
+            NÄCHSTER (continue)
+        WENN gegner näher als 80:
+            zielen und angreifen
+            SCHLEIFE VERLASSEN (break)
+pseudo.en:
+    FOR EACH rival I can see:
+        IF rival flies:
+            NEXT (continue)
+        IF rival is closer than 80:
+            aim and attack
+            LEAVE THE LOOP (break)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            for (Enemigo e : enemigosVistos()) {
+                if (e.vuela()) continue;             // este no vale: al siguiente || der zählt nicht: zum nächsten || not this one: next
+                if (e.distancia() < 80) {
+                    apuntarHacia(e.angulo());
+                    atacar();
+                    break;                           // ya he pegado: fuera del bucle || schon zugeschlagen: raus aus der Schleife || already hit: out of the loop
+                }
+            }
+        }
+    }
+
+=== bucle_infinito
+nivel: 2
+tema: 05
+titulo.es: Bucle infinito
+titulo.de: Endlosschleife
+titulo.en: Infinite loop
+claves.es: bucle infinito, while true, no termina nunca, se cuelga, tope de calculo, tope de pasos, se queda pensando
+claves.de: endlosschleife, unendliche schleife, while true, hört nie auf, hängt sich auf, rechenlimit, denkt nach
+claves.en: infinite loop, endless loop, while true, never ends, hangs, step limit, stalls thinking
+ver: while, break_continue, turno, rendimiento
+es:
+    Un bucle infinito es un bucle cuya condición nunca se vuelve falsa: da vueltas y más vueltas y no acaba nunca. En un programa normal, el programa se queda colgado y no hace nada más.
+    Es el locutor loco que se queda enganchado en «¡y golpea, y golpea, y golpea…!» mientras el combate sigue sin él. En MetajavBots el árbitro tiene un cronómetro: si tu robot no termina de pensar a tiempo, lo deja quieto unos turnos.
+    El juego cuenta los pasos que da tu código (el tope de cálculo). Si cadaTurno se pasa, el robot «se queda pensando» y pierde turnos, más cuantas más veces te pases; la consola lo avisa con ⏱. A veces se escribe while (true) a propósito, pero siempre con un break dentro que lo corte.
+    El fallo típico en el juego: esperar dentro de un turno algo que solo cambia entre turnos, como while (x() < 300) avanzar(10); o while (energia() < 50) {}. Mientras dura tu turno nada se mueve ni se recarga. Usa un if: «si aún no he llegado, avanzo un poco», y deja que el juego repita cadaTurno.
+de:
+    Eine Endlosschleife ist eine Schleife, deren Bedingung nie falsch wird: Sie dreht Runde um Runde und hört nie auf. Ein normales Programm hängt sich dabei auf und tut nichts anderes mehr.
+    Sie ist der verrückte Kommentator, der bei „und er schlägt, und er schlägt, und er schlägt …“ hängen bleibt, während der Kampf ohne ihn weitergeht. In MetajavBots hat der Ringrichter eine Stoppuhr: Denkt dein Roboter nicht rechtzeitig zu Ende, lässt er ihn ein paar Züge stillstehen.
+    Das Spiel zählt die Schritte deines Codes (das Rechenlimit). Überzieht cadaTurno (jedenZug), „denkt der Roboter nach“ und verliert Züge, umso mehr, je öfter du überziehst; die Konsole meldet es mit ⏱. Manchmal schreibt man absichtlich while (true), aber immer mit einem break darin, das es beendet.
+    Der typische Fehler im Spiel: innerhalb eines Zugs auf etwas warten, das sich nur zwischen den Zügen ändert, etwa while (x() < 300) avanzar(10); oder while (energia() < 50) {} (avanzar und energia heißen auf Deutsch vorwaerts und energie). Während dein Zug läuft, bewegt und lädt sich nichts. Nimm ein if: „Wenn ich noch nicht da bin, fahre ich ein Stück“, und lass das Spiel cadaTurno wiederholen.
+en:
+    An infinite loop is a loop whose condition never turns false: it goes round and round and never ends. A normal program just hangs and does nothing else.
+    It is the crazy commentator stuck on "and he hits, and he hits, and he hits…" while the fight carries on without him. In MetajavBots the referee has a stopwatch: if your robot doesn't finish thinking in time, he freezes it for a few ticks.
+    The game counts the steps your code takes (the step limit). If cadaTurno (onTick) goes over, the robot "stalls thinking" and loses ticks, more the more often you go over; the console flags it with ⏱. Sometimes you write while (true) on purpose, but always with a break inside that ends it.
+    The classic mistake in the game: waiting within a tick for something that only changes between ticks, like while (x() < 300) avanzar(10); or while (energia() < 50) {} (in English, avanzar is ahead and energia is energy). While your tick runs, nothing moves or recharges. Use an if: "if I'm not there yet, move a bit", and let the game repeat cadaTurno.
+pseudo.es:
+    CADA TURNO:
+        SI aún no he llegado a 300:
+            avanzar un poco
+        (NO: MIENTRAS no he llegado, avanzar; en un turno no te mueves)
+    MIENTRAS SIEMPRE:
+        hacer algo
+        SI ya está: SALIR (break)
+pseudo.de:
+    JEDEN ZUG:
+        WENN ich noch nicht bei 300 bin:
+            ein Stück fahren
+        (NICHT: SOLANGE nicht angekommen, fahren; in einem Zug bewegst du dich nicht)
+    SOLANGE IMMER:
+        etwas tun
+        WENN fertig: VERLASSEN (break)
+pseudo.en:
+    EVERY TICK:
+        IF I haven't reached 300 yet:
+            move a bit
+        (NOT: WHILE not there, move; you don't move within a tick)
+    WHILE FOREVER:
+        do something
+        IF done: LEAVE (break)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            if (x() < 300) {                    // un if, no un while: en un turno no te mueves || ein if, kein while: in einem Zug bewegst du dich nicht || an if, not a while: you don't move within a tick
+                avanzar(10);
+            }
+            int n = 1;
+            while (true) {                      // sin fin a propósito... || absichtlich endlos... || endless on purpose...
+                n = n * 2;
+                if (n > anchoArena()) break;    // ...pero con salida segura || ...aber mit sicherem Ausgang || ...but with a safe exit
+            }
+        }
+    }
+
+=== anidar
+nivel: 2
+tema: 05
+titulo.es: Anidar
+titulo.de: Verschachteln
+titulo.en: Nesting
+claves.es: anidar, anidado, anidados, bucles anidados, bucle dentro de otro, if dentro de if, nested
+claves.de: verschachteln, verschachtelt, verschachtelte schleifen, schleife in schleife, if im if, nested
+claves.en: nesting, nested, nested loops, loop inside a loop, if inside an if, nested if
+ver: for, if_else, bloque, break_continue
+es:
+    Anidar es meter una cosa dentro de otra: un if dentro de un if, un bucle dentro de otro bucle, un if dentro de un bucle. Lo de dentro se hace entero cada vez que lo de fuera le da paso.
+    Es como las muñecas rusas del taller: dentro del robot grande hay uno mediano, y dentro de ese, uno chiquitín que da los puñetazos. Con bucles: por cada vuelta del de fuera, el de dentro da todas las suyas, como un reloj con su aguja de horas y su aguja de minutos.
+    En Java basta con escribir un bloque dentro del otro, con su sangría: for (int fila = 0; fila < 3; fila++) { for (int col = 0; col < 3; col++) { … } } recorre 3 × 3 = 9 casillas. En el juego es normal un if dentro del for que recorre enemigosVistos(), y otro if dentro para ver si el brazo está listo.
+    El fallo típico: perderse en las llaves y cerrar donde no toca, o usar la misma letra i en los dos bucles. Usa nombres distintos (fila, col), cuida la sangría y, si hay más de tres niveles, saca la parte de dentro a un método propio.
+de:
+    Verschachteln heißt, etwas in etwas anderes zu stecken: ein if in ein if, eine Schleife in eine Schleife, ein if in eine Schleife. Das Innere läuft jedes Mal komplett durch, wenn das Äußere es durchlässt.
+    Wie die Matroschka-Puppen in der Werkstatt: Im großen Roboter steckt ein mittlerer und darin ein winziger, der die Schläge austeilt. Bei Schleifen gilt: Pro Runde der äußeren dreht die innere alle ihre Runden, wie eine Uhr mit Stunden- und Minutenzeiger.
+    In Java schreibst du einfach einen Block in den anderen, mit Einrückung: for (int zeile = 0; zeile < 3; zeile++) { for (int spalte = 0; spalte < 3; spalte++) { … } } läuft über 3 × 3 = 9 Felder. Im Spiel ist ein if in der Schleife über enemigosVistos (gesehen) normal, und darin noch ein if, ob der Arm bereit ist.
+    Der typische Fehler: sich in den geschweiften Klammern verlaufen und an der falschen Stelle schließen, oder in beiden Schleifen denselben Buchstaben i nehmen. Nimm verschiedene Namen (zeile, spalte), achte auf die Einrückung, und ab drei Ebenen lager das Innere in eine eigene Methode aus.
+en:
+    Nesting means putting one thing inside another: an if inside an if, a loop inside a loop, an if inside a loop. The inner part runs completely every time the outer part lets it through.
+    It's like the Russian dolls in the workshop: inside the big robot there's a medium one, and inside that a tiny one who throws the punches. With loops: for every lap of the outer one, the inner one does all of its laps, like a clock with an hour hand and a minute hand.
+    In Java you just write one block inside the other, indented: for (int row = 0; row < 3; row++) { for (int col = 0; col < 3; col++) { … } } covers 3 × 3 = 9 squares. In the game an if inside the loop over enemigosVistos (seenEnemies) is normal, with another if inside to check whether the arm is ready.
+    The classic mistake: getting lost in the braces and closing in the wrong place, or using the same letter i in both loops. Use different names (row, col), keep the indentation tidy and, beyond three levels, move the inner part into a method of its own.
+pseudo.es:
+    PARA fila DESDE 0 HASTA 2:
+        PARA col DESDE 0 HASTA 2:
+            SI fila = col:
+                escribir "diagonal: " + fila + "," + col
+pseudo.de:
+    FÜR zeile VON 0 BIS 2:
+        FÜR spalte VON 0 BIS 2:
+            WENN zeile = spalte:
+                schreibe "Diagonale: " + zeile + "," + spalte
+pseudo.en:
+    FOR row FROM 0 TO 2:
+        FOR col FROM 0 TO 2:
+            IF row = col:
+                write "diagonal: " + row + "," + col
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alEmpezar() {
+            for (int fila = 0; fila < 3; fila++) {        // el de fuera: 3 vueltas || die äußere: 3 Runden || the outer one: 3 laps
+                for (int col = 0; col < 3; col++) {       // el de dentro: 3 por cada una de fuera || die innere: 3 pro äußere Runde || the inner one: 3 per outer lap
+                    if (fila == col) {                    // un if dentro de los dos || ein if in beiden || an if inside both
+                        escribir("diagonal: " + fila + "," + col);
+                    }
+                }
+            }
+        }
+    }
+
+=== switch
+nivel: 2
+tema: 04
+titulo.es: Switch
+titulo.de: Switch
+titulo.en: Switch
+claves.es: switch, switch case, case, que es un switch, switch clasico, varios casos, default
+claves.de: switch, switch case, case, was ist ein switch, mehrere fälle, fallunterscheidung, default
+claves.en: switch, switch case, case, what is a switch, switch statement, many cases, fall through
+ver: if_else, switch_expresion, break_continue, enum
+es:
+    Un switch elige entre varios caminos según el valor de una sola cosa: si vale 1, haz esto; si vale 2, esto otro; si no es ninguno, lo de por defecto. Es una forma ordenada de escribir muchos if seguidos que miran lo mismo.
+    Es la ruleta de entrada del locutor: según el número que salga, el robot entra al ring bailando, haciendo el pino o tropezando con la cuerda. Y si sale un número que no está en la lista, entra andando sin más (eso es el default).
+    En Java: switch (valor) { case 1: …; break; case 2: …; break; default: …; }. Funciona con int, char, String y enum. En el juego, por ejemplo, switch (ronda()) para saludar distinto en cada ronda, o switch (g.arma()) para reaccionar según el arma que te ha dado.
+    El fallo típico: olvidar el break. Sin él, el switch clásico «se cuela» y ejecuta también el caso de abajo. Pon un break al final de cada caso (o usa el switch con flechas de Java 14, que no se cuela), y no olvides el default.
+de:
+    Ein switch wählt zwischen mehreren Wegen, je nach dem Wert einer einzigen Sache: Ist er 1, tu dies; ist er 2, tu das; passt keiner, nimm den Standardfall. Es ist eine aufgeräumte Art, viele ifs hintereinander zu schreiben, die alle dasselbe prüfen.
+    Er ist das Glücksrad des Ringsprechers beim Einmarsch: Je nach Zahl tanzt der Roboter in den Ring, macht einen Handstand oder stolpert über das Seil. Kommt eine Zahl, die nicht auf der Liste steht, geht er einfach ganz normal hinein (das ist default).
+    In Java: switch (wert) { case 1: …; break; case 2: …; break; default: …; }. Er funktioniert mit int, char, String und enum. Im Spiel etwa mit ronda (runde): switch (ronda()), um in jeder Runde anders zu grüßen, oder switch (g.arma()), um je nach Waffe zu reagieren, die dich getroffen hat.
+    Der typische Fehler: das break vergessen. Ohne break „rutscht“ der klassische switch durch und führt auch den Fall darunter aus. Setz ans Ende jedes Falls ein break (oder nimm den Pfeil-switch aus Java 14, der nicht durchrutscht), und vergiss default nicht.
+en:
+    A switch picks one of several paths depending on the value of a single thing: if it's 1, do this; if it's 2, do that; if it's none of them, do the default. It's a tidy way of writing lots of ifs in a row that all check the same thing.
+    It's the announcer's entrance wheel: depending on the number, the robot dances into the ring, does a handstand or trips over the rope. And if the number isn't on the list, it just walks in normally (that's the default).
+    In Java: switch (value) { case 1: …; break; case 2: …; break; default: …; }. It works with int, char, String and enum. In the game, for example with ronda (round): switch (ronda()) to greet differently every round, or switch (g.arma()) to react to the weapon that hit you.
+    The classic mistake: forgetting the break. Without it, the classic switch "falls through" and runs the case below as well. Put a break at the end of every case (or use the arrow switch from Java 14, which doesn't fall through), and don't forget the default.
+pseudo.es:
+    SEGÚN ronda:
+        CASO 1: decir "¡Encantado!"
+        CASO 2: decir "Otra vez tú"
+        SI NO: decir "Ya nos conocemos"
+pseudo.de:
+    JE NACH runde:
+        FALL 1: sage "Freut mich!"
+        FALL 2: sage "Du schon wieder"
+        SONST: sage "Wir kennen uns ja"
+pseudo.en:
+    DEPENDING ON round:
+        CASE 1: say "Nice to meet you!"
+        CASE 2: say "You again"
+        ELSE: say "We've met before"
+ejemplo:
+    @Override
+    public void alEmpezar() {
+        switch (ronda()) {                  // mira el número de ronda || schaut auf die Rundennummer || looks at the round number
+            case 1:
+                decir("¡Encantado!");
+                break;                      // sin break, se cuela en el siguiente || ohne break rutscht es in den nächsten || without break it falls into the next one
+            case 2:
+                decir("Otra vez tú");
+                break;
+            default:                        // cualquier otra ronda || jede andere Runde || any other round
+                decir("Ya nos conocemos");
+        }
+    }
+
+=== ternario
+nivel: 2
+tema: 04
+titulo.es: Operador ternario
+titulo.de: Ternärer Operator
+titulo.en: Ternary operator
+claves.es: ternario, operador ternario, interrogacion y dos puntos, if en una linea, elegir entre dos valores, ternary
+claves.de: ternär, ternärer operator, bedingungsoperator, fragezeichen doppelpunkt, if in einer zeile, ternary
+claves.en: ternary, ternary operator, conditional operator, question mark colon, one line if, pick one of two values
+ver: if_else, boolean, switch_expresion
+es:
+    El operador ternario es un if en miniatura que no hace cosas, sino que da un valor: «si esto es verdad, vale A; si no, vale B». Se escribe con una interrogación y dos puntos.
+    Es el robot indeciso con una moneda en la frente: cara, pego; cruz, huyo. No hay discurso ni plan: una pregunta, dos respuestas, y elige una en un instante.
+    En Java: condición ? valorSiSí : valorSiNo. Por ejemplo, String plan = e.distancia() < 100 ? "pegar" : "acercarse"; o avanzar(energia() > 50 ? 80 : 30);. Sirve para elegir un valor dentro de otra expresión sin escribir un if de cinco líneas.
+    El fallo típico: encadenar ternarios uno dentro de otro (a ? b : c ? d : e) hasta que nadie entiende nada. Si hay más de dos opciones, o si cada lado tiene que hacer algo y no solo dar un valor, usa un if o un switch.
+de:
+    Der ternäre Operator ist ein Mini-if, das nichts tut, sondern einen Wert liefert: „Wenn das stimmt, ist es A, sonst B.“ Man schreibt ihn mit Fragezeichen und Doppelpunkt.
+    Er ist der unentschlossene Roboter mit einer Münze auf der Stirn: Kopf, ich schlage zu; Zahl, ich renne weg. Keine Rede, kein Plan: eine Frage, zwei Antworten, und im Nu ist eine gewählt.
+    In Java: Bedingung ? wertWennJa : wertWennNein. Zum Beispiel String plan = e.distancia() < 100 ? "pegar" : "acercarse"; oder avanzar(energia() > 50 ? 80 : 30); (avanzar heißt vorwaerts, energia heißt energie). Damit wählst du einen Wert mitten in einem Ausdruck, ohne ein fünfzeiliges if.
+    Der typische Fehler: Ternäre ineinander verketten (a ? b : c ? d : e), bis keiner mehr durchblickt. Bei mehr als zwei Möglichkeiten, oder wenn jede Seite etwas tun und nicht nur einen Wert liefern soll, nimm ein if oder einen switch.
+en:
+    The ternary operator is a tiny if that doesn't do things but gives a value: "if this is true, it's A; otherwise it's B". You write it with a question mark and a colon.
+    It's the indecisive robot with a coin stuck to its forehead: heads, I punch; tails, I run. No speech, no plan: one question, two answers, and it picks one in an instant.
+    In Java: condition ? valueIfYes : valueIfNo. For example String plan = e.distancia() < 100 ? "pegar" : "acercarse"; or avanzar(energia() > 50 ? 80 : 30); (avanzar is ahead, energia is energy). It lets you choose a value in the middle of another expression without a five-line if.
+    The classic mistake: chaining ternaries inside each other (a ? b : c ? d : e) until nobody can follow. With more than two options, or when each side has to do something rather than just give a value, use an if or a switch.
+pseudo.es:
+    plan ← SI rival a menos de 100 ENTONCES "pegar" SI NO "acercarse"
+    decir plan
+    paso ← SI energía > 50 ENTONCES 80 SI NO 30
+    avanzar paso
+pseudo.de:
+    plan ← WENN gegner näher als 100 DANN "zuschlagen" SONST "rangehen"
+    sage plan
+    schritt ← WENN energie > 50 DANN 80 SONST 30
+    fahre schritt
+pseudo.en:
+    plan ← IF rival closer than 100 THEN "hit" ELSE "close in"
+    say plan
+    step ← IF energy > 50 THEN 80 ELSE 30
+    move step
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            String plan = e.distancia() < 100 ? "pegar" : "acercarse";   // ¿cerca? pegar; si no, acercarse || nah? zuschlagen; sonst ran || close? hit; otherwise close in
+            decir(plan);
+            double paso = energia() > 50 ? 80 : 30;                      // dos valores posibles, uno elegido || zwei mögliche Werte, einer gewählt || two possible values, one chosen
+            avanzar(paso);
+        }
+    }
+
+=== metodo
+nivel: 2
+tema: 06
+titulo.es: Método propio
+titulo.de: Eigene Methode
+titulo.en: Your own method
+claves.es: metodo, que es un metodo, metodo propio, definir un metodo, crear un metodo, hacer mi propio metodo, funcion, void
+claves.de: methode, was ist eine methode, eigene methode, methode definieren, methode schreiben, funktion, void
+claves.en: method, what is a method, my own method, define a method, write a method, function, void
+ver: llamar_metodo, parametro, return, sobrecarga
+es:
+    Un método es un trozo de código con nombre que puedes usar tantas veces como quieras con solo llamarlo. En vez de copiar las mismas cinco líneas en tres sitios, las escribes una vez, les pones nombre y las llamas por ese nombre.
+    Es el golpe secreto del robot, ensayado en el taller: «¡Torbellino!» significa girar, avanzar y soltar los dos brazos. En el combate basta con gritar «¡Torbellino!» y el robot ya sabe todos los pasos.
+    En Java: void esquivar() { girar(90); avanzar(80); }, dentro de la clase MiRobot pero fuera de los demás métodos. void quiere decir que no devuelve nada. Luego se llama con esquivar(); desde cadaTurno, desde alRecibirGolpe o desde donde haga falta. cadaTurno y alVerEnemigo también son métodos: los llama el juego.
+    El fallo típico: escribir un método dentro de otro (en Java no se puede) o definirlo y no llamarlo nunca, y extrañarse de que no pase nada. Dale un nombre que diga lo que hace, con verbo (esquivar, buscarRival), y que haga una sola cosa.
+de:
+    Eine Methode ist ein Stück Code mit Namen, das du so oft benutzen kannst, wie du willst, indem du es einfach aufrufst. Statt dieselben fünf Zeilen an drei Stellen zu kopieren, schreibst du sie einmal, gibst ihnen einen Namen und rufst sie darüber auf.
+    Sie ist der Geheimschlag des Roboters, in der Werkstatt einstudiert: „Wirbelwind!“ bedeutet drehen, vorfahren und beide Arme loslassen. Im Kampf reicht es, „Wirbelwind!“ zu rufen, und der Roboter kennt alle Schritte.
+    In Java: void esquivar() { girar(90); avanzar(80); } in der Klasse MiRobot, aber außerhalb der anderen Methoden. void heißt, dass sie nichts zurückgibt. Danach rufst du sie mit esquivar(); auf, aus cadaTurno (jedenZug), aus alRecibirGolpe (beiTreffer) oder wo immer du sie brauchst. Auch cadaTurno und alVerEnemigo (beiSicht) sind Methoden: Die ruft das Spiel auf.
+    Der typische Fehler: eine Methode in eine andere schreiben (das geht in Java nicht) oder sie definieren, aber nie aufrufen, und sich wundern, dass nichts passiert. Gib ihr einen Namen, der sagt, was sie tut, mit Verb (esquivar, buscarRival), und lass sie nur eine Sache tun.
+en:
+    A method is a named piece of code you can use as many times as you like just by calling it. Instead of copying the same five lines into three places, you write them once, give them a name and call them by that name.
+    It's the robot's secret move, rehearsed in the workshop: "Whirlwind!" means turn, charge and swing both arms. In the fight it only has to shout "Whirlwind!" and the robot already knows every step.
+    In Java: void esquivar() { girar(90); avanzar(80); }, inside the MiRobot class but outside the other methods. void means it gives nothing back. Then you call it with esquivar(); from cadaTurno (onTick), from alRecibirGolpe (onHit) or wherever you need it. cadaTurno and alVerEnemigo (onSeeEnemy) are methods too: the game calls them.
+    The classic mistake: writing a method inside another one (Java doesn't allow it) or defining it and never calling it, then wondering why nothing happens. Give it a name that says what it does, with a verb (esquivar, buscarRival), and make it do just one thing.
+pseudo.es:
+    CUANDO me dan:
+        esquivar
+    MÉTODO esquivar:
+        girar 90
+        avanzar 80
+pseudo.de:
+    WENN ich getroffen werde:
+        ausweichen
+    METHODE ausweichen:
+        drehe 90
+        fahre 80
+pseudo.en:
+    WHEN I get hit:
+        dodge
+    METHOD dodge:
+        turn 90
+        move 80
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alRecibirGolpe(Golpe g) {
+            esquivar();                      // se llama por su nombre || Aufruf über den Namen || called by its name
+        }
+
+        void esquivar() {                    // mi método: fuera de los otros, dentro de la clase || meine Methode: außerhalb der anderen, in der Klasse || my method: outside the others, inside the class
+            girar(90);
+            avanzar(80);
+        }
+    }
+
+=== parametro
+nivel: 2
+tema: 06
+titulo.es: Parámetro
+titulo.de: Parameter
+titulo.en: Parameter
+claves.es: parametro, parametros, argumento, argumentos, parametros y argumentos, pasar datos a un metodo, lo de entre parentesis
+claves.de: parameter, argument, argumente, parameter und argumente, werte übergeben, daten an eine methode übergeben
+claves.en: parameter, parameters, argument, arguments, parameters and arguments, pass a value to a method
+ver: metodo, return, llamar_metodo, referencia
+es:
+    Un parámetro es un hueco con nombre en un método, para que quien lo llame le dé un dato distinto cada vez. Al definir el método escribes los parámetros; al llamarlo, pones los valores de verdad, que se llaman argumentos.
+    Es la máquina de golpes del taller con una ranura: «¿cuántos puñetazos?». La ranura es el parámetro; el 3 que metes hoy, o el 10 de mañana, es el argumento. La máquina es la misma; lo que hace depende de lo que le metas.
+    En Java van entre los paréntesis, cada uno con su tipo: void acercarse(double distancia, double margen) { … }. Se llama con acercarse(e.distancia(), 60);. Ya los usas sin saberlo: avanzar(50) pasa el argumento 50, y alVerEnemigo(Enemigo e) recibe al rival en el parámetro e.
+    El fallo típico: pasar los argumentos en otro orden, o de otro tipo, que el de la definición: acercarse(60, e.distancia()) compila pero hace lo contrario. Y cambiar un parámetro de tipo int dentro del método no cambia la variable de quien lo llamó: Java pasa una copia del valor.
+de:
+    Ein Parameter ist eine benannte Lücke in einer Methode, damit der Aufrufer ihr jedes Mal einen anderen Wert geben kann. Beim Definieren schreibst du die Parameter hin; beim Aufrufen setzt du die echten Werte ein, die Argumente heißen.
+    Er ist der Schlagautomat in der Werkstatt mit einem Schlitz: „Wie viele Schläge?“ Der Schlitz ist der Parameter, die 3 heute oder die 10 morgen ist das Argument. Der Automat bleibt derselbe; was er tut, hängt davon ab, was du einwirfst.
+    In Java stehen sie in den Klammern, jeder mit seinem Typ: void acercarse(double distancia, double margen) { … }. Aufgerufen wird mit acercarse(e.distancia(), 60);. Du benutzt sie schon, ohne es zu wissen: avanzar(50) (vorwaerts) übergibt das Argument 50, und alVerEnemigo(Enemigo e) (beiSicht) bekommt den Gegner im Parameter e.
+    Der typische Fehler: Argumente in anderer Reihenfolge oder mit anderem Typ übergeben als in der Definition: acercarse(60, e.distancia()) kompiliert, tut aber das Gegenteil. Und wenn du einen int-Parameter in der Methode änderst, ändert sich die Variable des Aufrufers nicht: Java übergibt eine Kopie des Werts.
+en:
+    A parameter is a named slot in a method, so whoever calls it can hand it a different value each time. When you define the method you write the parameters; when you call it you put in the real values, which are called arguments.
+    It's the punching machine in the workshop with a coin slot: "how many punches?". The slot is the parameter; the 3 you put in today, or the 10 tomorrow, is the argument. The machine is the same; what it does depends on what you feed it.
+    In Java they go inside the brackets, each with its type: void acercarse(double distancia, double margen) { … }. You call it with acercarse(e.distancia(), 60);. You already use them without knowing: avanzar(50) (ahead) passes the argument 50, and alVerEnemigo(Enemigo e) (onSeeEnemy) receives the rival in the parameter e.
+    The classic mistake: passing the arguments in a different order, or of a different type, than the definition: acercarse(60, e.distancia()) compiles but does the opposite. And changing an int parameter inside the method doesn't change the caller's variable: Java passes a copy of the value.
+pseudo.es:
+    AL VER rival:
+        acercarse(distancia del rival, 60)
+    MÉTODO acercarse(distancia, margen):
+        SI distancia > margen:
+            avanzar distancia - margen
+pseudo.de:
+    WENN ich einen gegner sehe:
+        rangehen(abstand des gegners, 60)
+    METHODE rangehen(abstand, rand):
+        WENN abstand > rand:
+            fahre abstand - rand
+pseudo.en:
+    WHEN I see a rival:
+        closeIn(distance to rival, 60)
+    METHOD closeIn(distance, margin):
+        IF distance > margin:
+            move distance - margin
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            acercarse(e.distancia(), 60);                  // argumentos: los valores de verdad || Argumente: die echten Werte || arguments: the real values
+        }
+
+        void acercarse(double distancia, double margen) {  // parámetros: los huecos con nombre || Parameter: die benannten Lücken || parameters: the named slots
+            if (distancia > margen) {
+                avanzar(distancia - margen);
+            }
+        }
+    }
+
+=== return
+nivel: 2
+tema: 06
+titulo.es: Return
+titulo.de: Return
+titulo.en: Return
+claves.es: return, devolver, devolver un valor, valor de retorno, retorno, que devuelve un metodo, tipo de retorno
+claves.de: return, zurückgeben, rückgabe, rückgabewert, wert zurückgeben, rückgabetyp
+claves.en: return, return a value, return value, give back a value, return type, missing return statement
+ver: metodo, parametro, boolean, ternario
+es:
+    return hace dos cosas a la vez: termina el método en ese mismo instante y, si el método lo promete, entrega un valor a quien lo llamó. Así un método no solo hace cosas: también puede responder preguntas.
+    Es el ojeador que mandas a espiar al rival: va, mira y vuelve con una respuesta, «¡está a tiro!» o «¡demasiado lejos!». En cuanto da la respuesta, se acabó su trabajo; lo que pensara decir después ya no lo dice.
+    En Java, en vez de void, delante del nombre va el tipo que devuelve: boolean estaAMano(Enemigo e) { return e.distancia() < alcanceIzquierda(); }. Quien lo llama usa el resultado como cualquier valor: if (estaAMano(e)) atacar();. Así funcionan los de la API: energia() devuelve tu energía y atacar() devuelve si has podido atacar.
+    El fallo típico: que haya un camino sin return (por ejemplo, un if sin su else) y Java se queje con «missing return statement», o llamar al método y no usar lo que devuelve. Y ojo: el código que va justo después de un return nunca se ejecuta.
+de:
+    return tut zwei Dinge auf einmal: Es beendet die Methode sofort und übergibt, wenn die Methode das verspricht, dem Aufrufer einen Wert. So tut eine Methode nicht nur etwas, sondern kann auch Fragen beantworten.
+    Es ist der Späher, den du zum Gegner schickst: Er geht hin, schaut und kommt mit einer Antwort zurück, „In Reichweite!“ oder „Zu weit weg!“. Sobald er geantwortet hat, ist seine Arbeit vorbei; was er danach noch sagen wollte, sagt er nicht mehr.
+    In Java steht statt void der Typ vor dem Namen, den sie zurückgibt: boolean estaAMano(Enemigo e) { return e.distancia() < alcanceIzquierda(); } (alcanceIzquierda heißt reichweiteLinks). Der Aufrufer benutzt das Ergebnis wie jeden anderen Wert: if (estaAMano(e)) atacar();. So arbeiten auch die Methoden der API: energia (energie) gibt deine Energie zurück, und atacar (angreifen) gibt zurück, ob der Angriff geklappt hat.
+    Der typische Fehler: ein Weg ohne return (etwa ein if ohne sein else), worauf Java mit „missing return statement“ meckert, oder die Methode aufrufen und das Ergebnis nicht benutzen. Und Vorsicht: Code direkt nach einem return wird nie ausgeführt.
+en:
+    return does two things at once: it ends the method right there and, if the method promises one, hands a value back to whoever called it. That way a method doesn't just do things: it can also answer questions.
+    It's the scout you send to spy on the rival: off he goes, takes a look and comes back with an answer, "in range!" or "too far!". The moment he answers, his job is done; whatever he was going to say next never gets said.
+    In Java, instead of void, the type it returns goes before the name: boolean estaAMano(Enemigo e) { return e.distancia() < alcanceIzquierda(); } (alcanceIzquierda is rangeLeft). The caller uses the result like any other value: if (estaAMano(e)) atacar();. The API works the same way: energia (energy) returns your energy and atacar (attack) returns whether the attack went off.
+    The classic mistake: a path with no return (say, an if without its else), and Java complains with "missing return statement", or calling the method and ignoring what it returns. And watch out: code right after a return never runs.
+pseudo.es:
+    AL VER rival:
+        SI estaAMano(rival):
+            apuntar y atacar
+    MÉTODO estaAMano(rival):
+        SI rival vuela: DEVOLVER falso
+        DEVOLVER distancia del rival < mi alcance
+pseudo.de:
+    WENN ich einen gegner sehe:
+        WENN inReichweite(gegner):
+            zielen und angreifen
+    METHODE inReichweite(gegner):
+        WENN gegner fliegt: ZURÜCKGEBEN falsch
+        ZURÜCKGEBEN abstand des gegners < meine reichweite
+pseudo.en:
+    WHEN I see a rival:
+        IF inReach(rival):
+            aim and attack
+    METHOD inReach(rival):
+        IF rival flies: RETURN false
+        RETURN distance to rival < my reach
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            if (estaAMano(e)) {                            // usa la respuesta como un boolean || nutzt die Antwort als boolean || uses the answer as a boolean
+                apuntarHacia(e.angulo());
+                atacar();
+            }
+        }
+
+        boolean estaAMano(Enemigo e) {                     // boolean: promete devolver sí o no || boolean: verspricht ja oder nein || boolean: promises a yes or no
+            if (e.vuela()) return false;                   // return acaba aquí mismo || return endet genau hier || return ends right here
+            return e.distancia() < alcanceIzquierda();
+        }
+    }
+
+=== ambito
+nivel: 2
+tema: 06
+titulo.es: Ámbito
+titulo.de: Gültigkeitsbereich
+titulo.en: Scope
+claves.es: ambito, scope, ambito de una variable, donde vive una variable, variable local, cannot find symbol, variable que desaparece
+claves.de: gültigkeitsbereich, sichtbarkeit einer variable, scope, lokale variable, wo lebt eine variable, cannot find symbol
+claves.en: scope, variable scope, local variable, where a variable lives, cannot find symbol, variable out of scope
+ver: variable, bloque, atributo, metodo
+es:
+    El ámbito de una variable es la parte del código donde esa variable existe y se puede usar. Una variable vive desde que se declara hasta la llave } que cierra el bloque donde nació; fuera de ahí, para Java, no existe.
+    Es como las taquillas del estadio: lo que guardas en la taquilla de tu vestuario solo lo ves desde tu vestuario. Lo que está colgado en el tablón del pasillo (la clase) lo ve todo el equipo. Y lo que dejas en el banquillo durante un asalto, al acabar el asalto lo barren.
+    En Java: una variable declarada dentro de un método (local) solo existe en ese método y vuelve a nacer en cada llamada; una declarada dentro de un if o de un for, solo dentro de esas llaves. Una declarada en la clase, fuera de los métodos (un campo), la ven todos los métodos de MiRobot y dura entre turnos.
+    El fallo típico: usar una variable fuera de sus llaves y recibir «cannot find symbol», o declararla en cadaTurno esperando que recuerde algo del turno anterior. Declara cada variable en el sitio más pequeño que sirva; si tiene que durar entre turnos, súbela a la clase.
+de:
+    Der Gültigkeitsbereich einer Variable ist der Teil des Codes, in dem es sie gibt und man sie benutzen kann. Eine Variable lebt von ihrer Deklaration bis zur schließenden Klammer } des Blocks, in dem sie entstanden ist; außerhalb gibt es sie für Java nicht.
+    Wie die Spinde im Stadion: Was in deinem Kabinen-Spind liegt, siehst nur du von deiner Kabine aus. Was am schwarzen Brett im Gang hängt (die Klasse), sieht die ganze Mannschaft. Und was du während einer Runde auf der Bank liegen lässt, wird am Rundenende weggefegt.
+    In Java: Eine in einer Methode deklarierte (lokale) Variable gibt es nur in dieser Methode, und bei jedem Aufruf entsteht sie neu; eine in einem if oder for deklarierte nur in diesen Klammern. Eine in der Klasse außerhalb der Methoden (ein Feld) sehen alle Methoden von MiRobot, und sie hält über die Züge hinweg.
+    Der typische Fehler: eine Variable außerhalb ihrer Klammern benutzen und „cannot find symbol“ bekommen, oder sie in cadaTurno (jedenZug) deklarieren und erwarten, dass sie sich etwas aus dem letzten Zug merkt. Deklariere jede Variable im kleinsten Bereich, der reicht; muss sie über Züge halten, zieh sie hoch in die Klasse.
+en:
+    A variable's scope is the part of the code where that variable exists and can be used. A variable lives from where it is declared to the closing brace } of the block it was born in; outside of that, as far as Java is concerned, it doesn't exist.
+    It's like the lockers at the stadium: what you keep in your dressing-room locker can only be seen from your dressing room. What's pinned on the corridor noticeboard (the class) the whole team can see. And whatever you leave on the bench during a round gets swept away when the round ends.
+    In Java: a variable declared inside a method (a local) only exists in that method and is born again on every call; one declared inside an if or a for, only inside those braces. One declared in the class, outside the methods (a field), is visible to every method of MiRobot and lasts between ticks.
+    The classic mistake: using a variable outside its braces and getting "cannot find symbol", or declaring it in cadaTurno (onTick) and expecting it to remember something from the last tick. Declare every variable in the smallest place that works; if it has to last between ticks, move it up to the class.
+pseudo.es:
+    EN LA CLASE: turnosViéndolo ← 0      (lo ven todos)
+    AL VER rival:
+        cerca ← 100                      (solo aquí dentro)
+        turnosViéndolo ← turnosViéndolo + 1
+        SI rival más lejos que cerca:
+            extra ← 10                   (solo dentro de este SI)
+pseudo.de:
+    IN DER KLASSE: zuegeImBlick ← 0      (sehen alle)
+    WENN ich einen gegner sehe:
+        nah ← 100                        (nur hier drinnen)
+        zuegeImBlick ← zuegeImBlick + 1
+        WENN gegner weiter weg als nah:
+            extra ← 10                   (nur in diesem WENN)
+pseudo.en:
+    IN THE CLASS: ticksSeen ← 0          (everyone sees it)
+    WHEN I see a rival:
+        near ← 100                       (only in here)
+        ticksSeen ← ticksSeen + 1
+        IF rival farther than near:
+            extra ← 10                   (only inside this IF)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        int turnosViendolo = 0;                      // de la clase: lo ve todo el robot || der Klasse: der ganze Roboter sieht es || the class's: the whole robot sees it
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            double cerca = 100;                      // local: solo dentro de este método || lokal: nur in dieser Methode || local: only in this method
+            turnosViendolo++;
+            if (e.distancia() > cerca) {
+                double extra = 10;                   // aún más dentro: solo en este if || noch tiefer: nur in diesem if || even deeper: only in this if
+                avanzar(e.distancia() - cerca + extra);
+            }
+            escribir(turnosViendolo);                // aquí extra ya no existe || hier gibt es extra nicht mehr || extra no longer exists here
+        }
+    }
+
+=== array
+nivel: 2
+tema: 07
+titulo.es: Array
+titulo.de: Array
+titulo.en: Array
+claves.es: array, arrays, arreglo, vector, que es un array, crear un array, tamano fijo, corchetes, new int
+claves.de: array, arrays, feld, was ist ein array, array anlegen, feste größe, eckige klammern
+claves.en: array, arrays, what is an array, create an array, fixed size, square brackets, new int
+ver: recorrer_array, list, for, tipo
+es:
+    Un array es una fila de cajones numerados, todos del mismo tipo, con un tamaño que se decide al crearlo y ya no cambia. En vez de diez variables (golpe1, golpe2…), una sola con diez cajones.
+    Es la estantería de piezas de repuesto del taller: cinco huecos en fila, numerados desde el cero (el que hizo la estantería era programador). En cada hueco cabe un brazo, y solo un brazo: ahí no se mete una tostadora.
+    En Java: int[] golpes = new int[5]; crea 5 cajones (del 0 al 4) que empiezan a 0, y double[] pasos = {40, 80, 120}; crea uno ya lleno. Se usa con corchetes: pasos[0] es el primero, golpes[1]++ suma uno al segundo y pasos.length dice cuántos cajones hay (sin paréntesis).
+    El fallo típico: contar desde 1. El primer cajón es el 0 y el último es length - 1; pedir pasos[3] en un array de 3 lanza ArrayIndexOutOfBoundsException. Y si necesitas que crezca o encoja, no es un array: es una List.
+de:
+    Ein Array ist eine Reihe nummerierter Fächer, alle vom selben Typ, mit einer Größe, die beim Anlegen festgelegt wird und sich danach nicht mehr ändert. Statt zehn Variablen (schlag1, schlag2 …) eine einzige mit zehn Fächern.
+    Es ist das Ersatzteilregal in der Werkstatt: fünf Fächer in einer Reihe, nummeriert ab null (wer das Regal gebaut hat, war Programmierer). In jedes Fach passt ein Arm, und nur ein Arm: Ein Toaster kommt da nicht rein.
+    In Java: int[] golpes = new int[5]; legt 5 Fächer an (0 bis 4), die mit 0 beginnen, und double[] pasos = {40, 80, 120}; legt ein schon gefülltes an. Benutzt wird es mit eckigen Klammern: pasos[0] ist das erste, golpes[1]++ zählt das zweite hoch, und pasos.length sagt, wie viele Fächer es gibt (ohne Klammern).
+    Der typische Fehler: ab 1 zählen. Das erste Fach ist 0, das letzte length - 1; pasos[3] bei einem Array mit 3 Fächern wirft eine ArrayIndexOutOfBoundsException. Und wenn es wachsen oder schrumpfen soll, ist es kein Array, sondern eine List.
+en:
+    An array is a row of numbered slots, all of the same type, whose size is set when you create it and never changes. Instead of ten variables (hit1, hit2…), a single one with ten slots.
+    It's the spare-parts shelf in the workshop: five spaces in a row, numbered from zero (whoever built the shelf was a programmer). Each space holds one arm, and only an arm: you can't put a toaster in there.
+    In Java: int[] golpes = new int[5]; makes 5 slots (0 to 4) that start at 0, and double[] pasos = {40, 80, 120}; makes one already filled. You use it with square brackets: pasos[0] is the first, golpes[1]++ adds one to the second, and pasos.length tells you how many slots there are (no brackets).
+    The classic mistake: counting from 1. The first slot is 0 and the last is length - 1; asking for pasos[3] in an array of 3 throws ArrayIndexOutOfBoundsException. And if you need it to grow or shrink, it isn't an array: it's a List.
+pseudo.es:
+    pasos ← [40, 80, 120]            (cajones 0, 1 y 2)
+    golpesPorBrazo ← [0, 0]
+    CADA TURNO:
+        avanzar pasos[turno MÓDULO 3]
+        SI el brazo izquierdo pega: golpesPorBrazo[0] ← golpesPorBrazo[0] + 1
+pseudo.de:
+    schritte ← [40, 80, 120]         (Fächer 0, 1 und 2)
+    schlaegeProArm ← [0, 0]
+    JEDEN ZUG:
+        fahre schritte[zug MODULO 3]
+        WENN der linke Arm trifft: schlaegeProArm[0] ← schlaegeProArm[0] + 1
+pseudo.en:
+    steps ← [40, 80, 120]            (slots 0, 1 and 2)
+    hitsPerArm ← [0, 0]
+    EVERY TICK:
+        move steps[tick MODULO 3]
+        IF the left arm lands: hitsPerArm[0] ← hitsPerArm[0] + 1
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        double[] pasos = {40, 80, 120};                    // tres cajones: 0, 1 y 2 || drei Fächer: 0, 1 und 2 || three slots: 0, 1 and 2
+        int[] golpesPorBrazo = new int[2];                 // dos cajones, a 0 al nacer || zwei Fächer, anfangs 0 || two slots, starting at 0
+
+        @Override
+        public void cadaTurno() {
+            avanzar(pasos[turnoActual() % pasos.length]);  // % nunca se sale del array || mit % fällt man nie aus dem Array || % never falls off the array
+            if (atacarIzquierda()) golpesPorBrazo[0]++;
+            if (atacarDerecha()) golpesPorBrazo[1]++;
+        }
+    }
+
+=== recorrer_array
+nivel: 2
+tema: 07
+titulo.es: Recorrer un array
+titulo.de: Array durchlaufen
+titulo.en: Looping over an array
+claves.es: recorrer un array, recorrer array, indice, indices, for each, for-each, fuera de rango, arrayindexoutofboundsexception
+claves.de: array durchlaufen, über ein array laufen, index, indizes, for each, for-each, außerhalb des bereichs, arrayindexoutofboundsexception
+claves.en: loop over an array, iterate an array, index, indices, for each, for-each, out of bounds, arrayindexoutofboundsexception
+ver: array, for, break_continue, iterator
+es:
+    Recorrer un array es pasar por todos sus cajones, uno tras otro, para mirar o cambiar lo que hay en cada uno. Hay dos formas: con un contador que va diciendo el número de cajón, o con un for-each que te da cada valor sin números.
+    Es el inspector del taller pasando lista a la estantería de repuestos: «hueco 0, un brazo; hueco 1, un brazo; hueco 2… ¡vacío!». Si cuenta un hueco de más, mete la mano en la pared y se la pilla.
+    En Java, con índice: for (int i = 0; i < alcances.length; i++) { … alcances[i] … }, que sirve cuando necesitas saber en qué cajón estás o cambiar su valor. Sin índice: for (double a : alcances) { … }, más corto y sin peligro de pasarse. El mismo for-each recorre listas: for (Enemigo e : enemigosVistos()).
+    El fallo típico: escribir i <= alcances.length en vez de i < alcances.length; la última vuelta pide un cajón que no existe y salta ArrayIndexOutOfBoundsException. Otro: cambiar a en un for-each creyendo que cambia el array (solo cambias una copia; para cambiar, usa el índice).
+de:
+    Ein Array durchlaufen heißt, nacheinander durch alle Fächer zu gehen, um nachzusehen oder zu ändern, was darin liegt. Es gibt zwei Wege: mit einem Zähler, der die Fachnummer angibt, oder mit einem for-each, das dir jeden Wert ohne Nummern gibt.
+    Es ist der Werkstattprüfer, der beim Ersatzteilregal durchzählt: „Fach 0, ein Arm; Fach 1, ein Arm; Fach 2 … leer!“ Zählt er ein Fach zu viel, greift er in die Wand und klemmt sich die Hand ein.
+    In Java mit Index: for (int i = 0; i < alcances.length; i++) { … alcances[i] … }, gut, wenn du wissen musst, in welchem Fach du bist, oder den Wert ändern willst. Ohne Index: for (double a : alcances) { … }, kürzer und ohne Gefahr, darüber hinauszulaufen. Dasselbe for-each läuft auch über Listen: for (Enemigo e : enemigosVistos (gesehen)).
+    Der typische Fehler: i <= alcances.length statt i < alcances.length schreiben; die letzte Runde verlangt ein Fach, das es nicht gibt, und es kracht mit ArrayIndexOutOfBoundsException. Noch einer: a im for-each ändern und glauben, das Array ändere sich (du änderst nur eine Kopie; zum Ändern nimm den Index).
+en:
+    Looping over an array means visiting every slot, one after another, to look at or change what's in each one. There are two ways: with a counter that says the slot number, or with a for-each that hands you each value without numbers.
+    It's the workshop inspector taking roll call of the spare-parts shelf: "space 0, an arm; space 1, an arm; space 2… empty!". If he counts one space too many, he sticks his hand into the wall and gets it stuck.
+    In Java, with an index: for (int i = 0; i < alcances.length; i++) { … alcances[i] … }, handy when you need to know which slot you're in or want to change its value. Without an index: for (double a : alcances) { … }, shorter and with no risk of running past the end. The same for-each works on lists: for (Enemigo e : enemigosVistos (seenEnemies)).
+    The classic mistake: writing i <= alcances.length instead of i < alcances.length; the last lap asks for a slot that doesn't exist and you get ArrayIndexOutOfBoundsException. Another one: changing a in a for-each and thinking the array changes (you only change a copy; to change it, use the index).
+pseudo.es:
+    alcances ← [60, 90, 120, 150]
+    PARA i DESDE 0 MIENTRAS i < tamaño de alcances:
+        escribir "anillo " + i + ": " + alcances[i]
+    PARA CADA a EN alcances:
+        SI rival a menos de a: escribir "dentro de " + a
+pseudo.de:
+    reichweiten ← [60, 90, 120, 150]
+    FÜR i AB 0 SOLANGE i < größe von reichweiten:
+        schreibe "Ring " + i + ": " + reichweiten[i]
+    FÜR JEDES r IN reichweiten:
+        WENN gegner näher als r: schreibe "innerhalb von " + r
+pseudo.en:
+    ranges ← [60, 90, 120, 150]
+    FOR i FROM 0 WHILE i < size of ranges:
+        write "ring " + i + ": " + ranges[i]
+    FOR EACH r IN ranges:
+        IF rival closer than r: write "inside " + r
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        double[] alcances = {60, 90, 120, 150};
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            for (int i = 0; i < alcances.length; i++) {        // < y no <=: el último es length - 1 || < statt <=: das letzte ist length - 1 || < not <=: the last one is length - 1
+                escribir("anillo " + i + ": " + alcances[i]);
+            }
+            for (double a : alcances) {                         // for-each: cada valor, sin índices || for-each: jeder Wert, ohne Index || for-each: each value, no index
+                if (e.distancia() < a) escribir("dentro de " + a);
+            }
+        }
+    }
+
+=== string
+nivel: 2
+tema: 08
+titulo.es: String
+titulo.de: String
+titulo.en: String
+claves.es: string, texto, cadena, cadena de texto, comparar textos, comparar strings, length, substring, touppercase
+claves.de: string, text, zeichenkette, texte vergleichen, strings vergleichen, length, substring, touppercase
+claves.en: string, text, what is a string, compare strings, string comparison, length, substring, touppercase
+ver: char, stringbuilder, comparacion, null
+es:
+    Un String es un texto: una palabra, una frase, un nombre, todo lo que va entre comillas dobles. No es un tipo primitivo como int, sino un objeto que trae sus propios métodos para medirlo, cortarlo, buscar en él o pasarlo a mayúsculas.
+    Es la cinta de rotular del locutor: imprime «¡COBALTO EL DESTRUCTOR!» y la pega en la pantalla gigante. Una vez impresa, la cinta no se cambia: si quiere otro nombre, imprime una cinta nueva (los String no se modifican; cada cambio crea uno nuevo).
+    En Java: String nombre = e.nombre(); y luego nombre.length() (cuántas letras), nombre.toUpperCase() (en mayúsculas), nombre.substring(0, 3) (las tres primeras), nombre.contains("bot") o nombre.startsWith("Co"). Con + se pegan textos: decir("Hola, " + nombre);.
+    El fallo típico: comparar textos con ==. == mira si son el mismo objeto, no si tienen las mismas letras, y a veces falla sin avisar. Compara siempre con equals: "cobalto".equals(e.modelo()) (puesto así, ni siquiera falla si el otro es null). Y recuerda que toUpperCase() no cambia nombre: devuelve otro texto.
+de:
+    Ein String ist ein Text: ein Wort, ein Satz, ein Name, alles, was in doppelten Anführungszeichen steht. Er ist kein primitiver Typ wie int, sondern ein Objekt mit eigenen Methoden zum Messen, Zerschneiden, Durchsuchen oder Großschreiben.
+    Er ist das Beschriftungsband des Ringsprechers: Er druckt „KOBALT DER ZERSTÖRER!“ und klebt es auf die Riesenleinwand. Einmal gedruckt, wird das Band nicht mehr geändert: Will er einen anderen Namen, druckt er ein neues (Strings werden nie verändert; jede Änderung erzeugt einen neuen).
+    In Java: String nombre = e.nombre(); und dann nombre.length() (wie viele Zeichen), nombre.toUpperCase() (in Großbuchstaben), nombre.substring(0, 3) (die ersten drei), nombre.contains("bot") oder nombre.startsWith("Co"). Mit + klebst du Texte zusammen, etwa für decir (sagen): decir("Hallo, " + nombre);.
+    Der typische Fehler: Texte mit == vergleichen. == prüft, ob es dasselbe Objekt ist, nicht, ob die Buchstaben gleich sind, und geht manchmal stillschweigend schief. Vergleiche immer mit equals: "cobalto".equals(e.modelo()) (so herum kracht es nicht einmal, wenn das andere null ist). Und denk dran: toUpperCase() ändert nombre nicht, sondern liefert einen anderen Text.
+en:
+    A String is text: a word, a sentence, a name, anything between double quotes. It isn't a primitive type like int, but an object with its own methods to measure it, cut it, search it or turn it into capitals.
+    It's the announcer's label tape: he prints "COBALT THE DESTROYER!" and sticks it on the giant screen. Once printed, the tape never changes: if he wants another name, he prints a new tape (Strings are never modified; every change makes a new one).
+    In Java: String nombre = e.nombre(); then nombre.length() (how many characters), nombre.toUpperCase() (in capitals), nombre.substring(0, 3) (the first three), nombre.contains("bot") or nombre.startsWith("Co"). With + you glue texts together, for example for decir (say): decir("Hi, " + nombre);.
+    The classic mistake: comparing texts with ==. == checks whether they're the same object, not whether they have the same letters, and sometimes fails silently. Always compare with equals: "cobalto".equals(e.modelo()) (written that way round, it doesn't even crash if the other one is null). And remember that toUpperCase() doesn't change nombre: it returns another text.
+pseudo.es:
+    AL VER rival:
+        nombre ← nombre del rival
+        SI modelo del rival ES IGUAL A "cobalto":
+            decir "¡Tú otra vez!"
+        escribir nombre EN MAYÚSCULAS + " tiene " + letras de nombre + " letras"
+pseudo.de:
+    WENN ich einen gegner sehe:
+        name ← name des gegners
+        WENN modell des gegners GLEICH "cobalto":
+            sage "Du schon wieder!"
+        schreibe name IN GROSSBUCHSTABEN + " hat " + zeichen von name + " Zeichen"
+pseudo.en:
+    WHEN I see a rival:
+        name ← rival's name
+        IF rival's model EQUALS "cobalto":
+            say "You again!"
+        write name IN CAPITALS + " has " + letters in name + " letters"
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            String nombre = e.nombre();
+            if ("cobalto".equals(e.modelo())) {          // equals compara letras; == no || equals vergleicht Buchstaben; == nicht || equals compares letters; == doesn't
+                decir("¡Tú otra vez!");
+            }
+            String grande = nombre.toUpperCase();        // un texto nuevo; nombre sigue igual || ein neuer Text; nombre bleibt gleich || a new text; nombre stays the same
+            escribir(grande + " tiene " + nombre.length() + " letras");
+        }
+    }
+
+=== stringbuilder
+nivel: 2
+tema: 08
+titulo.es: StringBuilder
+titulo.de: StringBuilder
+titulo.en: StringBuilder
+claves.es: stringbuilder, string builder, append, juntar textos, construir un texto, pegar muchos textos, stringbuffer
+claves.de: stringbuilder, string builder, append, texte zusammensetzen, text aufbauen, viele texte verbinden, stringbuffer
+claves.en: stringbuilder, string builder, append, build a string, join many strings, string concatenation, stringbuffer
+ver: string, for, rendimiento, inmutabilidad
+es:
+    Un StringBuilder es un texto que sí se puede cambiar: le vas añadiendo trozos y, al final, lo conviertes en un String normal. Sirve para montar un texto largo a base de muchos pedazos.
+    Un String es una cinta ya impresa: para añadir una palabra hay que imprimir la cinta entera otra vez. El StringBuilder es la pizarra del locutor: va escribiendo «veo a Cobalto… a Zafiro… a Tostadora» al final de lo que ya hay, sin borrar ni copiar nada.
+    En Java: StringBuilder informe = new StringBuilder("veo: "); luego informe.append(e.nombre()).append("; "); tantas veces como quieras (cada append devuelve el mismo StringBuilder, por eso se encadenan), y al final escribir(informe.toString());. También tiene insert, reverse, setLength(0) para vaciarlo y length().
+    El fallo típico: pegar textos con + dentro de un for que da muchas vueltas: cada + crea un String nuevo y copia todo lo anterior, y con miles de vueltas se nota (y en el juego cuesta pasos). Para dos o tres trozos sueltos, + está bien; para un bucle, StringBuilder. Y no olvides el toString() al final.
+de:
+    Ein StringBuilder ist ein Text, den man sehr wohl ändern kann: Du hängst Stück für Stück an und machst am Ende einen normalen String daraus. Damit baust du einen langen Text aus vielen Teilen.
+    Ein String ist ein fertig gedrucktes Band: Für ein Wort mehr muss das ganze Band neu gedruckt werden. Der StringBuilder ist die Tafel des Ringsprechers: Er schreibt „ich sehe Kobalt … Saphir … Toaster“ einfach hinten an, ohne etwas wegzuwischen oder abzuschreiben.
+    In Java: StringBuilder informe = new StringBuilder("veo: "); dann informe.append(e.nombre()).append("; "); so oft du willst (jedes append gibt denselben StringBuilder zurück, deshalb lässt es sich verketten), und am Ende mit escribir (ausgeben) ausgeben: escribir(informe.toString());. Es gibt auch insert, reverse, setLength(0) zum Leeren und length().
+    Der typische Fehler: Texte in einem for mit vielen Runden mit + zusammenkleben: Jedes + erzeugt einen neuen String und kopiert alles Bisherige, bei Tausenden Runden merkt man das (und im Spiel kostet es Schritte). Für zwei, drei einzelne Stücke ist + in Ordnung; für eine Schleife StringBuilder. Und vergiss das toString() am Ende nicht.
+en:
+    A StringBuilder is text that you can change: you keep adding pieces to it and, at the end, turn it into a normal String. It's for putting together a long text out of lots of bits.
+    A String is a tape that's already printed: to add one word you have to print the whole tape again. The StringBuilder is the announcer's whiteboard: he keeps writing "I see Cobalt… Sapphire… Toaster" at the end of what's there, without wiping or copying anything.
+    In Java: StringBuilder informe = new StringBuilder("veo: "); then informe.append(e.nombre()).append("; "); as many times as you like (each append returns the same StringBuilder, which is why they chain), and finally print it with escribir (print): escribir(informe.toString());. It also has insert, reverse, setLength(0) to empty it, and length().
+    The classic mistake: gluing texts with + inside a for with lots of laps: every + creates a new String and copies everything before it, and with thousands of laps you notice (and in the game it costs steps). For two or three loose pieces, + is fine; for a loop, StringBuilder. And don't forget the toString() at the end.
+pseudo.es:
+    CADA 30 TURNOS:
+        informe ← pizarra nueva con "veo: "
+        PARA CADA rival QUE veo:
+            añadir a informe: nombre + " a " + distancia + "; "
+        escribir informe COMO TEXTO
+pseudo.de:
+    ALLE 30 ZÜGE:
+        bericht ← neue Tafel mit "ich sehe: "
+        FÜR JEDEN gegner, DEN ich sehe:
+            an bericht anhängen: name + " bei " + abstand + "; "
+        schreibe bericht ALS TEXT
+pseudo.en:
+    EVERY 30 TICKS:
+        report ← new whiteboard with "I see: "
+        FOR EACH rival I can see:
+            append to report: name + " at " + distance + "; "
+        write report AS TEXT
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            if (turnoActual() % 30 != 0) return;               // una vez por segundo basta || einmal pro Sekunde reicht || once a second is enough
+            StringBuilder informe = new StringBuilder("veo: ");
+            for (Enemigo e : enemigosVistos()) {
+                informe.append(e.nombre()).append(" a ").append((int) e.distancia()).append("; ");   // se añade sin copiar || wird ohne Kopieren angehängt || added without copying
+            }
+            escribir(informe.toString());                      // al final, a String || am Ende zu String || at the end, to String
+        }
+    }
+
+=== char
+nivel: 2
+tema: 08
+titulo.es: Char
+titulo.de: Char
+titulo.en: Char
+claves.es: char, caracter, una letra, charat, comillas simples, codigo ascii, unicode, character
+claves.de: char, zeichen, ein buchstabe, charat, einfache anführungszeichen, ascii code, unicode, character
+claves.en: char, character, a single letter, charat, single quotes, ascii code, unicode
+ver: string, tipo, casting, comparacion
+es:
+    Un char es un solo carácter: una letra, una cifra, un signo, un espacio. Se escribe entre comillas simples, 'A', y es un tipo primitivo, como int; por dentro, Java lo guarda como un número (su código Unicode).
+    Si un String es la cinta con el nombre del robot, cada letra de la cinta es un char. El locutor puede despegar una sola letra y gritarla: «¡Ceeeee… de Cobalto!».
+    En Java: char inicial = e.nombre().charAt(0); da la primera letra de un texto. Los char se comparan con == (inicial == 'Z' sí funciona, al contrario que con String). La clase Character ayuda: Character.isDigit(c), Character.isLetter(c), Character.toUpperCase(c). Como son números, (char) (inicial + 1) da la letra siguiente.
+    El fallo típico: confundir 'A' con "A". Con comillas simples es un char; con dobles, un String: char c = "A"; no compila. Otro: sumar dos char esperando texto, 'a' + 'b' da el número 195, no "ab"; si quieres texto, pon un String delante: "" + 'a' + 'b'.
+de:
+    Ein char ist ein einzelnes Zeichen: ein Buchstabe, eine Ziffer, ein Satzzeichen, ein Leerzeichen. Man schreibt es in einfache Anführungszeichen, 'A', und es ist ein primitiver Typ wie int; intern speichert Java es als Zahl (seinen Unicode-Code).
+    Ist ein String das Band mit dem Namen des Roboters, dann ist jeder Buchstabe darauf ein char. Der Ringsprecher kann einen einzelnen Buchstaben abziehen und ihn brüllen: „K wie Kobalt!“
+    In Java: char inicial = e.nombre().charAt(0); liefert den ersten Buchstaben eines Textes. chars vergleicht man mit == (inicial == 'Z' funktioniert, anders als bei String). Die Klasse Character hilft: Character.isDigit(c), Character.isLetter(c), Character.toUpperCase(c). Weil es Zahlen sind, liefert (char) (inicial + 1) den nächsten Buchstaben.
+    Der typische Fehler: 'A' mit "A" verwechseln. Mit einfachen Anführungszeichen ist es ein char, mit doppelten ein String: char c = "A"; kompiliert nicht. Noch einer: zwei chars addieren und Text erwarten; 'a' + 'b' ergibt die Zahl 195, nicht "ab". Willst du Text, stell einen String davor: "" + 'a' + 'b'.
+en:
+    A char is a single character: a letter, a digit, a symbol, a space. You write it in single quotes, 'A', and it's a primitive type, like int; inside, Java stores it as a number (its Unicode code).
+    If a String is the tape with the robot's name, every letter on that tape is a char. The announcer can peel off a single letter and bellow it: "Ceeeee… for Cobalt!".
+    In Java: char inicial = e.nombre().charAt(0); gives you the first letter of a text. chars are compared with == (inicial == 'Z' does work, unlike with String). The Character class helps: Character.isDigit(c), Character.isLetter(c), Character.toUpperCase(c). Since they're numbers, (char) (inicial + 1) gives the next letter.
+    The classic mistake: mixing up 'A' and "A". Single quotes make a char; double quotes, a String: char c = "A"; doesn't compile. Another one: adding two chars and expecting text; 'a' + 'b' gives the number 195, not "ab". If you want text, put a String first: "" + 'a' + 'b'.
+pseudo.es:
+    AL VER rival:
+        inicial ← primera letra del nombre del rival
+        SI inicial = 'Z':
+            decir "Z de Zorro"
+        siguiente ← la letra que va después de inicial
+pseudo.de:
+    WENN ich einen gegner sehe:
+        anfang ← erster Buchstabe vom namen des gegners
+        WENN anfang = 'Z':
+            sage "Z wie Zorro"
+        naechster ← der Buchstabe nach anfang
+pseudo.en:
+    WHEN I see a rival:
+        initial ← first letter of the rival's name
+        IF initial = 'Z':
+            say "Z for Zorro"
+        next ← the letter after initial
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            char inicial = e.nombre().charAt(0);              // la primera letra (posición 0) || der erste Buchstabe (Position 0) || the first letter (position 0)
+            if (inicial == 'Z') {                             // comillas simples y == || einfache Anführungszeichen und == || single quotes and ==
+                decir("Z de Zorro");
+            }
+            char siguiente = (char) (inicial + 1);            // por dentro es un número || innen ist es eine Zahl || inside it's a number
+            escribir(inicial + " -> " + siguiente + " (" + (int) inicial + ")");
+        }
+    }
+
+=== casting
+nivel: 2
+tema: 02
+titulo.es: Casting
+titulo.de: Typumwandlung
+titulo.en: Casting
+claves.es: casting, cast, conversion de tipos, convertir tipos, convertir double a int, quitar decimales, parseint, convertir texto a numero
+claves.de: casting, cast, typumwandlung, typen umwandeln, double in int umwandeln, nachkommastellen abschneiden, parseint
+claves.en: casting, cast, type conversion, convert types, double to int, drop the decimals, parseint, string to number
+ver: int_y_double, tipo, math, char
+es:
+    Hacer un casting es convertir un valor de un tipo a otro: un double con decimales a un int entero, un int a double, un char a su número. Algunas conversiones las hace Java solo; otras tienes que pedirlas tú, porque se pierde algo por el camino.
+    Es la prensa del desguace: metes un robot de 3,7 toneladas lleno de detallitos y sale un cubo de 3 toneladas justas. Cabe en la caja pequeña, sí, pero los detallitos (los decimales) se han quedado en la prensa y no vuelven.
+    En Java el casting se escribe con el tipo entre paréntesis delante: int metros = (int) e.distancia(); corta los decimales (137,8 se queda en 137). De int a double no hace falta: double d = 5; ya vale. Para redondear de verdad, Math.round(d); para pasar un texto a número, Integer.parseInt("42") o Double.parseDouble("3.5").
+    El fallo típico: creer que (int) redondea: (int) 2.9 da 2, y (int) -2.9 da -2. Otro: (double) (7 / 2) da 3.0, porque la división entera ya se hizo antes; para 3.5 convierte primero uno de los dos: (double) 7 / 2.
+de:
+    Casting heißt, einen Wert von einem Typ in einen anderen umzuwandeln: ein double mit Nachkommastellen in einen ganzzahligen int, einen int in double, ein char in seine Zahl. Manche Umwandlungen macht Java von selbst; andere musst du ausdrücklich verlangen, weil unterwegs etwas verloren geht.
+    Es ist die Schrottpresse: Du schiebst einen 3,7-Tonnen-Roboter voller Schnickschnack hinein, und heraus kommt ein Würfel von genau 3 Tonnen. Passt in die kleine Kiste, klar, aber der Schnickschnack (die Nachkommastellen) bleibt in der Presse und kommt nie wieder.
+    In Java steht der Typ in Klammern davor: int metros = (int) e.distancia(); schneidet die Nachkommastellen ab (137,8 wird 137). Von int nach double braucht es nichts: double d = 5; geht einfach. Zum echten Runden nimm Math.round(d); um einen Text in eine Zahl zu verwandeln, Integer.parseInt("42") oder Double.parseDouble("3.5").
+    Der typische Fehler: zu glauben, (int) runde: (int) 2.9 ergibt 2, und (int) -2.9 ergibt -2. Noch einer: (double) (7 / 2) ergibt 3.0, weil die ganzzahlige Division schon vorher passiert ist; für 3.5 wandle zuerst eine der beiden Zahlen um: (double) 7 / 2.
+en:
+    Casting means converting a value from one type to another: a double with decimals into a whole int, an int into a double, a char into its number. Java does some conversions by itself; others you have to ask for, because something gets lost on the way.
+    It's the scrapyard crusher: you feed in a 3.7-tonne robot covered in little gadgets and out comes a cube of exactly 3 tonnes. It fits in the small box, sure, but the little gadgets (the decimals) stay in the crusher and never come back.
+    In Java you write the type in brackets in front: int metros = (int) e.distancia(); chops off the decimals (137.8 becomes 137). From int to double you don't need anything: double d = 5; just works. To actually round, use Math.round(d); to turn text into a number, Integer.parseInt("42") or Double.parseDouble("3.5").
+    The classic mistake: thinking (int) rounds: (int) 2.9 gives 2, and (int) -2.9 gives -2. Another: (double) (7 / 2) gives 3.0, because the whole-number division already happened; for 3.5, convert one of them first: (double) 7 / 2.
+pseudo.es:
+    AL VER rival:
+        d ← distancia del rival            (por ejemplo 137,8)
+        metros ← d COMO ENTERO             (137: corta, no redondea)
+        redondeado ← redondear d           (138)
+        escribir metros + " " + redondeado
+pseudo.de:
+    WENN ich einen gegner sehe:
+        d ← abstand des gegners            (zum Beispiel 137,8)
+        meter ← d ALS GANZZAHL             (137: schneidet ab, rundet nicht)
+        gerundet ← runde d                 (138)
+        schreibe meter + " " + gerundet
+pseudo.en:
+    WHEN I see a rival:
+        d ← distance to rival              (say 137.8)
+        metres ← d AS WHOLE NUMBER         (137: chops, doesn't round)
+        rounded ← round d                  (138)
+        write metres + " " + rounded
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            double d = e.distancia();
+            int metros = (int) d;                  // corta los decimales: 137.8 da 137 || schneidet ab: 137.8 wird 137 || chops the decimals: 137.8 gives 137
+            long redondeado = Math.round(d);       // este sí redondea: 138 || das rundet wirklich: 138 || this one does round: 138
+            double media = (double) 7 / 2;         // 3.5; sin el cast, 7 / 2 da 3 || 3.5; ohne Cast ergibt 7 / 2 nur 3 || 3.5; without the cast, 7 / 2 gives 3
+            escribir(metros + " " + redondeado + " " + media);
+        }
+    }
+
+=== incremento
+nivel: 2
+tema: 03
+titulo.es: Incremento
+titulo.de: Inkrement
+titulo.en: Increment
+claves.es: incremento, incrementar, decrementar, decremento, sumar uno, restar uno, mas igual, i mas mas
+claves.de: inkrement, inkrementieren, dekrement, dekrementieren, eins addieren, eins abziehen, plus gleich, hochzählen
+claves.en: increment, decrement, add one, subtract one, plus equals, plus plus, compound assignment, count up
+ver: asignacion, operadores, for, variable
+es:
+    Incrementar es sumarle algo a una variable; decrementar, restárselo. Como se hace tantísimo (contar golpes, avanzar un contador), Java tiene atajos para escribirlo más corto: ++, --, +=, -=.
+    Es el marcador del ring con su botón gordo: cada vez que el robot acierta, el árbitro le da un manotazo al botón (++) y el número sube uno. Si el golpe vale por diez, gira la rueda diez de una vez (+= 10).
+    En Java: golpes++; es lo mismo que golpes = golpes + 1;, y vidas--; resta uno. rabia += g.dano(); suma lo que valga el daño y lo guarda en la misma variable; también hay -=, *= y /=. El i++ del for es justo esto.
+    El fallo típico: usar ++ dentro de otra expresión. En x = i++; x recibe el valor viejo y luego i sube; en x = ++i; primero sube. Para no liarte, escribe golpes++ sola en su línea. Y ojo: golpes + 1; sin guardarlo no cambia nada.
+de:
+    Inkrementieren heißt, etwas zu einer Variable dazuzuzählen; dekrementieren, etwas abzuziehen. Weil man das ständig braucht (Treffer zählen, einen Zähler weiterschalten), hat Java Abkürzungen dafür: ++, --, +=, -=.
+    Es ist die Anzeigetafel am Ring mit dem dicken Knopf: Bei jedem Treffer haut der Ringrichter drauf (++), und die Zahl steigt um eins. Zählt ein Schlag zehnfach, dreht er das Rad gleich um zehn weiter (+= 10).
+    In Java: treffer++; ist dasselbe wie treffer = treffer + 1;, und leben--; zieht eins ab. wut += g.dano(); zählt den Schaden dazu und speichert ihn in derselben Variable; es gibt auch -=, *= und /=. Das i++ der for-Schleife ist genau das.
+    Der typische Fehler: ++ mitten in einem anderen Ausdruck benutzen. Bei x = i++; bekommt x den alten Wert und erst dann steigt i; bei x = ++i; steigt es zuerst. Damit du nicht durcheinanderkommst, schreib treffer++ allein in eine Zeile. Und Achtung: treffer + 1; ohne Speichern ändert gar nichts.
+en:
+    Incrementing means adding something to a variable; decrementing, taking something away. Because you do it all the time (counting hits, moving a counter on), Java has shortcuts to write it shorter: ++, --, +=, -=.
+    It's the ringside scoreboard with its big fat button: every time the robot lands a hit, the referee slaps the button (++) and the number goes up by one. If the hit is worth ten, he spins the wheel ten at once (+= 10).
+    In Java: hits++; is the same as hits = hits + 1;, and lives--; takes one away. rage += g.dano(); adds the damage and stores it in the same variable; there are also -=, *= and /=. The i++ in a for loop is exactly this.
+    The classic mistake: using ++ inside another expression. In x = i++; x gets the old value and then i goes up; in x = ++i; it goes up first. To avoid confusion, write hits++ on its own line. And careful: hits + 1; without storing it changes nothing.
+pseudo.es:
+    golpesDados ← 0
+    rabia ← 0
+    CUANDO acierto:
+        golpesDados ← golpesDados + 1     (golpesDados++)
+        rabia ← rabia - 10                (rabia -= 10)
+    CUANDO me dan:
+        rabia ← rabia + daño              (rabia += daño)
+pseudo.de:
+    treffer ← 0
+    wut ← 0
+    WENN ich treffe:
+        treffer ← treffer + 1             (treffer++)
+        wut ← wut - 10                    (wut -= 10)
+    WENN ich getroffen werde:
+        wut ← wut + schaden               (wut += schaden)
+pseudo.en:
+    hitsLanded ← 0
+    rage ← 0
+    WHEN I land a hit:
+        hitsLanded ← hitsLanded + 1       (hitsLanded++)
+        rage ← rage - 10                  (rage -= 10)
+    WHEN I get hit:
+        rage ← rage + damage              (rage += damage)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        int golpesDados = 0;
+        double rabia = 0;
+
+        @Override
+        public void alAcertar(Golpe g) {
+            golpesDados++;                     // igual que golpesDados = golpesDados + 1 || wie golpesDados = golpesDados + 1 || same as golpesDados = golpesDados + 1
+            rabia -= 10;                       // resta y guarda de una vez || zieht ab und speichert in einem || subtracts and stores in one go
+        }
+        @Override
+        public void alRecibirGolpe(Golpe g) {
+            rabia += g.dano();                 // suma lo que me han hecho || zählt den Schaden dazu || adds the damage I took
+        }
+    }
+
+=== constante
+nivel: 2
+tema: 02
+titulo.es: Constante
+titulo.de: Konstante
+titulo.en: Constant
+claves.es: constante, constantes, final, static final, valor fijo, que no cambia, numero magico, mayusculas
+claves.de: konstante, konstanten, final, static final, fester wert, ändert sich nicht, magische zahl
+claves.en: constant, constants, final, static final, fixed value, never changes, magic number
+ver: variable, inmutabilidad, static, asignacion
+es:
+    Una constante es una variable que no se puede cambiar: le das un valor una vez y se queda así para siempre. Sirve para poner nombre a números importantes, como la distancia a la que tu robot empieza a pegar.
+    Es la regla grabada en la placa de bronce de la entrada del estadio: «PROHIBIDO MORDER». No está escrita con tiza en una pizarra: no hay robot listillo que la borre a mitad de combate.
+    En Java se marca con final: final double DISTANCIA_DE_PELEA = 90;. Si es de toda la clase, se suele escribir static final. Por costumbre van en MAYÚSCULAS con guiones bajos. Si luego escribes DISTANCIA_DE_PELEA = 50;, Java no compila. Las de Java ya las usas: Math.PI, Integer.MAX_VALUE.
+    El fallo típico: llenar el código de números sueltos (if (e.distancia() < 90), avanzar(90 - 30)…) y, cuando quieres cambiar el 90, tener que buscarlo en diez sitios y olvidar uno. Ponle nombre una vez como constante y úsala en todas partes. Ojo: final en un objeto o un array impide cambiar la caja, pero no lo de dentro.
+de:
+    Eine Konstante ist eine Variable, die sich nicht ändern lässt: Du gibst ihr einmal einen Wert, und der bleibt für immer. Damit gibst du wichtigen Zahlen einen Namen, etwa dem Abstand, ab dem dein Roboter zuschlägt.
+    Sie ist die Regel auf der Bronzetafel am Stadioneingang: „BEISSEN VERBOTEN“. Sie steht nicht mit Kreide auf einer Tafel: Kein schlauer Roboter kann sie mitten im Kampf wegwischen.
+    In Java markierst du sie mit final: final double DISTANCIA_DE_PELEA = 90;. Gehört sie zur ganzen Klasse, schreibt man meist static final. Üblicherweise stehen sie in GROSSBUCHSTABEN mit Unterstrichen. Schreibst du später DISTANCIA_DE_PELEA = 50;, kompiliert Java nicht. Die von Java benutzt du schon: Math.PI, Integer.MAX_VALUE.
+    Der typische Fehler: den Code mit nackten Zahlen vollstopfen (if (e.distancia() < 90), avanzar(90 - 30) …) und, wenn die 90 sich ändern soll, sie an zehn Stellen suchen und eine vergessen. Gib ihr einmal einen Namen als Konstante und benutz sie überall. Achtung: final bei einem Objekt oder Array verhindert, dass du die Kiste austauschst, aber nicht, dass sich ihr Inhalt ändert.
+en:
+    A constant is a variable that can't be changed: you give it a value once and it stays that way forever. It's for giving names to important numbers, like the distance at which your robot starts swinging.
+    It's the rule engraved on the bronze plaque at the stadium entrance: "NO BITING". It isn't chalked on a board: no clever-clogs robot can wipe it off halfway through a fight.
+    In Java you mark it with final: final double DISTANCIA_DE_PELEA = 90;. If it belongs to the whole class, you usually write static final. By convention they're in CAPITALS with underscores. If you later write DISTANCIA_DE_PELEA = 50;, Java won't compile. You already use Java's own: Math.PI, Integer.MAX_VALUE.
+    The classic mistake: filling the code with bare numbers (if (e.distancia() < 90), avanzar(90 - 30)…) and, when you want to change the 90, hunting for it in ten places and missing one. Name it once as a constant and use it everywhere. Careful: final on an object or an array stops you swapping the box, but not changing what's inside it.
+pseudo.es:
+    CONSTANTE DISTANCIA_DE_PELEA ← 90
+    AL VER rival:
+        SI rival a menos de DISTANCIA_DE_PELEA:
+            atacar
+        SI NO:
+            avanzar distancia - DISTANCIA_DE_PELEA
+pseudo.de:
+    KONSTANTE KAMPFABSTAND ← 90
+    WENN ich einen gegner sehe:
+        WENN gegner näher als KAMPFABSTAND:
+            angreifen
+        SONST:
+            fahre abstand - KAMPFABSTAND
+pseudo.en:
+    CONSTANT FIGHT_DISTANCE ← 90
+    WHEN I see a rival:
+        IF rival closer than FIGHT_DISTANCE:
+            attack
+        ELSE:
+            move distance - FIGHT_DISTANCE
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        static final double DISTANCIA_DE_PELEA = 90;     // final: nadie la cambia || final: keiner ändert sie || final: nobody changes it
+
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            if (e.distancia() < DISTANCIA_DE_PELEA) {     // un nombre en vez de un 90 suelto || ein Name statt einer nackten 90 || a name instead of a bare 90
+                atacar();
+            } else {
+                avanzar(e.distancia() - DISTANCIA_DE_PELEA);
+            }
+        }
+    }
+
+=== math
+nivel: 2
+tema: 03
+titulo.es: Math
+titulo.de: Math
+titulo.en: Math
+claves.es: math, math.max, math.min, math.abs, math.sqrt, math.atan2, math.todegrees, raiz cuadrada, valor absoluto, el mayor de dos
+claves.de: math, math.max, math.min, math.abs, math.sqrt, math.atan2, wurzel, quadratwurzel, betrag, das größere von zwei
+claves.en: math, math.max, math.min, math.abs, math.sqrt, math.atan2, math.todegrees, square root, absolute value, the bigger of two
+ver: operadores, casting, int_y_double, azar
+es:
+    Math es la caja de herramientas de cálculo que trae Java: el mayor de dos números, el menor, quitar el signo, la raíz cuadrada, potencias, ángulos… Ya está hecha y probada; solo hay que pedírselo.
+    Es el robot calculadora que se sienta en la grada con gafas de culo de vaso: le gritas «¿cuál es más grande, 70 o 120?» y te contesta antes de que acabes la frase. No pelea, pero sin él nadie sabría hacia dónde apuntar.
+    En Java se usa con Math delante: Math.max(a, b) y Math.min(a, b), Math.abs(-5) da 5, Math.sqrt(dx * dx + dy * dy) es la distancia de Pitágoras, Math.pow(2, 3) da 8.0, Math.round(d) redondea. Para ángulos, Math.atan2(dy, dx) da el ángulo en radianes y Math.toDegrees lo pasa a grados, que es lo que quiere el robot (anguloHacia y distanciaA ya lo hacen por ti).
+    El fallo típico: mezclar grados y radianes. Math.sin y Math.cos quieren radianes; girar y apuntarHacia, grados. Pásalos con Math.toRadians y Math.toDegrees. Y ojo con Math.atan2: el orden es (y, x), al revés de lo que parece.
+de:
+    Math ist der Rechenwerkzeugkasten, den Java mitbringt: die größere von zwei Zahlen, die kleinere, das Vorzeichen weg, Quadratwurzel, Potenzen, Winkel … Schon fertig und getestet; du musst nur fragen.
+    Er ist der Taschenrechner-Roboter mit Flaschenbodenbrille auf der Tribüne: Du rufst „Was ist größer, 70 oder 120?“, und er antwortet, bevor du den Satz beendet hast. Er kämpft nicht, aber ohne ihn wüsste keiner, wohin er zielen soll.
+    In Java schreibst du Math davor: Math.max(a, b) und Math.min(a, b), Math.abs(-5) ergibt 5, Math.sqrt(dx * dx + dy * dy) ist der Abstand nach Pythagoras, Math.pow(2, 3) ergibt 8.0, Math.round(d) rundet. Für Winkel liefert Math.atan2(dy, dx) den Winkel im Bogenmaß, und Math.toDegrees macht Grad daraus, die will der Roboter (anguloHacia (winkelZu) und distanciaA (abstandZu) erledigen das schon für dich).
+    Der typische Fehler: Grad und Bogenmaß vermischen. Math.sin und Math.cos wollen Bogenmaß, girar (drehen) und apuntarHacia (zielenNach) wollen Grad. Rechne mit Math.toRadians und Math.toDegrees um. Und Vorsicht bei Math.atan2: Die Reihenfolge ist (y, x), umgekehrt, als man denkt.
+en:
+    Math is the calculation toolbox that comes with Java: the bigger of two numbers, the smaller, dropping the sign, square roots, powers, angles… It's already built and tested; you only have to ask.
+    It's the calculator robot sitting in the stands with jam-jar glasses: you shout "which is bigger, 70 or 120?" and it answers before you've finished the sentence. It doesn't fight, but without it nobody would know where to aim.
+    In Java you put Math in front: Math.max(a, b) and Math.min(a, b), Math.abs(-5) gives 5, Math.sqrt(dx * dx + dy * dy) is Pythagoras' distance, Math.pow(2, 3) gives 8.0, Math.round(d) rounds. For angles, Math.atan2(dy, dx) gives the angle in radians and Math.toDegrees turns it into degrees, which is what the robot wants (anguloHacia (angleTo) and distanciaA (distanceTo) already do it for you).
+    The classic mistake: mixing up degrees and radians. Math.sin and Math.cos want radians; girar (turn) and apuntarHacia (aimTo) want degrees. Convert with Math.toRadians and Math.toDegrees. And watch Math.atan2: the order is (y, x), the opposite of what you'd expect.
+pseudo.es:
+    AL VER rival:
+        dx ← x del rival - mi x
+        dy ← y del rival - mi y
+        distancia ← RAÍZ(dx² + dy²)
+        ángulo ← EN GRADOS(atan2(dy, dx))
+        apuntar a ángulo
+        avanzar MÁXIMO(MÍNIMO(distancia - 60, 100), 0)
+pseudo.de:
+    WENN ich einen gegner sehe:
+        dx ← x des gegners - mein x
+        dy ← y des gegners - mein y
+        abstand ← WURZEL(dx² + dy²)
+        winkel ← IN GRAD(atan2(dy, dx))
+        ziele auf winkel
+        fahre MAXIMUM(MINIMUM(abstand - 60, 100), 0)
+pseudo.en:
+    WHEN I see a rival:
+        dx ← rival's x - my x
+        dy ← rival's y - my y
+        distance ← SQUARE ROOT(dx² + dy²)
+        angle ← IN DEGREES(atan2(dy, dx))
+        aim at angle
+        move MAX(MIN(distance - 60, 100), 0)
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            double dx = e.x() - x();
+            double dy = e.y() - y();
+            double distancia = Math.sqrt(dx * dx + dy * dy);        // Pitágoras: lo mismo que distanciaA || Pythagoras: dasselbe wie distanciaA || Pythagoras: same as distanciaA
+            double angulo = Math.toDegrees(Math.atan2(dy, dx));     // atan2 da radianes; el robot quiere grados || atan2 liefert Bogenmaß; der Roboter will Grad || atan2 gives radians; the robot wants degrees
+            double paso = Math.min(distancia - 60, 100);            // nunca más de 100 || nie mehr als 100 || never more than 100
+            apuntarHacia(angulo);
+            avanzar(Math.max(paso, 0));                             // y nunca negativo || und nie negativ || and never negative
+        }
+    }
+
+=== azar
+nivel: 2
+tema: 03
+titulo.es: Azar
+titulo.de: Zufall
+titulo.en: Randomness
+claves.es: azar, aleatorio, numero aleatorio, numero al azar, random, nextint, nextdouble, math.random
+claves.de: zufall, zufällig, zufallszahl, random, nextint, nextdouble, math.random
+claves.en: random, randomness, random number, random choice, nextint, nextdouble, math.random
+ver: math, do_while, int_y_double, memoria_entre_rondas
+es:
+    El azar sirve para que el programa elija sin seguir siempre el mismo camino: un número cualquiera de 1 a 6, girar a un lado o al otro, atacar unas veces sí y otras no. Un robot que siempre hace lo mismo es fácil de leer; uno con un poco de azar, no.
+    Es el dado gigante que el robot lleva colgado del cuello: cuando le dan, lo tira y, según salga, se escapa por la izquierda, por la derecha o se hace el muerto. El rival puede estudiarlo todo lo que quiera: ni el propio robot sabe qué hará.
+    En el juego usa azar(), que devuelve un Random de Java: azar().nextInt(6) da un entero de 0 a 5 (súmale 1 para un dado), azar().nextDouble() da un decimal entre 0 y 1, y azar().nextBoolean() da cara o cruz. Los números de azar() son de tu robot: la misma pelea repetida da lo mismo, y así puedes reproducir un fallo.
+    El fallo típico: creer que nextInt(6) puede dar 6: el número de dentro nunca sale (va de 0 a 5). Otro: hacer new Random() o Math.random() en el robot; funcionan, pero cada repetición de la pelea sale distinta y no hay forma de volver a ver el fallo. Usa azar().
+de:
+    Mit Zufall wählt das Programm, ohne immer denselben Weg zu gehen: irgendeine Zahl von 1 bis 6, nach links oder rechts drehen, mal angreifen und mal nicht. Ein Roboter, der immer dasselbe tut, ist leicht zu durchschauen; einer mit ein bisschen Zufall nicht.
+    Er ist der Riesenwürfel, den der Roboter um den Hals trägt: Wird er getroffen, wirft er ihn und haut je nach Ergebnis links ab, rechts ab oder stellt sich tot. Der Gegner kann ihn studieren, so viel er will: Nicht mal der Roboter selbst weiß, was er gleich tut.
+    Im Spiel nimmst du azar (zufall), das ein Java-Random liefert: azar().nextInt(6) gibt eine ganze Zahl von 0 bis 5 (plus 1 für einen Würfel), azar().nextDouble() eine Kommazahl zwischen 0 und 1, und azar().nextBoolean() Kopf oder Zahl. Die Zahlen von azar() gehören deinem Roboter: Derselbe Kampf noch einmal ergibt dasselbe, so kannst du einen Fehler nachstellen.
+    Der typische Fehler: zu glauben, nextInt(6) könne 6 liefern; die Zahl in der Klammer kommt nie heraus (es geht von 0 bis 5). Noch einer: im Roboter new Random() oder Math.random() benutzen; das geht, aber jede Wiederholung des Kampfes läuft anders, und den Fehler siehst du nie wieder. Nimm azar().
+en:
+    Randomness lets the program choose without always taking the same path: any number from 1 to 6, turning one way or the other, attacking sometimes and not others. A robot that always does the same thing is easy to read; one with a dash of randomness isn't.
+    It's the giant die the robot wears round its neck: when it gets hit, it rolls it and, depending on the result, escapes left, escapes right or plays dead. The rival can study it all it likes: not even the robot knows what it's about to do.
+    In the game use azar (random), which returns a Java Random: azar().nextInt(6) gives a whole number from 0 to 5 (add 1 for a die), azar().nextDouble() a decimal between 0 and 1, and azar().nextBoolean() heads or tails. The numbers from azar() belong to your robot: replaying the same fight gives the same result, so you can reproduce a bug.
+    The classic mistake: thinking nextInt(6) can give 6; the number in the brackets never comes out (it goes from 0 to 5). Another: using new Random() or Math.random() in the robot; they work, but every replay of the fight comes out different and you can never see the bug again. Use azar().
+pseudo.es:
+    CUANDO me dan:
+        lado ← número al azar: 0 o 1
+        giro ← entre 60 y 120, al azar
+        SI lado = 0: girar giro
+        SI NO: girar -giro
+        avanzar 80
+pseudo.de:
+    WENN ich getroffen werde:
+        seite ← Zufallszahl: 0 oder 1
+        drehung ← zufällig zwischen 60 und 120
+        WENN seite = 0: drehe drehung
+        SONST: drehe -drehung
+        fahre 80
+pseudo.en:
+    WHEN I get hit:
+        side ← random number: 0 or 1
+        turn ← random, between 60 and 120
+        IF side = 0: turn by turn
+        ELSE: turn by -turn
+        move 80
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alRecibirGolpe(Golpe g) {
+            int lado = azar().nextInt(2);                    // 0 o 1, nunca 2 || 0 oder 1, nie 2 || 0 or 1, never 2
+            double giro = 60 + azar().nextDouble() * 60;     // entre 60 y 120 || zwischen 60 und 120 || between 60 and 120
+            girar(lado == 0 ? giro : -giro);
+            avanzar(80);
+            if (azar().nextInt(100) < 10) {                  // un 10 % de las veces || in 10 % der Fälle || 10% of the time
+                decir("¡No me pillas!");
+            }
+        }
+    }
+
+=== null
+nivel: 2
+tema: 09
+titulo.es: Null
+titulo.de: Null
+titulo.en: Null
+claves.es: null, nullpointerexception, null pointer, npe, referencia vacia, es null, comprobar null, nada
+claves.de: null, nullpointerexception, null pointer, npe, leere referenz, ist null, auf null prüfen
+claves.en: null, nullpointerexception, null pointer, npe, empty reference, is null, check for null, null check
+ver: referencia, objeto, error_en_ejecucion, optional
+es:
+    null quiere decir «aquí no hay nada». Una variable de objeto (un String, un Enemigo, un array) no guarda el objeto en sí, sino dónde está; si todavía no apunta a ninguno, vale null.
+    Es la correa del robot sin perro: la tienes en la mano, pero al otro lado no hay nadie. Si gritas «¡muerde!» a una correa vacía, no pasa nada bueno: el árbitro para el combate y apunta un error.
+    En Java: Enemigo objetivo = null; es un objetivo que aún no existe. Antes de usarlo, pregunta: if (objetivo != null) { apuntarHacia(objetivo.angulo()); }. Muchos métodos devuelven null cuando no encuentran algo: memoria().get("clave") si no la guardaste nunca, por ejemplo.
+    El fallo típico: llamar a un método sobre algo que es null, como objetivo.angulo() antes de haber visto a nadie: salta NullPointerException y esa parte de tu código se para. Comprueba != null antes, o dale un valor desde el principio; con textos, "cobalto".equals(x) no falla aunque x sea null.
+de:
+    null heißt „hier ist nichts“. Eine Objektvariable (ein String, ein Enemigo, ein Array) speichert nicht das Objekt selbst, sondern wo es liegt; zeigt sie noch auf keins, ist sie null.
+    Es ist die Hundeleine ohne Hund: Du hältst sie in der Hand, aber am anderen Ende ist niemand. Rufst du einer leeren Leine „Fass!“ zu, passiert nichts Gutes: Der Ringrichter stoppt den Kampf und notiert einen Fehler.
+    In Java: Enemigo objetivo = null; ist ein Ziel, das es noch nicht gibt. Bevor du es benutzt, frag nach: if (objetivo != null) { apuntarHacia(objetivo.angulo()); } (apuntarHacia heißt zielenNach). Viele Methoden liefern null, wenn sie nichts finden, zum Beispiel das Gedächtnis memoria (gedaechtnis) mit memoria().get("clave"), wenn du diesen Schlüssel nie gespeichert hast.
+    Der typische Fehler: eine Methode auf etwas aufrufen, das null ist, etwa objetivo.angulo(), bevor du überhaupt jemanden gesehen hast: Es kracht mit NullPointerException, und dieser Teil deines Codes bricht ab. Prüf vorher auf != null oder gib ihr von Anfang an einen Wert; bei Texten kracht "cobalto".equals(x) nicht, auch wenn x null ist.
+en:
+    null means "there's nothing here". An object variable (a String, an Enemigo, an array) doesn't hold the object itself but where it is; if it doesn't point at one yet, it's null.
+    It's the robot's dog lead with no dog: you're holding it, but there's nobody on the other end. If you shout "bite!" at an empty lead, nothing good happens: the referee stops the fight and writes down an error.
+    In Java: Enemigo objetivo = null; is a target that doesn't exist yet. Before using it, ask: if (objetivo != null) { apuntarHacia(objetivo.angulo()); } (apuntarHacia is aimTo). Lots of methods return null when they can't find something, for example memoria (memory) with memoria().get("clave") if you never stored that key.
+    The classic mistake: calling a method on something that is null, like objetivo.angulo() before you've seen anyone: you get a NullPointerException and that part of your code stops. Check != null first, or give it a value from the start; with text, "cobalto".equals(x) doesn't crash even if x is null.
+pseudo.es:
+    objetivo ← NADA (null)
+    AL VER rival:
+        objetivo ← rival
+    CADA TURNO:
+        SI objetivo NO ES NADA:
+            apuntar al objetivo
+pseudo.de:
+    ziel ← NICHTS (null)
+    WENN ich einen gegner sehe:
+        ziel ← gegner
+    JEDEN ZUG:
+        WENN ziel NICHT NICHTS IST:
+            ziele auf das ziel
+pseudo.en:
+    target ← NOTHING (null)
+    WHEN I see a rival:
+        target ← rival
+    EVERY TICK:
+        IF target IS NOT NOTHING:
+            aim at the target
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        Enemigo objetivo = null;                    // aún no hay nadie || noch niemand da || nobody yet
+        @Override
+        public void alVerEnemigo(Enemigo e) {
+            objetivo = e;
+        }
+
+        @Override
+        public void cadaTurno() {
+            if (objetivo != null) {                 // pregunta antes de usar || erst fragen, dann benutzen || ask before using
+                apuntarHacia(objetivo.angulo());
+            }
+        }
+    }
+
+=== memoria_entre_rondas
+nivel: 2
+tema: 15
+titulo.es: Memoria entre rondas
+titulo.de: Gedächtnis zwischen Runden
+titulo.en: Memory between rounds
+claves.es: memoria entre rondas, memoria del robot, recordar entre rondas, guardar entre rondas, recordar de una ronda a otra, memoria put, memoria get
+claves.de: gedächtnis, gedächtnis zwischen runden, gedächtnis des roboters, zwischen runden merken, von runde zu runde merken
+claves.en: memory between rounds, robot memory, remember between rounds, keep data between rounds, from one round to the next
+ver: map, ambito, casting, null
+es:
+    La memoria del robot es un cuaderno donde apunta cosas que quiere recordar de una ronda a la siguiente: cuántas ha ganado, qué hizo el rival, qué táctica le salió mejor. Lo que guardas ahí no se borra al acabar la ronda.
+    Es la libreta que el robot esconde bajo la chapa del pecho: «el de rojo siempre ataca por la izquierda». Entre asalto y asalto lo pueden desmontar en el taller, cambiarle el código y volverlo a montar; la libreta sigue ahí.
+    En Java es memoria(), un Map<String, Object>: guardas con memoria().put("victorias", 3); y lees con memoria().get("victorias"), que da null si nunca lo guardaste. Más cómodo: memoria().getOrDefault("victorias", 0). Como guarda Object, al leer hay que convertir: int v = (int) memoria().getOrDefault("victorias", 0);.
+    El fallo típico: fiarse de un campo de la clase para recordar entre rondas. Dura mientras el robot no se fabrique de nuevo, pero al cambiar el código el robot se crea otra vez y los campos vuelven a empezar; memoria() sobrevive incluso a eso. Otro: guardar un double y leerlo como (int): salta ClassCastException; lee siempre con el mismo tipo que guardaste.
+de:
+    Das Gedächtnis des Roboters ist ein Notizbuch, in dem er festhält, was er sich von einer Runde zur nächsten merken will: wie oft er gewonnen hat, was der Gegner gemacht hat, welche Taktik am besten lief. Was du dort speicherst, wird am Rundenende nicht gelöscht.
+    Es ist das Notizheft, das der Roboter unter dem Brustblech versteckt: „Der Rote greift immer links an.“ Zwischen den Runden kann man ihn in der Werkstatt zerlegen, seinen Code ändern und ihn wieder zusammenbauen; das Heft ist noch da.
+    In Java ist es memoria (gedaechtnis), eine Map<String, Object>: Speichern mit memoria().put("victorias", 3); und lesen mit memoria().get("victorias"), was null liefert, wenn du es nie gespeichert hast. Bequemer: memoria().getOrDefault("victorias", 0). Weil es Object speichert, musst du beim Lesen umwandeln: int v = (int) memoria().getOrDefault("victorias", 0);.
+    Der typische Fehler: sich auf ein Feld der Klasse verlassen, um etwas über Runden hinweg zu behalten. Das hält nur, solange der Roboter nicht neu gebaut wird; änderst du den Code, entsteht er neu und die Felder fangen von vorn an. memoria() überlebt sogar das. Noch einer: ein double speichern und es als (int) lesen; das kracht mit ClassCastException. Lies immer mit dem Typ, den du gespeichert hast.
+en:
+    The robot's memory is a notebook where it jots down things it wants to remember from one round to the next: how many it has won, what the rival did, which tactic worked best. What you store there isn't wiped when the round ends.
+    It's the notepad the robot hides under its chest plate: "the red one always attacks from the left". Between rounds they can take it apart in the workshop, change its code and put it back together; the notepad is still there.
+    In Java it's memoria (memory), a Map<String, Object>: you store with memoria().put("victorias", 3); and read with memoria().get("victorias"), which gives null if you never stored it. Handier: memoria().getOrDefault("victorias", 0). Since it stores Object, you have to convert when reading: int v = (int) memoria().getOrDefault("victorias", 0);.
+    The classic mistake: relying on a field of the class to remember things between rounds. It lasts only while the robot isn't rebuilt; when you change the code the robot is created again and the fields start over, while memoria() survives even that. Another: storing a double and reading it as (int), which throws ClassCastException; always read it back as the type you stored.
+pseudo.es:
+    AL EMPEZAR:
+        vivas ← memoria["rondasVivo"], o 0 si no hay nada
+        decir "llevo " + vivas + " rondas vivo"
+    AL ACABAR LA RONDA:
+        SI me queda blindaje:
+            memoria["rondasVivo"] ← vivas + 1
+pseudo.de:
+    BEIM START:
+        lebend ← gedächtnis["rondasVivo"], oder 0, wenn nichts da ist
+        sage "schon " + lebend + " Runden überlebt"
+    AM RUNDENENDE:
+        WENN ich noch Panzerung habe:
+            gedächtnis["rondasVivo"] ← lebend + 1
+pseudo.en:
+    AT THE START:
+        alive ← memory["rondasVivo"], or 0 if there's nothing
+        say "survived " + alive + " rounds so far"
+    AT THE END OF THE ROUND:
+        IF I still have armor:
+            memory["rondasVivo"] ← alive + 1
+ejemplo:
+    public class MiRobot extends Metajavbot {
+        @Override
+        public void alEmpezar() {
+            int vivas = (int) memoria().getOrDefault("rondasVivo", 0);    // la primera vez no hay nada: 0 || beim ersten Mal ist nichts da: 0 || first time there's nothing: 0
+            decir("llevo " + vivas + " rondas vivo");
+        }
+        @Override
+        public void alAcabarRonda() {
+            if (blindaje() > 0) {                                           // acabo la ronda entero: una más || Runde heil überstanden: eine mehr || made it through the round: one more
+                int vivas = (int) memoria().getOrDefault("rondasVivo", 0);
+                memoria().put("rondasVivo", vivas + 1);                     // sobrevive aunque cambies el código || überlebt auch Codeänderungen || survives even code changes
+            }
+        }
+    }

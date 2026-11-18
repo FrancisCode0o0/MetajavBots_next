@@ -28,7 +28,12 @@ public final class Ui {
         this.e = e;
     }
 
+    /** El error del editor que se mira en este fotograma y el del anterior (VentanaDeCodigo.Senalado; el entrenador flotante lo usa). */
+    public VentanaDeCodigo.Senalado errorSenalado, errorSenaladoAntes;
+
     public void empezarFotograma() {
+        errorSenaladoAntes = errorSenalado;
+        errorSenalado = null;
         aviso = null;
         escapeReservadoAntes = escapeReservado;
         escapeReservado = false;

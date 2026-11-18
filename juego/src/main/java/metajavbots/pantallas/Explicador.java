@@ -57,6 +57,17 @@ public final class Explicador {
         }
     }
 
+    /**
+     * La explicación de ese error en un nivel concreto («noob», «junior» o «senior»), sin el mensaje de javac
+     * debajo; null si no la hay. El entrenador flotante la usa para dar más o menos pista.
+     */
+    public static String enNivel(String codigo, String mensaje, int linea, String nivel, Idioma idioma) {
+        if (codigo == null) return null;
+        String s = textos().get(codigo + "|" + nivel + "." + idioma.codigo());
+        if (s == null) s = textos().get(codigo + "|" + nivel + ".es");
+        return s == null ? null : s.replace("{msg}", mensaje == null ? "" : mensaje).replace("{linea}", Integer.toString(linea));
+    }
+
     /** La explicación para el jugador (con el mensaje de javac debajo). */
     public static String explicar(Compilador.Fallo f, Etiqueta etiqueta, Idioma idioma) {
         String n = nivel(etiqueta), clave = f.codigo + "|" + n + "." + idioma.codigo();

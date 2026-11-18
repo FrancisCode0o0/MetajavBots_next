@@ -238,6 +238,28 @@ public final class Capturas extends Juego {
         pantallas.put("12c_roto_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.ModoEspecial.encuentroRoto(this,
                 metajavbots.ejercicios.RobotRoto.todos().get(1))));
         pantallas.put("13_laboratorio", () -> new metajavbots.pantallas.PantallaLaboratorio(metajavbots.ejercicios.Laboratorio.todos().get(0)));
+        pantallas.put("13b_inspeccion", () -> new Pantalla() {
+            private final metajavbots.pantallas.PantallaLaboratorio lab =
+                    new metajavbots.pantallas.PantallaLaboratorio(metajavbots.ejercicios.Laboratorio.todos().get(0));
+            private boolean probado;
+
+            @Override
+            public void alEntrar(Juego j) {
+                lab.alEntrar(j);
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (!probado) {
+                    probado = true;
+                    lab.probarCon(j, "import static metajavbots.junit.Assertions.*;\nimport metajavbots.junit.*;\n\npublic class PruebasTrayectoria {\n"
+                            + "    @Test\n    void haciaElEste() {\n        assertEquals(0.0, Trayectoria.anguloHacia(0, 0, 10, 0), 1e-9);\n    }\n"
+                            + "    @Test\n    void haciaElNorte() {\n        assertEquals(90.0, Trayectoria.anguloHacia(0, 0, 0, 10), 1e-9);\n    }\n"
+                            + "    @Test\n    void distancia() {\n        assertEquals(5.0, Trayectoria.distancia(0, 0, 3, 4), 1e-9);\n    }\n}\n");
+                }
+                lab.fotograma(j, dt);
+            }
+        });
         pantallas.put("14_temario", metajavbots.pantallas.Temario::new);
         pantallas.put("15_historial", metajavbots.pantallas.Historial::new);
         pantallas.put("16_panel_ia", metajavbots.pantallas.PanelIA::new);
@@ -248,6 +270,115 @@ public final class Capturas extends Juego {
         pantallas.put("21_royale", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.royale(this, java.util.List.of())));
         pantallas.put("22_equipos", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.equipos(this, null)));
         pantallas.put("23_campanas", metajavbots.pantallas.Campanas::new);
+        // El entrenador flotante, abierto encima del taller, con una pregunta de quien no sabe nada.
+        pantallas.put("24_entrenador", () -> new Pantalla() {
+            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
+            private boolean abierto;
+
+            @Override
+            public void alEntrar(Juego j) {
+                taller.alEntrar(j);
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (!abierto) {
+                    abierto = true;
+                    j.entrenadorFlotante.abrir(j, null);
+                    j.entrenadorFlotante.preguntar(System.getProperty("capturas.pregunta", "¿qué es una variable?"));
+                }
+                taller.fotograma(j, dt);
+            }
+        });
+        // El entrenador con un error del editor: lo explica con una pelea y cómo arreglarlo.
+        pantallas.put("24b_entrenador_error", () -> new Pantalla() {
+            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
+            private boolean abierto;
+
+            @Override
+            public void alEntrar(Juego j) {
+                taller.alEntrar(j);
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (!abierto) {
+                    abierto = true;
+                    String codigo = "public class MiRobot extends Metajavbot {\n    @Override\n    public void cadaTurno() {\n        avanzar(50)\n    }\n}\n";
+                    metajavbots.codigo.Compilador.Fallo f = new metajavbots.codigo.Compilador.Fallo("MiRobot", 4, 20, "compiler.err.expected", "';' expected", true);
+                    j.entrenadorFlotante.abrirConError(j, new metajavbots.pantalla.VentanaDeCodigo.Senalado(new metajavbots.pantalla.VentanaDeCodigo.Marca(4, 20,
+                            metajavbots.pantallas.Explicador.explicar(f, j.jugador.etiqueta, j.jugador.idioma), true, f.codigo, f.mensaje),
+                            "        avanzar(50)", codigo, true));
+                    j.entrenadorFlotante.pedirPasoDelError(0);
+                    j.entrenadorFlotante.pedirPasoDelError(3);
+                }
+                taller.fotograma(j, dt);
+            }
+        });
+        // Un tip del taller, en su viñeta junto a la cabecita.
+        pantallas.put("24c_entrenador_tip", () -> new Pantalla() {
+            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
+
+            @Override
+            public void alEntrar(Juego j) {
+                taller.alEntrar(j);
+                j.entrenadorFlotante.tipAhora();
+            }
+
+            @Override
+            public String codigoParaConsejos() {
+                return taller.codigoParaConsejos();
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                taller.fotograma(j, dt);
+            }
+        });
+        pantallas.put("24d_guia_local", () -> new metajavbots.pantallas.GuiaDeCerebros(4));
+        pantallas.put("24d_guia_clave", () -> new metajavbots.pantallas.GuiaDeCerebros(6));
+        pantallas.put("24d_guia_despertar", () -> new metajavbots.pantallas.GuiaDeCerebros(7));
+        // Contra un jefe: el entrenador, en el hospital.
+        pantallas.put("24e_hospital", () -> new Pantalla() {
+            private metajavbots.pantallas.PantallaPelea pelea;
+            private int n;
+
+            @Override
+            public void alEntrar(Juego j) {
+                metajavbots.pantallas.Encuentro e = metajavbots.pantallas.PrepararPelea.encuentro(j, "ADAPTADA");
+                e.jefe = metajavbots.pantallas.Jefe.TODOS.get(0);
+                pelea = new metajavbots.pantallas.PantallaPelea(e);
+                pelea.alEntrar(j);
+            }
+
+            @Override
+            public boolean entrenadorEnElHospital() {
+                return true;
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (++n == 60) j.entrenadorFlotante.abrir(j, null);
+                pelea.fotograma(j, dt);
+            }
+        });
+        // En la pelea: el enemigo marcado y el consejo del entrenador.
+        pantallas.put("24f_consejo_pelea", () -> new Pantalla() {
+            private final metajavbots.pantallas.PantallaPelea pp =
+                    new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.encuentro(Capturas.this, "ADAPTADA"));
+
+            @Override
+            public void alEntrar(Juego j) {
+                pp.alEntrar(j);
+                pp.marcarEnemigo(1);
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                // A cuatro veces la velocidad: que pase la entrada y el entrenador vea pelear al marcado.
+                pp.fotograma(j, dt * 4);
+            }
+        });
         // "-Psolo=09b,09g": las pantallas que llevan alguno de esos textos, en ese orden.
         if (solo.isEmpty()) nombres.addAll(pantallas.keySet());
         for (String trozo : solo.isEmpty() ? new String[0] : solo.split(",")) {
@@ -292,6 +423,7 @@ public final class Capturas extends Juego {
     }
 
     private void siguiente() {
+        entrenadorFlotante.cerrar();
         actual++;
         fotogramas = 0;
         if (actual >= nombres.size()) {
