@@ -51,7 +51,7 @@ public final class PantallaPelea implements Pantalla {
     private float velocidad = 1, acumulado, t;
     private boolean pausa, depurador, entreRondas, terminada, compilando;
     private String locutor = "";
-    private float tiempoLocutor;
+    private float tiempoLocutor, altoDeLaBanda = 64;
     private volatile Compilador.Resultado resultadoDeCompilar;
     private String avisoDeCodigo = "";
     private boolean sinJdk;
@@ -278,6 +278,9 @@ public final class PantallaPelea implements Pantalla {
         j.voz.fotograma(j.sonidos);
         float ancho = depurador && !entreRondas ? p.ancho - 460 : p.ancho;
         vista.sacudida = Math.max(vista.sacudida, j.sacudida);
+        // Los bocadillos y los nombres, con la letra del jugador y por debajo de la banda del locutor.
+        vista.letra = ui.letra;
+        vista.techo = tiempoLocutor > 0 && !locutor.isEmpty() ? 100 + altoDeLaBanda + 8 : 0;
         vista.dibujar(p, pelea, 0, 88, ancho, p.alto - 88, pausa || entreRondas ? 0 : dt);
         marcador(j);
         if (depurador && !entreRondas) depurador(j, ancho);
@@ -415,10 +418,14 @@ public final class PantallaPelea implements Pantalla {
         tiempoLocutor -= dt;
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        float w = Math.min(900, p.ancho - 300), x = (p.ancho - w) / 2, y = 100;
+        float w = Math.min(1000, p.ancho - 200), x = (p.ancho - w) / 2, y = 100;
         float a = Math.min(1, tiempoLocutor * 2);
-        p.caja(x, y, w, 64, 32, 0x0B0F18, 0.88f * a);
-        p.bordeRedondeado(x, y, w, 64, 32, 0xFFC857, a, 2);
+        // La frase entera, en una o dos líneas (nada cortado).
+        float letra = ui.letra * 1.05f;
+        float alto = Math.max(64, p.altoDeParrafo(locutor, w - 110, letra) + 26);
+        altoDeLaBanda = alto;
+        p.caja(x, y, w, alto, 32, 0x0B0F18, 0.88f * a);
+        p.bordeRedondeado(x, y, w, alto, 32, 0xFFC857, a, 2);
         // La cabeza del locutor: un robot loco con antena y boca que se mueve.
         float hx = x + 36, hy = y + 32;
         p.caja(hx - 20, hy - 18, 40, 36, 8, 0x8A92A3, a);
@@ -430,7 +437,7 @@ public final class PantallaPelea implements Pantalla {
         p.rect(hx - 9, hy + 6, 18, boca, 0x111111, a);
         p.linea(hx, hy - 18, hx + 6, hy - 30, 2, 0x8A92A3, a);
         p.circulo(hx + 6, hy - 31, 4, (t % 0.4f) < 0.2f ? 0xFF4F4F : 0xFFC857, a);
-        p.texto(ui.recortarTexto(locutor, w - 100, ui.letra * 1.05f, true), x + 76, y + 18, ui.letra * 1.05f, true, 0xFFF1C1, a);
+        p.parrafo(locutor, x + 76, y + 13, w - 110, letra, 0xFFF1C1, a);
     }
 
     // ================================================================ depurador en vivo

@@ -174,7 +174,7 @@ public final class VistaDeArena {
         }
         efectos.avanzar(dt);
         efectos.dibujar(p);
-        for (Cuerpo c : orden) bocadillo(p, c, c.indice, dt);
+        rotulos(p, orden, pelea, dt);
         p.sinRecorte();
     }
 
@@ -320,15 +320,6 @@ public final class VistaDeArena {
         float px = sx(c.x, c.y), py = sy(c.y);
         float talla = escalaX * f(c.y) * 1.45f;
         dibujo.dibujar(co.montaje.modelo, co.montaje, px, py, talla, e);
-        if (pelea.combatientes.length > 2) {
-            float cabeza = py - (float) (125 * escalaX * co.montaje.modelo.tamano / 30);
-            int color = COLORES[pelea.equipo[c.indice] % COLORES.length];
-            p.caja(px - 60, cabeza - 4, 120, 22, 8, 0x0B0F18, 0.7f);
-            p.textoCentrado(co.nombre, px, cabeza, 14, true, c.fuera ? 0x777777 : color, 1);
-            float parte = (float) (c.blindaje() / 100);
-            p.rect(px - 50, cabeza + 20, 100, 4, 0x222222, 0.8f);
-            p.rect(px - 50, cabeza + 20, 100 * parte, 4, parte > 0.5f ? 0x5BD685 : parte > 0.2f ? 0xFFC857 : 0xFF6B6B, 1);
-        }
         // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea.
         double dano = Math.min(1.2, co.estropeado());
         float alto = (float) (62 * talla * co.montaje.modelo.tamano / 30);
@@ -382,18 +373,98 @@ public final class VistaDeArena {
         }
     }
 
-    private void bocadillo(Pincel p, Cuerpo c, int i, float dt) {
+    /** Lo más alto (en pantalla) a lo que pueden subir los rótulos: debajo de la banda del locutor, si la hay. */
+    public float techo;
+    /** El tamaño de la letra de los bocadillos y los nombres (la del jugador, para que se lea bien). */
+    public float letra = 18;
+    private final java.util.List<float[]> ocupado = new java.util.ArrayList<>();
+
+    /**
+     * Los nombres (con más de dos robots) y los bocadillos, sin pisarse: cada uno busca un sitio libre encima de su
+     * robot (y si no cabe, a un lado); un bocadillo que se ha tenido que apartar se une a su robot con una línea.
+     */
+    private void rotulos(Pincel p, java.util.List<Cuerpo> orden, Pelea pelea, float dt) {
+        ocupado.clear();
+        float arriba = Math.max(ay + 6, techo);
+        // Primero se buscan los sitios; luego se dibujan las líneas y encima los rótulos (las líneas no tachan ningún texto).
+        java.util.List<Runnable> lineas = new java.util.ArrayList<>(), cajas = new java.util.ArrayList<>();
+        if (pelea.combatientes.length > 2) {
+            for (Cuerpo c : orden) etiqueta(p, c, pelea, arriba, cajas);
+        }
+        for (Cuerpo c : orden) bocadillo(p, c, c.indice, dt, arriba, lineas, cajas);
+        for (Runnable r : lineas) r.run();
+        for (Runnable r : cajas) r.run();
+    }
+
+    private void etiqueta(Pincel p, Cuerpo c, Pelea pelea, float arriba, java.util.List<Runnable> cajas) {
+        Combatiente co = c.combatiente;
+        float t = Math.max(15, letra * 0.85f);
+        float w = Math.max(110, p.ancho(co.nombre, t, true) + 20), h = t * 1.3f + 12;
+        float[] cab = cabezaDe(c);
+        float[] r = sitioLibre(cab[0] - w / 2, cab[1] - h, w, h, arriba);
+        int color = COLORES[pelea.equipo[c.indice] % COLORES.length];
+        float parte = (float) (c.blindaje() / 100);
+        cajas.add(() -> {
+            p.caja(r[0], r[1], w, h, 8, 0x0B0F18, 0.92f);
+            p.textoCentrado(co.nombre, r[0] + w / 2, r[1] + 3, t, true, c.fuera ? 0x888888 : color, 1);
+            p.rect(r[0] + 8, r[1] + h - 7, w - 16, 4, 0x222222, 0.9f);
+            p.rect(r[0] + 8, r[1] + h - 7, (w - 16) * parte, 4, parte > 0.5f ? 0x5BD685 : parte > 0.2f ? 0xFFC857 : 0xFF6B6B, 1);
+        });
+    }
+
+    private void bocadillo(Pincel p, Cuerpo c, int i, float dt, float arriba, java.util.List<Runnable> lineas, java.util.List<Runnable> cajas) {
         if (tiempoBocadillo[i] <= 0 || bocadillo[i].isEmpty()) return;
         tiempoBocadillo[i] -= dt;
         float a = Math.min(1, tiempoBocadillo[i] * 2);
-        float t = 15;
-        float w = Math.min(340, p.ancho(bocadillo[i], t, false) + 24);
-        float h = p.altoDeParrafo(bocadillo[i], w - 20, t) + 14;
-        float px = sx(c.x, c.y), py = sy(c.y) - (float) (150 * escalaX * c.combatiente.montaje.modelo.tamano / 30) - h;
-        float bx = Math.max(ax + 6, Math.min(ax + aw - w - 6, px - w / 2));
-        p.caja(bx, py, w, h, 10, 0xFFFFFF, 0.93f * a);
-        p.triangulo(px - 8, py + h - 1, px + 8, py + h - 1, px, py + h + 10, 0xFFFFFF, 0.93f * a);
-        p.parrafo(bocadillo[i], bx + 10, py + 7, w - 20, t, 0x14161A, a);
+        String texto = bocadillo[i];
+        float t = Math.max(16, letra * 0.9f);
+        float w = Math.min(380, p.ancho(texto, t, false) + 28);
+        float h = p.altoDeParrafo(texto, w - 24, t) + 16;
+        float[] cab = cabezaDe(c);
+        float px = cab[0], py = cab[1] - 10;
+        float[] r = sitioLibre(px - w / 2, py - h - 10, w, h, arriba);
+        boolean enSuSitio = Math.abs(r[1] + h + 10 - py) < 4 && px > r[0] + 10 && px < r[0] + w - 10;
+        if (!enSuSitio) {
+            // Apartado para no pisar a otro: una línea hasta su robot.
+            float bx = Math.max(r[0] + 10, Math.min(r[0] + w - 10, px)), by = r[1] + h / 2 < py ? r[1] + h : r[1];
+            lineas.add(() -> p.linea(bx, by, px, py, 2, 0xFFFFFF, 0.7f * a));
+        }
+        cajas.add(() -> {
+            p.caja(r[0], r[1], w, h, 10, 0xFFFFFF, 0.95f * a);
+            if (enSuSitio) p.triangulo(px - 8, r[1] + h - 1, px + 8, r[1] + h - 1, px, r[1] + h + 10, 0xFFFFFF, 0.95f * a);
+            p.parrafo(texto, r[0] + 12, r[1] + 8, w - 24, t, 0x14161A, a);
+        });
+    }
+
+    /** Un sitio para un rótulo de w × h que no pise a los ya puestos: subiendo, y si no, a los lados. Lo apunta como ocupado. */
+    private float[] sitioLibre(float x, float y, float w, float h, float arriba) {
+        float x0 = Math.max(ax + 6, Math.min(ax + aw - w - 6, x));
+        float[] r = {x0, Math.max(arriba, y)};
+        for (int intento = 0; intento < 24 && pisa(r, w, h); intento++) {
+            float[] o = quienPisa(r, w, h);
+            float subir = o[1] - h - 6;
+            if (subir >= arriba) {
+                r[1] = subir;
+            } else {
+                // Arriba no cabe: al lado del que estorba (a la derecha o a la izquierda, donde haya sitio).
+                float derecha = o[0] + o[2] + 6, izquierda = o[0] - w - 6;
+                r[0] = derecha + w <= ax + aw - 6 ? derecha : Math.max(ax + 6, izquierda);
+                r[1] = Math.max(arriba, y);
+            }
+        }
+        ocupado.add(new float[]{r[0], r[1], w, h});
+        return r;
+    }
+
+    private boolean pisa(float[] r, float w, float h) {
+        return quienPisa(r, w, h) != null;
+    }
+
+    private float[] quienPisa(float[] r, float w, float h) {
+        for (float[] o : ocupado) {
+            if (r[0] < o[0] + o[2] + 4 && r[0] + w + 4 > o[0] && r[1] < o[1] + o[3] + 4 && r[1] + h + 4 > o[1]) return o;
+        }
+        return null;
     }
 
     /** Para quien dibuja encima (las barras de vida): dónde queda la cabeza de un robot en pantalla. */

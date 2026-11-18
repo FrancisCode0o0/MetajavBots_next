@@ -485,15 +485,14 @@ public final class Pelea {
                 double alcance = p.valor("alcance", 500);
                 double ang = c.mira;
                 double dx = Math.cos(Math.toRadians(ang)), dy = Math.sin(Math.toRadians(ang));
-                // ¿Pasa el rayo por el enemigo?
-                double ex = e.x - boca[0], ey = e.y - boca[1];
-                double t = ex * dx + ey * dy;
-                double perp = Math.abs(ex * dy - ey * dx);
-                boolean da = !e.fuera && t > 0 && t <= alcance + e.radio && perp <= e.radio;
-                double fin = da ? t : alcance;
-                rayos.add(new Rayo(c.indice, boca[0], boca[1], boca[0] + dx * fin, boca[1] + dy * fin, da));
+                // El rayo se para en el primer robot que se cruza (justo en su chapa); a un compañero no le hace daño.
+                double[] fin = {alcance};
+                Cuerpo tocado = primeroEnLaLinea(c, boca[0], boca[1], dx, dy, alcance, fin);
+                boolean da = tocado != null && tocado.equipo != c.equipo;
+                double hx = boca[0] + dx * fin[0], hy = boca[1] + dy * fin[0];
+                rayos.add(new Rayo(c.indice, boca[0], boca[1], hx, hy, da));
                 suceso(Suceso.Tipo.LASER, c.indice, boca[0], boca[1], ang, p.valor("dano"), "laser");
-                if (da) danar(e, c, p.valor("dano") * sobre, "laser", ang + 180, false);
+                if (da) danar(tocado, c, p.valor("dano") * sobre, "laser", ang + 180, false, hx, hy);
                 c.retroceso = 4;
                 break;
             }
@@ -522,31 +521,10 @@ public final class Pelea {
                 c.retroceso = 5;
                 break;
             }
-            case CUERPO: {
+            case CUERPO:
                 inf.ataque("cuerpo");
-                double d = Math.hypot(e.x - c.x, e.y - c.y);
-                double ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
-                boolean llega = !e.fuera && d <= c.radio + e.radio + p.valor("alcance", 50)
-                        && Math.abs(normal(ang - c.mira)) <= p.valor("cono", 70) / 2
-                        && !(e.vuela() && !c.vuela());
-                // Un golpe cuerpo a cuerpo empuja un poco hacia delante.
-                c.x += Math.cos(Math.toRadians(c.mira)) * 6;
-                c.y += Math.sin(Math.toRadians(c.mira)) * 6;
-                c.retroceso = -8;
-                if (llega) {
-                    suceso(Suceso.Tipo.GOLPE_CUERPO, c.indice, (c.x + e.x) / 2, (c.y + e.y) / 2, c.mira, p.valor("dano"), p.id);
-                    if (danar(e, c, p.valor("dano") * sobre * c.cifras.cuerpo, "cuerpo", ang + 180, true)) {
-                        int aturde = (int) p.valor("aturde");
-                        if (aturde > 0) aturdir(e, aturde);
-                        // Y lo echa para atrás.
-                        e.x += Math.cos(Math.toRadians(ang)) * 10;
-                        e.y += Math.sin(Math.toRadians(ang)) * 10;
-                    }
-                } else {
-                    suceso(Suceso.Tipo.FALLO_CUERPO, c.indice, c.x, c.y, c.mira, 0, p.id);
-                }
+                golpear(c, p, sobre);
                 break;
-            }
             case LLAMA:
                 inf.ataque("llama");
                 c.llama = (int) p.valor("duracion", 14);
@@ -631,6 +609,68 @@ public final class Pelea {
         suceso(Suceso.Tipo.ATURDIDO, e.indice, e.x, e.y, 0, turnos, "");
     }
 
+    /** Un golpe cuerpo a cuerpo: al enemigo que tenga delante y a su alcance (el más cercano), sea o no al que mira el código. */
+    private void golpear(Cuerpo c, Pieza p, double sobre) {
+        Cuerpo e = alAlcance(c, p.valor("alcance", 50), p.valor("cono", 70));
+        // Un golpe cuerpo a cuerpo empuja un poco hacia delante.
+        c.x += Math.cos(Math.toRadians(c.mira)) * 6;
+        c.y += Math.sin(Math.toRadians(c.mira)) * 6;
+        c.retroceso = -8;
+        if (e == null) {
+            suceso(Suceso.Tipo.FALLO_CUERPO, c.indice, c.x, c.y, c.mira, 0, p.id);
+            return;
+        }
+        double ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
+        // Donde toca: en la chapa del otro, del lado del que pega.
+        double hx = e.x - Math.cos(Math.toRadians(ang)) * e.radio * 0.85, hy = e.y - Math.sin(Math.toRadians(ang)) * e.radio * 0.85;
+        suceso(Suceso.Tipo.GOLPE_CUERPO, c.indice, hx, hy, c.mira, p.valor("dano"), p.id);
+        if (danar(e, c, p.valor("dano") * sobre * c.cifras.cuerpo, "cuerpo", ang + 180, true, hx, hy)) {
+            int aturde = (int) p.valor("aturde");
+            if (aturde > 0) aturdir(e, aturde);
+            // Y lo echa para atrás.
+            e.x += Math.cos(Math.toRadians(ang)) * 10;
+            e.y += Math.sin(Math.toRadians(ang)) * 10;
+        }
+    }
+
+    /**
+     * El primer robot (que no sea c ni esté fuera) que cruza la línea que sale de (x, y) en la dirección (dx, dy), hasta
+     * «alcance»; en fin[0] queda dónde toca su chapa (o el alcance si no toca a nadie).
+     */
+    public Cuerpo primeroEnLaLinea(Cuerpo c, double x, double y, double dx, double dy, double alcance, double[] fin) {
+        Cuerpo primero = null;
+        fin[0] = alcance;
+        for (Cuerpo o : cuerpos) {
+            if (o == c || o.fuera) continue;
+            double ox = o.x - x, oy = o.y - y;
+            double t = ox * dx + oy * dy;
+            double perp = Math.abs(ox * dy - oy * dx);
+            if (t <= 0 || perp > o.radio) continue;
+            double entrada = Math.max(0, t - Math.sqrt(o.radio * o.radio - perp * perp));
+            if (entrada <= alcance && entrada < fin[0]) {
+                fin[0] = entrada;
+                primero = o;
+            }
+        }
+        return primero;
+    }
+
+    /** El enemigo más cercano que c tiene delante (en su cono) y al alcance de un golpe; null si no hay. */
+    public Cuerpo alAlcance(Cuerpo c, double alcance, double cono) {
+        Cuerpo mejor = null;
+        double mejorD = Double.MAX_VALUE;
+        for (Cuerpo o : cuerpos) {
+            if (o == c || o.fuera || o.equipo == c.equipo || o.vuela() && !c.vuela()) continue;
+            double d = Math.hypot(o.x - c.x, o.y - c.y);
+            double ang = Math.toDegrees(Math.atan2(o.y - c.y, o.x - c.x));
+            if (d <= c.radio + o.radio + alcance && Math.abs(normal(ang - c.mira)) <= cono / 2 && d < mejorD) {
+                mejor = o;
+                mejorD = d;
+            }
+        }
+        return mejor;
+    }
+
     /** Por dónde sale el ataque: la punta del brazo. */
     static double[] boca(Cuerpo c, int brazo) {
         double lado = brazo == Cuerpo.IZQUIERDA ? 1 : brazo == Cuerpo.DERECHA ? -1 : 0;
@@ -644,6 +684,11 @@ public final class Pelea {
 
     /** Le hace daño a e (que viene de «de», desde el ángulo «desde»). Devuelve si le llegó algo. */
     boolean danar(Cuerpo e, Cuerpo de, double dano, String arma, double desde, boolean cuerpoACuerpo) {
+        return danar(e, de, dano, arma, desde, cuerpoACuerpo, e.x, e.y);
+    }
+
+    /** Lo mismo, con el punto donde pega (para que las chispas salgan ahí y no en el centro del robot). */
+    boolean danar(Cuerpo e, Cuerpo de, double dano, String arma, double desde, boolean cuerpoACuerpo, double ix, double iy) {
         if (e.fuera || dano <= 0) return false;
         // El éter esquiva las balas y los misiles.
         if ((arma.equals("bala") || arma.equals("misil")) && azar.nextDouble() < e.cifras.esquiva) {
@@ -655,7 +700,7 @@ public final class Pelea {
         if (e.escudoBrazo > 0 && Math.abs(normal(desde - e.mira)) <= e.conoEscudo / 2) bloqueo = e.bloqueoBrazo;
         if (e.escudoCabeza > 0) bloqueo = Math.max(bloqueo, e.bloqueoCabeza);
         if (bloqueo > 0) {
-            suceso(Suceso.Tipo.BLOQUEO, e.indice, e.x, e.y, desde, dano * bloqueo, arma);
+            suceso(Suceso.Tipo.BLOQUEO, e.indice, ix, iy, desde, dano * bloqueo, arma);
             dano *= 1 - bloqueo;
         }
         // Qué parte recibe el golpe.
@@ -689,7 +734,7 @@ public final class Pelea {
         e.golpesRecibidos.add(new ImpactoHecho(arma, hecho, normal(desde), parte));
         e.ultimoGolpe = turno;
         e.sacudida = Math.min(10, 2 + hecho / 2);
-        suceso(Suceso.Tipo.IMPACTO, e.indice, e.x, e.y, desde, hecho, arma);
+        suceso(Suceso.Tipo.IMPACTO, e.indice, ix, iy, desde, hecho, arma);
         if (antes > 0 && e.parte[parte] <= 0) {
             e.parte[parte] = 0;
             suceso(Suceso.Tipo.PARTE_ROTA, e.indice, e.x, e.y, 0, parte, Montaje.PARTES[parte]);
@@ -868,7 +913,7 @@ public final class Pelea {
                 if (Math.hypot(e.x - p.x, e.y - p.y) <= e.radio) {
                     p.vivo = false;
                     if (p.misil) suceso(Suceso.Tipo.EXPLOSION, p.dueno, p.x, p.y, 0, p.dano, "misil");
-                    danar(e, dueno, p.dano, p.misil ? "misil" : "bala", p.angulo() + 180, false);
+                    danar(e, dueno, p.dano, p.misil ? "misil" : "bala", p.angulo() + 180, false, p.x, p.y);
                     break;
                 }
             }

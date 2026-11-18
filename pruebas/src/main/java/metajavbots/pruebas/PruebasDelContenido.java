@@ -210,6 +210,19 @@ final class PruebasDelContenido {
             igual("zweiundvierzig", metajavbots.sonido.VozRobot.numeroEnLetras(42, metajavbots.textos.Idioma.DE));
         });
 
+        caso("diálogos: la pieza rota concuerda (brazo roto, piernas rotas, has roto la cabeza)", () -> {
+            metajavbots.textos.Idioma es = metajavbots.textos.Idioma.ES;
+            igual("{pieza} roto. Lo tenía en el 0,4 % de los futuros.", metajavbots.dialogos.Concordancia.ajustar(
+                    "{pieza} rota. Lo tenía en el 0,4 % de los futuros.", "brazo derecho", es));
+            igual("{pieza}: rotas. Ya no me hacía falta.", metajavbots.dialogos.Concordancia.ajustar("{pieza}: rota. Ya no me hacía falta.", "piernas", es));
+            igual("Has roto la {pieza}. Buen corte.", metajavbots.dialogos.Concordancia.ajustar("Has roto {pieza}. Buen corte.", "cabeza", es));
+            igual("¡Se han roto las {pieza}!", metajavbots.dialogos.Concordancia.ajustar("¡Se ha roto {pieza}!", "piernas", es));
+            igual("Mis {pieza} caen con honor.", metajavbots.dialogos.Concordancia.ajustar("Mi {pieza} cae con honor.", "piernas", es));
+            igual("The {pieza} are gone.", metajavbots.dialogos.Concordancia.ajustar("The {pieza} is gone.", "legs", metajavbots.textos.Idioma.EN));
+            igual("Das Teil {pieza} sind hin.", metajavbots.dialogos.Concordancia.ajustar("Das Teil {pieza} ist hin.", "Beine", metajavbots.textos.Idioma.DE));
+            igual("{pieza} rota.", metajavbots.dialogos.Concordancia.ajustar("{pieza} rota.", "cabeza", es), "la cabeza ya concordaba");
+        });
+
         caso("voz clara: el audio de Piper se lee, cambia de frecuencia y lleva el efecto suave (sin arrancar Piper)", () -> {
             byte[] b = new byte[44100];
             for (int i = 0; i < b.length / 2; i++) {

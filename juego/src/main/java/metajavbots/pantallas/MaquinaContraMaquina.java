@@ -113,6 +113,7 @@ public final class MaquinaContraMaquina implements Pantalla {
         }
         j.voz.fotograma(j.sonidos);
         float ah = (p.alto - arriba) * 0.5f;
+        vista.letra = ui.letra;
         vista.dibujar(p, pelea, 0, arriba, p.ancho, ah, pausa ? 0 : dt);
         // Las cabeceras de cada código y el código con la línea que se ejecuta.
         float cy = arriba + ah + 6, ch = p.alto - cy - 70, cw = (p.ancho - 30) / 2;

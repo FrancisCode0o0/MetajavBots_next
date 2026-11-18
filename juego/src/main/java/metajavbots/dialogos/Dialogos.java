@@ -80,6 +80,7 @@ public final class Dialogos {
         if (antes != null && l.size() > 1 && i == antes) i = (i + 1) % l.size();
         ultima.put(evento, i);
         String s = l.get(i).en(idioma);
+        if (huecos != null) s = Concordancia.ajustar(s, huecos.get("pieza"), idioma);
         if (huecos != null) for (Map.Entry<String, String> h : huecos.entrySet()) s = s.replace("{" + h.getKey() + "}", h.getValue());
         return s;
     }

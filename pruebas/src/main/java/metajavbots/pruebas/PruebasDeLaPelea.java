@@ -240,6 +240,35 @@ final class PruebasDeLaPelea {
             cierto(total > 50, "se pegaron: " + total);
         });
 
+        caso("pelea: el láser se para en la chapa del primer robot que cruza y el puñetazo va al que está delante", () -> {
+            Random r = new Random(3);
+            Combatiente[] cs = {Rivales.crear(Modelo.de("cobalto"), 0.5, 0.5, r), Rivales.crear(Modelo.de("mazo"), 0.5, 0.5, r),
+                    Rivales.crear(Modelo.de("chispa"), 0.5, 0.5, r)};
+            Pelea p = new Pelea(cs, new int[]{0, 1, 2}, 9);
+            p.empezarRonda();
+            metajavbots.combate.Cuerpo a = p.cuerpo(0), b = p.cuerpo(1), c = p.cuerpo(2);
+            a.x = 100;
+            a.y = 300;
+            a.mira = 0;
+            b.x = 300;
+            b.y = 310;
+            c.x = 500;
+            c.y = 300;
+            double[] fin = new double[1];
+            cierto(p.primeroEnLaLinea(a, a.x, a.y, 1, 0, 900, fin) == b, "el del medio tapa al de detrás");
+            double esperado = 200 - Math.sqrt(b.radio * b.radio - 100);
+            cierto(Math.abs(fin[0] - esperado) < 1e-6, "en su chapa: " + fin[0] + " / " + esperado);
+            b.y = 300 + b.radio + 5;
+            cierto(p.primeroEnLaLinea(a, a.x, a.y, 1, 0, 900, fin) == c, "si el del medio no está en la línea, el rayo sigue");
+            cierto(p.primeroEnLaLinea(a, a.x, a.y, 1, 0, 300, fin) == null && fin[0] == 300, "el alcance manda");
+            b.x = a.x + a.radio + b.radio + 20;
+            b.y = 300;
+            c.x = a.x - a.radio - c.radio - 10;
+            cierto(p.alAlcance(a, 50, 70) == b, "el de delante, no el de detrás");
+            a.mira = 180;
+            cierto(p.alAlcance(a, 50, 70) == c, "al girarse, el otro");
+        });
+
         caso("equipos: dos contra dos, los compañeros no se hacen daño y se avisan", () -> {
             Random r = new Random(5);
             Combatiente[] cs = {Rivales.crear(Modelo.de("vigia"), 0.7, 0.5, r), Rivales.crear(Modelo.de("mazo"), 0.7, 0.5, r),
