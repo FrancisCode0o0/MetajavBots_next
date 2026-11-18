@@ -93,7 +93,7 @@ public final class PantallaLaboratorio implements Pantalla {
         if (r != null && !probando && pruebas.marcas.isEmpty()) {
             for (Compilador.Fallo f : r.errores) {
                 if (f.archivo.equals(Compilador.nombreDeClase(pruebas.doc.texto()))) {
-                    pruebas.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave, f.codigo, f.mensaje));
+                    pruebas.marcas.add(Explicador.marca(f, jug));
                 }
             }
         }

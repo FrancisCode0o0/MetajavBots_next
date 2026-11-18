@@ -97,7 +97,8 @@ public final class GuiaDeCerebros implements Pantalla {
                 "google_gemma-3-4b-it-Q4_K_M.gguf   2,5 GB", "google_gemma-3-4b-it-Q8_0.gguf   4,1 GB", "google_gemma-3-4b-it-f16.gguf   7,8 GB"}, 0);
             case 3 -> carpeta(p, x, y, w, h);
             case 4 -> panelDeCerebros(p, x, y, w, h, false);
-            case 5 -> navegador(p, x, y, w, h, "aistudio.google.com/apikey", new String[]{"Create API key", "AIza••••••••••••••••••", "Copy"}, 0);
+            case 5 -> navegador(p, x, y, w, h, "aistudio.google.com/apikey",
+                    new String[]{"Create API key", "AIza••••••••••••••••••", "Copy"}, 0);
             case 6 -> panelDeCerebros(p, x, y, w, h, true);
             case 7 -> despertar(p, x, y, w, h);
             case 8 -> menu(p, x, y, w, h, new String[]{"menu.taller", "menu.pelear", "menu.ejercicios", "menu.tutoriales"}, 0);
@@ -147,7 +148,8 @@ public final class GuiaDeCerebros implements Pantalla {
 
     private void carpeta(Pincel p, float x, float y, float w, float h) {
         float cy = ventana(p, x, y, w, Math.min(h, 400), "C:\\…\\000KI_Local");
-        String[][] filas = {{"[ ]", "piper"}, {" ▶ ", "koboldcpp.exe"}, {" ◆ ", "google_gemma-3-4b-it-Q4_K_M.gguf"}, {" ◆ ", "Qwen_Qwen3.5-9B-Q4_K_M.gguf"}};
+        String[][] filas = {{"[ ]", "piper"}, {" ▶ ", "koboldcpp.exe"}, {" ◆ ", "google_gemma-3-4b-it-Q4_K_M.gguf"},
+            {" ◆ ", "Qwen_Qwen3.5-9B-Q4_K_M.gguf"}};
         for (String[] f : filas) {
             p.texto(f[0] + "  " + f[1], x + 30, cy + 8, 16, false, 0x2B2F36, 1);
             cy += 40;
@@ -174,7 +176,9 @@ public final class GuiaDeCerebros implements Pantalla {
         cy += 56;
         if (enLinea) {
             String[] prov = {"anthropic", "openai", "gemini"};
-            for (int k = 0; k < 3; k++) botonDibujado(p, prov[k], x + 16 + k * (tw + 8), cy, tw, 36, k == 2 ? 0x2F80ED : 0xE3E6EA, k == 2 ? 0xFFFFFF : 0x2B2F36);
+            for (int k = 0; k < 3; k++) {
+                botonDibujado(p, prov[k], x + 16 + k * (tw + 8), cy, tw, 36, k == 2 ? 0x2F80ED : 0xE3E6EA, k == 2 ? 0xFFFFFF : 0x2B2F36);
+            }
             cy += 52;
             p.caja(x + 16, cy, w - 200, 40, 6, 0xFFFFFF, 1);
             p.texto("AIza••••••••••••", x + 28, cy + 11, 15, false, 0x3A3F46, 1);

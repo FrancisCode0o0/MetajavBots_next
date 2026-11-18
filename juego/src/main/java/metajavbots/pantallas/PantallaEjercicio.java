@@ -208,7 +208,7 @@ public final class PantallaEjercicio implements Pantalla {
         Jugador jug = j.jugador;
         if (inf != null && !comprobando && editor.marcas.isEmpty() && !inf.compila()) {
             for (Compilador.Fallo f : inf.errores) {
-                editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave, f.codigo, f.mensaje));
+                editor.marcas.add(Explicador.marca(f, jug));
             }
         }
         if (inf != null && !comprobando && cambio == null && inf.todoBien()) {

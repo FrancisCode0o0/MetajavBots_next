@@ -352,7 +352,7 @@ public final class Taller implements Pantalla {
             resultado = null;
             editor.marcas.clear();
             for (Compilador.Fallo f : r.errores) {
-                editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave, f.codigo, f.mensaje));
+                editor.marcas.add(Explicador.marca(f, jug));
             }
             aviso = r.bien ? T.f("taller.compilado_ok", r.milisegundos) : T.f("pelea.errores", r.graves().size());
             tutor.compilado(r.bien);

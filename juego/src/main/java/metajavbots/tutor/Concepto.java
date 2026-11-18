@@ -25,7 +25,8 @@ import metajavbots.textos.Trilingue;
 public final class Concepto {
 
     /** Los archivos de conceptos, en orden (de lo básico a lo avanzado). */
-    static final String[] ARCHIVOS = {"01_basico.txt", "02_control.txt", "03_objetos.txt", "04_intermedio.txt", "05_moderno.txt", "06_senior.txt", "07_juego.txt"};
+    static final String[] ARCHIVOS = {"01_basico.txt", "02_control.txt", "03_objetos.txt", "04_intermedio.txt", "05_moderno.txt", "06_senior.txt",
+        "07_juego.txt"};
 
     public final String id, tema, ejemplo;
     public final int nivel;
@@ -163,7 +164,8 @@ public final class Concepto {
         {"char.lit", "char"}, {"illegal.esc.char", "string"}, {"unclosed.comment", "comentario"}, {"int.number.too.large", "int_y_double"},
         {"else.without.if", "if_else"}, {"duplicate.case", "switch"}, {"duplicate.default", "switch"}, {"not.exhaustive", "sealed"},
         {"switch.mixing", "switch_expresion"}, {"rule.completes", "switch_expresion"}, {"pattern.dominated", "pattern_matching"},
-        {"break.outside", "break_continue"}, {"cont.outside", "break_continue"}, {"not.loop.label", "break_continue"}, {"undef.label", "break_continue"}, {"unreachable.stmt", "return"},
+        {"break.outside", "break_continue"}, {"cont.outside", "break_continue"}, {"not.loop.label", "break_continue"},
+        {"undef.label", "break_continue"}, {"unreachable.stmt", "return"},
         {"foreach.not.applicable", "recorrer_array"}, {"cant.resolve.location.args", "llamar_metodo"}, {"cant.resolve", "variable"},
         {"doesnt.exist", "paquete_import"}, {"already.defined", "ambito"}, {"var.might.not.have.been.initialized", "variable"},
         {"var.might.already.be.assigned", "constante"}, {"cant.assign.val", "constante"}, {"final.parameter", "constante"},

@@ -30,8 +30,44 @@ final class EntrenadorEnLaPelea {
     private float tiempo, desdeElCambio, t;
     private int saltados;
 
+    private float tiempoDelMilagro = -1;
+    private String fraseDelMilagro;
+
     int marcado() {
         return marcado;
+    }
+
+    /** Para la IA: cómo va la pelea (cada robot, su daño, dónde está, su último error; cuál está marcado) y el código del jugador. */
+    String contexto(Pelea pelea, String codigo) {
+        StringBuilder sb = new StringBuilder("The player is in a robot fight (round ").append(pelea.ronda()).append(" of ").append(pelea.rondas)
+                .append("; whoever takes less damage wins).\n");
+        for (int i = 0; i < pelea.combatientes.length; i++) {
+            metajavbots.combate.Combatiente c = pelea.combatientes[i];
+            Cuerpo cu = pelea.cuerpo(i);
+            sb.append(i == 0 ? "PLAYER " : i == marcado ? "MARKED ENEMY " : "ENEMY ").append(c.nombre).append(" (")
+                    .append(c.montaje.modelo.id).append("): damage taken ").append(Math.round(c.danoTotalRecibido)).append(", dealt ")
+                    .append(Math.round(c.danoTotalHecho));
+            if (cu != null) sb.append(", at (").append(Math.round(cu.x)).append(", ").append(Math.round(cu.y)).append("), energy ")
+                    .append(Math.round(cu.energia));
+            if (!c.ultimoError.isEmpty()) sb.append(", last error: ").append(c.ultimoError);
+            sb.append('\n');
+        }
+        return sb.append("The player's robot code:\n").append(EntrenadorFlotante.conNumeros(codigo, 160)).toString();
+    }
+
+    /** Tras ganar a un jefe, el entrenador «sale del hospital» milagrosamente a felicitarte (al final sí fue al combate). */
+    void milagro(Juego j, float anchoDelCuadro, float dt) {
+        Entrenador en = Entrenador.de(j.jugador.entrenador);
+        if (tiempoDelMilagro < 0) {
+            tiempoDelMilagro = 0;
+            fraseDelMilagro = Hospital.milagro(System.nanoTime());
+            j.voz.decir(fraseDelMilagro, j.jugador.idioma, en.timbre);
+        }
+        tiempoDelMilagro += dt;
+        Pincel p = j.pincel;
+        float libre = (p.ancho - anchoDelCuadro) / 2;
+        if (libre >= 300) Hospital.milagro(p, en, fraseDelMilagro, 10, p.alto * 0.3f, libre - 20, tiempoDelMilagro);
+        else Hospital.milagro(p, en, fraseDelMilagro, 0, 150, p.ancho, tiempoDelMilagro);
     }
 
     /** Cada turno de la pelea: si hay un enemigo marcado, el entrenador lo mira. */

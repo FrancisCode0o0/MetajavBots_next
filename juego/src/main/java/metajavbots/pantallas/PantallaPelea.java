@@ -70,8 +70,6 @@ public final class PantallaPelea implements Pantalla {
     private final Dialogo dialogo = new Dialogo();
     /** El entrenador: consejos contra el enemigo marcado; contra un jefe, en el hospital (y al ganar, el milagro). */
     private final EntrenadorEnLaPelea entrenador = new EntrenadorEnLaPelea();
-    private float tiempoDelMilagro = -1;
-    private String fraseDelMilagro;
 
     public PantallaPelea(Encuentro e) {
         this.encuentro = e;
@@ -169,22 +167,7 @@ public final class PantallaPelea implements Pantalla {
 
     @Override
     public String contextoParaElEntrenador() {
-        if (pelea == null) return null;
-        StringBuilder sb = new StringBuilder("The player is in a robot fight (round ").append(pelea.ronda()).append(" of ").append(pelea.rondas)
-                .append("; whoever takes less damage wins).\n");
-        for (int i = 0; i < pelea.combatientes.length; i++) {
-            metajavbots.combate.Combatiente c = pelea.combatientes[i];
-            Cuerpo cu = pelea.cuerpo(i);
-            sb.append(i == 0 ? "PLAYER " : i == entrenador.marcado() ? "MARKED ENEMY " : "ENEMY ").append(c.nombre).append(" (")
-                    .append(c.montaje.modelo.id).append("): damage taken ").append(Math.round(c.danoTotalRecibido)).append(", dealt ")
-                    .append(Math.round(c.danoTotalHecho));
-            if (cu != null) sb.append(", at (").append(Math.round(cu.x)).append(", ").append(Math.round(cu.y)).append("), energy ")
-                    .append(Math.round(cu.energia));
-            if (!c.ultimoError.isEmpty()) sb.append(", last error: ").append(c.ultimoError);
-            sb.append('\n');
-        }
-        sb.append("The player's robot code:\n").append(EntrenadorFlotante.conNumeros(robot.listo() ? robot.fuente() : editor.doc.texto(), 160));
-        return sb.toString();
+        return pelea == null ? null : entrenador.contexto(pelea, robot.listo() ? robot.fuente() : editor.doc.texto());
     }
 
     private void empezarRonda(Juego j) {
@@ -291,8 +274,7 @@ public final class PantallaPelea implements Pantalla {
     private void marcarErrores(Compilador.Resultado res, Jugador jug) {
         editor.marcas.clear();
         for (Compilador.Fallo f : res.errores) {
-            editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna,
-                    Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave, f.codigo, f.mensaje));
+            editor.marcas.add(Explicador.marca(f, jug));
         }
     }
 
@@ -413,35 +395,9 @@ public final class PantallaPelea implements Pantalla {
     // ================================================================ marcador
 
     /** En una pelea de varios: el jugador arriba a la izquierda y los demás en una fila, con el color de su equipo. */
-    private void marcadorDeVarios(Juego j) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        p.rect(0, 0, p.ancho, 88, ui.tema.panel, 0.97f);
-        p.rect(0, 87, p.ancho, 1, ui.tema.borde, 1);
-        int n = pelea.combatientes.length;
-        float w = Math.min(260, (p.ancho - 260) / n);
-        for (int i = 0; i < n; i++) {
-            Cuerpo c = pelea.cuerpo(i);
-            Combatiente co = pelea.combatientes[i];
-            float x = 16 + i * w;
-            int color = VistaDeArena.COLORES[pelea.equipo[i] % VistaDeArena.COLORES.length];
-            p.texto(ui.recortarTexto(co.nombre, w - 20, ui.letra * 0.8f, true), x, 8, ui.letra * 0.8f, true, color, 1);
-            if (c != null) {
-                float parte = (float) (c.blindaje() / 100);
-                ui.barra(x, 34, w - 20, 14, parte, parte > 0.5f ? ui.tema.bien : parte > 0.2f ? ui.tema.aviso : ui.tema.mal, null);
-            }
-            p.texto(T.f("pelea.dano", Math.round(co.danoTotalRecibido)), x, 54, ui.letra * 0.65f, false, ui.tema.textoSuave, 1);
-        }
-        float cx = p.ancho - 130;
-        p.textoCentrado(T.f("pelea.ronda", pelea.ronda(), pelea.rondas), cx, 8, ui.letra * 0.9f, true, ui.tema.texto, 1);
-        int segundos = (int) Math.ceil((pelea.turnosPorRonda - pelea.turno()) / (double) Pelea.TURNOS_POR_SEGUNDO);
-        p.textoCentrado(String.format("%d:%02d", Math.max(0, segundos) / 60, Math.max(0, segundos) % 60), cx, 36, ui.letra * 1.5f, true,
-                segundos <= 10 ? ui.tema.mal : ui.tema.texto, 1);
-    }
-
     private void marcador(Juego j) {
         if (pelea.combatientes.length > 2) {
-            marcadorDeVarios(j);
+            Marcadores.deVarios(j, pelea);
             return;
         }
         Pincel p = j.pincel;
@@ -781,7 +737,7 @@ public final class PantallaPelea implements Pantalla {
                 yy += 32;
             }
         }
-        milagro(j, w, dt);
+        if (encuentro.jefe != null && ganoElJugador) entrenador.milagro(j, w, dt);
         if (encuentro.modo.equals("DESAFIO") && ganoElJugador && !premioElegido) {
             if (ui.boton(T.t("final.premio"), x + w / 2 - 170, y + h - 140, 340, 50,
                     Ui.Estilo.PRINCIPAL)) j.ir(new PremioDelDesafio(() -> premioElegido = true));
@@ -801,22 +757,6 @@ public final class PantallaPelea implements Pantalla {
             // Vuelve a la campaña (que sigue debajo): el siguiente capítulo ya está abierto.
             if (ui.boton(T.t("final.seguir_campana"), x + w - 290, y + h - 74, 260, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.volver();
         } else if (ui.boton(T.t("final.menu"), x + w - 230, y + h - 74, 200, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.irSolo(new Menu());
-    }
-
-    /** Tras ganar a un jefe, el entrenador «sale del hospital» milagrosamente a felicitarte (al final sí fue al combate). */
-    private void milagro(Juego j, float anchoDelCuadro, float dt) {
-        if (encuentro.jefe == null || !ganoElJugador) return;
-        metajavbots.tutor.Entrenador en = metajavbots.tutor.Entrenador.de(j.jugador.entrenador);
-        if (tiempoDelMilagro < 0) {
-            tiempoDelMilagro = 0;
-            fraseDelMilagro = Hospital.milagro(System.nanoTime());
-            j.voz.decir(fraseDelMilagro, j.jugador.idioma, en.timbre);
-        }
-        tiempoDelMilagro += dt;
-        Pincel p = j.pincel;
-        float libre = (p.ancho - anchoDelCuadro) / 2;
-        if (libre >= 300) Hospital.milagro(p, en, fraseDelMilagro, 10, p.alto * 0.3f, libre - 20, tiempoDelMilagro);
-        else Hospital.milagro(p, en, fraseDelMilagro, 0, 150, p.ancho, tiempoDelMilagro);
     }
 
     private void reparacion(Juego j, float dt) {

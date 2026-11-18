@@ -40,6 +40,12 @@ final class PruebasDelEntrenador {
     private static final Set<String> ILUSTRATIVOS = Set.of("modulos", "paquete_import");
 
     static void apuntar() {
+        conceptos();
+        busqueda();
+        ayudas();
+    }
+
+    private static void conceptos() {
         caso("entrenador: los conceptos, de cero a senior, en tres idiomas, con pseudocódigo, ejemplo y relacionados que existen", () -> {
             List<Concepto> todos = Concepto.todos();
             cierto(todos.size() >= 130, "al menos 130 conceptos: " + todos.size());
@@ -88,6 +94,9 @@ final class PruebasDelEntrenador {
             igual(0, malos.size(), "ejemplos que no compilan");
         });
 
+    }
+
+    private static void busqueda() {
         caso("entrenador: encuentra el concepto por lo que pregunta quien no sabe nada, en cualquier idioma", () -> {
             String[][] preguntas = {
                 {"¿qué es una variable?", "variable", "ES"},
@@ -137,6 +146,9 @@ final class PruebasDelEntrenador {
             }
         });
 
+    }
+
+    private static void ayudas() {
         caso("entrenador: los tips del taller ven lo que le pasa al código (y siempre tiene alguno)", () -> {
             String malo = "public class MiRobot extends Metajavbot {\n    public void cadaTurno() {\n        int vueltas = 0;\n        vueltas++;\n"
                     + "        while (true) {\n            avanzar(10);\n        }\n    }\n}\n";
@@ -145,7 +157,8 @@ final class PruebasDelEntrenador {
                 cierto(ids.contains(id), "ve «" + id + "»: " + ids);
             String bueno = "public class MiRobot extends Metajavbot {\n    private int vueltas;\n\n    @Override\n    public void cadaTurno() {\n"
                     + "        vueltas++;\n        avanzar(5);\n    }\n\n    @Override\n    public void alVerEnemigo(Enemigo e) {\n"
-                    + "        apuntarHacia(e.angulo());\n        atacar();\n    }\n\n    @Override\n    public void alRecibirGolpe(Golpe g) {\n        girar(90);\n    }\n\n"
+                    + "        apuntarHacia(e.angulo());\n        atacar();\n    }\n\n"
+                    + "    @Override\n    public void alRecibirGolpe(Golpe g) {\n        girar(90);\n    }\n\n"
                     + "    @Override\n    public void alChocarConPared() {\n        girar(180);\n    }\n}\n";
             for (String id : ids(ConsejosDelTaller.de(bueno))) cierto(id.startsWith("general_"), "nada que señalar al bueno: " + id);
             cierto(ids(ConsejosDelTaller.de("")).contains("vacio"), "el vacío");
@@ -240,7 +253,8 @@ final class PruebasDelEntrenador {
      * dentro de un método. Devuelve el primer error, o null si compila de alguna de esas maneras.
      */
     private static String compilarEjemplo(String ejemplo) {
-        String sinPublic = ejemplo.replaceAll("(?m)^public\\s+(?=(final\\s+|abstract\\s+|sealed\\s+|non-sealed\\s+)*(class|interface|record|enum|@interface)\\b)", "");
+        String sinPublic = ejemplo.replaceAll(
+                "(?m)^public\\s+(?=(final\\s+|abstract\\s+|sealed\\s+|non-sealed\\s+)*(class|interface|record|enum|@interface)\\b)", "");
         boolean conTipos = java.util.regex.Pattern.compile("(?m)^(@\\w+(\\([^)]*\\))?\\s+)*(final\\s+|abstract\\s+|sealed\\s+|non-sealed\\s+)*"
                 + "(class|interface|record|enum|@interface)\\s").matcher(sinPublic).find();
         String[] intentos = conTipos

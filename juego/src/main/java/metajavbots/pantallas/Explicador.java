@@ -9,7 +9,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 import metajavbots.codigo.Compilador;
+import metajavbots.pantalla.VentanaDeCodigo;
 import metajavbots.progreso.Etiqueta;
+import metajavbots.progreso.Jugador;
 import metajavbots.textos.Idioma;
 
 /**
@@ -66,6 +68,11 @@ public final class Explicador {
         String s = textos().get(codigo + "|" + nivel + "." + idioma.codigo());
         if (s == null) s = textos().get(codigo + "|" + nivel + ".es");
         return s == null ? null : s.replace("{msg}", mensaje == null ? "" : mensaje).replace("{linea}", Integer.toString(linea));
+    }
+
+    /** La marca del editor para ese fallo: su explicación a la medida del jugador, y el código y el mensaje para el entrenador. */
+    public static VentanaDeCodigo.Marca marca(Compilador.Fallo f, Jugador jug) {
+        return new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, explicar(f, jug.etiqueta, jug.idioma), f.grave, f.codigo, f.mensaje);
     }
 
     /** La explicación para el jugador (con el mensaje de javac debajo). */

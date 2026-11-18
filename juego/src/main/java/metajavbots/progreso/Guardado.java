@@ -152,8 +152,7 @@ public final class Guardado {
         v.put("vozDelLocutor", Boolean.toString(j.vozDelLocutor));
         v.put("vozClara", Boolean.toString(j.vozClara));
         v.put("entrenador", j.entrenador);
-        v.put("ayudaDelTutor", numero(j.ayudaDelTutor));
-        v.put("entrenadorActivo", Boolean.toString(j.entrenadorActivo));
+        v.put("ayudaDelTutor", numero(j.ayudaDelTutor) + (j.entrenadorActivo ? "" : ";sin_entrenador"));
         v.put("temaClaro", Boolean.toString(j.temaClaro));
         StringBuilder b = new StringBuilder("# Partida de MetajavBots (se puede leer; mejor no tocarla a mano)\n");
         for (Map.Entry<String, String> e : v.entrySet()) {
@@ -293,8 +292,10 @@ public final class Guardado {
         j.vozDelLocutor = !"false".equals(v.get("vozDelLocutor"));
         j.vozClara = !"false".equals(v.get("vozClara"));
         j.entrenador = v.getOrDefault("entrenador", "tuercas");
-        j.ayudaDelTutor = (float) decimal(v.get("ayudaDelTutor"), 0.5);
-        j.entrenadorActivo = !"false".equals(v.get("entrenadorActivo"));
+        // «0.5;sin_entrenador»: la ayuda y, si lo ha desactivado, el entrenador flotante (en una sola línea de la partida).
+        String ayuda = v.getOrDefault("ayudaDelTutor", "0.5");
+        j.entrenadorActivo = !ayuda.endsWith(";sin_entrenador");
+        j.ayudaDelTutor = (float) decimal(ayuda.replace(";sin_entrenador", ""), 0.5);
         j.temaClaro = Boolean.parseBoolean(v.get("temaClaro"));
     }
 

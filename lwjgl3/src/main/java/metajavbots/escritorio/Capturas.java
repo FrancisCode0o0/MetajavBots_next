@@ -238,6 +238,27 @@ public final class Capturas extends Juego {
         pantallas.put("12c_roto_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.ModoEspecial.encuentroRoto(this,
                 metajavbots.ejercicios.RobotRoto.todos().get(1))));
         pantallas.put("13_laboratorio", () -> new metajavbots.pantallas.PantallaLaboratorio(metajavbots.ejercicios.Laboratorio.todos().get(0)));
+        pantallaDeLaInspeccion();
+        pantallas.put("14_temario", metajavbots.pantallas.Temario::new);
+        pantallas.put("15_historial", metajavbots.pantallas.Historial::new);
+        pantallas.put("16_panel_ia", metajavbots.pantallas.PanelIA::new);
+        pantallas.put("17_ajustes", metajavbots.pantallas.Ajustes::new);
+        pantallas.put("18_bienvenida", metajavbots.pantallas.Bienvenida::new);
+        pantallas.put("19_rival", metajavbots.pantallas.CodigoDelRival::new);
+        pantallas.put("20_maquinas", MaquinasEnMarcha::new);
+        pantallas.put("21_royale", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.royale(this, java.util.List.of())));
+        pantallas.put("22_equipos", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.equipos(this, null)));
+        pantallas.put("23_campanas", metajavbots.pantallas.Campanas::new);
+        pantallasDelEntrenador();
+        // "-Psolo=09b,09g": las pantallas que llevan alguno de esos textos, en ese orden.
+        if (solo.isEmpty()) nombres.addAll(pantallas.keySet());
+        for (String trozo : solo.isEmpty() ? new String[0] : solo.split(",")) {
+            for (String n : pantallas.keySet()) if (n.contains(trozo) && !nombres.contains(n)) nombres.add(n);
+        }
+    }
+
+    /** La inspección animada del laboratorio de pruebas, con unas pruebas ya escritas. */
+    private void pantallaDeLaInspeccion() {
         pantallas.put("13b_inspeccion", () -> new Pantalla() {
             private final metajavbots.pantallas.PantallaLaboratorio lab =
                     new metajavbots.pantallas.PantallaLaboratorio(metajavbots.ejercicios.Laboratorio.todos().get(0));
@@ -260,84 +281,10 @@ public final class Capturas extends Juego {
                 lab.fotograma(j, dt);
             }
         });
-        pantallas.put("14_temario", metajavbots.pantallas.Temario::new);
-        pantallas.put("15_historial", metajavbots.pantallas.Historial::new);
-        pantallas.put("16_panel_ia", metajavbots.pantallas.PanelIA::new);
-        pantallas.put("17_ajustes", metajavbots.pantallas.Ajustes::new);
-        pantallas.put("18_bienvenida", metajavbots.pantallas.Bienvenida::new);
-        pantallas.put("19_rival", metajavbots.pantallas.CodigoDelRival::new);
-        pantallas.put("20_maquinas", MaquinasEnMarcha::new);
-        pantallas.put("21_royale", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.royale(this, java.util.List.of())));
-        pantallas.put("22_equipos", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.equipos(this, null)));
-        pantallas.put("23_campanas", metajavbots.pantallas.Campanas::new);
-        // El entrenador flotante, abierto encima del taller, con una pregunta de quien no sabe nada.
-        pantallas.put("24_entrenador", () -> new Pantalla() {
-            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
-            private boolean abierto;
+    }
 
-            @Override
-            public void alEntrar(Juego j) {
-                taller.alEntrar(j);
-            }
-
-            @Override
-            public void fotograma(Juego j, float dt) {
-                if (!abierto) {
-                    abierto = true;
-                    j.entrenadorFlotante.abrir(j, null);
-                    j.entrenadorFlotante.preguntar(System.getProperty("capturas.pregunta", "¿qué es una variable?"));
-                }
-                taller.fotograma(j, dt);
-            }
-        });
-        // El entrenador con un error del editor: lo explica con una pelea y cómo arreglarlo.
-        pantallas.put("24b_entrenador_error", () -> new Pantalla() {
-            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
-            private boolean abierto;
-
-            @Override
-            public void alEntrar(Juego j) {
-                taller.alEntrar(j);
-            }
-
-            @Override
-            public void fotograma(Juego j, float dt) {
-                if (!abierto) {
-                    abierto = true;
-                    String codigo = "public class MiRobot extends Metajavbot {\n    @Override\n    public void cadaTurno() {\n        avanzar(50)\n    }\n}\n";
-                    metajavbots.codigo.Compilador.Fallo f = new metajavbots.codigo.Compilador.Fallo("MiRobot", 4, 20, "compiler.err.expected", "';' expected", true);
-                    j.entrenadorFlotante.abrirConError(j, new metajavbots.pantalla.VentanaDeCodigo.Senalado(new metajavbots.pantalla.VentanaDeCodigo.Marca(4, 20,
-                            metajavbots.pantallas.Explicador.explicar(f, j.jugador.etiqueta, j.jugador.idioma), true, f.codigo, f.mensaje),
-                            "        avanzar(50)", codigo, true));
-                    j.entrenadorFlotante.pedirPasoDelError(0);
-                    j.entrenadorFlotante.pedirPasoDelError(3);
-                }
-                taller.fotograma(j, dt);
-            }
-        });
-        // Un tip del taller, en su viñeta junto a la cabecita.
-        pantallas.put("24c_entrenador_tip", () -> new Pantalla() {
-            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
-
-            @Override
-            public void alEntrar(Juego j) {
-                taller.alEntrar(j);
-                j.entrenadorFlotante.tipAhora();
-            }
-
-            @Override
-            public String codigoParaConsejos() {
-                return taller.codigoParaConsejos();
-            }
-
-            @Override
-            public void fotograma(Juego j, float dt) {
-                taller.fotograma(j, dt);
-            }
-        });
-        pantallas.put("24d_guia_local", () -> new metajavbots.pantallas.GuiaDeCerebros(4));
-        pantallas.put("24d_guia_clave", () -> new metajavbots.pantallas.GuiaDeCerebros(6));
-        pantallas.put("24d_guia_despertar", () -> new metajavbots.pantallas.GuiaDeCerebros(7));
+    /** El entrenador en la pelea: en el hospital contra un jefe, y aconsejando contra el enemigo marcado. */
+    private void pantallasDelEntrenadorEnLaPelea() {
         // Contra un jefe: el entrenador, en el hospital.
         pantallas.put("24e_hospital", () -> new Pantalla() {
             private metajavbots.pantallas.PantallaPelea pelea;
@@ -379,11 +326,79 @@ public final class Capturas extends Juego {
                 pp.fotograma(j, dt * 4);
             }
         });
-        // "-Psolo=09b,09g": las pantallas que llevan alguno de esos textos, en ese orden.
-        if (solo.isEmpty()) nombres.addAll(pantallas.keySet());
-        for (String trozo : solo.isEmpty() ? new String[0] : solo.split(",")) {
-            for (String n : pantallas.keySet()) if (n.contains(trozo) && !nombres.contains(n)) nombres.add(n);
-        }
+    }
+
+    /** Las capturas del entrenador flotante (bloque 1): la consulta, un error, un tip, la guía, el hospital y el consejo en la pelea. */
+    private void pantallasDelEntrenador() {
+        // El entrenador flotante, abierto encima del taller, con una pregunta de quien no sabe nada.
+        pantallas.put("24_entrenador", () -> new Pantalla() {
+            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
+            private boolean abierto;
+
+            @Override
+            public void alEntrar(Juego j) {
+                taller.alEntrar(j);
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (!abierto) {
+                    abierto = true;
+                    j.entrenadorFlotante.abrir(j, null);
+                    j.entrenadorFlotante.preguntar(System.getProperty("capturas.pregunta", "¿qué es una variable?"));
+                }
+                taller.fotograma(j, dt);
+            }
+        });
+        // El entrenador con un error del editor: lo explica con una pelea y cómo arreglarlo.
+        pantallas.put("24b_entrenador_error", () -> new Pantalla() {
+            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
+            private boolean abierto;
+
+            @Override
+            public void alEntrar(Juego j) {
+                taller.alEntrar(j);
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (!abierto) {
+                    abierto = true;
+                    String codigo = "public class MiRobot extends Metajavbot {\n    @Override\n    public void cadaTurno() {\n        avanzar(50)\n    }\n}\n";
+                    metajavbots.codigo.Compilador.Fallo f =
+                            new metajavbots.codigo.Compilador.Fallo("MiRobot", 4, 20, "compiler.err.expected", "';' expected", true);
+                    j.entrenadorFlotante.abrirConError(j, new metajavbots.pantalla.VentanaDeCodigo.Senalado(
+                            metajavbots.pantallas.Explicador.marca(f, j.jugador), "        avanzar(50)", codigo, true));
+                    j.entrenadorFlotante.pedirPasoDelError(0);
+                    j.entrenadorFlotante.pedirPasoDelError(3);
+                }
+                taller.fotograma(j, dt);
+            }
+        });
+        // Un tip del taller, en su viñeta junto a la cabecita.
+        pantallas.put("24c_entrenador_tip", () -> new Pantalla() {
+            private final metajavbots.pantallas.Taller taller = new metajavbots.pantallas.Taller();
+
+            @Override
+            public void alEntrar(Juego j) {
+                taller.alEntrar(j);
+                j.entrenadorFlotante.tipAhora();
+            }
+
+            @Override
+            public String codigoParaConsejos() {
+                return taller.codigoParaConsejos();
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                taller.fotograma(j, dt);
+            }
+        });
+        pantallas.put("24d_guia_local", () -> new metajavbots.pantallas.GuiaDeCerebros(4));
+        pantallas.put("24d_guia_clave", () -> new metajavbots.pantallas.GuiaDeCerebros(6));
+        pantallas.put("24d_guia_despertar", () -> new metajavbots.pantallas.GuiaDeCerebros(7));
+        pantallasDelEntrenadorEnLaPelea();
     }
 
     @Override

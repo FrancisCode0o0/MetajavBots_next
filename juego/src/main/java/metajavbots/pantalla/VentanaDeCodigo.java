@@ -87,6 +87,35 @@ public final class VentanaDeCodigo {
 
     // ================================================================ dibujar
 
+    /**
+     * Las olas de los errores de la línea l, su explicación al pasar el ratón y cuál se está mirando (para el
+     * entrenador flotante: el del ratón, el del punto del margen pulsado o, si no, el de la línea del cursor).
+     */
+    private void marcasDeLaLinea(Ui ui, int l, float x, float zx, float ly, float alto, float letra, int lineaCursor) {
+        Entrada e = ui.e;
+        String texto = doc.linea(l);
+        for (Marca m : marcas) {
+            if (m.linea != l + 1) continue;
+            // El punto del margen se pulsa: el entrenador explica ese error.
+            if (e.clic(x, ly, letra * 1.4f, alto)) ui.errorSenalado = new Senalado(m, texto, doc.texto(), true);
+            int c0 = Math.max(0, Math.min(texto.length(), m.columna - 1));
+            int c1 = c0;
+            while (c1 < texto.length() && Character.isJavaIdentifierPart(texto.charAt(c1))) c1++;
+            if (c1 == c0) c1 = Math.min(texto.length(), c0 + 1);
+            if (c1 == c0) c1 = c0 + 1;
+            ondas(ui.p, zx + c0 * letra - desplazamientoX, ly + alto - 3, (c1 - c0) * letra, m.grave ? ui.tema.mal : ui.tema.aviso);
+            if (e.dentro(zx + c0 * letra - desplazamientoX, ly, Math.max(letra, (c1 - c0) * letra), alto) || e.dentro(x, ly, letra * 1.4f, alto)) {
+                ui.avisar(m.texto + "\n\n" + metajavbots.textos.T.t("entrenador.error_f2"));
+                if (ui.errorSenalado == null) ui.errorSenalado = new Senalado(m, texto, doc.texto(), false);
+            }
+        }
+        // Sin el ratón encima de ninguno: el de la línea del cursor.
+        if (ui.errorSenalado == null && enfocada && l == lineaCursor) for (Marca m : marcas) if (m.linea == l + 1) {
+            ui.errorSenalado = new Senalado(m, texto, doc.texto(), false);
+            break;
+        }
+    }
+
     public void dibujar(Ui ui, float x, float y, float w, float h) {
         Pincel p = ui.p;
         Tema t = ui.tema;
@@ -125,14 +154,7 @@ public final class VentanaDeCodigo {
             String numero = Integer.toString(l + 1);
             p.textoDerecha(numero, x + margen - letra * 1.6f, ly + alto * 0.12f, tamano * 0.9f, l == lineaCursor,
                     l == lineaCursor ? t.texto : t.numeros, 1);
-            if (conError || conAviso) {
-                p.circulo(x + letra * 0.7f, ly + alto / 2, alto * 0.22f, conError ? t.mal : t.aviso, 1);
-                // El punto del margen se pulsa: el entrenador explica ese error.
-                if (e.clic(x, ly, letra * 1.4f, alto)) for (Marca m : marcas) if (m.linea == l + 1) {
-                    ui.errorSenalado = new Senalado(m, doc.linea(l), doc.texto(), true);
-                    break;
-                }
-            }
+            if (conError || conAviso) p.circulo(x + letra * 0.7f, ly + alto / 2, alto * 0.22f, conError ? t.mal : t.aviso, 1);
             // La selección.
             if (doc.haySeleccion()) {
                 int ini = doc.inicioDeLinea(l), fin = doc.finDeLinea(l);
@@ -144,26 +166,7 @@ public final class VentanaDeCodigo {
                 }
             }
             dibujarLinea(p, t, l, zx - desplazamientoX, ly, alto, letra, pareja, palabra);
-            for (Marca m : marcas) {
-                if (m.linea != l + 1) continue;
-                String texto = doc.linea(l);
-                int c0 = Math.max(0, Math.min(texto.length(), m.columna - 1));
-                int c1 = c0;
-                while (c1 < texto.length() && Character.isJavaIdentifierPart(texto.charAt(c1))) c1++;
-                if (c1 == c0) c1 = Math.min(texto.length(), c0 + 1);
-                if (c1 == c0) c1 = c0 + 1;
-                ondas(p, zx + c0 * letra - desplazamientoX, ly + alto - 3, (c1 - c0) * letra, m.grave ? t.mal : t.aviso);
-                if (e.dentro(zx + c0 * letra - desplazamientoX, ly, Math.max(letra, (c1 - c0) * letra), alto)
-                        || e.dentro(x, ly, letra * 1.4f, alto)) {
-                    ui.avisar(m.texto + "\n\n" + metajavbots.textos.T.t("entrenador.error_f2"));
-                    if (ui.errorSenalado == null) ui.errorSenalado = new Senalado(m, texto, doc.texto(), false);
-                }
-            }
-            // Sin el ratón encima de ninguno: el de la línea del cursor.
-            if (ui.errorSenalado == null && enfocada && l == lineaCursor) for (Marca m : marcas) if (m.linea == l + 1) {
-                ui.errorSenalado = new Senalado(m, doc.linea(l), doc.texto(), false);
-                break;
-            }
+            marcasDeLaLinea(ui, l, x, zx, ly, alto, letra, lineaCursor);
         }
         // El cursor (parpadea, pero no mientras se escribe).
         if (enfocada && !soloLectura && (parpadeo % 1.0f) < 0.6f) {

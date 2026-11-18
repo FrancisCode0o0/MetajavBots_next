@@ -26,7 +26,8 @@ public final class ConsejosDelTaller {
         "general_pseudo", "general_nombres"};
 
     private static final Pattern CONTADOR_EN_TURNO = Pattern.compile(
-            "void\\s+(cadaTurno|jedenZug|onTick)\\s*\\(\\s*\\)\\s*\\{[^}]*?\\b(int|double)\\s+(\\w+)\\s*=\\s*0\\s*;[^}]*?\\b\\3\\s*(\\+\\+|\\+=|=\\s*\\3\\s*\\+)",
+            "void\\s+(cadaTurno|jedenZug|onTick)\\s*\\(\\s*\\)\\s*\\{[^}]*?\\b(int|double)\\s+(\\w+)\\s*=\\s*0\\s*;"
+                    + "[^}]*?\\b\\3\\s*(\\+\\+|\\+=|=\\s*\\3\\s*\\+)",
             Pattern.DOTALL);
     private static final Pattern NUMERO = Pattern.compile("(?<![\\w.])(\\d{2,}(?:\\.\\d+)?)(?![\\w.])");
     private static final Pattern CAMPO_SIN_PRIVATE = Pattern.compile("(?m)^\\s{4}(?!private|public|protected|static|final|@|//|\\*|/)"
