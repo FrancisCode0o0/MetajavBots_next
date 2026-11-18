@@ -371,9 +371,8 @@ public final class Taller implements Pantalla {
             if (ui.boton("+ " + T.t("taller.nuevo_robot"), iz + 14, ry, ancho - 28, 46, Ui.Estilo.PRINCIPAL)) creando = true;
             ry += 54;
         } else if (jug.robots.size() < 4) {
-            p.parrafo(T.f("taller.mas_robots", jug.etiqueta.robotsPermitidos(), Progreso.VICTORIAS_POR_ROBOT[Math.min(3, jug.robots.size())]),
-                    iz + 18, ry, ancho - 36, ui.letra * 0.75f, ui.tema.textoApagado, 1);
-            ry += 80;
+            ry += p.parrafo(T.f("taller.mas_robots", jug.etiqueta.robotsPermitidos(), Progreso.VICTORIAS_POR_ROBOT[Math.min(3, jug.robots.size())]),
+                    iz + 18, ry, ancho - 36, ui.letra * 0.75f, ui.tema.textoApagado, 1) + 12;
         }
         return ry - y + 10;
     }

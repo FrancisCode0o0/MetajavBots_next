@@ -147,8 +147,13 @@ public final class VentanaDeCodigo {
         if (proponiendo) dibujarPropuestas(ui, zx, zy, alto, letra);
         // Con la barra de buscar o las propuestas abiertas, Esc las cierra (y no vuelve atrás).
         if (buscando || proponiendo) ui.reservarEscape();
-        if (soloLectura) p.textoDerecha("■ " + metajavbots.textos.T.t("editor.solo_lectura"), x + w - 18, y + h - alto - 4,
-                tamano * 0.8f, false, t.textoApagado, 1);
+        if (soloLectura) {
+            // Una etiqueta con su fondo, arriba a la derecha: no se mezcla con el código.
+            String s = "■ " + metajavbots.textos.T.t("editor.solo_lectura");
+            float tl = tamano * 0.8f, ew = p.ancho(s, tl, false) + 16;
+            p.caja(x + w - 22 - ew, y + 4, ew, tl * 1.5f, 6, t.panelAlto, 0.95f);
+            p.texto(s, x + w - 14 - ew, y + 4 + tl * 0.2f, tl, false, t.textoSuave, 1);
+        }
     }
 
     private void dibujarLinea(Pincel p, Tema t, int l, float x0, float y, float alto, float letra, int pareja, String palabra) {

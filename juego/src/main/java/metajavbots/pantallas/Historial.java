@@ -93,10 +93,14 @@ public final class Historial implements Pantalla {
         for (int k = h.size() - 1; k >= 0; k--) {
             Registro r = h.get(k);
             int color = r.resultado == Registro.Resultado.VICTORIA ? ui.tema.bien : r.resultado == Registro.Resultado.DERROTA ? ui.tema.mal : ui.tema.aviso;
-            p.texto(f.format(new Date(r.fecha)), rx + 16, yy, ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
-            p.texto(T.t("resultado." + r.resultado.name().toLowerCase()), rx + 130, yy, ui.letra * 0.75f, true, color, 1);
-            p.texto(ui.recortarTexto(r.rival + " (" + r.modo + ")", rw - 420, ui.letra * 0.75f, false), rx + 250, yy, ui.letra * 0.75f, false, ui.tema.texto,
-                    1);
+            // Las columnas, del ancho de lo que llevan (con letra grande no se pisan).
+            float tl = ui.letra * 0.75f;
+            String fecha = f.format(new Date(r.fecha)), resultado = T.t("resultado." + r.resultado.name().toLowerCase());
+            float c2 = rx + 16 + p.ancho("00/00 00:00", tl, false) + 14, c3 = c2 + p.ancho("Unentschieden", tl, true) + 14;
+            p.texto(fecha, rx + 16, yy, tl, false, ui.tema.textoSuave, 1);
+            p.texto(resultado, c2, yy, tl, true, color, 1);
+            float cifras = p.ancho("000 / 000", tl, false) + 40;
+            p.texto(ui.recortarTexto(r.rival + " (" + r.modo + ")", rx + rw - cifras - c3, tl, false), c3, yy, tl, false, ui.tema.texto, 1);
             p.textoDerecha(Math.round(r.danoHecho) + " / " + Math.round(r.danoRecibido), rx + rw - 30, yy, ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
             yy += ui.letra * 1.3f;
         }

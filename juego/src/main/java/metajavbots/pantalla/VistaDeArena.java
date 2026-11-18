@@ -329,7 +329,8 @@ public final class VistaDeArena {
         // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea.
         double dano = Math.min(1.2, co.estropeado());
         float alto = (float) (62 * talla * co.montaje.modelo.tamano / 30);
-        if (dano > 0.15 && azar.nextFloat() < dano * 0.5f) efectos.humo(px + azar.nextFloat() * 20 - 10, py - alto * 0.8f, (float) dano);
+        // El humo, menos y por encima de la cabeza: que no tape al robot.
+        if (dano > 0.15 && azar.nextFloat() < dano * 0.22f) efectos.humo(px + azar.nextFloat() * 20 - 10, py - alto * 1.1f, (float) dano * 0.8f);
         for (int i = 0; i < 4; i++) {
             if (c.parte[i] <= 0 && azar.nextFloat() < 0.08f) efectos.chispas(px + azar.nextFloat() * 30 - 15, py - alto * (0.3f + 0.15f * i), 3, 0xFFE38A);
         }
@@ -392,6 +393,12 @@ public final class VistaDeArena {
     private void rotulos(Pincel p, java.util.List<Cuerpo> orden, Pelea pelea, float dt) {
         ocupado.clear();
         float arriba = Math.max(ay + 6, techo);
+        // Los robots también ocupan: los nombres y los bocadillos no se ponen encima de ninguno.
+        for (Cuerpo c : orden) {
+            float[] cab = cabezaDe(c);
+            float ancho = 60 * escalaX * f(c.y) * (float) (c.combatiente.montaje.modelo.tamano / 30);
+            ocupado.add(new float[]{cab[0] - ancho / 2, cab[1], ancho, sy(c.y) - cab[1]});
+        }
         // Primero se buscan los sitios; luego se dibujan las líneas y encima los rótulos (las líneas no tachan ningún texto).
         java.util.List<Runnable> lineas = new java.util.ArrayList<>(), cajas = new java.util.ArrayList<>();
         if (pelea.combatientes.length > 2) {
@@ -410,6 +417,10 @@ public final class VistaDeArena {
         float[] r = sitioLibre(cab[0] - w / 2, cab[1] - h, w, h, arriba);
         int color = COLORES[pelea.equipo[c.indice] % COLORES.length];
         float parte = (float) (c.blindaje() / 100);
+        if (Math.abs(r[1] + h - cab[1]) > 6 || Math.abs(r[0] + w / 2 - cab[0]) > w / 2) {
+            // Apartado para no pisar nada: una línea fina hasta su robot.
+            cajas.add(0, () -> p.linea(r[0] + w / 2, r[1] + h, cab[0], cab[1], 1.5f, color, 0.6f));
+        }
         cajas.add(() -> {
             p.caja(r[0], r[1], w, h, 8, 0x0B0F18, 0.92f);
             p.textoCentrado(co.nombre, r[0] + w / 2, r[1] + 3, t, true, c.fuera ? 0x888888 : color, 1);
@@ -475,7 +486,9 @@ public final class VistaDeArena {
 
     /** Para quien dibuja encima (las barras de vida): dónde queda la cabeza de un robot en pantalla. */
     public float[] cabezaDe(Cuerpo c) {
-        float px = sx(c.x, c.y), py = sy(c.y) - (float) (140 * escalaX * c.combatiente.montaje.modelo.tamano / 30);
+        // Lo que mide el robot dibujado (con la perspectiva, como en sombraYRobot); los que vuelan, más arriba.
+        float alto = (c.vuela() ? 140 : 110) * escalaX * f(c.y) * (float) (c.combatiente.montaje.modelo.tamano / 30);
+        float px = sx(c.x, c.y), py = sy(c.y) - alto;
         return new float[]{px, py};
     }
 

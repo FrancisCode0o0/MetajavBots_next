@@ -1,6 +1,6 @@
 # CONSEJOS del modo tutor, sin IA: para cada meta, tres pistas de menos a más.
-#   pregunta: una pregunta para que pienses (la primera vez); pista: una ayuda más concreta; codigo: un trozo de código
-#   (solo si lo pides), en la API de cada idioma (codigo.es, codigo.de, codigo.en; «\n» es un salto de línea).
+#   pregunta: una pregunta para que pienses (la primera vez); pista: una ayuda más concreta. codigo: un trozo de
+#   referencia en la API de cada idioma; el entrenador NUNCA lo enseña (Fran, 18-nov): está para Fran y las pruebas lo compilan.
 # Fran: se pueden añadir metas copiando un bloque; el entrenador las ofrece en este orden.
 
 [rapido]
