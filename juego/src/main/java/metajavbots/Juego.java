@@ -33,6 +33,7 @@ public class Juego extends ApplicationAdapter {
     public Ui ui;
     public Sonidos sonidos;
     public metajavbots.sonido.Voz voz = new metajavbots.sonido.Voz();
+    public final metajavbots.sonido.Musica musica = new metajavbots.sonido.Musica();
     public Jugador jugador;
     private Pantalla pantalla;
     private final Deque<Pantalla> anteriores = new ArrayDeque<>();
@@ -110,6 +111,8 @@ public class Juego extends ApplicationAdapter {
             voz.clara = j.vozClara;
             voz.usarPiper(metajavbots.cerebro.CerebroLocal.carpeta(j.carpetaModelos).resolve("piper"));
             voz.volumen = j.volumenVoz;
+            musica.activa = j.musicaActiva;
+            musica.volumen = j.volumenMusica;
         }
     }
 
@@ -154,6 +157,8 @@ public class Juego extends ApplicationAdapter {
             }
         }
         sonidos.fotograma(dt);
+        musica.tocar(pantalla.musica());
+        musica.fotograma();
     }
 
     @Override
@@ -162,6 +167,7 @@ public class Juego extends ApplicationAdapter {
         // El cerebro local que arrancó el juego no se queda gastando memoria.
         metajavbots.cerebro.CerebroLocal.cerrar();
         if (sonidos != null) sonidos.liberar();
+        musica.liberar();
         if (pincel != null) pincel.liberar();
     }
 }

@@ -126,6 +126,7 @@ public final class Capturas extends Juego {
         j.tamanoDeLetra = Float.parseFloat(System.getProperty("capturas.letra", "18"));
         // Sin sonido no hace falta Piper (la voz clara es un programa aparte).
         j.vozClara = System.getProperty("capturas.sonido") != null;
+        j.musicaActiva = System.getProperty("capturas.sonido") != null;
         j.cerebros[0].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
         // Un cerebro que no escucha (las capturas no deben arrancar KoboldCpp de verdad).
         j.cerebros[0].direccionLocal = "http://localhost:5999";

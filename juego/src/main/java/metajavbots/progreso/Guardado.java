@@ -141,6 +141,8 @@ public final class Guardado {
         v.put("tamanoDeLetra", numero(j.tamanoDeLetra));
         v.put("volumen", numero(j.volumen));
         v.put("volumenVoz", numero(j.volumenVoz));
+        v.put("musicaActiva", String.valueOf(j.musicaActiva));
+        v.put("volumenMusica", numero(j.volumenMusica));
         v.put("vozDelLocutor", Boolean.toString(j.vozDelLocutor));
         v.put("vozClara", Boolean.toString(j.vozClara));
         v.put("entrenador", j.entrenador);
@@ -234,14 +236,7 @@ public final class Guardado {
         j.modeloLocal = v.getOrDefault("modeloLocal", "");
         j.carpetaModelos = v.getOrDefault("carpetaModelos", "");
         leerCerebros(v, j);
-        j.tamanoDeLetra = (float) decimal(v.get("tamanoDeLetra"), 18);
-        j.volumen = (float) decimal(v.get("volumen"), 0.8);
-        j.volumenVoz = (float) decimal(v.get("volumenVoz"), 0.9);
-        j.vozDelLocutor = !"false".equals(v.get("vozDelLocutor"));
-        j.vozClara = !"false".equals(v.get("vozClara"));
-        j.entrenador = v.getOrDefault("entrenador", "tuercas");
-        j.ayudaDelTutor = (float) decimal(v.get("ayudaDelTutor"), 0.5);
-        j.temaClaro = Boolean.parseBoolean(v.get("temaClaro"));
+        leerAjustes(v, j);
         Path ej = dir.resolve("ejercicios");
         if (Files.isDirectory(ej)) {
             try (Stream<Path> s = Files.list(ej)) {
@@ -259,6 +254,20 @@ public final class Guardado {
             }
         }
         return j;
+    }
+
+    /** La letra, el sonido, la música, la voz y el entrenador. */
+    private static void leerAjustes(Map<String, String> v, Jugador j) {
+        j.tamanoDeLetra = (float) decimal(v.get("tamanoDeLetra"), 18);
+        j.volumen = (float) decimal(v.get("volumen"), 0.8);
+        j.volumenVoz = (float) decimal(v.get("volumenVoz"), 0.9);
+        j.musicaActiva = !"false".equals(v.get("musicaActiva"));
+        j.volumenMusica = (float) decimal(v.get("volumenMusica"), 0.45);
+        j.vozDelLocutor = !"false".equals(v.get("vozDelLocutor"));
+        j.vozClara = !"false".equals(v.get("vozClara"));
+        j.entrenador = v.getOrDefault("entrenador", "tuercas");
+        j.ayudaDelTutor = (float) decimal(v.get("ayudaDelTutor"), 0.5);
+        j.temaClaro = Boolean.parseBoolean(v.get("temaClaro"));
     }
 
     static void escribir(Path destino, String texto) throws IOException {

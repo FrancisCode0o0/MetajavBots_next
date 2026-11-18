@@ -42,3 +42,7 @@ CastillaFantasX (carpeta `motor/`), del mismo autor, copiado de la Reliquia del 
 - **CodingBat** y **CodeStepByStep** (el estilo de ejercicios cortos que se comprueban solos).
 - **«Java Challenge»** de Michael Inden y **«Captain CiaoCiao»** de Christian Ullenboom (https://github.com/ullenboom/captain-ciaociao): el espíritu de los ejercicios temáticos. Ningún ejercicio, nombre ni texto copiado.
 - Las convenciones de estilo de Oracle y la guía de Google para Java (el formateo del editor).
+
+## Música
+
+Todos los temas de `res/musica/` son originales, compuestos para MetajavBots (`herramientas/componer_musica.py`); suenan con el sintetizador MIDI que trae Java. Rinden homenaje al género de las películas de las campañas sin copiar ninguna melodía.

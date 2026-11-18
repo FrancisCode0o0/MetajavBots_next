@@ -67,6 +67,14 @@ public final class Ajustes implements Pantalla {
         jug.volumen = ui.deslizador(T.t("ajustes.volumen"), jug.volumen, x, y, w, 50, null);
         j.sonidos.volumen = jug.volumen;
         y += 76;
+        jug.musicaActiva = ui.casilla(T.t("ajustes.musica"), jug.musicaActiva, x, y, T.t("ajustes.musica_ayuda"));
+        j.musica.activa = jug.musicaActiva;
+        y += 50;
+        if (jug.musicaActiva) {
+            jug.volumenMusica = ui.deslizador(T.t("ajustes.volumen_musica"), jug.volumenMusica, x, y, w, 50, null);
+            j.musica.volumen = jug.volumenMusica;
+            y += 76;
+        }
         jug.vozDelLocutor = ui.casilla(T.t("ajustes.voz"), jug.vozDelLocutor, x, y, T.t("ajustes.voz_ayuda"));
         j.voz.activa = jug.vozDelLocutor;
         y += 50;

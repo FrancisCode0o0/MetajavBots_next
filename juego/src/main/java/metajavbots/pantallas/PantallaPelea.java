@@ -69,6 +69,13 @@ public final class PantallaPelea implements Pantalla {
     }
 
     @Override
+    public String musica() {
+        // El último asalto, con fanfarria (si hay más de uno).
+        boolean ultimo = pelea != null && pelea.rondas > 1 && pelea.ronda() >= pelea.rondas;
+        return ultimo ? "final" : encuentro.musica;
+    }
+
+    @Override
     public void alEntrar(Juego j) {
         if (pelea != null) return;
         Jugador jug = j.jugador;

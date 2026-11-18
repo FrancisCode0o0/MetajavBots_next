@@ -1,7 +1,7 @@
 # CAMPAÑAS — Historias de varias peleas, parodias de películas de combate (con nombres y personajes propios).
 # Formato: [id] y luego «clave: valor». Los textos, «español | Deutsch | English».
 #   titulo, lema: el nombre de la campaña y una frase; homenaje: la película (solo se enseña en pequeño);
-#   entrenador: quién la cuenta (res/datos/entrenadores.txt); musica: el tema (res/musica/temas.txt);
+#   entrenador: quién la cuenta (res/datos/entrenadores.txt); musica: el tema (res/musica/temas.txt; en la pelea, el oriental y el drama pasan a uno con energía);
 #   requiere: la campaña que hay que acabar antes (las secuelas, en orden).
 #   Cada capítulo N: N.rival (su nombre, en tres idiomas o en uno), N.modelo (res/datos/modelos.txt), N.nivel (0 a 1), N.escenario
 #   (HANGAR, DESIERTO, NEON, LABORATORIO, LUNA), N.rondas, N.texto (lo que se cuenta antes) y N.victoria (al ganar).
@@ -470,7 +470,7 @@ titulo: Patadas a la Palmera | Tritte gegen die Palme | Palm Tree Kicker
 lema: Para vengar a su hermano, un robot extranjero aprende a dar patadas a una palmera hasta que la palmera pida perdón. | Um seinen Bruder zu rächen, lernt ein fremder Roboter, gegen eine Palme zu treten, bis die Palme um Verzeihung bittet. | To avenge his brother, a foreign robot learns to kick a palm tree until the palm tree apologises.
 homenaje: Kickboxer (1989)
 entrenador: pelobit
-musica: oriental
+musica: artes_marciales
 1.rival: Palmera Testaruda | Sture Palme | Stubborn Palm
 1.modelo: tejedora
 1.nivel: 0.3
@@ -498,7 +498,7 @@ titulo: Kumite-bit: torneo secreto | Kumite-Bit: Das geheime Turnier | Kumite-Bi
 lema: Un torneo prohibido en una ciudad de neón, una prueba con los ojos vendados y un campeón que rompe ladrillos por diversión. | Ein verbotenes Turnier in einer Neonstadt, eine Prüfung mit verbundenen Augen und ein Champion, der zum Spaß Ziegel zerschlägt. | A forbidden tournament in a neon city, a blindfolded test and a champion who smashes bricks for fun.
 homenaje: Bloodsport (1988)
 entrenador: yanobit
-musica: final
+musica: artes_marciales
 1.rival: Ladrón de Arroz | Reisdieb | Rice Thief
 1.modelo: avispa
 1.nivel: 0.3

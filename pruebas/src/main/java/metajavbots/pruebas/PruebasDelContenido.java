@@ -39,6 +39,22 @@ final class PruebasDelContenido {
         apuntarParte3();
         apuntarParte4();
         apuntarCampanas();
+        apuntarMusica();
+    }
+
+    private static void apuntarMusica() {
+        caso("música: cada tema tiene su MIDI, que se lee, y cada campaña usa un tema que existe", () -> {
+            java.util.Map<String, String> temas = new metajavbots.sonido.Musica().deSerie();
+            for (String t : java.util.List.of("menu", "combate", "entrenamiento", "oriental", "final", "drama")) cierto(temas.containsKey(t), "tema " + t);
+            for (java.util.Map.Entry<String, String> e : temas.entrySet()) {
+                try (java.io.InputStream in = metajavbots.sonido.Musica.class.getResourceAsStream("/musica/" + e.getValue())) {
+                    cierto(in != null, "falta " + e.getValue());
+                    javax.sound.midi.Sequence s = javax.sound.midi.MidiSystem.getSequence(new java.io.BufferedInputStream(in));
+                    cierto(s.getMicrosecondLength() > 10_000_000L, e.getKey() + " dura más de 10 s");
+                }
+            }
+            for (metajavbots.campanas.Campana c : metajavbots.campanas.Campana.deSerie()) cierto(temas.containsKey(c.musica), c.id + ": tema " + c.musica);
+        });
     }
 
     private static void apuntarCampanas() {

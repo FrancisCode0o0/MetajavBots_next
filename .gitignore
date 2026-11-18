@@ -12,6 +12,8 @@ out/
 *.iml
 # Partidas, ajustes y registros del jugador (los genera el juego)
 partidas/
+# La música personal de Fran (suena en vez de los MIDI; res/musica/temas.txt)
+musica_personal/
 ajustes.txt
 registro/
 robots_exportados/

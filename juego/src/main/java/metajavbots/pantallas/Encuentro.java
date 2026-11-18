@@ -43,4 +43,8 @@ public final class Encuentro {
     public String alGanar;
     /** Cómo se prepara la misma pelea otra vez («Revancha»), o null para hacerlo según el modo. */
     public java.util.function.Supplier<Encuentro> otraVez;
+    /** Los temas de pelea, con energía: el himno ochentero, el rock y el de artes marciales. */
+    public static final String[] TEMAS_DE_PELEA = {"combate", "rock", "artes_marciales"};
+    /** El tema de música de la pelea (uno de pelea al azar, o el de la campaña); en el último asalto suena «final». */
+    public String musica = TEMAS_DE_PELEA[(int) (Math.random() * TEMAS_DE_PELEA.length)];
 }

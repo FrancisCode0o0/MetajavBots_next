@@ -1,0 +1,14 @@
+# TEMAS — Qué archivo suena para cada tema de música («tema: archivo»).
+# Los MIDI de aquí son originales (herramientas/componer_musica.py los escribe de nuevo).
+# Fran: tu música va en la carpeta musica_personal/ junto al juego (no se sube al repositorio). Para que suene,
+# suelta el archivo ahí (.mid, .ogg, .mp3 o .wav) y apúntalo en musica_personal/temas.txt con el mismo formato,
+# p. ej. «combate: mi_cancion.mp3»; o llámalo como el tema (combate.mp3) y no hace falta apuntarlo.
+# Para un tema nuevo: añade una línea aquí y úsalo en una campaña (musica: nombre) en res/datos/campanas.txt.
+menu: menu.mid
+combate: combate.mid
+rock: rock.mid
+artes_marciales: artes_marciales.mid
+entrenamiento: entrenamiento.mid
+oriental: oriental.mid
+final: final.mid
+drama: drama.mid

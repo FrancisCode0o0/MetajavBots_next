@@ -507,3 +507,6 @@ campanas.sin_ia = No hay ningún cerebro de IA puesto (Ajustes). Las campañas d
 campanas.ia_fallo = La IA no escribió una campaña que se pueda leer. Prueba otra vez. | Die KI hat keine lesbare Kampagne geschrieben. Versuch es noch einmal. | The AI didn't write a readable campaign. Try again.
 campanas.ia_lista = ¡Campaña nueva! Está al final de la lista. | Neue Kampagne! Sie steht am Ende der Liste. | New campaign! It's at the end of the list.
 final.seguir_campana = Seguir la campaña | Kampagne fortsetzen | Back to the campaign
+ajustes.musica = Música | Musik | Music
+ajustes.musica_ayuda = Música de fondo original: una para el menú, otra para el combate y la de cada campaña. Tu propia música, en la carpeta musica_personal (mira res/musica/temas.txt). | Originale Hintergrundmusik: eine fürs Menü, eine für den Kampf und die jeder Kampagne. Eigene Musik kommt in den Ordner musica_personal (siehe res/musica/temas.txt). | Original background music: one for the menu, one for fights and one for each campaign. Your own music goes in the musica_personal folder (see res/musica/temas.txt).
+ajustes.volumen_musica = Volumen de la música | Lautstärke der Musik | Music volume

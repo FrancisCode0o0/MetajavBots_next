@@ -15,4 +15,9 @@ public interface Pantalla {
     /** Al irse de ella (para guardar lo que haga falta). */
     default void alSalir(Juego j) {
     }
+
+    /** El tema de música que suena en ella (res/musica/temas.txt). */
+    default String musica() {
+        return "menu";
+    }
 }

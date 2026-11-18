@@ -102,6 +102,9 @@ public final class Jugador {
     public String entrenador = "tuercas";
     /** Cuánto ayuda el entrenador, de 0 (lo mínimo: preguntas) a 1 (lo máximo: pseudocódigo y trozos de código enseguida). */
     public float ayudaDelTutor = 0.5f;
+    /** La música de fondo: si suena y a qué volumen. */
+    public boolean musicaActiva = true;
+    public float volumenMusica = 0.45f;
     public int victoriasExtrema;
 
     public Jugador(String nombre) {

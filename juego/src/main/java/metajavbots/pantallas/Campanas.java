@@ -49,6 +49,13 @@ public final class Campanas implements Pantalla {
         inventadas.addAll(leerInventadas(j.jugador));
     }
 
+    /** Suena el tema de la campaña elegida (el homenaje a su película). */
+    @Override
+    public String musica() {
+        List<Campana> cs = todas();
+        return cs.isEmpty() ? "menu" : cs.get(Math.max(0, Math.min(cs.size() - 1, elegida))).musica;
+    }
+
     private List<Campana> todas() {
         List<Campana> l = new ArrayList<>(Campana.deSerie());
         l.addAll(inventadas);
@@ -194,11 +201,21 @@ public final class Campanas implements Pantalla {
         e.escenario = escenario(k.escenario);
         e.titulo = c.titulo.en(jug.idioma);
         e.alGanar = k.victoria.en(jug.idioma);
+        e.musica = musicaDePelea(c.musica);
         e.alAcabar = gano -> {
             if (gano) jug.capitulosGanados.add(c.clave(k.numero));
         };
         e.otraVez = () -> encuentro(j, c, k);
         return e;
+    }
+
+    /** En la pelea, energía: el aire oriental pasa a ser el de artes marciales y el drama, el himno de combate. */
+    static String musicaDePelea(String tema) {
+        switch (tema) {
+            case "oriental": return "artes_marciales";
+            case "drama": case "menu": return "combate";
+            default: return tema;
+        }
     }
 
     static VistaDeArena.Escenario escenario(String nombre) {
