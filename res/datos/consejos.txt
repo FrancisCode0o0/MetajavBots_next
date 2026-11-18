@@ -1,0 +1,60 @@
+# CONSEJOS del modo tutor, sin IA: para cada meta, tres pistas de menos a más.
+#   pregunta: una pregunta para que pienses (la primera vez); pista: una ayuda más concreta; codigo: un trozo de código
+#   (solo si lo pides), en la API de cada idioma (codigo.es, codigo.de, codigo.en; «\n» es un salto de línea).
+# Fran: se pueden añadir metas copiando un bloque; el entrenador las ofrece en este orden.
+
+[rapido]
+titulo: Que vaya más rápido | Schneller fahren | Go faster
+pregunta: ¿Qué hace tu robot en cada turno cuando no ve a nadie? ¿Avanza, o se queda pensando? | Was macht dein Roboter in jedem Zug, wenn er niemanden sieht? Fährt er, oder denkt er nach? | What does your robot do each tick when it sees nobody? Does it move, or just think?
+pista: La velocidad depende de las piernas (ruedas y orugas son distintas) y de no parar: si cuando acaba un movimiento pides otro enseguida, nunca está quieto. | Die Geschwindigkeit hängt von den Beinen ab (Räder und Ketten sind verschieden) und davon, nie anzuhalten: Wenn eine Bewegung endet, gib sofort die nächste. | Speed depends on the legs (wheels and treads differ) and on never stopping: when a move ends, ask for the next one right away.
+codigo.es: if (restanteAvance() == 0) {\n    avanzar(200);\n}
+codigo.de: if (restStrecke() == 0) {\n    vorwaerts(200);\n}
+codigo.en: if (remainingDistance() == 0) {\n    ahead(200);\n}
+
+[apuntar]
+titulo: Que apunte mejor | Besser zielen | Aim better
+pregunta: Cuando ves al enemigo, ¿apuntas a donde está o a donde estará cuando llegue el disparo? | Wenn du den Gegner siehst, zielst du dahin, wo er ist, oder wohin er sein wird, wenn der Schuss ankommt? | When you see the enemy, do you aim where it is, or where it will be when the shot arrives?
+pista: Las balas tardan en llegar. Si el enemigo se mueve, apunta un poco por delante de él; los láseres llegan al instante. | Kugeln brauchen Zeit. Bewegt sich der Gegner, ziele etwas vor ihn; Laser treffen sofort. | Bullets take time. If the enemy moves, aim a little ahead of it; lasers hit instantly.
+codigo.es: apuntarHacia(e.angulo());\nif (Math.abs(restanteMira()) < 5) atacar();
+codigo.de: zielenNach(g.winkel());\nif (Math.abs(restZielen()) < 5) angreifen();
+codigo.en: aimTo(e.angle());\nif (Math.abs(remainingAim()) < 5) attack();
+
+[esquivar]
+titulo: Que esquive | Ausweichen | Dodge
+pregunta: Después de recibir un golpe, ¿tu robot sigue en el mismo sitio? ¿Qué harías tú? | Bleibt dein Roboter nach einem Treffer an derselben Stelle? Was würdest du tun? | After taking a hit, does your robot stay in the same spot? What would you do?
+pista: Usa el método que se llama al recibir un golpe para girar un poco y moverte de lado: un blanco quieto es un blanco fácil. | Nutze die Methode, die bei einem Treffer aufgerufen wird, um dich etwas zu drehen und seitlich zu bewegen: Ein stilles Ziel ist ein leichtes Ziel. | Use the method called when you are hit to turn a little and move sideways: a still target is an easy target.
+codigo.es: @Override\npublic void alRecibirGolpe(Golpe g) {\n    girar(90);\n    avanzar(120);\n}
+codigo.de: @Override\npublic void beiTreffer(Treffer t) {\n    drehen(90);\n    vorwaerts(120);\n}
+codigo.en: @Override\npublic void onHit(Hit h) {\n    turn(90);\n    ahead(120);\n}
+
+[paredes]
+titulo: Que no se choque con las paredes | Nicht gegen Wände fahren | Stop hitting walls
+pregunta: ¿Sabe tu robot dónde está la pared antes de tocarla? ¿Qué datos de la arena tienes a mano? | Weiß dein Roboter, wo die Wand ist, bevor er sie berührt? Welche Daten der Arena hast du? | Does your robot know where the wall is before touching it? What arena data do you have?
+pista: Compara tu x y tu y con el ancho y el alto de la arena: si te acercas a menos de 80, gira hacia el centro. | Vergleiche dein x und y mit Breite und Höhe der Arena: Bist du näher als 80, dreh zur Mitte. | Compare your x and y with the arena's width and height: closer than 80, turn towards the centre.
+codigo.es: if (x() < 80 || x() > anchoArena() - 80) {\n    girarHacia(anguloHacia(anchoArena() / 2, altoArena() / 2));\n}
+codigo.de: if (x() < 80 || x() > arenaBreite() - 80) {\n    drehenNach(winkelZu(arenaBreite() / 2, arenaHoehe() / 2));\n}
+codigo.en: if (x() < 80 || x() > arenaWidth() - 80) {\n    turnTo(angleTo(arenaWidth() / 2, arenaHeight() / 2));\n}
+
+[especial]
+titulo: Usar lo especial de la cabeza | Das Spezielle des Kopfes nutzen | Use the head special
+pregunta: ¿Qué hace tu cabeza: escudo, turbo, reparar…? ¿En qué momento te vendría mejor? | Was kann dein Kopf: Schild, Turbo, Reparatur…? Wann wäre es am nützlichsten? | What does your head do: shield, turbo, repair…? When would it help most?
+pista: Lo especial tarda en recargarse: guárdalo para cuando más falte (el escudo, al ver al enemigo cerca; reparar, con poco blindaje). | Das Spezielle lädt langsam nach: Heb es für den richtigen Moment auf (Schild bei nahem Gegner, Reparatur bei wenig Panzerung). | The special recharges slowly: save it for when it matters (shield when the enemy is close, repair when armour is low).
+codigo.es: if (blindaje() < 40 && listoEspecial()) especial();
+codigo.de: if (panzerung() < 40 && bereitSpezial()) spezial();
+codigo.en: if (armor() < 40 && readySpecial()) special();
+
+[memoria]
+titulo: Recordar entre rondas | Zwischen den Runden merken | Remember between rounds
+pregunta: Si en la ronda 1 el enemigo te ganó desde lejos, ¿cambiarías algo en la ronda 2? ¿Dónde lo apuntarías? | Wenn der Gegner dich in Runde 1 aus der Ferne besiegt hat, würdest du in Runde 2 etwas ändern? Wo würdest du es dir merken? | If the enemy beat you from afar in round 1, would you change something in round 2? Where would you note it?
+pista: Un campo de tu clase guarda datos mientras dura la ronda; para entre rondas, la memoria del robot. | Ein Feld deiner Klasse merkt sich Daten während der Runde; zwischen Runden das Gedächtnis des Roboters. | A field of your class keeps data during the round; between rounds, use the robot's memory.
+codigo.es: private int golpesRecibidos;\n\n@Override\npublic void alRecibirGolpe(Golpe g) {\n    golpesRecibidos++;\n}
+codigo.de: private int erhalteneTreffer;\n\n@Override\npublic void beiTreffer(Treffer t) {\n    erhalteneTreffer++;\n}
+codigo.en: private int hitsTaken;\n\n@Override\npublic void onHit(Hit h) {\n    hitsTaken++;\n}
+
+[distancia]
+titulo: Cambiar de arma según la distancia | Waffe je nach Abstand wählen | Switch weapon by distance
+pregunta: ¿Tienes un arma de cerca y otra de lejos? ¿Cómo sabría tu robot cuál le conviene ahora? | Hast du eine Nah- und eine Fernwaffe? Woher weiß dein Roboter, welche gerade passt? | Do you have a close and a long-range weapon? How would your robot know which one fits now?
+pista: Compara la distancia al enemigo con el alcance de cada brazo y ataca con el que llegue. | Vergleiche den Abstand zum Gegner mit der Reichweite jedes Arms und greife mit dem an, der hinkommt. | Compare the distance to the enemy with each arm's range and attack with the one that reaches.
+codigo.es: if (e.distancia() <= alcanceIzquierda()) atacarIzquierda();\nelse atacarDerecha();
+codigo.de: if (g.entfernung() <= reichweiteLinks()) angriffLinks();\nelse angriffRechts();
+codigo.en: if (e.distance() <= rangeLeft()) attackLeft();\nelse attackRight();

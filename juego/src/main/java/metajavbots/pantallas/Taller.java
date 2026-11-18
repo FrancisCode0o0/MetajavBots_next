@@ -44,6 +44,9 @@ public final class Taller implements Pantalla {
     private boolean creando;
     private final RobotDelJugador probador = new RobotDelJugador();
     private final Charla charla = new Charla();
+    private final PanelDelTutor tutor = new PanelDelTutor();
+    /** Lo que ocupa la lista de robots (el tutor va debajo). */
+    private float robotsAlto = 140;
 
     @Override
     public void alEntrar(Juego j) {
@@ -105,10 +108,13 @@ public final class Taller implements Pantalla {
         float arriba = Comun.cabecera(j, T.t("menu.taller"), true);
         // A la izquierda: los robots de la partida.
         float iz = 20, ancho = 300, y = arriba + 16;
-        robots(j, iz, y, ancho);
+        robotsAlto = robots(j, iz, y, ancho);
         Jugador.Robot r = jug.robot();
+        // El modo tutor, con su entrenador, entre la lista de robots y el robot (que queda abajo, más pequeño).
+        float alturaTutor = p.alto - 160 - (y + robotsAlto);
+        if (alturaTutor > 260) tutor.dibujar(j, editor, iz + 12, y + robotsAlto, ancho - 24, alturaTutor, dt);
         if (r != null) {
-            vista.robotSuelto(p, r.montaje(), iz + ancho / 2, p.alto - 70, 2.6f, t, 0, true);
+            vista.robotSuelto(p, r.montaje(), iz + ancho / 2, p.alto - 34, alturaTutor > 260 ? 1.5f : 2.6f, t, 0, true);
         }
         float x = iz + ancho + 20, w = p.ancho - x - 20;
         if (creando) {
@@ -208,20 +214,25 @@ public final class Taller implements Pantalla {
         Ui ui = j.ui;
         p.parrafo(T.t("taller.modelo_ayuda"), x, y, w, ui.letra * 0.85f, ui.tema.textoSuave, 1);
         List<Modelo> todos = Modelo.todos();
-        int porFila = 8;
-        float cw = w / porFila, chh = (h - 60) / 2;
+        int porFila = 8, filas = (todos.size() + porFila - 1) / porFila;
+        float cw = w / porFila, chh = (h - 60) / filas;
+        float talla = Math.min(1.6f, chh / 190);
         for (int i = 0; i < todos.size(); i++) {
             Modelo m = todos.get(i);
             float cx = x + (i % porFila) * cw, cy = y + 50 + (i / porFila) * chh;
             boolean disponible = Progreso.modeloDisponible(j.jugador, m), es = m.id.equals(r.modelo);
             p.caja(cx + 4, cy, cw - 8, chh - 10, 10, es ? ui.tema.panelAlto : ui.tema.panel, disponible ? 1 : 0.5f);
             if (es) p.bordeRedondeado(cx + 4, cy, cw - 8, chh - 10, 10, ui.tema.acento, 1, 2.5f);
-            if (disponible) vista.robotSuelto(p, new Montaje(m), cx + cw / 2, cy + chh - 90, 1.6f, t + i, 0, true);
+            if (disponible) vista.robotSuelto(p, new Montaje(m), cx + cw / 2, cy + chh - 80, talla, t + i, 0, true);
             else p.textoCentrado("?", cx + cw / 2, cy + chh / 2 - 40, 60, true, ui.tema.textoApagado, 1);
-            p.textoCentrado(disponible ? m.nombre(T.idioma) : desbloqueo(m.desbloqueo), cx + cw / 2, cy + chh - 74, ui.letra * 0.75f, true,
+            String nombre = disponible ? m.nombre(T.idioma) : desbloqueo(m.desbloqueo);
+            float tn = ui.cabe(nombre, cw - 16, ui.letra * 0.75f, true);
+            p.textoCentrado(ui.recortarTexto(nombre, cw - 16, tn, true), cx + cw / 2, cy + chh - 68, tn, true,
                     disponible ? ui.tema.texto : ui.tema.textoApagado, 1);
-            if (disponible) p.textoCentrado(m.naturaleza.nombre(T.idioma), cx + cw / 2, cy + chh - 48, ui.letra * 0.7f, false, m.naturaleza.color(), 1);
-            if (disponible && ui.e.dentro(cx, cy, cw, chh)) ui.avisar(m.lema.en(T.idioma));
+            if (disponible) p.textoCentrado(m.naturaleza.nombre(T.idioma), cx + cw / 2, cy + chh - 42, ui.letra * 0.7f, false, m.naturaleza.color(), 1);
+            if (disponible && ui.e.dentro(cx, cy, cw, chh)) {
+                ui.avisar(m.lema.en(T.idioma) + "\n\n" + metajavbots.tutor.Biografias.deRobot(m.id, T.idioma));
+            }
             if (disponible && !es && ui.e.clic(cx, cy, cw, chh)) {
                 r.modelo = m.id;
                 r.piezas.clear();
@@ -339,7 +350,7 @@ public final class Taller implements Pantalla {
     }
 
     /** A la izquierda: los robots de la partida (para elegir uno), el botón de uno nuevo o cuántas victorias faltan. */
-    private void robots(Juego j, float iz, float y, float ancho) {
+    private float robots(Juego j, float iz, float y, float ancho) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         Jugador jug = j.jugador;
@@ -364,5 +375,6 @@ public final class Taller implements Pantalla {
                     iz + 18, ry, ancho - 36, ui.letra * 0.75f, ui.tema.textoApagado, 1);
             ry += 80;
         }
+        return ry - y + 10;
     }
 }

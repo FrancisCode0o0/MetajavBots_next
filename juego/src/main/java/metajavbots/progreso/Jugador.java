@@ -96,6 +96,8 @@ public final class Jugador {
     public boolean vozDelLocutor = true, temaClaro;
     /** La voz clara del locutor (Piper, si está); si no, la propia, más robótica. */
     public boolean vozClara = true;
+    /** El entrenador del modo tutor (tutor/Entrenador). */
+    public String entrenador = "tuercas";
     public int victoriasExtrema;
 
     public Jugador(String nombre) {

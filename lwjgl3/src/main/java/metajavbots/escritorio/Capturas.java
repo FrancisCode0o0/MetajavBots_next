@@ -44,6 +44,22 @@ public final class Capturas extends Juego {
         pantallas.put("02_menu", metajavbots.pantallas.Menu::new);
         pantallas.put("03_robots", Escaparate::new);
         pantallas.put("03b_armas", Armeria::new);
+        pantallas.put("03d_entrenadores", () -> new Pantalla() {
+            private float t;
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                t += dt;
+                Comun.fondo(j, t);
+                java.util.List<metajavbots.tutor.Entrenador> es = metajavbots.tutor.Entrenador.todos();
+                for (int i = 0; i < es.size(); i++) {
+                    float x = 130 + i * (j.pincel.ancho - 260) / (es.size() - 1);
+                    metajavbots.tutor.CabezaDeEntrenador.dibujar(j.pincel, es.get(i), x, 330, 80, i % 2 == 0, t + i);
+                    j.pincel.textoCentrado(es.get(i).nombre.es, x, 520, 18, true, 0xFFFFFF, 1);
+                    j.pincel.parrafo(es.get(i).papel.es, x - 95, 560, 190, 14, 0xBBBBBB, 1);
+                }
+            }
+        });
         pantallas.put("03c_escenas", () -> new Pantalla() {
             private float t;
 

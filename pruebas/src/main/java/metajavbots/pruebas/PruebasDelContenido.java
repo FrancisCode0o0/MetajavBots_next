@@ -237,6 +237,36 @@ final class PruebasDelContenido {
     }
 
     private static void apuntarParte4() {
+        caso("tutor: siete entrenadores, metas con sus tres pistas, el código de cada una compila en los tres idiomas, y biografías", () -> {
+            igual(7, metajavbots.tutor.Entrenador.todos().size());
+            for (metajavbots.tutor.Entrenador e : metajavbots.tutor.Entrenador.todos()) {
+                for (metajavbots.textos.Idioma i : metajavbots.textos.Idioma.values()) {
+                    cierto(!e.frase(i, 0).isEmpty() && !e.nombre.en(i).isEmpty(), e.id + " habla " + i);
+                    cierto(!metajavbots.tutor.Biografias.deEntrenador(e.id, i).isEmpty(), "biografía de " + e.id + " en " + i);
+                }
+            }
+            for (metajavbots.piezas.Modelo m : metajavbots.piezas.Modelo.todos()) {
+                for (metajavbots.textos.Idioma i : metajavbots.textos.Idioma.values()) {
+                    cierto(!metajavbots.tutor.Biografias.deRobot(m.id, i).isEmpty(), "biografía de " + m.id + " en " + i);
+                }
+            }
+            cierto(metajavbots.tutor.Consejo.todos().size() >= 6, "metas");
+            if (!metajavbots.codigo.Compilador.hayCompilador()) return;
+            String[][] clases = {{"Metajavbot", "alVerEnemigo(Enemigo e)", "ES"}, {"MetajavbotDe", "beiSicht(Gegner g)", "DE"},
+                {"MetajavbotEn", "onSeeEnemy(Enemy e)", "EN"}};
+            for (metajavbots.tutor.Consejo c : metajavbots.tutor.Consejo.todos()) {
+                for (String[] k : clases) {
+                    String trozo = c.codigo(metajavbots.textos.Idioma.valueOf(k[2]));
+                    boolean deClase = trozo.contains("@Override") || trozo.startsWith("private");
+                    String fuente = "import metajavbots.api.*;\npublic class R extends " + k[0] + " {\n"
+                            + (deClase ? trozo : "@Override\npublic void " + k[1] + " {\n" + trozo + "\n}") + "\n}\n";
+                    metajavbots.codigo.Compilador.Resultado r = metajavbots.codigo.Compilador.compilar(fuente, false,
+                            metajavbots.codigo.Vigilante.Modo.ROBOT, java.util.Locale.ROOT);
+                    cierto(r.bien, c.id + " (" + k[2] + ") compila: " + r.errores);
+                }
+            }
+        });
+
         caso("voz clara: el audio de Piper se lee, cambia de frecuencia y lleva el efecto suave (sin arrancar Piper)", () -> {
             byte[] b = new byte[44100];
             for (int i = 0; i < b.length / 2; i++) {

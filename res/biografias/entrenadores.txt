@@ -1,0 +1,37 @@
+# BIOGRAFÍAS de los entrenadores del modo tutor: parodias con nombres y diseños propios. Fran las retoca a mano.
+# Formato: [id del entrenador] y una línea por idioma (es:, de:, en:).
+
+[tuercas]
+es: Lleva cuarenta años en el mismo gimnasio de chatarra y se queja de todos. Dicen que una vez sonrió, pero fue un fallo de su motor.
+de: Seit vierzig Jahren im selben Schrott-Gym, und er meckert über alle. Angeblich hat er einmal gelächelt, aber das war ein Motorfehler.
+en: Forty years in the same scrapyard gym, grumbling at everyone. They say he smiled once, but it was a motor glitch.
+
+[aceite]
+es: Te hará encerar tuercas durante semanas sin explicarte por qué. Al final lo entenderás todo, o tendrás muchas tuercas brillantes.
+de: Er lässt dich wochenlang Muttern polieren, ohne zu sagen warum. Am Ende verstehst du alles, oder du hast viele glänzende Muttern.
+en: He'll have you waxing nuts for weeks without saying why. In the end you'll understand everything, or own a lot of shiny nuts.
+
+[voltaje]
+es: Fue el campeón que te ganó en la final. Ahora te entrena para que le ganes a otro, porque perder contra él ya no tiene gracia.
+de: Er war der Champion, der dich im Finale besiegt hat. Jetzt trainiert er dich, damit du einen anderen besiegst; gegen ihn zu verlieren macht keinen Spaß mehr.
+en: He's the champion who beat you in the final. Now he trains you to beat someone else, because losing to him is no fun anymore.
+
+[remache]
+es: No quería entrenarte. Dijo que no siete veces y cerró el taller con cuatro candados. Aun así, te ha guardado una llave.
+de: Er wollte dich nicht trainieren. Er sagte siebenmal nein und schloss die Werkstatt mit vier Schlössern ab. Trotzdem hat er dir einen Schlüssel aufgehoben.
+en: He didn't want to train you. He said no seven times and locked the workshop with four padlocks. He still kept a key for you.
+
+[cobra]
+es: Su lema es «sin compasión con los bugs». Grita mucho, pero solo a los errores de compilación; a ti, nunca.
+de: Sein Motto ist «keine Gnade für Bugs». Er schreit viel, aber nur Kompilierfehler an; dich nie.
+en: His motto is "no mercy for bugs". He shouts a lot, but only at compile errors; never at you.
+
+[yanobit]
+es: Enseña judo de bits en un estanque. Dice que un buen programador cae siete veces y se levanta ocho, y que el octavo es un bucle.
+de: Er lehrt Bit-Judo an einem Teich. Er sagt, ein guter Programmierer fällt siebenmal und steht achtmal auf, und das achte ist eine Schleife.
+en: He teaches bit-judo by a pond. He says a good programmer falls seven times and rises eight, and the eighth is a loop.
+
+[pelobit]
+es: Tiene una barba de cables tan larga que la usa de bufanda. Exige perfección, acepta reverencias y desprecia los puntos y coma que faltan.
+de: Sein Kabelbart ist so lang, dass er ihn als Schal trägt. Er verlangt Perfektion, nimmt Verbeugungen an und verachtet fehlende Semikolons.
+en: His cable beard is so long he wears it as a scarf. He demands perfection, accepts bows and despises missing semicolons.

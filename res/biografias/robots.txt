@@ -1,0 +1,113 @@
+# BIOGRAFÍAS de los robots: muy absurdas, a propósito. Fran las retoca a mano.
+# Formato: [id del modelo] y una línea por idioma (es:, de:, en:). Una línea en blanco entre robots.
+# Se leen en el taller (pestaña Modelo, al dejar el ratón encima) y se pueden cambiar sin tocar Java.
+
+[cobalto]
+es: Nació en una fábrica de neveras y nadie se dio cuenta durante tres años. Todavía enfría los zumos que le dejan en el pecho.
+de: Er wurde in einer Kühlschrankfabrik geboren und drei Jahre lang hat es keiner gemerkt. Er kühlt immer noch die Säfte, die man ihm auf die Brust stellt.
+en: Born in a fridge factory, and nobody noticed for three years. He still chills any juice you leave on his chest.
+
+[chispa]
+es: Fue el primer robot en correr una maratón… dentro de una lavadora. Desde entonces no sabe estarse quieta.
+de: Sie lief als erster Roboter einen Marathon… in einer Waschmaschine. Seitdem kann sie nicht stillsitzen.
+en: The first robot ever to run a marathon… inside a washing machine. She has not sat still since.
+
+[vigia]
+es: Pasó once años vigilando un faro apagado. Vio pasar dos barcos y una gaviota que le debe dinero.
+de: Er bewachte elf Jahre lang einen ausgeschalteten Leuchtturm. Er sah zwei Schiffe und eine Möwe, die ihm Geld schuldet.
+en: He spent eleven years guarding a lighthouse that was switched off. He saw two ships and a seagull who owes him money.
+
+[mazo]
+es: Lo construyeron para partir nueces y se tomó el trabajo demasiado en serio. Le tienen prohibida la entrada en tres panaderías.
+de: Er wurde zum Nüsseknacken gebaut und nahm den Job viel zu ernst. Er hat Hausverbot in drei Bäckereien.
+en: Built to crack walnuts, he took the job far too seriously. He is banned from three bakeries.
+
+[grulla]
+es: Escribe haikus sobre tornillos. Su obra cumbre tiene diecisiete sílabas y ningún sentido.
+de: Sie schreibt Haikus über Schrauben. Ihr Hauptwerk hat siebzehn Silben und keinen Sinn.
+en: She writes haikus about screws. Her masterpiece has seventeen syllables and no meaning at all.
+
+[abaco]
+es: Calculó el número pi hasta el último decimal y se aburrió. Ahora cuenta ovejas eléctricas para dormir.
+de: Er berechnete Pi bis zur letzten Stelle und langweilte sich. Jetzt zählt er elektrische Schafe zum Einschlafen.
+en: He calculated pi to the very last decimal and got bored. Now he counts electric sheep to fall asleep.
+
+[bastion]
+es: Era la puerta de un castillo. El castillo se fue de vacaciones y la puerta se quedó.
+de: Er war das Tor einer Burg. Die Burg fuhr in Urlaub, das Tor blieb da.
+en: He used to be a castle gate. The castle went on holiday and the gate stayed behind.
+
+[avispa]
+es: Trabajó de despertador en un hotel y la despidieron por despertar también a los muebles.
+de: Sie arbeitete als Wecker in einem Hotel und wurde gefeuert, weil sie auch die Möbel weckte.
+en: She worked as a hotel alarm clock and was fired for waking up the furniture too.
+
+[tejedora]
+es: Teje redes con cable de auriculares enredado. Dice que los nudos se los hace el universo.
+de: Sie strickt Netze aus verhedderten Kopfhörerkabeln. Sie sagt, die Knoten macht das Universum.
+en: She knits nets out of tangled headphone cables. She says the universe ties the knots for her.
+
+[filo]
+es: Se entrenó cortando el viento hasta que el viento pidió una tregua por escrito.
+de: Er trainierte, indem er den Wind schnitt, bis der Wind schriftlich um Waffenstillstand bat.
+en: He trained by slicing the wind until the wind asked for a truce in writing.
+
+[faro]
+es: Actuó en un teatro de sombras. El problema es que él daba demasiada luz y no había sombras.
+de: Er spielte in einem Schattentheater. Das Problem: Er war so hell, dass es keine Schatten gab.
+en: He starred in a shadow theatre. Trouble was, he glowed so much there were no shadows.
+
+[pixel]
+es: Se escapó de una máquina recreativa de los ochenta. Aún suelta monedas cuando estornuda.
+de: Er ist aus einem Spielautomaten der Achtziger entkommen. Wenn er niest, fallen immer noch Münzen heraus.
+en: He escaped from an eighties arcade machine. He still drops coins when he sneezes.
+
+[nimbo]
+es: Fue una nube durante un martes entero. Nadie sabe cómo ni por qué, y él no quiere hablar de ello.
+de: Er war einen ganzen Dienstag lang eine Wolke. Keiner weiß wie oder warum, und er will nicht darüber reden.
+en: He was a cloud for an entire Tuesday. Nobody knows how or why, and he won't talk about it.
+
+[chatarra]
+es: Está hecho con piezas de nueve robots distintos y discute con todas ellas. Gana casi siempre la tostadora.
+de: Er besteht aus Teilen von neun verschiedenen Robotern und streitet mit allen. Meistens gewinnt der Toaster.
+en: He is made of parts from nine different robots and argues with all of them. The toaster usually wins.
+
+[voltio]
+es: Lo cargaron con un rayo de verdad en una tormenta. Desde entonces se ríe con eco.
+de: Er wurde bei einem Gewitter von einem echten Blitz aufgeladen. Seitdem lacht er mit Echo.
+en: He was charged by real lightning in a storm. Ever since, he laughs with an echo.
+
+[eclipse]
+es: Nadie lo ha visto llegar nunca. Tampoco irse. Hay quien dice que sigue en la sala de al lado.
+de: Niemand hat ihn je kommen sehen. Oder gehen. Manche sagen, er ist noch im Nebenzimmer.
+en: Nobody has ever seen him arrive. Or leave. Some say he is still in the next room.
+
+[serrucho]
+es: Empezó cortando tartas en bodas y acabó cortando la mesa, el mantel y el pastel de la boda de al lado.
+de: Er fing an, auf Hochzeiten Torten zu schneiden, und schnitt am Ende Tisch, Tischdecke und die Torte der Nachbarhochzeit.
+en: He started out cutting wedding cakes and ended up cutting the table, the tablecloth and the next wedding's cake.
+
+[galapago]
+es: Tiene ciento cuarenta años y sigue llegando el primero, porque sale tres días antes.
+de: Er ist hundertvierzig Jahre alt und kommt immer als Erster an, weil er drei Tage früher losgeht.
+en: He is a hundred and forty years old and still arrives first, because he sets off three days early.
+
+[volteo]
+es: Trabajó dando la vuelta a tortillas en un bar. Un día dio la vuelta al bar.
+de: Er wendete in einer Bar Tortillas. Eines Tages wendete er die Bar.
+en: He used to flip omelettes in a bar. One day he flipped the bar.
+
+[bolon]
+es: Su bola tiene nombre: se llama Doña Pepa y es la que manda. Él solo la saca a pasear.
+de: Seine Kugel hat einen Namen: Frau Pepa, und sie hat das Sagen. Er führt sie nur spazieren.
+en: His ball has a name: Lady Pepa, and she's the boss. He just takes her for walks.
+
+[barrena]
+es: Hizo un agujero tan profundo que salió por las antípodas y tuvo que volver en avión.
+de: Er bohrte ein so tiefes Loch, dass er auf der anderen Seite der Erde herauskam und mit dem Flugzeug zurückmusste.
+en: He drilled a hole so deep he came out on the other side of the world and had to fly home.
+
+[remolino]
+es: Ganó el campeonato de peonzas. El problema es que la peonza era él y todavía está mareado.
+de: Er gewann die Kreisel-Meisterschaft. Das Problem: Der Kreisel war er selbst, und ihm ist immer noch schwindlig.
+en: He won the spinning-top championship. Trouble is, he was the top, and he is still dizzy.
