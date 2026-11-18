@@ -3,6 +3,7 @@ package metajavbots.pantallas;
 import java.io.ByteArrayInputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.Normalizer;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,6 +36,11 @@ import metajavbots.textos.T;
  * recibe daño si el código usa ese tema, como los jefes). Con cerebro de IA,
  * además, ejercicios nuevos hechos a medida, que el comprobador valida
  * (su solución tiene que pasar sus casos) antes de dárselos.
+ * El temario se puede pegar o cargar de un archivo (PDF, Word, OpenDocument,
+ * PowerPoint, HTML, RTF o texto: ejercicios/LectorDeTemario), escribiendo su
+ * ruta o soltándolo en la ventana. La IA propone ejercicios que cubren todo el
+ * temario, a su nivel; los que se comprueban bien se guardan como campaña
+ * propia (ejercicios/TemarioGuardado) y se juegan después sin IA.
  */
 public final class Temario implements Pantalla {
 
@@ -44,6 +50,10 @@ public final class Temario implements Pantalla {
     private CerebroDelJuego.Peticion peticion;
     private volatile String estado = "";
     private final Ui.Desplazable despl = new Ui.Desplazable();
+    private final metajavbots.pantalla.CampoDeTexto ruta = new metajavbots.pantalla.CampoDeTexto();
+    /** El nombre con el que se guarda la propuesta (el del archivo, o la primera línea del texto). */
+    private String nombre = "";
+    private List<metajavbots.ejercicios.TemarioGuardado> guardados;
 
     /** Palabras que delatan cada tema, en los tres idiomas (sin tildes, en minúscula). */
     static final Map<String, String[]> PALABRAS = new LinkedHashMap<>();
@@ -142,16 +152,20 @@ public final class Temario implements Pantalla {
         float arriba = Comun.cabecera(j, T.t("menu.temario"), true);
         float x = 20, y = arriba + 12, w = p.ancho * 0.42f;
         float ayuda = p.parrafo(T.t("temario.ayuda"), x, y, w, ui.letra * 0.85f, ui.tema.textoSuave, 1) + 12;
+        ayuda += archivo(j, x, y + ayuda, w);
         texto.dibujar(ui, x, y + ayuda, w, p.alto - y - ayuda - 100);
         if (ui.boton(T.t("temario.preparar"), x, p.alto - 86, Math.max(300, p.ancho(T.t("temario.preparar"), ui.letra, true) + 40), 56, Ui.Estilo.PRINCIPAL)) {
             temas.clear();
             temas.addAll(temasDe(texto.doc.texto()));
             nuevos.clear();
             Cerebro c = CerebroDelJuego.de(jug);
+            if (nombre.isBlank()) nombre = primeraLinea(texto.doc.texto());
             if (c != null && peticion == null) {
                 estado = T.t("temario.pidiendo");
-                peticion = CerebroDelJuego.Peticion.lanzar(c, CerebroDelJuego.sistemaTemario(jug.idioma),
-                        CerebroDelJuego.uno("Syllabus:\n" + texto.doc.texto()), 900);
+                String t = texto.doc.texto();
+                // Lo que cabe en la petición (un temario muy largo se recorta: los temas suelen estar al principio, en el índice).
+                if (t.length() > 12_000) t = t.substring(0, 12_000);
+                peticion = CerebroDelJuego.Peticion.lanzar(c, CerebroDelJuego.sistemaTemario(jug.idioma), CerebroDelJuego.uno("Syllabus:\n" + t), 3000);
             } else {
                 estado = c == null ? T.t("temario.sin_ia") : "";
             }
@@ -182,6 +196,7 @@ public final class Temario implements Pantalla {
             }
             yy += 14;
         }
+        yy = guardados(j, rx, yy, rw);
         if (!nuevos.isEmpty()) {
             p.texto(T.t("temario.nuevos"), rx + 20, yy, ui.letra, true, ui.tema.acento, 1);
             yy += ui.letra * 1.6f;
@@ -191,6 +206,69 @@ public final class Temario implements Pantalla {
             }
         }
         ui.finDesplazable(despl, yy + d - cy);
+    }
+
+    /** Cargarlo de un archivo: la ruta (o soltarlo en la ventana) y «Cargar». Devuelve lo que ocupa. */
+    private float archivo(Juego j, float x, float y, float w) {
+        Ui ui = j.ui;
+        String[] soltados = j.archivosSoltados;
+        if (soltados != null && soltados.length > 0) {
+            j.archivosSoltados = null;
+            ruta.ponerTexto(soltados[0]);
+            cargar(ruta.texto());
+        }
+        float bw = Math.max(150, j.pincel.ancho(T.t("temario.cargar"), ui.letra, true) + 30);
+        boolean intro = ruta.dibujar(ui, x, y, w - bw - 8, 46, T.f("temario.ruta", metajavbots.ejercicios.LectorDeTemario.formatos()));
+        if (ui.boton(T.t("temario.cargar"), x + w - bw, y, bw, 46, Ui.Estilo.NORMAL, true, T.t("temario.cargar_ayuda")) || intro) cargar(ruta.texto());
+        return 56;
+    }
+
+    /** Carga el temario de ese archivo en el editor de la izquierda (o dice por qué no puede). */
+    private void cargar(String r) {
+        String s = r.strip().replaceAll("^\"|\"$", "");
+        if (s.isEmpty()) return;
+        try {
+            java.nio.file.Path f = java.nio.file.Paths.get(s);
+            texto.ponerTexto(metajavbots.ejercicios.LectorDeTemario.leer(f));
+            String n = f.getFileName().toString();
+            nombre = n.contains(".") ? n.substring(0, n.lastIndexOf('.')) : n;
+            estado = T.f("temario.cargado", n, texto.doc.lineas());
+        } catch (java.io.IOException | RuntimeException e) {
+            estado = T.f("temario.no_se_lee", s, e.getMessage());
+        }
+    }
+
+    private static String primeraLinea(String t) {
+        for (String l : t.split("\n")) if (!l.isBlank()) return l.strip().length() > 40 ? l.strip().substring(0, 40) : l.strip();
+        return "temario";
+    }
+
+    private java.nio.file.Path carpeta(Juego j) {
+        return metajavbots.progreso.Guardado.carpeta.resolve(metajavbots.progreso.Guardado.carpetaDe(j.jugador.nombre));
+    }
+
+    /** Los temarios guardados (campañas propias, sin IA): al pulsar uno, sus temas y sus ejercicios. Devuelve dónde acaba. */
+    private float guardados(Juego j, float rx, float yy, float rw) {
+        if (guardados == null) guardados = metajavbots.ejercicios.TemarioGuardado.todos(carpeta(j));
+        if (guardados.isEmpty()) return yy;
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        yy += 8;
+        p.texto(T.t("temario.guardados"), rx + 20, yy, ui.letra, true, ui.tema.acento, 1);
+        yy += ui.letra * 1.6f;
+        for (metajavbots.ejercicios.TemarioGuardado g : guardados) {
+            String n = T.f("temario.guardado", g.nombre, g.ejercicios.size());
+            if (ui.boton(n, rx + 30, yy, rw - 70, 42, Ui.Estilo.PLANO, true, T.t("temario.guardado_ayuda"))) {
+                temas.clear();
+                temas.addAll(g.temas);
+                nuevos.clear();
+                nuevos.addAll(g.ejercicios);
+                nombre = g.nombre;
+                estado = T.f("temario.abierto", g.nombre);
+            }
+            yy += 48;
+        }
+        return yy + 8;
     }
 
     private Encuentro combateTematico(Juego j, Tema tm, String det) {
@@ -206,16 +284,24 @@ public final class Temario implements Pantalla {
         try {
             List<Ejercicio> l = Ejercicio.leer(new ByteArrayInputStream(respuesta.getBytes(StandardCharsets.UTF_8)), "temario");
             int buenos = 0;
+            List<String> ids = new ArrayList<>();
             for (Ejercicio e : l) {
                 if (e.casos.size() < 3) continue;
                 Comprobador.Informe bien = Comprobador.comprobar(e, e.codigoSolucion(), Locale.ROOT);
                 Comprobador.Informe plantilla = Comprobador.comprobar(e, e.codigoInicial(), Locale.ROOT);
                 if (bien.todoBien() && !plantilla.todoBien()) {
                     nuevos.add(e);
+                    ids.add(e.id);
                     buenos++;
                 }
             }
             estado = T.f("temario.validados", buenos, l.size());
+            // Lo que ha salido bien se guarda como campaña propia: se juega después sin IA.
+            if (buenos > 0) {
+                metajavbots.ejercicios.TemarioGuardado.guardar(carpeta(j), nombre, temas, respuesta, ids);
+                guardados = null;
+                estado += " " + T.f("temario.guardado_en", nombre);
+            }
         } catch (Exception ex) {
             estado = T.f("cerebro.error", ex.getMessage());
         }

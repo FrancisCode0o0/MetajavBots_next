@@ -422,6 +422,16 @@ temario.pidiendo = Pidiendo a la IA ejercicios a tu medida… | Bitte die KI um 
 temario.validando = Comprobando que los ejercicios de la IA estén bien… | Prüfe, ob die Übungen der KI stimmen… | Checking that the AI's exercises are correct…
 temario.validados = La IA propuso {1} ejercicios; {0} pasan la comprobación y ya son tuyos. | Die KI schlug {1} Übungen vor; {0} bestehen die Prüfung und gehören dir. | The AI proposed {1} exercises; {0} pass the check and are yours.
 temario.sin_ia = Sin cerebro de IA: te preparo los ejercicios y combates del juego que encajan. | Ohne KI-Gehirn: Ich bereite die passenden Übungen und Kämpfe des Spiels vor. | Without an AI brain: I prepare the game's matching exercises and fights.
+temario.ruta = Ruta del archivo, o suéltalo en la ventana | Dateipfad, oder ins Fenster ziehen | File path, or drop it on the window
+temario.cargar = Cargar | Laden | Load
+temario.cargar_ayuda = Lee el temario del archivo: PDF, Word (.docx), OpenDocument (.odt, .odp), PowerPoint (.pptx), HTML, RTF o texto (.txt, .md). También puedes soltar el archivo en la ventana. | Liest den Lehrplan aus der Datei: PDF, Word (.docx), OpenDocument (.odt, .odp), PowerPoint (.pptx), HTML, RTF oder Text (.txt, .md). Du kannst die Datei auch ins Fenster ziehen. | Reads the syllabus from the file: PDF, Word (.docx), OpenDocument (.odt, .odp), PowerPoint (.pptx), HTML, RTF or text (.txt, .md). You can also drop the file onto the window.
+temario.cargado = Cargado «{0}» ({1} líneas). Pulsa «Preparar». | „{0}“ geladen ({1} Zeilen). Drück „Vorbereiten“. | Loaded «{0}» ({1} lines). Press «Prepare».
+temario.no_se_lee = No puedo leer «{0}»: {1} | Ich kann „{0}“ nicht lesen: {1} | I can't read «{0}»: {1}
+temario.guardados = Mis temarios (se juegan sin IA) | Meine Lehrpläne (ohne KI spielbar) | My syllabi (playable without AI)
+temario.guardado = {0} · {1} ejercicios | {0} · {1} Übungen | {0} · {1} exercises
+temario.guardado_ayuda = Abre sus ejercicios y sus combates de sparring, sin IA. | Öffnet seine Übungen und Sparringkämpfe, ohne KI. | Opens its exercises and sparring fights, without AI.
+temario.guardado_en = Guardado como campaña propia: «{0}». | Als eigene Kampagne gespeichert: „{0}“. | Saved as your own campaign: «{0}».
+temario.abierto = «{0}», sin IA: sus temas y sus ejercicios. | „{0}“, ohne KI: seine Themen und Übungen. | «{0}», without AI: its topics and exercises.
 
 pelear.mcm = Máquina contra máquina | Maschine gegen Maschine | Machine vs machine
 pelear.mcm_ayuda = Dos robots de la computadora pelean y tú miras su código: se ilumina la línea que se ejecuta. | Zwei Computer-Roboter kämpfen und du siehst ihren Code: Die ausgeführte Zeile leuchtet auf. | Two computer robots fight and you watch their code: the line being run lights up.

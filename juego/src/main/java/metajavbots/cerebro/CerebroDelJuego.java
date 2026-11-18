@@ -224,7 +224,9 @@ public final class CerebroDelJuego {
     /** Del temario del jugador, ejercicios: en el formato de res/ejercicios (lo valida el comprobador antes de dárselos). */
     public static String sistemaTemario(Idioma i) {
         return "You create short self-checking Java exercises for the game MetajavBots from the learner's syllabus. Write exercise text in "
-                + idiomaDe(i) + " (fill titulo.es/de/en and enunciado.es/de/en anyway; translate). Output ONLY exercises in this exact format, 3 exercises:\n"
+                + idiomaDe(i) + " (fill titulo.es/de/en and enunciado.es/de/en anyway; translate). Output ONLY exercises in this exact format. "
+                + "Cover the WHOLE syllabus: one exercise for each main topic in it (at most 8), in the order of the syllabus, at the "
+                + "difficulty the syllabus shows (dificultad 1 for beginners' material up to 5 for advanced; use the Java version it needs):\n"
                 + "=== id_in_lowercase\ntema: 05\ndificultad: 2\njava: 17\ntipo: metodo\ntitulo.es: ...\ntitulo.de: ...\ntitulo.en: ...\n"
                 + "enunciado.es: ...\nenunciado.de: ...\nenunciado.en: ...\nfirma: static int nombre(int x)\nplantilla:\n    return 0;\nsolucion:\n"
                 + "    return x * 2;\ncasos:\n    nombre(1) => 2\n    nombre(0) => 0\n    nombre(-3) => -6\n    nombre(10) => 20\n"

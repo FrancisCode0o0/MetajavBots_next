@@ -43,6 +43,8 @@ public class Juego extends ApplicationAdapter {
     private int fallosSeguidos;
     /** El entrenador flotante: asoma en todas las pantallas y explica cualquier concepto (F2). */
     public final metajavbots.pantallas.EntrenadorFlotante entrenadorFlotante = new metajavbots.pantallas.EntrenadorFlotante();
+    /** Los archivos que se acaban de soltar en la ventana (el escritorio los pone; los recoge quien los quiera, como el temario). */
+    public volatile String[] archivosSoltados;
     /** La primera pantalla (Capturas pone otras). */
     protected Pantalla primera;
 
