@@ -134,7 +134,29 @@ public final class Jefe {
                     new Trilingue("El Enjambre Paralelo", "Der Parallelschwarm", "The Parallel Swarm"),
                     new Trilingue("Usa clases seguras para hilos (AtomicInteger, ConcurrentHashMap…) o synchronized.",
                             "Benutze threadsichere Klassen (AtomicInteger, ConcurrentHashMap…) oder synchronized.",
-                            "Use thread-safe classes (AtomicInteger, ConcurrentHashMap…) or synchronized.")));
+                            "Use thread-safe classes (AtomicInteger, ConcurrentHashMap…) or synchronized.")),
+            // Los de senior (bloque 4). TODO-FRAN: nombres, modelos y dificultad.
+            new Jefe("records", "records", "pixel", 0.78,
+                    new Trilingue("El Notario de Datos", "Der Datennotar", "The Data Notary"),
+                    new Trilingue("Guarda lo que sabes del rival en un record propio (record Avistamiento(double x, double y) {}).",
+                            "Speichere, was du über den Gegner weißt, in einem eigenen record (record Sichtung(double x, double y) {}).",
+                            "Keep what you know about the rival in your own record (record Sighting(double x, double y) {}).")),
+            new Jefe("selladas", "selladas", "barrena", 0.8,
+                    new Trilingue("La Matrioska Sellada", "Die Versiegelte Matroschka", "The Sealed Matryoshka"),
+                    new Trilingue("Una interfaz sealed con sus permits y un switch con patrones (case Lejos l -> …) que decida qué hacer.",
+                            "Ein sealed-Interface mit permits und ein switch mit Mustern (case Fern f -> …), der entscheidet, was zu tun ist.",
+                            "A sealed interface with its permits and a switch with patterns (case Far f -> …) that decides what to do.")),
+            new Jefe("inmutabilidad", "inmutabilidad", "galapago", 0.82,
+                    new Trilingue("La Estatua de Mármol", "Die Marmorstatue", "The Marble Statue"),
+                    new Trilingue("Clases que no cambian: campos private final (al menos dos) y nada de setX; para cambiar, se crea otro objeto.",
+                            "Unveränderliche Klassen: private final Felder (mindestens zwei) und kein setX; zum Ändern ein neues Objekt.",
+                            "Classes that don't change: private final fields (at least two) and no setX; to change, create a new object.")),
+            new Jefe("estrategia", "estrategia", "tejedora", 0.85,
+                    new Trilingue("El Cambiaformas", "Der Gestaltwandler", "The Shapeshifter"),
+                    new Trilingue("Patrón estrategia: una interfaz propia (Tactica) y dos clases o más que la implementan; el robot cambia de táctica.",
+                            "Strategie-Muster: ein eigenes Interface (Taktik) und mindestens zwei Klassen, die es implementieren; "
+                                    + "der Roboter wechselt die Taktik.",
+                            "Strategy pattern: your own interface (Tactic) and two or more classes implementing it; the robot switches tactics.")));
 
     public static Jefe de(String id) {
         for (Jefe j : TODOS) if (j.id.equals(id)) return j;

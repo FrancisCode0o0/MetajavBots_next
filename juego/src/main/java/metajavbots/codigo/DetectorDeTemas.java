@@ -18,6 +18,8 @@ public final class DetectorDeTemas {
             GENERICOS = "genericos", EXCEPCIONES = "excepciones", LAMBDAS = "lambdas", STREAMS = "streams",
             RECURSION = "recursion", HILOS = "hilos", MODERNO = "moderno", POLIMORFISMO = "polimorfismo",
             ENCAPSULACION = "encapsulacion", BUCLES = "bucles", ARRAYS = "arrays", METODOS = "metodos", CONDICIONALES = "condicionales";
+    /** Los de senior (bloque 4): records, jerarquías selladas con pattern matching, inmutabilidad y el patrón estrategia. */
+    public static final String RECORDS = "records", SELLADAS = "selladas", INMUTABILIDAD = "inmutabilidad", ESTRATEGIA = "estrategia";
 
     private static final Set<String> COLECCION = Set.of("List", "ArrayList", "LinkedList", "Map", "HashMap", "TreeMap", "LinkedHashMap",
             "Set", "HashSet", "TreeSet", "LinkedHashSet", "Deque", "ArrayDeque", "Queue", "PriorityQueue", "Collection", "Iterator");
@@ -79,8 +81,42 @@ public final class DetectorDeTemas {
             if (t.contains(EXCEPCIONES) || throwPropio && hayTry) t.add(EXCEPCIONES);
         }
         if (recursion(c)) t.add(RECURSION);
+        senior(c, interfacesPropias, t);
         if (metodosPropios(c) >= 2) t.add(METODOS);
         return t;
+    }
+
+    /**
+     * Los temas de senior: un record propio; una jerarquía sellada (sealed/permits) que se recorre con patrones
+     * («case Tipo nombre», «instanceof Tipo nombre»); inmutabilidad (al menos dos campos private final y ningún
+     * setX); y el patrón estrategia (una interfaz propia con dos clases o más que la implementan).
+     */
+    static void senior(List<Lexico.Trozo> c, Set<String> interfacesPropias, Set<String> t) {
+        boolean sellada = false, patron = false;
+        int finales = 0;
+        boolean setter = false;
+        java.util.Map<String, Integer> implementaciones = new java.util.HashMap<>();
+        for (int i = 0; i < c.size(); i++) {
+            Lexico.Trozo x = c.get(i);
+            if (x.es("record") && i + 1 < c.size() && c.get(i + 1).clase == Lexico.Clase.NOMBRE) t.add(RECORDS);
+            if (x.es("sealed") || x.es("permits")) sellada = true;
+            if ((x.es("case") || x.es("instanceof")) && i + 2 < c.size() && c.get(i + 1).clase == Lexico.Clase.NOMBRE
+                    && c.get(i + 2).clase == Lexico.Clase.NOMBRE) patron = true;
+            if (x.es("private") && i + 3 < c.size() && c.get(i + 1).es("final")) {
+                Lexico.Trozo tras = i + 4 < c.size() ? c.get(i + 4) : null;
+                if (tras != null && (tras.es(";") || tras.es("="))) finales++;
+            }
+            if (x.clase == Lexico.Clase.NOMBRE && x.texto.length() > 3 && x.texto.startsWith("set") && Character.isUpperCase(x.texto.charAt(3))
+                    && i + 1 < c.size() && c.get(i + 1).es("(")) setter = true;
+            if (x.es("implements")) {
+                for (int k = i + 1; k < c.size() && !c.get(k).es("{"); k++) {
+                    if (interfacesPropias.contains(c.get(k).texto)) implementaciones.merge(c.get(k).texto, 1, Integer::sum);
+                }
+            }
+        }
+        if (sellada && patron) t.add(SELLADAS);
+        if (finales >= 2 && !setter) t.add(INMUTABILIDAD);
+        for (int n : implementaciones.values()) if (n >= 2) t.add(ESTRATEGIA);
     }
 
     /** ¿Algún método se llama a sí mismo? Se buscan los cuerpos de los métodos y su nombre dentro. */
