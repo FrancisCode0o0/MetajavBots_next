@@ -68,6 +68,12 @@ public final class VentanaDeCodigo {
 
     private float desplazamientoY, desplazamientoX;
     private boolean arrastrando, seguirCursor = true;
+    /** Las barras de desplazamiento: cuál se arrastra (0 ninguna, 1 la vertical, 2 la horizontal) y por dónde se agarró. */
+    private int barraArrastrada;
+    private float agarre;
+    /** Lo que mide la línea más larga (en letras), para la barra horizontal; se recalcula cuando cambia el texto. */
+    private int columnasMaximas;
+    private long versionDeColumnas = -1;
     private float parpadeo;
     private long versionColoreada = -1;
     private List<Lexico.Trozo> trozos = new ArrayList<>();
@@ -130,6 +136,7 @@ public final class VentanaDeCodigo {
         if (enfocada) teclas(ui, zh, alto);
         raton(ui, zx, zy, zw, zh, alto, letra);
         float maxY = desplazar(zw, zh, alto, letra);
+        arrastrarBarras(e, x, zx, zy, w, zw, zh, letra, maxY);
 
         p.rect(x, y, w, h, t.fondo, 1);
         p.rect(x, y + barra, margen - letra * 0.8f, h - barra, t.panel, 1);
@@ -175,7 +182,7 @@ public final class VentanaDeCodigo {
             p.rect(cx - 1, cy + 2, 2.5f, alto - 4, t.acento, 1);
         }
         p.sinRecorte();
-        barras(ui, x, zy, w, zh, alto, maxY);
+        barras(ui, x, zx, zy, w, zw, zh, letra, maxY);
         if (buscando) barraDeBuscar(ui, x, y, w, alto);
         if (proponiendo) dibujarPropuestas(ui, zx, zy, alto, letra);
         // Con la barra de buscar o las propuestas abiertas, Esc las cierra (y no vuelve atrás).
@@ -285,12 +292,72 @@ public final class VentanaDeCodigo {
         return w.length() >= 2 && !Lexico.CLAVES.contains(w) && !Lexico.PRIMITIVOS.contains(w) ? w : null;
     }
 
-    private void barras(Ui ui, float x, float zy, float w, float zh, float alto, float maxY) {
-        if (maxY <= 0) return;
+    /** Lo que se puede desplazar a lo ancho (0 si todo cabe). */
+    private float maxX(float zw, float letra) {
+        if (versionDeColumnas != doc.version()) {
+            versionDeColumnas = doc.version();
+            int m = 0;
+            for (int l = 0; l < doc.lineas(); l++) m = Math.max(m, doc.linea(l).length());
+            columnasMaximas = m;
+        }
+        return Math.max(0, columnasMaximas * letra + letra * 4 - zw);
+    }
+
+    /** El tirador de una barra: dónde empieza y cuánto mide, en un carril de largo «carril» que enseña «visible» de «visible + max». */
+    private static float[] tirador(float carril, float visible, float max, float desplazamiento) {
+        float largo = Math.max(30, carril * visible / (visible + max));
+        return new float[]{(carril - largo) * (max <= 0 ? 0 : desplazamiento / max), largo};
+    }
+
+    /**
+     * Las barras se manejan con el ratón, como en los editores de verdad: se arrastra el tirador (vertical a la derecha,
+     * horizontal abajo) y un clic en el carril salta a ese sitio (y se sigue arrastrando desde ahí).
+     */
+    private void arrastrarBarras(Entrada e, float x, float zx, float zy, float w, float zw, float zh, float letra, float maxY) {
+        float maxX = maxX(zw, letra);
+        if (!e.pulsado) barraArrastrada = 0;
+        if (e.recienPulsado && !e.clicUsado) {
+            if (maxY > 0 && e.dentro(x + w - 12, zy, 12, zh)) {
+                e.clicUsado = true;
+                float[] t = tirador(zh, zh, maxY, desplazamientoY);
+                float enCarril = e.ratonY - zy;
+                // Sobre el tirador: se agarra por ahí; en el carril: el tirador salta con su centro al ratón.
+                agarre = enCarril >= t[0] && enCarril <= t[0] + t[1] ? enCarril - t[0] : t[1] / 2;
+                barraArrastrada = 1;
+            } else if (maxX > 0 && e.dentro(zx, zy + zh, zw, 12)) {
+                e.clicUsado = true;
+                float[] t = tirador(zw, zw, maxX, desplazamientoX);
+                float enCarril = e.ratonX - zx;
+                agarre = enCarril >= t[0] && enCarril <= t[0] + t[1] ? enCarril - t[0] : t[1] / 2;
+                barraArrastrada = 2;
+            }
+        }
+        if (barraArrastrada == 1) {
+            float[] t = tirador(zh, zh, maxY, desplazamientoY);
+            float u = (e.ratonY - zy - agarre) / Math.max(1, zh - t[1]);
+            desplazamientoY = Math.max(0, Math.min(maxY, u * maxY));
+        } else if (barraArrastrada == 2) {
+            float[] t = tirador(zw, zw, maxX, desplazamientoX);
+            float u = (e.ratonX - zx - agarre) / Math.max(1, zw - t[1]);
+            desplazamientoX = Math.max(0, Math.min(maxX, u * maxX));
+        }
+    }
+
+    private void barras(Ui ui, float x, float zx, float zy, float w, float zw, float zh, float letra, float maxY) {
         Pincel p = ui.p;
-        float total = maxY + zh;
-        float bh = Math.max(30, zh * zh / total), by = zy + (zh - bh) * (desplazamientoY / maxY);
-        p.caja(x + w - 10, by, 7, bh, 3, ui.tema.borde, 0.9f);
+        Entrada e = ui.e;
+        float maxX = maxX(zw, letra);
+        if (maxX > 0) {
+            float[] t = tirador(zw, zw, maxX, desplazamientoX);
+            boolean viva = barraArrastrada == 2 || e.dentro(zx, zy + zh, zw, 12);
+            p.caja(zx, zy + zh + 2, zw, 9, 4, ui.tema.panel, viva ? 0.9f : 0.5f);
+            p.caja(zx + t[0], zy + zh + 2, t[1], 9, 4, viva ? ui.tema.acento : ui.tema.borde, 0.9f);
+        }
+        if (maxY <= 0) return;
+        float[] t = tirador(zh, zh, maxY, desplazamientoY);
+        boolean viva = barraArrastrada == 1 || e.dentro(x + w - 12, zy, 12, zh);
+        p.caja(x + w - 12, zy, 10, zh, 4, ui.tema.panel, viva ? 0.9f : 0.5f);
+        p.caja(x + w - 12, zy + t[0], 10, t[1], 4, viva ? ui.tema.acento : ui.tema.borde, 0.9f);
         // Las marcas de error, también en la barra (para encontrarlas en un código largo).
         for (Marca m : marcas) {
             float my = zy + zh * (m.linea - 1) / Math.max(1f, doc.lineas());
