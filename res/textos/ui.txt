@@ -550,3 +550,7 @@ entrada.esquina_2 = ¡Y en la esquina roja… {0}! | Und in der roten Ecke … {
 entrada.esquina_n = ¡Y también… {0}! | Und außerdem … {0}! | And also… {0}!
 entrada.a_pelear = ¡A PELEAR! | KAMPF! | FIGHT!
 entrada.saltar = Clic, Espacio o Esc para saltar la presentación | Klick, Leertaste oder Esc überspringt die Vorstellung | Click, Space or Esc to skip the introduction
+publico.bien = ¡BIEN! | JAAA! | YEAH!
+publico.oooh = ¡OOOH! | OOOH! | OOOH!
+publico.si = ¡¡SÍÍÍ!! | JAAAA!! | YESSS!!
+publico.buu = BUUU | BUUUH | BOOO

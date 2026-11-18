@@ -86,6 +86,7 @@ public final class PantallaPelea implements Pantalla {
         Jugador.Robot r = jug.robot();
         vista = new VistaDeArena(j.pincel);
         vista.escenario = encuentro.escenario;
+        vista.conPublico = true;
         // Un robot roto trae su propio código (el robot del jugador no se toca).
         String codigo = encuentro.codigo != null ? encuentro.codigo : r.codigo;
         editor.ponerTexto(codigo);

@@ -30,6 +30,10 @@ public final class VistaDeArena {
     private static final float TIRO = 58;
     public final Efectos efectos = new Efectos();
     private final Trastos trastos = new Trastos();
+    public final Publico publico = new Publico();
+    /** Si se dibuja el público (no en las capturas de las arenas ni en las vistas pequeñas). */
+    public boolean conPublico;
+    private Sonidos ultimosSonidos;
     private final DibujoRobot dibujo;
     private DibujoRobot.Estado[] estados = {new DibujoRobot.Estado(), new DibujoRobot.Estado()};
     private final Random azar = new Random(11);
@@ -121,7 +125,9 @@ public final class VistaDeArena {
     }
 
     public void sucesos(Pelea pelea, Sonidos sonidos) {
+        ultimosSonidos = sonidos;
         for (Suceso s : pelea.sucesos()) {
+            if (conPublico) publico.reaccionar(s, sonidos);
             float px = sx(s.x, s.y), py = sy(s.y) - TIRO * escalaX;
             switch (s.tipo) {
                 case LASER: if (sonidos != null) sonidos.tocar(s.valor > 10 ? "laser_pesado" : "laser", 0.6f, 0.9f + azar.nextFloat() * 0.2f); break;
@@ -206,6 +212,7 @@ public final class VistaDeArena {
         escalaX = (float) (aw * 0.94 / ancho);
         p.recortar(x, y, w, h);
         fondo(p);
+        if (conPublico) publico.dibujar(p, ax, ay + ah * 0.3f, aw, ah * 0.09f, dt, ultimosSonidos);
         suelo(p);
         DibujoDeArenas.delSuelo(p, this, pelea.arena, tiempo);
         for (metajavbots.combate.Aparatos.Uno a : pelea.aparatos.todos()) {

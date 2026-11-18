@@ -51,6 +51,8 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 
 - **Entradas épicas** (`EntradaEpica`): antes de la primera ronda, el locutor presenta a cada robot como en el boxeo («¡En la esquina azul… Cobaltito!»): la arena en penumbra, dos focos que barren hasta él, humo a sus pies, su nombre en grande que entra deslizándose y su biografía absurda en una frase (la primera de `res/biografias/robots.txt`), en la mitad contraria para no taparlo; al final, «¡A PELEAR!». Se salta con clic, Espacio o Esc. No sale en los tutoriales ni en los robots rotos.
 
+- **Público en la grada** (`pantalla/Publico.java`): dos filas de robots espectadores de colores al fondo de la arena, que se mecen; con un golpe fuerte, una pieza rota o un fuera de combate saltan con los brazos en alto y gritan («¡BIEN!», «¡OOOH!», «¡¡SÍÍÍ!!») con una ovación; si alguien se estampa contra la pared, el código falla o pasan 7 s sin golpes, abuchean («BUUU», ojos rojos, tiemblan). Dos sonidos nuevos del sintetizador (ovación y abucheo).
+
 **Lo que decidí yo (para que Fran lo revise)**
 
 - **Reglas de estilo que no exijo** (están en el XML y por qué): una sola sentencia por línea (las tablas de reglas de la voz y de las teclas del editor se leen mejor en una línea), no reasignar parámetros (el patrón «y += alto» de las funciones de dibujo) y no tocar la variable del bucle (los analizadores de código lo hacen). Hasta 11 parámetros (el `Registro` del historial tiene 11 datos).

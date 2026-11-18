@@ -58,6 +58,8 @@ public final class Sintetizador {
             case "subida": return arpegio(new float[]{523, 659, 784, 1046, 1318, 1568}, 0.09f, Onda.CUADRADA, 0.3f, r);
             case "bajada": return arpegio(new float[]{784, 659, 523, 392}, 0.14f, Onda.SIERRA, 0.3f, r);
             case "tope": return tono(0.4f, 400, 400, Onda.CUADRADA, 0.2f, r);
+            case "ovacion": return mezclar(ruido(1.6f, 0.32f, 3, r), ruido(1.6f, 0.18f, 1, r));
+            case "abucheo": return mezclar(tono(1.2f, 150, 115, Onda.SIERRA, 0.12f, r), ruido(1.2f, 0.12f, 6, r));
             case "bip_triste": return eco(tono(1.1f, 880, 160, Onda.CUADRADA, 0.18f, r), 0.25f, 0.3f);
             case "error": return mezclar(tono(0.2f, 160, 160, Onda.CUADRADA, 0.35f, r), ruido(0.2f, 0.25f, 3, r));
             case "camuflaje": return tono(0.5f, 1800, 200, Onda.SENO, 0.3f, r);
