@@ -51,7 +51,7 @@ final class AnimacionDelCaso {
     }
 
     /** Dibuja el caso con el robot; f: lo que lleva hecho (de 0 a 1, al ritmo de las líneas que ejecuta el código). */
-    static void dibujar(Ui ui, float x, float y, float w, float h, Ejercicio e, Comprobador.Resultado r, float f, float segundos) {
+    static void dibujar(Ui ui, float x, float y, float w, float h, Ejercicio e, Comprobador.Resultado r, float f, float segundos, float pista) {
         Pincel p = ui.p;
         Ejercicio.Tipo tipo = e.tipo;
         reloj = segundos;
@@ -62,15 +62,17 @@ final class AnimacionDelCaso {
         String esperado = r.caso.esperado;
         String obtenido = r.obtenido == null ? "" : r.obtenido;
         float suelo = y + h - 26;
+        // Arriba queda sitio para la pista de carrera (PistaDeCarrera): la acción va debajo.
+        float yy = y + pista, hh = h - pista;
         switch (forma(tipo, esperado)) {
             case CAJAS: AccionesDelRobotito.cajas(ui, x, suelo, w, numero(esperado), numero(obtenido), f, r.bien); break;
             case PUERTAS:
-                AccionesDelRobotito.puertas(ui, x, suelo, w, h, esperado.strip().equals("true"), obtenido.strip().equals("true"), f, r.bien);
+                AccionesDelRobotito.puertas(ui, x, suelo, w, hh, esperado.strip().equals("true"), obtenido.strip().equals("true"), f, r.bien);
                 break;
             case ESTANTERIA: AccionesDelRobotito.estanteria(ui, x, suelo, w, elementos(dentro(esperado)), elementos(dentro(obtenido)), f, r.bien); break;
-            case PAPEL: AccionesDelRobotito.escribir(ui, x, y, w, h, texto(esperado), texto(obtenido), f, r.bien, true, paseo(e, r)); break;
-            case ALARMA: AccionesDelRobotito.alarma(ui, x, suelo, w, h, esperado.substring(1), obtenido, f, r.bien); break;
-            default: AccionesDelRobotito.escribir(ui, x, y, w, h, texto(esperado), texto(obtenido), f, r.bien, false, paseo(e, r)); break;
+            case PAPEL: AccionesDelRobotito.escribir(ui, x, yy, w, hh, texto(esperado), texto(obtenido), f, r.bien, true, paseo(e, r)); break;
+            case ALARMA: AccionesDelRobotito.alarma(ui, x, suelo, w, hh, esperado.substring(1), obtenido, f, r.bien); break;
+            default: AccionesDelRobotito.escribir(ui, x, yy, w, hh, texto(esperado), texto(obtenido), f, r.bien, false, paseo(e, r)); break;
         }
         p.sinRecorte();
         String veredicto = r.bien ? "✔ " + T.t("animacion.bien") : "✘ " + T.t("animacion.mal");

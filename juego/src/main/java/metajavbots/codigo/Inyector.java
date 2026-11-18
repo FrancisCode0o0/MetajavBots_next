@@ -208,6 +208,8 @@ public final class Inyector {
         int[] inicioDeLinea = lineaDeCadaPosicion(fuente);
         Deque<Bloque> bloques = new ArrayDeque<>();
         Deque<Integer> parentesisDelBloque = new ArrayDeque<>();
+        // Si cada bloque es el cuerpo de un do (tras su «}» viene el while, que no se puede trazar).
+        Deque<Boolean> deDo = new ArrayDeque<>();
         Deque<String> clases = new ArrayDeque<>();
         int parentesis = 0;
         boolean esperaClase = false;
@@ -258,15 +260,14 @@ public final class Inyector {
                 }
                 bloques.push(tipo);
                 parentesisDelBloque.push(parentesis);
+                deDo.push(antes != null && antes.es("do"));
                 inicioDeSentencia = i + 1;
                 if (tipo == Bloque.SENTENCIAS && !constructor && i + 1 < t.size() && !t.get(i + 1).es("}")) {
                     metidos.add(new int[]{x.fin, 0});
                     textos.add(" " + LINEA + "(" + inicioDeLinea[t.get(i + 1).inicio] + ");");
                 }
             } else if (x.es("}")) {
-                Bloque cerrado = bloques.isEmpty() ? Bloque.SENTENCIAS : bloques.pop();
-                if (!parentesisDelBloque.isEmpty()) parentesisDelBloque.pop();
-                if (cerrado == Bloque.CLASE && !clases.isEmpty()) clases.pop();
+                cerrar(t, i, bloques, parentesisDelBloque, deDo, clases, parentesis, inicioDeLinea, metidos, textos);
                 inicioDeSentencia = i + 1;
             } else if (x.es(";")) {
                 Bloque arriba = bloques.peek();
@@ -282,6 +283,35 @@ public final class Inyector {
                 if (nivelDelBloque) inicioDeSentencia = i + 1;
             }
         }
+    }
+
+    /**
+     * Cierra un bloque. Tras el «}» de un if, un bucle, un try o un switch, traza también la sentencia que sigue (así se
+     * ve qué rama se saltó); no tras una lambda o una clase dentro de una expresión, ni tras el cuerpo de un do.
+     */
+    private static void cerrar(List<Lexico.Trozo> t, int i, Deque<Bloque> bloques, Deque<Integer> parentesisDelBloque, Deque<Boolean> deDo,
+            Deque<String> clases, int parentesis, int[] inicioDeLinea, List<int[]> metidos, List<String> textos) {
+        Bloque cerrado = bloques.isEmpty() ? Bloque.SENTENCIAS : bloques.pop();
+        if (!parentesisDelBloque.isEmpty()) parentesisDelBloque.pop();
+        boolean eraDeDo = !deDo.isEmpty() && deDo.pop();
+        if (cerrado == Bloque.CLASE && !clases.isEmpty()) clases.pop();
+        boolean nivelDelBloque = parentesisDelBloque.isEmpty() || parentesisDelBloque.peek() == parentesis;
+        if ((cerrado == Bloque.SENTENCIAS || cerrado == Bloque.SWITCH) && bloques.peek() == Bloque.SENTENCIAS && nivelDelBloque && !eraDeDo
+                && i + 1 < t.size() && empiezaSentencia(t.get(i + 1))) {
+            metidos.add(new int[]{t.get(i).fin, 0});
+            textos.add(" " + LINEA + "(" + inicioDeLinea[t.get(i + 1).inicio] + ");");
+        }
+    }
+
+    /** ¿Empieza ahí una sentencia nueva (y no un else, catch, finally, case, default, while de un do, «;», «)»…)? */
+    private static boolean empiezaSentencia(Lexico.Trozo t) {
+        if (t.clase == Lexico.Clase.NOMBRE || t.clase == Lexico.Clase.TIPO_PRIMITIVO) return true;
+        if (t.clase != Lexico.Clase.CLAVE) return false;
+        for (String k : new String[] {"if", "for", "while", "do", "return", "switch", "try", "throw", "final", "this", "super", "new", "synchronized",
+            "break", "continue", "assert"}) {
+            if (t.es(k)) return true;
+        }
+        return false;
     }
 
     /** La línea (desde 1) de cada posición del texto. */

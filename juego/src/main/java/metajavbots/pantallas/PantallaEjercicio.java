@@ -50,6 +50,11 @@ public final class PantallaEjercicio implements Pantalla {
     private int casoAnimado;
     private float tiempoAnimacion;
     private Comprobador.Informe informeAnimado;
+    /** La carrera de cada caso: las trazas del fantasma (la solución) y el recorrido ya leído del caso que se anima. */
+    private volatile List<int[]> trazasDelFantasma = List.of();
+    private PistaDeCarrera.Recorrido recorrido, recorridoFantasma;
+    private Comprobador.Resultado resultadoDeLaPista;
+    private static final float ALTO_PISTA = 100;
     /** El cerebro del tutor (se mira al entrar: preguntarlo en cada fotograma leería las claves del disco). */
     private Cerebro cerebro;
 
@@ -106,12 +111,26 @@ public final class PantallaEjercicio implements Pantalla {
                 } catch (RuntimeException ex) {
                     // sin traza: el robotito se anima solo con el tiempo
                 }
+                fantasma(j);
             }
             informe = inf;
             comprobando = false;
         }, "comprobar");
         h.setDaemon(true);
         h.start();
+    }
+
+    /** Las trazas de la solución en cada caso (una vez por ejercicio): es el fantasma con el que corre en la pista. */
+    private void fantasma(Juego j) {
+        if (!trazasDelFantasma.isEmpty() || e.solucion == null || e.solucion.isBlank()) return;
+        try {
+            Comprobador.Informe inf = Comprobador.comprobar(e, e.codigoSolucion(), j.jugador.idioma.locale(), true);
+            List<int[]> l = new ArrayList<>();
+            for (Comprobador.Resultado r : inf.casos) l.add(r.traza);
+            trazasDelFantasma = l;
+        } catch (RuntimeException ex) {
+            // sin fantasma: corre solo
+        }
     }
 
     @Override
@@ -155,7 +174,7 @@ public final class PantallaEjercicio implements Pantalla {
         }
         float ey = y + altoBarra + 12, eh = p.alto - ey - 70;
         boolean conRobot = inf != null && inf.compila() && !inf.casos.isEmpty();
-        float altoRobot = conRobot ? Math.min(260, eh * 0.42f) : 0;
+        float altoRobot = conRobot ? Math.min(260 + ALTO_PISTA, eh * 0.48f) : 0;
         eh -= altoRobot > 0 ? altoRobot + 10 : 0;
         editor.dibujar(ui, ex, ey, ew - lado - (lado > 0 ? 12 : 0), eh);
         if (conRobot) robotito(j, inf, ex, ey + eh + 10, ew - lado - (lado > 0 ? 12 : 0), altoRobot, dt);
@@ -314,7 +333,18 @@ public final class PantallaEjercicio implements Pantalla {
             for (int k = 0; k <= paso; k++) editor.lineasActivas.set(traza[k]);
             editor.lineaActiva = avance < 1 ? traza[paso] : 0;
         }
-        AnimacionDelCaso.dibujar(ui, x, y, w, h, e, r, avance, tiempoAnimacion);
+        boolean conPista = traza.length > 0;
+        AnimacionDelCaso.dibujar(ui, x, y, w, h, e, r, avance, tiempoAnimacion, conPista ? ALTO_PISTA + 8 : 0);
+        if (conPista) {
+            if (resultadoDeLaPista != r) {
+                resultadoDeLaPista = r;
+                recorrido = PistaDeCarrera.de(traza, editor.doc.texto());
+                List<int[]> tf = trazasDelFantasma;
+                recorridoFantasma = casoAnimado < tf.size() && tf.get(casoAnimado).length > 0
+                        ? PistaDeCarrera.de(tf.get(casoAnimado), e.codigoSolucion()) : null;
+            }
+            PistaDeCarrera.dibujar(ui, x + 6, y + 48, w - 12, ALTO_PISTA, recorrido, recorridoFantasma, avance, r.bien);
+        }
         String titulo = T.f("animacion.caso", casoAnimado + 1, inf.casos.size()) + "  " + r.caso.llamada;
         j.pincel.texto(ui.recortarTexto(titulo, w - 560, ui.letra * 0.85f, true), x + 12, y + 8, ui.letra * 0.85f, true, ui.tema.texto, 1);
         if (ui.boton("◄", x + w - 230, y + 6, 46, 38, Ui.Estilo.PLANO, casoAnimado > 0, null)) elegirCaso(casoAnimado - 1);

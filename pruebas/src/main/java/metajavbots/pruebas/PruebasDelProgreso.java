@@ -36,6 +36,7 @@ final class PruebasDelProgreso {
         apuntarParte2();
         apuntarParte3();
         apuntarParte4();
+        apuntarPista();
     }
 
     private static void apuntarParte1() {
@@ -250,6 +251,35 @@ final class PruebasDelProgreso {
             igual(Etiqueta.NOOB_1, PruebaDeNivel.resultado(nada));
             igual(Etiqueta.SENIOR_2, PruebaDeNivel.resultado(todo));
             igual(Etiqueta.NOOB_4, PruebaDeNivel.resultado(mitad));
+        });
+    }
+
+    private static metajavbots.ejercicios.Ejercicio delBanco(String id) {
+        for (metajavbots.ejercicios.Ejercicio e : metajavbots.ejercicios.Banco.delJuego().todos()) if (e.id.equals(id)) return e;
+        throw new IllegalArgumentException(id);
+    }
+
+    /** La pista de carrera de los ejercicios (PistaDeCarrera). */
+    private static void apuntarPista() {
+        caso("ejercicios: la pista de carrera sale de la traza (una valla por vuelta, un desvío y un cartel por cada if)", () -> {
+            if (!metajavbots.codigo.Compilador.hayCompilador()) return;
+            metajavbots.ejercicios.Ejercicio suma = delBanco("t05_sumar_hasta");
+            metajavbots.ejercicios.Comprobador.Informe inf = metajavbots.ejercicios.Comprobador.comprobar(suma, suma.codigoSolucion(),
+                    java.util.Locale.ROOT, true);
+            // sumarHasta(4): cuatro vueltas, y el return de después del bucle también se ve.
+            metajavbots.pantallas.PistaDeCarrera.Recorrido r = metajavbots.pantallas.PistaDeCarrera.de(inf.casos.get(0).traza, suma.codigoSolucion());
+            igual(4, r.vallas, "una valla por vuelta: " + java.util.Arrays.toString(inf.casos.get(0).traza));
+            int[] t = inf.casos.get(0).traza;
+            igual(suma.codigoSolucion().split("\n").length - 1, t[t.length - 1], "el return tras el «}» del for, en la traza");
+            metajavbots.ejercicios.Ejercicio disparar = delBanco("t04_puede_disparar");
+            String codigo = disparar.firma + " {\n    if (sobrecalentado) {\n        return false;\n    }\n    return energia >= coste;\n}\n";
+            inf = metajavbots.ejercicios.Comprobador.comprobar(disparar, codigo, java.util.Locale.ROOT, true);
+            cierto(inf.todoBien(), "con traza también pasa");
+            r = metajavbots.pantallas.PistaDeCarrera.de(inf.casos.get(0).traza, codigo);
+            igual(metajavbots.pantallas.PistaDeCarrera.Suceso.DESVIO, r.sucesos[1], "se salta el if: desvío");
+            igual(Boolean.FALSE, r.carteles[0], "el cartel del if, en rojo");
+            r = metajavbots.pantallas.PistaDeCarrera.de(inf.casos.get(3).traza, codigo);
+            igual(Boolean.TRUE, r.carteles[0], "sobrecalentado: entra en el if");
         });
     }
 
