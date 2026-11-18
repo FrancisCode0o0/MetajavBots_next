@@ -253,7 +253,10 @@ public final class PantallaPelea implements Pantalla {
             j.guardar();
         }
         teclas(j);
-        if (!pausa && !entreRondas && !terminada) {
+        if (vista.parada > 0) {
+            // Tras un golpe fuerte, la pelea se para un instante (como en los juegos de lucha).
+            vista.parada -= dt;
+        } else if (!pausa && !entreRondas && !terminada) {
             acumulado += dt * Pelea.TURNOS_POR_SEGUNDO * velocidad;
             int n = 0;
             while (acumulado >= 1 && n < 40) {

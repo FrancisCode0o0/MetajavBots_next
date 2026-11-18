@@ -173,9 +173,16 @@ final class Armas {
         if (pelea.danar(e, c, p.valor("dano") * sobre * c.cifras.cuerpo, "cuerpo", ang + 180, true, hx, hy)) {
             int aturde = (int) p.valor("aturde");
             if (aturde > 0) aturdir(e, aturde);
-            // Y lo echa para atrás.
-            e.x += Math.cos(Math.toRadians(ang)) * 10;
-            e.y += Math.sin(Math.toRadians(ang)) * 10;
+            // Y lo echa para atrás (las cuñas y los volteadores, mucho más).
+            double empuje = p.valor("empuje", 10);
+            e.x = Math.max(e.radio, Math.min(pelea.ancho - e.radio, e.x + Math.cos(Math.toRadians(ang)) * empuje));
+            e.y = Math.max(e.radio, Math.min(pelea.alto - e.radio, e.y + Math.sin(Math.toRadians(ang)) * empuje));
+            int vuelo = (int) p.valor("volteo");
+            if (vuelo > 0 && !e.vuela()) {
+                // El volteador lo levanta por los aires: se ve volar y, mientras, no hace nada.
+                e.volteado = Math.max(e.volteado, vuelo);
+                aturdir(e, vuelo);
+            }
         }
     }
 

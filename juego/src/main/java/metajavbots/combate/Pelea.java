@@ -585,6 +585,7 @@ public final class Pelea {
         if (c.camuflaje > 0) c.camuflaje--;
         if (c.sobrecarga > 0) c.sobrecarga--;
         if (c.aturdido > 0) c.aturdido--;
+        if (c.volteado > 0) c.volteado--;
         if (c.sacudida > 0) c.sacudida *= 0.8;
         c.retroceso *= 0.75;
         boolean piernasRotas = c.parteRota(Montaje.PIERNAS);

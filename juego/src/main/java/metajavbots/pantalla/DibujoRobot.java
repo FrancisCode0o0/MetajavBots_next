@@ -32,6 +32,10 @@ public final class DibujoRobot {
         public int brazoQueAtaca = -1;
         /** La cara de la pantalla (PANTALLA): 0 normal, 1 contento, 2 enfadado, 3 dolorido. */
         public int cara;
+        /** Cómo va el último golpe del brazo que ataca: 0 recién lanzado, 1 ya recogido (para la bola, la pinza, el volteador). */
+        public float faseDelAtaque = 1;
+        /** Lo que le queda en el aire tras un volteador (0..1). */
+        public float volteo;
     }
 
     private final Pincel p;
@@ -110,7 +114,8 @@ public final class DibujoRobot {
                 : loco == Pieza.Locomocion.FLOTANTE ? 7 + 2 * (float) Math.sin(e.tiempo * 4) : 0;
         // La sombra en el suelo.
         p.elipse(x, y, 26 * u * (flota > 10 ? 0.7f : 1), 7 * u, 0, 0x000000, 0.35f * alfa);
-        y0 = y - (flota + bote) * u;
+        float aire = e.volteo > 0 ? (float) Math.sin(Math.PI * Math.min(1, e.volteo)) * 34 : 0;
+        y0 = y - (flota + bote + aire) * u;
         if (e.fuera) {
             // Fuera de combate: se dibuja más abajo, torcido y apagado (se ve en Arena).
             y0 = y - (flota * 0.2f) * u + 6 * u;
@@ -137,6 +142,7 @@ public final class DibujoRobot {
         locomocion(loco, base, ancho, c1, c2, c3, e);
         torso(m, base, alto, ancho, c1, c2, c3, e);
         cabeza(m, cima, c1, c2, c3, e);
+        emblemaDeLaCabeza(mo, cima, c2, e);
         brazo(m, mo, Montaje.Hueco.DERECHA, ancho / 2 - 4, hombro, e, false, c1, c2, c3);
         detallesDelante(m, base, cima, ancho, c1, c2, c3, e);
         danos(e, base, cima, ancho, piernas);
@@ -390,6 +396,44 @@ public final class DibujoRobot {
         }
     }
 
+    /**
+     * La pieza de cabeza montada, a la vista: un emblema en el lado de la cabeza según lo que hace (radar, escudo, turbo,
+     * cruz médica, sombra, pulso o furia), para que se vea qué cabeza lleva aunque el modelo sea el mismo.
+     */
+    private void emblemaDeLaCabeza(Montaje mo, float cima, int c2, Estado e) {
+        Pieza pz = mo.pieza(Montaje.Hueco.CABEZA);
+        if (pz == null || e.fuera) return;
+        float bx = -10, by = cima + 9;
+        bola(bx, by, 3.4f, Pincel.oscurecer(c2, 0.35f));
+        switch (pz.especial()) {
+            case ESCUDO:
+                forma(0x6FD3FF, bx - 2.2f, by + 2, bx + 2.2f, by + 2, bx + 2.2f, by - 0.5f, bx, by - 2.6f, bx - 2.2f, by - 0.5f);
+                break;
+            case TURBO:
+                forma(0xFFB000, bx - 2.5f, by - 1.5f, bx + 2.5f, by, bx - 2.5f, by + 1.5f);
+                break;
+            case REPARAR:
+                caja(bx - 2.4f, by - 0.7f, 4.8f, 1.4f, 0.3f, 0x4CD964);
+                caja(bx - 0.7f, by - 2.4f, 1.4f, 4.8f, 0.3f, 0x4CD964);
+                break;
+            case CAMUFLAJE:
+                caja(bx - 2.6f, by - 0.8f, 5.2f, 1.6f, 0.6f, 0x111318);
+                break;
+            case PULSO:
+                p.aro(enX(bx), enY(by), 2.4f * u, 0.7f * u, 0x9BE7FF, alfa);
+                break;
+            case SOBRECARGA:
+                forma(0xFF3B30, bx - 1, by + 2.6f, bx + 1.6f, by + 0.2f, bx - 0.4f, by - 0.2f, bx + 1, by - 2.6f, bx - 1.6f, by - 0.2f, bx + 0.4f, by + 0.2f);
+                break;
+            default:
+                // El radar: una antena parabólica pequeña que gira.
+                float giro = (float) Math.sin(e.tiempo * 2) * 2;
+                raya(bx, by, bx + giro, by + 4, 0.7f, 0xCCCCCC);
+                ovalo(bx + giro, by + 4.5f, 2.6f, 1, 0xDDE3EA);
+                break;
+        }
+    }
+
     /** La cabeza con dos antenas que se balancean. */
     private void cabezaConAntenas(float hy, int c1, int c2, int luz, int ojo, Estado e) {
         caja(-8, hy, 16, 12, 3, c1);
@@ -482,7 +526,7 @@ public final class DibujoRobot {
                 break;
             }
             case CUERPO:
-                armaDeMano(pz.id, manoX, manoY, ca, sa, grosor, colArma, rota, e);
+                armaDeMano(pz.id, manoX, manoY, ca, sa, grosor, colArma, rota, e, e.brazoQueAtaca == brazoQueAtaca ? e.faseDelAtaque : 1);
                 break;
             case LLAMA: {
                 raya(manoX, manoY, manoX + ca * 12, manoY + sa * 12, grosor * 1.2f, colArma);
@@ -516,6 +560,76 @@ public final class DibujoRobot {
         }
     }
 
+    /**
+     * Las armas de las luchas de robots de verdad: sierra (gira, y más deprisa al golpear), pinza (se cierra), volteador
+     * (la pala sube), cuña, bola con cadena (sale disparada y se recoge) y sus mezclas. ¿Era una de ellas?
+     */
+    private boolean armaDeLucha(String id, float mx, float my, float ca, float sa, float grosor, int col, Estado e, float fase) {
+        float px = -sa, py = ca;
+        float golpe = 1 - fase;   // 1 justo al golpear, 0 en reposo
+        boolean hecho = false;
+        if (id.startsWith("sierra")) {
+            float cx = mx + ca * 9, cy = my + sa * 9, r = 8;
+            raya(mx, my, cx, cy, grosor * 0.7f, Pincel.oscurecer(col, 0.2f));
+            bola(cx, cy, r, 0xB8BEC6);
+            float giro = e.tiempo * (golpe > 0 ? 40 : 12);
+            for (int k = 0; k < 8; k++) {
+                double a = giro + k * Math.PI / 4;
+                float dx = (float) Math.cos(a), dy = (float) Math.sin(a);
+                forma(0xE0E4EA, cx + dx * r, cy + dy * r, cx + dx * (r + 3) - dy * 2, cy + dy * (r + 3) + dx * 2, cx + dx * (r - 1) - dy * 3, cy + dy * (r - 1) + dx * 3);
+            }
+            bola(cx, cy, 2.2f, Pincel.oscurecer(col, 0.3f));
+            if (golpe > 0.5f) p.brillo(enX(cx + ca * r), enY(cy + sa * r), 6 * u, 0xFFD27A, 0.5f * alfa);
+            hecho = true;
+        }
+        if (id.startsWith("pinza")) {
+            float abre = 4 + 5 * fase;   // al golpear se cierra
+            float bx = mx + ca * 4, by = my + sa * 4;
+            raya(bx, by, bx + ca * 12 + px * abre, by + sa * 12 + py * abre, grosor * 0.6f, col);
+            raya(bx, by, bx + ca * 12 - px * abre, by + sa * 12 - py * abre, grosor * 0.6f, col);
+            raya(bx + ca * 12 + px * abre, by + sa * 12 + py * abre, bx + ca * 15 + px * (abre - 3), by + sa * 15 + py * (abre - 3), grosor * 0.5f,
+                    Pincel.aclarar(col, 0.2f));
+            raya(bx + ca * 12 - px * abre, by + sa * 12 - py * abre, bx + ca * 15 - px * (abre - 3), by + sa * 15 - py * (abre - 3), grosor * 0.5f,
+                    Pincel.aclarar(col, 0.2f));
+            if (id.contains("taladro")) forma(0xB8BEC6, bx + px * 2, by + py * 2, bx + ca * 16, by + sa * 16, bx - px * 2, by - py * 2);
+            bola(bx, by, grosor * 0.6f, Pincel.oscurecer(col, 0.25f));
+            return true;
+        }
+        if (id.startsWith("volteador") || id.equals("sierra_volteadora")) {
+            // La pala: plana delante; al golpear sube de golpe.
+            float sube = golpe * 18;
+            float bx = mx + ca * 3, by = my + sa * 3 - 5;
+            int pala = Pincel.mezcla(col, 0x9AA0A6, 0.5f);
+            forma(pala, bx, by, bx + ca * 26, by + sa * 26 + sube, bx + ca * 26 + px * 4, by + sa * 26 + sube + 5, bx + px * 4, by + 5);
+            raya(bx, by + 2, bx + ca * 26, by + sa * 26 + sube + 2, 0.9f, Pincel.aclarar(pala, 0.35f));
+            raya(bx, by, bx + ca * 8, by + sa * 8 + sube * 0.4f, grosor, 0x5B6067);
+            return true;
+        }
+        if (id.startsWith("cuna")) {
+            float bx = mx + ca * 2, by = my + sa * 2;
+            forma(Pincel.mezcla(col, 0xC0C6CE, 0.4f), bx + px * 9, by + py * 9, bx + ca * 18, by + sa * 18 - 6, bx - px * 9, by - py * 9);
+            raya(bx + px * 9, by + py * 9, bx + ca * 18, by + sa * 18 - 6, 0.8f, 0xFFFFFF);
+            return true;
+        }
+        if (id.startsWith("bola")) {
+            // La cadena sale hasta 50 unidades al golpear y vuelve poco a poco.
+            float lejos = 6 + 44 * (fase < 0.25f ? fase / 0.25f : 1 - (fase - 0.25f) / 0.75f) * (fase < 1 ? 1 : 0);
+            float bx = mx + ca * lejos, by = my + sa * lejos;
+            for (int k = 1; k <= 6; k++) {
+                float f = k / 7f;
+                bola(mx + (bx - mx) * f, my + (by - my) * f, 0.9f, 0x8A8F96);
+            }
+            bola(bx, by, 5.5f, 0x3A3F46);
+            for (int k = 0; k < 6; k++) {
+                double a = k * Math.PI / 3 + e.tiempo * 3;
+                raya(bx, by, bx + (float) Math.cos(a) * 7.5f, by + (float) Math.sin(a) * 7.5f, 1.4f, 0x5B6067);
+            }
+            bola(bx - 1.5f, by + 1.5f, 1.6f, 0x9AA0A6);
+            return true;
+        }
+        return hecho;
+    }
+
     /** El brazo reparador: una pinza y una cruz verde. */
     private void reparadora(float manoX, float manoY, float ca, float sa, float grosor, int colArma) {
         float px = -sa, py = ca;   // perpendicular
@@ -527,8 +641,9 @@ public final class DibujoRobot {
     }
 
     /** Las armas de cuerpo a cuerpo en la mano: espada, martillo, taladro, látigo o el puño (ca y sa: hacia dónde apunta el brazo). */
-    private void armaDeMano(String id, float manoX, float manoY, float ca, float sa, float grosor, int colArma, boolean rota, Estado e) {
+    private void armaDeMano(String id, float manoX, float manoY, float ca, float sa, float grosor, int colArma, boolean rota, Estado e, float fase) {
         float px = -sa, py = ca;   // perpendicular
+        if (armaDeLucha(id, manoX, manoY, ca, sa, grosor, colArma, e, fase)) return;
         if (id.startsWith("espada") || id.startsWith("herencia")) {
             raya(manoX, manoY, manoX + ca * 4, manoY + sa * 4, grosor, Pincel.oscurecer(colArma, 0.3f));
             raya(manoX + ca * 4, manoY + sa * 4, manoX + ca * 30, manoY + sa * 30, grosor * 0.7f, 0xFF4FA3);

@@ -250,6 +250,18 @@ final class PruebasDeLaPelea {
             cierto(total > 50, "se pegaron: " + total);
         });
 
+        caso("piezas: las armas de las luchas de verdad (sierra, pinza, volteador, cuña, bola con cadena y mezclas) existen y empujan", () -> {
+            metajavbots.piezas.CatalogoDePiezas cat = metajavbots.piezas.CatalogoDePiezas.delJuego();
+            for (String id : new String[]{"sierra", "sierra_3", "pinza", "volteador", "cuna", "bola_cadena", "sierra_volteadora", "pinza_taladro"}) {
+                metajavbots.piezas.Pieza p = cat.pieza(id);
+                cierto(p != null, "existe " + id);
+                igual(metajavbots.piezas.Pieza.Arma.CUERPO, p.arma());
+                cierto(!p.nombre(metajavbots.textos.Idioma.DE).isEmpty() && !p.nombre(metajavbots.textos.Idioma.EN).isEmpty(), "tres idiomas");
+            }
+            cierto(cat.pieza("volteador").valor("volteo") > 0 && cat.pieza("cuna").valor("empuje", 10) > 10, "el volteador voltea y la cuña empuja");
+            cierto(cat.pieza("bola_cadena").valor("alcance") > 150, "la bola llega lejos");
+        });
+
         caso("pelea: el láser se para en la chapa del primer robot que cruza y el puñetazo va al que está delante", () -> {
             Random r = new Random(3);
             Combatiente[] cs = {Rivales.crear(Modelo.de("cobalto"), 0.5, 0.5, r), Rivales.crear(Modelo.de("mazo"), 0.5, 0.5, r),

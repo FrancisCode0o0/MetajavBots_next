@@ -38,6 +38,8 @@ public final class VistaDeArena {
     private float ax, ay, aw, ah, escalaX;
     private double ancho = 1000, alto = 700;
     public float sacudida;
+    /** Una pausa cortísima tras un golpe fuerte (los segundos que quedan): hace que el golpe se sienta. */
+    public float parada;
     /** La alegría de los robots (al subir de nivel saltan). */
     public float alegria;
 
@@ -99,6 +101,7 @@ public final class VistaDeArena {
                     float fuerza = (float) Math.min(1.5, s.valor / 10);
                     efectos.chispas(px, py, 4 + (int) (fuerza * 10), s.texto.equals("laser") ? 0x9FF7FF : 0xFFD27A);
                     if (s.valor > 8) sacudida = Math.max(sacudida, 3 + fuerza * 4);
+                    if (s.valor > 12) parada = Math.max(parada, 0.05f + Math.min(0.05f, (float) s.valor / 600));
                     if (sonidos != null && !s.texto.equals("llama") && !s.texto.equals("pared")) sonidos.tocar("chispa", 0.4f + fuerza * 0.3f);
                     break;
                 }
@@ -315,7 +318,9 @@ public final class VistaDeArena {
         e.aturdido = c.aturdido > 0;
         e.sobrecarga = c.sobrecarga > 0;
         e.fuera = c.fuera;
-        e.brazoQueAtaca = pelea.turno() - c.ultimoAtaque < 8 ? c.brazoDelUltimoAtaque : -1;
+        e.brazoQueAtaca = pelea.turno() - c.ultimoAtaque < 24 ? c.brazoDelUltimoAtaque : -1;
+        e.faseDelAtaque = Math.min(1, (pelea.turno() - c.ultimoAtaque) / 24f);
+        e.volteo = c.volteado / 24f;
         e.alegria = alegria;
         e.cara = c.fuera ? 3 : pelea.turno() - c.ultimoGolpe < 20 ? 3 : pelea.turno() - c.ultimoAtaque < 20 ? 2 : 0;
         float px = sx(c.x, c.y), py = sy(c.y);
@@ -472,6 +477,11 @@ public final class VistaDeArena {
     public float[] cabezaDe(Cuerpo c) {
         float px = sx(c.x, c.y), py = sy(c.y) - (float) (140 * escalaX * c.combatiente.montaje.modelo.tamano / 30);
         return new float[]{px, py};
+    }
+
+    /** Un robot suelto con un estado dado (para enseñar un arma a medio golpe). */
+    public void robotConEstado(Pincel p, Montaje m, float x, float y, float talla, DibujoRobot.Estado e) {
+        dibujo.dibujar(m.modelo, m, x, y, talla, e);
     }
 
     /** Un robot suelto (para el taller y los menús), sin pelea. */

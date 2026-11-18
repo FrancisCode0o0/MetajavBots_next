@@ -25,6 +25,15 @@ espada           | BRAZO | Espada de plasma  | Plasmaklinge      | Plasma blade 
 martillo         | BRAZO | Martillo sísmico  | Seismikhammer     | Seismic hammer    | arma=CUERPO dano=28 alcance=60 cono=70 enfriamiento=55 aturde=20 peso=16 blindaje=38 naturaleza=ACERO desbloqueo=victorias:8 serie=1-5
 taladro          | BRAZO | Taladro           | Bohrer            | Drill             | arma=CUERPO dano=9 alcance=50 cono=50 enfriamiento=12 peso=10 blindaje=30 naturaleza=FURIA desbloqueo=nivel:NOOB_2 serie=1-5
 latigo           | BRAZO | Látigo eléctrico  | Elektropeitsche   | Shock whip        | arma=CUERPO dano=8 alcance=140 cono=60 enfriamiento=24 energia=6 aturde=6 peso=6 blindaje=20 naturaleza=RAYO desbloqueo=nivel:JUNIOR_2 serie=1-5
+# ------------------------------------------------------------------ BRAZOS: como en las luchas de robots de verdad (Fran, 18-nov)
+#   empuje = cuánto echa para atrás al rival (10 si no se dice); volteo = turnos que lo deja en el aire (y aturdido).
+sierra           | BRAZO | Sierra circular   | Kreissäge         | Circular saw      | arma=CUERPO dano=5 alcance=50 cono=70 enfriamiento=7 peso=10 blindaje=26 naturaleza=FURIA desbloqueo=victorias:4 serie=1-5
+pinza            | BRAZO | Pinza aplastadora | Quetschzange      | Crusher claw      | arma=CUERPO dano=16 alcance=45 cono=60 enfriamiento=40 aturde=18 empuje=0 peso=12 blindaje=34 naturaleza=ACERO desbloqueo=victorias:6
+volteador        | BRAZO | Volteador         | Flipper           | Flipper           | arma=CUERPO dano=6 alcance=55 cono=80 enfriamiento=70 empuje=70 volteo=24 energia=10 peso=13 blindaje=32 naturaleza=INGENIO desbloqueo=victorias:8
+cuna             | BRAZO | Cuña              | Keil              | Wedge             | arma=CUERPO dano=4 alcance=40 cono=110 enfriamiento=18 empuje=45 peso=11 blindaje=44 naturaleza=ACERO desbloqueo=victorias:2
+bola_cadena      | BRAZO | Bola con cadena   | Kettenkugel       | Chain ball        | arma=CUERPO dano=17 alcance=210 cono=24 enfriamiento=60 empuje=30 aturde=8 peso=15 blindaje=24 naturaleza=FURIA desbloqueo=victorias:10
+sierra_volteadora | BRAZO | Sierra volteadora | Sägeflipper      | Saw flipper       | arma=CUERPO dano=8 alcance=50 cono=80 enfriamiento=55 empuje=50 volteo=14 energia=8 peso=15 blindaje=28 naturaleza=INGENIO desbloqueo=nivel:JUNIOR_2
+pinza_taladro    | BRAZO | Pinza con taladro | Bohrzange         | Drill claw        | arma=CUERPO dano=11 alcance=45 cono=60 enfriamiento=20 aturde=6 empuje=0 peso=14 blindaje=30 naturaleza=FURIA desbloqueo=nivel:JUNIOR_3
 # ------------------------------------------------------------------ BRAZOS: llama, escudo, reparar
 lanzallamas      | BRAZO | Lanzallamas       | Flammenwerfer     | Flamethrower      | arma=LLAMA dano=1.1 alcance=170 cono=30 duracion=14 enfriamiento=36 energia=9 peso=10 blindaje=24 naturaleza=FURIA desbloqueo=victorias:7 serie=1-5
 escudo_brazo     | BRAZO | Escudo de brazo   | Armschild         | Arm shield        | arma=ESCUDO bloqueo=0.7 cono=120 duracion=45 enfriamiento=90 peso=12 blindaje=48 naturaleza=ACERO desbloqueo=victorias:1 serie=1-5

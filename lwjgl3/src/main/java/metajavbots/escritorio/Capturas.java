@@ -43,6 +43,7 @@ public final class Capturas extends Juego {
         pantallas.put("01_inicio", metajavbots.pantallas.Inicio::new);
         pantallas.put("02_menu", metajavbots.pantallas.Menu::new);
         pantallas.put("03_robots", Escaparate::new);
+        pantallas.put("03b_armas", Armeria::new);
         for (VistaDeArena.Escenario e : VistaDeArena.Escenario.values()) {
             pantallas.put("04_arena_" + e.name().toLowerCase(), () -> new Arena(e));
         }
@@ -107,11 +108,20 @@ public final class Capturas extends Juego {
         irSolo(pantallas.get(nombres.get(actual)).get());
     }
 
+    private long nanos;
+    private int medidos;
+
     @Override
     public void render() {
+        long t0 = System.nanoTime();
         super.render();
         if (actual < 0 || actual >= nombres.size()) return;
         fotogramas++;
+        // Lo que tarda cada fotograma (sin contar la espera de la pantalla): para vigilar la fluidez.
+        if (fotogramas > 20) {
+            nanos += System.nanoTime() - t0;
+            medidos++;
+        }
         if (fotogramas == 10 && System.getProperty("capturas.sonido") != null) {
             sonidos.tocar("laser", 0.1f);
             sonidos.tocar("explosion", 0.1f);
@@ -127,7 +137,9 @@ public final class Capturas extends Juego {
             PixmapIO.writePNG(Gdx.files.absolute(f.getAbsolutePath()), derecha);
             pm.dispose();
             derecha.dispose();
-            System.out.println("foto: " + f);
+            System.out.println("foto: " + f + String.format(java.util.Locale.ROOT, "  (%.1f ms por fotograma)", medidos == 0 ? 0 : nanos / 1e6 / medidos));
+            nanos = 0;
+            medidos = 0;
             siguiente();
         }
     }
@@ -167,6 +179,39 @@ public final class Capturas extends Juego {
                 float y = 370 + (i / porFila) * 410;
                 vista.robotSuelto(p, new Montaje(ms.get(i)), x, y, 2.4f, t + i, 0, i % 2 == 0);
                 p.textoCentrado(ms.get(i).nombre.es, x, y + 20, 18, true, 0xFFFFFF, 1);
+            }
+        }
+    }
+
+    /** Las armas de las luchas de robots de verdad, montadas: arriba en reposo, abajo a medio golpe. */
+    static final class Armeria implements Pantalla {
+        private static final String[] ARMAS = {"sierra", "pinza", "volteador", "cuna", "bola_cadena", "sierra_volteadora", "pinza_taladro", "martillo"};
+        private VistaDeArena vista;
+        private float t;
+
+        @Override
+        public void fotograma(Juego j, float dt) {
+            if (vista == null) vista = new VistaDeArena(j.pincel);
+            t += dt;
+            Pincel p = j.pincel;
+            Comun.fondo(j, t);
+            metajavbots.piezas.CatalogoDePiezas cat = metajavbots.piezas.CatalogoDePiezas.delJuego();
+            for (int i = 0; i < ARMAS.length; i++) {
+                float x = 110 + i * ((p.ancho - 220) / (ARMAS.length - 1));
+                for (int fila = 0; fila < 2; fila++) {
+                    Montaje m = new Montaje(Modelo.todos().get(i * 2 % Modelo.todos().size()));
+                    metajavbots.piezas.Pieza pz = cat.pieza(ARMAS[i]);
+                    if (pz == null) pz = cat.pieza(ARMAS[i] + "_1");
+                    if (pz != null) m.poner(Montaje.Hueco.DERECHA, pz);
+                    metajavbots.pantalla.DibujoRobot.Estado e = new metajavbots.pantalla.DibujoRobot.Estado();
+                    e.tiempo = t;
+                    if (fila == 1) {
+                        e.brazoQueAtaca = 1;
+                        e.faseDelAtaque = 0.2f;
+                    }
+                    vista.robotConEstado(p, m, x, 380 + fila * 380, 2.4f, e);
+                    if (fila == 0) p.textoCentrado(pz == null ? "?" + ARMAS[i] : pz.nombre(metajavbots.textos.Idioma.ES), x, 400, 18, true, 0xFFFFFF, 1);
+                }
             }
         }
     }

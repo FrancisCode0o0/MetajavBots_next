@@ -166,10 +166,24 @@ public final class Ui {
     public String recortarTexto(String s, float anchoMax, float t, boolean negrita) {
         if (s == null) return "";
         if (p.ancho(s, t, negrita) <= anchoMax) return s;
-        int n = s.length();
-        while (n > 1 && p.ancho(s.substring(0, n) + "…", t, negrita) > anchoMax) n--;
-        return s.substring(0, n) + "…";
+        String clave = (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(t * 10) + "/" + p.escala + "|" + s;
+        String hecho = recortados.get(clave);
+        if (hecho != null) return hecho;
+        // Se busca el corte por mitades (medir letra a letra cada fotograma hacía lenta la lista de ejercicios).
+        int bien = 1, mal = s.length();
+        while (mal - bien > 1) {
+            int n = (bien + mal) / 2;
+            if (p.ancho(s.substring(0, n) + "…", t, negrita) <= anchoMax) bien = n;
+            else mal = n;
+        }
+        if (recortados.size() > 600) recortados.clear();
+        hecho = s.substring(0, bien) + "…";
+        recortados.put(clave, hecho);
+        return hecho;
     }
+
+    /** Los textos ya recortados (los mismos en cada fotograma). */
+    private final java.util.Map<String, String> recortados = new java.util.HashMap<>();
 
     /** Pestañas en fila; devuelve la elegida. */
     public int pestanas(String[] nombres, int elegida, float x, float y, float w, float h) {

@@ -39,6 +39,8 @@ public final class Cuerpo implements Mando {
     final boolean[] pedido = new boolean[3];
     /** Lo que dura cada efecto (en turnos). */
     public int escudoBrazo, escudoCabeza, turbo, camuflaje, sobrecarga, aturdido, llama, deuda;
+    /** Los turnos que le quedan en el aire tras un volteador (se ve levantado; no se mueve). */
+    public int volteado;
     int brazoDelEscudo = -1, brazoDeLaLlama = -1;
     double bloqueoBrazo, conoEscudo, bloqueoCabeza, factorTurbo = 1, factorSobrecarga = 1;
     public boolean fuera;
