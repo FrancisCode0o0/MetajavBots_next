@@ -576,7 +576,8 @@ public final class DibujoRobot {
             for (int k = 0; k < 8; k++) {
                 double a = giro + k * Math.PI / 4;
                 float dx = (float) Math.cos(a), dy = (float) Math.sin(a);
-                forma(0xE0E4EA, cx + dx * r, cy + dy * r, cx + dx * (r + 3) - dy * 2, cy + dy * (r + 3) + dx * 2, cx + dx * (r - 1) - dy * 3, cy + dy * (r - 1) + dx * 3);
+                forma(0xE0E4EA, cx + dx * r, cy + dy * r, cx + dx * (r + 3) - dy * 2, cy + dy * (r + 3) + dx * 2, cx + dx * (r - 1) - dy * 3, cy
+                        + dy * (r - 1) + dx * 3);
             }
             bola(cx, cy, 2.2f, Pincel.oscurecer(col, 0.3f));
             if (golpe > 0.5f) p.brillo(enX(cx + ca * r), enY(cy + sa * r), 6 * u, 0xFFD27A, 0.5f * alfa);
