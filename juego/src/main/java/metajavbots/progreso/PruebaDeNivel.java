@@ -105,6 +105,11 @@ public final class PruebaDeNivel {
      * barajadas. Los escalones van de menos a más, como en el banco.
      */
     public static List<Pregunta> nueva(Random r) {
+        return nueva(r, List.of());
+    }
+
+    /** Lo mismo, con más preguntas para el montón de cada escalón (las de la IA, ya comprobadas: PreguntasDeLaIa). */
+    public static List<Pregunta> nueva(Random r, List<GeneradorDePreguntas.Generada> extra) {
         List<Etiqueta> niveles = new ArrayList<>();
         for (Pregunta q : preguntas()) if (!niveles.contains(q.nivel)) niveles.add(q.nivel);
         List<Pregunta> l = new ArrayList<>();
@@ -112,6 +117,7 @@ public final class PruebaDeNivel {
             List<Pregunta> monton = new ArrayList<>();
             for (Pregunta q : preguntas()) if (q.nivel == nivel) monton.add(barajar(q, r));
             for (GeneradorDePreguntas.Generada g : GeneradorDePreguntas.generar(nivel, r, 4)) monton.add(g.comoPregunta(r));
+            for (GeneradorDePreguntas.Generada g : extra) if (g.nivel == nivel) monton.add(g.comoPregunta(r));
             Collections.shuffle(monton, r);
             l.addAll(monton.subList(0, Math.min(POR_ESCALON, monton.size())));
         }

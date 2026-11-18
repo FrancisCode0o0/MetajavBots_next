@@ -38,6 +38,8 @@ public final class Bienvenida implements Pantalla {
     private boolean entroConLaPrueba;
     /** Las preguntas de esta prueba (cada vez otras: PruebaDeNivel.nueva). */
     private List<PruebaDeNivel.Pregunta> prueba;
+    /** Con cerebro: las preguntas que inventa la IA, ya comprobadas (se piden al entrar, mientras se lee la presentación). */
+    private volatile List<metajavbots.progreso.GeneradorDePreguntas.Generada> deLaIa = List.of();
 
     @Override
     public void alEntrar(Juego j) {
@@ -48,6 +50,23 @@ public final class Bienvenida implements Pantalla {
             entroConLaPrueba = true;
         }
         nombre.maximo = 24;
+        pedirPreguntasALaIa(j);
+    }
+
+    private void pedirPreguntasALaIa(Juego j) {
+        metajavbots.cerebro.Cerebro c = j.jugador == null ? null : metajavbots.cerebro.CerebroDelJuego.de(j.jugador);
+        if (c == null) return;
+        Thread h = new Thread(() -> {
+            try {
+                String r = c.preguntar(metajavbots.progreso.PreguntasDeLaIa.sistema(), metajavbots.cerebro.CerebroDelJuego.uno(
+                        metajavbots.progreso.PreguntasDeLaIa.peticion(List.of(Etiqueta.NOOB_2, Etiqueta.JUNIOR_2, Etiqueta.SENIOR_1))), 900);
+                if (r != null) deLaIa = metajavbots.progreso.PreguntasDeLaIa.comprobar(r);
+            } catch (Exception e) {
+                // sin las de la IA: las de siempre
+            }
+        }, "preguntas-de-la-ia");
+        h.setDaemon(true);
+        h.start();
     }
 
     @Override
@@ -114,7 +133,7 @@ public final class Bienvenida implements Pantalla {
     private void prueba(Juego j, float dt) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        if (prueba == null) prueba = PruebaDeNivel.nueva(new java.util.Random());
+        if (prueba == null) prueba = PruebaDeNivel.nueva(new java.util.Random(), deLaIa);
         List<PruebaDeNivel.Pregunta> ps = prueba;
         if (pregunta >= ps.size() || debeParar(ps)) {
             j.jugador.etiqueta = PruebaDeNivel.resultado(ps, aciertos);
