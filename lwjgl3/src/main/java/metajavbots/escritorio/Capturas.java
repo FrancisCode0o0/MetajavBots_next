@@ -147,6 +147,7 @@ public final class Capturas extends Juego {
         j.ejerciciosResueltos.addAll(java.util.List.of("t01_hola_arena", "muestra_sumar"));
         j.capitulosGanados.addAll(java.util.List.of("rocko:1", "rocko:2", "rocko:3", "rocko2:1"));
         j.robotsArreglados.add("peonza");
+        j.jefesVencidos.addAll(java.util.List.of("gim_condicionales", "gim_bucles", "herencia"));
         ponerJugador(j);
         siguiente();
     }

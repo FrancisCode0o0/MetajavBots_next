@@ -128,8 +128,16 @@ public final class ModoEspecial implements Pantalla {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         Jugador jug = j.jugador;
+        yy = vitrina(j, x, yy, w);
         yy += p.parrafo(T.t("especial.jefes_ayuda"), x + 24, yy, w - 48, ui.letra * 0.9f, ui.tema.textoSuave, 1) + 16;
+        boolean gimnasios = false, jefes = false;
         for (Jefe jefe : Jefe.TODOS) {
+            if (jefe.gimnasio ? !gimnasios : !jefes) {
+                p.texto(T.t(jefe.gimnasio ? "especial.gimnasios" : "especial.jefes_titulo"), x + 24, yy, ui.letra * 1.3f, true, 0xFFC857, 1);
+                yy += ui.letra * 2;
+                if (jefe.gimnasio) gimnasios = true;
+                else jefes = true;
+            }
             boolean vencido = jug.jefesVencidos.contains(jefe.id);
             p.texto((vencido ? "✔ " : "") + jefe.nombre(T.idioma), x + 24, yy + 4, ui.letra * 1.1f, true, vencido ? ui.tema.bien : ui.tema.texto, 1);
             float pista = p.parrafo(jefe.pista.en(T.idioma), x + 24, yy + 36, w - 380, ui.letra * 0.8f, ui.tema.textoSuave, 1);
@@ -137,6 +145,39 @@ public final class ModoEspecial implements Pantalla {
             yy += Math.max(110, 36 + pista + 24);
         }
         return yy;
+    }
+
+    /** La vitrina: una medalla por cada gimnasio y cada jefe; brillan las ganadas. Encima de una, su nombre. */
+    private float vitrina(Juego j, float x, float yy, float w) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Jugador jug = j.jugador;
+        int n = Jefe.TODOS.size(), ganadas = 0;
+        for (Jefe jefe : Jefe.TODOS) if (jug.jefesVencidos.contains(jefe.id)) ganadas++;
+        p.texto(T.f("especial.medallas", ganadas, n), x + 24, yy, ui.letra * 1.1f, true, ui.tema.texto, 1);
+        yy += ui.letra * 1.8f;
+        float paso = Math.min(110, (w - 48) / n), r = Math.min(34, paso * 0.4f);
+        for (int i = 0; i < n; i++) {
+            Jefe jefe = Jefe.TODOS.get(i);
+            float cx = x + 24 + paso * (i + 0.5f), cy = yy + 22 + r;
+            medalla(p, ui, cx, cy, r, jefe, jug.jefesVencidos.contains(jefe.id));
+            if (ui.e.dentro(cx - r, cy - r - 22, 2 * r, 2 * r + 22)) ui.avisar(jefe.nombre(T.idioma));
+        }
+        return yy + 2 * r + 46;
+    }
+
+    /** Una medalla: su cinta, el disco con su borde y el símbolo del tema; sin ganar, apagada. */
+    static void medalla(Pincel p, Ui ui, float cx, float cy, float r, Jefe jefe, boolean ganada) {
+        float a = ganada ? 1 : 0.28f;
+        int c = ganada ? jefe.color : 0x8A92A3;
+        p.linea(cx - r * 0.5f, cy - r * 1.6f, cx - r * 0.15f, cy - r * 0.6f, r * 0.38f, Pincel.oscurecer(c, 0.35f), a);
+        p.linea(cx + r * 0.5f, cy - r * 1.6f, cx + r * 0.15f, cy - r * 0.6f, r * 0.38f, Pincel.oscurecer(c, 0.2f), a);
+        p.circulo(cx, cy, r, Pincel.oscurecer(c, 0.45f), a);
+        p.circulo(cx, cy, r * 0.84f, c, a);
+        p.aro(cx, cy, r * 0.68f, Math.max(1.5f, r * 0.06f), Pincel.oscurecer(c, 0.4f), a);
+        float tl = ui.cabe(jefe.simbolo, r * 1.2f, r * 0.62f, true);
+        p.textoCentrado(jefe.simbolo, cx, cy - tl * 0.62f, tl, true, ganada ? 0x1C1F26 : 0x5A5F66, a);
+        if (ganada) p.circulo(cx - r * 0.6f, cy - r * 0.5f, r * 0.1f, 0xFFFFFF, 0.55f);
     }
 
     /** Los robots rotos: su síntoma, una pista que se abre si se pide y el botón para arreglarlo en la arena. */

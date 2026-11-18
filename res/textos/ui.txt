@@ -518,3 +518,6 @@ roto.reparado = Reparado: {0} % | Repariert: {0} % | Repaired: {0} %
 roto.compila = Compila | Kompiliert | Compiles
 roto.cambiado = Código cambiado | Code geändert | Code changed
 roto.aciertos = Aciertos: {0}/{1} | Treffer: {0}/{1} | Hits: {0}/{1}
+especial.gimnasios = Gimnasios: los temas básicos | Arenen: die Grundlagen | Gyms: the basics
+especial.jefes_titulo = Jefes: los temas avanzados | Bosse: die fortgeschrittenen Themen | Bosses: the advanced topics
+especial.medallas = Tus medallas: {0} de {1} | Deine Medaillen: {0} von {1} | Your medals: {0} of {1}
