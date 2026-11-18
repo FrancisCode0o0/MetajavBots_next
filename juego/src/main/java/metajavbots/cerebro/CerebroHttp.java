@@ -51,7 +51,10 @@ public final class CerebroHttp implements Cerebro {
             case KOBOLD: return kobold(sistema, conversacion, fichas);
             default:
                 try {
-                    return openai(sistema, conversacion, fichas);
+                    String r = openai(sistema, conversacion, fichas);
+                    // Un modelo local que se ha quedado pensando sin contestar: otra vez, por el camino de KoboldCpp (sin pensar).
+                    if (r.isBlank() && esLocal()) return kobold(sistema, conversacion, fichas);
+                    return r;
                 } catch (Exception e) {
                     if (esLocal()) return kobold(sistema, conversacion, fichas);
                     throw e;
@@ -146,7 +149,8 @@ public final class CerebroHttp implements Cerebro {
         // KoboldCpp sin chat: se escribe todo como un solo texto con el formato de chat de Qwen (ChatML).
         StringBuilder p = new StringBuilder("<|im_start|>system\n").append(sistema).append("<|im_end|>\n");
         for (Mensaje m : conv) p.append("<|im_start|>").append(m.rol).append('\n').append(m.texto).append("<|im_end|>\n");
-        p.append("<|im_start|>assistant\n");
+        // El pensamiento ya cerrado: así Qwen3.5 y los que «piensan» contestan directamente (si no, se quedan sin palabras pensando).
+        p.append("<|im_start|>assistant\n<think>\n\n</think>\n\n");
         String cuerpo = "{\"prompt\":" + Json.texto(p.toString()) + ",\"max_length\":" + fichas
                 + ",\"temperature\":0.8,\"stop_sequence\":[\"<|im_end|>\",\"<|im_start|>\"]}";
         HttpRequest r = HttpRequest.newBuilder(URI.create(direccion + "/api/v1/generate")).timeout(espera)

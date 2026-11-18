@@ -39,6 +39,7 @@ public final class Pruebas {
         PruebasDeLaSesion.apuntar();
         PruebasDeLaPruebaConIa.apuntar();
         PruebasDeSenior.apuntar();
+        PruebasDeLasTresCasillas.apuntar();
 
         List<String> fallos = new ArrayList<>();
         int pasados = 0;

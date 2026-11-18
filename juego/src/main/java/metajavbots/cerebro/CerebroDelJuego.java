@@ -95,8 +95,8 @@ public final class CerebroDelJuego {
         return new CerebroLocalPerezoso(d, CerebroLocal.carpeta(j.carpetaModelos), modeloDe(j, i));
     }
 
-    /** El modelo de Gemini si no se elige otro (el alias de Google al «flash» más nuevo; TODO-FRAN: fijar uno). */
-    public static final String MODELO_GEMINI = "gemini-flash-latest";
+    /** El modelo de Gemini si no se elige otro (el 18-nov, «gemini-flash-latest» daba a menudo «mucha demanda»; este, no). TODO-FRAN. */
+    public static final String MODELO_GEMINI = "gemini-3.5-flash-lite";
 
     static Cerebro enLinea(Ranura r) {
         String clave = Claves.leer(r.proveedor);
