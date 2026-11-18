@@ -665,6 +665,9 @@ public final class PantallaPelea implements Pantalla {
                     objetivoCumplido ? ui.tema.bien : ui.tema.mal, 1);
             yy += 44;
         }
+        if (encuentro.alGanar != null && ganoElJugador) {
+            yy += p.parrafo(encuentro.alGanar, x + 40, yy, w - 80, ui.letra * 0.95f, ui.tema.texto, 1) + 16;
+        }
         if (cambio != null) {
             p.textoCentrado(T.f("final.experiencia", cambio.experiencia), x + w / 2, yy, ui.letra, false, ui.tema.texto, 1);
             yy += 36;
@@ -699,7 +702,10 @@ public final class PantallaPelea implements Pantalla {
         if (ui.boton(T.t("final.revisar"), x + w / 2 - 110, y + h - 74, 220, 54, Ui.Estilo.NORMAL, true, T.t("final.revisar_ayuda"))) {
             j.ir(new Revision(editor.doc.texto(), pelea, yo));
         }
-        if (ui.boton(T.t("final.menu"), x + w - 230, y + h - 74, 200, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.irSolo(new Menu());
+        if (encuentro.modo.equals("CAMPANA")) {
+            // Vuelve a la campaña (que sigue debajo): el siguiente capítulo ya está abierto.
+            if (ui.boton(T.t("final.seguir_campana"), x + w - 290, y + h - 74, 260, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.volver();
+        } else if (ui.boton(T.t("final.menu"), x + w - 230, y + h - 74, 200, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.irSolo(new Menu());
     }
 
     /** A los 0,6 s del final: explotan todos los que no son del equipo ganador, y el locutor y los robots lo dicen. */

@@ -74,6 +74,8 @@ public final class Jugador {
     public final Set<String> laboratoriosHechos = new LinkedHashSet<>();
     public final Set<String> tutorialesHechos = new LinkedHashSet<>();
     public final Set<String> legendariasGanadas = new LinkedHashSet<>();
+    /** Los capítulos de campaña ganados («rocko:1», «karatebit:3»…). */
+    public final Set<String> capitulosGanados = new LinkedHashSet<>();
     public final List<Registro> historial = new ArrayList<>();
     /** El panel de la IA: modo (ADAPTADA o una Dificultad), agresividad, humor y cortesía (0..1). */
     public String modoIA = "ADAPTADA";

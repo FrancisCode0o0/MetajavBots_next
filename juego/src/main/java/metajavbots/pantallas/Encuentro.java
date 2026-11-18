@@ -39,4 +39,8 @@ public final class Encuentro {
     public final java.util.List<Integer> equiposDeLosDemas = new java.util.ArrayList<>();
     /** Qué cerebro de IA elige la táctica de los robots de la computadora entre rondas (EstiloPorIA: el rápido, uno, mezclados…). */
     public int cerebros = EstiloPorIA.EL_RAPIDO;
+    /** Lo que se cuenta al ganar (el final de un capítulo de campaña), o null. */
+    public String alGanar;
+    /** Cómo se prepara la misma pelea otra vez («Revancha»), o null para hacerlo según el modo. */
+    public java.util.function.Supplier<Encuentro> otraVez;
 }

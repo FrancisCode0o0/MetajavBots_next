@@ -118,6 +118,7 @@ public final class Guardado {
         v.put("jefesVencidos", lista(j.jefesVencidos));
         v.put("retosHechos", lista(j.retosHechos));
         v.put("laboratoriosHechos", lista(j.laboratoriosHechos));
+        v.put("capitulosGanados", lista(j.capitulosGanados));
         v.put("tutorialesHechos", lista(j.tutorialesHechos));
         v.put("legendariasGanadas", lista(j.legendariasGanadas));
         v.put("modoIA", j.modoIA);
@@ -218,6 +219,7 @@ public final class Guardado {
         leerLista(v.get("jefesVencidos"), j.jefesVencidos);
         leerLista(v.get("retosHechos"), j.retosHechos);
         leerLista(v.get("laboratoriosHechos"), j.laboratoriosHechos);
+        leerLista(v.get("capitulosGanados"), j.capitulosGanados);
         leerLista(v.get("tutorialesHechos"), j.tutorialesHechos);
         leerLista(v.get("legendariasGanadas"), j.legendariasGanadas);
         j.modoIA = v.getOrDefault("modoIA", "ADAPTADA");

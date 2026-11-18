@@ -38,6 +38,38 @@ final class PruebasDelContenido {
         apuntarParte2();
         apuntarParte3();
         apuntarParte4();
+        apuntarCampanas();
+    }
+
+    private static void apuntarCampanas() {
+        caso("campañas: todas se leen, con capítulos completos en tres idiomas, rivales que existen y secuelas en orden", () -> {
+            java.util.List<metajavbots.campanas.Campana> cs = metajavbots.campanas.Campana.deSerie();
+            cierto(cs.size() >= 18, "al menos 18 campañas");
+            java.util.Set<String> ids = new java.util.HashSet<>(), vistas = new java.util.HashSet<>();
+            java.util.Set<String> modelos = new java.util.HashSet<>();
+            for (metajavbots.piezas.Modelo m : metajavbots.piezas.Modelo.todos()) modelos.add(m.id);
+            java.util.Set<String> escenarios = new java.util.HashSet<>();
+            for (metajavbots.pantalla.VistaDeArena.Escenario e : metajavbots.pantalla.VistaDeArena.Escenario.values()) escenarios.add(e.name());
+            for (metajavbots.campanas.Campana c : cs) {
+                cierto(ids.add(c.id), "id repetido: " + c.id);
+                cierto(c.requiere.isEmpty() || vistas.contains(c.requiere), c.id + " pide una campaña que va antes");
+                vistas.add(c.id);
+                cierto(c.capitulos.size() >= 3, c.id + " tiene 3 capítulos");
+                cierto(metajavbots.tutor.Entrenador.de(c.entrenador).id.equals(c.entrenador), c.id + ": entrenador " + c.entrenador);
+                for (metajavbots.campanas.Campana.Capitulo k : c.capitulos) {
+                    cierto(modelos.contains(k.modelo), c.id + ": modelo " + k.modelo);
+                    cierto(escenarios.contains(k.escenario), c.id + ": escenario " + k.escenario);
+                    for (metajavbots.textos.Idioma i : metajavbots.textos.Idioma.values()) {
+                        cierto(!k.texto.en(i).isEmpty() && !k.victoria.en(i).isEmpty(), c.id + "." + k.numero + " en " + i);
+                    }
+                    cierto(!k.texto.en(metajavbots.textos.Idioma.DE).equals(k.texto.en(metajavbots.textos.Idioma.ES)), c.id + "." + k.numero
+                            + " traducido");
+                }
+            }
+            // Lo que contesta la IA se lee igual; lo que no trae capítulos se descarta.
+            igual(1, metajavbots.campanas.Campana.leer("[ia_x]\ntitulo: A | B | C\n1.rival: R\n1.modelo: mazo\n1.texto: a | b | c\n", true).size());
+            igual(0, metajavbots.campanas.Campana.leer("Lo siento, no puedo.", true).size());
+        });
     }
 
     private static void apuntarParte1() {

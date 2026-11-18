@@ -49,6 +49,7 @@ public final class PrepararPelea implements Pantalla {
 
     /** Otra igual que la anterior (revancha), con un rival nuevo del mismo modo. */
     public static Pantalla repetir(Juego j, Encuentro anterior) {
+        if (anterior.otraVez != null) return new PantallaPelea(anterior.otraVez.get());
         if (anterior.modo.equals("ROYALE")) return new PantallaPelea(royale(j, robotsAjenos()));
         if (anterior.modo.equals("EQUIPOS")) return new PantallaPelea(equipos(j, null));
         if (anterior.modo.equals("JEFE") || anterior.modo.equals("TUTORIAL") || anterior.modo.equals("TEMARIO") || anterior.modo.equals("AJENO")) {
@@ -166,7 +167,7 @@ public final class PrepararPelea implements Pantalla {
         }
         String[][] modos = {
                 {"ADAPTADA", "pelear.adaptada"}, {"AZAR", "pelear.azar"}, {"DESAFIO", "pelear.desafio"}, {"PRACTICA", "pelear.practica"},
-                {"ROYALE", "pelear.royale"}, {"EQUIPOS", "pelear.equipos"}, {"MCM", "pelear.mcm"}};
+                {"ROYALE", "pelear.royale"}, {"EQUIPOS", "pelear.equipos"}, {"MCM", "pelear.mcm"}, {"CAMPANAS", "pelear.campanas"}};
         int columnas = 4;
         float w = (p.ancho - 80 - (columnas - 1) * 20) / columnas;
         // Todo se desplaza si no cabe (letra grande): nada se sale de su tarjeta ni se monta.
@@ -251,6 +252,7 @@ public final class PrepararPelea implements Pantalla {
         if (ui.boton(T.t("pelear.vamos"), x + 20, y + h - 66, w - 40, 50, principal ? Ui.Estilo.PRINCIPAL : Ui.Estilo.NORMAL, puede, null)) {
             String m = modo[0].equals("ADAPTADA") ? jug.modoIA : modo[0];
             if (m.equals("MCM")) j.ir(new MaquinaContraMaquina());
+            else if (m.equals("CAMPANAS")) j.ir(new Campanas());
             else if (m.equals("ROYALE")) {
                 Encuentro e = royale(j, ajenos);
                 e.cerebros = cerebrosRoyale;

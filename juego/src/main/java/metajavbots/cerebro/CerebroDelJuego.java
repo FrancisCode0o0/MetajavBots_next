@@ -229,6 +229,18 @@ public final class CerebroDelJuego {
                 + "with 4 spaces. The solution must be correct and pass every case; the template must compile and fail some case.";
     }
 
+    /** Para inventar una campaña de parodia, en el formato de res/datos/campanas.txt. */
+    public static String sistemaCampana(String modelos) {
+        return "You write funny story campaigns for MetajavBots, a game of programmable fighting robots. Each campaign parodies a "
+                + "combat or sports film (boxing, martial arts, wrestling, racing...) with ORIGINAL names and characters (robot puns), never "
+                + "the real names, never quoting real dialogue. Output ONLY one campaign in this exact format, 3 chapters, each text at most "
+                + "40 words, «español | Deutsch | English» in every text line:\n[ia_id]\ntitulo: es | de | en\nlema: es | de | en\n"
+                + "homenaje: Film title (year)\nentrenador: tuercas\nmusica: entrenamiento\n1.rival: Rival Name\n1.modelo: mazo\n1.nivel: 0.3\n"
+                + "1.escenario: HANGAR\n1.rondas: 3\n1.texto: es | de | en\n1.victoria: es | de | en\n(then 2. and 3. the same).\n"
+                + "entrenador is one of tuercas, aceite, voltaje, remache, cobra, yanobit, pelobit; musica one of entrenamiento, oriental, "
+                + "final, combate, drama; escenario one of HANGAR, DESIERTO, NEON, LABORATORIO, LUNA; nivel grows from 0.2 to 0.7; "
+                + "modelo one of: " + modelos + ". Keep it kind and absurd, for all ages.";
+    }
     public static List<Cerebro.Mensaje> uno(String texto) {
         List<Cerebro.Mensaje> l = new ArrayList<>();
         l.add(new Cerebro.Mensaje("user", texto));

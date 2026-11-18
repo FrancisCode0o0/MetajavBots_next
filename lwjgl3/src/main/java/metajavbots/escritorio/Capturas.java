@@ -109,6 +109,7 @@ public final class Capturas extends Juego {
         pantallas.put("20_maquinas", MaquinasEnMarcha::new);
         pantallas.put("21_royale", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.royale(this, java.util.List.of())));
         pantallas.put("22_equipos", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.equipos(this, null)));
+        pantallas.put("23_campanas", metajavbots.pantallas.Campanas::new);
         for (String n : pantallas.keySet()) if (solo.isEmpty() || n.contains(solo)) nombres.add(n);
     }
 
@@ -140,6 +141,7 @@ public final class Capturas extends Juego {
                     40 + azar.nextInt(120), 60 + azar.nextInt(140), 4, "JUNIOR_2"));
         }
         j.ejerciciosResueltos.addAll(java.util.List.of("t01_hola_arena", "muestra_sumar"));
+        j.capitulosGanados.addAll(java.util.List.of("rocko:1", "rocko:2", "rocko:3", "rocko2:1"));
         ponerJugador(j);
         siguiente();
     }
