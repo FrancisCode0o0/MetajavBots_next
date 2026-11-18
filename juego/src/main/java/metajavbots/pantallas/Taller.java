@@ -52,6 +52,16 @@ public final class Taller implements Pantalla {
     public void alEntrar(Juego j) {
         vista = new VistaDeArena(j.pincel);
         editor.palabras = Palabras.api(j.jugador.idioma);
+        // Como un IDE: la documentación al pasar el ratón y los errores mientras se escribe (se compila sin cargar el robot).
+        editor.documentacion = w -> Referencia.de(w, j.jugador.idioma);
+        editor.revisarAlEscribir = codigo -> {
+            if (!Compilador.hayCompilador()) return null;
+            List<VentanaDeCodigo.Marca> l = new ArrayList<>();
+            for (Compilador.Fallo f : Compilador.compilar(codigo, false, metajavbots.codigo.Vigilante.Modo.ROBOT, j.jugador.idioma.locale()).errores) {
+                l.add(Explicador.marca(f, j.jugador));
+            }
+            return l;
+        };
         editor.tamano = j.jugador.tamanoDeLetra;
         editor.alCompilar = () -> compilar(j);
         editor.alPedirAyuda = palabra -> {

@@ -61,6 +61,14 @@ public final class Referencia {
         }
     }
 
+    /** La documentación de una palabra (el editor la enseña al pasar el ratón): su firma y lo que hace; null si no la hay. */
+    public static String de(String palabra, Idioma i) {
+        for (Entrada e : todas()) {
+            if (e.insertable(i).equals(palabra + "(") || e.id.endsWith("." + palabra) || e.id.equals(palabra)) return e.firma(i) + "\n\n" + e.texto(i);
+        }
+        return null;
+    }
+
     private static List<Entrada> todas;
 
     private Referencia() {

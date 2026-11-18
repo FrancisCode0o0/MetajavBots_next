@@ -71,6 +71,15 @@ public final class PantallaEjercicio implements Pantalla {
         editor.tamano = jug.tamanoDeLetra;
         editor.alCompilar = () -> comprobar(j);
         editor.palabras = Palabras.api(jug.idioma);
+        editor.documentacion = w -> Referencia.de(w, jug.idioma);
+        // Errores al escribir: solo los de compilar (los casos se miran al pulsar «Comprobar»).
+        editor.revisarAlEscribir = codigo -> {
+            if (!Compilador.hayCompilador()) return null;
+            List<VentanaDeCodigo.Marca> l = new ArrayList<>();
+            Comprobador.Informe inf = Comprobador.comprobar(e, codigo, jug.idioma.locale());
+            if (!inf.compila()) for (Compilador.Fallo f : inf.errores) l.add(Explicador.marca(f, jug));
+            return l;
+        };
         editor.alPedirAyuda = w -> {
             conApi = true;
             api.buscar(w);

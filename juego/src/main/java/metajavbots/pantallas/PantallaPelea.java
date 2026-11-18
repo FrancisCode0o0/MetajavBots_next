@@ -96,6 +96,7 @@ public final class PantallaPelea implements Pantalla {
         editor.tamano = jug.tamanoDeLetra;
         editor.alCompilar = () -> compilar(j);
         editor.palabras = Palabras.api(jug.idioma);
+        editor.documentacion = w -> Referencia.de(w, jug.idioma);
         yo = new Combatiente(encuentro.codigo != null ? encuentro.titulo : r.nombre, encuentro.montaje != null ? encuentro.montaje : r.montaje(), robot);
         sinJdk = !Compilador.hayCompilador();
         if (sinJdk) usarPilotoAutomatico();

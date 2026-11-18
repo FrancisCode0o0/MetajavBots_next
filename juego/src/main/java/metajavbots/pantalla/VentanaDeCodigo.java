@@ -63,6 +63,16 @@ public final class VentanaDeCodigo {
     /** Lo que hace Ctrl+S / Ctrl+Intro (compilar), F1 (ayuda de la palabra) y los cambios. */
     public Runnable alCompilar;
     public java.util.function.Consumer<String> alPedirAyuda;
+    /**
+     * Errores al escribir, como en los editores de verdad: tras un segundo sin teclear, la pantalla revisa el código
+     * en segundo plano (lo compila) y devuelve sus marcas, que sustituyen a las que hay. Null: solo al compilar.
+     */
+    public java.util.function.Function<String, List<Marca>> revisarAlEscribir;
+    /** La documentación de una palabra que no es del jugador (la API del robot y la de Java), o null si no la hay. */
+    public java.util.function.Function<String, String> documentacion;
+    private final RevisorAlEscribir revisor = new RevisorAlEscribir();
+    private float encimaDe;
+    private String palabraEncima = "";
     /** Las palabras que propone el autocompletado (la API del idioma, las palabras clave…). */
     public List<String> palabras = new ArrayList<>();
 
@@ -89,6 +99,28 @@ public final class VentanaDeCodigo {
         doc.ponerTexto(s);
         desplazamientoX = desplazamientoY = 0;
         marcas.clear();
+    }
+
+    // ================================================================ como un IDE: errores al escribir y documentación
+
+    /** Con el ratón quieto sobre un nombre (medio segundo): su documentación; la de las clases del jugador, la primera. */
+    private void documentacionAlPasar(Ui ui, float zx, float zy, float zw, float zh, float alto, float letra) {
+        Entrada e = ui.e;
+        if (!e.dentro(zx, zy, zw, zh) || proponiendo) {
+            palabraEncima = "";
+            return;
+        }
+        String w = doc.palabraEn(posicionEn(e.ratonX, e.ratonY, zx, zy, alto, letra));
+        if (!w.equals(palabraEncima)) {
+            palabraEncima = w;
+            encimaDe = 0;
+            return;
+        }
+        encimaDe += Gdx.graphics == null ? 0.016f : Gdx.graphics.getDeltaTime();
+        if (encimaDe < 0.5f || w.length() < 2 || !Character.isJavaIdentifierStart(w.charAt(0))) return;
+        String propia = metajavbots.codigo.DocumentacionPropia.de(doc.texto(), w);
+        String texto = propia != null ? propia : documentacion == null ? null : documentacion.apply(w);
+        if (texto != null && !texto.isBlank()) ui.avisar(texto);
     }
 
     // ================================================================ dibujar
@@ -133,6 +165,7 @@ public final class VentanaDeCodigo {
         float zx = x + margen, zy = y + barra, zw = w - margen - 12, zh = h - barra - 12;
 
         if (e.dentro(x, y, w, h) && e.recienPulsado) enfocada = true;
+        if (revisarAlEscribir != null && !soloLectura) revisor.fotograma(doc, marcas, revisarAlEscribir);
         if (enfocada) teclas(ui, zh, alto);
         raton(ui, zx, zy, zw, zh, alto, letra);
         float maxY = desplazar(zw, zh, alto, letra);
@@ -175,6 +208,7 @@ public final class VentanaDeCodigo {
             dibujarLinea(p, t, l, zx - desplazamientoX, ly, alto, letra, pareja, palabra);
             marcasDeLaLinea(ui, l, x, zx, ly, alto, letra, lineaCursor);
         }
+        documentacionAlPasar(ui, zx, zy, zw, zh, alto, letra);
         // El cursor (parpadea, pero no mientras se escribe).
         if (enfocada && !soloLectura && (parpadeo % 1.0f) < 0.6f) {
             float cx = zx + doc.columnaDelCursor() * letra - desplazamientoX;
@@ -650,6 +684,16 @@ public final class VentanaDeCodigo {
         List<String> l = new ArrayList<>();
         java.util.Set<String> vistas = new java.util.HashSet<>();
         String bajo = pre.toLowerCase(java.util.Locale.ROOT);
+        // Tras «algo.», si «algo» es una clase del jugador (o una variable de una de ellas), lo suyo primero.
+        int ini = doc.cursor() - pre.length();
+        if (ini > 1 && doc.letra(ini - 1) == '.') {
+            int a = ini - 1;
+            while (a > 0 && Character.isJavaIdentifierPart(doc.letra(a - 1))) a--;
+            String antes = doc.texto().substring(a, ini - 1);
+            for (String m : metajavbots.codigo.DocumentacionPropia.miembros(doc.texto(), antes)) {
+                if (m.toLowerCase(java.util.Locale.ROOT).startsWith(bajo) && vistas.add(m)) l.add(m);
+            }
+        }
         for (String w : palabras) if (w.toLowerCase(java.util.Locale.ROOT).startsWith(bajo) && vistas.add(w)) l.add(w);
         for (Lexico.Trozo tr : trozos) {
             if (tr.clase == Lexico.Clase.NOMBRE && tr.texto.length() > 2 && !tr.texto.equals(pre)
