@@ -29,6 +29,7 @@ public final class VistaDeArena {
     /** A qué altura (en unidades de la arena) salen los disparos. */
     private static final float TIRO = 58;
     public final Efectos efectos = new Efectos();
+    private final Trastos trastos = new Trastos();
     private final DibujoRobot dibujo;
     private DibujoRobot.Estado[] estados = {new DibujoRobot.Estado(), new DibujoRobot.Estado()};
     private final Random azar = new Random(11);
@@ -233,6 +234,8 @@ public final class VistaDeArena {
         }
         efectos.avanzar(dt);
         efectos.dibujar(p);
+        trastos.avanzar(dt);
+        trastos.dibujar(p);
         DibujoDeArenas.lluvia(p, escenario, ax, ay, aw, ah, tiempo);
         rotulos(p, orden, pelea, dt);
         p.sinRecorte();
@@ -553,6 +556,37 @@ public final class VistaDeArena {
             if (r[0] < o[0] + o[2] + 4 && r[0] + w + 4 > o[0] && r[1] < o[1] + o[3] + 4 && r[1] + h + 4 > o[1]) return o;
         }
         return null;
+    }
+
+    /**
+     * Cómo acaba un robot que pierde (una de cinco, «variante»): la explosión grande, una lluvia de tornillos y
+     * engranajes que rebotan, confeti, la cabeza que sale rodando o mucho humo y un último «bip» triste. Devuelve el
+     * sonido que toca.
+     */
+    public String explotar(Cuerpo c, int variante) {
+        float[] cab = cabezaDe(c);
+        float suelo = sy(c.y), e = escala(c.y);
+        switch (variante % 5) {
+            case 1:
+                efectos.explosion(cab[0], cab[1] + 40, 1.0f);
+                trastos.piezas(cab[0], cab[1] + 40, suelo, 18, e);
+                return "estallido";
+            case 2:
+                efectos.confeti(cab[0], cab[1] + 30, 90);
+                efectos.anadir(Efectos.Tipo.ONDA, cab[0], cab[1] + 40, 0, 0, 0.4f, 80 * e, 0xFFD23F);
+                return "fuegos";
+            case 3:
+                efectos.explosion(cab[0], cab[1] + 60, 0.8f);
+                trastos.cabeza(cab[0], cab[1] + 20, suelo, e, 0x8A929C);
+                c.parte[metajavbots.piezas.Montaje.CABEZA] = 0;
+                return "parte_rota";
+            case 4:
+                for (int k = 0; k < 6; k++) efectos.humo(cab[0] + (k - 3) * 6 * e, cab[1] + 40 - k * 10 * e, 1.6f);
+                return "bip_triste";
+            default:
+                efectos.explosion(cab[0], cab[1] + 40, 2.2f);
+                return "explosion_grande";
+        }
     }
 
     /** Para quien dibuja encima (las barras de vida): dónde queda la cabeza de un robot en pantalla. */

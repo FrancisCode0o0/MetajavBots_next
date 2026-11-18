@@ -773,15 +773,14 @@ public final class PantallaPelea implements Pantalla {
     /** A los 0,6 s del final: explotan todos los que no son del equipo ganador, y el locutor y los robots lo dicen. */
     private void explotar(Juego j, int g) {
         explotado = true;
-        // Explotan todos los que no son del equipo ganador.
+        // Acaban todos los que no son del equipo ganador, cada uno a su manera (VistaDeArena.explotar).
+        int variante = new Random().nextInt(5);
         for (int i = 0; i < pelea.combatientes.length; i++) {
             Cuerpo perdedor = pelea.cuerpo(i);
             if (perdedor == null || pelea.equipo[i] == pelea.equipo[g]) continue;
-            float[] cab = vista.cabezaDe(perdedor);
-            vista.efectos.explosion(cab[0], cab[1] + 40, 2.2f);
+            j.sonidos.tocar(vista.explotar(perdedor, variante++), 1f);
             perdedor.fuera = true;
         }
-        j.sonidos.tocar("explosion_grande", 1f);
         j.sacudir(14, 0.9f);
         narrador.locutor(ganoElJugador ? "victoria_jugador" : "derrota_jugador", true, null);
         narrador.robot(g, "victoria", true, null);
