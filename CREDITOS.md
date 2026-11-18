@@ -12,6 +12,7 @@ Para que Fran lo revise antes de publicar. Todo lo demás (código, textos, ejer
 | blade-ink 1.3.2 | bladecoder | Apache-2.0 | La usa el motor (CastillaFantasX) para los diálogos de Ink; MetajavBots no la usa directamente |
 | jlayer 1.0.1 (gdx) y jorbis | JavaZOOM / JCraft | **LGPL** | Llegan con el backend de escritorio de libGDX (MP3 y OGG). El juego solo usa WAV, pero sin ellas libGDX no arranca el sonido. **A revisar por Fran** (docs/ESTADO.md). |
 | Gradle Wrapper 9.8 | Gradle Inc. | Apache-2.0 | Compilar |
+| Checkstyle 10.21.1 | Checkstyle | LGPL-2.1 | Solo para revisar el estilo del código (`gradlew estilo`); no va dentro del juego |
 
 ## Motor
 
@@ -31,6 +32,8 @@ CastillaFantasX (carpeta `motor/`), del mismo autor, copiado de la Reliquia del 
 | Gemma 3 4B IT (GGUF de bartowski) | Gemma Terms of Use (Google) | Modelo local opcional. No se distribuye. |
 | Qwen3.5-9B (GGUF de bartowski) | Apache-2.0 | Modelo local opcional. No se distribuye. |
 | Qwen2.5-Coder-7B-Instruct (el de Jarvis) | Apache-2.0 | Modelo local opcional. No se distribuye. |
+| Piper 2023.11.14-2 (voz clara del locutor) | MIT (trae espeak-ng, GPL-3.0, dentro del programa) | Programa aparte en 000KI_Local/piper que el juego llama si está. No se distribuye con el juego. |
+| Voces de Piper: es_ES-davefx-medium, de_DE-thorsten-medium, en_US-joe-medium | CC0 (datos de voz en dominio público) | rhasspy/piper-voices. No se distribuyen. |
 
 ## Inspiración (sin copiar nada)
 

@@ -163,7 +163,7 @@ public final class Taller implements Pantalla {
         // Debajo del editor, la pista (o lo que pasó al compilar), con su sitio: no pisa la última línea del código.
         String pie = aviso.isEmpty() ? T.t("taller.pista") : aviso;
         float tPie = ui.letra * 0.8f, altoPie = p.altoDeParrafo(pie, w, tPie) + 10;
-        float ey = cy + ui.altoDeBotonera + 10, eh = p.alto - 20 - altoPie - ey;
+        float ey = cy + ui.altoDeBotonera + 10, eh = p.alto - 34 - altoPie - ey;
         float ew = conApi ? w - 440 : w;
         editor.dibujar(ui, x, ey, ew, eh);
         if (conApi) api.dibujar(ui, jug.idioma, editor, x + ew + 12, ey, w - ew - 12, eh);
