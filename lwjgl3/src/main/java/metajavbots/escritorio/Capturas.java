@@ -99,6 +99,9 @@ public final class Capturas extends Juego {
         pantallas.put("10_tutoriales", metajavbots.pantallas.Tutoriales::new);
         pantallas.put("11_leccion", () -> new metajavbots.pantallas.PantallaLeccion(metajavbots.ejercicios.Leccion.todas().get(0)));
         pantallas.put("12_especial", metajavbots.pantallas.ModoEspecial::new);
+        pantallas.put("12b_rotos", () -> metajavbots.pantallas.ModoEspecial.alFinal(1));
+        pantallas.put("12c_roto_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.ModoEspecial.encuentroRoto(this,
+                metajavbots.ejercicios.RobotRoto.todos().get(1))));
         pantallas.put("13_laboratorio", () -> new metajavbots.pantallas.PantallaLaboratorio(metajavbots.ejercicios.Laboratorio.todos().get(0)));
         pantallas.put("14_temario", metajavbots.pantallas.Temario::new);
         pantallas.put("15_historial", metajavbots.pantallas.Historial::new);
@@ -143,6 +146,7 @@ public final class Capturas extends Juego {
         }
         j.ejerciciosResueltos.addAll(java.util.List.of("t01_hola_arena", "muestra_sumar"));
         j.capitulosGanados.addAll(java.util.List.of("rocko:1", "rocko:2", "rocko:3", "rocko2:1"));
+        j.robotsArreglados.add("peonza");
         ponerJugador(j);
         siguiente();
     }

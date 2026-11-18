@@ -40,6 +40,24 @@ final class PruebasDelContenido {
         apuntarParte4();
         apuntarCampanas();
         apuntarMusica();
+        apuntarRobotsRotos();
+    }
+
+    private static void apuntarRobotsRotos() {
+        caso("robots rotos: se traducen a las tres API y compilan (menos el que está roto a propósito al compilar)", () -> {
+            cierto(metajavbots.ejercicios.RobotRoto.todos().size() >= 5, "al menos 5");
+            String de = metajavbots.codigo.TraductorDeApi.traducir("public void alVerEnemigo(Enemigo e) { apuntarHacia(e.angulo()); decir(\"atacar\"); }",
+                    metajavbots.textos.Idioma.DE);
+            igual("public void beiSicht(Gegner e) { zielenNach(e.winkel()); sagen(\"atacar\"); }", de, "las comillas no se traducen");
+            if (!metajavbots.codigo.Compilador.hayCompilador()) return;
+            for (metajavbots.ejercicios.RobotRoto r : metajavbots.ejercicios.RobotRoto.todos()) {
+                for (metajavbots.textos.Idioma i : metajavbots.textos.Idioma.values()) {
+                    metajavbots.codigo.Compilador.Resultado res = metajavbots.codigo.Compilador.compilar(r.codigo(i), false,
+                            metajavbots.codigo.Vigilante.Modo.ROBOT, java.util.Locale.ROOT);
+                    cierto(res.bien != r.id.equals("sordo"), r.id + " en " + i + ": " + res.errores);
+                }
+            }
+        });
     }
 
     private static void apuntarMusica() {

@@ -42,6 +42,7 @@ public final class PantallaPelea implements Pantalla {
 
     private final Encuentro encuentro;
     private Pelea pelea;
+    private RobotEnReparacion reparando;
     private Combatiente yo;
     private final RobotDelJugador robot = new RobotDelJugador();
     private VistaDeArena vista;
@@ -82,15 +83,17 @@ public final class PantallaPelea implements Pantalla {
         Jugador.Robot r = jug.robot();
         vista = new VistaDeArena(j.pincel);
         vista.escenario = encuentro.escenario;
-        editor.ponerTexto(r.codigo);
+        // Un robot roto trae su propio código (el robot del jugador no se toca).
+        String codigo = encuentro.codigo != null ? encuentro.codigo : r.codigo;
+        editor.ponerTexto(codigo);
         editor.tamano = jug.tamanoDeLetra;
         editor.alCompilar = () -> compilar(j);
         editor.palabras = Palabras.api(jug.idioma);
-        yo = new Combatiente(r.nombre, r.montaje(), robot);
+        yo = new Combatiente(encuentro.codigo != null ? encuentro.titulo : r.nombre, encuentro.montaje != null ? encuentro.montaje : r.montaje(), robot);
         sinJdk = !Compilador.hayCompilador();
         if (sinJdk) usarPilotoAutomatico();
         else {
-            Compilador.Resultado res = robot.compilar(r.codigo, j.jugador.idioma.locale());
+            Compilador.Resultado res = robot.compilar(codigo, j.jugador.idioma.locale());
             if (!res.bien) {
                 marcarErrores(res, jug);
                 usarPilotoAutomatico();
@@ -228,7 +231,7 @@ public final class PantallaPelea implements Pantalla {
         if (compilando || sinJdk) return;
         compilando = true;
         String codigo = editor.doc.texto();
-        j.jugador.robot().codigo = codigo;
+        if (encuentro.codigo == null) j.jugador.robot().codigo = codigo;
         j.sonidos.tocar("compilar", 0.5f);
         Thread h = new Thread(() -> {
             resultadoDeCompilar = robot.compilar(codigo, j.jugador.idioma.locale());
@@ -301,6 +304,7 @@ public final class PantallaPelea implements Pantalla {
         vista.letra = ui.letra;
         vista.techo = tiempoLocutor > 0 && !locutor.isEmpty() ? 100 + altoDeLaBanda + 8 : 0;
         vista.dibujar(p, pelea, 0, 88, ancho, p.alto - 88, pausa || entreRondas ? 0 : dt);
+        if (encuentro.codigo != null) reparacion(j, dt);
         marcador(j);
         if (depurador && !entreRondas) depurador(j, ancho);
         bandaDelLocutor(j, dt);
@@ -633,6 +637,8 @@ public final class PantallaPelea implements Pantalla {
         }
         objetivoCumplido = encuentro.objetivo == null ? ganoElJugador
                 : Objetivo.cumple(encuentro.objetivo, yo, robot.listo() ? robot.fuente() : editor.doc.texto());
+        // Un robot roto solo cuenta arreglado si al final compila y se ha cambiado su código.
+        if (encuentro.codigo != null) objetivoCumplido &= robot.listo() && !robot.fuente().equals(encuentro.codigo);
         if (encuentro.alAcabar != null) encuentro.alAcabar.accept(objetivoCumplido);
         j.guardar();
         narrador.locutor("explosion_final", true, null);
@@ -713,6 +719,37 @@ public final class PantallaPelea implements Pantalla {
             // Vuelve a la campaña (que sigue debajo): el siguiente capítulo ya está abierto.
             if (ui.boton(T.t("final.seguir_campana"), x + w - 290, y + h - 74, 260, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.volver();
         } else if (ui.boton(T.t("final.menu"), x + w - 230, y + h - 74, 200, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.irSolo(new Menu());
+    }
+
+    /**
+     * Un robot roto: arriba a la izquierda se ve cómo se va reparando según lo que el jugador hace bien (compila,
+     * ha cambiado el código y va cumpliendo el objetivo).
+     */
+    private void reparacion(Juego j, float dt) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        boolean compila = robot.listo(), cambiado = compila && !robot.fuente().equals(encuentro.codigo);
+        Combatiente.Informe inf = yo.informes.isEmpty() ? new Combatiente.Informe() : yo.informes.get(yo.informes.size() - 1);
+        int quiere = Objetivo.aciertosQuePide(encuentro.objetivo);
+        float parte = quiere <= 0 ? (Objetivo.cumple(encuentro.objetivo, yo, robot.fuente()) ? 1 : 0) : Math.min(1, inf.aciertos / (float) quiere);
+        float arreglo = 0.1f + (compila ? 0.2f : 0) + (cambiado ? 0.2f : 0) + (cambiado ? 0.5f * parte : 0);
+        vista.averiaDelJugador = 1 - arreglo;
+        float tl = ui.letra * 0.72f, w = 250, h = 240 + 3 * tl * 1.4f, x = 16, y = 100;
+        p.caja(x, y, w, h, 12, ui.tema.panel, 0.88f);
+        p.texto(T.f("roto.reparado", Math.round(arreglo * 100)), x + 12, y + 8, ui.letra * 0.85f, true, arreglo >= 1 ? ui.tema.bien : 0xFFC857, 1);
+        if (reparando == null) {
+            reparando = new RobotEnReparacion();
+            reparando.alRecuperar = () -> j.sonidos.tocar("compilar", 0.7f);
+        }
+        reparando.dibujar(p, vista, yo.montaje, x + w / 2, y + 222, 2.1f, arreglo, dt);
+        float ly = y + 234;
+        String[][] pasos = {{compila ? "✔" : "□", T.t("roto.compila")}, {cambiado ? "✔" : "□", T.t("roto.cambiado")},
+            {parte >= 1 ? "✔" : "□", quiere > 0 ? T.f("roto.aciertos", inf.aciertos, quiere) : Objetivo.texto(encuentro.objetivo)}};
+        for (String[] paso : pasos) {
+            boolean hecho = paso[0].equals("✔");
+            p.texto(paso[0] + " " + ui.recortarTexto(paso[1], w - 40, tl, false), x + 12, ly, tl, false, hecho ? ui.tema.bien : ui.tema.texto, 1);
+            ly += tl * 1.4f;
+        }
     }
 
     /** A los 0,6 s del final: explotan todos los que no son del equipo ganador, y el locutor y los robots lo dicen. */

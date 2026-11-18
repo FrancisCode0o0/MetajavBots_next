@@ -45,6 +45,10 @@ public final class Encuentro {
     public java.util.function.Supplier<Encuentro> otraVez;
     /** Los temas de pelea, con energía: el himno ochentero, el rock y el de artes marciales. */
     public static final String[] TEMAS_DE_PELEA = {"combate", "rock", "artes_marciales"};
+    /** El código con que pelea el jugador en vez del de su robot (un robot roto que arreglar), o null. */
+    public String codigo;
+    /** El cuerpo con que pelea el jugador en vez del de su robot (el del robot roto), o null. */
+    public metajavbots.piezas.Montaje montaje;
     /** El tema de música de la pelea (uno de pelea al azar, o el de la campaña); en el último asalto suena «final». */
     public String musica = TEMAS_DE_PELEA[(int) (Math.random() * TEMAS_DE_PELEA.length)];
 }

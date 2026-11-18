@@ -14,6 +14,16 @@ public final class Objetivo {
     private Objetivo() {
     }
 
+    /** Los aciertos que pide un objetivo «aciertos>=N» (0 si es de otro tipo). */
+    public static int aciertosQuePide(String objetivo) {
+        if (objetivo == null || !objetivo.startsWith("aciertos>=")) return 0;
+        try {
+            return Integer.parseInt(objetivo.substring(10).strip());
+        } catch (NumberFormatException e) {
+            return 0;
+        }
+    }
+
     public static boolean cumple(String objetivo, Combatiente yo, String codigo) {
         if (objetivo == null) return true;
         Combatiente.Informe inf = yo.informes.isEmpty() ? new Combatiente.Informe() : yo.informes.get(yo.informes.size() - 1);

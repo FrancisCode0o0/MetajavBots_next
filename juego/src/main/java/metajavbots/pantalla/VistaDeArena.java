@@ -24,6 +24,8 @@ public final class VistaDeArena {
     public enum Escenario { HANGAR, DESIERTO, NEON, LABORATORIO, LUNA }
 
     public Escenario escenario = Escenario.HANGAR;
+    /** Lo averiado que está el robot del jugador sin contar los golpes (un robot roto a medio reparar): humo y chispas. */
+    public float averiaDelJugador;
     /** A qué altura (en unidades de la arena) salen los disparos. */
     private static final float TIRO = 58;
     public final Efectos efectos = new Efectos();
@@ -327,10 +329,13 @@ public final class VistaDeArena {
         float talla = escalaX * f(c.y) * 1.45f;
         dibujo.dibujar(co.montaje.modelo, co.montaje, px, py, talla, e);
         // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea.
-        double dano = Math.min(1.2, co.estropeado());
+        double dano = Math.min(1.2, Math.max(co.estropeado(), c.indice == 0 ? averiaDelJugador : 0));
         float alto = (float) (62 * talla * co.montaje.modelo.tamano / 30);
         // El humo, menos y por encima de la cabeza: que no tape al robot.
         if (dano > 0.15 && azar.nextFloat() < dano * 0.22f) efectos.humo(px + azar.nextFloat() * 20 - 10, py - alto * 1.1f, (float) dano * 0.8f);
+        if (c.indice == 0 && averiaDelJugador > 0.3f && azar.nextFloat() < averiaDelJugador * 0.1f) {
+            efectos.chispas(px + azar.nextFloat() * 30 - 15, py - alto * 0.6f, 3, 0xFFE38A);
+        }
         for (int i = 0; i < 4; i++) {
             if (c.parte[i] <= 0 && azar.nextFloat() < 0.08f) efectos.chispas(px + azar.nextFloat() * 30 - 15, py - alto * (0.3f + 0.15f * i), 3, 0xFFE38A);
         }
