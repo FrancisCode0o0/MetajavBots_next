@@ -39,6 +39,8 @@ public final class PrepararPelea implements Pantalla {
     private String aviso = "";
     private List<Path> ajenos = new ArrayList<>();
     private final Ui.Desplazable pagina = new Ui.Desplazable();
+    /** Qué cerebro de IA llevan los robots de la computadora en el battle royale. */
+    private int cerebrosRoyale = EstiloPorIA.EL_RAPIDO;
 
     /** La pelea normal, directa (el botón grande del menú). */
     public static Pantalla adaptada(Juego j) {
@@ -206,7 +208,7 @@ public final class PrepararPelea implements Pantalla {
         Ui ui = j.ui;
         float h = 18 + p.altoDeParrafo(T.t(modo[1]), w - 40, ui.letra * 1.3f, true) + 6
                 + p.altoDeParrafo(T.t(modo[1] + "_ayuda"), w - 40, ui.letra * 0.85f) + 14;
-        if (modo[0].equals("EQUIPOS")) h += 54;
+        if (modo[0].equals("EQUIPOS") || modo[0].equals("ROYALE")) h += 54;
         if (modo[0].equals("ADAPTADA") && !j.jugador.modoIA.equals("ADAPTADA")) h += ui.letra * 1.4f;
         if (modo[0].equals("DESAFIO") && !Progreso.puedeDesafiar(j.jugador)) {
             h += p.altoDeParrafo(T.f("pelear.desafio_espera", Progreso.PELEAS_ENTRE_DESAFIOS - j.jugador.peleasDesdeElDesafio), w - 40,
@@ -232,6 +234,13 @@ public final class PrepararPelea implements Pantalla {
             }
             cy += 54;
         }
+        if (modo[0].equals("ROYALE")) {
+            if (ui.boton(T.f("pelear.cerebros", EstiloPorIA.nombre(cerebrosRoyale)), x + 20, cy, w - 40, 44, Ui.Estilo.PLANO, true,
+                    T.t("pelear.cerebros_ayuda"))) {
+                cerebrosRoyale = EstiloPorIA.siguiente(cerebrosRoyale);
+            }
+            cy += 54;
+        }
         if (modo[0].equals("ADAPTADA") && !jug.modoIA.equals("ADAPTADA")) {
             p.texto(T.f("pelear.dificultad_fija", jug.modoIA), x + 20, cy, ui.letra * 0.8f, false, ui.tema.aviso, 1);
         }
@@ -242,7 +251,11 @@ public final class PrepararPelea implements Pantalla {
         if (ui.boton(T.t("pelear.vamos"), x + 20, y + h - 66, w - 40, 50, principal ? Ui.Estilo.PRINCIPAL : Ui.Estilo.NORMAL, puede, null)) {
             String m = modo[0].equals("ADAPTADA") ? jug.modoIA : modo[0];
             if (m.equals("MCM")) j.ir(new MaquinaContraMaquina());
-            else if (m.equals("ROYALE")) j.ir(new PantallaPelea(royale(j, ajenos)));
+            else if (m.equals("ROYALE")) {
+                Encuentro e = royale(j, ajenos);
+                e.cerebros = cerebrosRoyale;
+                j.ir(new PantallaPelea(e));
+            }
             else if (m.equals("EQUIPOS")) j.ir(new PantallaPelea(equipos(j, companero < 0 ? null : companeros.get(companero))));
             else j.ir(new PantallaPelea(encuentro(j, m)));
         }

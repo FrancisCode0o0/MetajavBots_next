@@ -38,6 +38,8 @@ public final class MaquinaContraMaquina implements Pantalla {
     private final VentanaDeCodigo[] codigo = {new VentanaDeCodigo(), new VentanaDeCodigo()};
     private boolean pausa;
     private float velocidad = 1, acumulado, esperaEntreRondas;
+    /** El cerebro de IA de cada robot (EstiloPorIA: ninguno o uno de los tres del jugador). */
+    private final int[] cerebro = {EstiloPorIA.NINGUNO, EstiloPorIA.NINGUNO};
     private String locutor = "";
     private float altoDeLaBanda = 44;
     private float tiempoLocutor;
@@ -166,6 +168,9 @@ public final class MaquinaContraMaquina implements Pantalla {
             if (ui.boton("►", x + w - 56, y + 320, 56, 50, Ui.Estilo.PLANO)) modelo[i] = (modelo[i] + 1) % ms.size();
             p.textoCentrado(m.nombre(T.idioma), x + w / 2, y + 330, ui.letra * 1.2f, true, ui.tema.texto, 1);
             nivel[i] = ui.deslizador(T.t("mcm.nivel"), nivel[i], x, y + 400, w, 50, null);
+            if (ui.boton(T.f("mcm.cerebro", EstiloPorIA.nombre(cerebro[i])), x, y + 470, w, 48, Ui.Estilo.PLANO, true, T.t("mcm.cerebro_ayuda"))) {
+                cerebro[i] = cerebro[i] >= 2 ? EstiloPorIA.NINGUNO : cerebro[i] + 1;
+            }
         }
         if (!Compilador.hayCompilador()) p.textoCentrado(T.t("mcm.sin_jdk"), p.ancho / 2, p.alto - 150, ui.letra * 0.85f, false, ui.tema.aviso, 1);
         if (ui.boton(T.t("mcm.empezar"), p.ancho / 2 - 160, p.alto - 100, 320, 60, Ui.Estilo.PRINCIPAL)) empezar(j);
@@ -177,6 +182,12 @@ public final class MaquinaContraMaquina implements Pantalla {
         boolean paso = pausa && j.entrada.tecla(Keys.RIGHT);
         if ((!pausa || paso) && pelea.estado() != Pelea.Estado.TERMINADA) {
             if (pelea.estado() == Pelea.Estado.ENTRE_RONDAS) {
+                if (esperaEntreRondas == 0) {
+                    // Entre rondas, cada robot con cerebro de IA elige su táctica para la siguiente.
+                    for (int i = 0; i < 2; i++) {
+                        EstiloPorIA.pedir(EstiloPorIA.cerebroDe(j.jugador, cerebro[i], i), pelea.combatientes[i], EstiloPorIA.informe(pelea, i));
+                    }
+                }
                 esperaEntreRondas += dt;
                 if (esperaEntreRondas > 2.5f) {
                     esperaEntreRondas = 0;

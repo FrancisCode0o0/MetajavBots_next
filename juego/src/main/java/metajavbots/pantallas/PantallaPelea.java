@@ -156,6 +156,14 @@ public final class PantallaPelea implements Pantalla {
      * siguiente (a la vista del informe) y el locutor resume la ronda con una frase propia. El nivel no cambia.
      */
     private void ajustarRivalConIA(Juego j) {
+        // Los demás robots de la computadora (battle royale, equipos): cada uno con el cerebro que le toca.
+        for (int i = 2; i < pelea.combatientes.length; i++) {
+            if (!pelea.combatientes[i].computadora) continue;
+            EstiloPorIA.pedir(EstiloPorIA.cerebroDe(j.jugador, encuentro.cerebros, i - 1), pelea.combatientes[i], EstiloPorIA.informe(pelea, i));
+        }
+        if (encuentro.cerebros != EstiloPorIA.EL_RAPIDO) {
+            EstiloPorIA.pedir(EstiloPorIA.cerebroDe(j.jugador, encuentro.cerebros, 0), encuentro.rival, EstiloPorIA.informe(pelea, 1));
+        }
         metajavbots.cerebro.Cerebro c = metajavbots.cerebro.CerebroDelJuego.rapido(j.jugador);
         if (c == null || !encuentro.rival.computadora || encuentro.jefe != null) return;
         Combatiente.Informe yoInf = pelea.informe(0), elInf = pelea.informe(1);
@@ -168,11 +176,13 @@ public final class PantallaPelea implements Pantalla {
                         + elInf.danoPorArmaRecibido.getOrDefault("misil", 0.0));
         Thread h = new Thread(() -> {
             try {
-                String r = c.preguntar(metajavbots.cerebro.CerebroDelJuego.sistemaEstilo(), informe, 6).toUpperCase(java.util.Locale.ROOT);
-                for (metajavbots.rivales.Estilo e : metajavbots.rivales.Estilo.values()) {
-                    if (r.contains(e.name())) {
-                        encuentro.rival.memoria.put("estilo", e);
-                        break;
+                if (encuentro.cerebros == EstiloPorIA.EL_RAPIDO) {
+                    String r = c.preguntar(metajavbots.cerebro.CerebroDelJuego.sistemaEstilo(), informe, 6).toUpperCase(java.util.Locale.ROOT);
+                    for (metajavbots.rivales.Estilo e : metajavbots.rivales.Estilo.values()) {
+                        if (r.contains(e.name())) {
+                            encuentro.rival.memoria.put("estilo", e);
+                            break;
+                        }
                     }
                 }
                 String f = c.preguntar(metajavbots.cerebro.CerebroDelJuego.sistemaLocutor(j.jugador.idioma), informe, 25);

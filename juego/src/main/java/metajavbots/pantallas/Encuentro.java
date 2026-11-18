@@ -37,4 +37,6 @@ public final class Encuentro {
      */
     public final java.util.List<Combatiente> demas = new java.util.ArrayList<>();
     public final java.util.List<Integer> equiposDeLosDemas = new java.util.ArrayList<>();
+    /** Qué cerebro de IA elige la táctica de los robots de la computadora entre rondas (EstiloPorIA: el rápido, uno, mezclados…). */
+    public int cerebros = EstiloPorIA.EL_RAPIDO;
 }
