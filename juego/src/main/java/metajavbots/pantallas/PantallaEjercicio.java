@@ -97,6 +97,58 @@ public final class PantallaEjercicio implements Pantalla {
         Ui ui = j.ui;
         Jugador jug = j.jugador;
         Comprobador.Informe inf = informe;
+        atenderInforme(j, inf);
+        Comun.fondo(j, t);
+        float arriba = Comun.cabecera(j, e.titulo(T.idioma), true);
+        float x = 20, y = arriba + 14, w = 520;
+        enunciado(j, inf, x, y, w);
+        // El editor (y la API o el tutor al lado).
+        float ex = x + w + 16, ew = p.ancho - ex - 20;
+        float lado = conApi || conTutor ? 430 : 0;
+        String[] barra = {comprobando ? T.t("ejercicio.comprobando") : T.t("ejercicio.comprobar") + "  (Ctrl+S)", T.t("taller.formatear"),
+            T.t("ejercicio.reiniciar"), T.t("taller.api")};
+        Ui.Estilo[] estilosArriba = {Ui.Estilo.PRINCIPAL, Ui.Estilo.PLANO, Ui.Estilo.PLANO, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO};
+        boolean[] activosArriba = {!comprobando && Compilador.hayCompilador(), true, true, true};
+        String[] ayudasArriba = {Compilador.hayCompilador() ? null : T.t("taller.sin_jdk"), null, T.t("ejercicio.reiniciar_ayuda"), null};
+        float anchoSiguiente = cambio != null ? p.ancho(T.t("ejercicio.siguiente") + " →", ui.letra, true) + 40 : 0;
+        switch (ui.botonera(barra, estilosArriba, activosArriba, ayudasArriba, ex, y, ew - anchoSiguiente - 10, 46)) {
+            case 0: comprobar(j); break;
+            case 1: editor.doc.formatear(); break;
+            case 2:
+                editor.doc.cambiarTodo(e.codigoInicial());
+                editor.marcas.clear();
+                break;
+            case 3: conApi = !conApi; break;
+            default: break;
+        }
+        float altoBarra = ui.altoDeBotonera;
+        if (cambio != null && ui.boton(T.t("ejercicio.siguiente") + " →", ex + ew - anchoSiguiente, y, anchoSiguiente, 46, Ui.Estilo.PRINCIPAL)) {
+            Ejercicio sig = siguiente(jug);
+            if (sig != null) {
+                j.volver();
+                j.ir(new PantallaEjercicio(sig));
+            }
+        }
+        float ey = y + altoBarra + 12, eh = p.alto - ey - 70;
+        if (!editor.doc.texto().equals(jug.codigoDeEjercicios.getOrDefault(e.id, "")) && inf != null) editor.marcas.removeIf(m -> false);
+        editor.dibujar(ui, ex, ey, ew - lado - (lado > 0 ? 12 : 0), eh);
+        if (conTutor) tutor(j, ex + ew - lado, ey, lado, eh);
+        else if (conApi) api.dibujar(ui, jug.idioma, editor, ex + ew - lado, ey, lado, eh);
+        estado(j, inf, ex, ew);
+        if (tiempoFiesta > 0) {
+            tiempoFiesta -= dt;
+            if ((int) (tiempoFiesta * 4) != (int) ((tiempoFiesta + dt) * 4)) {
+                fiesta.cohete((float) (p.ancho * (0.3 + Math.random() * 0.6)), p.alto, p.alto * 0.5f, 0x5BD685);
+            }
+            if (tiempoFiesta > 2.8f) fiesta.confeti(ex + ew / 2, ey + 40, 8);
+        }
+        fiesta.avanzar(dt);
+        fiesta.dibujar(p);
+    }
+
+    /** Lo que trae la comprobación: los errores al editor y, si todo va bien, el progreso y la fiesta. */
+    private void atenderInforme(Juego j, Comprobador.Informe inf) {
+        Jugador jug = j.jugador;
         if (inf != null && !comprobando && editor.marcas.isEmpty() && !inf.compila()) {
             for (Compilador.Fallo f : inf.errores) {
                 editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave));
@@ -109,10 +161,13 @@ public final class PantallaEjercicio implements Pantalla {
             if (cambio.subio) j.sacudir(8, 0.8f);
             j.guardar();
         }
-        Comun.fondo(j, t);
+    }
+
+    /** A la izquierda: el enunciado, la pista, la solución (tras tres intentos), los casos y lo que escribió; debajo, sus botones. */
+    private void enunciado(Juego j, Comprobador.Informe inf, float x, float y, float w) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
         Tema tm = Tema.de(e.tema);
-        float arriba = Comun.cabecera(j, e.titulo(T.idioma), true);
-        float x = 20, y = arriba + 14, w = 520;
         // El enunciado, la pista y los casos.
         float cy = ui.panel(x, y, w, p.alto - y - 20, (tm == null ? "" : tm.id + " · ") + "★".repeat(e.dificultad));
         float d = ui.desplazable(despl, x + 8, cy, w - 16, p.alto - cy - 100);
@@ -165,38 +220,12 @@ public final class PantallaEjercicio implements Pantalla {
             case 2: conTutor = !conTutor; break;
             default: break;
         }
-        // El editor (y la API o el tutor al lado).
-        float ex = x + w + 16, ew = p.ancho - ex - 20;
-        float lado = conApi || conTutor ? 430 : 0;
-        String[] barra = {comprobando ? T.t("ejercicio.comprobando") : T.t("ejercicio.comprobar") + "  (Ctrl+S)", T.t("taller.formatear"),
-            T.t("ejercicio.reiniciar"), T.t("taller.api")};
-        Ui.Estilo[] estilosArriba = {Ui.Estilo.PRINCIPAL, Ui.Estilo.PLANO, Ui.Estilo.PLANO, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO};
-        boolean[] activosArriba = {!comprobando && Compilador.hayCompilador(), true, true, true};
-        String[] ayudasArriba = {Compilador.hayCompilador() ? null : T.t("taller.sin_jdk"), null, T.t("ejercicio.reiniciar_ayuda"), null};
-        float anchoSiguiente = cambio != null ? p.ancho(T.t("ejercicio.siguiente") + " →", ui.letra, true) + 40 : 0;
-        switch (ui.botonera(barra, estilosArriba, activosArriba, ayudasArriba, ex, y, ew - anchoSiguiente - 10, 46)) {
-            case 0: comprobar(j); break;
-            case 1: editor.doc.formatear(); break;
-            case 2:
-                editor.doc.cambiarTodo(e.codigoInicial());
-                editor.marcas.clear();
-                break;
-            case 3: conApi = !conApi; break;
-            default: break;
-        }
-        float altoBarra = ui.altoDeBotonera;
-        if (cambio != null && ui.boton(T.t("ejercicio.siguiente") + " →", ex + ew - anchoSiguiente, y, anchoSiguiente, 46, Ui.Estilo.PRINCIPAL)) {
-            Ejercicio sig = siguiente(jug);
-            if (sig != null) {
-                j.volver();
-                j.ir(new PantallaEjercicio(sig));
-            }
-        }
-        float ey = y + altoBarra + 12, eh = p.alto - ey - 70;
-        if (!editor.doc.texto().equals(jug.codigoDeEjercicios.getOrDefault(e.id, "")) && inf != null) editor.marcas.removeIf(m -> false);
-        editor.dibujar(ui, ex, ey, ew - lado - (lado > 0 ? 12 : 0), eh);
-        if (conTutor) tutor(j, ex + ew - lado, ey, lado, eh);
-        else if (conApi) api.dibujar(ui, jug.idioma, editor, ex + ew - lado, ey, lado, eh);
+    }
+
+    /** Abajo: cómo ha ido (empieza, no compila, casi, bien) y lo que ha ganado. */
+    private void estado(Juego j, Comprobador.Informe inf, float ex, float ew) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
         // Cómo ha ido.
         String estado;
         int color;
@@ -221,15 +250,6 @@ public final class PantallaEjercicio implements Pantalla {
         for (metajavbots.piezas.Pieza pz : cambio == null ? List.<metajavbots.piezas.Pieza>of() : cambio.botin) {
             p.textoDerecha(T.f("final.botin", pz.nombre(T.idioma)), ex + ew, p.alto - 84, ui.letra * 0.9f, false, ui.tema.bien, 1);
         }
-        if (tiempoFiesta > 0) {
-            tiempoFiesta -= dt;
-            if ((int) (tiempoFiesta * 4) != (int) ((tiempoFiesta + dt) * 4)) {
-                fiesta.cohete((float) (p.ancho * (0.3 + Math.random() * 0.6)), p.alto, p.alto * 0.5f, 0x5BD685);
-            }
-            if (tiempoFiesta > 2.8f) fiesta.confeti(ex + ew / 2, ey + 40, 8);
-        }
-        fiesta.avanzar(dt);
-        fiesta.dibujar(p);
     }
 
     private Ejercicio siguiente(Jugador jug) {

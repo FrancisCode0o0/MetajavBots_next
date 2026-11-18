@@ -126,46 +126,7 @@ public final class Comprobador {
             }
         }
         if (!r.bien) return new Informe(errores, Collections.emptyList(), "");
-        Cargador cargador = new Cargador(r.clases, Vigilante.Modo.EJERCICIO);
-        List<Resultado> resultados = new ArrayList<>();
-        StringBuilder toda = new StringBuilder();
-        // Todo en un hilo aparte: si se cuelga, se abandona (el Tope lo para en cuanto dé otro paso).
-        AtomicReference<Object> cuenta = new AtomicReference<>();
-        Thread hilo = new Thread(() -> {
-            try {
-                Class<?> clase = cargador.loadClass(claseDeCasos);
-                for (int i = 0; i < e.casos.size(); i++) {
-                    Ejercicio.Caso c = e.casos.get(i);
-                    Resultado res = ejecutarCaso(clase, i, c, e.tipo, toda, cuenta);
-                    synchronized (resultados) {
-                        resultados.add(res);
-                    }
-                }
-            } catch (Throwable t) {
-                synchronized (resultados) {
-                    while (resultados.size() < e.casos.size()) {
-                        resultados.add(new Resultado(e.casos.get(resultados.size()), false, "⚠ " + t));
-                    }
-                }
-            }
-        }, "ejercicio-" + e.id);
-        hilo.setDaemon(true);
-        hilo.start();
-        try {
-            hilo.join(ESPERA_TOTAL_MS);
-        } catch (InterruptedException ie) {
-            Thread.currentThread().interrupt();
-        }
-        if (hilo.isAlive()) {
-            Puente.cancelar(cuenta.get());
-            hilo.interrupt();
-        }
-        List<Resultado> copia;
-        synchronized (resultados) {
-            copia = new ArrayList<>(resultados);
-        }
-        while (copia.size() < e.casos.size()) copia.add(new Resultado(e.casos.get(copia.size()), false, "⏱ tarda demasiado"));
-        return new Informe(errores, copia, toda.toString());
+        return ejecutar(e, r, claseDeCasos, errores);
     }
 
     private static Resultado ejecutarCaso(Class<?> clase, int i, Ejercicio.Caso c, Ejercicio.Tipo tipo, StringBuilder toda,
@@ -293,5 +254,49 @@ public final class Comprobador {
             }
         }
         return b.toString();
+    }
+
+    /** Ejecuta los casos ya compilados en un hilo aparte (si se cuelga, se abandona) y apunta lo que sale de cada uno. */
+    private static Informe ejecutar(Ejercicio e, Compilador.Resultado r, String claseDeCasos, List<Compilador.Fallo> errores) {
+        Cargador cargador = new Cargador(r.clases, Vigilante.Modo.EJERCICIO);
+        List<Resultado> resultados = new ArrayList<>();
+        StringBuilder toda = new StringBuilder();
+        // Todo en un hilo aparte: si se cuelga, se abandona (el Tope lo para en cuanto dé otro paso).
+        AtomicReference<Object> cuenta = new AtomicReference<>();
+        Thread hilo = new Thread(() -> {
+            try {
+                Class<?> clase = cargador.loadClass(claseDeCasos);
+                for (int i = 0; i < e.casos.size(); i++) {
+                    Ejercicio.Caso c = e.casos.get(i);
+                    Resultado res = ejecutarCaso(clase, i, c, e.tipo, toda, cuenta);
+                    synchronized (resultados) {
+                        resultados.add(res);
+                    }
+                }
+            } catch (Throwable t) {
+                synchronized (resultados) {
+                    while (resultados.size() < e.casos.size()) {
+                        resultados.add(new Resultado(e.casos.get(resultados.size()), false, "⚠ " + t));
+                    }
+                }
+            }
+        }, "ejercicio-" + e.id);
+        hilo.setDaemon(true);
+        hilo.start();
+        try {
+            hilo.join(ESPERA_TOTAL_MS);
+        } catch (InterruptedException ie) {
+            Thread.currentThread().interrupt();
+        }
+        if (hilo.isAlive()) {
+            Puente.cancelar(cuenta.get());
+            hilo.interrupt();
+        }
+        List<Resultado> copia;
+        synchronized (resultados) {
+            copia = new ArrayList<>(resultados);
+        }
+        while (copia.size() < e.casos.size()) copia.add(new Resultado(e.casos.get(copia.size()), false, "⏱ tarda demasiado"));
+        return new Informe(errores, copia, toda.toString());
     }
 }

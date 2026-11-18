@@ -85,15 +85,7 @@ public final class VentanaDeCodigo {
         if (e.dentro(x, y, w, h) && e.recienPulsado) enfocada = true;
         if (enfocada) teclas(ui, zh, alto);
         raton(ui, zx, zy, zw, zh, alto, letra);
-        if (seguirCursor) llevarAlCursor(zw, zh, alto, letra);
-        if (seguirActiva && lineaActiva > 0) {
-            float ay = (lineaActiva - 1) * alto;
-            if (ay < desplazamientoY + alto * 2 || ay > desplazamientoY + zh - alto * 3) desplazamientoY = ay - zh / 2;
-        }
-        seguirCursor = false;
-        float maxY = Math.max(0, doc.lineas() * alto - zh + alto * 2);
-        desplazamientoY = Math.max(0, Math.min(maxY, desplazamientoY));
-        desplazamientoX = Math.max(0, desplazamientoX);
+        float maxY = desplazar(zw, zh, alto, letra);
 
         p.rect(x, y, w, h, t.fondo, 1);
         p.rect(x, y + barra, margen - letra * 0.8f, h - barra, t.panel, 1);
@@ -614,5 +606,19 @@ public final class VentanaDeCodigo {
                 proponiendo = false;
             }
         }
+    }
+
+    /** Lleva la vista al cursor (o a la línea que se ejecuta) y la mantiene dentro del texto. Devuelve hasta dónde se puede bajar. */
+    private float desplazar(float zw, float zh, float alto, float letra) {
+        if (seguirCursor) llevarAlCursor(zw, zh, alto, letra);
+        if (seguirActiva && lineaActiva > 0) {
+            float ay = (lineaActiva - 1) * alto;
+            if (ay < desplazamientoY + alto * 2 || ay > desplazamientoY + zh - alto * 3) desplazamientoY = ay - zh / 2;
+        }
+        seguirCursor = false;
+        float maxY = Math.max(0, doc.lineas() * alto - zh + alto * 2);
+        desplazamientoY = Math.max(0, Math.min(maxY, desplazamientoY));
+        desplazamientoX = Math.max(0, desplazamientoX);
+        return maxY;
     }
 }

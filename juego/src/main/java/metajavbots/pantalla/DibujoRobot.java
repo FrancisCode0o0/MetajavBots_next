@@ -246,20 +246,9 @@ public final class DibujoRobot {
                 caja(-w + 3, base + alto * 0.55f, ancho * 0.35f, alto * 0.35f, 6, luz);
                 for (float f : new float[]{0.25f, 0.75f}) caja(-w, base + alto * f - 2, ancho, 4, 1, c2);
                 break;
-            case HEXAGONO: {
-                float[] v = new float[12];
-                for (int i = 0; i < 6; i++) {
-                    double a = Math.PI / 6 + i * Math.PI / 3;
-                    v[i * 2] = (float) Math.cos(a) * w;
-                    v[i * 2 + 1] = cy + (float) Math.sin(a) * alto / 2;
-                }
-                forma(c1, v);
-                forma(luz, v[6], v[7], v[8], v[9], 0, cy, v[4], v[5]);
-                borde(1.5f, linea, v);
-                bola(0, cy, w * 0.32f, c2);
-                bola(0, cy, w * 0.18f, c3);
+            case HEXAGONO:
+                torsoHexagonal(cy, w, alto, c1, c2, c3, luz, linea);
                 break;
-            }
             case ESBELTO:
                 caja(-w, base, ancho, alto, 6, sombra);
                 caja(-w + 1, base + 1, ancho - 2.5f, alto - 2, 5, c1);
@@ -307,6 +296,21 @@ public final class DibujoRobot {
         if (e.sobrecarga) p.brillo(enX(0), enY(base + alto / 2), ancho * 0.6f * u, 0xFF3B30, 0.5f * alfa);
     }
 
+    /** El torso de seis lados, con su núcleo en medio. */
+    private void torsoHexagonal(float cy, float w, float alto, int c1, int c2, int c3, int luz, int linea) {
+        float[] v = new float[12];
+        for (int i = 0; i < 6; i++) {
+            double a = Math.PI / 6 + i * Math.PI / 3;
+            v[i * 2] = (float) Math.cos(a) * w;
+            v[i * 2 + 1] = cy + (float) Math.sin(a) * alto / 2;
+        }
+        forma(c1, v);
+        forma(luz, v[6], v[7], v[8], v[9], 0, cy, v[4], v[5]);
+        borde(1.5f, linea, v);
+        bola(0, cy, w * 0.32f, c2);
+        bola(0, cy, w * 0.18f, c3);
+    }
+
     private void cabeza(Modelo m, float cima, int c1, int c2, int c3, Estado e) {
         int luz = Pincel.aclarar(c1, 0.25f), linea = Pincel.oscurecer(c1, 0.6f), cuello = Pincel.oscurecer(c2, 0.3f);
         boolean rota = e.partes[Montaje.CABEZA] <= 0.0001f || e.fuera;
@@ -330,16 +334,7 @@ public final class DibujoRobot {
                 p.aro(enX(3), enY(hy + 8), 6 * u, 1.2f * u, Pincel.aclarar(c2, 0.4f), alfa);
                 break;
             case ANTENAS:
-                caja(-8, hy, 16, 12, 3, c1);
-                caja(-7, hy + 6, 7, 5, 2, luz);
-                caja(-6, hy + 3, 13, 4, 1.5f, 0x111318);
-                bola(-2, hy + 5, 1.6f, ojo);
-                bola(4, hy + 5, 1.6f, ojo);
-                float vaiven = (float) Math.sin(e.tiempo * 5) * 2;
-                raya(-4, hy + 12, -7 + vaiven, hy + 22, 1.2f, c2);
-                raya(4, hy + 12, 8 + vaiven, hy + 21, 1.2f, c2);
-                bola(-7 + vaiven, hy + 22, 2, ojo);
-                bola(8 + vaiven, hy + 21, 2, ojo);
+                cabezaConAntenas(hy, c1, c2, luz, ojo, e);
                 break;
             case CUERNOS:
                 caja(-10, hy, 20, 11, 4, c1);
@@ -355,35 +350,9 @@ public final class DibujoRobot {
                 forma(0x111318, -2, hy + 4, 8, hy + 6, 8, hy + 3, -2, hy + 2.5f);
                 bola(5, hy + 4.5f, 1.5f, ojo);
                 break;
-            case PANTALLA: {
-                caja(-10, hy, 20, 15, 2.5f, Pincel.oscurecer(c1, 0.15f));
-                caja(-8.5f, hy + 1.5f, 17, 12, 1.5f, 0x0A1410);
-                int pix = rota ? 0x333333 : c3;
-                float t = e.tiempo;
-                boolean parpadea = (t % 3.2f) < 0.12f;
-                if (!parpadea) {
-                    caja(-5, hy + 8, 2.5f, 2.5f, 0, pix);
-                    caja(2.5f, hy + 8, 2.5f, 2.5f, 0, pix);
-                }
-                if (e.cara == 1) {
-                    caja(-5, hy + 4, 10, 1.5f, 0, pix);
-                    caja(-6, hy + 5, 1.5f, 1.5f, 0, pix);
-                    caja(4.5f, hy + 5, 1.5f, 1.5f, 0, pix);
-                } else if (e.cara == 2) {
-                    raya(-6, hy + 11.5f, -2, hy + 10.5f, 1, pix);
-                    raya(6, hy + 11.5f, 2, hy + 10.5f, 1, pix);
-                    caja(-4, hy + 4, 8, 1.5f, 0, pix);
-                } else if (e.cara == 3) {
-                    caja(-4, hy + 4, 8, 1.5f, 0, pix);
-                    caja(-5, hy + 3, 1.5f, 1.5f, 0, pix);
-                    caja(3.5f, hy + 3, 1.5f, 1.5f, 0, pix);
-                } else {
-                    caja(-4, hy + 4.5f, 8, 1.5f, 0, pix);
-                }
-                // Las rayas de la pantalla vieja.
-                for (int i = 0; i < 6; i++) caja(-8.5f, hy + 2 + i * 2, 17, 0.4f, 0, 0x000000);
+            case PANTALLA:
+                cabezaPantalla(hy, c1, c3, rota, e);
                 break;
-            }
             case FAROL:
                 caja(-7, hy, 14, 13, 2, c2);
                 caja(-6, hy + 2, 12, 9, 2, Pincel.aclarar(c3, rota ? 0 : 0.3f));
@@ -419,6 +388,50 @@ public final class DibujoRobot {
         if (rota) {
             raya(-6, hy + 2, 3, hy + 10, 1, 0x111111);
         }
+    }
+
+    /** La cabeza con dos antenas que se balancean. */
+    private void cabezaConAntenas(float hy, int c1, int c2, int luz, int ojo, Estado e) {
+        caja(-8, hy, 16, 12, 3, c1);
+        caja(-7, hy + 6, 7, 5, 2, luz);
+        caja(-6, hy + 3, 13, 4, 1.5f, 0x111318);
+        bola(-2, hy + 5, 1.6f, ojo);
+        bola(4, hy + 5, 1.6f, ojo);
+        float vaiven = (float) Math.sin(e.tiempo * 5) * 2;
+        raya(-4, hy + 12, -7 + vaiven, hy + 22, 1.2f, c2);
+        raya(4, hy + 12, 8 + vaiven, hy + 21, 1.2f, c2);
+        bola(-7 + vaiven, hy + 22, 2, ojo);
+        bola(8 + vaiven, hy + 21, 2, ojo);
+    }
+
+    /** La cabeza de pantalla vieja: la cara en píxeles (contenta, enfadada, dolorida o normal), que parpadea, y sus rayas. */
+    private void cabezaPantalla(float hy, int c1, int c3, boolean rota, Estado e) {
+        caja(-10, hy, 20, 15, 2.5f, Pincel.oscurecer(c1, 0.15f));
+        caja(-8.5f, hy + 1.5f, 17, 12, 1.5f, 0x0A1410);
+        int pix = rota ? 0x333333 : c3;
+        float t = e.tiempo;
+        boolean parpadea = (t % 3.2f) < 0.12f;
+        if (!parpadea) {
+            caja(-5, hy + 8, 2.5f, 2.5f, 0, pix);
+            caja(2.5f, hy + 8, 2.5f, 2.5f, 0, pix);
+        }
+        if (e.cara == 1) {
+            caja(-5, hy + 4, 10, 1.5f, 0, pix);
+            caja(-6, hy + 5, 1.5f, 1.5f, 0, pix);
+            caja(4.5f, hy + 5, 1.5f, 1.5f, 0, pix);
+        } else if (e.cara == 2) {
+            raya(-6, hy + 11.5f, -2, hy + 10.5f, 1, pix);
+            raya(6, hy + 11.5f, 2, hy + 10.5f, 1, pix);
+            caja(-4, hy + 4, 8, 1.5f, 0, pix);
+        } else if (e.cara == 3) {
+            caja(-4, hy + 4, 8, 1.5f, 0, pix);
+            caja(-5, hy + 3, 1.5f, 1.5f, 0, pix);
+            caja(3.5f, hy + 3, 1.5f, 1.5f, 0, pix);
+        } else {
+            caja(-4, hy + 4.5f, 8, 1.5f, 0, pix);
+        }
+        // Las rayas de la pantalla vieja.
+        for (int i = 0; i < 6; i++) caja(-8.5f, hy + 2 + i * 2, 17, 0.4f, 0, 0x000000);
     }
 
     private void brazo(Modelo m, Montaje mo, Montaje.Hueco hueco, float hx, float hy, Estado e, boolean detras, int c1, int c2, int c3) {
@@ -468,45 +481,9 @@ public final class DibujoRobot {
                 for (int k = -1; k <= 1; k++) bola(bx + ca * 12 + px * k * 3.5f, by + sa * 12 + py * k * 3.5f, 1.8f, 0xE63946);
                 break;
             }
-            case CUERPO: {
-                String id = pz.id;
-                if (id.startsWith("espada") || id.startsWith("herencia")) {
-                    raya(manoX, manoY, manoX + ca * 4, manoY + sa * 4, grosor, Pincel.oscurecer(colArma, 0.3f));
-                    raya(manoX + ca * 4, manoY + sa * 4, manoX + ca * 30, manoY + sa * 30, grosor * 0.7f, 0xFF4FA3);
-                    p.linea(enX(manoX + ca * 4), enY(manoY + sa * 4), enX(manoX + ca * 30), enY(manoY + sa * 30), grosor * 0.25f * u, 0xFFFFFF, alfa);
-                    if (!rota) p.brillo(enX(manoX + ca * 18), enY(manoY + sa * 18), 6 * u, 0xFF4FA3, 0.35f * alfa);
-                } else if (id.startsWith("martillo")) {
-                    raya(manoX, manoY, manoX + ca * 10, manoY + sa * 10, grosor * 0.6f, 0x5A4632);
-                    float hx2 = manoX + ca * 12, hy2 = manoY + sa * 12;
-                    forma(Pincel.mezcla(colArma, 0x9AA0A6, 0.5f), hx2 + px * 8 - ca * 3, hy2 + py * 8 - sa * 3, hx2 + px * 8 + ca * 5, hy2 + py * 8 + sa * 5,
-                            hx2 - px * 8 + ca * 5, hy2 - py * 8 + sa * 5, hx2 - px * 8 - ca * 3, hy2 - py * 8 - sa * 3);
-                } else if (id.startsWith("taladro")) {
-                    float gx = manoX + ca * 4, gy = manoY + sa * 4;
-                    forma(0xB8BEC6, gx + px * 5, gy + py * 5, gx + ca * 18, gy + sa * 18, gx - px * 5, gy - py * 5);
-                    float giro = e.tiempo * 30;
-                    for (int k = 0; k < 3; k++) {
-                        float f = ((k / 3f + giro * 0.05f) % 1);
-                        raya(gx + ca * f * 16 + px * 4 * (1 - f), gy + sa * f * 16 + py * 4 * (1 - f), gx + ca * (f * 16 + 2) - px * 4 * (1 - f),
-                                gy + sa * (f * 16 + 2) - py * 4 * (1 - f), 0.8f, 0x5B6067);
-                    }
-                } else if (id.startsWith("latigo") || id.startsWith("lambda")) {
-                    float ox = manoX, oy = manoY;
-                    for (int k = 1; k <= 8; k++) {
-                        float f = k / 8f;
-                        float nx = manoX + ca * 30 * f + px * (float) Math.sin(e.tiempo * 12 + k) * 4 * f;
-                        float ny = manoY + sa * 30 * f + py * (float) Math.sin(e.tiempo * 12 + k) * 4 * f;
-                        raya(ox, oy, nx, ny, 1.4f, 0x9BE7FF);
-                        ox = nx;
-                        oy = ny;
-                    }
-                    if (!rota) p.brillo(enX(ox), enY(oy), 3 * u, 0x9BE7FF, 0.6f * alfa);
-                } else {
-                    // Puños.
-                    bola(manoX + ca * 4, manoY + sa * 4, grosor * 1.2f, colArma);
-                    bola(manoX + ca * 5 + px * 2, manoY + sa * 5 + py * 2, grosor * 0.5f, Pincel.aclarar(colArma, 0.25f));
-                }
+            case CUERPO:
+                armaDeMano(pz.id, manoX, manoY, ca, sa, grosor, colArma, rota, e);
                 break;
-            }
             case LLAMA: {
                 raya(manoX, manoY, manoX + ca * 12, manoY + sa * 12, grosor * 1.2f, colArma);
                 raya(manoX + ca * 12, manoY + sa * 12, manoX + ca * 15, manoY + sa * 15, grosor * 0.8f, 0x333333);
@@ -526,14 +503,9 @@ public final class DibujoRobot {
                 bola(sx, sy, 2, c3);
                 break;
             }
-            case REPARAR: {
-                raya(manoX, manoY, manoX + ca * 9, manoY + sa * 9, grosor, colArma);
-                raya(manoX + ca * 9, manoY + sa * 9, manoX + ca * 13 + px * 3, manoY + sa * 13 + py * 3, 1.5f, 0xCCCCCC);
-                raya(manoX + ca * 9, manoY + sa * 9, manoX + ca * 13 - px * 3, manoY + sa * 13 - py * 3, 1.5f, 0xCCCCCC);
-                caja(manoX - 2, manoY + 3, 4, 1.4f, 0.3f, 0x4CD964);
-                caja(manoX - 0.7f, manoY + 1.7f, 1.4f, 4, 0.3f, 0x4CD964);
+            case REPARAR:
+                reparadora(manoX, manoY, ca, sa, grosor, colArma);
                 break;
-            }
             default:
                 break;
         }
@@ -541,6 +513,56 @@ public final class DibujoRobot {
             // Cables sueltos.
             raya(manoX, manoY, manoX + 3, manoY - 5, 0.8f, 0xFFB000);
             raya(manoX, manoY, manoX - 2, manoY - 6, 0.8f, 0x3FA9FF);
+        }
+    }
+
+    /** El brazo reparador: una pinza y una cruz verde. */
+    private void reparadora(float manoX, float manoY, float ca, float sa, float grosor, int colArma) {
+        float px = -sa, py = ca;   // perpendicular
+        raya(manoX, manoY, manoX + ca * 9, manoY + sa * 9, grosor, colArma);
+        raya(manoX + ca * 9, manoY + sa * 9, manoX + ca * 13 + px * 3, manoY + sa * 13 + py * 3, 1.5f, 0xCCCCCC);
+        raya(manoX + ca * 9, manoY + sa * 9, manoX + ca * 13 - px * 3, manoY + sa * 13 - py * 3, 1.5f, 0xCCCCCC);
+        caja(manoX - 2, manoY + 3, 4, 1.4f, 0.3f, 0x4CD964);
+        caja(manoX - 0.7f, manoY + 1.7f, 1.4f, 4, 0.3f, 0x4CD964);
+    }
+
+    /** Las armas de cuerpo a cuerpo en la mano: espada, martillo, taladro, látigo o el puño (ca y sa: hacia dónde apunta el brazo). */
+    private void armaDeMano(String id, float manoX, float manoY, float ca, float sa, float grosor, int colArma, boolean rota, Estado e) {
+        float px = -sa, py = ca;   // perpendicular
+        if (id.startsWith("espada") || id.startsWith("herencia")) {
+            raya(manoX, manoY, manoX + ca * 4, manoY + sa * 4, grosor, Pincel.oscurecer(colArma, 0.3f));
+            raya(manoX + ca * 4, manoY + sa * 4, manoX + ca * 30, manoY + sa * 30, grosor * 0.7f, 0xFF4FA3);
+            p.linea(enX(manoX + ca * 4), enY(manoY + sa * 4), enX(manoX + ca * 30), enY(manoY + sa * 30), grosor * 0.25f * u, 0xFFFFFF, alfa);
+            if (!rota) p.brillo(enX(manoX + ca * 18), enY(manoY + sa * 18), 6 * u, 0xFF4FA3, 0.35f * alfa);
+        } else if (id.startsWith("martillo")) {
+            raya(manoX, manoY, manoX + ca * 10, manoY + sa * 10, grosor * 0.6f, 0x5A4632);
+            float hx2 = manoX + ca * 12, hy2 = manoY + sa * 12;
+            forma(Pincel.mezcla(colArma, 0x9AA0A6, 0.5f), hx2 + px * 8 - ca * 3, hy2 + py * 8 - sa * 3, hx2 + px * 8 + ca * 5, hy2 + py * 8 + sa * 5,
+                    hx2 - px * 8 + ca * 5, hy2 - py * 8 + sa * 5, hx2 - px * 8 - ca * 3, hy2 - py * 8 - sa * 3);
+        } else if (id.startsWith("taladro")) {
+            float gx = manoX + ca * 4, gy = manoY + sa * 4;
+            forma(0xB8BEC6, gx + px * 5, gy + py * 5, gx + ca * 18, gy + sa * 18, gx - px * 5, gy - py * 5);
+            float giro = e.tiempo * 30;
+            for (int k = 0; k < 3; k++) {
+                float f = ((k / 3f + giro * 0.05f) % 1);
+                raya(gx + ca * f * 16 + px * 4 * (1 - f), gy + sa * f * 16 + py * 4 * (1 - f), gx + ca * (f * 16 + 2) - px * 4 * (1 - f),
+                        gy + sa * (f * 16 + 2) - py * 4 * (1 - f), 0.8f, 0x5B6067);
+            }
+        } else if (id.startsWith("latigo") || id.startsWith("lambda")) {
+            float ox = manoX, oy = manoY;
+            for (int k = 1; k <= 8; k++) {
+                float f = k / 8f;
+                float nx = manoX + ca * 30 * f + px * (float) Math.sin(e.tiempo * 12 + k) * 4 * f;
+                float ny = manoY + sa * 30 * f + py * (float) Math.sin(e.tiempo * 12 + k) * 4 * f;
+                raya(ox, oy, nx, ny, 1.4f, 0x9BE7FF);
+                ox = nx;
+                oy = ny;
+            }
+            if (!rota) p.brillo(enX(ox), enY(oy), 3 * u, 0x9BE7FF, 0.6f * alfa);
+        } else {
+            // Puños.
+            bola(manoX + ca * 4, manoY + sa * 4, grosor * 1.2f, colArma);
+            bola(manoX + ca * 5 + px * 2, manoY + sa * 5 + py * 2, grosor * 0.5f, Pincel.aclarar(colArma, 0.25f));
         }
     }
 

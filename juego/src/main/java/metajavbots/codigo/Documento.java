@@ -12,11 +12,9 @@ import java.util.List;
  * posiciones (desde 0); las líneas se recalculan tras cada cambio. Así no
  * hay forma de que el cursor quede fuera del texto: cada posición que llega
  * de fuera se recorta antes de usarla. Las pruebas (PruebasDelEditor) lo
- * machacan con miles de pulsaciones al azar.
- *
- * El estilo es el de los profesionales (las convenciones de Oracle y la
- * guía de Google para Java): sangría de 4 espacios y nunca tabuladores, la
- * llave que abre al final de la línea y la que cierra en su propia línea.
+ * machacan con miles de pulsaciones al azar. Estilo de Oracle y de Google:
+ * sangría de 4 espacios, la «{» al final de la línea y la «}» en la suya.
+ * Lo que no toca el texto (buscar, parejas, sangrías) está en TextoDeCodigo.
  */
 public final class Documento {
 
@@ -750,7 +748,6 @@ public final class Documento {
     }
 
     // ------------------------------------------------------------------ llaves y búsqueda
-
     /** La pareja de la llave, paréntesis o corchete que hay en pos (sin contar los de textos y comentarios); -1 si no hay. */
     public int parejaDe(int pos) {
         return TextoDeCodigo.pareja(texto.toString(), pos);

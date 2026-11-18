@@ -58,13 +58,8 @@ public final class Inyector {
         return inyectar(fuente, false);
     }
 
-    /** Con traza, además, una llamada a Tope.linea(n) antes de cada sentencia (para ver qué línea se ejecuta). */
-    public static Inyectado inyectar(String fuente, boolean traza) {
-        List<Lexico.Trozo> t = Lexico.codigo(fuente);
-        List<int[]> metidos = new ArrayList<>();
-        List<String> textos = new ArrayList<>();
-        if (traza) trazar(fuente, t, metidos, textos);
-        // Los paréntesis: dónde cierra cada uno.
+    /** Dónde cierra cada paréntesis y cada llave (y dónde abre cada cierre); -1 si no tiene pareja. */
+    static int[] parejas(List<Lexico.Trozo> t) {
         int[] pareja = new int[t.size()];
         java.util.Arrays.fill(pareja, -1);
         Deque<Integer> abiertos = new ArrayDeque<>();
@@ -83,6 +78,46 @@ public final class Inyector {
                 pareja[i] = a;
             }
         }
+        return pareja;
+    }
+
+    /** El paso de un while o un for (en i): lo primero de su cuerpo o, sin llaves, dentro de la condición. */
+    private static void pasoEnBucle(List<Lexico.Trozo> t, int i, int[] pareja, List<int[]> metidos, List<String> textos) {
+        Lexico.Trozo x = t.get(i);
+        int fin = pareja[i + 1];
+        if (fin + 1 < t.size() && t.get(fin + 1).es("{")) {
+            // Con llaves (lo normal): el paso, lo primero del cuerpo. Así «while (true)» sigue siendo un bucle sin fin
+            // para javac (si no, pediría un return detrás).
+            meter(metidos, textos, t.get(fin + 1).fin, " " + PASO + ";");
+        } else if (x.es("while")) {
+            meter(metidos, textos, t.get(i + 1).fin, PASO + " && (");
+            meter(metidos, textos, t.get(fin).inicio, ")");
+        } else {
+            // for sin llaves: el paso, en la condición (si es un for clásico con condición).
+            int primero = -1, segundo = -1, nivel = 0;
+            for (int k = i + 2; k < fin; k++) {
+                Lexico.Trozo y = t.get(k);
+                if (y.es("(") || y.es("[") || y.es("{")) nivel++;
+                else if (y.es(")") || y.es("]") || y.es("}")) nivel--;
+                else if (nivel == 0 && y.es(";")) {
+                    if (primero < 0) primero = k;
+                    else if (segundo < 0) segundo = k;
+                }
+            }
+            if (primero >= 0 && segundo > primero + 1) {
+                meter(metidos, textos, t.get(primero).fin, " " + PASO + " && (");
+                meter(metidos, textos, t.get(segundo).inicio, ")");
+            }
+        }
+    }
+
+    /** Con traza, además, una llamada a Tope.linea(n) antes de cada sentencia (para ver qué línea se ejecuta). */
+    public static Inyectado inyectar(String fuente, boolean traza) {
+        List<Lexico.Trozo> t = Lexico.codigo(fuente);
+        List<int[]> metidos = new ArrayList<>();
+        List<String> textos = new ArrayList<>();
+        if (traza) trazar(fuente, t, metidos, textos);
+        int[] pareja = parejas(t);
         // Los «while» que cierran un do-while (su paso ya va dentro del cuerpo del do).
         java.util.Set<Integer> whileDeDo = new java.util.HashSet<>();
         Deque<Llave> llaves = new ArrayDeque<>();
@@ -141,31 +176,7 @@ public final class Inyector {
                 if (cierre + 1 < t.size() && t.get(cierre + 1).es("while")) whileDeDo.add(cierre + 1);
             } else if ((x.es("while") || x.es("for")) && !whileDeDo.contains(i) && i + 1 < t.size() && t.get(i + 1).es("(")
                     && pareja[i + 1] > 0) {
-                int fin = pareja[i + 1];
-                if (fin + 1 < t.size() && t.get(fin + 1).es("{")) {
-                    // Con llaves (lo normal): el paso, lo primero del cuerpo. Así «while (true)» sigue siendo un bucle sin fin
-                    // para javac (si no, pediría un return detrás).
-                    meter(metidos, textos, t.get(fin + 1).fin, " " + PASO + ";");
-                } else if (x.es("while")) {
-                    meter(metidos, textos, t.get(i + 1).fin, PASO + " && (");
-                    meter(metidos, textos, t.get(fin).inicio, ")");
-                } else {
-                    // for sin llaves: el paso, en la condición (si es un for clásico con condición).
-                    int primero = -1, segundo = -1, nivel = 0;
-                    for (int k = i + 2; k < fin; k++) {
-                        Lexico.Trozo y = t.get(k);
-                        if (y.es("(") || y.es("[") || y.es("{")) nivel++;
-                        else if (y.es(")") || y.es("]") || y.es("}")) nivel--;
-                        else if (nivel == 0 && y.es(";")) {
-                            if (primero < 0) primero = k;
-                            else if (segundo < 0) segundo = k;
-                        }
-                    }
-                    if (primero >= 0 && segundo > primero + 1) {
-                        meter(metidos, textos, t.get(primero).fin, " " + PASO + " && (");
-                        meter(metidos, textos, t.get(segundo).inicio, ")");
-                    }
-                }
+                pasoEnBucle(t, i, pareja, metidos, textos);
             }
         }
         // Se aplica de atrás adelante para no mover las posiciones.
@@ -194,13 +205,7 @@ public final class Inyector {
      * break, continue o yield (javac diría que no se llega).
      */
     private static void trazar(String fuente, List<Lexico.Trozo> t, List<int[]> metidos, List<String> textos) {
-        int[] inicioDeLinea = new int[fuente.length() + 2];
-        int linea = 1;
-        for (int i = 0; i < fuente.length(); i++) {
-            inicioDeLinea[i] = linea;
-            if (fuente.charAt(i) == '\n') linea++;
-        }
-        inicioDeLinea[fuente.length()] = linea;
+        int[] inicioDeLinea = lineaDeCadaPosicion(fuente);
         Deque<Bloque> bloques = new ArrayDeque<>();
         Deque<Integer> parentesisDelBloque = new ArrayDeque<>();
         Deque<String> clases = new ArrayDeque<>();
@@ -269,13 +274,7 @@ public final class Inyector {
                 boolean nivelDelBloque = parentesisDelBloque.isEmpty() || parentesisDelBloque.peek() == parentesis;
                 if (arriba == Bloque.SENTENCIAS && nivelDelBloque && i + 1 < t.size()) {
                     Lexico.Trozo sig = t.get(i + 1);
-                    boolean prohibido = sig.es("}") || sig.es("else") || sig.es("catch") || sig.es("finally") || sig.es("while")
-                            || sig.es("case") || sig.es("default");
-                    for (int k = inicioDeSentencia; k < i && !prohibido; k++) {
-                        Lexico.Trozo y = t.get(k);
-                        if (y.es("return") || y.es("throw") || y.es("break") || y.es("continue") || y.es("yield")) prohibido = true;
-                    }
-                    if (!prohibido) {
+                    if (!trasEstaNo(t, inicioDeSentencia, i)) {
                         metidos.add(new int[]{x.fin, 0});
                         textos.add(" " + LINEA + "(" + inicioDeLinea[sig.inicio] + ");");
                     }
@@ -283,6 +282,35 @@ public final class Inyector {
                 if (nivelDelBloque) inicioDeSentencia = i + 1;
             }
         }
+    }
+
+    /** La línea (desde 1) de cada posición del texto. */
+    static int[] lineaDeCadaPosicion(String fuente) {
+        int[] linea = new int[fuente.length() + 2];
+        int n = 1;
+        for (int i = 0; i < fuente.length(); i++) {
+            linea[i] = n;
+            if (fuente.charAt(i) == '\n') n++;
+        }
+        linea[fuente.length()] = n;
+        return linea;
+    }
+
+    /**
+     * ¿No se puede trazar tras el «;» de la sentencia que va de «desde» a «fin»? No si lo que sigue es un cierre, un
+     * else, catch, finally, while (de un do), case o default, ni si la sentencia era un return, throw, break, continue o yield
+     * (lo de detrás no se alcanzaría: javac no lo compilaría).
+     */
+    static boolean trasEstaNo(List<Lexico.Trozo> t, int desde, int fin) {
+        Lexico.Trozo sig = t.get(fin + 1);
+        if (sig.es("}") || sig.es("else") || sig.es("catch") || sig.es("finally") || sig.es("while") || sig.es("case") || sig.es("default")) {
+            return true;
+        }
+        for (int k = desde; k < fin; k++) {
+            Lexico.Trozo y = t.get(k);
+            if (y.es("return") || y.es("throw") || y.es("break") || y.es("continue") || y.es("yield")) return true;
+        }
+        return false;
     }
 
     /** ¿Lo de antes de la «{» es «nombre(…)» de un método (no una constante de enum con argumentos)? Se mira si hay tipo delante. */

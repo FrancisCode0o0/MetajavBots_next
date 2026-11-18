@@ -35,41 +35,12 @@ public final class Historial implements Pantalla {
         Comun.fondo(j, 0);
         float arriba = Comun.cabecera(j, T.t("menu.historial"), true);
         List<Registro> h = jug.historial;
-        int v = jug.victorias(), d = jug.derrotas(), e = h.size() - v - d;
         float x = 20, y = arriba + 16;
-        // Las cifras grandes.
-        String[][] cifras = {
-                {T.t("historial.peleas"), Integer.toString(h.size())},
-                {T.t("historial.victorias"), Integer.toString(v)},
-                {T.t("historial.derrotas"), Integer.toString(d)},
-                {T.t("historial.empates"), Integer.toString(e)},
-                {T.t("historial.porcentaje"), h.isEmpty() ? "—" : Math.round(100.0 * v / h.size()) + " %"},
-                {T.t("historial.mejor_racha"), Integer.toString(mejorRacha(h))},
-                {T.t("historial.dano_medio"), h.isEmpty() ? "—" : Long.toString(Math.round(h.stream().mapToDouble(r -> r.danoRecibido).average().orElse(0)))},
-                {T.t("historial.experiencia"), Long.toString(jug.experiencia)}};
-        float cw = (p.ancho - 40) / cifras.length;
-        for (int i = 0; i < cifras.length; i++) {
-            float cx = x + i * cw;
-            p.caja(cx + 4, y, cw - 8, 90, 10, ui.tema.panel, 1);
-            p.textoCentrado(cifras[i][1], cx + cw / 2, y + 12, ui.letra * 1.8f, true, ui.tema.texto, 1);
-            p.textoCentrado(cifras[i][0], cx + cw / 2, y + 60, ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
-        }
+        cifras(j, x, y);
         y += 106;
         float h2 = p.alto - y - 20;
-        // Las últimas 30 peleas (barras: verde gana, rojo pierde; alto = daño hecho − recibido).
+        evolucion(j, x, y);
         float gw = (p.ancho - 60) * 0.5f;
-        float gy = ui.panel(x, y, gw, 230, T.t("historial.evolucion"));
-        int n = Math.min(30, h.size());
-        float bw = (gw - 40) / 30;
-        float base = gy + (230 - (gy - y)) / 2;
-        p.rect(x + 20, base, gw - 40, 1, ui.tema.borde, 1);
-        for (int i = 0; i < n; i++) {
-            Registro r = h.get(h.size() - n + i);
-            float alto = (float) Math.max(-80, Math.min(80, (r.danoHecho - r.danoRecibido) / 3));
-            int color = r.resultado == Registro.Resultado.VICTORIA ? ui.tema.bien : r.resultado == Registro.Resultado.DERROTA ? ui.tema.mal : ui.tema.aviso;
-            p.rect(x + 20 + i * bw, alto >= 0 ? base - alto : base, bw - 3, Math.max(2, Math.abs(alto)), color, 1);
-        }
-        if (n == 0) p.textoCentrado(T.t("historial.vacio"), x + gw / 2, base - 10, ui.letra * 0.9f, false, ui.tema.textoApagado, 1);
         // Contra cada modelo y en cada modo.
         Map<String, int[]> porModelo = new LinkedHashMap<>(), porModo = new LinkedHashMap<>();
         for (Registro r : h) {
@@ -139,5 +110,52 @@ public final class Historial implements Pantalla {
             mejor = Math.max(mejor, actual);
         }
         return mejor;
+    }
+
+    /** Arriba, las cifras grandes: peleas, victorias, derrotas, empates, porcentaje, mejor racha, daño medio y experiencia. */
+    private void cifras(Juego j, float x, float y) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Jugador jug = j.jugador;
+        List<Registro> h = jug.historial;
+        int v = jug.victorias(), d = jug.derrotas(), e = h.size() - v - d;
+        // Las cifras grandes.
+        String[][] cifras = {
+                {T.t("historial.peleas"), Integer.toString(h.size())},
+                {T.t("historial.victorias"), Integer.toString(v)},
+                {T.t("historial.derrotas"), Integer.toString(d)},
+                {T.t("historial.empates"), Integer.toString(e)},
+                {T.t("historial.porcentaje"), h.isEmpty() ? "—" : Math.round(100.0 * v / h.size()) + " %"},
+                {T.t("historial.mejor_racha"), Integer.toString(mejorRacha(h))},
+                {T.t("historial.dano_medio"), h.isEmpty() ? "—" : Long.toString(Math.round(h.stream().mapToDouble(r -> r.danoRecibido).average().orElse(0)))},
+                {T.t("historial.experiencia"), Long.toString(jug.experiencia)}};
+        float cw = (p.ancho - 40) / cifras.length;
+        for (int i = 0; i < cifras.length; i++) {
+            float cx = x + i * cw;
+            p.caja(cx + 4, y, cw - 8, 90, 10, ui.tema.panel, 1);
+            p.textoCentrado(cifras[i][1], cx + cw / 2, y + 12, ui.letra * 1.8f, true, ui.tema.texto, 1);
+            p.textoCentrado(cifras[i][0], cx + cw / 2, y + 60, ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
+        }
+    }
+
+    /** Las últimas 30 peleas, en barras: verde gana, rojo pierde; el alto es el daño hecho menos el recibido. */
+    private void evolucion(Juego j, float x, float y) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        List<Registro> h = j.jugador.historial;
+        // Las últimas 30 peleas (barras: verde gana, rojo pierde; alto = daño hecho − recibido).
+        float gw = (p.ancho - 60) * 0.5f;
+        float gy = ui.panel(x, y, gw, 230, T.t("historial.evolucion"));
+        int n = Math.min(30, h.size());
+        float bw = (gw - 40) / 30;
+        float base = gy + (230 - (gy - y)) / 2;
+        p.rect(x + 20, base, gw - 40, 1, ui.tema.borde, 1);
+        for (int i = 0; i < n; i++) {
+            Registro r = h.get(h.size() - n + i);
+            float alto = (float) Math.max(-80, Math.min(80, (r.danoHecho - r.danoRecibido) / 3));
+            int color = r.resultado == Registro.Resultado.VICTORIA ? ui.tema.bien : r.resultado == Registro.Resultado.DERROTA ? ui.tema.mal : ui.tema.aviso;
+            p.rect(x + 20 + i * bw, alto >= 0 ? base - alto : base, bw - 3, Math.max(2, Math.abs(alto)), color, 1);
+        }
+        if (n == 0) p.textoCentrado(T.t("historial.vacio"), x + gw / 2, base - 10, ui.letra * 0.9f, false, ui.tema.textoApagado, 1);
     }
 }

@@ -66,9 +66,7 @@ public final class Formateo {
                 continue;
             }
             String t = linea.strip();
-            if (t.isEmpty()) {
-                continue;
-            }
+            if (t.isEmpty()) continue;
             // Los trozos de esta línea.
             int desde = k, hasta = k;
             while (hasta < trozos.size() && trozos.get(hasta).inicio < fin) hasta++;

@@ -42,27 +42,7 @@ public final class ModoEspecial implements Pantalla {
         float yy = cy - d;
         switch (pestana) {
             case 0:
-                yy += p.parrafo(T.t("especial.jefes_ayuda"), x + 24, yy, w - 48, ui.letra * 0.9f, ui.tema.textoSuave, 1) + 16;
-                for (Jefe jefe : Jefe.TODOS) {
-                    boolean vencido = jug.jefesVencidos.contains(jefe.id);
-                    p.texto((vencido ? "✔ " : "") + jefe.nombre(T.idioma), x + 24, yy + 4, ui.letra * 1.1f, true, vencido ? ui.tema.bien : ui.tema.texto, 1);
-                    p.parrafo(jefe.pista.en(T.idioma), x + 24, yy + 36, w - 380, ui.letra * 0.8f, ui.tema.textoSuave, 1);
-                    if (ui.boton(T.t("especial.luchar"), x + w - 320, yy + 10, 280, 54, vencido ? Ui.Estilo.PLANO : Ui.Estilo.PRINCIPAL)) {
-                        Encuentro e = new Encuentro();
-                        e.jefe = jefe;
-                        e.modo = "JEFE";
-                        e.nivelRival = jefe.nivel;
-                        e.rival = Rivales.crear(Modelo.de(jefe.modelo), jefe.nivel, Math.max(0.6, jug.agresividad), new Random());
-                        e.rival = new metajavbots.combate.Combatiente(jefe.nombre(T.idioma), e.rival.montaje, e.rival.fabrica);
-                        e.rival.computadora = true;
-                        e.escenario = PrepararPelea.escenarioAlAzar();
-                        e.alAcabar = gano -> {
-                            if (gano) jug.jefesVencidos.add(jefe.id);
-                        };
-                        j.ir(new PantallaPelea(e));
-                    }
-                    yy += 110;
-                }
+                yy = jefes(j, x, yy, w);
                 break;
             case 1:
                 yy += p.parrafo(T.t("especial.tope_ayuda"), x + 24, yy, w - 48, ui.letra * 0.95f, ui.tema.texto, 1) + 24;
@@ -113,5 +93,38 @@ public final class ModoEspecial implements Pantalla {
                 break;
         }
         ui.finDesplazable(despl, yy + d - cy);
+    }
+
+    /** Los jefes de tema: su nombre, qué hay que usar para hacerles daño y «Luchar». Devuelve dónde acaba. */
+    private float jefes(Juego j, float x, float yy, float w) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Jugador jug = j.jugador;
+        yy += p.parrafo(T.t("especial.jefes_ayuda"), x + 24, yy, w - 48, ui.letra * 0.9f, ui.tema.textoSuave, 1) + 16;
+        for (Jefe jefe : Jefe.TODOS) {
+            boolean vencido = jug.jefesVencidos.contains(jefe.id);
+            p.texto((vencido ? "✔ " : "") + jefe.nombre(T.idioma), x + 24, yy + 4, ui.letra * 1.1f, true, vencido ? ui.tema.bien : ui.tema.texto, 1);
+            float pista = p.parrafo(jefe.pista.en(T.idioma), x + 24, yy + 36, w - 380, ui.letra * 0.8f, ui.tema.textoSuave, 1);
+            if (ui.boton(T.t("especial.luchar"), x + w - 320, yy + 10, 280, 54, vencido ? Ui.Estilo.PLANO : Ui.Estilo.PRINCIPAL)) luchar(j, jefe);
+            yy += Math.max(110, 36 + pista + 24);
+        }
+        return yy;
+    }
+
+    /** La pelea contra un jefe: su modelo, su nivel y su nombre; si se le gana, queda vencido. */
+    private static void luchar(Juego j, Jefe jefe) {
+        Jugador jug = j.jugador;
+        Encuentro e = new Encuentro();
+        e.jefe = jefe;
+        e.modo = "JEFE";
+        e.nivelRival = jefe.nivel;
+        e.rival = Rivales.crear(Modelo.de(jefe.modelo), jefe.nivel, Math.max(0.6, jug.agresividad), new Random());
+        e.rival = new metajavbots.combate.Combatiente(jefe.nombre(T.idioma), e.rival.montaje, e.rival.fabrica);
+        e.rival.computadora = true;
+        e.escenario = PrepararPelea.escenarioAlAzar();
+        e.alAcabar = gano -> {
+            if (gano) jug.jefesVencidos.add(jefe.id);
+        };
+        j.ir(new PantallaPelea(e));
     }
 }

@@ -107,71 +107,7 @@ public final class Narrador {
         esperaLocutor -= dt;
         for (int i = 0; i < esperaRobot.length; i++) esperaRobot[i] -= dt;
         tiempoSinAtacar += dt;
-        for (Suceso s : pelea.sucesos()) {
-            int q = s.quien;
-            switch (s.tipo) {
-                case RONDA_EMPIEZA: ronda((int) s.valor); break;
-                case LASER: case DISPARO: case MISIL: case GOLPE_CUERPO: case LLAMA:
-                    tiempoSinAtacar = 0;
-                    if (s.tipo == Suceso.Tipo.LASER && azar.nextFloat() < 0.15f) locutor("laser", false, null);
-                    if (s.tipo == Suceso.Tipo.MISIL && azar.nextFloat() < 0.3f) locutor("misil", false, null);
-                    if (s.tipo == Suceso.Tipo.GOLPE_CUERPO && azar.nextFloat() < 0.4f) locutor("cuerpo", false, null);
-                    if (azar.nextFloat() < 0.05f) robot(q, "ataque", false, null);
-                    break;
-                case IMPACTO:
-                    if (s.texto.equals("pared")) break;
-                    if (!primerGolpe) {
-                        primerGolpe = true;
-                        locutor("primer_golpe", true, null);
-                    } else if (s.valor >= 12) {
-                        locutor("golpe_fuerte", false, null);
-                    }
-                    robot(q, s.valor >= 12 ? "golpe_fuerte" : "golpe", false, null);
-                    if (azar.nextFloat() < 0.25f) robot(rival(q), "acierto", false, null);
-                    pullas(pelea, rival(q));
-                    break;
-                case FALLO_CUERPO:
-                    if (azar.nextFloat() < 0.3f) robot(q, "fallo", false, null);
-                    break;
-                case ESQUIVA:
-                    if (azar.nextFloat() < 0.4f) locutor("esquiva", false, null);
-                    robot(q, "esquiva", false, null);
-                    break;
-                case BLOQUEO: if (azar.nextFloat() < 0.4f) locutor("bloqueo", false, null); break;
-                case PARTE_ROTA: {
-                    String pieza = pieza(s.texto);
-                    Map<String, String> h = huecos(q, pieza);
-                    locutor("parte_rota", true, h);
-                    robot(q, "parte_rota", true, pieza);
-                    break;
-                }
-                case FUERA_DE_COMBATE: locutor("fuera_de_combate", true, null); break;
-                case ERROR_CODIGO:
-                    locutor("error_codigo", false, null);
-                    robot(q, "error_codigo", false, null);
-                    break;
-                case TOPE: if (azar.nextFloat() < 0.5f) locutor("tope", false, null); break;
-                case PARED: if (azar.nextFloat() < 0.2f) locutor("pared", false, null); break;
-                case CHOQUE: if (azar.nextFloat() < 0.4f) locutor("choque", false, null); break;
-                case ESPECIAL: robot(q, "especial", false, null); break;
-                case REPARACION: robot(q, "reparar", false, null); break;
-                case RONDA_ACABA: {
-                    locutor("fin_ronda", true, null);
-                    Pelea.Estado e = pelea.estado();
-                    if (e != Pelea.Estado.TERMINADA) {
-                        int mejor = 0, peor = 0;
-                        for (int i = 1; i < nombres.length; i++) {
-                            if (pelea.informe(i).danoRecibido < pelea.informe(mejor).danoRecibido) mejor = i;
-                            if (pelea.informe(i).danoRecibido > pelea.informe(peor).danoRecibido) peor = i;
-                        }
-                        robot(mejor, "victoria_ronda", true, null);
-                        if (peor != mejor) robot(peor, "derrota_ronda", true, null);
-                    }
-                    break;
-                }
-                default: break;
-            }
-        }
+        for (Suceso s : pelea.sucesos()) atender(s, pelea);
         for (int i = 0; i < nombres.length; i++) {
             Cuerpo c = pelea.cuerpo(i);
             if (c != null && !avisoPocoBlindaje[i] && c.blindaje() < 30) {
@@ -189,6 +125,74 @@ public final class Narrador {
         int lider = Math.abs(da - db) < 5 ? ultimoLider : da < db ? 0 : 1;
         if (ultimoLider >= 0 && lider != ultimoLider && pelea.ronda() >= 2) locutor("remontada", true, null);
         ultimoLider = lider;
+    }
+
+    /** Lo que se dice por un suceso de la pelea: el locutor y, a veces, el robot. */
+    private void atender(Suceso s, Pelea pelea) {
+        int q = s.quien;
+        switch (s.tipo) {
+            case RONDA_EMPIEZA: ronda((int) s.valor); break;
+            case LASER: case DISPARO: case MISIL: case GOLPE_CUERPO: case LLAMA:
+                tiempoSinAtacar = 0;
+                if (s.tipo == Suceso.Tipo.LASER && azar.nextFloat() < 0.15f) locutor("laser", false, null);
+                if (s.tipo == Suceso.Tipo.MISIL && azar.nextFloat() < 0.3f) locutor("misil", false, null);
+                if (s.tipo == Suceso.Tipo.GOLPE_CUERPO && azar.nextFloat() < 0.4f) locutor("cuerpo", false, null);
+                if (azar.nextFloat() < 0.05f) robot(q, "ataque", false, null);
+                break;
+            case IMPACTO:
+                if (s.texto.equals("pared")) break;
+                if (!primerGolpe) {
+                    primerGolpe = true;
+                    locutor("primer_golpe", true, null);
+                } else if (s.valor >= 12) {
+                    locutor("golpe_fuerte", false, null);
+                }
+                robot(q, s.valor >= 12 ? "golpe_fuerte" : "golpe", false, null);
+                if (azar.nextFloat() < 0.25f) robot(rival(q), "acierto", false, null);
+                pullas(pelea, rival(q));
+                break;
+            case FALLO_CUERPO:
+                if (azar.nextFloat() < 0.3f) robot(q, "fallo", false, null);
+                break;
+            case ESQUIVA:
+                if (azar.nextFloat() < 0.4f) locutor("esquiva", false, null);
+                robot(q, "esquiva", false, null);
+                break;
+            case BLOQUEO: if (azar.nextFloat() < 0.4f) locutor("bloqueo", false, null); break;
+            case PARTE_ROTA: {
+                String pieza = pieza(s.texto);
+                Map<String, String> h = huecos(q, pieza);
+                locutor("parte_rota", true, h);
+                robot(q, "parte_rota", true, pieza);
+                break;
+            }
+            case FUERA_DE_COMBATE: locutor("fuera_de_combate", true, null); break;
+            case ERROR_CODIGO:
+                locutor("error_codigo", false, null);
+                robot(q, "error_codigo", false, null);
+                break;
+            case TOPE: if (azar.nextFloat() < 0.5f) locutor("tope", false, null); break;
+            case PARED: if (azar.nextFloat() < 0.2f) locutor("pared", false, null); break;
+            case CHOQUE: if (azar.nextFloat() < 0.4f) locutor("choque", false, null); break;
+            case ESPECIAL: robot(q, "especial", false, null); break;
+            case REPARACION: robot(q, "reparar", false, null); break;
+            case RONDA_ACABA: {
+                locutor("fin_ronda", true, null);
+                Pelea.Estado e = pelea.estado();
+                if (e != Pelea.Estado.TERMINADA) {
+                    int mejor = 0, peor = 0;
+                    for (int i = 1; i < nombres.length; i++) {
+                        if (pelea.informe(i).danoRecibido < pelea.informe(mejor).danoRecibido) mejor = i;
+                        if (pelea.informe(i).danoRecibido > pelea.informe(peor).danoRecibido) peor = i;
+                    }
+                    robot(mejor, "victoria_ronda", true, null);
+                    if (peor != mejor) robot(peor, "derrota_ronda", true, null);
+                }
+                break;
+            }
+            default: break;
+        }
+    
     }
 
     /** Las burlas: la computadora (índice 1) según la agresividad; el robot del jugador, alguna suave. */

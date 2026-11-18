@@ -92,26 +92,7 @@ public final class MaquinaContraMaquina implements Pantalla {
             configurar(j, arriba);
             return;
         }
-        if (j.entrada.tecla(Keys.SPACE)) pausa = !pausa;
-        boolean paso = pausa && j.entrada.tecla(Keys.RIGHT);
-        if ((!pausa || paso) && pelea.estado() != Pelea.Estado.TERMINADA) {
-            if (pelea.estado() == Pelea.Estado.ENTRE_RONDAS) {
-                esperaEntreRondas += dt;
-                if (esperaEntreRondas > 2.5f) {
-                    esperaEntreRondas = 0;
-                    pelea.empezarRonda();
-                }
-            } else {
-                acumulado += paso ? 1 : dt * Pelea.TURNOS_POR_SEGUNDO * velocidad;
-                int n = 0;
-                while (acumulado >= 1 && n++ < 20 && pelea.estado() == Pelea.Estado.LUCHANDO) {
-                    acumulado -= 1;
-                    pelea.avanzar();
-                    vista.sucesos(pelea, j.sonidos);
-                    narrador.turno(pelea, 1f / Pelea.TURNOS_POR_SEGUNDO);
-                }
-            }
-        }
+        avanzar(j, dt);
         j.voz.fotograma(j.sonidos);
         float ah = (p.alto - arriba) * 0.5f;
         vista.letra = ui.letra;
@@ -188,5 +169,29 @@ public final class MaquinaContraMaquina implements Pantalla {
         }
         if (!Compilador.hayCompilador()) p.textoCentrado(T.t("mcm.sin_jdk"), p.ancho / 2, p.alto - 150, ui.letra * 0.85f, false, ui.tema.aviso, 1);
         if (ui.boton(T.t("mcm.empezar"), p.ancho / 2 - 160, p.alto - 100, 320, 60, Ui.Estilo.PRINCIPAL)) empezar(j);
+    }
+
+    /** La pelea avanza (Espacio: pausa; →: un turno), y entre rondas espera un poco antes de seguir. */
+    private void avanzar(Juego j, float dt) {
+        if (j.entrada.tecla(Keys.SPACE)) pausa = !pausa;
+        boolean paso = pausa && j.entrada.tecla(Keys.RIGHT);
+        if ((!pausa || paso) && pelea.estado() != Pelea.Estado.TERMINADA) {
+            if (pelea.estado() == Pelea.Estado.ENTRE_RONDAS) {
+                esperaEntreRondas += dt;
+                if (esperaEntreRondas > 2.5f) {
+                    esperaEntreRondas = 0;
+                    pelea.empezarRonda();
+                }
+            } else {
+                acumulado += paso ? 1 : dt * Pelea.TURNOS_POR_SEGUNDO * velocidad;
+                int n = 0;
+                while (acumulado >= 1 && n++ < 20 && pelea.estado() == Pelea.Estado.LUCHANDO) {
+                    acumulado -= 1;
+                    pelea.avanzar();
+                    vista.sucesos(pelea, j.sonidos);
+                    narrador.turno(pelea, 1f / Pelea.TURNOS_POR_SEGUNDO);
+                }
+            }
+        }
     }
 }

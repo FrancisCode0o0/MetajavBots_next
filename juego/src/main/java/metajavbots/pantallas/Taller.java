@@ -100,41 +100,12 @@ public final class Taller implements Pantalla {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         Jugador jug = j.jugador;
-        if (resultado != null) {
-            Compilador.Resultado r = resultado;
-            resultado = null;
-            editor.marcas.clear();
-            for (Compilador.Fallo f : r.errores) {
-                editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave));
-            }
-            aviso = r.bien ? T.f("taller.compilado_ok", r.milisegundos) : T.f("pelea.errores", r.graves().size());
-            j.sonidos.tocar(r.bien ? "bien" : "mal", 0.6f);
-        }
+        atenderCompilacion(j);
         Comun.fondo(j, t);
         float arriba = Comun.cabecera(j, T.t("menu.taller"), true);
         // A la izquierda: los robots de la partida.
         float iz = 20, ancho = 300, y = arriba + 16;
-        ui.panel(iz, y, ancho, p.alto - y - 20, T.t("taller.robots"));
-        float ry = y + 60;
-        int maximo = Progreso.robotsQuePuedeTener(jug);
-        for (int i = 0; i < jug.robots.size(); i++) {
-            Jugador.Robot r = jug.robots.get(i);
-            if (ui.boton(r.nombre, iz + 14, ry, ancho - 28, 46, i == jug.robotElegido ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
-                guardarCodigo(j);
-                jug.robotElegido = i;
-                cargar(j);
-                creando = false;
-            }
-            ry += 54;
-        }
-        if (jug.robots.size() < maximo) {
-            if (ui.boton("+ " + T.t("taller.nuevo_robot"), iz + 14, ry, ancho - 28, 46, Ui.Estilo.PRINCIPAL)) creando = true;
-            ry += 54;
-        } else if (jug.robots.size() < 4) {
-            p.parrafo(T.f("taller.mas_robots", jug.etiqueta.robotsPermitidos(), Progreso.VICTORIAS_POR_ROBOT[Math.min(3, jug.robots.size())]),
-                    iz + 18, ry, ancho - 36, ui.letra * 0.75f, ui.tema.textoApagado, 1);
-            ry += 80;
-        }
+        robots(j, iz, y, ancho);
         Jugador.Robot r = jug.robot();
         if (r != null) {
             vista.robotSuelto(p, r.montaje(), iz + ancho / 2, p.alto - 70, 2.6f, t, 0, true);
@@ -350,5 +321,48 @@ public final class Taller implements Pantalla {
         String arma = p.ranura == Pieza.Ranura.BRAZO ? p.arma().name() : p.ranura == Pieza.Ranura.CABEZA ? p.especial().name()
                 : p.ranura == Pieza.Ranura.PIERNAS ? p.locomocion().name() : "";
         return (arma.isEmpty() || arma.equals("NINGUNO") ? "" : arma + "  ") + b;
+    }
+
+    /** Lo que dijo el compilador: los errores al editor (explicados según el nivel) y el aviso de abajo. */
+    private void atenderCompilacion(Juego j) {
+        Jugador jug = j.jugador;
+        if (resultado != null) {
+            Compilador.Resultado r = resultado;
+            resultado = null;
+            editor.marcas.clear();
+            for (Compilador.Fallo f : r.errores) {
+                editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave));
+            }
+            aviso = r.bien ? T.f("taller.compilado_ok", r.milisegundos) : T.f("pelea.errores", r.graves().size());
+            j.sonidos.tocar(r.bien ? "bien" : "mal", 0.6f);
+        }
+    }
+
+    /** A la izquierda: los robots de la partida (para elegir uno), el botón de uno nuevo o cuántas victorias faltan. */
+    private void robots(Juego j, float iz, float y, float ancho) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Jugador jug = j.jugador;
+        ui.panel(iz, y, ancho, p.alto - y - 20, T.t("taller.robots"));
+        float ry = y + 60;
+        int maximo = Progreso.robotsQuePuedeTener(jug);
+        for (int i = 0; i < jug.robots.size(); i++) {
+            Jugador.Robot r = jug.robots.get(i);
+            if (ui.boton(r.nombre, iz + 14, ry, ancho - 28, 46, i == jug.robotElegido ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
+                guardarCodigo(j);
+                jug.robotElegido = i;
+                cargar(j);
+                creando = false;
+            }
+            ry += 54;
+        }
+        if (jug.robots.size() < maximo) {
+            if (ui.boton("+ " + T.t("taller.nuevo_robot"), iz + 14, ry, ancho - 28, 46, Ui.Estilo.PRINCIPAL)) creando = true;
+            ry += 54;
+        } else if (jug.robots.size() < 4) {
+            p.parrafo(T.f("taller.mas_robots", jug.etiqueta.robotsPermitidos(), Progreso.VICTORIAS_POR_ROBOT[Math.min(3, jug.robots.size())]),
+                    iz + 18, ry, ancho - 36, ui.letra * 0.75f, ui.tema.textoApagado, 1);
+            ry += 80;
+        }
     }
 }

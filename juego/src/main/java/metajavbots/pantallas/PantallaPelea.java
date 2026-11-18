@@ -623,33 +623,7 @@ public final class PantallaPelea implements Pantalla {
         Ui ui = j.ui;
         tiempoFinal += dt;
         int g = pelea.ganador();
-        // El que pierde explota (a los 0,6 s, con todo).
-        if (!explotado && tiempoFinal > 0.6f && g >= 0) {
-            explotado = true;
-            // Explotan todos los que no son del equipo ganador.
-            for (int i = 0; i < pelea.combatientes.length; i++) {
-                Cuerpo perdedor = pelea.cuerpo(i);
-                if (perdedor == null || pelea.equipo[i] == pelea.equipo[g]) continue;
-                float[] cab = vista.cabezaDe(perdedor);
-                vista.efectos.explosion(cab[0], cab[1] + 40, 2.2f);
-                perdedor.fuera = true;
-            }
-            j.sonidos.tocar("explosion_grande", 1f);
-            j.sacudir(14, 0.9f);
-            narrador.locutor(ganoElJugador ? "victoria_jugador" : "derrota_jugador", true, null);
-            narrador.robot(g, "victoria", true, null);
-            for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.equipo[i] != pelea.equipo[g]) {
-                narrador.robot(i, "derrota", true, null);
-                break;
-            }
-            if (cambio != null && cambio.subio) {
-                j.sonidos.tocar("subida", 1f);
-                narrador.locutor("subida_nivel", true, null);
-            } else if (cambio != null && cambio.bajo) {
-                j.sonidos.tocar("bajada", 0.8f);
-                narrador.locutor("bajada_nivel", true, null);
-            }
-        }
+        if (!explotado && tiempoFinal > 0.6f && g >= 0) explotar(j, g);
         if (cambio != null && cambio.subio) {
             // ¡Fuegos artificiales! Y los robots saltan de alegría, y la pantalla vibra.
             vista.alegria = 1;
@@ -713,5 +687,33 @@ public final class PantallaPelea implements Pantalla {
             j.ir(new Revision(editor.doc.texto(), pelea, yo));
         }
         if (ui.boton(T.t("final.menu"), x + w - 230, y + h - 74, 200, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.irSolo(new Menu());
+    }
+
+    /** A los 0,6 s del final: explotan todos los que no son del equipo ganador, y el locutor y los robots lo dicen. */
+    private void explotar(Juego j, int g) {
+        explotado = true;
+        // Explotan todos los que no son del equipo ganador.
+        for (int i = 0; i < pelea.combatientes.length; i++) {
+            Cuerpo perdedor = pelea.cuerpo(i);
+            if (perdedor == null || pelea.equipo[i] == pelea.equipo[g]) continue;
+            float[] cab = vista.cabezaDe(perdedor);
+            vista.efectos.explosion(cab[0], cab[1] + 40, 2.2f);
+            perdedor.fuera = true;
+        }
+        j.sonidos.tocar("explosion_grande", 1f);
+        j.sacudir(14, 0.9f);
+        narrador.locutor(ganoElJugador ? "victoria_jugador" : "derrota_jugador", true, null);
+        narrador.robot(g, "victoria", true, null);
+        for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.equipo[i] != pelea.equipo[g]) {
+            narrador.robot(i, "derrota", true, null);
+            break;
+        }
+        if (cambio != null && cambio.subio) {
+            j.sonidos.tocar("subida", 1f);
+            narrador.locutor("subida_nivel", true, null);
+        } else if (cambio != null && cambio.bajo) {
+            j.sonidos.tocar("bajada", 0.8f);
+            narrador.locutor("bajada_nivel", true, null);
+        }
     }
 }
