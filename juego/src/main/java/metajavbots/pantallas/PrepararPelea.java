@@ -14,6 +14,7 @@ import metajavbots.Juego;
 import metajavbots.codigo.Compilador;
 import metajavbots.codigo.RobotDelJugador;
 import metajavbots.combate.Combatiente;
+import metajavbots.combate.Pelea;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
@@ -120,6 +121,7 @@ public final class PrepararPelea implements Pantalla {
                 break;
             }
         }
+        if (e.rondas == Pelea.RONDAS) e.rondas = j.jugador.rondas;
         return e;
     }
 
@@ -170,6 +172,16 @@ public final class PrepararPelea implements Pantalla {
             }
             y += 70;
         }
+        // Cuántas rondas, como en el boxeo: a más rondas, más desgaste.
+        p.texto(T.t("pelear.rondas"), 40, y + 12, ui.letra, false, ui.tema.textoSuave, 1);
+        float rx = 40 + p.ancho(T.t("pelear.rondas"), ui.letra, false) + 20;
+        for (int r : Pelea.RONDAS_A_ELEGIR) {
+            if (ui.boton(Integer.toString(r), rx, y, 64, 48, jug.rondas == r ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true, T.t("pelear.rondas_ayuda"))) {
+                jug.rondas = r;
+            }
+            rx += 72;
+        }
+        y += 70;
         String[][] modos = {
                 {"ADAPTADA", "pelear.adaptada"}, {"AZAR", "pelear.azar"}, {"DESAFIO", "pelear.desafio"}, {"PRACTICA", "pelear.practica"},
                 {"ROYALE", "pelear.royale"}, {"EQUIPOS", "pelear.equipos"}, {"MCM", "pelear.mcm"}, {"CAMPANAS", "pelear.campanas"}};
@@ -214,7 +226,7 @@ public final class PrepararPelea implements Pantalla {
         Ui ui = j.ui;
         float h = 18 + p.altoDeParrafo(T.t(modo[1]), w - 40, ui.letra * 1.3f, true) + 6
                 + p.altoDeParrafo(T.t(modo[1] + "_ayuda"), w - 40, ui.letra * 0.85f) + 14;
-        if (modo[0].equals("EQUIPOS") || modo[0].equals("ROYALE")) h += 54;
+        if (modo[0].equals("EQUIPOS") || modo[0].equals("ROYALE")) h += 80;
         if (modo[0].equals("ADAPTADA") && !j.jugador.modoIA.equals("ADAPTADA")) h += ui.letra * 1.4f;
         if (modo[0].equals("DESAFIO") && !Progreso.puedeDesafiar(j.jugador)) {
             h += p.altoDeParrafo(T.f("pelear.desafio_espera", Progreso.PELEAS_ENTRE_DESAFIOS - j.jugador.peleasDesdeElDesafio), w - 40,
@@ -235,17 +247,17 @@ public final class PrepararPelea implements Pantalla {
         cy += p.parrafo(T.t(modo[1] + "_ayuda"), x + 20, cy, w - 40, ui.letra * 0.85f, ui.tema.textoSuave, 1) + 14;
         if (modo[0].equals("EQUIPOS")) {
             String nombre = companero < 0 ? T.t("pelear.companero_ia") : companeros.get(companero)[0];
-            if (ui.boton(T.f("pelear.companero", nombre), x + 20, cy, w - 40, 44, Ui.Estilo.PLANO, true, T.t("pelear.companero_ayuda"))) {
+            if (ui.boton(T.f("pelear.companero", nombre), x + 20, cy, w - 40, 70, Ui.Estilo.PLANO, true, T.t("pelear.companero_ayuda"))) {
                 companero = companero + 1 >= companeros.size() ? -1 : companero + 1;
             }
-            cy += 54;
+            cy += 80;
         }
         if (modo[0].equals("ROYALE")) {
-            if (ui.boton(T.f("pelear.cerebros", EstiloPorIA.nombre(cerebrosRoyale)), x + 20, cy, w - 40, 44, Ui.Estilo.PLANO, true,
+            if (ui.boton(T.f("pelear.cerebros", EstiloPorIA.nombre(cerebrosRoyale)), x + 20, cy, w - 40, 70, Ui.Estilo.PLANO, true,
                     T.t("pelear.cerebros_ayuda"))) {
                 cerebrosRoyale = EstiloPorIA.siguiente(cerebrosRoyale);
             }
-            cy += 54;
+            cy += 80;
         }
         if (modo[0].equals("ADAPTADA") && !jug.modoIA.equals("ADAPTADA")) {
             p.texto(T.f("pelear.dificultad_fija", jug.modoIA), x + 20, cy, ui.letra * 0.8f, false, ui.tema.aviso, 1);
@@ -288,6 +300,7 @@ public final class PrepararPelea implements Pantalla {
             e.demas.add(Rivales.alAzar(e.nivelRival, j.jugador.agresividad, azar));
             e.equiposDeLosDemas.add(equipo++);
         }
+        if (e.rondas == Pelea.RONDAS) e.rondas = j.jugador.rondas;
         return e;
     }
 
@@ -312,6 +325,7 @@ public final class PrepararPelea implements Pantalla {
         e.equiposDeLosDemas.add(0);
         e.demas.add(Rivales.crear(ms.get(azar.nextInt(ms.size())), e.nivelRival, j.jugador.agresividad, azar));
         e.equiposDeLosDemas.add(1);
+        if (e.rondas == Pelea.RONDAS) e.rondas = j.jugador.rondas;
         return e;
     }
 

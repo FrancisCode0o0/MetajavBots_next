@@ -147,6 +147,7 @@ public final class Guardado {
         v.put("volumenMusica", numero(j.volumenMusica));
         v.put("arenasConTrampas", String.valueOf(j.arenasConTrampas));
         v.put("aparatosEnLaArena", String.valueOf(j.aparatosEnLaArena));
+        v.put("rondas", Integer.toString(j.rondas));
         v.put("vozDelLocutor", Boolean.toString(j.vozDelLocutor));
         v.put("vozClara", Boolean.toString(j.vozClara));
         v.put("entrenador", j.entrenador);
@@ -285,6 +286,7 @@ public final class Guardado {
         j.volumenMusica = (float) decimal(v.get("volumenMusica"), 0.45);
         j.arenasConTrampas = !"false".equals(v.get("arenasConTrampas"));
         j.aparatosEnLaArena = !"false".equals(v.get("aparatosEnLaArena"));
+        j.rondas = (int) decimal(v.get("rondas"), 6);
         j.vozDelLocutor = !"false".equals(v.get("vozDelLocutor"));
         j.vozClara = !"false".equals(v.get("vozClara"));
         j.entrenador = v.getOrDefault("entrenador", "tuercas");

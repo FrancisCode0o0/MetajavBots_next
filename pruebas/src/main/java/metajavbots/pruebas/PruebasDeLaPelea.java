@@ -120,6 +120,27 @@ final class PruebasDeLaPelea {
         apuntarParte4();
         apuntarArenas();
         apuntarAparatos();
+        apuntarRondas();
+    }
+
+    private static void apuntarRondas() {
+        caso("rondas como en el boxeo: con 4 o menos cada ronda empieza entera; con 12, el daño se arrastra (nunca por debajo de la mitad)", () -> {
+            java.util.List<Modelo> ms = Modelo.todos();
+            for (int rondas : new int[]{4, 12}) {
+                Pelea p = new Pelea(Rivales.crear(ms.get(3), 0.8, 0.9, new Random(4)), Rivales.crear(ms.get(6), 0.8, 0.9, new Random(5)), 21);
+                p.rondas = rondas;
+                p.empezarRonda();
+                while (p.estado() == Pelea.Estado.LUCHANDO) p.avanzar();
+                if (p.estado() != Pelea.Estado.ENTRE_RONDAS) continue;
+                p.empezarRonda();
+                for (int i = 0; i < 2; i++) {
+                    metajavbots.combate.Cuerpo c = p.cuerpo(i);
+                    double total = c.blindaje(), dano = p.combatientes[i].danoTotalRecibido;
+                    if (rondas == 4 || dano < 1) cierto(total > 99.9, "entera con " + rondas + " rondas: " + total);
+                    else cierto(total < 99.9 && total >= 49.9, "con 12 rondas arrastra el daño (" + total + ")");
+                }
+            }
+        });
     }
 
     private static void apuntarAparatos() {

@@ -243,6 +243,7 @@ public final class ModoEspecial implements Pantalla {
         Encuentro e = new Encuentro();
         e.jefe = jefe;
         e.modo = "JEFE";
+        e.rondas = jug.rondas;
         e.nivelRival = jefe.nivel;
         e.rival = Rivales.crear(Modelo.de(jefe.modelo), jefe.nivel, Math.max(0.6, jug.agresividad), new Random());
         e.rival = new metajavbots.combate.Combatiente(jefe.nombre(T.idioma), e.rival.montaje, e.rival.fabrica);

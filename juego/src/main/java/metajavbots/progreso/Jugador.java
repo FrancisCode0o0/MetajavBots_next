@@ -115,6 +115,8 @@ public final class Jugador {
     public boolean arenasConTrampas = true;
     /** Si salen aparatos en la arena de ronda en ronda (motor a chorro, antigravedad, descarga…). */
     public boolean aparatosEnLaArena = true;
+    /** Las rondas de las peleas (3, 4, 6, 10 o 12, como en el boxeo; 6 de fábrica). */
+    public int rondas = 6;
     public int victoriasExtrema;
 
     public Jugador(String nombre) {

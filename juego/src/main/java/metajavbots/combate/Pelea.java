@@ -74,6 +74,17 @@ public final class Pelea {
         this(a, b, semilla, 1000, 700, 1200);
     }
 
+    /** Las rondas que se pueden elegir, como en el boxeo (Ajustes de la pelea). */
+    public static final int[] RONDAS_A_ELEGIR = {3, 4, 6, 10, 12};
+
+    /**
+     * Cuánto daño se arrastra de una ronda a la siguiente: nada hasta 4 rondas; más cuantas más (con 12, casi todo
+     * lo que lleva encima). Es el desgaste: en las peleas largas hay que programar para aguantar.
+     */
+    public double desgaste() {
+        return Math.max(0, rondas - RONDAS) * 0.12;
+    }
+
     /** Las trampas y los objetos de la arena (NINGUNA en las de siempre). */
     public Arena arena = Arena.NINGUNA;
     /** Los aparatos que salen de ronda en ronda (apagados salvo que la pantalla los encienda). */
@@ -181,6 +192,13 @@ public final class Pelea {
                 double a = Math.toRadians(giro + 360.0 * k / n);
                 double x = ancho / 2 + Math.cos(a) * (ancho / 2 - margen), y = alto / 2 + Math.sin(a) * (alto / 2 - margen);
                 cuerpos[i] = new Cuerpo(this, i, combatientes[i], x, y, normal(Math.toDegrees(a) + 180), semilla * 31 + ronda * 7 + i * 3);
+            }
+        }
+        if (ronda > 1 && desgaste() > 0) {
+            // Empieza con lo que arrastra de las rondas de antes (nunca por debajo de la mitad).
+            for (Cuerpo cu : cuerpos) {
+                double f = Math.max(0.5, 1 - cu.combatiente.estropeado() * desgaste());
+                for (int k = 0; k < 4; k++) cu.parte[k] *= f;
             }
         }
         estado = Estado.LUCHANDO;
