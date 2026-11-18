@@ -53,7 +53,9 @@ public final class EntrenadorFlotante {
     private Concepto elegido;
     private int nivel = 1;
     private final Ui.Desplazable despLista = new Ui.Desplazable(), despTexto = new Ui.Desplazable();
-    private float t, hablando;
+    private float t, hablando, dt;
+    /** Cuánto ha salido la pestaña (0, recogida en el borde; 1, entera). */
+    private float asomada;
     private CerebroDelJuego.Peticion peticion;
     private String respuestaIa;
     private Cerebro cerebro;
@@ -158,6 +160,7 @@ public final class EntrenadorFlotante {
     /** Al final del fotograma: la pestaña con la cabecita y el tip (cerrada) o la consulta entera (abierta). */
     public void dibujar(Juego j, float dt) {
         if (j.jugador == null) return;
+        this.dt = dt;
         t += dt;
         hablando = Math.max(0, hablando - dt);
         Entrenador en = Entrenador.de(j.jugador.entrenador);
@@ -185,9 +188,11 @@ public final class EntrenadorFlotante {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         boolean enfermo = hospital(j);
-        float r = 20, cx = p.ancho - 26, cy = p.alto * 0.56f;
-        boolean encima = j.entrada.dentro(cx - r - 10, cy - r - 10, r * 2 + 20, r * 2 + 20);
-        float sale = encima ? 10 : 0;
+        // Recogida, solo asoma media cabeza por el borde (no tapa lo de la pantalla); con el ratón encima, sale entera.
+        float r = 20, cy = p.alto * 0.56f;
+        boolean encima = j.entrada.dentro(p.ancho - (asomada > 0.5f ? r * 2 + 50 : 38), cy - r - 10, r * 2 + 50, r * 2 + 20);
+        asomada += (encima || tip != null ? 1 - asomada : -asomada) * Math.min(1, dt * 12);
+        float cx = p.ancho - 26 + (1 - asomada) * 24, sale = asomada * 10;
         p.caja(cx - r - 12 - sale, cy - r - 10, r * 2 + 40, r * 2 + 20, 14, enfermo ? 0xE8ECEF : ui.tema.panelAlto, 0.92f);
         p.bordeRedondeado(cx - r - 12 - sale, cy - r - 10, r * 2 + 40, r * 2 + 20, 14, enfermo ? 0xFF4D4D : ui.tema.acento, 0.9f, 1.5f);
         CabezaDeEntrenador.dibujar(p, en, cx - sale, cy, r, false, t);

@@ -43,8 +43,9 @@ public final class Comun {
             if (botonAtras(j)) j.volver();
             x = 40 + anchoDeAtras(j);
         }
-        p.texto(titulo, x, 20, ui.letra * 1.6f, true, ui.tema.texto, 1);
         Jugador jug = j.jugador;
+        // El título no se mete debajo de la insignia de la etiqueta (con letra grande, se encoge).
+        p.texto(titulo, x, 20, ui.cabe(titulo, (jug != null ? p.ancho - 460 : p.ancho) - x - 20, ui.letra * 1.6f, true), true, ui.tema.texto, 1);
         if (jug != null) {
             float ex = p.ancho - 460;
             insignia(p, ui, jug.etiqueta, ex, 14, 1f);
@@ -54,7 +55,7 @@ public final class Comun {
             String texto = jug.etiqueta == Etiqueta.MASTER ? "MASTER" : T.f("comun.progreso", r.victoriasQueTiene, r.victorias, r.ejerciciosQueTiene,
                     r.ejercicios);
             ui.barra(ex + 150, 22, 290, 20, parte, ui.tema.acento, null);
-            p.texto(texto, ex + 150, 46, ui.letra * 0.72f, false, ui.tema.textoSuave, 1);
+            p.texto(texto, ex + 150, 46, ui.cabe(texto, 296, ui.letra * 0.72f, false), false, ui.tema.textoSuave, 1);
             if (ui.e.dentro(ex, 10, 450, 60)) ui.avisar(T.f("comun.progreso_ayuda", jug.etiqueta.nombre, jug.etiqueta.siguiente().nombre));
         }
         return h;
