@@ -84,6 +84,12 @@ public final class Narrador {
         if (alHablarLocutor != null) alHablarLocutor.accept(f);
     }
 
+    /** El locutor dice ese texto ya hecho (la presentación de los robots), sin esperar su turno. */
+    public void anunciar(String texto) {
+        esperaLocutor = 3;
+        if (alHablarLocutor != null) alHablarLocutor.accept(texto);
+    }
+
     /** Lo dice un robot si toca. */
     public void robot(int quien, String evento, boolean importante, String pieza) {
         if (quien < 0 || quien >= robots.length) return;

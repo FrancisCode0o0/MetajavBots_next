@@ -38,6 +38,55 @@ public final class Capturas extends Juego {
     private final File salida;
     private int actual = -1, fotogramas;
 
+    /** Las pantallas de cómo acaba (y empieza) una pelea: las derrotas y la entrada épica. */
+    private void finalesDePelea() {
+        pantallas.put("08f_derrotas", () -> new Pantalla() {
+            private VistaDeArena vista;
+            private Pelea pelea;
+            private int fotogramas;
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (vista == null) {
+                    vista = new VistaDeArena(j.pincel);
+                    vista.escenario = VistaDeArena.Escenario.DESIERTO;
+                    Random r = new Random(3);
+                    List<Modelo> ms = Modelo.todos();
+                    pelea = new Pelea(Rivales.crear(ms.get(2), 0.6, 0.5, r), Rivales.crear(ms.get(7), 0.6, 0.5, r), 4);
+                    pelea.empezarRonda();
+                    for (int i = 0; i < 120; i++) pelea.avanzar();
+                }
+                // Con un paso fijo (las capturas van muy deprisa): se ve cómo van cayendo las piezas.
+                vista.dibujar(j.pincel, pelea, 0, 0, j.pincel.ancho, j.pincel.alto, 1 / 40f);
+                if (++fotogramas == 365) {
+                    vista.explotar(pelea.cuerpo(0), 1);
+                    vista.explotar(pelea.cuerpo(1), 3);
+                }
+            }
+        });
+        pantallas.put("08g_entrada", () -> new Pantalla() {
+            private VistaDeArena vista;
+            private Pelea pelea;
+            private metajavbots.pantallas.EntradaEpica entrada;
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (vista == null) {
+                    vista = new VistaDeArena(j.pincel);
+                    vista.escenario = VistaDeArena.Escenario.TEJADO;
+                    Random r = new Random(6);
+                    List<Modelo> ms = Modelo.todos();
+                    pelea = new Pelea(Rivales.crear(ms.get(0), 0.6, 0.5, r), Rivales.crear(ms.get(9), 0.6, 0.5, r), 2);
+                    pelea.empezarRonda();
+                    entrada = new metajavbots.pantallas.EntradaEpica(pelea);
+                }
+                entrada.en(4.6f);
+                vista.dibujar(j.pincel, pelea, 0, 88, j.pincel.ancho, j.pincel.alto - 88, dt);
+                entrada.dibujar(j, pelea, vista, 0, 88, j.pincel.ancho, j.pincel.alto - 88);
+            }
+        });
+    }
+
     /** Las pantallas de lo último: los aparatos de la arena. */
     private void nuevas() {
         pantallas.put("08e_arma_especial", () -> new Pantalla() {
@@ -63,30 +112,7 @@ public final class Capturas extends Juego {
                 especial.dibujar(j, vista, pelea);
             }
         });
-        pantallas.put("08f_derrotas", () -> new Pantalla() {
-            private VistaDeArena vista;
-            private Pelea pelea;
-            private int fotogramas;
-
-            @Override
-            public void fotograma(Juego j, float dt) {
-                if (vista == null) {
-                    vista = new VistaDeArena(j.pincel);
-                    vista.escenario = VistaDeArena.Escenario.DESIERTO;
-                    Random r = new Random(3);
-                    List<Modelo> ms = Modelo.todos();
-                    pelea = new Pelea(Rivales.crear(ms.get(2), 0.6, 0.5, r), Rivales.crear(ms.get(7), 0.6, 0.5, r), 4);
-                    pelea.empezarRonda();
-                    for (int i = 0; i < 120; i++) pelea.avanzar();
-                }
-                // Con un paso fijo (las capturas van muy deprisa): se ve cómo van cayendo las piezas.
-                vista.dibujar(j.pincel, pelea, 0, 0, j.pincel.ancho, j.pincel.alto, 1 / 40f);
-                if (++fotogramas == 365) {
-                    vista.explotar(pelea.cuerpo(0), 1);
-                    vista.explotar(pelea.cuerpo(1), 3);
-                }
-            }
-        });
+        finalesDePelea();
         pantallas.put("09f_finales", () -> new Pantalla() {
             private float t = 1.0f;
 

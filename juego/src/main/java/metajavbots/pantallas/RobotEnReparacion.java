@@ -3,10 +3,14 @@ package metajavbots.pantallas;
 import java.util.ArrayList;
 import java.util.List;
 
+import metajavbots.Juego;
+import metajavbots.combate.Combatiente;
 import metajavbots.pantalla.DibujoRobot;
 import metajavbots.pantalla.Pincel;
+import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VistaDeArena;
 import metajavbots.piezas.Montaje;
+import metajavbots.textos.T;
 
 /**
  * ROBOT EN REPARACIÓN — Un robot roto que se va arreglando a la vista: con
@@ -23,6 +27,40 @@ final class RobotEnReparacion {
     private final List<float[]> tornillos = new ArrayList<>();
     /** Lo que suena al recuperar una pieza (puede ser null). */
     Runnable alRecuperar;
+
+    RobotEnReparacion() {
+    }
+
+    RobotEnReparacion(Runnable alRecuperar) {
+        this.alRecuperar = alRecuperar;
+    }
+
+    /**
+     * En la pelea de un robot roto: arriba a la izquierda, cómo se va reparando según lo que el jugador hace bien
+     * (compila, ha cambiado el código y va cumpliendo el objetivo); en la arena, el humo de lo que le falta.
+     */
+    void panel(Juego j, VistaDeArena vista, Combatiente yo, boolean compila, String fuente, String original, String objetivo, float dt) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        boolean cambiado = compila && !fuente.equals(original);
+        Combatiente.Informe inf = yo.informes.isEmpty() ? new Combatiente.Informe() : yo.informes.get(yo.informes.size() - 1);
+        int quiere = Objetivo.aciertosQuePide(objetivo);
+        float parte = quiere <= 0 ? (Objetivo.cumple(objetivo, yo, fuente) ? 1 : 0) : Math.min(1, inf.aciertos / (float) quiere);
+        float arreglo = 0.1f + (compila ? 0.2f : 0) + (cambiado ? 0.2f : 0) + (cambiado ? 0.5f * parte : 0);
+        vista.averiaDelJugador = 1 - arreglo;
+        float tl = ui.letra * 0.72f, w = 250, h = 240 + 3 * tl * 1.4f, x = 16, y = 100;
+        p.caja(x, y, w, h, 12, ui.tema.panel, 0.88f);
+        p.texto(T.f("roto.reparado", Math.round(arreglo * 100)), x + 12, y + 8, ui.letra * 0.85f, true, arreglo >= 1 ? ui.tema.bien : 0xFFC857, 1);
+        dibujar(p, vista, yo.montaje, x + w / 2, y + 222, 2.1f, arreglo, dt);
+        float ly = y + 234;
+        String[][] pasos = {{compila ? "✔" : "□", T.t("roto.compila")}, {cambiado ? "✔" : "□", T.t("roto.cambiado")},
+            {parte >= 1 ? "✔" : "□", quiere > 0 ? T.f("roto.aciertos", inf.aciertos, quiere) : Objetivo.texto(objetivo)}};
+        for (String[] paso : pasos) {
+            boolean hecho = paso[0].equals("✔");
+            p.texto(paso[0] + " " + ui.recortarTexto(paso[1], w - 40, tl, false), x + 12, ly, tl, false, hecho ? ui.tema.bien : ui.tema.texto, 1);
+            ly += tl * 1.4f;
+        }
+    }
 
     /** Las piezas vuelven en este orden: piernas, brazo izquierdo, brazo derecho y cabeza. */
     private static final float[] UMBRAL = {0.85f, 0.45f, 0.65f, 0.25f};

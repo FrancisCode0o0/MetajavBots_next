@@ -45,6 +45,7 @@ public final class PantallaPelea implements Pantalla {
     private RobotEnReparacion reparando;
     private final PanelDelAparato panelDelAparato = new PanelDelAparato();
     private ArmaEspecial especial;
+    private EntradaEpica entrada;
     private Combatiente yo;
     private final RobotDelJugador robot = new RobotDelJugador();
     private VistaDeArena vista;
@@ -121,6 +122,7 @@ public final class PantallaPelea implements Pantalla {
         pelea.arena = metajavbots.combate.Arena.de(encuentro.escenario.name(), pelea.ancho, pelea.alto);
         // Los aparatos que salen de ronda en ronda (no en los robots rotos ni en los tutoriales).
         pelea.aparatos.activos = jug.aparatosEnLaArena && encuentro.codigo == null && encuentro.objetivo == null;
+        if (encuentro.codigo == null && encuentro.objetivo == null) entrada = new EntradaEpica(pelea);
         // El arma especial con cuenta atrás: en las peleas de uno contra uno de más de una ronda.
         if (jug.armasEspeciales && encuentro.demas.isEmpty() && encuentro.codigo == null && encuentro.objetivo == null && encuentro.rondas > 1
                 && !sinJdk) especial = ArmaEspecial.para(jug);
@@ -284,6 +286,8 @@ public final class PantallaPelea implements Pantalla {
         if (vista.parada > 0) {
             // Tras un golpe fuerte, la pelea se para un instante (como en los juegos de lucha).
             vista.parada -= dt;
+        } else if (entrada != null && entrada.activa()) {
+            entrada.avanzar(j, pelea, vista, narrador, dt);
         } else if (especial != null && especial.activa()) {
             especial.avanzar(j, pelea, vista, dt);
         } else if (!pausa && !entreRondas && !terminada) {
@@ -319,6 +323,7 @@ public final class PantallaPelea implements Pantalla {
         vista.letra = ui.letra;
         vista.techo = tiempoLocutor > 0 && !locutor.isEmpty() ? 100 + altoDeLaBanda + 8 : 0;
         vista.dibujar(p, pelea, 0, 88, ancho, p.alto - 88, pausa || entreRondas ? 0 : dt);
+        if (entrada != null && entrada.activa()) entrada.dibujar(j, pelea, vista, 0, 88, ancho, p.alto - 88);
         if (especial != null) especial.dibujar(j, vista, pelea);
         if (encuentro.codigo != null) reparacion(j, dt);
         marcador(j);
@@ -739,35 +744,9 @@ public final class PantallaPelea implements Pantalla {
         } else if (ui.boton(T.t("final.menu"), x + w - 230, y + h - 74, 200, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.irSolo(new Menu());
     }
 
-    /**
-     * Un robot roto: arriba a la izquierda se ve cómo se va reparando según lo que el jugador hace bien (compila,
-     * ha cambiado el código y va cumpliendo el objetivo).
-     */
     private void reparacion(Juego j, float dt) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        boolean compila = robot.listo(), cambiado = compila && !robot.fuente().equals(encuentro.codigo);
-        Combatiente.Informe inf = yo.informes.isEmpty() ? new Combatiente.Informe() : yo.informes.get(yo.informes.size() - 1);
-        int quiere = Objetivo.aciertosQuePide(encuentro.objetivo);
-        float parte = quiere <= 0 ? (Objetivo.cumple(encuentro.objetivo, yo, robot.fuente()) ? 1 : 0) : Math.min(1, inf.aciertos / (float) quiere);
-        float arreglo = 0.1f + (compila ? 0.2f : 0) + (cambiado ? 0.2f : 0) + (cambiado ? 0.5f * parte : 0);
-        vista.averiaDelJugador = 1 - arreglo;
-        float tl = ui.letra * 0.72f, w = 250, h = 240 + 3 * tl * 1.4f, x = 16, y = 100;
-        p.caja(x, y, w, h, 12, ui.tema.panel, 0.88f);
-        p.texto(T.f("roto.reparado", Math.round(arreglo * 100)), x + 12, y + 8, ui.letra * 0.85f, true, arreglo >= 1 ? ui.tema.bien : 0xFFC857, 1);
-        if (reparando == null) {
-            reparando = new RobotEnReparacion();
-            reparando.alRecuperar = () -> j.sonidos.tocar("compilar", 0.7f);
-        }
-        reparando.dibujar(p, vista, yo.montaje, x + w / 2, y + 222, 2.1f, arreglo, dt);
-        float ly = y + 234;
-        String[][] pasos = {{compila ? "✔" : "□", T.t("roto.compila")}, {cambiado ? "✔" : "□", T.t("roto.cambiado")},
-            {parte >= 1 ? "✔" : "□", quiere > 0 ? T.f("roto.aciertos", inf.aciertos, quiere) : Objetivo.texto(encuentro.objetivo)}};
-        for (String[] paso : pasos) {
-            boolean hecho = paso[0].equals("✔");
-            p.texto(paso[0] + " " + ui.recortarTexto(paso[1], w - 40, tl, false), x + 12, ly, tl, false, hecho ? ui.tema.bien : ui.tema.texto, 1);
-            ly += tl * 1.4f;
-        }
+        if (reparando == null) reparando = new RobotEnReparacion(() -> j.sonidos.tocar("compilar", 0.7f));
+        reparando.panel(j, vista, yo, robot.listo(), robot.listo() ? robot.fuente() : "", encuentro.codigo, encuentro.objetivo, dt);
     }
 
     /** A los 0,6 s del final: explotan todos los que no son del equipo ganador, y el locutor y los robots lo dicen. */

@@ -368,6 +368,12 @@ public final class VistaDeArena {
         }
     }
 
+    /** Solo ese robot, encima de todo (la presentación lo ilumina por encima de la penumbra). */
+    public void robotDe(Pincel p, Pelea pelea, int i) {
+        Cuerpo c = pelea.cuerpo(i);
+        if (c != null) sombraYRobot(p, c, pelea, 0);
+    }
+
     private void sombraYRobot(Pincel p, Cuerpo c, Pelea pelea, float dt) {
         DibujoRobot.Estado e = estados[c.indice];
         Combatiente co = c.combatiente;

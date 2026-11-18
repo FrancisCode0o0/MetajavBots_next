@@ -49,6 +49,8 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 
 - **Explosiones variadas al perder** (`VistaDeArena.explotar`, `pantalla/Trastos.java`): cada perdedor acaba de una de cinco maneras: la explosión grande, una lluvia de tornillos, tuercas y engranajes que rebotan por el suelo hasta pararse, un «pop» de confeti, la cabeza que sale volando y rueda con los ojos en X, o mucho humo y un último «bip» triste que baja de tono (sonido nuevo del sintetizador).
 
+- **Entradas épicas** (`EntradaEpica`): antes de la primera ronda, el locutor presenta a cada robot como en el boxeo («¡En la esquina azul… Cobaltito!»): la arena en penumbra, dos focos que barren hasta él, humo a sus pies, su nombre en grande que entra deslizándose y su biografía absurda en una frase (la primera de `res/biografias/robots.txt`), en la mitad contraria para no taparlo; al final, «¡A PELEAR!». Se salta con clic, Espacio o Esc. No sale en los tutoriales ni en los robots rotos.
+
 **Lo que decidí yo (para que Fran lo revise)**
 
 - **Reglas de estilo que no exijo** (están en el XML y por qué): una sola sentencia por línea (las tablas de reglas de la voz y de las teclas del editor se leen mejor en una línea), no reasignar parámetros (el patrón «y += alto» de las funciones de dibujo) y no tocar la variable del bucle (los analizadores de código lo hacen). Hasta 11 parámetros (el `Registro` del historial tiene 11 datos).
