@@ -91,7 +91,8 @@ public final class PantallaLaboratorio implements Pantalla {
         clase.dibujar(ui, x, y, w * 0.45f - 8, h);
         pruebas.dibujar(ui, x + w * 0.45f + 8, y, w * 0.55f - 8, h);
         float by = y + h + 12;
-        if (ui.boton(probando ? T.t("ejercicio.comprobando") : T.t("laboratorio.ejecutar") + "  (Ctrl+S)", x, by, 330, 50, Ui.Estilo.PRINCIPAL,
+        String ejecutar = probando ? T.t("ejercicio.comprobando") : T.t("laboratorio.ejecutar") + "  (Ctrl+S)";
+        if (ui.boton(ejecutar, x, by, Math.max(330, p.ancho(ejecutar, ui.letra, true) + 40), 50, Ui.Estilo.PRINCIPAL,
                 !probando && Compilador.hayCompilador(), null)) probar(j);
         if (r != null && !probando) {
             float ry = by + 62, rx = x;

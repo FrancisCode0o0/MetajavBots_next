@@ -107,9 +107,21 @@ public final class Ui {
         if (estilo != Estilo.PLANO) p.caja(x, y + 2, w, h, 8, 0x000000, 0.25f);
         p.caja(x, y + desplaza, w, h, 8, fondo, 1);
         if (encima || estilo == Estilo.ELEGIDO) p.bordeRedondeado(x, y + desplaza, w, h, 8, estilo == Estilo.ELEGIDO ? tema.acento : tema.borde, 1, 1.5f);
-        float t = cabe(texto, w - 16, Math.min(letra, h * 0.5f), true);
-        String s = recortarTexto(texto, w - 16, t, true);
-        p.textoCentrado(s, x + w / 2, y + desplaza + (h - t * 1.15f) / 2, t, true, letraColor, 1);
+        // Si no cabe: en un botón alto, en dos líneas con la letra entera; si no, con la letra algo menor; y si ni así, cortado.
+        float t = Math.min(letra, h * 0.5f);
+        java.util.List<String> lineas = p.ancho(texto, t, true) > w - 16 && h >= t * 2.9f ? p.partir(texto, w - 16, t, true) : null;
+        if (lineas == null || lineas.size() != 2) t = cabe(texto, w - 16, t, true);
+        if (lineas != null && lineas.size() == 2) {
+            // Un botón alto con un texto largo: en dos líneas, entero.
+            float ly = y + desplaza + (h - 2 * p.altoDeLinea(t)) / 2;
+            for (String l : lineas) {
+                p.textoCentrado(l, x + w / 2, ly, t, true, letraColor, 1);
+                ly += p.altoDeLinea(t);
+            }
+        } else {
+            String s = recortarTexto(texto, w - 16, t, true);
+            p.textoCentrado(s, x + w / 2, y + desplaza + (h - t * 1.15f) / 2, t, true, letraColor, 1);
+        }
         if (encima && ayuda != null) avisar(ayuda);
         if (activo && e.clic(x, y, w, h)) {
             if (sonidoDeClic != null) sonidoDeClic.run();

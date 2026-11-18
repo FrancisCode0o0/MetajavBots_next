@@ -142,9 +142,9 @@ public final class Temario implements Pantalla {
         Comun.fondo(j, 0);
         float arriba = Comun.cabecera(j, T.t("menu.temario"), true);
         float x = 20, y = arriba + 12, w = p.ancho * 0.42f;
-        p.parrafo(T.t("temario.ayuda"), x, y, w, ui.letra * 0.85f, ui.tema.textoSuave, 1);
-        texto.dibujar(ui, x, y + 60, w, p.alto - y - 160);
-        if (ui.boton(T.t("temario.preparar"), x, p.alto - 86, 300, 56, Ui.Estilo.PRINCIPAL)) {
+        float ayuda = p.parrafo(T.t("temario.ayuda"), x, y, w, ui.letra * 0.85f, ui.tema.textoSuave, 1) + 12;
+        texto.dibujar(ui, x, y + ayuda, w, p.alto - y - ayuda - 100);
+        if (ui.boton(T.t("temario.preparar"), x, p.alto - 86, Math.max(300, p.ancho(T.t("temario.preparar"), ui.letra, true) + 40), 56, Ui.Estilo.PRINCIPAL)) {
             temas.clear();
             temas.addAll(temasDe(texto.doc.texto()));
             nuevos.clear();

@@ -106,10 +106,13 @@ public final class Historial implements Pantalla {
             List<Ejercicio> es = Banco.delJuego().deTema(tm.id);
             int hechos = 0;
             for (Ejercicio ej : es) if (jug.ejerciciosResueltos.contains(ej.id)) hechos++;
-            float tx = rx + 16 + (i % cols) * (rw - 32) / cols, ty = ey + (i / cols) * 24;
-            p.texto(tm.id, tx, ty, ui.letra * 0.7f, false, ui.tema.textoSuave, 1);
-            ui.barra(tx + 30, ty + 4, (rw - 32) / cols - 90, 10, es.isEmpty() ? 0 : (float) hechos / es.size(), ui.tema.bien, null);
-            p.textoDerecha(hechos + "/" + es.size(), tx + (rw - 32) / cols - 10, ty, ui.letra * 0.7f, false, ui.tema.textoSuave, 1);
+            // Cada columna con su hueco a la derecha: la cifra de una no se pega al número de la siguiente.
+            float col = (rw - 32) / cols, tx = rx + 16 + (i % cols) * col, ty = ey + (i / cols) * 24;
+            float t = ui.letra * 0.7f, cifra = p.ancho("00/00", t, false);
+            p.texto(tm.id, tx, ty, t, false, ui.tema.textoSuave, 1);
+            float bx = tx + p.ancho("00", t, false) + 10;
+            ui.barra(bx, ty + 4, col - (bx - tx) - cifra - 40, 10, es.isEmpty() ? 0 : (float) hechos / es.size(), ui.tema.bien, null);
+            p.textoDerecha(hechos + "/" + es.size(), tx + col - 30, ty, t, false, ui.tema.textoSuave, 1);
             i++;
         }
         float ly = ui.panel(rx, y + 346, rw, h2 - 346, T.t("historial.ultimas"));

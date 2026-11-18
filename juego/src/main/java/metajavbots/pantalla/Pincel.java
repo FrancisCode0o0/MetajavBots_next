@@ -212,8 +212,11 @@ public final class Pincel {
     // ================================================================ letras
 
     /** La letra de ese tamaño lógico (normal o negrita), creada a los píxeles de verdad. */
+    /** La letra más pequeña que se dibuja (Fran tiene la vista cansada: nada de letra diminuta, ni en los rincones). */
+    public static final float LETRA_MINIMA = 14;
+
     public BitmapFont letra(float tamano, boolean negrita) {
-        int px = Math.max(6, Math.round(tamano * escala));
+        int px = Math.max(6, Math.round(Math.max(LETRA_MINIMA, tamano) * escala));
         int clave = px * 2 + (negrita ? 1 : 0);
         BitmapFont f = letras.get(clave);
         if (f == null) {
@@ -351,7 +354,7 @@ public final class Pincel {
 
     /** El alto de una línea de texto (con su espacio). */
     public float altoDeLinea(float tamano) {
-        return tamano * 1.35f;
+        return Math.max(LETRA_MINIMA, tamano) * 1.35f;
     }
 
     /** El ancho de una letra de la fuente de código (todas iguales: es monoespaciada). */

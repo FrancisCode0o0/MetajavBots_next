@@ -119,10 +119,10 @@ public final class PantallaLeccion implements Pantalla {
             }
         }
         float by = p.alto - 80;
-        if (ui.boton("← " + T.t("leccion.anterior"), x, by, 220, 54, Ui.Estilo.PLANO, pagina > 0, null)) pagina--;
+        if (ui.boton("← " + T.t("leccion.anterior"), x, by, 280, 54, Ui.Estilo.PLANO, pagina > 0, null)) pagina--;
         if (pagina < l.paginas.size()) {
-            if (ui.boton(T.t("leccion.siguiente") + " →", x + w - 220, by, 220, 54, Ui.Estilo.PRINCIPAL)) pagina++;
-        } else if (ui.boton(T.t("leccion.volver"), x + w - 220, by, 220, 54, Ui.Estilo.PRINCIPAL)) {
+            if (ui.boton(T.t("leccion.siguiente") + " →", x + w - 280, by, 280, 54, Ui.Estilo.PRINCIPAL)) pagina++;
+        } else if (ui.boton(T.t("leccion.volver"), x + w - 280, by, 280, 54, Ui.Estilo.PRINCIPAL)) {
             alEntrar(j);
             j.volver();
         }

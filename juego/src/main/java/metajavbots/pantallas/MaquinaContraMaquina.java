@@ -39,6 +39,7 @@ public final class MaquinaContraMaquina implements Pantalla {
     private boolean pausa;
     private float velocidad = 1, acumulado, esperaEntreRondas;
     private String locutor = "";
+    private float altoDeLaBanda = 44;
     private float tiempoLocutor;
     private boolean seguir = true;
 
@@ -114,6 +115,7 @@ public final class MaquinaContraMaquina implements Pantalla {
         j.voz.fotograma(j.sonidos);
         float ah = (p.alto - arriba) * 0.5f;
         vista.letra = ui.letra;
+        vista.techo = tiempoLocutor > 0 ? arriba + 12 + altoDeLaBanda + 8 : 0;
         vista.dibujar(p, pelea, 0, arriba, p.ancho, ah, pausa ? 0 : dt);
         // Las cabeceras de cada código y el código con la línea que se ejecuta.
         float cy = arriba + ah + 6, ch = p.alto - cy - 70, cw = (p.ancho - 30) / 2;
@@ -143,7 +145,7 @@ public final class MaquinaContraMaquina implements Pantalla {
         }
         float bx = 210;
         for (float v : new float[]{0.25f, 1, 2, 4}) {
-            if (ui.boton((v < 1 ? "×0.25" : "×" + (int) v), bx, by, 62, 46, velocidad == v ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) velocidad = v;
+            if (ui.boton((v < 1 ? "×¼" : "×" + (int) v), bx, by, 62, 46, velocidad == v ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) velocidad = v;
             bx += 68;
         }
         seguir = ui.casilla(T.t("mcm.seguir"), seguir, bx + 20, by + 10, T.t("mcm.seguir_ayuda"));
@@ -157,8 +159,15 @@ public final class MaquinaContraMaquina implements Pantalla {
         }
         if (tiempoLocutor > 0) {
             tiempoLocutor -= dt;
-            p.caja(p.ancho / 2 - 450, arriba + 60, 900, 44, 22, 0x0B0F18, 0.85f);
-            p.textoCentrado(ui.recortarTexto(locutor, 860, ui.letra, true), p.ancho / 2, arriba + 70, ui.letra, true, 0xFFF1C1, 1);
+            // La frase entera, en las líneas que haga falta (los bocadillos se quedan debajo: vista.techo).
+            float bw = Math.min(1000, p.ancho - 200), alto = p.altoDeParrafo(locutor, bw - 40, ui.letra, true) + 16;
+            p.caja(p.ancho / 2 - bw / 2, arriba + 12, bw, alto, 22, 0x0B0F18, 0.88f);
+            float yy = arriba + 20;
+            for (String l : p.partir(locutor, bw - 40, ui.letra, true)) {
+                p.textoCentrado(l, p.ancho / 2, yy, ui.letra, true, 0xFFF1C1, 1);
+                yy += p.altoDeLinea(ui.letra);
+            }
+            altoDeLaBanda = alto;
         }
     }
 

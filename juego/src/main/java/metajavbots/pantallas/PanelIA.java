@@ -44,12 +44,13 @@ public final class PanelIA implements Pantalla {
         y += 80;
         jug.cortesia = ui.deslizador(T.t("panel.cortesia"), (float) jug.cortesia, x, y, w, 50, T.t("panel.cortesia_ayuda"));
         y += 90;
-        if (ui.boton(T.t("panel.probar"), x, y, 280, 54, Ui.Estilo.NORMAL)) {
+        float pw = Math.min(w * 0.45f, p.ancho(T.t("panel.probar"), ui.letra, true) + 40);
+        if (ui.boton(T.t("panel.probar"), x, y, pw, 54, Ui.Estilo.NORMAL)) {
             String evento = jug.agresividad >= 0.6 && Math.random() < jug.agresividad ? "pulla" : jug.cortesia > 0.6 ? "saludo" : "burla";
             String f = Dialogos.de("bravucon").frase(evento, T.idioma, java.util.Map.of("yo", "Mazo", "rival", jug.robot() == null ? "?" : jug.robot().nombre));
             ejemplo = f == null ? "" : "«" + f + "»";
         }
-        p.parrafo(ejemplo, x + 300, y + 12, w - 300, ui.letra, ui.tema.texto, 1);
+        p.parrafo(ejemplo, x + pw + 20, y + 12, w - pw - 20, ui.letra, ui.tema.texto, 1);
         Comun.pie(j, T.t("panel.pie"));
     }
 
