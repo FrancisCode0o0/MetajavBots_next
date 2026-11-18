@@ -162,6 +162,29 @@ public final class Capturas extends Juego {
         });
     }
 
+    /** El robotito de los ejercicios haciendo lo que hace el código: con un fallo en cada forma, y uno que lo hace bien. */
+    private void robotitos() {
+        // El robotito que hace lo que hace el código: con un fallo en cada forma (cajas, puertas, pizarra, estantería, papel).
+        String[][] robotitos = {{"09b_robot_cajas", "05", "return n * 2;"}, {"09c_robot_puertas", "04", "return \"HUIR\";"}};
+        for (String[] rb : robotitos) {
+            pantallas.put(rb[0], () -> new ProbarEjercicio(metajavbots.ejercicios.PlantillasDeEjercicios.generar(rb[1], new Random(3)), rb[2]));
+        }
+        for (metajavbots.ejercicios.Ejercicio ej : metajavbots.ejercicios.Banco.delJuego().todos()) {
+            if (ej.tipo == metajavbots.ejercicios.Ejercicio.Tipo.METODO && ej.casos.get(0).esperado.startsWith("List.of(")
+                    && ej.firma.startsWith("static List")) {
+                pantallas.put("09d_robot_estanteria", () -> new ProbarEjercicio(ej, "return List.of();"));
+                break;
+            }
+        }
+        // Escribe en la pizarra (y se tuerce donde se equivoca) y apila bien todas las cajas.
+        pantallas.put("09g_robot_pizarra", () -> new ProbarEjercicio(ejercicio("t08_placa_del_robot"), "return \"<<\" + nombre + \">>\";"));
+        pantallas.put("09i_robot_puerta", () -> new ProbarEjercicio(ejercicio("t04_puede_disparar"), "return energia > coste;"));
+        pantallas.put("09h_robot_bien", () -> new ProbarEjercicio(ejercicio("t05_sumar_hasta"),
+                "int suma = 0;\n    for (int i = 1; i <= n; i++) {\n        suma += i;\n    }\n    return suma;"));
+        pantallas.put("09e_robot_papel", () -> new ProbarEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("01").get(0),
+                "System.out.println(\"MetajavBot OFFLINE\");"));
+    }
+
     Capturas(File salida, String solo) {
         this.salida = salida;
         pantallas.put("01_inicio", metajavbots.pantallas.Inicio::new);
@@ -206,20 +229,7 @@ public final class Capturas extends Juego {
         pantallas.put("07_pelear", metajavbots.pantallas.PrepararPelea::new);
         pantallas.put("08_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.encuentro(this, "ADAPTADA")));
         pantallas.put("09_ejercicio", () -> new metajavbots.pantallas.PantallaEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("05").get(2)));
-        // El robotito que hace lo que hace el código: con un fallo en cada forma (cajas, puertas, pizarra, estantería, papel).
-        String[][] robotitos = {{"09b_robot_cajas", "05", "return n * 2;"}, {"09c_robot_puertas", "04", "return \"HUIR\";"}};
-        for (String[] rb : robotitos) {
-            pantallas.put(rb[0], () -> new ProbarEjercicio(metajavbots.ejercicios.PlantillasDeEjercicios.generar(rb[1], new Random(3)), rb[2]));
-        }
-        for (metajavbots.ejercicios.Ejercicio ej : metajavbots.ejercicios.Banco.delJuego().todos()) {
-            if (ej.tipo == metajavbots.ejercicios.Ejercicio.Tipo.METODO && ej.casos.get(0).esperado.startsWith("List.of(")
-                    && ej.firma.startsWith("static List")) {
-                pantallas.put("09d_robot_estanteria", () -> new ProbarEjercicio(ej, "return List.of();"));
-                break;
-            }
-        }
-        pantallas.put("09e_robot_papel", () -> new ProbarEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("01").get(0),
-                "System.out.println(\"MetajavBot OFFLINE\");"));
+        robotitos();
         pantallas.put("10_tutoriales", metajavbots.pantallas.Tutoriales::new);
         pantallas.put("11_leccion", () -> new metajavbots.pantallas.PantallaLeccion(metajavbots.ejercicios.Leccion.todas().get(0)));
         pantallas.put("12_especial", metajavbots.pantallas.ModoEspecial::new);
@@ -238,7 +248,11 @@ public final class Capturas extends Juego {
         pantallas.put("21_royale", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.royale(this, java.util.List.of())));
         pantallas.put("22_equipos", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.equipos(this, null)));
         pantallas.put("23_campanas", metajavbots.pantallas.Campanas::new);
-        for (String n : pantallas.keySet()) if (solo.isEmpty() || n.contains(solo)) nombres.add(n);
+        // "-Psolo=09b,09g": las pantallas que llevan alguno de esos textos, en ese orden.
+        if (solo.isEmpty()) nombres.addAll(pantallas.keySet());
+        for (String trozo : solo.isEmpty() ? new String[0] : solo.split(",")) {
+            for (String n : pantallas.keySet()) if (n.contains(trozo) && !nombres.contains(n)) nombres.add(n);
+        }
     }
 
     @Override
@@ -290,12 +304,51 @@ public final class Capturas extends Juego {
     private long nanos;
     private int medidos;
 
+    /** Con «-Pgif=archivo.gif»: en vez de fotos, un GIF con unos segundos de cada pantalla elegida («-Psolo=…», «-Pgifseg=8»). */
+    private final String gif = System.getProperty("capturas.gif");
+    private final float segundosDeGif = Float.parseFloat(System.getProperty("capturas.gifseg", "8"));
+    private metajavbots.pantalla.GrabadorGif grabador;
+    private float tiempoDeGif, siguienteFoto;
+
+    /** En modo GIF: coge un fotograma cada 1/15 s; al pasar los segundos, la pantalla siguiente (y al final, lo guarda). */
+    private void fotogramaDeGif() {
+        if (grabador == null) {
+            grabador = new metajavbots.pantalla.GrabadorGif(Integer.parseInt(System.getProperty("capturas.gifancho", "800")), 7);
+            // "-Pgifrecorte=x,y,w,h": solo ese trozo de la pantalla.
+            String r = System.getProperty("capturas.gifrecorte");
+            if (r != null) {
+                String[] n = r.split(",");
+                grabador.recorte(Integer.parseInt(n[0]), Integer.parseInt(n[1]), Integer.parseInt(n[2]), Integer.parseInt(n[3]));
+            }
+        }
+        tiempoDeGif += Gdx.graphics.getDeltaTime();
+        if (fotogramas > 20 && tiempoDeGif >= siguienteFoto) {
+            grabador.coger();
+            siguienteFoto += 1 / 15f;
+        }
+        if (tiempoDeGif < segundosDeGif + 0.4f) return;
+        tiempoDeGif = 0;
+        siguienteFoto = 0;
+        if (actual == nombres.size() - 1) {
+            try {
+                System.out.println("gif: " + grabador.guardar(new File(gif)) + " (" + grabador.fotogramas() + " fotogramas)");
+            } catch (java.io.IOException e) {
+                System.out.println("gif: no se pudo guardar: " + e.getMessage());
+            }
+        }
+        siguiente();
+    }
+
     @Override
     public void render() {
         long t0 = System.nanoTime();
         super.render();
         if (actual < 0 || actual >= nombres.size()) return;
         fotogramas++;
+        if (gif != null) {
+            fotogramaDeGif();
+            return;
+        }
         // Lo que tarda cada fotograma (sin contar la espera de la pantalla): para vigilar la fluidez.
         if (fotogramas > 20) {
             nanos += System.nanoTime() - t0;
@@ -323,6 +376,11 @@ public final class Capturas extends Juego {
             medidos = 0;
             siguiente();
         }
+    }
+
+    private static metajavbots.ejercicios.Ejercicio ejercicio(String id) {
+        for (metajavbots.ejercicios.Ejercicio e : metajavbots.ejercicios.Banco.delJuego().todos()) if (e.id.equals(id)) return e;
+        throw new IllegalArgumentException(id);
     }
 
     /** Un ejercicio ya comprobado con un código dado (el robotito lo anima debajo del editor). */

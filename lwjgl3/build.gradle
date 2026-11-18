@@ -30,4 +30,9 @@ tasks.register('capturas', JavaExec) {
     if (project.hasProperty('sonido')) systemProperty 'capturas.sonido', 'si'
     if (project.hasProperty('idioma')) systemProperty 'capturas.idioma', project.property('idioma')
     if (project.hasProperty('letra')) systemProperty 'capturas.letra', project.property('letra')
+    // "-Pgif=gif_para_fran/1.gif -Psolo=09b": un GIF animado de esas pantallas (unos segundos de cada una, "-Pgifseg=8").
+    if (project.hasProperty('gif')) systemProperty 'capturas.gif', project.property('gif')
+    if (project.hasProperty('gifseg')) systemProperty 'capturas.gifseg', project.property('gifseg')
+    if (project.hasProperty('gifrecorte')) systemProperty 'capturas.gifrecorte', project.property('gifrecorte')
+    if (project.hasProperty('gifancho')) systemProperty 'capturas.gifancho', project.property('gifancho')
 }

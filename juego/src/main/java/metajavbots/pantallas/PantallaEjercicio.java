@@ -155,7 +155,7 @@ public final class PantallaEjercicio implements Pantalla {
         }
         float ey = y + altoBarra + 12, eh = p.alto - ey - 70;
         boolean conRobot = inf != null && inf.compila() && !inf.casos.isEmpty();
-        float altoRobot = conRobot ? Math.min(240, eh * 0.4f) : 0;
+        float altoRobot = conRobot ? Math.min(260, eh * 0.42f) : 0;
         eh -= altoRobot > 0 ? altoRobot + 10 : 0;
         editor.dibujar(ui, ex, ey, ew - lado - (lado > 0 ? 12 : 0), eh);
         if (conRobot) robotito(j, inf, ex, ey + eh + 10, ew - lado - (lado > 0 ? 12 : 0), altoRobot, dt);
@@ -302,22 +302,17 @@ public final class PantallaEjercicio implements Pantalla {
         casoAnimado = Math.max(0, Math.min(inf.casos.size() - 1, casoAnimado));
         tiempoAnimacion += dt;
         Comprobador.Resultado r = inf.casos.get(casoAnimado);
-        // Al ritmo del código: cada línea que se ejecuta es un paso (unos 3 por segundo; si son muchos, más deprisa).
-        float avance;
+        // El robotito hace la acción a su ritmo (un viaje por caja, unas letras por segundo…) y las líneas que ejecuta el
+        // código se iluminan a la par; al acabar, su final, y vuelta a empezar.
+        float duracion = AnimacionDelCaso.duracion(e, r);
+        if (tiempoAnimacion > duracion + 3.2f) tiempoAnimacion = 0;
+        float avance = Math.min(1, tiempoAnimacion / duracion);
         int[] traza = r.traza;
         if (traza.length > 0) {
-            float porSegundo = Math.max(3, traza.length / 9f);
-            int paso = (int) (tiempoAnimacion * porSegundo);
-            if (paso >= traza.length + porSegundo * 2) {
-                tiempoAnimacion = 0;
-                paso = 0;
-            }
+            int paso = Math.min(traza.length - 1, (int) (avance * traza.length));
             editor.lineasActivas.clear();
-            for (int k = 0; k <= Math.min(paso, traza.length - 1); k++) editor.lineasActivas.set(traza[k]);
-            editor.lineaActiva = paso < traza.length ? traza[paso] : 0;
-            avance = Math.min(1, (paso + 1f) / traza.length);
-        } else {
-            avance = Math.min(1, (tiempoAnimacion % (AnimacionDelCaso.DURACION + 1.2f)) / AnimacionDelCaso.DURACION);
+            for (int k = 0; k <= paso; k++) editor.lineasActivas.set(traza[k]);
+            editor.lineaActiva = avance < 1 ? traza[paso] : 0;
         }
         AnimacionDelCaso.dibujar(ui, x, y, w, h, e, r, avance, tiempoAnimacion);
         String titulo = T.f("animacion.caso", casoAnimado + 1, inf.casos.size()) + "  " + r.caso.llamada;
