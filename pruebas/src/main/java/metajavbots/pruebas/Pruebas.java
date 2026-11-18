@@ -33,6 +33,7 @@ public final class Pruebas {
         PruebasDelProgreso.apuntar();
         PruebasDelCerebro.apuntar();
         PruebasDelEntrenador.apuntar();
+        PruebasDeTresCerebros.apuntar();
 
         List<String> fallos = new ArrayList<>();
         int pasados = 0;
