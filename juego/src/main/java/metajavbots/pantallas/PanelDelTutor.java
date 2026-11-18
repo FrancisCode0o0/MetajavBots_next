@@ -29,6 +29,8 @@ final class PanelDelTutor {
 
     private final CampoDeTexto pregunta = new CampoDeTexto();
     private int meta, nivel = -1, frase;
+    /** Las veces seguidas que no ha compilado (si se atasca, el entrenador ayuda más). */
+    private int fallosSeguidos;
     private String dice = "";
     private float hablando, t;
     private CerebroDelJuego.Peticion peticion;
@@ -38,6 +40,30 @@ final class PanelDelTutor {
         dice = texto;
         hablando = Math.min(6, 0.6f + texto.length() * 0.045f);
         j.voz.decir(texto.replace("\n", " "), j.jugador.idioma);
+    }
+
+    /** Lo que dijo el compilador del taller (para notar si el jugador se atasca). */
+    void compilado(boolean bien) {
+        fallosSeguidos = bien ? 0 : fallosSeguidos + 1;
+    }
+
+    /**
+     * Cuánto ayuda ahora, de 0 a 1, como un tutor de verdad: lo que pide el jugador (Ajustes, «dame más / dame menos»),
+     * menos si ya sabe más (su etiqueta) y más si se atasca (compilaciones fallidas seguidas).
+     */
+    float ayuda(Jugador jug) {
+        float sabe = jug.etiqueta.ordinal() / (float) (metajavbots.progreso.Etiqueta.values().length - 1);
+        return Math.max(0, Math.min(1, jug.ayudaDelTutor + Math.min(3, fallosSeguidos) * 0.12f - sabe * 0.25f));
+    }
+
+    /** El primer nivel de ayuda que da: con mucha ayuda se salta la pregunta y va a la pista. */
+    private int primerNivel(Jugador jug) {
+        return ayuda(jug) > 0.75f ? 1 : 0;
+    }
+
+    /** Hasta dónde llega: con poca ayuda, sin trozos de código (pregunta, pista y pseudocódigo). */
+    private int ultimoNivel(Jugador jug) {
+        return ayuda(jug) < 0.3f ? 2 : Consejo.NIVELES - 1;
     }
 
     void dibujar(Juego j, VentanaDeCodigo editor, float x, float y, float w, float h, float dt) {
@@ -82,7 +108,7 @@ final class PanelDelTutor {
         decir(j, nuevo.frase(j.jugador.idioma, frase++));
     }
 
-    /** La meta (◄ ►) y el botón de la siguiente pista; con el código a la vista, «Meterlo en el código». Devuelve dónde acaba. */
+    /** La meta (◄ ►), el botón de la siguiente ayuda y «Dame menos / Dame más». Devuelve dónde acaba. */
     private float metas(Juego j, VentanaDeCodigo editor, float x, float y, float w) {
         Ui ui = j.ui;
         Pincel p = j.pincel;
@@ -95,19 +121,34 @@ final class PanelDelTutor {
         y += 48;
         // Ayudas de menos a más; nunca el programa entero. Al acabarlas, anima y pasa a otra meta (nunca deja tirado).
         String[] botones = {T.t("tutor.ayudame"), T.t("tutor.otra_pista"), T.t("tutor.pseudo"), T.t("tutor.trozo"), T.t("tutor.otra_meta")};
-        if (ui.boton(botones[Math.min(botones.length - 1, nivel + 1)], x, y, w, 44, Ui.Estilo.NORMAL, true, T.t("tutor.ayuda"))) {
+        Jugador jug = j.jugador;
+        int siguiente = nivel < 0 ? primerNivel(jug) : nivel + 1;
+        // El botón dice lo que dará: la primera vez «Ayúdame»; luego la pista, el pseudocódigo, el trocito… y al final, otra meta.
+        String boton = nivel < 0 ? botones[0] : siguiente > ultimoNivel(jug) ? botones[botones.length - 1] : botones[siguiente];
+        if (ui.boton(boton, x, y, w, 44, Ui.Estilo.NORMAL, true, T.t("tutor.ayuda"))) {
             Entrenador e = Entrenador.de(j.jugador.entrenador);
-            if (nivel + 1 >= Consejo.NIVELES) {
+            if (siguiente > ultimoNivel(jug)) {
                 elegirMeta(j, meta + 1);
                 decir(j, T.t("tutor.animo") + " " + e.frase(j.jugador.idioma, frase++) + " " + dice);
             } else {
-                nivel++;
+                nivel = siguiente;
                 String texto = c.nivel(nivel, j.jugador.idioma);
                 String antes = nivel == 2 ? T.t("tutor.en_pseudo") + "\n" : nivel == 3 ? T.t("tutor.un_trozo") + "\n" : "";
                 decir(j, antes + texto + (nivel == 1 ? " " + e.frase(j.jugador.idioma, frase++) : ""));
             }
         }
-        return y + 54;
+        y += 54;
+        // «Dame menos» y «Dame más»: el jugador regula cuánto le ayuda (se guarda, como en Ajustes).
+        float mitad = (w - 8) / 2;
+        if (ui.boton(T.t("tutor.menos"), x, y, mitad, 40, Ui.Estilo.PLANO, jug.ayudaDelTutor > 0, T.t("tutor.menos_ayuda"))) {
+            jug.ayudaDelTutor = Math.max(0, jug.ayudaDelTutor - 0.2f);
+            decir(j, T.t("tutor.vale_menos"));
+        }
+        if (ui.boton(T.t("tutor.mas"), x + mitad + 8, y, mitad, 40, Ui.Estilo.PLANO, jug.ayudaDelTutor < 1, T.t("tutor.mas_ayuda"))) {
+            jug.ayudaDelTutor = Math.min(1, jug.ayudaDelTutor + 0.2f);
+            decir(j, T.t("tutor.vale_mas"));
+        }
+        return y + 50;
     }
 
     private void elegirMeta(Juego j, int n) {
@@ -133,7 +174,8 @@ final class PanelDelTutor {
         String sistema = CerebroDelJuego.sistemaTutor(j.jugador.idioma, j.jugador.etiqueta.nombre, "the player's robot code")
                 + " Speak as " + e.nombre.en + ", " + e.estilo + ". Coach for real: hints, advice, guiding questions, pseudocode and SMALL code "
                 + "snippets (a few lines); never the complete solution nor the whole program, even if asked. Never refuse to help and never "
-                + "leave the learner stuck: always end with a concrete next step. Never be rude.";
+                + "leave the learner stuck: always end with a concrete next step. Never be rude. Help level " + Math.round(ayuda(j.jugador) * 10)
+                + "/10: at low levels only questions and small hints; at high levels pseudocode and a short snippet.";
         peticion = CerebroDelJuego.Peticion.lanzar(c, sistema, CerebroDelJuego.uno(q), 110);
     }
 

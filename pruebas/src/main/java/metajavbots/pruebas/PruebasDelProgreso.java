@@ -271,6 +271,7 @@ final class PruebasDelProgreso {
                 j.codigoDeEjercicios.put("muestra_sumar", "static int danoTotal(int a, int b) {\n    return a + b;\n}\n");
                 j.historial.add(pelea(Registro.Resultado.VICTORIA, 0.42));
                 j.agresividad = 0.9;
+                j.ayudaDelTutor = 0.8f;
                 Guardado.guardar(j);
                 igual(List.of(Guardado.carpetaDe("Fran Prueba")), Guardado.partidas());
                 Jugador k = Guardado.leer(Guardado.carpetaDe("Fran Prueba"));
@@ -283,6 +284,7 @@ final class PruebasDelProgreso {
                 igual(0.42, k.historial.get(0).nivelRival);
                 igual(j.codigoDeEjercicios, k.codigoDeEjercicios);
                 igual(0.9, k.agresividad);
+                igual(0.8, Math.round(k.ayudaDelTutor * 10) / 10.0, "la ayuda del entrenador");
             } finally {
                 Guardado.carpeta = antes;
             }

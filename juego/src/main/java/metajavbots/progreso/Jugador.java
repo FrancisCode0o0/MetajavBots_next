@@ -98,6 +98,8 @@ public final class Jugador {
     public boolean vozClara = true;
     /** El entrenador del modo tutor (tutor/Entrenador). */
     public String entrenador = "tuercas";
+    /** Cuánto ayuda el entrenador, de 0 (lo mínimo: preguntas) a 1 (lo máximo: pseudocódigo y trozos de código enseguida). */
+    public float ayudaDelTutor = 0.5f;
     public int victoriasExtrema;
 
     public Jugador(String nombre) {

@@ -345,6 +345,7 @@ public final class Taller implements Pantalla {
                 editor.marcas.add(new VentanaDeCodigo.Marca((int) f.linea, (int) f.columna, Explicador.explicar(f, jug.etiqueta, jug.idioma), f.grave));
             }
             aviso = r.bien ? T.f("taller.compilado_ok", r.milisegundos) : T.f("pelea.errores", r.graves().size());
+            tutor.compilado(r.bien);
             j.sonidos.tocar(r.bien ? "bien" : "mal", 0.6f);
         }
     }
