@@ -100,6 +100,17 @@ public final class Capturas extends Juego {
         pantallas.put("11_leccion", () -> new metajavbots.pantallas.PantallaLeccion(metajavbots.ejercicios.Leccion.todas().get(0)));
         pantallas.put("12_especial", metajavbots.pantallas.ModoEspecial::new);
         pantallas.put("12b_rotos", () -> metajavbots.pantallas.ModoEspecial.alFinal(1));
+        pantallas.put("08b_aparato_suelo", () -> new Arena(VistaDeArena.Escenario.HANGAR, 1));
+        pantallas.put("08c_aparato_montado", () -> new Arena(VistaDeArena.Escenario.LABORATORIO, 2));
+        pantallas.put("08d_aparato_codigo", () -> new Pantalla() {
+            private final metajavbots.pantallas.PanelDelAparato panel = metajavbots.pantallas.PanelDelAparato.abierto();
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                metajavbots.pantallas.Comun.fondo(j, 0);
+                panel.dibujar(j, metajavbots.combate.Aparatos.Tipo.PEGAMENTO, j.pincel.ancho - 400, j.pincel.alto - 64);
+            }
+        });
         pantallas.put("12c_roto_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.ModoEspecial.encuentroRoto(this,
                 metajavbots.ejercicios.RobotRoto.todos().get(1))));
         pantallas.put("13_laboratorio", () -> new metajavbots.pantallas.PantallaLaboratorio(metajavbots.ejercicios.Laboratorio.todos().get(0)));
@@ -305,9 +316,32 @@ public final class Capturas extends Juego {
         private final VistaDeArena.Escenario escenario;
         private VistaDeArena vista;
         private Pelea pelea;
+        /** Con aparatos: 0 sin, 1 recién salido en el suelo, 2 montado y en marcha. */
+        private int aparatos;
 
         Arena(VistaDeArena.Escenario e) {
             escenario = e;
+        }
+
+        Arena(VistaDeArena.Escenario e, int aparatos) {
+            escenario = e;
+            this.aparatos = aparatos;
+        }
+
+        /** Hasta que sale el aparato; con 2, el primero se lo pone y lo enciende. */
+        private void prepararAparatos() {
+            pelea.aparatos.activos = true;
+            while (pelea.turno() <= metajavbots.combate.Aparatos.SALE) pelea.avanzar();
+            if (aparatos < 2 || pelea.aparatos.todos().isEmpty()) return;
+            metajavbots.combate.Aparatos.Uno a = pelea.aparatos.todos().get(0);
+            metajavbots.combate.Cuerpo c = pelea.cuerpo(0);
+            c.x = a.x;
+            c.y = a.y;
+            pelea.avanzar();
+            c.conectar(a.tipo.hueco);
+            for (int i = 0; i <= metajavbots.combate.Aparatos.MONTAR; i++) pelea.avanzar();
+            c.usarAparato(false, 0);
+            for (int i = 0; i < 6; i++) pelea.avanzar();
         }
 
         @Override
@@ -321,9 +355,10 @@ public final class Capturas extends Juego {
                         r.nextLong());
                 pelea.arena = metajavbots.combate.Arena.de(escenario.name(), pelea.ancho, pelea.alto);
                 pelea.empezarRonda();
-                for (int i = 0; i < 160; i++) pelea.avanzar();
+                if (aparatos > 0) prepararAparatos();
+                else for (int i = 0; i < 160; i++) pelea.avanzar();
             }
-            pelea.avanzar();
+            if (aparatos != 1) pelea.avanzar();
             vista.sucesos(pelea, null);
             vista.dibujar(j.pincel, pelea, 0, 0, j.pincel.ancho, j.pincel.alto, dt);
         }

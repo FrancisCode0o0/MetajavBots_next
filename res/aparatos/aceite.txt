@@ -1,0 +1,102 @@
+== es
+/**
+ * LATADEACEITE «Resbalín» — Deja detrás de ti un charco de aceite
+ * que dura 10 segundos: quien lo pisa resbala (le cuesta frenar y
+ * girar). ¡Tú también!
+ *
+ * Cómo conectarlo a tu robot:
+ *   1. Ve hasta él y tócalo: lo coges (aparatos() te dice dónde
+ *      está).
+ *   2. Conéctalo en su hueco (si no es ese, no engancha):
+ *      conectar("espalda");
+ *   3. Úsalo: usarAparato();
+ * Se recarga en 8 s.
+ *
+ * Cumple la interfaz Aparato: tipo(), nombre(), conectado(),
+ * listo()…
+ */
+public final class LataDeAceite implements Aparato {
+
+    /** Los turnos que faltan para poder usarlo otra vez. */
+    private int espera;
+
+    @Override
+    public String tipo() {
+        return "aceite";
+    }
+
+    /** Lo que hace al usarlo. */
+    void usar(Metajavbot robot) {
+        if (espera > 0) return;
+        arena.charco("aceite", detras(40), 80, 300);
+        espera = 240;
+    }
+}
+== de
+/**
+ * OELKANNE «Resbalín» — Hinterlässt eine Ölpfütze, die 10 Sekunden
+ * bleibt: Wer hineinfährt, rutscht (schwer zu bremsen und zu
+ * lenken). Du auch!
+ *
+ * So schließt du es an deinen Roboter an:
+ *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
+ *      dir, wo es ist).
+ *   2. Schließ es an seinem Platz an (ein anderer hält nicht):
+ *      anschliessen("ruecken");
+ *   3. Benutze es: geraetBenutzen();
+ * Lädt in 8 s wieder auf.
+ *
+ * Erfüllt das Interface Geraet: typ(), name(), angeschlossen(),
+ * bereit() …
+ */
+public final class Oelkanne implements Geraet {
+
+    /** Die Züge, bis man es wieder benutzen kann. */
+    private int warten;
+
+    @Override
+    public String typ() {
+        return "aceite";
+    }
+
+    /** Was es beim Benutzen tut. */
+    void benutzen(MetajavbotDe roboter) {
+        if (warten > 0) return;
+        arena.pfuetze("aceite", hinten(40), 80, 300);
+        warten = 240;
+    }
+}
+== en
+/**
+ * OILCAN «Resbalín» — Leaves a puddle of oil behind you that lasts
+ * 10 seconds: whoever drives on it slips (hard to brake and turn).
+ * You too!
+ *
+ * How to plug it into your robot:
+ *   1. Drive to it and touch it: you pick it up (gadgets() tells
+ *      you where it is).
+ *   2. Plug it into its slot (any other won't hold):
+ *      plugIn("back");
+ *   3. Use it: useGadget();
+ * Recharges in 8 s.
+ *
+ * Implements the Gadget interface: type(), name(), pluggedIn(),
+ * ready()…
+ */
+public final class OilCan implements Gadget {
+
+    /** The ticks left until it can be used again. */
+    private int wait;
+
+    @Override
+    public String type() {
+        return "aceite";
+    }
+
+    /** What it does when used. */
+    void use(MetajavbotEn robot) {
+        if (wait > 0) return;
+        arena.puddle("aceite", behind(40), 80, 300);
+        wait = 240;
+    }
+}

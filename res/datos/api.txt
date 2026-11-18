@@ -423,6 +423,51 @@ es: Las trampas y los objetos de la arena: pinchos, sierras, foso, barriles… (
 de: Die Fallen und Gegenstände der Arena: Stacheln, Sägen, Grube, Fässer … (leer, wenn es keine gibt; Thema 15).
 en: The traps and objects in the arena: spikes, saws, pit, barrels… (empty if there are none; topic 15).
 
+=== api.aparatos
+tema: 15
+firma: List<Aparato> aparatos()
+firma.de: List<Geraet> geraete()
+firma.en: List<Gadget> gadgets()
+es: Los aparatos que hay en el suelo de la arena: ve hasta uno para cogerlo (vacía si no hay; tema 15).
+de: Die Geräte auf dem Boden der Arena: Fahr zu einem hin, um es aufzuheben (leer, wenn es keine gibt; Thema 15).
+en: The gadgets on the arena floor: drive to one to pick it up (empty if there are none; topic 15).
+
+=== api.miAparato
+tema: 13
+firma: Aparato miAparato()
+firma.de: Geraet meinGeraet()
+firma.en: Gadget myGadget()
+es: El aparato que llevas (null si no llevas ninguno).
+de: Das Gerät, das du trägst (null, wenn keins).
+en: The gadget you carry (null if none).
+
+=== api.conectar
+tema: 13
+firma: boolean conectar(String hueco)
+firma.de: boolean anschliessen(String platz)
+firma.en: boolean plugIn(String slot)
+es: Conecta el aparato que llevas en ese hueco: "espalda", "piernas", "cabeza" o "brazo" (lee su código para saber cuál).
+de: Schließt dein Gerät an diesem Platz an: "ruecken", "beine", "kopf" oder "arm" (lies seinen Code, um zu wissen, welcher).
+en: Plugs the gadget you carry into that slot: "back", "legs", "head" or "arm" (read its code to know which).
+
+=== api.usarAparato
+tema: 13
+firma: boolean usarAparato()
+firma.de: boolean geraetBenutzen()
+firma.en: boolean useGadget()
+es: Usa el aparato conectado, hacia donde miras. Devuelve si se pudo (conectado y recargado).
+de: Benutzt das angeschlossene Gerät (in Blickrichtung oder zu diesem Winkel). Gibt zurück, ob es ging.
+en: Uses the plugged-in gadget (where you aim, or at that angle). Returns whether it worked.
+
+=== api.usarAparato
+tema: 13
+firma: boolean usarAparato(double angulo)
+firma.de: boolean geraetBenutzen(double winkel)
+firma.en: boolean useGadget(double angle)
+es: Usa el aparato conectado hacia ese ángulo (para los que apuntan: lanzallamas, pegamento).
+de: Benutzt das angeschlossene Gerät (in Blickrichtung oder zu diesem Winkel). Gibt zurück, ob es ging.
+en: Uses the plugged-in gadget (where you aim, or at that angle). Returns whether it worked.
+
 === api.companeros
 tema: 15
 firma: List<Enemigo> companeros()
@@ -710,3 +755,75 @@ firma.en: Obstacle: double speed()
 es: double velocidad()
 de: 
 en: 
+
+=== Aparato.tipo
+tema: 13
+firma: Aparato: String tipo()
+firma.de: Geraet: String typ()
+firma.en: Gadget: String type()
+es: Qué es: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite" o "pegamento".
+de: Was es ist: "chorro" (Düse), "antigravedad", "descarga" (Schock), "lanzallamas" (Flammenwerfer), "aceite" (Öl), "pegamento" (Kleber).
+en: What it is: "chorro" (jet), "antigravedad" (anti-gravity), "descarga" (shock), "lanzallamas" (flamethrower), "aceite" (oil), "pegamento" (glue).
+
+=== Aparato.nombre
+tema: 13
+firma: Aparato: String nombre()
+firma.de: Geraet: String name()
+firma.en: Gadget: String name()
+es: Su nombre de marca (Jetzazo, Flotón, Chispazo…), para decirlo.
+de: Sein Markenname (Jetzazo, Flotón, Chispazo …), zum Sagen.
+en: Its brand name (Jetzazo, Flotón, Chispazo…), to say it.
+
+=== Aparato.x
+tema: 13
+firma: Aparato: double x()
+firma.de: Geraet: double x()
+firma.en: Gadget: double x()
+es: Dónde está (si lo llevas, dónde estás tú).
+de: Wo es ist (wenn du es trägst, wo du bist).
+en: Where it is (if you carry it, where you are).
+
+=== Aparato.y
+tema: 13
+firma: Aparato: double y()
+firma.de: Geraet: double y()
+firma.en: Gadget: double y()
+es: double y()
+de: 
+en: 
+
+=== Aparato.distancia
+tema: 13
+firma: Aparato: double distancia()
+firma.de: Geraet: double entfernung()
+firma.en: Gadget: double distance()
+es: Lo lejos que está de ti y en qué ángulo lo ves (grados, absoluto).
+de: Wie weit es von dir entfernt ist und in welchem Winkel du es siehst (Grad, absolut).
+en: How far it is from you and at which angle you see it (degrees, absolute).
+
+=== Aparato.angulo
+tema: 13
+firma: Aparato: double angulo()
+firma.de: Geraet: double winkel()
+firma.en: Gadget: double angle()
+es: double angulo()
+de: 
+en: 
+
+=== Aparato.conectado
+tema: 13
+firma: Aparato: boolean conectado()
+firma.de: Geraet: boolean angeschlossen()
+firma.en: Gadget: boolean pluggedIn()
+es: ¿Ya está conectado a tu robot? (Solo los que llevas.)
+de: Ist es schon an deinem Roboter angeschlossen? (Nur deins.)
+en: Is it already plugged into your robot? (Only yours.)
+
+=== Aparato.listo
+tema: 13
+firma: Aparato: boolean listo()
+firma.de: Geraet: boolean bereit()
+firma.en: Gadget: boolean ready()
+es: ¿Se puede usar ya? (Conectado y recargado.)
+de: Kann man es schon benutzen? (Angeschlossen und aufgeladen.)
+en: Can it be used yet? (Plugged in and recharged.)

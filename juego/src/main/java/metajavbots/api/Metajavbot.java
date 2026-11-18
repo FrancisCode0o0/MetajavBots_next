@@ -302,6 +302,31 @@ public abstract class Metajavbot extends RobotBase {
         return new ArrayList<>(m().obstaculos());
     }
 
+    /** Los aparatos que hay en el suelo de la arena: ve hasta uno para cogerlo (vacía si no hay; tema 15). */
+    public final List<Aparato> aparatos() {
+        return new ArrayList<>(m().aparatos());
+    }
+
+    /** El aparato que llevas (null si no llevas ninguno). */
+    public final Aparato miAparato() {
+        return m().miAparato();
+    }
+
+    /** Conecta el aparato que llevas en ese hueco: "espalda", "piernas", "cabeza" o "brazo" (lee su código para saber cuál). */
+    public final boolean conectar(String hueco) {
+        return m().conectar(hueco);
+    }
+
+    /** Usa el aparato conectado, hacia donde miras. Devuelve si se pudo (conectado y recargado). */
+    public final boolean usarAparato() {
+        return m().usarAparato(false, 0);
+    }
+
+    /** Usa el aparato conectado hacia ese ángulo (para los que apuntan: lanzallamas, pegamento). */
+    public final boolean usarAparato(double angulo) {
+        return m().usarAparato(true, angulo);
+    }
+
     /** Tus compañeros de equipo (en las peleas por equipos; vacía si peleas solo). */
     public final List<Enemigo> companeros() {
         return new ArrayList<>(m().companeros());

@@ -95,6 +95,30 @@ public final class VistaDeArena {
 
     // ================================================================ sucesos → efectos y sonidos
 
+    /** Lo que se ve y se oye de un aparato: sale, se coge, se monta, se usa o no engancha. */
+    private void aparato(Suceso s, float px, Sonidos sonidos) {
+        float suelo = sy(s.y);
+        switch (s.texto) {
+            case "aparato_sale": efectos.anadir(Efectos.Tipo.ONDA, px, suelo, 0, 0, 0.6f, 90 * escalaX, 0xFFE38A); break;
+            case "coger": case "conectado": efectos.chispas(px, suelo - 50 * escalaX, 10, 0xFFE38A); break;
+            case "aparato_descarga": efectos.anadir(Efectos.Tipo.ONDA, px, suelo - 30 * escalaX, 0, 0, 0.5f, 150 * escalaX, 0xFFF4A0); break;
+            case "aparato_chorro": efectos.humo(px, suelo - 20 * escalaX, 0.8f); break;
+            default: break;
+        }
+        if (sonidos == null) return;
+        String que;
+        switch (s.texto) {
+            case "hueco": que = "error"; break;
+            case "aparato_chorro": que = "turbo"; break;
+            case "aparato_descarga": que = "pulso"; break;
+            case "aparato_lanzallamas": que = "llama"; break;
+            case "aparato_antigravedad": que = "escudo"; break;
+            case "conectado": case "aparato_sale": que = "reparar"; break;
+            default: que = "servo"; break;
+        }
+        sonidos.tocar(que, 0.7f);
+    }
+
     public void sucesos(Pelea pelea, Sonidos sonidos) {
         for (Suceso s : pelea.sucesos()) {
             float px = sx(s.x, s.y), py = sy(s.y) - TIRO * escalaX;
@@ -127,6 +151,7 @@ public final class VistaDeArena {
                     efectos.chispas(px, py, 10, 0x9FE7FF);
                     if (sonidos != null) sonidos.tocar("escudo", 0.5f);
                     break;
+                case APARATO: aparato(s, px, sonidos); break;
                 case TRAMPA:
                     efectos.chispas(px, sy(s.y) - 20, s.texto.equals("sierra") ? 10 : 6, s.texto.equals("rayo") ? 0xBFE6FF : 0xFFE38A);
                     if (s.texto.equals("foso")) efectos.anadir(Efectos.Tipo.ONDA, sx(s.x, s.y), sy(s.y), 0, 0, 0.6f, 120 * escalaX, 0x101722);
@@ -182,6 +207,9 @@ public final class VistaDeArena {
         fondo(p);
         suelo(p);
         DibujoDeArenas.delSuelo(p, this, pelea.arena, tiempo);
+        for (metajavbots.combate.Aparatos.Uno a : pelea.aparatos.todos()) {
+            if (a.dueno < 0) DibujoDeAparatos.enElSuelo(p, this, a, tiempo, letra);
+        }
         // Lo que está más lejos (y mayor), antes.
         cuantos(pelea.combatientes.length);
         // Lo que está más lejos (y mayor), antes.
@@ -362,7 +390,10 @@ public final class VistaDeArena {
         e.cara = c.fuera ? 3 : pelea.turno() - c.ultimoGolpe < 20 ? 3 : pelea.turno() - c.ultimoAtaque < 20 ? 2 : 0;
         float px = sx(c.x, c.y), py = sy(c.y);
         float talla = escalaX * f(c.y) * 1.45f;
+        if (c.flotando > 0) py -= Math.min(1f, Math.min(c.flotando / 8f, (50 - c.flotando) / 8f)) * 26 * talla;
         dibujo.dibujar(co.montaje.modelo, co.montaje, px, py, talla, e);
+        metajavbots.combate.Aparatos.Uno lleva = pelea.aparatos.delCuerpo(c.indice);
+        if (lleva != null) DibujoDeAparatos.montado(p, lleva, px, py, (float) (62 * talla * co.montaje.modelo.tamano / 30), e.lado, tiempo);
         // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea.
         double dano = Math.min(1.2, Math.max(co.estropeado(), c.indice == 0 ? averiaDelJugador : 0));
         float alto = (float) (62 * talla * co.montaje.modelo.tamano / 30);
@@ -409,8 +440,8 @@ public final class VistaDeArena {
     private void llamas(Pincel p, Pelea pelea) {
         for (int i = 0; i < pelea.combatientes.length; i++) {
             Cuerpo c = pelea.cuerpo(i);
-            if (c == null || c.llama <= 0) continue;
-            double ang = Math.toRadians(c.mira);
+            if (c == null || c.llama <= 0 && c.llamaAparato <= 0) continue;
+            double ang = Math.toRadians(c.llama > 0 ? c.mira : c.miraDeLaLlama);
             for (int k = 0; k < 4; k++) {
                 double d = 30 + azar.nextDouble() * 150;
                 double ex = c.x + Math.cos(ang + (azar.nextDouble() - 0.5) * 0.4) * d, ey = c.y + Math.sin(ang + (azar.nextDouble() - 0.5) * 0.4) * d;

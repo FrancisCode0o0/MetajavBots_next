@@ -16,7 +16,9 @@ public final class Suceso {
         PARTE_ROTA, FUERA_DE_COMBATE, ESPECIAL, REPARACION, ATURDIDO,
         DECIR, ERROR_CODIGO, TOPE,
         /** Una trampa de la arena (el texto dice cuál: pinchos, sierra, foso…). */
-        TRAMPA
+        TRAMPA,
+        /** Un aparato: sale, se coge, se monta, se conecta, se usa o no engancha (el texto dice qué). */
+        APARATO
     }
 
     public final Tipo tipo;

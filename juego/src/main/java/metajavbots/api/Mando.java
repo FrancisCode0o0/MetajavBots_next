@@ -73,6 +73,15 @@ public interface Mando {
     /** Las trampas y los objetos de la arena (vacía en las arenas sin nada). */
     List<? extends Cosa> obstaculos();
 
+    /** Los aparatos que hay en el suelo; el que lleva (o null); conectarlo en un hueco; usarlo. */
+    List<? extends Cacharro> aparatos();
+
+    Cacharro miAparato();
+
+    boolean conectar(String hueco);
+
+    boolean usarAparato(boolean conAngulo, double angulo);
+
     /** Manda un mensaje a los compañeros (les llega el turno siguiente, en alOirAlEquipo). */
     void avisarAlEquipo(String mensaje);
 

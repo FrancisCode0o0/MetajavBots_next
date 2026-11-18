@@ -154,6 +154,23 @@ final class DibujoDeArenas {
                 case "rayo":
                     rayo(p, cx, cy, rx, ry, tr.peligroso(), t);
                     break;
+                case "aceite": {
+                    // Un charco negro con brillos de colores; se va secando.
+                    float a = tr.vida() < 0 ? 1 : Math.min(1, tr.vida() / 60f);
+                    p.elipse(cx, cy, rx, ry, 0, 0x14121C, 0.85f * a);
+                    p.elipse(cx - rx * 0.2f, cy - ry * 0.2f, rx * 0.5f, ry * 0.3f, 0, 0x9B7BFF, 0.25f * a);
+                    p.elipse(cx + rx * 0.25f, cy + ry * 0.1f, rx * 0.35f, ry * 0.2f, 0, 0x4FD8C0, 0.2f * a);
+                    break;
+                }
+                case "pegamento": {
+                    float a = tr.vida() < 0 ? 1 : Math.min(1, tr.vida() / 60f);
+                    p.elipse(cx, cy, rx, ry, 0, 0x4FB548, 0.8f * a);
+                    for (int k = 0; k < 5; k++) {
+                        float f = (t * 0.7f + k / 5f) % 1f;
+                        p.circulo(cx + (k - 2) * rx * 0.3f, cy - ry * 0.2f, rx * 0.08f * (0.5f + f), 0xB9F29A, (1 - f) * 0.8f * a);
+                    }
+                    break;
+                }
                 default:
                     break;
             }

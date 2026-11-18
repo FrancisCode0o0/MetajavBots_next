@@ -1,0 +1,101 @@
+== es
+/**
+ * LANZALLAMAS «Chamuscator» — Un chorro de fuego de 180 de largo
+ * durante 1 segundo, hacia el ángulo que le digas: quema poco a poco
+ * a quien pille.
+ *
+ * Cómo conectarlo a tu robot:
+ *   1. Ve hasta él y tócalo: lo coges (aparatos() te dice dónde
+ *      está).
+ *   2. Conéctalo en su hueco (si no es ese, no engancha):
+ *      conectar("brazo");
+ *   3. Úsalo: usarAparato(angulo);
+ * Se recarga en 5 s.
+ *
+ * Cumple la interfaz Aparato: tipo(), nombre(), conectado(),
+ * listo()…
+ */
+public final class Lanzallamas implements Aparato {
+
+    /** Los turnos que faltan para poder usarlo otra vez. */
+    private int espera;
+
+    @Override
+    public String tipo() {
+        return "lanzallamas";
+    }
+
+    /** Lo que hace al usarlo. */
+    void usar(Metajavbot robot, double angulo) {
+        if (espera > 0) return;
+        robot.fuego(angulo, 180, 30);   // alcance 180, 30 turnos
+        espera = 150;
+    }
+}
+== de
+/**
+ * FLAMMENWERFER «Chamuscator» — Ein Feuerstrahl, 180 lang, 1
+ * Sekunde, in den Winkel, den du angibst: verbrennt nach und nach,
+ * wen er erwischt.
+ *
+ * So schließt du es an deinen Roboter an:
+ *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
+ *      dir, wo es ist).
+ *   2. Schließ es an seinem Platz an (ein anderer hält nicht):
+ *      anschliessen("arm");
+ *   3. Benutze es: geraetBenutzen(winkel);
+ * Lädt in 5 s wieder auf.
+ *
+ * Erfüllt das Interface Geraet: typ(), name(), angeschlossen(),
+ * bereit() …
+ */
+public final class Flammenwerfer implements Geraet {
+
+    /** Die Züge, bis man es wieder benutzen kann. */
+    private int warten;
+
+    @Override
+    public String typ() {
+        return "lanzallamas";
+    }
+
+    /** Was es beim Benutzen tut. */
+    void benutzen(MetajavbotDe roboter, double winkel) {
+        if (warten > 0) return;
+        roboter.feuer(winkel, 180, 30);   // Reichweite 180, 30 Züge
+        warten = 150;
+    }
+}
+== en
+/**
+ * FLAMETHROWER «Chamuscator» — A jet of fire 180 long for 1 second,
+ * at the angle you give: slowly burns whoever it catches.
+ *
+ * How to plug it into your robot:
+ *   1. Drive to it and touch it: you pick it up (gadgets() tells
+ *      you where it is).
+ *   2. Plug it into its slot (any other won't hold):
+ *      plugIn("arm");
+ *   3. Use it: useGadget(angle);
+ * Recharges in 5 s.
+ *
+ * Implements the Gadget interface: type(), name(), pluggedIn(),
+ * ready()…
+ */
+public final class Flamethrower implements Gadget {
+
+    /** The ticks left until it can be used again. */
+    private int wait;
+
+    @Override
+    public String type() {
+        return "lanzallamas";
+    }
+
+    /** What it does when used. */
+    void use(MetajavbotEn robot, double angle) {
+        if (wait > 0) return;
+        robot.fire(angle, 180, 30);   // range 180, 30 ticks
+        wait = 150;
+    }
+}

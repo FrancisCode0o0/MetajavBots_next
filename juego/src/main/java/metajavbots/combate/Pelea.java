@@ -76,6 +76,14 @@ public final class Pelea {
 
     /** Las trampas y los objetos de la arena (NINGUNA en las de siempre). */
     public Arena arena = Arena.NINGUNA;
+    /** Los aparatos que salen de ronda en ronda (apagados salvo que la pantalla los encienda). */
+    public final Aparatos aparatos = new Aparatos();
+
+    /** La arena de esta pelea, para echarle algo encima (la compartida de siempre se cambia por una vacía propia). */
+    Arena arenaPropia() {
+        if (arena == Arena.NINGUNA) arena = Arena.vacia();
+        return arena;
+    }
 
     /** Las rondas de esta pelea (4; 1 en las prácticas y los tutoriales). */
     public int rondas = RONDAS;
@@ -100,6 +108,7 @@ public final class Pelea {
         this.ancho = ancho;
         this.alto = alto;
         this.turnosPorRonda = turnosPorRonda;
+        aparatos.empezarPelea(semilla);
     }
 
     // ================================================================ lo que se puede saber
@@ -146,6 +155,7 @@ public final class Pelea {
         if (estado == Estado.LUCHANDO || estado == Estado.TERMINADA) return;
         ronda++;
         turno = 0;
+        aparatos.empezarRonda();
         proyectiles.clear();
         rayos.clear();
         // Cada ronda, en un sitio distinto: uno a cada lado.
@@ -235,6 +245,7 @@ public final class Pelea {
         for (Cuerpo c : cuerpos) mover(c);
         for (int i = 0; i < n; i++) for (int k = i + 1; k < n; k++) chocar(cuerpos[i], cuerpos[k]);
         arena.turno(this);
+        aparatos.turno(this);
         for (Cuerpo c : cuerpos) efectosContinuos(c, objetivo(c));
         moverProyectiles();
         for (Rayo r : rayos) r.vida--;
@@ -287,6 +298,7 @@ public final class Pelea {
     }
 
     private void acabarRonda() {
+        aparatos.acabarRonda();
         for (Cuerpo c : cuerpos) {
             Combatiente.Informe inf = informe(c.indice);
             inf.turnos = turno;
@@ -590,6 +602,7 @@ public final class Pelea {
         if (c.sobrecarga > 0) c.sobrecarga--;
         if (c.aturdido > 0) c.aturdido--;
         if (c.volteado > 0) c.volteado--;
+        if (c.flotando > 0) c.flotando--;
         if (c.sacudida > 0) c.sacudida *= 0.8;
         c.retroceso *= 0.75;
         boolean piernasRotas = c.parteRota(Montaje.PIERNAS);
@@ -610,7 +623,7 @@ public final class Pelea {
         // Avanzar: acelera hacia lo que falta, y frena para llegar justo.
         double deseada = Math.max(-vmax, Math.min(vmax, c.avance));
         double acel = c.cifras.aceleracion * (Math.signum(deseada) != Math.signum(c.velocidad) || Math.abs(deseada) < Math.abs(c.velocidad) ? 2 : 1)
-                * (c.vuela() ? 1 : arena.agarre);
+                * (c.vuela() ? 1 : arena.agarreEn(c.x, c.y));
         if (c.velocidad < deseada) c.velocidad = Math.min(deseada, c.velocidad + acel);
         else if (c.velocidad > deseada) c.velocidad = Math.max(deseada, c.velocidad - acel);
         double rad = Math.toRadians(c.rumbo);

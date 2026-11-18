@@ -16,7 +16,7 @@ TEMAS = {
     'x': '02', 'y': '02', 'rumbo': '02', 'mira': '02', 'velocidad': '02', 'energia': '02', 'blindaje': '02', 'turnoActual': '02',
     'ronda': '02', 'anchoArena': '02', 'altoArena': '02', 'restanteAvance': '04', 'restanteGiro': '04', 'restanteMira': '04',
     'enemigosVistos': '15', 'anguloHacia': '06', 'distanciaA': '06', 'normalizar': '06', 'azar': '09', 'decir': '01', 'escribir': '01',
-    'memoria': '15', 'obstaculos': '15', 'alOirAlEquipo': '13', 'companeros': '15', 'avisarAlEquipo': '08',
+    'memoria': '15', 'obstaculos': '15', 'aparatos': '15', 'miAparato': '13', 'conectar': '13', 'usarAparato': '13', 'alOirAlEquipo': '13', 'companeros': '15', 'avisarAlEquipo': '08',
 }
 
 def metodos(archivo):
@@ -42,7 +42,8 @@ for (n1, f1, d1), (n2, f2, d2), (n3, f3, d3) in zip(es, de, en):
     b += ['=== api.' + n1, 'tema: ' + TEMAS.get(n1, '06'), 'firma: ' + f1, 'firma.de: ' + f2, 'firma.en: ' + f3,
           'es: ' + (d1 or f1), 'de: ' + (d2 or d1 or f2), 'en: ' + (d3 or d1 or f3), '']
 for a, bb, c, tema in (('Enemigo.java', 'Gegner.java', 'Enemy.java', '13'), ('Golpe.java', 'Treffer.java', 'Hit.java', '13'),
-                              ('Obstaculo.java', 'Hindernis.java', 'Obstacle.java', '13')):
+                              ('Obstaculo.java', 'Hindernis.java', 'Obstacle.java', '13'),
+                              ('Aparato.java', 'Geraet.java', 'Gadget.java', '13')):
     for (n1, f1, d1), (n2, f2, d2), (n3, f3, d3) in zip(interfaz(a), interfaz(bb), interfaz(c)):
         clase = a[:-5]
         b += ['=== ' + clase + '.' + n1, 'tema: ' + tema, 'firma: ' + clase + ': ' + f1, 'firma.de: ' + bb[:-5] + ': ' + f2,

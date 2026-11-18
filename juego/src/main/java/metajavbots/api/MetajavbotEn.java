@@ -301,6 +301,31 @@ public abstract class MetajavbotEn extends RobotBase {
         return new ArrayList<>(m().obstaculos());
     }
 
+    /** The gadgets on the arena floor: drive to one to pick it up (empty if there are none; topic 15). */
+    public final List<Gadget> gadgets() {
+        return new ArrayList<>(m().aparatos());
+    }
+
+    /** The gadget you carry (null if none). */
+    public final Gadget myGadget() {
+        return m().miAparato();
+    }
+
+    /** Plugs the gadget you carry into that slot: "back", "legs", "head" or "arm" (read its code to know which). */
+    public final boolean plugIn(String slot) {
+        return m().conectar(slot);
+    }
+
+    /** Uses the plugged-in gadget (where you aim, or at that angle). Returns whether it worked. */
+    public final boolean useGadget() {
+        return m().usarAparato(false, 0);
+    }
+
+    /** Uses the plugged-in gadget (where you aim, or at that angle). Returns whether it worked. */
+    public final boolean useGadget(double angle) {
+        return m().usarAparato(true, angle);
+    }
+
     /** Your teammates (in team fights; empty when you fight alone). */
     public final List<Enemy> teammates() {
         return new ArrayList<>(m().companeros());

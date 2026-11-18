@@ -113,6 +113,8 @@ public final class Jugador {
     public float volumenMusica = 0.45f;
     /** Si las peleas al azar pueden salir en arenas con trampas (pinchos, sierras, foso…). */
     public boolean arenasConTrampas = true;
+    /** Si salen aparatos en la arena de ronda en ronda (motor a chorro, antigravedad, descarga…). */
+    public boolean aparatosEnLaArena = true;
     public int victoriasExtrema;
 
     public Jugador(String nombre) {

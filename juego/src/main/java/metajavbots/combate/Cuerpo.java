@@ -39,6 +39,9 @@ public final class Cuerpo implements Mando {
     final boolean[] pedido = new boolean[3];
     /** Lo que dura cada efecto (en turnos). */
     public int escudoBrazo, escudoCabeza, turbo, camuflaje, sobrecarga, aturdido, llama, deuda;
+    /** Los turnos que le quedan flotando (el propulsor antigravedad) y echando fuego (el lanzallamas de un aparato). */
+    public int flotando, llamaAparato;
+    public double miraDeLaLlama;
     /** Los turnos que le quedan en el aire tras un volteador (se ve levantado; no se mueve). */
     public int volteado;
     int brazoDelEscudo = -1, brazoDeLaLlama = -1;
@@ -236,6 +239,27 @@ public final class Cuerpo implements Mando {
     }
 
     @Override
+    public List<? extends metajavbots.api.Cacharro> aparatos() {
+        return pelea.aparatos.vistas(this, false);
+    }
+
+    @Override
+    public metajavbots.api.Cacharro miAparato() {
+        List<metajavbots.api.Cacharro> l = pelea.aparatos.vistas(this, true);
+        return l.isEmpty() ? null : l.get(0);
+    }
+
+    @Override
+    public boolean conectar(String hueco) {
+        return pelea.aparatos.conectar(this, hueco);
+    }
+
+    @Override
+    public boolean usarAparato(boolean conAngulo, double angulo) {
+        return pelea.aparatos.usar(this, conAngulo ? angulo : mira);
+    }
+
+    @Override
     public void avisarAlEquipo(String mensaje) {
         if (mensaje == null) return;
         String m = mensaje.length() > 200 ? mensaje.substring(0, 200) : mensaje;
@@ -292,7 +316,7 @@ public final class Cuerpo implements Mando {
     }
 
     public boolean vuela() {
-        return cifras.vuela;
+        return cifras.vuela || flotando > 0;
     }
 
     /** Cuánto le queda de blindaje en total (sin porcentaje). */

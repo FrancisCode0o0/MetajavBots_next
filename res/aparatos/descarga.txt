@@ -1,0 +1,101 @@
+== es
+/**
+ * BOBINADEDESCARGA «Chispazo» — Una descarga eléctrica a tu
+ * alrededor: a los enemigos a menos de 150, 6 de daño y un rato sin
+ * moverse.
+ *
+ * Cómo conectarlo a tu robot:
+ *   1. Ve hasta él y tócalo: lo coges (aparatos() te dice dónde
+ *      está).
+ *   2. Conéctalo en su hueco (si no es ese, no engancha):
+ *      conectar("cabeza");
+ *   3. Úsalo: usarAparato();
+ * Se recarga en 6 s.
+ *
+ * Cumple la interfaz Aparato: tipo(), nombre(), conectado(),
+ * listo()…
+ */
+public final class BobinaDeDescarga implements Aparato {
+
+    /** Los turnos que faltan para poder usarlo otra vez. */
+    private int espera;
+
+    @Override
+    public String tipo() {
+        return "descarga";
+    }
+
+    /** Lo que hace al usarlo. */
+    void usar(Metajavbot robot) {
+        if (espera > 0) return;
+        for (Enemigo e : cerca(150)) { e.danar(6); e.aturdir(25); }
+        espera = 180;
+    }
+}
+== de
+/**
+ * ENTLADESPULE «Chispazo» — Ein Stromschlag um dich herum: Gegner
+ * näher als 150 bekommen 6 Schaden und können sich kurz nicht
+ * bewegen.
+ *
+ * So schließt du es an deinen Roboter an:
+ *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
+ *      dir, wo es ist).
+ *   2. Schließ es an seinem Platz an (ein anderer hält nicht):
+ *      anschliessen("kopf");
+ *   3. Benutze es: geraetBenutzen();
+ * Lädt in 6 s wieder auf.
+ *
+ * Erfüllt das Interface Geraet: typ(), name(), angeschlossen(),
+ * bereit() …
+ */
+public final class Entladespule implements Geraet {
+
+    /** Die Züge, bis man es wieder benutzen kann. */
+    private int warten;
+
+    @Override
+    public String typ() {
+        return "descarga";
+    }
+
+    /** Was es beim Benutzen tut. */
+    void benutzen(MetajavbotDe roboter) {
+        if (warten > 0) return;
+        for (Gegner g : nah(150)) { g.schaden(6); g.betaeuben(25); }
+        warten = 180;
+    }
+}
+== en
+/**
+ * SHOCKCOIL «Chispazo» — An electric shock all around you: enemies
+ * closer than 150 take 6 damage and are stunned for a while.
+ *
+ * How to plug it into your robot:
+ *   1. Drive to it and touch it: you pick it up (gadgets() tells
+ *      you where it is).
+ *   2. Plug it into its slot (any other won't hold):
+ *      plugIn("head");
+ *   3. Use it: useGadget();
+ * Recharges in 6 s.
+ *
+ * Implements the Gadget interface: type(), name(), pluggedIn(),
+ * ready()…
+ */
+public final class ShockCoil implements Gadget {
+
+    /** The ticks left until it can be used again. */
+    private int wait;
+
+    @Override
+    public String type() {
+        return "descarga";
+    }
+
+    /** What it does when used. */
+    void use(MetajavbotEn robot) {
+        if (wait > 0) return;
+        for (Enemy e : near(150)) { e.damage(6); e.stun(25); }
+        wait = 180;
+    }
+}

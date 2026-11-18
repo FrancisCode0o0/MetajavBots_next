@@ -34,6 +34,8 @@ metodos = {
     'restanteAvance': ('restStrecke', 'remainingDistance'), 'restanteGiro': ('restDrehung', 'remainingTurn'),
     'restanteMira': ('restZielen', 'remainingAim'),
     'enemigosVistos': ('gesehen', 'seenEnemies'), 'obstaculos': ('hindernisse', 'obstacles'),
+    'aparatos': ('geraete', 'gadgets'), 'miAparato': ('meinGeraet', 'myGadget'), 'conectar': ('anschliessen', 'plugIn'),
+    'usarAparato': ('geraetBenutzen', 'useGadget'),
     'companeros': ('kameraden', 'teammates'), 'avisarAlEquipo': ('teamMelden', 'tellTeam'),
     'anguloHacia': ('winkelZu', 'angleTo'), 'distanciaA': ('abstandZu', 'distanceTo'),
     'normalizar': ('normalisieren', 'normalize'),
@@ -105,6 +107,10 @@ doc = {
         'restStrecke': 'Was vom letzten Fahrbefehl noch fehlt.',
         'restDrehung': 'Was vom letzten Drehbefehl noch fehlt.',
         'gesehen': 'Die Gegner, die du gerade siehst (Thema 15: Collections).',
+        'geraete': 'Die Geräte auf dem Boden der Arena: Fahr zu einem hin, um es aufzuheben (leer, wenn es keine gibt; Thema 15).',
+        'meinGeraet': 'Das Gerät, das du trägst (null, wenn keins).',
+        'anschliessen': 'Schließt dein Gerät an diesem Platz an: "ruecken", "beine", "kopf" oder "arm" (lies seinen Code, um zu wissen, welcher).',
+        'geraetBenutzen': 'Benutzt das angeschlossene Gerät (in Blickrichtung oder zu diesem Winkel). Gibt zurück, ob es ging.',
         'hindernisse': 'Die Fallen und Gegenstände der Arena: Stacheln, Sägen, Grube, Fässer … (leer, wenn es keine gibt; Thema 15).',
         'winkelZu': 'Der absolute Winkel von dir zu diesem Punkt.',
         'abstandZu': 'Der Abstand von dir zu diesem Punkt.',
@@ -178,6 +184,10 @@ doc = {
         'remainingDistance': 'What is left of the last move order.',
         'remainingTurn': 'What is left of the last turn order.',
         'seenEnemies': 'The enemies you can see right now (topic 15: collections).',
+        'gadgets': 'The gadgets on the arena floor: drive to one to pick it up (empty if there are none; topic 15).',
+        'myGadget': 'The gadget you carry (null if none).',
+        'plugIn': 'Plugs the gadget you carry into that slot: "back", "legs", "head" or "arm" (read its code to know which).',
+        'useGadget': 'Uses the plugged-in gadget (where you aim, or at that angle). Returns whether it worked.',
         'obstacles': 'The traps and objects in the arena: spikes, saws, pit, barrels… (empty if there are none; topic 15).',
         'angleTo': 'The absolute angle from you to that point.',
         'distanceTo': 'The distance from you to that point.',
@@ -187,9 +197,9 @@ doc = {
         'print': "Writes to your robot's console (below the code).",
         'memory': 'Whatever you want to remember from round to round (topic 15: Map). It survives code changes.',
     }}
-tipos = {'de': {'Enemigo': 'Gegner', 'Golpe': 'Treffer', 'Obstaculo': 'Hindernis'}, 'en': {'Enemigo': 'Enemy', 'Golpe': 'Hit', 'Obstaculo': 'Obstacle'}}
-params = {'de': {'distancia': 'strecke', 'grados': 'grad', 'angulo': 'winkel', 'texto': 'text', 'mensaje': 'nachricht', 'de': 'von', 'g': 't', 'e': 'g'},
-          'en': {'distancia': 'distance', 'grados': 'degrees', 'angulo': 'angle', 'texto': 'text', 'mensaje': 'message', 'de': 'from', 'e': 'e', 'g': 'h'}}
+tipos = {'de': {'Enemigo': 'Gegner', 'Golpe': 'Treffer', 'Obstaculo': 'Hindernis', 'Aparato': 'Geraet'}, 'en': {'Enemigo': 'Enemy', 'Golpe': 'Hit', 'Obstaculo': 'Obstacle', 'Aparato': 'Gadget'}}
+params = {'de': {'distancia': 'strecke', 'grados': 'grad', 'angulo': 'winkel', 'texto': 'text', 'mensaje': 'nachricht', 'de': 'von', 'g': 't', 'e': 'g', 'hueco': 'platz'},
+          'en': {'distancia': 'distance', 'grados': 'degrees', 'angulo': 'angle', 'texto': 'text', 'mensaje': 'message', 'de': 'from', 'e': 'e', 'g': 'h', 'hueco': 'slot'}}
 secciones = [('lo que sobrescribes', ('was du überschreibst', 'what you override')), ('moverse', ('fahren', 'moving')),
              ('apuntar y atacar', ('zielen und angreifen', 'aiming and attacking')), ('saber', ('wissen', 'knowing')),
              ('ayudas', ('Hilfen', 'helpers'))]

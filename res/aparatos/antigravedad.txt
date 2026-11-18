@@ -1,0 +1,102 @@
+== es
+/**
+ * PROPULSORANTIGRAVEDAD «Flotón» — Te levanta un palmo del suelo
+ * durante 5/3 de segundo: pasas por encima de pinchos, fosos, aceite
+ * y pegamento, y luego bajas.
+ *
+ * Cómo conectarlo a tu robot:
+ *   1. Ve hasta él y tócalo: lo coges (aparatos() te dice dónde
+ *      está).
+ *   2. Conéctalo en su hueco (si no es ese, no engancha):
+ *      conectar("piernas");
+ *   3. Úsalo: usarAparato();
+ * Se recarga en 7 s.
+ *
+ * Cumple la interfaz Aparato: tipo(), nombre(), conectado(),
+ * listo()…
+ */
+public final class PropulsorAntigravedad implements Aparato {
+
+    /** Los turnos que faltan para poder usarlo otra vez. */
+    private int espera;
+
+    @Override
+    public String tipo() {
+        return "antigravedad";
+    }
+
+    /** Lo que hace al usarlo. */
+    void usar(Metajavbot robot) {
+        if (espera > 0) return;
+        robot.flotar(50);   // 50 turnos en el aire
+        espera = 210;
+    }
+}
+== de
+/**
+ * ANTIGRAVITATIONSANTRIEB «Flotón» — Hebt dich 5/3 Sekunden lang
+ * eine Handbreit vom Boden: Du gleitest über Stacheln, Gruben, Öl
+ * und Kleber und landest dann.
+ *
+ * So schließt du es an deinen Roboter an:
+ *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
+ *      dir, wo es ist).
+ *   2. Schließ es an seinem Platz an (ein anderer hält nicht):
+ *      anschliessen("beine");
+ *   3. Benutze es: geraetBenutzen();
+ * Lädt in 7 s wieder auf.
+ *
+ * Erfüllt das Interface Geraet: typ(), name(), angeschlossen(),
+ * bereit() …
+ */
+public final class Antigravitationsantrieb implements Geraet {
+
+    /** Die Züge, bis man es wieder benutzen kann. */
+    private int warten;
+
+    @Override
+    public String typ() {
+        return "antigravedad";
+    }
+
+    /** Was es beim Benutzen tut. */
+    void benutzen(MetajavbotDe roboter) {
+        if (warten > 0) return;
+        roboter.schweben(50);   // 50 Züge in der Luft
+        warten = 210;
+    }
+}
+== en
+/**
+ * ANTIGRAVITYTHRUSTER «Flotón» — Lifts you a hand above the floor
+ * for 5/3 of a second: you glide over spikes, pits, oil and glue,
+ * then land.
+ *
+ * How to plug it into your robot:
+ *   1. Drive to it and touch it: you pick it up (gadgets() tells
+ *      you where it is).
+ *   2. Plug it into its slot (any other won't hold):
+ *      plugIn("legs");
+ *   3. Use it: useGadget();
+ * Recharges in 7 s.
+ *
+ * Implements the Gadget interface: type(), name(), pluggedIn(),
+ * ready()…
+ */
+public final class AntiGravityThruster implements Gadget {
+
+    /** The ticks left until it can be used again. */
+    private int wait;
+
+    @Override
+    public String type() {
+        return "antigravedad";
+    }
+
+    /** What it does when used. */
+    void use(MetajavbotEn robot) {
+        if (wait > 0) return;
+        robot.hover(50);   // 50 ticks in the air
+        wait = 210;
+    }
+}

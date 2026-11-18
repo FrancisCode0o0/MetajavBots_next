@@ -119,6 +119,45 @@ final class PruebasDeLaPelea {
         apuntarParte3();
         apuntarParte4();
         apuntarArenas();
+        apuntarAparatos();
+    }
+
+    private static void apuntarAparatos() {
+        caso("aparatos: sale a los 3 s, se coge al tocarlo, solo engancha en su hueco (en cualquier idioma), tarda en montarse, se usa y se recarga", () -> {
+            java.util.List<Modelo> ms = Modelo.todos();
+            Pelea p = new Pelea(Rivales.crear(ms.get(0), 0.5, 0.5, new Random(1)), Rivales.crear(ms.get(1), 0.5, 0.5, new Random(2)), 11);
+            p.aparatos.activos = true;
+            cierto(p.aparatos.siguiente() != null, "se sabe el de la primera ronda");
+            p.empezarRonda();
+            while (p.turno() < metajavbots.combate.Aparatos.SALE) p.avanzar();
+            igual(1, p.aparatos.todos().size(), "ha salido");
+            metajavbots.combate.Aparatos.Uno a = p.aparatos.todos().get(0);
+            if (a.dueno < 0) {
+                metajavbots.combate.Cuerpo c = p.cuerpo(0);
+                c.x = a.x;
+                c.y = a.y;
+                p.avanzar();
+            }
+            cierto(a.dueno >= 0, "lo ha cogido alguien");
+            metajavbots.combate.Cuerpo c = p.cuerpo(a.dueno);
+            String otro = a.tipo.hueco.equals("cabeza") ? "piernas" : "cabeza";
+            cierto(!c.conectar(otro), "en otro hueco no engancha");
+            String aleman = java.util.Map.of("espalda", "Ruecken", "piernas", "beine", "cabeza", "kopf", "brazo", "arm").get(a.tipo.hueco);
+            cierto(c.conectar(aleman), "en el suyo, dicho en alemán, sí");
+            cierto(!c.miAparato().conectado(), "aún se está montando");
+            for (int k = 0; k < metajavbots.combate.Aparatos.MONTAR; k++) p.avanzar();
+            cierto(c.miAparato().conectado() && c.miAparato().listo(), "montado y listo");
+            cierto(c.usarAparato(true, 0), "se usa");
+            cierto(!c.usarAparato(true, 0), "y hay que esperar a que se recargue");
+            // Una pelea entera con aparatos: la computadora los coge, los conecta y los usa sin que nada falle.
+            for (int k = 0; k < 4; k++) {
+                Pelea q = new Pelea(Rivales.crear(ms.get(k), 0.6, 0.7, new Random(k)), Rivales.crear(ms.get(k + 5), 0.6, 0.7, new Random(k + 3)), 50 + k);
+                q.aparatos.activos = true;
+                q.arena = metajavbots.combate.Arena.de(k % 2 == 0 ? "HIELO" : "HANGAR", q.ancho, q.alto);
+                q.jugarEntera();
+                cierto(q.estado() == Pelea.Estado.TERMINADA, "acaba");
+            }
+        });
     }
 
     private static void apuntarArenas() {

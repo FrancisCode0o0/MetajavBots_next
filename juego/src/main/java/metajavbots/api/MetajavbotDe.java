@@ -301,6 +301,31 @@ public abstract class MetajavbotDe extends RobotBase {
         return new ArrayList<>(m().obstaculos());
     }
 
+    /** Die Geräte auf dem Boden der Arena: Fahr zu einem hin, um es aufzuheben (leer, wenn es keine gibt; Thema 15). */
+    public final List<Geraet> geraete() {
+        return new ArrayList<>(m().aparatos());
+    }
+
+    /** Das Gerät, das du trägst (null, wenn keins). */
+    public final Geraet meinGeraet() {
+        return m().miAparato();
+    }
+
+    /** Schließt dein Gerät an diesem Platz an: "ruecken", "beine", "kopf" oder "arm" (lies seinen Code, um zu wissen, welcher). */
+    public final boolean anschliessen(String platz) {
+        return m().conectar(platz);
+    }
+
+    /** Benutzt das angeschlossene Gerät (in Blickrichtung oder zu diesem Winkel). Gibt zurück, ob es ging. */
+    public final boolean geraetBenutzen() {
+        return m().usarAparato(false, 0);
+    }
+
+    /** Benutzt das angeschlossene Gerät (in Blickrichtung oder zu diesem Winkel). Gibt zurück, ob es ging. */
+    public final boolean geraetBenutzen(double winkel) {
+        return m().usarAparato(true, winkel);
+    }
+
     /** Deine Teamkameraden (in Teamkämpfen; leer, wenn du allein kämpfst). */
     public final List<Gegner> kameraden() {
         return new ArrayList<>(m().companeros());

@@ -25,6 +25,8 @@ public final class Arena {
         double vx, vy;
         final int ciclo, activo;
         int fase;
+        /** Los charcos (aceite, pegamento) se secan: los turnos que les quedan (-1, para siempre). */
+        int vida = -1;
 
         Trampa(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo) {
             this.tipo = tipo;
@@ -40,6 +42,7 @@ public final class Arena {
         public boolean peligroso() {
             switch (tipo) {
                 case "pinchos": case "rayo": return fase % ciclo < activo;
+            case "pegamento": return true;
                 case "sierra": case "carrito": case "foso": return true;
                 default: return false;
             }
@@ -55,6 +58,11 @@ public final class Arena {
 
         public int fase() {
             return fase;
+        }
+
+        /** Los turnos que le quedan a un charco (-1 si no se seca). */
+        public int vida() {
+            return vida;
         }
 
         public double rumbo() {
@@ -128,8 +136,26 @@ public final class Arena {
         }
     }
 
-    /** La arena de siempre: sin trampas y con el suelo que agarra. */
+    /** La arena de siempre: sin trampas y con el suelo que agarra. Es compartida: no se le añade nada (Pelea.arenaPropia). */
     public static final Arena NINGUNA = new Arena(1);
+
+    /** Una arena sin nada, propia de una pelea (para echarle charcos encima). */
+    static Arena vacia() {
+        return new Arena(1);
+    }
+
+    /** Un charco que dura un rato: aceite (resbala) o pegamento (casi no deja moverse). */
+    void charco(String tipo, double x, double y, double radio, int turnos) {
+        Trampa t = poner(tipo, x, y, radio, false, 0, 0);
+        t.vida = turnos;
+    }
+
+    /** Lo que agarra el suelo en ese sitio: el de la arena, y en el aceite casi nada. */
+    double agarreEn(double x, double y) {
+        double a = agarre;
+        for (Trampa t : trampas) if (t.tipo.equals("aceite") && Math.hypot(t.x - x, t.y - y) < t.radio) a = Math.min(a, 0.18);
+        return a;
+    }
 
     private final List<Trampa> trampas = new ArrayList<>();
     /** Lo que agarra el suelo: 1 normal; menos, se resbala (cuesta frenar y cambiar de dirección). */
@@ -208,8 +234,10 @@ public final class Arena {
         if (trampas.isEmpty()) return;
         for (Trampa t : trampas) {
             t.fase++;
+            if (t.vida > 0) t.vida--;
             mover(t, p);
         }
+        trampas.removeIf(t -> t.vida == 0);
         for (int i = 0; i < p.combatientes.length; i++) {
             Cuerpo c = p.cuerpo(i);
             if (c == null || c.fuera) continue;
@@ -231,6 +259,12 @@ public final class Arena {
     private void efecto(Pelea p, Cuerpo c, int k, Trampa t) {
         double dx = c.x - t.x, dy = c.y - t.y, d = Math.hypot(dx, dy);
         boolean suelo = !c.vuela();
+        if (t.tipo.equals("pegamento")) {
+            // El pegamento casi no deja moverse a lo que pisa el suelo.
+            if (suelo && d < t.radio) c.velocidad *= 0.35;
+            return;
+        }
+        if (t.tipo.equals("aceite")) return;
         if (t.tipo.equals("iman")) {
             // El imán tira de todos los que pisan el suelo, más cuanto más cerca.
             if (suelo && d < t.radio && d > 1) {

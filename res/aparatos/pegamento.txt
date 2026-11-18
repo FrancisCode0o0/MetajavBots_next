@@ -1,0 +1,102 @@
+== es
+/**
+ * PISTOLADEPEGAMENTO «Pegotón» — Dispara una pegota que cae a 220 (o
+ * en el primer enemigo de la línea): quien la pisa casi no se puede
+ * mover, durante 8 segundos.
+ *
+ * Cómo conectarlo a tu robot:
+ *   1. Ve hasta él y tócalo: lo coges (aparatos() te dice dónde
+ *      está).
+ *   2. Conéctalo en su hueco (si no es ese, no engancha):
+ *      conectar("brazo");
+ *   3. Úsalo: usarAparato(angulo);
+ * Se recarga en 5 s.
+ *
+ * Cumple la interfaz Aparato: tipo(), nombre(), conectado(),
+ * listo()…
+ */
+public final class PistolaDePegamento implements Aparato {
+
+    /** Los turnos que faltan para poder usarlo otra vez. */
+    private int espera;
+
+    @Override
+    public String tipo() {
+        return "pegamento";
+    }
+
+    /** Lo que hace al usarlo. */
+    void usar(Metajavbot robot, double angulo) {
+        if (espera > 0) return;
+        arena.charco("pegamento", donde(angulo, 220), 60, 240);
+        espera = 150;
+    }
+}
+== de
+/**
+ * KLEBEPISTOLE «Pegotón» — Schießt einen Klecks, der 220 weit fliegt
+ * (oder beim ersten Gegner auf der Linie landet): Wer hineinfährt,
+ * kommt 8 Sekunden lang kaum vom Fleck.
+ *
+ * So schließt du es an deinen Roboter an:
+ *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
+ *      dir, wo es ist).
+ *   2. Schließ es an seinem Platz an (ein anderer hält nicht):
+ *      anschliessen("arm");
+ *   3. Benutze es: geraetBenutzen(winkel);
+ * Lädt in 5 s wieder auf.
+ *
+ * Erfüllt das Interface Geraet: typ(), name(), angeschlossen(),
+ * bereit() …
+ */
+public final class Klebepistole implements Geraet {
+
+    /** Die Züge, bis man es wieder benutzen kann. */
+    private int warten;
+
+    @Override
+    public String typ() {
+        return "pegamento";
+    }
+
+    /** Was es beim Benutzen tut. */
+    void benutzen(MetajavbotDe roboter, double winkel) {
+        if (warten > 0) return;
+        arena.pfuetze("pegamento", wo(winkel, 220), 60, 240);
+        warten = 150;
+    }
+}
+== en
+/**
+ * GLUEGUN «Pegotón» — Shoots a blob that lands 220 away (or on the
+ * first enemy in line): whoever steps in it can hardly move, for 8
+ * seconds.
+ *
+ * How to plug it into your robot:
+ *   1. Drive to it and touch it: you pick it up (gadgets() tells
+ *      you where it is).
+ *   2. Plug it into its slot (any other won't hold):
+ *      plugIn("arm");
+ *   3. Use it: useGadget(angle);
+ * Recharges in 5 s.
+ *
+ * Implements the Gadget interface: type(), name(), pluggedIn(),
+ * ready()…
+ */
+public final class GlueGun implements Gadget {
+
+    /** The ticks left until it can be used again. */
+    private int wait;
+
+    @Override
+    public String type() {
+        return "pegamento";
+    }
+
+    /** What it does when used. */
+    void use(MetajavbotEn robot, double angle) {
+        if (wait > 0) return;
+        arena.puddle("pegamento", where(angle, 220), 60, 240);
+        wait = 150;
+    }
+}

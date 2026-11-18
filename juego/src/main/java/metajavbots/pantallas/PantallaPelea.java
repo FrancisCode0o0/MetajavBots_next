@@ -43,6 +43,7 @@ public final class PantallaPelea implements Pantalla {
     private final Encuentro encuentro;
     private Pelea pelea;
     private RobotEnReparacion reparando;
+    private final PanelDelAparato panelDelAparato = new PanelDelAparato();
     private Combatiente yo;
     private final RobotDelJugador robot = new RobotDelJugador();
     private VistaDeArena vista;
@@ -117,6 +118,8 @@ public final class PantallaPelea implements Pantalla {
         }
         pelea.rondas = encuentro.rondas;
         pelea.arena = metajavbots.combate.Arena.de(encuentro.escenario.name(), pelea.ancho, pelea.alto);
+        // Los aparatos que salen de ronda en ronda (no en los robots rotos ni en los tutoriales).
+        pelea.aparatos.activos = jug.aparatosEnLaArena && encuentro.codigo == null && encuentro.objetivo == null;
         pelea.topeDePasos = encuentro.topeDePasos;
         narrador = new Narrador(pelea.combatientes, pelea.equipo);
         narrador.idioma = jug.idioma;
@@ -435,7 +438,9 @@ public final class PantallaPelea implements Pantalla {
                 true, T.t("pelea.depurador_ayuda"))) depurador = !depurador;
         if (ui.boton(T.t("pelea.rendirse"), p.ancho - (depurador ? 460 : 0) - 170, y, 150, 46, Ui.Estilo.PELIGRO)) preguntarSiSalir(j);
         if (!avisoDeCodigo.isEmpty()) p.texto(avisoDeCodigo, 20, y - 30, ui.letra * 0.8f, false, ui.tema.aviso, 1);
+        if (panelDelAparato.dibujar(j, pelea.aparatos.siguiente(), p.ancho - (depurador ? 460 : 0) - 380 - 12, y)) pausa = true;
     }
+
 
     private void bandaDelLocutor(Juego j, float dt) {
         if (tiempoLocutor <= 0 || locutor.isEmpty()) return;

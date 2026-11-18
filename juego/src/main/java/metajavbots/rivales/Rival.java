@@ -1,5 +1,6 @@
 package metajavbots.rivales;
 
+import metajavbots.api.Aparato;
 import metajavbots.api.Enemigo;
 import metajavbots.api.Golpe;
 import metajavbots.api.Metajavbot;
@@ -91,9 +92,46 @@ public class Rival extends Metajavbot {
         }
         apuntarAlEnemigo();
         moverseSegunEstilo();
+        usarElAparato();
         apartarseDeLasTrampas();
         usarArmas();
         usarEspecial();
+    }
+
+    /**
+     * Los aparatos de la arena: si hay uno cerca, va a por él; si lo lleva, lo conecta en su hueco (el que dice su
+     * código) y lo usa cuando le conviene. En las peleas sin aparatos, no hace nada.
+     */
+    private void usarElAparato() {
+        Aparato mio = miAparato();
+        if (mio == null) {
+            for (Aparato a : aparatos()) {
+                if (a.distancia() < 320) {
+                    girarHacia(a.angulo());
+                    avanzar(a.distancia());
+                    return;
+                }
+            }
+            return;
+        }
+        if (!mio.conectado()) {
+            switch (mio.tipo()) {
+                case "antigravedad": conectar("piernas"); break;
+                case "descarga": conectar("cabeza"); break;
+                case "lanzallamas": case "pegamento": conectar("brazo"); break;
+                default: conectar("espalda"); break;
+            }
+            return;
+        }
+        if (!mio.listo()) return;
+        double d = distanciaA(enemigoX, enemigoY);
+        switch (mio.tipo()) {
+            case "descarga": if (d < 140) usarAparato(); break;
+            case "lanzallamas": if (d < 170) usarAparato(anguloHacia(enemigoX, enemigoY)); break;
+            case "pegamento": if (d < 240) usarAparato(anguloHacia(enemigoX, enemigoY)); break;
+            case "chorro": if (d > 250) usarAparato(); break;
+            default: usarAparato(); break;
+        }
     }
 
     /**
