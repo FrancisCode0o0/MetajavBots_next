@@ -297,6 +297,173 @@ def menu():
     return [epi, baj, bat]
 
 
+# ---------------------------------------------------------------- las épicas de las peleas (bloque 6)
+# Homenaje de género al boxeo y las artes marciales de los 70-80 y al rock de estadio: metales triunfales,
+# crescendos, coros, guitarras y tambores que empujan. Melodías propias, nada copiado.
+
+CLAP, CRASH2, BOMBO_GRANDE = 39, 57, 35
+TIMBAL = 47
+
+
+def redoble_timbal(p, inicio, dur, nota=38, desde=50, hasta=110):
+    """Redoble de timbales que crece (el subidón antes del tema)."""
+    n = int(dur * 8)
+    for k in range(n):
+        p.nota(inicio + k / 8, .12, nota, int(desde + (hasta - desde) * k / max(1, n - 1)))
+
+
+def campeon():
+    """El himno del campeón: timbales, fanfarria de metales que sube, cuerdas a corcheas y un coro en el estribillo.
+    Primero en re mayor; la última vuelta, un tono más arriba (el subidón final)."""
+    tro, tbn, cue, coro, baj, tim, bat = (Pista(0, 56, 'trompetas'), Pista(1, 61, 'metales'), Pista(2, 48, 'cuerdas'), Pista(3, 52, 'coro'),
+                                          Pista(4, 33, 'bajo'), Pista(5, 47, 'timbales'), Pista(9, 0, 'bateria'))
+    tema_a = ('D5/1.5 A4/.5 D5/1 E5/1 F#5/2 E5/1 D5/1 G5/1.5 F#5/.5 E5/1 D5/1 E5/3 r/1 '
+              'F#5/1.5 E5/.5 F#5/1 A5/1 B5/2 A5/1 F#5/1 G5/1 F#5/1 E5/1 C#5/1 D5/4')
+    tema_b = ('A5/2 B5/1 A5/1 G5/2 F#5/1 E5/1 F#5/1.5 G5/.5 A5/1 D6/1 D6/3 r/1 '
+              'B5/2 C#6/1 D6/1 E6/2 D6/1 B5/1 A5/1 F#5/1 G5/1 E5/1 D5/4')
+    prog_a, prog_b = 'D D G A D Bm A D', 'D Em D D Bm Em A D'
+    # Intro: redoble y acordes de metal a golpes.
+    redoble_timbal(tim, 0, 4, 38)
+    for k, a in enumerate('D G D A'.split()):
+        acordes(tbn, a, dur=1, inicio=4 + k * 2, fuerza=95, octava=4)
+    t = 12
+    for vuelta, subir in ((0, 0), (1, 0), (2, 2)):
+        fuerte = vuelta > 0
+        for prog, tema, voz in ((prog_a, tema_a, tro), (prog_b, tema_b, coro)):
+            acordes(cue, prog, inicio=t, fuerza=55 + 10 * vuelta, octava=4)
+            for c, a in enumerate(prog.split()):   # cuerdas a corcheas: el motor
+                raiz = altura(a[0] + ('#' if '#' in a else '') + '4') + subir
+                for k in range(8):
+                    cue.nota(t + c * 4 + k * .5, .4, raiz + (7 if k % 2 else 0), 60 + 8 * vuelta)
+            bajo(baj, prog, [(0, 0), (1.5, 0), (2, 7), (3, 12)], inicio=t, fuerza=95)
+            voz.melodia(tema, inicio=t, fuerza=100 + 8 * vuelta, transponer=subir)
+            if voz is coro:
+                tro.melodia(tema, inicio=t, fuerza=85, transponer=subir - 12)
+            if fuerte:
+                bateria(bat, 8, {BOMBO: [0, 2], CAJA: [1, 3], CHARLES: [k * .5 for k in range(8)]}, inicio=t, fuerza=100)
+                bat.nota(t, 2, PLATO, 110)
+            for k in range(0, 32, 8):
+                tim.nota(t + k, .5, 38 + subir, 100)
+                tim.nota(t + k + 3.5, .25, 45 + subir, 90)
+            t += 32
+    redoble_timbal(tim, t, 2, 40, 70, 127)
+    acordes(tbn, 'E', dur=6, inicio=t + 2, fuerza=120, octava=4)
+    acordes(coro, 'E', dur=6, inicio=t + 2, fuerza=110, octava=4)
+    bat.nota(t + 2, 4, PLATO, 127)
+    return [tro, tbn, cue, coro, baj, tim, bat]
+
+
+def estadio():
+    """Rock de estadio: pisotón-pisotón-palmada de todo el público, coro que canta el tema, y luego entran la guitarra
+    con quintas, el bajo y un solo. En mi menor, a medio tiempo."""
+    coro, gui, solo, baj, pia, bat = (Pista(0, 52, 'coro'), Pista(1, 30, 'guitarra'), Pista(2, 29, 'solo'), Pista(3, 34, 'bajo'),
+                                      Pista(4, 0, 'piano'), Pista(9, 0, 'bateria'))
+    canto = ('E5/1 E5/1 G5/1 E5/1 D5/1 D5/1 B4/2 E5/1 G5/1 A5/1 B5/1 A5/1 G5/1 E5/2 '
+             'G5/1 G5/1 A5/1 G5/1 F#5/1 E5/1 D5/2 E5/1 B4/1 D5/1 E5/1 E5/4')
+    prog = 'Em C D Em G D C B'
+    t = 0
+    for parte in range(4):
+        pisoton = {BOMBO_GRANDE: [0, .5, 2, 2.5], CLAP: [1, 3]}
+        if parte >= 1:
+            pisoton[CHARLES] = [k * .5 for k in range(8)]
+        bateria(bat, 8, pisoton, inicio=t, fuerza=105 + 5 * parte)
+        if parte == 0:
+            coro.melodia(canto, inicio=t, fuerza=95)
+        elif parte in (1, 3):
+            coro.melodia(canto, inicio=t, fuerza=105 + 6 * parte)
+            coro.melodia(canto, inicio=t, fuerza=85, transponer=-5)   # el público, a la cuarta
+            for c, a in enumerate(prog.split()):
+                raiz = altura(a[0] + ('#' if '#' in a else '') + '3')
+                for tt in (0, 1.5, 2, 3):
+                    gui.nota(t + c * 4 + tt, .45, raiz, 110)
+                    gui.nota(t + c * 4 + tt, .45, raiz + 7, 100)
+            bajo(baj, prog, [(0, 0), (1.5, 0), (2, 0), (3, 7)], inicio=t, fuerza=100)
+            acordes(pia, prog, dur=4, inicio=t, fuerza=60)
+            bat.nota(t, 2, PLATO, 115)
+        else:
+            # El solo de guitarra, por encima del pisotón: pentatónica que sube y sube.
+            solo.melodia('E5/.5 G5/.5 A5/.5 B5/.5 D6/1 B5/1 A5/.5 B5/.5 A5/.5 G5/.5 E5/2 '
+                         'G5/.5 A5/.5 B5/.5 D6/.5 E6/1 D6/1 B5/.5 D6/.5 B5/.5 A5/.5 B5/2 '
+                         'E6/.5 D6/.5 B5/.5 A5/.5 G5/.5 A5/.5 B5/.5 D6/.5 E6/2 G6/2 '
+                         'F#6/1 E6/1 D6/1 B5/1 E6/4', inicio=t, fuerza=118)
+            bajo(baj, prog, [(0, 0), (2, 0)], inicio=t, fuerza=95)
+        t += 32
+    for k in range(4):
+        bat.nota(t + k * .5, .3, BOMBO_GRANDE, 120)
+    acordes(gui, 'E5', dur=4, inicio=t + 2, fuerza=120, octava=3)
+    acordes(coro, 'E', dur=4, inicio=t + 2, fuerza=115, octava=4)
+    bat.nota(t + 2, 4, PLATO, 127)
+    return [coro, gui, solo, baj, pia, bat]
+
+
+def subidon():
+    """El montaje de entrenamiento: bajo de sinte a corcheas, cuerdas que no paran, golpes de metal y una melodía de
+    trompas; cada vuelta sube un tono (subir escaleras, correr por la playa, levantar chatarra)."""
+    tro, cue, met, baj, bat = (Pista(0, 60, 'trompas'), Pista(1, 48, 'cuerdas'), Pista(2, 61, 'metales'), Pista(3, 38, 'sinte_bajo'),
+                               Pista(9, 0, 'bateria'))
+    tema = ('C5/1 E5/.5 G5/1.5 C6/1 B5/1 G5/1 E5/1 F5/1.5 A5/.5 G5/2 r/2 E5/2 r/1 '
+            'F5/1 A5/.5 C6/1.5 D6/1 C6/1 A5/1 F5/1 G5/1 B5/1 D6/1 C6/4 r/2')
+    prog = 'C Am F G C Am F G'
+    t = 0
+    for vuelta in range(4):
+        subir = 2 * vuelta
+        for c, a in enumerate(prog.split()):
+            raiz = altura(a[0] + '2') + subir
+            for k in range(8):
+                baj.nota(t + c * 4 + k * .5, .4, raiz + (12 if k % 2 else 0), 100)
+            r4 = altura(a[0] + '4') + subir
+            menor = 'm' in a
+            for k in range(16):   # cuerdas a semicorcheas: el corazón a mil
+                cue.nota(t + c * 4 + k * .25, .2, r4 + (0, 4 - menor, 7, 12)[k % 4], 55 + 8 * vuelta)
+            for tt in (0, 2.5):
+                for iv in (0, 4 - menor, 7):
+                    met.nota(t + c * 4 + tt, .4, r4 + 12 + iv - 12, 90 + 6 * vuelta)
+        if vuelta > 0:
+            tro.melodia(tema, inicio=t, fuerza=95 + 8 * vuelta, transponer=subir)
+        bateria(bat, 8, {BOMBO: [0, 1, 2, 3], CAJA: [1, 3, 3.75], CHARLES: [k * .5 for k in range(8)]}, inicio=t, fuerza=95 + 8 * vuelta)
+        bat.nota(t, 2, PLATO, 100 + 7 * vuelta)
+        t += 32
+    acordes(met, 'D', dur=4, inicio=t, fuerza=120, octava=4)
+    acordes(tro, 'D', dur=4, inicio=t, fuerza=115, octava=5)
+    bat.nota(t, 4, PLATO, 127)
+    return [tro, cue, met, baj, bat]
+
+
+def ultimo_asalto():
+    """El último asalto: empieza en re menor, despacio y con timbales; cada vuelta más fuerte (crescendo), entra el
+    coro, los golpes de orquesta, y al final se abre a re mayor."""
+    coro, met, cue, hit, baj, tim, bat = (Pista(0, 52, 'coro'), Pista(1, 61, 'metales'), Pista(2, 48, 'cuerdas'), Pista(3, 55, 'golpe'),
+                                          Pista(4, 33, 'bajo'), Pista(5, 47, 'timbales'), Pista(9, 0, 'bateria'))
+    tema = ('D5/1 F5/1 A5/2 G5/1 F5/1 E5/2 D5/1 E5/1 F5/1 G5/1 A5/3 r/1 '
+            'Bb5/1 A5/1 G5/1 F5/1 E5/1.5 F5/.5 G5/2 A5/1 G5/1 F5/1 E5/1 D5/4')
+    prog = 'Dm Dm Gm A Bb Gm A Dm'
+    t = 0
+    for vuelta in range(4):
+        fuerza = 50 + 22 * vuelta
+        acordes(cue, prog, inicio=t, fuerza=fuerza, octava=4)
+        bajo(baj, prog, [(0, 0), (2, 0), (3, 7)], inicio=t, fuerza=fuerza + 10)
+        for k in range(0, 32, 4):
+            tim.nota(t + k, .4, 38, min(127, fuerza + 20))
+            tim.nota(t + k + 2.5, .3, 38, min(127, fuerza + 5))
+        if vuelta >= 1:
+            met.melodia(tema, inicio=t, fuerza=min(127, fuerza + 20))
+        if vuelta >= 2:
+            coro.melodia(tema, inicio=t, fuerza=min(127, fuerza + 25), transponer=12 if vuelta == 3 else 0)
+            bateria(bat, 8, {BOMBO: [0, 1.5, 2], CAJA: [1, 3], CHARLES: [k * .5 for k in range(8)]}, inicio=t, fuerza=min(127, fuerza + 15))
+            for k in range(0, 32, 8):
+                for iv in (0, 7, 12):
+                    hit.nota(t + k, .5, 62 + iv, 115)
+        t += 32
+    # Se abre a mayor: la victoria.
+    redoble_timbal(tim, t, 2, 38, 80, 127)
+    for a, d in (('Bb', 2), ('C', 2), ('D', 6)):
+        acordes(met, a, dur=d, inicio=t + 2, fuerza=124, octava=4)
+        acordes(coro, a, dur=d, inicio=t + 2, fuerza=120, octava=4)
+        t += d
+    bat.nota(t - 4, 4, PLATO, 127)
+    return [coro, met, cue, hit, baj, tim, bat]
+
+
 if __name__ == '__main__':
     guardar('entrenamiento', 116, entrenamiento())
     guardar('oriental', 76, oriental())
@@ -306,3 +473,7 @@ if __name__ == '__main__':
     guardar('artes_marciales', 132, artes_marciales())
     guardar('drama', 66, drama())
     guardar('menu', 96, menu())
+    guardar('campeon', 100, campeon())
+    guardar('estadio', 82, estadio())
+    guardar('subidon', 124, subidon())
+    guardar('ultimo_asalto', 120, ultimo_asalto())

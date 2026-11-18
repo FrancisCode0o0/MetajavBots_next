@@ -3,12 +3,13 @@
 # Fran: tu música va en la carpeta musica_personal/ junto al juego (no se sube al repositorio). Para que suene,
 # suelta el archivo ahí (.mid, .ogg, .mp3 o .wav) y apúntalo en musica_personal/temas.txt con el mismo formato,
 # p. ej. «combate: mi_cancion.mp3»; o llámalo como el tema (combate.mp3) y no hace falta apuntarlo.
+# Varias piezas separadas por comas: suena una al azar cada vez (para que no se repita).
 # Para un tema nuevo: añade una línea aquí y úsalo en una campaña (musica: nombre) en res/datos/campanas.txt.
 menu: menu.mid
-combate: combate.mid
+combate: combate.mid, campeon.mid, estadio.mid, subidon.mid
 rock: rock.mid
 artes_marciales: artes_marciales.mid
-entrenamiento: entrenamiento.mid
+entrenamiento: entrenamiento.mid, subidon.mid
 oriental: oriental.mid
-final: final.mid
+final: final.mid, ultimo_asalto.mid
 drama: drama.mid

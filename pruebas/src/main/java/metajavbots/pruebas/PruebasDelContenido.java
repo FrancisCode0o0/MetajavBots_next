@@ -102,12 +102,16 @@ final class PruebasDelContenido {
             java.util.Map<String, String> temas = new metajavbots.sonido.Musica().deSerie();
             for (String t : java.util.List.of("menu", "combate", "entrenamiento", "oriental", "final", "drama")) cierto(temas.containsKey(t), "tema " + t);
             for (java.util.Map.Entry<String, String> e : temas.entrySet()) {
-                try (java.io.InputStream in = metajavbots.sonido.Musica.class.getResourceAsStream("/musica/" + e.getValue())) {
-                    cierto(in != null, "falta " + e.getValue());
-                    javax.sound.midi.Sequence s = javax.sound.midi.MidiSystem.getSequence(new java.io.BufferedInputStream(in));
-                    cierto(s.getMicrosecondLength() > 10_000_000L, e.getKey() + " dura más de 10 s");
+                // Un tema puede tener varias piezas (suena una al azar): todas tienen que estar y leerse.
+                for (String pieza : e.getValue().split(",")) {
+                    try (java.io.InputStream in = metajavbots.sonido.Musica.class.getResourceAsStream("/musica/" + pieza.strip())) {
+                        cierto(in != null, "falta " + pieza);
+                        javax.sound.midi.Sequence s = javax.sound.midi.MidiSystem.getSequence(new java.io.BufferedInputStream(in));
+                        cierto(s.getMicrosecondLength() > 10_000_000L, e.getKey() + ": " + pieza + " dura más de 10 s");
+                    }
                 }
             }
+            cierto(temas.get("combate").split(",").length >= 4, "varias épicas para las peleas (bloque 6)");
             for (metajavbots.campanas.Campana c : metajavbots.campanas.Campana.deSerie()) cierto(temas.containsKey(c.musica), c.id + ": tema " + c.musica);
         });
     }

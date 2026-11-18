@@ -92,7 +92,7 @@ public final class Musica {
             }
             return;
         }
-        String serie = deSerie().get(tema);
+        String serie = elegir(deSerie().get(tema));
         if (propio == null && serie == null) return;
         if (hilo == null) {
             hilo = Executors.newSingleThreadExecutor(r -> {
@@ -113,6 +113,18 @@ public final class Musica {
             if (secuenciador == null) {
                 sintetizador = MidiSystem.getSynthesizer();
                 sintetizador.open();
+                Path sf = soundfont();
+                if (sf != null) {
+                    try {
+                        javax.sound.midi.Soundbank banco = MidiSystem.getSoundbank(sf.toFile());
+                        if (sintetizador.isSoundbankSupported(banco)) {
+                            if (sintetizador.getDefaultSoundbank() != null) sintetizador.unloadAllInstruments(sintetizador.getDefaultSoundbank());
+                            sintetizador.loadAllInstruments(banco);
+                        }
+                    } catch (Exception e) {
+                        // un .sf2 roto: los instrumentos de Java
+                    }
+                }
                 secuenciador = MidiSystem.getSequencer(false);
                 secuenciador.open();
                 secuenciador.getTransmitter().setReceiver(sintetizador.getReceiver());
@@ -184,6 +196,33 @@ public final class Musica {
             }
         }
         return deSerie;
+    }
+
+    /**
+     * De «a.mid, b.mid, c.mid» (varias piezas para un mismo tema, para que no se repita), una al azar; de una sola,
+     * esa; null si no hay.
+     */
+    static String elegir(String lista) {
+        if (lista == null) return null;
+        String[] l = lista.split(",");
+        return l[(int) (Math.random() * l.length)].strip();
+    }
+
+    /**
+     * Un SoundFont (.sf2) libre para que el MIDI suene mejor: el primero que haya en musica_personal/ o en
+     * ~/.metajavbots/ (no va en el repositorio: pesa). Sin él, los instrumentos de Java.
+     */
+    static Path soundfont() {
+        for (Path dir : new Path[]{carpetaPersonal, Paths.get(System.getProperty("user.home"), ".metajavbots")}) {
+            if (!Files.isDirectory(dir)) continue;
+            try (java.util.stream.Stream<Path> s = Files.list(dir)) {
+                java.util.Optional<Path> sf = s.filter(p -> p.toString().toLowerCase(Locale.ROOT).endsWith(".sf2")).sorted().findFirst();
+                if (sf.isPresent()) return sf.get();
+            } catch (java.io.IOException e) {
+                // se mira la siguiente
+            }
+        }
+        return null;
     }
 
     /** El archivo personal de ese tema (apuntado en musica_personal/temas.txt o con el nombre del tema), o null. */
