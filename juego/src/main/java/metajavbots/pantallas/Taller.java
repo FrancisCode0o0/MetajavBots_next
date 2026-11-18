@@ -164,38 +164,39 @@ public final class Taller implements Pantalla {
             charla.dibujar(j, r, editor.doc.texto(), x, cy, w, ch);
             return;
         }
-        // La barra del código.
-        float bx = x;
-        if (ui.boton(compilando ? T.t("taller.compilando") : T.t("taller.compilar"), bx, cy, 170, 44, Ui.Estilo.PRINCIPAL, !compilando, T.t("taller.compilar_ayuda"))) compilar(j);
-        bx += 178;
-        if (ui.boton(T.t("taller.formatear"), bx, cy, 150, 44, Ui.Estilo.PLANO, true, T.t("taller.formatear_ayuda"))) editor.doc.formatear();
-        bx += 158;
-        if (ui.boton(T.t("taller.buscar"), bx, cy, 120, 44, Ui.Estilo.PLANO, true, "Ctrl+F · Ctrl+H")) editor.abrirBusqueda(false);
-        bx += 128;
-        if (ui.boton(T.t("taller.api"), bx, cy, 110, 44, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true, T.t("taller.api_ayuda"))) conApi = !conApi;
-        bx += 118;
-        if (ui.boton(T.t("taller.exportar"), bx, cy, 150, 44, Ui.Estilo.PLANO, true, T.t("taller.exportar_ayuda"))) {
-            guardarCodigo(j);
-            try {
-                aviso = T.f("taller.exportado", Exportar.exportar(r, jug.nombre));
-            } catch (Exception e) {
-                aviso = e.toString();
-            }
+        // La barra del código: cada botón del ancho de su texto; si no caben (alemán, letra grande), en dos filas.
+        String[] textos = {compilando ? T.t("taller.compilando") : T.t("taller.compilar"), T.t("taller.formatear"), T.t("taller.buscar"),
+            T.t("taller.api"), T.t("taller.exportar"), T.t("taller.plantilla"), T.t("taller.rival"), "⌨ " + T.t("taller.atajos")};
+        Ui.Estilo[] estilos = {Ui.Estilo.PRINCIPAL, Ui.Estilo.PLANO, Ui.Estilo.PLANO, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, Ui.Estilo.PLANO,
+            Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO};
+        boolean[] activos = {!compilando, true, true, true, true, true, true, true};
+        String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.formatear_ayuda"), "Ctrl+F · Ctrl+H", T.t("taller.api_ayuda"),
+            T.t("taller.exportar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("taller.rival_ayuda"), T.t("taller.atajos_ayuda")};
+        switch (ui.botonera(textos, estilos, activos, ayudas, x, cy, w, 44)) {
+            case 0: compilar(j); break;
+            case 1: editor.doc.formatear(); break;
+            case 2: editor.abrirBusqueda(false); break;
+            case 3: conApi = !conApi; break;
+            case 4:
+                guardarCodigo(j);
+                try {
+                    aviso = T.f("taller.exportado", Exportar.exportar(r, jug.nombre));
+                } catch (Exception e) {
+                    aviso = e.toString();
+                }
+                break;
+            case 5: editor.doc.cambiarTodo(Comun.plantilla(jug.idioma)); break;
+            case 6: j.ir(new CodigoDelRival()); break;
+            default: break;
         }
-        bx += 158;
-        if (ui.boton(T.t("taller.plantilla"), bx, cy, 150, 44, Ui.Estilo.PLANO, true, T.t("taller.plantilla_ayuda"))) {
-            editor.doc.cambiarTodo(Comun.plantilla(jug.idioma));
-        }
-        bx += 158;
-        if (ui.boton(T.t("taller.rival"), bx, cy, 180, 44, Ui.Estilo.PLANO, true, T.t("taller.rival_ayuda"))) j.ir(new CodigoDelRival());
-        if (ui.e.dentro(x + w - 130, cy, 130, 44)) ui.avisar(T.t("taller.atajos_ayuda"));
-        p.textoCentrado("⌨ " + T.t("taller.atajos"), x + w - 65, cy + 12, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
-        float ey = cy + 54, eh = ch - 54 - 36;
+        // Debajo del editor, la pista (o lo que pasó al compilar), con su sitio: no pisa la última línea del código.
+        String pie = aviso.isEmpty() ? T.t("taller.pista") : aviso;
+        float tPie = ui.letra * 0.8f, altoPie = p.altoDeParrafo(pie, w, tPie) + 10;
+        float ey = cy + ui.altoDeBotonera + 10, eh = p.alto - 20 - altoPie - ey;
         float ew = conApi ? w - 440 : w;
         editor.dibujar(ui, x, ey, ew, eh);
         if (conApi) api.dibujar(ui, jug.idioma, editor, x + ew + 12, ey, w - ew - 12, eh);
-        p.texto(aviso.isEmpty() ? T.t("taller.pista") : aviso, x, p.alto - 46, ui.letra * 0.8f, false,
-                aviso.isEmpty() ? ui.tema.textoApagado : ui.tema.textoSuave, 1);
+        p.parrafo(pie, x, p.alto - 14 - altoPie, w, tPie, aviso.isEmpty() ? ui.tema.textoApagado : ui.tema.textoSuave, 1);
     }
 
     private void nuevoRobot(Juego j, float x, float y, float w, float h) {

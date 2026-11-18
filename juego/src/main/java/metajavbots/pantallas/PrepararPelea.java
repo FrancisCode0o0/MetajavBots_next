@@ -38,7 +38,7 @@ public final class PrepararPelea implements Pantalla {
     private int robotElegido = -1;
     private String aviso = "";
     private List<Path> ajenos = new ArrayList<>();
-    private final Ui.Desplazable despl = new Ui.Desplazable();
+    private final Ui.Desplazable pagina = new Ui.Desplazable();
 
     /** La pelea normal, directa (el botón grande del menú). */
     public static Pantalla adaptada(Juego j) {
@@ -166,54 +166,86 @@ public final class PrepararPelea implements Pantalla {
                 {"ADAPTADA", "pelear.adaptada"}, {"AZAR", "pelear.azar"}, {"DESAFIO", "pelear.desafio"}, {"PRACTICA", "pelear.practica"},
                 {"ROYALE", "pelear.royale"}, {"EQUIPOS", "pelear.equipos"}, {"MCM", "pelear.mcm"}};
         int columnas = 4;
-        float w = (p.ancho - 80 - (columnas - 1) * 20) / columnas, h = 200;
+        float w = (p.ancho - 80 - (columnas - 1) * 20) / columnas;
+        // Todo se desplaza si no cabe (letra grande): nada se sale de su tarjeta ni se monta.
+        float zonaY = y, zonaH = p.alto - zonaY - 10;
+        float desp = ui.desplazable(pagina, 0, zonaY, p.ancho, zonaH);
+        y -= desp;
         float y0 = y;
-        for (int i = 0; i < modos.length; i++) {
-            float x = 40 + (i % columnas) * (w + 20);
-            y = y0 + (i / columnas) * (h + 16);
-            boolean puede = !modos[i][0].equals("DESAFIO") || Progreso.puedeDesafiar(jug);
-            p.caja(x, y, w, h, 14, ui.tema.panel, 1);
-            p.texto(T.t(modos[i][1]), x + 20, y + 18, ui.letra * 1.3f, true, puede ? ui.tema.texto : ui.tema.textoApagado, 1);
-            p.parrafo(T.t(modos[i][1] + "_ayuda"), x + 20, y + 54, w - 40, ui.letra * 0.78f, ui.tema.textoSuave, 1);
-            if (modos[i][0].equals("EQUIPOS")) {
-                String nombre = companero < 0 ? T.t("pelear.companero_ia") : companeros.get(companero)[0];
-                if (ui.boton(T.f("pelear.companero", nombre), x + 20, y + h - 120, w - 40, 44, Ui.Estilo.PLANO, true, T.t("pelear.companero_ayuda"))) {
-                    companero = companero + 1 >= companeros.size() ? -1 : companero + 1;
-                }
+        for (int fila = 0; fila * columnas < modos.length; fila++) {
+            float h = 0;
+            for (int i = fila * columnas; i < Math.min(modos.length, (fila + 1) * columnas); i++) h = Math.max(h, altoDeTarjeta(j, modos[i], w));
+            for (int i = fila * columnas; i < Math.min(modos.length, (fila + 1) * columnas); i++) {
+                tarjeta(j, modos[i], i == 0, 40 + (i % columnas) * (w + 20), y, w, h);
             }
-            if (modos[i][0].equals("ADAPTADA") && !jug.modoIA.equals("ADAPTADA")) {
-                p.texto(T.f("pelear.dificultad_fija", jug.modoIA), x + 20, y + h - 100, ui.letra * 0.8f, false, ui.tema.aviso, 1);
-            }
-            if (!puede) {
-                p.parrafo(T.f("pelear.desafio_espera", Progreso.PELEAS_ENTRE_DESAFIOS - jug.peleasDesdeElDesafio), x + 20, y + h - 100, w - 40,
-                        ui.letra * 0.8f, ui.tema.aviso, 1);
-            }
-            if (ui.boton(T.t("pelear.vamos"), x + 20, y + h - 66, w - 40, 50, i == 0 ? Ui.Estilo.PRINCIPAL : Ui.Estilo.NORMAL, puede, null)) {
-                String modo = modos[i][0].equals("ADAPTADA") ? jug.modoIA : modos[i][0];
-                if (modo.equals("MCM")) j.ir(new MaquinaContraMaquina());
-                else if (modo.equals("ROYALE")) j.ir(new PantallaPelea(royale(j, ajenos)));
-                else if (modo.equals("EQUIPOS")) j.ir(new PantallaPelea(equipos(j, companero < 0 ? null : companeros.get(companero))));
-                else j.ir(new PantallaPelea(encuentro(j, modo)));
-            }
+            y += h + 16;
         }
-        y = y0 + 2 * (h + 16) + 10;
+        y += 10;
         // Los robots de otros jugadores.
         float pw = p.ancho - 80;
-        float cy = ui.panel(40, y, pw, p.alto - y - 30, T.t("pelear.ajenos"));
-        p.parrafo(T.t("pelear.ajenos_ayuda"), 60, cy, pw - 40, ui.letra * 0.85f, ui.tema.textoSuave, 1);
-        cy += 70;
-        float zona = p.alto - 30 - cy - 20;
-        float d = ui.desplazable(despl, 50, cy, pw - 20, zona);
-        float yy = cy - d;
+        float ayuda = p.altoDeParrafo(T.t("pelear.ajenos_ayuda"), pw - 40, ui.letra * 0.85f);
+        float lista = Math.max(1, ajenos.size()) * 56;
+        float alto = 26 + ui.letra * 1.4f + ayuda + 20 + lista + 20;
+        float cy = ui.panel(40, y, pw, alto, T.t("pelear.ajenos"));
+        cy += p.parrafo(T.t("pelear.ajenos_ayuda"), 60, cy, pw - 40, ui.letra * 0.85f, ui.tema.textoSuave, 1) + 20;
         for (Path a : ajenos) {
             String nombre = a.getFileName().toString();
-            p.texto(nombre, 70, yy + 12, ui.letra, false, ui.tema.texto, 1);
-            if (ui.boton(T.t("pelear.contra_este"), 50 + pw - 300, yy, 250, 46, Ui.Estilo.NORMAL)) pelearContraAjeno(j, a);
-            yy += 56;
+            p.texto(ui.recortarTexto(nombre, pw - 360, ui.letra, false), 70, cy + 12, ui.letra, false, ui.tema.texto, 1);
+            if (ui.boton(T.t("pelear.contra_este"), 50 + pw - 300, cy, 250, 46, Ui.Estilo.NORMAL)) pelearContraAjeno(j, a);
+            cy += 56;
         }
-        if (ajenos.isEmpty()) p.texto(T.t("pelear.sin_ajenos"), 70, yy + 10, ui.letra * 0.9f, false, ui.tema.textoApagado, 1);
-        ui.finDesplazable(despl, Math.max(56, ajenos.size() * 56));
-        if (!aviso.isEmpty()) p.texto(aviso, 60, p.alto - 60, ui.letra * 0.85f, false, ui.tema.mal, 1);
+        if (ajenos.isEmpty()) p.texto(T.t("pelear.sin_ajenos"), 70, cy + 10, ui.letra * 0.9f, false, ui.tema.textoApagado, 1);
+        y += alto + 20;
+        if (!aviso.isEmpty()) y += p.parrafo(aviso, 60, y, pw - 40, ui.letra * 0.85f, ui.tema.mal, 1) + 20;
+        ui.finDesplazable(pagina, y + desp - zonaY);
+    }
+
+    /** Lo que mide de alto la tarjeta de un modo, con la letra de ahora. */
+    private float altoDeTarjeta(Juego j, String[] modo, float w) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        float h = 18 + p.altoDeParrafo(T.t(modo[1]), w - 40, ui.letra * 1.3f, true) + 6
+                + p.altoDeParrafo(T.t(modo[1] + "_ayuda"), w - 40, ui.letra * 0.85f) + 14;
+        if (modo[0].equals("EQUIPOS")) h += 54;
+        if (modo[0].equals("ADAPTADA") && !j.jugador.modoIA.equals("ADAPTADA")) h += ui.letra * 1.4f;
+        if (modo[0].equals("DESAFIO") && !Progreso.puedeDesafiar(j.jugador)) {
+            h += p.altoDeParrafo(T.f("pelear.desafio_espera", Progreso.PELEAS_ENTRE_DESAFIOS - j.jugador.peleasDesdeElDesafio), w - 40,
+                    ui.letra * 0.8f) + 6;
+        }
+        return Math.max(200, h + 50 + 16);
+    }
+
+    /** La tarjeta de un modo: su nombre, qué es, lo suyo (el compañero, la espera del desafío) y «¡Vamos!». */
+    private void tarjeta(Juego j, String[] modo, boolean principal, float x, float y, float w, float h) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Jugador jug = j.jugador;
+        boolean puede = !modo[0].equals("DESAFIO") || Progreso.puedeDesafiar(jug);
+        p.caja(x, y, w, h, 14, ui.tema.panel, 1);
+        float cy = y + 18;
+        cy += p.parrafo(T.t(modo[1]), x + 20, cy, w - 40, ui.letra * 1.3f, true, puede ? ui.tema.texto : ui.tema.textoApagado, 1) + 6;
+        cy += p.parrafo(T.t(modo[1] + "_ayuda"), x + 20, cy, w - 40, ui.letra * 0.85f, ui.tema.textoSuave, 1) + 14;
+        if (modo[0].equals("EQUIPOS")) {
+            String nombre = companero < 0 ? T.t("pelear.companero_ia") : companeros.get(companero)[0];
+            if (ui.boton(T.f("pelear.companero", nombre), x + 20, cy, w - 40, 44, Ui.Estilo.PLANO, true, T.t("pelear.companero_ayuda"))) {
+                companero = companero + 1 >= companeros.size() ? -1 : companero + 1;
+            }
+            cy += 54;
+        }
+        if (modo[0].equals("ADAPTADA") && !jug.modoIA.equals("ADAPTADA")) {
+            p.texto(T.f("pelear.dificultad_fija", jug.modoIA), x + 20, cy, ui.letra * 0.8f, false, ui.tema.aviso, 1);
+        }
+        if (!puede) {
+            p.parrafo(T.f("pelear.desafio_espera", Progreso.PELEAS_ENTRE_DESAFIOS - jug.peleasDesdeElDesafio), x + 20, cy, w - 40,
+                    ui.letra * 0.8f, ui.tema.aviso, 1);
+        }
+        if (ui.boton(T.t("pelear.vamos"), x + 20, y + h - 66, w - 40, 50, principal ? Ui.Estilo.PRINCIPAL : Ui.Estilo.NORMAL, puede, null)) {
+            String m = modo[0].equals("ADAPTADA") ? jug.modoIA : modo[0];
+            if (m.equals("MCM")) j.ir(new MaquinaContraMaquina());
+            else if (m.equals("ROYALE")) j.ir(new PantallaPelea(royale(j, ajenos)));
+            else if (m.equals("EQUIPOS")) j.ir(new PantallaPelea(equipos(j, companero < 0 ? null : companeros.get(companero))));
+            else j.ir(new PantallaPelea(encuentro(j, m)));
+        }
     }
 
     /** Battle royale: todos contra todos. Tú, robots de la computadora con piezas al azar y los robots ajenos que haya (hasta 6 en total). */

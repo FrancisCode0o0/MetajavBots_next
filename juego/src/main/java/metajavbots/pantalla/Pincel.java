@@ -282,23 +282,38 @@ public final class Pincel {
 
     /** Un texto que se parte en líneas para caber en «ancho». Devuelve el alto que ocupa. */
     public float parrafo(String s, float x, float y, float anchoMax, float tamano, int rgb, float alfa) {
+        return parrafo(s, x, y, anchoMax, tamano, false, rgb, alfa);
+    }
+
+    /** Lo mismo, en negrita o no (los títulos largos también se parten: nada se sale de su marco). */
+    public float parrafo(String s, float x, float y, float anchoMax, float tamano, boolean negrita, int rgb, float alfa) {
         if (s == null || s.isEmpty()) return 0;
         float alto = altoDeLinea(tamano);
         float yy = y;
-        for (String linea : partir(s, anchoMax, tamano, false)) {
-            texto(linea, x, yy, tamano, false, rgb, alfa);
+        for (String linea : partir(s, anchoMax, tamano, negrita)) {
+            texto(linea, x, yy, tamano, negrita, rgb, alfa);
             yy += alto;
         }
         return yy - y;
     }
 
     public float altoDeParrafo(String s, float anchoMax, float tamano) {
-        if (s == null || s.isEmpty()) return 0;
-        return partir(s, anchoMax, tamano, false).size() * altoDeLinea(tamano);
+        return altoDeParrafo(s, anchoMax, tamano, false);
     }
 
-    /** Parte un texto en líneas que caben en anchoMax (respeta los saltos de línea). */
+    public float altoDeParrafo(String s, float anchoMax, float tamano, boolean negrita) {
+        if (s == null || s.isEmpty()) return 0;
+        return partir(s, anchoMax, tamano, negrita).size() * altoDeLinea(tamano);
+    }
+
+    /** Los textos ya partidos (se parten los mismos en cada fotograma: medir cada palabra cuesta). */
+    private final java.util.Map<String, java.util.List<String>> partidos = new java.util.HashMap<>();
+
+    /** Parte un texto en líneas que caben en anchoMax (respeta los saltos de línea; una palabra que no cabe sola, se corta). */
     public java.util.List<String> partir(String s, float anchoMax, float tamano, boolean negrita) {
+        String clave = (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(tamano * 10) + "/" + escala + "|" + s;
+        java.util.List<String> hecho = partidos.get(clave);
+        if (hecho != null) return hecho;
         java.util.List<String> l = new java.util.ArrayList<>();
         for (String parrafo : s.split("\n", -1)) {
             StringBuilder linea = new StringBuilder();
@@ -312,10 +327,20 @@ public final class Pincel {
                     linea.setLength(0);
                     linea.append(prueba);
                 }
+                // Una palabra más larga que la línea entera (una ruta, una palabra alemana): se parte por letras.
+                while (linea.length() > 1 && ancho(linea.toString(), tamano, negrita) > anchoMax) {
+                    int n = linea.length() - 1;
+                    while (n > 1 && ancho(linea.substring(0, n), tamano, negrita) > anchoMax) n--;
+                    l.add(linea.substring(0, n));
+                    linea.delete(0, n);
+                }
             }
             l.add(linea.toString());
         }
-        return l;
+        if (partidos.size() > 600) partidos.clear();
+        java.util.List<String> fijo = java.util.Collections.unmodifiableList(l);
+        partidos.put(clave, fijo);
+        return fijo;
     }
 
     public float ancho(String s, float tamano, boolean negrita) {

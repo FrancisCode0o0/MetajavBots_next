@@ -22,6 +22,7 @@ public final class PanelDeApi {
     private final CampoDeTexto busqueda = new CampoDeTexto();
     private String tema;
     private int elegida;
+    private final Ui.Desplazable ficha = new Ui.Desplazable();
     private final Ui.Desplazable lista = new Ui.Desplazable();
     private String ultimaBusqueda = null, ultimoTema = "-";
     private List<Referencia.Entrada> resultados = List.of();
@@ -65,7 +66,10 @@ public final class PanelDeApi {
                 if (k == elegida) p.rect(x + 10, yy, w - 32, alto, ui.tema.seleccion, 1);
                 p.texto(ui.recortarTexto(e.firma(idioma), w - 50, ui.letra * 0.8f, false), x + 16, yy + alto * 0.18f, ui.letra * 0.8f, false,
                         e.esDeLaApi() ? ui.tema.metodo : ui.tema.texto, 1);
-                if (ui.e.clic(x + 10, yy, w - 32, alto)) elegida = k;
+                if (ui.e.clic(x + 10, yy, w - 32, alto)) {
+                    elegida = k;
+                    ficha.alPrincipio();
+                }
             }
             yy += alto;
         }
@@ -75,26 +79,31 @@ public final class PanelDeApi {
         float dy = ly + lh + 12;
         p.rect(x + 12, dy - 6, w - 24, 1, ui.tema.borde, 1);
         if (elegida < resultados.size()) {
+            // La ficha de la entrada, que se desplaza si es larga (nada se sale del panel).
+            float zona = y + h - 8 - dy;
+            float desp = ui.desplazable(ficha, x + 4, dy, w - 8, zona);
+            float inicio = dy;
+            dy -= desp;
             Referencia.Entrada e = resultados.get(elegida);
-            dy += p.parrafo(e.firma(idioma), x + 16, dy, w - 32, ui.letra * 0.9f, ui.tema.metodo, 1) + 6;
+            dy += p.parrafo(e.firma(idioma), x + 16, dy, w - 44, ui.letra * 0.9f, ui.tema.metodo, 1) + 6;
             Tema t = Tema.de(e.tema);
-            if (t != null) {
-                p.texto(T.f("api.tema", t.id, t.nombre(idioma)), x + 16, dy, ui.letra * 0.7f, false, ui.tema.textoApagado, 1);
-                dy += ui.letra * 1.2f;
-            }
-            dy += p.parrafo(e.texto(idioma), x + 16, dy, w - 32, ui.letra * 0.85f, ui.tema.texto, 1) + 8;
+            if (t != null) dy += p.parrafo(T.f("api.tema", t.id, t.nombre(idioma)), x + 16, dy, w - 44, ui.letra * 0.78f, ui.tema.textoSuave, 1) + 6;
+            dy += p.parrafo(e.texto(idioma), x + 16, dy, w - 44, ui.letra * 0.85f, ui.tema.texto, 1) + 8;
             if (!e.ejemplo.isEmpty()) {
-                float eh = p.altoDeParrafo(e.ejemplo, w - 48, ui.letra * 0.8f) + 12;
-                p.caja(x + 14, dy, w - 28, eh, 6, ui.tema.fondo, 1);
-                p.parrafo(e.ejemplo, x + 24, dy + 6, w - 48, ui.letra * 0.8f, ui.tema.cadena, 1);
+                float eh = p.altoDeParrafo(e.ejemplo, w - 60, ui.letra * 0.8f) + 12;
+                p.caja(x + 14, dy, w - 40, eh, 6, ui.tema.fondo, 1);
+                p.parrafo(e.ejemplo, x + 24, dy + 6, w - 60, ui.letra * 0.8f, ui.tema.cadena, 1);
                 dy += eh + 8;
             }
             String ins = e.insertable(idioma);
-            if (editor != null && !editor.soloLectura && !ins.isEmpty() && dy + 46 < y + h
-                    && ui.boton(T.t("api.insertar"), x + 16, Math.min(dy, y + h - 56), 180, 44, Ui.Estilo.NORMAL)) {
-                editor.doc.insertar(ins);
-                editor.enfocada = true;
+            if (editor != null && !editor.soloLectura && !ins.isEmpty()) {
+                if (ui.boton(T.t("api.insertar"), x + 16, dy, Math.min(w - 44, p.ancho(T.t("api.insertar"), ui.letra, true) + 40), 44, Ui.Estilo.NORMAL)) {
+                    editor.doc.insertar(ins);
+                    editor.enfocada = true;
+                }
+                dy += 52;
             }
+            ui.finDesplazable(ficha, dy + desp - inicio);
         }
     }
 }

@@ -154,33 +154,44 @@ public final class PantallaEjercicio implements Pantalla {
         }
         ui.finDesplazable(despl, yy + d - cy);
         float by = p.alto - 84;
-        if (ui.boton(T.t("ejercicio.pista"), x + 16, by, 150, 46, Ui.Estilo.PLANO, !e.pista.es.isEmpty(), null)) pista = !pista;
-        if (ui.boton(T.t("ejercicio.ver_solucion"), x + 176, by, 170, 46, Ui.Estilo.PLANO, intentos >= 3, T.t("ejercicio.solucion_ayuda"))) solucion = !solucion;
-        if (ui.boton(T.t("ejercicio.tutor"), x + 356, by, 150, 46, conTutor ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
-                cerebro == null ? T.t("cerebro.sin") : T.t("ejercicio.tutor_ayuda"))) conTutor = !conTutor;
+        String[] abajo = {T.t("ejercicio.pista"), T.t("ejercicio.ver_solucion"), T.t("ejercicio.tutor")};
+        Ui.Estilo[] estilosAbajo = {Ui.Estilo.PLANO, Ui.Estilo.PLANO, conTutor ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO};
+        boolean[] activosAbajo = {!e.pista.es.isEmpty(), intentos >= 3, true};
+        String[] ayudasAbajo = {null, T.t("ejercicio.solucion_ayuda"), cerebro == null ? T.t("cerebro.sin") : T.t("ejercicio.tutor_ayuda")};
+        switch (ui.botonera(abajo, estilosAbajo, activosAbajo, ayudasAbajo, x + 16, by, w - 32, 46)) {
+            case 0: pista = !pista; break;
+            case 1: solucion = !solucion; break;
+            case 2: conTutor = !conTutor; break;
+            default: break;
+        }
         // El editor (y la API o el tutor al lado).
         float ex = x + w + 16, ew = p.ancho - ex - 20;
         float lado = conApi || conTutor ? 430 : 0;
-        float bx = ex;
-        if (ui.boton(comprobando ? T.t("ejercicio.comprobando") : T.t("ejercicio.comprobar") + "  (Ctrl+S)", bx, y, 280, 46, Ui.Estilo.PRINCIPAL,
-                !comprobando && Compilador.hayCompilador(), Compilador.hayCompilador() ? null : T.t("taller.sin_jdk"))) comprobar(j);
-        bx += 290;
-        if (ui.boton(T.t("taller.formatear"), bx, y, 150, 46, Ui.Estilo.PLANO)) editor.doc.formatear();
-        bx += 160;
-        if (ui.boton(T.t("ejercicio.reiniciar"), bx, y, 150, 46, Ui.Estilo.PLANO, true, T.t("ejercicio.reiniciar_ayuda"))) {
-            editor.doc.cambiarTodo(e.codigoInicial());
-            editor.marcas.clear();
+        String[] barra = {comprobando ? T.t("ejercicio.comprobando") : T.t("ejercicio.comprobar") + "  (Ctrl+S)", T.t("taller.formatear"),
+            T.t("ejercicio.reiniciar"), T.t("taller.api")};
+        Ui.Estilo[] estilosArriba = {Ui.Estilo.PRINCIPAL, Ui.Estilo.PLANO, Ui.Estilo.PLANO, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO};
+        boolean[] activosArriba = {!comprobando && Compilador.hayCompilador(), true, true, true};
+        String[] ayudasArriba = {Compilador.hayCompilador() ? null : T.t("taller.sin_jdk"), null, T.t("ejercicio.reiniciar_ayuda"), null};
+        float anchoSiguiente = cambio != null ? p.ancho(T.t("ejercicio.siguiente") + " →", ui.letra, true) + 40 : 0;
+        switch (ui.botonera(barra, estilosArriba, activosArriba, ayudasArriba, ex, y, ew - anchoSiguiente - 10, 46)) {
+            case 0: comprobar(j); break;
+            case 1: editor.doc.formatear(); break;
+            case 2:
+                editor.doc.cambiarTodo(e.codigoInicial());
+                editor.marcas.clear();
+                break;
+            case 3: conApi = !conApi; break;
+            default: break;
         }
-        bx += 160;
-        if (ui.boton(T.t("taller.api"), bx, y, 110, 46, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) conApi = !conApi;
-        if (cambio != null && ui.boton(T.t("ejercicio.siguiente") + " →", ex + ew - 230, y, 230, 46, Ui.Estilo.PRINCIPAL)) {
+        float altoBarra = ui.altoDeBotonera;
+        if (cambio != null && ui.boton(T.t("ejercicio.siguiente") + " →", ex + ew - anchoSiguiente, y, anchoSiguiente, 46, Ui.Estilo.PRINCIPAL)) {
             Ejercicio sig = siguiente(jug);
             if (sig != null) {
                 j.volver();
                 j.ir(new PantallaEjercicio(sig));
             }
         }
-        float ey = y + 58, eh = p.alto - ey - 70;
+        float ey = y + altoBarra + 12, eh = p.alto - ey - 70;
         if (!editor.doc.texto().equals(jug.codigoDeEjercicios.getOrDefault(e.id, "")) && inf != null) editor.marcas.removeIf(m -> false);
         editor.dibujar(ui, ex, ey, ew - lado - (lado > 0 ? 12 : 0), eh);
         if (conTutor) tutor(j, ex + ew - lado, ey, lado, eh);

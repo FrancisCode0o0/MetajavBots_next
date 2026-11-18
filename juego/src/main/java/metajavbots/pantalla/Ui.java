@@ -107,7 +107,7 @@ public final class Ui {
         if (estilo != Estilo.PLANO) p.caja(x, y + 2, w, h, 8, 0x000000, 0.25f);
         p.caja(x, y + desplaza, w, h, 8, fondo, 1);
         if (encima || estilo == Estilo.ELEGIDO) p.bordeRedondeado(x, y + desplaza, w, h, 8, estilo == Estilo.ELEGIDO ? tema.acento : tema.borde, 1, 1.5f);
-        float t = Math.min(letra, h * 0.5f);
+        float t = cabe(texto, w - 16, Math.min(letra, h * 0.5f), true);
         String s = recortarTexto(texto, w - 16, t, true);
         p.textoCentrado(s, x + w / 2, y + desplaza + (h - t * 1.15f) / 2, t, true, letraColor, 1);
         if (encima && ayuda != null) avisar(ayuda);
@@ -116,6 +116,37 @@ public final class Ui {
             return true;
         }
         return false;
+    }
+
+    /** El alto que ocupó la última botonera (una fila o más). */
+    public float altoDeBotonera;
+
+    /**
+     * Una fila de botones, cada uno del ancho de su texto (nada cortado); si no caben, siguen en otra fila debajo.
+     * Devuelve cuál se pulsó (o -1); el alto que ocupan queda en altoDeBotonera.
+     */
+    public int botonera(String[] textos, Estilo[] estilos, boolean[] activos, String[] ayudas, float x, float y, float w, float h) {
+        float t = Math.min(letra, h * 0.5f);
+        float bx = x, by = y;
+        int pulsado = -1;
+        for (int i = 0; i < textos.length; i++) {
+            float bw = Math.min(w, p.ancho(textos[i], t, true) + 34);
+            if (bx > x && bx + bw > x + w) {
+                bx = x;
+                by += h + 8;
+            }
+            if (boton(textos[i], bx, by, bw, h, estilos[i], activos == null || activos[i], ayudas == null ? null : ayudas[i])) pulsado = i;
+            bx += bw + 8;
+        }
+        altoDeBotonera = by + h - y;
+        return pulsado;
+    }
+
+    /** El tamaño de letra con que cabe un texto en ese ancho: el de siempre o algo menor (hasta tres cuartos); si ni así, se cortará. */
+    public float cabe(String s, float anchoMax, float t, boolean negrita) {
+        if (s == null) return t;
+        float w = p.ancho(s, t, negrita);
+        return w <= anchoMax ? t : Math.max(t * 0.75f, t * anchoMax / w);
     }
 
     /** Un texto que no cabe se corta con «…». */
@@ -137,7 +168,7 @@ public final class Ui {
             boolean encima = e.dentro(bx, y, ancho, h);
             p.rect(bx, y, ancho - 2, h, es ? tema.panelAlto : encima ? Pincel.mezcla(tema.panel, tema.panelAlto, 0.5f) : tema.panel, 1);
             if (es) p.rect(bx, y + h - 3, ancho - 2, 3, tema.acento, 1);
-            float t = Math.min(letra, h * 0.48f);
+            float t = cabe(nombres[i], ancho - 12, Math.min(letra, h * 0.48f), es);
             p.textoCentrado(recortarTexto(nombres[i], ancho - 12, t, es), bx + ancho / 2, y + (h - t * 1.15f) / 2, t, es,
                     es ? tema.texto : tema.textoSuave, 1);
             if (e.clic(bx, y, ancho, h)) {
