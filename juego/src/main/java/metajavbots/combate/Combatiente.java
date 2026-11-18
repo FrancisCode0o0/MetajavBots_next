@@ -36,6 +36,8 @@ public final class Combatiente {
         public int ataques, aciertos, errores, topes, turnosVistos, turnosCerca, turnosAturdido;
         public long pasosMaximos, pasosTotales;
         public int turnos;
+        /** Lo que ha recorrido en la ronda (unidades de la arena; para el minijuego de moverse). */
+        public double recorrido;
         public final Map<String, int[]> porArma = new HashMap<>();   // arma → {ataques, aciertos}
         public final Map<String, Double> danoPorArmaRecibido = new HashMap<>();
         public boolean fueraDeCombate;

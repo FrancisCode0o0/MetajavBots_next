@@ -71,6 +71,8 @@ public final class Menu implements Pantalla {
         }
         p.textoCentrado(T.f("menu.marcador", jug.victorias(), jug.derrotas()), iz + ancho / 2, arriba + 540, ui.letra, false, ui.tema.texto, 1);
         p.textoCentrado(T.f("menu.experiencia", jug.experiencia), iz + ancho / 2, arriba + 575, ui.letra * 0.9f, false, ui.tema.textoSuave, 1);
+        // Los minijuegos para aprender a moverse, girar, apuntar y disparar.
+        if (ui.boton(T.t("mini.boton"), iz + 30, p.alto - 302, ancho - 60, 64, Ui.Estilo.NORMAL, true, T.t("mini.boton_ayuda"))) j.ir(new MiniJuegos());
         // La hora de hoy, como la propone el entrenador: repaso de lo flojo, tema nuevo y pelea.
         if (ui.boton(T.t("sesion.boton"), iz + 30, p.alto - 226, ancho - 60, 64, Ui.Estilo.NORMAL, true, T.t("sesion.boton_ayuda"))) {
             j.ir(new SesionDeHoy());

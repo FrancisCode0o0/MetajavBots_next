@@ -253,6 +253,7 @@ public final class Capturas extends Juego {
         pantallas.put("22_equipos", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.equipos(this, null)));
         pantallas.put("23_campanas", metajavbots.pantallas.Campanas::new);
         pantallas.put("25_sesion_de_hoy", metajavbots.pantallas.SesionDeHoy::new);
+        pantallas.put("26_minijuegos", metajavbots.pantallas.MiniJuegos::new);
         pantallasDelEntrenador();
         // "-Psolo=09b,09g": las pantallas que llevan alguno de esos textos, en ese orden.
         if (solo.isEmpty()) nombres.addAll(pantallas.keySet());

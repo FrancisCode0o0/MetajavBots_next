@@ -418,6 +418,7 @@ public final class Pelea {
         inf.pasosTotales += pasos;
         inf.pasosMaximos = Math.max(inf.pasosMaximos, pasos);
         if (!c.vistos.isEmpty()) inf.turnosVistos++;
+        inf.recorrido += Math.abs(c.velocidad);
     }
 
     /** Ejecuta código del robot con su tope; devuelve los pasos dados. Nada de lo que haga el robot rompe la pelea. */
