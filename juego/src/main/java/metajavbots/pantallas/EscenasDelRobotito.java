@@ -173,17 +173,7 @@ public final class EscenasDelRobotito {
                 }
                 break;
             case ENCHUFES:
-                // El mismo enchufe (el contrato), y en cada uno una pieza distinta que lo cumple: láser, rueda y puño.
-                for (int i = 0; i < 3; i++) {
-                    float ex = dx + i * 60;
-                    p.caja(ex, arriba + 40, 40, 30, 6, 0xDDE3EA, 1);
-                    p.rect(ex + 12, arriba + 48, 4, 12, 0x333333, 1);
-                    p.rect(ex + 24, arriba + 48, 4, 12, 0x333333, 1);
-                    float sube = (float) Math.abs(Math.sin(reloj * 2 + i)) * 6;
-                    if (i == 0) p.rect(ex + 6, arriba + 14 - sube, 28, 10, 0xFF4FA3, 1);
-                    if (i == 1) p.aro(ex + 20, arriba + 22 - sube, 12, 4, 0x2A2F38, 1);
-                    if (i == 2) p.circulo(ex + 20, arriba + 20 - sube, 12, 0x3FA9F5, 1);
-                }
+                enchufes(p, dx, arriba, reloj);
                 break;
             case COMPOSICION:
                 // El robot y sus piezas, que se acercan y se encajan (tiene un..., no es un...).
@@ -248,6 +238,21 @@ public final class EscenasDelRobotito {
                 break;
             default:
                 break;
+        }
+    }
+
+    /** El mismo enchufe (el contrato de la interfaz) y en cada uno una pieza distinta que lo cumple. */
+    private static void enchufes(Pincel p, float dx, float arriba, float reloj) {
+        // El mismo enchufe (el contrato), y en cada uno una pieza distinta que lo cumple: láser, rueda y puño.
+        for (int i = 0; i < 3; i++) {
+            float ex = dx + i * 60;
+            p.caja(ex, arriba + 40, 40, 30, 6, 0xDDE3EA, 1);
+            p.rect(ex + 12, arriba + 48, 4, 12, 0x333333, 1);
+            p.rect(ex + 24, arriba + 48, 4, 12, 0x333333, 1);
+            float sube = (float) Math.abs(Math.sin(reloj * 2 + i)) * 6;
+            if (i == 0) p.rect(ex + 6, arriba + 14 - sube, 28, 10, 0xFF4FA3, 1);
+            if (i == 1) p.aro(ex + 20, arriba + 22 - sube, 12, 4, 0x2A2F38, 1);
+            if (i == 2) p.circulo(ex + 20, arriba + 20 - sube, 12, 0x3FA9F5, 1);
         }
     }
 
