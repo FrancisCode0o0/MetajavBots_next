@@ -120,6 +120,7 @@ public final class Guardado {
         v.put("laboratoriosHechos", lista(j.laboratoriosHechos));
         v.put("capitulosGanados", lista(j.capitulosGanados));
         v.put("robotsArreglados", lista(j.robotsArreglados));
+        v.put("retoDiario", j.retoDiarioUltimo + "," + j.retoDiarioId + "," + j.retoDiarioRacha + "," + j.retoDiarioMejor);
         v.put("tutorialesHechos", lista(j.tutorialesHechos));
         v.put("legendariasGanadas", lista(j.legendariasGanadas));
         v.put("modoIA", j.modoIA);
@@ -224,6 +225,7 @@ public final class Guardado {
         leerLista(v.get("laboratoriosHechos"), j.laboratoriosHechos);
         leerLista(v.get("capitulosGanados"), j.capitulosGanados);
         leerLista(v.get("robotsArreglados"), j.robotsArreglados);
+        leerRetoDiario(v.get("retoDiario"), j);
         leerLista(v.get("tutorialesHechos"), j.tutorialesHechos);
         leerLista(v.get("legendariasGanadas"), j.legendariasGanadas);
         j.modoIA = v.getOrDefault("modoIA", "ADAPTADA");
@@ -256,6 +258,20 @@ public final class Guardado {
             }
         }
         return j;
+    }
+
+    /** «día,ejercicio,racha,mejor» (sin él, como nuevo). */
+    private static void leerRetoDiario(String s, Jugador j) {
+        if (s == null) return;
+        String[] p = s.split(",", -1);
+        try {
+            j.retoDiarioUltimo = Long.parseLong(p[0]);
+            j.retoDiarioId = p[1];
+            j.retoDiarioRacha = Integer.parseInt(p[2]);
+            j.retoDiarioMejor = Integer.parseInt(p[3]);
+        } catch (RuntimeException e) {
+            // mal escrito: se queda sin racha
+        }
     }
 
     /** La letra, el sonido, la música, la voz y el entrenador. */

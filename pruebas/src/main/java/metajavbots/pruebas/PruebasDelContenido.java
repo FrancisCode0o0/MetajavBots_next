@@ -41,6 +41,27 @@ final class PruebasDelContenido {
         apuntarCampanas();
         apuntarMusica();
         apuntarRobotsRotos();
+        apuntarRetoDiario();
+    }
+
+    private static void apuntarRetoDiario() {
+        caso("reto diario: el mismo todo el día, otro al siguiente, sin resolver; la racha sube con días seguidos y se rompe al saltar uno", () -> {
+            metajavbots.progreso.Jugador j = new metajavbots.progreso.Jugador("Racha");
+            metajavbots.ejercicios.Ejercicio a = metajavbots.progreso.RetoDiario.de(j, 100), b = metajavbots.progreso.RetoDiario.de(j, 101);
+            igual(a.id, metajavbots.progreso.RetoDiario.de(j, 100).id, "el mismo todo el día");
+            cierto(!a.id.equals(b.id), "otro al día siguiente");
+            j.ejerciciosResueltos.add(b.id);
+            cierto(!metajavbots.progreso.RetoDiario.de(j, 101).id.equals(b.id), "uno sin resolver");
+            cierto(metajavbots.progreso.RetoDiario.hecho(j, 100, a.id) > 0, "da experiencia");
+            igual(0, metajavbots.progreso.RetoDiario.hecho(j, 100, a.id), "dos veces el mismo día, nada");
+            metajavbots.progreso.RetoDiario.hecho(j, 101, b.id);
+            igual(2, j.retoDiarioRacha);
+            igual(2, metajavbots.progreso.RetoDiario.racha(j, 102), "sigue viva al día siguiente");
+            igual(0, metajavbots.progreso.RetoDiario.racha(j, 103), "rota si se salta un día");
+            metajavbots.progreso.RetoDiario.hecho(j, 104, a.id);
+            igual(1, j.retoDiarioRacha);
+            igual(2, j.retoDiarioMejor);
+        });
     }
 
     private static void apuntarRobotsRotos() {

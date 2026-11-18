@@ -157,8 +157,12 @@ public final class Progreso {
     public static Cambio despuesDelEjercicio(Jugador j, Ejercicio e) {
         Cambio c = new Cambio();
         c.antes = j.etiqueta;
+        // El reto del día (se mira antes de apuntarlo: después ya sería otro).
+        long hoy = RetoDiario.hoy();
+        Ejercicio delDia = RetoDiario.de(j, hoy);
+        if (delDia != null && delDia.id.equals(e.id)) c.experiencia += RetoDiario.hecho(j, hoy, e.id);
         if (j.ejerciciosResueltos.add(e.id)) {
-            c.experiencia = e.experiencia();
+            c.experiencia += e.experiencia();
             j.experiencia += c.experiencia;
             if (e.desbloquea.startsWith("reto:")) {
                 String reto = e.desbloquea.substring(5);

@@ -4,7 +4,7 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 
 ## Repaso (METAJAVBOTS_REPASO, 18-nov-2026, Opus, de noche)
 
-**Qué repasé y arreglé** (un commit jugable por punto; `jugar.bat prueba`: 85 casos bien):
+**Qué repasé y arreglé** (un commit jugable por punto; `jugar.bat prueba`: 86 casos bien):
 
 - **Cerebros**: hasta **tres** (locales o en línea, mezclados) y en Ajustes se reparte qué hace cada uno (diálogos/pullas/locutor; revisión y temario; tutores). KoboldCpp **1.124.2** ya carga **Qwen3.5-9B** (35 s; ~30 s por respuesta) y el juego le pide que no «piense» en voz alta (si no, tarda minutos y se queda sin palabras). Gemma 3 4B para lo rápido y Qwen3.5 para lo pesado (botón «Recomendado»). Cada local tiene su KoboldCpp (5002-5004), se arranca al usarlo y se apaga sin uso; juntos nunca pasan de la memoria del ordenador menos 6 GB (si no cabe otro, se apaga el más viejo). La gráfica integrada no admite dos modelos a la vez: el segundo va solo con el procesador (casi igual de rápido). Probado de verdad: Gemma y Qwen3.5 a la vez (10 GB) y, al pedir el tercero, se apagó Gemma. Todo en docs/CEREBRO.md.
 - **Jarvis con la 1.124**: su modelo (qwen2.5-coder) **arranca y contesta** igual que antes. Ojo (para Fran, no lo toqué: es de Jarvis): `Jarvis.bat` no arranca su cerebro si ya hay *algún* koboldcpp.exe abierto; si el juego tiene el suyo en marcha, Jarvis se queda sin cerebro hasta que el juego lo apague (8 min sin uso o al cerrar). Arreglo posible en Jarvis: mirar el puerto 5001 en vez del nombre del proceso.
@@ -37,6 +37,8 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 
 - **Ideas nuevas: gimnasios y medallas** (Modo especial › Jefes de tema): siete líderes de gimnasio para los temas básicos (condiciones, bucles, métodos, arrays, encapsulación, polimorfismo y Java moderno), más fáciles, delante de los nueve jefes; funcionan igual que los jefes (solo les hace daño un código que usa su tema, con el mismo detector). Arriba, la vitrina con las 16 medallas dibujadas (cinta, disco y el símbolo del tema: if, for, [ ], <T>, ->…); brillan las ganadas y, con el ratón encima, su nombre.
 
+- **Ideas nuevas: reto diario con racha** (Ejercicios, junto a «Ejercicio nuevo»): un ejercicio del banco para cada día (el mismo todo el día, otro al siguiente, mejor uno sin resolver); hacerlo días seguidos sube la racha y da experiencia extra (10 + 5 por día de racha, hasta 60); si se salta un día, vuelve a empezar. Se guardan el día, la racha y la mejor racha.
+
 **Lo que decidí yo (para que Fran lo revise)**
 
 - **Reglas de estilo que no exijo** (están en el XML y por qué): una sola sentencia por línea (las tablas de reglas de la voz y de las teclas del editor se leen mejor en una línea), no reasignar parámetros (el patrón «y += alto» de las funciones de dibujo) y no tocar la variable del bucle (los analizadores de código lo hacen). Hasta 11 parámetros (el `Registro` del historial tiene 11 datos).
@@ -47,7 +49,7 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 ## Cómo se juega (y se prueba)
 
 - **Jugar**: `jugar.bat` (Windows) o `./jugar.sh`. Hace falta un **JDK 21 o más nuevo** (el juego compila el código Java del jugador con javac; con solo un JRE se pelea en «piloto automático» y se avisa).
-- **Pruebas**: `jugar.bat prueba` (o `gradlew pruebas:prueba`): **85 casos**, entre ellos: el editor machacado con miles de pulsaciones al azar, los 262 ejercicios (cada solución pasa sus casos y cada plantilla no), las 262 soluciones compiladas con la traza, peleas de 2, de 6 (battle royale) y de 2 contra 2, el equilibrio de los 16 modelos, el compilador y su caja de arena, el laboratorio de pruebas, la voz, el progreso y el guardado.
+- **Pruebas**: `jugar.bat prueba` (o `gradlew pruebas:prueba`): **86 casos**, entre ellos: el editor machacado con miles de pulsaciones al azar, los 262 ejercicios (cada solución pasa sus casos y cada plantilla no), las 262 soluciones compiladas con la traza, peleas de 2, de 6 (battle royale) y de 2 contra 2, el equilibrio de los 16 modelos, el compilador y su caja de arena, el laboratorio de pruebas, la voz, el progreso y el guardado.
 - **Capturas**: `jugar.bat capturas` (o `gradlew lwjgl3:capturas -Psalida=…`): fotos de todas las pantallas con ventana invisible. Con `-Psonido`, con el audio encendido.
 - **Cerebro de IA con arranque real** (opcional, tarda un minuto): `set METAJAVBOTS_PROBAR_CEREBRO=1` y `gradlew pruebas:prueba -Psolo=arranca`.
 

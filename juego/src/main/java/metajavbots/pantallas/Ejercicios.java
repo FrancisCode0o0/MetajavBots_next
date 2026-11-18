@@ -12,6 +12,7 @@ import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.progreso.Jugador;
+import metajavbots.progreso.RetoDiario;
 import metajavbots.textos.T;
 
 /**
@@ -31,6 +32,21 @@ public final class Ejercicios implements Pantalla {
 
     public Ejercicios(String tema) {
         this.tema = tema;
+    }
+
+    /** El botón del reto del día, con la racha (y si ya está hecho hoy). */
+    private void retoDelDia(Juego j, float x, float y, float w) {
+        Jugador jug = j.jugador;
+        long hoy = RetoDiario.hoy();
+        Ejercicio reto = RetoDiario.de(jug, hoy);
+        if (reto == null || w < 200) return;
+        int racha = RetoDiario.racha(jug, hoy);
+        boolean hecho = jug.retoDiarioUltimo == hoy;
+        String texto = (hecho ? "✔ " : "★ ") + T.f("ejercicios.reto_dia", racha);
+        if (j.ui.boton(j.ui.recortarTexto(texto, w - 30, j.ui.letra, true), x, y, Math.min(w, j.pincel.ancho(texto, j.ui.letra, true) + 40), 50,
+                hecho ? Ui.Estilo.NORMAL : Ui.Estilo.PRINCIPAL, true, T.f("ejercicios.reto_dia_ayuda", reto.titulo(T.idioma), jug.retoDiarioMejor))) {
+            j.ir(new PantallaEjercicio(reto));
+        }
     }
 
     @Override
@@ -85,11 +101,13 @@ public final class Ejercicios implements Pantalla {
         if (Compilador.hayCompilador()) {
             String nuevo = Preparador.listos(tema) > 0 ? T.t("ejercicios.nuevo_ia") : Preparador.preparando(tema) ? T.t("ejercicios.nuevo_preparando")
                     : T.t("ejercicios.nuevo");
-            if (ui.boton(nuevo, lx + 16, ly, Math.min(lw - 44, p.ancho(nuevo, ui.letra, true) + 40), 50, Ui.Estilo.PRINCIPAL, true,
+            float bn = Math.min(lw - 44, p.ancho(nuevo, ui.letra, true) + 40);
+            if (ui.boton(nuevo, lx + 16, ly, bn, 50, Ui.Estilo.PRINCIPAL, true,
                     T.t("ejercicios.nuevo_ayuda"))) {
                 Ejercicio e = Preparador.nuevo(jug, tema, new java.util.Random());
                 if (e != null) j.ir(new PantallaEjercicio(e));
             }
+            retoDelDia(j, lx + 16 + bn + 12, ly, lw - 44 - bn - 12);
             ly += 64;
             Preparador.preparar(jug, Tema.de(tema));
         }

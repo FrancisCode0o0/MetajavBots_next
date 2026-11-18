@@ -78,6 +78,10 @@ public final class Jugador {
     public final Set<String> capitulosGanados = new LinkedHashSet<>();
     /** Los robots rotos que ha arreglado. */
     public final Set<String> robotsArreglados = new LinkedHashSet<>();
+    /** El reto diario: el último día hecho (días desde 1970), su ejercicio, la racha y la mejor racha. */
+    public long retoDiarioUltimo = Long.MIN_VALUE / 2;
+    public String retoDiarioId = "";
+    public int retoDiarioRacha, retoDiarioMejor;
     public final List<Registro> historial = new ArrayList<>();
     /** El panel de la IA: modo (ADAPTADA o una Dificultad), agresividad, humor y cortesía (0..1). */
     public String modoIA = "ADAPTADA";

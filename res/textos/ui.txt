@@ -521,3 +521,5 @@ roto.aciertos = Aciertos: {0}/{1} | Treffer: {0}/{1} | Hits: {0}/{1}
 especial.gimnasios = Gimnasios: los temas básicos | Arenen: die Grundlagen | Gyms: the basics
 especial.jefes_titulo = Jefes: los temas avanzados | Bosse: die fortgeschrittenen Themen | Bosses: the advanced topics
 especial.medallas = Tus medallas: {0} de {1} | Deine Medaillen: {0} von {1} | Your medals: {0} of {1}
+ejercicios.reto_dia = Reto del día · racha {0} | Tagesaufgabe · Serie {0} | Daily challenge · streak {0}
+ejercicios.reto_dia_ayuda = Hoy: «{0}». Cada día uno distinto; si lo haces días seguidos, la racha sube y da más experiencia. Tu mejor racha: {1}. | Heute: «{0}». Jeden Tag eine andere; machst du sie an aufeinanderfolgenden Tagen, wächst die Serie und bringt mehr Erfahrung. Deine beste Serie: {1}. | Today: «{0}». A different one every day; do it on consecutive days and your streak grows and gives more experience. Your best streak: {1}.
