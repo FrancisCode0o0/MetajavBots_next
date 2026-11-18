@@ -24,25 +24,9 @@ final class AnimacionDelCaso {
     /** Lo que se anima, según la forma de la respuesta. */
     enum Forma { CAJAS, PUERTAS, PIZARRA, ESTANTERIA, PAPEL, ALARMA }
 
-    /** El escenario del robotito según el tema del ejercicio. */
-    enum Escena { COCINA, OBRA, APARCAMIENTO, BIBLIOTECA, ESTUDIO, LABERINTO, FABRICA }
-
-    /** El escenario de un tema: cocinar, construir, aparcar, ordenar libros, pintar, laberintos o clasificar en la fábrica. */
-    static Escena escena(String tema) {
-        switch (tema) {
-            case "01": case "02": case "06": return Escena.COCINA;
-            case "03": case "05": case "20": return Escena.OBRA;
-            case "04": case "14": return Escena.APARCAMIENTO;
-            case "07": case "15": case "16": case "18": return Escena.BIBLIOTECA;
-            case "08": case "19": return Escena.ESTUDIO;
-            case "21": case "17": return Escena.LABERINTO;
-            default: return Escena.FABRICA;
-        }
-    }
-
     /** Los segundos desde que empezó el caso (para que el robotito baile o se caiga al acabar); solo se dibuja de uno en uno. */
     private static float reloj;
-    private static Escena escenaActual = Escena.FABRICA;
+    private static EscenasDelRobotito.Escena escenaActual = EscenasDelRobotito.Escena.CLASIFICAR;
 
     /** Cuánto dura la animación de un caso (s). */
     static final float DURACION = 3.2f;
@@ -69,10 +53,10 @@ final class AnimacionDelCaso {
         Pincel p = ui.p;
         Ejercicio.Tipo tipo = e.tipo;
         reloj = segundos;
-        escenaActual = escena(e.tema);
+        escenaActual = EscenasDelRobotito.de(e.tema, e.enunciado.es + " " + e.titulo.es);
         p.caja(x, y, w, h, 10, ui.tema.fondo, 1);
         p.recortar(x, y, w, h);
-        fondo(p, escenaActual, x, y, w, h);
+        EscenasDelRobotito.fondo(p, escenaActual, x, y, w, h, reloj);
         String esperado = r.caso.esperado;
         String obtenido = r.obtenido == null ? "" : r.obtenido;
         float suelo = y + h - 26;
@@ -112,7 +96,10 @@ final class AnimacionDelCaso {
     /** El robotito trabajando; al acabar, si acertó, salta y baila; si no, se marea y se sienta de culo (con humo). */
     static void robot(Pincel p, float x, float suelo, float brazo, float f, boolean bien) {
         if (f < 1) {
-            robotito(p, x, suelo, brazo, true, 0x3FA9F5);
+            // En las excepciones, a media tarea tropieza (lanza), se tambalea y se recupera (catch): sigue con lo suyo.
+            float tropiezo = EscenasDelRobotito.tropiezo(escenaActual, f);
+            robotito(p, x + tropiezo * 10, suelo + tropiezo * 8, tropiezo > 0 ? 1 : brazo, tropiezo < 0.5f, 0x3FA9F5);
+            if (tropiezo > 0.3f) p.texto("!", x - 6, suelo - 120, 24, true, 0xFFD23F, 1);
             return;
         }
         if (bien) {
@@ -137,77 +124,9 @@ final class AnimacionDelCaso {
         p.circulo(x + 14, suelo - 90 - humo, 6 + humo * 0.2f, 0x8A919C, Math.max(0, 0.5f - humo / 60));
     }
 
-    /** El fondo del escenario: lo justo para que se reconozca (fogones, grúa, plazas de aparcar, estanterías, caballete, muros, cinta). */
-    private static void fondo(Pincel p, Escena escena, float x, float y, float w, float h) {
-        float suelo = y + h - 26;
-        switch (escena) {
-            case COCINA:
-                p.rect(x, suelo, w, 26, 0x6B4F33, 1);
-                p.caja(x + w - 150, suelo - 70, 120, 70, 6, 0x9AA0A6, 1);
-                for (int i = 0; i < 2; i++) p.aro(x + w - 120 + i * 60, suelo - 70, 14, 3, 0xFF7A45, 0.9f);
-                break;
-            case OBRA:
-                p.rect(x, suelo, w, 26, 0x8C6A43, 1);
-                p.linea(x + w - 60, y + 60, x + w - 60, suelo, 6, 0xFFB000, 1);
-                p.linea(x + w - 180, y + 66, x + w - 30, y + 66, 5, 0xFFB000, 1);
-                for (int i = 0; i < 8; i++) p.linea(x + w - 180 + i * 20, y + 62, x + w - 170 + i * 20, y + 70, 2, 0x111111, 0.8f);
-                break;
-            case APARCAMIENTO:
-                p.rect(x, suelo - 40, w, 66, 0x3A3F46, 1);
-                for (int i = 0; i < 10; i++) p.rect(x + 20 + i * w / 10, suelo + 6, w / 20, 4, 0xFFFFFF, 0.7f);
-                break;
-            case BIBLIOTECA:
-                p.rect(x, suelo, w, 26, 0x5A4632, 1);
-                for (int i = 0; i < 12; i++) p.rect(x + 20 + i * 14, y + 34, 10, 46, new int[]{0xB33A3A, 0x3A6EB3, 0x3AB36E, 0xB3A13A}[i % 4], 0.35f);
-                break;
-            case ESTUDIO:
-                p.rect(x, suelo, w, 26, 0x7A5A3A, 1);
-                for (int i = 0; i < 5; i++) p.circulo(x + w - 40 - i * 18, y + 30, 6, new int[]{0xFF5E5B, 0xFFD23F, 0x5BD685, 0x3FA9F5, 0xB07CFF}[i], 1);
-                break;
-            case LABERINTO:
-                for (int i = 0; i < 6; i++) p.rect(x + 100 + i * (w - 140) / 6f, y + 40 + (i % 2) * 40, 8, h - 110, 0x4A5A6E, 0.35f);
-                p.rect(x, suelo, w, 26, 0x2C3646, 1);
-                break;
-            default:
-                // La fábrica: una cinta transportadora que se mueve.
-                p.rect(x, suelo, w, 26, 0x2A2F38, 1);
-                for (int i = 0; i < 30; i++) p.rect(x + ((i * 40 + reloj * 60) % w), suelo + 8, 20, 4, 0x5B6067, 1);
-                break;
-        }
-    }
-
-    /** Un objeto del escenario (lo que el robotito apila o coloca): tortita, ladrillo, coche, libro, bote de pintura, piedra o caja. */
+    /** Un objeto del escenario (lo que el robotito apila o coloca), según la escena. */
     static void objeto(Pincel p, float cx, float cy, float lado, int color, float alfa) {
-        switch (escenaActual) {
-            case COCINA:
-                p.elipse(cx + lado / 2, cy + lado * 0.6f, lado * 0.55f, lado * 0.3f, 0, color == CAJA ? 0xE8B04A : color, alfa);
-                p.elipse(cx + lado / 2, cy + lado * 0.5f, lado * 0.45f, lado * 0.18f, 0, 0xF6D27A, alfa * 0.8f);
-                break;
-            case OBRA:
-                p.caja(cx, cy + lado * 0.3f, lado, lado * 0.6f, 1, color == CAJA ? 0xC0533A : color, alfa);
-                p.rect(cx, cy + lado * 0.58f, lado, 1.5f, 0xE6DED0, alfa);
-                break;
-            case BIBLIOTECA:
-                p.caja(cx + lado * 0.2f, cy, lado * 0.6f, lado, 1, color == CAJA ? 0x3A6EB3 : color, alfa);
-                p.rect(cx + lado * 0.2f, cy + lado * 0.2f, lado * 0.6f, 2, 0xF2EEE3, alfa);
-                break;
-            case ESTUDIO:
-                p.caja(cx + lado * 0.15f, cy + lado * 0.2f, lado * 0.7f, lado * 0.8f, 3, 0xDDE3EA, alfa);
-                p.caja(cx + lado * 0.15f, cy + lado * 0.2f, lado * 0.7f, lado * 0.3f, 3, color == CAJA ? 0xB07CFF : color, alfa);
-                break;
-            case APARCAMIENTO:
-                p.caja(cx, cy + lado * 0.35f, lado, lado * 0.45f, 4, color == CAJA ? 0xFF7A45 : color, alfa);
-                p.circulo(cx + lado * 0.25f, cy + lado * 0.85f, lado * 0.13f, 0x111111, alfa);
-                p.circulo(cx + lado * 0.75f, cy + lado * 0.85f, lado * 0.13f, 0x111111, alfa);
-                break;
-            case LABERINTO:
-                p.circulo(cx + lado / 2, cy + lado / 2, lado * 0.45f, color == CAJA ? 0x9AA0A6 : color, alfa);
-                break;
-            default:
-                p.caja(cx, cy, lado, lado, 2, color, alfa);
-                if (alfa >= 1) p.rect(cx + 2, cy + lado / 2 - 1, lado - 4, 2, Pincel.oscurecer(color, 0.25f), 1);
-                break;
-        }
+        EscenasDelRobotito.objeto(p, escenaActual, cx, cy, lado, color, CAJA, alfa);
     }
 
     // ================================================================ las formas

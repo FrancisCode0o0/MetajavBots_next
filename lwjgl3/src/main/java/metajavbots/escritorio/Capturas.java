@@ -44,6 +44,20 @@ public final class Capturas extends Juego {
         pantallas.put("02_menu", metajavbots.pantallas.Menu::new);
         pantallas.put("03_robots", Escaparate::new);
         pantallas.put("03b_armas", Armeria::new);
+        pantallas.put("03c_escenas", () -> new Pantalla() {
+            private float t;
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                t += dt;
+                Comun.fondo(j, t);
+                int n = metajavbots.pantallas.EscenasDelRobotito.cuantas();
+                for (int i = 0; i < n; i++) {
+                    float w = 390, h = 140;
+                    metajavbots.pantallas.EscenasDelRobotito.muestra(j.pincel, i, 8 + (i % 4) * (w + 8), 8 + (i / 4) * (h + 8), w, h, t);
+                }
+            }
+        });
         for (VistaDeArena.Escenario e : VistaDeArena.Escenario.values()) {
             pantallas.put("04_arena_" + e.name().toLowerCase(), () -> new Arena(e));
         }
