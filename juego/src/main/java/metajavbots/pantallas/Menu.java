@@ -71,6 +71,10 @@ public final class Menu implements Pantalla {
         }
         p.textoCentrado(T.f("menu.marcador", jug.victorias(), jug.derrotas()), iz + ancho / 2, arriba + 540, ui.letra, false, ui.tema.texto, 1);
         p.textoCentrado(T.f("menu.experiencia", jug.experiencia), iz + ancho / 2, arriba + 575, ui.letra * 0.9f, false, ui.tema.textoSuave, 1);
+        // La hora de hoy, como la propone el entrenador: repaso de lo flojo, tema nuevo y pelea.
+        if (ui.boton(T.t("sesion.boton"), iz + 30, p.alto - 226, ancho - 60, 64, Ui.Estilo.NORMAL, true, T.t("sesion.boton_ayuda"))) {
+            j.ir(new SesionDeHoy());
+        }
         if (ui.boton(T.t("menu.pelear_ya"), iz + 30, p.alto - 150, ancho - 60, 64, Ui.Estilo.PRINCIPAL, true, T.t("menu.pelear_ya_ayuda"))) {
             j.ir(PrepararPelea.adaptada(j));
         }
