@@ -53,6 +53,8 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 
 - **Público en la grada** (`pantalla/Publico.java`): dos filas de robots espectadores de colores al fondo de la arena, que se mecen; con un golpe fuerte, una pieza rota o un fuera de combate saltan con los brazos en alto y gritan («¡BIEN!», «¡OOOH!», «¡¡SÍÍÍ!!») con una ovación; si alguien se estampa contra la pared, el código falla o pasan 7 s sin golpes, abuchean («BUUU», ojos rojos, tiemblan). Dos sonidos nuevos del sintetizador (ovación y abucheo).
 
+- **Repetición a cámara lenta del mejor golpe** (`Repeticion`): la pelea se graba mientras se juega (los últimos 4 s: dónde está cada robot y lo que pasa) y se guarda el clip del golpe más fuerte (3 s antes y 1 s después). Al acabar, en la pantalla final, «▶ Repetición del mejor golpe» lo reproduce a un tercio de la velocidad, con marco rojo, piloto de grabación y «REPETICIÓN» (Esc para salir), con sus chispas, sus sonidos y el público. No se vuelve a simular (el jugador puede haber cambiado el código a mitad). **Pendiente para METAJAVBOTS_3**: la repetición con el código al lado (la línea que se ejecutaba) y guardarla como GIF.
+
 **Lo que decidí yo (para que Fran lo revise)**
 
 - **Reglas de estilo que no exijo** (están en el XML y por qué): una sola sentencia por línea (las tablas de reglas de la voz y de las teclas del editor se leen mejor en una línea), no reasignar parámetros (el patrón «y += alto» de las funciones de dibujo) y no tocar la variable del bucle (los analizadores de código lo hacen). Hasta 11 parámetros (el `Registro` del historial tiene 11 datos).

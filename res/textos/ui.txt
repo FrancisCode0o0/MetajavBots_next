@@ -554,3 +554,6 @@ publico.bien = ¡BIEN! | JAAA! | YEAH!
 publico.oooh = ¡OOOH! | OOOH! | OOOH!
 publico.si = ¡¡SÍÍÍ!! | JAAAA!! | YESSS!!
 publico.buu = BUUU | BUUUH | BOOO
+repeticion.ver = Repetición del mejor golpe | Wiederholung des besten Treffers | Replay of the best hit
+repeticion.titulo = REPETICIÓN | WIEDERHOLUNG | REPLAY
+repeticion.lenta = a cámara lenta · Esc para salir | in Zeitlupe · Esc beendet | in slow motion · Esc to leave

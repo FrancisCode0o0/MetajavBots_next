@@ -46,6 +46,7 @@ public final class PantallaPelea implements Pantalla {
     private final PanelDelAparato panelDelAparato = new PanelDelAparato();
     private ArmaEspecial especial;
     private EntradaEpica entrada;
+    private final Repeticion repeticion = new Repeticion();
     private Combatiente yo;
     private final RobotDelJugador robot = new RobotDelJugador();
     private VistaDeArena vista;
@@ -298,6 +299,7 @@ public final class PantallaPelea implements Pantalla {
                 acumulado -= 1;
                 n++;
                 pelea.avanzar();
+                repeticion.grabar(pelea);
                 vista.sucesos(pelea, j.sonidos);
                 narrador.turno(pelea, 1f / Pelea.TURNOS_POR_SEGUNDO);
                 if (pelea.estado() != Pelea.Estado.LUCHANDO) break;
@@ -668,14 +670,10 @@ public final class PantallaPelea implements Pantalla {
         narrador.locutor("explosion_final", true, null);
     }
 
-    private void pantallaFinal(Juego j, float dt) {
+    /** Si ha subido de nivel, fuegos artificiales, los robots saltan de alegría y la pantalla vibra. */
+    private void celebrar(Juego j, float dt) {
         Pincel p = j.pincel;
-        Ui ui = j.ui;
-        tiempoFinal += dt;
-        int g = pelea.ganador();
-        if (!explotado && tiempoFinal > 0.6f && g >= 0) explotar(j, g);
         if (cambio != null && cambio.subio) {
-            // ¡Fuegos artificiales! Y los robots saltan de alegría, y la pantalla vibra.
             vista.alegria = 1;
             if (tiempoFinal > 1 && (int) (tiempoFinal * 3) != (int) ((tiempoFinal - dt) * 3)) {
                 vista.efectos.cohete((float) (p.ancho * (0.15 + Math.random() * 0.7)), p.alto, p.alto * 0.55f,
@@ -686,7 +684,21 @@ public final class PantallaPelea implements Pantalla {
         } else if (ganoElJugador) {
             vista.alegria = 0.5f;
         }
+    }
+
+    private void pantallaFinal(Juego j, float dt) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        tiempoFinal += dt;
+        int g = pelea.ganador();
+        if (!explotado && tiempoFinal > 0.6f && g >= 0) explotar(j, g);
+        celebrar(j, dt);
         if (tiempoFinal < 2.2f) return;
+        if (repeticion.activa()) {
+            repeticion.avanzar(j, pelea, vista, dt);
+            repeticion.rotulo(j, 0, 88, p.ancho, p.alto - 88);
+            return;
+        }
         float w = 720, h = 470, x = (p.ancho - w) / 2, y = (p.alto - h) / 2;
         p.caja(x, y, w, h, 16, ui.tema.panel, 0.97f);
         p.bordeRedondeado(x, y, w, h, 16, ganoElJugador ? ui.tema.bien : g == -1 ? ui.tema.aviso : ui.tema.mal, 1, 3);
@@ -731,6 +743,10 @@ public final class PantallaPelea implements Pantalla {
         if (encuentro.modo.equals("DESAFIO") && ganoElJugador && !premioElegido) {
             if (ui.boton(T.t("final.premio"), x + w / 2 - 170, y + h - 140, 340, 50,
                     Ui.Estilo.PRINCIPAL)) j.ir(new PremioDelDesafio(() -> premioElegido = true));
+        }
+        boolean premio = encuentro.modo.equals("DESAFIO") && ganoElJugador && !premioElegido;
+        if (repeticion.hay() && ui.boton("▶ " + T.t("repeticion.ver"), x + w - 330, y + h - (premio ? 200 : 140), 300, 50, Ui.Estilo.PLANO)) {
+            repeticion.empezar(pelea);
         }
         if (ui.boton(T.t("final.revancha"), x + 30, y + h - 74, 200, 54, Ui.Estilo.NORMAL)) {
             j.volver();

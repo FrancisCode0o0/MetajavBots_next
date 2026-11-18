@@ -125,8 +125,13 @@ public final class VistaDeArena {
     }
 
     public void sucesos(Pelea pelea, Sonidos sonidos) {
+        sucesos(pelea.sucesos(), sonidos);
+    }
+
+    /** Los efectos y sonidos de esos sucesos (también los de una repetición). */
+    public void sucesos(java.util.List<Suceso> lista, Sonidos sonidos) {
         ultimosSonidos = sonidos;
-        for (Suceso s : pelea.sucesos()) {
+        for (Suceso s : lista) {
             if (conPublico) publico.reaccionar(s, sonidos);
             float px = sx(s.x, s.y), py = sy(s.y) - TIRO * escalaX;
             switch (s.tipo) {

@@ -113,6 +113,32 @@ public final class Capturas extends Juego {
             }
         });
         finalesDePelea();
+        pantallas.put("08h_repeticion", () -> new Pantalla() {
+            private VistaDeArena vista;
+            private Pelea pelea;
+            private final metajavbots.pantallas.Repeticion repeticion = new metajavbots.pantallas.Repeticion();
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (vista == null) {
+                    vista = new VistaDeArena(j.pincel);
+                    vista.escenario = VistaDeArena.Escenario.NEON;
+                    vista.conPublico = true;
+                    Random r = new Random(12);
+                    List<Modelo> ms = Modelo.todos();
+                    pelea = new Pelea(Rivales.crear(ms.get(3), 0.8, 0.9, r), Rivales.crear(ms.get(10), 0.8, 0.9, r), 13);
+                    pelea.empezarRonda();
+                    for (int i = 0; i < 900 && pelea.estado() == Pelea.Estado.LUCHANDO; i++) {
+                        pelea.avanzar();
+                        repeticion.grabar(pelea);
+                    }
+                    repeticion.empezar(pelea);
+                }
+                if (repeticion.activa()) repeticion.avanzar(j, pelea, vista, 1 / 60f);
+                vista.dibujar(j.pincel, pelea, 0, 88, j.pincel.ancho, j.pincel.alto - 88, 1 / 60f);
+                if (repeticion.activa()) repeticion.rotulo(j, 0, 88, j.pincel.ancho, j.pincel.alto - 88);
+            }
+        });
         pantallas.put("09f_finales", () -> new Pantalla() {
             private float t = 1.0f;
 
