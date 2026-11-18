@@ -53,6 +53,8 @@ public final class Ejercicio {
     public final List<Caso> casos;
     /** Lo que desbloquea (reto:<id>) al resolverlo; "" si nada. */
     public final String desbloquea;
+    /** La escena de su animación si no es la que toca por lo que devuelve: «giro» o «avance» (pantallas/EscenaDeArena), o "". */
+    public final String escena;
 
     Ejercicio(Map<String, String> v, String archivo) {
         this.archivo = archivo;
@@ -68,6 +70,7 @@ public final class Ejercicio {
         plantilla = v.getOrDefault("plantilla", "");
         solucion = v.getOrDefault("solucion", "");
         desbloquea = v.getOrDefault("desbloquea", "").strip();
+        escena = v.getOrDefault("escena", "").strip();
         List<Caso> l = new ArrayList<>();
         for (String linea : v.getOrDefault("casos", "").split("\n")) {
             linea = linea.strip();

@@ -22,7 +22,7 @@ import metajavbots.textos.T;
 final class AnimacionDelCaso {
 
     /** Lo que se anima, según la forma de la respuesta. */
-    enum Forma { CAJAS, PUERTAS, PIZARRA, ESTANTERIA, PAPEL, ALARMA }
+    enum Forma { CAJAS, PUERTAS, PIZARRA, ESTANTERIA, PAPEL, ALARMA, GIRO, AVANCE }
 
     /** Los segundos desde que empezó el caso (para que el robotito baile o se caiga al acabar); solo se dibuja de uno en uno. */
     private static float reloj;
@@ -35,6 +35,13 @@ final class AnimacionDelCaso {
     private static int variante;
 
     private AnimacionDelCaso() {
+    }
+
+    /** La forma que toca a un caso: la escena que pida el ejercicio («giro», «avance») o, si no, la de lo que se esperaba. */
+    static Forma forma(Ejercicio e, String esperado) {
+        if (e.escena.equals("giro")) return Forma.GIRO;
+        if (e.escena.equals("avance")) return Forma.AVANCE;
+        return forma(e.tipo, esperado);
     }
 
     /** La forma que toca a un caso, mirando lo que se esperaba. */
@@ -53,7 +60,6 @@ final class AnimacionDelCaso {
     /** Dibuja el caso con el robot; f: lo que lleva hecho (de 0 a 1, al ritmo de las líneas que ejecuta el código). */
     static void dibujar(Ui ui, float x, float y, float w, float h, Ejercicio e, Comprobador.Resultado r, float f, float segundos, float pista) {
         Pincel p = ui.p;
-        Ejercicio.Tipo tipo = e.tipo;
         reloj = segundos;
         escenaActual = EscenasDelRobotito.de(e.tema, e.enunciado.es + " " + e.titulo.es);
         p.caja(x, y, w, h, 10, ui.tema.fondo, 1);
@@ -64,7 +70,9 @@ final class AnimacionDelCaso {
         float suelo = y + h - 26;
         // Arriba queda sitio para la pista de carrera (PistaDeCarrera): la acción va debajo.
         float yy = y + pista, hh = h - pista;
-        switch (forma(tipo, esperado)) {
+        switch (forma(e, esperado)) {
+            case GIRO: EscenaDeArena.giro(ui, x, yy, w, hh, numero(esperado), numero(obtenido), f, r.bien); break;
+            case AVANCE: EscenaDeArena.avance(ui, x, yy, suelo, w, numero(esperado), numero(obtenido), f, r.bien); break;
             case CAJAS: AccionesDelRobotito.cajas(ui, x, suelo, w, numero(esperado), numero(obtenido), f, r.bien); break;
             case PUERTAS:
                 AccionesDelRobotito.puertas(ui, x, suelo, w, hh, esperado.strip().equals("true"), obtenido.strip().equals("true"), f, r.bien);
@@ -161,7 +169,7 @@ final class AnimacionDelCaso {
      */
     static float duracion(Ejercicio e, Comprobador.Resultado r) {
         String esp = r.caso.esperado, obt = r.obtenido == null ? "" : r.obtenido;
-        switch (forma(e.tipo, esp)) {
+        switch (forma(e, esp)) {
             case CAJAS: return AccionesDelRobotito.viajesDeCajas(numero(esp), numero(obt)) * AccionesDelRobotito.VIAJE + 0.3f;
             case ESTANTERIA:
                 int n = elementos(dentro(obt)).size(), m = elementos(dentro(esp)).size();
@@ -173,7 +181,7 @@ final class AnimacionDelCaso {
 
     private static int letrasPorEscribir(Ejercicio e, Comprobador.Resultado r) {
         String obt = texto(r.obtenido == null ? "" : r.obtenido);
-        return AccionesDelRobotito.letrasDe(forma(e.tipo, r.caso.esperado) == Forma.PAPEL ? obt.split("\n", -1) : new String[] {obt});
+        return AccionesDelRobotito.letrasDe(forma(e, r.caso.esperado) == Forma.PAPEL ? obt.split("\n", -1) : new String[] {obt});
     }
 
     /** Letras por segundo: 14 de normal; si es muy largo, más deprisa (que no pase de unos 6 s). */

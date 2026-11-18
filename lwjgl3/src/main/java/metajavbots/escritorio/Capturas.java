@@ -178,6 +178,9 @@ public final class Capturas extends Juego {
         }
         // Escribe en la pizarra (y se tuerce donde se equivoca) y apila bien todas las cajas.
         pantallas.put("09g_robot_pizarra", () -> new ProbarEjercicio(ejercicio("t08_placa_del_robot"), "return \"<<\" + nombre + \">>\";"));
+        // Los ejercicios del juego, en la arena (bloque 4): un giro que falla (pato de goma) y un avance que se pasa (aceite).
+        pantallas.put("09c2_arena_giro", () -> new ProbarEjercicio(ejercicio("j_angulo_hacia"), "return dy;"));
+        pantallas.put("09c3_arena_avance", () -> new ProbarEjercicio(ejercicio("j_hasta_la_bandera"), "return bandera;"));
         pantallas.put("09i_robot_puerta", () -> new ProbarEjercicio(ejercicio("t04_puede_disparar"), "return energia > coste;"));
         pantallas.put("09h_robot_bien", () -> new ProbarEjercicio(ejercicio("t05_sumar_hasta"),
                 "int suma = 0;\n    for (int i = 1; i <= n; i++) {\n        suma += i;\n    }\n    return suma;"));
