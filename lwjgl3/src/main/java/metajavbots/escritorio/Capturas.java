@@ -232,12 +232,13 @@ public final class Capturas extends Juego {
             Pincel p = j.pincel;
             Comun.fondo(j, t);
             List<Modelo> ms = Modelo.todos();
-            int porFila = 8;
+            int porFila = 8, filas = (ms.size() + porFila - 1) / porFila;
+            float alto = (p.alto - 40) / filas;
             for (int i = 0; i < ms.size(); i++) {
                 float x = 100 + (i % porFila) * ((p.ancho - 200) / (porFila - 1));
-                float y = 370 + (i / porFila) * 410;
-                vista.robotSuelto(p, new Montaje(ms.get(i)), x, y, 2.4f, t + i, 0, i % 2 == 0);
-                p.textoCentrado(ms.get(i).nombre.es, x, y + 20, 18, true, 0xFFFFFF, 1);
+                float y = 20 + alto * (i / porFila) + alto - 40;
+                vista.robotSuelto(p, new Montaje(ms.get(i)), x, y, 2.4f * Math.min(1, alto / 410) * 1.4f, t + i, 0, i % 2 == 0);
+                p.textoCentrado(ms.get(i).nombre.es, x, y + 10, 18, true, 0xFFFFFF, 1);
             }
         }
     }

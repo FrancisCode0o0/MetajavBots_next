@@ -261,3 +261,102 @@ blindaje = 0.9
 velocidad = 1.15
 piezas = cabeza_sombra espada canon_riel alas nucleo_cuantico
 desbloqueo = nivel:SENIOR_1
+
+# ------------------------------------------------------------------ Repaso (18-nov): los de las luchas de robots de verdad
+# Cada uno con un arma de las nuevas (sierra, cuña, pinza, volteador, bola con cadena, taladro) y su forma de pelear.
+
+[serrucho]
+nombre = Serrucho | Sägezahn | Sawtooth
+lema = Lo que toco, lo corto en rodajas. | Was ich berühre, schneide ich in Scheiben. | What I touch, I slice.
+naturaleza = FURIA
+personalidad = euforico
+tamano = 31
+torso = CUNA
+cabeza = OJOS
+brazos = GRUESOS
+detalles = pinchos rayas
+colores = E8742A 3A3F46 FFE14D
+blindaje = 1.05
+velocidad = 1.0
+piezas = cabeza_furia sierra cuna ruedas nucleo_blindado
+desbloqueo = victorias:5
+
+[galapago]
+nombre = Galápago | Panzerkröte | Shellback
+lema = Despacio, pero sin soltar. | Langsam, aber ich lasse nicht los. | Slow, but I never let go.
+naturaleza = ACERO
+personalidad = calmado
+tamano = 37
+torso = CAPARAZON
+cabeza = CASCO
+brazos = GRUESOS
+detalles = remaches parches
+colores = 2E6B8A C9C29A 8FE3FF
+blindaje = 1.35
+velocidad = 0.75
+piezas = cabeza_escudo pinza escudo_brazo orugas nucleo_blindado
+desbloqueo = victorias:7
+
+[volteo]
+nombre = Volteo | Kipper | Flipside
+lema = ¡Arriba! ¿Y ahora quién manda? | Hoch mit dir! Wer hat jetzt das Sagen? | Up you go! Who's the boss now?
+naturaleza = INGENIO
+personalidad = jugueton
+tamano = 30
+torso = HEXAGONO
+cabeza = VISOR
+brazos = NORMALES
+detalles = aleron tubos
+colores = F2C230 2B2F3A FF4F6B
+blindaje = 1.0
+velocidad = 1.1
+piezas = cabeza_turbo volteador canon_ligero ruedas nucleo_bateria
+desbloqueo = nivel:JUNIOR_1
+
+[bolon]
+nombre = Bolón | Kettenhund | Wrecker
+lema = La cadena va y viene. Tú, solo vas. | Die Kette kommt und geht. Du gehst nur. | The chain comes and goes. You just go.
+naturaleza = FURIA
+personalidad = grunon
+tamano = 35
+torso = BARRIL
+cabeza = FAROL
+brazos = GRUESOS
+detalles = hombreras remaches
+colores = 7A2A28 4A4F57 FFB000
+blindaje = 1.2
+velocidad = 0.8
+piezas = cabeza_radar bola_cadena martillo piernas_bipedo nucleo_blindado
+desbloqueo = victorias:12
+
+[barrena]
+nombre = Barrena | Bohrkäfer | Driller
+lema = Encuentro el agujero. Y si no, lo hago. | Ich finde das Loch. Und sonst bohre ich es. | I find the hole. If not, I make one.
+naturaleza = FURIA
+personalidad = intrigante
+tamano = 28
+torso = ESFERA
+cabeza = MONOOJO
+brazos = NORMALES
+detalles = tubos cola
+colores = 4A3F6B 9A90B8 7CFFB2
+blindaje = 0.95
+velocidad = 1.05
+piezas = cabeza_ojo pinza_taladro taladro patas_arana nucleo_cuantico
+desbloqueo = nivel:JUNIOR_2
+
+[remolino]
+nombre = Remolino | Wirbel | Whirl
+lema = Giro, salto, chispa. Y vuelta a empezar. | Drehen, springen, Funken. Und von vorn. | Spin, flip, spark. And again.
+naturaleza = RAYO
+personalidad = sarcastico
+tamano = 27
+torso = ESBELTO
+cabeza = CUERNOS
+brazos = FINOS
+detalles = capa rayas
+colores = 1F8A8A 0F2B33 FFEE88
+blindaje = 0.85
+velocidad = 1.25
+piezas = cabeza_pulso sierra_volteadora latigo flotador nucleo_bateria
+desbloqueo = nivel:JUNIOR_3
