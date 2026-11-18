@@ -27,6 +27,8 @@ public final class Ajustes implements Pantalla {
         cerebros.cargar(j.jugador);
     }
 
+    private final Ui.Desplazable izquierda = new Ui.Desplazable();
+
     @Override
     public void alSalir(Juego j) {
         Jugador jug = j.jugador;
@@ -42,8 +44,10 @@ public final class Ajustes implements Pantalla {
         Jugador jug = j.jugador;
         Comun.fondo(j, 0);
         float arriba = Comun.cabecera(j, T.t("menu.ajustes"), true);
-        float x = 60, y = arriba + 24, w = (p.ancho - 160) / 2;
-        // A la izquierda: idioma, letra, tema, sonido, voz.
+        float x = 60, w = (p.ancho - 160) / 2;
+        // A la izquierda: idioma, letra, tema, sonido, voz… (se desplaza si con letra grande no cabe).
+        float zona = arriba + 12, d = ui.desplazable(izquierda, 40, zona, w + 40, p.alto - zona - 12);
+        float y = zona + 12 - d;
         p.texto(T.t("ajustes.idioma"), x, y, ui.letra, true, ui.tema.texto, 1);
         y += 34;
         for (int i = 0; i < Idioma.values().length; i++) {
@@ -97,6 +101,7 @@ public final class Ajustes implements Pantalla {
         if (ui.boton(T.t("ajustes.probar_voz"), x, y, 260, 50, Ui.Estilo.NORMAL)) {
             j.voz.decir(metajavbots.dialogos.Dialogos.de("locutor").frase("inicio_pelea", jug.idioma, java.util.Map.of("jugador", jug.nombre)), jug.idioma);
         }
+        ui.finDesplazable(izquierda, y + 70 + d - zona);
         j.voz.fotograma(j.sonidos);
         // A la derecha: los cerebros de IA.
         cerebros.dibujar(j, x + w + 40, arriba + 16, w, p.alto - arriba - 40);

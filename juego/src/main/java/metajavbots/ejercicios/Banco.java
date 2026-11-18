@@ -64,7 +64,11 @@ public final class Banco {
     void anadir(Ejercicio e) {
         if (porId.containsKey(e.id)) avisos.add("id repetido: " + e.id + " (" + e.archivo + ")");
         porId.put(e.id, e);
+        porTema.clear();
     }
+
+    /** Los de cada tema, ya ordenados (las pantallas los piden en cada fotograma). */
+    private final java.util.Map<String, List<Ejercicio>> porTema = new java.util.HashMap<>();
 
     public Ejercicio ejercicio(String id) {
         return porId.get(id);
@@ -75,11 +79,14 @@ public final class Banco {
     }
 
     /** Los de un tema, de más fácil a más difícil. */
-    public List<Ejercicio> deTema(String tema) {
-        List<Ejercicio> l = new ArrayList<>();
-        for (Ejercicio e : porId.values()) if (e.tema.equals(tema)) l.add(e);
-        l.sort((a, b) -> Integer.compare(a.dificultad, b.dificultad));
-        return l;
+    public synchronized List<Ejercicio> deTema(String tema) {
+        List<Ejercicio> l = porTema.computeIfAbsent(tema, t -> {
+            List<Ejercicio> n = new ArrayList<>();
+            for (Ejercicio e : porId.values()) if (e.tema.equals(t)) n.add(e);
+            n.sort((a, b) -> Integer.compare(a.dificultad, b.dificultad));
+            return n;
+        });
+        return new ArrayList<>(l);
     }
 
     public List<String> avisos() {

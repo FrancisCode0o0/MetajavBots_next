@@ -34,11 +34,20 @@ public final class Ejercicios implements Pantalla {
         this.tema = tema;
     }
 
+    private Ejercicio reto;
+    private long retoDia = Long.MIN_VALUE;
+    private int retoResueltos = -1;
+
     /** El botón del reto del día, con la racha (y si ya está hecho hoy). */
     private void retoDelDia(Juego j, float x, float y, float w) {
         Jugador jug = j.jugador;
         long hoy = RetoDiario.hoy();
-        Ejercicio reto = RetoDiario.de(jug, hoy);
+        // Se calcula una vez (y otra si cambia el día o lo resuelto): no en cada fotograma.
+        if (hoy != retoDia || jug.ejerciciosResueltos.size() != retoResueltos) {
+            reto = RetoDiario.de(jug, hoy);
+            retoDia = hoy;
+            retoResueltos = jug.ejerciciosResueltos.size();
+        }
         if (reto == null || w < 200) return;
         int racha = RetoDiario.racha(jug, hoy);
         boolean hecho = jug.retoDiarioUltimo == hoy;
