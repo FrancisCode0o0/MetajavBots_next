@@ -8,6 +8,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import metajavbots.cerebro.Ranura;
+import metajavbots.cerebro.Tarea;
 import metajavbots.piezas.CatalogoDePiezas;
 import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
@@ -76,11 +78,19 @@ public final class Jugador {
     /** El panel de la IA: modo (ADAPTADA o una Dificultad), agresividad, humor y cortesía (0..1). */
     public String modoIA = "ADAPTADA";
     public double agresividad = 0.4, humor = 0.6, cortesia = 0.5;
-    /** El cerebro de IA: NINGUNO, LOCAL, EN_LINEA o AMBOS (la clave no se guarda aquí: la guarda Claves aparte). */
+    /** Los tres cerebros de IA que puede integrar el jugador (las claves no se guardan aquí: las guarda Claves aparte). */
+    public final Ranura[] cerebros = {new Ranura(), new Ranura(), new Ranura()};
+    /** Qué cerebro (0, 1 o 2) hace cada tarea, por el orden de Tarea. */
+    public final int[] reparto = repartoPorDefecto();
+    /** La carpeta de KoboldCpp y los modelos (vacía: la de Jarvis). */
+    public String carpetaModelos = "";
+    /**
+     * El cerebro de las partidas de antes de los tres cerebros: NINGUNO, LOCAL, EN_LINEA o AMBOS, con su proveedor, su
+     * modelo y sus direcciones. Solo se lee para pasarlo a las ranuras (migrarCerebroAntiguo).
+     */
     public String cerebro = "NINGUNO";
     public String proveedor = "anthropic", modeloEnLinea = "", direccionLocal = "http://localhost:5002", direccionEnLinea = "";
-    /** El modelo local elegido (un .gguf de la carpeta) y la carpeta (vacía: la de Jarvis). */
-    public String modeloLocal = "", carpetaModelos = "";
+    public String modeloLocal = "";
     /** Ajustes de la pantalla y el sonido. */
     public float tamanoDeLetra = 18, volumen = 0.8f, volumenVoz = 0.9f;
     public boolean vozDelLocutor = true, temaClaro;
@@ -88,6 +98,52 @@ public final class Jugador {
 
     public Jugador(String nombre) {
         this.nombre = nombre;
+    }
+
+    private static int[] repartoPorDefecto() {
+        int[] r = new int[Tarea.values().length];
+        for (Tarea t : Tarea.values()) r[t.ordinal()] = t.ranuraPorDefecto();
+        return r;
+    }
+
+    /** El cerebro que hace esa tarea. */
+    public int ranuraDe(Tarea t) {
+        return Math.max(0, Math.min(cerebros.length - 1, reparto[t.ordinal()]));
+    }
+
+    /** ¿Hay algún cerebro puesto? */
+    public boolean conCerebro() {
+        migrarCerebroAntiguo();
+        for (Ranura r : cerebros) if (!r.vacia()) return true;
+        return false;
+    }
+
+    /**
+     * Pasa el cerebro de antes (un solo campo: local, en línea o los dos) a las ranuras, si están vacías: el local a la 1
+     * (lo rápido) y el de en línea a la 1 o, con los dos, a la 2 (lo pesado y los tutores). Después lo deja en NINGUNO.
+     */
+    public void migrarCerebroAntiguo() {
+        if (cerebro == null || cerebro.equals("NINGUNO")) return;
+        for (Ranura r : cerebros) if (!r.vacia()) return;
+        boolean local = cerebro.equals("LOCAL") || cerebro.equals("AMBOS");
+        boolean enLinea = cerebro.equals("EN_LINEA") || cerebro.equals("AMBOS");
+        int siguiente = 0;
+        if (local) {
+            Ranura r = cerebros[siguiente++];
+            r.tipo = Ranura.Tipo.LOCAL;
+            r.modeloLocal = modeloLocal;
+            r.direccionLocal = direccionLocal.contains(":5002") ? "" : direccionLocal;
+        }
+        if (enLinea) {
+            Ranura r = cerebros[siguiente];
+            r.tipo = Ranura.Tipo.EN_LINEA;
+            r.proveedor = proveedor;
+            r.modeloEnLinea = modeloEnLinea;
+            r.direccionEnLinea = direccionEnLinea;
+            // Antes, con los dos, los tutores eran del de en línea.
+            if (local) reparto[Tarea.TUTOR.ordinal()] = 1;
+        }
+        cerebro = "NINGUNO";
     }
 
     public Robot robot() {

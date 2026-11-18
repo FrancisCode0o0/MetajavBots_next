@@ -78,6 +78,8 @@ public final class Entrada extends InputAdapter {
         ruedaNueva = 0;
         clicUsado = false;
         ruedaUsada = false;
+        zona = null;
+        bloqueada = false;
         if (Gdx.input != null) {
             ratonX = Gdx.input.getX() / pincel.escala;
             ratonY = Gdx.input.getY() / pincel.escala;
@@ -130,7 +132,23 @@ public final class Entrada extends InputAdapter {
         return Gdx.input != null && (Gdx.input.isKeyPressed(Input.Keys.ALT_LEFT) || Gdx.input.isKeyPressed(Input.Keys.ALT_RIGHT));
     }
 
+    /** Hay un diálogo abierto encima: lo de debajo no recibe ni el ratón ni las teclas (ver Dialogo). */
+    public boolean bloqueada;
+    /** La zona visible de lo que se desplaza: fuera de ella, lo de dentro no se toca (null: toda la pantalla). */
+    private float[] zona;
+
+    /** Desde aquí, el ratón solo cuenta dentro de este rectángulo (lo que se desplaza y queda tapado no se pulsa). */
+    public void limitar(float x, float y, float w, float h) {
+        zona = new float[]{x, y, w, h};
+    }
+
+    public void sinLimite() {
+        zona = null;
+    }
+
     public boolean dentro(float x, float y, float w, float h) {
+        if (bloqueada) return false;
+        if (zona != null && !(ratonX >= zona[0] && ratonX < zona[0] + zona[2] && ratonY >= zona[1] && ratonY < zona[1] + zona[3])) return false;
         return ratonX >= x && ratonX < x + w && ratonY >= y && ratonY < y + h;
     }
 
@@ -145,8 +163,9 @@ public final class Entrada extends InputAdapter {
 
     /** ¿Se ha pulsado esta tecla (con o sin Ctrl)? La consume. */
     public boolean tecla(int codigo, boolean conCtrl) {
+        if (bloqueada) return false;
         for (Tecla t : teclas) {
-            if (t.es(codigo, conCtrl) && !t.alt) {
+            if (t.es(codigo, conCtrl) && !t.alt && !t.usada) {
                 t.usada = true;
                 return true;
             }

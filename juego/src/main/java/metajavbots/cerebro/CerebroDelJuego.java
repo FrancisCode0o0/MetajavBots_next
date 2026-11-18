@@ -7,66 +7,108 @@ import metajavbots.progreso.Jugador;
 import metajavbots.textos.Idioma;
 
 /**
- * CEREBRO DEL JUEGO — El cerebro que ha elegido el jugador (Ajustes ›
- * Cerebro de IA): ninguno, el local o uno en línea. Y las peticiones que le
- * hace el juego, siempre en otro hilo (Peticion): el dibujo pregunta cada
- * fotograma si ya hay respuesta.
+ * CEREBRO DEL JUEGO — Los cerebros que ha puesto el jugador (Ajustes ›
+ * Cerebros de IA): hasta tres, locales o en línea, cada uno con sus tareas
+ * (Tarea: lo rápido, lo pesado, los tutores). Si el de una tarea falla (sin
+ * internet, sin clave, sin memoria), contesta otro de los puestos. Y las
+ * peticiones que le hace el juego, siempre en otro hilo (Peticion): el
+ * dibujo pregunta cada fotograma si ya hay respuesta.
  */
 public final class CerebroDelJuego {
 
     private CerebroDelJuego() {
     }
 
-    /**
-     * El cerebro para lo pesado (revisar el código, los tutores, el temario, los retos), o null si no hay. Con el doble
-     * cerebro (AMBOS) es el de en línea, y si falla internet o la clave, el local se encarga.
-     */
+    /** El cerebro para lo pesado (revisar el código, el temario, los retos), o null si no hay. */
     public static Cerebro de(Jugador j) {
         return pesado(j);
     }
 
     public static Cerebro pesado(Jugador j) {
-        if (j == null) return null;
-        switch (j.cerebro) {
-            case "LOCAL": return local(j);
-            case "EN_LINEA": return enLinea(j);
-            case "AMBOS": {
-                Cerebro en = enLinea(j), lo = local(j);
-                return en == null ? lo : new ConRespaldo(en, lo);
-            }
-            default: return null;
-        }
+        return para(j, Tarea.PESADO);
     }
 
-    /** El cerebro para lo rápido y constante (pullas, locutor, diálogos de los robots): con AMBOS, el local. */
+    /** El cerebro para lo rápido y constante (pullas, locutor, diálogos de los robots, charla). */
     public static Cerebro rapido(Jugador j) {
+        return para(j, Tarea.RAPIDO);
+    }
+
+    /** El cerebro de los tutores (tutoriales, lecciones, ejercicios). */
+    public static Cerebro tutor(Jugador j) {
+        return para(j, Tarea.TUTOR);
+    }
+
+    /** El cerebro de esa tarea, con los demás puestos de respaldo; null si no hay ninguno que sirva. */
+    public static Cerebro para(Jugador j, Tarea t) {
         if (j == null) return null;
-        switch (j.cerebro) {
-            case "LOCAL": case "AMBOS": return local(j);
-            case "EN_LINEA": return enLinea(j);
+        j.migrarCerebroAntiguo();
+        return conRespaldo(j, j.ranuraDe(t));
+    }
+
+    /** El cerebro de esa ranura (0, 1 o 2), con los demás de respaldo; si está vacía, los demás. Null si no hay ninguno. */
+    public static Cerebro conRespaldo(Jugador j, int ranura) {
+        List<Cerebro> orden = new ArrayList<>();
+        Cerebro primero = deLaRanura(j, ranura);
+        if (primero != null) orden.add(primero);
+        for (int i = 0; i < j.cerebros.length; i++) {
+            if (i == ranura) continue;
+            Cerebro c = deLaRanura(j, i);
+            if (c != null) orden.add(c);
+        }
+        if (orden.isEmpty()) return null;
+        Cerebro c = orden.get(orden.size() - 1);
+        for (int i = orden.size() - 2; i >= 0; i--) c = new ConRespaldo(orden.get(i), c);
+        return c;
+    }
+
+    /** El cerebro de una sola ranura, sin respaldo (null si está vacía o le falta la clave). */
+    public static Cerebro deLaRanura(Jugador j, int i) {
+        if (j == null || i < 0 || i >= j.cerebros.length) return null;
+        Ranura r = j.cerebros[i];
+        switch (r.tipo) {
+            case LOCAL: return local(j, i);
+            case EN_LINEA: return enLinea(r);
             default: return null;
         }
     }
 
-    static Cerebro local(Jugador j) {
-        String d = j.direccionLocal == null || j.direccionLocal.isBlank() ? "http://localhost:" + CerebroLocal.PUERTO_DEL_JUEGO : j.direccionLocal;
-        return new CerebroLocalPerezoso(d, CerebroLocal.carpeta(j.carpetaModelos), j.modeloLocal);
+    /** El puerto del KoboldCpp de una ranura local: el de la primera ranura con el mismo modelo (así lo comparten). */
+    public static int puertoDe(Jugador j, int i) {
+        String modelo = modeloDe(j, i);
+        for (int k = 0; k < i; k++) {
+            if (j.cerebros[k].tipo == Ranura.Tipo.LOCAL && j.cerebros[k].direccionLocal.isBlank() && modeloDe(j, k).equals(modelo)) {
+                return CerebroLocal.PUERTO_DEL_JUEGO + k;
+            }
+        }
+        return CerebroLocal.PUERTO_DEL_JUEGO + i;
     }
 
-    static Cerebro enLinea(Jugador j) {
-        String clave = Claves.leer(j.proveedor);
+    /** El .gguf de una ranura local: el elegido o el que le toca. */
+    public static String modeloDe(Jugador j, int i) {
+        String m = j.cerebros[i].modeloLocal;
+        return m == null || m.isBlank() ? CerebroLocal.modeloPorDefecto(CerebroLocal.carpeta(j.carpetaModelos), i) : m;
+    }
+
+    static Cerebro local(Jugador j, int i) {
+        Ranura r = j.cerebros[i];
+        String d = r.direccionLocal == null || r.direccionLocal.isBlank() ? CerebroLocal.direccion(puertoDe(j, i)) : r.direccionLocal;
+        return new CerebroLocalPerezoso(d, CerebroLocal.carpeta(j.carpetaModelos), modeloDe(j, i));
+    }
+
+    static Cerebro enLinea(Ranura r) {
+        String clave = Claves.leer(r.proveedor);
         if (clave.isEmpty()) return null;
-        switch (j.proveedor) {
+        switch (r.proveedor) {
             case "anthropic":
                 return new CerebroHttp(CerebroHttp.Forma.ANTHROPIC, "https://api.anthropic.com", clave,
-                        j.modeloEnLinea.isBlank() ? "claude-haiku-5-5" : j.modeloEnLinea, "Claude");
+                        r.modeloEnLinea.isBlank() ? "claude-haiku-5-5" : r.modeloEnLinea, "Claude");
             case "openai":
                 return new CerebroHttp(CerebroHttp.Forma.OPENAI, "https://api.openai.com", clave,
-                        j.modeloEnLinea.isBlank() ? "gpt-4o-mini" : j.modeloEnLinea, "OpenAI");
+                        r.modeloEnLinea.isBlank() ? "gpt-4o-mini" : r.modeloEnLinea, "OpenAI");
             default:
                 // Cualquier otro compatible con OpenAI, con su dirección.
-                return j.direccionEnLinea.isBlank() ? null
-                        : new CerebroHttp(CerebroHttp.Forma.OPENAI, j.direccionEnLinea, clave, j.modeloEnLinea, j.proveedor);
+                return r.direccionEnLinea.isBlank() ? null
+                        : new CerebroHttp(CerebroHttp.Forma.OPENAI, r.direccionEnLinea, clave, r.modeloEnLinea, r.proveedor);
         }
     }
 

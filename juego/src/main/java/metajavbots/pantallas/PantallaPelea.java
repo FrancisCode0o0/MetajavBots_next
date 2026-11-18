@@ -17,6 +17,7 @@ import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.Pelea;
 import metajavbots.dialogos.Narrador;
+import metajavbots.pantalla.Dialogo;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
@@ -59,9 +60,10 @@ public final class PantallaPelea implements Pantalla {
     private boolean explotado;
     private final Ui.Desplazable desplConsola = new Ui.Desplazable(), desplVariables = new Ui.Desplazable(), desplInforme = new Ui.Desplazable();
     private int pestanaEntreRondas;
-    private boolean ganoElJugador, objetivoCumplido;
+    private boolean ganoElJugador, objetivoCumplido, premioElegido;
     private volatile String resumenDelLocutor;
     private Revisor.Informe revision;
+    private final Dialogo dialogo = new Dialogo();
 
     public PantallaPelea(Encuentro e) {
         this.encuentro = e;
@@ -235,6 +237,7 @@ public final class PantallaPelea implements Pantalla {
         t += dt;
         Pincel p = j.pincel;
         Ui ui = j.ui;
+        dialogo.antes(ui);
         if (resultadoDeCompilar != null) {
             Compilador.Resultado res = resultadoDeCompilar;
             resultadoDeCompilar = null;
@@ -282,10 +285,25 @@ public final class PantallaPelea implements Pantalla {
         if (!terminada && !entreRondas) controles(j);
         if (entreRondas) entreRondas(j);
         if (terminada) final_(j, dt);
+        dialogo.dibujar(ui);
+    }
+
+    /** Salir de la pelea a medias (Esc o «Rendirse»): se para y se pregunta; salir cuenta como rendirse. */
+    private void preguntarSiSalir(Juego j) {
+        boolean estabaEnPausa = pausa;
+        pausa = true;
+        dialogo.confirmar(T.t("pelea.salir_titulo"), T.t("pelea.salir_texto"), T.t("pelea.rendirse"), T.t("pelea.seguir"), true, () -> {
+            pausa = estabaEnPausa;
+            entreRondas = false;
+            pelea.rendirse(0);
+            acabar(j);
+        });
     }
 
     private void teclas(Juego j) {
-        if (entreRondas || terminada) return;
+        if (terminada) return;
+        if (j.ui.atras()) preguntarSiSalir(j);
+        if (entreRondas) return;
         if (j.entrada.tecla(Keys.SPACE)) pausa = !pausa;
         if (j.entrada.tecla(Keys.F9)) depurador = !depurador;
         if (j.entrada.tecla(Keys.NUM_1)) velocidad = 1;
@@ -388,10 +406,7 @@ public final class PantallaPelea implements Pantalla {
         if (pausa && ui.boton(T.t("pelea.paso"), x, y, 120, 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_ayuda"))) pasoAPaso(j);
         if (ui.boton(T.t("pelea.depurador"), p.ancho - (depurador ? 460 : 0) - 380, y, 200, 46, depurador ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO,
                 true, T.t("pelea.depurador_ayuda"))) depurador = !depurador;
-        if (ui.boton(T.t("pelea.rendirse"), p.ancho - (depurador ? 460 : 0) - 170, y, 150, 46, Ui.Estilo.PELIGRO)) {
-            pelea.rendirse(0);
-            acabar(j);
-        }
+        if (ui.boton(T.t("pelea.rendirse"), p.ancho - (depurador ? 460 : 0) - 170, y, 150, 46, Ui.Estilo.PELIGRO)) preguntarSiSalir(j);
         if (!avisoDeCodigo.isEmpty()) p.texto(avisoDeCodigo, 20, y - 30, ui.letra * 0.8f, false, ui.tema.aviso, 1);
     }
 
@@ -680,8 +695,8 @@ public final class PantallaPelea implements Pantalla {
                 yy += 32;
             }
         }
-        if (encuentro.modo.equals("DESAFIO") && ganoElJugador) {
-            if (ui.boton(T.t("final.premio"), x + w / 2 - 170, y + h - 140, 340, 50, Ui.Estilo.PRINCIPAL)) j.ir(new PremioDelDesafio());
+        if (encuentro.modo.equals("DESAFIO") && ganoElJugador && !premioElegido) {
+            if (ui.boton(T.t("final.premio"), x + w / 2 - 170, y + h - 140, 340, 50, Ui.Estilo.PRINCIPAL)) j.ir(new PremioDelDesafio(() -> premioElegido = true));
         }
         if (ui.boton(T.t("final.revancha"), x + 30, y + h - 74, 200, 54, Ui.Estilo.NORMAL)) {
             j.volver();

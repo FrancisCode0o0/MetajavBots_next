@@ -28,4 +28,6 @@ tasks.register('capturas', JavaExec) {
     args((project.findProperty('salida') ?: 'build/capturas'), (project.findProperty('solo') ?: ''))
     // "-Psonido": con el audio encendido (para comprobar que suena sin fallar).
     if (project.hasProperty('sonido')) systemProperty 'capturas.sonido', 'si'
+    if (project.hasProperty('idioma')) systemProperty 'capturas.idioma', project.property('idioma')
+    if (project.hasProperty('letra')) systemProperty 'capturas.letra', project.property('letra')
 }

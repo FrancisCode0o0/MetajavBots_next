@@ -34,12 +34,19 @@ public final class Bienvenida implements Pantalla {
     private VistaDeArena vista;
     private int modelo;
     private final CampoDeTexto nombre = new CampoDeTexto();
+    /** La partida ya traía hecha la prueba: «Volver» lleva a la portada. */
+    private boolean entroConLaPrueba;
+    /** Las preguntas de esta prueba (cada vez otras: PruebaDeNivel.nueva). */
+    private List<PruebaDeNivel.Pregunta> prueba;
 
     @Override
     public void alEntrar(Juego j) {
         vista = new VistaDeArena(j.pincel);
         fuegos.alEstallar = () -> j.sonidos.tocar("estallido", 0.4f);
-        if (j.jugador.pruebaHecha) paso = 3;
+        if (j.jugador.pruebaHecha) {
+            paso = 3;
+            entroConLaPrueba = true;
+        }
         nombre.maximo = 24;
     }
 
@@ -50,6 +57,10 @@ public final class Bienvenida implements Pantalla {
         Ui ui = j.ui;
         Comun.fondo(j, t);
         float cx = p.ancho / 2;
+        if (Comun.botonAtras(j)) {
+            atras(j);
+            return;
+        }
         switch (paso) {
             case 0: {
                 p.textoCentrado(T.f("bienvenida.hola", j.jugador.nombre), cx, 150, ui.letra * 2.2f, true, ui.tema.texto, 1);
@@ -85,12 +96,28 @@ public final class Bienvenida implements Pantalla {
         }
     }
 
+    /** Un paso atrás: de la prueba o del robot, a la primera pregunta; de ahí, a la portada (la partida ya está creada). */
+    private void atras(Juego j) {
+        if (paso == 0 || entroConLaPrueba) {
+            j.irSolo(new Inicio());
+            return;
+        }
+        paso = 0;
+        pregunta = 0;
+        elegida = -1;
+        aciertos.clear();
+        prueba = null;
+        j.jugador.pruebaHecha = false;
+        j.jugador.etiqueta = Etiqueta.NOOB_1;
+    }
+
     private void prueba(Juego j, float dt) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        List<PruebaDeNivel.Pregunta> ps = PruebaDeNivel.preguntas();
+        if (prueba == null) prueba = PruebaDeNivel.nueva(new java.util.Random());
+        List<PruebaDeNivel.Pregunta> ps = prueba;
         if (pregunta >= ps.size() || debeParar(ps)) {
-            j.jugador.etiqueta = PruebaDeNivel.resultado(aciertos);
+            j.jugador.etiqueta = PruebaDeNivel.resultado(ps, aciertos);
             j.jugador.pruebaHecha = true;
             j.sonidos.tocar("subida", 0.8f);
             j.sacudir(6, 0.6f);
@@ -99,18 +126,18 @@ public final class Bienvenida implements Pantalla {
         }
         PruebaDeNivel.Pregunta q = ps.get(pregunta);
         float x = 160, w = p.ancho - 320;
-        p.texto(T.f("bienvenida.pregunta_n", pregunta + 1, ps.size()), x, 60, ui.letra, false, ui.tema.textoSuave, 1);
-        ui.barra(x, 92, w, 10, (float) pregunta / ps.size(), ui.tema.acento, null);
-        p.texto(q.pregunta.en(T.idioma), x, 130, ui.letra * 1.4f, true, ui.tema.texto, 1);
+        p.texto(T.f("bienvenida.pregunta_n", pregunta + 1, ps.size()), x, 24, ui.letra, false, ui.tema.textoSuave, 1);
+        ui.barra(x, 58, w, 10, (float) pregunta / ps.size(), ui.tema.acento, null);
+        float qy = 86 + p.parrafo(q.pregunta.en(T.idioma), x, 86, w, ui.letra * 1.4f, ui.tema.texto, 1) + 14;
         String[] lineas = q.codigo.split("\n");
-        float ch = lineas.length * ui.letra * 1.35f + 30;
-        p.caja(x, 190, w, ch, 10, ui.tema.panel, 1);
-        float ly = 205;
+        float ch = lineas.length * ui.letra * 1.3f + 30;
+        p.caja(x, qy, w, ch, 10, ui.tema.panel, 1);
+        float ly = qy + 15;
         for (String l : lineas) {
             p.texto(l, x + 24, ly, ui.letra * 1.05f, false, ui.tema.texto, 1);
-            ly += ui.letra * 1.35f;
+            ly += ui.letra * 1.3f;
         }
-        float oy = 210 + ch;
+        float oy = qy + ch + 20;
         for (int i = 0; i < q.opciones.size(); i++) {
             float bx = x + (i % 2) * (w / 2 + 10), by = oy + (i / 2) * 84;
             Ui.Estilo estilo = elegida < 0 ? Ui.Estilo.NORMAL : i == q.bien ? Ui.Estilo.PRINCIPAL : i == elegida ? Ui.Estilo.PELIGRO : Ui.Estilo.PLANO;

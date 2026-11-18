@@ -226,7 +226,9 @@ public final class Taller implements Pantalla {
             j.guardar();
             j.sonidos.tocar("subida", 0.5f);
         }
-        if (ui.boton(T.t("comun.cancelar"), x + 600, y + 410, 160, 50, Ui.Estilo.PLANO)) creando = false;
+        // Esc cierra este panel (no se va del taller).
+        ui.reservarEscape();
+        if (ui.boton(T.t("comun.cancelar"), x + 600, y + 410, 160, 50, Ui.Estilo.PLANO) || ui.e.tecla(com.badlogic.gdx.Input.Keys.ESCAPE)) creando = false;
     }
 
     private void modelos(Juego j, Jugador.Robot r, float x, float y, float w, float h) {

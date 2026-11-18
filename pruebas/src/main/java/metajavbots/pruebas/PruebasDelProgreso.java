@@ -106,6 +106,88 @@ final class PruebasDelProgreso {
             igual("naturaleza_furia", c.botin.get(0).id);
         });
 
+        caso("progreso: la prueba de nivel cambia cada vez (banco y preguntas generadas)", () -> {
+            List<PruebaDeNivel.Pregunta> a = PruebaDeNivel.nueva(new Random(1)), b = PruebaDeNivel.nueva(new Random(2));
+            igual(PruebaDeNivel.preguntas().size(), a.size(), "tres por escalón");
+            int iguales = 0;
+            for (int i = 0; i < a.size(); i++) {
+                igual(PruebaDeNivel.preguntas().get(i).nivel, a.get(i).nivel, "los escalones, en orden");
+                if (a.get(i).codigo.equals(b.get(i).codigo)) iguales++;
+                igual(4, a.get(i).opciones.size());
+                java.util.Set<String> distintas = new java.util.HashSet<>();
+                for (metajavbots.textos.Trilingue t : a.get(i).opciones) distintas.add(t.es);
+                igual(4, distintas.size(), "cuatro opciones distintas: " + a.get(i).codigo);
+            }
+            cierto(iguales < a.size() / 2, "dos pruebas se parecen poco (iguales: " + iguales + ")");
+            List<Boolean> todo = new ArrayList<>();
+            for (int i = 0; i < a.size(); i++) todo.add(true);
+            igual(Etiqueta.SENIOR_2, PruebaDeNivel.resultado(a, todo));
+        });
+
+        caso("progreso: cada pregunta generada escribe de verdad la respuesta buena (se compila y se ejecuta)", () -> {
+            if (!metajavbots.codigo.Compilador.hayCompilador()) {
+                System.out.println("            (sin JDK: se salta)");
+                return;
+            }
+            int n = 0;
+            for (Etiqueta nivel : Etiqueta.values()) {
+                for (java.util.function.Function<Random, metajavbots.progreso.GeneradorDePreguntas.Generada> plantilla
+                        : metajavbots.progreso.GeneradorDePreguntas.plantillas(nivel)) {
+                    StringBuilder texto = new StringBuilder();
+                    StringBuilder codigo = new StringBuilder();
+                    for (int semilla = 0; semilla < 12; semilla++) {
+                        metajavbots.progreso.GeneradorDePreguntas.Generada g = plantilla.apply(new Random(semilla * 31L + n));
+                        igual(3, new java.util.HashSet<>(g.malas).size(), "tres malas distintas");
+                        falso(g.malas.contains(g.respuesta), "la buena no está entre las malas");
+                        codigo.append("static class C").append(semilla).append(" {\n").append(g.arriba).append("\nstatic void q() {\n").append(g.cuerpo)
+                                .append("\n}\n}\n");
+                        texto.append("    C").append(semilla).append(".q(); => \"").append(g.respuesta.replace("\"", "\\\"")).append("\\n\"\n");
+                    }
+                    String ej = "=== generada\ntema: 01\ndificultad: 1\njava: 17\ntipo: salida\ntitulo.es: x\ntitulo.de: x\ntitulo.en: x\n"
+                            + "enunciado.es: x\nenunciado.de: x\nenunciado.en: x\nfirma: static void q0()\nplantilla:\n    return;\nsolucion:\n    return;\ncasos:\n" + texto;
+                    metajavbots.ejercicios.Ejercicio e = metajavbots.ejercicios.Ejercicio.leer(
+                            new java.io.ByteArrayInputStream(ej.getBytes(java.nio.charset.StandardCharsets.UTF_8)), "generada").get(0);
+                    metajavbots.ejercicios.Comprobador.Informe inf = metajavbots.ejercicios.Comprobador.comprobar(e, codigo.toString(), java.util.Locale.ROOT);
+                    cierto(inf.compila(), nivel + ": compila " + inf.errores + "\n" + codigo);
+                    for (metajavbots.ejercicios.Comprobador.Resultado r : inf.casos) {
+                        cierto(r.bien, nivel + ": " + r.caso.llamada + " esperaba " + r.caso.esperado + " y salió " + r.obtenido);
+                    }
+                    n++;
+                }
+            }
+            System.out.println("            " + n + " plantillas, 12 azares cada una");
+        });
+
+        caso("progreso: las partidas se cambian de nombre y se borran (a partidas/_borradas)", () -> {
+            Path antes = Guardado.carpeta;
+            Path tmp = Files.createTempDirectory("metajavbots");
+            Guardado.carpeta = tmp;
+            try {
+                Jugador j = new Jugador("Ana");
+                j.robots.add(new Jugador.Robot("Bip", "cobalto"));
+                Guardado.guardar(j);
+                Guardado.guardar(new Jugador("Luis"));
+                String nueva = Guardado.renombrar("Ana", "Ana Robótica");
+                igual("Ana_Robótica", nueva);
+                igual(List.of("Ana_Robótica", "Luis"), Guardado.partidas());
+                igual("Ana Robótica", Guardado.leer(nueva).nombre);
+                igual(1, Guardado.leer(nueva).robots.size(), "con sus robots");
+                try {
+                    Guardado.renombrar("Luis", "ana robótica");
+                    cierto(false, "no deja pisar otra partida");
+                } catch (java.io.IOException e) {
+                    igual("ya existe", e.getMessage());
+                }
+                Guardado.renombrar("Luis", "LUIS");
+                igual(List.of("Ana_Robótica", "LUIS"), Guardado.partidas(), "solo mayúsculas");
+                Guardado.borrar("LUIS");
+                igual(List.of("Ana_Robótica"), Guardado.partidas());
+                cierto(Files.isDirectory(tmp.resolve(Guardado.BORRADAS)), "se puede recuperar a mano");
+            } finally {
+                Guardado.carpeta = antes;
+            }
+        });
+
         caso("progreso: la prueba de nivel pone la etiqueta del principio", () -> {
             List<PruebaDeNivel.Pregunta> p = PruebaDeNivel.preguntas();
             cierto(p.size() >= 15, "preguntas: " + p.size());

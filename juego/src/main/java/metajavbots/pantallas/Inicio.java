@@ -5,6 +5,7 @@ import java.util.Random;
 
 import metajavbots.Juego;
 import metajavbots.pantalla.CampoDeTexto;
+import metajavbots.pantalla.Dialogo;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VistaDeArena;
@@ -18,7 +19,8 @@ import metajavbots.textos.T;
 
 /**
  * INICIO — La portada: el título, dos robots que se miran, el idioma y las
- * partidas guardadas (o una nueva). Una partida nueva pasa por la Bienvenida
+ * partidas guardadas (o una nueva), que se pueden cambiar de nombre y borrar
+ * (tras preguntar). Una partida nueva pasa por la Bienvenida
  * (la prueba de nivel y el primer robot).
  */
 public final class Inicio implements Pantalla {
@@ -30,6 +32,7 @@ public final class Inicio implements Pantalla {
     private VistaDeArena vista;
     private String aviso = "";
     private final Ui.Desplazable lista = new Ui.Desplazable();
+    private final Dialogo dialogo = new Dialogo();
 
     @Override
     public void alEntrar(Juego j) {
@@ -48,6 +51,7 @@ public final class Inicio implements Pantalla {
         t += dt;
         Pincel p = j.pincel;
         Ui ui = j.ui;
+        dialogo.antes(ui);
         Comun.fondo(j, t);
         // El título, con brillo.
         float cx = p.ancho / 2;
@@ -74,7 +78,10 @@ public final class Inicio implements Pantalla {
         float desp = ui.desplazable(lista, x + 12, cy, w - 24, zona);
         float yy = cy - desp;
         for (String nombreDePartida : partidas) {
-            if (ui.boton("▶  " + nombreDePartida.replace('_', ' '), x + 16, yy, w - 44, alto - 8)) abrir(j, nombreDePartida);
+            float bw = w - 44 - 2 * (alto + 2);
+            if (ui.boton("▶  " + nombreDePartida.replace('_', ' '), x + 16, yy, bw, alto - 8)) abrir(j, nombreDePartida);
+            if (ui.boton("✎", x + 20 + bw, yy, alto, alto - 8, Ui.Estilo.PLANO, true, T.t("inicio.renombrar_ayuda"))) renombrar(nombreDePartida);
+            if (ui.boton("✕", x + 24 + bw + alto, yy, alto, alto - 8, Ui.Estilo.PLANO, true, T.t("inicio.borrar_ayuda"))) borrar(nombreDePartida);
             yy += alto;
         }
         if (partidas.isEmpty()) p.texto(T.t("inicio.sin_partidas"), x + 20, yy + 10, ui.letra, false, ui.tema.textoSuave, 1);
@@ -85,6 +92,43 @@ public final class Inicio implements Pantalla {
         if (ui.boton(T.t("inicio.crear"), x + w - 200, ny + 32, 184, 50, Ui.Estilo.PRINCIPAL) || intro) crear(j);
         if (!aviso.isEmpty()) p.texto(aviso, x + 16, ny + 92, ui.letra * 0.85f, false, ui.tema.mal, 1);
         Comun.pie(j, T.t("inicio.pie"));
+        dialogo.dibujar(ui);
+    }
+
+    /** Borrar una partida, tras preguntar (va a partidas/_borradas/: si fue sin querer, Fran la puede sacar de ahí). */
+    private void borrar(String carpeta) {
+        String n = carpeta.replace('_', ' ');
+        dialogo.confirmar(T.t("inicio.borrar_titulo"), T.f("inicio.borrar_texto", n), T.t("inicio.borrar"), T.t("comun.cancelar"), true, () -> {
+            try {
+                Guardado.borrar(carpeta);
+                aviso = "";
+            } catch (Exception e) {
+                aviso = T.t("inicio.no_se_borra") + " " + e.getMessage();
+            }
+            partidas = Guardado.partidas();
+        });
+    }
+
+    private void renombrar(String carpeta) {
+        String n = carpeta.replace('_', ' ');
+        try {
+            n = Guardado.leer(carpeta).nombre;
+        } catch (Exception e) {
+            // se queda el de la carpeta
+        }
+        dialogo.pedirTexto(T.t("inicio.renombrar_titulo"), T.t("inicio.renombrar_texto"), n, T.t("inicio.renombrar"), T.t("comun.cancelar"), nuevo -> {
+            if (nuevo.isEmpty()) {
+                aviso = T.t("inicio.falta_nombre");
+                return;
+            }
+            try {
+                Guardado.renombrar(carpeta, nuevo);
+                aviso = "";
+            } catch (Exception e) {
+                aviso = "ya existe".equals(e.getMessage()) ? T.t("inicio.ya_existe") : T.t("inicio.no_se_abre") + " " + e.getMessage();
+            }
+            partidas = Guardado.partidas();
+        });
     }
 
     private void abrir(Juego j, String carpeta) {

@@ -71,8 +71,15 @@ public final class Capturas extends Juego {
     public void create() {
         primera = new Escaparate();
         super.create();
+        // Las partidas de las capturas, aparte: no se mezclan con las del jugador.
+        metajavbots.progreso.Guardado.carpeta = java.nio.file.Paths.get("build", "partidas_de_capturas");
         Jugador j = new Jugador("Capturas");
         j.etiqueta = Etiqueta.JUNIOR_2;
+        // "-Pidioma=de" y "-Pletra=24": para mirar la legibilidad en cada idioma y con la letra grande.
+        j.idioma = metajavbots.textos.Idioma.de(System.getProperty("capturas.idioma", "es"));
+        j.tamanoDeLetra = Float.parseFloat(System.getProperty("capturas.letra", "18"));
+        j.cerebros[0].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
+        j.cerebros[1].tipo = metajavbots.cerebro.Ranura.Tipo.EN_LINEA;
         Jugador.Robot r = new Jugador.Robot("Cobaltito", "cobalto");
         r.codigo = Comun.plantilla(j.idioma);
         j.robots.add(r);

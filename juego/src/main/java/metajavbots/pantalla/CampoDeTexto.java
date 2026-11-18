@@ -30,7 +30,7 @@ public final class CampoDeTexto {
         if (e.clic(x, y, w, h)) enfocado = true;
         else if (e.recienPulsado && !e.dentro(x, y, w, h)) enfocado = false;
         boolean intro = false;
-        if (enfocado) {
+        if (enfocado && !e.bloqueada) {
             for (Entrada.Tecla k : e.teclas) {
                 if (k.usada || k.alt && k.ctrl) continue;
                 k.usada = true;
@@ -42,7 +42,7 @@ public final class CampoDeTexto {
                     case Keys.HOME: doc.principio(k.mayus); break;
                     case Keys.END: doc.finalDelTexto(k.mayus); break;
                     case Keys.ENTER: case Keys.NUMPAD_ENTER: intro = true; break;
-                    case Keys.ESCAPE: enfocado = false; k.usada = false; break;
+                    case Keys.ESCAPE: enfocado = false; break;   // el primer Esc suelta el campo; el segundo vuelve atrás
                     default:
                         if (k.ctrl && k.codigo == Keys.A) doc.seleccionarTodo();
                         else if (k.ctrl && k.codigo == Keys.V) {
@@ -82,6 +82,7 @@ public final class CampoDeTexto {
             p.rect(cx, ty, 2, tam * 1.2f, t.acento, 1);
         }
         p.sinRecorte();
+        if (enfocado) ui.reservarEscape();
         return intro;
     }
 }

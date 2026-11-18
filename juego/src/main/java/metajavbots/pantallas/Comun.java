@@ -40,10 +40,8 @@ public final class Comun {
         p.rect(0, h - 1, p.ancho, 1, ui.tema.borde, 1);
         float x = 24;
         if (conVolver) {
-            if (ui.boton("← " + T.t("comun.volver"), 20, 16, 150, 46, Ui.Estilo.PLANO, true, T.t("comun.volver_ayuda")) || ui.atras()) {
-                j.volver();
-            }
-            x = 190;
+            if (botonAtras(j)) j.volver();
+            x = 40 + anchoDeAtras(j);
         }
         p.texto(titulo, x, 20, ui.letra * 1.6f, true, ui.tema.texto, 1);
         Jugador jug = j.jugador;
@@ -59,6 +57,18 @@ public final class Comun {
             if (ui.e.dentro(ex, 10, 450, 60)) ui.avisar(T.f("comun.progreso_ayuda", jug.etiqueta.nombre, jug.etiqueta.siguiente().nombre));
         }
         return h;
+    }
+
+    /** El ancho del botón «← Volver» (el alemán es más largo). */
+    static float anchoDeAtras(Juego j) {
+        return Math.max(150, j.pincel.ancho("← " + T.t("comun.volver"), Math.min(j.ui.letra, 23), true) + 32);
+    }
+
+    /** El botón «← Volver» arriba a la izquierda, siempre a la vista; también vale Esc. ¿Se ha pulsado? */
+    public static boolean botonAtras(Juego j) {
+        Ui ui = j.ui;
+        boolean b = ui.boton("← " + T.t("comun.volver"), 20, 16, anchoDeAtras(j), 46, Ui.Estilo.NORMAL, true, T.t("comun.volver_ayuda"));
+        return b || ui.atras();
     }
 
     /** La insignia de una etiqueta: un escudo de color con su nombre. */

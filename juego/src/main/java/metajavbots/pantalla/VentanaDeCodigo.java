@@ -153,6 +153,8 @@ public final class VentanaDeCodigo {
         barras(ui, x, zy, w, zh, alto, maxY);
         if (buscando) barraDeBuscar(ui, x, y, w, alto);
         if (proponiendo) dibujarPropuestas(ui, zx, zy, alto, letra);
+        // Con la barra de buscar o las propuestas abiertas, Esc las cierra (y no vuelve atrás).
+        if (buscando || proponiendo) ui.reservarEscape();
         if (soloLectura) p.textoDerecha("■ " + metajavbots.textos.T.t("editor.solo_lectura"), x + w - 18, y + h - alto - 4,
                 tamano * 0.8f, false, t.textoApagado, 1);
     }
@@ -316,6 +318,7 @@ public final class VentanaDeCodigo {
     // ================================================================ las teclas
 
     private void teclas(Ui ui, float zh, float alto) {
+        if (ui.e.bloqueada) return;
         Entrada e = ui.e;
         int pagina = Math.max(1, (int) (zh / alto) - 2);
         if (buscando && teclasDeBuscar(e)) return;

@@ -32,6 +32,8 @@ public final class PantallaLeccion implements Pantalla {
     private final CampoDeTexto pregunta = new CampoDeTexto();
     private final List<Cerebro.Mensaje> chat = new ArrayList<>();
     private CerebroDelJuego.Peticion peticion;
+    /** El cerebro del tutor (se mira al entrar: preguntarlo en cada fotograma leería las claves del disco). */
+    private Cerebro cerebro;
     private final Ui.Desplazable despl = new Ui.Desplazable();
 
     public PantallaLeccion(Leccion l) {
@@ -41,6 +43,7 @@ public final class PantallaLeccion implements Pantalla {
 
     @Override
     public void alEntrar(Juego j) {
+        cerebro = CerebroDelJuego.tutor(j.jugador);
         Jugador jug = j.jugador;
         for (int i = 0; i < l.tareas.size(); i++) {
             Leccion.Tarea t = l.tareas.get(i);
@@ -61,7 +64,6 @@ public final class PantallaLeccion implements Pantalla {
         Jugador jug = j.jugador;
         Comun.fondo(j, 0);
         float arriba = Comun.cabecera(j, l.titulo(T.idioma), true);
-        Cerebro cerebro = CerebroDelJuego.de(jug);
         float lado = cerebro != null ? 440 : 0;
         float w = Math.min(1100, p.ancho - 80 - (lado > 0 ? lado + 20 : 0));
         // El texto, de un ancho cómodo de leer (y centrado si sobra sitio).

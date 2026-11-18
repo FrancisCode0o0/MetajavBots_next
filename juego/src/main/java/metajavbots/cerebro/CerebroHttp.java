@@ -51,10 +51,14 @@ public final class CerebroHttp implements Cerebro {
                 try {
                     return openai(sistema, conversacion, fichas);
                 } catch (Exception e) {
-                    if (direccion.contains("localhost") || direccion.contains("127.0.0.1")) return kobold(sistema, conversacion, fichas);
+                    if (esLocal()) return kobold(sistema, conversacion, fichas);
                     throw e;
                 }
         }
+    }
+
+    private boolean esLocal() {
+        return direccion.contains("localhost") || direccion.contains("127.0.0.1");
     }
 
     private String anthropic(String sistema, List<Mensaje> conv, int fichas) throws Exception {
@@ -81,7 +85,10 @@ public final class CerebroHttp implements Cerebro {
         b.append("\"max_tokens\":").append(fichas).append(",\"temperature\":0.8,\"messages\":[{\"role\":\"system\",\"content\":")
                 .append(Json.texto(sistema)).append('}');
         for (Mensaje m : conv) b.append(",{\"role\":").append(Json.texto(m.rol)).append(",\"content\":").append(Json.texto(m.texto)).append('}');
-        b.append("]}");
+        b.append(']');
+        // Qwen3.5 y otros «piensan» antes de contestar (minutos en un portátil): en el local se les pide que no.
+        if (esLocal()) b.append(",\"chat_template_kwargs\":{\"enable_thinking\":false}");
+        b.append('}');
         HttpRequest.Builder r = HttpRequest.newBuilder(URI.create(direccion + "/v1/chat/completions")).timeout(espera)
                 .header("content-type", "application/json")
                 .POST(HttpRequest.BodyPublishers.ofString(b.toString(), StandardCharsets.UTF_8));
@@ -120,6 +127,9 @@ public final class CerebroHttp implements Cerebro {
     static String limpiar(String s) {
         if (s == null) return "";
         s = s.replaceAll("(?s)<think>.*?</think>", "");
+        // Un pensamiento que no acabó (se quedó sin palabras): no hay respuesta.
+        int i = s.indexOf("<think>");
+        if (i >= 0) s = s.substring(0, i);
         s = s.replace("<|im_end|>", "").replace("<|im_start|>", "");
         return s.strip();
     }

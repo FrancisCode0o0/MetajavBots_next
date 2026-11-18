@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import metajavbots.textos.Trilingue;
 
@@ -15,7 +16,8 @@ import metajavbots.textos.Trilingue;
  * PRUEBA DE NIVEL — Las preguntas del principio (res/datos/prueba_de_nivel.txt):
  * tres por escalón, de menos a más. Se empieza en el último escalón del que
  * se han acertado al menos dos de sus tres preguntas (sin saltarse ninguno).
- * Quien no ha programado nunca empieza en Noob I sin pasar por aquí.
+ * Quien no ha programado nunca empieza en Noob I sin pasar por aquí. Cada
+ * prueba es distinta (nueva): mezcla el banco con preguntas generadas.
  */
 public final class PruebaDeNivel {
 
@@ -27,7 +29,7 @@ public final class PruebaDeNivel {
         /** La buena, desde 0. */
         public final int bien;
 
-        Pregunta(Etiqueta nivel, Trilingue pregunta, String codigo, List<Trilingue> opciones, int bien) {
+        public Pregunta(Etiqueta nivel, Trilingue pregunta, String codigo, List<Trilingue> opciones, int bien) {
             this.nivel = nivel;
             this.pregunta = pregunta;
             this.codigo = codigo;
@@ -93,9 +95,45 @@ public final class PruebaDeNivel {
         return l;
     }
 
+    /** Las preguntas que se hacen por escalón. */
+    public static final int POR_ESCALON = 3;
+
+    /**
+     * Una prueba nueva, cada vez distinta: por cada escalón, tres preguntas sacadas al azar del banco
+     * (res/datos/prueba_de_nivel.txt) y de las que genera el GeneradorDePreguntas con otros números, y las opciones
+     * barajadas. Los escalones van de menos a más, como en el banco.
+     */
+    public static List<Pregunta> nueva(Random r) {
+        List<Etiqueta> niveles = new ArrayList<>();
+        for (Pregunta q : preguntas()) if (!niveles.contains(q.nivel)) niveles.add(q.nivel);
+        List<Pregunta> l = new ArrayList<>();
+        for (Etiqueta nivel : niveles) {
+            List<Pregunta> monton = new ArrayList<>();
+            for (Pregunta q : preguntas()) if (q.nivel == nivel) monton.add(barajar(q, r));
+            for (GeneradorDePreguntas.Generada g : GeneradorDePreguntas.generar(nivel, r, 4)) monton.add(g.comoPregunta(r));
+            Collections.shuffle(monton, r);
+            l.addAll(monton.subList(0, Math.min(POR_ESCALON, monton.size())));
+        }
+        return Collections.unmodifiableList(l);
+    }
+
+    /** La misma pregunta con las opciones en otro orden. */
+    static Pregunta barajar(Pregunta q, Random r) {
+        List<Integer> orden = new ArrayList<>();
+        for (int i = 0; i < q.opciones.size(); i++) orden.add(i);
+        Collections.shuffle(orden, r);
+        List<Trilingue> opciones = new ArrayList<>();
+        for (int i : orden) opciones.add(q.opciones.get(i));
+        return new Pregunta(q.nivel, q.pregunta, q.codigo, opciones, orden.indexOf(q.bien));
+    }
+
     /** La etiqueta con que se empieza según los aciertos (uno por pregunta, en el orden de preguntas()). */
     public static Etiqueta resultado(List<Boolean> aciertos) {
-        List<Pregunta> p = preguntas();
+        return resultado(preguntas(), aciertos);
+    }
+
+    /** La etiqueta con que se empieza según los aciertos de esa prueba (uno por pregunta, en su orden). */
+    public static Etiqueta resultado(List<Pregunta> p, List<Boolean> aciertos) {
         Etiqueta resultado = Etiqueta.NOOB_1;
         int i = 0;
         while (i < p.size()) {

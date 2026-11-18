@@ -15,6 +15,8 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
+import metajavbots.cerebro.Ranura;
+import metajavbots.cerebro.Tarea;
 import metajavbots.piezas.Montaje;
 import metajavbots.textos.Idioma;
 
@@ -43,6 +45,39 @@ public final class Guardado {
         }
         l.sort(String.CASE_INSENSITIVE_ORDER);
         return l;
+    }
+
+    /** Adonde van las partidas borradas (no se listan; si fue sin querer, se puede sacar de ahí a mano). */
+    public static final String BORRADAS = "_borradas";
+
+    /** Borra una partida: la saca de la lista y la deja en partidas/_borradas/, con la fecha. */
+    public static void borrar(String carpetaDelJugador) throws IOException {
+        Path origen = carpeta.resolve(carpetaDelJugador);
+        if (!Files.isDirectory(origen) || carpetaDelJugador.equals(BORRADAS)) return;
+        Path destino = carpeta.resolve(BORRADAS).resolve(carpetaDelJugador + "_" + System.currentTimeMillis());
+        Files.createDirectories(destino.getParent());
+        Files.move(origen, destino);
+    }
+
+    /**
+     * Cambia el nombre de una partida (y el de su carpeta). Devuelve la carpeta nueva; si ya hay otra partida con ese
+     * nombre, no toca nada y lanza un error.
+     */
+    public static String renombrar(String carpetaDelJugador, String nombreNuevo) throws IOException {
+        String nueva = carpetaDe(nombreNuevo);
+        Jugador j = leer(carpetaDelJugador);
+        boolean mismaCarpeta = nueva.equalsIgnoreCase(carpetaDelJugador);
+        if (!mismaCarpeta && Files.exists(carpeta.resolve(nueva))) throw new IOException("ya existe");
+        if (!mismaCarpeta) Files.move(carpeta.resolve(carpetaDelJugador), carpeta.resolve(nueva));
+        else if (!nueva.equals(carpetaDelJugador)) {
+            // Solo cambian mayúsculas: en Windows hay que pasar por un nombre intermedio.
+            Path paso = carpeta.resolve(nueva + "_" + System.nanoTime());
+            Files.move(carpeta.resolve(carpetaDelJugador), paso);
+            Files.move(paso, carpeta.resolve(nueva));
+        }
+        j.nombre = nombreNuevo.strip();
+        guardar(j);
+        return nueva;
     }
 
     /** El nombre de la carpeta de un jugador (sin letras que el sistema no acepte). */
@@ -89,12 +124,18 @@ public final class Guardado {
         v.put("agresividad", numero(j.agresividad));
         v.put("humor", numero(j.humor));
         v.put("cortesia", numero(j.cortesia));
-        v.put("cerebro", j.cerebro);
-        v.put("proveedor", j.proveedor);
-        v.put("modeloEnLinea", j.modeloEnLinea);
-        v.put("direccionLocal", j.direccionLocal);
-        v.put("direccionEnLinea", j.direccionEnLinea);
-        v.put("modeloLocal", j.modeloLocal);
+        j.migrarCerebroAntiguo();
+        for (int i = 0; i < j.cerebros.length; i++) {
+            Ranura r = j.cerebros[i];
+            String k = "cerebro." + (i + 1) + ".";
+            v.put(k + "tipo", r.tipo.name());
+            v.put(k + "modeloLocal", r.modeloLocal);
+            v.put(k + "direccionLocal", r.direccionLocal);
+            v.put(k + "proveedor", r.proveedor);
+            v.put(k + "modeloEnLinea", r.modeloEnLinea);
+            v.put(k + "direccionEnLinea", r.direccionEnLinea);
+        }
+        for (Tarea t : Tarea.values()) v.put("reparto." + t.name(), Integer.toString(j.ranuraDe(t) + 1));
         v.put("carpetaModelos", j.carpetaModelos);
         v.put("tamanoDeLetra", numero(j.tamanoDeLetra));
         v.put("volumen", numero(j.volumen));
@@ -112,6 +153,28 @@ public final class Guardado {
         StringBuilder h = new StringBuilder();
         for (Registro r : j.historial) h.append(r.aLinea()).append('\n');
         escribir(dir.resolve("historial.txt"), h.toString());
+    }
+
+    /** Los tres cerebros y su reparto (las partidas de antes traen uno solo: se pasa a las ranuras al usarlo). */
+    private static void leerCerebros(Map<String, String> v, Jugador j) {
+        for (int i = 0; i < j.cerebros.length; i++) {
+            Ranura r = j.cerebros[i];
+            String k = "cerebro." + (i + 1) + ".";
+            try {
+                r.tipo = Ranura.Tipo.valueOf(v.getOrDefault(k + "tipo", "NINGUNO"));
+            } catch (IllegalArgumentException e) {
+                r.tipo = Ranura.Tipo.NINGUNO;
+            }
+            r.modeloLocal = v.getOrDefault(k + "modeloLocal", "");
+            r.direccionLocal = v.getOrDefault(k + "direccionLocal", "");
+            r.proveedor = v.getOrDefault(k + "proveedor", "anthropic");
+            r.modeloEnLinea = v.getOrDefault(k + "modeloEnLinea", "");
+            r.direccionEnLinea = v.getOrDefault(k + "direccionEnLinea", "");
+        }
+        for (Tarea t : Tarea.values()) {
+            int n = (int) largo(v.getOrDefault("reparto." + t.name(), Integer.toString(t.ranuraPorDefecto() + 1))) - 1;
+            j.reparto[t.ordinal()] = Math.max(0, Math.min(j.cerebros.length - 1, n));
+        }
     }
 
     public static Jugador leer(String carpetaDelJugador) throws IOException {
@@ -165,6 +228,7 @@ public final class Guardado {
         j.direccionEnLinea = v.getOrDefault("direccionEnLinea", "");
         j.modeloLocal = v.getOrDefault("modeloLocal", "");
         j.carpetaModelos = v.getOrDefault("carpetaModelos", "");
+        leerCerebros(v, j);
         j.tamanoDeLetra = (float) decimal(v.get("tamanoDeLetra"), 18);
         j.volumen = (float) decimal(v.get("volumen"), 0.8);
         j.volumenVoz = (float) decimal(v.get("volumenVoz"), 0.9);

@@ -1,57 +1,71 @@
 package metajavbots.cerebro;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * CEREBRO LOCAL PEREZOSO — El modelo local no gasta memoria mientras no se
- * usa: la primera pregunta arranca KoboldCpp (si la dirección es la del
- * juego y no hay nadie escuchando) con el modelo elegido, y un vigilante lo
- * apaga tras unos minutos sin preguntas, y al cerrar el juego. Si escucha
- * otro (el de Jarvis), se usa sin arrancar ni apagar nada.
+ * CEREBRO LOCAL PEREZOSO — Un modelo local no gasta memoria mientras no se
+ * usa: la primera pregunta arranca su KoboldCpp (si la dirección es una de
+ * las del juego y no hay nadie escuchando) con el modelo elegido, y un
+ * vigilante apaga cada uno tras unos minutos sin preguntas, y todos al cerrar
+ * el juego. Si escucha otro (el de Jarvis), se usa sin arrancar ni apagar nada.
  */
 public final class CerebroLocalPerezoso implements Cerebro {
 
-    /** Minutos sin preguntas tras los que se apaga el KoboldCpp que arrancó el juego. */
+    /** Minutos sin preguntas tras los que se apaga un KoboldCpp que arrancó el juego. */
     public static final long MINUTOS_PARA_APAGAR = 8;
-    private static volatile long ultimoUso;
     private static Thread vigilante;
 
     private final String direccion;
     private final Path carpeta;
     private final String modeloPreferido;
+    private final int puerto;
     private final CerebroHttp http;
 
     public CerebroLocalPerezoso(String direccion, Path carpeta, String modeloPreferido) {
         this.direccion = direccion;
         this.carpeta = carpeta;
         this.modeloPreferido = modeloPreferido;
+        this.puerto = puertoDe(direccion);
         this.http = new CerebroHttp(CerebroHttp.Forma.OPENAI, direccion, "", "", "KoboldCpp");
+    }
+
+    /** El puerto de una dirección como «http://localhost:5002» (o -1). */
+    static int puertoDe(String direccion) {
+        int i = direccion.lastIndexOf(':');
+        try {
+            return Integer.parseInt(direccion.substring(i + 1).replaceAll("[^0-9].*", ""));
+        } catch (RuntimeException e) {
+            return -1;
+        }
     }
 
     @Override
     public String nombre() {
-        return "KoboldCpp";
+        String m = modeloPreferido == null || modeloPreferido.isBlank() ? "" : " · " + modeloPreferido.replace(".gguf", "");
+        return "KoboldCpp" + m;
     }
 
+    /** ¿Lo arranca el juego? (los puertos del juego empiezan en el 5002; el de Jarvis, no). */
     private boolean esDelJuego() {
-        return direccion.contains(":" + CerebroLocal.PUERTO_DEL_JUEGO);
+        return direccion.contains("localhost") && puerto >= CerebroLocal.PUERTO_DEL_JUEGO && puerto < CerebroLocal.PUERTO_DEL_JUEGO + 10;
     }
 
     @Override
     public String preguntar(String sistema, List<Mensaje> conversacion, int maximoDePalabras) throws Exception {
-        ultimoUso = System.currentTimeMillis();
+        CerebroLocal.usado(puerto);
         if (!CerebroLocal.escucha(direccion)) {
             if (!esDelJuego()) throw new IllegalStateException("no hay nadie escuchando en " + direccion);
-            String r = CerebroLocal.arrancarElQueFuncione(carpeta, modelos(), null);
+            String r = CerebroLocal.arrancarElQueFuncione(carpeta, modelos(), puerto, null);
             if (!r.equals("ya")) throw new IllegalStateException("el cerebro local no arranca: " + r);
             vigilar();
         }
         try {
             return http.preguntar(sistema, conversacion, maximoDePalabras);
         } finally {
-            ultimoUso = System.currentTimeMillis();
+            CerebroLocal.usado(puerto);
         }
     }
 
@@ -61,7 +75,7 @@ public final class CerebroLocalPerezoso implements Cerebro {
         if (modeloPreferido != null && !modeloPreferido.isBlank()) {
             Path p = carpeta.resolve(modeloPreferido);
             l.remove(p);
-            if (java.nio.file.Files.isRegularFile(p)) l.add(0, p);
+            if (Files.isRegularFile(p)) l.add(0, p);
         }
         return l;
     }
@@ -75,12 +89,9 @@ public final class CerebroLocalPerezoso implements Cerebro {
                 } catch (InterruptedException e) {
                     return;
                 }
-                if (System.currentTimeMillis() - ultimoUso > MINUTOS_PARA_APAGAR * 60_000) {
-                    CerebroLocal.parar();
-                    return;
-                }
+                if (!CerebroLocal.apagarLosQuietos(MINUTOS_PARA_APAGAR)) return;
             }
-        }, "apagar-cerebro-local");
+        }, "apagar-cerebros-locales");
         vigilante.setDaemon(true);
         vigilante.start();
     }

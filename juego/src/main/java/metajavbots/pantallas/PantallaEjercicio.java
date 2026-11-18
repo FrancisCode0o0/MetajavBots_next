@@ -46,6 +46,8 @@ public final class PantallaEjercicio implements Pantalla {
     private final List<Cerebro.Mensaje> chat = new ArrayList<>();
     private CerebroDelJuego.Peticion peticion;
     private boolean conTutor;
+    /** El cerebro del tutor (se mira al entrar: preguntarlo en cada fotograma leería las claves del disco). */
+    private Cerebro cerebro;
 
     public PantallaEjercicio(Ejercicio e) {
         this.e = e;
@@ -53,6 +55,7 @@ public final class PantallaEjercicio implements Pantalla {
 
     @Override
     public void alEntrar(Juego j) {
+        cerebro = CerebroDelJuego.tutor(j.jugador);
         if (editor.doc.largo() > 0) return;
         Jugador jug = j.jugador;
         editor.ponerTexto(jug.codigoDeEjercicios.getOrDefault(e.id, e.codigoInicial()));
@@ -154,7 +157,7 @@ public final class PantallaEjercicio implements Pantalla {
         if (ui.boton(T.t("ejercicio.pista"), x + 16, by, 150, 46, Ui.Estilo.PLANO, !e.pista.es.isEmpty(), null)) pista = !pista;
         if (ui.boton(T.t("ejercicio.ver_solucion"), x + 176, by, 170, 46, Ui.Estilo.PLANO, intentos >= 3, T.t("ejercicio.solucion_ayuda"))) solucion = !solucion;
         if (ui.boton(T.t("ejercicio.tutor"), x + 356, by, 150, 46, conTutor ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
-                CerebroDelJuego.de(jug) == null ? T.t("cerebro.sin") : T.t("ejercicio.tutor_ayuda"))) conTutor = !conTutor;
+                cerebro == null ? T.t("cerebro.sin") : T.t("ejercicio.tutor_ayuda"))) conTutor = !conTutor;
         // El editor (y la API o el tutor al lado).
         float ex = x + w + 16, ew = p.ancho - ex - 20;
         float lado = conApi || conTutor ? 430 : 0;
@@ -230,7 +233,7 @@ public final class PantallaEjercicio implements Pantalla {
         Ui ui = j.ui;
         Jugador jug = j.jugador;
         float cy = ui.panel(x, y, w, h, T.t("ejercicio.tutor"));
-        Cerebro c = CerebroDelJuego.de(jug);
+        Cerebro c = cerebro;
         if (c == null) {
             p.parrafo(T.t("cerebro.sin"), x + 16, cy, w - 32, ui.letra * 0.85f, ui.tema.textoSuave, 1);
             return;

@@ -27,6 +27,49 @@ final class PruebasDelCerebro {
             igual(null, CerebroDelJuego.de(j), "en línea sin clave: ninguno");
         });
 
+        caso("cerebro: tres ranuras con su reparto; la partida de antes pasa a las ranuras", () -> {
+            Jugador j = new Jugador("x");
+            j.cerebro = "AMBOS";
+            j.proveedor = "proveedor_de_prueba_sin_clave";
+            cierto(j.conCerebro(), "el cerebro de antes cuenta");
+            igual(metajavbots.cerebro.Ranura.Tipo.LOCAL, j.cerebros[0].tipo, "el local, a la 1");
+            igual(metajavbots.cerebro.Ranura.Tipo.EN_LINEA, j.cerebros[1].tipo, "el de en línea, a la 2");
+            igual(0, j.ranuraDe(metajavbots.cerebro.Tarea.RAPIDO));
+            igual(1, j.ranuraDe(metajavbots.cerebro.Tarea.PESADO));
+            // El de en línea no tiene clave: lo pesado lo hace el local (de respaldo).
+            Cerebro pesado = CerebroDelJuego.pesado(j);
+            cierto(pesado != null && pesado.nombre().startsWith("KoboldCpp"), "sin clave, el local hace lo pesado");
+            // Dos ranuras con el mismo modelo comparten KoboldCpp; con otro modelo, cada una el suyo.
+            j.cerebros[1].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
+            j.cerebros[0].modeloLocal = "a.gguf";
+            j.cerebros[1].modeloLocal = "a.gguf";
+            j.cerebros[2].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
+            j.cerebros[2].modeloLocal = "b.gguf";
+            igual(5002, CerebroDelJuego.puertoDe(j, 0));
+            igual(5002, CerebroDelJuego.puertoDe(j, 1), "mismo modelo, mismo KoboldCpp");
+            igual(5004, CerebroDelJuego.puertoDe(j, 2));
+            // Se guarda y se lee igual.
+            java.nio.file.Path antes = metajavbots.progreso.Guardado.carpeta;
+            java.nio.file.Path tmp = java.nio.file.Files.createTempDirectory("metajavbots");
+            metajavbots.progreso.Guardado.carpeta = tmp;
+            try {
+                j.reparto[metajavbots.cerebro.Tarea.TUTOR.ordinal()] = 2;
+                metajavbots.progreso.Guardado.guardar(j);
+                Jugador k = metajavbots.progreso.Guardado.leer(metajavbots.progreso.Guardado.carpetaDe("x"));
+                igual("b.gguf", k.cerebros[2].modeloLocal);
+                igual(metajavbots.cerebro.Ranura.Tipo.LOCAL, k.cerebros[1].tipo);
+                igual(2, k.ranuraDe(metajavbots.cerebro.Tarea.TUTOR));
+            } finally {
+                metajavbots.progreso.Guardado.carpeta = antes;
+            }
+        });
+
+        caso("cerebro: los modelos locales caben en la memoria (se deja sitio a Windows y al juego)", () -> {
+            long presupuesto = CerebroLocal.presupuestoMb(), total = CerebroLocal.memoriaTotalMb();
+            System.out.println("            memoria " + total + " MB, para modelos " + presupuesto + " MB");
+            cierto(total == 0 || presupuesto <= total - CerebroLocal.MEMORIA_RESERVADA_MB || presupuesto == 3000, "queda memoria de sobra");
+        });
+
         caso("cerebro: la clave se enseña tapada", () -> {
             igual("sk-…cdef", Claves.tapada("sk-1234567890abcdef"));
             igual("", Claves.tapada(""));
@@ -50,6 +93,38 @@ final class PruebasDelCerebro {
             System.out.println("            segunda: " + segunda + " ms → " + r2);
             CerebroLocal.parar();
             cierto(!r.isBlank() && !r2.isBlank(), "contesta");
+        });
+
+        caso("cerebro: arranca varios cerebros locales a la vez, Gemma (rápido) y Qwen3.5 (pesado), sin pasar de la memoria (solo con METAJAVBOTS_PROBAR_CEREBRO)", () -> {
+            if (System.getenv("METAJAVBOTS_PROBAR_CEREBRO") == null) {
+                System.out.println("            (se salta: arranca dos KoboldCpp, tarda)");
+                return;
+            }
+            Jugador j = new Jugador("x");
+            for (int i = 0; i < 2; i++) j.cerebros[i].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
+            try {
+                long t0 = System.currentTimeMillis();
+                String r = CerebroDelJuego.rapido(j).preguntar(CerebroDelJuego.sistemaLocutor(Idioma.ES), "Round 1. Player robot took 40 damage, dealt 70.", 25);
+                System.out.println("            rápido (" + CerebroDelJuego.modeloDe(j, 0) + "): " + (System.currentTimeMillis() - t0) + " ms → " + r);
+                t0 = System.currentTimeMillis();
+                String r2 = CerebroDelJuego.pesado(j).preguntar(CerebroDelJuego.sistemaTutor(Idioma.ES, "Noob I", "Loops"), "¿Qué es un bucle for? Una frase.", 40);
+                System.out.println("            pesado (" + CerebroDelJuego.modeloDe(j, 1) + "): " + (System.currentTimeMillis() - t0) + " ms → " + r2.replace('\n', ' '));
+                t0 = System.currentTimeMillis();
+                String r3 = CerebroDelJuego.pesado(j).preguntar(CerebroDelJuego.sistemaTutor(Idioma.ES, "Noob I", "Loops"), "¿Y un while? Una frase.", 40);
+                System.out.println("            pesado, segunda: " + (System.currentTimeMillis() - t0) + " ms → " + r3.replace('\n', ' '));
+                System.out.println("            en marcha: " + CerebroLocal.enMarchaDelJuego() + ", " + CerebroLocal.memoriaEnUsoMb() + " MB de " + CerebroLocal.presupuestoMb());
+                igual(2, CerebroLocal.enMarchaDelJuego().size(), "los dos a la vez");
+                cierto(!r.isBlank() && !r2.isBlank(), "contestan");
+                // El tercero (el de Jarvis, 6,3 GB) no cabe con los otros dos: se apaga el que lleva más rato sin usarse.
+                j.cerebros[2].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
+                t0 = System.currentTimeMillis();
+                String r4 = CerebroDelJuego.deLaRanura(j, 2).preguntar("Answer with one word.", "Say OK.", 4);
+                System.out.println("            tercero (" + CerebroDelJuego.modeloDe(j, 2) + "): " + (System.currentTimeMillis() - t0) + " ms → " + r4);
+                System.out.println("            en marcha: " + CerebroLocal.enMarchaDelJuego() + ", " + CerebroLocal.memoriaEnUsoMb() + " MB de " + CerebroLocal.presupuestoMb());
+                cierto(CerebroLocal.memoriaEnUsoMb() <= CerebroLocal.presupuestoMb(), "nunca pasan del presupuesto");
+            } finally {
+                CerebroLocal.parar();
+            }
         });
 
         caso("cerebro: si hay un KoboldCpp escuchando, contesta (pulla moderada y tutor)", () -> {

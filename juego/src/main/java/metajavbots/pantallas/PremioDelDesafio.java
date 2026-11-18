@@ -15,13 +15,24 @@ import metajavbots.textos.T;
 public final class PremioDelDesafio implements Pantalla {
 
     private boolean elegido;
+    /** Lo que pasa al elegir (la pelea quita su botón del premio). */
+    private final Runnable alElegir;
+
+    public PremioDelDesafio(Runnable alElegir) {
+        this.alElegir = alElegir;
+    }
 
     @Override
     public void fotograma(Juego j, float dt) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         Comun.fondo(j, 0);
-        Comun.cabecera(j, T.t("premio.titulo"), false);
+        // «Volver» lleva al final de la pelea, donde el botón del premio sigue esperando.
+        Comun.cabecera(j, T.t("premio.titulo"), true);
+        dibujar(j, p, ui);
+    }
+
+    private void dibujar(Juego j, Pincel p, Ui ui) {
         if (elegido) {
             p.textoCentrado(T.t("premio.hecho"), p.ancho / 2, 300, ui.letra * 1.5f, true, ui.tema.bien, 1);
             if (ui.boton(T.t("final.menu"), p.ancho / 2 - 120, 400, 240, 56, Ui.Estilo.PRINCIPAL)) j.irSolo(new Menu());
@@ -34,6 +45,7 @@ public final class PremioDelDesafio implements Pantalla {
             j.sonidos.tocar("subida", 1);
             j.sacudir(8, 0.8f);
             elegido = true;
+            alElegir.run();
             j.guardar();
         }
         List<Pieza> leg = Progreso.legendariasPorGanar(j.jugador);
@@ -43,6 +55,7 @@ public final class PremioDelDesafio implements Pantalla {
                 Progreso.premioDelDesafio(j.jugador, false, pz);
                 j.sonidos.tocar("reparar", 1);
                 elegido = true;
+                alElegir.run();
                 j.guardar();
             }
             y += 68;

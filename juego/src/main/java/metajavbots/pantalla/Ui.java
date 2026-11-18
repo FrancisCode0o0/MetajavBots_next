@@ -20,6 +20,8 @@ public final class Ui {
     /** El aviso que sale al dejar el ratón quieto encima de algo (se dibuja al final del fotograma). */
     private String aviso;
     private float avisoX, avisoY;
+    /** Lo reservó alguien este fotograma o el anterior (la cabecera pregunta antes de que se dibuje el campo). */
+    private boolean escapeReservado, escapeReservadoAntes;
 
     public Ui(Pincel p, Entrada e) {
         this.p = p;
@@ -28,6 +30,13 @@ public final class Ui {
 
     public void empezarFotograma() {
         aviso = null;
+        escapeReservadoAntes = escapeReservado;
+        escapeReservado = false;
+    }
+
+    /** Alguien usa Esc para lo suyo (un campo enfocado, una lista de propuestas): ese Esc no vuelve atrás. */
+    public void reservarEscape() {
+        escapeReservado = true;
     }
 
     /** Al final del fotograma: el aviso, encima de todo. */
@@ -209,6 +218,7 @@ public final class Ui {
 
     /** Una tecla Esc pulsada (para volver). */
     public boolean atras() {
+        if (escapeReservadoAntes || escapeReservado) return false;
         return e.tecla(Input.Keys.ESCAPE);
     }
 
@@ -255,11 +265,13 @@ public final class Ui {
         }
         d.desplazamiento = Math.max(0, Math.min(maximo, d.desplazamiento));
         p.recortar(x, y, w - 12, h);
+        e.limitar(x, y, w - 12, h);
         return d.desplazamiento;
     }
 
     public void finDesplazable(Desplazable d, float alturaDelContenido) {
         d.contenido = alturaDelContenido;
         p.sinRecorte();
+        e.sinLimite();
     }
 }
