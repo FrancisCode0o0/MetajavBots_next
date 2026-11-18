@@ -487,3 +487,4 @@ tutor.menos_ayuda = Ayudas más pequeñas: quiero pensarlo yo. | Kleinere Hilfen
 tutor.mas_ayuda = Ayudas más grandes: estoy atascado. | Größere Hilfen: Ich stecke fest. | Bigger help: I'm stuck.
 tutor.vale_menos = Vale, te dejo pensar más. Te daré ayudas más pequeñas. | Gut, ich lasse dich mehr nachdenken. Kleinere Hilfen. | Right, I'll let you think more. Smaller help from now on.
 tutor.vale_mas = Vale, te ayudo más. Pide la siguiente ayuda cuando quieras. | Gut, ich helfe dir mehr. Frag nach der nächsten Hilfe, wann du willst. | Right, I'll help more. Ask for the next hint whenever you like.
+tutor.si_atascas = Y si te atascas, pulsa «Dame más». | Und wenn du feststeckst, drück «Mehr». | And if you get stuck, press «Give me more».

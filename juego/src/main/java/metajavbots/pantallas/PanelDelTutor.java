@@ -53,7 +53,8 @@ final class PanelDelTutor {
      */
     float ayuda(Jugador jug) {
         float sabe = jug.etiqueta.ordinal() / (float) (metajavbots.progreso.Etiqueta.values().length - 1);
-        return Math.max(0, Math.min(1, jug.ayudaDelTutor + Math.min(3, fallosSeguidos) * 0.12f - sabe * 0.25f));
+        // Con el ajuste a la mitad: un Noob, 0,8 (trozos enseguida); un Junior, ~0,55; un Senior, ~0,35; un Master, 0,2 (una pregunta).
+        return Math.max(0, Math.min(1, jug.ayudaDelTutor + 0.3f - sabe * 0.6f + Math.min(3, fallosSeguidos) * 0.12f));
     }
 
     /** El primer nivel de ayuda que da: con mucha ayuda se salta la pregunta y va a la pista. */
@@ -61,9 +62,10 @@ final class PanelDelTutor {
         return ayuda(jug) > 0.75f ? 1 : 0;
     }
 
-    /** Hasta dónde llega: con poca ayuda, sin trozos de código (pregunta, pista y pseudocódigo). */
+    /** Hasta dónde llega: con muy poca ayuda, solo la pregunta; luego la pista; luego el pseudocódigo; con bastante, el trocito de código. */
     private int ultimoNivel(Jugador jug) {
-        return ayuda(jug) < 0.3f ? 2 : Consejo.NIVELES - 1;
+        float a = ayuda(jug);
+        return a < 0.25f ? 0 : a < 0.45f ? 1 : a < 0.6f ? 2 : Consejo.NIVELES - 1;
     }
 
     void dibujar(Juego j, VentanaDeCodigo editor, float x, float y, float w, float h, float dt) {
@@ -129,7 +131,9 @@ final class PanelDelTutor {
             Entrenador e = Entrenador.de(j.jugador.entrenador);
             if (siguiente > ultimoNivel(jug)) {
                 elegirMeta(j, meta + 1);
-                decir(j, T.t("tutor.animo") + " " + e.frase(j.jugador.idioma, frase++) + " " + dice);
+                // Si se quedó corto por el nivel, recuerda que puede pedir más: nunca deja al jugador tirado.
+                String mas = siguiente < Consejo.NIVELES ? " " + T.t("tutor.si_atascas") : "";
+                decir(j, T.t("tutor.animo") + mas + " " + e.frase(j.jugador.idioma, frase++) + " " + dice);
             } else {
                 nivel = siguiente;
                 String texto = c.nivel(nivel, j.jugador.idioma);
