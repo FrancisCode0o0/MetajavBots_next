@@ -190,6 +190,19 @@ final class PruebasDelProgreso {
             System.out.println("            " + n + " ejercicios de plantilla comprobados");
         });
 
+        caso("ejercicios: con traza, cada caso sabe qué líneas del jugador ejecuta y en qué orden (para el robotito)", () -> {
+            if (!metajavbots.codigo.Compilador.hayCompilador()) return;
+            metajavbots.ejercicios.Ejercicio e = metajavbots.ejercicios.PlantillasDeEjercicios.generar("05", new Random(1));
+            metajavbots.ejercicios.Comprobador.Informe inf = metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoSolucion(),
+                    java.util.Locale.ROOT, true);
+            cierto(inf.todoBien(), "con traza también pasa");
+            int[] t = inf.casos.get(inf.casos.size() - 1).traza;
+            cierto(t.length > 6, "un bucle repite líneas: " + java.util.Arrays.toString(t));
+            int lineas = e.codigoSolucion().split("\n").length;
+            for (int l : t) cierto(l >= 1 && l <= lineas, "solo líneas del jugador");
+            igual(0, metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoSolucion(), java.util.Locale.ROOT).casos.get(0).traza.length, "sin traza, nada");
+        });
+
         caso("progreso: las partidas se cambian de nombre y se borran (a partidas/_borradas)", () -> {
             Path antes = Guardado.carpeta;
             Path tmp = Files.createTempDirectory("metajavbots");

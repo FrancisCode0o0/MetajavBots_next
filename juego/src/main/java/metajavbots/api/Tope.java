@@ -20,6 +20,9 @@ public final class Tope {
         /** Las líneas que se han ejecutado (solo con la traza: el modo máquina contra máquina). */
         final java.util.BitSet lineas = new java.util.BitSet();
         int ultima;
+        /** Las líneas en el orden en que se ejecutan (hasta 5000). */
+        int[] orden = new int[64];
+        int enOrden;
     }
 
     static final InheritableThreadLocal<Cuenta> CUENTA = new InheritableThreadLocal<>();
@@ -47,6 +50,10 @@ public final class Tope {
         if (c == null) return;
         c.lineas.set(n);
         c.ultima = n;
+        if (c.enOrden < 5000) {
+            if (c.enOrden == c.orden.length) c.orden = java.util.Arrays.copyOf(c.orden, c.orden.length * 2);
+            c.orden[c.enOrden++] = n;
+        }
     }
 
     /** Los pasos dados en este turno (o en este ejercicio). */

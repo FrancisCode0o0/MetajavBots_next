@@ -46,6 +46,10 @@ public final class PantallaEjercicio implements Pantalla {
     private final List<Cerebro.Mensaje> chat = new ArrayList<>();
     private CerebroDelJuego.Peticion peticion;
     private boolean conTutor;
+    /** El caso que anima el robotito, desde cuándo, y de qué comprobación. */
+    private int casoAnimado;
+    private float tiempoAnimacion;
+    private Comprobador.Informe informeAnimado;
     /** El cerebro del tutor (se mira al entrar: preguntarlo en cada fotograma leería las claves del disco). */
     private Cerebro cerebro;
 
@@ -75,6 +79,17 @@ public final class PantallaEjercicio implements Pantalla {
         j.guardar();
     }
 
+    /** El método del ejercicio (su firma) con ese cuerpo. */
+    public String firmaCon(String cuerpo) {
+        return e.firma + " {\n    " + cuerpo + "\n}\n";
+    }
+
+    /** Pone ese código en el editor y lo comprueba (para las capturas: así se ve al robotito). */
+    public void probarCon(Juego j, String codigo) {
+        editor.doc.cambiarTodo(codigo);
+        comprobar(j);
+    }
+
     private void comprobar(Juego j) {
         if (comprobando) return;
         comprobando = true;
@@ -83,7 +98,16 @@ public final class PantallaEjercicio implements Pantalla {
         j.sonidos.tocar("compilar", 0.5f);
         String codigo = editor.doc.texto();
         Thread h = new Thread(() -> {
-            informe = Comprobador.comprobar(e, codigo, j.jugador.idioma.locale());
+            Comprobador.Informe inf = Comprobador.comprobar(e, codigo, j.jugador.idioma.locale());
+            if (inf.compila()) {
+                try {
+                    Comprobador.Informe conTraza = Comprobador.comprobar(e, codigo, j.jugador.idioma.locale(), true);
+                    for (int i = 0; i < inf.casos.size() && i < conTraza.casos.size(); i++) inf.casos.get(i).traza = conTraza.casos.get(i).traza;
+                } catch (RuntimeException ex) {
+                    // sin traza: el robotito se anima solo con el tiempo
+                }
+            }
+            informe = inf;
             comprobando = false;
         }, "comprobar");
         h.setDaemon(true);
@@ -130,8 +154,11 @@ public final class PantallaEjercicio implements Pantalla {
             }
         }
         float ey = y + altoBarra + 12, eh = p.alto - ey - 70;
-        if (!editor.doc.texto().equals(jug.codigoDeEjercicios.getOrDefault(e.id, "")) && inf != null) editor.marcas.removeIf(m -> false);
+        boolean conRobot = inf != null && inf.compila() && !inf.casos.isEmpty();
+        float altoRobot = conRobot ? Math.min(240, eh * 0.4f) : 0;
+        eh -= altoRobot > 0 ? altoRobot + 10 : 0;
         editor.dibujar(ui, ex, ey, ew - lado - (lado > 0 ? 12 : 0), eh);
+        if (conRobot) robotito(j, inf, ex, ey + eh + 10, ew - lado - (lado > 0 ? 12 : 0), altoRobot, dt);
         if (conTutor) tutor(j, ex + ew - lado, ey, lado, eh);
         else if (conApi) api.dibujar(ui, jug.idioma, editor, ex + ew - lado, ey, lado, eh);
         estado(j, inf, ex, ew);
@@ -196,6 +223,8 @@ public final class PantallaEjercicio implements Pantalla {
             Ejercicio.Caso c = e.casos.get(i);
             Comprobador.Resultado r = inf != null && i < inf.casos.size() ? inf.casos.get(i) : null;
             int color = r == null ? ui.tema.textoSuave : r.bien ? ui.tema.bien : ui.tema.mal;
+            if (r != null && ui.e.clic(x + 12, yy, w - 40, ui.letra * 2.5f)) elegirCaso(i);
+            if (r != null && i == casoAnimado) p.rect(x + 12, yy - 2, 4, ui.letra * 2.4f, ui.tema.acento, 1);
             p.texto((r == null ? "·" : r.bien ? "✔" : "✘") + " " + c.llamada, x + 20, yy, ui.letra * 0.78f, false, color, 1);
             yy += ui.letra * 1.15f;
             p.texto("   → " + c.esperado + (r != null && !r.bien ? "   (" + T.t("ejercicio.salio") + " " + r.obtenido + ")" : ""), x + 20, yy,
@@ -250,6 +279,58 @@ public final class PantallaEjercicio implements Pantalla {
         for (metajavbots.piezas.Pieza pz : cambio == null ? List.<metajavbots.piezas.Pieza>of() : cambio.botin) {
             p.textoDerecha(T.f("final.botin", pz.nombre(T.idioma)), ex + ew, p.alto - 84, ui.letra * 0.9f, false, ui.tema.bien, 1);
         }
+    }
+
+    /**
+     * Bajo el editor, tras comprobar: el robotito hace lo que hizo el código en un caso (AnimacionDelCaso). Empieza por el
+     * primero que falla; con ◄ ► (o pulsando un caso de la izquierda) se ven los demás.
+     */
+    private void robotito(Juego j, Comprobador.Informe inf, float x, float y, float w, float h, float dt) {
+        Ui ui = j.ui;
+        if (inf != informeAnimado) {
+            informeAnimado = inf;
+            editor.lineasActivas.clear();
+            casoAnimado = 0;
+            for (int i = 0; i < inf.casos.size(); i++) {
+                if (!inf.casos.get(i).bien) {
+                    casoAnimado = i;
+                    break;
+                }
+            }
+            tiempoAnimacion = 0;
+        }
+        casoAnimado = Math.max(0, Math.min(inf.casos.size() - 1, casoAnimado));
+        tiempoAnimacion += dt;
+        Comprobador.Resultado r = inf.casos.get(casoAnimado);
+        // Al ritmo del código: cada línea que se ejecuta es un paso (unos 3 por segundo; si son muchos, más deprisa).
+        float avance;
+        int[] traza = r.traza;
+        if (traza.length > 0) {
+            float porSegundo = Math.max(3, traza.length / 9f);
+            int paso = (int) (tiempoAnimacion * porSegundo);
+            if (paso >= traza.length + porSegundo * 2) {
+                tiempoAnimacion = 0;
+                paso = 0;
+            }
+            editor.lineasActivas.clear();
+            for (int k = 0; k <= Math.min(paso, traza.length - 1); k++) editor.lineasActivas.set(traza[k]);
+            editor.lineaActiva = paso < traza.length ? traza[paso] : 0;
+            avance = Math.min(1, (paso + 1f) / traza.length);
+        } else {
+            avance = Math.min(1, (tiempoAnimacion % (AnimacionDelCaso.DURACION + 1.2f)) / AnimacionDelCaso.DURACION);
+        }
+        AnimacionDelCaso.dibujar(ui, x, y, w, h, e.tipo, r, avance);
+        String titulo = T.f("animacion.caso", casoAnimado + 1, inf.casos.size()) + "  " + r.caso.llamada;
+        j.pincel.texto(ui.recortarTexto(titulo, w - 340, ui.letra * 0.85f, true), x + 12, y + 8, ui.letra * 0.85f, true, ui.tema.texto, 1);
+        if (ui.boton("◄", x + w - 230, y + 6, 46, 38, Ui.Estilo.PLANO, casoAnimado > 0, null)) elegirCaso(casoAnimado - 1);
+        if (ui.boton("►", x + w - 178, y + 6, 46, 38, Ui.Estilo.PLANO, casoAnimado < inf.casos.size() - 1, null)) elegirCaso(casoAnimado + 1);
+    }
+
+    private void elegirCaso(int i) {
+        casoAnimado = i;
+        tiempoAnimacion = 0;
+        editor.lineasActivas.clear();
+        editor.lineaActiva = 0;
     }
 
     private Ejercicio siguiente(Jugador jug) {

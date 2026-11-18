@@ -38,6 +38,8 @@ public final class Comprobador {
         public final Ejercicio.Caso caso;
         public final boolean bien;
         public final String obtenido;
+        /** Las líneas del código del jugador que se ejecutaron en este caso, en orden (solo comprobando con traza). */
+        public int[] traza = new int[0];
 
         Resultado(Ejercicio.Caso caso, boolean bien, String obtenido) {
             this.caso = caso;
@@ -80,6 +82,11 @@ public final class Comprobador {
     }
 
     public static Informe comprobar(Ejercicio e, String codigo, Locale idioma) {
+        return comprobar(e, codigo, idioma, false);
+    }
+
+    /** Lo mismo; con traza, cada caso apunta además las líneas que ejecuta, en orden (para el robotito: AnimacionDelCaso). */
+    public static Informe comprobar(Ejercicio e, String codigo, Locale idioma, boolean traza) {
         Map<String, String> fuentes = new LinkedHashMap<>();
         int desplazamiento;
         StringBuilder casos = new StringBuilder();
@@ -106,7 +113,7 @@ public final class Comprobador {
             claseDeCasos = "Ejercicio";
             fuentes.put(claseDeCasos, CABECERA + "\n" + codigo + "\n// ---- casos (no los escribe el jugador)" + casos + "\n}\n");
         }
-        Compilador.Resultado r = Compilador.compilar(fuentes, true, Vigilante.Modo.EJERCICIO, idioma);
+        Compilador.Resultado r = Compilador.compilar(fuentes, true, traza, Vigilante.Modo.EJERCICIO, idioma);
         List<Compilador.Fallo> errores = new ArrayList<>();
         int lineasDelJugador = codigo.split("\n", -1).length;
         for (Compilador.Fallo f : r.errores) {
@@ -126,7 +133,21 @@ public final class Comprobador {
             }
         }
         if (!r.bien) return new Informe(errores, Collections.emptyList(), "");
-        return ejecutar(e, r, claseDeCasos, errores);
+        return ejecutar(e, r, claseDeCasos, errores, desplazamiento, lineasDelJugador);
+    }
+
+    /** La traza del último caso ejecutado en este hilo. */
+    private static final ThreadLocal<int[]> ULTIMA_TRAZA = ThreadLocal.withInitial(() -> new int[0]);
+
+    /** Solo las líneas del código del jugador, con sus números (sin la cabecera ni los casos que añade el comprobador). */
+    static int[] suyas(int[] traza, int desplazamiento, int lineasDelJugador) {
+        int[] l = new int[traza.length];
+        int n = 0;
+        for (int x : traza) {
+            int y = x - desplazamiento;
+            if (y >= 1 && y <= lineasDelJugador) l[n++] = y;
+        }
+        return java.util.Arrays.copyOf(l, n);
     }
 
     private static Resultado ejecutarCaso(Class<?> clase, int i, Ejercicio.Caso c, Ejercicio.Tipo tipo, StringBuilder toda,
@@ -149,6 +170,7 @@ public final class Comprobador {
             obtenido = null;
         } finally {
             impreso = Salida.soltar();
+            ULTIMA_TRAZA.set(Puente.secuencia());
             Puente.dejarDeContar();
         }
         if (!impreso.isEmpty()) toda.append(impreso);
@@ -257,7 +279,8 @@ public final class Comprobador {
     }
 
     /** Ejecuta los casos ya compilados en un hilo aparte (si se cuelga, se abandona) y apunta lo que sale de cada uno. */
-    private static Informe ejecutar(Ejercicio e, Compilador.Resultado r, String claseDeCasos, List<Compilador.Fallo> errores) {
+    private static Informe ejecutar(Ejercicio e, Compilador.Resultado r, String claseDeCasos, List<Compilador.Fallo> errores, int desplazamiento,
+            int lineasDelJugador) {
         Cargador cargador = new Cargador(r.clases, Vigilante.Modo.EJERCICIO);
         List<Resultado> resultados = new ArrayList<>();
         StringBuilder toda = new StringBuilder();
@@ -269,6 +292,7 @@ public final class Comprobador {
                 for (int i = 0; i < e.casos.size(); i++) {
                     Ejercicio.Caso c = e.casos.get(i);
                     Resultado res = ejecutarCaso(clase, i, c, e.tipo, toda, cuenta);
+                    res.traza = suyas(ULTIMA_TRAZA.get(), desplazamiento, lineasDelJugador);
                     synchronized (resultados) {
                         resultados.add(res);
                     }

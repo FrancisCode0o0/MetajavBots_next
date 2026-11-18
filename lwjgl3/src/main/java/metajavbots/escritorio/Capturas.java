@@ -52,6 +52,20 @@ public final class Capturas extends Juego {
         pantallas.put("07_pelear", metajavbots.pantallas.PrepararPelea::new);
         pantallas.put("08_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.encuentro(this, "ADAPTADA")));
         pantallas.put("09_ejercicio", () -> new metajavbots.pantallas.PantallaEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("05").get(2)));
+        // El robotito que hace lo que hace el código: con un fallo en cada forma (cajas, puertas, pizarra, estantería, papel).
+        String[][] robotitos = {{"09b_robot_cajas", "05", "return n * 2;"}, {"09c_robot_puertas", "04", "return \"HUIR\";"}};
+        for (String[] rb : robotitos) {
+            pantallas.put(rb[0], () -> new ProbarEjercicio(metajavbots.ejercicios.PlantillasDeEjercicios.generar(rb[1], new Random(3)), rb[2]));
+        }
+        for (metajavbots.ejercicios.Ejercicio ej : metajavbots.ejercicios.Banco.delJuego().todos()) {
+            if (ej.tipo == metajavbots.ejercicios.Ejercicio.Tipo.METODO && ej.casos.get(0).esperado.startsWith("List.of(")
+                    && ej.firma.startsWith("static List")) {
+                pantallas.put("09d_robot_estanteria", () -> new ProbarEjercicio(ej, "return List.of();"));
+                break;
+            }
+        }
+        pantallas.put("09e_robot_papel", () -> new ProbarEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("01").get(0),
+                "System.out.println(\"MetajavBot OFFLINE\");"));
         pantallas.put("10_tutoriales", metajavbots.pantallas.Tutoriales::new);
         pantallas.put("11_leccion", () -> new metajavbots.pantallas.PantallaLeccion(metajavbots.ejercicios.Leccion.todas().get(0)));
         pantallas.put("12_especial", metajavbots.pantallas.ModoEspecial::new);
@@ -129,7 +143,9 @@ public final class Capturas extends Juego {
             sonidos.tocar("explosion", 0.1f);
             voz.decir("Prueba", metajavbots.textos.Idioma.ES);
         }
-        if (fotogramas == (nombres.get(actual).startsWith("08") || nombres.get(actual).startsWith("20") || nombres.get(actual).startsWith("2")
+        if (fotogramas == (nombres.get(actual).startsWith("08") || nombres.get(actual).startsWith("09c")
+                || nombres.get(actual).startsWith("09d") || nombres.get(actual).startsWith("09e") || nombres.get(actual).startsWith("20")
+                        || nombres.get(actual).startsWith("2")
                 && nombres.get(actual).compareTo("21") >= 0 ? 400 : 45)) {
             Pixmap pm = Pixmap.createFromFrameBuffer(0, 0, Gdx.graphics.getBackBufferWidth(), Gdx.graphics.getBackBufferHeight());
             // La imagen sale del revés (OpenGL empieza abajo): se da la vuelta.
@@ -143,6 +159,33 @@ public final class Capturas extends Juego {
             nanos = 0;
             medidos = 0;
             siguiente();
+        }
+    }
+
+    /** Un ejercicio ya comprobado con un código dado (el robotito lo anima debajo del editor). */
+    static final class ProbarEjercicio implements Pantalla {
+        private final metajavbots.pantallas.PantallaEjercicio pantalla;
+        private final String codigo;
+        private boolean probado;
+
+        ProbarEjercicio(metajavbots.ejercicios.Ejercicio e, String codigo) {
+            pantalla = new metajavbots.pantallas.PantallaEjercicio(e);
+            this.codigo = codigo;
+        }
+
+        @Override
+        public void alEntrar(Juego j) {
+            pantalla.alEntrar(j);
+        }
+
+        @Override
+        public void fotograma(Juego j, float dt) {
+            if (!probado) {
+                probado = true;
+                String firma = codigo.startsWith("System") ? codigo : codigo;
+                pantalla.probarCon(j, pantalla.firmaCon(firma));
+            }
+            pantalla.fotograma(j, dt);
         }
     }
 

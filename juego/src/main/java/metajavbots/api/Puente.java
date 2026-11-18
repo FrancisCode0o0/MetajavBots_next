@@ -72,6 +72,12 @@ public final class Puente {
         return c == null ? null : (java.util.BitSet) c.lineas.clone();
     }
 
+    /** Las líneas ejecutadas, en orden (la traza paso a paso); vacío si no hay cuenta. */
+    public static int[] secuencia() {
+        Tope.Cuenta c = Tope.CUENTA.get();
+        return c == null ? new int[0] : java.util.Arrays.copyOf(c.orden, c.enOrden);
+    }
+
     public static int ultimaLinea() {
         Tope.Cuenta c = Tope.CUENTA.get();
         return c == null ? 0 : c.ultima;
