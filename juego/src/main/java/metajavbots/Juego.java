@@ -160,7 +160,7 @@ public class Juego extends ApplicationAdapter {
     public void dispose() {
         guardar();
         // El cerebro local que arrancó el juego no se queda gastando memoria.
-        metajavbots.cerebro.CerebroLocal.parar();
+        metajavbots.cerebro.CerebroLocal.cerrar();
         if (sonidos != null) sonidos.liberar();
         if (pincel != null) pincel.liberar();
     }

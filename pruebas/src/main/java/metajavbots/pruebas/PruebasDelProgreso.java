@@ -170,6 +170,26 @@ final class PruebasDelProgreso {
     }
 
     private static void apuntarParte3() {
+        caso("ejercicios: los de plantilla cambian cada vez y su solución pasa sus casos (y la plantilla no)", () -> {
+            if (!metajavbots.codigo.Compilador.hayCompilador()) return;
+            int n = 0;
+            for (String tema : metajavbots.ejercicios.PlantillasDeEjercicios.TEMAS) {
+                java.util.Set<String> distintos = new java.util.HashSet<>();
+                for (int semilla = 0; semilla < 6; semilla++) {
+                    metajavbots.ejercicios.Ejercicio e = metajavbots.ejercicios.PlantillasDeEjercicios.generar(tema,
+                            new Random(semilla * 7L + tema.hashCode()));
+                    cierto(e != null, "hay plantilla del tema " + tema);
+                    igual(tema, e.tema);
+                    distintos.add(e.enunciado.es + e.casos);
+                    cierto(metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoSolucion(), java.util.Locale.ROOT).todoBien(), tema + ": la solución pasa");
+                    falso(metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoInicial(), java.util.Locale.ROOT).todoBien(), tema + ": la plantilla no");
+                    n++;
+                }
+                cierto(distintos.size() >= 4, tema + ": salen distintos (" + distintos.size() + ")");
+            }
+            System.out.println("            " + n + " ejercicios de plantilla comprobados");
+        });
+
         caso("progreso: las partidas se cambian de nombre y se borran (a partidas/_borradas)", () -> {
             Path antes = Guardado.carpeta;
             Path tmp = Files.createTempDirectory("metajavbots");

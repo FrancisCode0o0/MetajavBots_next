@@ -6,6 +6,7 @@ import metajavbots.Juego;
 import metajavbots.codigo.Compilador;
 import metajavbots.ejercicios.Banco;
 import metajavbots.ejercicios.Ejercicio;
+import metajavbots.ejercicios.Preparador;
 import metajavbots.ejercicios.Tema;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
@@ -79,6 +80,18 @@ public final class Ejercicios implements Pantalla {
         if (!Compilador.hayCompilador()) {
             p.parrafo(T.t("taller.sin_jdk"), lx + 20, ly, lw - 40, ui.letra * 0.9f, ui.tema.aviso, 1);
             ly += 60;
+        }
+        // Uno nuevo cada vez: de la IA (preparado de antemano y comprobado) o de las plantillas con valores al azar.
+        if (Compilador.hayCompilador()) {
+            String nuevo = Preparador.listos(tema) > 0 ? T.t("ejercicios.nuevo_ia") : Preparador.preparando(tema) ? T.t("ejercicios.nuevo_preparando")
+                    : T.t("ejercicios.nuevo");
+            if (ui.boton(nuevo, lx + 16, ly, Math.min(lw - 44, p.ancho(nuevo, ui.letra, true) + 40), 50, Ui.Estilo.PRINCIPAL, true,
+                    T.t("ejercicios.nuevo_ayuda"))) {
+                Ejercicio e = Preparador.nuevo(jug, tema, new java.util.Random());
+                if (e != null) j.ir(new PantallaEjercicio(e));
+            }
+            ly += 64;
+            Preparador.preparar(jug, Tema.de(tema));
         }
         float d2 = ui.desplazable(lista, lx + 8, ly, lw - 16, y + h - ly - 10);
         float y2 = ly - d2;

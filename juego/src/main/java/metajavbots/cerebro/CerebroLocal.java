@@ -57,6 +57,13 @@ public final class CerebroLocal {
     }
 
     private static final Map<Integer, Servidor> SERVIDORES = new LinkedHashMap<>();
+    /** El juego se cierra: no se arranca ninguno más (uno que estaba cargando se quedaba abierto sin juego). */
+    private static volatile boolean cerrando;
+
+    static {
+        // Aunque el juego se cierre de golpe, los KoboldCpp que arrancó se cierran con él.
+        Runtime.getRuntime().addShutdownHook(new Thread(CerebroLocal::cerrar, "cerrar-cerebros-locales"));
+    }
 
     private CerebroLocal() {
     }
@@ -195,6 +202,7 @@ public final class CerebroLocal {
      * procesador. Devuelve un texto de lo que pasó.
      */
     public static synchronized String arrancar(Path carpeta, Path modelo, int puerto, boolean enLaGrafica) {
+        if (cerrando) return "cerrando";
         if (escucha(direccion(puerto))) return "ya";
         Servidor cargando = SERVIDORES.get(puerto);
         if (cargando != null && cargando.proceso.isAlive()) return "arrancando";
@@ -308,6 +316,12 @@ public final class CerebroLocal {
             s.proceso.descendants().forEach(ProcessHandle::destroy);
             s.proceso.destroy();
         }
+    }
+
+    /** Al cerrar el juego: los cierra todos y no deja arrancar más. */
+    public static void cerrar() {
+        cerrando = true;
+        parar();
     }
 
     /** Cierra todos los KoboldCpp que arrancó el juego (el de Jarvis, no). */

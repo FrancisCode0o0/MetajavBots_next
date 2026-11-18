@@ -82,6 +82,8 @@ public final class Capturas extends Juego {
         // Sin sonido no hace falta Piper (la voz clara es un programa aparte).
         j.vozClara = System.getProperty("capturas.sonido") != null;
         j.cerebros[0].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
+        // Un cerebro que no escucha (las capturas no deben arrancar KoboldCpp de verdad).
+        j.cerebros[0].direccionLocal = "http://localhost:5999";
         j.cerebros[1].tipo = metajavbots.cerebro.Ranura.Tipo.EN_LINEA;
         Jugador.Robot r = new Jugador.Robot("Cobaltito", "cobalto");
         r.codigo = Comun.plantilla(j.idioma);

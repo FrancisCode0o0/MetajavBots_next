@@ -44,7 +44,7 @@ public final class Pincel {
 
     /** Las letras que se usan (los acentos de los tres idiomas y los símbolos del juego). */
     static final String LETRAS = FreeTypeFontGenerator.DEFAULT_CHARS
-            + "áéíóúüñÁÉÍÓÚÜÑ¿¡«»…—–·×÷±≤≥≠≈°äöüßÄÖÜàèìòùâêîôûçÇ€¢£¥©®™•▲▼►◄■□●○◆◇★☆✓✔✗✘⚠⏱→←↑↓↔⇒│─┌┐└┘├┤┬┴┼█▌▐░▒▓∞λπΣΩµ“”„‹›−⌨▤▶⚔⚙✎✕❚↺";
+            + "áéíóúüñÁÉÍÓÚÜÑ¿¡«»…—–·×÷±≤≥≠≈°äöüßÄÖÜàèìòùâêîôûçÇ€¢£¥©®™•▲▼►◄■□●○◆◇★☆✓✔✗✘⚠⏱→←↑↓↔⇒│─┌┐└┘├┤┬┴┼█▌▐░▒▓∞λπΣΩµ“”„‹›−⌨▤▶⚔⚙✎✕❚↺⚄";
 
     public Pincel() {
         lote = new SpriteBatch(4000);
