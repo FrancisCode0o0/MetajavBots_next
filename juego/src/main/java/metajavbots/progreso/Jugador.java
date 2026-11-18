@@ -94,6 +94,8 @@ public final class Jugador {
     /** Ajustes de la pantalla y el sonido. */
     public float tamanoDeLetra = 18, volumen = 0.8f, volumenVoz = 0.9f;
     public boolean vozDelLocutor = true, temaClaro;
+    /** La voz clara del locutor (Piper, si está); si no, la propia, más robótica. */
+    public boolean vozClara = true;
     public int victoriasExtrema;
 
     public Jugador(String nombre) {

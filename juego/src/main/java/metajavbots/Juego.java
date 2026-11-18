@@ -107,6 +107,8 @@ public class Juego extends ApplicationAdapter {
             ui.letra = Math.max(14, Math.min(28, j.tamanoDeLetra));
             sonidos.volumen = j.volumen;
             voz.activa = j.vozDelLocutor;
+            voz.clara = j.vozClara;
+            voz.usarPiper(metajavbots.cerebro.CerebroLocal.carpeta(j.carpetaModelos).resolve("piper"));
             voz.volumen = j.volumenVoz;
         }
     }

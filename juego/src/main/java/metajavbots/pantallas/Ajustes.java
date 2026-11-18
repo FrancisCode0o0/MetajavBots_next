@@ -69,6 +69,10 @@ public final class Ajustes implements Pantalla {
         jug.vozDelLocutor = ui.casilla(T.t("ajustes.voz"), jug.vozDelLocutor, x, y, T.t("ajustes.voz_ayuda"));
         j.voz.activa = jug.vozDelLocutor;
         y += 50;
+        String ayudaClara = j.voz.hayVozClara(jug.idioma) ? T.t("ajustes.voz_clara_ayuda") : T.t("ajustes.voz_clara_falta");
+        jug.vozClara = ui.casilla(T.t("ajustes.voz_clara"), jug.vozClara, x, y, ayudaClara);
+        j.voz.clara = jug.vozClara;
+        y += 50;
         jug.volumenVoz = ui.deslizador(T.t("ajustes.volumen_voz"), jug.volumenVoz, x, y, w, 50, null);
         j.voz.volumen = jug.volumenVoz;
         y += 76;

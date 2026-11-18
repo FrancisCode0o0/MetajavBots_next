@@ -323,7 +323,8 @@ public final class VozRobot {
             char c = fo.c;
             if (c == ' ') {
                 // Locutor loco: cada palabra, un tono distinto (y a veces un salto enorme).
-                tonoPalabra = tonoBase * (0.85 + azar.nextDouble() * 0.45) * (azar.nextInt(9) == 0 ? 1.6 : 1);
+                // Saltos más suaves que al principio (Fran, 17-nov: «no se le entiende casi»).
+                tonoPalabra = tonoBase * (0.92 + azar.nextDouble() * 0.25) * (azar.nextInt(12) == 0 ? 1.3 : 1);
                 trozos.add(new float[(int) (F * 0.03)]);
                 continue;
             }
@@ -397,9 +398,9 @@ public final class VozRobot {
         for (int i = 0; i < a.length; i++) {
             double x = a[i] / maximo;
             double anillo = Math.sin(2 * Math.PI * 70 * i / F);
-            double y = x * (0.62 + 0.38 * anillo);
-            if (i >= d1) y += s[i - d1] * 0.35;
-            if (i >= d2) y += s[i - d2] * 0.2;
+            double y = x * (0.76 + 0.24 * anillo);
+            if (i >= d1) y += s[i - d1] * 0.26;
+            if (i >= d2) y += s[i - d2] * 0.14;
             s[i] = (float) Math.tanh(y * 1.4) * 0.8f;
         }
         return s;

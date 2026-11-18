@@ -210,6 +210,24 @@ final class PruebasDelContenido {
             igual("zweiundvierzig", metajavbots.sonido.VozRobot.numeroEnLetras(42, metajavbots.textos.Idioma.DE));
         });
 
+        caso("voz clara: el audio de Piper se lee, cambia de frecuencia y lleva el efecto suave (sin arrancar Piper)", () -> {
+            byte[] b = new byte[44100];
+            for (int i = 0; i < b.length / 2; i++) {
+                short v = (short) (Math.sin(i * 0.05) * 20000);
+                b[2 * i] = (byte) v;
+                b[2 * i + 1] = (byte) (v >> 8);
+            }
+            float[] m = metajavbots.sonido.VozPiper.muestras(b);
+            igual(22050, m.length);
+            cierto(Math.abs(m[100] - Math.sin(100 * 0.05) * 20000 / 32768) < 1e-3, "16 bits, little endian");
+            float[] r = metajavbots.sonido.VozPiper.aFrecuenciaDelJuego(m, 16000);
+            cierto(Math.abs(r.length - 22050 * 22050 / 16000) < 3, "de 16 000 a 22 050 Hz: " + r.length);
+            for (float x : metajavbots.sonido.VozPiper.robotico(r)) cierto(!Float.isNaN(x) && Math.abs(x) <= 1, "sin saturar");
+            metajavbots.sonido.VozPiper sin = new metajavbots.sonido.VozPiper(java.nio.file.Paths.get("no_existe"));
+            falso(sin.disponible(metajavbots.textos.Idioma.ES), "sin Piper, la voz propia");
+            igual(null, sin.decir("Hola", metajavbots.textos.Idioma.ES));
+        });
+
         caso("detector de temas y temario: reconocen herencia, interfaces, colecciones, lambdas y recursión", () -> {
             String c = "import java.util.*;\npublic class R extends Metajavbot {\n interface Plan { void hacer(); }\n"
                     + " class A implements Plan { public void hacer() { } }\n class B { }\n class C extends B { }\n"

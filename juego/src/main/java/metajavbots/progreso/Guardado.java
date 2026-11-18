@@ -141,6 +141,7 @@ public final class Guardado {
         v.put("volumen", numero(j.volumen));
         v.put("volumenVoz", numero(j.volumenVoz));
         v.put("vozDelLocutor", Boolean.toString(j.vozDelLocutor));
+        v.put("vozClara", Boolean.toString(j.vozClara));
         v.put("temaClaro", Boolean.toString(j.temaClaro));
         StringBuilder b = new StringBuilder("# Partida de MetajavBots (se puede leer; mejor no tocarla a mano)\n");
         for (Map.Entry<String, String> e : v.entrySet()) {
@@ -233,6 +234,7 @@ public final class Guardado {
         j.volumen = (float) decimal(v.get("volumen"), 0.8);
         j.volumenVoz = (float) decimal(v.get("volumenVoz"), 0.9);
         j.vozDelLocutor = !"false".equals(v.get("vozDelLocutor"));
+        j.vozClara = !"false".equals(v.get("vozClara"));
         j.temaClaro = Boolean.parseBoolean(v.get("temaClaro"));
         Path ej = dir.resolve("ejercicios");
         if (Files.isDirectory(ej)) {

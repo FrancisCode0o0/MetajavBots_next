@@ -78,6 +78,8 @@ public final class Capturas extends Juego {
         // "-Pidioma=de" y "-Pletra=24": para mirar la legibilidad en cada idioma y con la letra grande.
         j.idioma = metajavbots.textos.Idioma.de(System.getProperty("capturas.idioma", "es"));
         j.tamanoDeLetra = Float.parseFloat(System.getProperty("capturas.letra", "18"));
+        // Sin sonido no hace falta Piper (la voz clara es un programa aparte).
+        j.vozClara = System.getProperty("capturas.sonido") != null;
         j.cerebros[0].tipo = metajavbots.cerebro.Ranura.Tipo.LOCAL;
         j.cerebros[1].tipo = metajavbots.cerebro.Ranura.Tipo.EN_LINEA;
         Jugador.Robot r = new Jugador.Robot("Cobaltito", "cobalto");

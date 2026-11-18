@@ -6,9 +6,10 @@ import java.util.concurrent.Executors;
 import metajavbots.textos.Idioma;
 
 /**
- * VOZ — La voz del locutor robot loco: el texto pasa por VozRobot (un
+ * VOZ — La voz del locutor robot loco: el texto lo lee Piper si está
+ * (VozPiper: voz clara con un efecto robótico suave) y, si no, VozRobot (un
  * sintetizador de formantes hecho aquí, sin internet y sin bibliotecas de
- * fuera) y suena con efecto metálico. Se sintetiza en un hilo aparte para
+ * fuera, con efecto metálico). Se sintetiza en un hilo aparte para
  * no parar el juego; cuando está lista, suena.
  */
 public final class Voz {
@@ -23,13 +24,29 @@ public final class Voz {
     private volatile long pedida;
     public boolean activa = true;
     public float volumen = 0.9f;
+    /** Con Piper, si está (voz humana con efecto robótico suave); si no, la voz propia. */
+    public boolean clara = true;
+    private volatile VozPiper piper;
+
+    /** Dónde está Piper (000KI_Local/piper, junto a los modelos de IA). */
+    public void usarPiper(java.nio.file.Path carpeta) {
+        piper = carpeta == null ? null : new VozPiper(carpeta);
+    }
+
+    /** ¿Hay voz clara para ese idioma? */
+    public boolean hayVozClara(Idioma idioma) {
+        VozPiper p = piper;
+        return p != null && p.disponible(idioma);
+    }
 
     /** Pide decir un texto (si ya está diciendo otro, este lo sustituye). */
     public void decir(String texto, Idioma idioma) {
         if (!activa || texto == null || texto.isBlank()) return;
         long yo = ++pedida;
+        VozPiper p = clara ? piper : null;
         hilo.submit(() -> {
-            float[] m = VozRobot.decir(texto, idioma, yo);
+            float[] m = p != null ? p.decir(texto, idioma) : null;
+            if (m == null) m = VozRobot.decir(texto, idioma, yo);
             if (yo == pedida) {
                 textoListo = texto;
                 lista = m;
