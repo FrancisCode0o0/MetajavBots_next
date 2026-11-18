@@ -44,6 +44,7 @@ public final class PantallaPelea implements Pantalla {
     private Pelea pelea;
     private RobotEnReparacion reparando;
     private final PanelDelAparato panelDelAparato = new PanelDelAparato();
+    private ArmaEspecial especial;
     private Combatiente yo;
     private final RobotDelJugador robot = new RobotDelJugador();
     private VistaDeArena vista;
@@ -120,6 +121,9 @@ public final class PantallaPelea implements Pantalla {
         pelea.arena = metajavbots.combate.Arena.de(encuentro.escenario.name(), pelea.ancho, pelea.alto);
         // Los aparatos que salen de ronda en ronda (no en los robots rotos ni en los tutoriales).
         pelea.aparatos.activos = jug.aparatosEnLaArena && encuentro.codigo == null && encuentro.objetivo == null;
+        // El arma especial con cuenta atrás: en las peleas de uno contra uno de más de una ronda.
+        if (jug.armasEspeciales && encuentro.demas.isEmpty() && encuentro.codigo == null && encuentro.objetivo == null && encuentro.rondas > 1
+                && !sinJdk) especial = ArmaEspecial.para(jug);
         pelea.topeDePasos = encuentro.topeDePasos;
         narrador = new Narrador(pelea.combatientes, pelea.equipo);
         narrador.idioma = jug.idioma;
@@ -280,6 +284,8 @@ public final class PantallaPelea implements Pantalla {
         if (vista.parada > 0) {
             // Tras un golpe fuerte, la pelea se para un instante (como en los juegos de lucha).
             vista.parada -= dt;
+        } else if (especial != null && especial.activa()) {
+            especial.avanzar(j, pelea, vista, dt);
         } else if (!pausa && !entreRondas && !terminada) {
             acumulado += dt * Pelea.TURNOS_POR_SEGUNDO * velocidad;
             int n = 0;
@@ -290,6 +296,10 @@ public final class PantallaPelea implements Pantalla {
                 vista.sucesos(pelea, j.sonidos);
                 narrador.turno(pelea, 1f / Pelea.TURNOS_POR_SEGUNDO);
                 if (pelea.estado() != Pelea.Estado.LUCHANDO) break;
+                if (especial != null && especial.toca(pelea)) {
+                    especial.empezar(j, pelea);
+                    break;
+                }
             }
             if (pelea.estado() == Pelea.Estado.ENTRE_RONDAS) {
                 entreRondas = true;
@@ -303,11 +313,13 @@ public final class PantallaPelea implements Pantalla {
         }
         j.voz.fotograma(j.sonidos);
         float ancho = depurador && !entreRondas ? p.ancho - 460 : p.ancho;
+        if (especial != null && especial.activa()) ancho = ArmaEspecial.anchoDeLaArena(p.ancho);
         vista.sacudida = Math.max(vista.sacudida, j.sacudida);
         // Los bocadillos y los nombres, con la letra del jugador y por debajo de la banda del locutor.
         vista.letra = ui.letra;
         vista.techo = tiempoLocutor > 0 && !locutor.isEmpty() ? 100 + altoDeLaBanda + 8 : 0;
         vista.dibujar(p, pelea, 0, 88, ancho, p.alto - 88, pausa || entreRondas ? 0 : dt);
+        if (especial != null) especial.dibujar(j, vista, pelea);
         if (encuentro.codigo != null) reparacion(j, dt);
         marcador(j);
         if (depurador && !entreRondas) depurador(j, ancho);

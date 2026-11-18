@@ -117,6 +117,8 @@ public final class Jugador {
     public boolean aparatosEnLaArena = true;
     /** Las rondas de las peleas (3, 4, 6, 10 o 12, como en el boxeo; 6 de fábrica). */
     public int rondas = 6;
+    /** Si sale el arma especial con cuenta atrás (un reto de código a mitad de pelea). */
+    public boolean armasEspeciales = true;
     public int victoriasExtrema;
 
     public Jugador(String nombre) {

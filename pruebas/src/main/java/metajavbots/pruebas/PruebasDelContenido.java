@@ -42,6 +42,22 @@ final class PruebasDelContenido {
         apuntarMusica();
         apuntarRobotsRotos();
         apuntarRetoDiario();
+        apuntarArmasEspeciales();
+    }
+
+    private static void apuntarArmasEspeciales() {
+        caso("armas especiales: los tres retos se leen, su solución pasa todos los casos y la plantilla no", () -> {
+            java.util.List<metajavbots.ejercicios.Ejercicio> l;
+            try (java.io.InputStream in = PruebasDelContenido.class.getResourceAsStream("/especiales/retos.txt")) {
+                l = metajavbots.ejercicios.Ejercicio.leer(in, "retos.txt");
+            }
+            igual(3, l.size());
+            if (!metajavbots.codigo.Compilador.hayCompilador()) return;
+            for (metajavbots.ejercicios.Ejercicio e : l) {
+                cierto(metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoSolucion(), java.util.Locale.ROOT).todoBien(), e.id + ": la solución");
+                cierto(!metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoInicial(), java.util.Locale.ROOT).todoBien(), e.id + ": la plantilla");
+            }
+        });
     }
 
     private static void apuntarRetoDiario() {

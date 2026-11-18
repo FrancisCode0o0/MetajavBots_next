@@ -4,7 +4,7 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 
 ## Repaso (METAJAVBOTS_REPASO, 18-nov-2026, Opus, de noche)
 
-**Qué repasé y arreglé** (un commit jugable por punto; `jugar.bat prueba`: 89 casos bien):
+**Qué repasé y arreglé** (un commit jugable por punto; `jugar.bat prueba`: 90 casos bien):
 
 - **Cerebros**: hasta **tres** (locales o en línea, mezclados) y en Ajustes se reparte qué hace cada uno (diálogos/pullas/locutor; revisión y temario; tutores). KoboldCpp **1.124.2** ya carga **Qwen3.5-9B** (35 s; ~30 s por respuesta) y el juego le pide que no «piense» en voz alta (si no, tarda minutos y se queda sin palabras). Gemma 3 4B para lo rápido y Qwen3.5 para lo pesado (botón «Recomendado»). Cada local tiene su KoboldCpp (5002-5004), se arranca al usarlo y se apaga sin uso; juntos nunca pasan de la memoria del ordenador menos 6 GB (si no cabe otro, se apaga el más viejo). La gráfica integrada no admite dos modelos a la vez: el segundo va solo con el procesador (casi igual de rápido). Probado de verdad: Gemma y Qwen3.5 a la vez (10 GB) y, al pedir el tercero, se apagó Gemma. Todo en docs/CEREBRO.md.
 - **Jarvis con la 1.124**: su modelo (qwen2.5-coder) **arranca y contesta** igual que antes. Ojo (para Fran, no lo toqué: es de Jarvis): `Jarvis.bat` no arranca su cerebro si ya hay *algún* koboldcpp.exe abierto; si el juego tiene el suyo en marcha, Jarvis se queda sin cerebro hasta que el juego lo apague (8 min sin uso o al cerrar). Arreglo posible en Jarvis: mirar el puerto 5001 en vez del nombre del proceso.
@@ -45,6 +45,8 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 
 - **Peleas de 3, 4, 6, 10 o 12 rondas** (Pelear, arriba; **6 de fábrica**, se guarda en la partida): valen para las peleas normales, el battle royale, por equipos y los jefes (las prácticas, los tutoriales y las campañas llevan las suyas). Con más de 4, **desgaste**: cada ronda empieza con parte del daño de las anteriores (con 6, poco; con 12, casi todo), nunca por debajo de la mitad del blindaje; con 4 o menos, como siempre. Arreglado de paso: en las tarjetas del battle royale y por equipos, el botón de los cerebros y del compañero cortaba su texto (ahora en dos líneas).
 
+- **Armas especiales con cuenta atrás** (una por pelea de uno contra uno, a los 10 s de la segunda ronda; opción en Ajustes, de fábrica, sí): la pelea se congela, la arena pasa a la izquierda y aparece un arma muy fuerte con **números grandes que parpadean** (en rojo los 10 últimos segundos). Su reto de código es justo lo que hace falta para apuntar (`res/especiales/retos.txt`, mismo formato que los ejercicios): **Martillo Titán** (la distancia, Pitágoras; 75 s; daño 16; para Noob), **Cañón de Plasma** (el ángulo con atan2; 100 s; 26; Junior) y **Arpón Trueno** (el ángulo con adelanto; 150 s; 36; Senior). En la arena, **la ayuda para apuntar**: la línea al rival, dx, dy y el arco del ángulo. Ctrl+S o «¡Comprobar!»; se puede probar varias veces. Si pasa todos los casos: el robot corre al arma, la coge y, si dispara, retrocede, se gira y dispara un rayo; si es el martillo, carga: daño fuerte y sacudida. A medias (compila y la mitad de los casos) al acabarse el tiempo: la coge pero apunta mal y falla. Si no, la computadora puede llegar antes (40 %) o se desvanece. Son aparte de los aparatos de la arena.
+
 **Lo que decidí yo (para que Fran lo revise)**
 
 - **Reglas de estilo que no exijo** (están en el XML y por qué): una sola sentencia por línea (las tablas de reglas de la voz y de las teclas del editor se leen mejor en una línea), no reasignar parámetros (el patrón «y += alto» de las funciones de dibujo) y no tocar la variable del bucle (los analizadores de código lo hacen). Hasta 11 parámetros (el `Registro` del historial tiene 11 datos).
@@ -55,7 +57,7 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 ## Cómo se juega (y se prueba)
 
 - **Jugar**: `jugar.bat` (Windows) o `./jugar.sh`. Hace falta un **JDK 21 o más nuevo** (el juego compila el código Java del jugador con javac; con solo un JRE se pelea en «piloto automático» y se avisa).
-- **Pruebas**: `jugar.bat prueba` (o `gradlew pruebas:prueba`): **89 casos**, entre ellos: el editor machacado con miles de pulsaciones al azar, los 262 ejercicios (cada solución pasa sus casos y cada plantilla no), las 262 soluciones compiladas con la traza, peleas de 2, de 6 (battle royale) y de 2 contra 2, el equilibrio de los 16 modelos, el compilador y su caja de arena, el laboratorio de pruebas, la voz, el progreso y el guardado.
+- **Pruebas**: `jugar.bat prueba` (o `gradlew pruebas:prueba`): **90 casos**, entre ellos: el editor machacado con miles de pulsaciones al azar, los 262 ejercicios (cada solución pasa sus casos y cada plantilla no), las 262 soluciones compiladas con la traza, peleas de 2, de 6 (battle royale) y de 2 contra 2, el equilibrio de los 16 modelos, el compilador y su caja de arena, el laboratorio de pruebas, la voz, el progreso y el guardado.
 - **Capturas**: `jugar.bat capturas` (o `gradlew lwjgl3:capturas -Psalida=…`): fotos de todas las pantallas con ventana invisible. Con `-Psonido`, con el audio encendido.
 - **Cerebro de IA con arranque real** (opcional, tarda un minuto): `set METAJAVBOTS_PROBAR_CEREBRO=1` y `gradlew pruebas:prueba -Psolo=arranca`.
 

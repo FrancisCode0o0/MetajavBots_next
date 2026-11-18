@@ -74,9 +74,6 @@ public final class Pelea {
         this(a, b, semilla, 1000, 700, 1200);
     }
 
-    /** Las rondas que se pueden elegir, como en el boxeo (Ajustes de la pelea). */
-    public static final int[] RONDAS_A_ELEGIR = {3, 4, 6, 10, 12};
-
     /**
      * Cuánto daño se arrastra de una ronda a la siguiente: nada hasta 4 rondas; más cuantas más (con 12, casi todo
      * lo que lleva encima). Es el desgaste: en las peleas largas hay que programar para aguantar.
@@ -295,6 +292,14 @@ public final class Pelea {
         if (mejor != null) return mejor;
         for (Cuerpo e : cuerpos) if (e != c && e.equipo != c.equipo) return e;
         return c;
+    }
+
+    /** El golpe de un arma especial (la cuenta atrás de la pantalla de la pelea): daño de «de» a «a», con su suceso. */
+    public void golpeEspecial(int de, int a, double dano, String arma) {
+        Cuerpo d = cuerpos[de], e = cuerpos[a];
+        double ang = Math.toDegrees(Math.atan2(d.y - e.y, d.x - e.x));
+        danar(e, d, dano, arma, ang, false);
+        suceso(Suceso.Tipo.EXPLOSION, a, e.x, e.y, ang, dano, arma);
     }
 
     /** Un aviso a los compañeros: les llega el turno siguiente (y se ve como un bocadillo). */

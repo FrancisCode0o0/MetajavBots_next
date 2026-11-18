@@ -71,6 +71,9 @@ public final class PrepararPelea implements Pantalla {
         return new PantallaPelea(encuentro(j, anterior.modo));
     }
 
+    /** Las rondas que se pueden elegir, como en el boxeo. */
+    static final int[] RONDAS_A_ELEGIR = {3, 4, 6, 10, 12};
+
     /** Si las peleas al azar pueden salir en arenas con trampas (Ajustes; de fábrica, sí). */
     public static boolean conTrampas = true;
 
@@ -175,7 +178,7 @@ public final class PrepararPelea implements Pantalla {
         // Cuántas rondas, como en el boxeo: a más rondas, más desgaste.
         p.texto(T.t("pelear.rondas"), 40, y + 12, ui.letra, false, ui.tema.textoSuave, 1);
         float rx = 40 + p.ancho(T.t("pelear.rondas"), ui.letra, false) + 20;
-        for (int r : Pelea.RONDAS_A_ELEGIR) {
+        for (int r : RONDAS_A_ELEGIR) {
             if (ui.boton(Integer.toString(r), rx, y, 64, 48, jug.rondas == r ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true, T.t("pelear.rondas_ayuda"))) {
                 jug.rondas = r;
             }

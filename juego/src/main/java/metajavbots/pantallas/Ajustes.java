@@ -63,6 +63,8 @@ public final class Ajustes implements Pantalla {
         y += 50;
         jug.aparatosEnLaArena = ui.casilla(T.t("ajustes.aparatos"), jug.aparatosEnLaArena, x, y, T.t("ajustes.aparatos_ayuda"));
         y += 50;
+        jug.armasEspeciales = ui.casilla(T.t("ajustes.especiales"), jug.armasEspeciales, x, y, T.t("ajustes.especiales_ayuda"));
+        y += 50;
         boolean claro = ui.casilla(T.t("ajustes.tema_claro"), jug.temaClaro, x, y, null);
         if (claro != jug.temaClaro) {
             jug.temaClaro = claro;

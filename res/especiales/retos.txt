@@ -1,0 +1,83 @@
+# ARMAS ESPECIALES — El reto de código de cada una (el mismo formato que los ejercicios).
+# Cuanto más difícil el reto, más fuerte el arma y más tiempo para hacerlo (Armas especiales, en la pelea).
+
+=== especial_martillo
+tema: 03
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Martillo Titán: ¿a qué distancia está?
+titulo.de: Titanhammer: Wie weit ist er weg?
+titulo.en: Titan Hammer: how far away is it?
+enunciado.es: Para cargar con el martillo hay que saber cuánto correr. El enemigo está dx más a la derecha y dy más arriba que tú: devuelve la distancia en línea recta (Pitágoras: la raíz de dx² + dy²).
+enunciado.de: Um mit dem Hammer anzustürmen, musst du wissen, wie weit es ist. Der Gegner ist dx weiter rechts und dy weiter oben als du: Gib die Luftlinie zurück (Pythagoras: die Wurzel aus dx² + dy²).
+enunciado.en: To charge with the hammer you need to know how far to run. The enemy is dx further right and dy further up than you: return the straight-line distance (Pythagoras: the square root of dx² + dy²).
+pista.es: Math.sqrt(x) es la raíz cuadrada; dx * dx es dx al cuadrado.
+pista.de: Math.sqrt(x) ist die Quadratwurzel; dx * dx ist dx zum Quadrat.
+pista.en: Math.sqrt(x) is the square root; dx * dx is dx squared.
+firma: static double distancia(double dx, double dy)
+plantilla:
+    return 0;
+solucion:
+    return Math.sqrt(dx * dx + dy * dy);
+casos:
+    distancia(3, 4) => 5.0
+    distancia(6, -8) => 10.0
+    distancia(-5, 12) => 13.0
+    distancia(0, 0) => 0.0
+    distancia(0, -7) => 7.0
+
+=== especial_canon
+tema: 03
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Cañón de Plasma: ¿hacia dónde apunto?
+titulo.de: Plasmakanone: Wohin ziele ich?
+titulo.en: Plasma Cannon: where do I aim?
+enunciado.es: El enemigo está dx más a la derecha y dy más arriba que tú. Devuelve el ángulo hacia él en grados, redondeado a entero: 0 es la derecha, 90 arriba, 180 la izquierda y -90 abajo.
+enunciado.de: Der Gegner ist dx weiter rechts und dy weiter oben als du. Gib den Winkel zu ihm in Grad zurück, auf eine ganze Zahl gerundet: 0 ist rechts, 90 oben, 180 links und -90 unten.
+enunciado.en: The enemy is dx further right and dy further up than you. Return the angle towards it in degrees, rounded to a whole number: 0 is right, 90 up, 180 left and -90 down.
+pista.es: Math.atan2(dy, dx) da el ángulo en radianes (¡primero dy!); Math.toDegrees lo pasa a grados y Math.round lo redondea (con un (int) delante).
+pista.de: Math.atan2(dy, dx) gibt den Winkel im Bogenmaß (zuerst dy!); Math.toDegrees macht Grad daraus und Math.round rundet (mit (int) davor).
+pista.en: Math.atan2(dy, dx) gives the angle in radians (dy first!); Math.toDegrees turns it into degrees and Math.round rounds it (with an (int) in front).
+firma: static int angulo(double dx, double dy)
+plantilla:
+    return 0;
+solucion:
+    return (int) Math.round(Math.toDegrees(Math.atan2(dy, dx)));
+casos:
+    angulo(10, 0) => 0
+    angulo(0, 10) => 90
+    angulo(-10, 0) => 180
+    angulo(0, -10) => -90
+    angulo(5, 5) => 45
+    angulo(-3, -3) => -135
+    angulo(100, 57.735) => 30
+
+=== especial_arpon
+tema: 03
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Arpón Trueno: apuntar adonde va a estar
+titulo.de: Donnerharpune: dorthin zielen, wo er sein wird
+titulo.en: Thunder Harpoon: aim where it will be
+enunciado.es: El arpón tarda turnos en llegar y el enemigo se mueve (vx, vy por turno). Está dx más a la derecha y dy más arriba que tú: apunta a donde estará cuando llegue el arpón. Devuelve ese ángulo en grados, redondeado a entero.
+enunciado.de: Die Harpune braucht turnos Züge und der Gegner bewegt sich (vx, vy pro Zug). Er ist dx weiter rechts und dy weiter oben als du: Ziele dorthin, wo er sein wird, wenn die Harpune ankommt. Gib diesen Winkel in Grad zurück, gerundet.
+enunciado.en: The harpoon takes turnos ticks to arrive and the enemy moves (vx, vy per tick). It is dx further right and dy further up than you: aim at where it will be when the harpoon arrives. Return that angle in degrees, rounded to a whole number.
+pista.es: Primero calcula dónde estará: dx + vx * turnos, dy + vy * turnos. Luego, el ángulo como con el cañón.
+pista.de: Rechne zuerst aus, wo er sein wird: dx + vx * turnos, dy + vy * turnos. Dann den Winkel wie bei der Kanone.
+pista.en: First work out where it will be: dx + vx * turnos, dy + vy * turnos. Then the angle, like with the cannon.
+firma: static int anguloConAdelanto(double dx, double dy, double vx, double vy, int turnos)
+plantilla:
+    return 0;
+solucion:
+    double x = dx + vx * turnos, y = dy + vy * turnos;
+    return (int) Math.round(Math.toDegrees(Math.atan2(y, x)));
+casos:
+    anguloConAdelanto(100, 0, 0, 5, 20) => 45
+    anguloConAdelanto(0, 100, 5, 0, 20) => 45
+    anguloConAdelanto(-100, 0, 0, -5, 20) => -135
+    anguloConAdelanto(50, 0, 0, 0, 10) => 0
+    anguloConAdelanto(0, 0, -1, 1, 10) => 135

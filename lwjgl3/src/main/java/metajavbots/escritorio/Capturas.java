@@ -40,6 +40,29 @@ public final class Capturas extends Juego {
 
     /** Las pantallas de lo último: los aparatos de la arena. */
     private void nuevas() {
+        pantallas.put("08e_arma_especial", () -> new Pantalla() {
+            private VistaDeArena vista;
+            private Pelea pelea;
+            private metajavbots.pantallas.ArmaEspecial especial;
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (vista == null) {
+                    vista = new VistaDeArena(j.pincel);
+                    vista.escenario = VistaDeArena.Escenario.NEON;
+                    Random r = new Random(8);
+                    List<Modelo> ms = Modelo.todos();
+                    pelea = new Pelea(Rivales.crear(ms.get(0), 0.6, 0.5, r), Rivales.crear(ms.get(4), 0.6, 0.5, r), 9);
+                    pelea.empezarRonda();
+                    for (int i = 0; i < 90; i++) pelea.avanzar();
+                    especial = metajavbots.pantallas.ArmaEspecial.para(j.jugador);
+                    especial.empezar(j, pelea);
+                }
+                vista.dibujar(j.pincel, pelea, 0, 88, j.pincel.ancho * 0.48f, j.pincel.alto - 88, dt);
+                especial.avanzar(j, pelea, vista, dt);
+                especial.dibujar(j, vista, pelea);
+            }
+        });
         pantallas.put("09f_finales", () -> new Pantalla() {
             private float t = 1.0f;
 
