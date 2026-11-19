@@ -1,0 +1,44 @@
+APUNTES METAJAVBOTS
+===================
+
+1. Complementos iniciales, tienda del juego y desbloqueo con código
+-------------------------------------------------------------------
+- Los jugadores empiezan actualmente con demasiados complementos al inicio.
+- Deberían comenzar con apenas 3 o 4 complementos.
+- Al ganar batallas, el jugador debe ir acumulando recompensa para poder comprar nuevos complementos en una tienda dentro del juego.
+- Para implementar los complementos adquiridos hay que programarlos: es necesario escribir código para desbloquearlos.
+- Una vez desbloqueado un complemento mediante código, pasa a quedar disponible en la API, se puede reutilizar cuando se quiera e incluso modificar con código.
+- Las modificaciones mediante código deben tener ciertos límites de equilibrio (por ejemplo, impedir que un arma pueda disparar de manera infinita o abusos similares).
+
+2. Bucles, condiciones y recursión de forma lógica en el juego
+--------------------------------------------------------------
+- El juego debe permitir implementar de manera lógica los bucles (los distintos tipos de bucles), las condiciones y las recursiones, para que los jugadores aprendan a utilizarlos en la práctica.
+- El bucle principal de movimiento durante el juego también debería poder colocarse y modificarse si hace falta.
+
+3. Depuración y testing en su propio apartado (con minijuegos)
+--------------------------------------------------------------
+- La depuración y el testing deben implementarse en el juego dentro de su propio apartado específico.
+- Se necesita un modo o juego propio de depuración y testing que cuente con sus propios minijuegos.
+
+4. Modificadores y tipos de declaración con base jugable real en POO
+--------------------------------------------------------------------
+- El tipo de declaración y los modificadores (`public`, `private`, `protected`, `final`, `static`, etc., y el acceso por defecto) deben tener una base jugable concreta dentro del juego.
+- Cada uno debe estar vinculado de forma coherente a un efecto o comportamiento lógico real de la programación orientada a objetos (no quedarse solo en teoría).
+
+5. Cantera de robots por nivel, economía equilibrada y programación propia
+--------------------------------------------------------------------------
+- El jugador debe empezar primero con dos modelos de robot iniciales y, a partir de ahí, ir desbloqueando/seleccionando nuevos robots de la cantera mediante puntos.
+- Cada nivel/etapa tiene su propia cantera de robots disponibles (por ejemplo: 5 robots seleccionables en el nivel 1, 5 más en el siguiente nivel y 6 en el último nivel).
+- Los puntos que se ganan jugando se pueden gastar tanto en nuevos robots como en complementos.
+- La economía de puntos debe estar bien equilibrada para obligar al jugador a tomar decisiones reales y elegir en qué invertir primero (un robot distinto o nuevos complementos).
+- Cada robot debe tener su propia manera de programarse para funcionar (no ser solo un cambio estético o de estadísticas).
+
+6. Principio general: aprendizaje integral y jugabilidad real
+-------------------------------------------------------------
+- Lo esencial y básico del juego es la programación: todo el juego debe ir dirigido a que el jugador aprenda jugando, casi sin darse cuenta, pero que aprenda realmente a programar en Java.
+- Todo en el juego tiene que seguir esa misma lógica y conducir a ese objetivo.
+- La experiencia debe sentirse como si los jugadores estuviesen programando casi robots de verdad, pero a pequeña escala.
+- El juego debe cubrir el aprendizaje de la programación desde todos los puntos de vista.
+- Todas las mecánicas (movimientos, robots, complementos, sistemas) deben tener una jugabilidad real directamente relacionada con la programación y el código.
+
+[Nota cortada del mensaje anterior, por si quieres retomarla más adelante: "...haz otro para que los ejercicios para l..."]
