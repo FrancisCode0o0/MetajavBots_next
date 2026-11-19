@@ -1,6 +1,7 @@
 package metajavbots.combate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -8,6 +9,7 @@ import java.util.Random;
 import metajavbots.api.Avistado;
 import metajavbots.api.Impacto;
 import metajavbots.api.Mando;
+import metajavbots.api.Puente;
 import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Pieza;
 
@@ -60,6 +62,13 @@ public final class Cuerpo implements Mando {
     /** Las líneas de su código que se ejecutaron en el último turno que pensó, y la última (con la traza). */
     public java.util.BitSet lineasDelTurno = new java.util.BitSet();
     public int ultimaLinea;
+    /** Las órdenes pedidas en el último turno que pensó y si alguna fue pisada (para el depurador F9). */
+    public List<OrdenDelTurno> ordenesDelTurno = List.of();
+    public boolean tieneConflictoDeOrdenes;
+    private final List<OrdenDelTurno> ordenesEnCurso = new ArrayList<>();
+    private String metodoActual = "";
+    private int invocacionActual;
+    private boolean registrandoOrdenes;
     /** Pasos de cálculo del último turno (para el medidor y el depurador). */
     public long pasosDelTurno;
     /** Para el dibujo: cuánto se ha movido (las piernas), el último golpe recibido y el retroceso del arma. */
@@ -290,6 +299,59 @@ public final class Cuerpo implements Mando {
     @Override
     public Random azar() {
         return azar;
+    }
+
+    @Override
+    public void enMetodo(String metodo) {
+        if (!registrandoOrdenes) return;
+        if (metodo != null && !metodo.isEmpty()) {
+            invocacionActual++;
+            metodoActual = metodo;
+        } else {
+            metodoActual = "";
+        }
+    }
+
+    @Override
+    public void anotarOrden(String accion, int canales) {
+        if (!registrandoOrdenes || ordenesEnCurso.size() >= 64) return;
+        ordenesEnCurso.add(new OrdenDelTurno(metodoActual, accion, canales, Puente.ultimaLinea(), invocacionActual, "", 0));
+    }
+
+    void empezarRegistroDeTurno() {
+        ordenesEnCurso.clear();
+        metodoActual = "";
+        invocacionActual = 0;
+        registrandoOrdenes = true;
+    }
+
+    void cerrarRegistroDeTurno() {
+        registrandoOrdenes = false;
+        metodoActual = "";
+        int n = ordenesEnCurso.size();
+        if (n == 0) {
+            ordenesDelTurno = List.of();
+            tieneConflictoDeOrdenes = false;
+            return;
+        }
+        List<OrdenDelTurno> resultado = new ArrayList<>(n);
+        boolean conflicto = false;
+        for (int i = 0; i < n; i++) {
+            OrdenDelTurno o = ordenesEnCurso.get(i);
+            if (o.canales != 0) {
+                for (int j = n - 1; j > i; j--) {
+                    OrdenDelTurno posterior = ordenesEnCurso.get(j);
+                    if (posterior.invocacion > o.invocacion && (o.canales & posterior.canales) != 0) {
+                        o = o.conPisada(posterior.metodo, posterior.linea);
+                        conflicto = true;
+                        break;
+                    }
+                }
+            }
+            resultado.add(o);
+        }
+        ordenesDelTurno = Collections.unmodifiableList(resultado);
+        tieneConflictoDeOrdenes = conflicto;
     }
 
     // ================================================================ por dentro

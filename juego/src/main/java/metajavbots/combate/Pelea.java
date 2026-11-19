@@ -405,6 +405,7 @@ public final class Pelea {
         c.chocoCon = null;
         List<String[]> avisos = new ArrayList<>(c.avisos);
         c.avisos.clear();
+        c.empezarRegistroDeTurno();
         long pasos = ejecutar(c, () -> {
             for (metajavbots.api.Impacto g : golpes) Puente.golpeado(co.robot, g);
             for (metajavbots.api.Impacto g : aciertos) Puente.acierto(co.robot, g);
@@ -414,6 +415,7 @@ public final class Pelea {
             for (Avistamiento v : c.vistos) Puente.ver(co.robot, v);
             Puente.turno(co.robot);
         }, tope);
+        c.cerrarRegistroDeTurno();
         c.pasosDelTurno = pasos;
         inf.pasosTotales += pasos;
         inf.pasosMaximos = Math.max(inf.pasosMaximos, pasos);

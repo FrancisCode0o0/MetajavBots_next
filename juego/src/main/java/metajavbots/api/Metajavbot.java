@@ -77,47 +77,47 @@ public abstract class Metajavbot extends RobotBase {
 
     @Override
     final void empezar() {
-        alEmpezar();
+        ejecutarEn("alEmpezar", this::alEmpezar);
     }
 
     @Override
     final void turno() {
-        cadaTurno();
+        ejecutarEn("cadaTurno", this::cadaTurno);
     }
 
     @Override
     final void ver(Avistado e) {
-        alVerEnemigo(e);
+        ejecutarEn("alVerEnemigo", () -> alVerEnemigo(e));
     }
 
     @Override
     final void golpeado(Impacto g) {
-        alRecibirGolpe(g);
+        ejecutarEn("alRecibirGolpe", () -> alRecibirGolpe(g));
     }
 
     @Override
     final void acierto(Impacto g) {
-        alAcertar(g);
+        ejecutarEn("alAcertar", () -> alAcertar(g));
     }
 
     @Override
     final void pared() {
-        alChocarConPared();
+        ejecutarEn("alChocarConPared", this::alChocarConPared);
     }
 
     @Override
     final void choque(Avistado e) {
-        alChocarConEnemigo(e);
+        ejecutarEn("alChocarConEnemigo", () -> alChocarConEnemigo(e));
     }
 
     @Override
     final void finDeRonda() {
-        alAcabarRonda();
+        ejecutarEn("alAcabarRonda", this::alAcabarRonda);
     }
 
     @Override
     final void equipo(String de, String mensaje) {
-        alOirAlEquipo(de, mensaje);
+        ejecutarEn("alOirAlEquipo", () -> alOirAlEquipo(de, mensaje));
     }
 
     // ================================================================ moverse
@@ -125,34 +125,41 @@ public abstract class Metajavbot extends RobotBase {
     /** Avanza esa distancia (negativa: marcha atrás). Sustituye a la orden de avance anterior. */
     public final void avanzar(double distancia) {
         m().avanzar(distancia);
+        anotarOrden("avanzar(" + redondear(distancia) + ")", Mando.CANAL_AVANCE);
     }
 
     /** Marcha atrás esa distancia. */
     public final void retroceder(double distancia) {
         m().avanzar(-distancia);
+        anotarOrden("retroceder(" + redondear(distancia) + ")", Mando.CANAL_AVANCE);
     }
 
     /** Gira el cuerpo esos grados (positivos: a la izquierda). */
     public final void girar(double grados) {
         m().girar(grados);
+        anotarOrden("girar(" + redondear(grados) + "°)", Mando.CANAL_GIRO);
     }
 
     public final void girarIzquierda(double grados) {
         m().girar(grados);
+        anotarOrden("girarIzquierda(" + redondear(grados) + "°)", Mando.CANAL_GIRO);
     }
 
     public final void girarDerecha(double grados) {
         m().girar(-grados);
+        anotarOrden("girarDerecha(" + redondear(grados) + "°)", Mando.CANAL_GIRO);
     }
 
     /** Gira el cuerpo hasta mirar hacia ese ángulo absoluto, por el camino más corto. */
     public final void girarHacia(double angulo) {
         m().girar(normalizar(angulo - m().rumbo()));
+        anotarOrden("girarHacia(" + redondear(angulo) + "°)", Mando.CANAL_GIRO);
     }
 
     /** Para: sin avanzar ni girar. */
     public final void detener() {
         m().detener();
+        anotarOrden("detener()", Mando.CANAL_AVANCE | Mando.CANAL_GIRO);
     }
 
     // ================================================================ apuntar y atacar
@@ -160,35 +167,46 @@ public abstract class Metajavbot extends RobotBase {
     /** Gira la mira (los brazos y el radar) esos grados, sin girar el cuerpo. */
     public final void apuntar(double grados) {
         m().apuntar(grados);
+        anotarOrden("apuntar(" + redondear(grados) + "°)", Mando.CANAL_MIRA);
     }
 
     /** Gira la mira hasta ese ángulo absoluto. */
     public final void apuntarHacia(double angulo) {
         m().apuntar(normalizar(angulo - m().mira()));
+        anotarOrden("apuntarHacia(" + redondear(angulo) + "°)", Mando.CANAL_MIRA);
     }
 
     /** Gira la mira hacia ese punto de la arena. */
     public final void apuntarA(double x, double y) {
-        apuntarHacia(anguloHasta(x, y));
+        m().apuntar(normalizar(anguloHasta(x, y) - m().mira()));
+        anotarOrden("apuntarA(" + redondear(x) + ", " + redondear(y) + ")", Mando.CANAL_MIRA);
     }
 
     /** Ataca con el brazo izquierdo hacia donde mira. Devuelve false si aún no estaba listo. */
     public final boolean atacarIzquierda() {
-        return m().atacar(Mando.IZQUIERDA);
+        boolean ok = m().atacar(Mando.IZQUIERDA);
+        if (ok) anotarOrden("atacarIzquierda()", 0);
+        return ok;
     }
 
     public final boolean atacarDerecha() {
-        return m().atacar(Mando.DERECHA);
+        boolean ok = m().atacar(Mando.DERECHA);
+        if (ok) anotarOrden("atacarDerecha()", 0);
+        return ok;
     }
 
     /** Usa lo especial de la cabeza (un escudo, un turbo, reparar…, según la pieza). */
     public final boolean especial() {
-        return m().atacar(Mando.CABEZA);
+        boolean ok = m().atacar(Mando.CABEZA);
+        if (ok) anotarOrden("especial()", 0);
+        return ok;
     }
 
     /** Ataca con el brazo que esté listo (primero el derecho). */
     public final boolean atacar() {
-        return m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
+        boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
+        if (ok) anotarOrden("atacar()", 0);
+        return ok;
     }
 
     public final boolean listoIzquierda() {

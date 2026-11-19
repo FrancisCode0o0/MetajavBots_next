@@ -19,6 +19,9 @@ public interface Mando {
     /** Los brazos: el izquierdo, el derecho y la cabeza (lo especial). */
     int IZQUIERDA = 0, DERECHA = 1, CABEZA = 2;
 
+    /** Canales de órdenes que pueden pisarse en el mismo turno (solo observación para el depurador). */
+    int CANAL_AVANCE = 1, CANAL_GIRO = 2, CANAL_MIRA = 4;
+
     double x();
 
     double y();
@@ -92,4 +95,12 @@ public interface Mando {
     Map<String, Object> memoria();
 
     Random azar();
+
+    /** Observación para el depurador: método del robot que se está ejecutando ahora. */
+    default void enMetodo(String metodo) {
+    }
+
+    /** Observación para el depurador: acción pedida y qué canales (avance/giro/mira) toca. */
+    default void anotarOrden(String accion, int canales) {
+    }
 }

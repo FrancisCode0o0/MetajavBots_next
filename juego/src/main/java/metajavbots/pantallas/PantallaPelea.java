@@ -1,9 +1,5 @@
 package metajavbots.pantallas;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 import com.badlogic.gdx.Input.Keys;
@@ -62,7 +58,8 @@ public final class PantallaPelea implements Pantalla {
     private float tiempoFinal;
     private Progreso.Cambio cambio;
     private boolean explotado;
-    private final Ui.Desplazable desplConsola = new Ui.Desplazable(), desplVariables = new Ui.Desplazable(), desplInforme = new Ui.Desplazable();
+    private final Ui.Desplazable desplInforme = new Ui.Desplazable();
+    private final PanelDepurador panelDepurador = new PanelDepurador();
     private int pestanaEntreRondas;
     private boolean ganoElJugador, objetivoCumplido, premioElegido;
     private volatile String resumenDelLocutor;
@@ -101,7 +98,7 @@ public final class PantallaPelea implements Pantalla {
         sinJdk = !Compilador.hayCompilador();
         if (sinJdk) usarPilotoAutomatico();
         else {
-            Compilador.Resultado res = robot.compilar(codigo, j.jugador.idioma.locale());
+            Compilador.Resultado res = robot.compilar(codigo, j.jugador.idioma.locale(), true);
             if (!res.bien) {
                 marcarErrores(res, jug);
                 usarPilotoAutomatico();
@@ -159,6 +156,23 @@ public final class PantallaPelea implements Pantalla {
     /** Marca ese enemigo para el entrenador, como si el jugador le hiciera clic (para las capturas). */
     public void marcarEnemigo(int i) {
         entrenador.marcarDesdeFuera(i);
+    }
+
+    /** Abre el depurador en la pestaña indicada (0: variables, 1: código/turno; para las capturas). */
+    public void abrirDepurador(int pestana) {
+        depurador = true;
+        panelDepurador.pestana(pestana);
+    }
+
+    /** Pausa o reanuda la pelea (para las capturas). */
+    public void pausar(boolean si) {
+        pausa = si;
+    }
+
+    /** Si el robot del jugador tiene ahora mismo una orden pisada en el último turno. */
+    public boolean tieneConflictoDeOrdenes() {
+        Cuerpo c = pelea == null ? null : pelea.cuerpo(0);
+        return c != null && c.tieneConflictoDeOrdenes;
     }
 
     @Override
@@ -265,7 +279,7 @@ public final class PantallaPelea implements Pantalla {
         if (encuentro.codigo == null) j.jugador.robot().codigo = codigo;
         j.sonidos.tocar("compilar", 0.5f);
         Thread h = new Thread(() -> {
-            resultadoDeCompilar = robot.compilar(codigo, j.jugador.idioma.locale());
+            resultadoDeCompilar = robot.compilar(codigo, j.jugador.idioma.locale(), true);
             compilando = false;
         }, "compilar");
         h.setDaemon(true);
@@ -347,8 +361,10 @@ public final class PantallaPelea implements Pantalla {
         if (especial != null) especial.dibujar(j, vista, pelea);
         if (encuentro.codigo != null) reparacion(j, dt);
         marcador(j);
-        if (depurador && !entreRondas) depurador(j, ancho);
-        bandaDelLocutor(j, dt);
+        if (depurador && !entreRondas) {
+            panelDepurador.dibujar(j, pelea, yo, robot.listo() ? robot.fuente() : "", robot.listo() && robot.conTraza(), ancho);
+        }
+        bandaDelLocutor(j, ancho, dt);
         // El entrenador aconseja contra el enemigo marcado (clic en él); contra un jefe no: está en el hospital.
         if (!terminada && !entreRondas && encuentro.jefe == null && j.jugador.entrenadorActivo && (especial == null || !especial.activa())
                 && (entrada == null || !entrada.activa())) {
@@ -466,11 +482,11 @@ public final class PantallaPelea implements Pantalla {
         if (panelDelAparato.dibujar(j, pelea.aparatos.siguiente(), der - 532, y)) pausa = true;
     }
 
-    private void bandaDelLocutor(Juego j, float dt) {
+    private void bandaDelLocutor(Juego j, float anchoZona, float dt) {
         if (tiempoLocutor <= 0 || locutor.isEmpty()) return;
         tiempoLocutor -= dt;
         Pincel p = j.pincel; Ui ui = j.ui;
-        float w = Math.min(1000, p.ancho - 200), x = (p.ancho - w) / 2, y = 100;
+        float w = Math.min(1000, anchoZona - 60), x = (anchoZona - w) / 2, y = 100;
         float a = Math.min(1, tiempoLocutor * 2);
         // La frase entera, en una o dos líneas (nada cortado).
         float letra = ui.letra * 1.05f;
@@ -490,87 +506,6 @@ public final class PantallaPelea implements Pantalla {
         p.linea(hx, hy - 18, hx + 6, hy - 30, 2, 0x8A92A3, a);
         p.circulo(hx + 6, hy - 31, 4, (t % 0.4f) < 0.2f ? 0xFF4F4F : 0xFFC857, a);
         p.parrafo(locutor, x + 76, y + 13, w - 110, letra, 0xFFF1C1, a);
-    }
-
-    // ================================================================ depurador en vivo
-
-    private void depurador(Juego j, float x) {
-        Pincel p = j.pincel; Ui ui = j.ui;
-        float w = p.ancho - x, y = 88, h = p.alto - 88;
-        p.rect(x, y, w, h, ui.tema.panel, 0.98f);
-        p.rect(x, y, 1, h, ui.tema.borde, 1);
-        float ty = y + 12;
-        p.texto(T.t("pelea.depurador"), x + 16, ty, ui.letra * 1.1f, true, ui.tema.texto, 1);
-        ty += 34;
-        Cuerpo c = pelea.cuerpo(0);
-        if (c != null) {
-            long tope = pelea.topeDePasos > 0 ? pelea.topeDePasos : (long) c.cifras.pasos;
-            float parte = Math.min(1, c.pasosDelTurno / (float) tope);
-            ui.barra(x + 16, ty, w - 32, 18, parte, parte > 0.8f ? ui.tema.mal : ui.tema.acento, T.f("pelea.pasos", c.pasosDelTurno, tope));
-            ty += 28;
-            p.texto(String.format(java.util.Locale.ROOT, "x=%.0f  y=%.0f  rumbo=%.0f°  mira=%.0f°", c.x, c.y, c.rumbo(), c.mira()), x + 16, ty,
-                    ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
-            ty += 24;
-            p.texto(String.format(java.util.Locale.ROOT, "%s=%.0f  %s=%.0f  %s=%d", T.t("pelea.blindaje"), c.blindaje(), T.t("pelea.energia"),
-                    c.energia, T.t("pelea.turno"), pelea.turno()), x + 16, ty, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
-            ty += 30;
-        }
-        p.texto(T.t("pelea.variables"), x + 16, ty, ui.letra * 0.9f, true, ui.tema.texto, 1);
-        ty += 26;
-        List<String[]> vars = variables(yo.robot());
-        float zona = (h - (ty - y)) * 0.5f;
-        float d = ui.desplazable(desplVariables, x + 8, ty, w - 16, zona);
-        float yy = ty - d;
-        for (String[] v : vars) {
-            p.texto(v[0], x + 16, yy, ui.letra * 0.8f, false, ui.tema.tipo, 1);
-            p.texto(ui.recortarTexto(v[1], w - 200, ui.letra * 0.8f, false), x + 180, yy, ui.letra * 0.8f, false, ui.tema.texto, 1);
-            yy += ui.letra * 1.15f;
-        }
-        if (vars.isEmpty()) p.texto(T.t("pelea.sin_variables"), x + 16, yy, ui.letra * 0.8f, false, ui.tema.textoApagado, 1);
-        ui.finDesplazable(desplVariables, Math.max(1, vars.size()) * ui.letra * 1.15f);
-        ty += zona + 10;
-        p.texto(T.t("pelea.consola"), x + 16, ty, ui.letra * 0.9f, true, ui.tema.texto, 1);
-        ty += 26;
-        consola(j, x + 8, ty, w - 16, y + h - ty - 80);
-    }
-
-    private void consola(Juego j, float x, float y, float w, float h) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        p.caja(x, y, w, h, 6, ui.tema.fondo, 1);
-        float alto = ui.letra * 0.95f;
-        desplConsola.desplazamiento = Math.max(0, yo.consola.size() * alto - h + 10);
-        float d = ui.desplazable(desplConsola, x, y + 4, w, h - 8);
-        float yy = y + 4 - d;
-        for (String l : yo.consola) {
-            int color = l.contains("⚠") ? ui.tema.mal : l.contains("⏱") ? ui.tema.aviso : ui.tema.texto;
-            p.texto(l, x + 8, yy, ui.letra * 0.75f, false, color, 1);
-            yy += alto;
-        }
-        ui.finDesplazable(desplConsola, yo.consola.size() * alto + 10);
-    }
-
-    /** Los campos del robot del jugador y lo que valen ahora (con reflexión: es el juego quien mira, no su código). */
-    static List<String[]> variables(RobotBase r) {
-        List<String[]> l = new ArrayList<>();
-        if (r == null) return l;
-        Class<?> c = r.getClass();
-        while (c != null && !c.getName().startsWith("metajavbots.api.")) {
-            for (Field f : c.getDeclaredFields()) {
-                if (Modifier.isStatic(f.getModifiers()) && Modifier.isFinal(f.getModifiers())) continue;
-                try {
-                    f.setAccessible(true);
-                    Object v = f.get(r);
-                    String s = v == null ? "null" : v.getClass().isArray() ? java.util.Arrays.deepToString(new Object[]{v}) : String.valueOf(v);
-                    if (v instanceof Double || v instanceof Float) s = String.format(java.util.Locale.ROOT, "%.2f", ((Number) v).doubleValue());
-                    l.add(new String[]{f.getType().getSimpleName() + " " + f.getName(), s.length() > 200 ? s.substring(0, 200) + "…" : s});
-                } catch (RuntimeException | IllegalAccessException e) {
-                    l.add(new String[]{f.getName(), "?"});
-                }
-            }
-            c = c.getSuperclass();
-        }
-        return l;
     }
 
     // ================================================================ entre rondas

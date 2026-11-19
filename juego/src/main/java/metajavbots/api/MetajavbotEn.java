@@ -76,47 +76,47 @@ public abstract class MetajavbotEn extends RobotBase {
 
     @Override
     final void empezar() {
-        onStart();
+        ejecutarEn("onStart", this::onStart);
     }
 
     @Override
     final void turno() {
-        onTick();
+        ejecutarEn("onTick", this::onTick);
     }
 
     @Override
     final void ver(Avistado e) {
-        onSeeEnemy(e);
+        ejecutarEn("onSeeEnemy", () -> onSeeEnemy(e));
     }
 
     @Override
     final void golpeado(Impacto g) {
-        onHit(g);
+        ejecutarEn("onHit", () -> onHit(g));
     }
 
     @Override
     final void acierto(Impacto g) {
-        onHitEnemy(g);
+        ejecutarEn("onHitEnemy", () -> onHitEnemy(g));
     }
 
     @Override
     final void pared() {
-        onHitWall();
+        ejecutarEn("onHitWall", this::onHitWall);
     }
 
     @Override
     final void choque(Avistado e) {
-        onBump(e);
+        ejecutarEn("onBump", () -> onBump(e));
     }
 
     @Override
     final void finDeRonda() {
-        onRoundEnd();
+        ejecutarEn("onRoundEnd", this::onRoundEnd);
     }
 
     @Override
     final void equipo(String de, String mensaje) {
-        onTeamMessage(de, mensaje);
+        ejecutarEn("onTeamMessage", () -> onTeamMessage(de, mensaje));
     }
 
     // ================================================================ moving
@@ -124,34 +124,41 @@ public abstract class MetajavbotEn extends RobotBase {
     /** Moves forward this distance (negative: backwards). Replaces the previous move order. */
     public final void ahead(double distance) {
         m().avanzar(distance);
+        anotarOrden("ahead(" + redondear(distance) + ")", Mando.CANAL_AVANCE);
     }
 
     /** Moves backwards this distance. */
     public final void back(double distance) {
         m().avanzar(-distance);
+        anotarOrden("back(" + redondear(distance) + ")", Mando.CANAL_AVANCE);
     }
 
     /** Turns the body this many degrees (positive: left). */
     public final void turn(double degrees) {
         m().girar(degrees);
+        anotarOrden("turn(" + redondear(degrees) + "°)", Mando.CANAL_GIRO);
     }
 
     public final void turnLeft(double degrees) {
         m().girar(degrees);
+        anotarOrden("turnLeft(" + redondear(degrees) + "°)", Mando.CANAL_GIRO);
     }
 
     public final void turnRight(double degrees) {
         m().girar(-degrees);
+        anotarOrden("turnRight(" + redondear(degrees) + "°)", Mando.CANAL_GIRO);
     }
 
     /** Turns the body to face this absolute angle, the short way. */
     public final void turnTo(double angle) {
         m().girar(normalize(angle - m().rumbo()));
+        anotarOrden("turnTo(" + redondear(angle) + "°)", Mando.CANAL_GIRO);
     }
 
     /** Stops: no moving, no turning. */
     public final void stop() {
         m().detener();
+        anotarOrden("stop()", Mando.CANAL_AVANCE | Mando.CANAL_GIRO);
     }
 
     // ================================================================ aiming and attacking
@@ -159,35 +166,46 @@ public abstract class MetajavbotEn extends RobotBase {
     /** Turns the sight (arms and radar) this many degrees without turning the body. */
     public final void aim(double degrees) {
         m().apuntar(degrees);
+        anotarOrden("aim(" + redondear(degrees) + "°)", Mando.CANAL_MIRA);
     }
 
     /** Turns the sight to this absolute angle. */
     public final void aimTo(double angle) {
         m().apuntar(normalize(angle - m().mira()));
+        anotarOrden("aimTo(" + redondear(angle) + "°)", Mando.CANAL_MIRA);
     }
 
     /** Turns the sight towards this point of the arena. */
     public final void aimAt(double x, double y) {
-        aimTo(anguloHasta(x, y));
+        m().apuntar(normalize(anguloHasta(x, y) - m().mira()));
+        anotarOrden("aimAt(" + redondear(x) + ", " + redondear(y) + ")", Mando.CANAL_MIRA);
     }
 
     /** Attacks with the left arm where the sight points. Returns false if it was not ready yet. */
     public final boolean attackLeft() {
-        return m().atacar(Mando.IZQUIERDA);
+        boolean ok = m().atacar(Mando.IZQUIERDA);
+        if (ok) anotarOrden("attackLeft()", 0);
+        return ok;
     }
 
     public final boolean attackRight() {
-        return m().atacar(Mando.DERECHA);
+        boolean ok = m().atacar(Mando.DERECHA);
+        if (ok) anotarOrden("attackRight()", 0);
+        return ok;
     }
 
     /** Uses the head's special (a shield, a turbo, repair…, depending on the part). */
     public final boolean special() {
-        return m().atacar(Mando.CABEZA);
+        boolean ok = m().atacar(Mando.CABEZA);
+        if (ok) anotarOrden("special()", 0);
+        return ok;
     }
 
     /** Attacks with whichever arm is ready (right first). */
     public final boolean attack() {
-        return m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
+        boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
+        if (ok) anotarOrden("attack()", 0);
+        return ok;
     }
 
     public final boolean readyLeft() {

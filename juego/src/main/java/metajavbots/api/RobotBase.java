@@ -57,4 +57,22 @@ public abstract class RobotBase {
     static String aTexto(Object o) {
         return String.valueOf(o);
     }
+
+    static long redondear(double v) {
+        return Double.isNaN(v) || Double.isInfinite(v) ? 0 : Math.round(v);
+    }
+
+    final void ejecutarEn(String metodo, Runnable r) {
+        Mando actual = mando;
+        if (actual != null) actual.enMetodo(metodo);
+        try {
+            r.run();
+        } finally {
+            if (actual != null) actual.enMetodo("");
+        }
+    }
+
+    final void anotarOrden(String accion, int canales) {
+        if (mando != null) mando.anotarOrden(accion, canales);
+    }
 }

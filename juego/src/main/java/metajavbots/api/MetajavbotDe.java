@@ -76,47 +76,47 @@ public abstract class MetajavbotDe extends RobotBase {
 
     @Override
     final void empezar() {
-        beimStart();
+        ejecutarEn("beimStart", this::beimStart);
     }
 
     @Override
     final void turno() {
-        jedenZug();
+        ejecutarEn("jedenZug", this::jedenZug);
     }
 
     @Override
     final void ver(Avistado e) {
-        beiSicht(e);
+        ejecutarEn("beiSicht", () -> beiSicht(e));
     }
 
     @Override
     final void golpeado(Impacto g) {
-        beiTreffer(g);
+        ejecutarEn("beiTreffer", () -> beiTreffer(g));
     }
 
     @Override
     final void acierto(Impacto g) {
-        beiEigenemTreffer(g);
+        ejecutarEn("beiEigenemTreffer", () -> beiEigenemTreffer(g));
     }
 
     @Override
     final void pared() {
-        beiWand();
+        ejecutarEn("beiWand", this::beiWand);
     }
 
     @Override
     final void choque(Avistado e) {
-        beiZusammenstoss(e);
+        ejecutarEn("beiZusammenstoss", () -> beiZusammenstoss(e));
     }
 
     @Override
     final void finDeRonda() {
-        beiRundenende();
+        ejecutarEn("beiRundenende", this::beiRundenende);
     }
 
     @Override
     final void equipo(String de, String mensaje) {
-        beiTeamNachricht(de, mensaje);
+        ejecutarEn("beiTeamNachricht", () -> beiTeamNachricht(de, mensaje));
     }
 
     // ================================================================ fahren
@@ -124,34 +124,41 @@ public abstract class MetajavbotDe extends RobotBase {
     /** Fährt diese Strecke vorwärts (negativ: rückwärts). Ersetzt den vorigen Fahrbefehl. */
     public final void vorwaerts(double strecke) {
         m().avanzar(strecke);
+        anotarOrden("vorwaerts(" + redondear(strecke) + ")", Mando.CANAL_AVANCE);
     }
 
     /** Fährt diese Strecke rückwärts. */
     public final void rueckwaerts(double strecke) {
         m().avanzar(-strecke);
+        anotarOrden("rueckwaerts(" + redondear(strecke) + ")", Mando.CANAL_AVANCE);
     }
 
     /** Dreht den Körper um diese Grad (positiv: nach links). */
     public final void drehen(double grad) {
         m().girar(grad);
+        anotarOrden("drehen(" + redondear(grad) + "°)", Mando.CANAL_GIRO);
     }
 
     public final void linksDrehen(double grad) {
         m().girar(grad);
+        anotarOrden("linksDrehen(" + redondear(grad) + "°)", Mando.CANAL_GIRO);
     }
 
     public final void rechtsDrehen(double grad) {
         m().girar(-grad);
+        anotarOrden("rechtsDrehen(" + redondear(grad) + "°)", Mando.CANAL_GIRO);
     }
 
     /** Dreht den Körper auf diesen absoluten Winkel, auf dem kürzesten Weg. */
     public final void drehenNach(double winkel) {
         m().girar(normalisieren(winkel - m().rumbo()));
+        anotarOrden("drehenNach(" + redondear(winkel) + "°)", Mando.CANAL_GIRO);
     }
 
     /** Hält an: weder fahren noch drehen. */
     public final void anhalten() {
         m().detener();
+        anotarOrden("anhalten()", Mando.CANAL_AVANCE | Mando.CANAL_GIRO);
     }
 
     // ================================================================ zielen und angreifen
@@ -159,35 +166,46 @@ public abstract class MetajavbotDe extends RobotBase {
     /** Dreht das Visier (Arme und Radar) um diese Grad, ohne den Körper zu drehen. */
     public final void zielen(double grad) {
         m().apuntar(grad);
+        anotarOrden("zielen(" + redondear(grad) + "°)", Mando.CANAL_MIRA);
     }
 
     /** Dreht das Visier auf diesen absoluten Winkel. */
     public final void zielenNach(double winkel) {
         m().apuntar(normalisieren(winkel - m().mira()));
+        anotarOrden("zielenNach(" + redondear(winkel) + "°)", Mando.CANAL_MIRA);
     }
 
     /** Dreht das Visier auf diesen Punkt der Arena. */
     public final void zielenAuf(double x, double y) {
-        zielenNach(anguloHasta(x, y));
+        m().apuntar(normalisieren(anguloHasta(x, y) - m().mira()));
+        anotarOrden("zielenAuf(" + redondear(x) + ", " + redondear(y) + ")", Mando.CANAL_MIRA);
     }
 
     /** Greift mit dem linken Arm in Blickrichtung an. Gibt false zurück, wenn er noch nicht bereit war. */
     public final boolean angriffLinks() {
-        return m().atacar(Mando.IZQUIERDA);
+        boolean ok = m().atacar(Mando.IZQUIERDA);
+        if (ok) anotarOrden("angriffLinks()", 0);
+        return ok;
     }
 
     public final boolean angriffRechts() {
-        return m().atacar(Mando.DERECHA);
+        boolean ok = m().atacar(Mando.DERECHA);
+        if (ok) anotarOrden("angriffRechts()", 0);
+        return ok;
     }
 
     /** Benutzt das Spezielle des Kopfes (Schild, Turbo, Reparatur…, je nach Teil). */
     public final boolean spezial() {
-        return m().atacar(Mando.CABEZA);
+        boolean ok = m().atacar(Mando.CABEZA);
+        if (ok) anotarOrden("spezial()", 0);
+        return ok;
     }
 
     /** Greift mit dem Arm an, der bereit ist (zuerst der rechte). */
     public final boolean angreifen() {
-        return m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
+        boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
+        if (ok) anotarOrden("angreifen()", 0);
+        return ok;
     }
 
     public final boolean bereitLinks() {

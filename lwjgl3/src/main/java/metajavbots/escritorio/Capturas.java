@@ -234,6 +234,7 @@ public final class Capturas extends Juego {
         pantallas.put("07_pelear", metajavbots.pantallas.PrepararPelea::new);
         pantallas.put("08_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.encuentro(this, "ADAPTADA")));
         pantallaDelVisor();
+        pantallaDelDepurador();
         pantallas.put("09_ejercicio", () -> new metajavbots.pantallas.PantallaEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("05").get(2)));
         robotitos();
         pantallas.put("10_tutoriales", metajavbots.pantallas.Tutoriales::new);
@@ -289,6 +290,50 @@ public final class Capturas extends Juego {
             @Override
             public void fotograma(Juego j, float dt) {
                 pp.fotograma(j, ++n < 45 ? dt * 2.5f : dt);
+            }
+        });
+    }
+
+    /** El depurador F9 abierto en «Código / Turno» con traza iluminada y una orden pisada en ámbar. */
+    private void pantallaDelDepurador() {
+        pantallas.put("08i_depurador_traza", () -> new Pantalla() {
+            private metajavbots.pantallas.PantallaPelea pp;
+            private String codigoAntes;
+            private int n;
+
+            @Override
+            public void alEntrar(Juego j) {
+                codigoAntes = j.jugador.robot().codigo;
+                j.jugador.robot().codigo = "import metajavbots.api.*;\n\n"
+                        + "public class Cobaltito extends Metajavbot {\n"
+                        + "    @Override\n"
+                        + "    public void alVerEnemigo(Enemigo e) {\n"
+                        + "        apuntarHacia(e.angulo());\n"
+                        + "        atacar();\n"
+                        + "    }\n\n"
+                        + "    @Override\n"
+                        + "    public void cadaTurno() {\n"
+                        + "        avanzar(80);\n"
+                        + "        apuntar(12);\n"
+                        + "    }\n"
+                        + "}\n";
+                metajavbots.pantallas.Encuentro e = metajavbots.pantallas.PrepararPelea.encuentro(j, "ADAPTADA");
+                e.escenario = VistaDeArena.Escenario.LABORATORIO;
+                pp = new metajavbots.pantallas.PantallaPelea(e);
+                pp.alEntrar(j);
+                pp.abrirDepurador(1);
+            }
+
+            @Override
+            public void alSalir(Juego j) {
+                if (codigoAntes != null) j.jugador.robot().codigo = codigoAntes;
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                if (pp.tieneConflictoDeOrdenes()) pp.pausar(true);
+                pp.fotograma(j, ++n < 120 && !pp.tieneConflictoDeOrdenes() ? dt * 4f : dt);
+                if (pp.tieneConflictoDeOrdenes()) pp.pausar(true);
             }
         });
     }
