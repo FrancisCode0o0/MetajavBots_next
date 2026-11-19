@@ -235,7 +235,7 @@ public final class Pelea {
     /** Un turno de pelea. No hace nada si no se está luchando. */
     public void avanzar() {
         if (estado != Estado.LUCHANDO) return;
-        sucesosDelTurno.clear();
+        if (turno > 0) sucesosDelTurno.clear();
         turno++;
         int n = cuerpos.length;
         // 1) Lo que ve cada uno (una foto del principio del turno): sus enemigos a la vista y sus compañeros.
@@ -261,7 +261,7 @@ public final class Pelea {
         for (int i = 0; i < n; i++) for (int k = i + 1; k < n; k++) chocar(cuerpos[i], cuerpos[k]);
         arena.turno(this);
         aparatos.turno(this);
-        for (Cuerpo c : cuerpos) efectosContinuos(c, objetivo(c));
+        for (Cuerpo c : cuerpos) efectosContinuos(c);
         moverProyectiles();
         for (Rayo r : rayos) r.vida--;
         rayos.removeIf(r -> r.vida <= 0);
@@ -425,34 +425,32 @@ public final class Pelea {
     private long ejecutar(Cuerpo c, Runnable r, long tope) {
         Puente.contar(tope, nanosPorTurno);
         metajavbots.codigo.Salida.capturar();
+        long pasos = 0;
         try {
-            r.run();
-        } catch (TopeDeCalculo t) {
-            Combatiente.Informe inf = informe(c.indice);
-            inf.topes++;
-            // Se pasa del tope: pierde los turnos siguientes, más cuanto más se pase (el código lento hace lento al robot).
-            c.deuda = Math.min(20, c.deuda + 2 + inf.topes / 3);
-            if (inf.topes <= 3 || inf.topes % 20 == 0) {
-                c.combatiente.escribir(turno, "⏱ Tope de cálculo (" + tope + " pasos por turno): el robot se queda pensando " + c.deuda + " turnos.");
-            }
-            suceso(Suceso.Tipo.TOPE, c.indice, c.x, c.y, 0, c.deuda, "");
-        } catch (StackOverflowError e) {
-            error(c, e, "recursión sin final (StackOverflowError)");
-        } catch (OutOfMemoryError e) {
-            error(c, e, "sin memoria");
-        } catch (Throwable e) {
-            error(c, e, null);
+            try {
+                r.run();
+            } catch (TopeDeCalculo t) {
+                Combatiente.Informe inf = informe(c.indice);
+                inf.topes++;
+                // Se pasa del tope: pierde los turnos siguientes, más cuanto más se pase (el código lento hace lento al robot).
+                c.deuda = Math.min(20, c.deuda + 2 + inf.topes / 3);
+                if (inf.topes <= 3 || inf.topes % 20 == 0) {
+                    c.combatiente.escribir(turno, "⏱ Tope de cálculo (" + tope + " pasos por turno): el robot se queda pensando " + c.deuda + " turnos.");
+                }
+                suceso(Suceso.Tipo.TOPE, c.indice, c.x, c.y, 0, c.deuda, "");
+            } catch (StackOverflowError e) { error(c, e, "recursión sin final (StackOverflowError)"); }
+            catch (OutOfMemoryError e) { error(c, e, "sin memoria"); }
+            catch (Throwable e) { error(c, e, null); }
+            // La traza (modo máquina contra máquina): qué líneas de su código se ejecutaron este turno.
+            java.util.BitSet lineas = Puente.lineas();
+            if (lineas != null && !lineas.isEmpty()) { c.lineasDelTurno = lineas; c.ultimaLinea = Puente.ultimaLinea(); }
+        } finally {
+            try {
+                String escrito = metajavbots.codigo.Salida.soltar();
+                if (!escrito.isEmpty()) c.combatiente.escribir(turno, escrito.stripTrailing());
+            } finally { pasos = Puente.dejarDeContar(); }
         }
-        // La traza (modo máquina contra máquina): qué líneas de su código se ejecutaron este turno.
-        java.util.BitSet lineas = Puente.lineas();
-        if (lineas != null && !lineas.isEmpty()) {
-            c.lineasDelTurno = lineas;
-            c.ultimaLinea = Puente.ultimaLinea();
-        }
-        // Lo que escribió con System.out va a su consola.
-        String escrito = metajavbots.codigo.Salida.soltar();
-        if (!escrito.isEmpty()) c.combatiente.escribir(turno, escrito.stripTrailing());
-        return Puente.dejarDeContar();
+        return pasos;
     }
 
     private void error(Cuerpo c, Throwable e, String que) {
@@ -706,17 +704,18 @@ public final class Pelea {
         b.velocidad *= 0.3;
     }
 
-    private void efectosContinuos(Cuerpo c, Cuerpo e) {
-        if (c.llama > 0 && !c.fuera) {
-            c.llama--;
-            Pieza p = c.piezaDe(c.brazoDeLaLlama);
-            if (p != null) {
-                double d = Math.hypot(e.x - c.x, e.y - c.y);
-                double ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
-                if (!e.fuera && d <= p.valor("alcance", 160) + e.radio && Math.abs(normal(ang - c.mira)) <= p.valor("cono", 30) / 2 + 8) {
-                    double sobre = c.sobrecarga > 0 ? c.factorSobrecarga : 1;
-                    danar(e, c, p.valor("dano", 1) * sobre * c.cifras.cuerpo, "llama", ang + 180, false);
-                }
+    private void efectosContinuos(Cuerpo c) {
+        if (c.llama <= 0 || c.fuera) return;
+        c.llama--;
+        Pieza p = c.piezaDe(c.brazoDeLaLlama);
+        if (p == null) return;
+        double sobre = c.sobrecarga > 0 ? c.factorSobrecarga : 1;
+        for (Cuerpo e : cuerpos) {
+            if (e == c || e.equipo == c.equipo || e.fuera) continue;
+            double d = Math.hypot(e.x - c.x, e.y - c.y);
+            double ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
+            if (d <= p.valor("alcance", 160) + e.radio && Math.abs(normal(ang - c.mira)) <= p.valor("cono", 30) / 2 + 8) {
+                danar(e, c, p.valor("dano", 1) * sobre * c.cifras.cuerpo, "llama", ang + 180, false);
             }
         }
     }

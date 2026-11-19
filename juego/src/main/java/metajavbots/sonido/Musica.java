@@ -65,11 +65,22 @@ public final class Musica {
 
     /** Lo apaga todo y cierra el sintetizador (al salir del juego). */
     public void liberar() {
+        activa = false;
+        pedido = "";
+        sonando = "";
         parar();
         if (hilo != null) {
-            hilo.submit(this::cerrarMidi);
-            hilo.shutdown();
+            if (!hilo.isShutdown()) {
+                hilo.submit(this::cerrarMidi);
+                hilo.shutdown();
+            }
+            try {
+                hilo.awaitTermination(500, java.util.concurrent.TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
+        cerrarMidi();
     }
 
     private void cambiar(String tema) {
@@ -78,7 +89,7 @@ public final class Musica {
         volumenPuesto = -1;
         if (tema.isEmpty()) {
             // Sin música, ni el sintetizador queda abierto.
-            if (hilo != null) hilo.submit(this::cerrarMidi);
+            if (hilo != null && !hilo.isShutdown()) hilo.submit(this::cerrarMidi);
             return;
         }
         Path propio = personal(tema);
@@ -101,7 +112,7 @@ public final class Musica {
                 return h;
             });
         }
-        hilo.submit(() -> empezarMidi(tema, propio, serie));
+        if (!hilo.isShutdown()) hilo.submit(() -> empezarMidi(tema, propio, serie));
     }
 
     /** En el hilo de la música: abre el sintetizador (la primera vez) y pone el MIDI en bucle. */
@@ -148,7 +159,7 @@ public final class Musica {
             archivo.dispose();
             archivo = null;
         }
-        if (hilo != null) {
+        if (hilo != null && !hilo.isShutdown()) {
             hilo.submit(() -> {
                 if (secuenciador != null && secuenciador.isRunning()) secuenciador.stop();
                 silenciar();
@@ -160,7 +171,7 @@ public final class Musica {
         volumenPuesto = volumen;
         float v = volumen;
         if (archivo != null) archivo.setVolume(v);
-        if (hilo != null) hilo.submit(() -> volumenMidi(v));
+        if (hilo != null && !hilo.isShutdown()) hilo.submit(() -> volumenMidi(v));
     }
 
     private void volumenMidi(float v) {
@@ -173,9 +184,16 @@ public final class Musica {
         for (MidiChannel c : sintetizador.getChannels()) if (c != null) c.allNotesOff();
     }
 
-    private void cerrarMidi() {
+    private synchronized void cerrarMidi() {
         try {
-            if (secuenciador != null) secuenciador.close();
+            if (secuenciador != null) {
+                if (secuenciador.isRunning()) secuenciador.stop();
+                secuenciador.close();
+            }
+        } catch (RuntimeException e) {
+            // ya estaba cerrado
+        }
+        try {
             if (sintetizador != null) sintetizador.close();
         } catch (RuntimeException e) {
             // ya estaba cerrado

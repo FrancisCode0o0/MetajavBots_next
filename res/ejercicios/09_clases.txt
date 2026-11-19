@@ -9,8 +9,8 @@ titulo.es: Tu primer robot de verdad
 titulo.de: Dein erster echter Roboter
 titulo.en: Your first real robot
 enunciado.es: Escribe la clase Robot con un campo para el nombre, un constructor Robot(String nombre) que lo guarda y un método String presentarse() que devuelve "Robot <nombre> listo".
-enunciado.de: Schreibe die Klasse Robot mit einem Feld für den Namen, einem Konstruktor Robot(String nombre), der ihn speichert, und einer Methode String presentarse(), die "Robot <nombre> listo" zurückgibt.
-enunciado.en: Write the class Robot with a field for the name, a constructor Robot(String nombre) that stores it and a method String presentarse() that returns "Robot <nombre> listo".
+enunciado.de: Schreibe die Klasse Robot mit einem Feld für den Namen, einem Konstruktor Robot(String nombre), der ihn speichert, und einer Methode String presentarse(), die "Robot <nombre> bereit" zurückgibt.
+enunciado.en: Write the class Robot with a field for the name, a constructor Robot(String nombre) that stores it and a method String presentarse() that returns "Robot <nombre> ready".
 pista.es: En el constructor, this.nombre = nombre; copia el parámetro en el campo del objeto.
 pista.de: Im Konstruktor kopiert this.nombre = nombre; den Parameter in das Feld des Objekts.
 pista.en: In the constructor, this.nombre = nombre; copies the parameter into the object's field.
@@ -41,6 +41,12 @@ casos:
     new Robot("Tita").presentarse() => "Robot Tita listo"
     new Robot("Mk-2").presentarse() => "Robot Mk-2 listo"
     new Robot("").presentarse() => "Robot  listo"
+terminos.de:
+    // escribe aquí el constructor Robot(String nombre) ==> // schreib hier den Konstruktor Robot(String nombre)
+     listo" ==>  bereit"
+terminos.en:
+    // escribe aquí el constructor Robot(String nombre) ==> // write the Robot(String nombre) constructor here
+     listo" ==>  ready"
 
 === t09_pieza_ficha
 tema: 09
@@ -88,6 +94,14 @@ casos:
     "" + new Pieza("escudo", 12) => "escudo (12 kg)"
     String.valueOf(new Pieza("tuerca", 0)) => "tuerca (0 kg)"
     new Pieza("", 1).toString() => " (1 kg)"
+terminos.de:
+    // sobrescribe toString() ==> // überschreibe toString()
+    escudo ==> schild
+    tuerca ==> mutter
+terminos.en:
+    // sobrescribe toString() ==> // override toString()
+    escudo ==> shield
+    tuerca ==> nut
 
 === t09_arena
 tema: 09
@@ -136,6 +150,10 @@ casos:
     new Arena(10, 5).dentro(10, 0) => false
     new Arena(10, 5).dentro(-1, 2) => false
     new Arena(0, 0).area() => 0
+terminos.de:
+    // campos, constructor y métodos ==> // Felder, Konstruktor und Methoden
+terminos.en:
+    // campos, constructor y métodos ==> // fields, constructor and methods
 
 === t09_arma_constructores
 tema: 09
@@ -194,6 +212,16 @@ casos:
     new Arma("espada", 4).ficha() => "espada 4/1"
     new Arma("puno").ficha() => "puno 1/1"
     new Arma("misil", 9, 10).ficha() => "misil 9/10"
+terminos.de:
+    // los otros dos constructores y ficha() ==> // die beiden anderen Konstruktoren und ficha()
+    espada ==> schwert
+    puno ==> faust
+    misil ==> rakete
+terminos.en:
+    // los otros dos constructores y ficha() ==> // the other two constructors and ficha()
+    espada ==> sword
+    puno ==> fist
+    misil ==> missile
 
 === t09_chasis_numerado
 tema: 09
@@ -325,6 +353,14 @@ casos:
     new Taller().anadir(new Pieza("laser", 6)).anadir(new Pieza("escudo", 12)).total() => 18
     new Taller().anadir(new Pieza("laser", 6)).anadir(new Pieza("escudo", 12)).anadir(new Pieza("motor", 12)).masPesada() => "escudo"
     new Taller().masPesada() => ""
+terminos.de:
+    // nombre, peso, constructor y getters ==> // nombre, peso, Konstruktor und Getter
+    // anadir, total, cuantas y masPesada ==> // anadir, total, cuantas und masPesada
+    escudo ==> schild
+terminos.en:
+    // nombre, peso, constructor y getters ==> // nombre, peso, constructor and getters
+    // anadir, total, cuantas y masPesada ==> // anadir, total, cuantas and masPesada
+    escudo ==> shield
 
 === t09_escuadron
 tema: 09
@@ -408,6 +444,12 @@ casos:
     new Escuadron(new Robot[]{new Robot("Rex", 5), new Robot("Tita", 9)}).cuantosSuperan(5) => 1
     new Escuadron(new Robot[0]).masFuerte() => ""
     new Escuadron(new Robot[0]).potenciaTotal() => 0
+terminos.de:
+    // nombre, potencia, constructor y getters ==> // nombre, potencia, Konstruktor und Getter
+    // el array de miembros, el constructor y los métodos ==> // das Mitglieder-Array, der Konstruktor und die Methoden
+terminos.en:
+    // nombre, potencia, constructor y getters ==> // nombre, potencia, constructor and getters
+    // el array de miembros, el constructor y los métodos ==> // the members array, the constructor and the methods
 
 === t09_vector
 tema: 09
@@ -463,6 +505,10 @@ casos:
     new Vector2(1, -2).por(3).toString() => "(3.0, -6.0)"
     new Vector2(3, 4).por(0.5).mas(new Vector2(0.5, 1)).longitud() => Math.sqrt(13)
     ((Supplier<String>) () -> { Vector2 v = new Vector2(1, 1); v.mas(new Vector2(5, 5)); v.por(9); return v.toString(); }).get() => "(1.0, 1.0)"
+terminos.de:
+    // constructor, mas, por, longitud y toString ==> // Konstruktor, mas, por, longitud und toString
+terminos.en:
+    // constructor, mas, por, longitud y toString ==> // constructor, mas, por, longitud and toString
 
 === t09_duelo
 tema: 09
@@ -532,6 +578,10 @@ casos:
     Robot.duelo(new Robot("Rex", 0, 5), new Robot("Tita", 3, 1)).getNombre() => "Tita"
     new Robot("Zap", 0, 1).sigueVivo() => false
     ((Supplier<Integer>) () -> { Robot r = new Robot("Zap", 5, 1); r.recibir(8); return r.getVida(); }).get() => 0
+terminos.de:
+    // constructor, getters, sigueVivo, recibir y duelo ==> // Konstruktor, Getter, sigueVivo, recibir und duelo
+terminos.en:
+    // constructor, getters, sigueVivo, recibir y duelo ==> // constructor, getters, sigueVivo, recibir and duelo
 
 === t09_coordenada_equals
 tema: 09
@@ -596,6 +646,10 @@ casos:
     new Coordenada(1, 2) == new Coordenada(1, 2) => false
     new Coordenada(4, 5).hashCode() == new Coordenada(4, 5).hashCode() => true
     new HashSet<>(Arrays.asList(new Coordenada(1, 2), new Coordenada(1, 2), new Coordenada(3, 3))).size() => 2
+terminos.de:
+    // sobrescribe equals y hashCode ==> // überschreibe equals und hashCode
+terminos.en:
+    // sobrescribe equals y hashCode ==> // override equals and hashCode
 
 === t09_cadena_de_piezas
 tema: 09
@@ -693,3 +747,9 @@ casos:
     new Cadena().get(-1) => !IndexOutOfBoundsException
     new Cadena().anadir("a").anadir("b").anadir("c").invertir().toString() => "[c, b, a]"
     new Cadena().invertir().anadir("x").get(0) => "x"
+terminos.de:
+    // la clase de los eslabones, el primero y los métodos ==> // die Glied-Klasse, das erste Glied und die Methoden
+    escudo ==> schild
+terminos.en:
+    // la clase de los eslabones, el primero y los métodos ==> // the link class, the first link and the methods
+    escudo ==> shield

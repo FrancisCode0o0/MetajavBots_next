@@ -9,11 +9,11 @@ titulo.es: Un robot que vuela
 titulo.de: Ein Roboter, der fliegt
 titulo.en: A robot that flies
 enunciado.es: La clase Robot ya está hecha: Robot(String nombre), String getNombre() y String moverse(), que da "<nombre> camina". Completa RobotVolador extends Robot, con el constructor RobotVolador(String nombre), para que moverse() dé "<nombre> vuela". Usa @Override.
-enunciado.de: Die Klasse Robot ist fertig: Robot(String nombre), String getNombre() und String moverse(), das "<nombre> camina" liefert. Vervollständige RobotVolador extends Robot mit dem Konstruktor RobotVolador(String nombre), sodass moverse() "<nombre> vuela" liefert. Benutze @Override.
-enunciado.en: The class Robot is done: Robot(String nombre), String getNombre() and String moverse(), which gives "<nombre> camina". Complete RobotVolador extends Robot, with the constructor RobotVolador(String nombre), so that moverse() gives "<nombre> vuela". Use @Override.
+enunciado.de: Die Klasse Robot ist fertig: Robot(String nombre), String getNombre() und String moverse(), das "<nombre> geht" liefert. Vervollständige RobotVolador extends Robot mit dem Konstruktor RobotVolador(String nombre), sodass moverse() "<nombre> fliegt" liefert. Benutze @Override.
+enunciado.en: The class Robot is done: Robot(String nombre), String getNombre() and String moverse(), which gives "<nombre> walks". Complete RobotVolador extends Robot, with the constructor RobotVolador(String nombre), so that moverse() gives "<nombre> flies". Use @Override.
 pista.es: @Override public String moverse() { return getNombre() + " vuela"; } — el campo nombre es privado de Robot, pero el getter se hereda.
-pista.de: @Override public String moverse() { return getNombre() + " vuela"; } — das Feld nombre ist privat in Robot, aber der Getter wird vererbt.
-pista.en: @Override public String moverse() { return getNombre() + " vuela"; } — the nombre field is private to Robot, but the getter is inherited.
+pista.de: @Override public String moverse() { return getNombre() + " fliegt"; } — das Feld nombre ist privat in Robot, aber der Getter wird vererbt.
+pista.en: @Override public String moverse() { return getNombre() + " flies"; } — the nombre field is private to Robot, but the getter is inherited.
 plantilla:
     class Robot {
         private final String nombre;
@@ -71,6 +71,14 @@ casos:
     ((Robot) new RobotVolador("Zap")).moverse() => "Zap vuela"
     new RobotVolador("Zap").getNombre() => "Zap"
     new RobotVolador("Zap") instanceof Robot => true
+terminos.de:
+    // sobrescribe moverse() ==> // überschreibe moverse()
+     camina" ==>  geht"
+     vuela" ==>  fliegt"
+terminos.en:
+    // sobrescribe moverse() ==> // override moverse()
+     camina" ==>  walks"
+     vuela" ==>  flies"
 
 === t11_arma_super
 tema: 11
@@ -81,8 +89,8 @@ titulo.es: Un arma es una pieza (super)
 titulo.de: Eine Waffe ist ein Bauteil (super)
 titulo.en: A weapon is a part (super)
 enunciado.es: La clase Pieza ya está: Pieza(String nombre, int peso), getNombre(), getPeso() y toString() con "<nombre> (<peso> kg)". Escribe Arma extends Pieza con Arma(String nombre, int peso, int dano), int getDano() y un toString() que añada " dano <dano>" al de Pieza: "laser (6 kg) dano 5".
-enunciado.de: Die Klasse Pieza gibt es schon: Pieza(String nombre, int peso), getNombre(), getPeso() und toString() mit "<nombre> (<peso> kg)". Schreibe Arma extends Pieza mit Arma(String nombre, int peso, int dano), int getDano() und einem toString(), das " dano <dano>" an das von Pieza anhängt: "laser (6 kg) dano 5".
-enunciado.en: The class Pieza is ready: Pieza(String nombre, int peso), getNombre(), getPeso() and toString() with "<nombre> (<peso> kg)". Write Arma extends Pieza with Arma(String nombre, int peso, int dano), int getDano() and a toString() that adds " dano <dano>" to Pieza's: "laser (6 kg) dano 5".
+enunciado.de: Die Klasse Pieza gibt es schon: Pieza(String nombre, int peso), getNombre(), getPeso() und toString() mit "<nombre> (<peso> kg)". Schreibe Arma extends Pieza mit Arma(String nombre, int peso, int dano), int getDano() und einem toString(), das " schaden <dano>" an das von Pieza anhängt: "laser (6 kg) schaden 5".
+enunciado.en: The class Pieza is ready: Pieza(String nombre, int peso), getNombre(), getPeso() and toString() with "<nombre> (<peso> kg)". Write Arma extends Pieza with Arma(String nombre, int peso, int dano), int getDano() and a toString() that adds " damage <dano>" to Pieza's: "laser (6 kg) damage 5".
 pista.es: super(nombre, peso); llama al constructor de Pieza (primera línea), y super.toString() a su toString.
 pista.de: super(nombre, peso); ruft den Konstruktor von Pieza auf (erste Zeile), und super.toString() dessen toString.
 pista.en: super(nombre, peso); calls Pieza's constructor (first line), and super.toString() calls its toString.
@@ -161,6 +169,14 @@ casos:
     new Arma("misil", 9, 12).getNombre() => "misil"
     new Pieza("tuerca", 1).toString() => "tuerca (1 kg)"
     ((Pieza) new Arma("hacha", 4, 3)).toString() => "hacha (4 kg) dano 3"
+terminos.de:
+    // constructor, getDano() y toString() ==> // Konstruktor, getDano() und toString()
+    " dano " ==> " schaden "
+    kg) dano  ==> kg) schaden 
+terminos.en:
+    // constructor, getDano() y toString() ==> // constructor, getDano() and toString()
+    " dano " ==> " damage "
+    kg) dano  ==> kg) damage 
 
 === t11_escudo_reforzado
 tema: 11
@@ -205,6 +221,10 @@ casos:
     new EscudoReforzado().danoQuePasa(3) => 0
     new EscudoReforzado().danoQuePasa(0) => 0
     ((Escudo) new EscudoReforzado()).danoQuePasa(20) => 8
+terminos.de:
+    // sobrescribe danoQuePasa ==> // überschreibe danoQuePasa
+terminos.en:
+    // sobrescribe danoQuePasa ==> // override danoQuePasa
 
 === t11_chasis_ligero
 tema: 11
@@ -215,8 +235,8 @@ titulo.es: Chasis ligero y pesado (super con argumentos)
 titulo.de: Leichtes und schweres Fahrgestell (super mit Argumenten)
 titulo.en: Light and heavy chassis (super with arguments)
 enunciado.es: Chasis(int blindaje) no tiene constructor sin parámetros, así que sus hijas tienen que llamar a super(...). Escribe ChasisLigero() (blindaje 2) y ChasisPesado() (blindaje 10), las dos extends Chasis, y sobrescribe String tipo() para que den "ligero" y "pesado". La velocidad, 12 - blindaje, la heredan sin tocarla.
-enunciado.de: Chasis(int blindaje) hat keinen parameterlosen Konstruktor, also müssen die Unterklassen super(...) aufrufen. Schreibe ChasisLigero() (Panzerung 2) und ChasisPesado() (Panzerung 10), beide extends Chasis, und überschreibe String tipo(), sodass sie "ligero" und "pesado" liefern. Das Tempo, 12 - blindaje, erben sie unverändert.
-enunciado.en: Chasis(int blindaje) has no constructor without parameters, so its subclasses must call super(...). Write ChasisLigero() (armour 2) and ChasisPesado() (armour 10), both extends Chasis, and override String tipo() so they give "ligero" and "pesado". The speed, 12 - blindaje, is inherited untouched.
+enunciado.de: Chasis(int blindaje) hat keinen parameterlosen Konstruktor, also müssen die Unterklassen super(...) aufrufen. Schreibe ChasisLigero() (Panzerung 2) und ChasisPesado() (Panzerung 10), beide extends Chasis, und überschreibe String tipo(), sodass sie "leicht" und "schwer" liefern. Das Tempo, 12 - blindaje, erben sie unverändert.
+enunciado.en: Chasis(int blindaje) has no constructor without parameters, so its subclasses must call super(...). Write ChasisLigero() (armour 2) and ChasisPesado() (armour 10), both extends Chasis, and override String tipo() so they give "light" and "heavy". The speed, 12 - blindaje, is inherited untouched.
 pista.es: ChasisLigero() { super(2); } — si no escribes el constructor, Java busca un Chasis() que no existe y no compila.
 pista.de: ChasisLigero() { super(2); } — schreibst du keinen Konstruktor, sucht Java ein Chasis(), das es nicht gibt, und es kompiliert nicht.
 pista.en: ChasisLigero() { super(2); } — if you don't write the constructor, Java looks for a Chasis() that doesn't exist and it won't compile.
@@ -296,6 +316,16 @@ casos:
     new ChasisLigero().tipo() => "ligero"
     new Chasis(5).tipo() => "normal"
     new ChasisLigero() instanceof Chasis => true
+terminos.de:
+    // un constructor sin parámetros y tipo() ==> // ein parameterloser Konstruktor und tipo()
+    // y ChasisPesado ==> // und ChasisPesado
+    "ligero" ==> "leicht"
+    "pesado" ==> "schwer"
+terminos.en:
+    // un constructor sin parámetros y tipo() ==> // a parameterless constructor and tipo()
+    // y ChasisPesado ==> // and ChasisPesado
+    "ligero" ==> "light"
+    "pesado" ==> "heavy"
 
 === t11_linaje
 tema: 11
@@ -306,11 +336,11 @@ titulo.es: Tres generaciones de máquinas
 titulo.de: Drei Generationen von Maschinen
 titulo.en: Three generations of machines
 enunciado.es: Escribe Maquina(String nombre), Robot(String nombre, int vida) extends Maquina y Tanque(String nombre, int vida, int canon) extends Robot. String ficha() da "Bum" en una Maquina, "Bum, vida 80" en un Robot y "Bum, vida 80, canon 12" en un Tanque; String linaje() da "Maquina", "Maquina > Robot" y "Maquina > Robot > Tanque". Cada clase añade lo suyo a lo del padre con super.
-enunciado.de: Schreibe Maquina(String nombre), Robot(String nombre, int vida) extends Maquina und Tanque(String nombre, int vida, int canon) extends Robot. String ficha() liefert "Bum" bei einer Maquina, "Bum, vida 80" bei einem Robot und "Bum, vida 80, canon 12" bei einem Tanque; String linaje() liefert "Maquina", "Maquina > Robot" und "Maquina > Robot > Tanque". Jede Klasse hängt ihren Teil mit super an den der Elternklasse.
-enunciado.en: Write Maquina(String nombre), Robot(String nombre, int vida) extends Maquina and Tanque(String nombre, int vida, int canon) extends Robot. String ficha() gives "Bum" for a Maquina, "Bum, vida 80" for a Robot and "Bum, vida 80, canon 12" for a Tanque; String linaje() gives "Maquina", "Maquina > Robot" and "Maquina > Robot > Tanque". Each class adds its part to the parent's with super.
+enunciado.de: Schreibe Maquina(String nombre), Robot(String nombre, int vida) extends Maquina und Tanque(String nombre, int vida, int canon) extends Robot. String ficha() liefert "Bum" bei einer Maquina, "Bum, leben 80" bei einem Robot und "Bum, leben 80, kanone 12" bei einem Tanque; String linaje() liefert "Maquina", "Maquina > Robot" und "Maquina > Robot > Tanque". Jede Klasse hängt ihren Teil mit super an den der Elternklasse.
+enunciado.en: Write Maquina(String nombre), Robot(String nombre, int vida) extends Maquina and Tanque(String nombre, int vida, int canon) extends Robot. String ficha() gives "Bum" for a Maquina, "Bum, health 80" for a Robot and "Bum, health 80, cannon 12" for a Tanque; String linaje() gives "Maquina", "Maquina > Robot" and "Maquina > Robot > Tanque". Each class adds its part to the parent's with super.
 pista.es: En Tanque: return super.ficha() + ", canon " + canon; — super.ficha() es la de Robot, que a su vez llama a la de Maquina.
-pista.de: In Tanque: return super.ficha() + ", canon " + canon; — super.ficha() ist die von Robot, die wiederum die von Maquina aufruft.
-pista.en: In Tanque: return super.ficha() + ", canon " + canon; — super.ficha() is Robot's, which in turn calls Maquina's.
+pista.de: In Tanque: return super.ficha() + ", kanone " + canon; — super.ficha() ist die von Robot, die wiederum die von Maquina aufruft.
+pista.en: In Tanque: return super.ficha() + ", cannon " + canon; — super.ficha() is Robot's, which in turn calls Maquina's.
 plantilla:
     class Maquina {
         // nombre, constructor, ficha() y linaje()
@@ -382,6 +412,18 @@ casos:
     new Maquina("M1").linaje() => "Maquina"
     new Robot("Rex", 30).linaje() => "Maquina > Robot"
     ((Maquina) new Tanque("Bum", 1, 1)).linaje() => "Maquina > Robot > Tanque"
+terminos.de:
+    // nombre, constructor, ficha() y linaje() ==> // nombre, Konstruktor, ficha() und linaje()
+    ", vida " ==> ", leben "
+    ", canon " ==> ", kanone "
+    , vida 30" ==> , leben 30"
+    , vida 80, canon 12" ==> , leben 80, kanone 12"
+terminos.en:
+    // nombre, constructor, ficha() y linaje() ==> // nombre, constructor, ficha() and linaje()
+    ", vida " ==> ", health "
+    ", canon " ==> ", cannon "
+    , vida 30" ==> , health 30"
+    , vida 80, canon 12" ==> , health 80, cannon 12" 
 
 === t11_bateria_solar
 tema: 11
@@ -468,6 +510,10 @@ casos:
     new BateriaSolar(20).cargar(3).alSol(1).getCarga() => 8
     new BateriaSolar(20).alSol(4).llena() => true
     new BateriaSolar(30).alSol(0).llena() => false
+terminos.de:
+    // constructor, alSol, llena y cargar ==> // Konstruktor, alSol, llena und cargar
+terminos.en:
+    // constructor, alSol, llena y cargar ==> // constructor, alSol, llena and cargar
 
 === t11_arma_perforante
 tema: 11
@@ -544,6 +590,12 @@ casos:
     new ArmaDeArea("granada", 5, 3).danoContra(2) => 9
     new ArmaDeArea("granada", 2, 4).danoContra(6) => 0
     ((Arma) new ArmaPerforante("lanza", 10)).danoContra(5) => 8
+terminos.de:
+    // nombre, dano, constructor y danoContra ==> // nombre, dano, Konstruktor und danoContra
+    // ArmaPerforante y ArmaDeArea ==> // ArmaPerforante und ArmaDeArea
+terminos.en:
+    // nombre, dano, constructor y danoContra ==> // nombre, dano, constructor and danoContra
+    // ArmaPerforante y ArmaDeArea ==> // ArmaPerforante and ArmaDeArea
 
 === t11_contador_doble
 tema: 11
@@ -613,6 +665,10 @@ casos:
     ((Supplier<Integer>) () -> { Contador c = new ContadorDoble(); c.incrementarVarios(3); return c.getValor(); }).get() => 6
     ((Supplier<Integer>) () -> { Contador c = new ContadorDoble(); c.incrementarVarios(0); return c.getValor(); }).get() => 0
     new ContadorDoble().getValor() => 0
+terminos.de:
+    // sobrescribe incrementar() ==> // überschreibe incrementar()
+terminos.en:
+    // sobrescribe incrementar() ==> // override incrementar()
 
 === t11_equals_heredado
 tema: 11
@@ -700,6 +756,12 @@ casos:
     new PiezaMk("laser", 6, 2).equals(new Pieza("laser", 6)) => false
     new Pieza("laser", 6).equals(null) => false
     new PiezaMk("x", 1, 1).hashCode() == new PiezaMk("x", 1, 1).hashCode() => true
+terminos.de:
+    // equals y hashCode ==> // equals und hashCode
+    // nivel, constructor, equals y hashCode ==> // nivel, Konstruktor, equals und hashCode
+terminos.en:
+    // equals y hashCode ==> // equals and hashCode
+    // nivel, constructor, equals y hashCode ==> // nivel, constructor, equals and hashCode
 
 === t11_pila_con_minimo
 tema: 11
@@ -827,3 +889,7 @@ casos:
     new PilaConMinimo().minimo() => !IllegalStateException
     new PilaConMinimo().apilar(1).apilar(2).apilar(3).apilar(4).apilar(5).tamano() => 5
     new PilaConMinimo().apilar(9).desapilar() => 9
+terminos.de:
+    // minimo(), apilar y desapilar ==> // minimo(), apilar und desapilar
+terminos.en:
+    // minimo(), apilar y desapilar ==> // minimo(), apilar and desapilar

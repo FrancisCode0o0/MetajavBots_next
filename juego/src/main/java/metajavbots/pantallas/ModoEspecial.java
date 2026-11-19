@@ -59,10 +59,15 @@ public final class ModoEspecial implements Pantalla {
         Comun.fondo(j, 0);
         float arriba = Comun.cabecera(j, T.t("menu.especial"), true);
         String[] pest = {T.t("especial.jefes"), T.t("especial.tope"), T.t("especial.laboratorio"), T.t("especial.retos"), T.t("especial.otros")};
+        int anterior = pestana;
         pestana = ui.pestanas(pest, pestana, 20, arriba + 16, p.ancho - 40, 50);
+        if (pestana != anterior) despl.alPrincipio();
         float x = 20, y = arriba + 80, w = p.ancho - 40, h = p.alto - y - 20;
         float cy = ui.panel(x, y, w, h, null);
-        if (bajarAlFinal) despl.desplazamiento = despl.contenido;
+        if (bajarAlFinal && despl.contenido > 0) {
+            despl.desplazamiento = despl.contenido;
+            bajarAlFinal = false;
+        }
         float d = ui.desplazable(despl, x + 8, cy, w - 16, y + h - cy - 10);
         float yy = cy - d;
         switch (pestana) {

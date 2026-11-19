@@ -216,8 +216,8 @@ titulo.es: La lista de precios de las armas
 titulo.de: Die Preisliste der Waffen
 titulo.en: The weapon price list
 enunciado.es: Con un switch, devuelve cuánta energía gasta cada arma: "laser" 30, "misil" 50 y "bala" 5. Cualquier otro texto (también "LASER", en mayúsculas) gasta 0. Ejemplo: costeDeArma("misil") devuelve 50.
-enunciado.de: Gib mit einem switch zurück, wie viel Energie jede Waffe verbraucht: "laser" 30, "misil" 50 und "bala" 5. Jeder andere Text (auch "LASER" in Großbuchstaben) kostet 0. Beispiel: costeDeArma("misil") gibt 50 zurück.
-enunciado.en: Using a switch, return how much energy each weapon uses: "laser" 30, "misil" 50 and "bala" 5. Any other text (including "LASER" in capitals) costs 0. Example: costeDeArma("misil") returns 50.
+enunciado.de: Gib mit einem switch zurück, wie viel Energie jede Waffe verbraucht: "laser" 30, "rakete" 50 und "kugel" 5. Jeder andere Text (auch "LASER" in Großbuchstaben) kostet 0. Beispiel: costeDeArma("rakete") gibt 50 zurück.
+enunciado.en: Using a switch, return how much energy each weapon uses: "laser" 30, "missile" 50 and "bullet" 5. Any other text (including "LASER" in capitals) costs 0. Example: costeDeArma("missile") returns 50.
 pista.es: switch (arma) { case "laser": coste = 30; break; ... default: coste = 0; } Sin el break, sigue con el caso siguiente.
 pista.de: switch (arma) { case "laser": coste = 30; break; ... default: coste = 0; } Ohne break geht es mit dem nächsten Fall weiter.
 pista.en: switch (arma) { case "laser": coste = 30; break; ... default: coste = 0; } Without break, it carries on into the next case.
@@ -250,6 +250,14 @@ casos:
     costeDeArma("rayo") => 0
     costeDeArma("LASER") => 0
     costeDeArma("") => 0
+terminos.de:
+    "misil" ==> "rakete"
+    "bala" ==> "kugel"
+    "rayo" ==> "strahl"
+terminos.en:
+    "misil" ==> "missile"
+    "bala" ==> "bullet"
+    "rayo" ==> "beam"
 
 === t04_puntos_por_puesto
 tema: 04
@@ -327,8 +335,8 @@ titulo.es: Láser, misil, escudo
 titulo.de: Laser, Rakete, Schild
 titulo.en: Laser, missile, shield
 enunciado.es: Dos robots eligen arma a la vez: "laser" derriba al "misil", el "misil" revienta el "escudo" y el "escudo" refleja el "laser". Devuelve 1 si gana a, 2 si gana b y 0 si empatan (eligen la misma). Ejemplo: duelo("laser", "misil") devuelve 1.
-enunciado.de: Zwei Roboter wählen gleichzeitig eine Waffe: "laser" schießt "misil" (die Rakete) ab, "misil" sprengt "escudo" (den Schild), und "escudo" wirft "laser" zurück. Gib 1 zurück, wenn a gewinnt, 2, wenn b gewinnt, und 0 bei Gleichstand (gleiche Wahl). Beispiel: duelo("laser", "misil") gibt 1 zurück.
-enunciado.en: Two robots pick a weapon at the same time: "laser" shoots down "misil" (the missile), "misil" blows up "escudo" (the shield) and "escudo" reflects "laser". Return 1 if a wins, 2 if b wins and 0 for a draw (same pick). Example: duelo("laser", "misil") returns 1.
+enunciado.de: Zwei Roboter wählen gleichzeitig eine Waffe: "laser" schießt "rakete" ab, "rakete" sprengt "schild", und "schild" wirft "laser" zurück. Gib 1 zurück, wenn a gewinnt, 2, wenn b gewinnt, und 0 bei Gleichstand (gleiche Wahl). Beispiel: duelo("laser", "rakete") gibt 1 zurück.
+enunciado.en: Two robots pick a weapon at the same time: "laser" shoots down "missile", "missile" blows up "shield" and "shield" reflects "laser". Return 1 if a wins, 2 if b wins and 0 for a draw (same pick). Example: duelo("laser", "missile") returns 1.
 pista.es: Los textos se comparan con equals, no con ==. Mira primero el empate; luego junta con || los tres casos en que gana a.
 pista.de: Texte vergleicht man mit equals, nicht mit ==. Prüf zuerst den Gleichstand; dann verbinde mit || die drei Fälle, in denen a gewinnt.
 pista.en: Compare texts with equals, not ==. Check the draw first; then join with || the three cases where a wins.
@@ -354,6 +362,12 @@ casos:
     duelo("laser", "escudo") => 2
     duelo("escudo", "misil") => 2
     duelo("laser", "laser") => 0
+terminos.de:
+    "misil" ==> "rakete"
+    "escudo" ==> "schild"
+terminos.en:
+    "misil" ==> "missile"
+    "escudo" ==> "shield"
 
 === t04_armadura_por_nivel
 tema: 04
@@ -402,6 +416,12 @@ casos:
     armaduraPorNivel(1) => 10
     armaduraPorNivel(0) => 0
     armaduraPorNivel(4) => 0
+terminos.de:
+    // sin break: sigue al caso 2 ==> // ohne break: weiter zu Fall 2
+    // sin break: sigue al caso 1 ==> // ohne break: weiter zu Fall 1
+terminos.en:
+    // sin break: sigue al caso 2 ==> // no break: falls through to case 2
+    // sin break: sigue al caso 1 ==> // no break: falls through to case 1
 
 === t04_danio_final
 tema: 04

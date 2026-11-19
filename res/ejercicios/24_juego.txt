@@ -178,8 +178,8 @@ titulo.es: ¿Con qué brazo?
 titulo.de: Mit welchem Arm?
 titulo.en: Which arm?
 enunciado.es: Devuelve el brazo con el que pegar: el que llegue al enemigo; si llegan los dos, el de menos alcance (pega más fuerte de cerca); si ninguno, "ninguno". Los nombres: "izquierda", "derecha", "ninguno".
-enunciado.de: Gib den Arm zurück, mit dem du zuschlägst: den, der den Gegner erreicht; erreichen ihn beide, den mit weniger Reichweite (der schlägt aus der Nähe härter); keiner, dann "ninguno". Die Namen: "izquierda", "derecha", "ninguno".
-enunciado.en: Return the arm to hit with: the one that reaches the enemy; if both do, the one with less reach (it hits harder up close); if neither, "ninguno". The names: "izquierda", "derecha", "ninguno".
+enunciado.de: Gib den Arm zurück, mit dem du zuschlägst: den, der den Gegner erreicht; erreichen ihn beide, den mit weniger Reichweite (der schlägt aus der Nähe härter); keiner, dann "keiner". Die Namen: "links", "rechts", "keiner".
+enunciado.en: Return the arm to hit with: the one that reaches the enemy; if both do, the one with less reach (it hits harder up close); if neither, "none". The names: "left", "right", "none".
 pista.es: Primero guarda en dos boolean si llega cada brazo. Luego piensa los cuatro casos: los dos, solo uno, solo el otro, ninguno.
 pista.de: Speichere zuerst in zwei boolean, ob jeder Arm hinkommt. Dann denk an die vier Fälle: beide, nur einer, nur der andere, keiner.
 pista.en: First store in two booleans whether each arm reaches. Then think through the four cases: both, only one, only the other, neither.
@@ -197,6 +197,14 @@ casos:
     elegirBrazo(300, 80, 400) => "derecha"
     elegirBrazo(500, 80, 400) => "ninguno"
     elegirBrazo(50, 400, 80) => "derecha"
+terminos.de:
+    "izquierda" ==> "links"
+    "derecha" ==> "rechts"
+    "ninguno" ==> "keiner"
+terminos.en:
+    "izquierda" ==> "left"
+    "derecha" ==> "right"
+    "ninguno" ==> "none"
 
 === j_mas_cercano
 tema: 07
@@ -236,8 +244,8 @@ titulo.es: Memoria entre rondas
 titulo.de: Gedächtnis zwischen den Runden
 titulo.en: Memory between rounds
 enunciado.es: memoria() es un Map que dura toda la pelea. Cada vez que el rival huye por la izquierda, súmale uno a la clave "izq" (empieza en 0 si no está) y devuelve cuántas veces lleva.
-enunciado.de: memoria() ist eine Map, die den ganzen Kampf hält. Jedes Mal, wenn der Gegner nach links flieht, erhöhe den Schlüssel "izq" um eins (bei 0 anfangen, wenn er fehlt) und gib zurück, wie oft schon.
-enunciado.en: memoria() is a Map that lasts the whole fight. Each time the rival flees to the left, add one to the key "izq" (start at 0 if missing) and return how many times so far.
+enunciado.de: memoria() ist eine Map, die den ganzen Kampf hält. Jedes Mal, wenn der Gegner nach links flieht, erhöhe den Schlüssel "links" um eins (bei 0 anfangen, wenn er fehlt) und gib zurück, wie oft schon.
+enunciado.en: memoria() is a Map that lasts the whole fight. Each time the rival flees to the left, add one to the key "left" (start at 0 if missing) and return how many times so far.
 pista.es: getOrDefault te da el valor o uno por defecto. Y no olvides volver a guardarlo con put: si no, la memoria no se entera.
 pista.de: getOrDefault liefert den Wert oder einen Standardwert. Und vergiss nicht, ihn mit put wieder zu speichern, sonst merkt sich das Gedächtnis nichts.
 pista.en: getOrDefault gives you the value or a default. And don't forget to store it back with put, or the memory won't know.
@@ -256,6 +264,10 @@ casos:
     huidas(new java.util.HashMap<>(), true) => 1
     huidas(new java.util.HashMap<>(), false) => 0
     huidas(new java.util.HashMap<>(java.util.Map.of("izq", 5)), false) => 5
+terminos.de:
+    "izq" ==> "links"
+terminos.en:
+    "izq" ==> "left"
 
 === j_usar_aparato
 tema: 04

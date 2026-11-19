@@ -23,6 +23,7 @@ public final class Main {
         c.setBackBufferConfig(8, 8, 8, 8, 16, 0, 4);
         c.setAudioConfig(32, 2048, 9);
         Juego juego = new Juego();
+        juego.selectorDeArchivos = SelectorDeArchivosEscritorio::abrir;
         // Soltar un archivo en la ventana (el temario en PDF, Word…): lo recoge la pantalla que lo quiera.
         c.setWindowListener(new com.badlogic.gdx.backends.lwjgl3.Lwjgl3WindowAdapter() {
             @Override
@@ -30,6 +31,13 @@ public final class Main {
                 juego.archivosSoltados = files;
             }
         });
-        new Lwjgl3Application(juego, c);
+        try {
+            new Lwjgl3Application(juego, c);
+        } catch (Throwable t) {
+            t.printStackTrace();
+        } finally {
+            juego.dispose();
+        }
+        System.exit(0);
     }
 }

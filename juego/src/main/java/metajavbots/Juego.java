@@ -41,10 +41,13 @@ public class Juego extends ApplicationAdapter {
     public float sacudida;
     private float tiempoSacudida;
     private int fallosSeguidos;
+    private boolean cerrado;
     /** El entrenador flotante: asoma en todas las pantallas y explica cualquier concepto (F2). */
     public final metajavbots.pantallas.EntrenadorFlotante entrenadorFlotante = new metajavbots.pantallas.EntrenadorFlotante();
     /** Los archivos que se acaban de soltar en la ventana (el escritorio los pone; los recoge quien los quiera, como el temario). */
     public volatile String[] archivosSoltados;
+    /** El selector nativo de archivos del sistema (el escritorio lo pone; null sin ventana). */
+    public volatile metajavbots.pantalla.SelectorDeArchivos selectorDeArchivos;
     /** La primera pantalla (Capturas pone otras). */
     protected Pantalla primera;
 
@@ -64,11 +67,18 @@ public class Juego extends ApplicationAdapter {
 
     @Override
     public void resize(int w, int h) {
-        if (pincel != null) pincel.redimensionar(w, h);
+        if (w <= 0 || h <= 0 || pincel == null) return;
+        try {
+            pincel.redimensionar(w, h);
+        } catch (Throwable t) {
+            Cierre.apuntar(t, null);
+        }
     }
 
     /** Va a otra pantalla (y recuerda esta para volver). */
     public void ir(Pantalla nueva) {
+        if (ui != null) ui.quitarFoco();
+        if (entrada != null) entrada.limpiar();
         if (pantalla != null) {
             pantalla.alSalir(this);
             anteriores.push(pantalla);
@@ -80,6 +90,9 @@ public class Juego extends ApplicationAdapter {
 
     /** Va a otra pantalla olvidando las anteriores (al menú, por ejemplo). */
     public void irSolo(Pantalla nueva) {
+        if (ui != null) ui.quitarFoco();
+        if (entrada != null) entrada.limpiar();
+        if (entrenadorFlotante != null) entrenadorFlotante.cerrar();
         if (pantalla != null) pantalla.alSalir(this);
         anteriores.clear();
         pantalla = nueva;
@@ -89,6 +102,8 @@ public class Juego extends ApplicationAdapter {
     /** Vuelve a la pantalla de antes. */
     public void volver() {
         if (anteriores.isEmpty()) return;
+        if (ui != null) ui.quitarFoco();
+        if (entrada != null) entrada.limpiar();
         if (pantalla != null) pantalla.alSalir(this);
         pantalla = anteriores.pop();
         pantalla.alEntrar(this);
@@ -155,7 +170,11 @@ public class Juego extends ApplicationAdapter {
             if (fallosSeguidos > 3) {
                 // Algo falla una y otra vez en esta pantalla: se vuelve al menú (o al inicio).
                 fallosSeguidos = 0;
-                irSolo(jugador != null ? new metajavbots.pantallas.Menu() : new Inicio());
+                try {
+                    irSolo(jugador != null ? new metajavbots.pantallas.Menu() : new Inicio());
+                } catch (Throwable secundario) {
+                    Cierre.apuntar(secundario, null);
+                }
             }
         } finally {
             try {
@@ -165,17 +184,28 @@ public class Juego extends ApplicationAdapter {
             }
         }
         // La voz suena en cualquier pantalla (el locutor, el tutor del taller, el entrenador flotante).
-        voz.fotograma(sonidos);
-        sonidos.fotograma(dt);
-        musica.tocar(pantalla.musica());
-        musica.fotograma();
+        try {
+            voz.fotograma(sonidos);
+            sonidos.fotograma(dt);
+            musica.tocar(pantalla.musica());
+            musica.fotograma();
+        } catch (Throwable t) {
+            Cierre.apuntar(t, null);
+        }
     }
 
     @Override
     public void dispose() {
-        guardar();
+        if (cerrado) return;
+        cerrado = true;
+        try {
+            guardar();
+        } catch (Throwable t) {
+            // no impedir el cierre de los recursos si falla el guardado
+        }
         // El cerebro local que arrancó el juego no se queda gastando memoria.
         metajavbots.cerebro.CerebroLocal.cerrar();
+        voz.liberar();
         if (sonidos != null) sonidos.liberar();
         musica.liberar();
         if (pincel != null) pincel.liberar();

@@ -9,11 +9,11 @@ titulo.es: Fuera la pirámide de ifs
 titulo.de: Weg mit der if-Pyramide
 titulo.en: Down with the if pyramid
 enunciado.es: La plantilla es una pirámide de ifs difícil de leer, y tiene un fallo: si maxima <= 0 debería lanzar IllegalArgumentException. Reescríbela con cláusulas de guarda (un if que sale pronto por cada caso especial): maxima <= 0, excepción; vida <= 0, "fuera de combate"; menos de un cuarto de maxima, "crítico"; menos de maxima, "tocado"; si no, "intacto".
-enunciado.de: Die Vorlage ist eine schwer lesbare if-Pyramide und hat einen Fehler: Bei maxima <= 0 sollte sie eine IllegalArgumentException werfen. Schreib sie mit Guard Clauses neu (ein if, das bei jedem Sonderfall früh aussteigt): maxima <= 0 Ausnahme; vida <= 0 "fuera de combate"; weniger als ein Viertel von maxima "crítico"; weniger als maxima "tocado"; sonst "intacto".
-enunciado.en: The template is a hard-to-read pyramid of ifs, and it has a bug: if maxima <= 0 it should throw an IllegalArgumentException. Rewrite it with guard clauses (an if that returns early for each special case): maxima <= 0, exception; vida <= 0, "fuera de combate"; less than a quarter of maxima, "crítico"; less than maxima, "tocado"; otherwise "intacto".
+enunciado.de: Die Vorlage ist eine schwer lesbare if-Pyramide und hat einen Fehler: Bei maxima <= 0 sollte sie eine IllegalArgumentException werfen. Schreib sie mit Guard Clauses neu (ein if, das bei jedem Sonderfall früh aussteigt): maxima <= 0 Ausnahme; vida <= 0 "ausser gefecht"; weniger als ein Viertel von maxima "kritisch"; weniger als maxima "getroffen"; sonst "intakt".
+enunciado.en: The template is a hard-to-read pyramid of ifs, and it has a bug: if maxima <= 0 it should throw an IllegalArgumentException. Rewrite it with guard clauses (an if that returns early for each special case): maxima <= 0, exception; vida <= 0, "out of action"; less than a quarter of maxima, "critical"; less than maxima, "damaged"; otherwise "intact".
 pista.es: Cada caso especial, arriba y con su return (o throw): if (vida <= 0) return "fuera de combate"; Sin else: si el if ha salido, no hace falta. «Menos de un cuarto» sin decimales: vida * 4 < maxima.
-pista.de: Jeder Sonderfall nach oben, mit eigenem return (oder throw): if (vida <= 0) return "fuera de combate"; Ohne else: Wenn das if schon ausgestiegen ist, braucht man keins. «Weniger als ein Viertel» ohne Dezimalzahlen: vida * 4 < maxima.
-pista.en: Each special case at the top, with its own return (or throw): if (vida <= 0) return "fuera de combate"; No else: if the if has already returned, you don't need one. "Less than a quarter" without decimals: vida * 4 < maxima.
+pista.de: Jeder Sonderfall nach oben, mit eigenem return (oder throw): if (vida <= 0) return "ausser gefecht"; Ohne else: Wenn das if schon ausgestiegen ist, braucht man keins. «Weniger als ein Viertel» ohne Dezimalzahlen: vida * 4 < maxima.
+pista.en: Each special case at the top, with its own return (or throw): if (vida <= 0) return "out of action"; No else: if the if has already returned, you don't need one. "Less than a quarter" without decimals: vida * 4 < maxima.
 firma: static String estado(int vida, int maxima)
 plantilla:
     if (maxima > 0) {
@@ -55,6 +55,16 @@ casos:
     estado(0, 100) => "fuera de combate"
     estado(-5, 100) => "fuera de combate"
     estado(10, 0) => !IllegalArgumentException
+terminos.de:
+    fuera de combate ==> ausser gefecht
+    crítico ==> kritisch
+    tocado ==> getroffen
+    intacto ==> intakt
+terminos.en:
+    fuera de combate ==> out of action
+    crítico ==> critical
+    tocado ==> damaged
+    intacto ==> intact
 
 === t22_quitar_duplicacion
 tema: 22
@@ -65,8 +75,8 @@ titulo.es: Copiar y pegar sale caro
 titulo.de: Kopieren und Einfügen rächt sich
 titulo.en: Copy and paste comes back to bite
 enunciado.es: La plantilla repite el mismo cálculo para cada arma, y al copiar y pegar se coló un fallo: el misil tiene alcance 300, no 400. Además, un arma desconocida debe lanzar IllegalArgumentException. Reglas: láser (daño 12, alcance 600), bala (8, 400), misil (25, 300); más allá del alcance, 0; dentro, el daño menos 1 por cada 100 de distancia, pero nunca menos de 1. Escribe la regla una sola vez.
-enunciado.de: Die Vorlage wiederholt dieselbe Rechnung für jede Waffe, und beim Kopieren hat sich ein Fehler eingeschlichen: Die Rakete hat Reichweite 300, nicht 400. Außerdem soll eine unbekannte Waffe eine IllegalArgumentException werfen. Regeln: láser (Schaden 12, Reichweite 600), bala (8, 400), misil (25, 300); jenseits der Reichweite 0; innerhalb der Schaden minus 1 pro 100 Entfernung, aber nie unter 1. Schreib die Regel nur einmal.
-enunciado.en: The template repeats the same calculation for every weapon, and copy-paste let a bug slip in: the missile has range 300, not 400. Also, an unknown weapon must throw an IllegalArgumentException. Rules: láser (damage 12, range 600), bala (8, 400), misil (25, 300); beyond the range, 0; within it, the damage minus 1 for every 100 of distance, but never below 1. Write the rule only once.
+enunciado.de: Die Vorlage wiederholt dieselbe Rechnung für jede Waffe, und beim Kopieren hat sich ein Fehler eingeschlichen: Die Rakete hat Reichweite 300, nicht 400. Außerdem soll eine unbekannte Waffe eine IllegalArgumentException werfen. Regeln: laser (Schaden 12, Reichweite 600), kugel (8, 400), rakete (25, 300); jenseits der Reichweite 0; innerhalb der Schaden minus 1 pro 100 Entfernung, aber nie unter 1. Schreib die Regel nur einmal.
+enunciado.en: The template repeats the same calculation for every weapon, and copy-paste let a bug slip in: the missile has range 300, not 400. Also, an unknown weapon must throw an IllegalArgumentException. Rules: laser (damage 12, range 600), bullet (8, 400), missile (25, 300); beyond the range, 0; within it, the damage minus 1 for every 100 of distance, but never below 1. Write the rule only once.
 pista.es: Separa los datos de la regla: un record local (Java 16) record Arma(int dano, int alcance) {}, un switch que elige los datos de cada arma (con default -> throw ...) y, debajo, la regla una sola vez.
 pista.de: Trenn die Daten von der Regel: ein lokaler Record (Java 16) record Arma(int dano, int alcance) {}, ein switch, das die Daten jeder Waffe wählt (mit default -> throw ...), und darunter die Regel ein einziges Mal.
 pista.en: Separate the data from the rule: a local record (Java 16) record Arma(int dano, int alcance) {}, a switch that picks each weapon's data (with default -> throw ...) and, below it, the rule just once.
@@ -112,6 +122,16 @@ casos:
     danoFinal("misil", 300) => 22
     danoFinal("misil", 350) => 0
     danoFinal("abrazo", 10) => !IllegalArgumentException
+terminos.de:
+    láser ==> laser
+    bala ==> kugel
+    misil ==> rakete
+    abrazo ==> umarmung
+terminos.en:
+    láser ==> laser
+    bala ==> bullet
+    misil ==> missile
+    abrazo ==> hug
 
 === t22_optional_en_vez_de_null
 tema: 22
@@ -254,6 +274,10 @@ casos:
     new Pieza("Mk II", 7).equals("Mk II") => false
     new Pieza("Mk II", 7).hashCode() == new Pieza("mk ii", 7).hashCode() => true
     new HashSet<>(List.of(new Pieza("Mk II", 7), new Pieza("MK II", 7), new Pieza("Mk II", 9))).size() => 2
+terminos.de:
+    // equals y hashCode ==> // equals und hashCode
+terminos.en:
+    // equals y hashCode ==> // equals and hashCode
 
 === t22_objeto_inmutable
 tema: 22
@@ -326,8 +350,8 @@ titulo.es: Montar un robot paso a paso
 titulo.de: Einen Roboter Schritt für Schritt bauen
 titulo.en: Build a robot step by step
 enunciado.es: Completa el patrón Builder: Robot.builder().nombre("Tito").blindaje(3).arma("láser").build(). El Robot es inmutable. Valores por defecto: blindaje 1 y arma "puño". build() lanza IllegalStateException si falta el nombre (o está en blanco) o el blindaje no está entre 1 y 10. toString() da "Tito [blindaje 3, láser]".
-enunciado.de: Vervollständige das Builder-Muster: Robot.builder().nombre("Tito").blindaje(3).arma("láser").build(). Der Robot ist unveränderlich. Standardwerte: blindaje 1 und arma "puño". build() wirft eine IllegalStateException, wenn der Name fehlt (oder leer ist) oder blindaje nicht zwischen 1 und 10 liegt. toString() liefert "Tito [blindaje 3, láser]".
-enunciado.en: Complete the Builder pattern: Robot.builder().nombre("Tito").blindaje(3).arma("láser").build(). The Robot is immutable. Defaults: blindaje 1 and arma "puño". build() throws an IllegalStateException if the name is missing (or blank) or blindaje is not between 1 and 10. toString() gives "Tito [blindaje 3, láser]".
+enunciado.de: Vervollständige das Builder-Muster: Robot.builder().nombre("Tito").blindaje(3).arma("laser").build(). Der Robot ist unveränderlich. Standardwerte: blindaje 1 und arma "faust". build() wirft eine IllegalStateException, wenn der Name fehlt (oder leer ist) oder blindaje nicht zwischen 1 und 10 liegt. toString() liefert "Tito [panzerung 3, laser]".
+enunciado.en: Complete the Builder pattern: Robot.builder().nombre("Tito").blindaje(3).arma("laser").build(). The Robot is immutable. Defaults: blindaje 1 and arma "fist". build() throws an IllegalStateException if the name is missing (or blank) or blindaje is not between 1 and 10. toString() gives "Tito [armor 3, laser]".
 pista.es: Cada método del Builder guarda su valor y devuelve this, para poder encadenar. build() comprueba todo y llama al constructor privado de Robot, que copia los campos del Builder.
 pista.de: Jede Builder-Methode speichert ihren Wert und gibt this zurück, damit man verketten kann. build() prüft alles und ruft den privaten Konstruktor von Robot auf, der die Felder des Builders übernimmt.
 pista.en: Each Builder method stores its value and returns this, so calls can be chained. build() checks everything and calls Robot's private constructor, which copies the Builder's fields.
@@ -456,6 +480,16 @@ casos:
     Robot.builder().blindaje(3).build() => !IllegalStateException
     Robot.builder().nombre("   ").build() => !IllegalStateException
     Robot.builder().nombre("Zap").blindaje(11).build() => !IllegalStateException
+terminos.de:
+    [blindaje  ==> [panzerung 
+    puño ==> faust
+    láser ==> laser
+    misil ==> rakete
+terminos.en:
+    [blindaje  ==> [armor 
+    puño ==> fist
+    láser ==> laser
+    misil ==> missile
 
 === t22_estrategia_de_tiro
 tema: 22
@@ -466,8 +500,8 @@ titulo.es: Estrategias de tiro intercambiables
 titulo.de: Austauschbare Zielstrategien
 titulo.en: Interchangeable targeting strategies
 enunciado.es: Patrón Strategy: Estrategia elige un objetivo de la lista. Añade a la interfaz static Estrategia segun(Comparator<Objetivo> preferencia) (el primero según la preferencia; a igualdad, por nombre) y las constantes MAS_CERCANO (menor distancia) y MAS_DEBIL (menor vida). Torreta(Estrategia e) tiene Torreta cambiarEstrategia(Estrategia e) (devuelve this) y String apuntar(List<Objetivo> enemigos): "a por NOMBRE" o "sin objetivo".
-enunciado.de: Strategy-Muster: Estrategia wählt ein Ziel aus der Liste. Ergänze im Interface static Estrategia segun(Comparator<Objetivo> preferencia) (das erste nach der Vorliebe; bei Gleichstand nach Namen) und die Konstanten MAS_CERCANO (kleinste Entfernung) und MAS_DEBIL (wenigste Lebensenergie). Torreta(Estrategia e) hat Torreta cambiarEstrategia(Estrategia e) (gibt this zurück) und String apuntar(List<Objetivo> enemigos): "a por NAME" oder "sin objetivo".
-enunciado.en: Strategy pattern: Estrategia picks a target from the list. Add to the interface static Estrategia segun(Comparator<Objetivo> preferencia) (the first by that preference; on a tie, by name) and the constants MAS_CERCANO (shortest distance) and MAS_DEBIL (lowest health). Torreta(Estrategia e) has Torreta cambiarEstrategia(Estrategia e) (returns this) and String apuntar(List<Objetivo> enemigos): "a por NAME" or "sin objetivo".
+enunciado.de: Strategy-Muster: Estrategia wählt ein Ziel aus der Liste. Ergänze im Interface static Estrategia segun(Comparator<Objetivo> preferencia) (das erste nach der Vorliebe; bei Gleichstand nach Namen) und die Konstanten MAS_CERCANO (kleinste Entfernung) und MAS_DEBIL (wenigste Lebensenergie). Torreta(Estrategia e) hat Torreta cambiarEstrategia(Estrategia e) (gibt this zurück) und String apuntar(List<Objetivo> enemigos): "auf NAME" oder "kein ziel".
+enunciado.en: Strategy pattern: Estrategia picks a target from the list. Add to the interface static Estrategia segun(Comparator<Objetivo> preferencia) (the first by that preference; on a tie, by name) and the constants MAS_CERCANO (shortest distance) and MAS_DEBIL (lowest health). Torreta(Estrategia e) has Torreta cambiarEstrategia(Estrategia e) (returns this) and String apuntar(List<Objetivo> enemigos): "target NAME" or "no target".
 pista.es: segun devuelve una lambda: enemigos -> enemigos.stream().min(preferencia.thenComparing(Objetivo::nombre)). La Torreta no sabe cómo se elige: solo llama a estrategia.elegir(...) y por eso puedes cambiarla en plena pelea.
 pista.de: segun gibt ein Lambda zurück: enemigos -> enemigos.stream().min(preferencia.thenComparing(Objetivo::nombre)). Die Torreta weiß nicht, wie gewählt wird: Sie ruft nur estrategia.elegir(...) auf, darum kannst du sie mitten im Kampf austauschen.
 pista.en: segun returns a lambda: enemigos -> enemigos.stream().min(preferencia.thenComparing(Objetivo::nombre)). The Torreta doesn't know how the choice is made: it just calls estrategia.elegir(...), which is why you can swap it mid-fight.
@@ -537,6 +571,12 @@ casos:
     new Torreta(Estrategia.segun(Comparator.comparingInt((Objetivo o) -> o.vida()).reversed())).apuntar(List.of(new Objetivo("Ada", 1, 10), new Objetivo("Zap", 9, 80))) => "a por Zap"
     new Torreta(lista -> lista.stream().filter(o -> o.nombre().startsWith("Z")).findFirst()).apuntar(List.of(new Objetivo("Ada", 1, 1), new Objetivo("Zap", 9, 9))) => "a por Zap"
     new Torreta(Estrategia.MAS_DEBIL).apuntar(List.of()) => "sin objetivo"
+terminos.de:
+    a por  ==> auf 
+    sin objetivo ==> kein ziel
+terminos.en:
+    a por  ==> target 
+    sin objetivo ==> no target
 
 === t22_version_comparable
 tema: 22
@@ -760,6 +800,10 @@ casos:
     new Taller().hacer(new Poner("a")).hacer(new Poner("b")).deshacer().deshacer().deshacer().piezas() => List.of()
     new Taller().deshacer().piezas() => List.of()
     new Taller().hacer(new Poner("a")).piezas().add("x") => !UnsupportedOperationException
+terminos.de:
+    // cambia la pieza de la posición dada y recuerda la que había ==> // ersetzt das Teil an dieser Position und merkt sich das alte
+terminos.en:
+    // cambia la pieza de la posición dada y recuerda la que había ==> // replaces the part at that position and remembers the old one
 
 === t22_reloj_inyectado
 tema: 22

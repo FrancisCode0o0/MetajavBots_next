@@ -1,829 +1,2100 @@
-# La API de los robots (la genera herramientas/api_doc.py; no se toca a mano).
+# La API de los robots (con explicaciones pedagógicas y pseudocódigo por idioma).
 
 === api.alEmpezar
 tema: 11
 firma: void alEmpezar()
 firma.de: void beimStart()
 firma.en: void onStart()
-es: Al empezar cada ronda (antes del primer turno). Tema 06: métodos.
-de: Zu Beginn jeder Runde (vor dem ersten Zug). Thema 06: Methoden.
-en: At the start of every round (before the first tick). Topic 06: methods.
+es: Evento sin parámetros ni valor de retorno. El motor lo ejecuta una sola vez al empezar cada ronda, justo antes del turno 0. Úsalo para inicializar variables, colocar el radar o dar la primera orden de movimiento.
+de: Ereignis ohne Parameter und Rückgabewert. Wird einmal zu Beginn jeder Runde direkt vor Zug 0 ausgeführt. Ideal für Startwerte, Startbefehle oder das Lesen aus dem Gedächtnis.
+en: Event with no parameters or return value. Runs once at the start of every round just before tick 0. Use it to initialize variables, set up aim, or issue the opening move order.
+donde.es: Decláralo con @Override en el cuerpo de tu clase Metajavbot, nunca dentro de otro método; no lo llames tú, sustituye al constructor para órdenes iniciales.
+donde.de: Mit @Override direkt im Rumpf deiner MetajavbotDe-Klasse deklarieren, nie in einer anderen Methode; nicht selbst aufrufen, ersetzt den Konstruktor für Startbefehle.
+donde.en: Declare with @Override directly inside your MetajavbotEn class body, never nested in another method; don't call it manually—use it instead of a constructor for opening orders.
+ejemplo.es:
+    AL EMPEZAR cada ronda:
+        apuntar(45)     // orienta la mira al inicio
+        avanzar(120)    // arranca hacia el centro
+ejemplo.de:
+    BEIM START jeder Runde:
+        zielen(45)      // Visier am Anfang ausrichten
+        vorwaerts(120)  // Richtung Mitte starten
+ejemplo.en:
+    ON START of each round:
+        aim(45)         // orient sight at start
+        ahead(120)      // start moving toward center
 
 === api.cadaTurno
 tema: 11
 firma: void cadaTurno()
 firma.de: void jedenZug()
 firma.en: void onTick()
-es: Cada turno (unos 30 por segundo). Aquí va lo principal.
-de: In jedem Zug (etwa 30 pro Sekunde). Hier steht das Wichtigste.
-en: Every tick (about 30 per second). The main logic goes here.
+es: Evento principal del robot, sin parámetros ni retorno. El motor lo ejecuta automáticamente unos 30 veces por segundo, al final de cada turno (después de los avisos y de alVerEnemigo). Aquí va tu lógica continua: patrullar, barrer con el radar o decidir el siguiente movimiento.
+de: Hauptmethode des Roboters ohne Parameter und Rückgabewert. Läuft automatisch ca. 30-mal pro Sekunde am Ende jedes Zugs (nach Ereignissen und beiSicht). Hierhin gehört deine laufende Steuerung: patrouillieren und Radar schwenken.
+en: Main robot hook with no parameters or return value. Runs automatically about 30 times per second at the end of every tick (after event handlers and onSeeEnemy). Put continuous logic here: patrolling and sweeping the radar.
+donde.es: Decláralo con @Override directamente en tu clase Metajavbot (no dentro de otro método ni con bucles infinitos dentro, porque el motor lo llama cada turno).
+donde.de: Mit @Override direkt in deiner MetajavbotDe-Klasse deklarieren (nie verschachtelt und ohne Endlosschleife darin, da die Engine sie jeden Zug selbst aufruft).
+donde.en: Declare with @Override directly in your MetajavbotEn class (never inside another method and without infinite loops inside, as the engine calls it every tick).
+ejemplo.es:
+    CADA TURNO:
+        SI restanteAvance() == 0:
+            avanzar(150)
+        apuntar(12)     // gira la mira en cada turno
+ejemplo.de:
+    JEDEN ZUG:
+        WENN restStrecke() == 0:
+            vorwaerts(150)
+        zielen(12)      // dreht das Visier in jedem Zug
+ejemplo.en:
+    EVERY TICK:
+        IF remainingDistance() == 0:
+            ahead(150)
+        aim(12)         // sweeps the sight every tick
 
 === api.alVerEnemigo
 tema: 11
 firma: void alVerEnemigo(Enemigo e)
 firma.de: void beiSicht(Gegner g)
 firma.en: void onSeeEnemy(Enemy e)
-es: Cada turno en que tu radar ve a un enemigo.
-de: In jedem Zug, in dem dein Radar einen Gegner sieht.
-en: Every tick in which your radar sees an enemy.
+es: Evento sin valor de retorno. Se ejecuta automáticamente antes de cadaTurno en todo turno en que un rival entra en el cono del radar. Recibe el parámetro e (tipo Enemigo) con una foto instantánea de su posición, distancia, ángulo, rumbo, velocidad y blindaje.
+de: Ereignis ohne Rückgabewert. Läuft automatisch vor jedenZug in jedem Zug, in dem ein Gegner im Radarkegel liegt. Bekommt g (Gegner) mit Position, Entfernung, Winkel, Richtung, Geschwindigkeit und Panzerung.
+en: Event with no return value. Runs automatically before onTick on every tick an opponent is inside your radar cone. Receives e (Enemy) with a snapshot of its position, distance, angle, heading, speed, and armor.
+donde.es: Sobrescríbelo en el cuerpo de tu clase Metajavbot, nunca dentro de cadaTurno(); no lo invoques a mano porque solo el motor te pasa el parámetro Enemigo e.
+donde.de: Direkt im Rumpf deiner MetajavbotDe-Klasse überschreiben, nie in jedenZug(); nicht selbst aufrufen, denn nur die Engine liefert das Gegner-Objekt g.
+donde.en: Override directly in your MetajavbotEn class body, never inside onTick(); do not invoke it yourself since only the engine supplies the Enemy parameter e.
+ejemplo.es:
+    AL VER enemigo e:
+        apuntarHacia(e.angulo())
+        SI e.distancia() <= alcanceDerecha():
+            atacarDerecha()
+ejemplo.de:
+    BEI SICHT von Gegner g:
+        zielenNach(g.winkel())
+        WENN g.entfernung() <= reichweiteRechts():
+            angriffRechts()
+ejemplo.en:
+    ON SEEING enemy e:
+        aimTo(e.angle())
+        IF e.distance() <= rangeRight():
+            attackRight()
 
 === api.alRecibirGolpe
 tema: 11
 firma: void alRecibirGolpe(Golpe g)
 firma.de: void beiTreffer(Treffer t)
 firma.en: void onHit(Hit h)
-es: Cuando te dan.
-de: Wenn du getroffen wirst.
-en: When you get hit.
+es: Evento sin retorno. Se ejecuta al inicio del turno cuando el robot recibió al menos un impacto en el turno anterior. Recibe g (Golpe) indicando el daño sufrido, el arma atacante, el ángulo desde el que vino el golpe y qué pieza recibió el daño.
+de: Ereignis ohne Rückgabewert. Läuft zu Beginn des Zugs, wenn du im vorigen Zug getroffen wurdest. Bekommt t (Treffer) mit Schaden, Angriffs-Waffe, Herkunftswinkel und getroffenem Teil.
+en: Event with no return value. Runs at the start of the tick when your robot took a hit on the previous tick. Receives h (Hit) telling the damage taken, weapon used, incoming angle, and which body part was hit.
+donde.es: Decláralo con @Override a nivel de clase en Metajavbot para reaccionar a impactos; no va dentro de otros métodos ni debes llamarlo manualmente.
+donde.de: Mit @Override auf Klassenebene in MetajavbotDe anlegen, um auf Treffer zu reagieren; gehört nicht in andere Methoden und wird nicht von Hand aufgerufen.
+donde.en: Declare with @Override at class level in MetajavbotEn to react to incoming hits; never place it inside another method or call it directly.
+ejemplo.es:
+    AL RECIBIR golpe g:
+        girarHacia(g.angulo() + 90)  // colócate de lado al tiro
+        avanzar(90)                  // sal de la línea de fuego
+ejemplo.de:
+    BEI TREFFER t:
+        drehenNach(t.winkel() + 90)  // seitlich zur Schusslinie
+        vorwaerts(90)                // aus der Schussbahn fahren
+ejemplo.en:
+    ON HIT h:
+        turnTo(h.angle() + 90)       // move perpendicular to shot
+        ahead(90)                    // step out of the line of fire
 
 === api.alAcertar
 tema: 11
 firma: void alAcertar(Golpe g)
 firma.de: void beiEigenemTreffer(Treffer t)
 firma.en: void onHitEnemy(Hit h)
-es: Cuando tu ataque da en el blanco.
-de: Wenn dein Angriff trifft.
-en: When your attack lands.
+es: Evento sin retorno. Se ejecuta al inicio del turno cuando uno de tus disparos o ataques cuerpo a cuerpo impacta al enemigo. Recibe g (Golpe) con el daño hecho, tu arma, el ángulo y la pieza golpeada del rival.
+de: Ereignis ohne Rückgabewert. Läuft zu Beginn des Zugs, wenn dein Angriff einen Gegner getroffen hat. Bekommt t (Treffer) mit ausgeteiltem Schaden, Waffe, Winkel und getroffenem Gegnerteil.
+en: Event with no return value. Runs at the start of the tick when one of your attacks hit an opponent. Receives h (Hit) with damage dealt, weapon, angle, and hit enemy part.
+donde.es: Decláralo con @Override en el cuerpo de tu clase Metajavbot para reaccionar al acertar; nunca dentro de alVerEnemigo() ni invocado por tu cuenta.
+donde.de: Mit @Override im Rumpf deiner MetajavbotDe-Klasse deklarieren, um auf eigene Treffer zu reagieren; nie in beiSicht() verschachteln oder selbst aufrufen.
+donde.en: Declare with @Override in your MetajavbotEn class body to react when your attack lands; never nest it inside onSeeEnemy() or call it manually.
+ejemplo.es:
+    AL ACERTAR golpe g:
+        escribir("Acerté " + g.dano() + " en " + g.pieza())
+        SI g.dano() >= 10: atacar()  // aprovecha la racha
+ejemplo.de:
+    BEI EIGENEM TREFFER t:
+        ausgeben("Treffer " + t.schaden() + " an " + t.teil())
+        WENN t.schaden() >= 10: angreifen()
+ejemplo.en:
+    ON HITTING enemy h:
+        print("Hit " + h.damage() + " on " + h.part())
+        IF h.damage() >= 10: attack()
 
 === api.alChocarConPared
 tema: 11
 firma: void alChocarConPared()
 firma.de: void beiWand()
 firma.en: void onHitWall()
-es: Cuando chocas con una pared (te hace un poco de daño).
-de: Wenn du gegen eine Wand fährst (kostet etwas Panzerung).
-en: When you crash into a wall (it costs a little armor).
+es: Evento sin parámetros ni retorno. Se ejecuta cuando tu robot toca el borde de la arena, frenando su avance y causando un pequeño daño al blindaje. Úsalo para retroceder o girar hacia el centro.
+de: Ereignis ohne Parameter und Rückgabewert. Läuft beim Aufprall auf eine Arenawand; bremst dich ab und kostet etwas Panzerung. Nutze es, um zurückzusetzen oder zur Mitte zu drehen.
+en: Event with no parameters or return value. Runs when your robot hits an arena wall, stopping movement and dealing minor armor damage. Use it to back away or steer toward the center.
+donde.es: Sobrescríbelo en el cuerpo de tu clase Metajavbot para despegarte del borde; no lo metas dentro de cadaTurno() ni lo llames tú mismo.
+donde.de: Im Rumpf deiner MetajavbotDe-Klasse überschreiben, um von der Wand wegzukommen; weder in jedenZug() einbetten noch manuell aufrufen.
+donde.en: Override in your MetajavbotEn class body to recover from wall collisions; never nest it inside onTick() or invoke it yourself.
+ejemplo.es:
+    AL CHOCAR CON PARED:
+        retroceder(60)
+        girar(110)      // aléjate del borde
+ejemplo.de:
+    BEI WAND:
+        rueckwaerts(60)
+        drehen(110)     // von der Wand wegdrehen
+ejemplo.en:
+    ON HITTING WALL:
+        back(60)
+        turn(110)       // turn away from the edge
 
 === api.alChocarConEnemigo
 tema: 11
 firma: void alChocarConEnemigo(Enemigo e)
 firma.de: void beiZusammenstoss(Gegner g)
 firma.en: void onBump(Enemy e)
-es: Cuando chocas con un enemigo.
-de: Wenn du mit einem Gegner zusammenstößt.
-en: When you bump into an enemy.
+es: Evento sin retorno. Se ejecuta cuando tu cuerpo colisiona directamente con otro robot. Recibe e (Enemigo) con los datos de ese rival para apuntar enseguida o separarte según tus armas.
+de: Ereignis ohne Rückgabewert. Läuft bei direkter Kollision mit einem anderen Roboter. Bekommt g (Gegner), um sofort auf ihn zu zielen oder auf Abstand zu gehen.
+en: Event with no return value. Runs when your body directly collides with another robot. Receives e (Enemy) so you can immediately aim at it or step back.
+donde.es: Decláralo con @Override en tu clase Metajavbot para reaccionar al choque cuerpo a cuerpo; nunca dentro de otro método ni llamado a mano.
+donde.de: Mit @Override in deiner MetajavbotDe-Klasse deklarieren, um auf Zusammenstöße zu reagieren; nie in einer Methode verschachteln oder selbst aufrufen.
+donde.en: Declare with @Override in your MetajavbotEn class to react to robot collisions; never put it inside another method or call it manually.
+ejemplo.es:
+    AL CHOCAR CON enemigo e:
+        apuntarHacia(e.angulo())
+        SI !atacar(): retroceder(40)
+ejemplo.de:
+    BEI ZUSAMMENSTOSS mit g:
+        zielenNach(g.winkel())
+        WENN !angreifen(): rueckwaerts(40)
+ejemplo.en:
+    ON BUMPING enemy e:
+        aimTo(e.angle())
+        IF !attack(): back(40)
 
 === api.alAcabarRonda
 tema: 11
 firma: void alAcabarRonda()
 firma.de: void beiRundenende()
 firma.en: void onRoundEnd()
-es: Al acabar la ronda.
-de: Am Ende der Runde.
-en: At the end of the round.
+es: Evento sin parámetros ni retorno. Se ejecuta una vez al terminar cada ronda (por tiempo o por KO). Sirve para resumir datos en memoria() o mostrar mensajes finales.
+de: Ereignis ohne Parameter und Rückgabewert. Läuft einmal am Ende jeder Runde (Zeitablauf oder K.o.). Eignet sich zum Speichern von Ergebnissen in gedaechtnis().
+en: Event with no parameters or return value. Runs once when a round finishes (timeout or knockout). Useful to record stats in memory() for the next round.
+donde.es: Decláralo con @Override a nivel de clase en Metajavbot para guardar datos en memoria() al final; aquí ya no tiene sentido dar órdenes de movimiento o ataque.
+donde.de: Mit @Override auf Klassenebene in MetajavbotDe deklarieren, um am Ende Daten in gedaechtnis() zu sichern; Bewegungs- oder Angriffsbefehle wirken hier nicht mehr.
+donde.en: Declare with @Override at class level in MetajavbotEn to save data into memory() at round end; issuing move or attack orders here has no effect.
+ejemplo.es:
+    AL ACABAR RONDA:
+        escribir("Fin de ronda con " + blindaje() + "%")
+ejemplo.de:
+    BEI RUNDENENDE:
+        ausgeben("Rundenende mit " + panzerung() + "%")
+ejemplo.en:
+    ON ROUND END:
+        print("Round over with " + armor() + "%")
 
 === api.alOirAlEquipo
 tema: 13
 firma: void alOirAlEquipo(String de, String mensaje)
 firma.de: void beiTeamNachricht(String von, String nachricht)
 firma.en: void onTeamMessage(String from, String message)
-es: Cuando un compañero de equipo te avisa (en las peleas por equipos).
-de: Wenn dir ein Teamkamerad etwas meldet (in Teamkämpfen).
-en: When a teammate tells you something (in team fights).
+es: Evento sin retorno para combates por equipos. Se ejecuta un turno después de que un compañero llame a avisarAlEquipo(...). Parámetros: de (nombre del compañero) y mensaje (el texto enviado).
+de: Ereignis ohne Rückgabewert für Teamkämpfe. Läuft einen Zug nachdem ein Kamerad teamMelden(...) aufgerufen hat. Parameter: von (Name des Kameraden) und nachricht (gesendeter Text).
+en: Event with no return value for team battles. Runs one tick after a teammate calls tellTeam(...). Parameters: from (teammate name) and message (text sent).
+donde.es: Sobrescríbelo en el cuerpo de tu clase Metajavbot para recibir avisos de aliados en peleas por equipos; nunca lo declares dentro de otro método ni lo llames tú.
+donde.de: Im Rumpf deiner MetajavbotDe-Klasse überschreiben, um Team-Nachrichten zu empfangen; nie in einer anderen Methode deklarieren oder selbst aufrufen.
+donde.en: Override in your MetajavbotEn class body to receive ally messages in team fights; never nest it in another method or call it yourself.
+ejemplo.es:
+    AL OÍR AL EQUIPO (de, mensaje):
+        SI mensaje.equals("ayuda"):
+            escribir(de + " pide apoyo")
+ejemplo.de:
+    BEI TEAM-NACHRICHT (von, nachricht):
+        WENN nachricht.equals("hilfe"):
+            ausgeben(von + " braucht Hilfe")
+ejemplo.en:
+    ON TEAM MESSAGE (from, message):
+        IF message.equals("help"):
+            print(from + " asks for support")
 
 === api.avanzar
 tema: 01
 firma: void avanzar(double distancia)
 firma.de: void vorwaerts(double strecke)
 firma.en: void ahead(double distance)
-es: Avanza esa distancia (negativa: marcha atrás). Sustituye a la orden de avance anterior.
-de: Fährt diese Strecke vorwärts (negativ: rückwärts). Ersetzt den vorigen Fahrbefehl.
-en: Moves forward this distance (negative: backwards). Replaces the previous move order.
+es: Orden de movimiento no bloqueante, sin retorno. Parámetro: distancia en píxeles (positiva hacia delante, negativa hacia atrás). Guarda la orden para ejecutarse turno a turno y sustituye a la orden de avance pendiente anterior.
+de: Nicht-blockierender Fahrbefehl ohne Rückgabewert. Parameter: strecke in Pixeln (positiv vorwärts, negativ rückwärts). Merkt sich die Strecke für die folgenden Züge und ersetzt einen noch laufenden Fahrbefehl.
+en: Non-blocking movement order with no return value. Parameter: distance in pixels (positive forward, negative backward). Queues movement over upcoming ticks and replaces any previous pending move order.
+donde.es: Llámalo dentro de alEmpezar(), cadaTurno() o un evento, mejor tras comprobar restanteAvance() == 0; nunca en el constructor ni en el cuerpo de la clase.
+donde.de: In beimStart(), jedenZug() oder einem Ereignis aufrufen, idealerweise wenn restStrecke() == 0 gilt; nie im Konstruktor oder direkt im Klassenrumpf.
+donde.en: Call inside onStart(), onTick(), or an event handler, ideally when remainingDistance() == 0; never in the constructor or directly in the class body.
+ejemplo.es:
+    // Ordena recorrer 120 px si ya terminó el tramo previo:
+    SI restanteAvance() == 0:
+        avanzar(120)
+ejemplo.de:
+    // Fährt 120 Pixel vor, sobald der alte Auftrag fertig ist:
+    WENN restStrecke() == 0:
+        vorwaerts(120)
+ejemplo.en:
+    // Move 120 px once previous order completes:
+    IF remainingDistance() == 0:
+        ahead(120)
 
 === api.retroceder
 tema: 01
 firma: void retroceder(double distancia)
 firma.de: void rueckwaerts(double strecke)
 firma.en: void back(double distance)
-es: Marcha atrás esa distancia.
-de: Fährt diese Strecke rückwärts.
-en: Moves backwards this distance.
+es: Orden de movimiento no bloqueante, sin retorno. Parámetro: distancia en píxeles que quieres retroceder (equivale a avanzar(-distancia)). Sustituye a la orden de avance anterior.
+de: Nicht-blockierender Fahrbefehl ohne Rückgabewert. Parameter: strecke in Pixeln rückwärts (entspricht vorwaerts(-strecke)). Ersetzt den vorigen Fahrbefehl.
+en: Non-blocking movement order with no return value. Parameter: distance in pixels to move backwards (same as ahead(-distance)). Replaces the previous move order.
+donde.es: Úsalo dentro de alChocarConPared(), alRecibirGolpe() o cadaTurno() para recular; no lo pongas en el constructor ni en inicializadores de campos.
+donde.de: In beiWand(), beiTreffer() oder jedenZug() zum Zurücksetzen aufrufen; nicht im Konstruktor oder in Feld-Initialisierern verwenden.
+donde.en: Call inside onHitWall(), onHit(), or onTick() to back off; never place it in the constructor or field initializers.
+ejemplo.es:
+    // Aléjate si el enemigo está demasiado cerca:
+    SI e.distancia() < 120:
+        retroceder(80)
+ejemplo.de:
+    // Zurückweichen, wenn der Gegner zu nah ist:
+    WENN g.entfernung() < 120:
+        rueckwaerts(80)
+ejemplo.en:
+    // Back away when the enemy gets too close:
+    IF e.distance() < 120:
+        back(80)
 
 === api.girar
 tema: 01
 firma: void girar(double grados)
 firma.de: void drehen(double grad)
 firma.en: void turn(double degrees)
-es: Gira el cuerpo esos grados (positivos: a la izquierda).
-de: Dreht den Körper um diese Grad (positiv: nach links).
-en: Turns the body this many degrees (positive: left).
+es: Orden de giro del cuerpo no bloqueante, sin retorno. Parámetro: grados relativos a tu rumbo actual (positivo gira a la izquierda/antihorario; negativo a la derecha). Se ejecuta poco a poco en los turnos siguientes según la velocidad de giro.
+de: Nicht-blockierender Drehbefehl ohne Rückgabewert. Parameter: grad relativ zur aktuellen Richtung (positiv links/gegen Uhrzeigersinn; negativ rechts). Wird Zug um Zug mit deinem Drehtempo ausgeführt.
+en: Non-blocking body rotation order with no return value. Parameter: degrees relative to current heading (positive turns left/CCW; negative turns right). Executed over subsequent ticks at your turn speed.
+donde.es: Llámalo dentro de cadaTurno() o eventos de choque para rotar el cuerpo; no lo pongas en el constructor ni lo confundas con apuntar() si solo quieres mover la mira.
+donde.de: In jedenZug() oder Kollisionsereignissen aufrufen, um den Rumpf zu drehen; nie im Konstruktor nutzen und nicht mit zielen() verwechseln.
+donde.en: Call inside onTick() or collision events to rotate the chassis; never in the constructor, and don't confuse it with aim() when you only want to turn the turret.
+ejemplo.es:
+    // Gira 90 grados a la izquierda poco a poco:
+    SI restanteGiro() == 0:
+        girar(90)
+ejemplo.de:
+    // Dreht schrittweise um 90 Grad nach links:
+    WENN restDrehung() == 0:
+        drehen(90)
+ejemplo.en:
+    // Turn 90 degrees left over upcoming ticks:
+    IF remainingTurn() == 0:
+        turn(90)
 
 === api.girarIzquierda
 tema: 01
 firma: void girarIzquierda(double grados)
 firma.de: void linksDrehen(double grad)
 firma.en: void turnLeft(double degrees)
-es: void girarIzquierda(double grados)
-de: void linksDrehen(double grad)
-en: void turnLeft(double degrees)
+es: Orden de giro del cuerpo hacia la izquierda (sentido antihorario), sin retorno. Parámetro: grados a girar a la izquierda. Es equivalente a girar(grados) y se ejecuta progresivamente en los siguientes turnos.
+de: Drehbefehl für den Körper nach links (gegen den Uhrzeigersinn), ohne Rückgabewert. Parameter: grad nach links. Entspricht drehen(grad) und wird Zug um Zug ausgeführt.
+en: Non-blocking body turn to the left (counter-clockwise) with no return value. Parameter: degrees to turn left. Equivalent to turn(degrees) and runs tick by tick.
+donde.es: Invócalo dentro de cadaTurno() o eventos para virar a la izquierda con ángulos positivos; evita llamarlo en el constructor o con valores negativos confusos.
+donde.de: In jedenZug() oder Ereignissen mit positivem Winkel zum Linksdrehen nutzen; nicht im Konstruktor aufrufen.
+donde.en: Invoke inside onTick() or events with a positive angle to steer left; avoid calling it in the constructor.
+ejemplo.es:
+    SI restanteGiro() == 0:
+        girarIzquierda(45)   // +45° respecto al rumbo actual
+ejemplo.de:
+    WENN restDrehung() == 0:
+        linksDrehen(45)      // +45° relativ zur Richtung
+ejemplo.en:
+    IF remainingTurn() == 0:
+        turnLeft(45)         // +45° relative to heading
 
 === api.girarDerecha
 tema: 01
 firma: void girarDerecha(double grados)
 firma.de: void rechtsDrehen(double grad)
 firma.en: void turnRight(double degrees)
-es: void girarDerecha(double grados)
-de: void rechtsDrehen(double grad)
-en: void turnRight(double degrees)
+es: Orden de giro del cuerpo hacia la derecha (sentido horario), sin retorno. Parámetro: grados a girar a la derecha (equivale a girar(-grados)). Se cumple turno a turno sustituyendo al giro pendiente anterior.
+de: Drehbefehl für den Körper nach rechts (im Uhrzeigersinn), ohne Rückgabewert. Parameter: grad nach rechts (entspricht drehen(-grad)). Wird Zug um Zug ausgeführt und ersetzt alte Drehbefehle.
+en: Non-blocking body turn to the right (clockwise) with no return value. Parameter: degrees to turn right (same as turn(-degrees)). Runs tick by tick and replaces previous turn orders.
+donde.es: Invócalo dentro de cadaTurno() o eventos para girar el cuerpo en sentido horario; nunca en el constructor ni fuera de un método del robot.
+donde.de: In jedenZug() oder Ereignissen für Rechtsdrehungen des Rumpfs aufrufen; niemals im Konstruktor oder außerhalb einer Methode.
+donde.en: Call inside onTick() or events to rotate the body clockwise; never in the constructor or outside a robot method.
+ejemplo.es:
+    AL CHOCAR CON PARED:
+        retroceder(50)
+        girarDerecha(90)
+ejemplo.de:
+    BEI WAND:
+        rueckwaerts(50)
+        rechtsDrehen(90)
+ejemplo.en:
+    ON HITTING WALL:
+        back(50)
+        turnRight(90)
 
 === api.girarHacia
 tema: 03
 firma: void girarHacia(double angulo)
 firma.de: void drehenNach(double winkel)
 firma.en: void turnTo(double angle)
-es: Gira el cuerpo hasta mirar hacia ese ángulo absoluto, por el camino más corto.
-de: Dreht den Körper auf diesen absoluten Winkel, auf dem kürzesten Weg.
-en: Turns the body to face this absolute angle, the short way.
+es: Orden de giro absoluto sin retorno. Parámetro: angulo destino en grados (0 derecha/este, 90 arriba/norte). Calcula automáticamente la diferencia normalizada desde tu rumbo() para girar por el camino más corto en los siguientes turnos.
+de: Absoluter Drehbefehl ohne Rückgabewert. Parameter: Zielwinkel in Grad (0 rechts/Osten, 90 oben/Norden). Berechnet automatisch den kürzesten Weg ab richtung() für die nächsten Züge.
+en: Absolute body turn order with no return value. Parameter: target angle in degrees (0 right/east, 90 up/north). Computes the shortest normalized delta from heading() over upcoming ticks.
+donde.es: Llámalo dentro de alVerEnemigo(), alRecibirGolpe() o cadaTurno() pasando un ángulo absoluto (como e.angulo() o g.angulo() + 90); nunca en el constructor.
+donde.de: In beiSicht(), beiTreffer() oder jedenZug() mit einem absoluten Winkel (z. B. g.winkel() oder t.winkel() + 90) aufrufen; nie im Konstruktor.
+donde.en: Call inside onSeeEnemy(), onHit(), or onTick() with an absolute angle (like e.angle() or h.angle() + 90); never in the constructor.
+ejemplo.es:
+    // Mira hacia el centro de la arena:
+    girarHacia(anguloHacia(anchoArena() / 2, altoArena() / 2))
+ejemplo.de:
+    // Zur Mitte der Arena drehen:
+    drehenNach(winkelZu(arenaBreite() / 2, arenaHoehe() / 2))
+ejemplo.en:
+    // Turn toward the center of the arena:
+    turnTo(angleTo(arenaWidth() / 2, arenaHeight() / 2))
 
 === api.detener
 tema: 01
 firma: void detener()
 firma.de: void anhalten()
 firma.en: void stop()
-es: Para: sin avanzar ni girar.
-de: Hält an: weder fahren noch drehen.
-en: Stops: no moving, no turning.
+es: Orden inmediata sin parámetros ni retorno. Cancela las órdenes pendientes de avance y giro del cuerpo (avanzar/girar quedan a 0), deteniendo el desplazamiento sin afectar a la mira.
+de: Sofortbefehl ohne Parameter und Rückgabewert. Löscht laufende Fahr- und Drehaufträge des Körpers (Reststrecke und Restdrehung auf 0), lässt das Visier aber unberührt.
+en: Immediate order with no parameters or return value. Clears pending body movement and rotation orders (remaining distance and turn become 0) without affecting your aim.
+donde.es: Úsalo dentro de cadaTurno() o eventos (como alVerEnemigo() o alChocarConPared()) para cancelar avance y giro pendientes; no lo llames en el constructor.
+donde.de: In jedenZug() oder Ereignissen (z. B. beiSicht() oder beiWand()) aufrufen, um offene Fahrt und Drehung sofort abzubrechen; nie im Konstruktor.
+donde.en: Call inside onTick() or events (like onSeeEnemy() or onHitWall()) to cancel pending movement and turning; never in the constructor.
+ejemplo.es:
+    SI e.distancia() < alcanceDerecha():
+        detener()       // quédate quieto para asegurar el tiro
+        atacarDerecha()
+ejemplo.de:
+    WENN g.entfernung() < reichweiteRechts():
+        anhalten()      // anhalten, um sauber zu schießen
+        angriffRechts()
+ejemplo.en:
+    IF e.distance() < rangeRight():
+        stop()          // hold still to fire steadily
+        attackRight()
 
 === api.apuntar
 tema: 01
 firma: void apuntar(double grados)
 firma.de: void zielen(double grad)
 firma.en: void aim(double degrees)
-es: Gira la mira (los brazos y el radar) esos grados, sin girar el cuerpo.
-de: Dreht das Visier (Arme und Radar) um diese Grad, ohne den Körper zu drehen.
-en: Turns the sight (arms and radar) this many degrees without turning the body.
+es: Orden no bloqueante sin retorno para girar los brazos y el radar, independientemente del cuerpo. Parámetro: grados relativos a mira() (positivos hacia la izquierda). Se ejecuta turno a turno; si no ves enemigos, úsalo para barrer la arena.
+de: Nicht-blockierender Befehl ohne Rückgabewert zum Drehen von Armen und Radar unabhängig vom Körper. Parameter: grad relativ zu blick() (positiv links). Läuft Zug um Zug; ideal zum Radarsuchen.
+en: Non-blocking order with no return value to rotate arms and radar independently of the body. Parameter: degrees relative to aimDirection() (positive left). Runs tick by tick; great for radar sweeping.
+donde.es: Llámalo en cadaTurno() para barrer con el radar o en alEmpezar() para orientar la mira; nunca en el constructor ni dentro de alAcabarRonda().
+donde.de: In jedenZug() zum Radarschwenk oder in beimStart() zum Ausrichten aufrufen; nie im Konstruktor und nicht in beiRundenende().
+donde.en: Call in onTick() to sweep the radar or in onStart() to orient the sight; never in the constructor or inside onRoundEnd().
+ejemplo.es:
+    CADA TURNO:
+        SI enemigosVistos().isEmpty():
+            apuntar(15)   // barre 15° para buscar rival
+ejemplo.de:
+    JEDEN ZUG:
+        WENN gesehen().isEmpty():
+            zielen(15)    // 15° schwenken, um Gegner zu finden
+ejemplo.en:
+    EVERY TICK:
+        IF seenEnemies().isEmpty():
+            aim(15)       // sweep 15° to scan for rivals
 
 === api.apuntarHacia
 tema: 03
 firma: void apuntarHacia(double angulo)
 firma.de: void zielenNach(double winkel)
 firma.en: void aimTo(double angle)
-es: Gira la mira hasta ese ángulo absoluto.
-de: Dreht das Visier auf diesen absoluten Winkel.
-en: Turns the sight to this absolute angle.
+es: Orden absoluta de puntería sin retorno. Parámetro: angulo absoluto en grados (0 derecha, 90 arriba). Calcula el camino más corto desde mira() y va girando la mira en los turnos siguientes hasta alinearla.
+de: Absoluter Zielbefehl ohne Rückgabewert. Parameter: absoluter Zielwinkel in Grad (0 rechts, 90 oben). Berechnet den kürzesten Drehweg von blick() und richtet das Visier Zug um Zug aus.
+en: Absolute aiming order with no return value. Parameter: absolute angle in degrees (0 right, 90 up). Computes shortest delta from aimDirection() and turns the sight over upcoming ticks.
+donde.es: Úsalo dentro de alVerEnemigo(Enemigo e) o cadaTurno() pasándole un ángulo absoluto como e.angulo(); nunca en el constructor ni en el cuerpo de la clase.
+donde.de: In beiSicht(Gegner g) oder jedenZug() mit absolutem Winkel wie g.winkel() aufrufen; nie im Konstruktor oder direkt im Klassenrumpf.
+donde.en: Call inside onSeeEnemy(Enemy e) or onTick() with an absolute angle such as e.angle(); never in the constructor or class body.
+ejemplo.es:
+    AL VER enemigo e:
+        apuntarHacia(e.angulo())
+        SI Math.abs(restanteMira()) < 5:
+            atacar()
+ejemplo.de:
+    BEI SICHT von g:
+        zielenNach(g.winkel())
+        WENN Math.abs(restZielen()) < 5:
+            angreifen()
+ejemplo.en:
+    ON SEEING e:
+        aimTo(e.angle())
+        IF Math.abs(remainingAim()) < 5:
+            attack()
 
 === api.apuntarA
 tema: 03
 firma: void apuntarA(double x, double y)
 firma.de: void zielenAuf(double x, double y)
 firma.en: void aimAt(double x, double y)
-es: Gira la mira hacia ese punto de la arena.
-de: Dreht das Visier auf diesen Punkt der Arena.
-en: Turns the sight towards this point of the arena.
+es: Orden de puntería hacia una coordenada exacta sin retorno. Parámetros: x e y de la arena. Calcula el ángulo desde tu posición hasta (x, y) y llama a apuntarHacia hacia ese punto. Muy útil para disparar por adelantado donde estará el rival.
+de: Zielbefehl auf eine exakte Position ohne Rückgabewert. Parameter: Arena-Koordinaten x und y. Berechnet den Winkel zu (x, y) und richtet das Visier dorthin aus. Ideal für Vorhalt-Schüsse.
+en: Aim order toward an exact coordinate with no return value. Parameters: arena coordinates x and y. Computes the angle from you to (x, y) and calls aimTo. Great for predictive lead shots.
+donde.es: Llámalo en cadaTurno() o eventos cuando tengas coordenadas (x, y) concretas, como el centro o e.x(), e.y(); no lo uses en el constructor.
+donde.de: In jedenZug() oder Ereignissen nutzen, wenn du konkrete (x, y)-Koordinaten wie die Mitte oder g.x(), g.y() hast; nicht im Konstruktor.
+donde.en: Call in onTick() or events when you have target (x, y) coordinates such as the arena center or e.x(), e.y(); never in the constructor.
+ejemplo.es:
+    // Apunta a una posición futura estimada (fx, fy):
+    double fx = e.x() + Math.cos(Math.toRadians(e.rumbo())) * e.velocidad() * 6;
+    double fy = e.y() + Math.sin(Math.toRadians(e.rumbo())) * e.velocidad() * 6;
+    apuntarA(fx, fy);
+ejemplo.de:
+    // Auf geschätzte Zukunftsposition (fx, fy) zielen:
+    double fx = g.x() + Math.cos(Math.toRadians(g.richtung())) * g.geschwindigkeit() * 6;
+    double fy = g.y() + Math.sin(Math.toRadians(g.richtung())) * g.geschwindigkeit() * 6;
+    zielenAuf(fx, fy);
+ejemplo.en:
+    // Aim at predicted future point (fx, fy):
+    double fx = e.x() + Math.cos(Math.toRadians(e.heading())) * e.speed() * 6;
+    double fy = e.y() + Math.sin(Math.toRadians(e.heading())) * e.speed() * 6;
+    aimAt(fx, fy);
 
 === api.atacarIzquierda
 tema: 04
 firma: boolean atacarIzquierda()
 firma.de: boolean angriffLinks()
 firma.en: boolean attackLeft()
-es: Ataca con el brazo izquierdo hacia donde mira. Devuelve false si aún no estaba listo.
-de: Greift mit dem linken Arm in Blickrichtung an. Gibt false zurück, wenn er noch nicht bereit war.
-en: Attacks with the left arm where the sight points. Returns false if it was not ready yet.
+es: Dispara o activa el arma del brazo izquierdo en la dirección de mira(). Se ejecuta en el turno actual si el brazo está sano, recargado y tienes energía suficiente; devuelve true si atacó y false si aún no estaba listo.
+de: Löst die Waffe des linken Arms in Richtung blick() aus. Wirkt in diesem Zug, falls der Arm intakt, abgekühlt und genug Energie da ist; gibt true bei Erfolg und false sonst zurück.
+en: Fires or activates the left arm weapon along aimDirection(). Runs this tick if the arm is intact, cooled down, and energy suffices; returns true if fired, false otherwise.
+donde.es: Llámalo dentro de alVerEnemigo() o cadaTurno() cuando el rival esté en mira y alcance, mejor comprobando listoIzquierda(); nunca en el constructor.
+donde.de: In beiSicht() oder jedenZug() aufrufen, wenn der Gegner im Visier und in Reichweite ist, am besten nach bereitLinks(); nie im Konstruktor.
+donde.en: Call inside onSeeEnemy() or onTick() when the target is lined up and in range, ideally after checking readyLeft(); never in the constructor.
+ejemplo.es:
+    SI listoIzquierda() Y e.distancia() <= alcanceIzquierda():
+        boolean disparo = atacarIzquierda()
+ejemplo.de:
+    WENN bereitLinks() UND g.entfernung() <= reichweiteLinks():
+        boolean schuss = angriffLinks()
+ejemplo.en:
+    IF readyLeft() AND e.distance() <= rangeLeft():
+        boolean fired = attackLeft()
 
 === api.atacarDerecha
 tema: 04
 firma: boolean atacarDerecha()
 firma.de: boolean angriffRechts()
 firma.en: boolean attackRight()
-es: boolean atacarDerecha()
-de: boolean angriffRechts()
-en: boolean attackRight()
+es: Dispara o activa el arma del brazo derecho hacia donde apunta mira(). Se ejecuta en este turno si el brazo derecho tiene pieza, no está roto, acabó su recarga y alcanza energía; devuelve true si atacó o false si no pudo.
+de: Löst die Waffe des rechten Arms in Richtung blick() aus. Wirkt in diesem Zug, falls der Arm intakt, bereit und genug Energie vorhanden ist; gibt true zurück, wenn er angriff.
+en: Fires or activates the right arm weapon along aimDirection(). Runs this tick if the right arm is intact, cooled down, and energy suffices; returns true if it attacked, false otherwise.
+donde.es: Invócalo en alVerEnemigo() o cadaTurno() tras alinear la mira y verificar alcanceDerecha(); evita llamarlo a ciegas en alEmpezar() o en el constructor.
+donde.de: In beiSicht() oder jedenZug() nach dem Zielen und Prüfen von reichweiteRechts() aufrufen; nicht blind in beimStart() oder im Konstruktor.
+donde.en: Invoke in onSeeEnemy() or onTick() after lining up aim and checking rangeRight(); avoid calling it blindly in onStart() or the constructor.
+ejemplo.es:
+    SI listoDerecha() Y e.distancia() <= alcanceDerecha():
+        boolean disparo = atacarDerecha()
+ejemplo.de:
+    WENN bereitRechts() UND g.entfernung() <= reichweiteRechts():
+        boolean schuss = angriffRechts()
+ejemplo.en:
+    IF readyRight() AND e.distance() <= rangeRight():
+        boolean fired = attackRight()
 
 === api.especial
 tema: 04
 firma: boolean especial()
 firma.de: boolean spezial()
 firma.en: boolean special()
-es: Usa lo especial de la cabeza (un escudo, un turbo, reparar…, según la pieza).
-de: Benutzt das Spezielle des Kopfes (Schild, Turbo, Reparatur…, je nach Teil).
-en: Uses the head's special (a shield, a turbo, repair…, depending on the part).
+es: Activa en este turno la habilidad especial equipada en la cabeza (escudo, turbo, reparar, camuflaje, pulso o sobrecarga) sin parámetros. Devuelve true si se activó (tenía especial, estaba recargado y había energía) o false si no.
+de: Aktiviert in diesem Zug die Spezialfähigkeit des Kopfes (Schild, Turbo, Reparatur, Tarnung, Puls oder Überladung) ohne Parameter. Gibt true zurück, wenn es geklappt hat, sonst false.
+en: Activates the head piece's special ability this tick (shield, turbo, repair, cloak, pulse, or overload) with no parameters. Returns true if triggered, false if unequipped, cooling down, or low energy.
+donde.es: Llámalo en cadaTurno(), alRecibirGolpe() o alVerEnemigo() cuando listoEspecial() sea true y la situación lo pida; no en el constructor ni en alAcabarRonda().
+donde.de: In jedenZug(), beiTreffer() oder beiSicht() aufrufen, wenn bereitSpezial() true liefert und der Moment passt; nie im Konstruktor oder beiRundenende().
+donde.en: Call in onTick(), onHit(), or onSeeEnemy() when readySpecial() is true and the timing fits; never in the constructor or onRoundEnd().
+ejemplo.es:
+    SI blindaje() < 60 Y listoEspecial():
+        especial()   // activa escudo, cura o impulso
+ejemplo.de:
+    WENN panzerung() < 60 UND bereitSpezial():
+        spezial()    // aktiviert Schild, Heilung oder Schub
+ejemplo.en:
+    IF armor() < 60 AND readySpecial():
+        special()    // triggers shield, heal, or boost
 
 === api.atacar
 tema: 01
 firma: boolean atacar()
 firma.de: boolean angreifen()
 firma.en: boolean attack()
-es: Ataca con el brazo que esté listo (primero el derecho).
-de: Greift mit dem Arm an, der bereit ist (zuerst der rechte).
-en: Attacks with whichever arm is ready (right first).
+es: Atajo sin parámetros que intenta atacar en este turno primero con el brazo derecho y, si no está listo, con el izquierdo hacia donde apunta mira(). Devuelve true si alguno de los dos brazos logró atacar; false si ambos estaban ocupados o sin energía.
+de: Kurzbefehl ohne Parameter: greift in diesem Zug zuerst mit dem rechten Arm an und falls der nicht bereit ist, mit dem linken Richtung blick(). Gibt true zurück, sobald ein Arm angreift, sonst false.
+en: Shortcut with no parameters: tries attacking this tick with the right arm first, and if not ready, the left arm along aimDirection(). Returns true if either arm attacked, false otherwise.
+donde.es: Llámalo dentro de alVerEnemigo() o cadaTurno() tras comprobar que apuntas al rival; no lo pongas en el constructor ni en un bucle para disparar varias veces en un turno.
+donde.de: In beiSicht() oder jedenZug() aufrufen, sobald das Visier passt; nicht im Konstruktor und nicht in einer Schleife (pro Zug feuert ohnehin nur ein Befehl).
+donde.en: Call inside onSeeEnemy() or onTick() once aimed at the foe; never in the constructor or in a loop expecting multiple shots in one tick.
+ejemplo.es:
+    AL VER enemigo e:
+        apuntarHacia(e.angulo())
+        SI atacar(): escribir("¡Fuego!")
+ejemplo.de:
+    BEI SICHT von g:
+        zielenNach(g.winkel())
+        WENN angreifen(): ausgeben("Feuer!")
+ejemplo.en:
+    ON SEEING e:
+        aimTo(e.angle())
+        IF attack(): print("Fire!")
 
 === api.listoIzquierda
 tema: 04
 firma: boolean listoIzquierda()
 firma.de: boolean bereitLinks()
 firma.en: boolean readyLeft()
-es: boolean listoIzquierda()
-de: boolean bereitLinks()
-en: boolean readyLeft()
+es: Consulta instantánea sin parámetros. Devuelve true si puedes llamar ahora mismo a atacarIzquierda(): la pieza existe, el brazo no está destruido (> 0 blindaje), terminó su tiempo de enfriamiento y tienes suficiente energía.
+de: Sofortabfrage ohne Parameter. Gibt true zurück, wenn du jetzt angriffLinks() nutzen kannst: Waffe vorhanden, Arm heil, Abkühlzeit vorbei und genug Energie vorhanden.
+en: Instant query with no parameters. Returns true if attackLeft() can fire right now: arm is equipped, not destroyed, off cooldown, and enough energy is available.
+donde.es: Úsalo dentro de un if en alVerEnemigo() o cadaTurno() antes de atacarIzquierda(); no lo pongas como sentencia suelta sin usar su boolean ni en el constructor.
+donde.de: In einer if-Bedingung in beiSicht() oder jedenZug() vor angriffLinks() nutzen; nicht als leere Anweisung ohne Auswertung und nicht im Konstruktor.
+donde.en: Use inside an if condition in onSeeEnemy() or onTick() before attackLeft(); don't leave it as an unused statement or call it in the constructor.
+ejemplo.es:
+    SI listoIzquierda():
+        atacarIzquierda()
+ejemplo.de:
+    WENN bereitLinks():
+        angriffLinks()
+ejemplo.en:
+    IF readyLeft():
+        attackLeft()
 
 === api.listoDerecha
 tema: 04
 firma: boolean listoDerecha()
 firma.de: boolean bereitRechts()
 firma.en: boolean readyRight()
-es: boolean listoDerecha()
-de: boolean bereitRechts()
-en: boolean readyRight()
+es: Consulta instantánea sin parámetros. Devuelve true si el brazo derecho tiene arma, sigue operativo, acabó su recarga y hay energía bastante para disparar en este turno.
+de: Sofortabfrage ohne Parameter. Gibt true zurück, wenn der rechte Arm eine Waffe hat, intakt ist, abgekühlt ist und genug Energie für einen Angriff bereitsteht.
+en: Instant query with no parameters. Returns true if the right arm is equipped, intact, cooled down, and has enough energy to attack this tick.
+donde.es: Colócalo en la condición de un if dentro de alVerEnemigo() o cadaTurno() antes de atacarDerecha(); nunca en inicializadores de campos ni en el constructor.
+donde.de: In der Bedingung eines if in beiSicht() oder jedenZug() vor angriffRechts() einsetzen; niemals in Feld-Initialisierern oder im Konstruktor.
+donde.en: Place inside an if condition in onSeeEnemy() or onTick() before attackRight(); never in field initializers or the constructor.
+ejemplo.es:
+    SI listoDerecha() Y e.distancia() <= alcanceDerecha():
+        atacarDerecha()
+ejemplo.de:
+    WENN bereitRechts() UND g.entfernung() <= reichweiteRechts():
+        angriffRechts()
+ejemplo.en:
+    IF readyRight() AND e.distance() <= rangeRight():
+        attackRight()
 
 === api.listoEspecial
 tema: 04
 firma: boolean listoEspecial()
 firma.de: boolean bereitSpezial()
 firma.en: boolean readySpecial()
-es: boolean listoEspecial()
-de: boolean bereitSpezial()
-en: boolean readySpecial()
+es: Consulta sin parámetros. Devuelve true si la cabeza posee una habilidad especial, acabó su recarga y cuentas con energía suficiente para activar especial() en este turno.
+de: Abfrage ohne Parameter. Gibt true zurück, wenn der Kopf eine Spezialfähigkeit hat, sie abgekühlt ist und genug Energie für spezial() da ist.
+en: Query with no parameters. Returns true if the head has a special ability, its cooldown finished, and you have enough energy to trigger special() this tick.
+donde.es: Úsalo en un if dentro de cadaTurno() o alRecibirGolpe() para comprobar si puedes activar especial(); no lo llames en el constructor.
+donde.de: In einem if in jedenZug() oder beiTreffer() prüfen, bevor du spezial() auslöst; nicht im Konstruktor aufrufen.
+donde.en: Check inside an if in onTick() or onHit() before triggering special(); never call it in the constructor.
+ejemplo.es:
+    SI listoEspecial() Y !especialCabeza().isEmpty():
+        especial()
+ejemplo.de:
+    WENN bereitSpezial() UND !spezialKopf().isEmpty():
+        spezial()
+ejemplo.en:
+    IF readySpecial() AND !headSpecial().isEmpty():
+        special()
 
 === api.armaIzquierda
 tema: 08
 firma: String armaIzquierda()
 firma.de: String waffeLinks()
 firma.en: String weaponLeft()
-es: El arma del brazo izquierdo: "LASER", "BALA", "MISIL", "CUERPO", "ESCUDO", "REPARAR"… ("" si no hay).
-de: Die Waffe des linken Arms: "LASER", "BALA" (Kugel), "MISIL" (Rakete), "CUERPO" (Nahkampf), "ESCUDO" (Schild), "REPARAR"… ("" wenn keine).
-en: The left arm weapon: "LASER", "BALA" (bullet), "MISIL" (missile), "CUERPO" (melee), "ESCUDO" (shield), "REPARAR" (repair)… ("" if none).
+es: Consulta sin parámetros. Devuelve el nombre interno en mayúsculas del arma izquierda ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") o "" si no llevas arma. Compáralo siempre con equals(), nunca con ==.
+de: Abfrage ohne Parameter. Gibt den internen Namen der linken Waffe zurück ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") oder "" ohne Waffe. Immer mit equals() prüfen, nicht mit ==.
+en: Query with no parameters. Returns the internal uppercase type of the left weapon ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") or "" if none. Always compare with equals(), never ==.
+donde.es: Consúltalo en alEmpezar() o en un if dentro de cadaTurno() (comparando con .equals, no con ==) para adaptar tu táctica al arma; nunca en el constructor.
+donde.de: In beimStart() oder einem if in jedenZug() abfragen (mit .equals vergleichen, nicht mit ==), um die Taktik anzupassen; nie im Konstruktor.
+donde.en: Query in onStart() or an if inside onTick() (compare with .equals, not ==) to adapt to your equipped weapon; never in the constructor.
+ejemplo.es:
+    SI armaIzquierda().equals("CUERPO"):
+        // acércate para golpear
+ejemplo.de:
+    WENN waffeLinks().equals("CUERPO"):
+        // für Nahkampf heranfahren
+ejemplo.en:
+    IF weaponLeft().equals("CUERPO"):
+        // close distance for melee
 
 === api.armaDerecha
 tema: 08
 firma: String armaDerecha()
 firma.de: String waffeRechts()
 firma.en: String weaponRight()
-es: String armaDerecha()
-de: String waffeRechts()
-en: String weaponRight()
+es: Consulta sin parámetros. Devuelve el tipo del arma derecha ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") o "" si no tiene. Útil para decidir si mantener distancia o acercarte al enemigo.
+de: Abfrage ohne Parameter. Gibt den Typ der rechten Waffe zurück ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") oder "". Hilft bei der Wahl zwischen Fern- und Nahkampf.
+en: Query with no parameters. Returns the right arm weapon type ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") or "" if unequipped. Helpful to decide combat range.
+donde.es: Consúltalo una vez en alEmpezar() o en métodos auxiliares para elegir distancia óptima; compáralo con .equals y nunca lo llames en el constructor.
+donde.de: Einmal in beimStart() oder in Hilfsmethoden abfragen, um die passende Distanz zu wählen; mit .equals vergleichen und nie im Konstruktor aufrufen.
+donde.en: Read once in onStart() or helper methods to pick your fighting range; compare with .equals and never call it in the constructor.
+ejemplo.es:
+    SI armaDerecha().equals("ESCUDO") Y listoDerecha():
+        atacarDerecha()
+ejemplo.de:
+    WENN waffeRechts().equals("ESCUDO") UND bereitRechts():
+        angriffRechts()
+ejemplo.en:
+    IF weaponRight().equals("ESCUDO") AND readyRight():
+        attackRight()
 
 === api.especialCabeza
 tema: 08
 firma: String especialCabeza()
 firma.de: String spezialKopf()
 firma.en: String headSpecial()
-es: Lo especial de la cabeza: "ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA" ("" si no tiene).
-de: Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO", "SOBRECARGA" ("" wenn keins).
-en: The head special: "ESCUDO" (shield), "TURBO", "REPARAR" (repair), "CAMUFLAJE" (cloak), "PULSO" (pulse), "SOBRECARGA" (overload) ("" if none).
+es: Consulta sin parámetros. Devuelve en mayúsculas el tipo de especial de tu cabeza ("ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA") o "" si no tiene especial.
+de: Abfrage ohne Parameter. Gibt großgeschrieben das Spezielle des Kopfes zurück ("ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA") oder "" wenn keins eingebaut ist.
+en: Query with no parameters. Returns uppercase type of your head special ("ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA") or "" if none.
+donde.es: Léelo en alEmpezar() o antes de usar especial() dentro de cadaTurno() para saber qué habilidad llevas equipada; no lo llames en el constructor.
+donde.de: In beimStart() oder vor spezial() in jedenZug() abfragen, um die ausgerüstete Kopffähigkeit zu erkennen; nicht im Konstruktor nutzen.
+donde.en: Read in onStart() or before calling special() in onTick() to know which head ability is equipped; never call it in the constructor.
+ejemplo.es:
+    SI especialCabeza().equals("REPARAR") Y blindaje() < 75:
+        especial()
+ejemplo.de:
+    WENN spezialKopf().equals("REPARAR") UND panzerung() < 75:
+        spezial()
+ejemplo.en:
+    IF headSpecial().equals("REPARAR") AND armor() < 75:
+        special()
 
 === api.alcanceIzquierda
 tema: 02
 firma: double alcanceIzquierda()
 firma.de: double reichweiteLinks()
 firma.en: double rangeLeft()
-es: Hasta dónde llega el arma del brazo izquierdo.
-de: Wie weit die Waffe des linken Arms reicht.
-en: How far the left arm's weapon reaches.
+es: Consulta sin parámetros. Devuelve el alcance máximo en píxeles del arma del brazo izquierdo (incluyendo tu tamaño si es cuerpo a cuerpo; 0 si no hay pieza). Compáralo con e.distancia() antes de disparar.
+de: Abfrage ohne Parameter. Gibt die maximale Reichweite des linken Arms in Pixeln zurück (inkl. Körpergröße bei Nahkampf; 0 ohne Teil). Vor dem Schuss mit g.entfernung() vergleichen.
+en: Query with no parameters. Returns the maximum reach in pixels of your left arm's weapon (including body size for melee; 0 if empty). Compare against e.distance() before firing.
+donde.es: Úsalo en comparaciones con e.distancia() dentro de alVerEnemigo() o guárdalo en un campo en alEmpezar(); nunca en el constructor.
+donde.de: In Vergleichen mit g.entfernung() in beiSicht() nutzen oder in beimStart() in einem Feld merken; niemals im Konstruktor.
+donde.en: Compare against e.distance() inside onSeeEnemy() or cache it in a field during onStart(); never in the constructor.
+ejemplo.es:
+    SI e.distancia() <= alcanceIzquierda() Y listoIzquierda():
+        atacarIzquierda()
+ejemplo.de:
+    WENN g.entfernung() <= reichweiteLinks() UND bereitLinks():
+        angriffLinks()
+ejemplo.en:
+    IF e.distance() <= rangeLeft() AND readyLeft():
+        attackLeft()
 
 === api.alcanceDerecha
 tema: 02
 firma: double alcanceDerecha()
 firma.de: double reichweiteRechts()
 firma.en: double rangeRight()
-es: double alcanceDerecha()
-de: double reichweiteRechts()
-en: double rangeRight()
+es: Consulta sin parámetros. Devuelve en píxeles hasta dónde llega el brazo derecho (0 si no hay arma). Comprobar si el rival está dentro de este alcance evita gastar energía y recarga disparando al aire.
+de: Abfrage ohne Parameter. Gibt in Pixeln zurück, wie weit der rechte Arm reicht (0 ohne Waffe). So vermeidest du unnötige Luftschüsse außerhalb der Reichweite.
+en: Query with no parameters. Returns in pixels how far the right arm weapon reaches (0 if none). Checking range avoids wasting energy and cooldown on out-of-range shots.
+donde.es: Compáralo con e.distancia() en alVerEnemigo() o cadaTurno() antes de atacarDerecha(); evita llamarlo en el constructor porque aún no hay arena.
+donde.de: In beiSicht() oder jedenZug() vor angriffRechts() mit g.entfernung() vergleichen; im Konstruktor nicht erlaubt, da die Arena noch fehlt.
+donde.en: Compare with e.distance() in onSeeEnemy() or onTick() before attackRight(); cannot be called in the constructor before entering the arena.
+ejemplo.es:
+    SI e.distancia() <= alcanceDerecha():
+        atacarDerecha()
+    SI NO:
+        avanzar(60)   // acércate hasta tener tiro
+ejemplo.de:
+    WENN g.entfernung() <= reichweiteRechts():
+        angriffRechts()
+    SONST:
+        vorwaerts(60) // näher ranfahren
+ejemplo.en:
+    IF e.distance() <= rangeRight():
+        attackRight()
+    ELSE:
+        ahead(60)     // move closer into range
 
 === api.x
 tema: 02
 firma: double x()
 firma.de: double x()
 firma.en: double x()
-es: double x()
-de: double x()
-en: double x()
+es: Consulta sin parámetros. Devuelve tu coordenada horizontal actual en píxeles, de 0 (borde izquierdo) a anchoArena() (borde derecho). Útil para detectar si te acercas demasiado a las paredes laterales.
+de: Abfrage ohne Parameter. Gibt deine aktuelle waagerechte Position in Pixeln zurück, von 0 (linker Rand) bis arenaBreite() (rechter Rand). Nützlich zum Erkennen seitlicher Wände.
+en: Query with no parameters. Returns your current horizontal position in pixels, from 0 (left wall) to arenaWidth() (right wall). Useful to detect approaching side walls.
+donde.es: Úsalo dentro de cadaTurno(), alEmpezar() o eventos para medir cercanía a paredes laterales o calcular vectores; nunca en el constructor ni como declaración de campo.
+donde.de: In jedenZug(), beimStart() oder Ereignissen nutzen, um Wandabstand oder Vektoren zu berechnen; nie im Konstruktor oder als Feldinitialisierung.
+donde.en: Use inside onTick(), onStart(), or events to check side-wall proximity or compute vectors; never in the constructor or field initializers.
+ejemplo.es:
+    SI x() < 80 O x() > anchoArena() - 80:
+        girarHacia(anguloHacia(anchoArena() / 2, altoArena() / 2))
+ejemplo.de:
+    WENN x() < 80 ODER x() > arenaBreite() - 80:
+        drehenNach(winkelZu(arenaBreite() / 2, arenaHoehe() / 2))
+ejemplo.en:
+    IF x() < 80 OR x() > arenaWidth() - 80:
+        turnTo(angleTo(arenaWidth() / 2, arenaHeight() / 2))
 
 === api.y
 tema: 02
 firma: double y()
 firma.de: double y()
 firma.en: double y()
-es: double y()
-de: double y()
-en: double y()
+es: Consulta sin parámetros. Devuelve tu coordenada vertical actual en píxeles, de 0 (borde inferior) a altoArena() (borde superior). Útil junto a x() para no chocar con el techo ni el suelo.
+de: Abfrage ohne Parameter. Gibt deine aktuelle senkrechte Position in Pixeln zurück, von 0 (unterer Rand) bis arenaHoehe() (oberer Rand). Zusammen mit x() vermeidet sie Wandtreffer.
+en: Query with no parameters. Returns your current vertical position in pixels, from 0 (bottom wall) to arenaHeight() (top wall). Pair with x() to stay clear of walls.
+donde.es: Llámalo dentro de cadaTurno() o eventos junto a altoArena() para controlar los bordes superior e inferior; no funciona en el constructor.
+donde.de: In jedenZug() oder Ereignissen zusammen mit arenaHoehe() nutzen, um oberen und unteren Rand zu prüfen; funktioniert nicht im Konstruktor.
+donde.en: Call inside onTick() or events alongside arenaHeight() to watch top and bottom edges; does not work in the constructor.
+ejemplo.es:
+    SI y() < 80 O y() > altoArena() - 80:
+        girarHacia(anguloHacia(anchoArena() / 2, altoArena() / 2))
+ejemplo.de:
+    WENN y() < 80 ODER y() > arenaHoehe() - 80:
+        drehenNach(winkelZu(arenaBreite() / 2, arenaHoehe() / 2))
+ejemplo.en:
+    IF y() < 80 OR y() > arenaHeight() - 80:
+        turnTo(angleTo(arenaWidth() / 2, arenaHeight() / 2))
 
 === api.rumbo
 tema: 02
 firma: double rumbo()
 firma.de: double richtung()
 firma.en: double heading()
-es: Hacia dónde mira el cuerpo (grados).
-de: Wohin der Körper schaut (Grad).
-en: Where the body faces (degrees).
+es: Consulta sin parámetros. Devuelve hacia dónde apunta tu cuerpo en grados absolutos normalizados en (-180, 180]: 0 es derecha (este), 90 arriba (norte), 180 izquierda y -90 abajo.
+de: Abfrage ohne Parameter. Gibt an, wohin dein Körper zeigt, als absoluten Winkel in (-180, 180]: 0 ist rechts (Osten), 90 oben (Norden), 180 links und -90 unten.
+en: Query with no parameters. Returns your body's absolute heading in degrees normalized to (-180, 180]: 0 is right (east), 90 up (north), 180 left, -90 down.
+donde.es: Consúltalo dentro de cadaTurno() o eventos para saber hacia dónde apunta el cuerpo antes de girar; no lo confundas con mira() ni lo llames en el constructor.
+donde.de: In jedenZug() oder Ereignissen abfragen, wohin der Rumpf zeigt; nicht mit blick() verwechseln und nie im Konstruktor aufrufen.
+donde.en: Query inside onTick() or events to know which way the body faces; don't confuse it with aimDirection() and never call it in the constructor.
+ejemplo.es:
+    // Gira justo en dirección opuesta a la actual:
+    girarHacia(rumbo() + 180)
+ejemplo.de:
+    // In die genau entgegengesetzte Richtung drehen:
+    drehenNach(richtung() + 180)
+ejemplo.en:
+    // Turn straight opposite to current direction:
+    turnTo(heading() + 180)
 
 === api.mira
 tema: 02
 firma: double mira()
 firma.de: double blick()
 firma.en: double aimDirection()
-es: Hacia dónde mira la mira (grados).
-de: Wohin das Visier schaut (Grad).
-en: Where the sight points (degrees).
+es: Consulta sin parámetros. Devuelve el ángulo absoluto actual de tus brazos y radar en (-180, 180]. Puede diferir de rumbo() porque la mira gira aparte del cuerpo.
+de: Abfrage ohne Parameter. Gibt den aktuellen absoluten Winkel von Armen und Radar in (-180, 180] zurück. Kann von richtung() abweichen, da das Visier unabhängig dreht.
+en: Query with no parameters. Returns the current absolute angle of your arms and radar in (-180, 180]. Can differ from heading() because the sight rotates independently.
+donde.es: Úsalo dentro de alVerEnemigo() o cadaTurno() para calcular el error angular normalizar(e.angulo() - mira()) antes de disparar; nunca en el constructor.
+donde.de: In beiSicht() oder jedenZug() nutzen, um den Zielfehler normalisieren(g.winkel() - blick()) vor dem Schuss zu prüfen; nie im Konstruktor.
+donde.en: Use inside onSeeEnemy() or onTick() to measure aim error normalize(e.angle() - aimDirection()) before firing; never in the constructor.
+ejemplo.es:
+    double error = Math.abs(normalizar(e.angulo() - mira()));
+    SI error < 4: atacar();
+ejemplo.de:
+    double fehler = Math.abs(normalisieren(g.winkel() - blick()));
+    WENN fehler < 4: angreifen();
+ejemplo.en:
+    double err = Math.abs(normalize(e.angle() - aimDirection()));
+    IF err < 4: attack();
 
 === api.velocidad
 tema: 02
 firma: double velocidad()
 firma.de: double geschwindigkeit()
 firma.en: double speed()
-es: double velocidad()
-de: double geschwindigkeit()
-en: double speed()
+es: Consulta sin parámetros. Devuelve cuántos píxeles por turno te estás moviendo ahora mismo (0 si estás quieto, negativo si vas marcha atrás, más alto si tienes turbo).
+de: Abfrage ohne Parameter. Gibt zurück, wie viele Pixel pro Zug du dich gerade bewegst (0 im Stand, negativ rückwärts, höher bei aktivem Turbo).
+en: Query with no parameters. Returns how many pixels per tick you are currently moving (0 when stopped, negative in reverse, higher while turbo is active).
+donde.es: Léelo en cadaTurno() o eventos para comprobar si tu robot está parado o frenado por un choque; no lo invoques en el constructor.
+donde.de: In jedenZug() oder Ereignissen prüfen, ob dein Roboter steht oder ausgebremst wurde; nicht im Konstruktor aufrufen.
+donde.en: Read inside onTick() or events to check whether your robot is stopped or slowed; never invoke it in the constructor.
+ejemplo.es:
+    SI Math.abs(velocidad()) < 0.5 Y restanteAvance() == 0:
+        avanzar(100)   // arranca si te quedaste quieto
+ejemplo.de:
+    WENN Math.abs(geschwindigkeit()) < 0.5 UND restStrecke() == 0:
+        vorwaerts(100) // losfahren, wenn man stillsteht
+ejemplo.en:
+    IF Math.abs(speed()) < 0.5 AND remainingDistance() == 0:
+        ahead(100)     // start moving if stationary
 
 === api.energia
 tema: 02
 firma: double energia()
 firma.de: double energie()
 firma.en: double energy()
-es: La energía (los láseres y lo especial la gastan; se recarga sola).
-de: Die Energie (Laser und Spezielles verbrauchen sie; sie lädt sich von selbst).
-en: Energy (lasers and specials use it; it recharges by itself).
+es: Consulta sin parámetros. Devuelve tu energía actual. Se recarga un poco en cada turno según tu núcleo y se gasta al disparar armas de energía o activar lo especial de la cabeza.
+de: Abfrage ohne Parameter. Gibt deine aktuelle Energie zurück. Lädt sich pro Zug je nach Kern auf und wird für Schüsse und Kopffähigkeiten verbraucht.
+en: Query with no parameters. Returns your current energy. Regenerates slightly each tick based on your core and is spent on firing weapons and head specials.
+donde.es: Consúltalo en condiciones if dentro de cadaTurno() o alVerEnemigo() para reservar energía para láseres o especial(); no va en el constructor.
+donde.de: In if-Abfragen in jedenZug() oder beiSicht() prüfen, um Energie für Laser oder spezial() zu sparen; gehört nicht in den Konstruktor.
+donde.en: Check inside if conditions in onTick() or onSeeEnemy() to save energy for lasers or special(); never in the constructor.
+ejemplo.es:
+    SI energia() > 35:
+        atacar()
+    SI NO:
+        retroceder(40)   // guarda energía un par de turnos
+ejemplo.de:
+    WENN energie() > 35:
+        angreifen()
+    SONST:
+        rueckwaerts(40)  // kurz Energie sparen
+ejemplo.en:
+    IF energy() > 35:
+        attack()
+    ELSE:
+        back(40)         // conserve energy briefly
 
 === api.blindaje
 tema: 02
 firma: double blindaje()
 firma.de: double panzerung()
 firma.en: double armor()
-es: Lo que te queda de blindaje, de 0 a 100.
-de: Deine restliche Panzerung, von 0 bis 100.
-en: Your remaining armor, from 0 to 100.
+es: Consulta sin parámetros. Devuelve el porcentaje de blindaje total que te queda en todas tus piezas, de 0 a 100. Úsalo para decidir cuándo curarte, poner escudo o huir.
+de: Abfrage ohne Parameter. Gibt deine verbleibende Gesamtpanzerung aller Teile in Prozent von 0 bis 100 zurück. Hilft zu entscheiden, wann Schutz oder Rückzug nötig ist.
+en: Query with no parameters. Returns your remaining overall armor across all parts as a percentage from 0 to 100. Useful to decide when to shield, heal, or retreat.
+donde.es: Consúltalo en cadaTurno() o alRecibirGolpe() para cambiar a modo defensivo o reparar cuando baje; no lo llames en el constructor.
+donde.de: In jedenZug() oder beiTreffer() abfragen, um bei niedriger Panzerung defensiv zu agieren oder zu reparieren; nicht im Konstruktor.
+donde.en: Check in onTick() or onHit() to switch to defensive play or heal when low; never call it in the constructor.
+ejemplo.es:
+    SI blindaje() < 35 Y listoEspecial():
+        especial()
+ejemplo.de:
+    WENN panzerung() < 35 UND bereitSpezial():
+        spezial()
+ejemplo.en:
+    IF armor() < 35 AND readySpecial():
+        special()
 
 === api.turnoActual
 tema: 02
 firma: int turnoActual()
 firma.de: int zug()
 firma.en: int tick()
-es: El número de turno de esta ronda (desde 0).
-de: Die Nummer des Zuges in dieser Runde (ab 0).
-en: The tick number in this round (from 0).
+es: Consulta sin parámetros. Devuelve el número de turno de la ronda actual empezando en 0 (en peleas normales hay 30 turnos por segundo hasta 1200). Sirve para hacer acciones periódicas con el operador «%».
+de: Abfrage ohne Parameter. Gibt die Zugnummer der laufenden Runde ab 0 zurück (normalerweise 30 Züge pro Sekunde bis 1200). Ideal für periodische Aktionen mit «%».
+en: Query with no parameters. Returns the current round's tick counter starting at 0 (typically 30 ticks per second up to 1200). Useful for periodic actions with the «%» operator.
+donde.es: Úsalo en cadaTurno() o eventos para medir cuántos turnos pasaron desde el último avistamiento o alternar patrones periódicos; nunca en el constructor.
+donde.de: In jedenZug() oder Ereignissen nutzen, um Züge seit der letzten Sichtung zu zählen oder Muster zu takten; nie im Konstruktor.
+donde.en: Use in onTick() or events to track ticks since last sighting or time periodic patterns; never in the constructor.
+ejemplo.es:
+    // Cambia de lado cada 45 turnos (1,5 segundos):
+    SI turnoActual() % 45 == 0:
+        girar(60)
+ejemplo.de:
+    // Alle 45 Züge (1,5 Sekunden) die Richtung wechseln:
+    WENN zug() % 45 == 0:
+        drehen(60)
+ejemplo.en:
+    // Switch steering every 45 ticks (1.5 seconds):
+    IF tick() % 45 == 0:
+        turn(60)
 
 === api.ronda
 tema: 02
 firma: int ronda()
 firma.de: int runde()
 firma.en: int round()
-es: La ronda (de 1 a 4).
-de: Die Runde (1 bis 4).
-en: The round (1 to 4).
+es: Consulta sin parámetros. Devuelve el número de la ronda actual empezando en 1 (normalmente de 1 a 4, o hasta 12 en combates largos). Sirve para ajustar tu estrategia según la ronda.
+de: Abfrage ohne Parameter. Gibt die Nummer der aktuellen Runde ab 1 zurück (meist 1 bis 4, bei langen Kämpfen mehr). Praktisch, um die Taktik je Runde anzupassen.
+en: Query with no parameters. Returns the current round number starting from 1 (usually 1 to 4, or more in longer bouts). Helpful to adapt your strategy per round.
+donde.es: Consúltalo en alEmpezar() o alAcabarRonda() para adaptar la estrategia entre rondas junto con memoria(); no lo llames en el constructor.
+donde.de: In beimStart() oder beiRundenende() abfragen, um die Strategie je Runde zusammen mit gedaechtnis() anzupassen; nicht im Konstruktor.
+donde.en: Query in onStart() or onRoundEnd() to adapt strategy across rounds alongside memory(); never call it in the constructor.
+ejemplo.es:
+    AL EMPEZAR:
+        decir("¡Ronda " + ronda() + "!")
+ejemplo.de:
+    BEIM START:
+        sagen("Runde " + runde() + "!")
+ejemplo.en:
+    ON START:
+        say("Round " + round() + "!")
 
 === api.anchoArena
 tema: 02
 firma: double anchoArena()
 firma.de: double arenaBreite()
 firma.en: double arenaWidth()
-es: double anchoArena()
-de: double arenaBreite()
-en: double arenaWidth()
+es: Consulta sin parámetros. Devuelve el ancho total de la arena en píxeles (normalmente 1000). La coordenada x válida va de 0 a anchoArena().
+de: Abfrage ohne Parameter. Gibt die Gesamtbreite der Arena in Pixeln zurück (üblicherweise 1000). Gültige x-Werte reichen von 0 bis arenaBreite().
+en: Query with no parameters. Returns the total width of the arena in pixels (typically 1000). Valid x coordinates range from 0 to arenaWidth().
+donde.es: Úsalo en alEmpezar() o cadaTurno() para calcular el centro (anchoArena() / 2) o el margen derecho; nunca en un campo de clase ni en el constructor.
+donde.de: In beimStart() oder jedenZug() nutzen, um die Mitte (arenaBreite() / 2) oder den rechten Rand zu berechnen; nie in Feld-Initialisierern oder im Konstruktor.
+donde.en: Use in onStart() or onTick() to compute the center (arenaWidth() / 2) or right margin; never in class field initializers or the constructor.
+ejemplo.es:
+    double centroX = anchoArena() / 2;
+    girarHacia(anguloHacia(centroX, altoArena() / 2));
+ejemplo.de:
+    double mitteX = arenaBreite() / 2;
+    drehenNach(winkelZu(mitteX, arenaHoehe() / 2));
+ejemplo.en:
+    double centerX = arenaWidth() / 2;
+    turnTo(angleTo(centerX, arenaHeight() / 2));
 
 === api.altoArena
 tema: 02
 firma: double altoArena()
 firma.de: double arenaHoehe()
 firma.en: double arenaHeight()
-es: double altoArena()
-de: double arenaHoehe()
-en: double arenaHeight()
+es: Consulta sin parámetros. Devuelve el alto total de la arena en píxeles (normalmente 700). La coordenada y válida va de 0 (abajo) a altoArena() (arriba).
+de: Abfrage ohne Parameter. Gibt die Gesamthöhe der Arena in Pixeln zurück (üblicherweise 700). Gültige y-Werte reichen von 0 (unten) bis arenaHoehe() (oben).
+en: Query with no parameters. Returns the total height of the arena in pixels (typically 700). Valid y coordinates range from 0 (bottom) to arenaHeight() (top).
+donde.es: Úsalo en alEmpezar() o cadaTurno() para calcular márgenes verticales y evitar el borde superior; nunca en inicializadores de campos ni en el constructor.
+donde.de: In beimStart() oder jedenZug() für obere Randabstände und Mittelpunkte nutzen; niemals in Feld-Initialisierern oder im Konstruktor.
+donde.en: Use in onStart() or onTick() for vertical margins and center calculations; never in field initializers or the constructor.
+ejemplo.es:
+    boolean cercaTecho = y() > altoArena() - 70;
+    SI cercaTecho: girarHacia(-90);
+ejemplo.de:
+    boolean nahOben = y() > arenaHoehe() - 70;
+    WENN nahOben: drehenNach(-90);
+ejemplo.en:
+    boolean nearTop = y() > arenaHeight() - 70;
+    IF nearTop: turnTo(-90);
 
 === api.restanteAvance
 tema: 04
 firma: double restanteAvance()
 firma.de: double restStrecke()
 firma.en: double remainingDistance()
-es: Lo que le falta por avanzar de la última orden.
-de: Was vom letzten Fahrbefehl noch fehlt.
-en: What is left of the last move order.
+es: Consulta sin parámetros. Devuelve los píxeles que faltan para completar tu última orden avanzar(...) o retroceder(...) (negativo si aún retrocede, 0 si ya llegó o se detuvo).
+de: Abfrage ohne Parameter. Gibt die verbleibenden Pixel deines letzten Fahrbefehls zurück (negativ beim Rückwärtsfahren, 0 wenn angekommen oder angehalten).
+en: Query with no parameters. Returns the remaining pixels of your last ahead(...) or back(...) order (negative if reversing, 0 when finished or stopped).
+donde.es: Compáralo con 0 dentro de un if en cadaTurno() para encadenar un nuevo avanzar() solo al terminar el anterior; no lo uses en el constructor.
+donde.de: In einem if in jedenZug() mit 0 vergleichen, um erst nach Abschluss der Fahrt ein neues vorwaerts() zu geben; nicht im Konstruktor.
+donde.en: Compare against 0 in an if inside onTick() so you only issue the next ahead() once the previous move finishes; never in the constructor.
+ejemplo.es:
+    // Da otra orden solo cuando termine la actual:
+    SI Math.abs(restanteAvance()) < 1:
+        avanzar(140)
+ejemplo.de:
+    // Neuen Befehl erst geben, wenn der alte erledigt ist:
+    WENN Math.abs(restStrecke()) < 1:
+        vorwaerts(140)
+ejemplo.en:
+    // Issue a new order only when the current one finishes:
+    IF Math.abs(remainingDistance()) < 1:
+        ahead(140)
 
 === api.restanteGiro
 tema: 04
 firma: double restanteGiro()
 firma.de: double restDrehung()
 firma.en: double remainingTurn()
-es: Lo que le falta por girar de la última orden.
-de: Was vom letzten Drehbefehl noch fehlt.
-en: What is left of the last turn order.
+es: Consulta sin parámetros. Devuelve los grados que aún faltan por girar al cuerpo de la última orden girar(...). Cuando vale 0, el cuerpo ya ha terminado de rotar.
+de: Abfrage ohne Parameter. Gibt die noch offenen Grad der letzten Körperdrehung zurück. Ist der Wert 0, ist die Drehung abgeschlossen.
+en: Query with no parameters. Returns the degrees remaining from the last body turn order. When 0, the body has finished rotating.
+donde.es: Úsalo en cadaTurno() para saber si el cuerpo ya terminó de girar antes de lanzar otro giro o avanzar; no va en el constructor.
+donde.de: In jedenZug() abfragen, ob der Rumpf seine Drehung beendet hat, bevor der nächste Befehl folgt; gehört nicht in den Konstruktor.
+donde.en: Check inside onTick() to see if the chassis finished turning before starting another turn or move; never in the constructor.
+ejemplo.es:
+    SI restanteGiro() == 0:
+        girar(90)   // inicia otro cuarto de vuelta
+ejemplo.de:
+    WENN restDrehung() == 0:
+        drehen(90)  // nächste Vierteldrehung starten
+ejemplo.en:
+    IF remainingTurn() == 0:
+        turn(90)    // start another quarter turn
 
 === api.restanteMira
 tema: 04
 firma: double restanteMira()
 firma.de: double restZielen()
 firma.en: double remainingAim()
-es: double restanteMira()
-de: double restZielen()
-en: double remainingAim()
+es: Consulta sin parámetros. Devuelve los grados que aún faltan por girar a los brazos y al radar hasta llegar al objetivo pedido. Cuando es casi 0, ya apuntas justo al sitio y puedes disparar con precisión.
+de: Abfrage ohne Parameter. Gibt an, wie viele Grad das Visier noch drehen muss, bis es ausgerichtet ist. Ist der Wert nahe 0, zielst du genau und kannst präzise feuern.
+en: Query with no parameters. Returns how many degrees remain for arms and radar to reach their target angle. When near 0, your sight is lined up for an accurate shot.
+donde.es: Consúltalo en cadaTurno() para lanzar un nuevo barrido de apuntar() solo cuando acabe el giro actual de la mira; nunca en el constructor.
+donde.de: In jedenZug() prüfen, um erst nach beendetem Visier-Schwenk ein neues zielen() zu starten; niemals im Konstruktor.
+donde.en: Check in onTick() to start a new aim() sweep only after the current sight rotation completes; never in the constructor.
+ejemplo.es:
+    apuntarHacia(e.angulo());
+    SI Math.abs(restanteMira()) < 3:
+        atacar();
+ejemplo.de:
+    zielenNach(g.winkel());
+    WENN Math.abs(restZielen()) < 3:
+        angreifen();
+ejemplo.en:
+    aimTo(e.angle());
+    IF Math.abs(remainingAim()) < 3:
+        attack();
 
 === api.enemigosVistos
 tema: 15
 firma: List<Enemigo> enemigosVistos()
 firma.de: List<Gegner> gesehen()
 firma.en: List<Enemy> seenEnemies()
-es: Los enemigos que ves ahora mismo (tema 15: colecciones).
-de: Die Gegner, die du gerade siehst (Thema 15: Collections).
-en: The enemies you can see right now (topic 15: collections).
+es: Consulta sin parámetros. Devuelve una lista (List<Enemigo>) con todos los rivales que tu radar ve en este turno, ordenada del más cercano al más lejano (lista vacía si no ves ninguno).
+de: Abfrage ohne Parameter. Gibt eine Liste (List<Gegner>) aller Gegner zurück, die dein Radar in diesem Zug sieht, sortiert vom nächsten zum fernsten (leer, wenn niemand in Sicht).
+en: Query with no parameters. Returns a List<Enemy> of all opponents visible to your radar this tick, sorted nearest first (empty list if none are seen).
+donde.es: Úsalo dentro de cadaTurno() para saber si ves a alguien (.isEmpty()) o recorrer varios rivales con un for-each; en alVerEnemigo() ya recibes a cada uno.
+donde.de: In jedenZug() nutzen, um per .isEmpty() zu prüfen, ob du jemanden siehst, oder mehrere Gegner zu durchlaufen; in beiSicht() erhältst du sie schon einzeln.
+donde.en: Call inside onTick() to check if anyone is visible (.isEmpty()) or iterate multiple foes; inside onSeeEnemy() you already receive each one.
+ejemplo.es:
+    List<Enemigo> lista = enemigosVistos();
+    SI !lista.isEmpty():
+        apuntarHacia(lista.get(0).angulo());
+ejemplo.de:
+    List<Gegner> liste = gesehen();
+    WENN !liste.isEmpty():
+        zielenNach(liste.get(0).winkel());
+ejemplo.en:
+    List<Enemy> list = seenEnemies();
+    IF !list.isEmpty():
+        aimTo(list.get(0).angle());
 
 === api.obstaculos
 tema: 15
 firma: List<Obstaculo> obstaculos()
 firma.de: List<Hindernis> hindernisse()
 firma.en: List<Obstacle> obstacles()
-es: Las trampas y los objetos de la arena: pinchos, sierras, foso, barriles… (vacía si no hay; tema 15).
-de: Die Fallen und Gegenstände der Arena: Stacheln, Sägen, Grube, Fässer … (leer, wenn es keine gibt; Thema 15).
-en: The traps and objects in the arena: spikes, saws, pit, barrels… (empty if there are none; topic 15).
+es: Consulta sin parámetros. Devuelve la lista de trampas y obstáculos presentes en la arena actual (pinchos, sierras, foso, imán, barriles…), o una lista vacía en arenas limpias. Úsala en cadaTurno para esquivarlos antes de pisarlos.
+de: Abfrage ohne Parameter. Gibt die Liste aller Fallen und Hindernisse der aktuellen Arena zurück (Stacheln, Sägen, Grube, Magnet, Fässer…), oder eine leere Liste in normalen Arenen.
+en: Query with no parameters. Returns the list of traps and obstacles in the current arena (spikes, saws, pit, magnet, barrels…), or an empty list on clean arenas. Check in onTick to steer clear.
+donde.es: Recórrelo con un for-each dentro de cadaTurno() (o alEmpezar() si son fijos) para esquivar trampas y barriles; nunca en el constructor.
+donde.de: In jedenZug() (oder beimStart() bei festen Objekten) mit for-each durchlaufen, um Fallen und Fässer zu umfahren; nie im Konstruktor.
+donde.en: Iterate with a for-each loop inside onTick() (or onStart() for static ones) to dodge traps and barrels; never in the constructor.
+ejemplo.es:
+    PARA CADA o EN obstaculos():
+        SI o.peligroso() Y o.distancia() < o.radio() + 60:
+            girarHacia(o.angulo() + 180);
+            avanzar(80);
+ejemplo.de:
+    FÜR JEDES o IN hindernisse():
+        WENN o.gefaehrlich() UND o.entfernung() < o.radius() + 60:
+            drehenNach(o.winkel() + 180);
+            vorwaerts(80);
+ejemplo.en:
+    FOR EACH o IN obstacles():
+        IF o.dangerous() AND o.distance() < o.radius() + 60:
+            turnTo(o.angle() + 180);
+            ahead(80);
 
 === api.aparatos
 tema: 15
 firma: List<Aparato> aparatos()
 firma.de: List<Geraet> geraete()
 firma.en: List<Gadget> gadgets()
-es: Los aparatos que hay en el suelo de la arena: ve hasta uno para cogerlo (vacía si no hay; tema 15).
-de: Die Geräte auf dem Boden der Arena: Fahr zu einem hin, um es aufzuheben (leer, wenn es keine gibt; Thema 15).
-en: The gadgets on the arena floor: drive to one to pick it up (empty if there are none; topic 15).
+es: Consulta sin parámetros. Devuelve los aparatos libres tirados en el suelo de la arena en este momento (salen a los pocos segundos si la opción está activa). Muévete sobre uno para recogerlo automáticamente.
+de: Abfrage ohne Parameter. Gibt die noch freien Geräte auf dem Boden der Arena zurück (erscheinen nach einigen Sekunden, falls aktiviert). Fahr über eines, um es aufzusammeln.
+en: Query with no parameters. Returns free gadgets lying on the arena floor right now (spawn after a few seconds when enabled). Drive over one to pick it up automatically.
+donde.es: Recórrelo en cadaTurno() cuando miAparato() sea null para ir a recoger un aparato del suelo; no lo llames en el constructor.
+donde.de: In jedenZug() durchlaufen, solange meinGeraet() null ist, um ein Gerät vom Boden einzusammeln; nicht im Konstruktor aufrufen.
+donde.en: Iterate inside onTick() while myGadget() is null to steer toward a gadget on the floor; never call it in the constructor.
+ejemplo.es:
+    SI miAparato() == null Y !aparatos().isEmpty():
+        Aparato a = aparatos().get(0);
+        girarHacia(a.angulo());
+        avanzar(a.distancia());
+ejemplo.de:
+    WENN meinGeraet() == null UND !geraete().isEmpty():
+        Geraet a = geraete().get(0);
+        drehenNach(a.winkel());
+        vorwaerts(a.entfernung());
+ejemplo.en:
+    IF myGadget() == null AND !gadgets().isEmpty():
+        Gadget g = gadgets().get(0);
+        turnTo(g.angle());
+        ahead(g.distance());
 
 === api.miAparato
 tema: 13
 firma: Aparato miAparato()
 firma.de: Geraet meinGeraet()
 firma.en: Gadget myGadget()
-es: El aparato que llevas (null si no llevas ninguno).
-de: Das Gerät, das du trägst (null, wenn keins).
-en: The gadget you carry (null if none).
+es: Consulta sin parámetros. Devuelve el aparato que tu robot lleva recogido ahora mismo, o null si no lleva ninguno. Sirve para comprobar si falta conectarlo con conectar(...) o si ya está listo() para usar.
+de: Abfrage ohne Parameter. Gibt das Gerät zurück, das dein Roboter gerade trägt, oder null wenn keines. Prüfe damit, ob anschliessen(...) nötig ist oder bereit() schon true liefert.
+en: Query with no parameters. Returns the gadget your robot currently carries, or null if none. Use it to check whether plugIn(...) is still needed or ready() is true.
+donde.es: Guárdalo en una variable local dentro de cadaTurno() y comprueba siempre != null antes de leer sus métodos; nunca lo llames en el constructor.
+donde.de: In jedenZug() in einer lokalen Variable speichern und immer != null prüfen, bevor du seine Methoden aufrufst; nie im Konstruktor.
+donde.en: Store in a local variable inside onTick() and always check != null before calling methods on it; never call it in the constructor.
+ejemplo.es:
+    Aparato a = miAparato();
+    SI a != null Y a.listo():
+        usarAparato();
+ejemplo.de:
+    Geraet a = meinGeraet();
+    WENN a != null UND a.bereit():
+        geraetBenutzen();
+ejemplo.en:
+    Gadget g = myGadget();
+    IF g != null AND g.ready():
+        useGadget();
 
 === api.conectar
 tema: 13
 firma: boolean conectar(String hueco)
 firma.de: boolean anschliessen(String platz)
 firma.en: boolean plugIn(String slot)
-es: Conecta el aparato que llevas en ese hueco: "espalda", "piernas", "cabeza" o "brazo" (lee su código para saber cuál).
-de: Schließt dein Gerät an diesem Platz an: "ruecken", "beine", "kopf" oder "arm" (lies seinen Code, um zu wissen, welcher).
-en: Plugs the gadget you carry into that slot: "back", "legs", "head" or "arm" (read its code to know which).
+es: Empieza a montar el aparato que recogiste en el hueco indicado ("espalda", "piernas", "cabeza" o "brazo"). Consulta el código del aparato durante la pelea para ver su hueco exacto: si aciertas tarda 1 segundo (30 turnos) en montarse y devuelve true; si no corresponde devuelve false.
+de: Startet die Montage des eingesammelten Geräts am Platz ("ruecken", "beine", "kopf" oder "arm"). Lies den Geräte-Code im Kampf: stimmt der Platz, dauert die Montage 1 Sekunde (30 Züge) und liefert true, sonst false.
+en: Starts mounting your carried gadget into the given slot ("back", "legs", "head", or "arm"). Check the gadget's code mid-fight for the right slot: if correct, mounting takes 1 second (30 ticks) and returns true; otherwise false.
+donde.es: Llámalo en cadaTurno() solo cuando miAparato() != null y !miAparato().conectado(), pasando el hueco exacto del aparato; no en el constructor.
+donde.de: In jedenZug() nur aufrufen, wenn meinGeraet() != null und !meinGeraet().angeschlossen() gilt, mit dem passenden Platz; nicht im Konstruktor.
+donde.en: Call in onTick() only when myGadget() != null and !myGadget().pluggedIn(), passing the gadget's required slot; never in the constructor.
+ejemplo.es:
+    Aparato a = miAparato();
+    SI a != null Y !a.conectado():
+        conectar("espalda");  // o el hueco que diga su código
+ejemplo.de:
+    Geraet a = meinGeraet();
+    WENN a != null UND !a.angeschlossen():
+        anschliessen("ruecken");
+ejemplo.en:
+    Gadget g = myGadget();
+    IF g != null AND !g.pluggedIn():
+        plugIn("back");       // match slot shown in gadget code
 
 === api.usarAparato
 tema: 13
 firma: boolean usarAparato()
 firma.de: boolean geraetBenutzen()
 firma.en: boolean useGadget()
-es: Usa el aparato conectado, hacia donde miras. Devuelve si se pudo (conectado y recargado).
-de: Benutzt das angeschlossene Gerät (in Blickrichtung oder zu diesem Winkel). Gibt zurück, ob es ging.
-en: Uses the plugged-in gadget (where you aim, or at that angle). Returns whether it worked.
+es: Activa en este turno el aparato ya montado y recargado en dirección a mira() (ideal para chorro, antigravedad, descarga o aceite). Devuelve true si se activó o false si aún se monta, no está conectado o está en recarga.
+de: Löst in diesem Zug das angeschlossene und geladene Gerät in Richtung blick() aus (ideal für Düse, Antigravitation, Schock, Öl). Gibt true bei Aktivierung zurück, sonst false.
+en: Triggers your mounted and recharged gadget this tick along aimDirection() (great for jet, anti-gravity, shock, or oil). Returns true if triggered, false if still mounting, unplugged, or cooling down.
+donde.es: Invócalo en cadaTurno() o alVerEnemigo() cuando miAparato() != null y miAparato().listo() sea true; nunca en el constructor ni sin haberlo conectado.
+donde.de: In jedenZug() oder beiSicht() aufrufen, wenn meinGeraet() != null und meinGeraet().bereit() true ist; nie im Konstruktor oder vor anschliessen().
+donde.en: Invoke in onTick() or onSeeEnemy() when myGadget() != null and myGadget().ready() is true; never in the constructor or before plugging it in.
+ejemplo.es:
+    SI miAparato() != null Y miAparato().listo():
+        usarAparato();
+ejemplo.de:
+    WENN meinGeraet() != null UND meinGeraet().bereit():
+        geraetBenutzen();
+ejemplo.en:
+    IF myGadget() != null AND myGadget().ready():
+        useGadget();
 
-=== api.usarAparato
+=== api.usarAparato.angulo
 tema: 13
 firma: boolean usarAparato(double angulo)
 firma.de: boolean geraetBenutzen(double winkel)
 firma.en: boolean useGadget(double angle)
-es: Usa el aparato conectado hacia ese ángulo (para los que apuntan: lanzallamas, pegamento).
-de: Benutzt das angeschlossene Gerät (in Blickrichtung oder zu diesem Winkel). Gibt zurück, ob es ging.
-en: Uses the plugged-in gadget (where you aim, or at that angle). Returns whether it worked.
+es: Sobrecarga que activa tu aparato apuntando a un ángulo absoluto específico en grados (pensado para aparatos direccionales como lanzallamas o pegamento). Devuelve true si el aparato estaba conectado, recargado y pudo dispararse.
+de: Überladung: aktiviert das Gerät auf einen bestimmten absoluten Winkel in Grad (gedacht für Flammenwerfer oder Kleber). Gibt true zurück, wenn es bereit war und ausgelöst wurde.
+en: Overload that fires your gadget toward a specific absolute angle in degrees (designed for aimed gadgets like flamethrower or glue). Returns true if plugged in, ready, and triggered.
+donde.es: Úsalo dentro de alVerEnemigo(Enemigo e) o cadaTurno() para aparatos dirigidos (como lanzallamas o pegamento) cuando miAparato().listo() sea true; no en el constructor.
+donde.de: In beiSicht(Gegner g) oder jedenZug() für zielbare Geräte (z. B. Flammenwerfer, Kleber) nutzen, wenn meinGeraet().bereit() true ist; nicht im Konstruktor.
+donde.en: Use in onSeeEnemy(Enemy e) or onTick() for aimed gadgets (like flamethrower or glue) when myGadget().ready() is true; never in the constructor.
+ejemplo.es:
+    // Lanza llamas o pegamento directo hacia el enemigo:
+    SI miAparato() != null Y miAparato().listo():
+        usarAparato(e.angulo());
+ejemplo.de:
+    // Flammenwerfer oder Kleber direkt zum Gegner richten:
+    WENN meinGeraet() != null UND meinGeraet().bereit():
+        geraetBenutzen(g.winkel());
+ejemplo.en:
+    // Aim flamethrower or glue directly at the enemy:
+    IF myGadget() != null AND myGadget().ready():
+        useGadget(e.angle());
 
 === api.companeros
 tema: 15
 firma: List<Enemigo> companeros()
 firma.de: List<Gegner> kameraden()
 firma.en: List<Enemy> teammates()
-es: Tus compañeros de equipo (en las peleas por equipos; vacía si peleas solo).
-de: Deine Teamkameraden (in Teamkämpfen; leer, wenn du allein kämpfst).
-en: Your teammates (in team fights; empty when you fight alone).
+es: Consulta sin parámetros para peleas por equipos. Devuelve la lista de compañeros aliados vivos en este turno (con su posición exacta aunque no estén en tu radar), o una lista vacía cuando peleas solo.
+de: Abfrage ohne Parameter für Teamkämpfe. Gibt die Liste lebender Verbündeter in diesem Zug zurück (mit Position, auch außerhalb des Radars), oder leer in Einzelkämpfen.
+en: Query with no parameters for team battles. Returns the list of living allies this tick (with position even outside radar cone), or an empty list in solo fights.
+donde.es: Recórrelo en cadaTurno() o alVerEnemigo() en peleas por equipos para evitar estorbar a aliados o coordinar fuego; en duelos 1v1 devuelve lista vacía.
+donde.de: In Teamkämpfen in jedenZug() oder beiSicht() durchlaufen, um Verbündete nicht zu blockieren oder abzustimmen; im 1v1 immer leer.
+donde.en: Iterate in onTick() or onSeeEnemy() during team fights to coordinate or avoid blocking allies; in 1v1 fights it is always empty.
+ejemplo.es:
+    PARA CADA aliado EN companeros():
+        SI aliado.distancia() < 60: retroceder(40); // no estorbarse
+ejemplo.de:
+    FÜR JEDEN kamerad IN kameraden():
+        WENN kamerad.entfernung() < 60: rueckwaerts(40);
+ejemplo.en:
+    FOR EACH ally IN teammates():
+        IF ally.distance() < 60: back(40); // avoid crowding
 
 === api.avisarAlEquipo
 tema: 08
 firma: void avisarAlEquipo(Object mensaje)
 firma.de: void teamMelden(Object nachricht)
 firma.en: void tellTeam(Object message)
-es: Avisa a tus compañeros (les llega el turno siguiente en alOirAlEquipo): «voy a por el de la izquierda».
-de: Meldet deinen Kameraden etwas (es kommt im nächsten Zug in beiTeamNachricht an).
-en: Tells your teammates something (it arrives next tick in onTeamMessage).
+es: Envía un texto o valor (máx. 200 caracteres) a todos tus compañeros de equipo; sin valor de retorno. Se entrega al turno siguiente mediante el evento alOirAlEquipo(de, mensaje).
+de: Sendet eine Nachricht (max. 200 Zeichen) an alle Teamkameraden; kein Rückgabewert. Kommt im nächsten Zug über beiTeamNachricht(von, nachricht) an.
+en: Sends a text or value (max 200 chars) to all teammates; no return value. Delivered on the next tick via onTeamMessage(from, message).
+donde.es: Llámalo en alVerEnemigo() o alRecibirGolpe() en peleas por equipos (llega en el turno siguiente a alOirAlEquipo()); evita saturarlo cada turno sin filtro.
+donde.de: In Teamkämpfen in beiSicht() oder beiTreffer() aufrufen (kommt im nächsten Zug in beiTeamNachricht() an); nicht ungefiltert jeden Zug spammen.
+donde.en: Call in onSeeEnemy() or onHit() during team fights (delivered next tick to onTeamMessage()); avoid spamming it every single tick.
+ejemplo.es:
+    AL VER enemigo e:
+        SI e.blindaje() < 25: avisarAlEquipo("rematar:" + e.nombre());
+ejemplo.de:
+    BEI SICHT von g:
+        WENN g.panzerung() < 25: teamMelden("fokus:" + g.name());
+ejemplo.en:
+    ON SEEING e:
+        IF e.armor() < 25: tellTeam("focus:" + e.name());
 
 === api.anguloHacia
 tema: 06
 firma: double anguloHacia(double x, double y)
 firma.de: double winkelZu(double x, double y)
 firma.en: double angleTo(double x, double y)
-es: El ángulo absoluto desde ti hasta ese punto.
-de: Der absolute Winkel von dir zu diesem Punkt.
-en: The absolute angle from you to that point.
+es: Función auxiliar sin efectos laterales. Parámetros: coordenadas (x, y) de un punto de la arena. Devuelve el ángulo absoluto en grados desde tu posición actual hasta ese punto, listo para usar en girarHacia o apuntarHacia.
+de: Hilfsfunktion ohne Nebenwirkungen. Parameter: Koordinaten (x, y) in der Arena. Gibt den absoluten Winkel in Grad von deiner Position zu diesem Punkt zurück.
+en: Pure helper function. Parameters: arena coordinates (x, y). Returns the absolute angle in degrees from your current position to that point, ready for turnTo or aimTo.
+donde.es: Úsalo como argumento de girarHacia() o apuntarHacia() dentro de cadaTurno() o eventos; depende de tu posición, así que nunca lo llames en el constructor.
+donde.de: Als Argument für drehenNach() oder zielenNach() in jedenZug() oder Ereignissen nutzen; hängt von deiner Position ab, daher nie im Konstruktor.
+donde.en: Pass its result to turnTo() or aimTo() inside onTick() or events; it depends on your position, so never call it in the constructor.
+ejemplo.es:
+    double alCentro = anguloHacia(anchoArena() / 2, altoArena() / 2);
+    girarHacia(alCentro);
+ejemplo.de:
+    double zurMitte = winkelZu(arenaBreite() / 2, arenaHoehe() / 2);
+    drehenNach(zurMitte);
+ejemplo.en:
+    double toCenter = angleTo(arenaWidth() / 2, arenaHeight() / 2);
+    turnTo(toCenter);
 
 === api.distanciaA
 tema: 06
 firma: double distanciaA(double x, double y)
 firma.de: double abstandZu(double x, double y)
 firma.en: double distanceTo(double x, double y)
-es: La distancia desde ti hasta ese punto.
-de: Der Abstand von dir zu diesem Punkt.
-en: The distance from you to that point.
+es: Función auxiliar sin efectos laterales. Parámetros: coordenadas (x, y) en la arena. Devuelve la distancia en línea recta (en píxeles) entre tu robot y ese punto.
+de: Hilfsfunktion ohne Nebenwirkungen. Parameter: Arena-Koordinaten (x, y). Gibt den Luftlinien-Abstand in Pixeln zwischen deinem Roboter und diesem Punkt zurück.
+en: Pure helper function. Parameters: arena coordinates (x, y). Returns the straight-line distance in pixels between your robot and that point.
+donde.es: Úsalo dentro de cadaTurno() o eventos para medir qué lejos estás de un punto (x, y) o del centro; no puede llamarse en el constructor.
+donde.de: In jedenZug() oder Ereignissen aufrufen, um deinen Abstand zu einem Punkt (x, y) oder der Mitte zu messen; im Konstruktor nicht erlaubt.
+donde.en: Call inside onTick() or events to measure how far you are from a point (x, y) or the center; cannot be called in the constructor.
+ejemplo.es:
+    SI distanciaA(anchoArena() / 2, altoArena() / 2) > 250:
+        girarHacia(anguloHacia(anchoArena() / 2, altoArena() / 2));
+ejemplo.de:
+    WENN abstandZu(arenaBreite() / 2, arenaHoehe() / 2) > 250:
+        drehenNach(winkelZu(arenaBreite() / 2, arenaHoehe() / 2));
+ejemplo.en:
+    IF distanceTo(arenaWidth() / 2, arenaHeight() / 2) > 250:
+        turnTo(angleTo(arenaWidth() / 2, arenaHeight() / 2));
 
 === api.normalizar
 tema: 06
 firma: double normalizar(double grados)
 firma.de: double normalisieren(double grad)
 firma.en: double normalize(double degrees)
-es: Lleva un ángulo a (-180, 180]: normalizar(350) da -10.
-de: Bringt einen Winkel nach (-180, 180]: normalisieren(350) ergibt -10.
-en: Brings an angle into (-180, 180]: normalize(350) gives -10.
+es: Función auxiliar matemática. Parámetro: cualquier ángulo en grados. Lo ajusta al rango (-180, 180] para evitar giros largos innecesarios (por ejemplo, normalizar(350) devuelve -10).
+de: Mathematische Hilfsfunktion. Parameter: beliebiger Winkel in Grad. Bringt ihn in (-180, 180], um unnötige Umwege beim Drehen zu vermeiden (normalisieren(350) ergibt -10).
+en: Math helper function. Parameter: any angle in degrees. Wraps it into (-180, 180] to avoid long spins (for example, normalize(350) returns -10).
+donde.es: Úsalo dentro de expresiones de ángulo en cualquier método (p. ej. normalizar(e.angulo() - mira())) para mantener diferencias entre -180 y 180 grados.
+donde.de: In Winkelberechnungen innerhalb jeder Methode einsetzen (z. B. normalisieren(g.winkel() - blick())), um Differenzen in (-180, 180] zu halten.
+donde.en: Use inside angle expressions in any method (e.g. normalize(e.angle() - aimDirection())) to keep angle differences within (-180, 180].
+ejemplo.es:
+    double dif = normalizar(e.angulo() - mira());  // entre -180 y +180
+    SI Math.abs(dif) < 5: atacar();
+ejemplo.de:
+    double diff = normalisieren(g.winkel() - blick());
+    WENN Math.abs(diff) < 5: angreifen();
+ejemplo.en:
+    double diff = normalize(e.angle() - aimDirection());
+    IF Math.abs(diff) < 5: attack();
 
 === api.azar
 tema: 09
 firma: Random azar()
 firma.de: Random zufall()
 firma.en: Random random()
-es: Números al azar (los de tu robot: la misma pelea repetida da lo mismo).
-de: Zufallszahlen (die deines Roboters: derselbe Kampf ergibt dasselbe).
-en: Random numbers (your robot's own: the same fight replayed gives the same).
+es: Consulta sin parámetros. Devuelve el generador Random propio y determinista de tu robot (la misma semilla de pelea produce la misma secuencia). Úsalo en lugar de Math.random() para elegir direcciones o pausas aleatorias.
+de: Abfrage ohne Parameter. Gibt den eigenen, reproduzierbaren Random-Generator deines Roboters zurück. Nutze ihn statt Math.random() für zufällige Richtungen oder Pausen.
+en: Query with no parameters. Returns your robot's deterministic Random generator (replaying the same seed reproduces choices). Prefer it over Math.random() for random turns or timings.
+donde.es: Llámalo dentro de alEmpezar(), cadaTurno() o eventos para elegir giros o pausas aleatorias reproducibles; no lo guardes en un campo inicializado antes de alEmpezar().
+donde.de: In beimStart(), jedenZug() oder Ereignissen für reproduzierbare Zufallswerte nutzen; nicht schon vor beimStart() in einem Feld-Initialisierer aufrufen.
+donde.en: Call inside onStart(), onTick(), or events for reproducible random moves; don't invoke it in a field initializer before onStart().
+ejemplo.es:
+    SI restanteGiro() == 0:
+        girar(azar().nextInt(90) - 45);  // giro entre -45° y +44°
+ejemplo.de:
+    WENN restDrehung() == 0:
+        drehen(zufall().nextInt(90) - 45);
+ejemplo.en:
+    IF remainingTurn() == 0:
+        turn(random().nextInt(90) - 45);
 
 === api.decir
 tema: 01
 firma: void decir(Object texto)
 firma.de: void sagen(Object text)
 firma.en: void say(Object text)
-es: Dice algo en un bocadillo, encima del robot.
-de: Sagt etwas in einer Sprechblase über dem Roboter.
-en: Says something in a speech bubble above the robot.
+es: Acción visual sin valor de retorno. Parámetro: cualquier texto o dato (se convierte a String, máx. 120 caracteres). Muestra un bocadillo encima del robot durante unos 3 segundos sin afectar al combate.
+de: Visuelle Aktion ohne Rückgabewert. Parameter: beliebiger Text oder Wert (max. 120 Zeichen). Zeigt etwa 3 Sekunden lang eine Sprechblase über deinem Roboter an.
+en: Visual action with no return value. Parameter: any text or value (converted to String, max 120 chars). Displays a speech bubble over your robot for about 3 seconds.
+donde.es: Llámalo en eventos puntuales (alEmpezar(), alAcertar(), alRecibirGolpe()) para mostrar un bocadillo; evita llamarlo cada turno seguido o se pisará el texto.
+donde.de: In punktuellen Ereignissen (beimStart(), beiEigenemTreffer(), beiTreffer()) für Sprechblasen nutzen; nicht jeden Zug aufrufen, sonst überschreibt sich der Text.
+donde.en: Call in occasional events (onStart(), onHitEnemy(), onHit()) for speech bubbles; avoid calling it every tick or messages will overwrite each other.
+ejemplo.es:
+    AL VER enemigo e:
+        decir("¡Te vi, " + e.nombre() + "!");
+ejemplo.de:
+    BEI SICHT von g:
+        sagen("Erwischt, " + g.name() + "!");
+ejemplo.en:
+    ON SEEING e:
+        say("Spotted " + e.name() + "!");
 
 === api.escribir
 tema: 01
 firma: void escribir(Object texto)
 firma.de: void ausgeben(Object text)
 firma.en: void print(Object text)
-es: Escribe en la consola de tu robot (debajo del código).
-de: Schreibt in die Konsole deines Roboters (unter dem Code).
-en: Writes to your robot's console (below the code).
+es: Función de depuración sin retorno. Parámetro: mensaje o variable a inspeccionar. Escribe una línea en la consola del depurador (F9 en combate) junto con el número de turno actual.
+de: Debug-Ausgabe ohne Rückgabewert. Parameter: Nachricht oder Variable. Schreibt den Wert zusammen mit dem aktuellen Zug in die Debugger-Konsole des Kampfes (F9).
+en: Debugging helper with no return value. Parameter: message or variable to inspect. Prints a line in your robot's debugger console (F9 during fight) stamped with the current tick.
+donde.es: Úsalo dentro de eventos o condiciones concretas para depurar en la consola del robot; evita llamarlo sin filtro en cadaTurno() para no inundar el registro.
+donde.de: In Ereignissen oder gezielten if-Zweigen zum Debuggen in der Roboterkonsole nutzen; nicht ungefiltert in jedem Zug ausgeben.
+donde.en: Call inside events or guarded if blocks to debug in the robot console; avoid calling it unconditionally every tick or you'll flood the log.
+ejemplo.es:
+    CADA TURNO:
+        SI turnoActual() % 30 == 0:
+            escribir("x=" + (int) x() + " blindaje=" + (int) blindaje());
+ejemplo.de:
+    JEDEN ZUG:
+        WENN zug() % 30 == 0:
+            ausgeben("x=" + (int) x() + " panzerung=" + (int) panzerung());
+ejemplo.en:
+    EVERY TICK:
+        IF tick() % 30 == 0:
+            print("x=" + (int) x() + " armor=" + (int) armor());
+
+=== api.memoria
+tema: 15
+firma: Map<String, Object> memoria()
+firma.de: Map<String, Object> gedaechtnis()
+firma.en: Map<String, Object> memory()
+es: Consulta sin parámetros. Devuelve un Map<String, Object> persistente que se conserva entre todas las rondas de la pelea (incluso si editas y recompilas tu código entre rondas). Úsalo para recordar qué táctica funcionó.
+de: Abfrage ohne Parameter. Gibt eine dauerhafte Map<String, Object> zurück, die über alle Runden des Kampfes erhalten bleibt (selbst beim Neukompilieren zwischen Runden).
+en: Query with no parameters. Returns a persistent Map<String, Object> kept across all rounds of the match (even if you edit and recompile code between rounds). Great to remember what worked.
+donde.es: Léelo en alEmpezar() y actualízalo en alAcabarRonda() o eventos para recordar datos entre rondas; nunca lo llames en el constructor ni en inicializadores de campo.
+donde.de: In beimStart() auslesen und in beiRundenende() oder Ereignissen aktualisieren, um Wissen über Runden zu behalten; nie im Konstruktor oder als Feldstartwert.
+donde.en: Read in onStart() and update in onRoundEnd() or events to carry data across rounds; never call it in the constructor or field initializers.
+ejemplo.es:
+    int giros = (int) memoria().getOrDefault("sentido", 1);
+    AL RECIBIR golpe g:
+        memoria().put("sentido", -giros);  // invierte para la siguiente ronda
+ejemplo.de:
+    int richtung = (int) gedaechtnis().getOrDefault("richtung", 1);
+    BEI TREFFER t:
+        gedaechtnis().put("richtung", -richtung);
+ejemplo.en:
+    int dir = (int) memory().getOrDefault("dir", 1);
+    ON HIT h:
+        memory().put("dir", -dir);        // flip direction next round
 
 === Enemigo.x
 tema: 13
 firma: Enemigo: double x()
 firma.de: Gegner: double x()
 firma.en: Enemy: double x()
-es: Dónde está (en la arena).
-de: Wo er steht (in der Arena).
-en: Where it is (in the arena).
+es: Método de consulta del objeto Enemigo recibido en alVerEnemigo o enemigosVistos(). Devuelve la coordenada horizontal x (píxeles) que tenía el rival en la foto de este turno.
+de: Abfragemethode am Objekt Gegner aus beiSicht oder gesehen(). Gibt die waagerechte x-Koordinate (Pixel) des Gegners in der Momentaufnahme dieses Zugs zurück.
+en: Getter on Enemy received in onSeeEnemy or seenEnemies(). Returns the opponent's horizontal x coordinate (in pixels) captured at the start of this tick.
+donde.es: Invócalo sobre el parámetro e dentro de alVerEnemigo(Enemigo e), alChocarConEnemigo() o un elemento de enemigosVistos() / companeros(); nunca suelto.
+donde.de: Nur auf dem Parameter g in beiSicht(Gegner g), beiZusammenstoss() oder einem Element aus gesehen() / kameraden() aufrufen; niemals alleinstehend.
+donde.en: Call on the parameter e inside onSeeEnemy(Enemy e), onBump(), or an item from seenEnemies() / teammates(); never standalone.
+ejemplo.es:
+    AL VER enemigo e:
+        double futuraX = e.x() + Math.cos(Math.toRadians(e.rumbo())) * e.velocidad() * 5;
+ejemplo.de:
+    BEI SICHT von g:
+        double zielX = g.x() + Math.cos(Math.toRadians(g.richtung())) * g.geschwindigkeit() * 5;
+ejemplo.en:
+    ON SEEING e:
+        double futureX = e.x() + Math.cos(Math.toRadians(e.heading())) * e.speed() * 5;
 
 === Enemigo.y
 tema: 13
 firma: Enemigo: double y()
 firma.de: Gegner: double y()
 firma.en: Enemy: double y()
-es: double y()
-de: 
-en: 
+es: Método de consulta sobre un Enemigo visto. Devuelve su coordenada vertical y (píxeles, de 0 abajo a altoArena() arriba) en el instante del avistamiento.
+de: Abfragemethode am gesehenen Gegner. Gibt seine senkrechte y-Koordinate (Pixel, 0 unten bis arenaHoehe() oben) zum Zeitpunkt der Sichtung zurück.
+en: Getter on a seen Enemy. Returns its vertical y coordinate (in pixels, 0 bottom to arenaHeight() top) at the moment of detection.
+donde.es: Invócalo sobre un objeto Enemigo (e.y()) dentro de alVerEnemigo(), alChocarConEnemigo() o al recorrer enemigosVistos(); si escribes y() solo, lees tu propia Y.
+donde.de: Auf einem Gegner-Objekt (g.y()) in beiSicht(), beiZusammenstoss() oder einer gesehen()-Schleife aufrufen; y() allein liefert deine eigene Position.
+donde.en: Call on an Enemy object (e.y()) in onSeeEnemy(), onBump(), or a seenEnemies() loop; plain y() reads your own position instead.
+ejemplo.es:
+    AL VER enemigo e:
+        apuntarA(e.x(), e.y());   // apunta a sus coordenadas actuales
+ejemplo.de:
+    BEI SICHT von g:
+        zielenAuf(g.x(), g.y());  // auf seine Position zielen
+ejemplo.en:
+    ON SEEING e:
+        aimAt(e.x(), e.y());      // aim at its current position
 
 === Enemigo.distancia
 tema: 13
 firma: Enemigo: double distancia()
 firma.de: Gegner: double entfernung()
 firma.en: Enemy: double distance()
-es: Lo lejos que está de ti.
-de: Wie weit er von dir entfernt ist.
-en: How far away it is.
+es: Método de consulta sobre Enemigo sin parámetros. Devuelve la distancia en línea recta (en píxeles) entre tu robot y ese enemigo. Imprescindible para comprobar si está dentro del alcance de tus armas.
+de: Abfragemethode am Gegner ohne Parameter. Gibt den direkten Abstand in Pixeln zwischen dir und dem Gegner zurück. Wichtig für Reichweiten-Checks.
+en: Getter on Enemy with no parameters. Returns the straight-line distance in pixels between you and that enemy. Essential for checking weapon range.
+donde.es: Úsalo como e.distancia() en alVerEnemigo() o al recorrer enemigosVistos() para comparar con tu alcance; no existe como método suelto de Metajavbot.
+donde.de: Als g.entfernung() in beiSicht() oder beim Durchlaufen von gesehen() mit deiner Reichweite vergleichen; existiert nicht direkt auf MetajavbotDe.
+donde.en: Use as e.distance() in onSeeEnemy() or when looping over seenEnemies() to compare with your weapon range; not a standalone MetajavbotEn method.
+ejemplo.es:
+    SI e.distancia() <= alcanceDerecha():
+        atacarDerecha();
+    SI NO:
+        avanzar(50);
+ejemplo.de:
+    WENN g.entfernung() <= reichweiteRechts():
+        angriffRechts();
+    SONST:
+        vorwaerts(50);
+ejemplo.en:
+    IF e.distance() <= rangeRight():
+        attackRight();
+    ELSE:
+        ahead(50);
 
 === Enemigo.angulo
 tema: 13
 firma: Enemigo: double angulo()
 firma.de: Gegner: double winkel()
 firma.en: Enemy: double angle()
-es: El ángulo (en grados, absoluto) en que lo ves desde donde estás: apuntarHacia(e.angulo()).
-de: Der Winkel (in Grad, absolut), unter dem du ihn siehst: zielenNach(g.winkel()).
-en: The absolute angle (degrees) at which you see it: aimTo(e.angle()).
+es: Método de consulta sin parámetros sobre Enemigo. Devuelve el ángulo absoluto (en grados) desde tu posición hacia ese rival. Pásalo directamente a apuntarHacia(...) para apuntarle.
+de: Abfragemethode am Gegner ohne Parameter. Gibt den absoluten Winkel (Grad) von deiner Position zum Gegner zurück. Direkt in zielenNach(...) nutzbar.
+en: Getter on Enemy with no parameters. Returns the absolute angle (degrees) from your robot toward that opponent. Pass straight into aimTo(...) to track it.
+donde.es: Pásalo como e.angulo() a apuntarHacia() o girarHacia() dentro de alVerEnemigo() o un bucle sobre enemigosVistos(); nunca lo llames sin el objeto delante.
+donde.de: Als g.winkel() an zielenNach() oder drehenNach() in beiSicht() oder einer gesehen()-Schleife übergeben; nie ohne Gegner-Referenz davor aufrufen.
+donde.en: Pass e.angle() to aimTo() or turnTo() inside onSeeEnemy() or a seenEnemies() loop; never call it without an Enemy reference in front.
+ejemplo.es:
+    AL VER enemigo e:
+        apuntarHacia(e.angulo());
+        atacar();
+ejemplo.de:
+    BEI SICHT von g:
+        zielenNach(g.winkel());
+        angreifen();
+ejemplo.en:
+    ON SEEING e:
+        aimTo(e.angle());
+        attack();
 
 === Enemigo.rumbo
 tema: 13
 firma: Enemigo: double rumbo()
 firma.de: Gegner: double richtung()
 firma.en: Enemy: double heading()
-es: Hacia dónde va él (grados).
-de: Wohin er fährt (Grad).
-en: Where it is heading (degrees).
+es: Método de consulta sobre Enemigo sin parámetros. Devuelve la dirección en grados (-180, 180] hacia donde apunta el cuerpo del enemigo. Útil junto a e.velocidad() para predecir su desplazamiento.
+de: Abfragemethode am Gegner ohne Parameter. Gibt die Ausrichtung des gegnerischen Körpers in Grad (-180, 180] zurück. Hilft zusammen mit g.geschwindigkeit() bei der Vorhersage.
+en: Getter on Enemy with no parameters. Returns the opponent body's heading in degrees (-180, 180]. Combine with e.speed() to predict future position.
+donde.es: Llámalo sobre e (e.rumbo()) dentro de alVerEnemigo() para predecir hacia dónde se mueve el rival; rumbo() sin prefijo devuelve tu propio rumbo.
+donde.de: Auf g (g.richtung()) in beiSicht() aufrufen, um die Bewegungsrichtung des Gegners vorauszuberechnen; richtung() allein ist dein eigener Kurs.
+donde.en: Call on e (e.heading()) inside onSeeEnemy() to predict enemy movement; bare heading() returns your own chassis direction.
+ejemplo.es:
+    // Calcula cuánto avanza en X por turno:
+    double vx = Math.cos(Math.toRadians(e.rumbo())) * e.velocidad();
+ejemplo.de:
+    // Bewegung pro Zug auf der X-Achse:
+    double vx = Math.cos(Math.toRadians(g.richtung())) * g.geschwindigkeit();
+ejemplo.en:
+    // Enemy X velocity per tick:
+    double vx = Math.cos(Math.toRadians(e.heading())) * e.speed();
 
 === Enemigo.velocidad
 tema: 13
 firma: Enemigo: double velocidad()
 firma.de: Gegner: double geschwindigkeit()
 firma.en: Enemy: double speed()
-es: Lo rápido que va (unidades por turno; negativo si va marcha atrás).
-de: Wie schnell er ist (Einheiten pro Zug; negativ rückwärts).
-en: How fast it moves (units per tick; negative when reversing).
+es: Método de consulta sobre Enemigo. Devuelve cuántos píxeles por turno se mueve el rival (0 si está parado, negativo si marcha atrás). Si va rápido, conviene apuntar un poco por delante de su trayectoria.
+de: Abfragemethode am Gegner. Gibt sein Tempo in Pixeln pro Zug zurück (0 im Stand, negativ rückwärts). Bei schnellen Gegnern lohnt sich Vorhalt beim Zielen.
+en: Getter on Enemy. Returns how many pixels per tick the opponent is moving (0 when stationary, negative in reverse). Fast targets call for predictive lead shots.
+donde.es: Úsalo como e.velocidad() junto a e.rumbo() dentro de alVerEnemigo() para disparo predictivo; velocidad() sin objeto devuelve tu propia velocidad.
+donde.de: Als g.geschwindigkeit() zusammen mit g.richtung() in beiSicht() für Vorhalteschüsse nutzen; geschwindigkeit() ohne Objekt ist dein eigenes Tempo.
+donde.en: Combine e.speed() with e.heading() inside onSeeEnemy() for lead targeting; bare speed() returns your own speed instead.
+ejemplo.es:
+    SI Math.abs(e.velocidad()) < 1.0:
+        apuntarHacia(e.angulo());  // blanco quieto: tiro directo
+ejemplo.de:
+    WENN Math.abs(g.geschwindigkeit()) < 1.0:
+        zielenNach(g.winkel());    // stehendes Ziel: direkt zielen
+ejemplo.en:
+    IF Math.abs(e.speed()) < 1.0:
+        aimTo(e.angle());          // stationary target: direct shot
 
 === Enemigo.blindaje
 tema: 13
 firma: Enemigo: double blindaje()
 firma.de: Gegner: double panzerung()
 firma.en: Enemy: double armor()
-es: Lo que le queda de blindaje, de 0 a 100.
-de: Seine restliche Panzerung, von 0 bis 100.
-en: Its remaining armor, from 0 to 100.
+es: Método de consulta sobre Enemigo. Devuelve el porcentaje de blindaje restante del rival (de 0 a 100). Útil en battle royale o por equipos para priorizar al oponente más debilitado.
+de: Abfragemethode am Gegner. Gibt die restliche Panzerung des Gegners in Prozent (0 bis 100) zurück. Ideal in Mehrkämpfen, um geschwächte Ziele zuerst anzugreifen.
+en: Getter on Enemy. Returns the enemy's remaining overall armor percentage (0 to 100). Great in team or royale modes to finish off the weakest rival.
+donde.es: Consúltalo como e.blindaje() en alVerEnemigo() o al elegir objetivo en enemigosVistos() para rematar al más tocado; blindaje() solo devuelve el tuyo.
+donde.de: Als g.panzerung() in beiSicht() oder bei der Zielwahl in gesehen() prüfen, um geschwächte Gegner zu fokussieren; panzerung() allein ist deine eigene.
+donde.en: Check e.armor() in onSeeEnemy() or when picking a target from seenEnemies() to focus weak foes; bare armor() returns your own armor.
+ejemplo.es:
+    // Busca en enemigosVistos() si alguno está casi roto:
+    SI e.blindaje() < 20:
+        avisarAlEquipo("¡A por " + e.nombre() + "!");
+ejemplo.de:
+    WENN g.panzerung() < 20:
+        teamMelden("Auf " + g.name() + "!");
+ejemplo.en:
+    IF e.armor() < 20:
+        tellTeam("Finish " + e.name() + "!");
 
 === Enemigo.nombre
 tema: 13
 firma: Enemigo: String nombre()
 firma.de: Gegner: String name()
 firma.en: Enemy: String name()
-es: Su nombre.
-de: Sein Name.
-en: Its name.
+es: Método de consulta sobre Enemigo. Devuelve el nombre String del robot avistado. Sirve para identificar a un rival concreto o mencionarlo en decir(...) o escribir(...).
+de: Abfragemethode am Gegner. Gibt den Namen des gesichteten Roboters als String zurück. Praktisch zur Identifikation oder für Ausgaben in sagen(...) / ausgeben(...).
+en: Getter on Enemy. Returns the seen robot's name as a String. Useful to track a specific opponent or reference it in say(...) or print(...).
+donde.es: Invócalo como e.nombre() en alVerEnemigo() o al recorrer companeros() para identificar robots en logs o memoria(); nunca como método suelto.
+donde.de: Als g.name() in beiSicht() oder beim Durchlaufen von kameraden() für Logs oder gedaechtnis()-Schlüssel nutzen; nicht ohne Objekt davor.
+donde.en: Call as e.name() in onSeeEnemy() or over teammates() to identify robots in logs or memory() keys; never standalone.
+ejemplo.es:
+    escribir("Veo a " + e.nombre() + " a distancia " + (int) e.distancia());
+ejemplo.de:
+    ausgeben("Sehe " + g.name() + " in " + (int) g.entfernung() + " px");
+ejemplo.en:
+    print("Seeing " + e.name() + " at " + (int) e.distance() + " px");
 
 === Enemigo.modelo
 tema: 13
 firma: Enemigo: String modelo()
 firma.de: Gegner: String modell()
 firma.en: Enemy: String model()
-es: Su modelo (por ejemplo, "cobalto").
-de: Sein Modell (zum Beispiel "cobalto").
-en: Its model (for example "cobalto").
+es: Método de consulta sobre Enemigo. Devuelve el identificador en minúsculas del modelo del rival (p. ej. "cobalto", "vigia", "chispa"). Útil para adaptar tu táctica según su chasis.
+de: Abfragemethode am Gegner. Gibt die Modell-ID des Gegners in Kleinbuchstaben zurück (z. B. "cobalto", "vigia"). Hilfreich, um deine Taktik seinem Fahrwerk anzupassen.
+en: Getter on Enemy. Returns the lowercase model ID of the opponent (e.g. "cobalto", "vigia"). Helpful to tailor tactics against specific robot builds.
+donde.es: Llámalo como e.modelo() en alVerEnemigo() (comparando con .equals) para reconocer el chasis del rival y adaptar tu táctica; nunca sin objeto Enemigo.
+donde.de: Als g.modell() in beiSicht() (mit .equals vergleichen) nutzen, um das gegnerische Modell zu erkennen; niemals ohne Gegner-Objekt davor.
+donde.en: Call as e.model() in onSeeEnemy() (comparing with .equals) to recognize the rival's chassis and adapt; never without an Enemy object.
+ejemplo.es:
+    SI e.modelo().equals("avispa"):
+        apuntarHacia(e.angulo());  // prioriza láser frente a modelos rápidos
+ejemplo.de:
+    WENN g.modell().equals("avispa"):
+        zielenNach(g.winkel());
+ejemplo.en:
+    IF e.model().equals("avispa"):
+        aimTo(e.angle());
 
 === Enemigo.vuela
 tema: 13
 firma: Enemigo: boolean vuela()
 firma.de: Gegner: boolean fliegt()
 firma.en: Enemy: boolean flies()
-es: ¿Va volando? (los golpes cuerpo a cuerpo no le llegan).
-de: Fliegt er? (Nahkampfschläge erreichen ihn nicht).
-en: Is it flying? (melee hits can't reach it).
+es: Método de consulta sobre Enemigo. Devuelve true si ese robot está volando ahora (por piernas voladoras o propulsor antigravedad); los golpes cuerpo a cuerpo no pueden alcanzarlo, pero las armas a distancia sí.
+de: Abfragemethode am Gegner. Gibt true zurück, wenn er gerade fliegt (Flugbeine oder Antigravitation); Nahkampfwaffen treffen ihn nicht, Fernwaffen hingegen schon.
+en: Getter on Enemy. Returns true if the enemy is airborne right now (hover legs or anti-gravity); melee attacks miss flying targets, whereas ranged weapons hit them.
+donde.es: Úsalo en un if como e.vuela() dentro de alVerEnemigo() para no desperdiciar ataques cuerpo a cuerpo contra rivales aéreos; siempre sobre el parámetro e.
+donde.de: In einem if als g.fliegt() in beiSicht() prüfen, um keine Nahkampfangriffe an fliegende Gegner zu verschwenden; stets über g aufrufen.
+donde.en: Check e.flies() in an if inside onSeeEnemy() so you don't waste melee attacks on airborne foes; always call it on the Enemy reference.
+ejemplo.es:
+    SI e.vuela() Y armaDerecha().equals("CUERPO") Y listoIzquierda():
+        atacarIzquierda();   // usa tu brazo a distancia si el derecho es cuerpo
+ejemplo.de:
+    WENN g.fliegt() UND waffeRechts().equals("CUERPO") UND bereitLinks():
+        angriffLinks();
+ejemplo.en:
+    IF e.flies() AND weaponRight().equals("CUERPO") AND readyLeft():
+        attackLeft();
 
 === Golpe.dano
 tema: 13
 firma: Golpe: double dano()
 firma.de: Treffer: double schaden()
 firma.en: Hit: double damage()
-es: Cuánto blindaje quitó.
-de: Wie viel Panzerung er gekostet hat.
-en: How much armor it took.
+es: Método de consulta sobre Golpe (recibido en alRecibirGolpe o alAcertar). Devuelve los puntos de daño aplicados tras reducciones o escudos. Permite distinguir rasguños leves de impactos fuertes.
+de: Abfragemethode an Treffer (in beiTreffer oder beiEigenemTreffer). Gibt die erlittenen oder ausgeteilten Schadenspunkte nach Schildreduktion zurück.
+en: Getter on Hit (inside onHit or onHitEnemy). Returns the damage points dealt after shields or reductions, letting you tell scratches apart from heavy hits.
+donde.es: Invócalo sobre el parámetro g (g.dano()) únicamente dentro de alRecibirGolpe(Golpe g) o alAcertar(Golpe g); no existe fuera de esos eventos.
+donde.de: Nur auf dem Parameter t (t.schaden()) innerhalb von beiTreffer(Treffer t) oder beiEigenemTreffer(Treffer t) aufrufen; außerhalb existiert kein Treffer.
+donde.en: Call on the parameter h (h.damage()) only inside onHit(Hit h) or onHitEnemy(Hit h); there is no Hit object outside those events.
+ejemplo.es:
+    AL RECIBIR golpe g:
+        SI g.dano() >= 10:
+            girarHacia(g.angulo() + 90);
+            avanzar(100);
+ejemplo.de:
+    BEI TREFFER t:
+        WENN t.schaden() >= 10:
+            drehenNach(t.winkel() + 90);
+            vorwaerts(100);
+ejemplo.en:
+    ON HIT h:
+        IF h.damage() >= 10:
+            turnTo(h.angle() + 90);
+            ahead(100);
 
 === Golpe.arma
 tema: 13
 firma: Golpe: String arma()
 firma.de: Treffer: String waffe()
 firma.en: Hit: String weapon()
-es: Con qué: "laser", "bala", "misil", "cuerpo", "choque" o "pared".
-de: Womit: "laser", "kugel", "rakete", "nahkampf", "zusammenstoss" oder "wand".
-en: With what: "laser", "bullet", "missile", "melee", "ram" or "wall".
+es: Método de consulta sobre Golpe. Devuelve con qué se produjo el golpe: "laser", "bala", "misil", "cuerpo", "llama", "pulso", "choque" o "pared". Compáralo con equals().
+de: Abfragemethode an Treffer. Gibt die Schadensquelle zurück: "laser", "kugel", "rakete", "nahkampf", "flamme", "puls", "zusammenstoss" oder "wand". Mit equals() vergleichen.
+en: Getter on Hit. Returns the hit source: "laser", "bullet", "missile", "melee", "flame", "pulse", "ram", or "wall". Compare using equals().
+donde.es: Léelo como g.arma() dentro de alRecibirGolpe() o alAcertar() (comparando con .equals) para distinguir láser, bala, misil o choque; nunca suelto.
+donde.de: Als t.waffe() in beiTreffer() oder beiEigenemTreffer() (mit .equals vergleichen) abfragen, um Laser, Kugel oder Nahkampf zu unterscheiden; nie alleinstehend.
+donde.en: Read as h.weapon() inside onHit() or onHitEnemy() (compare with .equals) to tell laser, bullet, missile, or melee apart; never standalone.
+ejemplo.es:
+    AL RECIBIR golpe g:
+        SI !g.arma().equals("pared"):
+            apuntarHacia(g.angulo());  // mira hacia quien te atacó
+ejemplo.de:
+    BEI TREFFER t:
+        WENN !t.waffe().equals("wand"):
+            zielenNach(t.winkel());
+ejemplo.en:
+    ON HIT h:
+        IF !h.weapon().equals("wall"):
+            aimTo(h.angle());          // look toward the attacker
 
 === Golpe.angulo
 tema: 13
 firma: Golpe: double angulo()
 firma.de: Treffer: double winkel()
 firma.en: Hit: double angle()
-es: De dónde vino (grados, absoluto): si te dan, girarHacia(g.angulo() + 90) para esquivar de lado.
-de: Woher er kam (Grad, absolut).
-en: Where it came from (absolute degrees).
+es: Método de consulta sobre Golpe. Devuelve el ángulo absoluto (grados) desde tu robot hacia la dirección de origen del ataque. Gira ±90° respecto a este ángulo para esquivar lateralmente, o apunta hacia él para devolver el golpe.
+de: Abfragemethode an Treffer. Gibt den absoluten Winkel (Grad) zurück, aus dem der Treffer kam. Dreh ±90° zum Ausweichen oder ziel dorthin zum Kontern.
+en: Getter on Hit. Returns the absolute angle (degrees) where the hit came from. Turn ±90° relative to this angle to strafe out of danger, or aim there to counter-attack.
+donde.es: Úsalo como g.angulo() dentro de alRecibirGolpe(Golpe g) para esquivar de lado (g.angulo() + 90) o mirar hacia el atacante; nunca fuera de eventos de golpe.
+donde.de: Als t.winkel() in beiTreffer(Treffer t) nutzen, um seitlich auszuweichen (t.winkel() + 90) oder zurückzuzielen; nicht außerhalb von Treffer-Ereignissen.
+donde.en: Use h.angle() inside onHit(Hit h) to strafe perpendicular (h.angle() + 90) or turn toward the shooter; never outside hit event handlers.
+ejemplo.es:
+    AL RECIBIR golpe g:
+        apuntarHacia(g.angulo());      // busca con el radar al atacante
+        girarHacia(g.angulo() + 90);   // muévete en perpendicular
+ejemplo.de:
+    BEI TREFFER t:
+        zielenNach(t.winkel());
+        drehenNach(t.winkel() + 90);
+ejemplo.en:
+    ON HIT h:
+        aimTo(h.angle());
+        turnTo(h.angle() + 90);
 
 === Golpe.pieza
 tema: 13
 firma: Golpe: String pieza()
 firma.de: Treffer: String teil()
 firma.en: Hit: String part()
-es: Qué pieza recibió el golpe: "cabeza", "izquierda", "derecha" o "piernas".
-de: Welches Teil getroffen wurde: "kopf", "links", "rechts" oder "beine".
-en: Which part was hit: "head", "left", "right" or "legs".
+es: Método de consulta sobre Golpe. Devuelve qué zona recibió el impacto ("cabeza", "izquierda", "derecha" o "piernas"). Útil para proteger o evitar exponer una zona dañada.
+de: Abfragemethode an Treffer. Gibt zurück, welches Teil getroffen wurde ("kopf", "links", "rechts" oder "beine"). Nützlich, um beschädigte Teile zu schützen.
+en: Getter on Hit. Returns which body part was struck ("head", "left", "right", or "legs"). Useful to react if critical parts take heavy hits.
+donde.es: Consúltalo como g.pieza() dentro de alRecibirGolpe() o alAcertar() para saber si dieron en cabeza, brazos o piernas; no lo llames sin el parámetro Golpe.
+donde.de: Als t.teil() in beiTreffer() oder beiEigenemTreffer() abfragen, um Kopf-, Arm- oder Beintreffer zu erkennen; nie ohne Treffer-Parameter aufrufen.
+donde.en: Query h.part() inside onHit() or onHitEnemy() to see if head, arms, or legs were struck; never call it without the Hit parameter.
+ejemplo.es:
+    AL RECIBIR golpe g:
+        SI g.pieza().equals("cabeza") Y listoEspecial():
+            especial();   // protege la cabeza antes de quedar KO
+ejemplo.de:
+    BEI TREFFER t:
+        WENN t.teil().equals("kopf") UND bereitSpezial():
+            spezial();
+ejemplo.en:
+    ON HIT h:
+        IF h.part().equals("head") AND readySpecial():
+            special();
 
 === Obstaculo.tipo
 tema: 13
 firma: Obstaculo: String tipo()
 firma.de: Hindernis: String typ()
 firma.en: Obstacle: String type()
-es: Qué es: "pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo" o "hielo".
-de: Was es ist: "pinchos" (Stacheln), "sierra" (Säge), "iman" (Magnet), "foso" (Grube), "barril" (Fass), "carrito" (Wagen) …
-en: What it is: "pinchos" (spikes), "sierra" (saw), "iman" (magnet), "foso" (pit), "barril" (barrel), "carrito" (cart)…
+es: Método de consulta sobre un elemento de obstaculos(). Devuelve su tipo en minúsculas ("pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "hielo", "aceite" o "pegamento"). Compáralo con equals().
+de: Abfragemethode zu einem Objekt aus hindernisse(). Gibt den Typ kleingeschrieben zurück ("pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "hielo", "aceite", "pegamento").
+en: Getter on an element from obstacles(). Returns its lowercase ID ("pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "hielo", "aceite", or "pegamento"). Compare with equals().
+donde.es: Llámalo sobre cada elemento o de obstaculos() (o.tipo(), comparado con .equals) dentro de cadaTurno() para distinguir pinchos, sierras, foso o barriles; nunca suelto.
+donde.de: Auf jedem Element o aus hindernisse() (o.typ(), mit .equals vergleichen) in jedenZug() aufrufen, um Stacheln, Sägen oder Fässer zu unterscheiden; nie ohne Objekt.
+donde.en: Call on each item o from obstacles() (o.type(), compared with .equals) inside onTick() to tell spikes, saws, pits, or barrels apart; never standalone.
+ejemplo.es:
+    PARA CADA o EN obstaculos():
+        SI o.tipo().equals("sierra") Y o.distancia() < 120:
+            girarHacia(o.angulo() + 180);
+ejemplo.de:
+    FÜR JEDES o IN hindernisse():
+        WENN o.typ().equals("sierra") UND o.entfernung() < 120:
+            drehenNach(o.winkel() + 180);
+ejemplo.en:
+    FOR EACH o IN obstacles():
+        IF o.type().equals("sierra") AND o.distance() < 120:
+            turnTo(o.angle() + 180);
 
 === Obstaculo.x
 tema: 13
 firma: Obstaculo: double x()
 firma.de: Hindernis: double x()
 firma.en: Obstacle: double x()
-es: Dónde está su centro (en la arena).
-de: Wo seine Mitte ist (in der Arena).
-en: Where its centre is (in the arena).
+es: Método de consulta sobre Obstaculo. Devuelve la coordenada horizontal x del centro del obstáculo en la arena (píxeles).
+de: Abfragemethode an Hindernis. Gibt die waagerechte x-Koordinate der Mitte des Hindernisses in der Arena zurück (Pixel).
+en: Getter on Obstacle. Returns the horizontal x coordinate of the obstacle's center in the arena (pixels).
+donde.es: Invócalo como o.x() sobre un elemento de obstaculos() dentro de cadaTurno() para calcular rutas de rodeo; x() sin prefijo devuelve tu propia coordenada.
+donde.de: Als o.x() auf einem Element aus hindernisse() in jedenZug() nutzen, um Ausweichpunkte zu berechnen; x() allein liefert deine eigene X-Koordinate.
+donde.en: Call as o.x() on an element from obstacles() inside onTick() to plan avoidance paths; bare x() returns your own X coordinate.
+ejemplo.es:
+    double dx = o.x() - x();   // distancia horizontal hasta su centro
+ejemplo.de:
+    double dx = o.x() - x();   // waagerechter Abstand zur Mitte
+ejemplo.en:
+    double dx = o.x() - x();   // horizontal offset to center
 
 === Obstaculo.y
 tema: 13
 firma: Obstaculo: double y()
 firma.de: Hindernis: double y()
 firma.en: Obstacle: double y()
-es: double y()
-de: 
-en: 
+es: Método de consulta sobre Obstaculo. Devuelve la coordenada vertical y del centro de la trampa u objeto en píxeles (0 abajo, altoArena() arriba).
+de: Abfragemethode an Hindernis. Gibt die senkrechte y-Koordinate der Mitte in Pixeln zurück (0 unten, arenaHoehe() oben).
+en: Getter on Obstacle. Returns the vertical y coordinate of the obstacle's center in pixels (0 bottom, arenaHeight() top).
+donde.es: Invócalo como o.y() sobre un objeto Obstaculo obtenido de obstaculos() dentro de cadaTurno(); sin prefijo, y() leería tu propia posición vertical.
+donde.de: Als o.y() auf einem Hindernis aus hindernisse() in jedenZug() aufrufen; ohne Objekt davor liest y() deine eigene vertikale Position.
+donde.en: Call as o.y() on an Obstacle from obstacles() inside onTick(); without the object prefix, y() reads your own vertical position.
+ejemplo.es:
+    SI distanciaA(o.x(), o.y()) < o.radio() + 45:
+        girarHacia(o.angulo() + 120);
+ejemplo.de:
+    WENN abstandZu(o.x(), o.y()) < o.radius() + 45:
+        drehenNach(o.winkel() + 120);
+ejemplo.en:
+    IF distanceTo(o.x(), o.y()) < o.radius() + 45:
+        turnTo(o.angle() + 120);
 
 === Obstaculo.radio
 tema: 13
 firma: Obstaculo: double radio()
 firma.de: Hindernis: double radius()
 firma.en: Obstacle: double radius()
-es: Lo que ocupa: un círculo de este radio alrededor del centro.
-de: Was es einnimmt: ein Kreis mit diesem Radius um die Mitte.
-en: What it takes up: a circle of this radius around its centre.
+es: Método de consulta sobre Obstaculo. Devuelve el radio en píxeles de su zona circular alrededor de (x(), y()). Mantente a más de o.radio() + 40 píxeles de distancia para no rozarlo.
+de: Abfragemethode an Hindernis. Gibt den Radius seines Wirkungskreises in Pixeln um (x(), y()) zurück. Halte über o.radius() + 40 Pixel Abstand.
+en: Getter on Obstacle. Returns the radius in pixels around (x(), y()). Keep further than o.radius() + 40 pixels away to stay clear.
+donde.es: Súmalo como margen de seguridad (o.radio() + 40) al comparar o.distancia() dentro de un bucle sobre obstaculos() en cadaTurno(); nunca suelto.
+donde.de: Als Sicherheitsabstand (o.radius() + 40) beim Vergleich mit o.entfernung() in einer hindernisse()-Schleife in jedenZug() nutzen; nie alleinstehend.
+donde.en: Add it as a safety margin (o.radius() + 40) when checking o.distance() inside an obstacles() loop in onTick(); never standalone.
+ejemplo.es:
+    SI o.distancia() < o.radio() + 45:
+        girarHacia(o.angulo() + 135);
+ejemplo.de:
+    WENN o.entfernung() < o.radius() + 45:
+        drehenNach(o.winkel() + 135);
+ejemplo.en:
+    IF o.distance() < o.radius() + 45:
+        turnTo(o.angle() + 135);
 
 === Obstaculo.distancia
 tema: 13
 firma: Obstaculo: double distancia()
 firma.de: Hindernis: double entfernung()
 firma.en: Obstacle: double distance()
-es: Lo lejos que está su centro de ti.
-de: Wie weit seine Mitte von dir entfernt ist.
-en: How far its centre is from you.
+es: Método de consulta sobre Obstaculo. Devuelve la distancia en píxeles desde tu robot hasta el centro de ese obstáculo en este turno.
+de: Abfragemethode an Hindernis. Gibt den Abstand in Pixeln zwischen dir und der Mitte des Hindernisses in diesem Zug zurück.
+en: Getter on Obstacle. Returns the distance in pixels from your robot to the obstacle's center this tick.
+donde.es: Compáralo como o.distancia() dentro de un for-each de obstaculos() en cadaTurno() para esquivar solo los obstáculos cercanos; siempre sobre el objeto o.
+donde.de: Als o.entfernung() in einer for-each-Schleife über hindernisse() in jedenZug() prüfen, um nur nahe Hindernisse zu umgehen; stets über o aufrufen.
+donde.en: Check o.distance() inside a for-each over obstacles() in onTick() to dodge only nearby hazards; always invoke it on the Obstacle item.
+ejemplo.es:
+    SI o.peligroso() Y o.distancia() < o.radio() + 50:
+        retroceder(60);
+ejemplo.de:
+    WENN o.gefaehrlich() UND o.entfernung() < o.radius() + 50:
+        rueckwaerts(60);
+ejemplo.en:
+    IF o.dangerous() AND o.distance() < o.radius() + 50:
+        back(60);
 
 === Obstaculo.angulo
 tema: 13
 firma: Obstaculo: double angulo()
 firma.de: Hindernis: double winkel()
 firma.en: Obstacle: double angle()
-es: El ángulo (en grados, absoluto) en que lo ves desde donde estás.
-de: Der Winkel (in Grad, absolut), in dem du es von deinem Platz aus siehst.
-en: The angle (in degrees, absolute) at which you see it from where you are.
+es: Método de consulta sobre Obstaculo. Devuelve el ángulo absoluto (grados) desde tu robot hacia el centro del obstáculo. Para alejarte de él, gira hacia o.angulo() + 180.
+de: Abfragemethode an Hindernis. Gibt den absoluten Winkel (Grad) von dir zum Hindernis zurück. Dreh nach o.winkel() + 180, um dich zu entfernen.
+en: Getter on Obstacle. Returns the absolute angle (degrees) from your robot toward the obstacle's center. Turn toward o.angle() + 180 to steer away.
+donde.es: Úsalo como o.angulo() dentro de un bucle sobre obstaculos() en cadaTurno() para girar en sentido contrario (o.angulo() + 180) y alejarte; nunca sin prefijo.
+donde.de: Als o.winkel() in einer hindernisse()-Schleife in jedenZug() nutzen, um wegzudrehen (o.winkel() + 180); nie ohne Hindernis-Objekt davor.
+donde.en: Use o.angle() inside an obstacles() loop in onTick() to steer away (o.angle() + 180); never call it without the Obstacle reference.
+ejemplo.es:
+    SI o.peligroso() Y o.distancia() < 110:
+        girarHacia(o.angulo() + 180);
+ejemplo.de:
+    WENN o.gefaehrlich() UND o.entfernung() < 110:
+        drehenNach(o.winkel() + 180);
+ejemplo.en:
+    IF o.dangerous() AND o.distance() < 110:
+        turnTo(o.angle() + 180);
 
 === Obstaculo.peligroso
 tema: 13
 firma: Obstaculo: boolean peligroso()
 firma.de: Hindernis: boolean gefaehrlich()
 firma.en: Obstacle: boolean dangerous()
-es: ¿Hace daño ahora mismo? (los pinchos, solo cuando han salido).
-de: Schadet es gerade? (Die Stacheln nur, wenn sie draußen sind.)
-en: Does it hurt right now? (The spikes only when they are out.)
+es: Método de consulta sobre Obstaculo. Devuelve true si la trampa hace daño o frena ahora mismo (las sierras, el carrito o el foso siempre son true; pinchos y rayos solo cuando están activos).
+de: Abfragemethode an Hindernis. Gibt true zurück, wenn die Falle gerade schadet oder bremst (Sägen, Grube, Wagen immer; Stacheln und Blitz nur in ihrer aktiven Phase).
+en: Getter on Obstacle. Returns true if the trap currently harms or hinders you (saws, pit, cart are always true; spikes and lightning only during active phase).
+donde.es: Compruébalo en un if como o.peligroso() al recorrer obstaculos() en cadaTurno() para evitar pinchos o trampas activas ahora mismo; nunca suelto.
+donde.de: In einem if als o.gefaehrlich() beim Durchlaufen von hindernisse() in jedenZug() prüfen, um gerade aktive Fallen zu meiden; nie alleinstehend.
+donde.en: Check o.dangerous() in an if while looping over obstacles() in onTick() to avoid currently active traps; never standalone.
+ejemplo.es:
+    SI o.peligroso() Y o.distancia() < o.radio() + 45:
+        avanzar(-60);
+ejemplo.de:
+    WENN o.gefaehrlich() UND o.entfernung() < o.radius() + 45:
+        vorwaerts(-60);
+ejemplo.en:
+    IF o.dangerous() AND o.distance() < o.radius() + 45:
+        ahead(-60);
 
 === Obstaculo.solido
 tema: 13
 firma: Obstaculo: boolean solido()
 firma.de: Hindernis: boolean fest()
 firma.en: Obstacle: boolean solid()
-es: ¿Es sólido? (no se puede atravesar: hay que rodearlo).
-de: Ist es fest? (Man kommt nicht hindurch: Man muss außen herum.)
-en: Is it solid? (You can't go through it: you have to go round.)
+es: Método de consulta sobre Obstaculo. Devuelve true si bloquea físicamente el paso (como barriles o el carrito) y debes rodearlo para no quedar atascado.
+de: Abfragemethode an Hindernis. Gibt true zurück, wenn es den Weg physisch blockiert (z. B. Fässer oder Wagen) und du herumfahren musst.
+en: Getter on Obstacle. Returns true if it physically blocks movement (like barrels or the cart) so you must steer around it.
+donde.es: Consúltalo como o.solido() dentro de un bucle de obstaculos() en cadaTurno() para rodear muros o barriles que bloquean el paso; siempre sobre o.
+donde.de: Als o.fest() in einer hindernisse()-Schleife in jedenZug() abfragen, um blockierende Objekte gezielt zu umfahren; immer auf o aufrufen.
+donde.en: Query o.solid() inside an obstacles() loop in onTick() to steer around impassable barriers; always call it on the Obstacle instance.
+ejemplo.es:
+    SI o.solido() Y o.distancia() < o.radio() + 50:
+        girarHacia(o.angulo() + 90);  // rodéalo de lado
+ejemplo.de:
+    WENN o.fest() UND o.entfernung() < o.radius() + 50:
+        drehenNach(o.winkel() + 90);
+ejemplo.en:
+    IF o.solid() AND o.distance() < o.radius() + 50:
+        turnTo(o.angle() + 90);       // steer sideways past it
 
 === Obstaculo.rumbo
 tema: 13
 firma: Obstaculo: double rumbo()
 firma.de: Hindernis: double richtung()
 firma.en: Obstacle: double heading()
-es: Hacia dónde se mueve (grados) y a qué velocidad (0 si está quieto).
-de: Wohin es sich bewegt (Grad) und wie schnell (0, wenn es stillsteht).
-en: Where it is moving (degrees) and how fast (0 if it stands still).
+es: Método de consulta sobre Obstaculo. Devuelve en grados la dirección en la que se desplaza un obstáculo móvil como el carrito (0 si está quieto).
+de: Abfragemethode an Hindernis. Gibt in Grad die Bewegungsrichtung eines beweglichen Hindernisses wie des Wagens zurück (0 im Stillstand).
+en: Getter on Obstacle. Returns in degrees the movement direction of a moving obstacle like the cart (0 when stationary).
+donde.es: Léelo como o.rumbo() sobre un elemento de obstaculos() en cadaTurno() cuando o.velocidad() > 0 para esquivar obstáculos móviles como carritos; nunca sin o.
+donde.de: Als o.richtung() auf einem Element aus hindernisse() in jedenZug() lesen, wenn o.geschwindigkeit() > 0 gilt, um bewegte Hindernisse zu umgehen.
+donde.en: Read o.heading() on an obstacles() item in onTick() when o.speed() > 0 to dodge moving hazards like carts; never without the item prefix.
+ejemplo.es:
+    SI o.velocidad() > 0:
+        girarHacia(o.rumbo() + 90);  // cruza perpendicular a su ruta
+ejemplo.de:
+    WENN o.geschwindigkeit() > 0:
+        drehenNach(o.richtung() + 90);
+ejemplo.en:
+    IF o.speed() > 0:
+        turnTo(o.heading() + 90);    // move perpendicular to its path
 
 === Obstaculo.velocidad
 tema: 13
 firma: Obstaculo: double velocidad()
 firma.de: Hindernis: double geschwindigkeit()
 firma.en: Obstacle: double speed()
-es: double velocidad()
-de: 
-en: 
+es: Método de consulta sobre Obstaculo. Devuelve la rapidez en píxeles por turno a la que se mueve ese objeto (0 si es una trampa fija en el suelo).
+de: Abfragemethode an Hindernis. Gibt das Tempo in Pixeln pro Zug zurück (0 bei festen Fallen auf dem Boden).
+en: Getter on Obstacle. Returns the speed in pixels per tick at which the obstacle moves (0 for fixed floor traps).
+donde.es: Compruébalo como o.velocidad() dentro de un bucle de obstaculos() en cadaTurno() para distinguir trampas fijas (0) de peligros en movimiento; nunca suelto.
+donde.de: Als o.geschwindigkeit() in einer hindernisse()-Schleife in jedenZug() prüfen, um feste (0) von bewegten Hindernissen zu trennen; nie ohne Objekt.
+donde.en: Check o.speed() inside an obstacles() loop in onTick() to tell static traps (0) from moving hazards; never standalone.
+ejemplo.es:
+    SI o.velocidad() > 0 Y o.distancia() < 120:
+        apuntarHacia(o.angulo() + 90);
+ejemplo.de:
+    WENN o.geschwindigkeit() > 0 UND o.entfernung() < 120:
+        drehenNach(o.richtung() + 90);
+ejemplo.en:
+    IF o.speed() > 0 AND o.distance() < 120:
+        turnTo(o.heading() + 90);
 
 === Aparato.tipo
 tema: 13
 firma: Aparato: String tipo()
 firma.de: Geraet: String typ()
 firma.en: Gadget: String type()
-es: Qué es: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite" o "pegamento".
-de: Was es ist: "chorro" (Düse), "antigravedad", "descarga" (Schock), "lanzallamas" (Flammenwerfer), "aceite" (Öl), "pegamento" (Kleber).
-en: What it is: "chorro" (jet), "antigravedad" (anti-gravity), "descarga" (shock), "lanzallamas" (flamethrower), "aceite" (oil), "pegamento" (glue).
+es: Método de consulta sobre un Aparato. Devuelve su identificador en minúsculas: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite" o "pegamento". Compáralo con equals().
+de: Abfragemethode an Geraet. Gibt seine Kennung kleingeschrieben zurück: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite" oder "pegamento".
+en: Getter on Gadget. Returns its lowercase ID: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite", or "pegamento". Compare with equals().
+donde.es: Invócalo como a.tipo() sobre un elemento de aparatos() o sobre miAparato() (tras comprobar != null) en cadaTurno() para decidir a qué hueco conectarlo.
+donde.de: Als a.typ() auf einem Element aus geraete() oder auf meinGeraet() (nach != null-Prüfung) in jedenZug() aufrufen, um den passenden Platz zu wählen.
+donde.en: Call as a.type() on an item from gadgets() or on myGadget() (after checking != null) in onTick() to decide which slot to plug it into.
+ejemplo.es:
+    Aparato a = miAparato();
+    SI a != null Y a.tipo().equals("chorro"):
+        conectar("espalda");
+ejemplo.de:
+    Geraet a = meinGeraet();
+    WENN a != null UND a.typ().equals("chorro"):
+        anschliessen("ruecken");
+ejemplo.en:
+    Gadget g = myGadget();
+    IF g != null AND g.type().equals("chorro"):
+        plugIn("back");
 
 === Aparato.nombre
 tema: 13
 firma: Aparato: String nombre()
 firma.de: Geraet: String name()
 firma.en: Gadget: String name()
-es: Su nombre de marca (Jetzazo, Flotón, Chispazo…), para decirlo.
-de: Sein Markenname (Jetzazo, Flotón, Chispazo …), zum Sagen.
-en: Its brand name (Jetzazo, Flotón, Chispazo…), to say it.
+es: Método de consulta sobre un Aparato. Devuelve su nombre comercial (por ejemplo "Jetzazo", "Flotón", "Chispazo"), útil para anunciarlo con decir(...) o escribir(...).
+de: Abfragemethode an Geraet. Gibt den Markennamen zurück (z. B. "Jetzazo", "Flotón", "Chispazo"), geeignet für sagen(...) oder ausgeben(...).
+en: Getter on Gadget. Returns its brand name (e.g. "Jetzazo", "Flotón", "Chispazo"), handy to announce with say(...) or print(...).
+donde.es: Úsalo como a.nombre() sobre un Aparato de aparatos() o miAparato() (no null) para anunciarlo con decir() o escribir(); nunca como llamada suelta.
+donde.de: Als a.name() auf einem Geraet aus geraete() oder meinGeraet() (nicht null) für sagen() oder ausgeben() nutzen; nie ohne Objekt davor.
+donde.en: Use a.name() on a Gadget from gadgets() or non-null myGadget() to announce it via say() or print(); never as a bare call.
+ejemplo.es:
+    SI miAparato() != null:
+        decir("¡Cogí " + miAparato().nombre() + "!");
+ejemplo.de:
+    WENN meinGeraet() != null:
+        sagen(meinGeraet().name() + " geholt!");
+ejemplo.en:
+    IF myGadget() != null:
+        say("Grabbed " + myGadget().name() + "!");
 
 === Aparato.x
 tema: 13
 firma: Aparato: double x()
 firma.de: Geraet: double x()
 firma.en: Gadget: double x()
-es: Dónde está (si lo llevas, dónde estás tú).
-de: Wo es ist (wenn du es trägst, wo du bist).
-en: Where it is (if you carry it, where you are).
+es: Método de consulta sobre un Aparato. Devuelve su coordenada horizontal x en píxeles dentro de la arena (si ya lo llevas encima, coincide con tu propia x()).
+de: Abfragemethode an Geraet. Gibt die waagerechte x-Koordinate in Pixeln zurück (trägst du es schon, entspricht es deinem eigenen x()).
+en: Getter on Gadget. Returns its horizontal x coordinate in pixels inside the arena (if you are carrying it, matches your x()).
+donde.es: Léelo como a.x() sobre un elemento de aparatos() dentro de cadaTurno() para dirigirte hacia él; recuerda que x() sin prefijo es tu propia posición.
+donde.de: Als a.x() auf einem Element aus geraete() in jedenZug() lesen, um es anzusteuern; x() ohne Präfix ist deine eigene Position.
+donde.en: Read a.x() on a gadgets() item inside onTick() to navigate toward it; remember bare x() is your own position.
+ejemplo.es:
+    double destinoX = a.x();
+ejemplo.de:
+    double zielX = a.x();
+ejemplo.en:
+    double targetX = g.x();
 
 === Aparato.y
 tema: 13
 firma: Aparato: double y()
 firma.de: Geraet: double y()
 firma.en: Gadget: double y()
-es: double y()
-de: 
-en: 
+es: Método de consulta sobre un Aparato. Devuelve su coordenada vertical y en píxeles en la arena (0 abajo a altoArena() arriba; si lo llevas, coincide con tu y()).
+de: Abfragemethode an Geraet. Gibt die senkrechte y-Koordinate in Pixeln zurück (0 unten bis arenaHoehe() oben; beim Tragen dein eigenes y()).
+en: Getter on Gadget. Returns its vertical y coordinate in pixels in the arena (0 bottom to arenaHeight() top; if carried, matches your y()).
+donde.es: Léelo como a.y() sobre un elemento de aparatos() en cadaTurno() junto a a.x() para trazar rumbo al aparato; sin prefijo, y() devuelve tu propia Y.
+donde.de: Als a.y() auf einem Element aus geraete() in jedenZug() zusammen mit a.x() nutzen, um das Gerät anzufahren; y() allein ist deine eigene Y-Koordinate.
+donde.en: Read a.y() on a gadgets() item in onTick() together with a.x() to head for it; bare y() returns your own Y coordinate.
+ejemplo.es:
+    // Mira hacia su posición en el suelo (a.x(), a.y()):
+    girarHacia(anguloHacia(a.x(), a.y()));
+ejemplo.de:
+    drehenNach(winkelZu(a.x(), a.y()));
+ejemplo.en:
+    turnTo(angleTo(g.x(), g.y()));
 
 === Aparato.distancia
 tema: 13
 firma: Aparato: double distancia()
 firma.de: Geraet: double entfernung()
 firma.en: Gadget: double distance()
-es: Lo lejos que está de ti y en qué ángulo lo ves (grados, absoluto).
-de: Wie weit es von dir entfernt ist und in welchem Winkel du es siehst (Grad, absolut).
-en: How far it is from you and at which angle you see it (degrees, absolute).
+es: Método de consulta sobre un Aparato. Devuelve los píxeles de distancia entre tu robot y ese aparato (0 si ya lo llevas recogido).
+de: Abfragemethode an Geraet. Gibt den Abstand in Pixeln zwischen dir und dem Gerät zurück (0, wenn du es schon trägst).
+en: Getter on Gadget. Returns the distance in pixels between your robot and that gadget (0 when already carried).
+donde.es: Compáralo como a.distancia() al recorrer aparatos() en cadaTurno() para elegir el aparato más cercano del suelo; siempre sobre la variable a.
+donde.de: Als a.entfernung() beim Durchlaufen von geraete() in jedenZug() vergleichen, um das nächste Gerät auf dem Boden zu wählen; stets über a aufrufen.
+donde.en: Compare a.distance() when looping over gadgets() in onTick() to pick the nearest floor gadget; always call it on the Gadget variable.
+ejemplo.es:
+    Aparato a = aparatos().get(0);
+    girarHacia(a.angulo());
+    avanzar(a.distancia());
+ejemplo.de:
+    Geraet a = geraete().get(0);
+    drehenNach(a.winkel());
+    vorwaerts(a.entfernung());
+ejemplo.en:
+    Gadget g = gadgets().get(0);
+    turnTo(g.angle());
+    ahead(g.distance());
 
 === Aparato.angulo
 tema: 13
 firma: Aparato: double angulo()
 firma.de: Geraet: double winkel()
 firma.en: Gadget: double angle()
-es: double angulo()
-de: 
-en: 
+es: Método de consulta sobre un Aparato. Devuelve el ángulo absoluto (en grados) desde tu posición hacia ese aparato en el suelo para girar directamente hacia él.
+de: Abfragemethode an Geraet. Gibt den absoluten Winkel (Grad) von deiner Position zu diesem Gerät auf dem Boden zurück.
+en: Getter on Gadget. Returns the absolute angle (degrees) from your robot toward that gadget on the floor so you can turn straight to it.
+donde.es: Pásalo como a.angulo() a girarHacia() dentro de cadaTurno() al recorrer aparatos() para caminar directo al aparato; nunca lo llames sin el objeto a.
+donde.de: Als a.winkel() an drehenNach() in jedenZug() übergeben, wenn du geraete() durchläufst, um direkt darauf zuzufahren; nie ohne Objekt davor.
+donde.en: Pass a.angle() to turnTo() inside onTick() when iterating gadgets() to head straight to it; never call it without the Gadget object.
+ejemplo.es:
+    SI miAparato() == null Y !aparatos().isEmpty():
+        girarHacia(aparatos().get(0).angulo());
+        avanzar(aparatos().get(0).distancia());
+ejemplo.de:
+    WENN meinGeraet() == null UND !geraete().isEmpty():
+        drehenNach(geraete().get(0).winkel());
+        vorwaerts(geraete().get(0).entfernung());
+ejemplo.en:
+    IF myGadget() == null AND !gadgets().isEmpty():
+        turnTo(gadgets().get(0).angle());
+        ahead(gadgets().get(0).distance());
 
 === Aparato.conectado
 tema: 13
 firma: Aparato: boolean conectado()
 firma.de: Geraet: boolean angeschlossen()
 firma.en: Gadget: boolean pluggedIn()
-es: ¿Ya está conectado a tu robot? (Solo los que llevas.)
-de: Ist es schon an deinem Roboter angeschlossen? (Nur deins.)
-en: Is it already plugged into your robot? (Only yours.)
+es: Método de consulta sin parámetros sobre tu aparato. Devuelve true cuando ya terminó el segundo de montaje tras llamar a conectar(...), y false mientras siga suelto o montándose.
+de: Abfrage ohne Parameter an deinem Gerät. Gibt true zurück, sobald die 1-sekündige Montage nach anschliessen(...) abgeschlossen ist, sonst false.
+en: Getter with no parameters on your gadget. Returns true once the 1-second mount after plugIn(...) finishes, or false while unplugged or mounting.
+donde.es: Compruébalo en un if como !a.conectado() sobre miAparato() (tras verificar a != null) en cadaTurno() antes de llamar a conectar(); en aparatos del suelo siempre es false.
+donde.de: In einem if als !a.angeschlossen() auf meinGeraet() (nach a != null) in jedenZug() prüfen, bevor du anschliessen() aufrufst; bei Bodengeräten immer false.
+donde.en: Check !a.pluggedIn() on myGadget() (after a != null) in onTick() before calling plugIn(); for floor gadgets it is always false.
+ejemplo.es:
+    Aparato a = miAparato();
+    SI a != null Y !a.conectado():
+        conectar("espalda");
+ejemplo.de:
+    Geraet a = meinGeraet();
+    WENN a != null UND !a.angeschlossen():
+        anschliessen("ruecken");
+ejemplo.en:
+    Gadget g = myGadget();
+    IF g != null AND !g.pluggedIn():
+        plugIn("back");
 
 === Aparato.listo
 tema: 13
 firma: Aparato: boolean listo()
 firma.de: Geraet: boolean bereit()
 firma.en: Gadget: boolean ready()
-es: ¿Se puede usar ya? (Conectado y recargado.)
-de: Kann man es schon benutzen? (Angeschlossen und aufgeladen.)
-en: Can it be used yet? (Plugged in and recharged.)
+es: Método de consulta sin parámetros sobre tu aparato. Devuelve true solo si está conectado y además su tiempo de recarga ya llegó a 0, listo para activarse con usarAparato(...).
+de: Abfrage ohne Parameter an deinem Gerät. Gibt nur dann true zurück, wenn es angeschlossen ist und seine Abkühlzeit auf 0 steht, bereit für geraetBenutzen(...).
+en: Getter with no parameters on your gadget. Returns true only when it is both plugged in and off cooldown, ready to trigger with useGadget(...).
+donde.es: Úsalo en un if como a.listo() sobre miAparato() (comprobando antes a != null) en cadaTurno() o alVerEnemigo() justo antes de usarAparato().
+donde.de: In einem if als a.bereit() auf meinGeraet() (vorher a != null prüfen) in jedenZug() oder beiSicht() direkt vor geraetBenutzen() einsetzen.
+donde.en: Check a.ready() on myGadget() (after checking a != null) in onTick() or onSeeEnemy() right before calling useGadget().
+ejemplo.es:
+    Aparato a = miAparato();
+    SI a != null Y a.listo():
+        usarAparato();
+ejemplo.de:
+    Geraet a = meinGeraet();
+    WENN a != null UND a.bereit():
+        geraetBenutzen();
+ejemplo.en:
+    Gadget g = myGadget();
+    IF g != null AND g.ready():
+        useGadget();

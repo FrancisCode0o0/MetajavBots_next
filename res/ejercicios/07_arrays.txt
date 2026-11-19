@@ -219,8 +219,8 @@ titulo.es: ¿Está la pieza en el inventario?
 titulo.de: Ist das Teil im Lager?
 titulo.en: Is the part in stock?
 enunciado.es: Devuelve true si buscada está en el array piezas. Ahora a veces falla porque compara los textos con ==. Ejemplo: contiene(new String[]{"brazo", "pinza"}, "pinza") devuelve true.
-enunciado.de: Gib true zurück, wenn buscada im Array piezas vorkommt. Im Moment klappt das manchmal nicht, weil die Texte mit == verglichen werden. Beispiel: contiene(new String[]{"brazo", "pinza"}, "pinza") gibt true zurück.
-enunciado.en: Return true if buscada is in the array piezas. Right now it sometimes fails because it compares the texts with ==. Example: contiene(new String[]{"brazo", "pinza"}, "pinza") returns true.
+enunciado.de: Gib true zurück, wenn buscada im Array piezas vorkommt. Im Moment klappt das manchmal nicht, weil die Texte mit == verglichen werden. Beispiel: contiene(new String[]{"arm", "greifer"}, "greifer") gibt true zurück.
+enunciado.en: Return true if buscada is in the array piezas. Right now it sometimes fails because it compares the texts with ==. Example: contiene(new String[]{"arm", "claw"}, "claw") returns true.
 pista.es: == mira si son el mismo objeto, no si dicen lo mismo. Para comparar el contenido de dos String: pieza.equals(buscada).
 pista.de: == prüft, ob es dasselbe Objekt ist, nicht, ob derselbe Text drinsteht. Den Inhalt zweier Strings vergleichst du mit pieza.equals(buscada).
 pista.en: == checks whether they are the same object, not whether they say the same thing. To compare the content of two Strings: pieza.equals(buscada).
@@ -245,6 +245,14 @@ casos:
     contiene(new String[]{}, "brazo") => false
     contiene(new String[]{"laser", "motor"}, new String("laser")) => true
     contiene(new String[]{"motor"}, new String("Motor")) => false
+terminos.de:
+    "brazo" ==> "arm"
+    "pinza" ==> "greifer"
+    "rueda" ==> "rad"
+terminos.en:
+    "brazo" ==> "arm"
+    "pinza" ==> "claw"
+    "rueda" ==> "wheel"
 
 === t07_invertir
 tema: 07

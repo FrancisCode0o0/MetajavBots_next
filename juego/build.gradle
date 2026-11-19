@@ -10,6 +10,7 @@ sourceSets {
 
 dependencies {
     api project(':motor')
+    implementation "org.apache.pdfbox:pdfbox:$pdfboxVersion"
 }
 
 // El código del rival de la computadora va también dentro del juego, para leerlo en el taller (Taller › Código del rival).

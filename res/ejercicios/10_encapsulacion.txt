@@ -105,6 +105,10 @@ casos:
     new Piloto("Ada", 3).esVeterano() => false
     new Piloto("Lin", 10).esVeterano() => true
     new Piloto("Lin", 25).esVeterano() => true
+terminos.de:
+    // constructor, getters y esVeterano() ==> // Konstruktor, Getter und esVeterano()
+terminos.en:
+    // constructor, getters y esVeterano() ==> // constructor, getters and esVeterano()
 
 === t10_barra_de_vida
 tema: 10
@@ -173,6 +177,10 @@ casos:
     ((Supplier<Boolean>) () -> { BarraDeVida b = new BarraDeVida(5); b.danar(5); return b.estaVacia(); }).get() => true
     new BarraDeVida(0) => !IllegalArgumentException
     new BarraDeVida(10).danar(-5) => !IllegalArgumentException
+terminos.de:
+    // constructor, getVida, danar, curar y estaVacia ==> // Konstruktor, getVida, danar, curar und estaVacia
+terminos.en:
+    // constructor, getVida, danar, curar y estaVacia ==> // constructor, getVida, danar, curar and estaVacia
 
 === t10_monedero
 tema: 10
@@ -235,6 +243,10 @@ casos:
     new Monedero(-1) => !IllegalArgumentException
     new Monedero(5).pagar(-100) => !IllegalArgumentException
     ((Supplier<Integer>) () -> { new Monedero(5).ingresar(0); return 0; }).get() => !IllegalArgumentException
+terminos.de:
+    // constructor, getCreditos, pagar e ingresar ==> // Konstruktor, getCreditos, pagar und ingresar
+terminos.en:
+    // constructor, getCreditos, pagar e ingresar ==> // constructor, getCreditos, pagar and ingresar
 
 === t10_cronometro
 tema: 10
@@ -291,6 +303,10 @@ casos:
     new Cronometro(0, -1) => !IllegalArgumentException
     new Cronometro(0, 10).mas(-20) => !IllegalArgumentException
     ((Supplier<String>) () -> { Cronometro c = new Cronometro(0, 10); c.mas(30); return c.toString(); }).get() => "00:10"
+terminos.de:
+    // un campo private final con el total de segundos ==> // ein private-final-Feld mit den Gesamtsekunden
+terminos.en:
+    // un campo private final con el total de segundos ==> // a private final field with the total seconds
 
 === t10_reactor
 tema: 10
@@ -352,6 +368,10 @@ casos:
     Reactor.enCelsius(-273.15).getCelsius() => -273.15
     Reactor.enCelsius(-300) => !IllegalArgumentException
     Reactor.enFahrenheit(-500) => !IllegalArgumentException
+terminos.de:
+    // enCelsius, enFahrenheit, getCelsius y getFahrenheit ==> // enCelsius, enFahrenheit, getCelsius und getFahrenheit
+terminos.en:
+    // enCelsius, enFahrenheit, getCelsius y getFahrenheit ==> // enCelsius, enFahrenheit, getCelsius and getFahrenheit
 
 === t10_candado
 tema: 10
@@ -419,6 +439,10 @@ casos:
     ((Supplier<Boolean>) () -> { Candado c = new Candado("1234"); c.abrir("1"); c.abrir("2"); return c.abrir("1234"); }).get() => true
     ((Supplier<Boolean>) () -> { Candado c = new Candado("1234"); c.abrir("1"); c.abrir("2"); c.abrir("3"); return c.abrir("1234"); }).get() => false
     ((Supplier<Integer>) () -> { Candado c = new Candado("1"); for (int i = 0; i < 5; i++) { c.abrir("x"); } return c.intentosRestantes(); }).get() => 0
+terminos.de:
+    // estaBloqueado() e intentosRestantes() ==> // estaBloqueado() und intentosRestantes()
+terminos.en:
+    // estaBloqueado() e intentosRestantes() ==> // estaBloqueado() and intentosRestantes()
 
 === t10_inventario_copia
 tema: 10
@@ -567,6 +591,10 @@ casos:
     NumeroDeSerie.de("MK-42") => !IllegalArgumentException
     NumeroDeSerie.de("M-0042") => !IllegalArgumentException
     NumeroDeSerie.de("MK-9999").siguiente() => !IllegalStateException
+terminos.de:
+    // de, getSerie, getNumero, siguiente y toString ==> // de, getSerie, getNumero, siguiente und toString
+terminos.en:
+    // de, getSerie, getNumero, siguiente y toString ==> // de, getSerie, getNumero, siguiente and toString
 
 === t10_robot_builder
 tema: 10
@@ -577,8 +605,8 @@ titulo.es: Montar robots con el patrón Builder
 titulo.de: Roboter bauen mit dem Builder-Muster
 titulo.en: Assembling robots with the Builder pattern
 enunciado.es: Un Robot tiene nombre, blindaje (0 a 10, por defecto 0), velocidad (1 a 10, por defecto 5) y arma (por defecto "puno"), y no cambia nunca. Escribe la clase Robot con constructor privado, int getVelocidad(), String toString() ("Rex[blindaje=5, velocidad=3, arma=laser]") y la clase anidada static Robot.Builder con Builder(String nombre), Builder blindaje(int), Builder velocidad(int), Builder arma(String) y Robot build(), que lanza IllegalStateException si algún valor se sale de su rango.
-enunciado.de: Ein Robot hat Name, Panzerung (0 bis 10, Standard 0), Tempo (1 bis 10, Standard 5) und Waffe (Standard "puno") und ändert sich nie. Schreibe die Klasse Robot mit privatem Konstruktor, int getVelocidad(), String toString() ("Rex[blindaje=5, velocidad=3, arma=laser]") und der verschachtelten Klasse static Robot.Builder mit Builder(String nombre), Builder blindaje(int), Builder velocidad(int), Builder arma(String) und Robot build(), das IllegalStateException wirft, wenn ein Wert außerhalb seines Bereichs liegt.
-enunciado.en: A Robot has a name, armour (0 to 10, default 0), speed (1 to 10, default 5) and a weapon (default "puno"), and it never changes. Write the class Robot with a private constructor, int getVelocidad(), String toString() ("Rex[blindaje=5, velocidad=3, arma=laser]") and the nested class static Robot.Builder with Builder(String nombre), Builder blindaje(int), Builder velocidad(int), Builder arma(String) and Robot build(), which throws IllegalStateException if any value is out of range.
+enunciado.de: Ein Robot hat Name, Panzerung (0 bis 10, Standard 0), Tempo (1 bis 10, Standard 5) und Waffe (Standard "faust") und ändert sich nie. Schreibe die Klasse Robot mit privatem Konstruktor, int getVelocidad(), String toString() ("Rex[blindaje=5, velocidad=3, arma=laser]") und der verschachtelten Klasse static Robot.Builder mit Builder(String nombre), Builder blindaje(int), Builder velocidad(int), Builder arma(String) und Robot build(), das IllegalStateException wirft, wenn ein Wert außerhalb seines Bereichs liegt.
+enunciado.en: A Robot has a name, armour (0 to 10, default 0), speed (1 to 10, default 5) and a weapon (default "fist"), and it never changes. Write the class Robot with a private constructor, int getVelocidad(), String toString() ("Rex[blindaje=5, velocidad=3, arma=laser]") and the nested class static Robot.Builder with Builder(String nombre), Builder blindaje(int), Builder velocidad(int), Builder arma(String) and Robot build(), which throws IllegalStateException if any value is out of range.
 pista.es: Los métodos del Builder guardan el valor y devuelven this. build() comprueba los rangos y llama a new Robot(this): el constructor privado copia los campos del Builder.
 pista.de: Die Builder-Methoden speichern den Wert und geben this zurück. build() prüft die Bereiche und ruft new Robot(this) auf: Der private Konstruktor kopiert die Felder des Builders.
 pista.en: The Builder's methods store the value and return this. build() checks the ranges and calls new Robot(this): the private constructor copies the Builder's fields.
@@ -658,3 +686,9 @@ casos:
     new Robot.Builder("Zap").velocidad(0).build() => !IllegalStateException
     new Robot.Builder("Zap").blindaje(11).build() => !IllegalStateException
     new Robot.Builder("Zap").blindaje(-1).velocidad(4).build() => !IllegalStateException
+terminos.de:
+    // el constructor privado, getVelocidad, toString y la clase static Builder ==> // der private Konstruktor, getVelocidad, toString und die statische Klasse Builder
+    puno ==> faust
+terminos.en:
+    // el constructor privado, getVelocidad, toString y la clase static Builder ==> // the private constructor, getVelocidad, toString and the static Builder class
+    puno ==> fist

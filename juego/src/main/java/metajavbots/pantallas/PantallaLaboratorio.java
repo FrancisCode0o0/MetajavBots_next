@@ -48,6 +48,8 @@ public final class PantallaLaboratorio implements Pantalla {
         clase.soloLectura = true;
         pruebas.ponerTexto(j.jugador.codigoDeEjercicios.getOrDefault("lab_" + l.id, l.plantilla));
         clase.tamano = pruebas.tamano = j.jugador.tamanoDeLetra;
+        clase.enfocada = false;
+        pruebas.enfocada = true;
         pruebas.alCompilar = () -> probar(j);
     }
 
@@ -69,8 +71,11 @@ public final class PantallaLaboratorio implements Pantalla {
         String codigo = pruebas.doc.texto();
         j.sonidos.tocar("compilar", 0.5f);
         Thread h = new Thread(() -> {
-            resultado = l.comprobar(codigo, j.jugador.idioma.locale());
-            probando = false;
+            try {
+                resultado = l.comprobar(codigo, j.jugador.idioma.locale());
+            } finally {
+                probando = false;
+            }
         }, "laboratorio");
         h.setDaemon(true);
         h.start();

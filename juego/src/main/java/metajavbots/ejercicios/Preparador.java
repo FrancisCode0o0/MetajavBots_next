@@ -28,7 +28,9 @@ public final class Preparador {
 
     /** Cuántos se tienen listos por tema. */
     private static final int LISTOS_POR_TEMA = 2;
+    private static final long ENFRIAMIENTO_MS = 60_000;
     private static final Map<String, Deque<Ejercicio>> LISTOS = new HashMap<>();
+    private static final Map<String, Long> ULTIMO_INTENTO = new HashMap<>();
     private static final Set<String> PIDIENDO = new HashSet<>();
 
     private Preparador() {
@@ -37,9 +39,12 @@ public final class Preparador {
     /** Si hay cerebro y faltan, pide en segundo plano ejercicios nuevos de ese tema. */
     public static synchronized void preparar(Jugador j, Tema tema) {
         if (tema == null || PIDIENDO.contains(tema.id) || cola(tema.id).size() >= LISTOS_POR_TEMA || !metajavbots.codigo.Compilador.hayCompilador()) return;
+        long ahora = System.currentTimeMillis();
+        if (ahora - ULTIMO_INTENTO.getOrDefault(tema.id, 0L) < ENFRIAMIENTO_MS) return;
         Cerebro c = CerebroDelJuego.pesado(j);
         if (c == null) return;
         PIDIENDO.add(tema.id);
+        ULTIMO_INTENTO.put(tema.id, ahora);
         Thread h = new Thread(() -> {
             try {
                 String r = c.preguntar(CerebroDelJuego.sistemaTemario(j.idioma),
@@ -55,6 +60,7 @@ public final class Preparador {
             } finally {
                 synchronized (Preparador.class) {
                     PIDIENDO.remove(tema.id);
+                    ULTIMO_INTENTO.put(tema.id, System.currentTimeMillis());
                 }
             }
         }, "preparar-ejercicios");

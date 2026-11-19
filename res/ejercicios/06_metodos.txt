@@ -226,6 +226,10 @@ casos:
     Reparacion.reparar(50) => 60
     Reparacion.reparar(95) => 100
     Reparacion.reparar(0) => 10
+terminos.de:
+    // escribe aquí otro reparar, con un solo parámetro ==> // schreib hier ein zweites reparar mit nur einem Parameter
+terminos.en:
+    // escribe aquí otro reparar, con un solo parámetro ==> // write a second reparar here, with a single parameter
 
 === t06_suma_de_golpes
 tema: 06
@@ -344,8 +348,8 @@ titulo.es: La calculadora de combate
 titulo.de: Der Kampfrechner
 titulo.en: The combat calculator
 enunciado.es: Escribe la clase Combate con tres métodos static: danioBase(nivel) da 5 + 3 · nivel; multiplicador(arma) da 1.5 para "laser", 2.0 para "misil" y 1.0 para cualquier otra; y danioTotal(nivel, arma, armadura) multiplica los dos anteriores, lo redondea con Math.round, le resta la armadura y nunca baja de 0. Ejemplo: Combate.danioTotal(1, "laser", 2) devuelve 10.
-enunciado.de: Schreib die Klasse Combate mit drei static-Methoden: danioBase(nivel) liefert 5 + 3 · nivel; multiplicador(arma) liefert 1.5 für "laser", 2.0 für "misil" und 1.0 für alles andere; und danioTotal(nivel, arma, armadura) multipliziert die beiden, rundet mit Math.round, zieht die Panzerung ab und fällt nie unter 0. Beispiel: Combate.danioTotal(1, "laser", 2) gibt 10 zurück.
-enunciado.en: Write the class Combate with three static methods: danioBase(nivel) gives 5 + 3 · nivel; multiplicador(arma) gives 1.5 for "laser", 2.0 for "misil" and 1.0 for anything else; and danioTotal(nivel, arma, armadura) multiplies those two, rounds with Math.round, subtracts the armor and never drops below 0. Example: Combate.danioTotal(1, "laser", 2) returns 10.
+enunciado.de: Schreib die Klasse Combate mit drei static-Methoden: danioBase(nivel) liefert 5 + 3 · nivel; multiplicador(arma) liefert 1.5 für "laser", 2.0 für "rakete" und 1.0 für alles andere; und danioTotal(nivel, arma, armadura) multipliziert die beiden, rundet mit Math.round, zieht die Panzerung ab und fällt nie unter 0. Beispiel: Combate.danioTotal(1, "laser", 2) gibt 10 zurück.
+enunciado.en: Write the class Combate with three static methods: danioBase(nivel) gives 5 + 3 · nivel; multiplicador(arma) gives 1.5 for "laser", 2.0 for "missile" and 1.0 for anything else; and danioTotal(nivel, arma, armadura) multiplies those two, rounds with Math.round, subtracts the armor and never drops below 0. Example: Combate.danioTotal(1, "laser", 2) returns 10.
 pista.es: Escribe y prueba primero los dos métodos pequeños. Math.round de un double da un long: haz (int) Math.round(...). Para el suelo de 0, Math.max(0, ...).
 pista.de: Schreib und teste zuerst die beiden kleinen Methoden. Math.round auf einem double liefert einen long: also (int) Math.round(...). Für die Untergrenze 0: Math.max(0, ...).
 pista.en: Write and test the two small methods first. Math.round on a double gives a long: so (int) Math.round(...). For the floor of 0, Math.max(0, ...).
@@ -396,3 +400,9 @@ casos:
     Combate.danioTotal(5, "misil", 10) => 30
     Combate.danioTotal(2, "laser", 0) => 17
     Combate.danioTotal(0, "bala", 9) => 0
+terminos.de:
+    "misil" ==> "rakete"
+    "bala" ==> "kugel"
+terminos.en:
+    "misil" ==> "missile"
+    "bala" ==> "bullet"

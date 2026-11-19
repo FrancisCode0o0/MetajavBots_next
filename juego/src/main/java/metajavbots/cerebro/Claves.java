@@ -15,6 +15,8 @@ import java.nio.file.attribute.PosixFilePermissions;
  */
 public final class Claves {
 
+    private static final java.util.Map<String, String> CACHE = new java.util.concurrent.ConcurrentHashMap<>();
+
     private Claves() {
     }
 
@@ -27,18 +29,23 @@ public final class Claves {
     }
 
     public static String leer(String proveedor) {
-        try {
-            Path f = archivo(proveedor);
-            return Files.exists(f) ? Files.readString(f, StandardCharsets.UTF_8).strip() : "";
-        } catch (IOException e) {
-            return "";
-        }
+        if (proveedor == null || proveedor.isEmpty()) return "";
+        return CACHE.computeIfAbsent(proveedor, k -> {
+            try {
+                Path f = archivo(k);
+                return Files.exists(f) ? Files.readString(f, StandardCharsets.UTF_8).strip() : "";
+            } catch (IOException e) {
+                return "";
+            }
+        });
     }
 
     public static void guardar(String proveedor, String clave) throws IOException {
         Files.createDirectories(carpeta());
         Path f = archivo(proveedor);
-        Files.writeString(f, clave == null ? "" : clave.strip(), StandardCharsets.UTF_8);
+        String limpia = clave == null ? "" : clave.strip();
+        Files.writeString(f, limpia, StandardCharsets.UTF_8);
+        CACHE.put(proveedor, limpia);
         try {
             Files.setPosixFilePermissions(f, PosixFilePermissions.fromString("rw-------"));
         } catch (UnsupportedOperationException | IOException e) {

@@ -10,11 +10,11 @@ titulo.es: Un switch que no se cae
 titulo.de: Ein switch, der nicht durchfällt
 titulo.en: A switch that doesn't fall through
 enunciado.es: Este switch antiguo tiene un fallo: al láser le falta el break y cae en la bala. Reescríbelo como switch expression (Java 14): láser 12, bala y perdigón 8, misil 25, llama 5 y cualquier otra cosa 0.
-enunciado.de: Dieses alte switch hat einen Fehler: Beim Laser fehlt das break, und er fällt in die Kugel durch. Schreib es als switch expression neu (Java 14): láser 12, bala und perdigón 8, misil 25, llama 5 und alles andere 0.
-enunciado.en: This old switch has a bug: the laser is missing its break and falls into the bullet. Rewrite it as a switch expression (Java 14): láser 12, bala and perdigón 8, misil 25, llama 5 and anything else 0.
+enunciado.de: Dieses alte switch hat einen Fehler: Beim Laser fehlt das break, und er fällt in die Kugel durch. Schreib es als switch expression neu (Java 14): laser 12, kugel und schrot 8, rakete 25, flamme 5 und alles andere 0.
+enunciado.en: This old switch has a bug: the laser is missing its break and falls into the bullet. Rewrite it as a switch expression (Java 14): laser 12, bullet and pellet 8, missile 25, flame 5 and anything else 0.
 pista.es: return switch (arma) { case "láser" -> 12; case "bala", "perdigón" -> 8; ... default -> 0; }; Con la flecha no hay caídas ni break, y el switch devuelve un valor.
-pista.de: return switch (arma) { case "láser" -> 12; case "bala", "perdigón" -> 8; ... default -> 0; }; Mit dem Pfeil gibt es kein Durchfallen und kein break, und das switch liefert einen Wert.
-pista.en: return switch (arma) { case "láser" -> 12; case "bala", "perdigón" -> 8; ... default -> 0; }; With the arrow there is no fall-through and no break, and the switch yields a value.
+pista.de: return switch (arma) { case "laser" -> 12; case "kugel", "schrot" -> 8; ... default -> 0; }; Mit dem Pfeil gibt es kein Durchfallen und kein break, und das switch liefert einen Wert.
+pista.en: return switch (arma) { case "laser" -> 12; case "bullet", "pellet" -> 8; ... default -> 0; }; With the arrow there is no fall-through and no break, and the switch yields a value.
 firma: static int danoDeArma(String arma)
 plantilla:
     int dano = 0;
@@ -44,6 +44,20 @@ casos:
     danoDeArma("misil") => 25
     danoDeArma("llama") => 5
     danoDeArma("abrazo") => 0
+terminos.de:
+    láser ==> laser
+    bala ==> kugel
+    perdigón ==> schrot
+    misil ==> rakete
+    llama ==> flamme
+    abrazo ==> umarmung
+terminos.en:
+    láser ==> laser
+    bala ==> bullet
+    perdigón ==> pellet
+    misil ==> missile
+    llama ==> flame
+    abrazo ==> hug
 
 === t19_enum_de_armas
 tema: 19
@@ -159,8 +173,8 @@ titulo.es: ¿Qué ha captado el sensor?
 titulo.de: Was hat der Sensor erfasst?
 titulo.en: What did the sensor pick up?
 enunciado.es: Devuelve "número N" si cosa es un Integer, "texto de N letras" si es un String que no está en blanco, "array de N" si es un int[] y "otra cosa" en cualquier otro caso (también null). Usa instanceof con patrón (Java 16): sin casts.
-enunciado.de: Gib "número N" zurück, wenn cosa ein Integer ist, "texto de N letras", wenn es ein nicht leerer String ist, "array de N", wenn es ein int[] ist, und sonst "otra cosa" (auch bei null). Nutze instanceof mit Pattern (Java 16): ohne Casts.
-enunciado.en: Return "número N" if cosa is an Integer, "texto de N letras" if it is a String that isn't blank, "array de N" if it is an int[], and "otra cosa" otherwise (null too). Use instanceof with a pattern (Java 16): no casts.
+enunciado.de: Gib "zahl N" zurück, wenn cosa ein Integer ist, "text mit N zeichen", wenn es ein nicht leerer String ist, "array mit N", wenn es ein int[] ist, und sonst "etwas anderes" (auch bei null). Nutze instanceof mit Pattern (Java 16): ohne Casts.
+enunciado.en: Return "number N" if cosa is an Integer, "text of N letters" if it is a String that isn't blank, "array of N" if it is an int[], and "something else" otherwise (null too). Use instanceof with a pattern (Java 16): no casts.
 pista.es: if (cosa instanceof String s && !s.isBlank()) declara s solo cuando encaja. instanceof con null siempre da false.
 pista.de: if (cosa instanceof String s && !s.isBlank()) deklariert s nur, wenn es passt. instanceof mit null ist immer false.
 pista.en: if (cosa instanceof String s && !s.isBlank()) declares s only when it matches. instanceof with null is always false.
@@ -188,6 +202,18 @@ casos:
     describir(new int[]{4, 5, 6}) => "array de 3"
     describir(2.5) => "otra cosa"
     describir(null) => "otra cosa"
+terminos.de:
+    "número  ==> "zahl 
+    "texto de  ==> "text mit 
+     letras" ==>  zeichen"
+    "array de  ==> "array mit 
+    otra cosa ==> etwas anderes
+terminos.en:
+    "número  ==> "number 
+    "texto de  ==> "text of 
+     letras" ==>  letters"
+    "array de  ==> "array of 
+    otra cosa ==> something else
 
 === t19_ficha_con_text_block
 tema: 19
@@ -198,8 +224,8 @@ titulo.es: La ficha del robot
 titulo.de: Der Steckbrief des Roboters
 titulo.en: The robot's profile card
 enunciado.es: Imprime la ficha del robot (el nombre en mayúsculas) exactamente así, línea a línea: == FICHA == / Robot: NOMBRE / Vida: vida/100 / Lema: "¡A por ellos!". Usa un text block (Java 15) y formatted().
-enunciado.de: Gib den Steckbrief des Roboters (den Namen in Großbuchstaben) genau so aus, Zeile für Zeile: == FICHA == / Robot: NAME / Vida: vida/100 / Lema: "¡A por ellos!". Nutze einen Textblock (Java 15) und formatted().
-enunciado.en: Print the robot's card (the name in capitals) exactly like this, line by line: == FICHA == / Robot: NAME / Vida: vida/100 / Lema: "¡A por ellos!". Use a text block (Java 15) and formatted().
+enunciado.de: Gib den Steckbrief des Roboters (den Namen in Großbuchstaben) genau so aus, Zeile für Zeile: == STECKBRIEF == / Robot: NAME / Leben: vida/100 / Motto: "Auf geht's!". Nutze einen Textblock (Java 15) und formatted().
+enunciado.en: Print the robot's card (the name in capitals) exactly like this, line by line: == PROFILE == / Robot: NAME / Health: vida/100 / Motto: "Let's get them!". Use a text block (Java 15) and formatted().
 pista.es: Un text block empieza con """ y un salto de línea; dentro, las comillas no se escapan. Pon %s y %d y llama a .formatted(nombre.toUpperCase(), vida). Imprime con print: el bloque ya acaba en salto de línea.
 pista.de: Ein Textblock beginnt mit """ und einem Zeilenumbruch; darin werden Anführungszeichen nicht escaped. Setz %s und %d ein und ruf .formatted(nombre.toUpperCase(), vida) auf. Gib mit print aus: Der Block endet schon mit einem Zeilenumbruch.
 pista.en: A text block starts with """ and a line break; inside it, quotes need no escaping. Put %s and %d in it and call .formatted(nombre.toUpperCase(), vida). Print with print: the block already ends with a line break.
@@ -219,6 +245,16 @@ casos:
     ficha("rex", 0); => "== FICHA ==\nRobot: REX\nVida: 0/100\nLema: \"¡A por ellos!\"\n"
     ficha("Mk II", 100); => "== FICHA ==\nRobot: MK II\nVida: 100/100\nLema: \"¡A por ellos!\"\n"
     ficha("", 5); => "== FICHA ==\nRobot: \nVida: 5/100\nLema: \"¡A por ellos!\"\n"
+terminos.de:
+    FICHA ==> STECKBRIEF
+    Vida: ==> Leben:
+    Lema: ==> Motto:
+    ¡A por ellos! ==> Auf geht's!
+terminos.en:
+    FICHA ==> PROFILE
+    Vida: ==> Health:
+    Lema: ==> Motto:
+    ¡A por ellos! ==> Let's get them!
 
 === t19_ignorar_con_guion_bajo
 tema: 19
@@ -256,6 +292,10 @@ casos:
     sumarValidas(List.of("10", "x7", "5")) => 15
     sumarValidas(List.of("-3", "3.5", " 4", "")) => -3
     sumarValidas(List.of()) => 0
+terminos.de:
+    // lectura estropeada: no cuenta ==> // defekter Messwert: zählt nicht
+terminos.en:
+    // lectura estropeada: no cuenta ==> // garbled reading: ignored
 
 === t19_colecciones_secuenciadas
 tema: 19
@@ -265,9 +305,9 @@ tipo: metodo
 titulo.es: El primero y el último de la fila
 titulo.de: Der Erste und der Letzte in der Reihe
 titulo.en: First and last in the row
-enunciado.es: Java 21 trajo SequencedCollection: listas, deques y conjuntos ordenados comparten getFirst() y getLast(). Devuelve "primero/último" de la colección, o "" si está vacía.
-enunciado.de: Java 21 brachte SequencedCollection: Listen, Deques und geordnete Mengen haben gemeinsam getFirst() und getLast(). Gib "erstes/letztes" der Collection zurück, oder "", wenn sie leer ist.
-enunciado.en: Java 21 brought SequencedCollection: lists, deques and ordered sets now share getFirst() and getLast(). Return "first/last" of the collection, or "" if it is empty.
+enunciado.es: Java 21 trajo SequencedCollection: listas, deques y conjuntos ordenados comparten getFirst() y getLast(). Devuelve "<primero>/<último>" de la colección, o "" si está vacía.
+enunciado.de: Java 21 brachte SequencedCollection: Listen, Deques und geordnete Mengen haben gemeinsam getFirst() und getLast(). Gib "<erstes>/<letztes>" der Collection zurück, oder "", wenn sie leer ist.
+enunciado.en: Java 21 brought SequencedCollection: lists, deques and ordered sets now share getFirst() and getLast(). Return "<first>/<last>" of the collection, or "" if it is empty.
 pista.es: if (fila.isEmpty()) return ""; return fila.getFirst() + "/" + fila.getLast(); Funciona igual con List, ArrayDeque, LinkedHashSet o TreeSet.
 pista.de: if (fila.isEmpty()) return ""; return fila.getFirst() + "/" + fila.getLast(); Das klappt genauso mit List, ArrayDeque, LinkedHashSet oder TreeSet.
 pista.en: if (fila.isEmpty()) return ""; return fila.getFirst() + "/" + fila.getLast(); It works the same with List, ArrayDeque, LinkedHashSet or TreeSet.
@@ -295,8 +335,8 @@ titulo.es: Clasificar lecturas del radar
 titulo.de: Radarmeldungen einordnen
 titulo.en: Classify radar readings
 enunciado.es: Con pattern matching en switch (Java 21): null da "sin señal"; un Integer negativo, "error N" (N sin signo); otro Integer, "distancia N"; un String en blanco, "vacía"; otro String, "mensaje: S"; un Double, "ángulo D" con un decimal; cualquier otra cosa, "desconocida".
-enunciado.de: Mit Pattern Matching im switch (Java 21): null ergibt "sin señal"; ein negativer Integer "error N" (N ohne Vorzeichen); ein anderer Integer "distancia N"; ein leerer String "vacía"; ein anderer String "mensaje: S"; ein Double "ángulo D" mit einer Nachkommastelle; alles andere "desconocida".
-enunciado.en: With pattern matching for switch (Java 21): null gives "sin señal"; a negative Integer, "error N" (N without the sign); any other Integer, "distancia N"; a blank String, "vacía"; any other String, "mensaje: S"; a Double, "ángulo D" with one decimal; anything else, "desconocida".
+enunciado.de: Mit Pattern Matching im switch (Java 21): null ergibt "kein signal"; ein negativer Integer "fehler N" (N ohne Vorzeichen); ein anderer Integer "distanz N"; ein leerer String "leer"; ein anderer String "nachricht: S"; ein Double "winkel D" mit einer Nachkommastelle; alles andere "unbekannt".
+enunciado.en: With pattern matching for switch (Java 21): null gives "no signal"; a negative Integer, "error N" (N without the sign); any other Integer, "distance N"; a blank String, "blank"; any other String, "message: S"; a Double, "angle D" with one decimal; anything else, "unknown".
 pista.es: case null -> ...; case Integer i when i < 0 -> ...; case Integer i -> ...; Los casos con when van antes que los generales. Para el decimal: String.format(Locale.ROOT, "%.1f", d).
 pista.de: case null -> ...; case Integer i when i < 0 -> ...; case Integer i -> ...; Die Fälle mit when kommen vor den allgemeinen. Für die Nachkommastelle: String.format(Locale.ROOT, "%.1f", d).
 pista.en: case null -> ...; case Integer i when i < 0 -> ...; case Integer i -> ...; The cases with when go before the general ones. For the decimal: String.format(Locale.ROOT, "%.1f", d).
@@ -322,6 +362,23 @@ casos:
     clasificar("enemigo al norte") => "mensaje: enemigo al norte"
     clasificar(3.14159) => "ángulo 3.1"
     clasificar('x') => "desconocida"
+terminos.de:
+    sin señal ==> kein signal
+    "error  ==> "fehler 
+    "distancia  ==> "distanz 
+    vacía ==> leer
+    mensaje:  ==> nachricht: 
+    enemigo al norte ==> feind im norden
+    ángulo  ==> winkel 
+    desconocida ==> unbekannt
+terminos.en:
+    sin señal ==> no signal
+    "distancia  ==> "distance 
+    vacía ==> blank
+    mensaje:  ==> message: 
+    enemigo al norte ==> enemy to the north
+    ángulo  ==> angle 
+    desconocida ==> unknown
 
 === t19_disparos_sellados
 tema: 19
@@ -390,11 +447,11 @@ titulo.es: Comprobar antes de llamar a super
 titulo.de: Prüfen vor dem super-Aufruf
 titulo.en: Check before calling super
 enunciado.es: Blindaje(int grosor) crea una Pieza llamada "blindaje Nmm" que pesa grosor * 3. Si grosor no está entre 1 y 10, lanza IllegalArgumentException sin llegar a crear la Pieza (Pieza.creadas() no debe cambiar). Desde Java 25 el constructor puede comprobar y calcular antes de super(...).
-enunciado.de: Blindaje(int grosor) erzeugt ein Pieza namens "blindaje Nmm", das grosor * 3 wiegt. Liegt grosor nicht zwischen 1 und 10, wirf eine IllegalArgumentException, ohne dass das Pieza entsteht (Pieza.creadas() darf sich nicht ändern). Seit Java 25 darf der Konstruktor vor super(...) prüfen und rechnen.
-enunciado.en: Blindaje(int grosor) creates a Pieza called "blindaje Nmm" that weighs grosor * 3. If grosor is not between 1 and 10, throw an IllegalArgumentException without creating the Pieza at all (Pieza.creadas() must not change). Since Java 25 the constructor may check and compute before super(...).
+enunciado.de: Blindaje(int grosor) erzeugt ein Pieza namens "panzerung Nmm", das grosor * 3 wiegt. Liegt grosor nicht zwischen 1 und 10, wirf eine IllegalArgumentException, ohne dass das Pieza entsteht (Pieza.creadas() darf sich nicht ändern). Seit Java 25 darf der Konstruktor vor super(...) prüfen und rechnen.
+enunciado.en: Blindaje(int grosor) creates a Pieza called "armor Nmm" that weighs grosor * 3. If grosor is not between 1 and 10, throw an IllegalArgumentException without creating the Pieza at all (Pieza.creadas() must not change). Since Java 25 the constructor may check and compute before super(...).
 pista.es: Pon el if con el throw antes de super("blindaje " + grosor + "mm", grosor * 3). Antes de super no puedes usar this, pero sí los parámetros. Antes de Java 25 había que hacerlo con un método estático auxiliar.
-pista.de: Setz das if mit dem throw vor super("blindaje " + grosor + "mm", grosor * 3). Vor super darfst du this nicht benutzen, die Parameter aber schon. Vor Java 25 brauchte man dafür eine statische Hilfsmethode.
-pista.en: Put the if with the throw before super("blindaje " + grosor + "mm", grosor * 3). Before super you can't use this, but you can use the parameters. Before Java 25 you needed a static helper method for this.
+pista.de: Setz das if mit dem throw vor super("panzerung " + grosor + "mm", grosor * 3). Vor super darfst du this nicht benutzen, die Parameter aber schon. Vor Java 25 brauchte man dafür eine statische Hilfsmethode.
+pista.en: Put the if with the throw before super("armor " + grosor + "mm", grosor * 3). Before super you can't use this, but you can use the parameters. Before Java 25 you needed a static helper method for this.
 plantilla:
     public class Blindaje extends Pieza {
 
@@ -467,6 +524,10 @@ casos:
     new Blindaje(0) => !IllegalArgumentException
     new Blindaje(11) => !IllegalArgumentException
     ((Supplier<Integer>) () -> { int antes = Pieza.creadas(); try { new Blindaje(-2); } catch (IllegalArgumentException e) { } return Pieza.creadas() - antes; }).get() => 0
+terminos.de:
+    "blindaje ==> "panzerung
+terminos.en:
+    "blindaje ==> "armor
 
 === t19_formula_de_dano
 tema: 19

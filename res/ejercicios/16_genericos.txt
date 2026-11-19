@@ -8,8 +8,8 @@ titulo.es: Una caja para cualquier pieza
 titulo.de: Eine Kiste für jedes Teil
 titulo.en: A box for any part
 enunciado.es: La clase Caja guarda su contenido como Object y obliga a hacer casts. Hazla genérica (los genéricos llegaron en Java 5): Caja<T> con el constructor Caja(T contenido), T sacar() y boolean estaVacia() (true si el contenido es null). Así new Caja<>("láser") funciona con el operador diamante de Java 7.
-enunciado.de: Die Klasse Caja speichert ihren Inhalt als Object, und man muss ständig casten. Mach sie generisch (Generics gibt es seit Java 5): Caja<T> mit dem Konstruktor Caja(T contenido), T sacar() und boolean estaVacia() (true, wenn der Inhalt null ist). Dann klappt new Caja<>("láser") mit dem Diamant-Operator aus Java 7.
-enunciado.en: The Caja class stores its content as Object and forces you to cast. Make it generic (generics arrived in Java 5): Caja<T> with the constructor Caja(T contenido), T sacar() and boolean estaVacia() (true when the content is null). Then new Caja<>("láser") works with the diamond operator from Java 7.
+enunciado.de: Die Klasse Caja speichert ihren Inhalt als Object, und man muss ständig casten. Mach sie generisch (Generics gibt es seit Java 5): Caja<T> mit dem Konstruktor Caja(T contenido), T sacar() und boolean estaVacia() (true, wenn der Inhalt null ist). Dann klappt new Caja<>("laser") mit dem Diamant-Operator aus Java 7.
+enunciado.en: The Caja class stores its content as Object and forces you to cast. Make it generic (generics arrived in Java 5): Caja<T> with the constructor Caja(T contenido), T sacar() and boolean estaVacia() (true when the content is null). Then new Caja<>("laser") works with the diamond operator from Java 7.
 pista.es: Escribe public class Caja<T> y cambia Object por T en el campo, el constructor y sacar().
 pista.de: Schreib public class Caja<T> und ersetze Object durch T im Feld, im Konstruktor und in sacar().
 pista.en: Write public class Caja<T> and replace Object with T in the field, the constructor and sacar().
@@ -51,6 +51,10 @@ casos:
     new Caja<>("radar").sacar().length() => 5
     new Caja<String>(null).estaVacia() => true
     new Caja<>(2.5).estaVacia() => false
+terminos.de:
+    "láser" ==> "laser"
+terminos.en:
+    "láser" ==> "laser"
 
 === t16_ultimo_de_la_lista
 tema: 16
@@ -128,6 +132,10 @@ casos:
     new Par<>(1, 'x').invertido().segundo() => 1
     new Par<>("a", 2.0).toString() => "(a, 2.0)"
     new Par<>(null, "b").invertido().toString() => "(b, null)"
+terminos.de:
+    // tus campos, tu constructor y tus métodos ==> // deine Felder, dein Konstruktor und deine Methoden
+terminos.en:
+    // tus campos, tu constructor y tus métodos ==> // your fields, your constructor and your methods
 
 === t16_suma_con_comodin
 tema: 16
@@ -420,6 +428,10 @@ casos:
     new Almacen<Pieza>().guardar(new Pieza("L1", 12)).guardar(new Pieza("L1", 15)).buscar("L1").get().peso() => 15
     new Almacen<Pieza>().guardar(new Pieza("B2", 1)).guardar(new Pieza("A7", 2)).todos() => List.of(new Pieza("A7", 2), new Pieza("B2", 1))
     new Almacen<Pieza>().todos() => List.of()
+terminos.de:
+    // guardar, buscar, tamano y todos ==> // guardar, buscar, tamano und todos
+terminos.en:
+    // guardar, buscar, tamano y todos ==> // guardar, buscar, tamano and todos
 
 === t16_mejor_segun
 tema: 16

@@ -304,6 +304,10 @@ casos:
     marco(3, 1); => "###\n"
     marco(1, 1); => "#\n"
     marco(0, 0); => ""
+terminos.de:
+    // dos bucles, uno dentro del otro ==> // zwei Schleifen ineinander
+terminos.en:
+    // dos bucles, uno dentro del otro ==> // two nested loops
 
 === t05_a_binario
 tema: 05

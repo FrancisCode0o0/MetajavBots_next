@@ -45,8 +45,21 @@ public final class Referencia {
             return t == null ? v.getOrDefault("es", "") : t;
         }
 
+        /** Pista práctica sobre dónde puede (o dónde no debe) colocarse esta entrada en el código. */
+        public String donde(Idioma i) {
+            String t = v.get("donde." + i.codigo());
+            return t == null ? v.getOrDefault("donde.es", "") : t;
+        }
+
+        public String ejemplo(Idioma i) {
+            String t = v.get("ejemplo." + i.codigo());
+            if (t != null && !t.isEmpty()) return t;
+            return ejemplo;
+        }
+
         public boolean esDeLaApi() {
-            return id.startsWith("api.") || id.startsWith("Enemigo.") || id.startsWith("Golpe.");
+            return id.startsWith("api.") || id.startsWith("Enemigo.") || id.startsWith("Golpe.")
+                    || id.startsWith("Obstaculo.") || id.startsWith("Aparato.");
         }
 
         /** Lo que se escribe en el editor al pulsar «Insertar» (el nombre del método o de la palabra). */
@@ -103,9 +116,10 @@ public final class Referencia {
                 int i = linea.indexOf(':');
                 if (i > 0 && !linea.startsWith(" ")) {
                     ultima = linea.substring(0, i).strip();
-                    actual.merge(ultima, linea.substring(i + 1).strip(), (a, b) -> a + "\n" + b);
+                    actual.merge(ultima, linea.substring(i + 1).strip(), (a, b) -> a.isEmpty() ? b : a + "\n" + b);
                 } else if (ultima != null) {
-                    actual.merge(ultima, linea.strip(), (a, b) -> a + "\n" + b);
+                    String cont = linea.startsWith("    ") ? linea.substring(4).stripTrailing() : linea.strip();
+                    actual.merge(ultima, cont, (a, b) -> a.isEmpty() ? b : a + "\n" + b);
                 }
             }
             if (actual != null) l.add(new Entrada(actual));
@@ -126,7 +140,7 @@ public final class Referencia {
         for (Entrada e : todas()) {
             if (tema != null && !e.tema.equals(tema)) continue;
             String nombre = sinTildes(e.id + " " + e.firma(idioma));
-            String todo = nombre + " " + sinTildes(e.texto(idioma) + " " + e.ejemplo);
+            String todo = nombre + " " + sinTildes(e.texto(idioma) + " " + e.donde(idioma) + " " + e.ejemplo(idioma));
             boolean enNombre = true, enTodo = true;
             for (String p : palabras) {
                 if (p.isEmpty()) continue;

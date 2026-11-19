@@ -15,6 +15,7 @@ public final class Dialogo {
     private boolean abierto, peligro;
     private String titulo = "", texto = "", aceptar = "", cancelar = "";
     private Consumer<String> alAceptar;
+    private Runnable alCancelar;
     private final CampoDeTexto campo = new CampoDeTexto();
     private boolean conCampo;
 
@@ -24,9 +25,15 @@ public final class Dialogo {
 
     /** Pide confirmar algo. Con «peligro», el botón de aceptar sale en rojo (borrar). */
     public void confirmar(String titulo, String texto, String aceptar, String cancelar, boolean peligro, Runnable siAcepta) {
+        confirmar(titulo, texto, aceptar, cancelar, peligro, siAcepta, null);
+    }
+
+    /** Igual, avisando también si el usuario cancela o pulsa Esc. */
+    public void confirmar(String titulo, String texto, String aceptar, String cancelar, boolean peligro, Runnable siAcepta, Runnable siCancela) {
         abrir(titulo, texto, aceptar, cancelar, peligro);
         conCampo = false;
         alAceptar = s -> siAcepta.run();
+        alCancelar = siCancela;
     }
 
     /** Pide un texto (un nombre nuevo), con lo que había escrito para cambiarlo. */
@@ -46,6 +53,7 @@ public final class Dialogo {
         this.aceptar = aceptar;
         this.cancelar = cancelar;
         this.peligro = peligro;
+        this.alCancelar = null;
         abierto = true;
     }
 
@@ -97,7 +105,9 @@ public final class Dialogo {
             cerrar();
             alAceptar.accept(campo.texto().strip());
         } else if (no) {
+            Runnable r = alCancelar;
             cerrar();
+            if (r != null) r.run();
         }
     }
 }

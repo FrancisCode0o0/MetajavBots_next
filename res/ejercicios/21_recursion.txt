@@ -308,8 +308,8 @@ titulo.es: Apilar blindajes de un poste a otro
 titulo.de: Panzerplatten von Stange zu Stange
 titulo.en: Moving armour plates between posts
 enunciado.es: Hay n placas de blindaje apiladas en el poste desde, de mayor (n) a menor (1). Pásalas al poste hasta usando el poste libre, moviendo una placa cada vez y sin poner nunca una grande sobre una pequeña. Imprime cada movimiento como "placa 1: A -> C".
-enunciado.de: Auf der Stange desde liegen n Panzerplatten, von der größten (n) bis zur kleinsten (1). Bring sie mit Hilfe der Stange libre auf die Stange hasta, immer nur eine Platte auf einmal und nie eine große auf eine kleine. Gib jeden Zug als "placa 1: A -> C" aus.
-enunciado.en: There are n armour plates stacked on post desde, from largest (n) to smallest (1). Move them to post hasta using post libre, one plate at a time and never putting a large one on a small one. Print each move as "placa 1: A -> C".
+enunciado.de: Auf der Stange desde liegen n Panzerplatten, von der größten (n) bis zur kleinsten (1). Bring sie mit Hilfe der Stange libre auf die Stange hasta, immer nur eine Platte auf einmal und nie eine große auf eine kleine. Gib jeden Zug als "platte 1: A -> C" aus.
+enunciado.en: There are n armour plates stacked on post desde, from largest (n) to smallest (1). Move them to post hasta using post libre, one plate at a time and never putting a large one on a small one. Print each move as "plate 1: A -> C".
 pista.es: Para mover n placas: mueve n - 1 de desde a libre, mueve la placa n de desde a hasta y vuelve a poner las n - 1 de libre a hasta. Con n == 0 no se hace nada.
 pista.de: Um n Platten zu bewegen: Bring n - 1 von desde nach libre, bewege Platte n von desde nach hasta und bring die n - 1 von libre nach hasta. Bei n == 0 passiert nichts.
 pista.en: To move n plates: move n - 1 from desde to libre, move plate n from desde to hasta and put the n - 1 back from libre onto hasta. With n == 0 nothing happens.
@@ -329,6 +329,10 @@ casos:
     hanoi(3, 'A', 'C', 'B'); => "placa 1: A -> C\nplaca 2: A -> B\nplaca 1: C -> B\nplaca 3: A -> C\nplaca 1: B -> A\nplaca 2: B -> C\nplaca 1: A -> C\n"
     hanoi(2, 'X', 'Y', 'Z'); => "placa 1: X -> Z\nplaca 2: X -> Y\nplaca 1: Z -> Y\n"
     hanoi(0, 'A', 'C', 'B'); => ""
+terminos.de:
+    placa  ==> platte 
+terminos.en:
+    placa  ==> plate 
 
 === t21_ordenar_por_mezcla
 tema: 21

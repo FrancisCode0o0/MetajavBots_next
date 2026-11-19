@@ -58,8 +58,8 @@ titulo.es: Un robot que nada y vuela
 titulo.de: Ein Roboter, der schwimmt und fliegt
 titulo.en: A robot that swims and flies
 enunciado.es: Una clase solo puede tener un padre, pero puede implementar varias interfaces. Escribe las interfaces Nadador (String nadar()) y Volador (String volar()), la clase Patorobot, que implementa las dos ("chap chap" al nadar, "zum" al volar), y la clase Dron, que solo vuela ("bzzz").
-enunciado.de: Eine Klasse kann nur eine Elternklasse haben, aber mehrere Interfaces implementieren. Schreibe die Interfaces Nadador (String nadar()) und Volador (String volar()), die Klasse Patorobot, die beide implementiert ("chap chap" beim Schwimmen, "zum" beim Fliegen), und die Klasse Dron, die nur fliegt ("bzzz").
-enunciado.en: A class can only have one parent, but it can implement several interfaces. Write the interfaces Nadador (String nadar()) and Volador (String volar()), the class Patorobot, which implements both ("chap chap" when swimming, "zum" when flying), and the class Dron, which only flies ("bzzz").
+enunciado.de: Eine Klasse kann nur eine Elternklasse haben, aber mehrere Interfaces implementieren. Schreibe die Interfaces Nadador (String nadar()) und Volador (String volar()), die Klasse Patorobot, die beide implementiert ("platsch" beim Schwimmen, "summ" beim Fliegen), und die Klasse Dron, die nur fliegt ("bzzz").
+enunciado.en: A class can only have one parent, but it can implement several interfaces. Write the interfaces Nadador (String nadar()) and Volador (String volar()), the class Patorobot, which implements both ("splash" when swimming, "zoom" when flying), and the class Dron, which only flies ("bzzz").
 pista.es: class Patorobot implements Nadador, Volador { ... } — las interfaces van separadas por comas.
 pista.de: class Patorobot implements Nadador, Volador { ... } — die Interfaces stehen durch Kommas getrennt.
 pista.en: class Patorobot implements Nadador, Volador { ... } — the interfaces are separated by commas.
@@ -109,6 +109,12 @@ casos:
     new Dron().volar() => "bzzz"
     new Dron() instanceof Nadador => false
     new Volador[]{new Dron(), new Patorobot()}[1].volar() => "zum"
+terminos.de:
+    "chap chap" ==> "platsch"
+    "zum" ==> "summ"
+terminos.en:
+    "chap chap" ==> "splash"
+    "zum" ==> "zoom"
 
 === t13_reparable_default
 tema: 13
@@ -196,6 +202,12 @@ casos:
     new Muro(160).necesitaReparacion() => false
     new Muro(149).necesitaReparacion() => true
     ((Reparable) new Muro(200)).puntosQueFaltan() => 0
+terminos.de:
+    // los dos métodos default ==> // die beiden default-Methoden
+    // Torreta y Muro ==> // Torreta und Muro
+terminos.en:
+    // los dos métodos default ==> // the two default methods
+    // Torreta y Muro ==> // Torreta and Muro
 
 === t13_sensor_estrategia
 tema: 13
@@ -274,6 +286,12 @@ casos:
     new Robot(new Radar(10)).cambiarSensor(new Camara()).cuantosDetecta(new int[]{1, 5}) => 1
     new Robot(new Radar(0)).cuantosDetecta(new int[0]) => 0
     new Robot(d -> d % 2 == 0).cuantosDetecta(new int[]{1, 2, 4}) => 2
+terminos.de:
+    // Radar y Camara ==> // Radar und Camara
+    // el sensor, el constructor, cuantosDetecta y cambiarSensor ==> // Sensor, Konstruktor, cuantosDetecta und cambiarSensor
+terminos.en:
+    // Radar y Camara ==> // Radar and Camara
+    // el sensor, el constructor, cuantosDetecta y cambiarSensor ==> // the sensor, the constructor, cuantosDetecta and cambiarSensor
 
 === t13_comparable
 tema: 13
@@ -335,6 +353,10 @@ casos:
     new Robot("Rex", 9).compareTo(new Robot("Rex", 9)) => 0
     Collections.max(Arrays.asList(new Robot("Rex", 5), new Robot("Tita", 9), new Robot("Zap", 2))).getNombre() => "Tita"
     ((Supplier<String>) () -> { Robot[] r = {new Robot("Zap", 7), new Robot("Ada", 3), new Robot("Bo", 7)}; Arrays.sort(r); return Arrays.toString(r); }).get() => "[Ada, Bo, Zap]"
+terminos.de:
+    // getNombre, toString y compareTo ==> // getNombre, toString und compareTo
+terminos.en:
+    // getNombre, toString y compareTo ==> // getNombre, toString and compareTo
 
 === t13_arma_static
 tema: 13
@@ -392,6 +414,10 @@ casos:
     Arma.mejor(Arma.de(6), new Martillo()) instanceof Martillo => false
     Arma.mejor(new Martillo(), Arma.de(2)) instanceof Martillo => true
     Arma.de(-1) => !IllegalArgumentException
+terminos.de:
+    // danoCritico, de y mejor ==> // danoCritico, de und mejor
+terminos.en:
+    // danoCritico, de y mejor ==> // danoCritico, de and mejor
 
 === t13_conflicto_default
 tema: 13
@@ -402,8 +428,8 @@ titulo.es: Dos default con el mismo nombre
 titulo.de: Zwei default-Methoden mit demselben Namen
 titulo.en: Two defaults with the same name
 enunciado.es: Volador y Nadador traen los dos default String moverse() ("vuela" y "nada"). La clase Anfibio implementa las dos y Java no sabe cuál elegir: no compila. Sobrescribe moverse() en Anfibio para que dé "vuela y nada", usando los dos default. Escribe también Gaviota, que solo implementa Volador y no sobrescribe nada.
-enunciado.de: Volador und Nadador bringen beide default String moverse() mit ("vuela" und "nada"). Die Klasse Anfibio implementiert beide, und Java weiß nicht, welche es nehmen soll: Es kompiliert nicht. Überschreibe moverse() in Anfibio so, dass es "vuela y nada" liefert, mit beiden default-Methoden. Schreibe auch Gaviota, die nur Volador implementiert und nichts überschreibt.
-enunciado.en: Volador and Nadador both bring default String moverse() ("vuela" and "nada"). The class Anfibio implements both and Java can't tell which to pick: it doesn't compile. Override moverse() in Anfibio so it gives "vuela y nada", using both defaults. Also write Gaviota, which only implements Volador and overrides nothing.
+enunciado.de: Volador und Nadador bringen beide default String moverse() mit ("fliegt" und "schwimmt"). Die Klasse Anfibio implementiert beide, und Java weiß nicht, welche es nehmen soll: Es kompiliert nicht. Überschreibe moverse() in Anfibio so, dass es "fliegt und schwimmt" liefert, mit beiden default-Methoden. Schreibe auch Gaviota, die nur Volador implementiert und nichts überschreibt.
+enunciado.en: Volador and Nadador both bring default String moverse() ("flies" and "swims"). The class Anfibio implements both and Java can't tell which to pick: it doesn't compile. Override moverse() in Anfibio so it gives "flies and swims", using both defaults. Also write Gaviota, which only implements Volador and overrides nothing.
 pista.es: Volador.super.moverse() llama al default de Volador; Nadador.super.moverse(), al de Nadador.
 pista.de: Volador.super.moverse() ruft die default-Methode von Volador auf, Nadador.super.moverse() die von Nadador.
 pista.en: Volador.super.moverse() calls Volador's default; Nadador.super.moverse() calls Nadador's.
@@ -451,6 +477,16 @@ casos:
     ((Nadador) new Anfibio()).moverse() => "vuela y nada"
     ((Volador) new Anfibio()).moverse() => "vuela y nada"
     new Gaviota().moverse() => "vuela"
+terminos.de:
+    "vuela y nada" ==> "fliegt und schwimmt"
+    "vuela" ==> "fliegt"
+    "nada" ==> "schwimmt"
+    " y " ==> " und "
+terminos.en:
+    "vuela y nada" ==> "flies and swims"
+    "vuela" ==> "flies"
+    "nada" ==> "swims"
+    " y " ==> " and "
 
 === t13_private_en_interfaz
 tema: 13
@@ -461,8 +497,8 @@ titulo.es: Métodos private en una interfaz (Java 9)
 titulo.de: private-Methoden in einem Interface (Java 9)
 titulo.en: Private methods in an interface (Java 9)
 enunciado.es: Escribe la interfaz Registrable con String nombre() y dos default, String info(String texto) y String alerta(String texto), que dan "[INFO] <nombre>: <texto>" y "[ALERTA] <nombre>: <texto>". Para no repetir código, los dos llaman a un método private de la interfaz, algo que se puede desde Java 9. Después, Torreta (nombre "torreta") y Robot(String nombre), que implementan Registrable.
-enunciado.de: Schreibe das Interface Registrable mit String nombre() und zwei default-Methoden, String info(String texto) und String alerta(String texto), die "[INFO] <nombre>: <texto>" und "[ALERTA] <nombre>: <texto>" liefern. Damit sich nichts wiederholt, rufen beide eine private-Methode des Interfaces auf, was seit Java 9 geht. Danach Torreta (Name "torreta") und Robot(String nombre), die Registrable implementieren.
-enunciado.en: Write the interface Registrable with String nombre() and two defaults, String info(String texto) and String alerta(String texto), which give "[INFO] <nombre>: <texto>" and "[ALERTA] <nombre>: <texto>". To avoid repeating code, both call a private method of the interface, which is allowed since Java 9. Then Torreta (name "torreta") and Robot(String nombre), which implement Registrable.
+enunciado.de: Schreibe das Interface Registrable mit String nombre() und zwei default-Methoden, String info(String texto) und String alerta(String texto), die "[INFO] <nombre>: <texto>" und "[ALARM] <nombre>: <texto>" liefern. Damit sich nichts wiederholt, rufen beide eine private-Methode des Interfaces auf, was seit Java 9 geht. Danach Torreta (Name "geschuetz") und Robot(String nombre), die Registrable implementieren.
+enunciado.en: Write the interface Registrable with String nombre() and two defaults, String info(String texto) and String alerta(String texto), which give "[INFO] <nombre>: <texto>" and "[ALERT] <nombre>: <texto>". To avoid repeating code, both call a private method of the interface, which is allowed since Java 9. Then Torreta (name "turret") and Robot(String nombre), which implement Registrable.
 pista.es: private String formatear(String nivel, String texto) { return "[" + nivel + "] " + nombre() + ": " + texto; } — las clases que implementan la interfaz no lo ven.
 pista.de: private String formatear(String nivel, String texto) { return "[" + nivel + "] " + nombre() + ": " + texto; } — die implementierenden Klassen sehen sie nicht.
 pista.en: private String formatear(String nivel, String texto) { return "[" + nivel + "] " + nombre() + ": " + texto; } — the implementing classes can't see it.
@@ -515,6 +551,22 @@ casos:
     new Torreta().alerta("sin balas") => "[ALERTA] torreta: sin balas"
     new Robot("Rex").info("") => "[INFO] Rex: "
     new Robot("Tita").alerta("herida") => "[ALERTA] Tita: herida"
+terminos.de:
+    // info, alerta y un método private que los dos usen ==> // info, alerta und eine private Methode für beide
+    // Torreta y Robot ==> // Torreta und Robot
+    ALERTA ==> ALARM
+    torreta ==> geschuetz
+    herida ==> verletzt
+    sin balas ==> keine kugeln
+    lista ==> bereit
+terminos.en:
+    // info, alerta y un método private que los dos usen ==> // info, alerta and a private method for both
+    // Torreta y Robot ==> // Torreta and Robot
+    ALERTA ==> ALERT
+    torreta ==> turret
+    herida ==> hurt
+    sin balas ==> no ammo
+    lista ==> ready
 
 === t13_escuadron_iterable
 tema: 13
@@ -563,6 +615,10 @@ casos:
     new Escuadron("a", "b", "c").tamano() => 3
     ((Supplier<Integer>) () -> { int letras = 0; for (String n : new Escuadron("Rex", "Ada", "Bo")) { letras += n.length(); } return letras; }).get() => 8
     ((Supplier<String>) () -> { String[] mios = {"a", "b"}; Escuadron e = new Escuadron(mios); mios[0] = "x"; return String.join("", e); }).get() => "ab"
+terminos.de:
+    // los nombres, el constructor, tamano e iterator ==> // nombres, Konstruktor, tamano und iterator
+terminos.en:
+    // los nombres, el constructor, tamano e iterator ==> // names, constructor, tamano and iterator
 
 === t13_cuenta_atras
 tema: 13
@@ -632,3 +688,7 @@ casos:
     new CuentaAtras(0).iterator().next() => !NoSuchElementException
     new CuentaAtras(-1) => !IllegalArgumentException
     ((Supplier<Integer>) () -> { CuentaAtras c = new CuentaAtras(4); int suma = 0; for (int a : c) { for (int b : c) { suma += a * b; } } return suma; }).get() => 100
+terminos.de:
+    // desde, el constructor e iterator() ==> // desde, Konstruktor und iterator()
+terminos.en:
+    // desde, el constructor e iterator() ==> // desde, constructor and iterator()

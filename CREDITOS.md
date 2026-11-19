@@ -10,6 +10,7 @@ Para que Fran lo revise antes de publicar. Todo lo demás (código, textos, ejer
 | LWJGL 3 | Lightweight Java Game Library | BSD-3-Clause | Por debajo de libGDX (OpenGL, OpenAL, GLFW) |
 | shapedrawer 2.5.0 | earlygrey | MIT | Formas (los robots, la arena) |
 | blade-ink 1.3.2 | bladecoder | Apache-2.0 | La usa el motor (CastillaFantasX) para los diálogos de Ink; MetajavBots no la usa directamente |
+| Apache PDFBox 3.0.4 (pdfbox, fontbox, pdfbox-io, commons-logging) | The Apache Software Foundation | Apache-2.0 | Extracción de texto de archivos PDF en «Mi temario» (streams comprimidos, fuentes CID/Type0, mapas ToUnicode y codificaciones) |
 | jlayer 1.0.1 (gdx) y jorbis | JavaZOOM / JCraft | **LGPL** | Llegan con el backend de escritorio de libGDX (MP3 y OGG). El juego solo usa WAV, pero sin ellas libGDX no arranca el sonido. **A revisar por Fran** (docs/ESTADO.md). |
 | Gradle Wrapper 9.8 | Gradle Inc. | Apache-2.0 | Compilar |
 | Checkstyle 10.21.1 | Checkstyle | LGPL-2.1 | Solo para revisar el estilo del código (`gradlew estilo`); no va dentro del juego |

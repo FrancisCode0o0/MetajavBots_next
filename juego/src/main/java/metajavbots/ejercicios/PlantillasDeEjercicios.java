@@ -92,9 +92,11 @@ public final class PlantillasDeEjercicios {
         }
         return ejercicio("04", 2, new String[]{"¿Atacar o huir?", "Angreifen oder fliehen?", "Attack or flee?"},
                 new String[]{"Con más de " + limite + " de energía, devuelve \"ATACAR\"; si no, \"HUIR\".",
-                    "Mit mehr als " + limite + " Energie gib \"ATACAR\" zurück, sonst \"HUIR\".",
-                    "With more than " + limite + " energy return \"ATACAR\"; otherwise \"HUIR\"."},
-                "static String accion(int energia)", "return \"\";", "return energia > " + limite + " ? \"ATACAR\" : \"HUIR\";", casos);
+                    "Mit mehr als " + limite + " Energie gib \"ANGREIFEN\" zurück, sonst \"FLIEHEN\".",
+                    "With more than " + limite + " energy return \"ATTACK\"; otherwise \"FLEE\"."},
+                "static String accion(int energia)", "return \"\";", "return energia > " + limite + " ? \"ATACAR\" : \"HUIR\";", casos)
+                + "terminos.de:\n    \"ATACAR\" ==> \"ANGREIFEN\"\n    \"HUIR\" ==> \"FLIEHEN\"\n"
+                + "terminos.en:\n    \"ATACAR\" ==> \"ATTACK\"\n    \"HUIR\" ==> \"FLEE\"\n";
     }
 
     static String multiplos(Random r) {
@@ -150,7 +152,7 @@ public final class PlantillasDeEjercicios {
 
     static String letras(Random r) {
         char letra = "aeiorst".charAt(r.nextInt(7));
-        String[] palabras = {"metajavbot", "tuerca", "arena", "robot", "radar", "estrella", "torreta", "chispas"};
+        String[] palabras = {"metajavbot", "laser", "arena", "robot", "radar", "turbo", "motor", "sensor"};
         List<String> casos = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             // Uno de los casos lleva la letra seguro (si no, «return 0» podría acertarlos todos).

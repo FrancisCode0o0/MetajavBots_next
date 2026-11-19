@@ -23,9 +23,10 @@ public final class CerebroHttp implements Cerebro {
     /** Cómo se habla con el modelo: la API de Anthropic, la de Gemini (Google), la compatible con OpenAI o la propia de KoboldCpp. */
     public enum Forma { ANTHROPIC, GEMINI, OPENAI, KOBOLD }
 
+    private static final HttpClient CLIENTE = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
+
     private final Forma forma;
     private final String direccion, clave, modelo, nombre;
-    private final HttpClient cliente = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(8)).build();
     /** Lo que puede tardar una respuesta (un modelo local en un portátil, bastante). */
     public Duration espera = Duration.ofSeconds(300);
 
@@ -161,7 +162,7 @@ public final class CerebroHttp implements Cerebro {
     }
 
     private JsonValue enviar(HttpRequest r) throws Exception {
-        HttpResponse<String> res = cliente.send(r, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
+        HttpResponse<String> res = CLIENTE.send(r, HttpResponse.BodyHandlers.ofString(StandardCharsets.UTF_8));
         if (res.statusCode() / 100 != 2) {
             String cuerpo = res.body() == null ? "" : res.body();
             throw new IllegalStateException("HTTP " + res.statusCode() + ": " + (cuerpo.length() > 300 ? cuerpo.substring(0, 300) : cuerpo));

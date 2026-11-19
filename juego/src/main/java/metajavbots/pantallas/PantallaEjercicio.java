@@ -19,6 +19,7 @@ import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VentanaDeCodigo;
 import metajavbots.progreso.Jugador;
 import metajavbots.progreso.Progreso;
+import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 
 /**
@@ -67,7 +68,10 @@ public final class PantallaEjercicio implements Pantalla {
         cerebro = CerebroDelJuego.tutor(j.jugador);
         if (editor.doc.largo() > 0) return;
         Jugador jug = j.jugador;
-        editor.ponerTexto(jug.codigoDeEjercicios.getOrDefault(e.id, e.codigoInicial()));
+        String guardado = jug.codigoDeEjercicios.get(e.id);
+        boolean plantillaOtro = guardado != null && (guardado.equals(e.codigoInicial(Idioma.ES))
+                || guardado.equals(e.codigoInicial(Idioma.DE)) || guardado.equals(e.codigoInicial(Idioma.EN)));
+        editor.ponerTexto(guardado == null || plantillaOtro ? e.codigoInicial(jug.idioma) : guardado);
         editor.tamano = jug.tamanoDeLetra;
         editor.alCompilar = () -> comprobar(j);
         editor.palabras = Palabras.api(jug.idioma);
@@ -76,12 +80,13 @@ public final class PantallaEjercicio implements Pantalla {
         editor.revisarAlEscribir = codigo -> {
             if (!Compilador.hayCompilador()) return null;
             List<VentanaDeCodigo.Marca> l = new ArrayList<>();
-            Comprobador.Informe inf = Comprobador.comprobar(e, codigo, jug.idioma.locale());
+            Comprobador.Informe inf = Comprobador.soloCompilar(e, codigo, jug.idioma.locale());
             if (!inf.compila()) for (Compilador.Fallo f : inf.errores) l.add(Explicador.marca(f, jug));
             return l;
         };
         editor.alPedirAyuda = w -> {
             conApi = true;
+            conTutor = false;
             api.buscar(w);
         };
         fiesta.alEstallar = () -> j.sonidos.tocar("estallido", 0.35f);
@@ -123,31 +128,38 @@ public final class PantallaEjercicio implements Pantalla {
         j.sonidos.tocar("compilar", 0.5f);
         String codigo = editor.doc.texto();
         Thread h = new Thread(() -> {
-            Comprobador.Informe inf = Comprobador.comprobar(e, codigo, j.jugador.idioma.locale());
-            if (inf.compila()) {
-                try {
-                    Comprobador.Informe conTraza = Comprobador.comprobar(e, codigo, j.jugador.idioma.locale(), true);
-                    for (int i = 0; i < inf.casos.size() && i < conTraza.casos.size(); i++) inf.casos.get(i).traza = conTraza.casos.get(i).traza;
-                } catch (RuntimeException ex) {
-                    // sin traza: el robotito se anima solo con el tiempo
+            try {
+                Comprobador.Informe inf = Comprobador.comprobar(e, codigo, j.jugador.idioma.locale());
+                if (inf.compila()) {
+                    try {
+                        Comprobador.Informe conTraza = Comprobador.comprobar(e, codigo, j.jugador.idioma.locale(), true);
+                        for (int i = 0; i < inf.casos.size() && i < conTraza.casos.size(); i++) inf.casos.get(i).traza = conTraza.casos.get(i).traza;
+                    } catch (RuntimeException ex) {
+                        // sin traza: el robotito se anima solo con el tiempo
+                    }
+                    fantasma(j);
                 }
-                fantasma(j);
+                informe = inf;
+            } finally {
+                comprobando = false;
             }
-            informe = inf;
-            comprobando = false;
         }, "comprobar");
         h.setDaemon(true);
         h.start();
     }
 
-    /** Las trazas de la solución en cada caso (una vez por ejercicio): es el fantasma con el que corre en la pista. */
+    private Idioma idiomaFantasma;
+
+    /** Las trazas de la solución en cada caso (una vez por ejercicio y lenguaje): es el fantasma con el que corre en la pista. */
     private void fantasma(Juego j) {
-        if (!trazasDelFantasma.isEmpty() || e.solucion == null || e.solucion.isBlank()) return;
+        Idioma id = j.jugador.idioma;
+        if ((!trazasDelFantasma.isEmpty() && id == idiomaFantasma) || e.solucion(id) == null || e.solucion(id).isBlank()) return;
         try {
-            Comprobador.Informe inf = Comprobador.comprobar(e, e.codigoSolucion(), j.jugador.idioma.locale(), true);
+            Comprobador.Informe inf = Comprobador.comprobar(e, e.codigoSolucion(id), id.locale(), true);
             List<int[]> l = new ArrayList<>();
             for (Comprobador.Resultado r : inf.casos) l.add(r.traza);
             trazasDelFantasma = l;
+            idiomaFantasma = id;
         } catch (RuntimeException ex) {
             // sin fantasma: corre solo
         }
@@ -178,10 +190,14 @@ public final class PantallaEjercicio implements Pantalla {
             case 0: comprobar(j); break;
             case 1: editor.doc.formatear(); break;
             case 2:
-                editor.doc.cambiarTodo(e.codigoInicial());
+                editor.doc.cambiarTodo(e.codigoInicial(jug.idioma));
                 editor.marcas.clear();
+                informe = null;
                 break;
-            case 3: conApi = !conApi; break;
+            case 3:
+                conApi = !conApi;
+                if (conApi) conTutor = false;
+                break;
             default: break;
         }
         float altoBarra = ui.altoDeBotonera;
@@ -249,7 +265,7 @@ public final class PantallaEjercicio implements Pantalla {
         if (solucion) {
             p.texto(T.t("ejercicio.solucion"), x + 20, yy, ui.letra * 0.85f, true, ui.tema.textoSuave, 1);
             yy += ui.letra * 1.4f;
-            for (String l : e.codigoSolucion().split("\n")) {
+            for (String l : e.codigoSolucion(T.idioma).split("\n")) {
                 p.texto(l, x + 24, yy, ui.letra * 0.75f, false, ui.tema.cadena, 1);
                 yy += ui.letra * 1.05f;
             }
@@ -258,8 +274,9 @@ public final class PantallaEjercicio implements Pantalla {
         // Los casos: antes de comprobar, solo cómo se llaman; después, en verde o en rojo.
         p.texto(T.t("ejercicio.casos"), x + 20, yy, ui.letra * 0.9f, true, ui.tema.texto, 1);
         yy += ui.letra * 1.6f;
-        for (int i = 0; i < e.casos.size(); i++) {
-            Ejercicio.Caso c = e.casos.get(i);
+        List<Ejercicio.Caso> casos = e.casos(T.idioma);
+        for (int i = 0; i < casos.size(); i++) {
+            Ejercicio.Caso c = casos.get(i);
             Comprobador.Resultado r = inf != null && i < inf.casos.size() ? inf.casos.get(i) : null;
             int color = r == null ? ui.tema.textoSuave : r.bien ? ui.tema.bien : ui.tema.mal;
             if (r != null && ui.e.clic(x + 12, yy, w - 40, ui.letra * 2.5f)) elegirCaso(i);
@@ -285,7 +302,10 @@ public final class PantallaEjercicio implements Pantalla {
         switch (ui.botonera(abajo, estilosAbajo, activosAbajo, ayudasAbajo, x + 16, by, w - 32, 46)) {
             case 0: pista = !pista; break;
             case 1: solucion = !solucion; break;
-            case 2: conTutor = !conTutor; break;
+            case 2:
+                conTutor = !conTutor;
+                if (conTutor) conApi = false;
+                break;
             default: break;
         }
     }
@@ -328,6 +348,7 @@ public final class PantallaEjercicio implements Pantalla {
         Ui ui = j.ui;
         if (inf != informeAnimado) {
             informeAnimado = inf;
+            AnimacionDelCaso.elegirCelebracion();
             editor.lineasActivas.clear();
             casoAnimado = 0;
             for (int i = 0; i < inf.casos.size(); i++) {
@@ -341,10 +362,10 @@ public final class PantallaEjercicio implements Pantalla {
         casoAnimado = Math.max(0, Math.min(inf.casos.size() - 1, casoAnimado));
         tiempoAnimacion += dt;
         Comprobador.Resultado r = inf.casos.get(casoAnimado);
-        // El robotito hace la acción a su ritmo (un viaje por caja, unas letras por segundo…) y las líneas que ejecuta el
-        // código se iluminan a la par; al acabar, su final, y vuelta a empezar.
+        // Al acertar, ejecuta el caso y una única celebración al azar; si falla, repite para ver el fallo.
         float duracion = AnimacionDelCaso.duracion(e, r);
-        if (tiempoAnimacion > duracion + 3.2f) tiempoAnimacion = 0;
+        if (r.bien) tiempoAnimacion = Math.min(tiempoAnimacion, duracion + (float) Math.PI);
+        else if (tiempoAnimacion > duracion + 3.2f) tiempoAnimacion = 0;
         float avance = Math.min(1, tiempoAnimacion / duracion);
         int[] traza = r.traza;
         if (traza.length > 0) {
@@ -361,7 +382,7 @@ public final class PantallaEjercicio implements Pantalla {
                 recorrido = PistaDeCarrera.de(traza, editor.doc.texto());
                 List<int[]> tf = trazasDelFantasma;
                 recorridoFantasma = casoAnimado < tf.size() && tf.get(casoAnimado).length > 0
-                        ? PistaDeCarrera.de(tf.get(casoAnimado), e.codigoSolucion()) : null;
+                        ? PistaDeCarrera.de(tf.get(casoAnimado), e.codigoSolucion(j.jugador.idioma)) : null;
             }
             PistaDeCarrera.dibujar(ui, x + 6, y + 48, w - 12, ALTO_PISTA, recorrido, recorridoFantasma, avance, r.bien);
         }
@@ -372,6 +393,9 @@ public final class PantallaEjercicio implements Pantalla {
     }
 
     private void elegirCaso(int i) {
+        if (informeAnimado != null && informeAnimado.todoBien() && casoAnimado < informeAnimado.casos.size()) {
+            if (tiempoAnimacion >= AnimacionDelCaso.duracion(e, informeAnimado.casos.get(casoAnimado))) AnimacionDelCaso.fijarPoseFinal();
+        }
         casoAnimado = i;
         tiempoAnimacion = 0;
         editor.lineasActivas.clear();

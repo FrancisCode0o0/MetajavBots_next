@@ -60,8 +60,9 @@ public final class Pincel {
 
     /** Cuando cambia el tamaño de la ventana: la pantalla lógica mide al menos 1600 × 900 de ancho y alto proporcionales. */
     public void redimensionar(int px, int py) {
-        pixelesAncho = Math.max(1, px);
-        pixelesAlto = Math.max(1, py);
+        if (px <= 0 || py <= 0) return;
+        pixelesAncho = px;
+        pixelesAlto = py;
         escala = Math.max(0.5f, Math.min(pixelesAncho / 1600f, pixelesAlto / 900f));
         ancho = pixelesAncho / escala;
         alto = pixelesAlto / escala;
@@ -79,6 +80,7 @@ public final class Pincel {
     }
 
     public void acabar() {
+        while (recortes > 0) sinRecorte();
         lote.end();
     }
 
@@ -251,6 +253,22 @@ public final class Pincel {
         return medida.width;
     }
 
+    /** Escribe un texto con un contorno sólido alrededor para garantizar alto contraste sobre cualquier fondo. */
+    public float textoConBorde(String s, float x, float y, float tamano, boolean negrita, int rgb, int bordeRgb, float alfa) {
+        if (s == null || s.isEmpty()) return 0;
+        float g = Math.max(1.4f, tamano * 0.09f);
+        float d = g * 0.75f;
+        texto(s, x - g, y, tamano, negrita, bordeRgb, alfa);
+        texto(s, x + g, y, tamano, negrita, bordeRgb, alfa);
+        texto(s, x, y - g, tamano, negrita, bordeRgb, alfa);
+        texto(s, x, y + g, tamano, negrita, bordeRgb, alfa);
+        texto(s, x - d, y - d, tamano, negrita, bordeRgb, alfa);
+        texto(s, x + d, y - d, tamano, negrita, bordeRgb, alfa);
+        texto(s, x - d, y + d, tamano, negrita, bordeRgb, alfa);
+        texto(s, x + d, y + d, tamano, negrita, bordeRgb, alfa);
+        return texto(s, x, y, tamano, negrita, rgb, alfa);
+    }
+
     /**
      * Una línea con colores por trozos, de una vez (la fuente coloca cada letra: en el editor de código,
      * así ninguna letra se monta en otra). Cada trozo: {texto, color RGB}.
@@ -370,6 +388,7 @@ public final class Pincel {
     // ================================================================ recortes
 
     private final Rectangle recorte = new Rectangle(), escena = new Rectangle();
+    private final boolean[] apilados = new boolean[32];
     private int recortes;
 
     /** Solo se dibuja dentro de este rectángulo hasta sinRecorte(). Se pueden anidar. */
@@ -378,9 +397,8 @@ public final class Pincel {
         // ScissorStack trabaja en píxeles de la ventana, con la y hacia arriba.
         escena.set(x * escala, (alto - y - h) * escala, Math.max(0, w) * escala, Math.max(0, h) * escala);
         recorte.set(escena);
-        if (ScissorStack.pushScissors(new Rectangle(recorte))) recortes++;
-        else {
-            ScissorStack.pushScissors(new Rectangle(0, 0, 0, 0));
+        if (recortes < apilados.length) {
+            apilados[recortes] = ScissorStack.pushScissors(new Rectangle(recorte));
             recortes++;
         }
     }
@@ -388,8 +406,11 @@ public final class Pincel {
     public void sinRecorte() {
         if (recortes <= 0) return;
         lote.flush();
-        ScissorStack.popScissors();
         recortes--;
+        if (apilados[recortes]) {
+            ScissorStack.popScissors();
+            apilados[recortes] = false;
+        }
     }
 
     public int pixelesAncho() {

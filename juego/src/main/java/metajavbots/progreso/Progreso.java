@@ -162,8 +162,9 @@ public final class Progreso {
         Ejercicio delDia = RetoDiario.de(j, hoy);
         if (delDia != null && delDia.id.equals(e.id)) c.experiencia += RetoDiario.hecho(j, hoy, e.id);
         if (j.ejerciciosResueltos.add(e.id)) {
-            c.experiencia += e.experiencia();
-            j.experiencia += c.experiencia;
+            int exp = e.experiencia();
+            c.experiencia += exp;
+            j.experiencia += exp;
             if (e.desbloquea.startsWith("reto:")) {
                 String reto = e.desbloquea.substring(5);
                 j.retosHechos.add(reto);

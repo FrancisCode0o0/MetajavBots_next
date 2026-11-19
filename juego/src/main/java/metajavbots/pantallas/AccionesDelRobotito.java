@@ -428,7 +428,7 @@ final class AccionesDelRobotito {
                 double a = f * 30 + k * 2.1;
                 p.texto("★", rx + (float) Math.cos(a) * 22 - 6, suelo - 110 + (float) Math.sin(a) * 6, 16, true, 0xFFD23F, 1);
             }
-            bocadillo(ui, "¡PLONK!", destino, suelo - ph - ui.letra * 1.6f, ROJO);
+            bocadillo(ui, T.idioma.elegir("¡PLONK!", "PLONK!", "PLONK!"), destino, suelo - ph - ui.letra * 1.6f, ROJO);
         }
     }
 
@@ -462,7 +462,7 @@ final class AccionesDelRobotito {
             // Se ha quedado con la palanca en la mano.
             p.linea(mx, my, mx + 10, my - 34, 5, 0xB8C0C8, 1);
             p.circulo(mx + 10, my - 34, 7, ROJO, 1);
-            bocadillo(ui, "¿¡…!?", rx, suelo - 120, ROJO);
+            bocadillo(ui, T.idioma.elegir("¿¡…!?", "?!…", "?!…"), rx, suelo - 120, ROJO);
         }
         p.texto(T.f("animacion.alarma", esperado), x + w * 0.52f, suelo - 70, ui.letra * 0.8f, false, ui.tema.texto, 1);
         p.texto(ui.recortarTexto(T.t("animacion.salio") + " " + obtenido, w * 0.46f, ui.letra * 0.8f, false), x + w * 0.52f, suelo - 44, ui.letra * 0.8f,

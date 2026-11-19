@@ -51,10 +51,12 @@ public final class MiniJuegos implements Pantalla {
             String[] lineas = T.t("mini." + id + ".pseudo").split("\n");
             float alto = p.altoDeLinea(ui.letra * 0.8f);
             float cajaAlta = Math.min(lineas.length * alto + 12, y + h - 70 - yy);
-            p.caja(x + 20, yy, w - 40, cajaAlta, 8, 0x1B2430, 1);
-            p.recortar(x + 20, yy, w - 40, cajaAlta);
-            for (int k = 0; k < lineas.length; k++) p.texto(lineas[k], x + 30, yy + 6 + k * alto, ui.letra * 0.8f, false, 0xE8E2C8, 1);
-            p.sinRecorte();
+            if (cajaAlta > 8) {
+                p.caja(x + 20, yy, w - 40, cajaAlta, 8, 0x1B2430, 1);
+                p.recortar(x + 20, yy, w - 40, cajaAlta);
+                for (int k = 0; k < lineas.length; k++) p.texto(lineas[k], x + 30, yy + 6 + k * alto, ui.letra * 0.8f, false, 0xE8E2C8, 1);
+                p.sinRecorte();
+            }
             float bw = (w - 52) / 2;
             if (ui.boton(T.t("mini.jugar"), x + 20, y + h - 60, bw, 46, hecho ? Ui.Estilo.NORMAL : Ui.Estilo.PRINCIPAL)) {
                 j.ir(new PantallaPelea(reto(j, id, objetivo)));

@@ -62,6 +62,7 @@ public final class Puente {
     /** Deja de contar y devuelve los pasos dados. */
     public static long dejarDeContar() {
         Tope.Cuenta c = Tope.CUENTA.get();
+        if (c != null) c.cancelada = true;
         Tope.CUENTA.remove();
         return c == null ? 0 : c.pasos;
     }
@@ -69,13 +70,19 @@ public final class Puente {
     /** Las líneas que ha ejecutado el código que se está contando, y la última (la traza); null si no hay cuenta. */
     public static java.util.BitSet lineas() {
         Tope.Cuenta c = Tope.CUENTA.get();
-        return c == null ? null : (java.util.BitSet) c.lineas.clone();
+        if (c == null) return null;
+        synchronized (c) {
+            return (java.util.BitSet) c.lineas.clone();
+        }
     }
 
     /** Las líneas ejecutadas, en orden (la traza paso a paso); vacío si no hay cuenta. */
     public static int[] secuencia() {
         Tope.Cuenta c = Tope.CUENTA.get();
-        return c == null ? new int[0] : java.util.Arrays.copyOf(c.orden, c.enOrden);
+        if (c == null) return new int[0];
+        synchronized (c) {
+            return java.util.Arrays.copyOf(c.orden, c.enOrden);
+        }
     }
 
     public static int ultimaLinea() {

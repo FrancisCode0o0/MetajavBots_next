@@ -157,7 +157,7 @@ final class EntrenadorEnLaPelea {
         float w = Math.min(470, ancho * 0.4f), tl = ui.letra * 0.78f, x = ancho - w - 16;
         float th = p.altoDeParrafo(texto, w - 90, tl);
         float trozoAlto = trozo == null ? 0 : trozo.split("\n").length * p.altoDeLinea(tl * 0.95f) + tl * 1.6f + 10;
-        float h = Math.max(70, th + trozoAlto + (marcado >= 0 ? 58 : 20)), y = p.alto - 80 - h;
+        float h = Math.max(78, th + trozoAlto + (marcado >= 0 ? 58 : 20)), y = p.alto - 80 - h;
         p.caja(x, y, w, h, 12, ui.tema.panelAlto, 0.9f);
         p.bordeRedondeado(x, y, w, h, 12, marcado >= 0 ? 0xFFD23F : ui.tema.borde, 0.8f, 1.5f);
         CabezaDeEntrenador.dibujar(p, en, x + 38, y + 38, 24, tiempo < 3, t);

@@ -106,7 +106,7 @@ public final class PreguntasDeLaIa {
             String s = inf.casos.get(0).obtenido;
             // Lo que se obtuvo, como se enseña: entre comillas y escapado («\n», «\"»); si lanzó algo («!…»), no vale.
             if (s == null || s.length() < 2 || !s.startsWith("\"") || !s.endsWith("\"")) return null;
-            s = s.substring(1, s.length() - 1).replace("\\n", "\n").replace("\\\"", "\"").replace("\\\\", "\\");
+            s = metajavbots.ejercicios.Comprobador.desescapar(s);
             return s.endsWith("\n") ? s.substring(0, s.length() - 1) : s;
         } catch (java.io.IOException | RuntimeException e) {
             return null;

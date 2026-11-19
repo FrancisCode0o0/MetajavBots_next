@@ -14,6 +14,8 @@ import java.util.Set;
 
 import metajavbots.codigo.Compilador;
 import metajavbots.codigo.Vigilante;
+import metajavbots.pantalla.Entrada;
+import metajavbots.pantallas.EntrenadorFlotante;
 import metajavbots.sonido.Timbre;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
@@ -43,6 +45,7 @@ final class PruebasDelEntrenador {
         conceptos();
         busqueda();
         ayudas();
+        bocadilloDeTips();
     }
 
     private static void conceptos() {
@@ -231,6 +234,62 @@ final class PruebasDelEntrenador {
                     for (String k : new String[]{"corto", "titulo", "pasos"}) cierto(T.existe("guia." + n + "." + k), "guia." + n + "." + k);
                     cierto(T.t("guia." + n + ".pasos").split("\n").length >= 3, "pasos de la página " + n + " en " + i);
                 }
+            }
+            T.idioma = Idioma.ES;
+        });
+    }
+
+    private static void bocadilloDeTips() {
+        caso("entrenador: el bocadillo de tips tarda más en salir y respeta el enfriamiento al cerrarlo", () -> {
+            EntrenadorFlotante ef = new EntrenadorFlotante();
+            String codigo = "public class MiRobot extends Metajavbot { public void cadaTurno() { avanzar(10); } }";
+            cierto(ef.tipActual() == null, "empieza sin tip");
+            igual(EntrenadorFlotante.ESPERA_INICIAL_TIP, ef.esperaDelTip(), "espera inicial");
+            cierto(EntrenadorFlotante.ESPERA_INICIAL_TIP >= 60f, "espera inicial holgada");
+            cierto(EntrenadorFlotante.ESPERA_ENTRE_TIPS >= 120f, "espera entre tips holgada");
+            cierto(EntrenadorFlotante.ESPERA_TRAS_CERRAR_MANUAL > EntrenadorFlotante.ESPERA_ENTRE_TIPS, "cierre manual enfría más");
+            cierto(!ef.avanzarTemporizadorDeTip(codigo, 40f) && ef.tipActual() == null, "no molesta pronto");
+            cierto(ef.avanzarTemporizadorDeTip(codigo, EntrenadorFlotante.ESPERA_INICIAL_TIP), "aparece al vencer la espera inicial");
+            cierto(ef.tipActual() != null, "tip visible");
+            // Al caducar solo, se oculta y aplica el enfriamiento entre tips.
+            cierto(!ef.avanzarTemporizadorDeTip(codigo, EntrenadorFlotante.DURACION_VISIBLE_TIP + 1f), "caduca solo");
+            cierto(ef.tipActual() == null, "oculto tras caducar");
+            igual(EntrenadorFlotante.ESPERA_ENTRE_TIPS, ef.esperaDelTip(), "enfriamiento tras caducar");
+            // tipAhora sigue disparando un tip al instante (capturas y pruebas).
+            ef.tipAhora();
+            cierto(ef.avanzarTemporizadorDeTip(codigo, 0.1f) && ef.tipActual() != null, "tipAhora dispara al instante");
+            // Cerrar manualmente («×» o «Gracias») lo oculta al instante y respeta el enfriamiento largo.
+            ef.cerrarTipManualmente();
+            cierto(ef.tipActual() == null && !ef.abierto(), "cierre manual oculta sin abrir consulta");
+            igual(EntrenadorFlotante.ESPERA_TRAS_CERRAR_MANUAL, ef.esperaDelTip(), "enfriamiento manual");
+            cierto(!ef.avanzarTemporizadorDeTip(codigo, EntrenadorFlotante.ESPERA_ENTRE_TIPS), "no vuelve antes del enfriamiento manual");
+            cierto(ef.tipActual() == null, "sigue oculto durante el enfriamiento manual");
+            cierto(ef.avanzarTemporizadorDeTip(codigo, EntrenadorFlotante.ESPERA_TRAS_CERRAR_MANUAL), "vuelve al acabar el enfriamiento manual");
+            cierto(ef.tipActual() != null, "nuevo tip tras enfriamiento manual");
+            // Salir de una pantalla con código lo oculta y no deja la espera a cero.
+            ef.avanzarTemporizadorDeTip(null, 0.1f);
+            cierto(ef.tipActual() == null && ef.esperaDelTip() >= EntrenadorFlotante.ESPERA_ENTRE_TIPS, "salir del taller limpia y enfría");
+        });
+
+        caso("entrenador: el botón «×» del bocadillo no pisa el texto, consume el clic y tiene texto en tres idiomas", () -> {
+            for (float[] tam : new float[][]{{1600, 900}, {1280, 720}, {1024, 768}}) {
+                EntrenadorFlotante.CajaTip c = EntrenadorFlotante.cajaTip(tam[0], tam[1], 60f);
+                cierto(c.contiene(c.cerrarX(), c.cerrarY()), "esquina sup-izq de × dentro del bocadillo");
+                cierto(c.contiene(c.cerrarX() + c.cerrarTam() - 1f, c.cerrarY() + c.cerrarTam() - 1f), "esquina inf-der de × dentro");
+                float finTexto = c.x() + EntrenadorFlotante.MARGEN_TEXTO_IZQ + c.anchoTexto();
+                cierto(finTexto + 8f <= c.cerrarX(), "margen suficiente para que el texto no pise la ×");
+                Entrada e = new Entrada(null);
+                e.ratonX = c.cerrarX() + c.cerrarTam() / 2f;
+                e.ratonY = c.cerrarY() + c.cerrarTam() / 2f;
+                e.recienPulsado = true;
+                cierto(c.enCerrar(e.ratonX, e.ratonY), "ratón sobre ×");
+                cierto(e.clic(c.cerrarX(), c.cerrarY(), c.cerrarTam(), c.cerrarTam()), "clic en × reconocido");
+                cierto(e.clicUsado, "clic en × consumido");
+                cierto(!e.clic(0, 0, tam[0], tam[1]), "el clic no atraviesa hacia el panel de debajo");
+            }
+            for (Idioma i : Idioma.values()) {
+                T.idioma = i;
+                cierto(T.existe("entrenador.tip.cerrar_x") && !T.t("entrenador.tip.cerrar_x").isBlank(), "tooltip × en " + i);
             }
             T.idioma = Idioma.ES;
         });

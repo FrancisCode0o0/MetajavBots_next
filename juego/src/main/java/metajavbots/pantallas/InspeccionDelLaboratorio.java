@@ -95,7 +95,7 @@ final class InspeccionDelLaboratorio {
                 bocadillo(ui, T.t("laboratorio.pillado"), escaner, suelo - 150, VERDE);
             } else {
                 rx = escaner + v * (derecha - escaner);
-                p.texto("je je", rx - 18, suelo - 120 - (float) Math.abs(Math.sin(t * 8)) * 6, 16, true, 0xFFD23F, 1);
+                p.texto(T.idioma.elegir("je je", "hehe", "hehe"), rx - 18, suelo - 120 - (float) Math.abs(Math.sin(t * 8)) * 6, 16, true, 0xFFD23F, 1);
                 bocadillo(ui, T.t("laboratorio.se_escapa"), escaner, suelo - 150, ROJO);
             }
         }

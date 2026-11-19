@@ -1,7 +1,11 @@
 package metajavbots.ejercicios;
 
-import java.io.ByteArrayOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.CharacterCodingException;
+import java.nio.charset.Charset;
+import java.nio.charset.CodingErrorAction;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,23 +16,31 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.zip.Inflater;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
+import org.apache.pdfbox.Loader;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.encryption.InvalidPasswordException;
+import org.apache.pdfbox.text.PDFTextStripper;
+
+import metajavbots.textos.T;
+
 /**
  * LECTOR DE TEMARIO — Saca el texto del temario que da el jugador, venga en el
- * formato que venga, sin bibliotecas de fuera: texto (.txt, .md, .java, .csv),
- * Word (.docx), OpenDocument (.odt, .odp), PowerPoint (.pptx), páginas web
- * (.html) y RTF, que son zips con XML o texto con marcas; y PDF, del que se
- * leen los textos de sus páginas (los trozos entre paréntesis de Tj y TJ,
- * descomprimiendo los que van con FlateDecode). Un PDF escaneado (solo
- * imágenes) no tiene texto: se avisa.
+ * formato que venga: texto (.txt, .md, .java, .csv), Word (.docx),
+ * OpenDocument (.odt, .odp), PowerPoint (.pptx), páginas web (.html), RTF y
+ * PDF (con Apache PDFBox para streams comprimidos, fuentes CID/Type0, mapas
+ * ToUnicode y codificaciones reales). Los formatos no soportados, archivos
+ * binarios o PDFs escaneados sin texto extraíble se rechazan con un aviso
+ * claro en el idioma activo.
  */
 public final class LectorDeTemario {
 
     /** Lo más largo que se lee (un temario de 300 páginas no hace falta entero para proponer ejercicios). */
     public static final int MAXIMO = 60_000;
+
+    private static final Charset WINDOWS_1252 = Charset.forName("windows-1252");
 
     private LectorDeTemario() {
     }
@@ -36,24 +48,41 @@ public final class LectorDeTemario {
     /** Las extensiones que entiende. */
     public static final List<String> FORMATOS = List.of("txt", "md", "java", "csv", "docx", "odt", "odp", "pptx", "html", "htm", "rtf", "pdf");
 
-    /** El texto del archivo (recortado a MAXIMO); lanza IOException si no se puede leer o no es de un formato que entienda. */
+    /** El texto del archivo (recortado a MAXIMO); lanza IOException con aviso en el idioma activo si no se puede leer o no es válido. */
     public static String leer(Path archivo) throws IOException {
-        String n = archivo.getFileName().toString().toLowerCase(Locale.ROOT);
-        String ext = n.contains(".") ? n.substring(n.lastIndexOf('.') + 1) : "txt";
-        byte[] b = Files.readAllBytes(archivo);
-        String t;
-        switch (ext) {
-            case "docx": t = docx(b); break;
-            case "odt": case "odp": t = deXml(entradas(b, "content.xml"), "text:p|text:h"); break;
-            case "pptx": t = deXml(entradas(b, "ppt/slides/slide"), "a:p"); break;
-            case "html": case "htm": t = html(new String(b, StandardCharsets.UTF_8)); break;
-            case "rtf": t = rtf(new String(b, StandardCharsets.ISO_8859_1)); break;
-            case "pdf": t = pdf(b); break;
-            default: t = new String(b, StandardCharsets.UTF_8);
+        if (archivo == null || !Files.isRegularFile(archivo)) {
+            throw new IOException(T.t("temario.error_no_existe"));
         }
-        t = t.replace("\r", "").replaceAll("[ \\t]+", " ").replaceAll(" *\\n *", "\n").replaceAll("\\n{3,}", "\n\n").strip();
-        if (t.isEmpty()) throw new IOException("sin texto");
+        String n = archivo.getFileName().toString().toLowerCase(Locale.ROOT);
+        int punto = n.lastIndexOf('.');
+        String ext = punto > 0 && punto < n.length() - 1 ? n.substring(punto + 1) : "";
+        byte[] b = Files.readAllBytes(archivo);
+        if (b.length == 0) {
+            throw new IOException(T.t("temario.error_sin_texto"));
+        }
+        String t = extraer(b, ext);
+        t = t.replace("\r", "").replace('\f', '\n').replace('\u00A0', ' ').replace("\uFEFF", "").replace("\u00AD", "");
+        t = t.replaceAll("[ \\t]+", " ").replaceAll(" *\\n *", "\n").replaceAll("\\n{3,}", "\n\n").strip();
+        if (t.isEmpty()) {
+            throw new IOException(T.t("temario.error_sin_texto"));
+        }
+        if (!esTextoLegible(t)) {
+            throw new IOException("pdf".equals(ext) ? T.t("temario.error_pdf_ilegible") : T.t("temario.error_binario"));
+        }
         return t.length() > MAXIMO ? t.substring(0, MAXIMO) : t;
+    }
+
+    private static String extraer(byte[] b, String ext) throws IOException {
+        switch (ext) {
+            case "docx": return docx(b);
+            case "odt": case "odp": return deXml(entradas(b, "content.xml"), "text:p|text:h");
+            case "pptx": return deXml(entradas(b, "ppt/slides/slide"), "a:p");
+            case "html": case "htm": return html(decodificarTexto(b));
+            case "rtf": return rtfDe(b);
+            case "pdf": return pdf(b);
+            case "": case "txt": case "md": case "java": case "csv": return decodificarTexto(b);
+            default: throw new IOException(T.f("temario.error_formato", "." + ext, formatos()));
+        }
     }
 
     /** Word: los párrafos de word/document.xml (cada w:p, una línea; el texto, en los w:t). */
@@ -68,13 +97,15 @@ public final class LectorDeTemario {
             if (!na.isEmpty() && !nc.isEmpty() && na.length() != nc.length()) return na.length() - nc.length();
             return a.compareTo(c);
         });
-        try (ZipInputStream z = new ZipInputStream(new java.io.ByteArrayInputStream(zip))) {
+        try (ZipInputStream z = new ZipInputStream(new ByteArrayInputStream(zip))) {
             ZipEntry e;
             while ((e = z.getNextEntry()) != null) {
-                if (e.getName().startsWith(prefijo) && e.getName().endsWith(".xml")) l.put(e.getName(), new String(z.readAllBytes(), StandardCharsets.UTF_8));
+                if (e.getName().startsWith(prefijo) && e.getName().endsWith(".xml")) {
+                    l.put(e.getName(), new String(z.readAllBytes(), StandardCharsets.UTF_8));
+                }
             }
         }
-        if (l.isEmpty()) throw new IOException("no es un documento: falta " + prefijo);
+        if (l.isEmpty()) throw new IOException(T.f("temario.error_documento", prefijo));
         // Cada XML ya acaba sus párrafos con un salto: se juntan sin más.
         return String.join("", l.values());
     }
@@ -92,6 +123,15 @@ public final class LectorDeTemario {
     static String html(String h) {
         String s = h.replaceAll("(?is)<(script|style)[^>]*>.*?</\\1>", " ").replaceAll("(?i)<br\\s*/?>|</(p|div|h\\d|li|tr)>", "\n");
         return entidades(s.replaceAll("<[^>]+>", ""));
+    }
+
+    private static String rtfDe(byte[] b) throws IOException {
+        if (esBinario(b)) throw new IOException(T.t("temario.error_binario"));
+        String crudo = new String(b, StandardCharsets.ISO_8859_1);
+        if (!crudo.stripLeading().startsWith("{\\rtf")) {
+            throw new IOException(T.f("temario.error_documento", "{\\rtf"));
+        }
+        return rtf(crudo);
     }
 
     /** RTF: sin grupos de cabecera, sin palabras de control; \par es un salto y \'e1 una letra. */
@@ -119,102 +159,111 @@ public final class LectorDeTemario {
 
     // ================================================================ PDF
 
-    /** El texto de un PDF: de cada stream (descomprimido si va con FlateDecode), lo que pintan Tj, TJ, ' y ". */
+    /** El texto de un PDF real (streams comprimidos, fuentes CID/Type0, mapas ToUnicode y orden de lectura) con Apache PDFBox. */
     static String pdf(byte[] b) throws IOException {
-        String todo = new String(b, StandardCharsets.ISO_8859_1);
-        if (!todo.startsWith("%PDF")) throw new IOException("no es un PDF");
-        StringBuilder sb = new StringBuilder();
-        Matcher m = Pattern.compile("(<<(?:(?!>>).)*?>>)\\s*stream\\r?\\n", Pattern.DOTALL).matcher(todo);
-        int desde = 0;
-        while (m.find(desde)) {
-            int ini = m.end(), fin = todo.indexOf("endstream", ini);
-            if (fin < 0) break;
-            desde = fin;
-            byte[] datos = java.util.Arrays.copyOfRange(b, ini, fin);
-            String dic = m.group(1);
-            if (dic.contains("/Image") || dic.contains("/FontFile")) continue;
-            if (dic.contains("/FlateDecode")) datos = inflar(datos);
-            if (datos == null) continue;
-            textoDeContenido(new String(datos, StandardCharsets.ISO_8859_1), sb);
-        }
-        if (sb.toString().isBlank()) throw new IOException("el PDF no tiene texto (¿escaneado?)");
-        return sb.toString();
-    }
-
-    private static byte[] inflar(byte[] d) {
-        Inflater inf = new Inflater();
-        inf.setInput(d);
-        ByteArrayOutputStream o = new ByteArrayOutputStream();
-        byte[] buf = new byte[8192];
-        try {
-            while (!inf.finished()) {
-                int n = inf.inflate(buf);
-                if (n == 0 && (inf.needsInput() || inf.needsDictionary())) break;
-                o.write(buf, 0, n);
-            }
-            return o.toByteArray();
-        } catch (java.util.zip.DataFormatException e) {
-            return o.size() > 0 ? o.toByteArray() : null;
-        } finally {
-            inf.end();
-        }
-    }
-
-    /** Los textos de un contenido de página: cada BT…ET con sus (cadenas); un salto con Td, TD, T* o «'», y al acabar el bloque. */
-    static void textoDeContenido(String c, StringBuilder sb) {
-        if (!c.contains("BT")) return;
-        int i = 0;
-        boolean algo = false;
-        while (i < c.length()) {
-            char ch = c.charAt(i);
-            if (ch == '(') {
-                StringBuilder t = new StringBuilder();
-                i = cadena(c, i + 1, t);
-                sb.append(t);
-                algo = true;
-                continue;
-            }
-            if (algo && (c.startsWith("Td", i) || c.startsWith("TD", i) || c.startsWith("T*", i) || c.startsWith("ET", i) || ch == '\'')) {
-                sb.append('\n');
-                algo = false;
-            } else if (ch == ']' && algo) {
-                sb.append(' ');
-            }
-            i++;
-        }
-        sb.append('\n');
-    }
-
-    /** Lee una cadena literal de PDF desde «i» (tras el paréntesis), con sus escapes y paréntesis anidados; devuelve dónde acaba. */
-    private static int cadena(String c, int i, StringBuilder t) {
-        int prof = 1;
-        while (i < c.length()) {
-            char ch = c.charAt(i++);
-            if (ch == '\\' && i < c.length()) {
-                char e = c.charAt(i++);
-                switch (e) {
-                    case 'n': t.append('\n'); break;
-                    case 'r': case 't': t.append(' '); break;
-                    case '(': case ')': case '\\': t.append(e); break;
-                    default:
-                        if (e >= '0' && e <= '7') {
-                            int fin = i - 1;
-                            while (fin < c.length() && fin < i + 2 && c.charAt(fin) >= '0' && c.charAt(fin) <= '7') fin++;
-                            t.append((char) Integer.parseInt(c.substring(i - 1, fin), 8));
-                            i = fin;
-                        }
+        if (!esPdf(b)) throw new IOException(T.t("temario.error_pdf_invalido"));
+        String extraido;
+        try (PDDocument doc = Loader.loadPDF(b)) {
+            PDFTextStripper stripper = new PDFTextStripper();
+            stripper.setSortByPosition(true);
+            StringBuilder sb = new StringBuilder();
+            int paginas = doc.getNumberOfPages();
+            for (int p = 1; p <= paginas && sb.length() <= MAXIMO + 2000; p++) {
+                stripper.setStartPage(p);
+                stripper.setEndPage(p);
+                String trozo = stripper.getText(doc);
+                if (trozo != null && !trozo.isBlank()) {
+                    if (sb.length() > 0) sb.append('\n');
+                    sb.append(trozo);
                 }
-            } else if (ch == '(') {
-                prof++;
-                t.append(ch);
-            } else if (ch == ')') {
-                if (--prof == 0) return i;
-                t.append(ch);
-            } else {
-                t.append(ch);
+            }
+            extraido = sb.toString();
+        } catch (InvalidPasswordException e) {
+            throw new IOException(T.t("temario.error_pdf_protegido"), e);
+        } catch (IOException e) {
+            throw new IOException(T.t("temario.error_pdf_invalido"), e);
+        }
+        if (extraido.isBlank()) throw new IOException(T.t("temario.error_pdf_sin_texto"));
+        if (!esTextoLegible(extraido)) throw new IOException(T.t("temario.error_pdf_ilegible"));
+        return extraido;
+    }
+
+    private static boolean esPdf(byte[] b) {
+        int limite = Math.min(b.length, 1024);
+        String cabecera = new String(b, 0, limite, StandardCharsets.ISO_8859_1);
+        return cabecera.contains("%PDF-");
+    }
+
+    // ================================================================ TEXTO Y LEGIBILIDAD
+
+    /** Decodifica texto plano (UTF-8 con o sin BOM, UTF-16 con BOM o Windows-1252) y rechaza archivos binarios. */
+    static String decodificarTexto(byte[] b) throws IOException {
+        if (b.length >= 2 && (b[0] & 0xFF) == 0xFF && (b[1] & 0xFF) == 0xFE) {
+            return new String(b, 2, b.length - 2, StandardCharsets.UTF_16LE);
+        }
+        if (b.length >= 2 && (b[0] & 0xFF) == 0xFE && (b[1] & 0xFF) == 0xFF) {
+            return new String(b, 2, b.length - 2, StandardCharsets.UTF_16BE);
+        }
+        int inicio = (b.length >= 3 && (b[0] & 0xFF) == 0xEF && (b[1] & 0xFF) == 0xBB && (b[2] & 0xFF) == 0xBF) ? 3 : 0;
+        if (esBinario(b, inicio)) throw new IOException(T.t("temario.error_binario"));
+        try {
+            return StandardCharsets.UTF_8.newDecoder()
+                    .onMalformedInput(CodingErrorAction.REPORT)
+                    .onUnmappableCharacter(CodingErrorAction.REPORT)
+                    .decode(ByteBuffer.wrap(b, inicio, b.length - inicio))
+                    .toString();
+        } catch (CharacterCodingException e) {
+            return new String(b, inicio, b.length - inicio, WINDOWS_1252);
+        }
+    }
+
+    static boolean esBinario(byte[] b) {
+        return esBinario(b, 0);
+    }
+
+    private static boolean esBinario(byte[] b, int inicio) {
+        int limite = Math.min(b.length, inicio + 8192);
+        int muestra = limite - inicio;
+        if (muestra <= 0) return false;
+        int controles = 0;
+        for (int i = inicio; i < limite; i++) {
+            int v = b[i] & 0xFF;
+            if (v == 0) return true;
+            if ((v < 0x20 && v != '\t' && v != '\n' && v != '\r' && v != '\f') || v == 0x7F) controles++;
+        }
+        return controles > 0 && (double) controles / muestra > 0.05;
+    }
+
+    /** Comprueba que el texto extraído sea legible (no caracteres de control, reemplazo U+FFFD ni basura de fuentes sin Unicode). */
+    static boolean esTextoLegible(String t) {
+        int total = 0, alfanum = 0, legibles = 0, corruptos = 0;
+        for (int i = 0; i < t.length(); ) {
+            int cp = t.codePointAt(i);
+            i += Character.charCount(cp);
+            if (Character.isWhitespace(cp)) continue;
+            total++;
+            int tipo = Character.getType(cp);
+            if (cp == 0xFFFD || Character.isISOControl(cp) || tipo == Character.PRIVATE_USE
+                    || tipo == Character.UNASSIGNED || tipo == Character.SURROGATE) {
+                corruptos++;
+            } else if (Character.isLetterOrDigit(cp)) {
+                alfanum++;
+                legibles++;
+            } else if (esPuntuacionOSimbolo(cp, tipo)) {
+                legibles++;
             }
         }
-        return i;
+        if (total == 0 || alfanum == 0) return false;
+        if (corruptos > 0 && (double) corruptos / total > 0.15) return false;
+        return total < 20 || (double) legibles / total >= 0.50;
+    }
+
+    private static boolean esPuntuacionOSimbolo(int cp, int tipo) {
+        if (cp >= 0x21 && cp <= 0x7E) return true;
+        return tipo == Character.DASH_PUNCTUATION || tipo == Character.START_PUNCTUATION || tipo == Character.END_PUNCTUATION
+                || tipo == Character.CONNECTOR_PUNCTUATION || tipo == Character.OTHER_PUNCTUATION
+                || tipo == Character.INITIAL_QUOTE_PUNCTUATION || tipo == Character.FINAL_QUOTE_PUNCTUATION
+                || tipo == Character.CURRENCY_SYMBOL || tipo == Character.MATH_SYMBOL;
     }
 
     /** Las extensiones, para enseñarlas al jugador («txt, md, docx…»). */

@@ -67,6 +67,10 @@ plantilla:
     public class Punto {
         // tus campos, tu constructor y tu método
     }
+terminos.de:
+    // tus campos, tu constructor y tu método ==> // deine Felder, dein Konstruktor und deine Methode
+terminos.en:
+    // tus campos, tu constructor y tu método ==> // your fields, your constructor and your method
 solucion:
     public class Punto {
         private final double x, y;

@@ -1,6 +1,7 @@
 package metajavbots.pantallas;
 
 import metajavbots.pantalla.Pincel;
+import metajavbots.textos.T;
 
 /**
  * FINALES DEL ROBOTITO — Lo que hace el robotito de los ejercicios al acabar,
@@ -89,7 +90,7 @@ public final class FinalesDelRobotito {
         p.brillo(x, ojoY, 26, 0xFF2020, 0.5f + 0.3f * (float) Math.sin(t * 10));
         float barrido = (float) Math.sin(t * 2.5) * 70;
         p.linea(x + 2.5f * K, ojoY, x + 90 + barrido * 0.2f, ojoY + barrido, 2, 0xFF3030, 0.6f);
-        p.texto("MUAJAJA…", x + 30, suelo - 110, 18, true, 0xFF4040, Math.min(1, (t - 0.4f) * 3));
+        p.texto(T.idioma.elegir("MUAJAJA…", "MUAHAHA…", "MWAHAHA…"), x + 30, suelo - 110, 18, true, 0xFF4040, Math.min(1, (t - 0.4f) * 3));
     }
 
     // ================================================================ al fallar

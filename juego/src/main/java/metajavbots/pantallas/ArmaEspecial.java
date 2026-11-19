@@ -1,7 +1,9 @@
 package metajavbots.pantallas;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 import metajavbots.Juego;
 import metajavbots.combate.Cuerpo;
@@ -30,11 +32,11 @@ import metajavbots.textos.Trilingue;
  */
 public final class ArmaEspecial {
 
-    /** Las armas: su reto, si dispara o carga, el tiempo (s) y el daño. */
+    /** Las armas: su reto, si dispara o carga, el tiempo de cuenta atrás (s) y el daño. */
     enum Tipo {
-        MARTILLO("especial_martillo", new Trilingue("Martillo Titán", "Titanhammer", "Titan Hammer"), false, 75, 16),
-        CANON("especial_canon", new Trilingue("Cañón de Plasma", "Plasmakanone", "Plasma Cannon"), true, 100, 26),
-        ARPON("especial_arpon", new Trilingue("Arpón Trueno", "Donnerharpune", "Thunder Harpoon"), true, 150, 36);
+        MARTILLO("especial_martillo", new Trilingue("Martillo Titán", "Titanhammer", "Titan Hammer"), false, 45, 16),
+        CANON("especial_canon", new Trilingue("Cañón de Plasma", "Plasmakanone", "Plasma Cannon"), true, 65, 26),
+        ARPON("especial_arpon", new Trilingue("Arpón Trueno", "Donnerharpune", "Thunder Harpoon"), true, 90, 36);
 
         final String reto;
         final Trilingue nombre;
@@ -69,18 +71,30 @@ public final class ArmaEspecial {
     private Comprobador.Informe ultimo;
     private boolean disparado;
 
+    private static String ultimoReto = "";
+
     private ArmaEspecial(Tipo tipo, Ejercicio reto) {
         this.tipo = tipo;
         this.reto = reto;
     }
 
-    /** La de esta pelea, según el nivel del jugador (null si no hay reto que cargar). */
+    /** La de esta pelea, según el nivel del jugador (elige un reto al azar entre los de esa herramienta). */
     public static ArmaEspecial para(Jugador jug) {
         int nivel = jug.etiqueta.ordinal() / 4;
         Tipo tipo = nivel <= 0 ? Tipo.MARTILLO : nivel == 1 ? Tipo.CANON : Tipo.ARPON;
         try (InputStream in = ArmaEspecial.class.getResourceAsStream("/especiales/retos.txt")) {
-            List<Ejercicio> l = Ejercicio.leer(in, "retos.txt");
-            for (Ejercicio e : l) if (e.id.equals(tipo.reto)) return new ArmaEspecial(tipo, e);
+            List<Ejercicio> todos = Ejercicio.leer(in, "retos.txt");
+            List<Ejercicio> candidatos = new ArrayList<>();
+            for (Ejercicio e : todos) {
+                if (e.id.equals(tipo.reto) || e.id.startsWith(tipo.reto + "_")) candidatos.add(e);
+            }
+            if (candidatos.isEmpty()) return null;
+            List<Ejercicio> sinRepetir = new ArrayList<>();
+            for (Ejercicio e : candidatos) if (!e.id.equals(ultimoReto)) sinRepetir.add(e);
+            List<Ejercicio> bolsa = sinRepetir.isEmpty() ? candidatos : sinRepetir;
+            Ejercicio elegido = bolsa.get(ThreadLocalRandom.current().nextInt(bolsa.size()));
+            ultimoReto = elegido.id;
+            return new ArmaEspecial(tipo, elegido);
         } catch (Exception e) {
             // sin reto, sin arma especial
         }
@@ -102,7 +116,7 @@ public final class ArmaEspecial {
         ax = Math.max(80, Math.min(p.ancho - 80, (a.x + b.x) / 2 + (a.y - b.y) * 0.25));
         ay = Math.max(80, Math.min(p.alto - 80, (a.y + b.y) / 2 + (b.x - a.x) * 0.25));
         resta = tipo.segundos;
-        editor.ponerTexto(reto.codigoInicial());
+        editor.ponerTexto(reto.codigoInicial(j.jugador.idioma));
         editor.tamano = j.jugador.tamanoDeLetra;
         editor.enfocada = true;
         editor.alCompilar = () -> comprobar(j);
@@ -115,8 +129,11 @@ public final class ArmaEspecial {
         comprobando = true;
         String codigo = editor.doc.texto();
         Thread h = new Thread(() -> {
-            informe = Comprobador.comprobar(reto, codigo, j.jugador.idioma.locale());
-            comprobando = false;
+            try {
+                informe = Comprobador.comprobar(reto, codigo, j.jugador.idioma.locale());
+            } finally {
+                comprobando = false;
+            }
         }, "arma-especial");
         h.setDaemon(true);
         h.start();

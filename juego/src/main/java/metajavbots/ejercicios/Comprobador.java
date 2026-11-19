@@ -18,6 +18,7 @@ import metajavbots.codigo.Cargador;
 import metajavbots.codigo.Compilador;
 import metajavbots.codigo.Salida;
 import metajavbots.codigo.Vigilante;
+import metajavbots.textos.Idioma;
 
 /**
  * COMPROBADOR — Comprueba un ejercicio: compila el código del jugador junto a
@@ -85,13 +86,31 @@ public final class Comprobador {
         return comprobar(e, codigo, idioma, false);
     }
 
+    /** Solo compila el ejercicio con sus casos (para revisar al escribir, sin ejecutar los casos). */
+    public static Informe soloCompilar(Ejercicio e, String codigo, Locale idioma) {
+        return compilar(e, codigo, idioma, false, false);
+    }
+
     /** Lo mismo; con traza, cada caso apunta además las líneas que ejecuta, en orden (para el robotito: AnimacionDelCaso). */
     public static Informe comprobar(Ejercicio e, String codigo, Locale idioma, boolean traza) {
+        return compilar(e, codigo, idioma, traza, true);
+    }
+
+    private static Idioma idiomaDe(Locale locale) {
+        if (locale == null) return Idioma.ES;
+        String l = locale.getLanguage();
+        if ("de".equals(l)) return Idioma.DE;
+        if ("en".equals(l)) return Idioma.EN;
+        return Idioma.ES;
+    }
+
+    private static Informe compilar(Ejercicio e, String codigo, Locale idioma, boolean traza, boolean ejecutarCasos) {
+        List<Ejercicio.Caso> listaCasos = e.casos(idiomaDe(idioma));
         Map<String, String> fuentes = new LinkedHashMap<>();
         int desplazamiento;
         StringBuilder casos = new StringBuilder();
-        for (int i = 0; i < e.casos.size(); i++) {
-            Ejercicio.Caso c = e.casos.get(i);
+        for (int i = 0; i < listaCasos.size(); i++) {
+            Ejercicio.Caso c = listaCasos.get(i);
             if (e.tipo == Ejercicio.Tipo.SALIDA) {
                 casos.append("\nstatic Object __caso").append(i).append("() throws Throwable { ").append(c.llamada)
                         .append(c.llamada.endsWith(";") ? "" : ";").append(" return null; }");
@@ -113,7 +132,7 @@ public final class Comprobador {
             claseDeCasos = "Ejercicio";
             fuentes.put(claseDeCasos, CABECERA + "\n" + codigo + "\n// ---- casos (no los escribe el jugador)" + casos + "\n}\n");
         }
-        Compilador.Resultado r = Compilador.compilar(fuentes, true, traza, Vigilante.Modo.EJERCICIO, idioma);
+        Compilador.Resultado r = Compilador.compilar(fuentes, ejecutarCasos, traza && ejecutarCasos, Vigilante.Modo.EJERCICIO, idioma);
         List<Compilador.Fallo> errores = new ArrayList<>();
         int lineasDelJugador = codigo.split("\n", -1).length;
         for (Compilador.Fallo f : r.errores) {
@@ -132,8 +151,8 @@ public final class Comprobador {
                 errores.add(new Compilador.Fallo(f.archivo, linea, f.columna, f.codigo, f.mensaje, f.grave));
             }
         }
-        if (!r.bien) return new Informe(errores, Collections.emptyList(), "");
-        return ejecutar(e, r, claseDeCasos, errores, desplazamiento, lineasDelJugador);
+        if (!r.bien || !ejecutarCasos) return new Informe(errores, Collections.emptyList(), "");
+        return ejecutar(e, listaCasos, r, claseDeCasos, errores, desplazamiento, lineasDelJugador);
     }
 
     /** La traza del último caso ejecutado en este hilo. */
@@ -197,12 +216,21 @@ public final class Comprobador {
             return new Resultado(c, bien, "\"" + escapar(limpio) + "\"");
         }
         Object esperado;
+        Puente.contar(PASOS, NANOS_POR_CASO);
+        cuenta.set(Puente.cuentaActual());
         try {
             Method m = clase.getDeclaredMethod("__esperado" + i);
             m.setAccessible(true);
             esperado = m.invoke(null);
+        } catch (InvocationTargetException ex) {
+            if (ex.getCause() instanceof TopeDeCalculo) {
+                return new Resultado(c, false, "⏱ demasiados pasos (¿un bucle que no acaba?)");
+            }
+            return new Resultado(c, false, "⚠ el caso no se pudo evaluar: " + ex.getCause());
         } catch (Throwable ex) {
             return new Resultado(c, false, "⚠ el caso no se pudo evaluar: " + ex);
+        } finally {
+            Puente.dejarDeContar();
         }
         return new Resultado(c, iguales(esperado, obtenido), mostrar(obtenido));
     }
@@ -262,7 +290,7 @@ public final class Comprobador {
         return s.replace("\\", "\\\\").replace("\n", "\\n").replace("\t", "\\t").replace("\"", "\\\"");
     }
 
-    static String desescapar(String s) {
+    public static String desescapar(String s) {
         s = s.strip();
         if (s.startsWith("\"") && s.endsWith("\"") && s.length() >= 2) s = s.substring(1, s.length() - 1);
         StringBuilder b = new StringBuilder();
@@ -279,8 +307,8 @@ public final class Comprobador {
     }
 
     /** Ejecuta los casos ya compilados en un hilo aparte (si se cuelga, se abandona) y apunta lo que sale de cada uno. */
-    private static Informe ejecutar(Ejercicio e, Compilador.Resultado r, String claseDeCasos, List<Compilador.Fallo> errores, int desplazamiento,
-            int lineasDelJugador) {
+    private static Informe ejecutar(Ejercicio e, List<Ejercicio.Caso> listaCasos, Compilador.Resultado r, String claseDeCasos,
+            List<Compilador.Fallo> errores, int desplazamiento, int lineasDelJugador) {
         Cargador cargador = new Cargador(r.clases, Vigilante.Modo.EJERCICIO);
         List<Resultado> resultados = new ArrayList<>();
         StringBuilder toda = new StringBuilder();
@@ -289,8 +317,8 @@ public final class Comprobador {
         Thread hilo = new Thread(() -> {
             try {
                 Class<?> clase = cargador.loadClass(claseDeCasos);
-                for (int i = 0; i < e.casos.size(); i++) {
-                    Ejercicio.Caso c = e.casos.get(i);
+                for (int i = 0; i < listaCasos.size(); i++) {
+                    Ejercicio.Caso c = listaCasos.get(i);
                     Resultado res = ejecutarCaso(clase, i, c, e.tipo, toda, cuenta);
                     res.traza = suyas(ULTIMA_TRAZA.get(), desplazamiento, lineasDelJugador);
                     synchronized (resultados) {
@@ -299,8 +327,8 @@ public final class Comprobador {
                 }
             } catch (Throwable t) {
                 synchronized (resultados) {
-                    while (resultados.size() < e.casos.size()) {
-                        resultados.add(new Resultado(e.casos.get(resultados.size()), false, "⚠ " + t));
+                    while (resultados.size() < listaCasos.size()) {
+                        resultados.add(new Resultado(listaCasos.get(resultados.size()), false, "⚠ " + t));
                     }
                 }
             }
@@ -320,7 +348,7 @@ public final class Comprobador {
         synchronized (resultados) {
             copia = new ArrayList<>(resultados);
         }
-        while (copia.size() < e.casos.size()) copia.add(new Resultado(e.casos.get(copia.size()), false, "⏱ tarda demasiado"));
+        while (copia.size() < listaCasos.size()) copia.add(new Resultado(listaCasos.get(copia.size()), false, "⏱ tarda demasiado"));
         return new Informe(errores, copia, toda.toString());
     }
 }

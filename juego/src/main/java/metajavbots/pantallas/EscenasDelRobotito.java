@@ -181,7 +181,7 @@ public final class EscenasDelRobotito {
                     float lejos = (float) Math.abs(Math.sin(reloj * 1.2f)) * 18;
                     p.caja(dx + 60 + (i - 1) * (40 + lejos), arriba + 20 + (i == 1 ? 0 : 20), 34, 34, 6, new int[]{0x5BD685, 0x3FA9F5, 0xFF7A45}[i], 1);
                 }
-                p.texto("tiene-un", dx + 40, arriba + 74, 14, true, 0xF2EEE3, 1);
+                p.texto(T.idioma.elegir("tiene-un", "hat-ein", "has-a"), dx + 40, arriba + 74, 14, true, 0xF2EEE3, 1);
                 break;
             case ABSTRACTA:
                 // El molde con un hueco (el método abstracto) y dos hijos que lo rellenan cada uno a su manera.

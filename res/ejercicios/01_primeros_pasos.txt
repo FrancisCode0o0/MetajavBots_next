@@ -16,6 +16,10 @@ pista.en: Change the text between the quotes: System.out.println("MetajavBot ONL
 firma: static void encender()
 plantilla:
     System.out.println("Escribe aquí el texto");
+terminos.de:
+    Escribe aquí el texto ==> Schreib hier den Text
+terminos.en:
+    Escribe aquí el texto ==> Write the text here
 solucion:
     System.out.println("MetajavBot ONLINE");
 casos:
@@ -48,6 +52,10 @@ casos:
     decir("Láser listo"); => "Láser listo\n"
     decir("Hallo, Arena!"); => "Hallo, Arena!\n"
     decir(""); => "\n"
+terminos.de:
+    Láser listo ==> Laser bereit
+terminos.en:
+    Láser listo ==> Laser ready
 
 === t01_eco
 tema: 01
@@ -74,6 +82,10 @@ casos:
     eco("CLANG"); => "CLANG\nCLANG\n"
     eco("bzzz..."); => "bzzz...\nbzzz...\n"
     eco("¡Ay!"); => "¡Ay!\n¡Ay!\n"
+terminos.de:
+    ¡Ay! ==> Autsch!
+terminos.en:
+    ¡Ay! ==> Ouch!
 
 === t01_unir_piezas
 tema: 01
@@ -84,8 +96,8 @@ titulo.es: Dos piezas en una línea
 titulo.de: Zwei Teile in einer Zeile
 titulo.en: Two parts on one line
 enunciado.es: Imprime pieza1, un signo + y pieza2, todo en la MISMA línea. Ejemplo: unirPiezas("brazo", "pinza") imprime brazo+pinza.
-enunciado.de: Gib pieza1, ein Pluszeichen und pieza2 aus, alles in DERSELBEN Zeile. Beispiel: unirPiezas("brazo", "pinza") gibt brazo+pinza aus.
-enunciado.en: Print pieza1, a + sign and pieza2, all on the SAME line. Example: unirPiezas("brazo", "pinza") prints brazo+pinza.
+enunciado.de: Gib pieza1, ein Pluszeichen und pieza2 aus, alles in DERSELBEN Zeile. Beispiel: unirPiezas("arm", "greifer") gibt arm+greifer aus.
+enunciado.en: Print pieza1, a + sign and pieza2, all on the SAME line. Example: unirPiezas("arm", "claw") prints arm+claw.
 pista.es: System.out.print escribe sin saltar de línea; System.out.println salta de línea al terminar. Usa print, print y println.
 pista.de: System.out.print schreibt ohne Zeilenumbruch; System.out.println bricht am Ende um. Nimm print, print und println.
 pista.en: System.out.print writes without a line break; System.out.println adds one at the end. Use print, print and println.
@@ -103,6 +115,16 @@ casos:
     unirPiezas("rueda", "motor"); => "rueda+motor\n"
     unirPiezas("", "láser"); => "+láser\n"
     unirPiezas("A", ""); => "A+\n"
+terminos.de:
+    brazo ==> arm
+    pinza ==> greifer
+    rueda ==> rad
+    láser ==> laser
+terminos.en:
+    brazo ==> arm
+    pinza ==> claw
+    rueda ==> wheel
+    láser ==> laser
 
 === t01_presentarse
 tema: 01
@@ -159,6 +181,10 @@ casos:
     cuentaAtras("¡Fuego!"); => "3\n2\n1\n¡Fuego!\n"
     cuentaAtras("Los!"); => "3\n2\n1\nLos!\n"
     cuentaAtras(""); => "3\n2\n1\n\n"
+terminos.de:
+    ¡Fuego! ==> Feuer!
+terminos.en:
+    ¡Fuego! ==> Fire!
 
 === t01_comentar_linea
 tema: 01
@@ -216,6 +242,10 @@ casos:
     dibujarRobot("x_x"); => " [x_x]\n /|_|\\\n  / \\\n"
     dibujarRobot("^-^"); => " [^-^]\n /|_|\\\n  / \\\n"
     dibujarRobot(""); => " []\n /|_|\\\n  / \\\n"
+terminos.de:
+    // faltan el cuerpo y las piernas ==> // es fehlen noch der Körper und die Beine
+terminos.en:
+    // faltan el cuerpo y las piernas ==> // missing the body and the legs
 
 === t01_citar
 tema: 01
@@ -323,3 +353,7 @@ casos:
     cartel("Rost"); => "+---------+\n|  ARENA  |\n+---------+\nRobot: Rost\n"
     cartel("B-12"); => "+---------+\n|  ARENA  |\n+---------+\nRobot: B-12\n"
     cartel(""); => "+---------+\n|  ARENA  |\n+---------+\nRobot: \n"
+terminos.de:
+    // usa un bloque de texto: """ ... """ ==> // verwende einen Textblock: """ ... """
+terminos.en:
+    // usa un bloque de texto: """ ... """ ==> // use a text block: """ ... """

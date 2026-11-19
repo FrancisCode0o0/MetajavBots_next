@@ -48,11 +48,13 @@ public final class Tope {
     public static void linea(int n) {
         Cuenta c = CUENTA.get();
         if (c == null) return;
-        c.lineas.set(n);
-        c.ultima = n;
-        if (c.enOrden < 5000) {
-            if (c.enOrden == c.orden.length) c.orden = java.util.Arrays.copyOf(c.orden, c.orden.length * 2);
-            c.orden[c.enOrden++] = n;
+        synchronized (c) {
+            c.lineas.set(n);
+            c.ultima = n;
+            if (c.enOrden < 5000) {
+                if (c.enOrden == c.orden.length) c.orden = java.util.Arrays.copyOf(c.orden, c.orden.length * 2);
+                c.orden[c.enOrden++] = n;
+            }
         }
     }
 

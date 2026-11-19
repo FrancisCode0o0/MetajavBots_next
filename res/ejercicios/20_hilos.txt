@@ -195,6 +195,10 @@ casos:
     Contador.martillear(1, 5) => 5
     Contador.martillear(8, 0) => 0
     new Contador().valor() => 0
+terminos.de:
+    // suma uno sin que los hilos se pisen ==> // addiere eins, ohne dass die Threads sich in die Quere kommen
+terminos.en:
+    // suma uno sin que los hilos se pisen ==> // add one without the threads tripping over each other
 
 === t20_disparos_atomicos
 tema: 20
@@ -250,6 +254,10 @@ casos:
     Municion.contarDisparos(3, 0) => 0
     Municion.contarDisparos(0, 50) => 0
     Municion.contarDisparos(16, 5000) => 80000
+terminos.de:
+    // tu pool de 4 hilos y tu AtomicInteger ==> // dein Pool mit 4 Threads und dein AtomicInteger
+terminos.en:
+    // tu pool de 4 hilos y tu AtomicInteger ==> // your pool of 4 threads and your AtomicInteger
 
 === t20_dano_por_robot
 tema: 20
@@ -372,11 +380,11 @@ titulo.es: Un ataque combinado asíncrono
 titulo.de: Ein asynchroner Kombiangriff
 titulo.en: An asynchronous combined attack
 enunciado.es: En la clase Ataque, escribe static String combinado(int laser, int misil). Calcula a la vez, con CompletableFuture.supplyAsync (Java 8), calcular("láser", laser) y calcular("misil", misil) (ya hecho); junta los dos con thenCombine y devuelve "total: N". Si alguno falla, devuelve "fallo: " y el mensaje de su excepción.
-enunciado.de: Schreib in der Klasse Ataque static String combinado(int laser, int misil). Berechne gleichzeitig mit CompletableFuture.supplyAsync (Java 8) calcular("láser", laser) und calcular("misil", misil) (schon fertig); verbinde beide mit thenCombine und gib "total: N" zurück. Scheitert eins, gib "fallo: " und die Meldung seiner Ausnahme zurück.
-enunciado.en: In the Ataque class, write static String combinado(int laser, int misil). Compute calcular("láser", laser) and calcular("misil", misil) (already done) at the same time with CompletableFuture.supplyAsync (Java 8); merge them with thenCombine and return "total: N". If either fails, return "fallo: " plus its exception's message.
+enunciado.de: Schreib in der Klasse Ataque static String combinado(int laser, int misil). Berechne gleichzeitig mit CompletableFuture.supplyAsync (Java 8) calcular("laser", laser) und calcular("rakete", misil) (schon fertig); verbinde beide mit thenCombine und gib "gesamt: N" zurück. Scheitert eins, gib "fehler: " und die Meldung seiner Ausnahme zurück.
+enunciado.en: In the Ataque class, write static String combinado(int laser, int misil). Compute calcular("laser", laser) and calcular("missile", misil) (already done) at the same time with CompletableFuture.supplyAsync (Java 8); merge them with thenCombine and return "total: N". If either fails, return "error: " plus its exception's message.
 pista.es: a.thenCombine(b, Integer::sum).thenApply(t -> "total: " + t).exceptionally(e -> "fallo: " + e.getCause().getMessage()).join(). La excepción llega envuelta en una CompletionException: el mensaje está en getCause().
-pista.de: a.thenCombine(b, Integer::sum).thenApply(t -> "total: " + t).exceptionally(e -> "fallo: " + e.getCause().getMessage()).join(). Die Ausnahme kommt verpackt in einer CompletionException an: Die Meldung steckt in getCause().
-pista.en: a.thenCombine(b, Integer::sum).thenApply(t -> "total: " + t).exceptionally(e -> "fallo: " + e.getCause().getMessage()).join(). The exception arrives wrapped in a CompletionException: the message is in getCause().
+pista.de: a.thenCombine(b, Integer::sum).thenApply(t -> "gesamt: " + t).exceptionally(e -> "fehler: " + e.getCause().getMessage()).join(). Die Ausnahme kommt verpackt in einer CompletionException an: Die Meldung steckt in getCause().
+pista.en: a.thenCombine(b, Integer::sum).thenApply(t -> "total: " + t).exceptionally(e -> "error: " + e.getCause().getMessage()).join(). The exception arrives wrapped in a CompletionException: the message is in getCause().
 plantilla:
     import java.util.concurrent.CompletableFuture;
 
@@ -421,6 +429,21 @@ casos:
     Ataque.combinado(0, 0) => "total: 0"
     Ataque.combinado(-1, 10) => "fallo: láser averiado"
     Ataque.combinado(5, -3) => "fallo: misil averiado"
+terminos.de:
+    "misil" ==> "rakete"
+    misil averiado ==> rakete defekt
+    "láser" ==> "laser"
+    láser averiado ==> laser defekt
+     averiado" ==>  defekt"
+    "total:  ==> "gesamt: 
+    "fallo:  ==> "fehler: 
+terminos.en:
+    "misil" ==> "missile"
+    misil averiado ==> missile broken
+    "láser" ==> "laser"
+    láser averiado ==> laser broken
+     averiado" ==>  broken"
+    "fallo:  ==> "error: 
 
 === t20_sondas_virtuales
 tema: 20
@@ -663,3 +686,13 @@ casos:
     Almacen.cruce(0) => "1000/1000"
     ((Supplier<String>) () -> { Almacen a = new Almacen(1, 10); Almacen b = new Almacen(2, 0); Almacen.mover(a, b, 4); Almacen.mover(b, a, 1); return a.piezas() + "/" + b.piezas(); }).get() => "7/3"
     ((Supplier<String>) () -> { Almacen.mover(new Almacen(1, 3), new Almacen(2, 0), 5); return "movido"; }).get() => !IllegalStateException
+terminos.de:
+    // bloquea los dos almacenes, siempre en el mismo orden ==> // sperre beide Lager, immer in derselben Reihenfolge
+    /** Ya hecho: dos hilos se pasan piezas a la vez, en sentidos contrarios. */ ==> /** Schon fertig: zwei Threads schieben sich gleichzeitig Teile zu. */
+    no hay bastantes piezas ==> nicht genug Teile
+    "movido" ==> "verschoben"
+terminos.en:
+    // bloquea los dos almacenes, siempre en el mismo orden ==> // lock both stores, always in the same order
+    /** Ya hecho: dos hilos se pasan piezas a la vez, en sentidos contrarios. */ ==> /** Already done: two threads move parts both ways at once. */
+    no hay bastantes piezas ==> not enough parts
+    "movido" ==> "moved"

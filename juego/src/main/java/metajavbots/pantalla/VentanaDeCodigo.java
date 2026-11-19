@@ -72,7 +72,8 @@ public final class VentanaDeCodigo {
     public java.util.function.Function<String, String> documentacion;
     private final RevisorAlEscribir revisor = new RevisorAlEscribir();
     private float encimaDe;
-    private String palabraEncima = "";
+    private String palabraEncima = "", palabraDocCache = "", textoDocCache;
+    private long versionDocCache = -1;
     /** Las palabras que propone el autocompletado (la API del idioma, las palabras clave…). */
     public List<String> palabras = new ArrayList<>();
 
@@ -118,9 +119,13 @@ public final class VentanaDeCodigo {
         }
         encimaDe += Gdx.graphics == null ? 0.016f : Gdx.graphics.getDeltaTime();
         if (encimaDe < 0.5f || w.length() < 2 || !Character.isJavaIdentifierStart(w.charAt(0))) return;
-        String propia = metajavbots.codigo.DocumentacionPropia.de(doc.texto(), w);
-        String texto = propia != null ? propia : documentacion == null ? null : documentacion.apply(w);
-        if (texto != null && !texto.isBlank()) ui.avisar(texto);
+        if (!w.equals(palabraDocCache) || doc.version() != versionDocCache) {
+            palabraDocCache = w;
+            versionDocCache = doc.version();
+            String propia = metajavbots.codigo.DocumentacionPropia.de(doc.texto(), w);
+            textoDocCache = propia != null ? propia : documentacion == null ? null : documentacion.apply(w);
+        }
+        if (textoDocCache != null && !textoDocCache.isBlank()) ui.avisar(textoDocCache);
     }
 
     // ================================================================ dibujar
@@ -164,7 +169,11 @@ public final class VentanaDeCodigo {
         float barra = buscando ? alto * (reemplazando ? 2.4f : 1.4f) : 0;
         float zx = x + margen, zy = y + barra, zw = w - margen - 12, zh = h - barra - 12;
 
-        if (e.dentro(x, y, w, h) && e.recienPulsado) enfocada = true;
+        if (!e.bloqueada && e.recienPulsado) {
+            if (e.dentro(x, y, w, h)) enfocada = true;
+            else if (enfocada) { enfocada = false; ui.desenfocar(this); }
+        } else if (ui.tieneOtroFoco(this)) enfocada = false;
+        if (enfocada) ui.registrarFoco(this, () -> enfocada = false);
         if (revisarAlEscribir != null && !soloLectura) revisor.fotograma(doc, marcas, revisarAlEscribir);
         if (enfocada) teclas(ui, zh, alto);
         raton(ui, zx, zy, zw, zh, alto, letra);
@@ -503,10 +512,7 @@ public final class VentanaDeCodigo {
                 if (cambia && proponiendo) actualizarPropuestas();
             }
         }
-        if (soloLectura) {
-            e.letras.clear();
-            return;
-        }
+        if (soloLectura) return;
         for (char ch : e.letras) {
             doc.teclear(ch);
             seguirCursor = true;
@@ -608,8 +614,8 @@ public final class VentanaDeCodigo {
                     seguirCursor = true;
                     break;
                 case Keys.TAB: if (reemplazando) campoReemplazo = !campoReemplazo; break;
-                case Keys.BACKSPACE: campo.borrarAtras(); break;
-                case Keys.FORWARD_DEL: campo.borrarDelante(); break;
+                case Keys.BACKSPACE: if (k.ctrl) campo.borrarPalabraAtras(); else campo.borrarAtras(); break;
+                case Keys.FORWARD_DEL: if (k.ctrl) campo.borrarPalabraDelante(); else campo.borrarDelante(); break;
                 case Keys.LEFT: campo.izquierda(k.mayus, k.ctrl); break;
                 case Keys.RIGHT: campo.derecha(k.mayus, k.ctrl); break;
                 case Keys.HOME: campo.principio(k.mayus); break;
@@ -620,6 +626,12 @@ public final class VentanaDeCodigo {
                     else if (k.ctrl && k.codigo == Keys.V) {
                         String s = leerPortapapeles();
                         if (s != null) campo.insertar(s.replace("\n", " "));
+                    } else if (k.ctrl && k.codigo == Keys.Z) { if (k.mayus) campo.rehacer(); else campo.deshacer(); }
+                    else if (k.ctrl && k.codigo == Keys.Y) campo.rehacer();
+                    else if (k.ctrl && k.codigo == Keys.C) portapapeles(campo.haySeleccion() ? campo.seleccion() : campo.texto());
+                    else if (k.ctrl && k.codigo == Keys.X) {
+                        portapapeles(campo.haySeleccion() ? campo.seleccion() : campo.texto());
+                        if (campo.haySeleccion()) campo.borrarAtras(); else campo.cambiarTodo("");
                     } else if (k.ctrl && k.codigo == Keys.F) campoReemplazo = false;
                     else usada = false;
                     break;
@@ -634,14 +646,17 @@ public final class VentanaDeCodigo {
             algo = true;
             if (!campoReemplazo) {
                 int i = doc.buscar(busqueda.texto(), doc.inicioDeSeleccion(), true, false);
-                if (i >= 0) {
-                    doc.seleccionar(i, i + busqueda.largo());
-                    seguirCursor = true;
-                }
+                if (i >= 0) { doc.seleccionar(i, i + busqueda.largo()); seguirCursor = true; }
             }
         }
         e.letras.clear();
         return algo || buscando;
+    }
+
+    private static int indiceEnLinea(Pincel p, float rx, float tam, String s) {
+        if (rx <= 0 || s.isEmpty()) return 0;
+        for (int i = 0; i < s.length(); i++) if (p.ancho(s.substring(0, i + 1), tam, false) >= rx) return i;
+        return s.length();
     }
 
     private void barraDeBuscar(Ui ui, float x, float y, float w, float alto) {
@@ -657,11 +672,21 @@ public final class VentanaDeCodigo {
             p.texto(nombres[i], x + 10, fy + 2, t1, false, t.textoSuave, 1);
             float cx = x + 150, cw = Math.min(420, w - 330);
             boolean activo = campoReemplazo == (i == 1);
+            String txt = campos[i].texto();
             p.caja(cx, fy - 2, cw, alto, 5, t.fondo, 1);
             p.bordeRedondeado(cx, fy - 2, cw, alto, 5, activo ? t.acento : t.borde, 1, 1.5f);
-            p.texto(campos[i].texto(), cx + 8, fy + 2, t1, false, t.texto, 1);
-            if (activo) p.rect(cx + 8 + p.ancho(campos[i].texto().substring(0, campos[i].cursor()), t1, false), fy, 2, alto - 6, t.acento, 1);
-            if (ui.e.clic(cx, fy - 2, cw, alto)) campoReemplazo = i == 1;
+            p.recortar(cx + 4, fy - 2, cw - 8, alto);
+            if (campos[i].haySeleccion()) {
+                float sx = cx + 8 + p.ancho(txt.substring(0, campos[i].inicioDeSeleccion()), t1, false);
+                p.rect(sx, fy, p.ancho(campos[i].seleccion(), t1, false), alto - 6, t.seleccion, 1);
+            }
+            p.texto(txt, cx + 8, fy + 2, t1, false, t.texto, 1);
+            if (activo) p.rect(cx + 8 + p.ancho(txt.substring(0, campos[i].cursor()), t1, false), fy, 2, alto - 6, t.acento, 1);
+            p.sinRecorte();
+            if (ui.e.clic(cx, fy - 2, cw, alto)) {
+                campoReemplazo = i == 1;
+                campos[i].moverA(indiceEnLinea(p, ui.e.ratonX - (cx + 8), t1, txt), ui.e.mayus());
+            }
         }
         int n = doc.apariciones(busqueda.texto(), false).size();
         float bx = x + Math.min(600, w - 170);

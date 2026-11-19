@@ -36,6 +36,7 @@ public final class Concepto {
     /** La explicación: un párrafo por elemento, en cada idioma. */
     private final Map<Idioma, List<String>> parrafos = new LinkedHashMap<>();
     private final Map<Idioma, List<String>> claves = new LinkedHashMap<>();
+    private final Map<Idioma, String> titulosNormalizados = new java.util.EnumMap<>(Idioma.class);
     /** El pseudocódigo, en cada idioma (con su sangría). */
     private final Map<Idioma, String> pseudo = new LinkedHashMap<>();
     public final List<String> ver;
@@ -53,6 +54,7 @@ public final class Concepto {
             String c = i.name().toLowerCase(java.util.Locale.ROOT);
             parrafos.put(i, bloques.getOrDefault(c, List.of()));
             pseudo.put(i, String.join("\n", bloques.getOrDefault("pseudo." + c, List.of())).stripTrailing());
+            titulosNormalizados.put(i, normalizar(titulo.en(i)));
             List<String> k = new ArrayList<>();
             for (String s : v.getOrDefault("claves." + c, "").split(",")) if (!s.isBlank()) k.add(normalizar(s));
             claves.put(i, k);
@@ -124,7 +126,7 @@ public final class Concepto {
         if (q.contains(idPalabras)) p += 8 + idPalabras.length();
         for (Idioma i : Idioma.values()) {
             int peso = i == idioma ? 3 : 1;
-            String tit = " " + normalizar(titulo.en(i)) + " ";
+            String tit = " " + titulosNormalizados.getOrDefault(i, "") + " ";
             if (tit.length() > 3 && q.contains(tit)) p += (6 + tit.length()) * peso;
             for (String k : claves(i)) {
                 if (k.length() >= 2 && q.contains(" " + k + " ")) p += (4 + k.length()) * peso;

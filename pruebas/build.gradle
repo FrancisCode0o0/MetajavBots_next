@@ -3,6 +3,7 @@ apply plugin: 'application'
 
 dependencies {
     implementation project(':juego')
+    implementation "org.apache.pdfbox:pdfbox:$pdfboxVersion"
     implementation "com.badlogicgames.gdx:gdx-backend-headless:$gdxVersion"
     implementation "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-desktop"
     implementation "com.badlogicgames.gdx:gdx-freetype-platform:$gdxVersion:natives-desktop"

@@ -22,6 +22,9 @@ public final class Ui {
     private float avisoX, avisoY;
     /** Lo reservó alguien este fotograma o el anterior (la cabecera pregunta antes de que se dibuje el campo). */
     private boolean escapeReservado, escapeReservadoAntes;
+    private Object focoActual;
+    private Runnable desenfocarActual;
+    private boolean focoVisto;
 
     public Ui(Pincel p, Entrada e) {
         this.p = p;
@@ -37,6 +40,41 @@ public final class Ui {
         aviso = null;
         escapeReservadoAntes = escapeReservado;
         escapeReservado = false;
+        focoVisto = false;
+    }
+
+    /** Registra qué componente tiene el foco exclusivo del teclado en este fotograma. */
+    public void registrarFoco(Object quien, Runnable desenfocar) {
+        if (quien == null) return;
+        if (focoActual != null && focoActual != quien && desenfocarActual != null) {
+            desenfocarActual.run();
+        }
+        focoActual = quien;
+        desenfocarActual = desenfocar;
+        focoVisto = true;
+    }
+
+    /** Suelta el foco si pertenece a «quien». */
+    public void desenfocar(Object quien) {
+        if (focoActual == quien) {
+            if (desenfocarActual != null) desenfocarActual.run();
+            focoActual = null;
+            desenfocarActual = null;
+            focoVisto = false;
+        }
+    }
+
+    /** ¿Hay otro componente distinto con el foco activo? */
+    public boolean tieneOtroFoco(Object quien) {
+        return focoActual != null && focoActual != quien;
+    }
+
+    /** Quita el foco de cualquier componente activo (al cambiar de pantalla o pestaña). */
+    public void quitarFoco() {
+        if (desenfocarActual != null) desenfocarActual.run();
+        focoActual = null;
+        desenfocarActual = null;
+        focoVisto = false;
     }
 
     /** Alguien usa Esc para lo suyo (un campo enfocado, una lista de propuestas): ese Esc no vuelve atrás. */
@@ -44,8 +82,9 @@ public final class Ui {
         escapeReservado = true;
     }
 
-    /** Al final del fotograma: el aviso, encima de todo. */
+    /** Al final del fotograma: limpia focos que dejaron de dibujarse y muestra el aviso encima de todo. */
     public void acabarFotograma() {
+        if (focoActual != null && !focoVisto) quitarFoco();
         if (aviso == null || e.quieto < 0.5f) return;
         float t = letra * 0.85f;
         float w = Math.min(520, p.ancho(aviso, t, false) + 24);
@@ -324,6 +363,7 @@ public final class Ui {
             }
             if (!e.pulsado) d.arrastrando = false;
             if (d.arrastrando) d.desplazamiento = d.desdeDesplazamiento + (e.ratonY - d.desdeY) * d.contenido / h;
+            p.caja(x + w - 9, y, 6, h, 3, tema.fondo, 0.35f);
             p.caja(x + w - 9, by, 6, bh, 3, encima || d.arrastrando ? tema.textoSuave : tema.borde, 0.9f);
         }
         d.desplazamiento = Math.max(0, Math.min(maximo, d.desplazamiento));

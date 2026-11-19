@@ -97,6 +97,21 @@ public final class Entrada extends InputAdapter {
             Input.Keys.FORWARD_DEL, Input.Keys.PAGE_UP, Input.Keys.PAGE_DOWN, Input.Keys.ENTER, Input.Keys.TAB, Input.Keys.Z, Input.Keys.Y};
     private final long[] desde = new long[REPETIBLES.length], ultimaRepeticion = new long[REPETIBLES.length];
 
+    /** Vacía pulsaciones y clics pendientes (al cambiar de pantalla). */
+    public synchronized void limpiar() {
+        letras.clear();
+        teclas.clear();
+        letrasNuevas.clear();
+        teclasNuevas.clear();
+        pulsadoNuevo = soltadoNuevo = derechoNuevo = false;
+        pulsado = recienPulsado = recienSoltado = derechoPulsado = false;
+        rueda = ruedaNueva = 0;
+        clics = 0;
+        clicUsado = ruedaUsada = false;
+        java.util.Arrays.fill(desde, 0);
+        java.util.Arrays.fill(ultimaRepeticion, 0);
+    }
+
     private void repetirTeclas() {
         if (Gdx.input == null) return;
         long ahora = System.currentTimeMillis();

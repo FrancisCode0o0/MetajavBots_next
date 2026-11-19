@@ -30,9 +30,20 @@ final class AnimacionDelCaso {
 
     static final int ROJO = 0xFF5E5B, VERDE = 0x5BD685;
     private static final int CAJA = 0xC98B4A;
-    /** Cuándo acabó el caso (en el reloj; -1 si aún no) y qué final le toca (FinalesDelRobotito). */
+    /** Cuándo acabó el caso (en el reloj; -1 si aún no), qué final le toca y si ya terminó la única celebración. */
     private static float acabo = -1;
-    private static int variante;
+    private static int variante = -1;
+    private static boolean poseFinal;
+
+    static void elegirCelebracion() {
+        acabo = -1;
+        poseFinal = false;
+        variante = java.util.concurrent.ThreadLocalRandom.current().nextInt(FinalesDelRobotito.VARIANTES);
+    }
+
+    static void fijarPoseFinal() {
+        poseFinal = true;
+    }
 
     private AnimacionDelCaso() {
     }
@@ -112,12 +123,14 @@ final class AnimacionDelCaso {
         p.linea(bx, by, bx + 12 * k, by - (12 * brazo - 6 * (1 - brazo)) * k, 3 * k, Pincel.oscurecer(color, 0.2f), 1);
     }
 
-    /** El robotito trabajando; al acabar, uno de sus finales (FinalesDelRobotito), alegre si acertó y desastroso si no. */
+    /** El robotito trabajando; al acabar, la celebración única elegida al azar (FinalesDelRobotito), alegre si acertó y desastroso si no. */
     static void robot(Pincel p, float x, float suelo, float brazo, float f, boolean bien) {
         if (f < 1) acabo = -1;
         else if (acabo < 0) {
             acabo = reloj;
-            variante = (int) (Math.random() * FinalesDelRobotito.VARIANTES);
+            if (!bien || variante < 0) {
+                variante = java.util.concurrent.ThreadLocalRandom.current().nextInt(FinalesDelRobotito.VARIANTES);
+            }
         }
         if (f < 1) {
             // En las excepciones, a media tarea tropieza (lanza), se tambalea y se recupera (catch): sigue con lo suyo.
@@ -126,8 +139,10 @@ final class AnimacionDelCaso {
             if (tropiezo > 0.3f) p.texto("!", x - 6, suelo - 120, 24, true, 0xFFD23F, 1);
             return;
         }
-        if (bien) FinalesDelRobotito.bien(p, x, suelo, reloj - acabo, variante);
-        else FinalesDelRobotito.mal(p, x, suelo, reloj - acabo, variante);
+        if (bien) {
+            if (poseFinal) robotito(p, x, suelo, 1, VERDE, 0x3FA9F5);
+            else FinalesDelRobotito.bien(p, x, suelo, reloj - acabo, variante);
+        } else FinalesDelRobotito.mal(p, x, suelo, reloj - acabo, variante);
     }
 
     /**

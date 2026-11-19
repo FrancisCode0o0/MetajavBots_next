@@ -126,9 +126,11 @@ public final class PantallaLeccion implements Pantalla {
             alEntrar(j);
             j.volver();
         }
-        if (j.entrada.tecla(com.badlogic.gdx.Input.Keys.RIGHT) && pagina < l.paginas.size()) pagina++;
-        if (j.entrada.tecla(com.badlogic.gdx.Input.Keys.LEFT) && pagina > 0) pagina--;
         if (cerebro != null) tutor(j, cerebro, p.ancho - 40 - lado, y, lado, p.alto - y - 30);
+        if (!pregunta.enfocado) {
+            if (pagina < l.paginas.size() && j.entrada.tecla(com.badlogic.gdx.Input.Keys.RIGHT)) pagina++;
+            if (pagina > 0 && j.entrada.tecla(com.badlogic.gdx.Input.Keys.LEFT)) pagina--;
+        }
     }
 
     private void tutor(Juego j, Cerebro c, float x, float y, float w, float h) {

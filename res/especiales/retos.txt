@@ -1,5 +1,5 @@
-# ARMAS ESPECIALES — El reto de código de cada una (el mismo formato que los ejercicios).
-# Cuanto más difícil el reto, más fuerte el arma y más tiempo para hacerlo (Armas especiales, en la pelea).
+# ARMAS ESPECIALES — Varios retos cortos y variados para cada arma especial (es/de/en).
+# La pelea elige uno al azar del bloque correspondiente al arma; el tiempo depende de la herramienta en ArmaEspecial.java.
 
 === especial_martillo
 tema: 03
@@ -9,12 +9,12 @@ tipo: metodo
 titulo.es: Martillo Titán: ¿a qué distancia está?
 titulo.de: Titanhammer: Wie weit ist er weg?
 titulo.en: Titan Hammer: how far away is it?
-enunciado.es: Para cargar con el martillo hay que saber cuánto correr. El enemigo está dx más a la derecha y dy más arriba que tú: devuelve la distancia en línea recta (Pitágoras: la raíz de dx² + dy²).
-enunciado.de: Um mit dem Hammer anzustürmen, musst du wissen, wie weit es ist. Der Gegner ist dx weiter rechts und dy weiter oben als du: Gib die Luftlinie zurück (Pythagoras: die Wurzel aus dx² + dy²).
-enunciado.en: To charge with the hammer you need to know how far to run. The enemy is dx further right and dy further up than you: return the straight-line distance (Pythagoras: the square root of dx² + dy²).
-pista.es: Math.sqrt(x) es la raíz cuadrada; dx * dx es dx al cuadrado.
-pista.de: Math.sqrt(x) ist die Quadratwurzel; dx * dx ist dx zum Quadrat.
-pista.en: Math.sqrt(x) is the square root; dx * dx is dx squared.
+enunciado.es: Para cargar con el martillo hay que saber cuánto correr. El enemigo está dx más a la derecha y dy más arriba que tú: devuelve la distancia en línea recta (Pitágoras: raíz cuadrada de dx² + dy²).
+enunciado.de: Um mit dem Hammer anzustürmen, musst du die Laufstrecke kennen. Der Gegner ist dx weiter rechts und dy weiter oben als du: Gib den direkten Abstand zurück (Pythagoras: Wurzel aus dx² + dy²).
+enunciado.en: To charge with the hammer you need to know how far to run. The enemy is dx right and dy up from you: return the straight-line distance (Pythagoras: square root of dx² + dy²).
+pista.es: Math.sqrt(x) calcula la raíz cuadrada; dx * dx es dx al cuadrado.
+pista.de: Math.sqrt(x) berechnet die Quadratwurzel; dx * dx ist dx zum Quadrat.
+pista.en: Math.sqrt(x) computes the square root; dx * dx is dx squared.
 firma: static double distancia(double dx, double dy)
 plantilla:
     return 0;
@@ -27,6 +27,81 @@ casos:
     distancia(0, 0) => 0.0
     distancia(0, -7) => 7.0
 
+=== especial_martillo_alcance
+tema: 04
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Martillo Titán: ¿llega el golpe?
+titulo.de: Titanhammer: Reicht der Schlag?
+titulo.en: Titan Hammer: within reach?
+enunciado.es: Antes de soltar el martillazo, comprueba si el rival está al alcance. Devuelve true si d es menor o igual que max, o false en caso contrario.
+enunciado.de: Prüfe vor dem Hammerschlag, ob der Gegner in Reichweite ist. Gib true zurück, wenn d kleiner oder gleich max ist, sonst false.
+enunciado.en: Before swinging the hammer, check if the opponent is in range. Return true if d is less than or equal to max, otherwise false.
+pista.es: Usa el operador de comparación <=.
+pista.de: Verwende den Vergleichsoperator <=.
+pista.en: Use the <= comparison operator.
+firma: static boolean enAlcance(double d, double max)
+plantilla:
+    return false;
+solucion:
+    return d <= max;
+casos:
+    enAlcance(80, 100) => true
+    enAlcance(100, 100) => true
+    enAlcance(125.5, 100) => false
+    enAlcance(0, 50) => true
+
+=== especial_martillo_impacto
+tema: 03
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Martillo Titán: golpe contra escudo
+titulo.de: Titanhammer: Treffer gegen Schild
+titulo.en: Titan Hammer: smash vs shield
+enunciado.es: Calcula el daño real del martillo: al valor golpe réstale escudo, pero el resultado nunca puede ser negativo (como mínimo 0).
+enunciado.de: Berechne den echten Hammerschaden: Ziehe von golpe den Wert escudo ab, aber das Ergebnis darf nie negativ werden (mindestens 0).
+enunciado.en: Compute the hammer's net damage: subtract escudo from golpe, never returning less than 0.
+pista.es: Math.max(0, golpe - escudo) evita valores negativos.
+pista.de: Math.max(0, golpe - escudo) verhindert negative Werte.
+pista.en: Math.max(0, golpe - escudo) avoids negative values.
+firma: static int danoNeto(int golpe, int escudo)
+plantilla:
+    return 0;
+solucion:
+    return Math.max(0, golpe - escudo);
+casos:
+    danoNeto(16, 4) => 12
+    danoNeto(16, 16) => 0
+    danoNeto(10, 15) => 0
+    danoNeto(20, 0) => 20
+
+=== especial_martillo_carga
+tema: 03
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Martillo Titán: tramo tras avanzar
+titulo.de: Titanhammer: Reststrecke nach Vorstoß
+titulo.en: Titan Hammer: distance left
+enunciado.es: Tu robot está a dist del enemigo y da una zancada de tamaño paso. Devuelve la distancia restante sin pasarse de 0 si el paso supera dist.
+enunciado.de: Dein Roboter ist dist vom Gegner entfernt und macht einen Schritt der Größe paso. Gib die verbleibende Distanz zurück, mindestens jedoch 0.
+enunciado.en: Your robot is dist away from the enemy and steps forward by paso. Return the remaining distance, clamped at 0 if paso exceeds dist.
+pista.es: Resta paso a dist y quédate con Math.max(0, ...).
+pista.de: Ziehe paso von dist ab und nutze Math.max(0, ...).
+pista.en: Subtract paso from dist and clamp with Math.max(0, ...).
+firma: static int restante(int dist, int paso)
+plantilla:
+    return 0;
+solucion:
+    return Math.max(0, dist - paso);
+casos:
+    restante(120, 40) => 80
+    restante(30, 50) => 0
+    restante(40, 40) => 0
+    restante(0, 10) => 0
+
 === especial_canon
 tema: 03
 dificultad: 2
@@ -35,12 +110,12 @@ tipo: metodo
 titulo.es: Cañón de Plasma: ¿hacia dónde apunto?
 titulo.de: Plasmakanone: Wohin ziele ich?
 titulo.en: Plasma Cannon: where do I aim?
-enunciado.es: El enemigo está dx más a la derecha y dy más arriba que tú. Devuelve el ángulo hacia él en grados, redondeado a entero: 0 es la derecha, 90 arriba, 180 la izquierda y -90 abajo.
-enunciado.de: Der Gegner ist dx weiter rechts und dy weiter oben als du. Gib den Winkel zu ihm in Grad zurück, auf eine ganze Zahl gerundet: 0 ist rechts, 90 oben, 180 links und -90 unten.
-enunciado.en: The enemy is dx further right and dy further up than you. Return the angle towards it in degrees, rounded to a whole number: 0 is right, 90 up, 180 left and -90 down.
-pista.es: Math.atan2(dy, dx) da el ángulo en radianes (¡primero dy!); Math.toDegrees lo pasa a grados y Math.round lo redondea (con un (int) delante).
-pista.de: Math.atan2(dy, dx) gibt den Winkel im Bogenmaß (zuerst dy!); Math.toDegrees macht Grad daraus und Math.round rundet (mit (int) davor).
-pista.en: Math.atan2(dy, dx) gives the angle in radians (dy first!); Math.toDegrees turns it into degrees and Math.round rounds it (with an (int) in front).
+enunciado.es: El enemigo está dx más a la derecha y dy más arriba que tú. Devuelve el ángulo hacia él en grados, redondeado a entero: 0 es derecha, 90 arriba, 180 izquierda y -90 abajo.
+enunciado.de: Der Gegner ist dx weiter rechts und dy weiter oben als du. Gib den Winkel zu ihm in Grad auf eine ganze Zahl gerundet zurück: 0 rechts, 90 oben, 180 links, -90 unten.
+enunciado.en: The enemy is dx right and dy up from you. Return the angle toward it in degrees rounded to an int: 0 right, 90 up, 180 left, -90 down.
+pista.es: Math.atan2(dy, dx) da radianes (primero dy); Math.toDegrees pasa a grados y (int) Math.round(...) redondea.
+pista.de: Math.atan2(dy, dx) liefert Bogenmaß (zuerst dy); Math.toDegrees wandelt in Grad um und (int) Math.round(...) rundet.
+pista.en: Math.atan2(dy, dx) returns radians (dy first); Math.toDegrees converts to degrees and (int) Math.round(...) rounds.
 firma: static int angulo(double dx, double dy)
 plantilla:
     return 0;
@@ -55,6 +130,81 @@ casos:
     angulo(-3, -3) => -135
     angulo(100, 57.735) => 30
 
+=== especial_canon_energia
+tema: 03
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Cañón de Plasma: ¿cuántos tiros caben?
+titulo.de: Plasmakanone: Wie viele Schüsse?
+titulo.en: Plasma Cannon: shots available
+enunciado.es: Tienes energia disponible y cada disparo de plasma gasta coste (> 0). Devuelve cuántos disparos completos puedes hacer antes de quedarte sin energía.
+enunciado.de: Du hast energia zur Verfügung und jeder Plasmaschuss kostet coste (> 0). Gib zurück, wie viele vollständige Schüsse möglich sind.
+enunciado.en: You have energia available and each plasma shot costs coste (> 0). Return how many full shots you can fire.
+pista.es: En Java, dividir dos enteros con / descarta los decimales y da los tiros completos.
+pista.de: Eine Ganzzahldivision mit / verwirft den Rest und liefert die vollen Schüsse.
+pista.en: Integer division with / discards the remainder and yields whole shots.
+firma: static int disparos(int energia, int coste)
+plantilla:
+    return 0;
+solucion:
+    return energia / coste;
+casos:
+    disparos(100, 25) => 4
+    disparos(95, 30) => 3
+    disparos(15, 20) => 0
+    disparos(0, 10) => 0
+
+=== especial_canon_calor
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Cañón de Plasma: ¿aguanta sin fundirse?
+titulo.de: Plasmakanone: Überhitzung prüfen
+titulo.en: Plasma Cannon: overheat check
+enunciado.es: El cañón está a calor grados y el siguiente disparo añade subida grados. Devuelve true si supera estrictamente el límite max (se sobrecalienta), o false si aguanta.
+enunciado.de: Die Kanone hat calor Grad und der nächste Schuss fügt subida hinzu. Gib true zurück, wenn die Grenze max streng überschritten wird, sonst false.
+enunciado.en: The cannon is at calor degrees and the next shot adds subida degrees. Return true if it strictly exceeds limit max, otherwise false.
+pista.es: Suma calor + subida y compáralo con > max.
+pista.de: Addiere calor + subida und prüfe > max.
+pista.en: Add calor + subida and check > max.
+firma: static boolean sobrecalienta(int calor, int subida, int max)
+plantilla:
+    return false;
+solucion:
+    return calor + subida > max;
+casos:
+    sobrecalienta(70, 25, 90) => true
+    sobrecalienta(65, 25, 90) => false
+    sobrecalienta(90, 1, 90) => true
+    sobrecalienta(0, 40, 100) => false
+
+=== especial_canon_rafaga
+tema: 03
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Cañón de Plasma: ráfaga sobrecargada
+titulo.de: Plasmakanone: Überladene Salve
+titulo.en: Plasma Cannon: supercharged burst
+enunciado.es: El cañón dispara tiros proyectiles de daño dano cada uno y suma un bono de plasma final. Devuelve el daño total de la ráfaga.
+enunciado.de: Die Kanone feuert tiros Projektile mit jeweils dano Schaden und addiert einen Plasma-Bonus bono. Gib den Gesamtschaden der Salve zurück.
+enunciado.en: The cannon fires tiros projectiles dealing dano each plus a plasma bonus bono. Return the burst's total damage.
+pista.es: Multiplica tiros * dano y suma bono.
+pista.de: Multipliziere tiros * dano und addiere bono.
+pista.en: Multiply tiros * dano and add bono.
+firma: static int danoRafaga(int tiros, int dano, int bono)
+plantilla:
+    return 0;
+solucion:
+    return tiros * dano + bono;
+casos:
+    danoRafaga(3, 8, 5) => 29
+    danoRafaga(1, 12, 0) => 12
+    danoRafaga(0, 10, 4) => 4
+    danoRafaga(4, 6, 2) => 26
+
 === especial_arpon
 tema: 03
 dificultad: 3
@@ -63,17 +213,17 @@ tipo: metodo
 titulo.es: Arpón Trueno: apuntar adonde va a estar
 titulo.de: Donnerharpune: dorthin zielen, wo er sein wird
 titulo.en: Thunder Harpoon: aim where it will be
-enunciado.es: El arpón tarda turnos en llegar y el enemigo se mueve (vx, vy por turno). Está dx más a la derecha y dy más arriba que tú: apunta a donde estará cuando llegue el arpón. Devuelve ese ángulo en grados, redondeado a entero.
-enunciado.de: Die Harpune braucht turnos Züge und der Gegner bewegt sich (vx, vy pro Zug). Er ist dx weiter rechts und dy weiter oben als du: Ziele dorthin, wo er sein wird, wenn die Harpune ankommt. Gib diesen Winkel in Grad zurück, gerundet.
-enunciado.en: The harpoon takes turnos ticks to arrive and the enemy moves (vx, vy per tick). It is dx further right and dy further up than you: aim at where it will be when the harpoon arrives. Return that angle in degrees, rounded to a whole number.
-pista.es: Primero calcula dónde estará: dx + vx * turnos, dy + vy * turnos. Luego, el ángulo como con el cañón.
-pista.de: Rechne zuerst aus, wo er sein wird: dx + vx * turnos, dy + vy * turnos. Dann den Winkel wie bei der Kanone.
-pista.en: First work out where it will be: dx + vx * turnos, dy + vy * turnos. Then the angle, like with the cannon.
-firma: static int anguloConAdelanto(double dx, double dy, double vx, double vy, int turnos)
+enunciado.es: El arpón tarda t turnos en llegar y el enemigo se mueve a velocidad (vx, vy) por turno desde (dx, dy). Devuelve el ángulo en grados redondeado a entero hacia su posición futura.
+enunciado.de: Die Harpune braucht t Züge und der Gegner bewegt sich mit Tempo (vx, vy) pro Zug ab (dx, dy). Gib den gerundeten Winkel in Grad zu seiner Zukunftsposition zurück.
+enunciado.en: The harpoon takes t ticks to travel while the enemy moves at (vx, vy) per tick starting from (dx, dy). Return the rounded angle in degrees to its future spot.
+pista.es: Calcula x = dx + vx * t e y = dy + vy * t, y aplica (int) Math.round(Math.toDegrees(Math.atan2(y, x))).
+pista.de: Berechne x = dx + vx * t und y = dy + vy * t, dann (int) Math.round(Math.toDegrees(Math.atan2(y, x))).
+pista.en: Compute x = dx + vx * t and y = dy + vy * t, then (int) Math.round(Math.toDegrees(Math.atan2(y, x))).
+firma: static int anguloConAdelanto(double dx, double dy, double vx, double vy, int t)
 plantilla:
     return 0;
 solucion:
-    double x = dx + vx * turnos, y = dy + vy * turnos;
+    double x = dx + vx * t, y = dy + vy * t;
     return (int) Math.round(Math.toDegrees(Math.atan2(y, x)));
 casos:
     anguloConAdelanto(100, 0, 0, 5, 20) => 45
@@ -81,3 +231,84 @@ casos:
     anguloConAdelanto(-100, 0, 0, -5, 20) => -135
     anguloConAdelanto(50, 0, 0, 0, 10) => 0
     anguloConAdelanto(0, 0, -1, 1, 10) => 135
+
+=== especial_arpon_giro
+tema: 04
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Arpón Trueno: giro por el camino corto
+titulo.de: Donnerharpune: kürzester Drehweg
+titulo.en: Thunder Harpoon: shortest turn angle
+enunciado.es: Tu mira apunta a mira grados y el objetivo está en objetivo grados. Devuelve cuántos grados debes girar en el rango (-180, 180] para llegar por el camino más corto.
+enunciado.de: Dein Visier zeigt auf mira Grad und das Ziel liegt bei objetivo Grad. Gib die kleinste Drehung in (-180, 180] zurück, um direkt dorthin zu drehen.
+enunciado.en: Your sight points at mira degrees and the target is at objetivo degrees. Return the shortest turn in (-180, 180] to rotate straight onto target.
+pista.es: Toma d = (objetivo - mira) % 360; si d > 180 resta 360, si d <= -180 suma 360.
+pista.de: Nimm d = (objetivo - mira) % 360; wenn d > 180 ziehe 360 ab, wenn d <= -180 addiere 360.
+pista.en: Compute d = (objetivo - mira) % 360; if d > 180 subtract 360, if d <= -180 add 360.
+firma: static int giroCorto(int mira, int objetivo)
+plantilla:
+    return 0;
+solucion:
+    int d = (objetivo - mira) % 360;
+    if (d > 180) d -= 360;
+    if (d <= -180) d += 360;
+    return d;
+casos:
+    giroCorto(10, 50) => 40
+    giroCorto(350, 10) => 20
+    giroCorto(10, 350) => -20
+    giroCorto(0, 180) => 180
+    giroCorto(170, -170) => 20
+
+=== especial_arpon_tiron
+tema: 03
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Arpón Trueno: recoger el cable
+titulo.de: Donnerharpune: Seil einholen
+titulo.en: Thunder Harpoon: reel it in
+enunciado.es: El arpón se engancha a un enemigo que está a dist píxeles y recoge fuerza píxeles de cable. Devuelve a qué distancia final queda (nunca menor que 0).
+enunciado.de: Die Harpune trifft einen Gegner in dist Pixeln Abstand und zieht ihn um fuerza Pixel heran. Gib den neuen Abstand zurück (nie kleiner als 0).
+enunciado.en: The harpoon hooks an enemy dist pixels away and reels in fuerza pixels of cable. Return the resulting distance (never below 0).
+pista.es: Usa Math.max(0, dist - fuerza).
+pista.de: Verwende Math.max(0, dist - fuerza).
+pista.en: Use Math.max(0, dist - fuerza).
+firma: static int tiron(int dist, int fuerza)
+plantilla:
+    return 0;
+solucion:
+    return Math.max(0, dist - fuerza);
+casos:
+    tiron(220, 90) => 130
+    tiron(70, 90) => 0
+    tiron(100, 100) => 0
+    tiron(150, 0) => 150
+
+=== especial_arpon_cadena
+tema: 07
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Arpón Trueno: salto eléctrico
+titulo.de: Donnerharpune: Kettenschlag
+titulo.en: Thunder Harpoon: chain lightning
+enunciado.es: El arpón puede electrocutar a todos los robots cercanos. Dado el array d de distancias y un límite max, devuelve cuántos objetivos están a distancia menor o igual que max.
+enunciado.de: Die Harpune trifft alle nahen Ziele per Blitz. Gib für das Array d mit Abständen und die Grenze max zurück, wie viele Ziele höchstens max entfernt sind.
+enunciado.en: The harpoon arcs electricity to nearby targets. Given distance array d and limit max, return how many targets are within distance <= max.
+pista.es: Recorre d con un for-each y suma 1 a un contador cada vez que x <= max.
+pista.de: Durchlaufe d mit einer for-each-Schleife und zähle jeden Wert mit x <= max.
+pista.en: Iterate through d with a for-each loop and increment a counter whenever x <= max.
+firma: static int enCadena(int[] d, int max)
+plantilla:
+    return 0;
+solucion:
+    int c = 0;
+    for (int x : d) if (x <= max) c++;
+    return c;
+casos:
+    enCadena(new int[]{80, 150, 110, 200}, 120) => 2
+    enCadena(new int[]{50, 60}, 60) => 2
+    enCadena(new int[]{200, 300}, 100) => 0
+    enCadena(new int[]{}, 100) => 0

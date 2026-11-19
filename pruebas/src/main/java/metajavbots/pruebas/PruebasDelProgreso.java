@@ -315,9 +315,25 @@ final class PruebasDelProgreso {
                 igual(j.codigoDeEjercicios, k.codigoDeEjercicios);
                 igual(0.9, k.agresividad);
                 igual(0.8, Math.round(k.ayudaDelTutor * 10) / 10.0, "la ayuda del entrenador");
+                Path rf = tmp.resolve(Guardado.carpetaDe("Fran Prueba")).resolve("robot_1.java");
+                java.nio.file.attribute.FileTime marca = java.nio.file.attribute.FileTime.fromMillis(1_000_000L);
+                Files.setLastModifiedTime(rf, marca);
+                Guardado.guardar(j);
+                igual(marca, Files.getLastModifiedTime(rf), "sin cambios no reescribe el archivo");
             } finally {
                 Guardado.carpeta = antes;
             }
+        });
+
+        caso("progreso: reto diario no duplica la experiencia del bono", () -> {
+            Jugador j = new Jugador("Reto");
+            long hoy = metajavbots.progreso.RetoDiario.hoy();
+            metajavbots.ejercicios.Ejercicio delDia = metajavbots.progreso.RetoDiario.de(j, hoy);
+            cierto(delDia != null, "existe reto del día");
+            Progreso.Cambio c = Progreso.despuesDelEjercicio(j, delDia);
+            int esperado = delDia.experiencia() + 10 + 5 * Math.min(10, j.retoDiarioRacha);
+            igual((long) esperado, j.experiencia, "suma base y bono una sola vez");
+            igual((long) esperado, c.experiencia, "cambio coincide con la experiencia sumada");
         });
     }
 }

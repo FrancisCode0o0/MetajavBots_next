@@ -69,8 +69,9 @@ public final class Leccion {
     public static synchronized List<Leccion> todas() {
         if (todas == null) {
             List<Leccion> l = new ArrayList<>();
+            List<String> indice = Banco.indice("/ejercicios/indice.txt");
             for (Tema t : Tema.todos()) {
-                String nombre = archivoDe(t);
+                String nombre = archivoDe(t, indice);
                 if (nombre == null) continue;
                 try (InputStream in = Leccion.class.getResourceAsStream("/tutoriales/" + nombre)) {
                     if (in != null) l.addAll(leer(in));
@@ -86,7 +87,11 @@ public final class Leccion {
 
     /** Los tutoriales se llaman como los ejercicios de su tema (01_primeros_pasos.txt…). */
     static String archivoDe(Tema t) {
-        for (String a : Banco.indice("/ejercicios/indice.txt")) if (a.startsWith(t.id + "_")) return a;
+        return archivoDe(t, Banco.indice("/ejercicios/indice.txt"));
+    }
+
+    static String archivoDe(Tema t, List<String> indice) {
+        for (String a : indice) if (a.startsWith(t.id + "_")) return a;
         return null;
     }
 

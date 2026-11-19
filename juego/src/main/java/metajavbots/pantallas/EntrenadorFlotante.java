@@ -46,6 +46,33 @@ import metajavbots.tutor.Entrenador;
  */
 public final class EntrenadorFlotante {
 
+    // ================================================================ frecuencia y enfriamiento del bocadillo de tips
+    /** Segundos antes de que salga el primer tip automático al entrar al taller (antes: 20 s). */
+    public static final float ESPERA_INICIAL_TIP = 75f;
+    /** Segundos de enfriamiento entre tips automáticos tras caducar solos o abrir «Explícamelo» (antes: 45 s). */
+    public static final float ESPERA_ENTRE_TIPS = 180f;
+    /** Segundos de enfriamiento cuando el jugador cierra el bocadillo a mano con «×» o «Gracias»/«Danke». */
+    public static final float ESPERA_TRAS_CERRAR_MANUAL = 300f;
+    /** Segundos que permanece visible un tip automático antes de ocultarse solo. */
+    public static final float DURACION_VISIBLE_TIP = 16f;
+
+    /** Márgenes y tamaño del botón «×» en la esquina superior derecha del bocadillo de tips. */
+    public static final float MARGEN_TEXTO_IZQ = 12f;
+    public static final float BOTON_CERRAR_TAM = 24f;
+    private static final float BOTON_CERRAR_MARGEN = 6f;
+    private static final float MARGEN_TEXTO_DER = BOTON_CERRAR_TAM + BOTON_CERRAR_MARGEN + 12f;
+
+    /** Geometría del bocadillo de tips y de su botón «×», compartida entre el bloqueo de clic y el dibujo. */
+    public record CajaTip(float x, float y, float w, float h, float anchoTexto, float cerrarX, float cerrarY, float cerrarTam) {
+        public boolean contiene(float px, float py) {
+            return px >= x && px < x + w && py >= y && py < y + h;
+        }
+
+        public boolean enCerrar(float px, float py) {
+            return px >= cerrarX && px < cerrarX + cerrarTam && py >= cerrarY && py < cerrarY + cerrarTam;
+        }
+    }
+
     private boolean abierto;
     private final CampoDeTexto pregunta = new CampoDeTexto();
     private String ultimaPregunta = "";
@@ -64,7 +91,7 @@ public final class EntrenadorFlotante {
     private final List<Integer> pasosDelError = new ArrayList<>();
     /** El tip del taller que enseña ahora (o null), cuánto lleva a la vista y cuánto falta para el siguiente. */
     private ConsejosDelTaller.Tip tip;
-    private float tiempoDelTip, esperaDelTip = 20;
+    private float tiempoDelTip, esperaDelTip = ESPERA_INICIAL_TIP;
     private final Set<String> tipsDados = new HashSet<>();
     private int tipGeneral;
 
@@ -77,7 +104,7 @@ public final class EntrenadorFlotante {
         abierto = true;
         pregunta.enfocado = true;
         error = null;
-        tip = null;
+        if (tip != null) cerrarTip(ESPERA_ENTRE_TIPS);
         cerebro = j.jugador == null ? null : CerebroDelJuego.tutor(j.jugador);
         String tema = j.pantalla() == null ? null : j.pantalla().temaDeJava();
         Concepto delTema = null;
@@ -120,6 +147,70 @@ public final class EntrenadorFlotante {
         esperaDelTip = 0;
     }
 
+    /** El tip que está mostrando el bocadillo ahora mismo (o null si está oculto). */
+    public ConsejosDelTaller.Tip tipActual() {
+        return tip;
+    }
+
+    /** Segundos que faltan para el próximo tip automático. */
+    public float esperaDelTip() {
+        return esperaDelTip;
+    }
+
+    /** Cierra el bocadillo de tips manualmente («×» o «Gracias»/«Danke») aplicando el enfriamiento largo. */
+    public void cerrarTipManualmente() {
+        cerrarTip(ESPERA_TRAS_CERRAR_MANUAL);
+    }
+
+    private void cerrarTip(float enfriamiento) {
+        tip = null;
+        tiempoDelTip = 0;
+        esperaDelTip = Math.max(esperaDelTip, enfriamiento);
+    }
+
+    /**
+     * Avanza el temporizador de tips automáticos del taller.
+     * Devuelve true si acaba de aparecer un tip nuevo en este paso.
+     */
+    public boolean avanzarTemporizadorDeTip(String codigo, float dt) {
+        if (codigo == null) {
+            if (tip != null) cerrarTip(ESPERA_ENTRE_TIPS);
+            return false;
+        }
+        if (tip == null) {
+            esperaDelTip -= dt;
+            if (esperaDelTip > 0) return false;
+            tip = siguienteTip(codigo);
+            tiempoDelTip = dt;
+            return tip != null;
+        }
+        tiempoDelTip += dt;
+        if (tiempoDelTip > DURACION_VISIBLE_TIP) {
+            cerrarTip(ESPERA_ENTRE_TIPS);
+        }
+        return false;
+    }
+
+    /** Calcula la caja del bocadillo y la posición del botón «×» a partir del tamaño de pantalla y la altura del texto. */
+    public static CajaTip cajaTip(float pantallaAncho, float pantallaAlto, float altoTexto) {
+        float w = Math.min(420, pantallaAncho * 0.36f);
+        float anchoTexto = Math.max(80f, w - MARGEN_TEXTO_IZQ - MARGEN_TEXTO_DER);
+        float h = Math.max(altoTexto, BOTON_CERRAR_TAM) + 70f;
+        float x = pantallaAncho - 80f - w;
+        float y = pantallaAlto * 0.56f - h / 2f;
+        float cerrarX = x + w - BOTON_CERRAR_MARGEN - BOTON_CERRAR_TAM;
+        float cerrarY = y + BOTON_CERRAR_MARGEN;
+        return new CajaTip(x, y, w, h, anchoTexto, cerrarX, cerrarY, BOTON_CERRAR_TAM);
+    }
+
+    private CajaTip cajaTip(Pincel p, Ui ui, String texto) {
+        float w = Math.min(420, p.ancho * 0.36f);
+        float tl = ui.letra * 0.8f;
+        float anchoTexto = Math.max(80f, w - MARGEN_TEXTO_IZQ - MARGEN_TEXTO_DER);
+        float th = p.altoDeParrafo(texto, anchoTexto, tl);
+        return cajaTip(p.ancho, p.alto, th);
+    }
+
     public void cerrar() {
         abierto = false;
         pregunta.enfocado = false;
@@ -154,12 +245,25 @@ public final class EntrenadorFlotante {
             else if (s != null && !hospital(j)) abrirConError(j, s);
             else abrir(j, null);
         }
-        if (abierto) j.entrada.bloqueada = true;
+        if (abierto || ratonEncima(j)) j.entrada.bloqueada = true;
+    }
+
+    private boolean ratonEncima(Juego j) {
+        if (j.jugador == null || !j.jugador.entrenadorActivo) return false;
+        Pincel p = j.pincel;
+        float r = 20, cy = p.alto * 0.56f;
+        if (j.entrada.dentro(p.ancho - (asomada > 0.5f ? r * 2 + 50 : 38), cy - r - 14, r * 2 + 50, r * 2 + 28)) return true;
+        if (tip != null && j.pantalla() != null && j.pantalla().codigoParaConsejos() != null) {
+            CajaTip c = cajaTip(p, j.ui, T.t("entrenador.tip." + tip.id()));
+            return j.entrada.dentro(c.x, c.y, c.w, c.h);
+        }
+        return false;
     }
 
     /** Al final del fotograma: la pestaña con la cabecita y el tip (cerrada) o la consulta entera (abierta). */
     public void dibujar(Juego j, float dt) {
         if (j.jugador == null) return;
+        j.entrada.bloqueada = false;
         this.dt = dt;
         t += dt;
         hablando = Math.max(0, hablando - dt);
@@ -170,7 +274,6 @@ public final class EntrenadorFlotante {
             tipDelTaller(j, en, dt);
             return;
         }
-        j.entrada.bloqueada = false;
         Ui ui = j.ui;
         ui.reservarEscape();
         if (j.entrada.tecla(Input.Keys.ESCAPE)) {
@@ -190,20 +293,20 @@ public final class EntrenadorFlotante {
         boolean enfermo = hospital(j);
         // Recogida, solo asoma media cabeza por el borde (no tapa lo de la pantalla); con el ratón encima, sale entera.
         float r = 20, cy = p.alto * 0.56f;
-        boolean encima = j.entrada.dentro(p.ancho - (asomada > 0.5f ? r * 2 + 50 : 38), cy - r - 10, r * 2 + 50, r * 2 + 20);
+        boolean encima = j.entrada.dentro(p.ancho - (asomada > 0.5f ? r * 2 + 50 : 38), cy - r - 14, r * 2 + 50, r * 2 + 28);
         asomada += (encima || tip != null ? 1 - asomada : -asomada) * Math.min(1, dt * 12);
         float cx = p.ancho - 26 + (1 - asomada) * 24, sale = asomada * 10;
-        p.caja(cx - r - 12 - sale, cy - r - 10, r * 2 + 40, r * 2 + 20, 14, enfermo ? 0xE8ECEF : ui.tema.panelAlto, 0.92f);
-        p.bordeRedondeado(cx - r - 12 - sale, cy - r - 10, r * 2 + 40, r * 2 + 20, 14, enfermo ? 0xFF4D4D : ui.tema.acento, 0.9f, 1.5f);
+        p.caja(cx - r - 12 - sale, cy - r - 14, r * 2 + 40, r * 2 + 28, 14, enfermo ? 0xE8ECEF : ui.tema.panelAlto, 0.92f);
+        p.bordeRedondeado(cx - r - 12 - sale, cy - r - 14, r * 2 + 40, r * 2 + 28, 14, enfermo ? 0xFF4D4D : ui.tema.acento, 0.9f, 1.5f);
         CabezaDeEntrenador.dibujar(p, en, cx - sale, cy, r, false, t);
         if (enfermo) {
             p.rect(cx - sale - r, cy - r * 0.55f, r * 2, r * 0.3f, 0xFFFFFF, 0.95f);
-            p.textoCentrado("+", cx - sale + r * 0.9f, cy - r - 8, 18, true, 0xFF4D4D, 1);
+            p.textoCentrado("+", cx - sale + r * 0.9f, cy - r - 11, 18, true, 0xFF4D4D, 1);
         } else {
-            p.textoCentrado("?", cx - sale + r * 0.9f, cy - r - 8, 16, true, 0xFFD23F, 1);
+            p.textoCentrado("?", cx - sale + r * 0.9f, cy - r - 11, 16, true, 0xFFD23F, 1);
         }
         if (encima) ui.avisar(enfermo ? T.t("entrenador.hospital.ayuda") : T.t("entrenador.pestana"));
-        if (j.entrada.clic(cx - r - 12 - sale, cy - r - 10, r * 2 + 40, r * 2 + 20)) abrir(j, null);
+        if (j.entrada.clic(cx - r - 12 - sale, cy - r - 14, r * 2 + 40, r * 2 + 28)) abrir(j, null);
     }
 
     // ================================================================ los tips del taller
@@ -211,49 +314,61 @@ public final class EntrenadorFlotante {
     /** Mientras se programa un robot: de vez en cuando, un tip en una viñeta junto a la cabecita. */
     private void tipDelTaller(Juego j, Entrenador en, float dt) {
         String codigo = j.pantalla() == null ? null : j.pantalla().codigoParaConsejos();
-        if (codigo == null) {
-            tip = null;
-            return;
-        }
-        if (tip == null) {
-            esperaDelTip -= dt;
-            if (esperaDelTip > 0) return;
-            tip = siguienteTip(codigo);
-            tiempoDelTip = 0;
-            if (tip == null) return;
+        if (avanzarTemporizadorDeTip(codigo, dt)) {
             decir(j, T.t("entrenador.tip." + tip.id()));
         }
-        tiempoDelTip += dt;
+        if (tip == null) return;
         Pincel p = j.pincel;
         Ui ui = j.ui;
         String texto = T.t("entrenador.tip." + tip.id());
-        float w = Math.min(420, p.ancho * 0.36f), tl = ui.letra * 0.8f;
-        float th = p.altoDeParrafo(texto, w - 24, tl);
-        float h = th + 70, x = p.ancho - 80 - w, y = p.alto * 0.56f - h / 2;
+        float tl = ui.letra * 0.8f;
+        CajaTip c = cajaTip(p, ui, texto);
         float aparece = Math.min(1, tiempoDelTip * 4);
-        p.caja(x + 3, y + 4, w, h, 12, 0x000000, 0.3f * aparece);
-        p.caja(x, y, w, h, 12, 0xF5F3EA, 0.97f * aparece);
-        p.triangulo(x + w, y + h / 2 - 10, x + w, y + h / 2 + 10, x + w + 14, y + h / 2, 0xF5F3EA, 0.97f * aparece);
-        p.parrafo(texto, x + 12, y + 10, w - 24, tl, 0x1E1E1E, aparece);
-        float by = y + h - 50, bw = (w - 32) / 3;
-        if (ui.boton(T.t("entrenador.tip.explica"), x + 8, by, bw, 40, Ui.Estilo.PLANO)) {
-            String c = tip.concepto();
-            tip = null;
-            esperaDelTip = 45;
-            abrir(j, c);
+        p.caja(c.x + 3, c.y + 4, c.w, c.h, 12, 0x000000, 0.3f * aparece);
+        p.caja(c.x, c.y, c.w, c.h, 12, 0xF5F3EA, 0.97f * aparece);
+        p.triangulo(c.x + c.w, c.y + c.h / 2 - 10, c.x + c.w, c.y + c.h / 2 + 10, c.x + c.w + 14, c.y + c.h / 2, 0xF5F3EA, 0.97f * aparece);
+        p.parrafo(texto, c.x + MARGEN_TEXTO_IZQ, c.y + 10, c.anchoTexto, tl, 0x1E1E1E, aparece);
+        if (botonCerrarTip(j, c, aparece)) {
+            cerrarTipManualmente();
             return;
         }
-        if (ui.boton(T.t("entrenador.tip.otro"), x + 16 + bw, by, bw, 40, Ui.Estilo.PLANO)) {
+        float by = c.y + c.h - 50, bw = (c.w - 32) / 3;
+        if (ui.boton(T.t("entrenador.tip.explica"), c.x + 8, by, bw, 40, Ui.Estilo.PLANO)) {
+            String concepto = tip.concepto();
+            cerrarTip(ESPERA_ENTRE_TIPS);
+            abrir(j, concepto);
+            return;
+        }
+        if (ui.boton(T.t("entrenador.tip.otro"), c.x + 16 + bw, by, bw, 40, Ui.Estilo.PLANO)) {
             tip = siguienteTip(codigo);
             tiempoDelTip = 0;
             if (tip != null) decir(j, T.t("entrenador.tip." + tip.id()));
             return;
         }
-        // Se va sola a los 16 s; el siguiente, dentro de un rato (TODO-FRAN: cada cuánto).
-        if (ui.boton(T.t("entrenador.tip.cerrar"), x + 24 + 2 * bw, by, bw, 40, Ui.Estilo.PLANO) || tiempoDelTip > 16) {
-            tip = null;
-            esperaDelTip = 45;
+        if (ui.boton(T.t("entrenador.tip.cerrar"), c.x + 24 + 2 * bw, by, bw, 40, Ui.Estilo.PLANO)) {
+            cerrarTipManualmente();
         }
+    }
+
+    /** Botón pequeño «×» en la esquina superior derecha del bocadillo: cierra el tip y consume el clic. */
+    private boolean botonCerrarTip(Juego j, CajaTip c, float aparece) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        boolean encima = j.entrada.dentro(c.cerrarX, c.cerrarY, c.cerrarTam, c.cerrarTam);
+        boolean apretado = encima && j.entrada.pulsado;
+        if (encima) {
+            p.caja(c.cerrarX, c.cerrarY, c.cerrarTam, c.cerrarTam, 6, apretado ? 0xCFC8B4 : 0xE2DCCB, 0.95f * aparece);
+            ui.avisar(T.t("entrenador.tip.cerrar_x"));
+        }
+        float tam = Math.min(18f, ui.letra * 0.9f);
+        float desplaza = apretado ? 1f : 0f;
+        p.textoCentrado("×", c.cerrarX + c.cerrarTam / 2f, c.cerrarY + desplaza + (c.cerrarTam - tam * 1.15f) / 2f, tam, true,
+                encima ? 0x1E1E1E : 0x625D52, aparece);
+        if (j.entrada.clic(c.cerrarX, c.cerrarY, c.cerrarTam, c.cerrarTam)) {
+            if (ui.sonidoDeClic != null) ui.sonidoDeClic.run();
+            return true;
+        }
+        return false;
     }
 
     /** El primer tip del código que aún no ha dado; si ya los dio todos, uno de los generales (por turnos). */

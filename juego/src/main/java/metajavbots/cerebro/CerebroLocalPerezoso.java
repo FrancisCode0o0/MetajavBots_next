@@ -83,7 +83,7 @@ public final class CerebroLocalPerezoso implements Cerebro {
     private static synchronized void vigilar() {
         if (vigilante != null && vigilante.isAlive()) return;
         vigilante = new Thread(() -> {
-            while (true) {
+            while (!Thread.currentThread().isInterrupted()) {
                 try {
                     Thread.sleep(30_000);
                 } catch (InterruptedException e) {
@@ -94,5 +94,13 @@ public final class CerebroLocalPerezoso implements Cerebro {
         }, "apagar-cerebros-locales");
         vigilante.setDaemon(true);
         vigilante.start();
+    }
+
+    /** Detiene el hilo vigilante al cerrar el juego. */
+    public static synchronized void cerrar() {
+        if (vigilante != null) {
+            vigilante.interrupt();
+            vigilante = null;
+        }
     }
 }

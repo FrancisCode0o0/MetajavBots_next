@@ -43,15 +43,49 @@ final class PruebasDelContenido {
         apuntarRobotsRotos();
         apuntarRetoDiario();
         apuntarArmasEspeciales();
+        apuntarPistasReferencia();
+    }
+
+    private static void apuntarPistasReferencia() {
+        caso("referencia y API: cada entrada tiene su pista de ubicación en ES, DE y EN, sin vacíos ni duplicados", () -> {
+            List<metajavbots.pantallas.Referencia.Entrada> todas = metajavbots.pantallas.Referencia.todas();
+            cierto(todas.size() >= 332, "entradas en api.txt + referencia.txt: " + todas.size());
+            long deApi = todas.stream().filter(metajavbots.pantallas.Referencia.Entrada::esDeLaApi).count();
+            cierto(deApi >= 93, "entradas de api.txt: " + deApi);
+            cierto(todas.size() - deApi >= 239, "entradas de referencia.txt: " + (todas.size() - deApi));
+            for (metajavbots.textos.Idioma i : metajavbots.textos.Idioma.values()) {
+                java.util.Map<String, String> vistas = new java.util.HashMap<>();
+                for (metajavbots.pantallas.Referencia.Entrada e : todas) {
+                    String p = e.donde(i).strip();
+                    cierto(!p.isEmpty(), e.id + " sin pista «donde» en " + i);
+                    String previa = vistas.put(p, e.id);
+                    cierto(previa == null, "pista «donde» duplicada en " + i + " entre " + previa + " y " + e.id + ": " + p);
+                }
+            }
+            for (metajavbots.pantallas.Referencia.Entrada e : todas) {
+                String es = e.donde(metajavbots.textos.Idioma.ES).strip();
+                cierto(!es.equals(e.donde(metajavbots.textos.Idioma.DE).strip()), e.id + ": pista en DE igual que ES");
+                cierto(!es.equals(e.donde(metajavbots.textos.Idioma.EN).strip()), e.id + ": pista en EN igual que ES");
+            }
+        });
     }
 
     private static void apuntarArmasEspeciales() {
-        caso("armas especiales: los tres retos se leen, su solución pasa todos los casos y la plantilla no", () -> {
+        caso("armas especiales: varios retos por herramienta en tres idiomas, su solución pasa todos los casos y la plantilla no", () -> {
             java.util.List<metajavbots.ejercicios.Ejercicio> l;
             try (java.io.InputStream in = PruebasDelContenido.class.getResourceAsStream("/especiales/retos.txt")) {
                 l = metajavbots.ejercicios.Ejercicio.leer(in, "retos.txt");
             }
-            igual(3, l.size());
+            cierto(l.size() >= 9, "al menos 9 retos (varios por herramienta): " + l.size());
+            for (String prefijo : new String[]{"especial_martillo", "especial_canon", "especial_arpon"}) {
+                long cuenta = l.stream().filter(e -> e.id.equals(prefijo) || e.id.startsWith(prefijo + "_")).count();
+                cierto(cuenta >= 3, prefijo + ": al menos 3 retos (" + cuenta + ")");
+            }
+            for (metajavbots.ejercicios.Ejercicio e : l) {
+                for (String s : new String[]{e.titulo.es, e.titulo.de, e.titulo.en, e.enunciado.es, e.enunciado.de, e.enunciado.en}) {
+                    cierto(!s.isEmpty(), e.id + ": título y enunciado en los tres idiomas");
+                }
+            }
             if (!metajavbots.codigo.Compilador.hayCompilador()) return;
             for (metajavbots.ejercicios.Ejercicio e : l) {
                 cierto(metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoSolucion(), java.util.Locale.ROOT).todoBien(), e.id + ": la solución");
@@ -183,22 +217,27 @@ final class PruebasDelContenido {
 
         caso("ejercicios: la solución de cada uno pasa todos sus casos y la plantilla no", () -> {
             List<String> mal = new ArrayList<>();
-            int n = 0;
+            int n = 0, variantes = 0;
             for (Ejercicio e : Banco.delJuego().todos()) {
                 if (e.java > Compilador.versionDeJava()) continue;
                 n++;
-                Comprobador.Informe bien = Comprobador.comprobar(e, e.codigoSolucion(), Locale.ROOT);
-                if (!bien.todoBien()) {
-                    StringBuilder b = new StringBuilder(e.id + ": la solución no pasa:");
-                    for (Compilador.Fallo f : bien.errores) b.append(" [").append(f).append("]");
-                    for (Comprobador.Resultado r : bien.casos) if (!r.bien) b.append(" [").append(r.caso).append(" → ").append(r.obtenido).append("]");
-                    mal.add(b.toString());
+                for (metajavbots.textos.Idioma id : metajavbots.textos.Idioma.values()) {
+                    if (id != metajavbots.textos.Idioma.ES && e.casos(id) == e.casos && e.solucion(id).equals(e.solucion)
+                            && e.plantilla(id).equals(e.plantilla)) continue;
+                    if (id != metajavbots.textos.Idioma.ES) variantes++;
+                    Comprobador.Informe bien = Comprobador.comprobar(e, e.codigoSolucion(id), id.locale());
+                    if (!bien.todoBien()) {
+                        StringBuilder b = new StringBuilder(e.id + " (" + id + "): la solución no pasa:");
+                        for (Compilador.Fallo f : bien.errores) b.append(" [").append(f).append("]");
+                        for (Comprobador.Resultado r : bien.casos) if (!r.bien) b.append(" [").append(r.caso).append(" → ").append(r.obtenido).append("]");
+                        mal.add(b.toString());
+                    }
+                    Comprobador.Informe plantilla = Comprobador.comprobar(e, e.codigoInicial(id), id.locale());
+                    if (plantilla.todoBien()) mal.add(e.id + " (" + id + "): la plantilla ya pasa todos los casos");
+                    if (e.tipo != Ejercicio.Tipo.CLASE && !plantilla.compila()) mal.add(e.id + " (" + id + "): la plantilla no compila " + plantilla.errores);
                 }
-                Comprobador.Informe plantilla = Comprobador.comprobar(e, e.codigoInicial(), Locale.ROOT);
-                if (plantilla.todoBien()) mal.add(e.id + ": la plantilla ya pasa todos los casos");
-                if (e.tipo != Ejercicio.Tipo.CLASE && !plantilla.compila()) mal.add(e.id + ": la plantilla no compila " + plantilla.errores);
             }
-            System.out.println("            " + n + " ejercicios comprobados");
+            System.out.println("            " + n + " ejercicios comprobados (+" + variantes + " variantes DE/EN)");
             cierto(mal.isEmpty(), String.join("\n  ", mal));
         });
 

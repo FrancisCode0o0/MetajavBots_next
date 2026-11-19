@@ -57,6 +57,7 @@ public final class CerebroLocal {
     }
 
     private static final Map<Integer, Servidor> SERVIDORES = new LinkedHashMap<>();
+    private static final HttpClient CLIENTE_SONDEO = HttpClient.newBuilder().connectTimeout(Duration.ofMillis(700)).build();
     /** El juego se cierra: no se arranca ninguno más (uno que estaba cargando se quedaba abierto sin juego). */
     private static volatile boolean cerrando;
 
@@ -77,8 +78,8 @@ public final class CerebroLocal {
     /** ¿Hay alguien escuchando en esa dirección? (pregunta por el modelo cargado). */
     public static boolean escucha(String direccion) {
         try {
-            HttpClient c = HttpClient.newBuilder().connectTimeout(Duration.ofSeconds(2)).build();
-            HttpResponse<String> r = c.send(HttpRequest.newBuilder(URI.create(direccion + "/api/v1/model")).timeout(Duration.ofSeconds(3)).GET().build(),
+            HttpResponse<String> r = CLIENTE_SONDEO.send(
+                    HttpRequest.newBuilder(URI.create(direccion + "/api/v1/model")).timeout(Duration.ofSeconds(3)).GET().build(),
                     HttpResponse.BodyHandlers.ofString());
             return r.statusCode() == 200;
         } catch (Exception e) {
@@ -244,13 +245,16 @@ public final class CerebroLocal {
     }
 
     public static String arrancarElQueFuncione(Path carpeta, List<Path> modelos, int puerto, Consumer<String> estado) {
+        if (cerrando) return "cerrando";
         if (escucha(direccion(puerto))) return "ya";
         String ultimo = "sin_modelo";
         for (Path m : modelos) {
+            if (cerrando) return "cerrando";
             if (estado != null) estado.accept(m.getFileName().toString());
             // Primero en la gráfica; si no cabe (la integrada comparte poca memoria con los otros modelos), con el procesador,
             // que en el portátil de Fran contesta casi igual de rápido (Qwen3.5-9B: 25 s frente a 30 s).
             for (boolean enLaGrafica : new boolean[]{true, false}) {
+                if (cerrando) return "cerrando";
                 ultimo = arrancar(carpeta, m, puerto, enLaGrafica);
                 if (ultimo.equals("ya")) return ultimo;
                 if (!ultimo.equals("arrancando")) break;
@@ -265,7 +269,7 @@ public final class CerebroLocal {
     /** Espera a que el KoboldCpp de ese puerto escuche; false si se cierra antes o tarda demasiado. */
     private static boolean esperarACargar(int puerto) {
         long limite = System.currentTimeMillis() + ESPERA_DE_CARGA_MS;
-        while (System.currentTimeMillis() < limite) {
+        while (System.currentTimeMillis() < limite && !cerrando) {
             if (escucha(direccion(puerto))) return true;
             synchronized (CerebroLocal.class) {
                 Servidor s = SERVIDORES.get(puerto);
@@ -277,6 +281,10 @@ public final class CerebroLocal {
                 Thread.currentThread().interrupt();
                 return false;
             }
+        }
+        if (cerrando) {
+            parar(puerto);
+            return false;
         }
         return false;
     }
@@ -313,14 +321,15 @@ public final class CerebroLocal {
     public static synchronized void parar(int puerto) {
         Servidor s = SERVIDORES.remove(puerto);
         if (s != null) {
-            s.proceso.descendants().forEach(ProcessHandle::destroy);
-            s.proceso.destroy();
+            s.proceso.descendants().forEach(ProcessHandle::destroyForcibly);
+            s.proceso.destroyForcibly();
         }
     }
 
     /** Al cerrar el juego: los cierra todos y no deja arrancar más. */
     public static void cerrar() {
         cerrando = true;
+        CerebroLocalPerezoso.cerrar();
         parar();
     }
 

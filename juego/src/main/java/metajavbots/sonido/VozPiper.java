@@ -26,8 +26,12 @@ public final class VozPiper {
     /** Cuánto puede tardar Piper en leer una frase. */
     private static final long ESPERA_MS = 20_000;
     private static final Pattern FRECUENCIA_DEL_MODELO = Pattern.compile("\"sample_rate\"\\s*:\\s*(\\d+)");
+    private static final java.util.Map<Path, Integer> FRECUENCIAS = new java.util.concurrent.ConcurrentHashMap<>();
 
     private final Path carpeta;
+    private final java.util.Map<Idioma, Path> vocesPorIdioma = new java.util.concurrent.ConcurrentHashMap<>();
+    private final java.util.Map<Idioma, Boolean> disponibles = new java.util.concurrent.ConcurrentHashMap<>();
+    private volatile Process enCurso;
 
     /** La carpeta de Piper (con piper.exe y voces/). */
     public VozPiper(Path carpeta) {
@@ -45,22 +49,30 @@ public final class VozPiper {
 
     /** La voz de un idioma (la primera voces/<es|de|en>_*.onnx), o null. */
     Path voz(Idioma idioma) {
+        Path cacheada = vocesPorIdioma.get(idioma);
+        if (cacheada != null && Files.isRegularFile(cacheada)) return cacheada;
         Path voces = carpeta.resolve("voces");
         if (!Files.isDirectory(voces)) return null;
         String prefijo = idioma.codigo() + "_";
         try (Stream<Path> s = Files.list(voces)) {
             List<Path> l = s.filter(p -> p.getFileName().toString().startsWith(prefijo) && p.toString().endsWith(".onnx")).sorted().toList();
-            return l.isEmpty() ? null : l.get(0);
+            if (l.isEmpty()) return null;
+            vocesPorIdioma.put(idioma, l.get(0));
+            return l.get(0);
         } catch (Exception e) {
             return null;
         }
     }
 
-    private final java.util.Map<Idioma, Boolean> disponibles = new java.util.concurrent.ConcurrentHashMap<>();
-
     /** ¿Puede leer en ese idioma? (se mira el disco una vez: los Ajustes lo preguntan en cada fotograma). */
     public boolean disponible(Idioma idioma) {
         return disponibles.computeIfAbsent(idioma, i -> programa() != null && voz(i) != null);
+    }
+
+    /** Cancela el proceso de Piper en curso, si lo hay. */
+    public void cancelar() {
+        Process p = enCurso;
+        if (p != null && p.isAlive()) p.destroyForcibly();
     }
 
     /** Lee el texto: el audio (mono, a la frecuencia del juego) con el efecto robótico, o null si no ha podido. */
@@ -72,10 +84,12 @@ public final class VozPiper {
     public float[] decir(String texto, Idioma idioma, Timbre timbre) {
         Path exe = programa(), voz = voz(idioma);
         if (exe == null || voz == null) return null;
+        Process p = null;
         try {
             String largo = String.format(java.util.Locale.ROOT, "%.3f", 0.95 * timbre.tono() / timbre.velocidad());
-            Process p = new ProcessBuilder(exe.toString(), "--model", voz.toString(), "--output_raw", "--length_scale", largo,
+            p = new ProcessBuilder(exe.toString(), "--model", voz.toString(), "--output_raw", "--length_scale", largo,
                     "--sentence_silence", "0.15").directory(carpeta.toFile()).redirectError(ProcessBuilder.Redirect.DISCARD).start();
+            enCurso = p;
             try (OutputStream entrada = p.getOutputStream()) {
                 entrada.write(texto.replace('\n', ' ').getBytes(StandardCharsets.UTF_8));
             }
@@ -92,18 +106,25 @@ public final class VozPiper {
             return robotico(Timbre.cambiarTono(aFrecuenciaDelJuego(muestras(b), frecuencia(voz)), timbre.tono()), timbre.robot());
         } catch (Exception e) {
             return null;
+        } finally {
+            if (p != null) {
+                if (p.isAlive()) p.destroyForcibly();
+                if (enCurso == p) enCurso = null;
+            }
         }
     }
 
     /** La frecuencia de la voz (la dice su .onnx.json; si no, la de casi todas las de Piper). */
     public static int frecuencia(Path voz) {
-        try {
-            Matcher m = FRECUENCIA_DEL_MODELO.matcher(Files.readString(Path.of(voz + ".json"), StandardCharsets.UTF_8));
-            if (m.find()) return Integer.parseInt(m.group(1));
-        } catch (Exception e) {
-            // la de siempre
-        }
-        return 22050;
+        return FRECUENCIAS.computeIfAbsent(voz, v -> {
+            try {
+                Matcher m = FRECUENCIA_DEL_MODELO.matcher(Files.readString(Path.of(v + ".json"), StandardCharsets.UTF_8));
+                if (m.find()) return Integer.parseInt(m.group(1));
+            } catch (Exception e) {
+                // la de siempre
+            }
+            return 22050;
+        });
     }
 
     /** De bytes (16 bits, little endian) a muestras entre -1 y 1. */

@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -51,6 +52,9 @@ public final class Ejercicio {
     public final Tipo tipo;
     public final Trilingue titulo, enunciado, pista;
     public final List<Caso> casos;
+    private final Map<Idioma, String> plantillas = new EnumMap<>(Idioma.class);
+    private final Map<Idioma, String> soluciones = new EnumMap<>(Idioma.class);
+    private final Map<Idioma, List<Caso>> casosPorIdioma = new EnumMap<>(Idioma.class);
     /** Lo que desbloquea (reto:<id>) al resolverlo; "" si nada. */
     public final String desbloquea;
     /** La escena de su animación si no es la que toca por lo que devuelve: «giro» o «avance» (pantallas/EscenaDeArena), o "". */
@@ -71,31 +75,82 @@ public final class Ejercicio {
         solucion = v.getOrDefault("solucion", "");
         desbloquea = v.getOrDefault("desbloquea", "").strip();
         escena = v.getOrDefault("escena", "").strip();
+        String casosRaw = v.getOrDefault("casos", "");
+        casos = leerCasos(casosRaw);
+        for (Idioma i : Idioma.values()) {
+            String term = v.get("terminos." + i.codigo());
+            String pl = v.containsKey("plantilla." + i.codigo()) ? v.get("plantilla." + i.codigo()) : aplicarTerminos(plantilla, term);
+            String so = v.containsKey("solucion." + i.codigo()) ? v.get("solucion." + i.codigo()) : aplicarTerminos(solucion, term);
+            String ca = v.containsKey("casos." + i.codigo()) ? v.get("casos." + i.codigo()) : aplicarTerminos(casosRaw, term);
+            plantillas.put(i, pl);
+            soluciones.put(i, so);
+            casosPorIdioma.put(i, ca.equals(casosRaw) ? casos : leerCasos(ca));
+        }
+    }
+
+    private static List<Caso> leerCasos(String texto) {
         List<Caso> l = new ArrayList<>();
-        for (String linea : v.getOrDefault("casos", "").split("\n")) {
+        for (String linea : texto.split("\n")) {
             linea = linea.strip();
             if (linea.isEmpty()) continue;
             int i = linea.lastIndexOf("=>");
             if (i < 0) continue;
             l.add(new Caso(linea.substring(0, i).strip(), linea.substring(i + 2).strip()));
         }
-        casos = Collections.unmodifiableList(l);
+        return Collections.unmodifiableList(l);
+    }
+
+    private static String aplicarTerminos(String s, String spec) {
+        if (s == null || s.isEmpty() || spec == null || spec.isBlank()) return s;
+        String res = s;
+        for (String linea : spec.split("\n")) {
+            String t = linea.strip();
+            if (t.isEmpty() || t.startsWith("#")) continue;
+            int sep = t.indexOf("==>");
+            if (sep <= 0) continue;
+            String viejo = t.substring(0, sep).strip();
+            String nuevo = t.substring(sep + 3).strip();
+            res = res.replace(viejo, nuevo);
+        }
+        return res;
     }
 
     public String titulo(Idioma i) {
         return titulo.en(i);
     }
 
+    public String plantilla(Idioma i) {
+        return plantillas.getOrDefault(i == null ? Idioma.ES : i, plantilla);
+    }
+
+    public String solucion(Idioma i) {
+        return soluciones.getOrDefault(i == null ? Idioma.ES : i, solucion);
+    }
+
+    public List<Caso> casos(Idioma i) {
+        return casosPorIdioma.getOrDefault(i == null ? Idioma.ES : i, casos);
+    }
+
     /** Lo que aparece en el editor al empezar: en un método, la firma con la plantilla dentro. */
     public String codigoInicial() {
-        if (tipo == Tipo.CLASE) return plantilla;
-        return firma + " {\n" + sangrar(plantilla) + "}\n";
+        return codigoInicial(Idioma.ES);
+    }
+
+    public String codigoInicial(Idioma i) {
+        String p = plantilla(i);
+        if (tipo == Tipo.CLASE) return p;
+        return firma + " {\n" + sangrar(p) + "}\n";
     }
 
     /** El código de la solución, como lo escribiría el jugador. */
     public String codigoSolucion() {
-        if (tipo == Tipo.CLASE) return solucion;
-        return firma + " {\n" + sangrar(solucion) + "}\n";
+        return codigoSolucion(Idioma.ES);
+    }
+
+    public String codigoSolucion(Idioma i) {
+        String s = solucion(i);
+        if (tipo == Tipo.CLASE) return s;
+        return firma + " {\n" + sangrar(s) + "}\n";
     }
 
     /** Los puntos de experiencia que da (más cuanto más difícil y más avanzado el tema). */

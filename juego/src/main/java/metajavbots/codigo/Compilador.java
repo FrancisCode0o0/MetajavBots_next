@@ -84,19 +84,24 @@ public final class Compilador {
 
     private static JavaCompiler javac;
     private static StandardJavaFileManager archivos;
-    private static boolean buscado;
+    private static volatile boolean buscado;
+    private static volatile String rutaClases;
 
     private Compilador() {
     }
 
     /** ¿Hay javac? (no lo hay si el juego corre con un JRE en vez de un JDK). */
-    public static synchronized boolean hayCompilador() {
+    public static boolean hayCompilador() {
         if (!buscado) {
-            buscado = true;
-            try {
-                javac = ToolProvider.getSystemJavaCompiler();
-            } catch (Throwable e) {
-                javac = null;
+            synchronized (Compilador.class) {
+                if (!buscado) {
+                    try {
+                        javac = ToolProvider.getSystemJavaCompiler();
+                    } catch (Throwable e) {
+                        javac = null;
+                    }
+                    buscado = true;
+                }
             }
         }
         return javac != null;
@@ -204,7 +209,9 @@ public final class Compilador {
     }
 
     private static String classpath() {
-        String cp = System.getProperty("java.class.path", "");
+        String cp = rutaClases;
+        if (cp != null) return cp;
+        cp = System.getProperty("java.class.path", "");
         // Si se juega desde un IDE o un lanzador que no pone el classpath, al menos la carpeta o el jar del juego.
         try {
             String propio = new File(Compilador.class.getProtectionDomain().getCodeSource().getLocation().toURI()).getPath();
@@ -212,6 +219,7 @@ public final class Compilador {
         } catch (Exception | Error e) {
             // sin más
         }
+        rutaClases = cp;
         return cp;
     }
 

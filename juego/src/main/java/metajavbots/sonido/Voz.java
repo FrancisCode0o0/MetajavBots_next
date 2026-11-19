@@ -20,8 +20,16 @@ public final class Voz {
         t.setDaemon(true);
         return t;
     });
+    private static final int MAX_CACHE = 24;
+    private final java.util.Map<String, float[]> cache = java.util.Collections.synchronizedMap(
+            new java.util.LinkedHashMap<String, float[]>(32, 0.75f, true) {
+                @Override
+                protected boolean removeEldestEntry(java.util.Map.Entry<String, float[]> eldest) {
+                    return size() > MAX_CACHE;
+                }
+            });
     private volatile float[] lista;
-    private volatile String textoListo;
+    private volatile String claveLista;
     private volatile long pedida;
     public boolean activa = true;
     public float volumen = 0.9f;
@@ -49,12 +57,25 @@ public final class Voz {
     public void decir(String texto, Idioma idioma, Timbre timbre) {
         if (!activa || texto == null || texto.isBlank()) return;
         long yo = ++pedida;
+        String limpio = texto.strip();
+        String clave = idioma.name() + "|" + (clara ? "C" : "R") + "|" + timbre + "|" + limpio;
+        float[] cacheada = cache.get(clave);
+        if (cacheada != null) {
+            claveLista = clave;
+            lista = cacheada;
+            return;
+        }
         VozPiper p = clara ? piper : null;
+        VozPiper actual = piper;
+        if (actual != null) actual.cancelar();
+        if (hilo.isShutdown()) return;
         hilo.submit(() -> {
-            float[] m = p != null ? p.decir(texto, idioma, timbre) : null;
-            if (m == null) m = Timbre.cambiarTono(VozRobot.decir(texto, idioma, yo), timbre.tono());
-            if (yo == pedida) {
-                textoListo = texto;
+            if (yo != pedida || !activa) return;
+            float[] m = p != null ? p.decir(limpio, idioma, timbre) : null;
+            if (m == null) m = Timbre.cambiarTono(VozRobot.decir(limpio, idioma, yo), timbre.tono());
+            if (m != null) cache.put(clave, m);
+            if (yo == pedida && activa) {
+                claveLista = clave;
                 lista = m;
             }
         });
@@ -63,8 +84,19 @@ public final class Voz {
     /** Cada fotograma: si hay una frase lista, suena. */
     public void fotograma(Sonidos sonidos) {
         float[] m = lista;
+        String clave = claveLista;
         if (m == null) return;
         lista = null;
-        sonidos.tocarMuestras("voz:" + textoListo, m, volumen);
+        sonidos.tocarMuestras("voz:" + clave, m, volumen);
+    }
+
+    /** Cancela cualquier síntesis en marcha y cierra el hilo de voz al salir. */
+    public void liberar() {
+        activa = false;
+        pedida++;
+        lista = null;
+        VozPiper p = piper;
+        if (p != null) p.cancelar();
+        hilo.shutdownNow();
     }
 }

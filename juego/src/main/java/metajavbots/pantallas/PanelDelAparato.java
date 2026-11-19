@@ -18,6 +18,11 @@ public final class PanelDelAparato {
     private String codigoDelAparato = "";
     private final VentanaDeCodigo ventanaDelAparato = new VentanaDeCodigo();
 
+    /** ¿Está abierta la ventana del aparato? */
+    public boolean estaAbierto() {
+        return verAparato;
+    }
+
     /** Uno con el código ya abierto (para las capturas). */
     public static PanelDelAparato abierto() {
         PanelDelAparato p = new PanelDelAparato();
@@ -52,6 +57,7 @@ public final class PanelDelAparato {
         ventanaDelAparato.tamano = j.jugador.tamanoDeLetra;
         ventanaDelAparato.dibujar(ui, x + 12, cy, w - 24, py + h - cy - 70);
         if (ui.boton(T.t("aparato.cerrar"), x + w - 220, py + h - 60, 200, 48, Ui.Estilo.PRINCIPAL) || ui.atras()) verAparato = false;
+        ui.reservarEscape();
         return pausar;
     }
 }

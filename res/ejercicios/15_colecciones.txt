@@ -63,11 +63,11 @@ titulo.es: El arsenal que no se toca (List.of, Java 9)
 titulo.de: Das unantastbare Arsenal (List.of, Java 9)
 titulo.en: The untouchable arsenal (List.of, Java 9)
 enunciado.es: Devuelve las armas con las que empieza todo robot: "puno", "laser" y "escudo", en una lista que nadie pueda cambiar: ni añadir, ni quitar, ni sustituir. List.of, que llegó en Java 9, crea justo eso; si alguien lo intenta, salta UnsupportedOperationException.
-enunciado.de: Gib die Waffen zurück, mit denen jeder Roboter startet: "puno", "laser" und "escudo", in einer Liste, die niemand ändern kann: nichts hinzufügen, entfernen oder ersetzen. List.of, das mit Java 9 kam, erzeugt genau das; wer es versucht, bekommt eine UnsupportedOperationException.
-enunciado.en: Return the weapons every robot starts with: "puno", "laser" and "escudo", in a list nobody can change: no adding, removing or replacing. List.of, which arrived in Java 9, creates exactly that; anyone who tries gets an UnsupportedOperationException.
+enunciado.de: Gib die Waffen zurück, mit denen jeder Roboter startet: "faust", "laser" und "schild", in einer Liste, die niemand ändern kann: nichts hinzufügen, entfernen oder ersetzen. List.of, das mit Java 9 kam, erzeugt genau das; wer es versucht, bekommt eine UnsupportedOperationException.
+enunciado.en: Return the weapons every robot starts with: "fist", "laser" and "shield", in a list nobody can change: no adding, removing or replacing. List.of, which arrived in Java 9, creates exactly that; anyone who tries gets an UnsupportedOperationException.
 pista.es: return List.of("puno", "laser", "escudo"); — Arrays.asList no deja añadir, pero sí cambiar con set.
-pista.de: return List.of("puno", "laser", "escudo"); — Arrays.asList verbietet add, erlaubt aber set.
-pista.en: return List.of("puno", "laser", "escudo"); — Arrays.asList forbids add, but still allows set.
+pista.de: return List.of("faust", "laser", "schild"); — Arrays.asList verbietet add, erlaubt aber set.
+pista.en: return List.of("fist", "laser", "shield"); — Arrays.asList forbids add, but still allows set.
 firma: static List<String> armasIniciales()
 plantilla:
     return new ArrayList<>(Arrays.asList("puno", "laser", "escudo"));
@@ -79,6 +79,16 @@ casos:
     armasIniciales().add("misil") => !UnsupportedOperationException
     armasIniciales().set(0, "garra") => !UnsupportedOperationException
     armasIniciales().remove("laser") => !UnsupportedOperationException
+terminos.de:
+    puno ==> faust
+    escudo ==> schild
+    misil ==> rakete
+    garra ==> klaue
+terminos.en:
+    puno ==> fist
+    escudo ==> shield
+    misil ==> missile
+    garra ==> claw
 
 === t15_primero_y_ultimo
 tema: 15
@@ -238,8 +248,8 @@ titulo.es: La cola del taller (Deque)
 titulo.de: Die Warteschlange der Werkstatt (Deque)
 titulo.en: The workshop queue (Deque)
 enunciado.es: Escribe la clase Taller con Taller(), Taller llega(String robot) (se pone al final de la cola), Taller urgente(String robot) (se cuela al principio), String atender() (saca y devuelve el primero; "nadie" si no hay), String siguiente() (lo mira sin sacarlo; "nadie" si no hay) e int enEspera(). llega y urgente devuelven this.
-enunciado.de: Schreibe die Klasse Taller mit Taller(), Taller llega(String robot) (stellt sich hinten an), Taller urgente(String robot) (drängelt sich vorne rein), String atender() (nimmt den Ersten heraus und gibt ihn zurück; "nadie", wenn keiner da ist), String siguiente() (schaut ihn an, ohne ihn herauszunehmen; "nadie", wenn keiner da ist) und int enEspera(). llega und urgente geben this zurück.
-enunciado.en: Write the class Taller with Taller(), Taller llega(String robot) (joins the back of the queue), Taller urgente(String robot) (jumps to the front), String atender() (takes out and returns the first; "nadie" if there's nobody), String siguiente() (looks at it without taking it out; "nadie" if there's nobody) and int enEspera(). llega and urgente return this.
+enunciado.de: Schreibe die Klasse Taller mit Taller(), Taller llega(String robot) (stellt sich hinten an), Taller urgente(String robot) (drängelt sich vorne rein), String atender() (nimmt den Ersten heraus und gibt ihn zurück; "niemand", wenn keiner da ist), String siguiente() (schaut ihn an, ohne ihn herauszunehmen; "niemand", wenn keiner da ist) und int enEspera(). llega und urgente geben this zurück.
+enunciado.en: Write the class Taller with Taller(), Taller llega(String robot) (joins the back of the queue), Taller urgente(String robot) (jumps to the front), String atender() (takes out and returns the first; "nobody" if there's nobody), String siguiente() (looks at it without taking it out; "nobody" if there's nobody) and int enEspera(). llega and urgente return this.
 pista.es: Un ArrayDeque<String> sirve por los dos lados: addLast, addFirst, pollFirst y peekFirst (los dos últimos dan null si está vacío).
 pista.de: Eine ArrayDeque<String> funktioniert an beiden Enden: addLast, addFirst, pollFirst und peekFirst (die letzten beiden liefern null, wenn sie leer ist).
 pista.en: An ArrayDeque<String> works at both ends: addLast, addFirst, pollFirst and peekFirst (the last two give null when it's empty).
@@ -293,6 +303,12 @@ casos:
     new Taller().llega("Rex").llega("Tita").enEspera() => 2
     ((Supplier<String>) () -> { Taller t = new Taller().llega("A").llega("B").urgente("C"); t.atender(); return t.atender() + t.atender() + t.atender(); }).get() => "ABnadie"
     ((Supplier<Integer>) () -> { Taller t = new Taller().llega("A"); t.siguiente(); return t.enEspera(); }).get() => 1
+terminos.de:
+    // llega, urgente, atender, siguiente y enEspera ==> // llega, urgente, atender, siguiente und enEspera
+    nadie ==> niemand
+terminos.en:
+    // llega, urgente, atender, siguiente y enEspera ==> // llega, urgente, atender, siguiente and enEspera
+    nadie ==> nobody
 
 === t15_por_nivel
 tema: 15
@@ -303,8 +319,8 @@ titulo.es: Agrupar robots por nivel (Map de listas)
 titulo.de: Roboter nach Stufe gruppieren (Map von Listen)
 titulo.en: Grouping robots by level (Map of lists)
 enunciado.es: Cada ficha es "<nombre>:<nivel>", como "Rex:3". Devuelve un Map que, para cada nivel, guarde la lista de nombres en el orden en que aparecen, con los niveles de menor a mayor (un TreeMap).
-enunciado.de: Jeder Eintrag ist "<nombre>:<nivel>", etwa "Rex:3". Gib eine Map zurück, die für jede Stufe die Liste der Namen in der Reihenfolge ihres Auftretens speichert, mit den Stufen aufsteigend (eine TreeMap).
-enunciado.en: Each entry is "<nombre>:<nivel>", like "Rex:3". Return a Map that, for each level, keeps the list of names in the order they appear, with the levels from lowest to highest (a TreeMap).
+enunciado.de: Jeder Eintrag ist "<name>:<stufe>", etwa "Rex:3". Gib eine Map zurück, die für jede Stufe die Liste der Namen in der Reihenfolge ihres Auftretens speichert, mit den Stufen aufsteigend (eine TreeMap).
+enunciado.en: Each entry is "<name>:<level>", like "Rex:3". Return a Map that, for each level, keeps the list of names in the order they appear, with the levels from lowest to highest (a TreeMap).
 pista.es: Parte con split(":"). Si el nivel aún no está en el mapa, mete una lista nueva con put; después añade el nombre a la lista de ese nivel. computeIfAbsent hace las dos cosas de una vez.
 pista.de: Trenne mit split(":"). Ist die Stufe noch nicht in der Map, leg mit put eine neue Liste an; dann füge den Namen zur Liste dieser Stufe hinzu. computeIfAbsent erledigt beides auf einmal.
 pista.en: Split with split(":"). If the level isn't in the map yet, put a new list in; then add the name to that level's list. computeIfAbsent does both in one go.
@@ -411,6 +427,10 @@ casos:
     new Inventario().meter("a", 2).meter("b", 3).total() => 5
     new Inventario().meter("laser", 0) => !IllegalArgumentException
     new Inventario().meter("laser", 1).piezas().add("misil") => !UnsupportedOperationException
+terminos.de:
+    // meter, sacar, cantidad, total y piezas ==> // meter, sacar, cantidad, total und piezas
+terminos.en:
+    // meter, sacar, cantidad, total y piezas ==> // meter, sacar, cantidad, total and piezas
 
 === t15_mejores
 tema: 15

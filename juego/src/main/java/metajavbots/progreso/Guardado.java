@@ -300,8 +300,15 @@ public final class Guardado {
     }
 
     static void escribir(Path destino, String texto) throws IOException {
+        byte[] bytes = texto.getBytes(StandardCharsets.UTF_8);
+        if (Files.isRegularFile(destino) && Files.size(destino) == bytes.length
+                && java.util.Arrays.equals(Files.readAllBytes(destino), bytes)) {
+            return;
+        }
+        Path padre = destino.getParent();
+        if (padre != null) Files.createDirectories(padre);
         Path nuevo = destino.resolveSibling(destino.getFileName() + ".nuevo");
-        Files.writeString(nuevo, texto, StandardCharsets.UTF_8);
+        Files.write(nuevo, bytes);
         try {
             Files.move(nuevo, destino, StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
         } catch (AtomicMoveNotSupportedException e) {

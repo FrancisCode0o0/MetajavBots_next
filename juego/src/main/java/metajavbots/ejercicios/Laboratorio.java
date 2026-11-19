@@ -95,54 +95,9 @@ public final class Laboratorio {
             return null;
         }
         Map<String, String> res = new LinkedHashMap<>();
-        Thread h = new Thread(() -> {
-            try {
-                Cargador cg = new Cargador(c.clases, Vigilante.Modo.EJERCICIO);
-                Class<?> k = cg.loadClass(nombrePruebas);
-                Method antes = null;
-                List<Method> tests = new ArrayList<>();
-                for (Method m : k.getDeclaredMethods()) {
-                    if (m.isAnnotationPresent(metajavbots.junit.Test.class)) tests.add(m);
-                    if (m.isAnnotationPresent(metajavbots.junit.BeforeEach.class)) antes = m;
-                }
-                tests.sort((a, b) -> a.getName().compareTo(b.getName()));
-                for (Method m : tests) {
-                    String nombre = m.getName();
-                    metajavbots.junit.DisplayName dn = m.getAnnotation(metajavbots.junit.DisplayName.class);
-                    if (dn != null) nombre = dn.value();
-                    Puente.contar(20_000_000L, 2_000_000_000L);
-                    try {
-                        java.lang.reflect.Constructor<?> ctor = k.getDeclaredConstructor();
-                        ctor.setAccessible(true);
-                        Object o = ctor.newInstance();
-                        if (antes != null) {
-                            antes.setAccessible(true);
-                            antes.invoke(o);
-                        }
-                        m.setAccessible(true);
-                        m.invoke(o);
-                        synchronized (res) {
-                            res.put(nombre, "");
-                        }
-                    } catch (InvocationTargetException e) {
-                        Throwable t = e.getCause();
-                        synchronized (res) {
-                            res.put(nombre, t.getClass().getSimpleName() + (t.getMessage() != null ? ": " + t.getMessage() : ""));
-                        }
-                    } catch (Throwable t) {
-                        synchronized (res) {
-                            res.put(nombre, t.toString());
-                        }
-                    } finally {
-                        Puente.dejarDeContar();
-                    }
-                }
-            } catch (Throwable t) {
-                synchronized (res) {
-                    res.put("?", t.toString());
-                }
-            }
-        }, "laboratorio");
+        java.util.concurrent.atomic.AtomicReference<Object> cuenta = new java.util.concurrent.atomic.AtomicReference<>();
+        java.util.concurrent.atomic.AtomicInteger total = new java.util.concurrent.atomic.AtomicInteger(-1);
+        Thread h = new Thread(() -> ejecutarPruebas(c, nombrePruebas, res, cuenta, total), "laboratorio");
         h.setDaemon(true);
         h.start();
         try {
@@ -150,8 +105,82 @@ public final class Laboratorio {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        boolean colgado = h.isAlive();
+        if (colgado) {
+            Puente.cancelar(cuenta.get());
+            h.interrupt();
+            try {
+                h.join(200);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
         synchronized (res) {
+            if (colgado || (total.get() >= 0 && res.size() < total.get())) {
+                res.put(claveUnica(res, "tiempo", null), "⏱ tarda demasiado");
+            }
             return new LinkedHashMap<>(res);
+        }
+    }
+
+    private static void ejecutarPruebas(Compilador.Resultado c, String nombrePruebas, Map<String, String> res,
+            java.util.concurrent.atomic.AtomicReference<Object> cuenta, java.util.concurrent.atomic.AtomicInteger total) {
+        try {
+            Cargador cg = new Cargador(c.clases, Vigilante.Modo.EJERCICIO);
+            Class<?> k = cg.loadClass(nombrePruebas);
+            Method antes = null;
+            List<Method> tests = new ArrayList<>();
+            for (Method m : k.getDeclaredMethods()) {
+                if (m.isAnnotationPresent(metajavbots.junit.Test.class)) tests.add(m);
+                if (m.isAnnotationPresent(metajavbots.junit.BeforeEach.class)) antes = m;
+            }
+            tests.sort((a, b) -> a.getName().compareTo(b.getName()));
+            total.set(tests.size());
+            for (Method m : tests) {
+                metajavbots.junit.DisplayName dn = m.getAnnotation(metajavbots.junit.DisplayName.class);
+                String nombre = claveUnica(res, dn != null ? dn.value() : m.getName(), m);
+                Puente.contar(20_000_000L, 2_000_000_000L);
+                cuenta.set(Puente.cuentaActual());
+                try {
+                    java.lang.reflect.Constructor<?> ctor = k.getDeclaredConstructor();
+                    ctor.setAccessible(true);
+                    Object o = ctor.newInstance();
+                    if (antes != null) {
+                        antes.setAccessible(true);
+                        antes.invoke(o);
+                    }
+                    m.setAccessible(true);
+                    m.invoke(o);
+                    synchronized (res) {
+                        res.put(nombre, "");
+                    }
+                } catch (InvocationTargetException e) {
+                    Throwable t = e.getCause() != null ? e.getCause() : e;
+                    synchronized (res) {
+                        res.put(nombre, t.getClass().getSimpleName() + (t.getMessage() != null ? ": " + t.getMessage() : ""));
+                    }
+                } catch (Throwable t) {
+                    synchronized (res) {
+                        res.put(nombre, t.toString());
+                    }
+                } finally {
+                    Puente.dejarDeContar();
+                }
+            }
+        } catch (Throwable t) {
+            synchronized (res) {
+                res.put("?", t.toString());
+            }
+        }
+    }
+
+    private static String claveUnica(Map<String, String> res, String base, Method m) {
+        synchronized (res) {
+            if (!res.containsKey(base)) return base;
+            String cand = m == null ? base + "_timeout" : base + " (" + m.getName() + ")";
+            int n = 2;
+            while (res.containsKey(cand)) cand = base + " (" + (n++) + ")";
+            return cand;
         }
     }
 

@@ -330,7 +330,6 @@ public final class PantallaPelea implements Pantalla {
             if (pelea.estado() == Pelea.Estado.ENTRE_RONDAS) {
                 entreRondas = true;
                 pestanaEntreRondas = 0;
-                editor.ponerTexto(j.jugador.robot().codigo);
                 revision = Revisor.revisar(editor.doc.texto(), pelea, j.jugador.idioma);
                 ajustarRivalConIA(j);
             } else if (pelea.estado() == Pelea.Estado.TERMINADA) {
@@ -371,13 +370,13 @@ public final class PantallaPelea implements Pantalla {
             entreRondas = false;
             pelea.rendirse(0);
             acabar(j);
-        });
+        }, () -> pausa = estabaEnPausa);
     }
 
     private void teclas(Juego j) {
-        if (terminada) return;
+        if (terminada || (entrada != null && entrada.activa()) || panelDelAparato.estaAbierto()) return;
         if (j.ui.atras()) preguntarSiSalir(j);
-        if (entreRondas) return;
+        if (entreRondas || (especial != null && especial.activa())) return;
         if (j.entrada.tecla(Keys.SPACE)) pausa = !pausa;
         if (j.entrada.tecla(Keys.F9)) depurador = !depurador;
         if (j.entrada.tecla(Keys.NUM_1)) velocidad = 1;
@@ -455,7 +454,7 @@ public final class PantallaPelea implements Pantalla {
         if (ui.boton(T.t("pelea.depurador"), p.ancho - (depurador ? 460 : 0) - 380, y, 200, 46, depurador ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO,
                 true, T.t("pelea.depurador_ayuda"))) depurador = !depurador;
         if (ui.boton(T.t("pelea.rendirse"), p.ancho - (depurador ? 460 : 0) - 170, y, 150, 46, Ui.Estilo.PELIGRO)) preguntarSiSalir(j);
-        if (!avisoDeCodigo.isEmpty()) p.texto(avisoDeCodigo, 20, y - 30, ui.letra * 0.8f, false, ui.tema.aviso, 1);
+        if (!avisoDeCodigo.isEmpty()) p.textoConBorde(avisoDeCodigo, 20, y - 30, ui.letra * 0.8f, true, ui.tema.aviso, 0x000000, 1);
         if (panelDelAparato.dibujar(j, pelea.aparatos.siguiente(), p.ancho - (depurador ? 460 : 0) - 380 - 12, y)) pausa = true;
     }
 
@@ -596,7 +595,7 @@ public final class PantallaPelea implements Pantalla {
                 break;
         }
         if (ui.boton(T.f("pelea.siguiente_ronda", pelea.ronda() + 1), x + w - 340, y + h - 66, 316, 52, Ui.Estilo.PRINCIPAL)) {
-            j.jugador.robot().ponerPiezas(yo.montaje);
+            if (encuentro.montaje == null && encuentro.codigo == null) j.jugador.robot().ponerPiezas(yo.montaje);
             j.guardar();
             empezarRonda(j);
         }
@@ -652,7 +651,7 @@ public final class PantallaPelea implements Pantalla {
         int g = pelea.ganador();
         ganoElJugador = g >= 0 && pelea.equipo[g] == pelea.equipo[0];
         Jugador jug = j.jugador;
-        jug.robot().ponerPiezas(yo.montaje);
+        if (encuentro.montaje == null && encuentro.codigo == null) jug.robot().ponerPiezas(yo.montaje);
         Registro.Resultado res = g == 0 ? Registro.Resultado.VICTORIA : g == 1 ? Registro.Resultado.DERROTA : Registro.Resultado.EMPATE;
         if (encuentro.cuenta) {
             Registro r = new Registro(System.currentTimeMillis(), encuentro.modo, encuentro.rival.nombre, encuentro.rival.montaje.modelo.id,
