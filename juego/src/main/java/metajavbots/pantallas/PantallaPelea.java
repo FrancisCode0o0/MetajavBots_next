@@ -410,10 +410,13 @@ public final class PantallaPelea implements Pantalla {
             boolean derecha = i == 1;
             float x = derecha ? p.ancho - 620 : 20;
             int color = i == 0 ? 0x3FE0FF : 0xFF4FD8;
-            p.texto(co.nombre + (co.computadora ? "  ·  " + T.t("pelea.computadora") : ""), x, 8, ui.letra, true, color, 1);
+            String dano = T.f("pelea.dano", Math.round(co.danoTotalRecibido));
+            float danoW = c == null ? 0 : p.ancho(dano, ui.letra * 0.8f, false);
+            String nombre = co.nombre + (co.computadora ? "  ·  " + T.t("pelea.computadora") : "");
+            p.texto(nombre, x, 8, ui.cabe(nombre, 588 - danoW - 14, ui.letra, true), true, color, 1);
             if (c == null) continue;
             float bx = x, by = 34;
-            p.textoDerecha(T.f("pelea.dano", Math.round(co.danoTotalRecibido)), x + 588, 10, ui.letra * 0.8f, false, ui.tema.texto, 1);
+            p.textoDerecha(dano, x + 588, 10, ui.letra * 0.8f, false, ui.tema.texto, 1);
             String[] nombres = {T.t("parte.cabeza"), T.t("parte.izquierda"), T.t("parte.derecha"), T.t("parte.piernas")};
             for (int k = 0; k < 4; k++) {
                 float parte = (float) (c.parte[k] / Math.max(1, c.parteMax[k]));
@@ -430,12 +433,15 @@ public final class PantallaPelea implements Pantalla {
         int segundos = (int) Math.ceil((pelea.turnosPorRonda - pelea.turno()) / (double) Pelea.TURNOS_POR_SEGUNDO);
         p.textoCentrado(String.format("%d:%02d", Math.max(0, segundos) / 60, Math.max(0, segundos) % 60), cx, 38, ui.letra * 1.6f, true,
                 segundos <= 10 ? ui.tema.mal : ui.tema.texto, 1);
+        float centroAncho = Math.max(180, p.ancho - 1250);
         if (encuentro.objetivo != null) {
-            p.textoCentrado(Objetivo.texto(encuentro.objetivo), cx, 70, ui.letra * 0.7f, false, ui.tema.aviso, 1);
+            String obj = Objetivo.texto(encuentro.objetivo);
+            p.textoCentrado(obj, cx, 70, ui.cabe(obj, centroAncho, ui.letra * 0.7f, false), false, ui.tema.aviso, 1);
         }
         if (encuentro.jefe != null) {
             boolean vulnerable = pelea.resistencia[1] >= 1;
-            p.textoCentrado(vulnerable ? T.t("pelea.jefe_vulnerable") : T.t("pelea.jefe_inmune"), cx, 70, ui.letra * 0.7f, false,
+            String jefeTxt = vulnerable ? T.t("pelea.jefe_vulnerable") : T.t("pelea.jefe_inmune");
+            p.textoCentrado(jefeTxt, cx, 70, ui.cabe(jefeTxt, centroAncho, ui.letra * 0.7f, false), false,
                     vulnerable ? ui.tema.bien : ui.tema.mal, 1);
         }
     }
@@ -609,7 +615,8 @@ public final class PantallaPelea implements Pantalla {
             Combatiente.Informe inf = pelea.informe(i);
             float cx = x + i * (col + 20);
             int color = i == 0 ? 0x3FE0FF : 0xFF4FD8;
-            p.texto(pelea.combatientes[i].nombre, cx, y, ui.letra * 1.1f, true, color, 1);
+            String nombre = pelea.combatientes[i].nombre;
+            p.texto(nombre, cx, y, ui.cabe(nombre, col - 10, ui.letra * 1.1f, true), true, color, 1);
             String[] lineas = {
                     T.f("informe.dano_recibido", Math.round(inf.danoRecibido)),
                     T.f("informe.dano_hecho", Math.round(inf.danoHecho)),
@@ -620,8 +627,7 @@ public final class PantallaPelea implements Pantalla {
                     T.f("informe.total", Math.round(pelea.combatientes[i].danoTotalRecibido))};
             float yy = y + 40;
             for (String l : lineas) {
-                p.texto(l, cx, yy, ui.letra * 0.9f, false, ui.tema.texto, 1);
-                yy += ui.letra * 1.5f;
+                yy += p.parrafo(l, cx, yy, col - 10, ui.letra * 0.9f, ui.tema.texto, 1) + 6;
             }
             yy += 10;
             for (java.util.Map.Entry<String, int[]> e : inf.porArma.entrySet()) {

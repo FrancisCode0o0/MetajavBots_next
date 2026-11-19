@@ -88,7 +88,9 @@ public final class SesionDeHoy implements Pantalla {
         p.bordeRedondeado(x, y, w, h, 14, ui.tema.borde, 1, 1);
         p.circulo(x + 34, y + 34, 20, ui.tema.acento, 1);
         p.textoCentrado(Integer.toString(n), x + 34, y + 34 - p.altoDeLinea(ui.letra) / 2, ui.letra, true, 0x10161C, 1);
-        p.texto(T.t(clave), x + 64, y + 22, ui.letra * 1.1f, true, ui.tema.texto, 1);
+        float tiempoW = p.ancho(tiempo, ui.letra * 0.85f, false);
+        String titulo = T.t(clave);
+        p.texto(titulo, x + 64, y + 22, ui.cabe(titulo, w - 64 - tiempoW - 26, ui.letra * 1.1f, true), true, ui.tema.texto, 1);
         p.textoDerecha(tiempo, x + w - 16, y + 24, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
         return y + 72;
     }

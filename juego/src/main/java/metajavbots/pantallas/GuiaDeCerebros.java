@@ -46,7 +46,8 @@ public final class GuiaDeCerebros implements Pantalla {
             j.volver();
             return;
         }
-        p.texto(T.t("guia.titulo"), 220, 22, ui.letra * 1.4f, true, ui.tema.texto, 1);
+        String tituloGuia = T.t("guia.titulo");
+        p.texto(tituloGuia, 220, 22, ui.cabe(tituloGuia, p.ancho - 240, ui.letra * 1.4f, true), true, ui.tema.texto, 1);
         // Las páginas, como pestañas numeradas.
         float bx = 20, by = 76, bw = Math.min(150, (p.ancho - 40) / PAGINAS - 6);
         for (int i = 0; i < PAGINAS; i++) {
@@ -62,16 +63,17 @@ public final class GuiaDeCerebros implements Pantalla {
         // Los pasos, con el entrenador que los cuenta.
         Entrenador en = Entrenador.de(j.jugador == null ? "tuercas" : j.jugador.entrenador);
         CabezaDeEntrenador.dibujar(p, en, 56, y + 34, 30, false, t);
-        p.parrafo(T.t("guia." + (pagina + 1) + ".titulo"), 100, y + 12, iw - 90, ui.letra * 1.2f, true, ui.tema.acento, 1);
-        float d = ui.desplazable(desp, 20, y + 80, iw, h - 80);
-        float yy = y + 80 - d;
+        float tituloH = p.parrafo(T.t("guia." + (pagina + 1) + ".titulo"), 100, y + 12, iw - 90, ui.letra * 1.2f, true, ui.tema.acento, 1);
+        float inicioPasos = y + Math.max(80, 12 + tituloH + 14);
+        float d = ui.desplazable(desp, 20, inicioPasos, iw, h - (inicioPasos - y));
+        float yy = inicioPasos - d;
         int k = 1;
         for (String paso : T.t("guia." + (pagina + 1) + ".pasos").split("\n")) {
             if (paso.isBlank()) continue;
             p.textoDerecha((k++) + ".", 52, yy, ui.letra * 0.95f, true, ui.tema.acento, 1);
             yy += p.parrafo(paso, 60, yy, iw - 50, ui.letra * 0.95f, ui.tema.texto, 1) + ui.letra * 0.7f;
         }
-        ui.finDesplazable(desp, yy + d - (y + 80));
+        ui.finDesplazable(desp, yy + d - inicioPasos);
         // El dibujo de la página.
         float dx = iw + 50, dw = p.ancho - dx - 30;
         dibujo(j, pagina, dx, y, dw, h);

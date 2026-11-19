@@ -108,6 +108,6 @@ public final class EntradaEpica {
         float a = Math.min(1, Math.max(0, (local - 0.5f) / 0.4f));
         pi.caja(mitad - bw / 2, by, bw, bh, 12, 0x0B0F18, 0.85f * a);
         pi.parrafo(linea, mitad - bw / 2 + 20, by + 12, bw - 40, tb, 0xF4F1E8, a);
-        pi.textoCentrado(T.t("entrada.saltar"), x + w / 2, y + h - ui.letra * 1.6f, ui.letra * 0.75f, false, 0xAAB0BA, 0.8f);
+        pi.textoCentrado(T.t("entrada.saltar"), x + w / 2, y + h - 76 - ui.letra * 0.9f, ui.letra * 0.75f, false, 0xAAB0BA, 0.85f);
     }
 }

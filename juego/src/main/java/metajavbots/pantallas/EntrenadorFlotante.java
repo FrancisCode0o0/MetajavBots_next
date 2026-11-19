@@ -434,7 +434,8 @@ public final class EntrenadorFlotante {
             // Nada escrito de serie que se le parezca: con IA, se lo pregunta a ella.
             preguntarALaIa(j, elegido, idioma, en);
         }
-        lista(j, x + 16, fy + 58, lw - 16, y + h - fy - 124, idioma);
+        float altoAyuda = ui.letra * 1.1f + 68;
+        lista(j, x + 16, fy + 58, lw - 16, y + h - fy - 58 - altoAyuda, idioma);
         barraDeAyuda(j, x + 16, y + h - 58, lw - 16);
         explicacion(j, x + lw + 20, y + 70, w - lw - 40, h - 86, idioma, en);
     }

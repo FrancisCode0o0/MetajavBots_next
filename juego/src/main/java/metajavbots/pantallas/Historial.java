@@ -137,8 +137,10 @@ public final class Historial implements Pantalla {
         for (int i = 0; i < cifras.length; i++) {
             float cx = x + i * cw;
             p.caja(cx + 4, y, cw - 8, 90, 10, ui.tema.panel, 1);
-            p.textoCentrado(cifras[i][1], cx + cw / 2, y + 12, ui.letra * 1.8f, true, ui.tema.texto, 1);
-            p.textoCentrado(cifras[i][0], cx + cw / 2, y + 60, ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
+            float tv = ui.cabe(cifras[i][1], cw - 16, ui.letra * 1.8f, true);
+            p.textoCentrado(cifras[i][1], cx + cw / 2, y + 12, tv, true, ui.tema.texto, 1);
+            float tl = ui.cabe(cifras[i][0], cw - 16, ui.letra * 0.75f, false);
+            p.textoCentrado(cifras[i][0], cx + cw / 2, y + 60, tl, false, ui.tema.textoSuave, 1);
         }
     }
 

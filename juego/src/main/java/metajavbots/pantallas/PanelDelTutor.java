@@ -93,10 +93,12 @@ final class PanelDelTutor {
         cy += 50;
         float r = 34;
         CabezaDeEntrenador.dibujar(p, e, x + r + 6, cy + r + 8, r, hablando > 0, t);
-        // Su viñeta, a la derecha de la cabeza, con la punta hacia la boca.
+        // Su viñeta, a la derecha de la cabeza, con la punta hacia la boca (sin pisar los controles ni el robot de abajo).
         float bx = x + 2 * r + 22, bw = w - (bx - x), tl = ui.letra * 0.82f;
         String texto = peticion != null ? T.t("cerebro.pensando") : dice;
-        float bh = Math.min(h * 0.45f, p.altoDeParrafo(texto, bw - 20, tl) + 16);
+        float bhMax = Math.max(92, Math.min(h * 0.45f, h - 256));
+        while (tl > Pincel.LETRA_MINIMA && p.altoDeParrafo(texto, bw - 20, tl) + 16 > bhMax) tl = Math.max(Pincel.LETRA_MINIMA, tl - 1);
+        float bh = Math.min(bhMax, p.altoDeParrafo(texto, bw - 20, tl) + 16);
         p.caja(bx, cy, bw, bh, 10, 0xF5F3EA, 1);
         p.triangulo(bx, cy + 24, bx, cy + 40, bx - 10, cy + 34, 0xF5F3EA, 1);
         p.recortar(bx, cy, bw, bh);
