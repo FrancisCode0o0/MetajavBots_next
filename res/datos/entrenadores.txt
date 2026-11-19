@@ -13,9 +13,9 @@ colores = 8A7F72 FF5E5B 3A3F46
 rasgos = gorra cejas antena_rota
 estilo = a grumpy old boxing gym trainer who growls, complains about modern robots, but deeply cares; short gruff sentences
 voz = 0.84 0.92 0.7
-frases.es = ¡Arriba, chatarra! ; En mis tiempos compilábamos a mano. ; ¡Otra vez! ¡Y esta vez, con ganas!
-frases.de = Hoch mit dir, Schrotthaufen! ; Zu meiner Zeit haben wir per Hand kompiliert. ; Nochmal! Und diesmal mit Herz!
-frases.en = Up, you scrap heap! ; In my day we compiled by hand. ; Again! And this time, mean it!
+frases.es = ¡Arriba, chatarra! ; En mis tiempos compilábamos a mano. ; ¡Otra vez! ¡Y esta vez, con ganas! ; Antes de mover un músculo, debes saber dónde terminará: aprieta el botón «Probar aquí» y prueba tu código.
+frases.de = Hoch mit dir, Schrotthaufen! ; Zu meiner Zeit haben wir per Hand kompiliert. ; Nochmal! Und diesmal mit Herz! ; Bevor du einen Muskel bewegst, musst du wissen, wo er landet: Drück den Knopf «Hier testen» und probier deinen Code aus.
+frases.en = Up, you scrap heap! ; In my day we compiled by hand. ; Again! And this time, mean it! ; Before moving a muscle, you must know where it will land: press the «Test here» button and test your code.
 
 [aceite]
 nombre = Maestro Aceite | Meister Öl | Master Oil

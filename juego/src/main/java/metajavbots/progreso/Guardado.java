@@ -154,17 +154,26 @@ public final class Guardado {
         v.put("entrenador", j.entrenador);
         v.put("ayudaDelTutor", numero(j.ayudaDelTutor) + (j.entrenadorActivo ? "" : ";sin_entrenador"));
         v.put("temaClaro", Boolean.toString(j.temaClaro));
+        v.put("ultimoRivalNombre", j.ultimoRivalNombre == null ? "" : j.ultimoRivalNombre);
         StringBuilder b = new StringBuilder("# Partida de MetajavBots (se puede leer; mejor no tocarla a mano)\n");
         for (Map.Entry<String, String> e : v.entrySet()) {
             b.append(e.getKey()).append(" = ").append(e.getValue().replace("\n", " ")).append('\n');
         }
         escribir(dir.resolve("partida.txt"), b.toString());
+        guardarArchivosAparte(dir, j);
+    }
+
+    /** Los ejercicios, el historial y el código del último rival (cada uno en su archivo). */
+    private static void guardarArchivosAparte(Path dir, Jugador j) throws IOException {
         for (Map.Entry<String, String> e : j.codigoDeEjercicios.entrySet()) {
             if (e.getKey().matches("[a-z0-9_]+")) escribir(dir.resolve("ejercicios").resolve(e.getKey() + ".java"), e.getValue());
         }
         StringBuilder h = new StringBuilder();
         for (Registro r : j.historial) h.append(r.aLinea()).append('\n');
         escribir(dir.resolve("historial.txt"), h.toString());
+        Path ultimoRival = dir.resolve("ultimo_rival.java");
+        if (j.ultimoRivalCodigo != null && !j.ultimoRivalCodigo.isBlank()) escribir(ultimoRival, j.ultimoRivalCodigo);
+        else Files.deleteIfExists(ultimoRival);
     }
 
     /** Los tres cerebros y su reparto (las partidas de antes traen uno solo: se pasa a las ranuras al usarlo). */
@@ -261,6 +270,9 @@ public final class Guardado {
                 if (r != null) j.historial.add(r);
             }
         }
+        j.ultimoRivalNombre = v.getOrDefault("ultimoRivalNombre", "");
+        Path ultimoRival = dir.resolve("ultimo_rival.java");
+        if (Files.exists(ultimoRival)) j.ultimoRivalCodigo = Files.readString(ultimoRival, StandardCharsets.UTF_8);
         return j;
     }
 

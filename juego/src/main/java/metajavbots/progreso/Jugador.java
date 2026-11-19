@@ -83,6 +83,9 @@ public final class Jugador {
     public String retoDiarioId = "";
     public int retoDiarioRacha, retoDiarioMejor;
     public final List<Registro> historial = new ArrayList<>();
+    /** El último rival con el que se peleó (su nombre y su código real); vacíos si aún no ha peleado. */
+    public String ultimoRivalNombre = "";
+    public String ultimoRivalCodigo = "";
     /** El panel de la IA: modo (ADAPTADA o una Dificultad), agresividad, humor y cortesía (0..1). */
     public String modoIA = "ADAPTADA";
     public double agresividad = 0.4, humor = 0.6, cortesia = 0.5;
@@ -188,5 +191,16 @@ public final class Jugador {
         int n = 0;
         for (Registro r : historial) if (r.resultado == Registro.Resultado.DERROTA) n++;
         return n;
+    }
+
+    /** Apunta el último rival con el que se peleó (su nombre y su código real). */
+    public void registrarUltimoRival(String nombreRival, String codigoRival) {
+        ultimoRivalNombre = nombreRival == null ? "" : nombreRival;
+        ultimoRivalCodigo = codigoRival == null ? "" : codigoRival;
+    }
+
+    /** ¿Ha disputado ya al menos una pelea (por último rival guardado o historial)? */
+    public boolean haPeleado() {
+        return ultimoRivalCodigo != null && !ultimoRivalCodigo.isBlank() || !historial.isEmpty();
     }
 }

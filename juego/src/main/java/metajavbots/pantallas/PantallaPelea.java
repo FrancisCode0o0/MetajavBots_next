@@ -663,6 +663,7 @@ public final class PantallaPelea implements Pantalla {
                     yo.montaje.modelo.id, encuentro.nivelRival, res, yo.danoTotalRecibido, yo.danoTotalHecho, pelea.ronda(), jug.etiqueta.name());
             cambio = Progreso.despuesDeLaPelea(jug, r, encuentro.rival.montaje.modelo.naturaleza.name(), new Random());
         }
+        if (encuentro.rival != null) jug.registrarUltimoRival(encuentro.rival.nombre, metajavbots.rivales.Rivales.codigoDe(encuentro.rival));
         objetivoCumplido = encuentro.objetivo == null ? ganoElJugador
                 : Objetivo.cumple(encuentro.objetivo, yo, robot.listo() ? robot.fuente() : editor.doc.texto());
         // Un robot roto solo cuenta arreglado si al final compila y se ha cambiado su código.

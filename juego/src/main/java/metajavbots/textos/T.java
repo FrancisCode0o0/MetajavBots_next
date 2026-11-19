@@ -42,8 +42,13 @@ public final class T {
     }
 
     public static String t(String clave) {
+        return en(clave, idioma);
+    }
+
+    /** El texto de esa clave en un idioma concreto (sin depender de T.idioma). */
+    public static String en(String clave, Idioma id) {
         Trilingue t = TEXTOS.get(clave);
-        return t == null ? clave : t.en(idioma).replace("\\n", "\n");
+        return t == null ? clave : t.en(id == null ? Idioma.ES : id).replace("\\n", "\n");
     }
 
     public static String f(String clave, Object... huecos) {

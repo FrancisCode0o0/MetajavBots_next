@@ -25,4 +25,9 @@ public interface Fabrica {
     default boolean esSuya(String nombreDeClase) {
         return false;
     }
+
+    /** El código fuente de este robot (vacío si no está disponible). */
+    default String fuente() {
+        return "";
+    }
 }

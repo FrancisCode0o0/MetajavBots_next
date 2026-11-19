@@ -228,6 +228,8 @@ public final class Capturas extends Juego {
             pantallas.put("04_arena_" + e.name().toLowerCase(), () -> new Arena(e));
         }
         pantallas.put("05_taller", metajavbots.pantallas.Taller::new);
+        pantallas.put("05b_taller_banco", metajavbots.pantallas.Taller::conBanco);
+        pantallas.put("05c_taller_paquetes", metajavbots.pantallas.Taller::enPaquetes);
         pantallas.put("06_ejercicios", metajavbots.pantallas.Ejercicios::new);
         pantallas.put("07_pelear", metajavbots.pantallas.PrepararPelea::new);
         pantallas.put("08_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.encuentro(this, "ADAPTADA")));

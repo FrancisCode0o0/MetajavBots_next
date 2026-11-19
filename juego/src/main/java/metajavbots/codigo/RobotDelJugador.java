@@ -18,11 +18,18 @@ public final class RobotDelJugador implements Fabrica {
     private Cargador cargador;
     private String clase = "";
     private long version;
+    private boolean conTraza;
     private Compilador.Resultado ultimo;
 
     /** Compila el código; si sale bien, la próxima ronda usa este robot. Devuelve el resultado (con sus errores). */
     public Compilador.Resultado compilar(String codigo, Locale idioma) {
-        Compilador.Resultado r = Compilador.compilar(codigo, true, Vigilante.Modo.ROBOT, idioma);
+        return compilar(codigo, idioma, false);
+    }
+
+    /** Compila el código; con traza, cada sentencia apunta su línea al ejecutarse (para resaltarlas en el editor). */
+    public Compilador.Resultado compilar(String codigo, Locale idioma, boolean traza) {
+        Compilador.Resultado r = Compilador.compilar(java.util.Map.of(Compilador.nombreDeClase(codigo), codigo),
+                true, traza, Vigilante.Modo.ROBOT, idioma);
         ultimo = r;
         if (!r.bien) return r;
         Cargador nuevo = new Cargador(r.clases, Vigilante.Modo.ROBOT);
@@ -47,14 +54,20 @@ public final class RobotDelJugador implements Fabrica {
         fuente = codigo;
         cargador = nuevo;
         clase = elegida;
+        conTraza = traza;
         version++;
         return r;
+    }
+
+    public boolean conTraza() {
+        return conTraza;
     }
 
     public Compilador.Resultado ultimo() {
         return ultimo;
     }
 
+    @Override
     public String fuente() {
         return fuente;
     }

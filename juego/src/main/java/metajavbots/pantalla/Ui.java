@@ -105,8 +105,8 @@ public final class Ui {
 
     // ================================================================ botones
 
-    /** El aspecto de un botón: normal, el principal de la pantalla, peligroso, plano o elegido. */
-    public enum Estilo { NORMAL, PRINCIPAL, PELIGRO, PLANO, ELEGIDO }
+    /** El aspecto de un botón: normal, el principal de la pantalla, peligroso, plano, elegido o destacado (amarillo). */
+    public enum Estilo { NORMAL, PRINCIPAL, PELIGRO, PLANO, ELEGIDO, DESTACADO }
 
     public boolean boton(String texto, float x, float y, float w, float h) {
         return boton(texto, x, y, w, h, Estilo.NORMAL, true, null);
@@ -135,6 +135,10 @@ public final class Ui {
                 break;
             case ELEGIDO:
                 fondo = Pincel.mezcla(tema.panelAlto, tema.acento, 0.35f);
+                break;
+            case DESTACADO:
+                fondo = 0xFFD23F;
+                letraColor = 0x14161A;
                 break;
             default:
                 fondo = tema.panelAlto;

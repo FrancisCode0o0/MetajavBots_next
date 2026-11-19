@@ -1,6 +1,10 @@
 package metajavbots.rivales;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import metajavbots.api.RobotBase;
@@ -18,7 +22,48 @@ import metajavbots.piezas.Pieza;
  */
 public final class Rivales {
 
+    /** Los rivales del juego cuyo código fuente se puede leer en el taller. */
+    public static final List<String> CLASES = List.of("Rival", "Muneco");
+    private static final Map<String, String> FUENTES = new HashMap<>();
+
     private Rivales() {
+    }
+
+    /** El código fuente de una clase de rival del juego (Rival o Muneco). */
+    public static synchronized String codigoDe(String clase) {
+        String clave = CLASES.contains(clase) ? clase : "Rival";
+        String ya = FUENTES.get(clave);
+        if (ya != null) return ya;
+        String codigo = "// " + clave + ".java";
+        try (InputStream in = Rivales.class.getResourceAsStream("/codigo_rival/" + clave + ".java")) {
+            if (in != null) codigo = new String(in.readAllBytes(), StandardCharsets.UTF_8);
+        } catch (Exception e) {
+            codigo = "// " + e;
+        }
+        FUENTES.put(clave, codigo);
+        return codigo;
+    }
+
+    /** El código real de un combatiente rival (su código propio si lo trae, o el de su clase). */
+    public static String codigoDe(Combatiente rival) {
+        if (rival != null && rival.fabrica != null) {
+            String f = rival.fabrica.fuente();
+            if (f != null && !f.isBlank()) return f;
+            String c = rival.fabrica.clase();
+            if (c != null && !c.isBlank()) return codigoDe(c);
+        }
+        return codigoDe("Rival");
+    }
+
+    /** El código de rival que corresponde a un modo del historial (para partidas guardadas de antes). */
+    public static String codigoParaModo(String modo) {
+        return "TUTORIAL".equals(modo) ? codigoDe("Muneco") : codigoDe("Rival");
+    }
+
+    /** El código de uno de los rivales válidos del juego, elegido al azar. */
+    public static String codigoAlAzar(Random azar) {
+        Random r = azar == null ? new Random() : azar;
+        return codigoDe(CLASES.get(r.nextInt(CLASES.size())));
     }
 
     /** Un rival con las piezas de fábrica de su modelo, mejoradas según el nivel (Mk I a Mk V). */
@@ -52,6 +97,16 @@ public final class Rivales {
             @Override
             public RobotBase crear() {
                 return new Muneco();
+            }
+
+            @Override
+            public String clase() {
+                return "Muneco";
+            }
+
+            @Override
+            public String fuente() {
+                return codigoDe("Muneco");
             }
         });
         c.computadora = true;
@@ -88,6 +143,11 @@ public final class Rivales {
             @Override
             public String clase() {
                 return "Rival";
+            }
+
+            @Override
+            public String fuente() {
+                return codigoDe("Rival");
             }
         };
         Combatiente c = new Combatiente(nombre, m, f);

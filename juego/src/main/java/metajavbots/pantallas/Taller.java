@@ -31,7 +31,12 @@ public final class Taller implements Pantalla {
 
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
     private final PanelDeApi api = new PanelDeApi();
+    private final PanelDePaquetes paquetes = new PanelDePaquetes();
+    private final BancoDePruebas banco = new BancoDePruebas();
     private boolean conApi = true;
+    private boolean conApiAntes = true;
+    private boolean enBanco;
+    private boolean abrirBancoAlEntrar;
     private int pestana;
     private int robotCargado = -1;
     private volatile Compilador.Resultado resultado;
@@ -47,6 +52,20 @@ public final class Taller implements Pantalla {
     private final PanelDelTutor tutor = new PanelDelTutor();
     /** Lo que ocupa la lista de robots (el tutor va debajo). */
     private float robotsAlto = 140;
+
+    /** Abre el taller directamente con el banco de pruebas rápido activo (para las capturas). */
+    public static Taller conBanco() {
+        Taller taller = new Taller();
+        taller.abrirBancoAlEntrar = true;
+        return taller;
+    }
+
+    /** Abre el taller directamente en la pestaña de paquetes Javadoc (para las capturas). */
+    public static Taller enPaquetes() {
+        Taller taller = new Taller();
+        taller.pestana = 4;
+        return taller;
+    }
 
     @Override
     public void alEntrar(Juego j) {
@@ -65,14 +84,25 @@ public final class Taller implements Pantalla {
         editor.tamano = j.jugador.tamanoDeLetra;
         editor.alCompilar = () -> compilar(j);
         editor.alPedirAyuda = palabra -> {
+            if (enBanco) cerrarBanco(false);
             conApi = true;
             api.buscar(palabra);
         };
         cargar(j);
+        if (abrirBancoAlEntrar) {
+            abrirBancoAlEntrar = false;
+            conApiAntes = conApi;
+            conApi = false;
+            enBanco = true;
+            if (Compilador.hayCompilador()) probador.compilar(editor.doc.texto(), j.jugador.idioma.locale(), true);
+            banco.reiniciar(j.jugador.robot(), probador, j.pincel);
+            for (int i = 0; i < 15; i++) banco.avanzarTiempo(0.1f);
+        }
     }
 
     @Override
     public String contextoParaElEntrenador() {
+        if (pestana == 4) return paquetes.contextoParaIa();
         return EntrenadorFlotante.contextoDeCodigo("The player is in the workshop, programming their fighting robot.", editor);
     }
 
@@ -83,6 +113,8 @@ public final class Taller implements Pantalla {
 
     @Override
     public void alSalir(Juego j) {
+        cerrarBanco(false);
+        paquetes.desenfocar(j.ui);
         guardarCodigo(j);
     }
 
@@ -100,21 +132,50 @@ public final class Taller implements Pantalla {
     }
 
     private void compilar(Juego j) {
+        lanzarCompilacion(j, true);
+    }
+
+    private void compilarParaBanco(Juego j) {
+        lanzarCompilacion(j, false);
+    }
+
+    private void lanzarCompilacion(Juego j, boolean guardar) {
         if (compilando) return;
         if (!Compilador.hayCompilador()) {
             aviso = T.t("taller.sin_jdk");
             return;
         }
-        guardarCodigo(j);
+        if (guardar) guardarCodigo(j);
         compilando = true;
         j.sonidos.tocar("compilar", 0.5f);
         String codigo = editor.doc.texto();
+        boolean conTraza = enBanco;
         Thread h = new Thread(() -> {
-            resultado = probador.compilar(codigo, j.jugador.idioma.locale());
+            resultado = probador.compilar(codigo, j.jugador.idioma.locale(), conTraza);
             compilando = false;
         }, "compilar");
         h.setDaemon(true);
         h.start();
+    }
+
+    private void alternarBanco(Juego j) {
+        if (enBanco) {
+            cerrarBanco(true);
+            return;
+        }
+        conApiAntes = conApi;
+        conApi = false;
+        enBanco = true;
+        if (!probador.listo() || !probador.conTraza() || !editor.doc.texto().equals(probador.fuente())) compilarParaBanco(j);
+        else banco.reiniciar(j.jugador.robot(), probador, j.pincel);
+    }
+
+    private void cerrarBanco(boolean restaurarApi) {
+        enBanco = false;
+        banco.limpiar();
+        editor.lineasActivas.clear();
+        editor.lineaActiva = 0;
+        if (restaurarApi) conApi = conApiAntes;
     }
 
     @Override
@@ -144,7 +205,12 @@ public final class Taller implements Pantalla {
         String[] pest = {T.t("taller.codigo"), T.t("taller.piezas"), T.t("taller.modelo"), T.t("taller.charla")};
         int antes = pestana;
         pestana = ui.pestanas(pest, pestana, x, y, 720, 46);
-        if (antes == 0 && pestana != 0) guardarCodigo(j);
+        if (pestanaPaquetes(ui, x + 722, y, Math.min(180, w - 722), 46, pestana == 4)) pestana = 4;
+        if (antes == 0 && pestana != 0) {
+            guardarCodigo(j);
+            if (enBanco) cerrarBanco(true);
+        }
+        if (antes == 4 && pestana != 4) paquetes.desenfocar(ui);
         float cy = y + 56, ch = p.alto - cy - 20;
         if (r == null) return;
         if (pestana == 1) {
@@ -161,20 +227,55 @@ public final class Taller implements Pantalla {
             charla.dibujar(j, r, editor.doc.texto(), x, cy, w, ch);
             return;
         }
+        if (pestana == 4) {
+            paquetes.dibujar(ui, jug.idioma, x, cy, w, ch);
+            return;
+        }
+        pestanaCodigo(j, r, x, cy, w, dt);
+    }
+
+    private static boolean pestanaPaquetes(Ui ui, float x, float y, float w, float h, boolean elegida) {
+        Pincel p = ui.p;
+        boolean encima = ui.e.dentro(x, y, w, h);
+        int fondo = elegida ? 0xCC8E5C : encima ? 0xC28454 : 0xB87A4B;
+        p.rect(x, y, w, h, fondo, 1);
+        if (elegida) p.rect(x, y + h - 3, w, 3, ui.tema.acento, 1);
+        String txt = T.t("taller.paquetes");
+        float t = ui.cabe(txt, w - 16, Math.min(ui.letra, h * 0.5f), true);
+        p.textoCentrado(ui.recortarTexto(txt, w - 16, t, true), x + w / 2, y + (h - t * 1.15f) / 2, t, true, 0x14161A, 1);
+        if (ui.e.clic(x, y, w, h)) {
+            if (ui.sonidoDeClic != null) ui.sonidoDeClic.run();
+            return true;
+        }
+        return false;
+    }
+
+    private void pestanaCodigo(Juego j, Jugador.Robot r, float x, float cy, float w, float dt) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Jugador jug = j.jugador;
         // La barra del código: cada botón del ancho de su texto; si no caben (alemán, letra grande), en dos filas.
-        String[] textos = {compilando ? T.t("taller.compilando") : T.t("taller.compilar"), T.t("taller.formatear"), T.t("taller.buscar"),
-            T.t("taller.api"), T.t("taller.exportar"), T.t("taller.plantilla"), T.t("taller.rival"), "⌨ " + T.t("taller.atajos")};
-        Ui.Estilo[] estilos = {Ui.Estilo.PRINCIPAL, Ui.Estilo.PLANO, Ui.Estilo.PLANO, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, Ui.Estilo.PLANO,
-            Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO};
-        boolean[] activos = {!compilando, true, true, true, true, true, true, true};
-        String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.formatear_ayuda"), "Ctrl+F · Ctrl+H", T.t("taller.api_ayuda"),
-            T.t("taller.exportar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("taller.rival_ayuda"), T.t("taller.atajos_ayuda")};
+        String[] textos = {compilando ? T.t("taller.compilando") : T.t("taller.compilar"), T.t("taller.probar_aqui"), T.t("taller.formatear"),
+            T.t("taller.buscar"), T.t("taller.api"), T.t("taller.exportar"), T.t("taller.plantilla"), T.t("taller.rival"), "⌨ " + T.t("taller.atajos")};
+        Ui.Estilo[] estilos = {Ui.Estilo.PRINCIPAL, Ui.Estilo.DESTACADO, Ui.Estilo.PLANO, Ui.Estilo.PLANO,
+            conApi && !enBanco ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO};
+        boolean[] activos = {!compilando, true, true, true, true, true, true, true, true};
+        String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.probar_aqui_ayuda"), T.t("taller.formatear_ayuda"), "Ctrl+F · Ctrl+H",
+            T.t("taller.api_ayuda"), T.t("taller.exportar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("taller.rival_ayuda"), T.t("taller.atajos_ayuda")};
         switch (ui.botonera(textos, estilos, activos, ayudas, x, cy, w, 44)) {
             case 0: compilar(j); break;
-            case 1: editor.doc.formatear(); break;
-            case 2: editor.abrirBusqueda(false); break;
-            case 3: conApi = !conApi; break;
+            case 1: alternarBanco(j); break;
+            case 2: editor.doc.formatear(); break;
+            case 3: editor.abrirBusqueda(false); break;
             case 4:
+                if (enBanco) {
+                    cerrarBanco(false);
+                    conApi = true;
+                } else {
+                    conApi = !conApi;
+                }
+                break;
+            case 5:
                 guardarCodigo(j);
                 try {
                     aviso = T.f("taller.exportado", Exportar.exportar(r, jug.nombre));
@@ -182,17 +283,23 @@ public final class Taller implements Pantalla {
                     aviso = e.toString();
                 }
                 break;
-            case 5: editor.doc.cambiarTodo(Comun.plantilla(jug.idioma)); break;
-            case 6: j.ir(new CodigoDelRival()); break;
+            case 6: editor.doc.cambiarTodo(Comun.plantilla(jug.idioma)); break;
+            case 7: j.ir(new CodigoDelRival()); break;
             default: break;
         }
         // Debajo del editor, la pista (o lo que pasó al compilar), con su sitio: no pisa la última línea del código.
         String pie = aviso.isEmpty() ? T.t("taller.pista") : aviso;
         float tPie = ui.letra * 0.8f, altoPie = p.altoDeParrafo(pie, w, tPie) + 10;
         float ey = cy + ui.altoDeBotonera + 10, eh = p.alto - 34 - altoPie - ey;
-        float ew = conApi ? w - 440 : w;
+        float anchoDerecho = enBanco ? Math.min(540, Math.max(400, w * 0.44f)) : conApi ? 440 : 0;
+        float ew = anchoDerecho > 0 ? w - anchoDerecho : w;
+        if (enBanco) banco.marcarLineas(editor);
         editor.dibujar(ui, x, ey, ew, eh);
-        if (conApi) api.dibujar(ui, jug.idioma, editor, x + ew + 12, ey, w - ew - 12, eh);
+        if (enBanco) {
+            if (banco.dibujar(j, r, probador, compilando, x + ew + 12, ey, w - ew - 12, eh, dt)) cerrarBanco(true);
+        } else if (conApi) {
+            api.dibujar(ui, jug.idioma, editor, x + ew + 12, ey, w - ew - 12, eh);
+        }
         p.parrafo(pie, x, p.alto - 14 - altoPie, w, tPie, aviso.isEmpty() ? ui.tema.textoApagado : ui.tema.textoSuave, 1);
     }
 
@@ -366,6 +473,7 @@ public final class Taller implements Pantalla {
             }
             aviso = r.bien ? T.f("taller.compilado_ok", r.milisegundos) : T.f("pelea.errores", r.graves().size());
             tutor.compilado(r.bien);
+            if (r.bien && enBanco) banco.reiniciar(jug.robot(), probador, j.pincel);
             j.sonidos.tocar(r.bien ? "bien" : "mal", 0.6f);
         }
     }
@@ -385,11 +493,18 @@ public final class Taller implements Pantalla {
                 jug.robotElegido = i;
                 cargar(j);
                 creando = false;
+                if (enBanco) {
+                    banco.limpiar();
+                    compilarParaBanco(j);
+                }
             }
             ry += 54;
         }
         if (jug.robots.size() < maximo) {
-            if (ui.boton("+ " + T.t("taller.nuevo_robot"), iz + 14, ry, ancho - 28, 46, Ui.Estilo.PRINCIPAL)) creando = true;
+            if (ui.boton("+ " + T.t("taller.nuevo_robot"), iz + 14, ry, ancho - 28, 46, Ui.Estilo.PRINCIPAL)) {
+                if (enBanco) cerrarBanco(true);
+                creando = true;
+            }
             ry += 54;
         } else if (jug.robots.size() < 4) {
             ry += p.parrafo(T.f("taller.mas_robots", jug.etiqueta.robotsPermitidos(), Progreso.VICTORIAS_POR_ROBOT[Math.min(3, jug.robots.size())]),

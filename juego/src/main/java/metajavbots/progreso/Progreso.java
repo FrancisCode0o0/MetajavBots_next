@@ -97,6 +97,7 @@ public final class Progreso {
         int robotsAntes = robotsQuePuedeTener(j);
         List<Modelo> modelosAntes = modelosDisponibles(j);
         j.historial.add(r);
+        j.registrarUltimoRival(r.rival, metajavbots.rivales.Rivales.codigoParaModo(r.modo));
         j.peleasDesdeElDesafio++;
         boolean cuenta = !r.modo.equals("PRACTICA") && !r.modo.equals("AJENO");
         if (r.resultado == Registro.Resultado.VICTORIA) {

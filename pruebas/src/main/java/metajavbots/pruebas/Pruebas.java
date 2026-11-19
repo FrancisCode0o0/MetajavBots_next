@@ -40,6 +40,8 @@ public final class Pruebas {
         PruebasDeLaPruebaConIa.apuntar();
         PruebasDeSenior.apuntar();
         PruebasDeLasTresCasillas.apuntar();
+        PruebasDelBanco.apuntar();
+        PruebasDelCodigoDelRival.apuntar();
 
         List<String> fallos = new ArrayList<>();
         int pasados = 0;

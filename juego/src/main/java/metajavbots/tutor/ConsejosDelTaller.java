@@ -23,7 +23,7 @@ public final class ConsejosDelTaller {
 
     /** Los de siempre, cuando el código no tiene nada que señalar (atajos del editor y del juego). */
     static final String[] GENERALES = {"general_autocompletar", "general_f1", "general_f2", "general_comentar", "general_probar",
-        "general_pseudo", "general_nombres"};
+        "general_banco", "general_pseudo", "general_nombres"};
 
     private static final Pattern CONTADOR_EN_TURNO = Pattern.compile(
             "void\\s+(cadaTurno|jedenZug|onTick)\\s*\\(\\s*\\)\\s*\\{[^}]*?\\b(int|double)\\s+(\\w+)\\s*=\\s*0\\s*;"
@@ -80,7 +80,7 @@ public final class ConsejosDelTaller {
     }
 
     private static List<Tip> conGenerales(List<Tip> l) {
-        String[] conceptos = {"llamar_metodo", "llamar_metodo", "pseudocodigo", "comentario", "depurar", "pseudocodigo", "variable"};
+        String[] conceptos = {"llamar_metodo", "llamar_metodo", "pseudocodigo", "comentario", "depurar", "depurar", "pseudocodigo", "variable"};
         for (int i = 0; i < GENERALES.length; i++) l.add(new Tip(GENERALES[i], conceptos[i]));
         return l;
     }

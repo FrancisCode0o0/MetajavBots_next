@@ -71,6 +71,11 @@ public final class RivalConTraza {
             public boolean esSuya(String nombre) {
                 return nombre.startsWith("metajavbots.rivales.Rival");
             }
+
+            @Override
+            public String fuente() {
+                return RivalConTraza.fuente();
+            }
         };
     }
 }

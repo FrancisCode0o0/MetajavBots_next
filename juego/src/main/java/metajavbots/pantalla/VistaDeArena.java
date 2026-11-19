@@ -33,6 +33,8 @@ public final class VistaDeArena {
     public final Publico publico = new Publico();
     /** Si se dibuja el público (no en las capturas de las arenas ni en las vistas pequeñas). */
     public boolean conPublico;
+    /** Si no es null, dibuja a cada combatiente como el robotito de los ejercicios con ese color (banco de pruebas). */
+    public int[] coloresRobotitos;
     /** Si el visor táctico (F8) está activo y qué enemigo está marcado (-1 si ninguno). */
     public boolean visorTactico;
     public int enemigoMarcado = -1;
@@ -436,7 +438,11 @@ public final class VistaDeArena {
         float px = sx(c.x, c.y), py = sy(c.y);
         float talla = escalaX * f(c.y) * 1.45f;
         if (c.flotando > 0) py -= Math.min(1f, Math.min(c.flotando / 8f, (50 - c.flotando) / 8f)) * 26 * talla;
-        dibujo.dibujar(co.montaje.modelo, co.montaje, px, py, talla, e);
+        if (coloresRobotitos != null && c.indice < coloresRobotitos.length) {
+            dibujarRobotito(p, px, py, talla, e, coloresRobotitos[c.indice]);
+        } else {
+            dibujo.dibujar(co.montaje.modelo, co.montaje, px, py, talla, e);
+        }
         metajavbots.combate.Aparatos.Uno lleva = pelea.aparatos.delCuerpo(c.indice);
         if (lleva != null) DibujoDeAparatos.montado(p, lleva, px, py, (float) (62 * talla * co.montaje.modelo.tamano / 30), e.lado, tiempo);
         // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea.
@@ -451,6 +457,36 @@ public final class VistaDeArena {
             if (c.parte[i] <= 0 && azar.nextFloat() < 0.08f) efectos.chispas(px + azar.nextFloat() * 30 - 15, py - alto * (0.3f + 0.15f * i), 3, 0xFFE38A);
         }
         if (c.fuera && azar.nextFloat() < 0.5f) efectos.humo(px, py - alto * 0.6f, 1.2f);
+    }
+
+    /** El robotito de los ejercicios (ruedas, cuerpo, cabeza con visor y antena, brazo animado), escalado a la arena. */
+    private void dibujarRobotito(Pincel p, float x, float suelo, float talla, DibujoRobot.Estado e, int color) {
+        float k = talla * 1.15f;
+        float alfa = e.camuflaje ? 0.35f : 1f;
+        float sac = e.sacudida > 0.1f ? (float) Math.sin(tiempo * 42) * e.sacudida * 0.6f : 0;
+        float bote = e.fuera ? 0 : (float) Math.abs(Math.sin(e.paso * 0.12)) * 2.5f * k;
+        float rx = x + sac;
+        float ry = suelo - bote;
+        int ojo = e.fuera ? 0x555B66 : e.aturdido ? 0xFFD23F : e.cara == 3 ? 0xFFFFFF : e.cara == 2 ? 0xFFE38A : 0x5BD685;
+        p.elipse(rx, suelo + 2 * k, 16 * k, 4 * k, 0, 0x000000, 0.32f * alfa);
+        if (e.turbo) p.brillo(rx - 14 * k * e.lado, suelo - 8 * k, 12 * k, 0xFF9F1C, 0.6f * alfa);
+        p.circulo(rx - 9 * k, suelo - 5 * k, 5 * k, 0x2A2F38, alfa);
+        p.circulo(rx + 9 * k, suelo - 5 * k, 5 * k, 0x2A2F38, alfa);
+        float gi = (float) (e.paso * 0.25);
+        p.circulo(rx - 9 * k + (float) Math.cos(gi) * 2.2f * k, suelo - 5 * k + (float) Math.sin(gi) * 2.2f * k, 1.4f * k, 0x7A8494, alfa);
+        p.circulo(rx + 9 * k + (float) Math.cos(gi) * 2.2f * k, suelo - 5 * k + (float) Math.sin(gi) * 2.2f * k, 1.4f * k, 0x7A8494, alfa);
+        p.caja(rx - 13 * k, ry - 34 * k, 26 * k, 26 * k, 5 * k, color, alfa);
+        p.caja(rx - 9 * k, ry - 52 * k, 18 * k, 16 * k, 4 * k, Pincel.aclarar(color, 0.15f), alfa);
+        p.caja(rx - 6 * k, ry - 47 * k, 12 * k, 6 * k, 2 * k, 0x111318, alfa);
+        float mira = 1.2f * k * e.lado;
+        p.circulo(rx - 2.5f * k + mira, ry - 44 * k, 1.6f * k, ojo, alfa);
+        p.circulo(rx + 2.5f * k + mira, ry - 44 * k, 1.6f * k, ojo, alfa);
+        p.linea(rx, ry - 52 * k, rx + 3 * k * e.lado, ry - 59 * k, 1.5f * k, 0xAAB0BA, alfa);
+        p.circulo(rx + 3 * k * e.lado, ry - 60 * k, 2 * k, ojo, alfa);
+        float brazo = e.brazoQueAtaca >= 0 ? Math.max(0.2f, 1f - e.faseDelAtaque) : 0.35f + 0.15f * (float) Math.sin(e.tiempo * 3);
+        float bx = rx + 13 * k * e.lado, by = ry - 26 * k;
+        p.linea(bx, by, bx + 12 * k * e.lado, by - (12 * brazo - 6 * (1 - brazo)) * k, 3 * k, Pincel.oscurecer(color, 0.2f), alfa);
+        if (e.escudo) p.aro(rx, ry - 30 * k, 32 * k, 2.5f * k, 0x9FE7FF, 0.75f);
     }
 
     private void proyectiles(Pincel p, Pelea pelea) {
