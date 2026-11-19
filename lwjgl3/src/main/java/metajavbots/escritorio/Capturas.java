@@ -231,6 +231,7 @@ public final class Capturas extends Juego {
         pantallas.put("06_ejercicios", metajavbots.pantallas.Ejercicios::new);
         pantallas.put("07_pelear", metajavbots.pantallas.PrepararPelea::new);
         pantallas.put("08_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.PrepararPelea.encuentro(this, "ADAPTADA")));
+        pantallaDelVisor();
         pantallas.put("09_ejercicio", () -> new metajavbots.pantallas.PantallaEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("05").get(2)));
         robotitos();
         pantallas.put("10_tutoriales", metajavbots.pantallas.Tutoriales::new);
@@ -260,6 +261,34 @@ public final class Capturas extends Juego {
         for (String trozo : solo.isEmpty() ? new String[0] : solo.split(",")) {
             for (String n : pantallas.keySet()) if (n.contains(trozo) && !nombres.contains(n)) nombres.add(n);
         }
+    }
+
+    /** El visor táctico (F8) activo en vivo sobre una arena con trampas y enemigo marcado. */
+    private void pantallaDelVisor() {
+        pantallas.put("08b_visor_tactico", () -> new Pantalla() {
+            private metajavbots.pantallas.PantallaPelea pp;
+            private int n;
+
+            @Override
+            public void alEntrar(Juego j) {
+                metajavbots.pantallas.Encuentro e = metajavbots.pantallas.PrepararPelea.encuentro(j, "ADAPTADA");
+                e.escenario = VistaDeArena.Escenario.CHATARRERIA;
+                pp = new metajavbots.pantallas.PantallaPelea(e);
+                pp.alEntrar(j);
+                pp.marcarEnemigo(1);
+                j.visorTactico = true;
+            }
+
+            @Override
+            public void alSalir(Juego j) {
+                j.visorTactico = false;
+            }
+
+            @Override
+            public void fotograma(Juego j, float dt) {
+                pp.fotograma(j, ++n < 45 ? dt * 2.5f : dt);
+            }
+        });
     }
 
     /** La inspección animada del laboratorio de pruebas, con unas pruebas ya escritas. */

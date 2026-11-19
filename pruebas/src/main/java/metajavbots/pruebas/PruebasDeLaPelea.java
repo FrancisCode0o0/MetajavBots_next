@@ -420,5 +420,48 @@ final class PruebasDeLaPelea {
             }
             cierto(vistos.size() >= 10, "salen distintos: " + vistos.size());
         });
+
+        caso("visor táctico: lee radar, alcances, ángulo relativo, obstáculos y encaja etiquetas con letra 26", () -> {
+            Pelea p = new Pelea(con("yo", Modelo.de("cobalto"), de(Sencillo::new)), con("el", Modelo.de("mazo"), de(Sencillo::new)), 11);
+            p.arena = metajavbots.combate.Arena.de("CHATARRERIA", p.ancho, p.alto);
+            p.empezarRonda();
+            metajavbots.combate.Cuerpo yo = p.cuerpo(0), el = p.cuerpo(1);
+            yo.x = 260;
+            yo.y = 320;
+            yo.mira = 15;
+            el.x = 460;
+            el.y = 390;
+            p.avanzar();
+            metajavbots.pantalla.VisorTactico.Datos d = metajavbots.pantalla.VisorTactico.leer(p, 1);
+            cierto(d != null, "datos del visor");
+            igual(yo.alcance(metajavbots.combate.Cuerpo.IZQUIERDA), d.alcanceIzq, "alcance izquierda");
+            igual(yo.alcance(metajavbots.combate.Cuerpo.DERECHA), d.alcanceDer, "alcance derecha");
+            cierto(d.radioRadar > 100 && d.conoRadar > 0, "cono y radio del radar");
+            cierto(d.objetivo != null && d.objetivo.visible, "objetivo visible en el radar");
+            metajavbots.api.Avistado visto = yo.vistos().get(0);
+            cierto(Math.abs(d.objetivo.distancia - visto.distancia()) < 1e-6, "distancia coherente con e.distancia()");
+            cierto(Math.abs(d.objetivo.anguloAbs - visto.angulo()) < 1e-6, "ángulo coherente con e.angulo()");
+            cierto(Math.abs(d.objetivo.anguloRel - Pelea.normal(visto.angulo() - yo.mira())) < 1e-6, "ángulo relativo coherente");
+            cierto(!d.obstaculos.isEmpty(), "lee los obstáculos de la arena");
+            boolean hayPeligro = false;
+            for (metajavbots.api.Cosa o : d.obstaculos) if (o.peligroso()) hayPeligro = true;
+            cierto(hayPeligro, "detecta obstáculos peligrosos");
+            // Con cabeza rota, el radio del radar se reduce al 40 % (igual que en Pelea.vistosPor).
+            double radioSano = d.radioRadar;
+            yo.parte[metajavbots.piezas.Montaje.CABEZA] = 0;
+            cierto(Math.abs(metajavbots.pantalla.VisorTactico.leer(p, 1).radioRadar - radioSano * 0.4) < 1e-6, "cabeza rota reduce radar");
+            // Las etiquetas del visor respetan techo y barra inferior incluso con -Pletra=26.
+            float tl26 = metajavbots.pantalla.VisorTactico.tamanoLetra(26f);
+            cierto(tl26 >= metajavbots.pantalla.Pincel.LETRA_MINIMA && tl26 <= 19f, "letra acotada en -Pletra=26: " + tl26);
+            float[] pos = metajavbots.pantalla.VisorTactico.encajarEtiqueta(2000, 900, 120, 26, 0, 88, 1600, 812, 172);
+            cierto(pos[0] + 120 <= 1590 && pos[1] >= 176 && pos[1] + 26 <= 816, "etiqueta dentro del área segura");
+            for (metajavbots.textos.Idioma id : metajavbots.textos.Idioma.values()) {
+                metajavbots.textos.T.idioma = id;
+                for (String k : new String[]{"pelea.visor", "pelea.visor_ayuda", "visor.izq", "visor.der"}) {
+                    cierto(!metajavbots.textos.T.t(k).equals(k) && !metajavbots.textos.T.t(k).isEmpty(), "clave " + k + " en " + id);
+                }
+            }
+            metajavbots.textos.T.idioma = metajavbots.textos.Idioma.ES;
+        });
     }
 }

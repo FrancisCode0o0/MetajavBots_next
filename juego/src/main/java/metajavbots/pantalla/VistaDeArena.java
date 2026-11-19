@@ -33,6 +33,10 @@ public final class VistaDeArena {
     public final Publico publico = new Publico();
     /** Si se dibuja el público (no en las capturas de las arenas ni en las vistas pequeñas). */
     public boolean conPublico;
+    /** Si el visor táctico (F8) está activo y qué enemigo está marcado (-1 si ninguno). */
+    public boolean visorTactico;
+    public int enemigoMarcado = -1;
+    private final VisorTactico visor = new VisorTactico();
     private Sonidos ultimosSonidos;
     private final DibujoRobot dibujo;
     private DibujoRobot.Estado[] estados = {new DibujoRobot.Estado(), new DibujoRobot.Estado()};
@@ -97,6 +101,24 @@ public final class VistaDeArena {
         float suelo = ah * 0.62f;
         return (float) (ay + ah * 0.3f + (1 - y / alto) * suelo);
     }
+
+    /** Configura el visor táctico (F8) y el enemigo marcado para este fotograma. */
+    public void visor(boolean activo, int marcado) {
+        this.visorTactico = activo;
+        this.enemigoMarcado = marcado;
+    }
+
+    float ax() { return ax; }
+
+    float ay() { return ay; }
+
+    float aw() { return aw; }
+
+    float ah() { return ah; }
+
+    double anchoArena() { return ancho; }
+
+    double altoArena() { return alto; }
 
     // ================================================================ sucesos → efectos y sonidos
 
@@ -223,6 +245,7 @@ public final class VistaDeArena {
         for (metajavbots.combate.Aparatos.Uno a : pelea.aparatos.todos()) {
             if (a.dueno < 0) DibujoDeAparatos.enElSuelo(p, this, a, tiempo, letra);
         }
+        if (visorTactico) visor.dibujarSuelo(p, this, pelea, enemigoMarcado, dt);
         // Lo que está más lejos (y mayor), antes.
         cuantos(pelea.combatientes.length);
         // Lo que está más lejos (y mayor), antes.
@@ -249,6 +272,7 @@ public final class VistaDeArena {
         trastos.avanzar(dt);
         trastos.dibujar(p);
         DibujoDeArenas.lluvia(p, escenario, ax, ay, aw, ah, tiempo);
+        if (visorTactico) visor.dibujarEtiquetas(p, this, pelea, enemigoMarcado);
         rotulos(p, orden, pelea, dt);
         p.sinRecorte();
     }

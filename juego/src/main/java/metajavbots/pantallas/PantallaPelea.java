@@ -284,8 +284,7 @@ public final class PantallaPelea implements Pantalla {
     @Override
     public void fotograma(Juego j, float dt) {
         t += dt;
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
+        Pincel p = j.pincel; Ui ui = j.ui;
         dialogo.antes(ui);
         if (resultadoDeCompilar != null) {
             Compilador.Resultado res = resultadoDeCompilar;
@@ -342,6 +341,7 @@ public final class PantallaPelea implements Pantalla {
         // Los bocadillos y los nombres, con la letra del jugador y por debajo de la banda del locutor.
         vista.letra = ui.letra;
         vista.techo = tiempoLocutor > 0 && !locutor.isEmpty() ? 100 + altoDeLaBanda + 8 : 0;
+        vista.visor(j.visorTactico && (entrada == null || !entrada.activa()) && (especial == null || !especial.activa()), entrenador.marcado());
         vista.dibujar(p, pelea, 0, 88, ancho, p.alto - 88, pausa || entreRondas ? 0 : dt);
         if (entrada != null && entrada.activa()) entrada.dibujar(j, pelea, vista, 0, 88, ancho, p.alto - 88);
         if (especial != null) especial.dibujar(j, vista, pelea);
@@ -378,6 +378,7 @@ public final class PantallaPelea implements Pantalla {
         if (j.ui.atras()) preguntarSiSalir(j);
         if (entreRondas || (especial != null && especial.activa())) return;
         if (j.entrada.tecla(Keys.SPACE)) pausa = !pausa;
+        if (j.entrada.tecla(Keys.F8)) j.visorTactico = !j.visorTactico;
         if (j.entrada.tecla(Keys.F9)) depurador = !depurador;
         if (j.entrada.tecla(Keys.NUM_1)) velocidad = 1;
         if (j.entrada.tecla(Keys.NUM_2)) velocidad = 2;
@@ -447,9 +448,8 @@ public final class PantallaPelea implements Pantalla {
     }
 
     private void controles(Juego j) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        float y = p.alto - 64, x = 20;
+        Pincel p = j.pincel; Ui ui = j.ui;
+        float y = p.alto - 64, x = 20, der = p.ancho - (depurador ? 460 : 0);
         if (ui.boton(pausa ? "▶" : "❚❚", x, y, 56, 46, Ui.Estilo.NORMAL, true, T.t("pelea.pausa_ayuda"))) pausa = !pausa;
         x += 64;
         for (float v : new float[]{1, 2, 4}) {
@@ -457,19 +457,19 @@ public final class PantallaPelea implements Pantalla {
             x += 62;
         }
         if (pausa && ui.boton(T.t("pelea.paso"), x, y, 120, 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_ayuda"))) pasoAPaso(j);
-        if (ui.boton(T.t("pelea.depurador"), p.ancho - (depurador ? 460 : 0) - 380, y, 200, 46, depurador ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO,
-                true, T.t("pelea.depurador_ayuda"))) depurador = !depurador;
-        if (ui.boton(T.t("pelea.rendirse"), p.ancho - (depurador ? 460 : 0) - 170, y, 150, 46, Ui.Estilo.PELIGRO)) preguntarSiSalir(j);
+        if (ui.boton(T.t("pelea.visor"), der - 520, y, 130, 46, j.visorTactico ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
+                T.t("pelea.visor_ayuda"))) j.visorTactico = !j.visorTactico;
+        if (ui.boton(T.t("pelea.depurador"), der - 380, y, 200, 46, depurador ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
+                T.t("pelea.depurador_ayuda"))) depurador = !depurador;
+        if (ui.boton(T.t("pelea.rendirse"), der - 170, y, 150, 46, Ui.Estilo.PELIGRO)) preguntarSiSalir(j);
         if (!avisoDeCodigo.isEmpty()) p.textoConBorde(avisoDeCodigo, 20, y - 30, ui.letra * 0.8f, true, ui.tema.aviso, 0x000000, 1);
-        if (panelDelAparato.dibujar(j, pelea.aparatos.siguiente(), p.ancho - (depurador ? 460 : 0) - 380 - 12, y)) pausa = true;
+        if (panelDelAparato.dibujar(j, pelea.aparatos.siguiente(), der - 532, y)) pausa = true;
     }
-
 
     private void bandaDelLocutor(Juego j, float dt) {
         if (tiempoLocutor <= 0 || locutor.isEmpty()) return;
         tiempoLocutor -= dt;
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
+        Pincel p = j.pincel; Ui ui = j.ui;
         float w = Math.min(1000, p.ancho - 200), x = (p.ancho - w) / 2, y = 100;
         float a = Math.min(1, tiempoLocutor * 2);
         // La frase entera, en una o dos líneas (nada cortado).
@@ -495,8 +495,7 @@ public final class PantallaPelea implements Pantalla {
     // ================================================================ depurador en vivo
 
     private void depurador(Juego j, float x) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
+        Pincel p = j.pincel; Ui ui = j.ui;
         float w = p.ancho - x, y = 88, h = p.alto - 88;
         p.rect(x, y, w, h, ui.tema.panel, 0.98f);
         p.rect(x, y, 1, h, ui.tema.borde, 1);
