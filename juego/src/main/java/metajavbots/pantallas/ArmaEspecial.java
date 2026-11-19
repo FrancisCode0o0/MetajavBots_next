@@ -14,7 +14,9 @@ import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VentanaDeCodigo;
 import metajavbots.pantalla.VistaDeArena;
+import metajavbots.progreso.Etiqueta;
 import metajavbots.progreso.Jugador;
+import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 import metajavbots.textos.Trilingue;
 
@@ -32,23 +34,47 @@ import metajavbots.textos.Trilingue;
  */
 public final class ArmaEspecial {
 
-    /** Las armas: su reto, si dispara o carga, el tiempo de cuenta atrás (s) y el daño. */
+    /** Las armas: su prefijo de reto, rango (0 Noob, 1 Junior, 2 Senior), nombre, si dispara o carga, cuenta atrás (s), daño y colores. */
     enum Tipo {
-        MARTILLO("especial_martillo", new Trilingue("Martillo Titán", "Titanhammer", "Titan Hammer"), false, 45, 16),
-        CANON("especial_canon", new Trilingue("Cañón de Plasma", "Plasmakanone", "Plasma Cannon"), true, 65, 26),
-        ARPON("especial_arpon", new Trilingue("Arpón Trueno", "Donnerharpune", "Thunder Harpoon"), true, 90, 36);
+        MARTILLO("especial_martillo", 0, new Trilingue("Martillo Titán", "Titanhammer", "Titan Hammer"), false, 45, 16, 0xB8C0C8, 0xFFC857),
+        LANZA("especial_lanza", 0, new Trilingue("Lanza de Chispas", "Funkenlanze", "Spark Lance"), false, 45, 17, 0xD48A3B, 0xFFE27A),
+        ESCUDO("especial_escudo", 0, new Trilingue("Pulso de Escudo", "Schildimpuls", "Shield Pulse"), false, 45, 15, 0x4E8C7A, 0x7CF2C6),
+        CANON("especial_canon", 1, new Trilingue("Cañón de Plasma", "Plasmakanone", "Plasma Cannon"), true, 65, 26, 0x6B3FA0, 0xD08CFF),
+        RAYO("especial_rayo", 1, new Trilingue("Rayo Giratorio", "Drehstrahl", "Gyro Beam"), true, 65, 25, 0x2F7E9E, 0x7CE6FF),
+        SIERRA("especial_sierra", 1, new Trilingue("Brazo Sierra", "Sägearm", "Saw Arm"), false, 60, 27, 0xA84A3E, 0xFF9B6A),
+        ARPON("especial_arpon", 2, new Trilingue("Arpón Trueno", "Donnerharpune", "Thunder Harpoon"), true, 90, 36, 0x3A6EA5, 0x9FD8FF),
+        MISIL("especial_misil", 2, new Trilingue("Misil Rastreador", "Suchrakete", "Seeker Missile"), true, 85, 35, 0x8C3A52, 0xFF8FA3),
+        TORRETA("especial_torreta", 2, new Trilingue("Torreta Enjambre", "Schwarmgeschütz", "Swarm Turret"), true, 90, 38, 0x4F5D95, 0xA5C4FF);
 
         final String reto;
+        final int nivel;
         final Trilingue nombre;
         final boolean dispara;
-        final int segundos, dano;
+        final int segundos, dano, color, acento;
 
-        Tipo(String reto, Trilingue nombre, boolean dispara, int segundos, int dano) {
+        Tipo(String reto, int nivel, Trilingue nombre, boolean dispara, int segundos, int dano, int color, int acento) {
             this.reto = reto;
+            this.nivel = nivel;
             this.nombre = nombre;
             this.dispara = dispara;
             this.segundos = segundos;
             this.dano = dano;
+            this.color = color;
+            this.acento = acento;
+        }
+
+        boolean casa(String idReto) {
+            return idReto.equals(reto) || idReto.startsWith(reto + "_");
+        }
+    }
+
+    private static final class Candidato {
+        final Tipo tipo;
+        final Ejercicio reto;
+
+        Candidato(Tipo tipo, Ejercicio reto) {
+            this.tipo = tipo;
+            this.reto = reto;
         }
     }
 
@@ -78,27 +104,51 @@ public final class ArmaEspecial {
         this.reto = reto;
     }
 
-    /** La de esta pelea, según el nivel del jugador (elige un reto al azar entre los de esa herramienta). */
+    /** Rango de arma especial para una etiqueta: 0 Noob, 1 Junior, 2 Senior/Master. */
+    public static int nivelDe(Etiqueta etiqueta) {
+        return Math.min(2, Math.max(0, etiqueta.ordinal() / 4));
+    }
+
+    /** La de esta pelea, según el nivel del jugador (filtra por rango y elige un reto al azar sin repetir el último). */
     public static ArmaEspecial para(Jugador jug) {
-        int nivel = jug.etiqueta.ordinal() / 4;
-        Tipo tipo = nivel <= 0 ? Tipo.MARTILLO : nivel == 1 ? Tipo.CANON : Tipo.ARPON;
+        int nivel = nivelDe(jug.etiqueta);
         try (InputStream in = ArmaEspecial.class.getResourceAsStream("/especiales/retos.txt")) {
             List<Ejercicio> todos = Ejercicio.leer(in, "retos.txt");
-            List<Ejercicio> candidatos = new ArrayList<>();
+            List<Candidato> candidatos = new ArrayList<>();
             for (Ejercicio e : todos) {
-                if (e.id.equals(tipo.reto) || e.id.startsWith(tipo.reto + "_")) candidatos.add(e);
+                for (Tipo t : Tipo.values()) {
+                    if (t.nivel == nivel && t.casa(e.id)) {
+                        candidatos.add(new Candidato(t, e));
+                        break;
+                    }
+                }
             }
             if (candidatos.isEmpty()) return null;
-            List<Ejercicio> sinRepetir = new ArrayList<>();
-            for (Ejercicio e : candidatos) if (!e.id.equals(ultimoReto)) sinRepetir.add(e);
-            List<Ejercicio> bolsa = sinRepetir.isEmpty() ? candidatos : sinRepetir;
-            Ejercicio elegido = bolsa.get(ThreadLocalRandom.current().nextInt(bolsa.size()));
-            ultimoReto = elegido.id;
-            return new ArmaEspecial(tipo, elegido);
+            List<Candidato> sinRepetir = new ArrayList<>();
+            for (Candidato c : candidatos) if (!c.reto.id.equals(ultimoReto)) sinRepetir.add(c);
+            List<Candidato> bolsa = sinRepetir.isEmpty() ? candidatos : sinRepetir;
+            Candidato elegido = bolsa.get(ThreadLocalRandom.current().nextInt(bolsa.size()));
+            ultimoReto = elegido.reto.id;
+            return new ArmaEspecial(elegido.tipo, elegido.reto);
         } catch (Exception e) {
             // sin reto, sin arma especial
         }
         return null;
+    }
+
+    /** Identificador del reto elegido para esta arma especial. */
+    public String idReto() {
+        return reto.id;
+    }
+
+    /** Rango (0 Noob, 1 Junior, 2 Senior) del arma elegida. */
+    public int nivel() {
+        return tipo.nivel;
+    }
+
+    /** Nombre del arma en el idioma indicado. */
+    public String nombreArma(Idioma idioma) {
+        return tipo.nombre.en(idioma);
     }
 
     boolean activa() {
@@ -243,7 +293,7 @@ public final class ArmaEspecial {
             float x1 = v.sx(c.x, c.y), y1 = v.sy(c.y) - 60 * v.escala(c.y);
             double fx = c.x + Math.cos(rad) * largo, fy = c.y + Math.sin(rad) * largo;
             float x2 = v.sx(fx, fy), y2 = v.sy(fy) - 60 * v.escala(fy);
-            pi.linea(x1, y1, x2, y2, 14, tipo == Tipo.ARPON ? 0x9FD8FF : 0xD08CFF, 0.5f);
+            pi.linea(x1, y1, x2, y2, 14, tipo.acento, 0.5f);
             pi.linea(x1, y1, x2, y2, 5, 0xFFFFFF, 0.95f);
         }
         if (!mensaje.isEmpty() && fase != Fase.CUENTA) {
@@ -268,13 +318,13 @@ public final class ArmaEspecial {
             pi.aro(v.sx(x, y), v.sy(y), s * 1.6f, 3, 0xFFE27A, 0.8f);
         }
         if (tipo.dispara) {
-            pi.caja(cx - s, cy - s * 0.35f, s * 1.8f, s * 0.7f, s * 0.2f, tipo == Tipo.ARPON ? 0x3A6EA5 : 0x6B3FA0, 1);
+            pi.caja(cx - s, cy - s * 0.35f, s * 1.8f, s * 0.7f, s * 0.2f, tipo.color, 1);
             pi.rect(cx + s * 0.6f, cy - s * 0.15f, s * 0.9f, s * 0.3f, 0xD9DEE4, 1);
-            pi.circulo(cx - s * 0.4f, cy, s * 0.22f, tipo == Tipo.ARPON ? 0x9FD8FF : 0xD08CFF, 1);
+            pi.circulo(cx - s * 0.4f, cy, s * 0.22f, tipo.acento, 1);
         } else {
             pi.rect(cx - s * 0.12f, cy - s * 0.2f, s * 0.24f, s * 1.6f, 0x8A5A3A, 1);
-            pi.caja(cx - s * 0.8f, cy - s * 0.75f, s * 1.6f, s * 0.7f, s * 0.15f, 0xB8C0C8, 1);
-            pi.rect(cx - s * 0.8f, cy - s * 0.5f, s * 1.6f, s * 0.12f, 0xFFC857, 1);
+            pi.caja(cx - s * 0.8f, cy - s * 0.75f, s * 1.6f, s * 0.7f, s * 0.15f, tipo.color, 1);
+            pi.rect(cx - s * 0.8f, cy - s * 0.5f, s * 1.6f, s * 0.12f, tipo.acento, 1);
         }
     }
 

@@ -102,6 +102,58 @@ casos:
     restante(40, 40) => 0
     restante(0, 10) => 0
 
+=== especial_lanza_alcance
+tema: 04
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Lanza de Chispas: ¿alcance y energía?
+titulo.de: Funkenlanze: Reichweite und Energie?
+titulo.en: Spark Lance: range and energy?
+enunciado.es: Para embestir con la lanza, el rival debe estar a distancia dist <= alcance y debes tener al menos coste de energia. Devuelve true si puedes cargar, o false si falta alguna condición.
+enunciado.de: Für den Lanzenstoß muss der Gegner höchstens alcance entfernt sein (dist <= alcance) und deine energia mindestens coste betragen. Gib true zurück, wenn beides passt, sonst false.
+enunciado.en: To lunge with the lance, the rival must be within dist <= alcance and your energia must be at least coste. Return true if you can charge, otherwise false.
+pista.es: Usa un if con && para comprobar dist <= alcance && energia >= coste.
+pista.de: Prüfe mit if und &&, ob dist <= alcance && energia >= coste gilt.
+pista.en: Use an if with && to check dist <= alcance && energia >= coste.
+firma: static boolean puedeCargar(double dist, double alcance, int energia, int coste)
+plantilla:
+    return false;
+solucion:
+    if (dist <= alcance && energia >= coste) return true;
+    return false;
+casos:
+    puedeCargar(80, 100, 40, 25) => true
+    puedeCargar(100, 100, 25, 25) => true
+    puedeCargar(120, 100, 50, 25) => false
+    puedeCargar(60, 100, 10, 25) => false
+
+=== especial_escudo_energia
+tema: 03
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Pulso de Escudo: energía restante
+titulo.de: Schildimpuls: Restenergie
+titulo.en: Shield Pulse: remaining energy
+enunciado.es: Empiezas con energia puntos y lanzas tiros pulsos que cuestan coste cada uno. Devuelve la energía restante (nunca menor que 0 si el gasto supera la energía).
+enunciado.de: Du startest mit energia Punkten und feuerst tiros Impulse zu je coste Energie. Gib die verbleibende Energie zurück (niemals kleiner als 0).
+enunciado.en: You start with energia points and fire tiros pulses costing coste each. Return the remaining energy (never below 0 if cost exceeds energy).
+pista.es: Calcula sobra = energia - tiros * coste; si es menor que 0, devuelve 0.
+pista.de: Berechne sobra = energia - tiros * coste; ist das Ergebnis kleiner als 0, gib 0 zurück.
+pista.en: Compute sobra = energia - tiros * coste; if it is less than 0, return 0.
+firma: static int energiaRestante(int energia, int tiros, int coste)
+plantilla:
+    return 0;
+solucion:
+    int sobra = energia - tiros * coste;
+    return sobra < 0 ? 0 : sobra;
+casos:
+    energiaRestante(100, 3, 25) => 25
+    energiaRestante(60, 2, 30) => 0
+    energiaRestante(40, 3, 20) => 0
+    energiaRestante(80, 0, 15) => 80
+
 === especial_canon
 tema: 03
 dificultad: 2
@@ -204,6 +256,60 @@ casos:
     danoRafaga(1, 12, 0) => 12
     danoRafaga(0, 10, 4) => 4
     danoRafaga(4, 6, 2) => 26
+
+=== especial_rayo_angulo
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Rayo Giratorio: normalizar el ángulo
+titulo.de: Drehstrahl: Winkel normalisieren
+titulo.en: Gyro Beam: normalize the angle
+enunciado.es: El giroscopio puede devolver cualquier ángulo entero grados (negativo o mayor que 359). Devuelve el ángulo equivalente dentro del rango [0, 360).
+enunciado.de: Das Gyroskop liefert beliebige ganze Winkel grados (auch negativ oder über 359). Gib den entsprechenden Winkel im Bereich [0, 360) zurück.
+enunciado.en: The gyroscope can return any integer angle grados (negative or above 359). Return the equivalent angle in the range [0, 360).
+pista.es: Calcula r = grados % 360; si r < 0, súmale 360.
+pista.de: Berechne r = grados % 360; wenn r < 0, addiere 360.
+pista.en: Compute r = grados % 360; if r < 0, add 360.
+firma: static int normalizarAngulo(int grados)
+plantilla:
+    return 0;
+solucion:
+    int r = grados % 360;
+    return r < 0 ? r + 360 : r;
+casos:
+    normalizarAngulo(45) => 45
+    normalizarAngulo(360) => 0
+    normalizarAngulo(450) => 90
+    normalizarAngulo(-30) => 330
+    normalizarAngulo(-390) => 330
+
+=== especial_sierra_brazo
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Brazo Sierra: elegir el mejor brazo
+titulo.de: Sägearm: den besseren Arm wählen
+titulo.en: Saw Arm: pick the better arm
+enunciado.es: El rival está a distancia dist. El brazo izquierdo hace danoIzq si dist <= alcIzq (si no, 0) y el derecho hace danoDer si dist <= alcDer (si no, 0). Devuelve el mayor daño que puedes causar.
+enunciado.de: Der Gegner ist dist entfernt. Der linke Arm macht danoIzq bei dist <= alcIzq (sonst 0), der rechte danoDer bei dist <= alcDer (sonst 0). Gib den höheren möglichen Schaden zurück.
+enunciado.en: The rival is dist away. The left arm deals danoIzq if dist <= alcIzq (else 0) and the right deals danoDer if dist <= alcDer (else 0). Return the highest damage you can deal.
+pista.es: Calcula el daño efectivo de cada brazo según su alcance y devuelve Math.max(izq, der).
+pista.de: Berechne den wirksamen Schaden jedes Arms je nach Reichweite und gib Math.max(izq, der) zurück.
+pista.en: Compute each arm's effective damage based on its reach and return Math.max(izq, der).
+firma: static int mejorBrazo(int dist, int danoIzq, int alcIzq, int danoDer, int alcDer)
+plantilla:
+    return 0;
+solucion:
+    int izq = dist <= alcIzq ? danoIzq : 0;
+    int der = dist <= alcDer ? danoDer : 0;
+    return Math.max(izq, der);
+casos:
+    mejorBrazo(80, 18, 100, 24, 90) => 24
+    mejorBrazo(95, 18, 100, 24, 90) => 18
+    mejorBrazo(150, 18, 100, 24, 90) => 0
+    mejorBrazo(50, 30, 50, 20, 120) => 30
 
 === especial_arpon
 tema: 03
@@ -312,3 +418,59 @@ casos:
     enCadena(new int[]{50, 60}, 60) => 2
     enCadena(new int[]{200, 300}, 100) => 0
     enCadena(new int[]{}, 100) => 0
+
+=== especial_misil_prediccion
+tema: 03
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Misil Rastreador: distancia al punto futuro
+titulo.de: Suchrakete: Abstand zum Zukunftspunkt
+titulo.en: Seeker Missile: distance to future spot
+enunciado.es: El enemigo parte de (dx, dy) y se mueve a velocidad (vx, vy) por turno durante t turnos. Devuelve la distancia en línea recta desde (0, 0) hasta su posición futura.
+enunciado.de: Der Gegner startet bei (dx, dy) und bewegt sich t Züge lang mit Tempo (vx, vy) pro Zug. Gib den direkten Abstand von (0, 0) zu seiner Zukunftsposition zurück.
+enunciado.en: The enemy starts at (dx, dy) and moves at velocity (vx, vy) per tick for t ticks. Return the straight-line distance from (0, 0) to its future position.
+pista.es: Calcula x = dx + vx * t e y = dy + vy * t, y devuelve Math.hypot(x, y) o Math.sqrt(x * x + y * y).
+pista.de: Berechne x = dx + vx * t und y = dy + vy * t und gib Math.hypot(x, y) oder Math.sqrt(x * x + y * y) zurück.
+pista.en: Compute x = dx + vx * t and y = dy + vy * t, then return Math.hypot(x, y) or Math.sqrt(x * x + y * y).
+firma: static double distanciaFutura(double dx, double dy, double vx, double vy, int t)
+plantilla:
+    return 0;
+solucion:
+    double x = dx + vx * t, y = dy + vy * t;
+    return Math.hypot(x, y);
+casos:
+    distanciaFutura(3, 0, 0, 2, 2) => 5.0
+    distanciaFutura(0, 0, 3, 4, 2) => 10.0
+    distanciaFutura(10, 0, -2, 0, 5) => 0.0
+    distanciaFutura(-6, 8, 0, 0, 4) => 10.0
+
+=== especial_torreta_objetivo
+tema: 07
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Torreta Enjambre: elegir el objetivo más cercano
+titulo.de: Schwarmgeschütz: nächstes Ziel wählen
+titulo.en: Swarm Turret: pick closest target
+enunciado.es: Recibes un array dists con las distancias a varios objetivos y un alcance máximo max. Devuelve el índice del objetivo más cercano con dists[i] <= max, o -1 si ninguno está al alcance (en empate, el menor índice).
+enunciado.de: Du erhältst ein Array dists mit Zielabständen und eine Maximalreichweite max. Gib den Index des nächsten Ziels mit dists[i] <= max zurück, oder -1, wenn keines erreichbar ist (bei Gleichstand den kleineren Index).
+enunciado.en: Given an array dists of target distances and a maximum range max, return the index of the closest target with dists[i] <= max, or -1 if none is in range (tie-break: lower index).
+pista.es: Guarda el mejor índice empezando en -1; recorre dists y actualiza si dists[i] <= max y mejora la menor distancia vista.
+pista.de: Merke dir den besten Index (Start -1); durchlaufe dists und aktualisiere, wenn dists[i] <= max und näher als der bisherige Treffer ist.
+pista.en: Track the best index starting at -1; loop over dists and update when dists[i] <= max and closer than the best so far.
+firma: static int objetivoMasCercano(int[] dists, int max)
+plantilla:
+    return -1;
+solucion:
+    int mejor = -1;
+    for (int i = 0; i < dists.length; i++) {
+        if (dists[i] <= max && (mejor == -1 || dists[i] < dists[mejor])) mejor = i;
+    }
+    return mejor;
+casos:
+    objetivoMasCercano(new int[]{140, 85, 60, 110}, 100) => 2
+    objetivoMasCercano(new int[]{200, 150}, 100) => -1
+    objetivoMasCercano(new int[]{70, 70, 90}, 100) => 0
+    objetivoMasCercano(new int[]{}, 100) => -1
+    objetivoMasCercano(new int[]{100, 120}, 100) => 0

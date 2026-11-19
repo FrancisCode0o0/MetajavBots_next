@@ -71,25 +71,61 @@ final class PruebasDelContenido {
     }
 
     private static void apuntarArmasEspeciales() {
-        caso("armas especiales: varios retos por herramienta en tres idiomas, su solución pasa todos los casos y la plantilla no", () -> {
+        caso("armas especiales: retos por nivel en tres idiomas, selección sin repetir, solución pasa y plantilla falla", () -> {
             java.util.List<metajavbots.ejercicios.Ejercicio> l;
             try (java.io.InputStream in = PruebasDelContenido.class.getResourceAsStream("/especiales/retos.txt")) {
                 l = metajavbots.ejercicios.Ejercicio.leer(in, "retos.txt");
             }
-            cierto(l.size() >= 9, "al menos 9 retos (varios por herramienta): " + l.size());
-            for (String prefijo : new String[]{"especial_martillo", "especial_canon", "especial_arpon"}) {
-                long cuenta = l.stream().filter(e -> e.id.equals(prefijo) || e.id.startsWith(prefijo + "_")).count();
-                cierto(cuenta >= 3, prefijo + ": al menos 3 retos (" + cuenta + ")");
+            cierto(l.size() >= 18, "al menos 18 retos (varias armas por nivel): " + l.size());
+            String[][] prefijosPorNivel = {
+                {"especial_martillo", "especial_lanza", "especial_escudo"},
+                {"especial_canon", "especial_rayo", "especial_sierra"},
+                {"especial_arpon", "especial_misil", "especial_torreta"}
+            };
+            for (String[] grupo : prefijosPorNivel) {
+                for (String prefijo : grupo) {
+                    long cuenta = l.stream().filter(e -> e.id.equals(prefijo) || e.id.startsWith(prefijo + "_")).count();
+                    cierto(cuenta >= 1, prefijo + ": al menos 1 reto (" + cuenta + ")");
+                }
             }
             for (metajavbots.ejercicios.Ejercicio e : l) {
-                for (String s : new String[]{e.titulo.es, e.titulo.de, e.titulo.en, e.enunciado.es, e.enunciado.de, e.enunciado.en}) {
-                    cierto(!s.isEmpty(), e.id + ": título y enunciado en los tres idiomas");
+                for (String s : new String[]{e.titulo.es, e.titulo.de, e.titulo.en, e.enunciado.es, e.enunciado.de, e.enunciado.en,
+                    e.pista.es, e.pista.de, e.pista.en}) {
+                    cierto(!s.isEmpty(), e.id + ": título, enunciado y pista en los tres idiomas");
                 }
+            }
+            metajavbots.progreso.Etiqueta[] etiquetas = {
+                metajavbots.progreso.Etiqueta.NOOB_1,
+                metajavbots.progreso.Etiqueta.JUNIOR_1,
+                metajavbots.progreso.Etiqueta.SENIOR_1,
+                metajavbots.progreso.Etiqueta.MASTER
+            };
+            for (metajavbots.progreso.Etiqueta et : etiquetas) {
+                metajavbots.progreso.Jugador j = new metajavbots.progreso.Jugador("Test");
+                j.etiqueta = et;
+                int esperado = metajavbots.pantallas.ArmaEspecial.nivelDe(et);
+                String previo = "";
+                java.util.Set<String> vistos = new java.util.HashSet<>();
+                for (int k = 0; k < 12; k++) {
+                    metajavbots.pantallas.ArmaEspecial a = metajavbots.pantallas.ArmaEspecial.para(j);
+                    cierto(a != null, et + ": debe elegir arma especial");
+                    igual(esperado, a.nivel(), et + ": rango correcto");
+                    cierto(!a.idReto().equals(previo), et + ": no repetir el último reto (" + previo + ")");
+                    for (metajavbots.textos.Idioma id : metajavbots.textos.Idioma.values()) {
+                        cierto(!a.nombreArma(id).isEmpty(), a.idReto() + ": nombre del arma en " + id);
+                    }
+                    previo = a.idReto();
+                    vistos.add(previo);
+                }
+                cierto(vistos.size() >= 2, et + ": variedad de retos (" + vistos + ")");
             }
             if (!metajavbots.codigo.Compilador.hayCompilador()) return;
             for (metajavbots.ejercicios.Ejercicio e : l) {
-                cierto(metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoSolucion(), java.util.Locale.ROOT).todoBien(), e.id + ": la solución");
-                cierto(!metajavbots.ejercicios.Comprobador.comprobar(e, e.codigoInicial(), java.util.Locale.ROOT).todoBien(), e.id + ": la plantilla");
+                Comprobador.Informe bien = Comprobador.comprobar(e, e.codigoSolucion(), java.util.Locale.ROOT);
+                cierto(bien.todoBien(), e.id + ": la solución falla " + bien.errores);
+                Comprobador.Informe plantilla = Comprobador.comprobar(e, e.codigoInicial(), java.util.Locale.ROOT);
+                cierto(plantilla.compila(), e.id + ": la plantilla debe compilar " + plantilla.errores);
+                cierto(!plantilla.todoBien(), e.id + ": la plantilla debe fallar");
             }
         });
     }
