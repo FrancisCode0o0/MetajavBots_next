@@ -12,7 +12,7 @@ laser_pesado     | BRAZO | Láser pesado      | Schwerer Laser    | Heavy laser 
 laser_pulso      | BRAZO | Láser de pulsos   | Pulslaser         | Pulse laser       | arma=LASER dano=3 alcance=420 enfriamiento=8 energia=5 peso=5 blindaje=18 naturaleza=RAYO desbloqueo=victorias:3 serie=1-5
 laser_francotirador | BRAZO | Láser de precisión | Präzisionslaser | Sniper laser    | arma=LASER dano=15 alcance=800 enfriamiento=70 energia=30 peso=9 blindaje=16 naturaleza=FOCO desbloqueo=nivel:NOOB_3 serie=1-5
 # ------------------------------------------------------------------ BRAZOS: balas (viajan; no gastan energía)
-canon_ligero     | BRAZO | Cañón ligero      | Leichte Kanone    | Light cannon      | arma=BALA dano=5 alcance=650 enfriamiento=12 velocidad=15 dispersion=3 peso=7 blindaje=24 naturaleza=ACERO serie=1-5
+canon_ligero     | BRAZO | Cañón ligero      | Leichte Kanone    | Light cannon      | arma=BALA dano=5 alcance=650 enfriamiento=12 velocidad=15 dispersion=3 peso=7 blindaje=24 naturaleza=ACERO desbloqueo=victorias:1 serie=1-5
 ametralladora    | BRAZO | Ametralladora     | Maschinengewehr   | Machine gun       | arma=BALA dano=2 alcance=500 enfriamiento=4 velocidad=17 dispersion=7 peso=8 blindaje=22 naturaleza=RAYO desbloqueo=victorias:2 serie=1-5
 escopeta         | BRAZO | Escopeta de remaches | Nietenflinte   | Rivet shotgun     | arma=BALA dano=4 perdigones=5 alcance=300 enfriamiento=34 velocidad=13 dispersion=16 peso=10 blindaje=26 naturaleza=FURIA desbloqueo=victorias:5 serie=1-5
 canon_riel       | BRAZO | Cañón de riel     | Schienenkanone    | Railgun           | arma=BALA dano=18 alcance=900 enfriamiento=80 velocidad=32 dispersion=0.5 energia=25 peso=14 blindaje=20 naturaleza=FOCO desbloqueo=nivel:JUNIOR_1 serie=1-5
@@ -20,7 +20,7 @@ canon_riel       | BRAZO | Cañón de riel     | Schienenkanone    | Railgun    
 lanzamisiles     | BRAZO | Lanzamisiles      | Raketenwerfer     | Missile launcher  | arma=MISIL dano=13 alcance=850 enfriamiento=60 velocidad=7 giro=4 energia=6 peso=12 blindaje=24 naturaleza=INGENIO desbloqueo=victorias:4 serie=1-5
 enjambre         | BRAZO | Enjambre          | Schwarm           | Swarm pod         | arma=MISIL dano=4 misiles=3 alcance=700 enfriamiento=70 velocidad=8 giro=6 energia=10 peso=11 blindaje=20 naturaleza=INGENIO desbloqueo=nivel:NOOB_4 serie=1-5
 # ------------------------------------------------------------------ BRAZOS: cuerpo a cuerpo
-punos            | BRAZO | Puños hidráulicos | Hydraulikfäuste   | Hydraulic fists   | arma=CUERPO dano=14 alcance=55 cono=80 enfriamiento=26 peso=9 blindaje=34 naturaleza=FURIA serie=1-5
+punos            | BRAZO | Puños hidráulicos | Hydraulikfäuste   | Hydraulic fists   | arma=CUERPO dano=14 alcance=55 cono=80 enfriamiento=26 peso=9 blindaje=34 naturaleza=FURIA desbloqueo=victorias:2 serie=1-5
 espada           | BRAZO | Espada de plasma  | Plasmaklinge      | Plasma blade      | arma=CUERPO dano=19 alcance=75 cono=100 enfriamiento=32 energia=8 peso=8 blindaje=26 naturaleza=FURIA desbloqueo=victorias:4 serie=1-5
 martillo         | BRAZO | Martillo sísmico  | Seismikhammer     | Seismic hammer    | arma=CUERPO dano=28 alcance=60 cono=70 enfriamiento=55 aturde=20 peso=16 blindaje=38 naturaleza=ACERO desbloqueo=victorias:8 serie=1-5
 taladro          | BRAZO | Taladro           | Bohrer            | Drill             | arma=CUERPO dano=9 alcance=50 cono=50 enfriamiento=12 peso=10 blindaje=30 naturaleza=FURIA desbloqueo=nivel:NOOB_2 serie=1-5

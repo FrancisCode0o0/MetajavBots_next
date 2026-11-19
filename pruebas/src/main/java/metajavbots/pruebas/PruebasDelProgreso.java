@@ -95,9 +95,22 @@ final class PruebasDelProgreso {
         caso("progreso: las piezas se desbloquean con victorias, niveles, retos y desafíos", () -> {
             Jugador j = new Jugador("x");
             CatalogoDePiezas c = CatalogoDePiezas.delJuego();
-            cierto(Progreso.piezaDisponible(j, c.pieza("laser_basico")), "la de inicio");
+            List<metajavbots.piezas.Pieza> iniciales = Progreso.piezasDisponibles(j);
+            igual(4, iniciales.size(), "en NOOB_1 empieza con exactamente 4 complementos básicos: " + iniciales);
+            cierto(Progreso.piezaDisponible(j, c.pieza("laser_basico")), "arma básica de inicio");
+            cierto(Progreso.piezaDisponible(j, c.pieza("cabeza_radar")), "cabeza básica de inicio");
+            cierto(Progreso.piezaDisponible(j, c.pieza("piernas_bipedo")), "piernas básicas de inicio");
+            cierto(Progreso.piezaDisponible(j, c.pieza("nucleo_basico")), "núcleo básico de inicio");
+            falso(Progreso.piezaDisponible(j, c.pieza("canon_ligero")), "cañón ligero ya requiere desbloqueo");
+            falso(Progreso.piezaDisponible(j, c.pieza("punos")), "puños ya requieren desbloqueo");
+            cierto(Progreso.piezaUsable(j, c.pieza("canon_ligero"), Modelo.de("cobalto")), "de fábrica en cobalto sigue siendo usable");
             falso(Progreso.piezaDisponible(j, c.pieza("laser_pesado")), "la de 6 victorias, no");
-            for (int i = 0; i < 6; i++) j.historial.add(pelea(Registro.Resultado.VICTORIA, 0.3));
+            j.historial.add(pelea(Registro.Resultado.VICTORIA, 0.2));
+            cierto(Progreso.piezaDisponible(j, c.pieza("canon_ligero")), "con 1 victoria se desbloquea cañón ligero");
+            falso(Progreso.piezaDisponible(j, c.pieza("punos")), "con 1 victoria aún no tiene puños");
+            j.historial.add(pelea(Registro.Resultado.VICTORIA, 0.2));
+            cierto(Progreso.piezaDisponible(j, c.pieza("punos")), "con 2 victorias se desbloquean puños");
+            for (int i = 0; i < 4; i++) j.historial.add(pelea(Registro.Resultado.VICTORIA, 0.3));
             cierto(Progreso.piezaDisponible(j, c.pieza("laser_pesado")), "con 6 victorias, sí");
             falso(Progreso.piezaDisponible(j, c.pieza("reto_prediccion")), "la del reto, no");
             j.retosHechos.add("prediccion");

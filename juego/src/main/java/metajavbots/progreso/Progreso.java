@@ -236,15 +236,23 @@ public final class Progreso {
     }
 
     public static boolean piezaDisponible(Jugador j, Pieza p) {
+        if (p == null) return false;
         if (j.piezasGanadas.contains(p.id) || j.legendariasGanadas.contains(p.id)) return true;
         // Con muchas partes desbloqueadas en Master, como dice el encargo: todas las comunes y raras.
         if (j.etiqueta == Etiqueta.MASTER && p.rareza.ordinal() <= Pieza.Rareza.RARA.ordinal()) return true;
         return cumple(j, p.desbloqueo);
     }
 
+    /** Piezas desbloqueadas para el jugador (en NOOB_1 nuevo: los 4 complementos básicos de inicio). */
+    public static List<Pieza> piezasDisponibles(Jugador j) {
+        List<Pieza> l = new ArrayList<>();
+        for (Pieza p : CatalogoDePiezas.delJuego().todas()) if (piezaDisponible(j, p)) l.add(p);
+        return l;
+    }
+
     /** ¿Puede ponerle esta pieza a este robot? (las de fábrica de su modelo, siempre). */
     public static boolean piezaUsable(Jugador j, Pieza p, Modelo m) {
-        return m.piezas.contains(p.id) || piezaDisponible(j, p);
+        return p != null && ((m != null && m.piezas.contains(p.id)) || piezaDisponible(j, p));
     }
 
     public static boolean modeloDisponible(Jugador j, Modelo m) {
