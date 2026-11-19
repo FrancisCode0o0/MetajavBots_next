@@ -33,10 +33,49 @@ final class PruebasDeLaSesion {
             inf.ataques = 4;
             inf.aciertos = 4;
             cierto(!metajavbots.pantallas.Objetivo.cumple("punteria>=60", c, ""), "con menos de 5 ataques no vale");
-            for (String id : new String[]{"moverse", "girar", "apuntar", "disparar"}) {
+            for (String id : new String[]{"moverse", "girar", "apuntar", "disparar", "esquivar"}) {
                 for (String k : new String[]{"", ".texto", ".pseudo"}) cierto(metajavbots.textos.T.existe("mini." + id + k), "mini." + id + k);
             }
             cierto(metajavbots.pantallas.Objetivo.texto("vistos>=300").contains("10"), "10 s: " + metajavbots.pantallas.Objetivo.texto("vistos>=300"));
+        });
+
+        caso("minijuegos: esquivar obstáculos valida sinDanoTrampa>= y carga una arena con trampas activas", () -> {
+            metajavbots.combate.Combatiente c = metajavbots.rivales.Rivales.muneco();
+            metajavbots.combate.Combatiente.Informe inf = new metajavbots.combate.Combatiente.Informe();
+            c.informes.add(inf);
+            inf.turnos = 599;
+            cierto(!metajavbots.pantallas.Objetivo.cumple("sinDanoTrampa>=600", c, ""), "menos turnos de los pedidos no cumple");
+            inf.turnos = 600;
+            inf.danoPorArmaRecibido.put("pared", 3.0);
+            cierto(metajavbots.pantallas.Objetivo.cumple("sinDanoTrampa>=600", c, ""), "sin daño de trampas durante 20 s cumple");
+            inf.fueraDeCombate = true;
+            cierto(!metajavbots.pantallas.Objetivo.cumple("sinDanoTrampa>=600", c, ""), "fuera de combate no cumple");
+            inf.fueraDeCombate = false;
+            inf.danoPorArmaRecibido.put("pinchos", 5.0);
+            cierto(!metajavbots.pantallas.Objetivo.cumple("sinDanoTrampa>=600", c, ""), "con daño de pinchos no cumple");
+
+            String[][] retos = metajavbots.pantallas.MiniJuegos.retos();
+            igual(5, retos.length, "cinco minijuegos");
+            igual("esquivar", retos[4][0], "id del 5.º minijuego");
+            igual("sinDanoTrampa>=600", retos[4][1], "objetivo del 5.º minijuego");
+
+            metajavbots.pantallas.Encuentro en = metajavbots.pantallas.MiniJuegos.prepararReto(retos[4][0], retos[4][1]);
+            cierto(en.rival != null && en.escenario != null, "encuentro y escenario cargados");
+            igual("sinDanoTrampa>=600", en.objetivo, "objetivo en el encuentro");
+            metajavbots.combate.Arena arena = metajavbots.combate.Arena.de(en.escenario.name(), 1000, 700);
+            cierto(!arena.trampas().isEmpty(), "la arena del 5.º minijuego tiene trampas activas: " + en.escenario);
+            cierto(arena.trampas().stream().anyMatch(metajavbots.combate.Arena.Trampa::peligroso), "hay al menos una trampa peligrosa");
+
+            for (metajavbots.textos.Idioma id : metajavbots.textos.Idioma.values()) {
+                cierto(!metajavbots.textos.T.en("mini.esquivar", id).isBlank(), "mini.esquivar en " + id);
+                cierto(!metajavbots.textos.T.en("mini.esquivar.texto", id).isBlank(), "mini.esquivar.texto en " + id);
+                cierto(!metajavbots.textos.T.en("objetivo.sin_dano_trampa", id).isBlank(), "objetivo.sin_dano_trampa en " + id);
+            }
+            cierto(metajavbots.textos.T.en("mini.esquivar.pseudo", metajavbots.textos.Idioma.ES).contains("obstaculos()"), "pista ES con obstaculos()");
+            cierto(metajavbots.textos.T.en("mini.esquivar.pseudo", metajavbots.textos.Idioma.DE).contains("hindernisse()"), "pista DE con hindernisse()");
+            cierto(metajavbots.textos.T.en("mini.esquivar.pseudo", metajavbots.textos.Idioma.EN).contains("obstacles()"), "pista EN con obstacles()");
+            cierto(metajavbots.pantallas.Objetivo.texto("sinDanoTrampa>=600").contains("20"),
+                    "20 s: " + metajavbots.pantallas.Objetivo.texto("sinDanoTrampa>=600"));
         });
 
         caso("sesión de una hora: repasa el tema a medias que peor lleva y abre el siguiente que su etiqueta permite", () -> {

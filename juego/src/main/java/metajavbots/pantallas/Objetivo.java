@@ -5,9 +5,11 @@ import metajavbots.combate.Combatiente;
 import metajavbots.textos.T;
 
 /**
- * OBJETIVO — Las pruebas de robot de los tutoriales: «aciertos>=3» (dar 3
- * golpes en la ronda), «dano<=40» (recibir como mucho 40), «ronda_sin_errores»
- * y «usa:for» (el código tiene esa palabra, de verdad: no en un comentario).
+ * OBJETIVO — Las pruebas de robot de los tutoriales y minijuegos: «aciertos>=3»
+ * (dar 3 golpes en la ronda), «dano<=40» (recibir como mucho 40), «ronda_sin_errores»,
+ * «usa:for» (el código tiene esa palabra, de verdad: no en un comentario),
+ * «recorre>=», «vistos>=», «punteria>=» y «sinDanoTrampa>=» (sobrevivir N turnos
+ * sin recibir daño de trampas ni obstáculos de la arena).
  */
 public final class Objetivo {
 
@@ -35,6 +37,10 @@ public final class Objetivo {
             if (objetivo.startsWith("recorre>=")) return inf.recorrido >= Double.parseDouble(objetivo.substring(9).strip());
             if (objetivo.startsWith("vistos>=")) return inf.turnosVistos >= Integer.parseInt(objetivo.substring(8).strip());
             if (objetivo.startsWith("punteria>=")) return inf.ataques >= 5 && inf.punteria() * 100 >= Double.parseDouble(objetivo.substring(10).strip());
+            if (objetivo.startsWith("sinDanoTrampa>=")) {
+                int turnos = Integer.parseInt(objetivo.substring(15).strip());
+                return !inf.fueraDeCombate && inf.turnos >= turnos && inf.danoDeTrampas() == 0;
+            }
         } catch (NumberFormatException e) {
             return false;
         }
@@ -56,6 +62,7 @@ public final class Objetivo {
         if (objetivo.startsWith("recorre>=")) return T.f("objetivo.recorre", objetivo.substring(9));
         if (objetivo.startsWith("vistos>=")) return T.f("objetivo.vistos", Integer.parseInt(objetivo.substring(8)) / 30);
         if (objetivo.startsWith("punteria>=")) return T.f("objetivo.punteria", objetivo.substring(10));
+        if (objetivo.startsWith("sinDanoTrampa>=")) return T.f("objetivo.sin_dano_trampa", Integer.parseInt(objetivo.substring(15).strip()) / 30);
         return objetivo;
     }
 }

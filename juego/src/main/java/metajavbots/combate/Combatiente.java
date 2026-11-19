@@ -59,6 +59,15 @@ public final class Combatiente {
         public double pasosMedios() {
             return turnos == 0 ? 0 : (double) pasosTotales / turnos;
         }
+
+        /** Daño recibido por obstáculos o trampas de la arena en esta ronda. */
+        public double danoDeTrampas() {
+            double total = 0;
+            for (String tipo : new String[]{"pinchos", "sierra", "foso", "carrito", "rayo", "barril", "chimenea"}) {
+                total += danoPorArmaRecibido.getOrDefault(tipo, 0.0);
+            }
+            return total;
+        }
     }
 
     public final String nombre;
