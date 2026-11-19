@@ -59,6 +59,7 @@ public final class Menu implements Pantalla {
         Comun.fondo(j, t);
         float arriba = Comun.cabecera(j, "MetajavBots", false);
         Jugador jug = j.jugador;
+        dibujarMonedasCabecera(j, jug);
         // A la izquierda, el robot elegido.
         float iz = 40, ancho = 380;
         ui.panel(iz, arriba + 24, ancho, p.alto - arriba - 60, null);
@@ -115,5 +116,21 @@ public final class Menu implements Pantalla {
             j.guardar();
             j.irSolo(new Inicio());
         }
+    }
+
+    /** Muestra el saldo actual de monedas en la cabecera del menú, respetando letra escalable e idioma. */
+    private void dibujarMonedasCabecera(Juego j, Jugador jug) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        String texto = "◆ " + T.f("menu.monedas", Jugador.formatearMonedas(jug.monedas));
+        float anchoMax = Math.max(120, p.ancho - 460 - 360);
+        float tam = ui.cabe(texto, anchoMax - 32, Math.min(ui.letra, 22f), true);
+        float mw = Math.min(anchoMax, Math.max(130, p.ancho(texto, tam, true) + 32));
+        float mx = p.ancho - 460 - mw - 16, my = 14, mh = 50;
+        int dorado = 0xFFC857;
+        p.caja(mx, my, mw, mh, 10, Pincel.oscurecer(dorado, 0.65f), 1);
+        p.bordeRedondeado(mx, my, mw, mh, 10, dorado, 1, 2);
+        p.textoCentrado(texto, mx + mw / 2, my + (mh - p.altoDeLinea(tam)) / 2, tam, true, 0xFFFFFF, 1);
+        if (ui.e.dentro(mx, my, mw, mh)) ui.avisar(T.t("menu.monedas_ayuda"));
     }
 }

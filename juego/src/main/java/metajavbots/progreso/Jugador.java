@@ -58,6 +58,8 @@ public final class Jugador {
     /** ¿Ya hizo la prueba de nivel del principio? */
     public boolean pruebaHecha;
     public long experiencia;
+    /** Monedas gastables (separadas de la experiencia), con precisión de centésimas (p. ej. 0.25, 3.5). */
+    public double monedas;
     public int victoriasEnLaEtiqueta, derrotasEnLaEtiqueta, derrotasSeguidas, victoriasSeguidas;
     /** Las peleas desde el último desafío (hay que esperar para el siguiente). */
     public int peleasDesdeElDesafio = 99;
@@ -202,5 +204,30 @@ public final class Jugador {
     /** ¿Ha disputado ya al menos una pelea (por último rival guardado o historial)? */
     public boolean haPeleado() {
         return ultimoRivalCodigo != null && !ultimoRivalCodigo.isBlank() || !historial.isEmpty();
+    }
+
+    /** Redondea una cantidad de monedas a centésimas exactas. */
+    public static double redondearMonedas(double valor) {
+        return Math.round(valor * 100.0) / 100.0;
+    }
+
+    /** Formatea el saldo de monedas sin ceros sobrantes (0, 2, 3.5, 0.25). */
+    public static String formatearMonedas(double valor) {
+        long centesimas = Math.round(valor * 100.0);
+        if (centesimas % 100 == 0) return Long.toString(centesimas / 100);
+        if (centesimas % 10 == 0) return String.format(java.util.Locale.ROOT, "%.1f", centesimas / 100.0);
+        return String.format(java.util.Locale.ROOT, "%.2f", centesimas / 100.0);
+    }
+
+    /** Suma monedas al saldo del jugador (solo cantidades positivas). */
+    public void sumarMonedas(double cantidad) {
+        if (cantidad > 0) monedas = redondearMonedas(monedas + cantidad);
+    }
+
+    /** Gasta monedas si hay saldo suficiente; devuelve si se pudo realizar el gasto. */
+    public boolean gastarMonedas(double cantidad) {
+        if (cantidad < 0 || monedas + 1e-9 < cantidad) return false;
+        monedas = Math.max(0, redondearMonedas(monedas - cantidad));
+        return true;
     }
 }

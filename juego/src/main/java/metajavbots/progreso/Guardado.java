@@ -95,6 +95,7 @@ public final class Guardado {
         v.put("etiqueta", j.etiqueta.name());
         v.put("pruebaHecha", Boolean.toString(j.pruebaHecha));
         v.put("experiencia", Long.toString(j.experiencia));
+        v.put("monedas", String.format(Locale.ROOT, "%.2f", Jugador.redondearMonedas(j.monedas)));
         v.put("victoriasEnLaEtiqueta", Integer.toString(j.victoriasEnLaEtiqueta));
         v.put("derrotasEnLaEtiqueta", Integer.toString(j.derrotasEnLaEtiqueta));
         v.put("derrotasSeguidas", Integer.toString(j.derrotasSeguidas));
@@ -211,6 +212,7 @@ public final class Guardado {
         j.etiqueta = Etiqueta.de(v.getOrDefault("etiqueta", "NOOB_1"));
         j.pruebaHecha = Boolean.parseBoolean(v.get("pruebaHecha"));
         j.experiencia = largo(v.get("experiencia"));
+        j.monedas = Math.max(0, Jugador.redondearMonedas(decimal(v.get("monedas"), 0)));
         j.victoriasEnLaEtiqueta = (int) largo(v.get("victoriasEnLaEtiqueta"));
         j.derrotasEnLaEtiqueta = (int) largo(v.get("derrotasEnLaEtiqueta"));
         j.derrotasSeguidas = (int) largo(v.get("derrotasSeguidas"));

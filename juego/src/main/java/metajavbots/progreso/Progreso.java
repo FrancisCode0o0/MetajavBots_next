@@ -30,6 +30,12 @@ public final class Progreso {
     public static final int[] VICTORIAS_POR_ROBOT = {0, 30, 80, 150};
     public static final int VICTORIAS_EXTREMA_PARA_MASTER = 25;
     public static final int PELEAS_ENTRE_DESAFIOS = 5;
+    /** Monedas ganadas al resolver un ejercicio por primera vez. */
+    public static final double MONEDAS_POR_EJERCICIO = 0.25;
+    /** Monedas ganadas al vencer en una pelea según la categoría del rango. */
+    public static final double MONEDAS_VICTORIA_NOOB = 2.0;
+    public static final double MONEDAS_VICTORIA_JUNIOR = 3.0;
+    public static final double MONEDAS_VICTORIA_SENIOR = 3.5;
 
     private Progreso() {
     }
@@ -88,6 +94,18 @@ public final class Progreso {
         public final List<Modelo> modelosNuevos = new ArrayList<>();
         public int robotsNuevos;
         public long experiencia;
+        public double monedas;
+    }
+
+    /** Monedas otorgadas por ganar una pelea según el rango (Noob: 2, Junior: 3, Senior/Master: 3.5). */
+    public static double monedasPorVictoria(Etiqueta e) {
+        if (e == null) return MONEDAS_VICTORIA_NOOB;
+        switch (e.categoria()) {
+            case JUNIOR: return MONEDAS_VICTORIA_JUNIOR;
+            case SENIOR:
+            case MASTER: return MONEDAS_VICTORIA_SENIOR;
+            default: return MONEDAS_VICTORIA_NOOB;
+        }
     }
 
     /** Apunta una pelea en el historial y aplica sus consecuencias. */
@@ -106,6 +124,8 @@ public final class Progreso {
             if (cuenta) j.victoriasEnLaEtiqueta++;
             if (r.nivelRival >= 0.99) j.victoriasExtrema++;
             c.experiencia = 30 + Math.round(70 * r.nivelRival);
+            c.monedas = monedasPorVictoria(j.etiqueta);
+            j.sumarMonedas(c.monedas);
             Pieza p = botin(j, naturalezaDelRival, azar);
             if (p != null) {
                 j.piezasGanadas.add(p.id);
@@ -166,6 +186,8 @@ public final class Progreso {
             int exp = e.experiencia();
             c.experiencia += exp;
             j.experiencia += exp;
+            c.monedas = MONEDAS_POR_EJERCICIO;
+            j.sumarMonedas(MONEDAS_POR_EJERCICIO);
             if (e.desbloquea.startsWith("reto:")) {
                 String reto = e.desbloquea.substring(5);
                 j.retosHechos.add(reto);

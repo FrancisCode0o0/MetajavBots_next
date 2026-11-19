@@ -37,6 +37,7 @@ final class PruebasDelProgreso {
         apuntarParte3();
         apuntarParte4();
         apuntarPista();
+        apuntarMonedas();
     }
 
     private static void apuntarParte1() {
@@ -334,6 +335,96 @@ final class PruebasDelProgreso {
             int esperado = delDia.experiencia() + 10 + 5 * Math.min(10, j.retoDiarioRacha);
             igual((long) esperado, j.experiencia, "suma base y bono una sola vez");
             igual((long) esperado, c.experiencia, "cambio coincide con la experiencia sumada");
+        });
+    }
+
+    private static void apuntarMonedas() {
+        caso("progreso: monedas por ejercicio (primera vez) y por victoria en Noob, Junior, Senior y Master", () -> {
+            Jugador j = new Jugador("Monedas");
+            Random azar = new Random(7);
+            igual(0.0, j.monedas, "empieza sin monedas");
+
+            List<metajavbots.ejercicios.Ejercicio> todos = metajavbots.ejercicios.Banco.delJuego().todos();
+            metajavbots.ejercicios.Ejercicio e1 = todos.get(0);
+            metajavbots.ejercicios.Ejercicio e2 = todos.get(1);
+
+            Progreso.Cambio ce1 = Progreso.despuesDelEjercicio(j, e1);
+            igual(0.25, ce1.monedas, "primer ejercicio: +0.25 monedas");
+            igual(0.25, j.monedas, "saldo tras primer ejercicio");
+
+            Progreso.Cambio ce1Rep = Progreso.despuesDelEjercicio(j, e1);
+            igual(0.0, ce1Rep.monedas, "ejercicio repetido no vuelve a dar monedas");
+            igual(0.25, j.monedas, "saldo sin cambios al repetir ejercicio");
+
+            Progreso.Cambio ce2 = Progreso.despuesDelEjercicio(j, e2);
+            igual(0.25, ce2.monedas, "segundo ejercicio nuevo: +0.25 monedas");
+            igual(0.5, j.monedas, "saldo tras dos ejercicios");
+
+            j.etiqueta = Etiqueta.NOOB_2;
+            Progreso.Cambio cNoob = Progreso.despuesDeLaPelea(j, pelea(Registro.Resultado.VICTORIA, 0.2), "ACERO", azar);
+            igual(2.0, cNoob.monedas, "victoria en Noob: +2.0 monedas");
+            igual(2.5, j.monedas, "saldo tras victoria Noob");
+
+            Progreso.Cambio cDerrota = Progreso.despuesDeLaPelea(j, pelea(Registro.Resultado.DERROTA, 0.2), "ACERO", azar);
+            igual(0.0, cDerrota.monedas, "derrota no da monedas");
+            Progreso.Cambio cEmpate = Progreso.despuesDeLaPelea(j, pelea(Registro.Resultado.EMPATE, 0.2), "ACERO", azar);
+            igual(0.0, cEmpate.monedas, "empate no da monedas");
+            igual(2.5, j.monedas, "saldo sin cambios tras derrota y empate");
+
+            j.etiqueta = Etiqueta.JUNIOR_3;
+            Progreso.Cambio cJunior = Progreso.despuesDeLaPelea(j, pelea(Registro.Resultado.VICTORIA, 0.5), "RAYO", azar);
+            igual(3.0, cJunior.monedas, "victoria en Junior: +3.0 monedas");
+            igual(5.5, j.monedas, "saldo tras victoria Junior");
+
+            j.etiqueta = Etiqueta.SENIOR_1;
+            Progreso.Cambio cSenior = Progreso.despuesDeLaPelea(j, pelea(Registro.Resultado.VICTORIA, 0.8), "FUEGO", azar);
+            igual(3.5, cSenior.monedas, "victoria en Senior: +3.5 monedas");
+            igual(9.0, j.monedas, "saldo tras victoria Senior");
+
+            j.etiqueta = Etiqueta.MASTER;
+            Progreso.Cambio cMaster = Progreso.despuesDeLaPelea(j, pelea(Registro.Resultado.VICTORIA, 1.0), "SOMBRA", azar);
+            igual(3.5, cMaster.monedas, "victoria en Master: +3.5 monedas");
+            igual(12.5, j.monedas, "saldo tras victoria Master");
+
+            long expAntes = j.experiencia;
+            cierto(j.gastarMonedas(2.25), "permite gastar monedas disponibles");
+            igual(10.25, j.monedas, "saldo tras gasto");
+            igual(expAntes, j.experiencia, "gastar monedas no afecta a la experiencia");
+            falso(j.gastarMonedas(50.0), "no permite gastar más del saldo");
+            igual(10.25, j.monedas, "saldo intacto tras gasto rechazado");
+            igual("0", Jugador.formatearMonedas(0));
+            igual("0.25", Jugador.formatearMonedas(0.25));
+            igual("3.5", Jugador.formatearMonedas(3.5));
+            igual("10.25", Jugador.formatearMonedas(10.25));
+        });
+
+        caso("progreso: persistencia de monedas al guardar y cargar, y compatibilidad hacia atrás", () -> {
+            Path antes = Guardado.carpeta;
+            Path tmp = Files.createTempDirectory("metajavbots_monedas");
+            Guardado.carpeta = tmp;
+            try {
+                Jugador j = new Jugador("Saldo Test");
+                j.etiqueta = Etiqueta.JUNIOR_1;
+                Progreso.despuesDelEjercicio(j, metajavbots.ejercicios.Banco.delJuego().todos().get(0));
+                Progreso.despuesDeLaPelea(j, pelea(Registro.Resultado.VICTORIA, 0.4), "ACERO", new Random(3));
+                igual(3.25, j.monedas, "saldo antes de guardar");
+                Guardado.guardar(j);
+
+                Jugador cargado = Guardado.leer(Guardado.carpetaDe("Saldo Test"));
+                igual(3.25, cargado.monedas, "monedas conservadas al guardar y cargar");
+
+                // Partida antigua sin el campo monedas: debe cargar en 0.
+                Path archivo = tmp.resolve(Guardado.carpetaDe("Saldo Test")).resolve("partida.txt");
+                List<String> sinMonedas = new ArrayList<>();
+                for (String linea : Files.readAllLines(archivo, java.nio.charset.StandardCharsets.UTF_8)) {
+                    if (!linea.startsWith("monedas =")) sinMonedas.add(linea);
+                }
+                Files.write(archivo, sinMonedas, java.nio.charset.StandardCharsets.UTF_8);
+                Jugador antiguo = Guardado.leer(Guardado.carpetaDe("Saldo Test"));
+                igual(0.0, antiguo.monedas, "partida sin campo monedas empieza en 0");
+            } finally {
+                Guardado.carpeta = antes;
+            }
         });
     }
 }

@@ -98,6 +98,8 @@ menu.ajustes = Ajustes | Einstellungen | Settings
 menu.ajustes_ayuda = Idioma, letra, sonido, voz y cerebro de IA. | Sprache, Schrift, Ton, Stimme und KI-Gehirn. | Language, font, sound, voice and AI brain.
 menu.marcador = {0} victorias · {1} derrotas | {0} Siege · {1} Niederlagen | {0} wins · {1} losses
 menu.experiencia = {0} puntos de experiencia | {0} Erfahrungspunkte | {0} experience points
+menu.monedas = {0} monedas | {0} Münzen | {0} coins
+menu.monedas_ayuda = Monedas gastables ganadas al resolver ejercicios y ganar peleas. | Ausgebbare Münzen aus gelösten Übungen und gewonnenen Kämpfen. | Spendable coins earned by solving exercises and winning fights.
 
 pelear.tu_robot = Tu robot: | Dein Roboter: | Your robot:
 pelear.adaptada = Contra la computadora | Gegen den Computer | Against the computer
