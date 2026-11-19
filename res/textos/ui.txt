@@ -305,6 +305,9 @@ paquetes.import_etiqueta = Cómo importar | Importieren | How to import
 paquetes.bloqueado_titulo = Restricciones de la caja de arena | Sandbox-Einschränkungen | Sandbox restrictions
 paquetes.bloqueados_resumen = Algunas clases del paquete están bloqueadas por seguridad en la caja de arena. | Einige Klassen des Pakets sind aus Sicherheitsgründen in der Sandbox gesperrt. | Some classes in this package are blocked for security in the sandbox.
 paquetes.miembros = Métodos y miembros clave | Wichtige Methoden und Elemente | Key methods and members
+paquetes.miembro.descripcion = Descripción breve | Kurzbeschreibung | Brief description
+paquetes.miembro.donde = Dónde se usa | Wo es verwendet wird | Where it is used
+paquetes.miembro.ejemplo = Ejemplo en pseudocódigo | Beispiel in Pseudocode | Pseudocode example
 paquetes.ejemplo = Ejemplo de uso | Anwendungsbeispiel | Usage example
 paquetes.tipo.paquete = paquete | Paket | package
 paquetes.tipo.interfaz = interfaz | Interface | interface
@@ -505,9 +508,9 @@ revisor.texto_igual = Comparas textos con ==: usa equals() («hola».equals(text
 revisor.nombre_clase = Los nombres de las clases empiezan por mayúscula (MiRobot, no miRobot). | Klassennamen beginnen mit einem Großbuchstaben (MeinRoboter, nicht meinRoboter). | Class names start with a capital letter (MyRobot, not myRobot).
 
 rival.titulo = Código del último rival | Code des letzten Gegners | Last rival's code
-rival.ayuda = Así está programada la computadora: con la misma API que tu robot. Léelo, entiéndelo y cópiale lo que te guste. | So ist der Computer programmiert: mit derselben API wie dein Roboter. Lies ihn, versteh ihn und übernimm, was dir gefällt. | This is how the computer is programmed: with the same API as your robot. Read it, understand it and borrow what you like.
+rival.ayuda = El robot de la computadora era un robot como el tuyo y estaba programado con la misma API. | Der Roboter des Computers war ein Roboter wie deiner und wurde mit derselben API programmiert. | The computer's robot was a robot just like yours and was programmed with the same API.
 rival.sparring = // Este es el código de un sparring | // Dies ist der Code eines Sparring-Gegners | // This is the code of a sparring opponent
-rival.ayuda_ultimo = Así estaba programado tu último rival ({0}): con la misma API que tu robot. Léelo, entiéndelo y cópiale lo que te guste. | So war dein letzter Gegner ({0}) programmiert: mit derselben API wie dein Roboter. Lies ihn, versteh ihn und übernimm, was dir gefällt. | This is how your last opponent ({0}) was programmed: with the same API as your robot. Read it, understand it and borrow what you like.
+rival.ayuda_ultimo = {0}, el robot de la computadora, era un robot como el tuyo y estaba programado con la misma API. {1} | {0}, der Roboter des Computers, war ein Roboter wie deiner und wurde mit derselben API programmiert. {1} | {0}, the computer's robot, was a robot just like yours and was programmed with the same API. {1}
 rival.ayuda_sparring = Aún no has peleado: aquí tienes el código de un sparring al azar para leerlo y aprender de él. | Du hast noch nicht gekämpft: Hier ist der Code eines zufälligen Sparring-Gegners zum Lesen und Lernen. | You haven't fought yet: here is the code of a random sparring opponent to read and learn from.
 
 temario.ayuda = Pega aquí tu temario (apuntes, la lista de temas, el índice de las diapositivas). El juego reconoce los temas de Java y te prepara ejercicios y combates de cada uno. | Füge hier deinen Lehrplan ein (Notizen, Themenliste, Folien-Inhaltsverzeichnis). Das Spiel erkennt die Java-Themen und bereitet Übungen und Kämpfe dazu vor. | Paste your syllabus here (notes, the list of topics, the slides' table of contents). The game recognises the Java topics and prepares exercises and fights for each.

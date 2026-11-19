@@ -68,6 +68,37 @@ final class PruebasDelContenido {
                 cierto(!es.equals(e.donde(metajavbots.textos.Idioma.EN).strip()), e.id + ": pista en EN igual que ES");
             }
         });
+
+        caso("paquetes: cada método o campo tiene ficha práctica trilingüe (descripción, dónde y pseudocódigo) sin vacíos", () -> {
+            int total = 0;
+            for (metajavbots.codigo.Paquetes.Paquete pq : metajavbots.codigo.Paquetes.todos()) {
+                for (metajavbots.codigo.Paquetes.Componente c : pq.componentes) {
+                    int n = c.miembros(metajavbots.textos.Idioma.ES).size();
+                    for (int idx = 0; idx < n; idx++) {
+                        total++;
+                        for (metajavbots.textos.Idioma id : metajavbots.textos.Idioma.values()) {
+                            metajavbots.pantallas.PanelDePaquetes.FichaMiembro f =
+                                    metajavbots.pantallas.PanelDePaquetes.fichaDeMiembro(c, idx, id);
+                            cierto(f != null, c.id + "[" + idx + "] ficha null en " + id);
+                            cierto(f.firma != null && !f.firma.isBlank(), c.id + "[" + idx + "] firma vacía en " + id);
+                            cierto(f.descripcion != null && !f.descripcion.isBlank(), c.id + "[" + idx + "] desc vacía en " + id);
+                            cierto(f.donde != null && !f.donde.isBlank(), c.id + "[" + idx + "] donde vacío en " + id);
+                            cierto(f.pseudocodigo != null && !f.pseudocodigo.isBlank(), c.id + "[" + idx + "] pseudo vacío en " + id);
+                            int lineas = f.pseudocodigo.split("\n").length;
+                            cierto(lineas >= 2 && lineas <= 5, c.id + "[" + idx + "] pseudo de 2-5 líneas en " + id + ": " + lineas);
+                        }
+                    }
+                }
+            }
+            cierto(total >= 200, "miembros documentados: " + total);
+            metajavbots.codigo.Paquetes.Componente enemigo = metajavbots.codigo.Paquetes.de("metajavbots.api").componente("Enemigo");
+            for (metajavbots.textos.Idioma id : metajavbots.textos.Idioma.values()) {
+                metajavbots.pantallas.PanelDePaquetes.FichaMiembro xy =
+                        metajavbots.pantallas.PanelDePaquetes.fichaDeMiembro(enemigo, 0, id);
+                cierto(xy.firma.contains("x()") && xy.firma.contains("y()"), "Enemigo x/y en " + id);
+                cierto(!xy.descripcion.isBlank() && !xy.donde.isBlank() && !xy.pseudocodigo.isBlank(), "ficha x/y completa en " + id);
+            }
+        });
     }
 
     private static void apuntarArmasEspeciales() {

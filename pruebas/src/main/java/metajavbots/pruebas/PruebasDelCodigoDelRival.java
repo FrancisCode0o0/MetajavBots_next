@@ -13,6 +13,7 @@ import java.util.Set;
 
 import metajavbots.combate.Combatiente;
 import metajavbots.pantallas.CodigoDelRival;
+import metajavbots.pantallas.RivalesAbsurdos;
 import metajavbots.piezas.Modelo;
 import metajavbots.progreso.Guardado;
 import metajavbots.progreso.Jugador;
@@ -109,6 +110,48 @@ final class PruebasDelCodigoDelRival {
                 cierto(codigo.contains("class Rival extends MetajavbotEn"), "devuelve el código del rival en EN");
             } finally {
                 Guardado.carpeta = antes;
+            }
+        });
+        apuntarDescripcionAbsurda();
+    }
+
+    private static void apuntarDescripcionAbsurda() {
+        caso("codigo del rival: rival combatido recibe nombre y minibiografía absurda en pasado (ES/DE/EN); sparring queda exento", () -> {
+            cierto(RivalesAbsurdos.todos().size() >= 15, "al menos 15 rivales absurdos: " + RivalesAbsurdos.todos().size());
+            Set<String> nombres = new HashSet<>();
+            for (RivalesAbsurdos.Perfil p : RivalesAbsurdos.todos()) {
+                cierto(p.nombre != null && !p.nombre.isBlank(), "nombre no vacío");
+                cierto(nombres.add(p.nombre), "nombre repetido: " + p.nombre);
+                for (Idioma id : Idioma.values()) {
+                    String bio = p.biografia(id);
+                    cierto(bio != null && !bio.isBlank(), "biografía vacía para " + p.nombre + " en " + id);
+                    cierto(!bio.contains("\n"), "biografía de 1-2 líneas sin saltos forzados: " + p.nombre);
+                }
+                cierto(!p.biografia(Idioma.ES).equals(p.biografia(Idioma.DE)), "DE traducido: " + p.nombre);
+                cierto(!p.biografia(Idioma.ES).equals(p.biografia(Idioma.EN)), "EN traducido: " + p.nombre);
+            }
+
+            Jugador combatido = new Jugador("Guerrero");
+            combatido.registrarUltimoRival("Cobalto", "public class Rival extends Metajavbot {}");
+            RivalesAbsurdos.Perfil esperado = RivalesAbsurdos.para(combatido);
+            String ayudaEs = CodigoDelRival.ayudaPara(combatido, Idioma.ES);
+            String ayudaDe = CodigoDelRival.ayudaPara(combatido, Idioma.DE);
+            String ayudaEn = CodigoDelRival.ayudaPara(combatido, Idioma.EN);
+            cierto(ayudaEs.contains(esperado.nombre) && ayudaEs.contains(esperado.biografia(Idioma.ES)), "ES incluye nombre y bio: " + ayudaEs);
+            cierto(ayudaDe.contains(esperado.nombre) && ayudaDe.contains(esperado.biografia(Idioma.DE)), "DE incluye nombre y bio: " + ayudaDe);
+            cierto(ayudaEn.contains(esperado.nombre) && ayudaEn.contains(esperado.biografia(Idioma.EN)), "EN incluye nombre y bio: " + ayudaEn);
+            cierto(ayudaEs.contains("era un robot") && ayudaEs.contains("estaba programado"), "ES en pasado: " + ayudaEs);
+            cierto(ayudaDe.contains("war ein Roboter") && ayudaDe.contains("wurde"), "DE en pasado: " + ayudaDe);
+            cierto(ayudaEn.contains("was a robot") && ayudaEn.contains("was programmed"), "EN en pasado: " + ayudaEn);
+
+            Jugador sparring = new Jugador("SinPeleas");
+            for (Idioma id : Idioma.values()) {
+                String texto = CodigoDelRival.ayudaPara(sparring, id);
+                igual(T.en("rival.ayuda_sparring", id), texto, "sparring conserva aviso simple en " + id);
+                for (RivalesAbsurdos.Perfil p : RivalesAbsurdos.todos()) {
+                    falso(texto.contains(p.nombre), "sparring sin nombre absurdo " + p.nombre + " en " + id);
+                    falso(texto.contains(p.biografia(id)), "sparring sin minibiografía en " + id);
+                }
             }
         });
     }

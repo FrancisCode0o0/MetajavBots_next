@@ -47,20 +47,26 @@ public final class CodigoDelRival implements Pantalla {
 
     /** El texto de ayuda superior según si ya ha peleado contra algún rival o está viendo un sparring. */
     public static String ayudaPara(Jugador jugador) {
+        Idioma idioma = jugador != null && jugador.idioma != null ? jugador.idioma : T.idioma;
+        return ayudaPara(jugador, idioma);
+    }
+
+    /** El texto de ayuda superior en el idioma indicado (pasado + nombre/minibiografía absurda si ya peleó; aviso simple si es sparring). */
+    public static String ayudaPara(Jugador jugador, Idioma idioma) {
+        Idioma id = idioma == null ? Idioma.ES : idioma;
         if (jugador != null && jugador.haPeleado()) {
-            String nombre = jugador.ultimoRivalNombre;
-            if ((nombre == null || nombre.isBlank()) && !jugador.historial.isEmpty()) {
-                nombre = jugador.historial.get(jugador.historial.size() - 1).rival;
-            }
-            return nombre != null && !nombre.isBlank() ? T.f("rival.ayuda_ultimo", nombre) : T.t("rival.ayuda");
+            RivalesAbsurdos.Perfil perfil = RivalesAbsurdos.para(jugador);
+            return T.en("rival.ayuda_ultimo", id)
+                    .replace("{0}", perfil.nombre)
+                    .replace("{1}", perfil.biografia(id));
         }
-        return T.t("rival.ayuda_sparring");
+        return T.en("rival.ayuda_sparring", id);
     }
 
     @Override
     public void alEntrar(Juego j) {
         Idioma idioma = j.jugador == null || j.jugador.idioma == null ? Idioma.ES : j.jugador.idioma;
-        ayuda = ayudaPara(j.jugador);
+        ayuda = ayudaPara(j.jugador, idioma);
         editor.palabras = Palabras.api(idioma);
         editor.documentacion = w -> Referencia.de(w, idioma);
         editor.ponerTexto(codigoPara(j.jugador, new Random()));
@@ -75,8 +81,10 @@ public final class CodigoDelRival implements Pantalla {
         float arriba = Comun.cabecera(j, T.t("rival.titulo"), true);
         float w = j.pincel.ancho - 40;
         String texto = ayuda.isEmpty() ? T.t("rival.ayuda") : ayuda;
-        j.pincel.parrafo(texto, 20, arriba + 12, w, j.ui.letra * 0.85f, j.ui.tema.textoSuave, 1);
-        editor.dibujar(j.ui, 20, arriba + 60, w - 440, j.pincel.alto - arriba - 80);
-        api.dibujar(j.ui, j.jugador.idioma, null, w - 400, arriba + 60, 420, j.pincel.alto - arriba - 80);
+        float textoH = j.pincel.parrafo(texto, 20, arriba + 10, w, j.ui.letra * 0.85f, j.ui.tema.textoSuave, 1);
+        float cuerpoY = arriba + 20 + textoH;
+        float cuerpoH = Math.max(120, j.pincel.alto - cuerpoY - 20);
+        editor.dibujar(j.ui, 20, cuerpoY, w - 440, cuerpoH);
+        api.dibujar(j.ui, j.jugador.idioma, null, w - 400, cuerpoY, 420, cuerpoH);
     }
 }

@@ -21,15 +21,46 @@ import metajavbots.textos.T;
  */
 public final class PanelDePaquetes {
 
+    /** Ficha práctica de un método o campo en el idioma activo. */
+    public static final class FichaMiembro {
+        public final String firma;
+        public final String descripcion;
+        public final String donde;
+        public final String pseudocodigo;
+
+        public FichaMiembro(String firma, String descripcion, String donde, String pseudocodigo) {
+            this.firma = firma;
+            this.descripcion = descripcion;
+            this.donde = donde;
+            this.pseudocodigo = pseudocodigo;
+        }
+    }
+
     private final CampoDeTexto busqueda = new CampoDeTexto();
     private final Ui.Desplazable desp = new Ui.Desplazable();
     private Paquetes.Paquete paqueteActual;
     private Paquetes.Componente componenteActual;
+    private int miembroActual = -1;
+    private int miembroEnfocado = -1;
+    private boolean enfocadoPorTeclado;
     private String ultimaConsulta = "";
     private Idioma ultimoIdioma;
     private List<Paquetes.Sugerencia> sugerencias = List.of();
     private int sugerenciaElegida;
     private boolean desplegado;
+
+    /** Resuelve la ficha práctica (descripción, dónde se usa y pseudocódigo) del miembro en el índice dado. */
+    public static FichaMiembro fichaDeMiembro(Paquetes.Componente componente, int indice, Idioma idioma) {
+        if (componente == null) return FichasDePaquetes.resolver(null, "", idioma);
+        List<String> lista = componente.miembros(idioma);
+        String linea = indice >= 0 && indice < lista.size() ? lista.get(indice) : "";
+        return FichasDePaquetes.resolver(componente, linea, idioma);
+    }
+
+    /** Resuelve la ficha práctica (descripción, dónde se usa y pseudocódigo) de una línea de miembro. */
+    public static FichaMiembro fichaDeMiembro(Paquetes.Componente componente, String lineaMiembro, Idioma idioma) {
+        return FichasDePaquetes.resolver(componente, lineaMiembro, idioma);
+    }
 
     /** Suelta el foco del buscador y cierra el desplegable (al cambiar de pestaña). */
     public void desenfocar(Ui ui) {
@@ -43,6 +74,8 @@ public final class PanelDePaquetes {
         Paquetes.Paquete p = Paquetes.de(nombre);
         paqueteActual = p;
         componenteActual = null;
+        miembroActual = -1;
+        miembroEnfocado = -1;
         desplegado = false;
         busqueda.enfocado = false;
         desp.alPrincipio();
@@ -53,9 +86,25 @@ public final class PanelDePaquetes {
         Paquetes.Paquete p = Paquetes.de(nombrePaquete);
         paqueteActual = p;
         componenteActual = p == null ? null : p.componente(idComponente);
+        miembroActual = -1;
+        miembroEnfocado = -1;
         desplegado = false;
         busqueda.enfocado = false;
         desp.alPrincipio();
+    }
+
+    /** Abre directamente la ficha de un método o campo concreto dentro de un componente (útil para capturas y pruebas). */
+    public void abrirMiembro(String nombrePaquete, String idComponente, int indice) {
+        abrirComponente(nombrePaquete, idComponente);
+        if (componenteActual != null && indice >= 0 && indice < componenteActual.miembros(Idioma.ES).size()) {
+            miembroActual = indice;
+            miembroEnfocado = indice;
+        }
+    }
+
+    /** Índice del miembro abierto actualmente (-1 si no se está viendo el detalle de un miembro). */
+    public int miembroActual() {
+        return miembroActual;
     }
 
     /** Escribe una búsqueda y abre el autocompletado (útil para capturas y pruebas). */
@@ -68,6 +117,11 @@ public final class PanelDePaquetes {
 
     /** Qué paquete o componente está consultando el jugador, para el contexto del entrenador con IA. */
     public String contextoParaIa() {
+        if (componenteActual != null && paqueteActual != null && miembroActual >= 0) {
+            FichaMiembro f = fichaDeMiembro(componenteActual, miembroActual, ultimoIdioma == null ? Idioma.ES : ultimoIdioma);
+            return "The player has the Workshop Packages (Javadoc) tab open, viewing member "
+                    + f.firma + " of " + paqueteActual.nombre + "." + componenteActual.id + ".";
+        }
         if (componenteActual != null && paqueteActual != null) {
             return "The player has the Workshop Packages (Javadoc) tab open, viewing component "
                     + paqueteActual.nombre + "." + componenteActual.id + " (" + componenteActual.tipo.clave + ").";
@@ -125,8 +179,10 @@ public final class PanelDePaquetes {
             dibujarIndice(ui, idioma, x + 12, contenidoY, w - 24, contenidoH, bloquearDebajo);
         } else if (componenteActual == null) {
             dibujarPaquete(ui, idioma, x + 12, contenidoY, w - 24, contenidoH, bloquearDebajo);
+        } else if (miembroActual < 0) {
+            dibujarComponente(ui, idioma, x + 12, contenidoY, w - 24, contenidoH, bloquearDebajo);
         } else {
-            dibujarComponente(ui, idioma, x + 12, contenidoY, w - 24, contenidoH);
+            dibujarMiembro(ui, idioma, x + 12, contenidoY, w - 24, contenidoH);
         }
 
         if (desplegado && !busqueda.texto().isBlank()) {
@@ -183,6 +239,8 @@ public final class PanelDePaquetes {
     private void elegirSugerencia(Ui ui, Paquetes.Sugerencia s) {
         paqueteActual = s.paquete;
         componenteActual = s.componente;
+        miembroActual = -1;
+        miembroEnfocado = -1;
         desenfocar(ui);
         desp.alPrincipio();
     }
@@ -202,14 +260,33 @@ public final class PanelDePaquetes {
             Ui.Estilo[] est = {Ui.Estilo.PLANO};
             if (ui.botonera(txt, est, null, null, x, y, w, bh) == 0) {
                 paqueteActual = null;
+                miembroActual = -1;
+                miembroEnfocado = -1;
                 desp.alPrincipio();
                 return y + ui.altoDeBotonera + 12;
             }
-            float bx = x + Math.min(w * 0.45f, p.ancho(txt[0], Math.min(ui.letra, bh * 0.5f), true) + 46);
+            float bw = Math.min(w, p.ancho(txt[0], Math.min(ui.letra, bh * 0.5f), true) + 34);
+            float bx = x + bw + 12;
             float tCrumb = ui.letra * 0.85f;
-            if (w - (bx - x) > 120) {
-                p.texto(ui.recortarTexto(paqueteActual.nombre, w - (bx - x), tCrumb, true), bx, y + (bh - tCrumb * 1.15f) / 2, tCrumb, true,
+            if (x + w - bx > 120) {
+                p.texto(ui.recortarTexto(paqueteActual.nombre, x + w - bx, tCrumb, true), bx, y + (bh - tCrumb * 1.15f) / 2, tCrumb, true,
                         ui.tema.acento, 1);
+            }
+            return y + ui.altoDeBotonera + 12;
+        }
+        if (miembroActual >= 0) {
+            String[] txt = {"← " + T.t("comun.volver"), T.t("paquetes.volver_indice")};
+            Ui.Estilo[] est = {Ui.Estilo.NORMAL, Ui.Estilo.PLANO};
+            int pulsado = ui.botonera(txt, est, null, null, x, y, w, bh);
+            if (pulsado == 0) {
+                miembroActual = -1;
+                desp.alPrincipio();
+            } else if (pulsado == 1) {
+                paqueteActual = null;
+                componenteActual = null;
+                miembroActual = -1;
+                miembroEnfocado = -1;
+                desp.alPrincipio();
             }
             return y + ui.altoDeBotonera + 12;
         }
@@ -219,9 +296,13 @@ public final class PanelDePaquetes {
         if (pulsado == 0) {
             paqueteActual = null;
             componenteActual = null;
+            miembroActual = -1;
+            miembroEnfocado = -1;
             desp.alPrincipio();
         } else if (pulsado == 1) {
             componenteActual = null;
+            miembroActual = -1;
+            miembroEnfocado = -1;
             desp.alPrincipio();
         }
         return y + ui.altoDeBotonera + 12;
@@ -319,6 +400,8 @@ public final class PanelDePaquetes {
         p.parrafo(c.descripcion(idioma), x + 14, yy + 11 + p.altoDeLinea(tNom), ancho - 28, tDesc, ui.tema.texto, 1);
         if (encima && ui.e.clic(x, yy, ancho, cardH)) {
             componenteActual = c;
+            miembroActual = -1;
+            miembroEnfocado = -1;
             desp.alPrincipio();
         }
         return yy + cardH + 8;
@@ -326,10 +409,15 @@ public final class PanelDePaquetes {
 
     // ================================================================ 3. Vista de componente
 
-    private void dibujarComponente(Ui ui, Idioma idioma, float x, float y, float w, float h) {
+    private void dibujarComponente(Ui ui, Idioma idioma, float x, float y, float w, float h, boolean bloquearClic) {
         Pincel p = ui.p;
         Paquetes.Paquete pq = paqueteActual;
         Paquetes.Componente c = componenteActual;
+        List<String> miembros = c.miembros(idioma);
+        if (!busqueda.enfocado && !desplegado) {
+            atenderTeclasComponente(ui, miembros.size(), h);
+            if (componenteActual == null || miembroActual >= 0) return;
+        }
         float d = ui.desplazable(desp, x, y, w, h);
         float yy = y - d + 4;
         float ancho = w - 24;
@@ -346,15 +434,15 @@ public final class PanelDePaquetes {
 
         yy += p.parrafo(c.descripcion(idioma), x + 8, yy, ancho - 16, ui.letra * 0.9f, ui.tema.texto, 1) + 14;
 
-        List<String> miembros = c.miembros(idioma);
         if (!miembros.isEmpty()) {
             p.texto(T.t("paquetes.miembros"), x + 8, yy, ui.letra * 0.92f, true, ui.tema.textoSuave, 1);
             yy += p.altoDeLinea(ui.letra * 0.92f) + 6;
-            for (String m : miembros) {
-                yy = filaMiembro(p, ui, m, x + 4, yy, ancho);
+            for (int i = 0; i < miembros.size(); i++) {
+                yy = filaMiembro(p, ui, miembros.get(i), i, x + 4, yy, ancho, y, h, d, bloquearClic);
             }
             yy += 8;
         }
+        enfocadoPorTeclado = false;
         String ej = c.ejemplo(idioma);
         if (!ej.isEmpty()) {
             yy += cajaCodigo(p, ui, T.t("paquetes.ejemplo"), ej, x + 4, yy, ancho) + 12;
@@ -362,26 +450,134 @@ public final class PanelDePaquetes {
         ui.finDesplazable(desp, yy + d - y + 10);
     }
 
-    private float filaMiembro(Pincel p, Ui ui, String miembro, float x, float yy, float ancho) {
+    private void atenderTeclasComponente(Ui ui, int totalMiembros, float h) {
+        for (Entrada.Tecla k : ui.e.teclas) {
+            if (k.usada) continue;
+            if (k.codigo == Keys.DOWN && totalMiembros > 0) {
+                miembroEnfocado = miembroEnfocado < 0 ? 0 : Math.min(totalMiembros - 1, miembroEnfocado + 1);
+                enfocadoPorTeclado = true;
+                k.usada = true;
+            } else if (k.codigo == Keys.UP && totalMiembros > 0) {
+                miembroEnfocado = miembroEnfocado <= 0 ? 0 : miembroEnfocado - 1;
+                enfocadoPorTeclado = true;
+                k.usada = true;
+            } else if ((k.codigo == Keys.ENTER || k.codigo == Keys.NUMPAD_ENTER) && miembroEnfocado >= 0 && miembroEnfocado < totalMiembros) {
+                miembroActual = miembroEnfocado;
+                desp.alPrincipio();
+                k.usada = true;
+            } else if (k.codigo == Keys.PAGE_DOWN) {
+                desp.desplazamiento += h * 0.8f;
+                k.usada = true;
+            } else if (k.codigo == Keys.PAGE_UP) {
+                desp.desplazamiento = Math.max(0, desp.desplazamiento - h * 0.8f);
+                k.usada = true;
+            } else if (k.codigo == Keys.ESCAPE || k.codigo == Keys.BACKSPACE) {
+                componenteActual = null;
+                miembroEnfocado = -1;
+                desp.alPrincipio();
+                ui.reservarEscape();
+                k.usada = true;
+            }
+        }
+    }
+
+    private float filaMiembro(Pincel p, Ui ui, String miembro, int indice, float x, float yy, float ancho,
+            float visY, float visH, float d, boolean bloquearClic) {
         int sep = miembro.indexOf(" — ");
         float tF = ui.letra * 0.82f;
         float tD = ui.letra * 0.8f;
-        if (sep > 0) {
-            String firma = miembro.substring(0, sep);
-            String desc = miembro.substring(sep + 3);
-            float fh = p.altoDeParrafo(firma, ancho - 24, tF);
-            float dh = p.altoDeParrafo(desc, ancho - 24, tD);
-            float bh = fh + dh + 14;
-            p.caja(x, yy, ancho, bh, 6, ui.tema.fondo, 1);
-            p.bordeRedondeado(x, yy, ancho, bh, 6, ui.tema.borde, 0.6f, 1);
-            p.parrafo(firma, x + 12, yy + 6, ancho - 24, tF, true, ui.tema.metodo, 1);
-            p.parrafo(desc, x + 12, yy + 8 + fh, ancho - 24, tD, ui.tema.texto, 1);
-            return yy + bh + 6;
+        float textoW = Math.max(80, ancho - 42);
+        float bh;
+        String firma = sep > 0 ? miembro.substring(0, sep) : miembro;
+        String desc = sep > 0 ? miembro.substring(sep + 3) : "";
+        float fh = sep > 0 ? p.altoDeParrafo(firma, textoW, tF, true) : p.altoDeParrafo(firma, textoW, tD);
+        float dh = sep > 0 ? p.altoDeParrafo(desc, textoW, tD) : 0;
+        bh = sep > 0 ? fh + dh + 18 : fh + 14;
+
+        if (enfocadoPorTeclado && indice == miembroEnfocado) {
+            desp.mostrar(yy + d - visY, bh, visH);
         }
-        float bh = p.altoDeParrafo(miembro, ancho - 24, tD) + 12;
-        p.caja(x, yy, ancho, bh, 6, ui.tema.fondo, 1);
-        p.parrafo(miembro, x + 12, yy + 6, ancho - 24, tD, ui.tema.texto, 1);
+        boolean encima = !bloquearClic && ui.e.dentro(x, yy, ancho, bh) && yy + bh > visY && yy < visY + visH;
+        boolean enfocado = encima || indice == miembroEnfocado;
+        p.caja(x, yy, ancho, bh, 6, enfocado ? ui.tema.panelAlto : ui.tema.fondo, 1);
+        p.bordeRedondeado(x, yy, ancho, bh, 6, enfocado ? ui.tema.acento : ui.tema.borde, enfocado ? 1f : 0.6f, enfocado ? 1.5f : 1f);
+        if (sep > 0) {
+            p.parrafo(firma, x + 12, yy + 6, textoW, tF, true, ui.tema.metodo, 1);
+            p.parrafo(desc, x + 12, yy + 10 + fh, textoW, tD, ui.tema.texto, 1);
+        } else {
+            p.parrafo(firma, x + 12, yy + 6, textoW, tD, ui.tema.texto, 1);
+        }
+        p.texto("›", x + ancho - 20, yy + (bh - tF * 1.15f) / 2, tF, true, enfocado ? ui.tema.acento : ui.tema.textoSuave, 1);
+        if (encima && ui.e.clic(x, yy, ancho, bh)) {
+            if (ui.sonidoDeClic != null) ui.sonidoDeClic.run();
+            miembroActual = indice;
+            miembroEnfocado = indice;
+            desp.alPrincipio();
+        }
         return yy + bh + 6;
+    }
+
+    // ================================================================ 4. Vista de detalle de miembro
+
+    private void dibujarMiembro(Ui ui, Idioma idioma, float x, float y, float w, float h) {
+        if (!busqueda.enfocado && !desplegado) {
+            atenderTeclasMiembro(ui, h);
+            if (miembroActual < 0) return;
+        }
+        Pincel p = ui.p;
+        Paquetes.Paquete pq = paqueteActual;
+        Paquetes.Componente c = componenteActual;
+        FichaMiembro ficha = fichaDeMiembro(c, miembroActual, idioma);
+        float d = ui.desplazable(desp, x, y, w, h);
+        float yy = y - d + 4;
+        float ancho = w - 24;
+
+        String sub = c.nombre(idioma) + " · " + pq.nombre;
+        yy += p.parrafo(sub, x + 8, yy, ancho - 16, ui.letra * 0.78f, true, colorTipo(ui, c.tipo), 1) + 4;
+        yy += p.parrafo(ficha.firma, x + 8, yy, ancho - 16, ui.letra * 1.08f, true, ui.tema.metodo, 1) + 12;
+
+        yy += cajaBloque(p, ui, T.t("paquetes.miembro.descripcion"), ficha.descripcion, x + 4, yy, ancho, ui.tema.acento) + 12;
+        yy += cajaBloque(p, ui, T.t("paquetes.miembro.donde"), ficha.donde, x + 4, yy, ancho, ui.tema.aviso) + 12;
+        yy += cajaCodigo(p, ui, T.t("paquetes.miembro.ejemplo"), ficha.pseudocodigo, x + 4, yy, ancho) + 14;
+        ui.finDesplazable(desp, yy + d - y + 10);
+    }
+
+    private void atenderTeclasMiembro(Ui ui, float h) {
+        for (Entrada.Tecla k : ui.e.teclas) {
+            if (k.usada) continue;
+            if (k.codigo == Keys.DOWN) {
+                desp.desplazamiento += ui.letra * 3;
+                k.usada = true;
+            } else if (k.codigo == Keys.UP) {
+                desp.desplazamiento = Math.max(0, desp.desplazamiento - ui.letra * 3);
+                k.usada = true;
+            } else if (k.codigo == Keys.PAGE_DOWN) {
+                desp.desplazamiento += h * 0.8f;
+                k.usada = true;
+            } else if (k.codigo == Keys.PAGE_UP) {
+                desp.desplazamiento = Math.max(0, desp.desplazamiento - h * 0.8f);
+                k.usada = true;
+            } else if (k.codigo == Keys.ESCAPE || k.codigo == Keys.BACKSPACE) {
+                miembroActual = -1;
+                desp.alPrincipio();
+                ui.reservarEscape();
+                k.usada = true;
+            }
+        }
+    }
+
+    private static float cajaBloque(Pincel p, Ui ui, String titulo, String texto, float x, float y, float w, int colorBorde) {
+        float tTit = ui.letra * 0.82f;
+        float tTxt = ui.letra * 0.84f;
+        float titH = p.altoDeParrafo(titulo, w - 28, tTit, true);
+        float txtH = p.altoDeParrafo(texto, w - 28, tTxt);
+        float ch = titH + txtH + 22;
+        p.caja(x, y, w, ch, 6, ui.tema.panelAlto, 1);
+        p.rect(x, y + 4, 4, Math.max(0, ch - 8), colorBorde, 0.95f);
+        p.bordeRedondeado(x, y, w, ch, 6, ui.tema.borde, 0.8f, 1);
+        p.parrafo(titulo, x + 14, y + 7, w - 28, tTit, true, colorBorde, 1);
+        p.parrafo(texto, x + 14, y + 12 + titH, w - 28, tTxt, ui.tema.texto, 1);
+        return ch;
     }
 
     // ================================================================ Desplegable de autocompletado
@@ -428,12 +624,12 @@ public final class PanelDePaquetes {
     private static float cajaCodigo(Pincel p, Ui ui, String rotulo, String codigo, float x, float y, float w) {
         float tRot = ui.letra * 0.78f;
         float tCod = ui.letra * 0.8f;
-        p.texto(rotulo, x + 4, y, tRot, true, ui.tema.textoSuave, 1);
-        float cy = y + p.altoDeLinea(tRot) + 4;
-        float ch = p.altoDeParrafo(codigo, w - 24, tCod) + 14;
+        float rotH = p.parrafo(rotulo, x + 4, y, Math.max(60, w - 8), tRot, true, ui.tema.textoSuave, 1);
+        float cy = y + rotH + 4;
+        float ch = p.altoDeParrafo(codigo, Math.max(60, w - 24), tCod) + 14;
         p.caja(x, cy, w, ch, 6, ui.tema.fondo, 1);
         p.bordeRedondeado(x, cy, w, ch, 6, ui.tema.borde, 0.8f, 1);
-        p.parrafo(codigo, x + 12, cy + 7, w - 24, tCod, ui.tema.cadena, 1);
+        p.parrafo(codigo, x + 12, cy + 7, Math.max(60, w - 24), tCod, ui.tema.cadena, 1);
         return (cy + ch) - y;
     }
 
