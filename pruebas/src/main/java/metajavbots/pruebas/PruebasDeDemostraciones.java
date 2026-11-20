@@ -26,6 +26,7 @@ final class PruebasDeDemostraciones {
         apuntarCargaTrilingue();
         apuntarEjecucionCompleta();
         apuntarCoherenciaYVersalita();
+        apuntarDemo2TrilingueYEjecucion();
     }
 
     private static void apuntarCargaTrilingue() {
@@ -72,7 +73,7 @@ final class PruebasDeDemostraciones {
     private static void verificarClavesUi() {
         String[] claves = {
             "demo.boton", "demo.boton_ayuda", "demo.banner_texto", "demo.titulo", "demo.intro",
-            "demo.ver", "demo.pasos", "demo.paso_de", "demo.nivel.1", "demo.continuar",
+            "demo.ver", "demo.pasos", "demo.paso_de", "demo.nivel.1", "demo.nivel.2", "demo.continuar",
             "demo.repetir", "demo.salir", "demo.ejecutando", "demo.pausa_paso", "demo.fin"
         };
         for (String k : claves) {
@@ -308,5 +309,141 @@ final class PruebasDeDemostraciones {
             igual("B", aleman.get(0).texto);
             igual("EISSEN", aleman.get(1).texto);
         });
+    }
+
+    private static void apuntarDemo2TrilingueYEjecucion() {
+        caso("demo 2: carga trilingüe de 6 pasos (ES, DE, EN), líneas ▶, API y compilación de código roto y corregido", () -> {
+            cierto(Demostracion.todas().size() >= 2, "deben existir Demo 1 y Demo 2");
+            Demostracion d2 = Demostracion.de(Demostracion.ID_DEMO_2);
+            cierto(d2 != null, "Demo 2 accesible por id");
+            igual(6, d2.pasos.size(), "Demo 2 tiene 6 pasos");
+            String[] idsEsperados = {
+                "regla_receta", "fallo_en_vivo", "orden_del_turno",
+                "mover_linea", "prueba_en_arena", "noob_a_junior"
+            };
+            for (int i = 0; i < idsEsperados.length; i++) {
+                igual(idsEsperados[i], d2.pasos.get(i).id, "demo 2 paso " + (i + 1));
+            }
+            cierto(!d2.titulo(Idioma.ES).equals(d2.titulo(Idioma.DE)), "Demo 2 título distinto ES/DE");
+            cierto(!d2.titulo(Idioma.ES).equals(d2.titulo(Idioma.EN)), "Demo 2 título distinto ES/EN");
+
+            for (Idioma id : Idioma.values()) {
+                String codigoRoto = d2.pasos.get(0).codigo(d2, id);
+                String codigoFijo = d2.pasos.get(3).codigo(d2, id);
+                cierto(!codigoRoto.equals(codigoFijo), "Demo 2 cambia el código al mover la línea en " + id);
+                for (Demostracion.Paso p : d2.pasos) {
+                    String cod = p.codigo(d2, id);
+                    String[] lineas = cod.split("\n");
+                    cierto(!p.titulo(id).isBlank(), p.id + " título en " + id);
+                    cierto(!p.texto(id).isBlank(), p.id + " texto en " + id);
+                    cierto(p.lineaPrincipal >= 1 && p.lineaPrincipal <= lineas.length,
+                            p.id + " línea principal fuera de rango en " + id + ": " + p.lineaPrincipal);
+                    for (int ls : p.lineasSecundarias) {
+                        cierto(ls >= 1 && ls <= lineas.length, p.id + " línea secundaria fuera de rango: " + ls);
+                    }
+                }
+                verificarApiDemo2(id, codigoRoto.split("\n"), codigoFijo.split("\n"));
+                if (Compilador.hayCompilador()) {
+                    Compilador.Resultado rRoto = Compilador.compilar(codigoRoto, true, Vigilante.Modo.ROBOT, id.locale());
+                    cierto(rRoto.bien, "código roto de Demo 2 debe compilar en " + id + ": " + rRoto.errores);
+                    Compilador.Resultado rFijo = Compilador.compilar(codigoFijo, true, Vigilante.Modo.ROBOT, id.locale());
+                    cierto(rFijo.bien, "código corregido de Demo 2 debe compilar en " + id + ": " + rFijo.errores);
+                }
+            }
+        });
+
+        caso("demo 2: ejecución en vivo de los 6 pasos (fallo, orden, línea movida, acierto y cierre) en ES, DE y EN", () -> {
+            Demostracion d2 = Demostracion.de(Demostracion.ID_DEMO_2);
+            for (Idioma id : Idioma.values()) {
+                verificarRecorridoDemo2(d2, id);
+            }
+        });
+    }
+
+    private static void verificarApiDemo2(Idioma id, String[] roto, String[] fijo) {
+        if (id == Idioma.ES) {
+            cierto(roto[14].contains("apuntar(25);"), "ES roto línea 15 apuntar(25)");
+            cierto(fijo[13].contains("apuntar(25);"), "ES corregido línea 14 apuntar(25)");
+            cierto(roto[5].contains("apuntarHacia("), "ES línea 6 apuntarHacia");
+            cierto(roto[6].contains("atacar()"), "ES línea 7 atacar");
+        } else if (id == Idioma.DE) {
+            cierto(roto[14].contains("zielen(25);"), "DE roto línea 15 zielen(25)");
+            cierto(fijo[13].contains("zielen(25);"), "DE corregido línea 14 zielen(25)");
+            cierto(roto[5].contains("zielenNach("), "DE línea 6 zielenNach");
+            cierto(roto[6].contains("angreifen()"), "DE línea 7 angreifen");
+        } else {
+            cierto(roto[14].contains("aim(25);"), "EN roto línea 15 aim(25)");
+            cierto(fijo[13].contains("aim(25);"), "EN corregido línea 14 aim(25)");
+            cierto(roto[5].contains("aimTo("), "EN línea 6 aimTo");
+            cierto(roto[6].contains("attack()"), "EN línea 7 attack");
+        }
+    }
+
+    private static void verificarRecorridoDemo2(Demostracion d2, Idioma id) {
+        MotorDemostracion m = new MotorDemostracion(d2, id);
+
+        // Paso 1: La regla de la receta (pausa inicial).
+        igual(0, m.indicePaso(), id + " demo 2 paso 1");
+        cierto(m.pausado(), id + " demo 2 paso 1 pausado");
+        igual(3, m.lineaActiva(), id + " demo 2 paso 1 resalta línea 3");
+        igual(Demostracion.Resaltado.BIEN, m.resaltadoActual(), id + " demo 2 paso 1 resaltado verde");
+        cierto(m.ultimoError().isEmpty(), id + " demo 2 sin error en paso 1");
+
+        // Paso 2: El fallo en vivo (dispara fuera de objetivo por apuntar(25) en línea 15, resaltado en rojo).
+        m.continuar();
+        igual(1, m.indicePaso(), id + " demo 2 paso 2");
+        falso(m.pausado(), id + " demo 2 paso 2 arranca en vivo");
+        correrHastaPausa(m, 150);
+        cierto(m.pausado(), id + " demo 2 paso 2 pausa automática");
+        cierto(m.enemigoDetectado(), id + " demo 2 paso 2 detecta al muñeco");
+        cierto(m.disparoRealizado(), id + " demo 2 paso 2 dispara");
+        falso(m.impactoRealizado(), id + " demo 2 paso 2 falla el tiro por el orden erróneo");
+        igual(15, m.lineaActiva(), id + " demo 2 paso 2 señala línea culpable 15");
+        igual(Demostracion.Resaltado.ERROR, m.resaltadoActual(), id + " demo 2 paso 2 resalta en rojo");
+        cierto(m.ultimoError().isEmpty(), id + " demo 2 sin error en paso 2");
+
+        // Paso 3: Qué pasa turno a turno (resaltado en ámbar).
+        m.continuar();
+        igual(2, m.indicePaso(), id + " demo 2 paso 3");
+        cierto(m.pausado(), id + " demo 2 paso 3 pausado");
+        igual(15, m.lineaActiva(), id + " demo 2 paso 3 señala línea 15");
+        igual(Demostracion.Resaltado.AVISO, m.resaltadoActual(), id + " demo 2 paso 3 resalta en ámbar");
+        BitSet activas3 = m.lineasActivas();
+        cierto(activas3.get(5) && activas3.get(6) && activas3.get(11) && activas3.get(15),
+                id + " demo 2 paso 3 resalta ambos bloques y la línea conflictiva");
+
+        // Paso 4: Mover la línea de sitio (código actualizado y línea 14 en verde).
+        m.continuar();
+        igual(3, m.indicePaso(), id + " demo 2 paso 4");
+        cierto(m.pausado(), id + " demo 2 paso 4 pausado");
+        igual(14, m.lineaActiva(), id + " demo 2 paso 4 señala línea movida 14");
+        igual(Demostracion.Resaltado.BIEN, m.resaltadoActual(), id + " demo 2 paso 4 resalta en verde");
+        cierto(m.codigoActual().split("\n")[13].contains("(25);"), id + " demo 2 paso 4 tiene la orden en línea 14");
+
+        // Paso 5: La prueba en la arena (acierta al objetivo y baja el blindaje del muñeco).
+        m.continuar();
+        igual(4, m.indicePaso(), id + " demo 2 paso 5");
+        falso(m.pausado(), id + " demo 2 paso 5 arranca en vivo");
+        cierto(m.resaltarHudBarras(), id + " demo 2 paso 5 resalta barras HUD");
+        correrHastaPausa(m, 200);
+        cierto(m.pausado(), id + " demo 2 paso 5 pausa tras acertar");
+        cierto(m.enemigoDetectado(), id + " demo 2 paso 5 detecta al muñeco");
+        cierto(m.disparoRealizado(), id + " demo 2 paso 5 dispara");
+        cierto(m.impactoRealizado(), id + " demo 2 paso 5 acierta al muñeco");
+        cierto(m.pelea().cuerpo(1).blindaje() < 100.0, id + " demo 2 paso 5 baja el blindaje del muñeco");
+        igual(7, m.lineaActiva(), id + " demo 2 paso 5 resalta atacar");
+        cierto(m.ultimoError().isEmpty(), id + " demo 2 sin error en paso 5");
+
+        // Paso 6: Cómo subir de Noob a Junior (cierre con marcas [[...]]).
+        m.continuar();
+        igual(5, m.indicePaso(), id + " demo 2 paso 6");
+        cierto(m.esUltimoPaso(), id + " demo 2 paso 6 es el último");
+        cierto(m.pausado(), id + " demo 2 paso 6 pausado");
+        String txt6 = m.pasoActual().texto(id);
+        cierto(TextoEnriquecido.tieneMarcas(txt6), id + " demo 2 paso 6 usa marcas [[...]]");
+        cierto(txt6.contains("Noob") && txt6.contains("Junior"), id + " demo 2 paso 6 explica Noob a Junior");
+        cierto(m.ultimoError().isEmpty(), id + " demo 2 sin error en paso 6");
+        m.continuar();
+        cierto(m.terminada(), id + " demo 2 finalizada al continuar tras el último paso");
     }
 }

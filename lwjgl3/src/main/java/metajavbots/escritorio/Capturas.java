@@ -239,8 +239,7 @@ public final class Capturas extends Juego {
         pantallas.put("09_ejercicio", () -> new metajavbots.pantallas.PantallaEjercicio(metajavbots.ejercicios.Banco.delJuego().deTema("05").get(2)));
         robotitos();
         pantallas.put("10_tutoriales", metajavbots.pantallas.Tutoriales::new);
-        pantallas.put("10b_demostraciones", metajavbots.pantallas.Demostraciones::new);
-        pantallas.put("10c_demo1", () -> new metajavbots.pantallas.PantallaDemostracion(metajavbots.ejercicios.Demostracion.todas().get(0)));
+        pantallasDeDemostraciones();
         pantallas.put("11_leccion", () -> new metajavbots.pantallas.PantallaLeccion(metajavbots.ejercicios.Leccion.todas().get(0)));
         pantallas.put("12_especial", metajavbots.pantallas.ModoEspecial::new);
         pantallas.put("12b_rotos", () -> metajavbots.pantallas.DepuracionYTesting.alFinal(0));
@@ -269,7 +268,14 @@ public final class Capturas extends Juego {
         }
     }
 
-    /** El menú recién entrado tras una bajada de nivel (alarma luminosa roja). */
+    private void pantallasDeDemostraciones() {
+        var d2 = metajavbots.ejercicios.Demostracion.de(metajavbots.ejercicios.Demostracion.ID_DEMO_2);
+        pantallas.put("10b_demostraciones", metajavbots.pantallas.Demostraciones::new);
+        pantallas.put("10c_demo1", () -> new metajavbots.pantallas.PantallaDemostracion(metajavbots.ejercicios.Demostracion.todas().get(0)));
+        pantallas.put("10d_demo2_fallo", () -> new metajavbots.pantallas.PantallaDemostracion(d2, 1));
+        pantallas.put("10e_demo2_orden", () -> new metajavbots.pantallas.PantallaDemostracion(d2, 3));
+        pantallas.put("10f_demo2_cierre", () -> new metajavbots.pantallas.PantallaDemostracion(d2, 5));
+    }
     private void pantallaDeBajada() {
         pantallas.put("02b_menu_bajada", () -> new Pantalla() {
             private final metajavbots.pantallas.Menu menu = new metajavbots.pantallas.Menu();

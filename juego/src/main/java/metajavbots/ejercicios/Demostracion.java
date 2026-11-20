@@ -23,7 +23,18 @@ public final class Demostracion {
         RADAR,
         DETECTAR,
         APUNTAR_Y_DISPARAR,
+        FALLO_ORDEN,
+        ORDEN_TURNO,
+        CORREGIR_LINEA,
+        ACIERTO_ORDEN,
         CIERRE
+    }
+
+    /** Color del resaltado de la línea activa (▶) en el editor de código. */
+    public enum Resaltado {
+        BIEN,
+        AVISO,
+        ERROR
     }
 
     /** Un paso de la demostración: título, explicación del entrenador, líneas a resaltar y acción en la arena. */
@@ -37,9 +48,18 @@ public final class Demostracion {
         public final int turnosMinimos;
         public final int turnosMaximos;
         public final Accion accion;
+        public final Resaltado resaltado;
+        public final Trilingue codigoPaso;
 
         public Paso(String id, Trilingue titulo, Trilingue texto, int lineaPrincipal, int[] lineasSecundarias,
                 boolean activarVisor, int turnosMinimos, int turnosMaximos, Accion accion) {
+            this(id, titulo, texto, lineaPrincipal, lineasSecundarias, activarVisor, turnosMinimos, turnosMaximos,
+                    accion, Resaltado.BIEN, null);
+        }
+
+        public Paso(String id, Trilingue titulo, Trilingue texto, int lineaPrincipal, int[] lineasSecundarias,
+                boolean activarVisor, int turnosMinimos, int turnosMaximos, Accion accion,
+                Resaltado resaltado, Trilingue codigoPaso) {
             this.id = id;
             this.titulo = titulo;
             this.texto = texto;
@@ -49,6 +69,8 @@ public final class Demostracion {
             this.turnosMinimos = Math.max(0, turnosMinimos);
             this.turnosMaximos = Math.max(this.turnosMinimos, turnosMaximos);
             this.accion = accion == null ? Accion.QUIETO : accion;
+            this.resaltado = resaltado == null ? Resaltado.BIEN : resaltado;
+            this.codigoPaso = codigoPaso;
         }
 
         public String titulo(Idioma idioma) {
@@ -58,11 +80,17 @@ public final class Demostracion {
         public String texto(Idioma idioma) {
             return texto.en(idioma);
         }
+
+        /** Código que debe mostrar el editor en este paso (el propio del paso si lo cambia, o el general de la demo). */
+        public String codigo(Demostracion demo, Idioma idioma) {
+            return codigoPaso != null ? codigoPaso.en(idioma) : demo.codigo(idioma);
+        }
     }
 
     public static final String ID_DEMO_1 = "demo_01_basica";
+    public static final String ID_DEMO_2 = "demo_02_orden";
 
-    private static final List<Demostracion> TODAS = Collections.unmodifiableList(List.of(crearDemo1()));
+    private static final List<Demostracion> TODAS = Collections.unmodifiableList(List.of(crearDemo1(), Demo2Orden.crear()));
 
     public final String id;
     public final int nivel;

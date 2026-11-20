@@ -198,11 +198,26 @@ public final class MotorDemostracion {
             case APUNTAR_Y_DISPARAR:
                 yo.mira = -26;
                 break;
+            case FALLO_ORDEN:
+            case ACIERTO_ORDEN:
+                yo.mira = -34;
+                break;
+            case ORDEN_TURNO:
+                yo.mira = 22;
+                break;
+            case CORREGIR_LINEA:
+                yo.mira = -28;
+                break;
             default:
                 yo.mira = 0;
                 break;
         }
-        rival.x = p.accion == Demostracion.Accion.APUNTAR_Y_DISPARAR ? 560 : 595;
+        boolean cerca = p.accion == Demostracion.Accion.APUNTAR_Y_DISPARAR
+                || p.accion == Demostracion.Accion.FALLO_ORDEN
+                || p.accion == Demostracion.Accion.ORDEN_TURNO
+                || p.accion == Demostracion.Accion.CORREGIR_LINEA
+                || p.accion == Demostracion.Accion.ACIERTO_ORDEN;
+        rival.x = cerca ? 560 : 595;
         rival.y = 360;
         rival.rumbo = 180;
         rival.mira = 180;
@@ -264,7 +279,10 @@ public final class MotorDemostracion {
             case DETECTAR:
                 return enemigoDetectado && turnosTrasDeteccion >= 2;
             case APUNTAR_Y_DISPARAR:
+            case ACIERTO_ORDEN:
                 return enemigoDetectado && disparoRealizado && ((impactoRealizado && turnosTrasImpacto >= 4) || turnosTrasDisparo >= 20);
+            case FALLO_ORDEN:
+                return enemigoDetectado && disparoRealizado && turnosTrasDisparo >= 10;
             default:
                 return false;
         }
@@ -330,7 +348,27 @@ public final class MotorDemostracion {
                         marcarLineaViva(9, 8);
                     }
                     break;
+                case FALLO_ORDEN:
+                    if (enemigosVistos().isEmpty()) {
+                        avanzar(40);
+                    } else {
+                        detener();
+                    }
+                    apuntar(25);
+                    marcarLineaViva(15, 6, 7);
+                    break;
+                case ACIERTO_ORDEN:
+                    if (enemigosVistos().isEmpty()) {
+                        avanzar(40);
+                        apuntar(25);
+                        marcarLineaViva(14, 12, 13);
+                    } else {
+                        detener();
+                    }
+                    break;
                 case QUIETO:
+                case ORDEN_TURNO:
+                case CORREGIR_LINEA:
                 case CIERRE:
                 default:
                     detener();
@@ -346,17 +384,29 @@ public final class MotorDemostracion {
                 marcarLineaViva(14, 8);
                 return;
             }
-            if (a != Demostracion.Accion.APUNTAR_Y_DISPARAR) return;
+            if (a == Demostracion.Accion.FALLO_ORDEN) {
+                enemigoDetectado = true;
+                apuntarHacia(e.angulo());
+                if (!disparoRealizado && atacar()) {
+                    disparoRealizado = true;
+                }
+                marcarLineaViva(15, 6, 7);
+                return;
+            }
+            if (a != Demostracion.Accion.APUNTAR_Y_DISPARAR && a != Demostracion.Accion.ACIERTO_ORDEN) return;
             enemigoDetectado = true;
             apuntarHacia(e.angulo());
             double error = Math.abs(normalizar(e.angulo() - mira()));
+            int lApuntar = a == Demostracion.Accion.ACIERTO_ORDEN ? 6 : 15;
+            int lAtacar = a == Demostracion.Accion.ACIERTO_ORDEN ? 7 : 16;
+            int lBloque = a == Demostracion.Accion.ACIERTO_ORDEN ? 5 : 14;
             if (!disparoRealizado && error < 1.0) {
                 if (atacar()) disparoRealizado = true;
-                marcarLineaViva(16, 15, 14);
+                marcarLineaViva(lAtacar, lApuntar, lBloque);
             } else if (!disparoRealizado) {
-                marcarLineaViva(15, 14, 16);
+                marcarLineaViva(lApuntar, lBloque, lAtacar);
             } else {
-                marcarLineaViva(16, 15, 14);
+                marcarLineaViva(lAtacar, lApuntar, lBloque);
             }
         }
     }
@@ -459,6 +509,23 @@ public final class MotorDemostracion {
         return ultimoError;
     }
 
+    /** Código fuente que corresponde al paso actual en el idioma activo. */
+    public String codigoActual() {
+        return pasoActual().codigo(demo, idioma);
+    }
+
+    /** Color semántico del resaltado de la línea activa (▶) en el paso actual. */
+    public Demostracion.Resaltado resaltadoActual() {
+        return pasoActual().resaltado;
+    }
+
+    /** Salta directamente a un paso concreto (útil para capturas o pruebas). */
+    public void irAPaso(int indice) {
+        indicePaso = Math.max(0, Math.min(demo.pasos.size() - 1, indice));
+        terminada = false;
+        iniciarPaso();
+    }
+
     /** Indica si las barras de blindaje y energía del HUD están listas para mostrarse en la demostración. */
     public boolean hudBarrasVisible() {
         return pelea != null && pelea.cuerpo(0) != null;
@@ -466,6 +533,7 @@ public final class MotorDemostracion {
 
     /** Indica si el paso actual llama explícitamente la atención sobre las barras de blindaje y energía. */
     public boolean resaltarHudBarras() {
-        return pasoActual().accion == Demostracion.Accion.APUNTAR_Y_DISPARAR;
+        Demostracion.Accion a = pasoActual().accion;
+        return a == Demostracion.Accion.APUNTAR_Y_DISPARAR || a == Demostracion.Accion.ACIERTO_ORDEN;
     }
 }

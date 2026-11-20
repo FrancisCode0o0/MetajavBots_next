@@ -30,11 +30,13 @@ import metajavbots.tutor.Entrenador;
 public final class PantallaDemostracion implements Pantalla {
 
     private final Demostracion demo;
+    private final int pasoInicial;
     private MotorDemostracion motor;
     private VistaDeArena vista;
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
     private final Ui.Desplazable desplTexto = new Ui.Desplazable();
     private Idioma idioma = Idioma.ES;
+    private String codigoMostrado = "";
     private float acumulado;
     private float tiempo;
     private float hablando;
@@ -42,7 +44,12 @@ public final class PantallaDemostracion implements Pantalla {
     private boolean eraPausado;
 
     public PantallaDemostracion(Demostracion demo) {
+        this(demo, 0);
+    }
+
+    public PantallaDemostracion(Demostracion demo, int pasoInicial) {
         this.demo = demo == null ? Demostracion.todas().get(0) : demo;
+        this.pasoInicial = Math.max(0, pasoInicial);
     }
 
     @Override
@@ -50,10 +57,12 @@ public final class PantallaDemostracion implements Pantalla {
         idioma = j.jugador != null && j.jugador.idioma != null ? j.jugador.idioma : T.idioma;
         Montaje montaje = j.jugador == null ? null : j.jugador.montajeDe(j.jugador.robot());
         motor = new MotorDemostracion(demo, idioma, montaje);
+        if (pasoInicial > 0) motor.irAPaso(pasoInicial);
         vista = new VistaDeArena(j.pincel);
         vista.escenario = demo.escenario;
         vista.conPublico = false;
-        editor.ponerTexto(demo.codigo(idioma));
+        codigoMostrado = motor.codigoActual();
+        editor.ponerTexto(codigoMostrado);
         editor.soloLectura = true;
         editor.seguirActiva = true;
         editor.palabras = Palabras.api(idioma);
@@ -63,7 +72,7 @@ public final class PantallaDemostracion implements Pantalla {
         pasoAnunciado = -1;
         eraPausado = false;
         desplTexto.alPrincipio();
-        sincronizarEditor();
+        sincronizarEditor(j.ui);
     }
 
     private static float tamanoCodigo(float letraUi, float letraJugador) {
@@ -83,7 +92,7 @@ public final class PantallaDemostracion implements Pantalla {
         manejarTeclas(j);
         avanzarSimulacion(j, dt);
         anunciarSiPausa(j);
-        sincronizarEditor();
+        sincronizarEditor(ui);
 
         float margen = 20;
         float wTotal = p.ancho - margen * 2;
@@ -139,9 +148,18 @@ public final class PantallaDemostracion implements Pantalla {
         eraPausado = pausadoAhora;
     }
 
-    private void sincronizarEditor() {
+    private void sincronizarEditor(Ui ui) {
+        String codigoActual = motor.codigoActual();
+        if (!codigoActual.equals(codigoMostrado)) {
+            codigoMostrado = codigoActual;
+            editor.ponerTexto(codigoMostrado);
+        }
         editor.lineaActiva = motor.lineaActiva();
         editor.lineasActivas = motor.lineasActivas();
+        Demostracion.Resaltado r = motor.resaltadoActual();
+        if (r == Demostracion.Resaltado.ERROR) editor.colorLineaActiva = ui.tema.mal;
+        else if (r == Demostracion.Resaltado.AVISO) editor.colorLineaActiva = ui.tema.aviso;
+        else editor.colorLineaActiva = 0;
     }
 
     private void dibujarArena(Juego j, float x, float y, float w, float h, float dt) {
@@ -253,7 +271,17 @@ public final class PantallaDemostracion implements Pantalla {
                 }
                 break;
             case APUNTAR_Y_DISPARAR:
+            case ACIERTO_ORDEN:
                 dibujarIndicadorDisparo(p, yo, rival, pulso, tl);
+                break;
+            case FALLO_ORDEN:
+                dibujarIndicadorFallo(p, yo, pulso, tl);
+                break;
+            case ORDEN_TURNO:
+                dibujarIndicadorOrdenTurno(p, ax, ay, aw, tl);
+                break;
+            case CORREGIR_LINEA:
+                dibujarIndicadorCorregido(p, ax, ay, aw, tl);
                 break;
             default:
                 break;
@@ -331,6 +359,31 @@ public final class PantallaDemostracion implements Pantalla {
         String txt = String.format(Locale.ROOT, "%s %.0f",
                 idioma.elegir("Energía", "Energie", "Energy"), yo.energia);
         dibujarEtiquetaArena(p, txt, ox, oy + 26f, tl, 0x3FE0FF);
+    }
+
+    private void dibujarIndicadorFallo(Pincel p, Cuerpo yo, float pulso, float tl) {
+        if (!motor.disparoRealizado()) return;
+        float ox = vista.sx(yo.x, yo.y);
+        float oy = vista.sy(yo.y);
+        p.aro(ox, oy, 26f + pulso * 8f, 2.8f, 0xFF6B6B, 0.95f);
+        String txt = idioma.elegir("¡Fallo! +25°", "Daneben! +25°", "Miss! +25°");
+        dibujarEtiquetaArena(p, txt, ox, oy + 34f, tl, 0xFF6B6B);
+    }
+
+    private void dibujarIndicadorOrdenTurno(Pincel p, float ax, float ay, float aw, float tl) {
+        String txt = idioma.elegir(
+                "1. alVerEnemigo() → 2. cadaTurno()",
+                "1. beiSicht() → 2. jedenZug()",
+                "1. onSeeEnemy() → 2. onTick()");
+        dibujarEtiquetaArena(p, txt, ax + aw / 2f, ay + 64f, tl, 0xFFC857);
+    }
+
+    private void dibujarIndicadorCorregido(Pincel p, float ax, float ay, float aw, float tl) {
+        String txt = idioma.elegir(
+                "✓ apuntar(25) dentro del if",
+                "✓ zielen(25) im if-Block",
+                "✓ aim(25) inside the if");
+        dibujarEtiquetaArena(p, txt, ax + aw / 2f, ay + 64f, tl, 0x5BD685);
     }
 
     private static void dibujarPuntaFlecha(Pincel p, float x1, float y1, float x2, float y2, float largo, int color) {

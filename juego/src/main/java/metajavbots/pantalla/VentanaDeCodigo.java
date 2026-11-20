@@ -55,9 +55,9 @@ public final class VentanaDeCodigo {
     public final List<Marca> marcas = new ArrayList<>();
     /** Una línea que resaltar (la del último error en la pelea, por ejemplo); 0 si ninguna. */
     public int lineaResaltada;
-    /** Las líneas que se acaban de ejecutar (la traza del modo máquina contra máquina), desde 1; y la última, más marcada. */
+    /** Las líneas que se acaban de ejecutar (la traza del modo máquina contra máquina), desde 1; y la última, más marcada (0 = verde). */
     public java.util.BitSet lineasActivas = new java.util.BitSet();
-    public int lineaActiva;
+    public int lineaActiva, colorLineaActiva;
     /** Si se sigue a la línea activa (se desplaza solo para verla). */
     public boolean seguirActiva;
     /** Lo que hace Ctrl+S / Ctrl+Intro (compilar), F1 (ayuda de la palabra) y los cambios. */
@@ -193,15 +193,13 @@ public final class VentanaDeCodigo {
             float ly = zy + l * alto - desplazamientoY;
             if (l == lineaCursor && enfocada) p.rect(zx - 4, ly, zw + 4, alto, t.lineaActual, 1);
             if (lineaResaltada == l + 1) p.rect(zx - 4, ly, zw + 4, alto, t.mal, 0.18f);
-            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) p.rect(zx - 4, ly, zw + 4, alto, t.bien, lineaActiva == l + 1 ? 0.34f : 0.18f);
-            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) p.rect(zx - 4, ly, 5, alto, t.bien, lineaActiva == l + 1 ? 1f : 0.75f);
-            if (lineaActiva == l + 1) p.marco(zx - 4, ly, zw + 4, alto, t.bien, 0.98f, 2f);
-            if (lineaActiva == l + 1) p.texto("▶", x + 2, ly + alto * 0.08f, tamano * 0.95f, true, t.bien, 1);
+            int col = colorLineaActiva != 0 ? colorLineaActiva : t.bien;
+            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) p.rect(zx - 4, ly, zw + 4, alto, col, lineaActiva == l + 1 ? 0.34f : 0.18f);
+            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) p.rect(zx - 4, ly, 5, alto, col, lineaActiva == l + 1 ? 1f : 0.75f);
+            if (lineaActiva == l + 1) p.marco(zx - 4, ly, zw + 4, alto, col, 0.98f, 2f);
+            if (lineaActiva == l + 1) p.texto("▶", x + 2, ly + alto * 0.08f, tamano * 0.95f, true, col, 1);
             boolean conError = false, conAviso = false;
-            for (Marca m : marcas) if (m.linea == l + 1) {
-                if (m.grave) conError = true;
-                else conAviso = true;
-            }
+            for (Marca m : marcas) if (m.linea == l + 1) { if (m.grave) conError = true; else conAviso = true; }
             String numero = Integer.toString(l + 1);
             p.textoDeCodigoDerecha(numero, x + margen - letra * 1.6f, ly + alto * 0.12f, tamano * 0.9f, l == lineaCursor,
                     l == lineaCursor ? t.texto : t.numeros, 1);
