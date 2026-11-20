@@ -32,6 +32,7 @@ final class PruebasDelDepurador {
         apuntarSinFalsosPositivos();
         apuntarDetenerYTextos();
         apuntarLimpiezaDeEstados();
+        apuntarLimpiezaDeEventosBloqueados();
         apuntarTurnoMostrado();
     }
 
@@ -262,6 +263,104 @@ final class PruebasDelDepurador {
                 T.idioma = antes;
             }
         });
+    }
+
+    private static void apuntarLimpiezaDeEventosBloqueados() {
+        caso("depurador: aturdido descarta pared y aviso pendientes", () -> {
+            Modelo modelo = Modelo.de("vigia");
+            Pelea p = new Pelea(new Combatiente[]{
+                    PruebasDeLaPelea.con("registro", modelo, PruebasDeLaPelea.de(RegistradorDeEventos::new)),
+                    PruebasDeLaPelea.con("enemigo", modelo, PruebasDeLaPelea.de(PruebasDeLaPelea.Sencillo::new))
+            }, new int[]{0, 1}, 73);
+            p.empezarRonda();
+            Cuerpo receptor = p.cuerpo(0);
+            campoReasignable(receptor, "chocoConPared", true);
+            java.util.List<String[]> avisos = listaCampo(receptor, "avisos");
+            avisos.add(new String[]{"equipo", "mensaje obsoleto"});
+            receptor.aturdido = 1;
+            p.avanzar();
+            p.avanzar();
+            cierto(!receptor.combatiente.memoria.containsKey("pared"), "la pared bloqueada no se entregó");
+            cierto(!receptor.combatiente.memoria.containsKey("avisos"), "el aviso bloqueado no se entregó");
+        });
+
+        caso("depurador: deuda descarta todos los eventos pendientes", () -> {
+            Modelo modelo = Modelo.de("vigia");
+            Pelea p = new Pelea(new Combatiente[]{
+                    PruebasDeLaPelea.con("registro", modelo, PruebasDeLaPelea.de(RegistradorDeEventos::new)),
+                    PruebasDeLaPelea.con("enemigo", modelo, PruebasDeLaPelea.de(PruebasDeLaPelea.Sencillo::new))
+            }, new int[]{0, 1}, 74);
+            p.empezarRonda();
+            Cuerpo receptor = p.cuerpo(0);
+            java.util.List<metajavbots.api.Impacto> golpes =
+                    listaCampo(receptor, "golpesRecibidos");
+            golpes.add(null);
+            java.util.List<metajavbots.api.Impacto> aciertos = listaCampo(receptor, "aciertos");
+            aciertos.add(null);
+            campoReasignable(receptor, "chocoConPared", true);
+            metajavbots.api.Avistado choque = (metajavbots.api.Avistado) java.lang.reflect.Proxy.newProxyInstance(
+                    metajavbots.api.Avistado.class.getClassLoader(),
+                    new Class<?>[]{metajavbots.api.Avistado.class},
+                    (proxy, metodo, argumentos) -> valorPredeterminado(metodo.getReturnType()));
+            campoReasignable(receptor, "chocoCon", choque);
+            java.util.List<String[]> avisos = listaCampo(receptor, "avisos");
+            avisos.add(new String[]{"equipo", "mensaje obsoleto"});
+            receptor.deuda = 1;
+            p.avanzar();
+            p.avanzar();
+            cierto(!receptor.combatiente.memoria.containsKey("golpes"), "los golpes bloqueados no se entregaron");
+            cierto(!receptor.combatiente.memoria.containsKey("aciertos"), "los aciertos bloqueados no se entregaron");
+            cierto(!receptor.combatiente.memoria.containsKey("pared"), "la pared bloqueada no se entregó");
+            cierto(!receptor.combatiente.memoria.containsKey("choques"), "el choque bloqueado no se entregó");
+            cierto(!receptor.combatiente.memoria.containsKey("avisos"), "el aviso bloqueado no se entregó");
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> java.util.List<T> listaCampo(Object objeto, String nombre) throws Exception {
+        java.lang.reflect.Field campo = objeto.getClass().getDeclaredField(nombre);
+        campo.setAccessible(true);
+        return (java.util.List<T>) campo.get(objeto);
+    }
+
+    private static void campoReasignable(Object objeto, String nombre, Object valor) throws Exception {
+        java.lang.reflect.Field campo = objeto.getClass().getDeclaredField(nombre);
+        campo.setAccessible(true);
+        campo.set(objeto, valor);
+    }
+
+    private static Object valorPredeterminado(Class<?> tipo) {
+        if (tipo == boolean.class) return false;
+        if (tipo == byte.class) return (byte) 0;
+        if (tipo == short.class) return (short) 0;
+        if (tipo == int.class) return 0;
+        if (tipo == long.class) return 0L;
+        if (tipo == float.class) return 0.0f;
+        if (tipo == double.class) return 0.0d;
+        if (tipo == char.class) return '\0';
+        return null;
+    }
+
+    public static class RegistradorDeEventos extends metajavbots.api.Metajavbot {
+        @Override
+        public void alRecibirGolpe(metajavbots.api.Golpe g) { contar("golpes"); }
+
+        @Override
+        public void alAcertar(metajavbots.api.Golpe g) { contar("aciertos"); }
+
+        @Override
+        public void alChocarConPared() { contar("pared"); }
+
+        @Override
+        public void alChocarConEnemigo(metajavbots.api.Enemigo e) { contar("choques"); }
+
+        @Override
+        public void alOirAlEquipo(String de, String mensaje) { contar("avisos"); }
+
+        private void contar(String clave) {
+            int valor = memoria().get(clave) instanceof Integer ? (int) memoria().get(clave) : 0;
+            memoria().put(clave, valor + 1);
+        }
     }
 
     private static Pelea peleaCon(String codigo, long semilla) {

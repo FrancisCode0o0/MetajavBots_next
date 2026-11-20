@@ -362,23 +362,23 @@ public final class Pelea {
 
     private void pensar(Cuerpo c) {
         c.turnoPensado = turno;
-        if (c.fuera) { c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.FUERA_DE_COMBATE); return; }
+        if (c.fuera) { c.limpiarEventosPendientes(); c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.FUERA_DE_COMBATE); return; }
         if (c.tiempoDeBocadillo > 0) c.tiempoDeBocadillo--;
         Combatiente.Informe inf = informe(c.indice);
         if (c.aturdido > 0) {
             inf.turnosAturdido++;
-            c.golpesRecibidos.clear();
-            c.aciertos.clear();
+            c.limpiarEventosPendientes();
             c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.ATURDIDO);
             return;
         }
         if (c.deuda > 0) {
             c.deuda--;
+            c.limpiarEventosPendientes();
             c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.DEUDA_TOPE);
             return;
         }
         Combatiente co = c.combatiente;
-        if (co.robot == null) { c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.SIN_CODIGO); return; }
+        if (co.robot == null) { c.limpiarEventosPendientes(); c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.SIN_CODIGO); return; }
         c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.EJECUTADO);
         long tope = c.topeDePasos();
         List<metajavbots.api.Impacto> golpes = new ArrayList<>(c.golpesRecibidos);

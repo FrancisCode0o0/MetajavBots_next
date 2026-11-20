@@ -141,6 +141,15 @@ public final class Cuerpo implements Mando {
         estadoPensamiento = estado;
     }
 
+    /** Descarta los eventos pendientes que el código bloqueado no debe recibir. */
+    public void limpiarEventosPendientes() {
+        golpesRecibidos.clear();
+        aciertos.clear();
+        chocoConPared = false;
+        chocoCon = null;
+        avisos.clear();
+    }
+
     /** Coloca los cuerpos al empezar una ronda: 1v1, 1 contra varios en formación o corro por equipos. */
     static Cuerpo[] posicionar(Pelea pelea, int ronda, long semilla, Random azar) {
         double margen = 120;
