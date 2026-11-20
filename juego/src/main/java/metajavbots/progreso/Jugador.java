@@ -65,7 +65,7 @@ public final class Jugador {
     public int peleasDesdeElDesafio = 99;
     public final List<Robot> robots = new ArrayList<>();
     public int robotElegido;
-    /** Piezas ganadas sueltas (botín, desafíos), aparte de las que da cumplir su regla. */
+    /** Piezas ganadas sueltas (botín, desafíos) o compradas en la tienda, aparte de las que da cumplir su regla. */
     public final Set<String> piezasGanadas = new LinkedHashSet<>();
     public final Set<String> modelosGanados = new LinkedHashSet<>();
     public final Set<String> ejerciciosResueltos = new LinkedHashSet<>();

@@ -38,6 +38,7 @@ final class PruebasDelProgreso {
         apuntarParte4();
         apuntarPista();
         apuntarMonedas();
+        apuntarTienda();
     }
 
     private static void apuntarParte1() {
@@ -435,6 +436,92 @@ final class PruebasDelProgreso {
                 Files.write(archivo, sinMonedas, java.nio.charset.StandardCharsets.UTF_8);
                 Jugador antiguo = Guardado.leer(Guardado.carpetaDe("Saldo Test"));
                 igual(0.0, antiguo.monedas, "partida sin campo monedas empieza en 0");
+            } finally {
+                Guardado.carpeta = antes;
+            }
+        });
+    }
+
+    private static void apuntarTienda() {
+        caso("tienda: catálogo por rangos, compra válida, sin saldo y bloqueo de rango superior", () -> {
+            CatalogoDePiezas c = CatalogoDePiezas.delJuego();
+            cierto(!c.comprables(Etiqueta.Categoria.NOOB).isEmpty(), "hay piezas comprables en NOOB");
+            cierto(!c.comprables(Etiqueta.Categoria.JUNIOR).isEmpty(), "hay piezas comprables en JUNIOR");
+            cierto(!c.comprables(Etiqueta.Categoria.SENIOR).isEmpty(), "hay piezas comprables en SENIOR");
+            falso(c.pieza("laser_basico").comprable(), "pieza inicial no se vende");
+            cierto(c.pieza("laser_basico_2").comprable(), "Mk II de pieza inicial sí se vende");
+            falso(c.pieza("laser_aurora").comprable(), "legendaria de desafío no se vende");
+            falso(c.pieza("herencia_espada").comprable(), "épica de jefe no se vende");
+            cierto(!metajavbots.pantallas.Tienda.piezasFiltradas(Etiqueta.Categoria.NOOB, metajavbots.piezas.Pieza.Ranura.BRAZO).isEmpty(),
+                    "filtro por rango y ranura funciona");
+
+            metajavbots.piezas.Pieza noob = c.pieza("canon_ligero");
+            metajavbots.piezas.Pieza cara = c.pieza("escopeta");
+            metajavbots.piezas.Pieza junior = c.pieza("laser_pesado");
+            metajavbots.piezas.Pieza senior = c.pieza("bola_cadena");
+            igual(Etiqueta.Categoria.NOOB, noob.rangoTienda, "canon_ligero es NOOB");
+            igual(Etiqueta.Categoria.JUNIOR, junior.rangoTienda, "laser_pesado es JUNIOR");
+            igual(Etiqueta.Categoria.SENIOR, senior.rangoTienda, "bola_cadena es SENIOR");
+
+            Jugador j = new Jugador("Comprador");
+            j.etiqueta = Etiqueta.NOOB_1;
+            j.sumarMonedas(6.0);
+
+            // Compra válida: descuenta monedas y añade pieza.
+            igual(Progreso.CompraResultado.COMPRADA, Progreso.comprarPieza(j, noob), "compra válida en NOOB");
+            igual(Jugador.redondearMonedas(6.0 - noob.precio), j.monedas, "descuenta precio exacto");
+            cierto(j.piezasGanadas.contains(noob.id), "guarda id en piezasGanadas");
+            cierto(Progreso.piezaDisponible(j, noob), "pieza disponible tras comprar");
+
+            // Comprar una ya adquirida no descuenta de nuevo.
+            double saldoTrasCompra = j.monedas;
+            igual(Progreso.CompraResultado.YA_LA_TIENE, Progreso.comprarPieza(j, noob), "no recompra pieza que ya tiene");
+            igual(saldoTrasCompra, j.monedas, "saldo intacto si ya la tiene");
+
+            // Intento sin saldo suficiente.
+            igual(Progreso.CompraResultado.SALDO_INSUFICIENTE, Progreso.comprarPieza(j, cara), "rechaza si falta saldo");
+            igual(saldoTrasCompra, j.monedas, "saldo intacto sin saldo suficiente");
+            falso(Progreso.piezaDisponible(j, cara), "pieza no añadida sin saldo");
+
+            // Intento de pieza de rango superior bloqueada (aun teniendo muchas monedas).
+            j.sumarMonedas(100.0);
+            double saldoAlto = j.monedas;
+            igual(Progreso.CompraResultado.RANGO_INSUFICIENTE, Progreso.comprarPieza(j, junior), "NOOB no puede comprar JUNIOR");
+            igual(Progreso.CompraResultado.RANGO_INSUFICIENTE, Progreso.comprarPieza(j, senior), "NOOB no puede comprar SENIOR");
+            igual(saldoAlto, j.monedas, "saldo intacto tras bloqueo de rango");
+            falso(Progreso.piezaDisponible(j, junior), "pieza JUNIOR sigue bloqueada");
+
+            // Al subir a JUNIOR, desbloquea JUNIOR pero SENIOR sigue bloqueada.
+            j.etiqueta = Etiqueta.JUNIOR_1;
+            igual(Progreso.CompraResultado.COMPRADA, Progreso.comprarPieza(j, junior), "JUNIOR puede comprar pieza JUNIOR");
+            cierto(Progreso.piezaDisponible(j, junior), "pieza JUNIOR adquirida");
+            igual(Progreso.CompraResultado.RANGO_INSUFICIENTE, Progreso.comprarPieza(j, senior), "JUNIOR no puede comprar SENIOR");
+
+            // Al subir a SENIOR, desbloquea SENIOR.
+            j.etiqueta = Etiqueta.SENIOR_1;
+            igual(Progreso.CompraResultado.COMPRADA, Progreso.comprarPieza(j, senior), "SENIOR puede comprar pieza SENIOR");
+            cierto(Progreso.piezaDisponible(j, senior), "pieza SENIOR adquirida");
+        });
+
+        caso("tienda: persistencia de pieza comprada y monedas al guardar y cargar", () -> {
+            Path antes = Guardado.carpeta;
+            Path tmp = Files.createTempDirectory("metajavbots_tienda");
+            Guardado.carpeta = tmp;
+            try {
+                CatalogoDePiezas c = CatalogoDePiezas.delJuego();
+                metajavbots.piezas.Pieza pz = c.pieza("ametralladora");
+                Jugador j = new Jugador("Tienda Save");
+                j.etiqueta = Etiqueta.NOOB_2;
+                j.sumarMonedas(12.5);
+                igual(Progreso.CompraResultado.COMPRADA, Progreso.comprarPieza(j, pz), "compra antes de guardar");
+                double saldoEsperado = Jugador.redondearMonedas(12.5 - pz.precio);
+                igual(saldoEsperado, j.monedas, "saldo tras compra");
+                Guardado.guardar(j);
+
+                Jugador cargado = Guardado.leer(Guardado.carpetaDe("Tienda Save"));
+                igual(saldoEsperado, cargado.monedas, "saldo descontado persiste en partida.txt");
+                cierto(cargado.piezasGanadas.contains(pz.id), "pieza comprada persiste en piezasGanadas");
+                cierto(Progreso.piezaDisponible(cargado, pz), "pieza comprada disponible tras cargar");
             } finally {
                 Guardado.carpeta = antes;
             }

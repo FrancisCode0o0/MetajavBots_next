@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import metajavbots.progreso.Etiqueta;
 import metajavbots.textos.Trilingue;
 
 /**
@@ -124,6 +125,11 @@ public final class CatalogoDePiezas {
         Pieza.Rareza rareza = Pieza.enumDe(Pieza.Rareza.class, textos.remove("rareza"), Pieza.Rareza.COMUN);
         String desbloqueo = textos.getOrDefault("desbloqueo", "inicio");
         textos.remove("desbloqueo");
+        Double precioObj = valores.remove("precio");
+        double precioBase = precioObj == null ? 0 : Math.max(0, precioObj);
+        String rangoTxt = textos.remove("rango");
+        Etiqueta.Categoria rangoBase = rangoTxt == null ? null : Pieza.enumDe(Etiqueta.Categoria.class, rangoTxt, null);
+        if (rangoTxt != null && rangoBase == null) avisos.add("línea " + n + ": rango desconocido «" + rangoTxt + "»");
         String serie = textos.remove("serie");
         int desde = 1, hasta = 1;
         if (serie != null) {
@@ -147,9 +153,26 @@ public final class CatalogoDePiezas {
             Trilingue nom = serie == null ? nombre : new Trilingue(
                     nombre.es + " Mk " + ROMANOS[marca], nombre.de + " Mk " + ROMANOS[marca], nombre.en + " Mk " + ROMANOS[marca]);
             String desb = marca == 1 ? desbloqueo : desbloqueoDeMarca(desbloqueo, marca);
+            double precioMarca = precioDeMarca(precioBase, desbloqueo, marca);
+            Etiqueta.Categoria rangoMarca = precioMarca > 0 ? rangoDeMarca(rangoBase, marca) : null;
             if (porId.containsKey(idMarca)) avisos.add("línea " + n + ": «" + idMarca + "» repetida");
-            porId.put(idMarca, new Pieza(idMarca, ranura, nom, nat, rareza, desb, marca, v, textos));
+            porId.put(idMarca, new Pieza(idMarca, ranura, nom, nat, rareza, desb, marca, precioMarca, rangoMarca, v, textos));
         }
+    }
+
+    /** El precio en monedas sube con la marca (las piezas de inicio Mk I no se venden en la tienda). */
+    static double precioDeMarca(double base, String desbloqueoBase, int marca) {
+        if (base <= 0 || (marca == 1 && "inicio".equals(desbloqueoBase))) return 0;
+        return Math.round(base * (1.0 + 0.5 * (marca - 1)) * 2.0) / 2.0;
+    }
+
+    /** El rango mínimo en tienda escala con las marcas más altas (Mk III-IV y Mk V). */
+    static Etiqueta.Categoria rangoDeMarca(Etiqueta.Categoria base, int marca) {
+        if (base == null) return null;
+        if (marca >= 5) return Etiqueta.Categoria.SENIOR;
+        if (marca >= 4 && base == Etiqueta.Categoria.JUNIOR) return Etiqueta.Categoria.SENIOR;
+        if (marca >= 3 && base == Etiqueta.Categoria.NOOB) return Etiqueta.Categoria.JUNIOR;
+        return base;
     }
 
     /** La Mk k de una serie se gana con más victorias que la anterior. */
@@ -181,6 +204,15 @@ public final class CatalogoDePiezas {
     public List<Pieza> de(Pieza.Ranura ranura) {
         List<Pieza> l = new ArrayList<>();
         for (Pieza p : porId.values()) if (p.ranura == ranura) l.add(p);
+        return l;
+    }
+
+    /** Piezas comprables en la tienda (si rango es null, devuelve todas las comprables). */
+    public List<Pieza> comprables(Etiqueta.Categoria rango) {
+        List<Pieza> l = new ArrayList<>();
+        for (Pieza p : porId.values()) {
+            if (p.comprable() && (rango == null || p.rangoTienda == rango)) l.add(p);
+        }
         return l;
     }
 

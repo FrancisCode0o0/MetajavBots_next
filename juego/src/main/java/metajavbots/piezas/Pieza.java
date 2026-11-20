@@ -4,6 +4,7 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import metajavbots.progreso.Etiqueta;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.Trilingue;
 
@@ -40,11 +41,15 @@ public final class Pieza {
     public final String desbloqueo;
     /** Mk I = 1 … Mk V = 5 (1 si no es de una serie). */
     public final int marca;
+    /** Precio en monedas en la tienda (0 si no se vende en la tienda). */
+    public final double precio;
+    /** Rango mínimo del jugador para comprar esta pieza en la tienda (null si no se vende). */
+    public final Etiqueta.Categoria rangoTienda;
     private final Map<String, Double> valores;
     private final Map<String, String> textos;
 
     Pieza(String id, Ranura ranura, Trilingue nombre, Naturaleza naturaleza, Rareza rareza, String desbloqueo, int marca,
-          Map<String, Double> valores, Map<String, String> textos) {
+          double precio, Etiqueta.Categoria rangoTienda, Map<String, Double> valores, Map<String, String> textos) {
         this.id = id;
         this.ranura = ranura;
         this.nombre = nombre;
@@ -52,6 +57,8 @@ public final class Pieza {
         this.rareza = rareza;
         this.desbloqueo = desbloqueo;
         this.marca = marca;
+        this.precio = precio;
+        this.rangoTienda = rangoTienda;
         this.valores = Collections.unmodifiableMap(new LinkedHashMap<>(valores));
         this.textos = Collections.unmodifiableMap(new LinkedHashMap<>(textos));
     }
@@ -95,6 +102,11 @@ public final class Pieza {
     /** ¿Es de las que se tienen desde el principio? */
     public boolean deInicio() {
         return desbloqueo.equals("inicio");
+    }
+
+    /** ¿Se puede comprar en la tienda con monedas? */
+    public boolean comprable() {
+        return precio > 0 && rangoTienda != null;
     }
 
     static <E extends Enum<E>> E enumDe(Class<E> clase, String nombre, E siNo) {

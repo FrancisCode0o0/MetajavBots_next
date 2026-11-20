@@ -235,6 +235,29 @@ public final class Progreso {
         return true;
     }
 
+    /** Resultado de intentar comprar una pieza en la tienda. */
+    public enum CompraResultado {
+        COMPRADA, NO_COMPRABLE, YA_LA_TIENE, RANGO_INSUFICIENTE, SALDO_INSUFICIENTE
+    }
+
+    /** ¿Tiene el jugador rango suficiente para comprar piezas de esta categoría en la tienda? */
+    public static boolean rangoDesbloqueadoEnTienda(Jugador j, Etiqueta.Categoria rango) {
+        return j != null && rango != null && j.etiqueta.categoria().ordinal() >= rango.ordinal();
+    }
+
+    /**
+     * Intenta comprar una pieza del catálogo con las monedas del jugador.
+     * Si la compra es válida, descuenta el precio y añade la pieza a {@code j.piezasGanadas}.
+     */
+    public static CompraResultado comprarPieza(Jugador j, Pieza p) {
+        if (j == null || p == null || !p.comprable()) return CompraResultado.NO_COMPRABLE;
+        if (piezaDisponible(j, p)) return CompraResultado.YA_LA_TIENE;
+        if (!rangoDesbloqueadoEnTienda(j, p.rangoTienda)) return CompraResultado.RANGO_INSUFICIENTE;
+        if (!j.gastarMonedas(p.precio)) return CompraResultado.SALDO_INSUFICIENTE;
+        j.piezasGanadas.add(p.id);
+        return CompraResultado.COMPRADA;
+    }
+
     public static boolean piezaDisponible(Jugador j, Pieza p) {
         if (p == null) return false;
         if (j.piezasGanadas.contains(p.id) || j.legendariasGanadas.contains(p.id)) return true;

@@ -69,11 +69,13 @@ public final class Menu implements Pantalla {
         if (ui.boton(T.t("menu.pelear_ya"), iz + 30, abajo, ancho - 60, 64, Ui.Estilo.PRINCIPAL, true, T.t("menu.pelear_ya_ayuda"))) {
             j.ir(PrepararPelea.adaptada(j));
         }
-        // La hora de hoy (repaso, tema nuevo y pelea) y los minijuegos (moverse, girar, apuntar y disparar), uno encima del otro.
+        // La hora de hoy (repaso, tema nuevo y pelea), los minijuegos y la tienda, uno encima del otro.
         float fila = abajo - 60;
         if (ui.boton(T.t("sesion.boton"), iz + 30, fila, ancho - 60, 50, Ui.Estilo.NORMAL, true, T.t("sesion.boton_ayuda"))) j.ir(new SesionDeHoy());
         fila -= 58;
         if (ui.boton(T.t("mini.boton"), iz + 30, fila, ancho - 60, 50, Ui.Estilo.NORMAL, true, T.t("mini.boton_ayuda"))) j.ir(new MiniJuegos());
+        fila -= 58;
+        if (ui.boton("◆ " + T.t("menu.tienda"), iz + 30, fila, ancho - 60, 50, Ui.Estilo.DESTACADO, true, T.t("menu.tienda_ayuda"))) j.ir(new Tienda());
         float alto = p.altoDeLinea(ui.letra);
         float yExp = fila - 12 - alto, yMarcador = yExp - alto * 1.2f;
         String exp = T.f("menu.experiencia", jug.experiencia), marcador = T.f("menu.marcador", jug.victorias(), jug.derrotas());
@@ -128,9 +130,14 @@ public final class Menu implements Pantalla {
         float mw = Math.min(anchoMax, Math.max(130, p.ancho(texto, tam, true) + 32));
         float mx = p.ancho - 460 - mw - 16, my = 14, mh = 50;
         int dorado = 0xFFC857;
-        p.caja(mx, my, mw, mh, 10, Pincel.oscurecer(dorado, 0.65f), 1);
-        p.bordeRedondeado(mx, my, mw, mh, 10, dorado, 1, 2);
+        boolean encima = ui.e.dentro(mx, my, mw, mh);
+        p.caja(mx, my, mw, mh, 10, Pincel.oscurecer(dorado, encima ? 0.55f : 0.65f), 1);
+        p.bordeRedondeado(mx, my, mw, mh, 10, dorado, 1, encima ? 2.5f : 2);
         p.textoCentrado(texto, mx + mw / 2, my + (mh - p.altoDeLinea(tam)) / 2, tam, true, 0xFFFFFF, 1);
-        if (ui.e.dentro(mx, my, mw, mh)) ui.avisar(T.t("menu.monedas_ayuda"));
+        if (encima) ui.avisar(T.t("menu.monedas_ayuda"));
+        if (ui.e.clic(mx, my, mw, mh)) {
+            j.sonidos.tocar("clic", 0.5f);
+            j.ir(new Tienda());
+        }
     }
 }
