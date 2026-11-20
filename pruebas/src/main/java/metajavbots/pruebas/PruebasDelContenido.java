@@ -44,6 +44,7 @@ final class PruebasDelContenido {
         apuntarRetoDiario();
         apuntarArmasEspeciales();
         apuntarPistasReferencia();
+        apuntarDepuracionYTesting();
     }
 
     private static void apuntarPistasReferencia() {
@@ -387,8 +388,15 @@ final class PruebasDelContenido {
     private static void apuntarParte3() {
         caso("laboratorio: la solución de cada reto pasa y caza a todos los mutantes; la plantilla no", () -> {
             List<metajavbots.ejercicios.Laboratorio> ls = metajavbots.ejercicios.Laboratorio.todos();
-            igual(3, ls.size());
+            igual(5, ls.size());
+            java.util.Set<String> ids = new java.util.HashSet<>();
             for (metajavbots.ejercicios.Laboratorio l : ls) {
+                ids.add(l.id);
+                for (metajavbots.textos.Idioma i : metajavbots.textos.Idioma.values()) {
+                    cierto(!l.titulo.en(i).isBlank() && !l.enunciado.en(i).isBlank(), l.id + ": textos en " + i);
+                }
+                cierto(!l.titulo.de.equals(l.titulo.es) && !l.titulo.en.equals(l.titulo.es), l.id + ": título traducido");
+                cierto(!l.enunciado.de.equals(l.enunciado.es) && !l.enunciado.en.equals(l.enunciado.es), l.id + ": enunciado traducido");
                 metajavbots.ejercicios.Laboratorio.Resultado r = l.comprobar(l.solucion, Locale.ROOT);
                 cierto(r.todoBien(), l.id + ": la solución " + r.pruebas + " cazados " + r.cazados + " " + r.errores);
                 cierto(!l.comprobar(l.plantilla, Locale.ROOT).todoBien(), l.id + ": la plantilla no basta");
@@ -397,6 +405,8 @@ final class PruebasDelContenido {
                         + l.id)) pieza = true;
                 cierto(pieza, l.id + " da una pieza");
             }
+            cierto(ids.contains("blackbox"), "incluye reto blackbox");
+            cierto(ids.contains("whitebox"), "incluye reto whitebox");
         });
 
         caso("errores y referencia: cada error tiene sus 9 textos y la referencia cubre los 22 temas", () -> {
@@ -525,6 +535,20 @@ final class PruebasDelContenido {
             cierto(Comprobador.iguales(List.of(1, 2), new ArrayList<>(List.of(1, 2))), "listas");
             cierto(Comprobador.iguales(3, 3L), "int y long");
             falso(Comprobador.iguales("a", "b"), "textos distintos");
+        });
+    }
+
+    private static void apuntarDepuracionYTesting() {
+        caso("menú y modo especial: Depuración y Testing tiene sección propia separada de ModoEspecial", () -> {
+            List<String> casillas = metajavbots.pantallas.Menu.clavesDeCasillas();
+            cierto(casillas.contains("menu.depuracion"), "Menú incluye menu.depuracion");
+            cierto(casillas.contains("menu.especial"), "Menú mantiene menu.especial");
+            cierto(metajavbots.pantallas.ModoEspecial.CLAVES_PESTANAS.contains("especial.jefes"), "ModoEspecial mantiene jefes");
+            cierto(metajavbots.pantallas.ModoEspecial.CLAVES_PESTANAS.contains("especial.tope"), "ModoEspecial mantiene tope");
+            falso(metajavbots.pantallas.ModoEspecial.CLAVES_PESTANAS.contains("especial.laboratorio"), "ModoEspecial ya no tiene laboratorio");
+            falso(metajavbots.pantallas.ModoEspecial.CLAVES_PESTANAS.contains("especial.rotos"), "ModoEspecial ya no tiene robots rotos");
+            igual(List.of("especial.rotos", "especial.laboratorio"), metajavbots.pantallas.DepuracionYTesting.CLAVES_PESTANAS,
+                    "DepuracionYTesting agrupa robots rotos y laboratorio");
         });
     }
 }

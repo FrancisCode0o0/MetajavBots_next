@@ -1,0 +1,182 @@
+# Laboratorio: pruebas Whitebox (cobertura de ramas if/else/switch). Gana «Escáner de ramas» (pruebas:whitebox).
+=== whitebox
+titulo.es: Pruebas Whitebox: cobertura de ramas
+titulo.de: Whitebox-Tests: Zweigüberdeckung
+titulo.en: Whitebox tests: branch coverage
+enunciado.es: Estrategia Whitebox (caja blanca): mira el código de DecisorTactico.decidir(int energia, double distancia, String modo) y diseña pruebas que recorran todas sus ramas (if, else if, switch con sus casos y default, y el else final). Cada mutante esconde un fallo en una rama distinta: si alguna rama queda sin cubrir, su mutante se escapará.
+enunciado.de: Whitebox-Strategie: Lies den Code von DecisorTactico.decidir(int energia, double distancia, String modo) und schreibe Tests, die alle Zweige durchlaufen (if, else if, switch samt Fällen und default sowie das abschließende else). Jeder Mutant versteckt einen Fehler in einem anderen Zweig: Bleibt ein Zweig ungetestet, entwischt sein Mutant.
+enunciado.en: Whitebox strategy: inspect DecisorTactico.decidir(int energia, double distancia, String modo) and write tests that execute every branch (if, else if, switch cases and default, and the final else). Each mutant hides a bug in a different branch: any uncovered branch lets its mutant escape.
+clase:
+    public class DecisorTactico {
+        public static String decidir(int energia, double distancia, String modo) {
+            if (energia < 20) {
+                return "RECARGAR";
+            }
+            if (distancia < 60) {
+                return "GOLPEAR";
+            } else if (distancia <= 250) {
+                switch (modo) {
+                    case "AGRESIVO":
+                        return "DISPARAR";
+                    case "DEFENSIVO":
+                        return "ESCUDO";
+                    default:
+                        return "RODEAR";
+                }
+            } else {
+                return "AVANZAR";
+            }
+        }
+    }
+mutante:
+    public class DecisorTactico {
+        public static String decidir(int energia, double distancia, String modo) {
+            if (energia < 20) {
+                return "ESPERAR";
+            }
+            if (distancia < 60) {
+                return "GOLPEAR";
+            } else if (distancia <= 250) {
+                switch (modo) {
+                    case "AGRESIVO":
+                        return "DISPARAR";
+                    case "DEFENSIVO":
+                        return "ESCUDO";
+                    default:
+                        return "RODEAR";
+                }
+            } else {
+                return "AVANZAR";
+            }
+        }
+    }
+mutante:
+    public class DecisorTactico {
+        public static String decidir(int energia, double distancia, String modo) {
+            if (energia < 20) {
+                return "RECARGAR";
+            }
+            if (distancia < 60) {
+                return "DISPARAR";
+            } else if (distancia <= 250) {
+                switch (modo) {
+                    case "AGRESIVO":
+                        return "DISPARAR";
+                    case "DEFENSIVO":
+                        return "ESCUDO";
+                    default:
+                        return "RODEAR";
+                }
+            } else {
+                return "AVANZAR";
+            }
+        }
+    }
+mutante:
+    public class DecisorTactico {
+        public static String decidir(int energia, double distancia, String modo) {
+            if (energia < 20) {
+                return "RECARGAR";
+            }
+            if (distancia < 60) {
+                return "GOLPEAR";
+            } else if (distancia <= 250) {
+                switch (modo) {
+                    case "AGRESIVO":
+                        return "DISPARAR";
+                    case "DEFENSIVO":
+                        return "RODEAR";
+                    default:
+                        return "RODEAR";
+                }
+            } else {
+                return "AVANZAR";
+            }
+        }
+    }
+mutante:
+    public class DecisorTactico {
+        public static String decidir(int energia, double distancia, String modo) {
+            if (energia < 20) {
+                return "RECARGAR";
+            }
+            if (distancia < 60) {
+                return "GOLPEAR";
+            } else if (distancia <= 250) {
+                switch (modo) {
+                    case "AGRESIVO":
+                        return "DISPARAR";
+                    case "DEFENSIVO":
+                        return "ESCUDO";
+                    default:
+                        return "DISPARAR";
+                }
+            } else {
+                return "AVANZAR";
+            }
+        }
+    }
+mutante:
+    public class DecisorTactico {
+        public static String decidir(int energia, double distancia, String modo) {
+            if (energia < 20) {
+                return "RECARGAR";
+            }
+            if (distancia < 60) {
+                return "GOLPEAR";
+            } else if (distancia <= 250) {
+                switch (modo) {
+                    case "AGRESIVO":
+                        return "DISPARAR";
+                    case "DEFENSIVO":
+                        return "ESCUDO";
+                    default:
+                        return "RODEAR";
+                }
+            } else {
+                return "DISPARAR";
+            }
+        }
+    }
+plantilla:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.*;
+
+    public class PruebasWhitebox {
+
+        @Test
+        void mediaDistanciaAgresivo() {
+            assertEquals("DISPARAR", DecisorTactico.decidir(80, 150, "AGRESIVO"));
+        }
+    }
+solucion:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.*;
+
+    public class PruebasWhitebox {
+
+        @Test
+        void pocaEnergiaRecarga() {
+            assertEquals("RECARGAR", DecisorTactico.decidir(10, 100, "AGRESIVO"));
+        }
+
+        @Test
+        void muyCercaGolpea() {
+            assertEquals("GOLPEAR", DecisorTactico.decidir(80, 40, "AGRESIVO"));
+        }
+
+        @Test
+        void mediaDistanciaDefensivoUsaEscudo() {
+            assertEquals("ESCUDO", DecisorTactico.decidir(80, 150, "DEFENSIVO"));
+        }
+
+        @Test
+        void mediaDistanciaOtroModoRodea() {
+            assertEquals("RODEAR", DecisorTactico.decidir(80, 150, "NEUTRAL"));
+        }
+
+        @Test
+        void lejosAvanza() {
+            assertEquals("AVANZAR", DecisorTactico.decidir(80, 320, "AGRESIVO"));
+        }
+    }

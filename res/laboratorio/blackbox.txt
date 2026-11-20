@@ -1,0 +1,116 @@
+# Laboratorio: pruebas Blackbox (clases de equivalencia y casos límite). Gana «Patas de borde» (pruebas:blackbox).
+=== blackbox
+titulo.es: Pruebas Blackbox: clases de equivalencia y bordes
+titulo.de: Blackbox-Tests: Äquivalenzklassen und Grenzwerte
+titulo.en: Blackbox tests: equivalence classes and boundaries
+enunciado.es: Estrategia Blackbox (caja negra): prueba AnalizadorDeEnergia.consumoSeguro(int[] cargas, int limite) usando clases de equivalencia y valores límite sin depender de la implementación. Suma las cargas hasta un máximo de limite; si cargas es null o vacío devuelve 0; si limite < 0 o alguna carga es negativa lanza IllegalArgumentException. Caza a los cuatro mutantes probando negativos, cero, el límite exacto y arrays vacíos.
+enunciado.de: Blackbox-Strategie: Teste AnalizadorDeEnergia.consumoSeguro(int[] cargas, int limite) mit Äquivalenzklassen und Grenzwerten, ohne dich auf die Implementierung zu stützen. Summiert die Ladungen bis maximal limite; bei null oder leerem Array kommt 0 zurück; bei limite < 0 oder negativer Ladung wird IllegalArgumentException geworfen. Fange alle vier Mutanten mit Negativwerten, Null, exaktem Grenzwert und leerem Array.
+enunciado.en: Blackbox strategy: test AnalizadorDeEnergia.consumoSeguro(int[] cargas, int limite) using equivalence classes and boundary values without relying on internals. Sums charges capped at limite; returns 0 for null or empty array; throws IllegalArgumentException if limite < 0 or any charge is negative. Catch all four mutants by testing negatives, zero, exact boundaries, and empty arrays.
+clase:
+    public class AnalizadorDeEnergia {
+        public static int consumoSeguro(int[] cargas, int limite) {
+            if (limite < 0) throw new IllegalArgumentException("límite negativo");
+            if (cargas == null || cargas.length == 0) return 0;
+            int total = 0;
+            for (int c : cargas) {
+                if (c < 0) throw new IllegalArgumentException("carga negativa");
+                total += c;
+                if (total >= limite) return limite;
+            }
+            return total;
+        }
+    }
+mutante:
+    public class AnalizadorDeEnergia {
+        public static int consumoSeguro(int[] cargas, int limite) {
+            if (limite <= 0) throw new IllegalArgumentException("límite no positivo");
+            if (cargas == null || cargas.length == 0) return 0;
+            int total = 0;
+            for (int c : cargas) {
+                if (c < 0) throw new IllegalArgumentException("carga negativa");
+                total += c;
+                if (total >= limite) return limite;
+            }
+            return total;
+        }
+    }
+mutante:
+    public class AnalizadorDeEnergia {
+        public static int consumoSeguro(int[] cargas, int limite) {
+            if (limite < 0) throw new IllegalArgumentException("límite negativo");
+            if (cargas == null) return 0;
+            if (cargas.length == 0) return -1;
+            int total = 0;
+            for (int c : cargas) {
+                if (c < 0) throw new IllegalArgumentException("carga negativa");
+                total += c;
+                if (total >= limite) return limite;
+            }
+            return total;
+        }
+    }
+mutante:
+    public class AnalizadorDeEnergia {
+        public static int consumoSeguro(int[] cargas, int limite) {
+            if (limite < 0) throw new IllegalArgumentException("límite negativo");
+            if (cargas == null || cargas.length == 0) return 0;
+            int total = 0;
+            for (int c : cargas) {
+                total += c;
+                if (total >= limite) return limite;
+            }
+            return total;
+        }
+    }
+mutante:
+    public class AnalizadorDeEnergia {
+        public static int consumoSeguro(int[] cargas, int limite) {
+            if (limite < 0) throw new IllegalArgumentException("límite negativo");
+            if (cargas == null || cargas.length == 0) return 0;
+            int total = 0;
+            for (int c : cargas) {
+                if (c < 0) throw new IllegalArgumentException("carga negativa");
+                total += c;
+                if (total >= limite - 1) return Math.max(0, limite - 1);
+            }
+            return total;
+        }
+    }
+plantilla:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.*;
+
+    public class PruebasBlackbox {
+
+        @Test
+        void casoNormal() {
+            assertEquals(15, AnalizadorDeEnergia.consumoSeguro(new int[]{5, 10}, 100));
+        }
+    }
+solucion:
+    import static metajavbots.junit.Assertions.*;
+    import metajavbots.junit.*;
+
+    public class PruebasBlackbox {
+
+        @Test
+        void arrayVacioDevuelveCero() {
+            assertEquals(0, AnalizadorDeEnergia.consumoSeguro(new int[]{}, 50));
+        }
+
+        @Test
+        void limiteCeroDevuelveCero() {
+            assertEquals(0, AnalizadorDeEnergia.consumoSeguro(new int[]{5, 10}, 0));
+        }
+
+        @Test
+        void cargaNegativaLanzaExcepcion() {
+            assertThrows(IllegalArgumentException.class,
+                    () -> AnalizadorDeEnergia.consumoSeguro(new int[]{10, -2}, 50));
+        }
+
+        @Test
+        void limiteExactoNoRecortaDeMas() {
+            assertEquals(10, AnalizadorDeEnergia.consumoSeguro(new int[]{4, 6}, 10));
+        }
+    }

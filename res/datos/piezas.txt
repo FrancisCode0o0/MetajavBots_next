@@ -95,6 +95,8 @@ generico_nucleo  | NUCLEO | Núcleo genérico <T> | Generischer Kern <T> | Gener
 prueba_sensor    | CABEZA | Sensor verificado   | Geprüfter Sensor    | Verified sensor    | radar=700 cono=75 especial=NINGUNO peso=4 blindaje=32 naturaleza=FOCO rareza=RARA desbloqueo=pruebas:trayectoria
 prueba_blindaje  | NUCLEO | Núcleo verificado   | Geprüfter Kern      | Verified core      | pasos=8000 energiaMax=120 recarga=0.55 peso=5 blindaje=25 naturaleza=ACERO rareza=RARA desbloqueo=pruebas:blindaje
 prueba_punteria  | BRAZO  | Láser verificado    | Geprüfter Laser     | Verified laser     | arma=LASER dano=8 alcance=600 enfriamiento=22 energia=11 peso=6 blindaje=24 naturaleza=FOCO rareza=RARA desbloqueo=pruebas:punteria
+prueba_blackbox  | PIERNAS | Patas de borde     | Grenzbeine          | Boundary legs      | locomocion=PATAS velocidad=6.2 giro=11 aceleracion=0.8 carga=36 peso=9 blindaje=36 naturaleza=INGENIO rareza=RARA desbloqueo=pruebas:blackbox
+prueba_whitebox  | CABEZA | Escáner de ramas    | Zweigscanner        | Branch scanner     | radar=680 cono=85 especial=NINGUNO peso=4 blindaje=30 naturaleza=INGENIO rareza=RARA desbloqueo=pruebas:whitebox
 # Las que se ganan programándolas uno mismo (retos de programar, docs/MODO_ESPECIAL.md):
 reto_radar_giratorio | CABEZA | Radar giratorio | Drehradar         | Spinning radar     | radar=560 cono=90 especial=NINGUNO peso=5 blindaje=28 naturaleza=INGENIO rareza=RARA desbloqueo=reto:radar
 reto_esquiva     | PIERNAS | Muelles de esquiva | Ausweichfedern    | Dodge springs      | locomocion=PATAS velocidad=6.5 giro=13 aceleracion=0.9 carga=34 peso=9 blindaje=34 naturaleza=ETER rareza=RARA desbloqueo=reto:esquiva

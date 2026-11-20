@@ -240,9 +240,9 @@ public final class Capturas extends Juego {
         pantallas.put("10_tutoriales", metajavbots.pantallas.Tutoriales::new);
         pantallas.put("11_leccion", () -> new metajavbots.pantallas.PantallaLeccion(metajavbots.ejercicios.Leccion.todas().get(0)));
         pantallas.put("12_especial", metajavbots.pantallas.ModoEspecial::new);
-        pantallas.put("12b_rotos", () -> metajavbots.pantallas.ModoEspecial.alFinal(1));
+        pantallas.put("12b_rotos", () -> metajavbots.pantallas.DepuracionYTesting.alFinal(0));
         nuevas();
-        pantallas.put("12c_roto_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.ModoEspecial.encuentroRoto(this,
+        pantallas.put("12c_roto_pelea", () -> new metajavbots.pantallas.PantallaPelea(metajavbots.pantallas.DepuracionYTesting.encuentroRoto(this,
                 metajavbots.ejercicios.RobotRoto.todos().get(1))));
         pantallas.put("13_laboratorio", () -> new metajavbots.pantallas.PantallaLaboratorio(metajavbots.ejercicios.Laboratorio.todos().get(0)));
         pantallaDeLaInspeccion();

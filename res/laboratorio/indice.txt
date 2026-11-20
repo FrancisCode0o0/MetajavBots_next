@@ -2,3 +2,5 @@
 trayectoria.txt
 blindaje.txt
 punteria.txt
+blackbox.txt
+whitebox.txt
