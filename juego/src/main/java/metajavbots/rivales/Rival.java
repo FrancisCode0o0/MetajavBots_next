@@ -117,8 +117,8 @@ public class Rival extends Metajavbot {
         if (!mio.conectado()) {
             switch (mio.tipo()) {
                 case "antigravedad": conectar("piernas"); break;
-                case "descarga": conectar("cabeza"); break;
-                case "lanzallamas": case "pegamento": conectar("brazo"); break;
+                case "descarga": case "iman": conectar("cabeza"); break;
+                case "lanzallamas": case "pegamento": case "martillo": conectar("brazo"); break;
                 default: conectar("espalda"); break;
             }
             return;
@@ -129,6 +129,8 @@ public class Rival extends Metajavbot {
             case "descarga": if (d < 140) usarAparato(); break;
             case "lanzallamas": if (d < 170) usarAparato(anguloHacia(enemigoX, enemigoY)); break;
             case "pegamento": if (d < 240) usarAparato(anguloHacia(enemigoX, enemigoY)); break;
+            case "iman": if (d < 250) usarAparato(anguloHacia(enemigoX, enemigoY)); break;
+            case "martillo": if (d < 120) usarAparato(anguloHacia(enemigoX, enemigoY)); break;
             case "chorro": if (d > 250) usarAparato(); break;
             default: usarAparato(); break;
         }

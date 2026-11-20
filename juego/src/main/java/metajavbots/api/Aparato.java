@@ -11,7 +11,7 @@ package metajavbots.api;
  */
 public interface Aparato {
 
-    /** Qué es: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite" o "pegamento". */
+    /** Qué es: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite", "pegamento", "iman" o "martillo". */
     String tipo();
 
     /** Su nombre de marca (Jetzazo, Flotón, Chispazo…), para decirlo. */

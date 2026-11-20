@@ -132,6 +132,11 @@ public final class VistaDeArena {
             case "coger": case "conectado": efectos.chispas(px, suelo - 50 * escalaX, 10, 0xFFE38A); break;
             case "aparato_descarga": efectos.anadir(Efectos.Tipo.ONDA, px, suelo - 30 * escalaX, 0, 0, 0.5f, 150 * escalaX, 0xFFF4A0); break;
             case "aparato_chorro": efectos.humo(px, suelo - 20 * escalaX, 0.8f); break;
+            case "aparato_iman": efectos.anadir(Efectos.Tipo.ONDA, px, suelo - 35 * escalaX, 0, 0, 0.55f, 220 * escalaX, 0x38D9C0); break;
+            case "aparato_martillo":
+                efectos.chispas(px, suelo - 35 * escalaX, 14, 0xFFE38A);
+                sacudida = Math.max(sacudida, 6);
+                break;
             default: break;
         }
         if (sonidos == null) return;
@@ -139,9 +144,10 @@ public final class VistaDeArena {
         switch (s.texto) {
             case "hueco": que = "error"; break;
             case "aparato_chorro": que = "turbo"; break;
-            case "aparato_descarga": que = "pulso"; break;
+            case "aparato_descarga": case "aparato_iman": que = "pulso"; break;
             case "aparato_lanzallamas": que = "llama"; break;
             case "aparato_antigravedad": que = "escudo"; break;
+            case "aparato_martillo": que = "golpe_fuerte"; break;
             case "conectado": case "aparato_sale": que = "reparar"; break;
             default: que = "servo"; break;
         }

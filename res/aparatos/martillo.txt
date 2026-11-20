@@ -1,0 +1,102 @@
+== es
+/**
+ * MARTILLO «Mazazo» — Un martillo acoplable de corto alcance hacia
+ * el ángulo que le digas: golpea con 10 de daño, empuja al rival
+ * hacia atrás y lo deja aturdido un momento.
+ *
+ * Cómo conectarlo a tu robot:
+ *   1. Ve hasta él y tócalo: lo coges (aparatos() te dice dónde
+ *      está).
+ *   2. Conéctalo en su hueco (si no es ese, no engancha):
+ *      conectar("brazo");
+ *   3. Úsalo: usarAparato(angulo);
+ * Se recarga en 5 s.
+ *
+ * Cumple la interfaz Aparato: tipo(), nombre(), conectado(),
+ * listo()…
+ */
+public final class Martillo implements Aparato {
+
+    /** Los turnos que faltan para poder usarlo otra vez. */
+    private int espera;
+
+    @Override
+    public String tipo() {
+        return "martillo";
+    }
+
+    /** Lo que hace al usarlo. */
+    void usar(Metajavbot robot, double angulo) {
+        if (espera > 0) return;
+        robot.golpeMartillo(angulo, 80, 10, 65, 20);   // daño 10, empuje 65, aturde 20
+        espera = 150;
+    }
+}
+== de
+/**
+ * HAMMER «Mazazo» — Ein ansteckbarer Nahkampf-Hammer in den Winkel,
+ * den du angibst: Schlägt mit 10 Schaden zu, stößt den Gegner
+ * zurück und betäubt ihn kurz.
+ *
+ * So schließt du es an deinen Roboter an:
+ *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
+ *      dir, wo es ist).
+ *   2. Schließ es an seinem Platz an (ein anderer hält nicht):
+ *      anschliessen("arm");
+ *   3. Benutze es: geraetBenutzen(winkel);
+ * Lädt in 5 s wieder auf.
+ *
+ * Erfüllt das Interface Geraet: typ(), name(), angeschlossen(),
+ * bereit() …
+ */
+public final class Hammer implements Geraet {
+
+    /** Die Züge, bis man es wieder benutzen kann. */
+    private int warten;
+
+    @Override
+    public String typ() {
+        return "martillo";
+    }
+
+    /** Was es beim Benutzen tut. */
+    void benutzen(MetajavbotDe roboter, double winkel) {
+        if (warten > 0) return;
+        roboter.hammerschlag(winkel, 80, 10, 65, 20);   // Schaden 10, Stoß 65, Betäubung 20
+        warten = 150;
+    }
+}
+== en
+/**
+ * HAMMER «Mazazo» — An attachable short-range hammer aimed at the
+ * angle you give: deals 10 damage, knocks the enemy back and stuns
+ * them briefly.
+ *
+ * How to plug it into your robot:
+ *   1. Drive to it and touch it: you pick it up (gadgets() tells
+ *      you where it is).
+ *   2. Plug it into its slot (any other won't hold):
+ *      plugIn("arm");
+ *   3. Use it: useGadget(angle);
+ * Recharges in 5 s.
+ *
+ * Implements the Gadget interface: type(), name(), pluggedIn(),
+ * ready()…
+ */
+public final class Hammer implements Gadget {
+
+    /** The ticks left until it can be used again. */
+    private int wait;
+
+    @Override
+    public String type() {
+        return "martillo";
+    }
+
+    /** What it does when used. */
+    void use(MetajavbotEn robot, double angle) {
+        if (wait > 0) return;
+        robot.hammerStrike(angle, 80, 10, 65, 20);   // 10 damage, knockback 65, stun 20
+        wait = 150;
+    }
+}

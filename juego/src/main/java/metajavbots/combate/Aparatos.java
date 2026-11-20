@@ -9,18 +9,20 @@ import metajavbots.api.Cacharro;
 
 /**
  * APARATOS — Los cacharros que aparecen en la arena de ronda en ronda (motor
- * a chorro, antigravedad, descarga, lanzallamas, aceite, pegamento). Se
- * anuncia el de la ronda siguiente al acabar una (para programar entre
- * rondas cómo ir a por él); sale a los 3 s de empezar. Se coge al tocarlo, se
- * conecta con conectar(hueco) en el hueco que dice su código (si no es ese,
- * no engancha), tarda un segundo en montarse y se usa con usarAparato().
+ * a chorro, antigravedad, descarga, lanzallamas, aceite, pegamento, imán,
+ * martillo). Se anuncia el de la ronda siguiente al acabar una (para
+ * programar entre rondas cómo ir a por él); sale a los 3 s de empezar. Se
+ * coge al tocarlo, se conecta con conectar(hueco) en el hueco que dice su
+ * código (si no es ese, no engancha), tarda un segundo en montarse y se usa
+ * con usarAparato().
  */
 public final class Aparatos {
 
     /** Los tipos, su nombre de marca, su hueco y su recarga (en turnos). */
     public enum Tipo {
         CHORRO("Jetzazo", "espalda", 120), ANTIGRAVEDAD("Flotón", "piernas", 210), DESCARGA("Chispazo", "cabeza", 180),
-        LANZALLAMAS("Chamuscator", "brazo", 150), ACEITE("Resbalín", "espalda", 240), PEGAMENTO("Pegotón", "brazo", 150);
+        LANZALLAMAS("Chamuscator", "brazo", 150), ACEITE("Resbalín", "espalda", 240), PEGAMENTO("Pegotón", "brazo", 150),
+        IMAN("Imanator", "cabeza", 180), MARTILLO("Mazazo", "brazo", 150);
 
         public final String nombre, hueco;
         public final int recarga;
@@ -127,6 +129,11 @@ public final class Aparatos {
         return activos ? siguiente : null;
     }
 
+    /** Fija el aparato que saldrá en la ronda (útil para pruebas o escenarios dirigidos). */
+    public void fijarSiguiente(Tipo tipo) {
+        this.siguiente = tipo;
+    }
+
     void empezarPelea(long semilla) {
         azar = new Random(semilla * 13 + 1);
         siguiente = Tipo.values()[azar.nextInt(Tipo.values().length)];
@@ -230,6 +237,14 @@ public final class Aparatos {
                 a.activo = 10;
                 break;
             }
+            case IMAN:
+                iman(p, c, angulo);
+                a.activo = 18;
+                break;
+            case MARTILLO:
+                martillo(p, c, angulo);
+                a.activo = 15;
+                break;
             default:
                 break;
         }
@@ -306,6 +321,49 @@ public final class Aparatos {
             double d = Math.hypot(e.x - c.x, e.y - c.y);
             double ang = Math.abs(Pelea.normal(Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x)) - c.miraDeLaLlama));
             if (d < 180 && ang < 18 && c.llamaAparato % 3 == 0) p.danar(e, c, 1.2, "llama", Math.toDegrees(Math.atan2(c.y - e.y, c.x - e.x)), false);
+        }
+    }
+
+    /** El imán: atrae hacia el robot a los enemigos del cono y desvía proyectiles enemigos hacia el ángulo dado. */
+    private static void iman(Pelea p, Cuerpo c, double angulo) {
+        double rad = Math.toRadians(angulo);
+        for (int i = 0; i < p.combatientes.length; i++) {
+            Cuerpo e = p.cuerpo(i);
+            if (e == null || e == c || e.fuera || p.equipo[i] == p.equipo[c.indice]) continue;
+            double dx = e.x - c.x, dy = e.y - c.y;
+            double d = Math.hypot(dx, dy);
+            double ang = Math.toDegrees(Math.atan2(dy, dx));
+            if (d > 0.001 && d < 260 && Math.abs(Pelea.normal(ang - angulo)) <= 45) {
+                double tiron = Math.min(65, Math.max(0, d - (c.radio + e.radio + 4)));
+                e.x = Math.max(e.radio, Math.min(p.ancho - e.radio, e.x - (dx / d) * tiron));
+                e.y = Math.max(e.radio, Math.min(p.alto - e.radio, e.y - (dy / d) * tiron));
+            }
+        }
+        for (Proyectil pr : p.proyectiles) {
+            if (!pr.vivo || p.equipo[pr.dueno] == p.equipo[c.indice]) continue;
+            if (Math.hypot(pr.x - c.x, pr.y - c.y) < 260) {
+                pr.vx = Math.cos(rad) * pr.velocidad;
+                pr.vy = Math.sin(rad) * pr.velocidad;
+            }
+        }
+    }
+
+    /** El martillo acoplable: golpe de corto alcance en el ángulo indicado con daño, empuje y aturdimiento. */
+    private static void martillo(Pelea p, Cuerpo c, double angulo) {
+        for (int i = 0; i < p.combatientes.length; i++) {
+            Cuerpo e = p.cuerpo(i);
+            if (e == null || e == c || e.fuera || p.equipo[i] == p.equipo[c.indice]) continue;
+            double dx = e.x - c.x, dy = e.y - c.y;
+            double d = Math.hypot(dx, dy);
+            double ang = Math.toDegrees(Math.atan2(dy, dx));
+            if (d <= c.radio + e.radio + 80 && Math.abs(Pelea.normal(ang - angulo)) <= 50) {
+                p.danar(e, c, 10, "martillo", Pelea.normal(ang + 180), true);
+                double radEmpuje = Math.toRadians(ang);
+                e.x = Math.max(e.radio, Math.min(p.ancho - e.radio, e.x + Math.cos(radEmpuje) * 65));
+                e.y = Math.max(e.radio, Math.min(p.alto - e.radio, e.y + Math.sin(radEmpuje) * 65));
+                e.aturdido = Math.max(e.aturdido, 20);
+                e.avance = 0;
+            }
         }
     }
 }

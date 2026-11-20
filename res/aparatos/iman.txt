@@ -1,0 +1,102 @@
+== es
+/**
+ * IMAN «Imanator» — Un pulso magnético en el ángulo que le digas:
+ * atrae hacia ti a los enemigos en un cono de 260 y desvía hacia
+ * ese ángulo los proyectiles enemigos cercanos.
+ *
+ * Cómo conectarlo a tu robot:
+ *   1. Ve hasta él y tócalo: lo coges (aparatos() te dice dónde
+ *      está).
+ *   2. Conéctalo en su hueco (si no es ese, no engancha):
+ *      conectar("cabeza");
+ *   3. Úsalo: usarAparato(angulo);
+ * Se recarga en 6 s.
+ *
+ * Cumple la interfaz Aparato: tipo(), nombre(), conectado(),
+ * listo()…
+ */
+public final class Iman implements Aparato {
+
+    /** Los turnos que faltan para poder usarlo otra vez. */
+    private int espera;
+
+    @Override
+    public String tipo() {
+        return "iman";
+    }
+
+    /** Lo que hace al usarlo. */
+    void usar(Metajavbot robot, double angulo) {
+        if (espera > 0) return;
+        robot.atraerYDesviar(angulo, 260, 65);   // alcance 260, tirón 65
+        espera = 180;
+    }
+}
+== de
+/**
+ * MAGNET «Imanator» — Ein Magnetimpuls in den Winkel, den du
+ * angibst: Zieht Gegner in einem Kegel von 260 zu dir heran und
+ * lenkt feindliche Geschosse in der Nähe in diesen Winkel um.
+ *
+ * So schließt du es an deinen Roboter an:
+ *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
+ *      dir, wo es ist).
+ *   2. Schließ es an seinem Platz an (ein anderer hält nicht):
+ *      anschliessen("kopf");
+ *   3. Benutze es: geraetBenutzen(winkel);
+ * Lädt in 6 s wieder auf.
+ *
+ * Erfüllt das Interface Geraet: typ(), name(), angeschlossen(),
+ * bereit() …
+ */
+public final class Magnet implements Geraet {
+
+    /** Die Züge, bis man es wieder benutzen kann. */
+    private int warten;
+
+    @Override
+    public String typ() {
+        return "iman";
+    }
+
+    /** Was es beim Benutzen tut. */
+    void benutzen(MetajavbotDe roboter, double winkel) {
+        if (warten > 0) return;
+        roboter.anziehenUndAblenken(winkel, 260, 65);   // Reichweite 260, Zug 65
+        warten = 180;
+    }
+}
+== en
+/**
+ * MAGNET «Imanator» — A magnetic pulse at the angle you give:
+ * pulls enemies in a 260-unit cone toward you and deflects nearby
+ * enemy projectiles toward that angle.
+ *
+ * How to plug it into your robot:
+ *   1. Drive to it and touch it: you pick it up (gadgets() tells
+ *      you where it is).
+ *   2. Plug it into its slot (any other won't hold):
+ *      plugIn("head");
+ *   3. Use it: useGadget(angle);
+ * Recharges in 6 s.
+ *
+ * Implements the Gadget interface: type(), name(), pluggedIn(),
+ * ready()…
+ */
+public final class Magnet implements Gadget {
+
+    /** The ticks left until it can be used again. */
+    private int wait;
+
+    @Override
+    public String type() {
+        return "iman";
+    }
+
+    /** What it does when used. */
+    void use(MetajavbotEn robot, double angle) {
+        if (wait > 0) return;
+        robot.pullAndDeflect(angle, 260, 65);   // range 260, pull 65
+        wait = 180;
+    }
+}

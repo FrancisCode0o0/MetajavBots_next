@@ -6,9 +6,9 @@ import metajavbots.combate.Aparatos;
  * DIBUJO DE APARATOS — Los cacharros de la arena: flotando en el suelo
  * (con su anillo de luz y su nombre), pasando de la mano a su hueco mientras
  * el robot se los pone, y ya montados: la mochila a chorro en la espalda, el
- * anillo antigravedad bajo los pies, la bobina en la cabeza, el lanzallamas o
- * la pistola de pegamento en el brazo, la lata de aceite a la espalda. Cuando
- * se usan, se nota (llamas, rayos, luz azul).
+ * anillo antigravedad bajo los pies, la bobina o el imán en la cabeza, el
+ * lanzallamas, la pistola de pegamento o el martillo en el brazo, la lata de
+ * aceite a la espalda. Cuando se usan, se nota (llamas, rayos, ondas, golpes).
  */
 final class DibujoDeAparatos {
 
@@ -69,6 +69,18 @@ final class DibujoDeAparatos {
                 float l = s * (1.5f + (float) Math.random() * 1.5f);
                 p.linea(hueco[0], hueco[1] + s * 0.6f, hueco[0] - lado * l, hueco[1] + s * 0.6f + l * 0.5f, s * 0.35f, k % 2 == 0 ? 0xFF8A1A : 0xFFD24A, 0.8f);
             }
+        } else if (a.tipo == Aparatos.Tipo.IMAN && a.activo > 0) {
+            // Ondas magnéticas que salen de la cabeza.
+            float pulso = (t * 8) % 1f;
+            p.aro(hueco[0], hueco[1], s * (1.2f + pulso * 1.6f), 2.5f, 0x38D9C0, 0.75f * (1 - pulso));
+            p.aro(hueco[0], hueco[1], s * (0.7f + ((pulso + 0.5f) % 1f) * 1.6f), 2, 0x9FF5E8, 0.6f);
+        } else if (a.tipo == Aparatos.Tipo.MARTILLO && a.activo > 0) {
+            // Estela de impacto del martillazo delante del brazo.
+            float ix = hueco[0] + lado * s * 1.15f, iy = hueco[1];
+            p.aro(ix, iy, s * 0.9f, 3, 0xFFD24A, 0.75f);
+            for (int k = -1; k <= 1; k++) {
+                p.linea(ix, iy, ix + lado * s * 0.9f, iy + k * s * 0.55f, 2.5f, 0xFFE38A, 0.85f);
+            }
         }
     }
 
@@ -89,6 +101,8 @@ final class DibujoDeAparatos {
             case DESCARGA: return 0xFFE14A;
             case LANZALLAMAS: return 0xFF4A3A;
             case ACEITE: return 0x9B7BFF;
+            case IMAN: return 0x38D9C0;
+            case MARTILLO: return 0xF4A261;
             default: return 0x7BE36B;
         }
     }
@@ -132,6 +146,22 @@ final class DibujoDeAparatos {
                 p.rect(cx - s * 0.4f, cy - s * 0.15f, s * 0.8f, s * 0.25f, 0x9B7BFF, 1);
                 p.circulo(cx + s * 0.55f, cy + s * 0.35f, s * 0.13f, 0x1A1A22, 1);
                 break;
+            case IMAN:
+                // Un imán de herradura rojo con polos plateados y pulso turquesa.
+                p.caja(cx - s * 0.55f, cy - s * 0.55f, s * 1.1f, s * 0.9f, s * 0.45f, 0xE63946, 1);
+                p.caja(cx - s * 0.25f, cy - s * 0.2f, s * 0.5f, s * 0.65f, s * 0.15f, 0x1B222C, 1);
+                p.rect(cx - s * 0.55f, cy + s * 0.22f, s * 0.3f, s * 0.28f, 0xDCE4EC, 1);
+                p.rect(cx + s * 0.25f, cy + s * 0.22f, s * 0.3f, s * 0.28f, 0xDCE4EC, 1);
+                if (activo) p.aro(cx, cy, s * 1.05f, 2, 0x38D9C0, 0.85f);
+                break;
+            case MARTILLO: {
+                // Un martillo pesado acoplable con mango metálico y cabeza reforzada.
+                float giro = activo ? s * 0.28f : 0;
+                p.rect(cx - s * 0.14f, cy - s * 0.2f, s * 0.28f, s * 0.9f, 0x4A525D, 1);
+                p.caja(cx - s * 0.62f + giro, cy - s * 0.65f, s * 1.24f, s * 0.55f, s * 0.14f, 0xA8B2BD, 1);
+                p.rect(cx - s * 0.52f + giro, cy - s * 0.45f, s * 1.04f, s * 0.16f, 0xF4A261, 1);
+                break;
+            }
             default:
                 // Pegamento: un tubo verde con su boquilla y una gota colgando.
                 p.caja(cx - s * 0.55f, cy - s * 0.25f, s * 0.9f, s * 0.5f, s * 0.2f, 0x4FB548, 1);

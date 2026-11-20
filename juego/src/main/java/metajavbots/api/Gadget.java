@@ -11,7 +11,7 @@ package metajavbots.api;
  */
 public interface Gadget {
 
-    /** What it is: "chorro" (jet), "antigravedad" (anti-gravity), "descarga" (shock), "lanzallamas" (flamethrower), "aceite" (oil), "pegamento" (glue). */
+    /** What it is: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite", "pegamento", "iman" (magnet), "martillo" (hammer). */
     String type();
 
     /** Its brand name (Jetzazo, Flotón, Chispazo…), to say it. */
