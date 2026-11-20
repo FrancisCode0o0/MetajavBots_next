@@ -33,7 +33,7 @@ public final class Combatiente {
     /** Lo que pasó en una ronda (el informe entre rondas). */
     public static final class Informe {
         public double danoRecibido, danoHecho;
-        public int ataques, aciertos, errores, topes, turnosVistos, turnosCerca, turnosAturdido;
+        public int ataques, aciertos, errores, topes, turnosVistos, turnosMultiplesVistos, maxEnemigosVistos, turnosCerca, turnosAturdido;
         public long pasosMaximos, pasosTotales;
         public int turnos;
         /** Lo que ha recorrido en la ronda (unidades de la arena; para el minijuego de moverse). */
@@ -90,6 +90,9 @@ public final class Combatiente {
     public ModificadoresPoo efectosPoo = ModificadoresPoo.NINGUNO;
     /** Es la computadora (para el locutor y los diálogos). */
     public boolean computadora;
+    /** Escalas de blindaje y daño (1.0 por defecto; reducidas en drones y robots ligeros de encuentros múltiples). */
+    public double escalaBlindaje = 1.0;
+    public double escalaDano = 1.0;
 
     public Combatiente(String nombre, Montaje montaje, Fabrica fabrica) {
         this.nombre = nombre;
@@ -118,7 +121,7 @@ public final class Combatiente {
 
     /** Cuánto daño lleva respecto a lo que aguanta en una ronda (0..1+): de esto salen el humo y las chispas. */
     public double estropeado() {
-        double max = montaje.cifras().blindajeTotal();
+        double max = montaje.cifras().blindajeTotal() * escalaBlindaje;
         return max <= 0 ? 0 : danoTotalRecibido / (max * 1.6);
     }
 }

@@ -104,18 +104,68 @@ public final class Cuerpo implements Mando {
         this.equipo = pelea.equipo[indice];
         this.combatiente = c;
         this.cifras = c.montaje.cifras();
-        this.radio = c.montaje.modelo.tamano;
+        this.radio = c.escalaBlindaje < 0.7 ? c.montaje.modelo.tamano * 0.82 : c.montaje.modelo.tamano;
         this.x = x;
         this.y = y;
         this.rumbo = rumbo;
         this.mira = rumbo;
         this.energia = energiaMaxSegura(cifras.energiaMax);
         for (int i = 0; i < 4; i++) {
-            double bl = blindajeSeguro(cifras.blindaje[i]);
+            double bl = blindajeSeguro(cifras.blindaje[i] * c.escalaBlindaje);
             parte[i] = bl;
             parteMax[i] = bl;
         }
         this.azar = new Random(semilla);
+    }
+
+    /** Coloca los cuerpos al empezar una ronda: 1v1, 1 contra varios en formación o corro por equipos. */
+    static Cuerpo[] posicionar(Pelea pelea, int ronda, long semilla, Random azar) {
+        double margen = 120;
+        Combatiente[] cs = pelea.combatientes;
+        int n = cs.length;
+        if (n == 2) {
+            double ya = margen + azar.nextDouble() * (pelea.alto - 2 * margen);
+            double yb = margen + azar.nextDouble() * (pelea.alto - 2 * margen);
+            boolean cambia = ronda % 2 == 0;
+            double xa = cambia ? pelea.ancho - margen : margen;
+            double xb = cambia ? margen : pelea.ancho - margen;
+            return new Cuerpo[]{
+                    new Cuerpo(pelea, 0, cs[0], xa, ya, cambia ? 180 : 0, semilla * 31 + ronda * 7),
+                    new Cuerpo(pelea, 1, cs[1], xb, yb, cambia ? 0 : 180, semilla * 31 + ronda * 7 + 3)};
+        }
+        if (pelea.esUnoContraVarios()) {
+            boolean cambia = ronda % 2 == 0;
+            double xJug = cambia ? pelea.ancho - margen : margen;
+            double xRiv = cambia ? margen : pelea.ancho - margen;
+            double rumboJug = cambia ? 180 : 0;
+            double rumboRiv = cambia ? 0 : 180;
+            Cuerpo[] res = new Cuerpo[n];
+            double yCentro = pelea.alto / 2 + (azar.nextDouble() - 0.5) * 120;
+            res[0] = new Cuerpo(pelea, 0, cs[0], xJug, yCentro, rumboJug, semilla * 31 + ronda * 7);
+            int enemigos = n - 1;
+            double paso = Math.min(110, (pelea.alto - 2 * margen) / Math.max(1, enemigos));
+            double yInicio = yCentro - paso * (enemigos - 1) / 2.0;
+            for (int i = 1; i < n; i++) {
+                double y = Math.max(margen, Math.min(pelea.alto - margen, yInicio + (i - 1) * paso));
+                double desfaseX = ((i - 1) % 2) * (cambia ? 45 : -45);
+                res[i] = new Cuerpo(pelea, i, cs[i], xRiv + desfaseX, y, rumboRiv, semilla * 31 + ronda * 7 + i * 3);
+            }
+            return res;
+        }
+        // Varios: en corro alrededor del centro, los del mismo equipo juntos, mirando al centro.
+        Integer[] orden = new Integer[n];
+        for (int i = 0; i < n; i++) orden[i] = i;
+        java.util.Arrays.sort(orden, (p, q) -> Integer.compare(pelea.equipo[p], pelea.equipo[q]));
+        double giro = azar.nextDouble() * 360;
+        Cuerpo[] res = new Cuerpo[n];
+        for (int k = 0; k < n; k++) {
+            int i = orden[k];
+            double a = Math.toRadians(giro + 360.0 * k / n);
+            double x = pelea.ancho / 2 + Math.cos(a) * (pelea.ancho / 2 - margen);
+            double y = pelea.alto / 2 + Math.sin(a) * (pelea.alto / 2 - margen);
+            res[i] = new Cuerpo(pelea, i, cs[i], x, y, Pelea.normal(Math.toDegrees(a) + 180), semilla * 31 + ronda * 7 + i * 3);
+        }
+        return res;
     }
 
     // ================================================================ el Mando (lo que usa su código)

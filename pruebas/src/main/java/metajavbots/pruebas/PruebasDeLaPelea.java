@@ -113,6 +113,71 @@ final class PruebasDeLaPelea {
         }
     }
 
+    /** Recorre enemigosVistos() con un bucle for-each para apuntar al enemigo más cercano. */
+    public static class CazadorConBucle extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            Enemigo mejor = null;
+            for (Enemigo e : enemigosVistos()) {
+                if (mejor == null || e.distancia() < mejor.distancia()) mejor = e;
+            }
+            int vistos = enemigosVistos().size();
+            int max = (int) memoria().getOrDefault("maxVistos", 0);
+            if (vistos > max) memoria().put("maxVistos", vistos);
+            if (mejor != null) {
+                apuntarHacia(mejor.angulo());
+                if (mejor.distancia() > 180) {
+                    girarHacia(mejor.angulo());
+                    avanzar(40);
+                }
+                atacar();
+            } else {
+                apuntar(12);
+                if (restanteAvance() == 0) avanzar(60);
+            }
+        }
+    }
+
+    /** Verifica geseheneGegner() en alemán. */
+    public static class JaegerMitSchleife extends MetajavbotDe {
+        @Override
+        public void jedenZug() {
+            int max = (int) gedaechtnis().getOrDefault("maxVistos", 0);
+            int vistos = geseheneGegner().size();
+            if (vistos > max) gedaechtnis().put("maxVistos", vistos);
+            Gegner ziel = null;
+            for (Gegner g : geseheneGegner()) {
+                if (ziel == null || g.entfernung() < ziel.entfernung()) ziel = g;
+            }
+            if (ziel != null) {
+                zielenNach(ziel.winkel());
+                angreifen();
+            } else {
+                zielen(12);
+            }
+        }
+    }
+
+    /** Verifica seenEnemies() en inglés. */
+    public static class LoopHunterEn extends MetajavbotEn {
+        @Override
+        public void onTick() {
+            int max = (int) memory().getOrDefault("maxVistos", 0);
+            int vistos = seenEnemies().size();
+            if (vistos > max) memory().put("maxVistos", vistos);
+            Enemy target = null;
+            for (Enemy e : seenEnemies()) {
+                if (target == null || e.distance() < target.distance()) target = e;
+            }
+            if (target != null) {
+                aimTo(target.angle());
+                attack();
+            } else {
+                aim(12);
+            }
+        }
+    }
+
     static void apuntar() {
         apuntarParte1();
         apuntarParte2();
@@ -121,6 +186,9 @@ final class PruebasDeLaPelea {
         apuntarArenas();
         apuntarAparatos();
         apuntarRondas();
+        apuntarFrecuenciaMultiples();
+        apuntarSimulacionMultiples();
+        apuntarAvisoMultiplesObjetivos();
     }
 
     private static void apuntarRondas() {
@@ -463,5 +531,164 @@ final class PruebasDeLaPelea {
             }
             metajavbots.textos.T.idioma = metajavbots.textos.Idioma.ES;
         });
+    }
+
+    private static void apuntarFrecuenciaMultiples() {
+        caso("múltiples objetivos: NOOB_1..NOOB_3 nunca los generan y la frecuencia escala en NOOB_4, JUNIOR y SENIOR/MASTER", () -> {
+            metajavbots.progreso.Etiqueta[] sinMulti = {
+                metajavbots.progreso.Etiqueta.NOOB_1, metajavbots.progreso.Etiqueta.NOOB_2, metajavbots.progreso.Etiqueta.NOOB_3
+            };
+            for (metajavbots.progreso.Etiqueta e : sinMulti) {
+                igual(0.0, metajavbots.progreso.Progreso.probabilidadMultiplesObjetivos(e), "probabilidad 0 en " + e);
+                metajavbots.progreso.Jugador j = new metajavbots.progreso.Jugador("n");
+                j.etiqueta = e;
+                Random r = new Random(123);
+                for (int k = 0; k < 200; k++) {
+                    metajavbots.pantallas.Encuentro enc = metajavbots.pantallas.PrepararPelea.encuentro(j, "ADAPTADA", r);
+                    cierto(enc.demas.isEmpty(), e + " debe mantener 1v1 puro");
+                }
+            }
+            int muestras = 800;
+            double fNoob4 = frecuenciaMultiples(metajavbots.progreso.Etiqueta.NOOB_4, muestras, 11L);
+            double fJunior = frecuenciaMultiples(metajavbots.progreso.Etiqueta.JUNIOR_2, muestras, 22L);
+            double fSenior = frecuenciaMultiples(metajavbots.progreso.Etiqueta.SENIOR_2, muestras, 33L);
+            double fMaster = frecuenciaMultiples(metajavbots.progreso.Etiqueta.MASTER, muestras, 44L);
+            cierto(fNoob4 > 0.15 && fNoob4 < 0.35, "NOOB_4 ~25 %: " + fNoob4);
+            cierto(fJunior > 0.30 && fJunior < 0.50, "JUNIOR ~40 %: " + fJunior);
+            cierto(fSenior > 0.45 && fSenior < 0.68, "SENIOR ~55 %: " + fSenior);
+            cierto(fMaster > 0.45 && fMaster < 0.68, "MASTER ~55 %: " + fMaster);
+            cierto(fNoob4 < fJunior && fJunior < fSenior, "escala NOOB_4 < JUNIOR < SENIOR: " + fNoob4 + " / " + fJunior + " / " + fSenior);
+        });
+    }
+
+    private static void apuntarSimulacionMultiples() {
+        caso("múltiples objetivos: pelea contra rival + drones y contra escuadrón ligero se simula limpia y llena enemigosVistos()", () -> {
+            Random azar = new Random(7);
+            java.util.List<Combatiente> enemigos = java.util.List.of(
+                    Rivales.crear(Modelo.de("cobalto"), 0.4, 0.5, azar),
+                    Rivales.dron(0.4, 0.5, azar, 1),
+                    Rivales.dron(0.4, 0.5, azar, 2));
+            Combatiente jugadorEs = con("yo", Modelo.de("vigia"), de(CazadorConBucle::new));
+            Pelea p = Pelea.contraMultiples(jugadorEs, enemigos, 91L);
+            cierto(p.tieneMultiplesObjetivos(), "detecta múltiples objetivos");
+            igual(3, p.enemigosDe(0), "tres objetivos rivales");
+            p.empezarRonda();
+            // Al acercarlos dentro del radar, los tres aparecen a la vez en enemigosVistos() / geseheneGegner() / seenEnemies().
+            metajavbots.combate.Cuerpo yo = p.cuerpo(0);
+            yo.x = 200;
+            yo.y = 350;
+            yo.mira = 0;
+            for (int i = 1; i <= 3; i++) {
+                p.cuerpo(i).x = 420 + (i - 1) * 20;
+                p.cuerpo(i).y = 320 + (i - 1) * 30;
+            }
+            p.avanzar();
+            cierto(yo.vistos().size() >= 2, "enemigosVistos() devuelve varios objetivos a la vez: " + yo.vistos().size());
+            p.jugarEntera();
+            igual(Pelea.Estado.TERMINADA, p.estado(), "termina limpiamente");
+            igual(Pelea.RONDAS, p.ronda(), "completa las rondas");
+            cierto(p.ganador() >= -1, "ganador válido");
+            cierto((int) jugadorEs.memoria.getOrDefault("maxVistos", 0) >= 2, "el bucle sobre enemigosVistos() vio varios objetivos");
+            cierto(jugadorEs.danoTotalHecho > 0, "el jugador hace daño en pelea múltiple");
+
+            // También en alemán (geseheneGegner) e inglés (seenEnemies) con encuentro generado en SENIOR.
+            Combatiente jugDe = con("de", Modelo.de("vigia"), de(JaegerMitSchleife::new));
+            Pelea pDe = Pelea.contraMultiples(jugDe, java.util.List.of(
+                    Rivales.ligero(Modelo.de("chispa"), 0.5, 0.5, new Random(1), 2),
+                    Rivales.ligero(Modelo.de("vigia"), 0.5, 0.5, new Random(2), 2)), 92L);
+            pDe.empezarRonda();
+            pDe.cuerpo(0).x = 200;
+            pDe.cuerpo(0).y = 350;
+            pDe.cuerpo(0).mira = 0;
+            pDe.cuerpo(1).x = 400;
+            pDe.cuerpo(1).y = 330;
+            pDe.cuerpo(2).x = 420;
+            pDe.cuerpo(2).y = 370;
+            pDe.avanzar();
+            cierto((int) jugDe.memoria.getOrDefault("maxVistos", 0) >= 2, "geseheneGegner() ve varios objetivos");
+            pDe.jugarEntera();
+            igual(Pelea.Estado.TERMINADA, pDe.estado(), "pelea DE termina limpiamente");
+
+            Combatiente jugEn = con("en", Modelo.de("vigia"), de(LoopHunterEn::new));
+            Pelea pEn = Pelea.contraMultiples(jugEn, java.util.List.of(
+                    Rivales.ligero(Modelo.de("chispa"), 0.5, 0.5, new Random(3), 2),
+                    Rivales.ligero(Modelo.de("cobalto"), 0.5, 0.5, new Random(4), 2)), 93L);
+            pEn.empezarRonda();
+            pEn.cuerpo(0).x = 200;
+            pEn.cuerpo(0).y = 350;
+            pEn.cuerpo(0).mira = 0;
+            pEn.cuerpo(1).x = 400;
+            pEn.cuerpo(1).y = 330;
+            pEn.cuerpo(2).x = 420;
+            pEn.cuerpo(2).y = 370;
+            pEn.avanzar();
+            cierto((int) jugEn.memoria.getOrDefault("maxVistos", 0) >= 2, "seenEnemies() ve varios objetivos");
+            pEn.jugarEntera();
+            igual(Pelea.Estado.TERMINADA, pEn.estado(), "pelea EN termina limpiamente");
+        });
+    }
+
+    private static void apuntarAvisoMultiplesObjetivos() {
+        caso("múltiples objetivos: aviso y pista en pseudocódigo (es, de, en) si no recorre enemigosVistos() con bucle", () -> {
+            String sinBucle = "public class MiRobot extends Metajavbot { @Override public void alVerEnemigo(Enemigo e) { "
+                    + "apuntarHacia(e.angulo()); atacar(); } }";
+            String conBucleEs = "public class MiRobot extends Metajavbot { @Override public void cadaTurno() { "
+                    + "for (Enemigo e : enemigosVistos()) { apuntarHacia(e.angulo()); } } }";
+            String conBucleDe = "public class MeinRoboter extends MetajavbotDe { @Override public void jedenZug() { "
+                    + "for (Gegner g : geseheneGegner()) { zielenNach(g.winkel()); } } }";
+            String conBucleEn = "public class MyRobot extends MetajavbotEn { @Override public void onTick() { "
+                    + "for (Enemy e : seenEnemies()) { aimTo(e.angle()); } } }";
+
+            cierto(!metajavbots.tutor.ConsejosDelTaller.recorreEnemigosVistosConBucle(sinBucle), "sin bucle no pasa");
+            cierto(metajavbots.tutor.ConsejosDelTaller.recorreEnemigosVistosConBucle(conBucleEs), "bucle en es");
+            cierto(metajavbots.tutor.ConsejosDelTaller.recorreEnemigosVistosConBucle(conBucleDe), "bucle en de");
+            cierto(metajavbots.tutor.ConsejosDelTaller.recorreEnemigosVistosConBucle(conBucleEn), "bucle en en");
+
+            boolean tieneTipSinBucle = false;
+            for (metajavbots.tutor.ConsejosDelTaller.Tip t : metajavbots.tutor.ConsejosDelTaller.de(sinBucle, true)) {
+                if ("multiples_objetivos".equals(t.id())) tieneTipSinBucle = true;
+            }
+            cierto(tieneTipSinBucle, "ConsejosDelTaller avisa cuando hay múltiples objetivos sin bucle");
+            boolean tieneTipConBucle = false;
+            for (metajavbots.tutor.ConsejosDelTaller.Tip t : metajavbots.tutor.ConsejosDelTaller.de(conBucleEs, true)) {
+                if ("multiples_objetivos".equals(t.id())) tieneTipConBucle = true;
+            }
+            cierto(!tieneTipConBucle, "ConsejosDelTaller no avisa si ya usa bucle sobre enemigosVistos()");
+
+            Pelea p = Pelea.contraMultiples(con("yo", Modelo.de("cobalto"), de(Sencillo::new)), java.util.List.of(
+                    Rivales.dron(0.3, 0.3, new Random(1), 1), Rivales.dron(0.3, 0.3, new Random(2), 2)), 77L);
+            p.empezarRonda();
+            p.avanzar();
+            for (metajavbots.textos.Idioma id : metajavbots.textos.Idioma.values()) {
+                metajavbots.textos.T.idioma = id;
+                String esperado = metajavbots.textos.T.t("revisor.multiples_objetivos");
+                cierto(!esperado.equals("revisor.multiples_objetivos") && !esperado.isBlank(), "texto revisor en " + id);
+                String tip = metajavbots.textos.T.t("entrenador.tip.multiples_objetivos");
+                cierto(!tip.equals("entrenador.tip.multiples_objetivos") && !tip.isBlank(), "texto tip en " + id);
+                metajavbots.pantallas.Revisor.Informe infSin = metajavbots.pantallas.Revisor.revisar(sinBucle, p, id);
+                cierto(infSin.consejos.contains(esperado), "Revisor avisa sin bucle en " + id);
+                String conBucle = id == metajavbots.textos.Idioma.ES ? conBucleEs
+                        : id == metajavbots.textos.Idioma.DE ? conBucleDe : conBucleEn;
+                metajavbots.pantallas.Revisor.Informe infCon = metajavbots.pantallas.Revisor.revisar(conBucle, p, id);
+                cierto(!infCon.consejos.contains(esperado), "Revisor no avisa con bucle en " + id);
+            }
+            metajavbots.textos.T.idioma = metajavbots.textos.Idioma.ES;
+        });
+    }
+
+    private static double frecuenciaMultiples(metajavbots.progreso.Etiqueta etiqueta, int muestras, long semilla) {
+        metajavbots.progreso.Jugador j = new metajavbots.progreso.Jugador("test");
+        j.etiqueta = etiqueta;
+        Random r = new Random(semilla);
+        int multiples = 0;
+        for (int i = 0; i < muestras; i++) {
+            metajavbots.pantallas.Encuentro enc = metajavbots.pantallas.PrepararPelea.encuentro(j, "ADAPTADA", r);
+            if (!enc.demas.isEmpty()) {
+                cierto(enc.demas.size() >= 1 && enc.demas.size() <= 2, "entre 2 y 3 enemigos totales");
+                for (int eq : enc.equiposDeLosDemas) igual(1, eq, "todos los enemigos en equipo 1");
+                multiples++;
+            }
+        }
+        return (double) multiples / muestras;
     }
 }

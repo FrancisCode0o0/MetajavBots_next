@@ -607,7 +607,7 @@ public final class PantallaPelea implements Pantalla {
         ganoElJugador = g >= 0 && pelea.equipo[g] == pelea.equipo[0];
         Jugador jug = j.jugador;
         if (encuentro.montaje == null && encuentro.codigo == null) jug.robot().ponerPiezas(yo.montaje);
-        Registro.Resultado res = g == 0 ? Registro.Resultado.VICTORIA : g == 1 ? Registro.Resultado.DERROTA : Registro.Resultado.EMPATE;
+        Registro.Resultado res = g < 0 ? Registro.Resultado.EMPATE : ganoElJugador ? Registro.Resultado.VICTORIA : Registro.Resultado.DERROTA;
         if (encuentro.cuenta) {
             Registro r = new Registro(System.currentTimeMillis(), encuentro.modo, encuentro.rival.nombre, encuentro.rival.montaje.modelo.id,
                     yo.montaje.modelo.id, encuentro.nivelRival, res, yo.danoTotalRecibido, yo.danoTotalHecho, pelea.ronda(), jug.etiqueta.name());
@@ -657,7 +657,8 @@ public final class PantallaPelea implements Pantalla {
         p.bordeRedondeado(x, y, w, h, 16, ganoElJugador ? ui.tema.bien : g == -1 ? ui.tema.aviso : ui.tema.mal, 1, 3);
         String titulo = g == -1 ? T.t("final.empate") : ganoElJugador ? T.t("final.victoria") : T.t("final.derrota");
         p.textoCentrado(titulo, x + w / 2, y + 24, ui.letra * 2.2f, true, ganoElJugador ? ui.tema.bien : ui.tema.texto, 1);
-        p.textoCentrado(T.f("final.danos", Math.round(yo.danoTotalRecibido), Math.round(encuentro.rival.danoTotalRecibido)), x + w / 2, y + 90,
+        p.textoCentrado(T.f("final.danos", Math.round(yo.danoTotalRecibido),
+                Math.round(pelea.tieneMultiplesObjetivos() ? pelea.danoDelEquipo(1) : encuentro.rival.danoTotalRecibido)), x + w / 2, y + 90,
                 ui.letra, false, ui.tema.textoSuave, 1);
         float yy = y + 140;
         if (encuentro.objetivo != null) {

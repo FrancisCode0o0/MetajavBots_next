@@ -362,6 +362,25 @@ public final class Progreso {
         return Math.max(0, Math.min(1, n));
     }
 
+    /**
+     * Probabilidad (0..1) de encuentro con múltiples objetivos en peleas normales según la etiqueta:
+     * NOOB_1..NOOB_3 = 0 % (1v1 puro), NOOB_4 = 25 %, JUNIOR = 40 %, SENIOR y MASTER = 55 %.
+     */
+    public static double probabilidadMultiplesObjetivos(Etiqueta e) {
+        if (e == null) return 0.0;
+        if (e == Etiqueta.NOOB_1 || e == Etiqueta.NOOB_2 || e == Etiqueta.NOOB_3) return 0.0;
+        if (e == Etiqueta.NOOB_4) return 0.25;
+        if (e.categoria() == Etiqueta.Categoria.JUNIOR) return 0.40;
+        return 0.55;
+    }
+
+    /** ¿Debe esta pelea normal enfrentar al jugador a múltiples objetivos (drones o robots ligeros)? */
+    public static boolean tocaMultiplesObjetivos(Jugador j, Random azar) {
+        if (j == null || azar == null) return false;
+        double prob = probabilidadMultiplesObjetivos(j.etiqueta);
+        return prob > 0 && azar.nextDouble() < prob;
+    }
+
     public static boolean puedeDesafiar(Jugador j) {
         return j.peleasDesdeElDesafio >= PELEAS_ENTRE_DESAFIOS && j.etiqueta != Etiqueta.MASTER;
     }

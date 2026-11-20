@@ -33,6 +33,8 @@ public final class ConsejosDelTaller {
     private static final Pattern CAMPO_SIN_PRIVATE = Pattern.compile("(?m)^\\s{4}(?!private|public|protected|static|final|@|//|\\*|/)"
             + "(int|double|boolean|String|long|float)\\s+\\w+\\s*(=|;)");
 
+    private static final Pattern BUCLE = Pattern.compile("\\b(for|while)\\s*\\(|\\.forEach\\s*\\(");
+
     private ConsejosDelTaller() {
     }
 
@@ -46,8 +48,19 @@ public final class ConsejosDelTaller {
         return false;
     }
 
+    /** ¿Recorre el código la lista de enemigos vistos con un bucle (for / while / forEach)? */
+    public static boolean recorreEnemigosVistosConBucle(String codigo) {
+        String c = limpio(codigo == null ? "" : codigo);
+        return tiene(c, "enemigosVistos", "gesehen", "geseheneGegner", "seenEnemies") && BUCLE.matcher(c).find();
+    }
+
     /** Lo que le llama la atención de ese código, de lo más importante a lo menos (al final, los generales). */
     public static List<Tip> de(String codigo) {
+        return de(codigo, false);
+    }
+
+    /** Igual que {@link #de(String)}, avisando además si hay múltiples objetivos sin bucle sobre enemigosVistos(). */
+    public static List<Tip> de(String codigo, boolean multiplesObjetivos) {
         List<Tip> l = new ArrayList<>();
         String c = limpio(codigo == null ? "" : codigo);
         if (c.isBlank()) {
@@ -55,12 +68,13 @@ public final class ConsejosDelTaller {
             return conGenerales(l);
         }
         boolean turno = tiene(c, "cadaTurno", "jedenZug", "onTick");
+        if (multiplesObjetivos && !recorreEnemigosVistosConBucle(c)) l.add(new Tip("multiples_objetivos", "for"));
         if (tiene(c, "Thread", "ExecutorService", "synchronized")) l.add(new Tip("hilos", "hilo"));
         if (turno && Pattern.compile("while\\s*\\(\\s*true\\s*\\)").matcher(c).find()) l.add(new Tip("while_true", "turno"));
         if (CONTADOR_EN_TURNO.matcher(c).find()) l.add(new Tip("contador_dentro", "ambito"));
         if (Pattern.compile("(\\.nombre\\(\\)|\\.modelo\\(\\)|\\.modell\\(\\)|\\.name\\(\\)|\\.model\\(\\))\\s*==\\s*\"").matcher(c).find()
                 || Pattern.compile("\"\"\\s*==").matcher(c).find()) l.add(new Tip("string_igual", "string"));
-        if (!tiene(c, "alVerEnemigo", "beiSicht", "onSeeEnemy", "enemigosVistos", "gesehen", "seenEnemies"))
+        if (!tiene(c, "alVerEnemigo", "beiSicht", "onSeeEnemy", "enemigosVistos", "gesehen", "geseheneGegner", "seenEnemies"))
             l.add(new Tip("sin_radar", "turno"));
         if (!tiene(c, "apuntar", "apuntarHacia", "apuntarA", "zielen", "zielenAuf", "zielenNach", "aim", "aimAt", "aimTo"))
             l.add(new Tip("sin_apuntar", "llamar_metodo"));

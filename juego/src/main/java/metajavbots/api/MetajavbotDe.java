@@ -340,6 +340,11 @@ public abstract class MetajavbotDe extends RobotBase {
         return new ArrayList<>(m().vistos());
     }
 
+    /** Alias für gesehen(): alle Gegner, die dein Radar gerade sieht. */
+    public final List<Gegner> geseheneGegner() {
+        return gesehen();
+    }
+
     /** Die Fallen und Gegenstände der Arena: Stacheln, Sägen, Grube, Fässer … (leer, wenn es keine gibt; Thema 15). */
     public final List<Hindernis> hindernisse() {
         return new ArrayList<>(m().obstaculos());

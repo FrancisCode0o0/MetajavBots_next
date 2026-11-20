@@ -105,6 +105,21 @@ public final class Pelea {
         this(cs, equipos, semilla, 1000, 700, 1200);
     }
 
+    /** Una pelea de 1 contra múltiples objetivos: el jugador en el equipo 0 y todos los enemigos en el equipo 1. */
+    public static Pelea contraMultiples(Combatiente jugador, List<Combatiente> enemigos, long semilla) {
+        if (jugador == null || enemigos == null || enemigos.isEmpty()) {
+            throw new IllegalArgumentException("hacen falta un jugador y al menos un enemigo");
+        }
+        Combatiente[] cs = new Combatiente[1 + enemigos.size()];
+        int[] eq = new int[cs.length];
+        cs[0] = jugador;
+        for (int i = 0; i < enemigos.size(); i++) {
+            cs[1 + i] = enemigos.get(i);
+            eq[1 + i] = 1;
+        }
+        return new Pelea(cs, eq, semilla);
+    }
+
     public Pelea(Combatiente[] cs, int[] equipos, long semilla, double ancho, double alto, int turnosPorRonda) {
         if (cs.length < 2 || equipos.length != cs.length) throw new IllegalArgumentException("hacen falta al menos dos, cada uno con su equipo");
         combatientes = cs.clone();
@@ -121,39 +136,41 @@ public final class Pelea {
 
     // ================================================================ lo que se puede saber
 
-    public Estado estado() {
-        return estado;
-    }
+    public Estado estado() { return estado; }
 
-    public int ronda() {
-        return ronda;
-    }
+    public int ronda() { return ronda; }
 
-    public int turno() {
-        return turno;
-    }
+    public int turno() { return turno; }
 
-    public Cuerpo cuerpo(int i) {
-        return i >= 0 && i < cuerpos.length ? cuerpos[i] : null;
-    }
+    public Cuerpo cuerpo(int i) { return i >= 0 && i < cuerpos.length ? cuerpos[i] : null; }
 
     /** Los sucesos del último turno (se vacían al dar el siguiente). */
-    public List<Suceso> sucesos() {
-        return Collections.unmodifiableList(sucesosDelTurno);
-    }
+    public List<Suceso> sucesos() { return Collections.unmodifiableList(sucesosDelTurno); }
 
     /** Todos los sucesos de la pelea (para el resumen y el locutor). */
-    public List<Suceso> historia() {
-        return Collections.unmodifiableList(sucesos);
-    }
+    public List<Suceso> historia() { return Collections.unmodifiableList(sucesos); }
 
-    public int ganador() {
-        return ganador;
-    }
+    public int ganador() { return ganador; }
 
     /** Lo que queda de ronda, de 0 a 1. */
-    public double restoDeRonda() {
-        return 1 - (double) turno / turnosPorRonda;
+    public double restoDeRonda() { return 1 - (double) turno / turnosPorRonda; }
+
+    /** Cuántos rivales de otro equipo tiene el combatiente indicado. */
+    public int enemigosDe(int indice) {
+        if (indice < 0 || indice >= equipo.length) return 0;
+        int n = 0;
+        for (int i = 0; i < equipo.length; i++) if (equipo[i] != equipo[indice]) n++;
+        return n;
+    }
+
+    /** ¿Se enfrenta el jugador a varios objetivos a la vez? */
+    public boolean tieneMultiplesObjetivos() { return enemigosDe(0) > 1; }
+
+    /** ¿Es un encuentro de 1 jugador (equipo 0) contra 2 o más enemigos en el equipo 1? */
+    boolean esUnoContraVarios() {
+        if (combatientes.length < 3 || equipo[0] != 0) return false;
+        for (int i = 1; i < equipo.length; i++) if (equipo[i] != 1) return false;
+        return true;
     }
 
     // ================================================================ las rondas
@@ -166,31 +183,8 @@ public final class Pelea {
         aparatos.empezarRonda();
         proyectiles.clear();
         rayos.clear();
-        // Cada ronda, en un sitio distinto: uno a cada lado.
-        double margen = 120;
-        if (combatientes.length == 2) {
-            double ya = margen + azar.nextDouble() * (alto - 2 * margen);
-            double yb = margen + azar.nextDouble() * (alto - 2 * margen);
-            boolean cambia = ronda % 2 == 0;
-            double xa = cambia ? ancho - margen : margen, xb = cambia ? margen : ancho - margen;
-            cuerpos = new Cuerpo[]{
-                    new Cuerpo(this, 0, combatientes[0], xa, ya, cambia ? 180 : 0, semilla * 31 + ronda * 7),
-                    new Cuerpo(this, 1, combatientes[1], xb, yb, cambia ? 0 : 180, semilla * 31 + ronda * 7 + 3)};
-        } else {
-            // Varios: en corro alrededor del centro, los del mismo equipo juntos, mirando al centro.
-            int n = combatientes.length;
-            Integer[] orden = new Integer[n];
-            for (int i = 0; i < n; i++) orden[i] = i;
-            java.util.Arrays.sort(orden, (p, q) -> Integer.compare(equipo[p], equipo[q]));
-            double giro = azar.nextDouble() * 360;
-            cuerpos = new Cuerpo[n];
-            for (int k = 0; k < n; k++) {
-                int i = orden[k];
-                double a = Math.toRadians(giro + 360.0 * k / n);
-                double x = ancho / 2 + Math.cos(a) * (ancho / 2 - margen), y = alto / 2 + Math.sin(a) * (alto / 2 - margen);
-                cuerpos[i] = new Cuerpo(this, i, combatientes[i], x, y, normal(Math.toDegrees(a) + 180), semilla * 31 + ronda * 7 + i * 3);
-            }
-        }
+        // Cada ronda, en un sitio distinto: uno a cada lado (o en formación si es 1 contra varios).
+        cuerpos = Cuerpo.posicionar(this, ronda, semilla, azar);
         if (ronda > 1 && desgaste() > 0) {
             // Empieza con lo que arrastra de las rondas de antes (nunca por debajo de la mitad).
             for (Cuerpo cu : cuerpos) {
@@ -408,6 +402,8 @@ public final class Pelea {
         inf.pasosTotales += pasos;
         inf.pasosMaximos = Math.max(inf.pasosMaximos, pasos);
         if (!c.vistos.isEmpty()) inf.turnosVistos++;
+        if (c.vistos.size() > 1) inf.turnosMultiplesVistos++;
+        if (c.vistos.size() > inf.maxEnemigosVistos) inf.maxEnemigosVistos = c.vistos.size();
         inf.recorrido += Math.abs(c.velocidad);
     }
 
@@ -543,6 +539,7 @@ public final class Pelea {
             suceso(Suceso.Tipo.ESQUIVA, e.indice, e.x, e.y, desde, dano, arma);
             return false;
         }
+        if (de != null) dano *= de.combatiente.escalaDano;
         dano *= resistencia[e.indice] * e.efectosPoo().factorDanoRecibido;
         double bloqueo = 0;
         if (e.escudoBrazo > 0 && Math.abs(normal(desde - e.mira)) <= e.conoEscudo / 2) bloqueo = e.bloqueoBrazo;

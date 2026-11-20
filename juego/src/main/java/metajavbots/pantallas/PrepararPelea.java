@@ -86,8 +86,11 @@ public final class PrepararPelea implements Pantalla {
 
     /** Monta el encuentro de un modo: ADAPTADA, una Dificultad, AZAR, DESAFIO o PRACTICA. */
     public static Encuentro encuentro(Juego j, String modo) {
-        Jugador jug = j.jugador;
-        Random azar = new Random();
+        return encuentro(j.jugador, modo, new Random());
+    }
+
+    /** Monta el encuentro para un jugador con un azar dado (usable también en pruebas sin ventana). */
+    public static Encuentro encuentro(Jugador jug, String modo, Random azar) {
         Encuentro e = new Encuentro();
         e.modo = modo;
         e.escenario = escenarioAlAzar();
@@ -124,8 +127,35 @@ public final class PrepararPelea implements Pantalla {
                 break;
             }
         }
-        if (e.rondas == Pelea.RONDAS) e.rondas = j.jugador.rondas;
+        if (!"PRACTICA".equals(modo) && !"DESAFIO".equals(modo) && Progreso.tocaMultiplesObjetivos(jug, azar)) {
+            poblarMultiplesObjetivos(e, jug, modelos, azar);
+        }
+        if (e.rondas == Pelea.RONDAS) e.rondas = jug.rondas;
         return e;
+    }
+
+    /** Convierte una pelea normal en un encuentro de 1 contra varios: rival + drones o 2–3 robots ligeros. */
+    private static void poblarMultiplesObjetivos(Encuentro e, Jugador jug, List<Modelo> modelos, Random azar) {
+        boolean seniorOMas = jug.etiqueta.categoria().ordinal() >= metajavbots.progreso.Etiqueta.Categoria.SENIOR.ordinal();
+        boolean noob4 = jug.etiqueta == metajavbots.progreso.Etiqueta.NOOB_4;
+        if (azar.nextBoolean()) {
+            // Variante 1: rival principal + 1 o 2 drones ligeros de escolta.
+            int drones = noob4 ? 1 : (seniorOMas || azar.nextBoolean() ? 2 : 1);
+            e.rival.escalaBlindaje = drones == 1 ? 0.80 : 0.72;
+            e.rival.escalaDano = drones == 1 ? 0.75 : 0.68;
+            for (int i = 1; i <= drones; i++) {
+                e.demas.add(Rivales.dron(e.nivelRival, jug.agresividad, azar, i));
+                e.equiposDeLosDemas.add(1);
+            }
+        } else {
+            // Variante 2: escuadrón de 2 o 3 enemigos ligeros simultáneos.
+            int total = noob4 ? 2 : (seniorOMas || azar.nextBoolean() ? 3 : 2);
+            e.rival = Rivales.ligero(modelos.get(azar.nextInt(modelos.size())), e.nivelRival, jug.agresividad, azar, total);
+            for (int i = 1; i < total; i++) {
+                e.demas.add(Rivales.ligero(modelos.get(azar.nextInt(modelos.size())), e.nivelRival, jug.agresividad, azar, total));
+                e.equiposDeLosDemas.add(1);
+            }
+        }
     }
 
     /** Los posibles compañeros de equipo: {nombre, tipo («ajeno» o «partida»), ruta o carpeta}. -1: la computadora. */

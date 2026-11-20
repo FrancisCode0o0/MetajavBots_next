@@ -131,6 +131,29 @@ public final class Rivales {
         return combatiente("¿" + modelo.nombre.es + "?", m, nivel, agresividad, estilos[azar.nextInt(estilos.length)], azar, false);
     }
 
+    /** Un dron ligero de escolta para encuentros con múltiples objetivos (menos blindaje y daño). */
+    public static Combatiente dron(double nivel, double agresividad, Random azar, int numero) {
+        Modelo m = Modelo.de("chispa");
+        if (m == null) m = Modelo.todos().get(0);
+        double nivelDron = Math.max(0.05, nivel * 0.7);
+        Combatiente base = crear(m, nivelDron, Math.min(0.6, agresividad), azar, false);
+        Combatiente c = new Combatiente("Dron " + numero, base.montaje, base.fabrica);
+        c.computadora = true;
+        c.escalaBlindaje = 0.42;
+        c.escalaDano = 0.40;
+        return c;
+    }
+
+    /** Un robot ligero para escuadrones de 2 o 3 enemigos simultáneos (equilibrado para 1 contra varios). */
+    public static Combatiente ligero(Modelo modelo, double nivel, double agresividad, Random azar, int totalEnemigos) {
+        boolean trio = totalEnemigos >= 3;
+        double nivelLigero = Math.max(0.05, nivel * (trio ? 0.75 : 0.85));
+        Combatiente c = crear(modelo, nivelLigero, Math.min(0.7, agresividad), azar, false);
+        c.escalaBlindaje = trio ? 0.48 : 0.64;
+        c.escalaDano = trio ? 0.44 : 0.58;
+        return c;
+    }
+
     private static Combatiente combatiente(String nombre, Montaje m, double nivel, double agresividad, Estilo estilo, Random azar, boolean traza) {
         Ajuste ajuste = new Ajuste(nivel, agresividad, null);
         Fabrica conTraza = traza ? RivalConTraza.fabrica(ajuste, estilo) : null;

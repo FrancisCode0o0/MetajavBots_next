@@ -8,6 +8,7 @@ import metajavbots.combate.Combatiente;
 import metajavbots.combate.Pelea;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
+import metajavbots.tutor.ConsejosDelTaller;
 
 /**
  * REVISOR — Consejos sobre el código y la ronda, sin IA (con el cerebro de
@@ -42,6 +43,9 @@ public final class Revisor {
             if (inf.danoPorArmaRecibido.getOrDefault("pared", 0.0) > 5) r.consejos.add(T.t("revisor.paredes"));
             if (inf.errores > 0) r.consejos.add(T.f("revisor.errores", inf.errores, pelea.combatientes[0].ultimoError));
             if (inf.topes > 0) r.consejos.add(T.f("revisor.topes", inf.topes));
+            if (pelea.tieneMultiplesObjetivos() && !ConsejosDelTaller.recorreEnemigosVistosConBucle(codigo)) {
+                r.consejos.add(T.t("revisor.multiples_objetivos"));
+            }
             if (pelea.combatientes[0].efectosPoo != null && pelea.combatientes[0].efectosPoo.camposPublicosMutables > 0) {
                 r.consejos.add(T.f("poo.consejo_public", pelea.combatientes[0].efectosPoo.camposPublicosMutables));
             }
