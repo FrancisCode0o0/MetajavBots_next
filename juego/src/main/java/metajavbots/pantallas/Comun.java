@@ -8,6 +8,7 @@ import metajavbots.Juego;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Tema;
 import metajavbots.pantalla.Ui;
+import metajavbots.piezas.Modelo;
 import metajavbots.progreso.Etiqueta;
 import metajavbots.progreso.Jugador;
 import metajavbots.progreso.Progreso;
@@ -99,6 +100,28 @@ public final class Comun {
             // sigue abajo
         }
         return "import metajavbots.api.*;\n\npublic class MiRobot extends Metajavbot {\n}\n";
+    }
+
+    /** El código inicial adaptado al modelo elegido, con un comentario breve sobre su arquetipo y habilidad propia. */
+    public static String plantilla(Idioma i, Modelo modelo) {
+        String base = plantilla(i);
+        if (modelo == null) return base;
+        String comentario = comentarioDeArquetipo(i, modelo);
+        int pos = base.indexOf("public class ");
+        if (pos < 0) return comentario + "\n" + base;
+        return base.substring(0, pos) + comentario + "\n" + base.substring(pos);
+    }
+
+    /** Comentario breve en el idioma del jugador con el arquetipo del modelo y su método programable propio. */
+    public static String comentarioDeArquetipo(Idioma i, Modelo modelo) {
+        String mod = modelo.nombre(i);
+        String arq = modelo.arquetipo.nombre(i);
+        String hab = modelo.arquetipo.habilidad(i);
+        String desc = modelo.arquetipo.resumen(i);
+        return i.elegir(
+                "// Arquetipo de " + mod + ": " + arq + " — habilidad propia: " + hab + " (" + desc + ").",
+                "// Archetyp von " + mod + ": " + arq + " — eigene Fähigkeit: " + hab + " (" + desc + ").",
+                "// " + mod + " archetype: " + arq + " — signature ability: " + hab + " (" + desc + ").");
     }
 
     /** Una pantalla de «aún no hecho» no debería verse nunca; por si acaso, se vuelve. */

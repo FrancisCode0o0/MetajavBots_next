@@ -201,6 +201,27 @@ public abstract class MetajavbotEn extends RobotBase {
         return ok;
     }
 
+    /** Signature ability of the Assault archetype: forward speed burst (warns in the console on other archetypes). */
+    public final boolean charge() {
+        boolean ok = m().embestir();
+        if (ok) anotarOrden("charge()", Mando.CANAL_AVANCE);
+        return ok;
+    }
+
+    /** Signature ability of the Tactical archetype: 360° extended-range radar sweep (warns on other archetypes). */
+    public final boolean radarPulse() {
+        boolean ok = m().pulsoRadar();
+        if (ok) anotarOrden("radarPulse()", 0);
+        return ok;
+    }
+
+    /** Signature ability of the Defender archetype: fortified stance that reduces incoming damage (warns on other archetypes). */
+    public final boolean fortify() {
+        boolean ok = m().fortificar();
+        if (ok) anotarOrden("fortify()", Mando.CANAL_AVANCE);
+        return ok;
+    }
+
     /** Attacks with whichever arm is ready (right first). */
     public final boolean attack() {
         boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
@@ -232,6 +253,11 @@ public abstract class MetajavbotEn extends RobotBase {
     /** The head special: "ESCUDO" (shield), "TURBO", "REPARAR" (repair), "CAMUFLAJE" (cloak), "PULSO" (pulse), "SOBRECARGA" (overload) ("" if none). */
     public final String headSpecial() {
         return m().arma(Mando.CABEZA);
+    }
+
+    /** The archetype of your robot model: "ASALTO", "TACTICO" or "DEFENSOR". */
+    public final String archetype() {
+        return m().arquetipo();
     }
 
     /** How far the left arm's weapon reaches. */

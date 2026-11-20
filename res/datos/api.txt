@@ -522,6 +522,81 @@ ejemplo.en:
     IF armor() < 60 AND readySpecial():
         special()    // triggers shield, heal, or boost
 
+=== api.embestir
+tema: 04
+firma: boolean embestir()
+firma.de: boolean ansturm()
+firma.en: boolean charge()
+es: Habilidad propia del arquetipo Asalto: embestida frontal con impulso de velocidad (avisa en consola en otros arquetipos).
+de: Eigene Fähigkeit des Archetyps Sturm: Vorwärts-Temposchub (warnt in der Konsole bei anderen Archetypen).
+en: Signature ability of the Assault archetype: forward speed burst (warns in the console on other archetypes).
+donde.es: Llámalo dentro de cadaTurno() o alVerEnemigo(e) solo en robots de arquetipo Asalto (en otros arquetipos devuelve false y avisa en consola).
+donde.de: In jedenZug() oder beiSicht(g) nur bei Sturm-Robotern aufrufen (bei anderen Archetypen liefert es false und warnt in der Konsole).
+donde.en: Call inside onTick() or onSeeEnemy(e) only on Assault-archetype robots (on other archetypes it returns false and warns in the console).
+ejemplo.es:
+    AL VER enemigo e:
+        girarHacia(e.angulo())
+        SI e.distancia() > 120:
+            embestir()
+ejemplo.de:
+    BEI SICHT von Gegner g:
+        drehenNach(g.winkel())
+        WENN g.entfernung() > 120:
+            ansturm()
+ejemplo.en:
+    ON SEEING enemy e:
+        turnTo(e.angle())
+        IF e.distance() > 120:
+            charge()
+
+=== api.pulsoRadar
+tema: 04
+firma: boolean pulsoRadar()
+firma.de: boolean radarImpuls()
+firma.en: boolean radarPulse()
+es: Habilidad propia del arquetipo Táctico: barrido de radar en 360° con alcance ampliado (avisa en consola en otros arquetipos).
+de: Eigene Fähigkeit des Archetyps Taktiker: 360°-Radarimpuls mit größerer Reichweite (warnt bei anderen Archetypen).
+en: Signature ability of the Tactical archetype: 360° extended-range radar sweep (warns on other archetypes).
+donde.es: Llámalo dentro de cadaTurno() o alRecibirGolpe(g) solo en robots de arquetipo Táctico para revelar rivales en 360° (en otros avisa en consola).
+donde.de: In jedenZug() oder beiTreffer(t) nur bei Taktiker-Robotern aufrufen, um Gegner rundum in 360° zu erfassen (sonst Konsolenwarnung).
+donde.en: Call inside onTick() or onHit(h) only on Tactical-archetype robots to reveal enemies in 360° (otherwise logs a console warning).
+ejemplo.es:
+    CADA TURNO:
+        SI enemigosVistos().isEmpty():
+            pulsoRadar()
+ejemplo.de:
+    JEDEN ZUG:
+        WENN gesehen().isEmpty():
+            radarImpuls()
+ejemplo.en:
+    EVERY TICK:
+        IF seenEnemies().isEmpty():
+            radarPulse()
+
+=== api.fortificar
+tema: 04
+firma: boolean fortificar()
+firma.de: boolean befestigen()
+firma.en: boolean fortify()
+es: Habilidad propia del arquetipo Defensor: postura fortificada que reduce el daño recibido (avisa en consola en otros arquetipos).
+de: Eigene Fähigkeit des Archetyps Verteidiger: Abwehrhaltung, verringert Schaden (warnt bei anderen Archetypen).
+en: Signature ability of the Defender archetype: fortified stance that reduces incoming damage (warns on other archetypes).
+donde.es: Llámalo dentro de alRecibirGolpe(g) o cadaTurno() solo en robots de arquetipo Defensor para activar la postura blindada (en otros avisa en consola).
+donde.de: In beiTreffer(t) oder jedenZug() nur bei Verteidiger-Robotern aufrufen, um die Abwehrhaltung zu aktivieren (sonst Konsolenwarnung).
+donde.en: Call inside onHit(h) or onTick() only on Defender-archetype robots to raise the fortified stance (otherwise logs a console warning).
+ejemplo.es:
+    AL RECIBIR GOLPE g:
+        fortificar()
+        apuntarHacia(g.angulo())
+ejemplo.de:
+    BEI TREFFER t:
+        befestigen()
+        zielenNach(t.winkel())
+ejemplo.en:
+    ON HIT h:
+        fortify()
+        aimTo(h.angle())
+
 === api.atacar
 tema: 01
 firma: boolean atacar()
@@ -671,6 +746,30 @@ ejemplo.de:
 ejemplo.en:
     IF headSpecial().equals("REPARAR") AND armor() < 75:
         special()
+
+=== api.arquetipo
+tema: 08
+firma: String arquetipo()
+firma.de: String archetyp()
+firma.en: String archetype()
+es: El arquetipo de tu modelo de robot: "ASALTO", "TACTICO" o "DEFENSOR".
+de: Der Archetyp deines Robotermodells: "ASALTO", "TACTICO" oder "DEFENSOR".
+en: The archetype of your robot model: "ASALTO", "TACTICO" or "DEFENSOR".
+donde.es: Úsalo en condiciones dentro de alEmpezar() o cadaTurno() comparando con .equals("ASALTO"), .equals("TACTICO") o .equals("DEFENSOR").
+donde.de: In Bedingungen in beimStart() oder jedenZug() mit .equals("ASALTO"), .equals("TACTICO") oder .equals("DEFENSOR") vergleichen.
+donde.en: Use in conditions inside onStart() or onTick() comparing with .equals("ASALTO"), .equals("TACTICO") or .equals("DEFENSOR").
+ejemplo.es:
+    AL EMPEZAR:
+        SI arquetipo().equals("ASALTO"):
+            decir("¡Al ataque!")
+ejemplo.de:
+    BEIM START:
+        WENN archetyp().equals("ASALTO"):
+            sagen("Angriff!")
+ejemplo.en:
+    ON START:
+        IF archetype().equals("ASALTO"):
+            say("Charge!")
 
 === api.alcanceIzquierda
 tema: 02
@@ -1370,30 +1469,6 @@ ejemplo.en:
     EVERY TICK:
         IF tick() % 30 == 0:
             print("x=" + (int) x() + " armor=" + (int) armor());
-
-=== api.memoria
-tema: 15
-firma: Map<String, Object> memoria()
-firma.de: Map<String, Object> gedaechtnis()
-firma.en: Map<String, Object> memory()
-es: Consulta sin parámetros. Devuelve un Map<String, Object> persistente que se conserva entre todas las rondas de la pelea (incluso si editas y recompilas tu código entre rondas). Úsalo para recordar qué táctica funcionó.
-de: Abfrage ohne Parameter. Gibt eine dauerhafte Map<String, Object> zurück, die über alle Runden des Kampfes erhalten bleibt (selbst beim Neukompilieren zwischen Runden).
-en: Query with no parameters. Returns a persistent Map<String, Object> kept across all rounds of the match (even if you edit and recompile code between rounds). Great to remember what worked.
-donde.es: Léelo en alEmpezar() y actualízalo en alAcabarRonda() o eventos para recordar datos entre rondas; nunca lo llames en el constructor ni en inicializadores de campo.
-donde.de: In beimStart() auslesen und in beiRundenende() oder Ereignissen aktualisieren, um Wissen über Runden zu behalten; nie im Konstruktor oder als Feldstartwert.
-donde.en: Read in onStart() and update in onRoundEnd() or events to carry data across rounds; never call it in the constructor or field initializers.
-ejemplo.es:
-    int giros = (int) memoria().getOrDefault("sentido", 1);
-    AL RECIBIR golpe g:
-        memoria().put("sentido", -giros);  // invierte para la siguiente ronda
-ejemplo.de:
-    int richtung = (int) gedaechtnis().getOrDefault("richtung", 1);
-    BEI TREFFER t:
-        gedaechtnis().put("richtung", -richtung);
-ejemplo.en:
-    int dir = (int) memory().getOrDefault("dir", 1);
-    ON HIT h:
-        memory().put("dir", -dir);        // flip direction next round
 
 === Enemigo.x
 tema: 13

@@ -240,20 +240,7 @@ public final class Pelea {
         turno++;
         int n = cuerpos.length;
         // 1) Lo que ve cada uno (una foto del principio del turno): sus enemigos a la vista y sus compañeros.
-        for (Cuerpo c : cuerpos) {
-            List<Avistamiento> vistos = new ArrayList<>(1), companeros = new ArrayList<>(0);
-            for (Cuerpo otro : cuerpos) {
-                if (otro == c) continue;
-                if (otro.equipo == c.equipo) {
-                    if (!otro.fuera) companeros.add(new Avistamiento(c, otro));
-                } else {
-                    vistos.addAll(vistosPor(c, otro));
-                }
-            }
-            if (vistos.size() > 1) vistos.sort((p, q) -> Double.compare(p.distancia(), q.distancia()));
-            c.vistos = vistos;
-            c.companeros = companeros;
-        }
+        for (Cuerpo c : cuerpos) actualizarVistos(c);
         // 2) El código de cada uno (empieza uno distinto cada turno, para que nadie vaya siempre primero).
         for (int k = 0; k < n; k++) pensar(cuerpos[(turno + k) % n]);
         // 3) Los ataques, el movimiento, los choques, los proyectiles.
@@ -481,16 +468,29 @@ public final class Pelea {
 
     // ================================================================ ver
 
+    void actualizarVistos(Cuerpo c) {
+        List<Avistamiento> vistos = new ArrayList<>(1), companeros = new ArrayList<>(0);
+        for (Cuerpo otro : cuerpos) {
+            if (otro == c) continue;
+            if (otro.equipo == c.equipo) { if (!otro.fuera) companeros.add(new Avistamiento(c, otro)); }
+            else vistos.addAll(vistosPor(c, otro));
+        }
+        if (vistos.size() > 1) vistos.sort((p, q) -> Double.compare(p.distancia(), q.distancia()));
+        c.vistos = vistos;
+        c.companeros = companeros;
+    }
+
     private List<Avistamiento> vistosPor(Cuerpo yo, Cuerpo el) {
         List<Avistamiento> l = new ArrayList<>(1);
         if (el.fuera || yo.fuera) return l;
         double d = Math.hypot(el.x - yo.x, el.y - yo.y);
         Pieza cabeza = yo.piezaDe(Cuerpo.CABEZA);
         double radar = (cabeza == null ? 400 : cabeza.valor("radar", 400)) * yo.efectosPoo().factorRadarPropio * el.efectosPoo().factorRadarRival;
+        if (yo.pulsoTactico > 0) radar *= 1.5;
         double cono = cabeza == null ? 50 : cabeza.valor("cono", 50);
         if (yo.parteRota(Montaje.CABEZA)) radar *= 0.4;
         double ang = Math.toDegrees(Math.atan2(el.y - yo.y, el.x - yo.x));
-        boolean enCono = Math.abs(normal(ang - yo.mira)) <= cono / 2;
+        boolean enCono = yo.pulsoTactico > 0 || Math.abs(normal(ang - yo.mira)) <= cono / 2;
         boolean cerca = d <= 110 + el.radio;
         boolean ve = cerca || d <= radar && enCono;
         if (el.camuflaje > 0 && d > 150) ve = false;
@@ -629,6 +629,7 @@ public final class Pelea {
         if (c.aturdido > 0) c.aturdido--;
         if (c.volteado > 0) c.volteado--;
         if (c.flotando > 0) c.flotando--;
+        c.pasoArquetipo();
         if (c.sacudida > 0) c.sacudida *= 0.8;
         c.retroceso *= 0.75;
         boolean piernasRotas = c.parteRota(Montaje.PIERNAS);

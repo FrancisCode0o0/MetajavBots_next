@@ -220,7 +220,7 @@ public final class Bienvenida implements Pantalla {
             Modelo m = disponibles.get(modelo);
             String n = nombre.texto().isBlank() ? m.nombre(T.idioma) : nombre.texto().strip();
             Jugador.Robot r = new Jugador.Robot(n, m.id);
-            r.codigo = Comun.plantilla(T.idioma);
+            r.codigo = Comun.plantilla(T.idioma, m);
             jug.robots.add(r);
             jug.robotElegido = jug.robots.size() - 1;
             jug.idioma = T.idioma;

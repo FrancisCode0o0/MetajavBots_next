@@ -85,8 +85,28 @@ public interface Mando {
 
     boolean usarAparato(boolean conAngulo, double angulo);
 
-    /** Manda un mensaje a los compañeros (les llega el turno siguiente, en alOirAlEquipo). */
+    /** Avisa a tus compañeros (les llega el turno siguiente, en alOirAlEquipo). */
     void avisarAlEquipo(String mensaje);
+
+    /** El arquetipo del modelo de robot: "ASALTO", "TACTICO" o "DEFENSOR". */
+    default String arquetipo() {
+        return "";
+    }
+
+    /** Habilidad propia de Asalto: embestida con impulso frontal de velocidad. */
+    default boolean embestir() {
+        return false;
+    }
+
+    /** Habilidad propia de Táctico: barrido de radar en 360° con alcance ampliado. */
+    default boolean pulsoRadar() {
+        return false;
+    }
+
+    /** Habilidad propia de Defensor: postura fortificada que reduce el daño recibido. */
+    default boolean fortificar() {
+        return false;
+    }
 
     void decir(String texto);
 

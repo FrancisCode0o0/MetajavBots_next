@@ -202,6 +202,27 @@ public abstract class Metajavbot extends RobotBase {
         return ok;
     }
 
+    /** Habilidad propia del arquetipo Asalto: embestida frontal con impulso de velocidad (avisa en consola en otros arquetipos). */
+    public final boolean embestir() {
+        boolean ok = m().embestir();
+        if (ok) anotarOrden("embestir()", Mando.CANAL_AVANCE);
+        return ok;
+    }
+
+    /** Habilidad propia del arquetipo Táctico: barrido de radar en 360° con alcance ampliado (avisa en consola en otros arquetipos). */
+    public final boolean pulsoRadar() {
+        boolean ok = m().pulsoRadar();
+        if (ok) anotarOrden("pulsoRadar()", 0);
+        return ok;
+    }
+
+    /** Habilidad propia del arquetipo Defensor: postura fortificada que reduce el daño recibido (avisa en consola en otros arquetipos). */
+    public final boolean fortificar() {
+        boolean ok = m().fortificar();
+        if (ok) anotarOrden("fortificar()", Mando.CANAL_AVANCE);
+        return ok;
+    }
+
     /** Ataca con el brazo que esté listo (primero el derecho). */
     public final boolean atacar() {
         boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
@@ -233,6 +254,11 @@ public abstract class Metajavbot extends RobotBase {
     /** Lo especial de la cabeza: "ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA" ("" si no tiene). */
     public final String especialCabeza() {
         return m().arma(Mando.CABEZA);
+    }
+
+    /** El arquetipo de tu modelo de robot: "ASALTO", "TACTICO" o "DEFENSOR". */
+    public final String arquetipo() {
+        return m().arquetipo();
     }
 
     /** Hasta dónde llega el arma del brazo izquierdo. */

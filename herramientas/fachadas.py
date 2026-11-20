@@ -22,6 +22,8 @@ metodos = {
     'apuntarHacia': ('zielenNach', 'aimTo'), 'apuntarA': ('zielenAuf', 'aimAt'),
     'atacarIzquierda': ('angriffLinks', 'attackLeft'), 'atacarDerecha': ('angriffRechts', 'attackRight'),
     'especial': ('spezial', 'special'), 'atacar': ('angreifen', 'attack'),
+    'embestir': ('ansturm', 'charge'), 'pulsoRadar': ('radarImpuls', 'radarPulse'), 'fortificar': ('befestigen', 'fortify'),
+    'arquetipo': ('archetyp', 'archetype'),
     'listoIzquierda': ('bereitLinks', 'readyLeft'), 'listoDerecha': ('bereitRechts', 'readyRight'),
     'listoEspecial': ('bereitSpezial', 'readySpecial'),
     'especialCabeza': ('spezialKopf', 'headSpecial'),
@@ -94,6 +96,10 @@ doc = {
         'zielenAuf': 'Dreht das Visier auf diesen Punkt der Arena.',
         'angriffLinks': 'Greift mit dem linken Arm in Blickrichtung an. Gibt false zurück, wenn er noch nicht bereit war.',
         'spezial': 'Benutzt das Spezielle des Kopfes (Schild, Turbo, Reparatur…, je nach Teil).',
+        'ansturm': 'Eigene Fähigkeit des Archetyps Sturm: Vorwärts-Temposchub (warnt in der Konsole bei anderen Archetypen).',
+        'radarImpuls': 'Eigene Fähigkeit des Archetyps Taktiker: 360°-Radarimpuls mit größerer Reichweite (warnt bei anderen Archetypen).',
+        'befestigen': 'Eigene Fähigkeit des Archetyps Verteidiger: Abwehrhaltung, verringert Schaden (warnt bei anderen Archetypen).',
+        'archetyp': 'Der Archetyp deines Robotermodells: "ASALTO", "TACTICO" oder "DEFENSOR".',
         'angreifen': 'Greift mit dem Arm an, der bereit ist (zuerst der rechte).',
         'waffeLinks': 'Die Waffe des linken Arms: "LASER", "BALA" (Kugel), "MISIL" (Rakete), "CUERPO" (Nahkampf), "ESCUDO" (Schild), "REPARAR"… ("" wenn keine).',
         'spezialKopf': 'Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO", "SOBRECARGA" ("" wenn keins).',
@@ -171,6 +177,10 @@ doc = {
         'aimAt': 'Turns the sight towards this point of the arena.',
         'attackLeft': 'Attacks with the left arm where the sight points. Returns false if it was not ready yet.',
         'special': "Uses the head's special (a shield, a turbo, repair…, depending on the part).",
+        'charge': 'Signature ability of the Assault archetype: forward speed burst (warns in the console on other archetypes).',
+        'radarPulse': 'Signature ability of the Tactical archetype: 360° extended-range radar sweep (warns on other archetypes).',
+        'fortify': 'Signature ability of the Defender archetype: fortified stance that reduces incoming damage (warns on other archetypes).',
+        'archetype': 'The archetype of your robot model: "ASALTO", "TACTICO" or "DEFENSOR".',
         'attack': 'Attacks with whichever arm is ready (right first).',
         'weaponLeft': 'The left arm weapon: "LASER", "BALA" (bullet), "MISIL" (missile), "CUERPO" (melee), "ESCUDO" (shield), "REPARAR" (repair)… ("" if none).',
         'headSpecial': 'The head special: "ESCUDO" (shield), "TURBO", "REPARAR" (repair), "CAMUFLAJE" (cloak), "PULSO" (pulse), "SOBRECARGA" (overload) ("" if none).',
@@ -214,6 +224,8 @@ for lang, idx, cls in (('de', 0, 'MetajavbotDe'), ('en', 1, 'MetajavbotEn')):
     allmap = {**{k: v[idx] for k, v in hooks.items()}, **{k: v[idx] for k, v in metodos.items()}}
     s = re.sub(r'm\(\)\.(\w+)\(', lambda mo: 'm().§' + mo.group(1) + '(', s)
     s = re.sub(r'(?<![\w§.])(\w+)\(', lambda mo: allmap.get(mo.group(1), mo.group(1)) + '(', s)
+    s = re.sub(r'this::(\w+)', lambda mo: 'this::' + allmap.get(mo.group(1), mo.group(1)), s)
+    s = re.sub(r'ejecutarEn\("(\w+)"', lambda mo: 'ejecutarEn("' + allmap.get(mo.group(1), mo.group(1)) + '"', s)
     s = s.replace('§', '')
     # javadocs
     def redoc(mo):

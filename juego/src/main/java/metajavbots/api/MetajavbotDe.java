@@ -201,6 +201,27 @@ public abstract class MetajavbotDe extends RobotBase {
         return ok;
     }
 
+    /** Eigene Fähigkeit des Archetyps Sturm: Vorwärts-Temposchub (warnt in der Konsole bei anderen Archetypen). */
+    public final boolean ansturm() {
+        boolean ok = m().embestir();
+        if (ok) anotarOrden("ansturm()", Mando.CANAL_AVANCE);
+        return ok;
+    }
+
+    /** Eigene Fähigkeit des Archetyps Taktiker: 360°-Radarimpuls mit größerer Reichweite (warnt bei anderen Archetypen). */
+    public final boolean radarImpuls() {
+        boolean ok = m().pulsoRadar();
+        if (ok) anotarOrden("radarImpuls()", 0);
+        return ok;
+    }
+
+    /** Eigene Fähigkeit des Archetyps Verteidiger: Abwehrhaltung, verringert Schaden (warnt bei anderen Archetypen). */
+    public final boolean befestigen() {
+        boolean ok = m().fortificar();
+        if (ok) anotarOrden("befestigen()", Mando.CANAL_AVANCE);
+        return ok;
+    }
+
     /** Greift mit dem Arm an, der bereit ist (zuerst der rechte). */
     public final boolean angreifen() {
         boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
@@ -232,6 +253,11 @@ public abstract class MetajavbotDe extends RobotBase {
     /** Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO", "SOBRECARGA" ("" wenn keins). */
     public final String spezialKopf() {
         return m().arma(Mando.CABEZA);
+    }
+
+    /** Der Archetyp deines Robotermodells: "ASALTO", "TACTICO" oder "DEFENSOR". */
+    public final String archetyp() {
+        return m().arquetipo();
     }
 
     /** Wie weit die Waffe des linken Arms reicht. */

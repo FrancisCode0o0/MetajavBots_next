@@ -44,6 +44,7 @@ public final class Pruebas {
         PruebasDelCodigoDelRival.apuntar();
         PruebasDelDepurador.apuntar();
         PruebasDeModificadoresPoo.apuntar();
+        PruebasDeArquetipos.apuntar();
 
         List<String> fallos = new ArrayList<>();
         int pasados = 0;

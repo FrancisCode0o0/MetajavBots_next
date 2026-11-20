@@ -10,8 +10,12 @@ import metajavbots.api.Avistado;
 import metajavbots.api.Impacto;
 import metajavbots.api.Mando;
 import metajavbots.api.Puente;
+import metajavbots.piezas.Arquetipo;
+import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Pieza;
+import metajavbots.textos.Idioma;
+import metajavbots.textos.T;
 
 /**
  * CUERPO — Un robot en la arena durante una ronda: dónde está, hacia dónde
@@ -61,6 +65,9 @@ public final class Cuerpo implements Mando {
     public double miraDeLaLlama;
     /** Los turnos que le quedan en el aire tras un volteador (se ve levantado; no se mueve). */
     public int volteado;
+    /** Turnos de barrido táctico en 360°, enfriamiento de la habilidad de arquetipo y cadencia del aviso. */
+    public int pulsoTactico;
+    int enfriamientoArquetipo, avisoArquetipo;
     int brazoDelEscudo = -1, brazoDeLaLlama = -1;
     double bloqueoBrazo, conoEscudo, bloqueoCabeza, factorTurbo = 1, factorSobrecarga = 1;
     public boolean fuera;
@@ -290,6 +297,73 @@ public final class Cuerpo implements Mando {
         if (mensaje == null) return;
         String m = mensaje.length() > 200 ? mensaje.substring(0, 200) : mensaje;
         pelea.avisar(this, m);
+    }
+
+    @Override
+    public String arquetipo() {
+        return combatiente.montaje.modelo.arquetipo.name();
+    }
+
+    @Override
+    public boolean embestir() {
+        if (!exigirArquetipo(Arquetipo.ASALTO)) return false;
+        if (fuera || enfriamientoArquetipo > 0 || energia < 12) return false;
+        energia = Math.max(0, energia - 12);
+        enfriamientoArquetipo = 90;
+        turbo = Math.max(turbo, 18);
+        factorTurbo = Math.max(factorTurbo, 1.55);
+        avance = Math.max(avance, 140);
+        pelea.suceso(Suceso.Tipo.ESPECIAL, indice, x, y, rumbo, 18, "embestir");
+        return true;
+    }
+
+    @Override
+    public boolean pulsoRadar() {
+        if (!exigirArquetipo(Arquetipo.TACTICO)) return false;
+        if (fuera || enfriamientoArquetipo > 0 || energia < 10) return false;
+        energia = Math.max(0, energia - 10);
+        enfriamientoArquetipo = 90;
+        pulsoTactico = Math.max(pulsoTactico, 25);
+        pelea.actualizarVistos(this);
+        pelea.suceso(Suceso.Tipo.ESPECIAL, indice, x, y, mira, 25, "pulso_radar");
+        return true;
+    }
+
+    @Override
+    public boolean fortificar() {
+        if (!exigirArquetipo(Arquetipo.DEFENSOR)) return false;
+        if (fuera || enfriamientoArquetipo > 0 || energia < 12) return false;
+        energia = Math.max(0, energia - 12);
+        enfriamientoArquetipo = 105;
+        escudoCabeza = Math.max(escudoCabeza, 45);
+        bloqueoCabeza = Math.max(bloqueoCabeza, 0.55);
+        avance = 0;
+        pelea.suceso(Suceso.Tipo.ESPECIAL, indice, x, y, rumbo, 45, "fortificar");
+        return true;
+    }
+
+    private boolean exigirArquetipo(Arquetipo requerido) {
+        Modelo mod = combatiente.montaje.modelo;
+        if (mod.arquetipo == requerido) return true;
+        if (avisoArquetipo <= 0) {
+            Idioma id = T.idioma == null ? Idioma.ES : T.idioma;
+            String msg = id.elegir(
+                    "⚠ " + requerido.habilidad(Idioma.ES) + " solo funciona en robots de arquetipo "
+                            + requerido.nombre(Idioma.ES) + " (tu modelo " + mod.nombre(Idioma.ES) + " es " + mod.arquetipo.nombre(Idioma.ES) + ").",
+                    "⚠ " + requerido.habilidad(Idioma.DE) + " funktioniert nur bei Robotern des Archetyps "
+                            + requerido.nombre(Idioma.DE) + " (dein Modell " + mod.nombre(Idioma.DE) + " ist " + mod.arquetipo.nombre(Idioma.DE) + ").",
+                    "⚠ " + requerido.habilidad(Idioma.EN) + " only works on " + requerido.nombre(Idioma.EN)
+                            + " archetype robots (your model " + mod.nombre(Idioma.EN) + " is " + mod.arquetipo.nombre(Idioma.EN) + ").");
+            escribir(msg);
+            avisoArquetipo = 30;
+        }
+        return false;
+    }
+
+    void pasoArquetipo() {
+        if (pulsoTactico > 0) pulsoTactico--;
+        if (enfriamientoArquetipo > 0) enfriamientoArquetipo--;
+        if (avisoArquetipo > 0) avisoArquetipo--;
     }
 
     @Override

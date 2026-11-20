@@ -35,6 +35,7 @@ public final class Modelo {
     public final String id;
     public final Trilingue nombre, lema;
     public final Naturaleza naturaleza;
+    public final Arquetipo arquetipo;
     public final String personalidad;
     /** El radio del robot en la arena. */
     public final double tamano;
@@ -57,6 +58,7 @@ public final class Modelo {
         nombre = trilingue(v.getOrDefault("nombre", id));
         lema = trilingue(v.getOrDefault("lema", ""));
         naturaleza = Naturaleza.de(v.get("naturaleza"));
+        arquetipo = Arquetipo.de(v.get("arquetipo"));
         personalidad = v.getOrDefault("personalidad", "estoico");
         tamano = numero(v.get("tamano"), 32);
         torso = Pieza.enumDe(Torso.class, v.get("torso"), Torso.CAJA);

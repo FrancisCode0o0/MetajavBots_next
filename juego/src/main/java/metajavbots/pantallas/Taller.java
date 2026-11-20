@@ -53,6 +53,11 @@ public final class Taller implements Pantalla {
     /** Lo que ocupa la lista de robots (el tutor va debajo). */
     private float robotsAlto = 140;
 
+    /** Plantilla inicial del taller para el idioma y modelo elegidos (incluye su arquetipo y habilidad propia). */
+    public static String plantillaInicial(metajavbots.textos.Idioma idioma, Modelo modelo) {
+        return Comun.plantilla(idioma, modelo);
+    }
+
     /** Abre el taller directamente con el banco de pruebas rápido activo (para las capturas). */
     public static Taller conBanco() {
         Taller taller = new Taller();
@@ -283,7 +288,7 @@ public final class Taller implements Pantalla {
                     aviso = e.toString();
                 }
                 break;
-            case 6: editor.doc.cambiarTodo(Comun.plantilla(jug.idioma)); break;
+            case 6: editor.doc.cambiarTodo(plantillaInicial(jug.idioma, Modelo.de(r.modelo))); break;
             case 7: j.ir(new CodigoDelRival()); break;
             default: break;
         }
@@ -323,7 +328,7 @@ public final class Taller implements Pantalla {
         if (ui.boton(T.t("taller.crear"), x + 400, y + 410, 180, 50, Ui.Estilo.PRINCIPAL) || intro) {
             Modelo m = ms.get(Math.min(modeloNuevo, ms.size() - 1));
             Jugador.Robot r = new Jugador.Robot(nombreNuevo.texto().isBlank() ? m.nombre(T.idioma) : nombreNuevo.texto().strip(), m.id);
-            r.codigo = Comun.plantilla(jug.idioma);
+            r.codigo = plantillaInicial(jug.idioma, m);
             jug.robots.add(r);
             jug.robotElegido = jug.robots.size() - 1;
             cargar(j);
