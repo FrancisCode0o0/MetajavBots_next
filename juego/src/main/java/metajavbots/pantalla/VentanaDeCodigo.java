@@ -193,10 +193,10 @@ public final class VentanaDeCodigo {
             float ly = zy + l * alto - desplazamientoY;
             if (l == lineaCursor && enfocada) p.rect(zx - 4, ly, zw + 4, alto, t.lineaActual, 1);
             if (lineaResaltada == l + 1) p.rect(zx - 4, ly, zw + 4, alto, t.mal, 0.18f);
-            if (lineasActivas.get(l + 1)) p.rect(zx - 4, ly, zw + 4, alto, t.bien, lineaActiva == l + 1 ? 0.48f : 0.24f);
-            if (lineasActivas.get(l + 1)) p.rect(zx - 4, ly, 4, alto, t.bien, lineaActiva == l + 1 ? 1f : 0.75f);
-            if (lineaActiva == l + 1) p.rect(zx - 4, ly, zw + 4, 1.5f, t.bien, 0.95f);
-            if (lineaActiva == l + 1) p.texto("▶", x + 1, ly + alto * 0.08f, tamano * 0.9f, true, t.bien, 1);
+            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) p.rect(zx - 4, ly, zw + 4, alto, t.bien, lineaActiva == l + 1 ? 0.34f : 0.18f);
+            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) p.rect(zx - 4, ly, 5, alto, t.bien, lineaActiva == l + 1 ? 1f : 0.75f);
+            if (lineaActiva == l + 1) p.marco(zx - 4, ly, zw + 4, alto, t.bien, 0.98f, 2f);
+            if (lineaActiva == l + 1) p.texto("▶", x + 2, ly + alto * 0.08f, tamano * 0.95f, true, t.bien, 1);
             boolean conError = false, conAviso = false;
             for (Marca m : marcas) if (m.linea == l + 1) {
                 if (m.grave) conError = true;

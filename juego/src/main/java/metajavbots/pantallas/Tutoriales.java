@@ -29,7 +29,10 @@ public final class Tutoriales implements Pantalla {
         Jugador jug = j.jugador;
         Comun.fondo(j, t);
         float arriba = Comun.cabecera(j, T.t("menu.tutoriales"), true);
-        float x = 20, y = arriba + 16, w = p.ancho - 40, h = p.alto - y - 20;
+        float x = 20, w = p.ancho - 40;
+        float barraY = arriba + 12;
+        float barraH = dibujarBarraDemostraciones(j, x, barraY, w);
+        float y = barraY + barraH + 12, h = Math.max(120, p.alto - y - 20);
         float cy = ui.panel(x, y, w, h, null);
         float d = ui.desplazable(despl, x + 8, cy, w - 16, y + h - cy - 10);
         float yy = cy - d;
@@ -55,5 +58,30 @@ public final class Tutoriales implements Pantalla {
             yy += 84;
         }
         ui.finDesplazable(despl, yy + d - cy);
+    }
+
+    private float dibujarBarraDemostraciones(Juego j, float x, float y, float w) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        String btnTxt = "▶ " + T.t("demo.boton");
+        float tBtn = Math.min(ui.letra, 24f);
+        float bw = Math.max(230, Math.min(w * 0.36f, p.ancho(btnTxt, tBtn, true) + 42));
+        float textoW = Math.max(200, w - bw - 48);
+        float tTit = Math.min(ui.letra * 1.05f, 25f);
+        float tSub = Math.min(ui.letra * 0.85f, 21f);
+        String tit = "▶ " + T.t("demo.titulo");
+        String sub = T.t("demo.banner_texto");
+        float hTit = p.altoDeLinea(tTit);
+        float hSub = p.altoDeParrafo(sub, textoW, tSub);
+        float h = Math.max(68, 20 + hTit + 4 + hSub);
+        p.caja(x, y, w, h, 12, ui.tema.panelAlto, 1);
+        p.bordeRedondeado(x, y, w, h, 12, ui.tema.acento, 0.9f, 1.8f);
+        p.texto(tit, x + 20, y + 10, ui.cabe(tit, textoW, tTit, true), true, ui.tema.acento, 1);
+        p.parrafo(sub, x + 20, y + 10 + hTit + 4, textoW, tSub, ui.tema.textoSuave, 1);
+        float bh = Math.max(46, Math.min(54, h - 18));
+        if (ui.boton(btnTxt, x + w - bw - 16, y + (h - bh) / 2f, bw, bh, Ui.Estilo.DESTACADO, true, T.t("demo.boton_ayuda"))) {
+            j.ir(new Demostraciones());
+        }
+        return h;
     }
 }
