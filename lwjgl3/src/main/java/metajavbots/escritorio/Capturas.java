@@ -524,6 +524,7 @@ public final class Capturas extends Juego {
                     40 + azar.nextInt(120), 60 + azar.nextInt(140), 4, "JUNIOR_2"));
         }
         j.ejerciciosResueltos.addAll(java.util.List.of("t01_hola_arena", "muestra_sumar"));
+        j.retosHechos.addAll(java.util.List.of("mini:moverse", "mini:girar"));
         j.capitulosGanados.addAll(java.util.List.of("rocko:1", "rocko:2", "rocko:3", "rocko2:1"));
         j.robotsArreglados.add("peonza");
         j.jefesVencidos.addAll(java.util.List.of("gim_condicionales", "gim_bucles", "herencia"));

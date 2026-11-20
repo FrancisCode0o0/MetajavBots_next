@@ -1,28 +1,25 @@
-{
+﻿{
   "version": 1,
   "hooks": {
     "preToolUse": [
       {
         "type": "command",
-        "powershell": "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File .github/hooks/puente_avisos.ps1 -Evento preToolUse"
+        "powershell": "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File .github/hooks/puente_avisos.ps1 -Evento preToolUse",
+        "timeoutSec": 300
       }
     ],
-    "permissionRequest": [
+    "agentStop": [
       {
         "type": "command",
-        "powershell": "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File .github/hooks/aviso_permiso_copilot.ps1"
-      }
-    ],
-    "notification": [
-      {
-        "type": "command",
-        "powershell": "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File .github/hooks/puente_avisos.ps1 -Evento notification"
+        "powershell": "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File .github/hooks/puente_avisos.ps1 -Evento agentStop",
+        "timeoutSec": 15
       }
     ],
     "sessionEnd": [
       {
         "type": "command",
-        "powershell": "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File .github/hooks/puente_avisos.ps1 -Evento sessionEnd"
+        "powershell": "powershell.exe -NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File .github/hooks/puente_avisos.ps1 -Evento sessionEnd",
+        "timeoutSec": 15
       }
     ]
   }
