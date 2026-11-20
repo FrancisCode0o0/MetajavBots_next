@@ -214,8 +214,8 @@ public final class Taller implements Pantalla {
         float cy = y + 56, ch = p.alto - cy - 20;
         if (r == null) return;
         if (pestana == 1) {
-            Combatiente c = new Combatiente(r.nombre, r.montaje(), null);
-            piezas(j, c, x, cy, w, ch);
+            Combatiente c = new Combatiente(r.nombre, jug.montajeDe(r), null);
+            piezas(j, c, x, cy, w, ch, true);
             r.ponerPiezas(c.montaje);
             return;
         }
@@ -390,6 +390,11 @@ public final class Taller implements Pantalla {
 
     /** Las piezas de cada hueco, con ◄ ► entre las que se pueden poner, y sus cifras. Lo usan el taller y la pausa entre rondas. */
     public static void piezas(Juego j, Combatiente c, float x, float y, float w, float h) {
+        piezas(j, c, x, y, w, h, false);
+    }
+
+    /** Igual que {@link #piezas(Juego, Combatiente, float, float, float, float)}; si {@code permitirActivar}, muestra botón para activar pendientes. */
+    public static void piezas(Juego j, Combatiente c, float x, float y, float w, float h, boolean permitirActivar) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         Jugador jug = j.jugador;
@@ -399,10 +404,14 @@ public final class Taller implements Pantalla {
         float yy = y;
         for (Montaje.Hueco hueco : Montaje.Hueco.values()) {
             List<Pieza> opciones = new ArrayList<>();
-            for (Pieza pz : cat.de(hueco.ranura)) if (Progreso.piezaUsable(jug, pz, m.modelo)) opciones.add(pz);
+            for (Pieza pz : cat.de(hueco.ranura)) {
+                if (Progreso.piezaUsable(jug, pz, m.modelo)) {
+                    opciones.add(metajavbots.ejercicios.RetoDePieza.aplicarAjustes(pz, jug.ajustesDePiezas.get(pz.id)));
+                }
+            }
             Pieza actual = m.pieza(hueco);
             if (hueco == Montaje.Hueco.NATURALEZA) opciones.add(0, null);
-            int i = opciones.indexOf(actual);
+            int i = indiceDePieza(opciones, actual);
             p.caja(x, yy, w * 0.62f, fila - 8, 10, ui.tema.panel, 1);
             p.texto(T.t("hueco." + hueco.name().toLowerCase()), x + 16, yy + 10, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
             String nombre = actual == null ? T.t("taller.sin_pieza") : actual.nombre(T.idioma);
@@ -424,9 +433,22 @@ public final class Taller implements Pantalla {
             }
             yy += fila;
         }
-        // A la derecha: las cifras del robot montado.
+        dibujarPanelCifras(j, m, x + w * 0.62f + 20, y, w * 0.38f - 20, h, permitirActivar);
+    }
+
+    private static int indiceDePieza(List<Pieza> opciones, Pieza actual) {
+        if (actual == null) return opciones.indexOf(null);
+        for (int i = 0; i < opciones.size(); i++) {
+            Pieza p = opciones.get(i);
+            if (p != null && p.id.equals(actual.id)) return i;
+        }
+        return -1;
+    }
+
+    private static void dibujarPanelCifras(Juego j, Montaje m, float cx, float y, float cw, float h, boolean permitirActivar) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
         Montaje.Cifras cf = m.cifras();
-        float cx = x + w * 0.62f + 20, cw = w * 0.38f - 20;
         float cy = ui.panel(cx, y, cw, h, T.t("taller.cifras"));
         String[] l = {
                 T.f("cifras.blindaje", Math.round(cf.blindajeTotal())),
@@ -441,6 +463,20 @@ public final class Taller implements Pantalla {
             if (s.isEmpty()) continue;
             p.texto(s, cx + 18, cy, ui.letra * 0.88f, false, ui.tema.texto, 1);
             cy += ui.letra * 1.6f;
+        }
+        List<Pieza> pendientes = permitirActivar ? Progreso.piezasPendientes(j.jugador) : List.of();
+        if (!pendientes.isEmpty()) {
+            cy += 8;
+            p.texto(T.t("taller.pendientes"), cx + 18, cy, ui.letra * 0.85f, true, ui.tema.aviso, 1);
+            cy += ui.letra * 1.4f;
+            for (Pieza pz : pendientes) {
+                if (cy + 40 > y + h - 12) break;
+                if (ui.boton("⚡ " + pz.nombre(T.idioma), cx + 18, cy, cw - 36, 36, Ui.Estilo.PRINCIPAL, true, T.t("tienda.activar_ayuda"))) {
+                    j.ir(new PantallaActivarPieza(pz));
+                }
+                cy += 42;
+            }
+            return;
         }
         cy += 10;
         p.parrafo(T.t("taller.piezas_ayuda"), cx + 18, cy, cw - 36, ui.letra * 0.75f, ui.tema.textoApagado, 1);

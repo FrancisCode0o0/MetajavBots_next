@@ -3,13 +3,16 @@ package metajavbots.progreso;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Random;
 
 import metajavbots.ejercicios.Banco;
 import metajavbots.ejercicios.Ejercicio;
+import metajavbots.ejercicios.RetoDePieza;
 import metajavbots.ejercicios.Tema;
 import metajavbots.piezas.CatalogoDePiezas;
 import metajavbots.piezas.Modelo;
+import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Naturaleza;
 import metajavbots.piezas.Pieza;
 
@@ -247,15 +250,65 @@ public final class Progreso {
 
     /**
      * Intenta comprar una pieza del catálogo con las monedas del jugador.
-     * Si la compra es válida, descuenta el precio y añade la pieza a {@code j.piezasGanadas}.
+     * Si la compra es válida, descuenta el precio y la marca en {@code j.piezasPendientes}
+     * (no equipable aún hasta superar su reto de código).
      */
     public static CompraResultado comprarPieza(Jugador j, Pieza p) {
         if (j == null || p == null || !p.comprable()) return CompraResultado.NO_COMPRABLE;
-        if (piezaDisponible(j, p)) return CompraResultado.YA_LA_TIENE;
+        if (piezaDisponible(j, p) || piezaPendiente(j, p)) return CompraResultado.YA_LA_TIENE;
         if (!rangoDesbloqueadoEnTienda(j, p.rangoTienda)) return CompraResultado.RANGO_INSUFICIENTE;
         if (!j.gastarMonedas(p.precio)) return CompraResultado.SALDO_INSUFICIENTE;
-        j.piezasGanadas.add(p.id);
+        j.piezasPendientes.add(p.id);
         return CompraResultado.COMPRADA;
+    }
+
+    /** ¿Fue comprada en la tienda y está aún pendiente de superar su reto de código? */
+    public static boolean piezaPendiente(Jugador j, Pieza p) {
+        return j != null && p != null && j.piezasPendientes.contains(p.id) && !piezaDisponible(j, p);
+    }
+
+    /** Piezas compradas en la tienda que aún esperan su reto de código para activarse. */
+    public static List<Pieza> piezasPendientes(Jugador j) {
+        List<Pieza> l = new ArrayList<>();
+        if (j == null) return l;
+        CatalogoDePiezas cat = CatalogoDePiezas.delJuego();
+        for (String id : j.piezasPendientes) {
+            Pieza p = cat.pieza(id);
+            if (p != null && !piezaDisponible(j, p)) l.add(p);
+        }
+        return l;
+    }
+
+    /**
+     * Activa una pieza tras superar su reto de código: sale de {@code piezasPendientes}, pasa a
+     * {@code piezasGanadas}, guarda sus parámetros básicos acotados dentro de los límites de
+     * equilibrio y, si el jugador tiene un robot activo, la equipa en el hueco correspondiente.
+     */
+    public static boolean activarPieza(Jugador j, Pieza p, Map<String, Double> ajustes) {
+        if (j == null || p == null) return false;
+        j.piezasPendientes.remove(p.id);
+        j.piezasGanadas.add(p.id);
+        Map<String, Double> acotados = RetoDePieza.acotarAjustes(p, ajustes);
+        if (acotados.isEmpty()) j.ajustesDePiezas.remove(p.id);
+        else j.ajustesDePiezas.put(p.id, acotados);
+        Jugador.Robot r = j.robot();
+        if (r != null) {
+            Montaje.Hueco hueco = huecoPorDefecto(p.ranura);
+            if (hueco != null) r.piezas.put(hueco, p.id);
+        }
+        return true;
+    }
+
+    private static Montaje.Hueco huecoPorDefecto(Pieza.Ranura ranura) {
+        if (ranura == null) return null;
+        switch (ranura) {
+            case CABEZA: return Montaje.Hueco.CABEZA;
+            case BRAZO: return Montaje.Hueco.IZQUIERDA;
+            case PIERNAS: return Montaje.Hueco.PIERNAS;
+            case NUCLEO: return Montaje.Hueco.NUCLEO;
+            case NATURALEZA: return Montaje.Hueco.NATURALEZA;
+            default: return null;
+        }
     }
 
     public static boolean piezaDisponible(Jugador j, Pieza p) {
@@ -352,7 +405,7 @@ public final class Progreso {
         if (n != Naturaleza.NINGUNA) {
             for (int m = 1; m <= marca; m++) {
                 Pieza p = c.pieza("naturaleza_" + n.name().toLowerCase(Locale.ROOT) + (m == 1 ? "" : "_" + m));
-                if (p != null && !piezaDisponible(j, p)) return p;
+                if (p != null && !piezaDisponible(j, p) && !piezaPendiente(j, p)) return p;
             }
         }
         if (azar.nextDouble() < 0.5) {

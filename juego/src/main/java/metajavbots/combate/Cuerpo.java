@@ -21,6 +21,21 @@ import metajavbots.piezas.Pieza;
  */
 public final class Cuerpo implements Mando {
 
+    /** Límites de equilibrio anti-abuso para cadencia, recarga, energía y movilidad en combate. */
+    public static final int MIN_ENFRIAMIENTO = 3;
+    public static final int MAX_ENFRIAMIENTO = 600;
+    public static final double MIN_RECARGA = 0.1;
+    public static final double MAX_RECARGA = 1.2;
+    public static final double MIN_ENERGIA_MAX = 40.0;
+    public static final double MAX_ENERGIA_MAX = 220.0;
+    public static final double MAX_COSTE = 100.0;
+    public static final double MIN_VELOCIDAD = 1.0;
+    public static final double MAX_VELOCIDAD = 12.0;
+    public static final double MIN_GIRO = 1.5;
+    public static final double MAX_GIRO = 18.0;
+    public static final double MIN_BLINDAJE_PARTE = 10.0;
+    public static final double MAX_BLINDAJE_PARTE = 250.0;
+
     final Pelea pelea;
     public final int indice;
     /** Su equipo (en una pelea de dos, 0 y 1; en un battle royale, cada uno el suyo). */
@@ -87,10 +102,11 @@ public final class Cuerpo implements Mando {
         this.y = y;
         this.rumbo = rumbo;
         this.mira = rumbo;
-        this.energia = cifras.energiaMax;
+        this.energia = energiaMaxSegura(cifras.energiaMax);
         for (int i = 0; i < 4; i++) {
-            parte[i] = cifras.blindaje[i];
-            parteMax[i] = cifras.blindaje[i];
+            double bl = blindajeSeguro(cifras.blindaje[i]);
+            parte[i] = bl;
+            parteMax[i] = bl;
         }
         this.azar = new Random(semilla);
     }
@@ -198,9 +214,9 @@ public final class Cuerpo implements Mando {
         if (brazo < 0 || brazo > 2 || !listo(brazo)) return false;
         pedido[brazo] = true;
         Pieza p = piezaDe(brazo);
-        // Se marca ya, para que dos llamadas en el mismo turno no ataquen dos veces.
-        enfriamiento[brazo] = Math.max(1, (int) Math.round(p.valor("enfriamiento", 30) / (1 + pelea.refuerzoDeEnfriamiento(this))));
-        energia -= costeDe(brazo, p);
+        // Se marca ya, para que dos llamadas en el mismo turno no ataquen dos veces (nunca cadencia infinita ni recarga <= 0).
+        enfriamiento[brazo] = enfriamientoSeguro(p.valor("enfriamiento", 30), pelea.refuerzoDeEnfriamiento(this));
+        energia = Math.max(0, energia - costeDe(brazo, p));
         return true;
     }
 
@@ -228,8 +244,9 @@ public final class Cuerpo implements Mando {
     public double alcance(int brazo) {
         Pieza p = piezaDe(brazo);
         if (p == null) return 0;
-        if (p.arma() == Pieza.Arma.CUERPO) return p.valor("alcance") + radio * 2;
-        return p.valor("alcance");
+        double alc = Armas.alcanceSeguro(p.valor("alcance"));
+        if (p.arma() == Pieza.Arma.CUERPO) return alc + radio * 2;
+        return alc;
     }
 
     @Override
@@ -369,7 +386,51 @@ public final class Cuerpo implements Mando {
     }
 
     static double costeDe(int brazo, Pieza p) {
-        return brazo == CABEZA ? p.valor("coste") : p.valor("energia");
+        return costeSeguro(brazo == CABEZA ? p.valor("coste") : p.valor("energia"));
+    }
+
+    /** Enfriamiento acotado en turnos: rechaza valores <= 0, NaN o infinitos (evita cadencia infinita). */
+    public static int enfriamientoSeguro(double base, double refuerzo) {
+        double b = Double.isFinite(base) && base > 0 ? base : MIN_ENFRIAMIENTO;
+        double r = Double.isFinite(refuerzo) ? Math.max(0, Math.min(1.5, refuerzo)) : 0;
+        int turnos = (int) Math.round(b / (1.0 + r));
+        return Math.max(MIN_ENFRIAMIENTO, Math.min(MAX_ENFRIAMIENTO, turnos));
+    }
+
+    /** Coste de energía acotado (nunca negativo ni infinito). */
+    public static double costeSeguro(double coste) {
+        if (!Double.isFinite(coste) || coste <= 0) return 0;
+        return Math.min(MAX_COSTE, coste);
+    }
+
+    /** Recarga de energía por turno acotada (siempre > 0 y dentro de límites). */
+    public static double recargaSegura(double recarga) {
+        if (!Double.isFinite(recarga) || recarga <= 0) return MIN_RECARGA;
+        return Math.max(MIN_RECARGA, Math.min(MAX_RECARGA, recarga));
+    }
+
+    /** Energía máxima acotada dentro de límites de equilibrio. */
+    public static double energiaMaxSegura(double energiaMax) {
+        if (!Double.isFinite(energiaMax) || energiaMax <= 0) return MIN_ENERGIA_MAX;
+        return Math.max(MIN_ENERGIA_MAX, Math.min(MAX_ENERGIA_MAX, energiaMax));
+    }
+
+    /** Velocidad máxima acotada dentro de límites de equilibrio. */
+    public static double velocidadSegura(double velocidad) {
+        if (!Double.isFinite(velocidad) || velocidad <= 0) return MIN_VELOCIDAD;
+        return Math.max(MIN_VELOCIDAD, Math.min(MAX_VELOCIDAD, velocidad));
+    }
+
+    /** Giro máximo acotado dentro de límites de equilibrio. */
+    public static double giroSeguro(double giro) {
+        if (!Double.isFinite(giro) || giro <= 0) return MIN_GIRO;
+        return Math.max(MIN_GIRO, Math.min(MAX_GIRO, giro));
+    }
+
+    /** Blindaje por parte acotado dentro de límites de equilibrio. */
+    public static double blindajeSeguro(double blindaje) {
+        if (!Double.isFinite(blindaje) || blindaje <= 0) return MIN_BLINDAJE_PARTE;
+        return Math.max(MIN_BLINDAJE_PARTE, Math.min(MAX_BLINDAJE_PARTE, blindaje));
     }
 
     private static double limpio(double v, double max) {

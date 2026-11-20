@@ -114,6 +114,8 @@ public final class Guardado {
             escribir(dir.resolve("robot_" + (i + 1) + ".java"), r.codigo);
         }
         v.put("piezasGanadas", lista(j.piezasGanadas));
+        v.put("piezasPendientes", lista(j.piezasPendientes));
+        guardarAjustesDePiezas(v, j);
         v.put("modelosGanados", lista(j.modelosGanados));
         v.put("ejerciciosResueltos", lista(j.ejerciciosResueltos));
         v.put("jefesVencidos", lista(j.jefesVencidos));
@@ -233,6 +235,8 @@ public final class Guardado {
             j.robots.add(r);
         }
         leerLista(v.get("piezasGanadas"), j.piezasGanadas);
+        leerLista(v.get("piezasPendientes"), j.piezasPendientes);
+        leerAjustesDePiezas(v, j);
         leerLista(v.get("modelosGanados"), j.modelosGanados);
         leerLista(v.get("ejerciciosResueltos"), j.ejerciciosResueltos);
         leerLista(v.get("jefesVencidos"), j.jefesVencidos);
@@ -337,6 +341,35 @@ public final class Guardado {
     private static void leerLista(String s, Collection<String> destino) {
         if (s == null || s.isBlank()) return;
         for (String x : s.split(",")) if (!x.isBlank()) destino.add(x.strip());
+    }
+
+    private static void guardarAjustesDePiezas(Map<String, String> v, Jugador j) {
+        for (Map.Entry<String, Map<String, Double>> e : j.ajustesDePiezas.entrySet()) {
+            if (e.getValue() == null || e.getValue().isEmpty()) continue;
+            StringBuilder aj = new StringBuilder();
+            for (Map.Entry<String, Double> kv : e.getValue().entrySet()) {
+                if (aj.length() > 0) aj.append(',');
+                aj.append(kv.getKey()).append('=').append(numero(kv.getValue()));
+            }
+            v.put("piezaAjuste." + e.getKey(), aj.toString());
+        }
+    }
+
+    private static void leerAjustesDePiezas(Map<String, String> v, Jugador j) {
+        for (Map.Entry<String, String> e : v.entrySet()) {
+            if (!e.getKey().startsWith("piezaAjuste.")) continue;
+            String idPieza = e.getKey().substring("piezaAjuste.".length()).strip();
+            if (idPieza.isEmpty() || e.getValue().isBlank()) continue;
+            Map<String, Double> mapa = new LinkedHashMap<>();
+            for (String par : e.getValue().split(",")) {
+                int eq = par.indexOf('=');
+                if (eq <= 0) continue;
+                String clave = par.substring(0, eq).strip();
+                double val = decimal(par.substring(eq + 1), Double.NaN);
+                if (!clave.isEmpty() && Double.isFinite(val)) mapa.put(clave, val);
+            }
+            if (!mapa.isEmpty()) j.ajustesDePiezas.put(idPieza, mapa);
+        }
     }
 
     private static long largo(String s) {

@@ -18,8 +18,8 @@ import metajavbots.textos.T;
  * TIENDA — Catálogo de piezas y complementos comprables con las monedas del
  * jugador, agrupado por rango (Noob, Junior y Senior). Las piezas de rangos
  * superiores aparecen bloqueadas hasta alcanzar ese rango; las compradas se
- * guardan en {@link Jugador#piezasGanadas} (partida.txt) y quedan disponibles
- * al instante en el Taller.
+ * guardan en {@link Jugador#piezasPendientes} (partida.txt) y requieren
+ * superar su breve reto de código para quedar activas y equipables en el Taller.
  */
 public final class Tienda implements Pantalla {
 
@@ -156,23 +156,26 @@ public final class Tienda implements Pantalla {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         boolean yaLaTiene = Progreso.piezaDisponible(jug, pz);
+        boolean pendiente = Progreso.piezaPendiente(jug, pz);
         boolean alcanzaSaldo = jug.monedas + 1e-9 >= pz.precio;
-        int borde = yaLaTiene ? ui.tema.bien : desbloqueado ? ui.tema.borde : ui.tema.textoApagado;
-        p.caja(x, y, w, h, 12, ui.tema.panel, desbloqueado || yaLaTiene ? 1f : 0.65f);
-        p.bordeRedondeado(x, y, w, h, 12, borde, 1, yaLaTiene ? 2f : 1f);
+        int borde = yaLaTiene ? ui.tema.bien : pendiente ? ui.tema.aviso : desbloqueado ? ui.tema.borde : ui.tema.textoApagado;
+        p.caja(x, y, w, h, 12, ui.tema.panel, desbloqueado || yaLaTiene || pendiente ? 1f : 0.65f);
+        p.bordeRedondeado(x, y, w, h, 12, borde, 1, yaLaTiene || pendiente ? 2f : 1f);
 
-        float bw = Math.min(200, Math.max(136, w * 0.30f));
+        float bw = Math.min(220, Math.max(144, w * 0.32f));
         float textoW = w - bw - 36;
         String nombre = pz.nombre(T.idioma);
         float tNom = ui.cabe(nombre, textoW, ui.letra * 1.02f, true);
         p.texto(ui.recortarTexto(nombre, textoW, tNom, true), x + 16, y + 12, tNom, true,
-                desbloqueado || yaLaTiene ? ui.tema.texto : ui.tema.textoSuave, 1);
+                desbloqueado || yaLaTiene || pendiente ? ui.tema.texto : ui.tema.textoSuave, 1);
 
         float yMeta = y + 14 + p.altoDeLinea(tNom) + 2;
         p.circulo(x + 22, yMeta + ui.letra * 0.42f, 6, pz.naturaleza.color(), 1);
-        String meta = pz.naturaleza.nombre(T.idioma) + " · " + nombreRanura(pz.ranura);
+        String meta = pz.naturaleza.nombre(T.idioma) + " · " + nombreRanura(pz.ranura)
+                + (pendiente ? " · " + T.t("tienda.pendiente") : "");
         float tMeta = ui.cabe(meta, textoW - 20, ui.letra * 0.76f, false);
-        p.texto(ui.recortarTexto(meta, textoW - 20, tMeta, false), x + 34, yMeta, tMeta, false, ui.tema.textoSuave, 1);
+        p.texto(ui.recortarTexto(meta, textoW - 20, tMeta, false), x + 34, yMeta, tMeta, false,
+                pendiente ? ui.tema.aviso : ui.tema.textoSuave, 1);
 
         float yCifras = yMeta + p.altoDeLinea(tMeta) + 4;
         String cifras = Taller.cifras(pz);
@@ -191,6 +194,10 @@ public final class Tienda implements Pantalla {
         float by = y + h - bh - 14;
         if (yaLaTiene) {
             ui.boton("✔ " + T.t("tienda.comprada"), bx, by, bw, bh, Ui.Estilo.PLANO, false, null);
+        } else if (pendiente) {
+            if (ui.boton("⚡ " + T.t("tienda.activar"), bx, by, bw, bh, Ui.Estilo.PRINCIPAL, true, T.t("tienda.activar_ayuda"))) {
+                j.ir(new PantallaActivarPieza(pz));
+            }
         } else if (!desbloqueado) {
             ui.boton("🔒 " + T.t("tienda.bloqueada"), bx, by, bw, bh, Ui.Estilo.PLANO, false,
                     T.f("tienda.necesita_rango", nombreRango(pz.rangoTienda)));

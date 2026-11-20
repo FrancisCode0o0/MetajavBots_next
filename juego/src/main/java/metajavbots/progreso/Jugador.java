@@ -37,11 +37,19 @@ public final class Jugador {
 
         /** El montaje con las piezas que tiene puestas (las que falten, las de fábrica del modelo). */
         public Montaje montaje() {
+            return montaje(null);
+        }
+
+        /** El montaje aplicando, si existen, los ajustes personalizados (ya acotados) de las piezas activadas. */
+        public Montaje montaje(Map<String, Map<String, Double>> ajustes) {
             Montaje m = new Montaje(Modelo.de(modelo));
             CatalogoDePiezas c = CatalogoDePiezas.delJuego();
             for (Map.Entry<Montaje.Hueco, String> e : piezas.entrySet()) {
                 Pieza p = c.pieza(e.getValue());
-                if (p != null) m.poner(e.getKey(), p);
+                if (p != null) {
+                    Map<String, Double> aj = ajustes == null ? null : ajustes.get(p.id);
+                    m.poner(e.getKey(), aj == null || aj.isEmpty() ? p : metajavbots.ejercicios.RetoDePieza.aplicarAjustes(p, aj));
+                }
             }
             return m;
         }
@@ -65,8 +73,12 @@ public final class Jugador {
     public int peleasDesdeElDesafio = 99;
     public final List<Robot> robots = new ArrayList<>();
     public int robotElegido;
-    /** Piezas ganadas sueltas (botín, desafíos) o compradas en la tienda, aparte de las que da cumplir su regla. */
+    /** Piezas ganadas sueltas (botín, desafíos) o activadas tras comprar en la tienda, aparte de las que da cumplir su regla. */
     public final Set<String> piezasGanadas = new LinkedHashSet<>();
+    /** Piezas compradas en la tienda pendientes de superar su reto de código para quedar activas/equipables. */
+    public final Set<String> piezasPendientes = new LinkedHashSet<>();
+    /** Ajustes básicos programados por el jugador para piezas activadas (clave de pieza → clave=valor acotados). */
+    public final Map<String, Map<String, Double>> ajustesDePiezas = new LinkedHashMap<>();
     public final Set<String> modelosGanados = new LinkedHashSet<>();
     public final Set<String> ejerciciosResueltos = new LinkedHashSet<>();
     /** El último código de cada ejercicio (para seguir donde se dejó). */
@@ -181,6 +193,11 @@ public final class Jugador {
     public Robot robot() {
         if (robots.isEmpty()) return null;
         return robots.get(Math.max(0, Math.min(robotElegido, robots.size() - 1)));
+    }
+
+    /** El montaje de un robot del jugador aplicando sus ajustes de piezas acotados. */
+    public Montaje montajeDe(Robot r) {
+        return r == null ? null : r.montaje(ajustesDePiezas);
     }
 
     public int victorias() {

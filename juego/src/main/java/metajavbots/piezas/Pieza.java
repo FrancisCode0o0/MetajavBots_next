@@ -109,6 +109,16 @@ public final class Pieza {
         return precio > 0 && rangoTienda != null;
     }
 
+    /** Devuelve una copia de esta pieza con algunos valores numéricos sustituidos (los demás quedan igual). */
+    public Pieza conValores(Map<String, Double> cambios) {
+        if (cambios == null || cambios.isEmpty()) return this;
+        Map<String, Double> copia = new LinkedHashMap<>(valores);
+        for (Map.Entry<String, Double> e : cambios.entrySet()) {
+            if (e.getKey() != null && e.getValue() != null) copia.put(e.getKey(), e.getValue());
+        }
+        return new Pieza(id, ranura, nombre, naturaleza, rareza, desbloqueo, marca, precio, rangoTienda, copia, textos);
+    }
+
     static <E extends Enum<E>> E enumDe(Class<E> clase, String nombre, E siNo) {
         if (nombre == null || nombre.isEmpty()) return siNo;
         try {

@@ -536,7 +536,7 @@ public final class Pelea {
 
     /** Lo mismo, con el punto donde pega (para que las chispas salgan ahí y no en el centro del robot). */
     boolean danar(Cuerpo e, Cuerpo de, double dano, String arma, double desde, boolean cuerpoACuerpo, double ix, double iy) {
-        if (e.fuera || dano <= 0) return false;
+        if (e.fuera || (dano = Armas.danoEfectivoSeguro(dano)) <= 0) return false;
         // El éter esquiva las balas y los misiles.
         if ((arma.equals("bala") || arma.equals("misil")) && azar.nextDouble() < e.cifras.esquiva) {
             suceso(Suceso.Tipo.ESQUIVA, e.indice, e.x, e.y, desde, dano, arma);
@@ -617,7 +617,7 @@ public final class Pelea {
             c.velocidad *= 0.8;
             return;
         }
-        c.energia = Math.min(c.cifras.energiaMax, c.energia + c.cifras.recarga);
+        c.energia = Math.min(Cuerpo.energiaMaxSegura(c.cifras.energiaMax), c.energia + Cuerpo.recargaSegura(c.cifras.recarga));
         for (int i = 0; i < 3; i++) if (c.enfriamiento[i] > 0) c.enfriamiento[i]--;
         if (c.escudoBrazo > 0) c.escudoBrazo--;
         if (c.escudoCabeza > 0) c.escudoCabeza--;
@@ -630,8 +630,8 @@ public final class Pelea {
         if (c.sacudida > 0) c.sacudida *= 0.8;
         c.retroceso *= 0.75;
         boolean piernasRotas = c.parteRota(Montaje.PIERNAS);
-        double vmax = c.cifras.velocidad * (c.turbo > 0 ? c.factorTurbo : 1) * (piernasRotas ? 0.4 : 1);
-        double gmax = c.cifras.giro * (piernasRotas ? 0.5 : 1);
+        double vmax = Cuerpo.velocidadSegura(c.cifras.velocidad) * (c.turbo > 0 ? Armas.factorSeguro(c.factorTurbo) : 1) * (piernasRotas ? 0.4 : 1);
+        double gmax = Cuerpo.giroSeguro(c.cifras.giro) * (piernasRotas ? 0.5 : 1);
         if (c.aturdido > 0) {
             vmax = 0;
             gmax = 0;
@@ -711,13 +711,13 @@ public final class Pelea {
         c.llama--;
         Pieza p = c.piezaDe(c.brazoDeLaLlama);
         if (p == null) return;
-        double sobre = c.sobrecarga > 0 ? c.factorSobrecarga : 1;
+        double sobre = c.sobrecarga > 0 ? Armas.factorSeguro(c.factorSobrecarga) : 1;
         for (Cuerpo e : cuerpos) {
             if (e == c || e.equipo == c.equipo || e.fuera) continue;
-            double d = Math.hypot(e.x - c.x, e.y - c.y);
-            double ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
-            if (d <= p.valor("alcance", 160) + e.radio && Math.abs(normal(ang - c.mira)) <= p.valor("cono", 30) / 2 + 8) {
-                danar(e, c, p.valor("dano", 1) * sobre * c.cifras.cuerpo, "llama", ang + 180, false);
+            double d = Math.hypot(e.x - c.x, e.y - c.y), ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
+            double alc = Armas.alcanceSeguro(p.valor("alcance", 160)), con = Armas.conoSeguro(p.valor("cono", 30));
+            if (d <= alc + e.radio && Math.abs(normal(ang - c.mira)) <= con / 2 + 8) {
+                danar(e, c, Armas.danoSeguro(p.valor("dano", 1)) * sobre * c.cifras.cuerpo, "llama", ang + 180, false);
             }
         }
     }

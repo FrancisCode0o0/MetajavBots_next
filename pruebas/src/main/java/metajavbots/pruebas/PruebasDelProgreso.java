@@ -39,6 +39,8 @@ final class PruebasDelProgreso {
         apuntarPista();
         apuntarMonedas();
         apuntarTienda();
+        apuntarActivacion();
+        apuntarLimitesDeCombate();
     }
 
     private static void apuntarParte1() {
@@ -467,16 +469,18 @@ final class PruebasDelProgreso {
             j.etiqueta = Etiqueta.NOOB_1;
             j.sumarMonedas(6.0);
 
-            // Compra válida: descuenta monedas y añade pieza.
+            // Compra válida: descuenta monedas y queda pendiente de activar (no equipable aún).
             igual(Progreso.CompraResultado.COMPRADA, Progreso.comprarPieza(j, noob), "compra válida en NOOB");
             igual(Jugador.redondearMonedas(6.0 - noob.precio), j.monedas, "descuenta precio exacto");
-            cierto(j.piezasGanadas.contains(noob.id), "guarda id en piezasGanadas");
-            cierto(Progreso.piezaDisponible(j, noob), "pieza disponible tras comprar");
+            cierto(j.piezasPendientes.contains(noob.id), "guarda id en piezasPendientes");
+            cierto(Progreso.piezaPendiente(j, noob), "pieza pendiente tras comprar");
+            falso(Progreso.piezaDisponible(j, noob), "pieza bloqueada hasta superar reto de código");
+            falso(Progreso.piezaUsable(j, noob, Modelo.de("mazo")), "no equipable en Taller hasta activar");
 
-            // Comprar una ya adquirida no descuenta de nuevo.
+            // Comprar una ya adquirida (aunque siga pendiente) no descuenta de nuevo.
             double saldoTrasCompra = j.monedas;
-            igual(Progreso.CompraResultado.YA_LA_TIENE, Progreso.comprarPieza(j, noob), "no recompra pieza que ya tiene");
-            igual(saldoTrasCompra, j.monedas, "saldo intacto si ya la tiene");
+            igual(Progreso.CompraResultado.YA_LA_TIENE, Progreso.comprarPieza(j, noob), "no recompra pieza pendiente");
+            igual(saldoTrasCompra, j.monedas, "saldo intacto si ya la compró");
 
             // Intento sin saldo suficiente.
             igual(Progreso.CompraResultado.SALDO_INSUFICIENTE, Progreso.comprarPieza(j, cara), "rechaza si falta saldo");
@@ -494,16 +498,17 @@ final class PruebasDelProgreso {
             // Al subir a JUNIOR, desbloquea JUNIOR pero SENIOR sigue bloqueada.
             j.etiqueta = Etiqueta.JUNIOR_1;
             igual(Progreso.CompraResultado.COMPRADA, Progreso.comprarPieza(j, junior), "JUNIOR puede comprar pieza JUNIOR");
-            cierto(Progreso.piezaDisponible(j, junior), "pieza JUNIOR adquirida");
+            cierto(Progreso.piezaPendiente(j, junior), "pieza JUNIOR pendiente tras compra");
+            falso(Progreso.piezaDisponible(j, junior), "pieza JUNIOR no disponible hasta reto");
             igual(Progreso.CompraResultado.RANGO_INSUFICIENTE, Progreso.comprarPieza(j, senior), "JUNIOR no puede comprar SENIOR");
 
             // Al subir a SENIOR, desbloquea SENIOR.
             j.etiqueta = Etiqueta.SENIOR_1;
             igual(Progreso.CompraResultado.COMPRADA, Progreso.comprarPieza(j, senior), "SENIOR puede comprar pieza SENIOR");
-            cierto(Progreso.piezaDisponible(j, senior), "pieza SENIOR adquirida");
+            cierto(Progreso.piezaPendiente(j, senior), "pieza SENIOR pendiente tras compra");
         });
 
-        caso("tienda: persistencia de pieza comprada y monedas al guardar y cargar", () -> {
+        caso("tienda: persistencia de pieza pendiente y monedas al guardar y cargar", () -> {
             Path antes = Guardado.carpeta;
             Path tmp = Files.createTempDirectory("metajavbots_tienda");
             Guardado.carpeta = tmp;
@@ -520,11 +525,143 @@ final class PruebasDelProgreso {
 
                 Jugador cargado = Guardado.leer(Guardado.carpetaDe("Tienda Save"));
                 igual(saldoEsperado, cargado.monedas, "saldo descontado persiste en partida.txt");
-                cierto(cargado.piezasGanadas.contains(pz.id), "pieza comprada persiste en piezasGanadas");
-                cierto(Progreso.piezaDisponible(cargado, pz), "pieza comprada disponible tras cargar");
+                cierto(cargado.piezasPendientes.contains(pz.id), "pieza comprada persiste en piezasPendientes");
+                cierto(Progreso.piezaPendiente(cargado, pz), "pieza sigue pendiente tras cargar");
+                falso(Progreso.piezaDisponible(cargado, pz), "sigue bloqueada hasta superar el reto");
             } finally {
                 Guardado.carpeta = antes;
             }
+        });
+    }
+
+    private static void apuntarActivacion() {
+        caso("tienda: reto de código trilingüe por mecánica, desbloqueo al pasarlo y persistencia de ajustes", () -> {
+            CatalogoDePiezas c = CatalogoDePiezas.delJuego();
+            String[] muestras = {"canon_ligero", "punos", "escudo_brazo", "brazo_reparador", "lanzallamas",
+                "cabeza_escudo", "ruedas", "nucleo_bateria", "naturaleza_furia"};
+            for (String id : muestras) {
+                metajavbots.piezas.Pieza pz = c.pieza(id);
+                metajavbots.ejercicios.Ejercicio reto = metajavbots.ejercicios.RetoDePieza.para(pz);
+                cierto(!reto.titulo.es.isEmpty() && !reto.titulo.de.isEmpty() && !reto.titulo.en.isEmpty(), id + ": título trilingüe");
+                cierto(!reto.enunciado.es.isEmpty() && !reto.enunciado.de.isEmpty() && !reto.enunciado.en.isEmpty(), id + ": enunciado trilingüe");
+                cierto(!reto.pista.es.isEmpty() && !reto.pista.de.isEmpty() && !reto.pista.en.isEmpty(), id + ": pista trilingüe");
+                if (metajavbots.codigo.Compilador.hayCompilador()) {
+                    metajavbots.ejercicios.Comprobador.Informe pl = metajavbots.ejercicios.Comprobador.comprobar(
+                            reto, reto.codigoInicial(), java.util.Locale.ROOT);
+                    cierto(pl.compila(), id + ": plantilla compila " + pl.errores);
+                    falso(pl.todoBien(), id + ": plantilla falla casos");
+                    metajavbots.ejercicios.Comprobador.Informe sol = metajavbots.ejercicios.Comprobador.comprobar(
+                            reto, reto.codigoSolucion(), java.util.Locale.ROOT);
+                    cierto(sol.todoBien(), id + ": solución pasa todos los casos " + sol.errores);
+                }
+            }
+
+            // Flujo completo: compra -> bloqueada -> pasar reto -> desbloqueada y equipada con ajustes acotados.
+            Path antes = Guardado.carpeta;
+            Path tmp = Files.createTempDirectory("metajavbots_activar");
+            Guardado.carpeta = tmp;
+            try {
+                metajavbots.piezas.Pieza pz = c.pieza("ametralladora");
+                Jugador j = new Jugador("Activador");
+                j.robots.add(new Jugador.Robot("Spark", "cobalto"));
+                j.sumarMonedas(20.0);
+                igual(Progreso.CompraResultado.COMPRADA, Progreso.comprarPieza(j, pz), "compra");
+                falso(Progreso.piezaDisponible(j, pz), "bloqueada tras compra");
+                falso(Progreso.piezaUsable(j, pz, Modelo.de("cobalto")), "no equipable antes del reto");
+
+                metajavbots.ejercicios.Ejercicio reto = metajavbots.ejercicios.RetoDePieza.para(pz);
+                if (metajavbots.codigo.Compilador.hayCompilador()) {
+                    cierto(metajavbots.ejercicios.Comprobador.comprobar(reto, reto.codigoSolucion(), java.util.Locale.ROOT).todoBien(),
+                            "pasa el reto de activación");
+                }
+                java.util.Map<String, Double> ajustes = new java.util.LinkedHashMap<>();
+                ajustes.put("dano", 2.2);
+                ajustes.put("enfriamiento", 0.0);
+                cierto(Progreso.activarPieza(j, pz, ajustes), "activa la pieza");
+                falso(Progreso.piezaPendiente(j, pz), "ya no está pendiente");
+                cierto(Progreso.piezaDisponible(j, pz), "queda desbloqueada");
+                cierto(Progreso.piezaUsable(j, pz, Modelo.de("cobalto")), "ya es equipable en Taller");
+                igual(pz.id, j.robot().piezas.get(Montaje.Hueco.IZQUIERDA), "equipada en el robot activo");
+                double enfAcotado = j.ajustesDePiezas.get(pz.id).get("enfriamiento");
+                cierto(enfAcotado >= metajavbots.combate.Cuerpo.MIN_ENFRIAMIENTO, "enfriamiento <= 0 acotado: " + enfAcotado);
+
+                Guardado.guardar(j);
+                Jugador cargado = Guardado.leer(Guardado.carpetaDe("Activador"));
+                cierto(Progreso.piezaDisponible(cargado, pz), "desbloqueada tras recargar");
+                falso(Progreso.piezaPendiente(cargado, pz), "no vuelve a pendiente");
+                igual(enfAcotado, cargado.ajustesDePiezas.get(pz.id).get("enfriamiento"), "ajustes persisten");
+            } finally {
+                Guardado.carpeta = antes;
+            }
+        });
+    }
+
+    private static void apuntarLimitesDeCombate() {
+        caso("combate: rechazo y acotado de valores abusivos en Armas, Cuerpo y ajustes", () -> {
+            CatalogoDePiezas c = CatalogoDePiezas.delJuego();
+            metajavbots.piezas.Pieza arma = c.pieza("canon_ligero");
+            metajavbots.piezas.Pieza escudo = c.pieza("escudo_brazo");
+            metajavbots.piezas.Pieza nucleo = c.pieza("nucleo_basico");
+
+            // Acotado de ajustes propuestos por el jugador (valores abusivos, NaN, infinitos y claves inválidas).
+            java.util.Map<String, Double> abusivos = new java.util.LinkedHashMap<>();
+            abusivos.put("dano", 99999.0);
+            abusivos.put("enfriamiento", -10.0);
+            abusivos.put("trampa", 1234.0);
+            java.util.Map<String, Double> acotArma = metajavbots.ejercicios.RetoDePieza.acotarAjustes(arma, abusivos);
+            falso(acotArma.containsKey("trampa"), "clave desconocida rechazada");
+            cierto(acotArma.get("dano") <= metajavbots.combate.Armas.MAX_DANO && acotArma.get("dano") <= arma.valor("dano") * 1.2,
+                    "daño acotado: " + acotArma.get("dano"));
+            cierto(acotArma.get("enfriamiento") >= metajavbots.combate.Cuerpo.MIN_ENFRIAMIENTO,
+                    "enfriamiento acotado >= mínimo: " + acotArma.get("enfriamiento"));
+
+            java.util.Map<String, Double> abusEsc = java.util.Map.of("bloqueo", 1.0, "duracion", Double.POSITIVE_INFINITY);
+            java.util.Map<String, Double> acotEsc = metajavbots.ejercicios.RetoDePieza.acotarAjustes(escudo, abusEsc);
+            cierto(acotEsc.get("bloqueo") <= metajavbots.combate.Armas.MAX_BLOQUEO, "bloqueo nunca 100 %");
+            cierto(Double.isFinite(acotEsc.get("duracion")), "infinito rechazado");
+
+            java.util.Map<String, Double> abusNuc = java.util.Map.of("recarga", -5.0, "energiaMax", Double.NaN);
+            java.util.Map<String, Double> acotNuc = metajavbots.ejercicios.RetoDePieza.acotarAjustes(nucleo, abusNuc);
+            cierto(acotNuc.get("recarga") >= metajavbots.combate.Cuerpo.MIN_RECARGA, "recarga <= 0 rechazada");
+            cierto(Double.isFinite(acotNuc.get("energiaMax")), "NaN rechazado");
+
+            // Validación directa en el motor de combate (Armas y Cuerpo).
+            cierto(metajavbots.combate.Cuerpo.enfriamientoSeguro(0, 0) >= metajavbots.combate.Cuerpo.MIN_ENFRIAMIENTO, "enfriamiento 0 acotado");
+            cierto(metajavbots.combate.Cuerpo.enfriamientoSeguro(-20, 5) >= metajavbots.combate.Cuerpo.MIN_ENFRIAMIENTO, "enfriamiento negativo acotado");
+            cierto(metajavbots.combate.Cuerpo.enfriamientoSeguro(Double.NaN, 0) >= metajavbots.combate.Cuerpo.MIN_ENFRIAMIENTO, "enfriamiento NaN acotado");
+            cierto(metajavbots.combate.Cuerpo.recargaSegura(0) >= metajavbots.combate.Cuerpo.MIN_RECARGA, "recarga 0 acotada");
+            cierto(metajavbots.combate.Cuerpo.recargaSegura(-3) >= metajavbots.combate.Cuerpo.MIN_RECARGA, "recarga negativa acotada");
+            cierto(metajavbots.combate.Cuerpo.recargaSegura(500) <= metajavbots.combate.Cuerpo.MAX_RECARGA, "recarga excesiva acotada");
+            igual(0.0, metajavbots.combate.Armas.danoSeguro(-15), "daño negativo rechazado");
+            igual(0.0, metajavbots.combate.Armas.danoSeguro(Double.NaN), "daño NaN rechazado");
+            igual(metajavbots.combate.Armas.MAX_DANO, metajavbots.combate.Armas.danoSeguro(9999), "daño fuera de rango acotado");
+            igual(metajavbots.combate.Armas.MAX_DANO_EFECTIVO, metajavbots.combate.Armas.danoEfectivoSeguro(9999), "daño efectivo acotado");
+            igual(metajavbots.combate.Armas.MAX_BLOQUEO, metajavbots.combate.Armas.bloqueoSeguro(1.0), "bloqueo 100 % acotado");
+            igual(metajavbots.combate.Armas.MAX_PROYECTILES, metajavbots.combate.Armas.proyectilesSeguros(200), "proyectiles excesivos acotados");
+
+            // Pelea real con pieza manipulada (cadencia 0, daño 9999, recarga -10): el motor evita abusos.
+            metajavbots.piezas.Pieza rota = c.pieza("laser_basico").conValores(java.util.Map.of("dano", 9999.0, "enfriamiento", 0.0));
+            metajavbots.piezas.Pieza nucRoto = c.pieza("nucleo_basico").conValores(java.util.Map.of("recarga", -10.0));
+            Montaje mA = new Montaje(Modelo.de("cobalto"));
+            mA.poner(Montaje.Hueco.IZQUIERDA, rota);
+            mA.poner(Montaje.Hueco.NUCLEO, nucRoto);
+            metajavbots.combate.Combatiente ca = new metajavbots.combate.Combatiente("A", mA, null);
+            metajavbots.combate.Combatiente cb = new metajavbots.combate.Combatiente("B", new Montaje(Modelo.de("cobalto")), null);
+            metajavbots.combate.Pelea pelea = new metajavbots.combate.Pelea(ca, cb, 7L);
+            pelea.empezarRonda();
+            metajavbots.combate.Cuerpo a = pelea.cuerpo(0);
+            metajavbots.combate.Cuerpo b = pelea.cuerpo(1);
+            b.x = a.x + 150;
+            b.y = a.y;
+            a.mira = 0;
+            cierto(a.atacar(metajavbots.combate.Cuerpo.IZQUIERDA), "primer ataque permitido");
+            falso(a.listo(metajavbots.combate.Cuerpo.IZQUIERDA), "enfriamiento evita cadencia infinita");
+            double energiaTrasDisparo = a.energia;
+            pelea.avanzar();
+            falso(a.listo(metajavbots.combate.Cuerpo.IZQUIERDA), "sigue en enfriamiento en el turno siguiente");
+            cierto(a.energia > energiaTrasDisparo, "recarga acotada > 0 aunque el núcleo tuviera recarga <= 0");
+            cierto(cb.danoTotalRecibido <= metajavbots.combate.Armas.MAX_DANO_EFECTIVO,
+                    "daño en pelea acotado: " + cb.danoTotalRecibido);
         });
     }
 }
