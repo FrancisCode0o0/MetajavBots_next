@@ -11,6 +11,7 @@ import metajavbots.codigo.DetectorDeTemas;
 import metajavbots.codigo.RobotDelJugador;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
+import metajavbots.combate.ModificadoresPoo;
 import metajavbots.combate.Pelea;
 import metajavbots.dialogos.Narrador;
 import metajavbots.pantalla.Dialogo;
@@ -568,6 +569,19 @@ public final class PantallaPelea implements Pantalla {
             for (java.util.Map.Entry<String, int[]> e : inf.porArma.entrySet()) {
                 p.texto("· " + e.getKey() + ": " + e.getValue()[1] + "/" + e.getValue()[0], cx + 10, yy, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
                 yy += ui.letra * 1.3f;
+            }
+            if (i == 0 && pelea.combatientes[0].efectosPoo != null) {
+                java.util.List<ModificadoresPoo.Entrada> poo = pelea.combatientes[0].efectosPoo.resumen();
+                if (!poo.isEmpty()) {
+                    yy += 8;
+                    p.texto(T.t("poo.titulo"), cx, yy, ui.letra * 0.9f, true, ui.tema.texto, 1);
+                    yy += ui.letra * 1.3f;
+                    for (ModificadoresPoo.Entrada e : poo) {
+                        int colPoo = e.nivel == ModificadoresPoo.Nivel.PENALIZACION ? ui.tema.mal
+                                : e.nivel == ModificadoresPoo.Nivel.BONO ? ui.tema.bien : ui.tema.aviso;
+                        yy += p.parrafo("• " + e.texto, cx + 6, yy, col - 16, ui.letra * 0.78f, colPoo, 1) + 4;
+                    }
+                }
             }
         }
         // Consejos del revisor (sin IA, o con ella si está puesta).

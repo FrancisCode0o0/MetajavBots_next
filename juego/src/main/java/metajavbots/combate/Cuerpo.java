@@ -452,4 +452,29 @@ public final class Cuerpo implements Mando {
     public boolean parteRota(int p) {
         return parte[p] <= 0;
     }
+
+    /** Efectos POO activos de este robot (calculados por reflexión sobre su clase compilada). */
+    public ModificadoresPoo efectosPoo() {
+        return combatiente.efectosPoo == null ? ModificadoresPoo.NINGUNO : combatiente.efectosPoo;
+    }
+
+    /** Presupuesto efectivo de pasos de cálculo por turno, aplicando el bono de modificadores {@code final}. */
+    public long topeDePasos() {
+        double base = pelea.topeDePasos > 0 ? pelea.topeDePasos : cifras.pasos;
+        return Math.max(1L, Math.round(base * efectosPoo().factorPasos));
+    }
+
+    /** Analiza los modificadores POO de la clase del robot al iniciar la ronda. */
+    void actualizarEfectosPoo() {
+        boolean enEquipo = false;
+        for (int i = 0; i < pelea.equipo.length; i++) {
+            if (i != indice && pelea.equipo[i] == equipo) {
+                enEquipo = true;
+                break;
+            }
+        }
+        combatiente.efectosPoo = combatiente.robot == null
+                ? ModificadoresPoo.NINGUNO
+                : ModificadoresPoo.analizar(combatiente.robot.getClass(), enEquipo);
+    }
 }

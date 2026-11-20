@@ -74,7 +74,7 @@ public final class VisorTactico {
         Cuerpo yo = pelea.cuerpo(0);
         if (yo == null || yo.fuera) return null;
         Pieza cabeza = yo.combatiente.montaje.pieza(Montaje.Hueco.CABEZA);
-        double radioRadar = cabeza == null ? 400 : cabeza.valor("radar", 400);
+        double radioRadar = (cabeza == null ? 400 : cabeza.valor("radar", 400)) * yo.efectosPoo().factorRadarPropio;
         double conoRadar = cabeza == null ? 50 : cabeza.valor("cono", 50);
         if (yo.parteRota(Montaje.CABEZA)) radioRadar *= 0.4;
         List<? extends Avistado> vistos = yo.vistos();

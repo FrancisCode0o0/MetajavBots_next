@@ -42,6 +42,9 @@ public final class Revisor {
             if (inf.danoPorArmaRecibido.getOrDefault("pared", 0.0) > 5) r.consejos.add(T.t("revisor.paredes"));
             if (inf.errores > 0) r.consejos.add(T.f("revisor.errores", inf.errores, pelea.combatientes[0].ultimoError));
             if (inf.topes > 0) r.consejos.add(T.f("revisor.topes", inf.topes));
+            if (pelea.combatientes[0].efectosPoo != null && pelea.combatientes[0].efectosPoo.camposPublicosMutables > 0) {
+                r.consejos.add(T.f("poo.consejo_public", pelea.combatientes[0].efectosPoo.camposPublicosMutables));
+            }
         }
         estilo(codigo, r);
         if (r.consejos.isEmpty()) r.consejos.add(T.t("revisor.bien"));

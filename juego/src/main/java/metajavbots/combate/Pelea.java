@@ -228,6 +228,7 @@ public final class Pelea {
             }
         }
         if (c.robot == null) return;
+        cu.actualizarEfectosPoo();
         Puente.conectar(c.robot, cu);
         ejecutar(cu, () -> Puente.empezar(c.robot), 2_000_000);
     }
@@ -394,7 +395,7 @@ public final class Pelea {
         }
         Combatiente co = c.combatiente;
         if (co.robot == null) return;
-        long tope = topeDePasos > 0 ? topeDePasos : (long) c.cifras.pasos;
+        long tope = c.topeDePasos();
         List<metajavbots.api.Impacto> golpes = new ArrayList<>(c.golpesRecibidos);
         List<metajavbots.api.Impacto> aciertos = new ArrayList<>(c.aciertos);
         c.golpesRecibidos.clear();
@@ -485,7 +486,7 @@ public final class Pelea {
         if (el.fuera || yo.fuera) return l;
         double d = Math.hypot(el.x - yo.x, el.y - yo.y);
         Pieza cabeza = yo.piezaDe(Cuerpo.CABEZA);
-        double radar = cabeza == null ? 400 : cabeza.valor("radar", 400);
+        double radar = (cabeza == null ? 400 : cabeza.valor("radar", 400)) * yo.efectosPoo().factorRadarPropio * el.efectosPoo().factorRadarRival;
         double cono = cabeza == null ? 50 : cabeza.valor("cono", 50);
         if (yo.parteRota(Montaje.CABEZA)) radar *= 0.4;
         double ang = Math.toDegrees(Math.atan2(el.y - yo.y, el.x - yo.x));
@@ -542,7 +543,7 @@ public final class Pelea {
             suceso(Suceso.Tipo.ESQUIVA, e.indice, e.x, e.y, desde, dano, arma);
             return false;
         }
-        dano *= resistencia[e.indice];
+        dano *= resistencia[e.indice] * e.efectosPoo().factorDanoRecibido;
         double bloqueo = 0;
         if (e.escudoBrazo > 0 && Math.abs(normal(desde - e.mira)) <= e.conoEscudo / 2) bloqueo = e.bloqueoBrazo;
         if (e.escudoCabeza > 0) bloqueo = Math.max(bloqueo, e.bloqueoCabeza);
@@ -617,7 +618,8 @@ public final class Pelea {
             c.velocidad *= 0.8;
             return;
         }
-        c.energia = Math.min(Cuerpo.energiaMaxSegura(c.cifras.energiaMax), c.energia + Cuerpo.recargaSegura(c.cifras.recarga));
+        c.energia = Math.min(Cuerpo.energiaMaxSegura(c.cifras.energiaMax),
+                c.energia + Cuerpo.recargaSegura(c.cifras.recarga * c.efectosPoo().factorRecarga));
         for (int i = 0; i < 3; i++) if (c.enfriamiento[i] > 0) c.enfriamiento[i]--;
         if (c.escudoBrazo > 0) c.escudoBrazo--;
         if (c.escudoCabeza > 0) c.escudoCabeza--;
@@ -678,11 +680,7 @@ public final class Pelea {
         double dx = b.x - a.x, dy = b.y - a.y;
         double d = Math.hypot(dx, dy), min = a.radio + b.radio;
         if (d >= min) return;
-        if (d < 0.001) {
-            dx = 1;
-            dy = 0;
-            d = 1;
-        }
+        if (d < 0.001) { dx = 1; dy = 0; d = 1; }
         double empuje = (min - d) / 2 + 0.5;
         double ux = dx / d, uy = dy / d;
         a.x -= ux * empuje;

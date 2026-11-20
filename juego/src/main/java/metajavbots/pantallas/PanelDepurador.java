@@ -9,6 +9,7 @@ import metajavbots.Juego;
 import metajavbots.api.RobotBase;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
+import metajavbots.combate.ModificadoresPoo;
 import metajavbots.combate.OrdenDelTurno;
 import metajavbots.combate.Pelea;
 import metajavbots.pantalla.Pincel;
@@ -55,7 +56,7 @@ final class PanelDepurador {
         ty += p.altoDeLinea(tamTitulo) + 4;
         Cuerpo c = pelea.cuerpo(0);
         if (c != null) {
-            long tope = pelea.topeDePasos > 0 ? pelea.topeDePasos : (long) c.cifras.pasos;
+            long tope = c.topeDePasos();
             float parte = Math.min(1, c.pasosDelTurno / (float) tope);
             ui.barra(x + 16, ty, w - 32, 18, parte, parte > 0.8f ? ui.tema.mal : ui.tema.acento, T.f("pelea.pasos", c.pasosDelTurno, tope));
             ty += 24;
@@ -80,6 +81,7 @@ final class PanelDepurador {
     private void variablesYConsola(Juego j, Combatiente yo, float x, float ty, float w, float abajo) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
+        ty = resumenPoo(j, yo, x, ty, w);
         float tamCab = ui.cabe(T.t("pelea.variables"), w - 32, ui.letra * 0.88f, true);
         p.texto(T.t("pelea.variables"), x + 16, ty, tamCab, true, ui.tema.texto, 1);
         ty += p.altoDeLinea(tamCab) + 4;
@@ -101,6 +103,23 @@ final class PanelDepurador {
         p.texto(T.t("pelea.consola"), x + 16, ty, tamCab, true, ui.tema.texto, 1);
         ty += p.altoDeLinea(tamCab) + 4;
         consola(j, yo, x + 8, ty, w - 16, Math.max(60, abajo - ty));
+    }
+
+    private float resumenPoo(Juego j, Combatiente yo, float x, float ty, float w) {
+        List<ModificadoresPoo.Entrada> entradas = yo.efectosPoo == null ? List.of() : yo.efectosPoo.resumen();
+        if (entradas.isEmpty()) return ty;
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        float tamCab = ui.cabe(T.t("poo.titulo"), w - 32, ui.letra * 0.84f, true);
+        p.texto(T.t("poo.titulo"), x + 16, ty, tamCab, true, ui.tema.texto, 1);
+        ty += p.altoDeLinea(tamCab) + 2;
+        float tam = Math.min(17, ui.letra * 0.72f);
+        for (ModificadoresPoo.Entrada e : entradas) {
+            int col = e.nivel == ModificadoresPoo.Nivel.PENALIZACION ? ui.tema.mal
+                    : e.nivel == ModificadoresPoo.Nivel.BONO ? ui.tema.bien : ui.tema.aviso;
+            ty += p.parrafo("• " + e.texto, x + 16, ty, w - 32, tam, col, 1) + 2;
+        }
+        return ty + 6;
     }
 
     private void consola(Juego j, Combatiente yo, float x, float y, float w, float h) {

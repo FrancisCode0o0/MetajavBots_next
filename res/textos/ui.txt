@@ -202,6 +202,17 @@ informe.topes = Topes de cálculo: {0} (media {1} pasos por turno) | Rechenlimit
 informe.total = Daño total en la pelea: {0} | Gesamtschaden im Kampf: {0} | Total damage in the fight: {0}
 informe.consejos = Consejos | Tipps | Tips
 
+poo.titulo = Modificadores POO | OOP-Modifikatoren | OOP modifiers
+poo.ninguno = Sin modificadores POO activos | Keine aktiven OOP-Modifikatoren | No active OOP modifiers
+poo.private = private ({0}): -{1} % daño · -{2} % radar rival | private ({0}): -{1} % Schaden · -{2} % Gegner-Radar | private ({0}): -{1}% dmg · -{2}% enemy radar
+poo.final = final ({0}): +{1} % pasos por turno | final ({0}): +{1} % Schritte pro Zug | final ({0}): +{1}% steps per tick
+poo.static_equipo = static ({0}): memoria de equipo (+{1} % radar, +{2} % recarga) | static ({0}): Team-Speicher (+{1} % Radar, +{2} % Aufladung) | static ({0}): team memory (+{1}% radar, +{2}% recharge)
+poo.static_solo = static ({0}): memoria persistente de clase | static ({0}): persistenter Klassenspeicher | static ({0}): persistent class memory
+poo.protected = protected ({0}): herencia controlada (-{1} % daño, -{2} % radar rival) | protected ({0}): kontrollierte Vererbung (-{1} % Schaden, -{2} % Gegner-Radar) | protected ({0}): controlled inheritance (-{1}% dmg, -{2}% enemy radar)
+poo.paquete = acceso por defecto ({0}): +{1} % radar rival (usa private) | Paketzugriff ({0}): +{1} % Gegner-Radar (nutze private) | package-private ({0}): +{1}% enemy radar (use private)
+poo.public = public mutable ({0}): +{1} % daño · +{2} % radar rival | public veränderbar ({0}): +{1} % Schaden · +{2} % Gegner-Radar | mutable public ({0}): +{1}% dmg · +{2}% enemy radar
+poo.consejo_public = Tienes {0} campo(s) public mutables sin encapsular: el rival te detecta antes y recibes más daño. Cámbialos a private. | Du hast {0} veränderbare public-Felder ohne Kapselung: Der Gegner erkennt dich früher und du nimmst mehr Schaden. Mach sie private. | You have {0} unencapsulated mutable public field(s): the enemy detects you earlier and you take more damage. Make them private.
+
 final.victoria = ¡VICTORIA! | SIEG! | VICTORY!
 final.derrota = Derrota | Niederlage | Defeat
 final.empate = Empate | Unentschieden | Draw

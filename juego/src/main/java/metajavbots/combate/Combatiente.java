@@ -86,6 +86,8 @@ public final class Combatiente {
     /** Lo que pierde de vista la pelea: el último error (con su línea), para enseñarlo en el editor. */
     public String ultimoError = "";
     public int lineaDelUltimoError = -1;
+    /** Efectos jugables calculados por reflexión sobre los modificadores POO de la clase del robot. */
+    public ModificadoresPoo efectosPoo = ModificadoresPoo.NINGUNO;
     /** Es la computadora (para el locutor y los diálogos). */
     public boolean computadora;
 
