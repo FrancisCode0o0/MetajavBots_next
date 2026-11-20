@@ -83,11 +83,11 @@ codigo:
         rondasGanadas = 0;             // primera ronda: aún no había nada guardado
     }
 --- pagina
-es: finally se ejecuta SIEMPRE, haya excepción o no: ideal para dejar las cosas en orden (enfriar el arma,
+es: finally se ejecuta [[siempre]], haya excepción o no: ideal para dejar las cosas en orden (enfriar el arma,
 es: cerrar un recurso). Desde Java 7 puedes atrapar varias de golpe con multi-catch:
 es: catch (NumberFormatException | NullPointerException e). Y nunca dejes un catch vacío:
 es: un error tragado en silencio es el más difícil de encontrar.
-de: finally läuft IMMER, mit oder ohne Ausnahme: ideal, um aufzuräumen (die Waffe abkühlen,
+de: finally läuft [[immer]], mit oder ohne Ausnahme: ideal, um aufzuräumen (die Waffe abkühlen,
 de: eine Ressource schließen). Seit Java 7 fängst du mit Multi-Catch mehrere auf einmal:
 de: catch (NumberFormatException | NullPointerException e). Und lass nie ein catch leer:
 de: Ein still verschluckter Fehler ist am schwersten zu finden.

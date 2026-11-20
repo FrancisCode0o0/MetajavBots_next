@@ -354,7 +354,7 @@ titulo.de: Die Raute im Wappen
 titulo.en: The emblem diamond
 enunciado.es: Dibuja un rombo de asteriscos cuya fila del medio tiene 2·n - 1. Cada fila está centrada con espacios a la izquierda (no a la derecha). Ejemplo: rombo(2) imprime " *", "***" y " *". Con n = 0, nada.
 enunciado.de: Zeichne eine Raute aus Sternchen, deren mittlere Zeile 2·n - 1 hat. Jede Zeile wird mit Leerzeichen links (nicht rechts) zentriert. Beispiel: rombo(2) gibt " *", "***" und " *" aus. Bei n = 0 nichts.
-enunciado.en: Draw a diamond of asterisks whose middle row has 2·n - 1 of them. Each row is centred with spaces on the left (not on the right). Example: rombo(2) prints " *", "***" and " *". With n = 0, nothing.
+enunciado.en: Draw a diamond of asterisks whose middle row has 2·n - 1 of them. Each row is centered with spaces on the left (not on the right). Example: rombo(2) prints " *", "***" and " *". With n = 0, nothing.
 pista.es: Recorre las filas con i de -(n - 1) a n - 1. En cada una van Math.abs(i) espacios y 2 * (n - Math.abs(i)) - 1 asteriscos.
 pista.de: Lauf mit i von -(n - 1) bis n - 1 über die Zeilen. In jede Zeile kommen Math.abs(i) Leerzeichen und 2 * (n - Math.abs(i)) - 1 Sternchen.
 pista.en: Loop over the rows with i from -(n - 1) to n - 1. Each row gets Math.abs(i) spaces and 2 * (n - Math.abs(i)) - 1 asterisks.

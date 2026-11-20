@@ -577,6 +577,11 @@ public final class Cuerpo implements Mando {
         return parte[p] <= 0;
     }
 
+    /** Turnos que le quedan al arma de ese brazo para volver a estar lista (0 si ya puede disparar). */
+    public int enfriamiento(int brazo) {
+        return brazo >= 0 && brazo < enfriamiento.length ? enfriamiento[brazo] : 0;
+    }
+
     /** Efectos POO activos de este robot (calculados por reflexión sobre su clase compilada). */
     public ModificadoresPoo efectosPoo() {
         return combatiente.efectosPoo == null ? ModificadoresPoo.NINGUNO : combatiente.efectosPoo;

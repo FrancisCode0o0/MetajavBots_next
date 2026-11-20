@@ -42,7 +42,7 @@ robot: ronda_sin_errores
 es: Saca al menos una maniobra a su propio método (esquivar, buscar…) y pelea una ronda sin errores.
 de: Lagere mindestens ein Manöver in eine eigene Methode aus (ausweichen, suchen …) und kämpf eine Runde
 de: fehlerfrei.
-en: Move at least one manoeuvre into its own method (dodge, search…) and fight a round without errors.
+en: Move at least one maneuver into its own method (dodge, search…) and fight a round without errors.
 --- tarea
 ejercicio: t06_area_escudo
 es: Un método que recibe el radio y devuelve el área del escudo redondo.

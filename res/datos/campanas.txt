@@ -19,7 +19,7 @@ musica: entrenamiento
 1.escenario: HANGAR
 1.rondas: 3
 1.texto: Rocko cobra la deuda de un tornillo prestado y pelea los viernes en el sótano de la chatarrería. Hoy, contra Tuerca Araña, que muerde cables. | Rocko treibt Schulden für eine geliehene Schraube ein und kämpft freitags im Keller des Schrottplatzes. Heute gegen Mutterspinne, die Kabel beißt. | Rocko collects a debt for a borrowed screw and fights on Fridays in the scrapyard basement. Tonight: Nut Spider, who bites cables.
-1.victoria: ¡Ganó! Le pagan con tres tuercas y medio litro de aceite. Rocko invita a Aceituna, la de la ferretería. | Gewonnen! Bezahlt in drei Muttern und einem halben Liter Öl. Rocko lädt Olivia aus dem Eisenwarenladen ein. | Won! Paid in three nuts and half a litre of oil. Rocko asks out Olivette from the hardware shop.
+1.victoria: ¡Ganó! Le pagan con tres tuercas y medio litro de aceite. Rocko invita a Aceituna, la de la ferretería. | Gewonnen! Bezahlt in drei Muttern und einem halben Liter Öl. Rocko lädt Olivia aus dem Eisenwarenladen ein. | Won! Paid in three nuts and half a liter of oil. Rocko asks out Olivette from the hardware shop.
 2.rival: Costillar Congelado | Gefrorene Rippe | Frozen Ribs
 2.modelo: galapago
 2.nivel: 0.25
@@ -33,7 +33,7 @@ musica: entrenamiento
 3.escenario: NEON
 3.rondas: 4
 3.texto: La gran noche. Apolo Cromo entra vestido de bandera y lanzando monedas. Rocko solo quiere una cosa: aguantar de pie hasta el final. | Die große Nacht. Apollo Chrom kommt im Flaggenkostüm und wirft Münzen. Rocko will nur eines: bis zum Schluss stehen bleiben. | The big night. Apollo Chrome comes in dressed as a flag, throwing coins. Rocko wants only one thing: to still be standing at the end.
-3.victoria: ¡Sigue en pie! Con un ojo abollado, Rocko grita entre el público: «¡Aceitunaaa!». Ella le grita: «¡Te quiero, chatarra!». | Er steht noch! Mit einer Delle am Auge ruft Rocko in die Menge: «Oliviaaa!». Sie ruft zurück: «Ich liebe dich, du Schrotthaufen!». | Still standing! With a dented eye, Rocko shouts into the crowd: «Oliveeette!». She shouts back: «I love you, scrap heap!».
+3.victoria: ¡Sigue en pie! Con un ojo abollado, Rocko grita entre el público: «¡Aceitunaaa!». Ella le grita: «¡Te quiero, chatarra!». | Er steht noch! Mit einer Delle am Auge ruft Rocko in die Menge: «Oliviaaa!». Sie ruft zurück: «Ich liebe dich, du Schrotthaufen!». | Still standing! With a dented eye, Rocko shouts into the crowd: "Oliveeette!". She shouts back: "I love you, scrap heap!".
 
 [rocko2]
 titulo: Rocko II: la revancha | Rocko II: Die Revanche | Rocko II: The Rematch
@@ -48,13 +48,13 @@ requiere: rocko
 1.escenario: NEON
 1.rondas: 3
 1.texto: Rocko se gasta los premios en una moto que no sabe conducir y lo contratan para un anuncio de aftershave. No sabe leer el guion. El robot del anuncio se enfada. | Rocko verprasst sein Preisgeld für ein Motorrad, das er nicht fahren kann, und dreht einen Werbespot für Rasierwasser. Er kann das Drehbuch nicht lesen. Der Werbe-Roboter wird sauer. | Rocko blows his prize money on a motorbike he can't ride and lands an aftershave advert. He can't read the script. The advert robot gets angry.
-1.victoria: Lo despiden del anuncio, pero el director dice que «tiene algo». Probablemente óxido. | Er fliegt aus dem Spot, aber der Regisseur sagt, er «hat was». Wahrscheinlich Rost. | He's fired from the advert, but the director says he «has something». Probably rust.
+1.victoria: Lo despiden del anuncio, pero el director dice que «tiene algo». Probablemente óxido. | Er fliegt aus dem Spot, aber der Regisseur sagt, er «hat was». Wahrscheinlich Rost. | He's fired from the advert, but the director says he "has something". Probably rust.
 2.rival: Aspiradora Veloz | Flinker Sauger | Speedy Vacuum
 2.modelo: avispa
 2.nivel: 0.35
 2.escenario: HANGAR
 2.rondas: 3
-2.texto: Don Tuercas tiene un método: «Si atrapas a la aspiradora robot, atrapas cualquier cosa». La aspiradora no está de acuerdo. | Don Mutter hat eine Methode: «Wenn du den Saugroboter fängst, fängst du alles.» Der Saugroboter sieht das anders. | Don Bolts has a method: «If you can catch the robot vacuum, you can catch anything.» The vacuum disagrees.
+2.texto: Don Tuercas tiene un método: «Si atrapas a la aspiradora robot, atrapas cualquier cosa». La aspiradora no está de acuerdo. | Don Mutter hat eine Methode: «Wenn du den Saugroboter fängst, fängst du alles.» Der Saugroboter sieht das anders. | Don Bolts has a method: "If you can catch the robot vacuum, you can catch anything." The vacuum disagrees.
 2.victoria: ¡Atrapada! La aspiradora, por fin limpia, le pasa la bolsa del polvo como trofeo. | Gefangen! Der Saugroboter überreicht ihm als Trophäe den Staubbeutel. | Caught! The vacuum hands over its dust bag as a trophy.
 3.rival: Apolo Cromo | Apollo Chrom | Apollo Chrome
 3.modelo: faro
@@ -62,7 +62,7 @@ requiere: rocko
 3.escenario: NEON
 3.rondas: 4
 3.texto: La revancha. Rocko ha aprendido a pegar con los dos brazos, porque Don Tuercas le ató el izquierdo a una lavadora durante un mes. | Die Revanche. Rocko kann jetzt mit beiden Armen schlagen, weil Don Mutter ihm einen Monat lang den linken an eine Waschmaschine gebunden hat. | The rematch. Rocko can now punch with both arms, because Don Bolts tied his left one to a washing machine for a month.
-3.victoria: Los dos caen a la vez... y Rocko se levanta agarrándose a las cuerdas. ¡Campeón del mundo! «¡Aceituna, lo hemos conseguido!». | Beide gehen gleichzeitig zu Boden ... und Rocko zieht sich an den Seilen hoch. Weltmeister! «Olivia, wir haben es geschafft!». | They both go down at once... and Rocko hauls himself up on the ropes. World champion! «Olivette, we did it!».
+3.victoria: Los dos caen a la vez... y Rocko se levanta agarrándose a las cuerdas. ¡Campeón del mundo! «¡Aceituna, lo hemos conseguido!». | Beide gehen gleichzeitig zu Boden ... und Rocko zieht sich an den Seilen hoch. Weltmeister! «Olivia, wir haben es geschafft!». | They both go down at once... and Rocko hauls himself up on the ropes. World champion! "Olivette, we did it!".
 
 [rocko3]
 titulo: Rocko III: el ojo del tostador | Rocko III: Das Auge des Toasters | Rocko III: Eye of the Toaster
@@ -76,7 +76,7 @@ requiere: rocko2
 1.nivel: 0.35
 1.escenario: NEON
 1.rondas: 2
-1.texto: Una exhibición benéfica contra Bocazas Tronante, un robot de lucha libre de tres metros que se toma el «espectáculo» muy en serio. Muy, muy en serio. | Ein Wohltätigkeitskampf gegen Großmaul Donnerkiste, einen drei Meter großen Wrestling-Roboter, der die «Show» sehr ernst nimmt. Sehr, sehr ernst. | A charity exhibition against Thunder Gob, a ten-foot wrestling robot who takes «the show» very seriously. Very, very seriously.
+1.texto: Una exhibición benéfica contra Bocazas Tronante, un robot de lucha libre de tres metros que se toma el «espectáculo» muy en serio. Muy, muy en serio. | Ein Wohltätigkeitskampf gegen Großmaul Donnerkiste, einen drei Meter großen Wrestling-Roboter, der die «Show» sehr ernst nimmt. Sehr, sehr ernst. | A charity exhibition against Thunder Gob, a ten-foot wrestling robot who takes "the show" very seriously. Very, very seriously.
 1.victoria: Bocazas se hace una foto con Rocko y le firma la abolladura. Todos contentos, menos la abolladura. | Großmaul macht ein Foto mit Rocko und signiert die Delle. Alle zufrieden, außer der Delle. | Thunder Gob takes a photo with Rocko and signs the dent. Everyone's happy except the dent.
 2.rival: Garrote Lunk | Knüppel Lunk | Club Lunk
 2.modelo: mazo
@@ -90,7 +90,7 @@ requiere: rocko2
 3.nivel: 0.65
 3.escenario: DESIERTO
 3.rondas: 4
-3.texto: Entrenan en la playa, a cámara lenta, con las olas. Apolo le enseña a bailar: «¡Pies ligeros, Rocko!». Rocko pisa a Apolo cuarenta veces. Ahora, la revancha. | Training am Strand, in Zeitlupe, mit Wellen. Apollo bringt ihm das Tanzen bei: «Leichte Füße, Rocko!». Rocko tritt Apollo vierzigmal auf die Füße. Jetzt: die Revanche. | Training on the beach, in slow motion, with waves. Apollo teaches him to dance: «Light feet, Rocko!». Rocko steps on Apollo forty times. Now, the rematch.
+3.texto: Entrenan en la playa, a cámara lenta, con las olas. Apolo le enseña a bailar: «¡Pies ligeros, Rocko!». Rocko pisa a Apolo cuarenta veces. Ahora, la revancha. | Training am Strand, in Zeitlupe, mit Wellen. Apollo bringt ihm das Tanzen bei: «Leichte Füße, Rocko!». Rocko tritt Apollo vierzigmal auf die Füße. Jetzt: die Revanche. | Training on the beach, in slow motion, with waves. Apollo teaches him to dance: "Light feet, Rocko!". Rocko steps on Apollo forty times. Now, the rematch.
 3.victoria: ¡Tenía el ojo del tostador! Garrote Lunk cae como una tostada: siempre del lado de la mantequilla. | Er hatte das Auge des Toasters! Knüppel Lunk fällt wie ein Toast: immer auf die Butterseite. | He had the eye of the toaster! Club Lunk falls like toast: always butter side down.
 
 [rocko4]
@@ -105,7 +105,7 @@ requiere: rocko3
 1.nivel: 0.4
 1.escenario: NEON
 1.rondas: 2
-1.texto: Llega Igor Tundrov, dos metros de acero de laboratorio que dice una sola frase: «Te voy a formatear». Antes, una exhibición con mucha purpurina para calentar. | Igor Tundrov kommt an, zwei Meter Laborstahl, der nur einen Satz sagt: «Ich formatiere dich.» Vorher ein Schaukampf mit viel Glitzer zum Aufwärmen. | Igor Tundrov arrives, seven feet of lab steel who says a single sentence: «I will format you.» First, a glittery exhibition bout to warm up.
+1.texto: Llega Igor Tundrov, dos metros de acero de laboratorio que dice una sola frase: «Te voy a formatear». Antes, una exhibición con mucha purpurina para calentar. | Igor Tundrov kommt an, zwei Meter Laborstahl, der nur einen Satz sagt: «Ich formatiere dich.» Vorher ein Schaukampf mit viel Glitzer zum Aufwärmen. | Igor Tundrov arrives, seven feet of lab steel who says a single sentence: "I will format you." First, a glittery exhibition bout to warm up.
 1.victoria: Mucha purpurina, poco golpe. Rocko se va a entrenar a una cabaña en la nieve, sin enchufes. | Viel Glitzer, wenig Schlag. Rocko trainiert in einer Hütte im Schnee, ohne Steckdosen. | Lots of glitter, little punch. Rocko goes to train in a cabin in the snow, with no sockets.
 2.rival: Trineo Rebelde | Rebellischer Schlitten | Rebel Sled
 2.modelo: galapago
@@ -113,14 +113,14 @@ requiere: rocko3
 2.escenario: HIELO
 2.rondas: 3
 2.texto: Rocko corta leña, arrastra trineos y sube montañas sin cinta de correr. Tundrov, en su laboratorio, tiene 400 sensores. Rocko tiene un trineo que no quiere moverse. | Rocko hackt Holz, zieht Schlitten und erklimmt Berge ohne Laufband. Tundrov hat im Labor 400 Sensoren. Rocko hat einen Schlitten, der nicht will. | Rocko chops wood, drags sleds and climbs mountains with no treadmill. Tundrov has 400 sensors in his lab. Rocko has a sled that won't budge.
-2.victoria: En la cima grita «¡TUNDROOOV!». Le contesta el eco y un alce muy molesto. | Auf dem Gipfel schreit er «TUNDROOOV!». Es antworten das Echo und ein sehr genervter Elch. | At the summit he shouts «TUNDROOOV!». The echo answers, and a very annoyed moose.
+2.victoria: En la cima grita «¡TUNDROOOV!». Le contesta el eco y un alce muy molesto. | Auf dem Gipfel schreit er «TUNDROOOV!». Es antworten das Echo und ein sehr genervter Elch. | At the summit he shouts "TUNDROOOV!". The echo answers, and a very annoyed moose.
 3.rival: Igor Tundrov
 3.modelo: eclipse
 3.nivel: 0.75
 3.escenario: LUNA
 3.rondas: 4
 3.texto: La pelea, en campo contrario, con todo el público en contra. Tundrov no siente los golpes. Rocko tampoco: se le congelaron los sensores por el camino. | Der Kampf in der Fremde, das ganze Publikum dagegen. Tundrov spürt keine Schläge. Rocko auch nicht: Seine Sensoren sind unterwegs eingefroren. | The fight away from home, with the whole crowd against him. Tundrov doesn't feel the punches. Neither does Rocko: his sensors froze on the way.
-3.victoria: ¡Ganó! Rocko coge el micrófono: «Si yo puedo cambiar, y vosotros podéis cambiar... todos podemos actualizar el firmware». Ovación. | Gewonnen! Rocko greift zum Mikrofon: «Wenn ich mich ändern kann und ihr euch ändern könnt ... können wir alle die Firmware aktualisieren.» Jubel. | Won! Rocko grabs the mic: «If I can change, and you can change... everybody can update their firmware.» Ovation.
+3.victoria: ¡Ganó! Rocko coge el micrófono: «Si yo puedo cambiar, y vosotros podéis cambiar... todos podemos actualizar el firmware». Ovación. | Gewonnen! Rocko greift zum Mikrofon: «Wenn ich mich ändern kann und ihr euch ändern könnt ... können wir alle die Firmware aktualisieren.» Jubel. | Won! Rocko grabs the mic: "If I can change, and you can change... everybody can update their firmware." Ovation.
 
 [rocko5]
 titulo: Rocko V: vuelta al barrio | Rocko V: Zurück ins Viertel | Rocko V: Back to the Block
@@ -142,14 +142,14 @@ requiere: rocko4
 2.escenario: NEON
 2.rondas: 3
 2.texto: El representante Tiburón le promete a Tomi luces, dinero y una cinta dorada. Tomi se va con él. Rocko intenta hablar con el representante. El representante tiene seguridad. | Manager Hai verspricht Tomi Licht, Geld und einen goldenen Gürtel. Tomi geht mit ihm. Rocko will mit dem Manager reden. Der Manager hat Security. | Agent Shark promises Tommy lights, money and a golden belt. Tommy leaves with him. Rocko tries to talk to the agent. The agent has security.
-2.victoria: La seguridad, desmontada en piezas de recambio. Tomi lo reta: «¡Pelea conmigo, viejo!». | Die Security liegt in Ersatzteilen. Tomi fordert ihn heraus: «Kämpf gegen mich, Alter!». | Security, reduced to spare parts. Tommy challenges him: «Fight me, old man!».
+2.victoria: La seguridad, desmontada en piezas de recambio. Tomi lo reta: «¡Pelea conmigo, viejo!». | Die Security liegt in Ersatzteilen. Tomi fordert ihn heraus: «Kämpf gegen mich, Alter!». | Security, reduced to spare parts. Tommy challenges him: "Fight me, old man!".
 3.rival: Tomi Cañón | Tomi Kanone | Tommy Cannon
 3.modelo: vigia
 3.nivel: 0.6
 3.escenario: TEJADO
 3.rondas: 4
-3.texto: En la calle, sin cuerdas ni árbitro. Don Tuercas le habla desde el recuerdo: «Levántate, que todavía te debo una lección». | Auf der Straße, ohne Seile und ohne Ringrichter. Don Mutter spricht aus der Erinnerung: «Steh auf, ich schulde dir noch eine Lektion.» | In the street, no ropes, no referee. Don Bolts speaks from memory: «Get up, I still owe you a lesson.»
-3.victoria: Rocko gana en su barrio, delante de sus vecinos. Tomi se va con el chasis entre las piernas. | Rocko gewinnt in seinem Viertel, vor seinen Nachbarn. Tomi zieht mit eingezogenem Chassis ab. | Rocko wins on his own block, in front of his neighbours. Tommy leaves with his chassis between his legs.
+3.texto: En la calle, sin cuerdas ni árbitro. Don Tuercas le habla desde el recuerdo: «Levántate, que todavía te debo una lección». | Auf der Straße, ohne Seile und ohne Ringrichter. Don Mutter spricht aus der Erinnerung: «Steh auf, ich schulde dir noch eine Lektion.» | In the street, no ropes, no referee. Don Bolts speaks from memory: "Get up, I still owe you a lesson."
+3.victoria: Rocko gana en su barrio, delante de sus vecinos. Tomi se va con el chasis entre las piernas. | Rocko gewinnt in seinem Viertel, vor seinen Nachbarn. Tomi zieht mit eingezogenem Chassis ab. | Rocko wins on his own block, in front of his neighbors. Tommy leaves with his chassis between his legs.
 
 [rocko6]
 titulo: Rocko Sexto: el último asalto | Rocko der Sechste: Die letzte Runde | Rocko the Sixth: The Last Round
@@ -177,7 +177,7 @@ requiere: rocko5
 3.nivel: 0.8
 3.escenario: NEON
 3.rondas: 4
-3.texto: El último asalto. Nadie apuesta por Rocko. Rocko tampoco, pero va igual: «No se trata de lo fuerte que pegas, sino de lo fuerte que te pegan y sigues compilando». | Die letzte Runde. Niemand wettet auf Rocko. Rocko auch nicht, aber er geht trotzdem: «Es geht nicht darum, wie hart du schlägst, sondern wie hart du getroffen wirst und weiter kompilierst.» | The last round. No one bets on Rocko. Neither does Rocko, but he goes anyway: «It's not about how hard you hit, it's about how hard you get hit and keep compiling.»
+3.texto: El último asalto. Nadie apuesta por Rocko. Rocko tampoco, pero va igual: «No se trata de lo fuerte que pegas, sino de lo fuerte que te pegan y sigues compilando». | Die letzte Runde. Niemand wettet auf Rocko. Rocko auch nicht, aber er geht trotzdem: «Es geht nicht darum, wie hart du schlägst, sondern wie hart du getroffen wirst und weiter kompilierst.» | The last round. No one bets on Rocko. Neither does Rocko, but he goes anyway: "It's not about how hard you hit, it's about how hard you get hit and keep compiling."
 3.victoria: Rocko aguanta hasta la campana. Saluda al público, se quita el gorrito de lana y se va a casa. Aceituna lo espera con aceite caliente. | Rocko hält bis zum Gong durch. Er grüßt das Publikum, nimmt die Wollmütze ab und geht nach Hause. Olivia wartet mit warmem Öl. | Rocko lasts until the bell. He waves to the crowd, takes off his woolly hat and goes home. Olivette is waiting with warm oil.
 
 [karatebit]
@@ -198,15 +198,15 @@ musica: oriental
 2.nivel: 0.3
 2.escenario: CHATARRERIA
 2.rondas: 3
-2.texto: «Dar aceite, quitar aceite.» Dani encera coches durante semanas sin saber por qué. Hoy, uno de los coches se ha cansado de tanto brillo y quiere pelea. | «Öl drauf, Öl runter.» Dani wachst wochenlang Autos, ohne zu wissen, warum. Heute hat eins der Autos genug vom Glanz und will kämpfen. | «Oil on, oil off.» Dani waxes cars for weeks without knowing why. Today one of the cars has had enough shine and wants a fight.
+2.texto: «Dar aceite, quitar aceite.» Dani encera coches durante semanas sin saber por qué. Hoy, uno de los coches se ha cansado de tanto brillo y quiere pelea. | «Öl drauf, Öl runter.» Dani wachst wochenlang Autos, ohne zu wissen, warum. Heute hat eins der Autos genug vom Glanz und will kämpfen. | "Oil on, oil off." Dani waxes cars for weeks without knowing why. Today one of the cars has had enough shine and wants a fight.
 2.victoria: ¡Dar aceite, quitar aceite era para parar golpes! Dani lo entiende todo. El coche, reluciente, se va a una boda. | Öl drauf, Öl runter war zum Blocken! Dani versteht alles. Das Auto glänzt und fährt zu einer Hochzeit. | Oil on, oil off was for blocking! Dani understands everything. The gleaming car leaves for a wedding.
 3.rival: Yoni Laurel
 3.modelo: filo
 3.nivel: 0.45
 3.escenario: NEON
 3.rondas: 4
-3.texto: La final del torneo. Dani cojea de una rueda. El sensei de Cobra Cable grita: «¡Sin piedad, y sin reiniciar!». Miyaceite le dice: «Si aprieta, la grúa». | Das Finale des Turniers. Dani hinkt auf einem Rad. Der Sensei von Kobra-Kabel brüllt: «Keine Gnade, kein Neustart!». Miyaöl sagt: «Wenn es eng wird, der Kran.» | The tournament final. Dani is limping on one wheel. The Cobra Cable sensei yells: «No mercy, no reboot!». Miyoili says: «If it gets tight, the crane.»
-3.victoria: ¡La patada de la grúa! Una pata arriba, los brazos abiertos... ¡y al suelo Yoni! Yoni le da la copa: «Eres bueno, LaRueda». | Der Kranich-Tritt! Ein Bein hoch, die Arme ausgebreitet ... und Yoni liegt! Yoni überreicht den Pokal: «Du bist gut, LaRad.» | The crane kick! One leg up, arms wide... and Yoni goes down! Yoni hands him the trophy: «You're all right, LaWheel.»
+3.texto: La final del torneo. Dani cojea de una rueda. El sensei de Cobra Cable grita: «¡Sin piedad, y sin reiniciar!». Miyaceite le dice: «Si aprieta, la grúa». | Das Finale des Turniers. Dani hinkt auf einem Rad. Der Sensei von Kobra-Kabel brüllt: «Keine Gnade, kein Neustart!». Miyaöl sagt: «Wenn es eng wird, der Kran.» | The tournament final. Dani is limping on one wheel. The Cobra Cable sensei yells: "No mercy, no reboot!". Miyoili says: "If it gets tight, the crane."
+3.victoria: ¡La patada de la grúa! Una pata arriba, los brazos abiertos... ¡y al suelo Yoni! Yoni le da la copa: «Eres bueno, LaRueda». | Der Kranich-Tritt! Ein Bein hoch, die Arme ausgebreitet ... und Yoni liegt! Yoni überreicht den Pokal: «Du bist gut, LaRad.» | The crane kick! One leg up, arms wide... and Yoni goes down! Yoni hands him the trophy: "You're all right, LaWheel."
 
 [karatebit2]
 titulo: Kárate-bit II: viaje a Oki-Nube | Karate-Bit II: Reise nach Oki-Wolke | Karate-Bit II: Trip to Oki-Cloud
@@ -220,7 +220,7 @@ requiere: karatebit
 1.nivel: 0.35
 1.escenario: DESIERTO
 1.rondas: 3
-1.texto: En Oki-Nube, Sato Rencor no ha olvidado que Miyaceite se fue con su novia hace cuarenta años. Ha estado cuarenta años practicando una frase amenazadora. | Auf Oki-Wolke hat Sato Groll nicht vergessen, dass Miyaöl vor vierzig Jahren mit seiner Freundin weggegangen ist. Er hat vierzig Jahre lang einen bedrohlichen Satz geübt. | On Oki-Cloud, Sato Grudge hasn't forgotten that Miyoili left with his girlfriend forty years ago. He's spent forty years practising a threatening sentence.
+1.texto: En Oki-Nube, Sato Rencor no ha olvidado que Miyaceite se fue con su novia hace cuarenta años. Ha estado cuarenta años practicando una frase amenazadora. | Auf Oki-Wolke hat Sato Groll nicht vergessen, dass Miyaöl vor vierzig Jahren mit seiner Freundin weggegangen ist. Er hat vierzig Jahre lang einen bedrohlichen Satz geübt. | On Oki-Cloud, Sato Grudge hasn't forgotten that Miyoili left with his girlfriend forty years ago. He's spent forty years practicing a threatening sentence.
 1.victoria: Sato se queda sin frase. Dani aprende la técnica del ventilador: girar y girar hasta que el rival se marea. | Sato fehlen die Worte. Dani lernt die Ventilator-Technik: drehen und drehen, bis dem Gegner schwindlig wird. | Sato is lost for words. Dani learns the fan technique: spin and spin until the opponent gets dizzy.
 2.rival: Elegido Nueve | Auserwählter Neun | Chosen Nine
 2.modelo: serrucho
@@ -235,7 +235,7 @@ requiere: karatebit
 3.escenario: NEON
 3.rondas: 4
 3.texto: En el festival, con tambores y farolillos, Elegido Nueve pelea de verdad. El pueblo entero hace girar sus ventiladores para animar a Dani. | Beim Fest, mit Trommeln und Laternen, kämpft Auserwählter Neun ernsthaft. Das ganze Dorf lässt seine Ventilatoren kreisen, um Dani anzufeuern. | At the festival, with drums and lanterns, Chosen Nine fights for real. The whole village spins its fans to cheer Dani on.
-3.victoria: ¡La técnica del ventilador funciona! Dani le aprieta la nariz a Elegido Nueve en vez de rematarlo: «¿Vivir o morir?». «Vivir... y ventilar». | Die Ventilator-Technik wirkt! Dani drückt Auserwählter Neun die Nase, statt ihn fertigzumachen: «Leben oder sterben?» «Leben ... und lüften.» | The fan technique works! Dani squeezes Chosen Nine's nose instead of finishing him: «Live or die?» «Live... and ventilate.»
+3.victoria: ¡La técnica del ventilador funciona! Dani le aprieta la nariz a Elegido Nueve en vez de rematarlo: «¿Vivir o morir?». «Vivir... y ventilar». | Die Ventilator-Technik wirkt! Dani drückt Auserwählter Neun die Nase, statt ihn fertigzumachen: «Leben oder sterben?» «Leben ... und lüften.» | The fan technique works! Dani squeezes Chosen Nine's nose instead of finishing him: "Live or die?" "Live... and ventilate."
 
 [karatebit3]
 titulo: Kárate-bit III: el torneo trucado | Karate-Bit III: Das gezinkte Turnier | Karate-Bit III: The Rigged Tournament
@@ -249,7 +249,7 @@ requiere: karatebit2
 1.nivel: 0.45
 1.escenario: LABORATORIO
 1.rondas: 3
-1.texto: Tery Plateado se ofrece a entrenar a Dani «gratis». Sus métodos: golpear placas de cemento hasta abollarse los nudillos. Algo huele a trampa. Y a aceite quemado. | Tery Silberling bietet an, Dani «kostenlos» zu trainieren. Seine Methode: auf Betonplatten schlagen, bis die Knöchel verbeult sind. Das riecht nach Falle. Und nach verbranntem Öl. | Tery Silverson offers to train Dani «for free». His method: punching concrete slabs until your knuckles dent. Something smells like a trap. And like burnt oil.
+1.texto: Tery Plateado se ofrece a entrenar a Dani «gratis». Sus métodos: golpear placas de cemento hasta abollarse los nudillos. Algo huele a trampa. Y a aceite quemado. | Tery Silberling bietet an, Dani «kostenlos» zu trainieren. Seine Methode: auf Betonplatten schlagen, bis die Knöchel verbeult sind. Das riecht nach Falle. Und nach verbranntem Öl. | Tery Silverson offers to train Dani "for free". His method: punching concrete slabs until your knuckles dent. Something smells like a trap. And like burnt oil.
 1.victoria: Dani se da cuenta del truco y vuelve con Miyaceite, que lo lleva a buscar un bonsái de cobre en un acantilado. | Dani durchschaut den Trick und kehrt zu Miyaöl zurück, der mit ihm an einer Klippe einen Kupfer-Bonsai sucht. | Dani sees through the trick and goes back to Miyoili, who takes him to find a copper bonsai on a cliff.
 2.rival: Bonsái Vengativo | Rachsüchtiger Bonsai | Vengeful Bonsai
 2.modelo: tejedora
@@ -257,13 +257,13 @@ requiere: karatebit2
 2.escenario: DESIERTO
 2.rondas: 2
 2.texto: El bonsái de cobre no quiere que lo cojan. Tiene raíces muy largas y muy mal genio. | Der Kupfer-Bonsai will nicht gepflückt werden. Er hat sehr lange Wurzeln und sehr schlechte Laune. | The copper bonsai does not want to be picked. It has very long roots and a very bad temper.
-2.victoria: Dani planta el bonsái en una maceta de tornillos. Miyaceite asiente: «Kárate de dentro, no de cemento». | Dani pflanzt den Bonsai in einen Schraubentopf. Miyaöl nickt: «Karate von innen, nicht aus Beton.» | Dani plants the bonsai in a pot of screws. Miyoili nods: «Karate from inside, not from concrete.»
+2.victoria: Dani planta el bonsái en una maceta de tornillos. Miyaceite asiente: «Kárate de dentro, no de cemento». | Dani pflanzt den Bonsai in einen Schraubentopf. Miyaöl nickt: «Karate von innen, nicht aus Beton.» | Dani plants the bonsai in a pot of screws. Miyoili nods: "Karate from inside, not from concrete."
 3.rival: Maik Barreno | Maik Bohrer | Mike Driller
 3.modelo: barrena
 3.nivel: 0.65
 3.escenario: NEON
 3.rondas: 4
-3.texto: El torneo está trucado: el rival, Maik Barreno, pega donde no se puede pegar y los jueces miran el móvil. Miyaceite: «Tu kárate está aquí... en el código». | Das Turnier ist gezinkt: Gegner Maik Bohrer schlägt, wo man nicht darf, und die Richter schauen aufs Handy. Miyaöl: «Dein Karate ist hier ... im Code.» | The tournament is rigged: opponent Mike Driller hits where you mustn't and the judges are looking at their phones. Miyoili: «Your karate is here... in the code.»
+3.texto: El torneo está trucado: el rival, Maik Barreno, pega donde no se puede pegar y los jueces miran el móvil. Miyaceite: «Tu kárate está aquí... en el código». | Das Turnier ist gezinkt: Gegner Maik Bohrer schlägt, wo man nicht darf, und die Richter schauen aufs Handy. Miyaöl: «Dein Karate ist hier ... im Code.» | The tournament is rigged: opponent Mike Driller hits where you mustn't and the judges are looking at their phones. Miyoili: "Your karate is here... in the code."
 3.victoria: Dani gana con la kata del principio, la que parecía un baile. Los jueces sueltan el móvil, por fin. | Dani gewinnt mit der Kata vom Anfang, die wie ein Tanz aussah. Die Richter legen endlich das Handy weg. | Dani wins with the kata from the start, the one that looked like a dance. The judges finally put down their phones.
 
 [karatebit4]
@@ -285,7 +285,7 @@ requiere: karatebit3
 2.nivel: 0.5
 2.escenario: LUNA
 2.rondas: 3
-2.texto: Prueba de los monjes: esquivar la bola del monasterio, que rueda sola, sin mirar. «La bola no tiene prisa. Tú tampoco.» | Prüfung der Mönche: der Klosterkugel ausweichen, die von selbst rollt, ohne hinzusehen. «Die Kugel hat keine Eile. Du auch nicht.» | The monks' test: dodge the monastery ball, which rolls by itself, without looking. «The ball is in no hurry. Neither are you.»
+2.texto: Prueba de los monjes: esquivar la bola del monasterio, que rueda sola, sin mirar. «La bola no tiene prisa. Tú tampoco.» | Prüfung der Mönche: der Klosterkugel ausweichen, die von selbst rollt, ohne hinzusehen. «Die Kugel hat keine Eile. Du auch nicht.» | The monks' test: dodge the monastery ball, which rolls by itself, without looking. "The ball is in no hurry. Neither are you."
 2.victoria: Pleno. Los monjes aplauden con una mano, que es como aplauden aquí. | Alle neune. Die Mönche klatschen mit einer Hand, so klatscht man hier. | Strike. The monks applaud with one hand, which is how they applaud here.
 3.rival: Capitán Alfa | Kapitän Alpha | Captain Alpha
 3.modelo: bastion
@@ -314,14 +314,14 @@ requiere: karatebit4
 2.nivel: 0.45
 2.escenario: HANGAR
 2.rondas: 2
-2.texto: «Chaqueta puesta. Chaqueta en la percha. Chaqueta al suelo. Chaqueta puesta.» Mil veces. Al día mil uno, la percha se rebela. | «Jacke an. Jacke an den Haken. Jacke auf den Boden. Jacke an.» Tausendmal. Am tausendundersten Tag rebelliert der Haken. | «Jacket on. Jacket on the hanger. Jacket on the floor. Jacket on.» A thousand times. On day one thousand and one, the hanger rebels.
+2.texto: «Chaqueta puesta. Chaqueta en la percha. Chaqueta al suelo. Chaqueta puesta.» Mil veces. Al día mil uno, la percha se rebela. | «Jacke an. Jacke an den Haken. Jacke auf den Boden. Jacke an.» Tausendmal. Am tausendundersten Tag rebelliert der Haken. | "Jacket on. Jacket on the hanger. Jacket on the floor. Jacket on." A thousand times. On day one thousand and one, the hanger rebels.
 2.victoria: ¡Cada gesto de la chaqueta era una defensa! La percha se rinde y le cuelga la chaqueta, por cortesía. | Jede Jackenbewegung war eine Abwehr! Der Haken gibt auf und hängt ihm höflich die Jacke auf. | Every jacket move was a block! The hanger gives up and politely hangs up his jacket.
 3.rival: Chen Cuchilla | Chen Klinge | Chen Blade
 3.modelo: serrucho
 3.nivel: 0.6
 3.escenario: NEON
 3.rondas: 4
-3.texto: El torneo, con Chen Cuchilla y un maestro que le grita «¡Sin piedad!». Dre-bit tiene una pata tocada y una técnica de la cobra que vio en un espejo. | Das Turnier, mit Chen Klinge und einem Meister, der «Keine Gnade!» brüllt. Dre-Bit hat ein angeschlagenes Bein und eine Kobra-Technik, die er in einem Spiegel gesehen hat. | The tournament, with Chen Blade and a master yelling «No mercy!». Dre-bit has a bad leg and a cobra technique he saw in a mirror.
+3.texto: El torneo, con Chen Cuchilla y un maestro que le grita «¡Sin piedad!». Dre-bit tiene una pata tocada y una técnica de la cobra que vio en un espejo. | Das Turnier, mit Chen Klinge und einem Meister, der «Keine Gnade!» brüllt. Dre-Bit hat ein angeschlagenes Bein und eine Kobra-Technik, die er in einem Spiegel gesehen hat. | The tournament, with Chen Blade and a master yelling "No mercy!". Dre-bit has a bad leg and a cobra technique he saw in a mirror.
 3.victoria: ¡La técnica del espejo! Chen le entrega el trofeo él mismo, con una reverencia. El señor Jandro, por fin, sonríe y suelta la escoba. | Die Spiegel-Technik! Chen überreicht ihm selbst den Pokal, mit einer Verbeugung. Herr Jandro lächelt endlich und lässt den Besen los. | The mirror technique! Chen hands him the trophy himself, with a bow. Mr Jandro finally smiles and lets go of the broom.
 
 [leyendasbit]
@@ -343,7 +343,7 @@ requiere: kungbit
 2.nivel: 0.5
 2.escenario: HANGAR
 2.rondas: 2
-2.texto: Sus dos maestros no se ponen de acuerdo: uno dice «dar aceite»; el otro, «chaqueta puesta». Para entrenarlo, pelean los dos contra él a la vez. Por turnos. Más o menos. | Seine zwei Meister sind sich uneinig: Der eine sagt «Öl drauf», der andere «Jacke an». Zum Training kämpfen beide gleichzeitig gegen ihn. Abwechselnd. Ungefähr. | His two masters can't agree: one says «oil on», the other «jacket on». To train him, they both fight him at once. Taking turns. Sort of.
+2.texto: Sus dos maestros no se ponen de acuerdo: uno dice «dar aceite»; el otro, «chaqueta puesta». Para entrenarlo, pelean los dos contra él a la vez. Por turnos. Más o menos. | Seine zwei Meister sind sich uneinig: Der eine sagt «Öl drauf», der andere «Jacke an». Zum Training kämpfen beide gleichzeitig gegen ihn. Abwechselnd. Ungefähr. | His two masters can't agree: one says "oil on", the other "jacket on". To train him, they both fight him at once. Taking turns. Sort of.
 2.victoria: Li-bit mezcla las dos escuelas: da aceite con la chaqueta puesta. Los maestros se miran y se dan la mano. | Li-Bit verbindet beide Schulen: Er ölt mit angezogener Jacke. Die Meister sehen sich an und geben sich die Hand. | Li-bit blends both schools: oil on, with his jacket on. The masters look at each other and shake hands.
 3.rival: Campeón del Dragón | Drachen-Champion | Dragon Champion
 3.modelo: remolino
@@ -364,7 +364,7 @@ musica: drama
 1.nivel: 0.45
 1.escenario: HANGAR
 1.rondas: 3
-1.texto: Jaque LaMota ve el mundo en blanco y negro: se le rompió el chip del color. Su eterno rival, Rayo Azucarado, es tan rápido que se le ve en color de lo rápido que va. | Jacke LaMotte sieht die Welt in Schwarz-Weiß: Sein Farbchip ist kaputt. Sein ewiger Rivale Zucker-Blitz ist so schnell, dass er vor lauter Tempo in Farbe erscheint. | Jake LaMote sees the world in black and white: his colour chip broke. His eternal rival, Sugar Bolt, is so fast that he shows up in colour from sheer speed.
+1.texto: Jaque LaMota ve el mundo en blanco y negro: se le rompió el chip del color. Su eterno rival, Rayo Azucarado, es tan rápido que se le ve en color de lo rápido que va. | Jacke LaMotte sieht die Welt in Schwarz-Weiß: Sein Farbchip ist kaputt. Sein ewiger Rivale Zucker-Blitz ist so schnell, dass er vor lauter Tempo in Farbe erscheint. | Jake LaMote sees the world in black and white: his color chip broke. His eternal rival, Sugar Bolt, is so fast that he shows up in color from sheer speed.
 1.victoria: Primera victoria contra Rayo. LaMota la celebra comiéndose una tuerca de más. Su entrenador le quita el plato. | Erster Sieg gegen Blitz. LaMotte feiert mit einer Mutter zu viel. Sein Trainer nimmt ihm den Teller weg. | First win against Bolt. LaMote celebrates by eating one nut too many. His trainer takes the plate away.
 2.rival: Báscula Implacable | Gnadenlose Waage | Ruthless Scales
 2.modelo: galapago
@@ -379,7 +379,7 @@ musica: drama
 3.escenario: NEON
 3.rondas: 4
 3.texto: La sexta pelea contra Rayo Azucarado. LaMota no se rinde nunca; dice que nunca nadie lo ha tumbado. Hoy quiere demostrarlo otra vez. | Der sechste Kampf gegen Zucker-Blitz. LaMotte gibt nie auf; er sagt, niemand habe ihn je zu Boden geschickt. Heute will er es wieder beweisen. | The sixth fight against Sugar Bolt. LaMote never gives up; he says nobody has ever put him down. Today he wants to prove it again.
-3.victoria: «No me tumbaste, Rayo. No me tumbaste.» Y por un instante, la pantalla de LaMota se ve en color. | «Du hast mich nicht umgehauen, Blitz. Du hast mich nicht umgehauen.» Und einen Moment lang ist LaMottes Bildschirm in Farbe. | «You never got me down, Bolt. You never got me down.» And for a moment, LaMote's screen shows colour.
+3.victoria: «No me tumbaste, Rayo. No me tumbaste.» Y por un instante, la pantalla de LaMota se ve en color. | «Du hast mich nicht umgehauen, Blitz. Du hast mich nicht umgehauen.» Und einen Moment lang ist LaMottes Bildschirm in Farbe. | "You never got me down, Bolt. You never got me down." And for a moment, LaMote's screen shows color.
 
 [granyudo]
 titulo: La leyenda del gran yudo-bit | Die Legende vom großen Judo-Bit | The Legend of the Great Judo-Bit
@@ -421,7 +421,7 @@ musica: drama
 1.escenario: HANGAR
 1.rondas: 2
 1.texto: Magui Fitz-Bit paga el gimnasio con propinas y golpea el saco hasta que cierran. El Sargento Remache dice que no entrena a nadie. Y menos a una versión 31. | Magi Fitz-Bit bezahlt die Halle mit Trinkgeld und schlägt auf den Sack, bis zugesperrt wird. Feldwebel Niete sagt, er trainiere niemanden. Schon gar nicht Version 31. | Maggie Fitz-Bit pays for the gym with tips and punches the bag until closing. Sergeant Rivet says he trains nobody. Least of all a version 31.
-1.victoria: El saco se rinde antes que ella. Remache refunfuña: «Mañana a las seis. Y no me hables». | Der Sack gibt vor ihr auf. Niete brummt: «Morgen um sechs. Und red nicht mit mir.» | The bag gives up before she does. Rivet grumbles: «Six tomorrow. And don't talk to me.»
+1.victoria: El saco se rinde antes que ella. Remache refunfuña: «Mañana a las seis. Y no me hables». | Der Sack gibt vor ihr auf. Niete brummt: «Morgen um sechs. Und red nicht mit mir.» | The bag gives up before she does. Rivet grumbles: "Six tomorrow. And don't talk to me."
 2.rival: Campeona del Barrio | Viertelmeisterin | Neighbourhood Champ
 2.modelo: avispa
 2.nivel: 0.55
@@ -434,8 +434,8 @@ musica: drama
 3.nivel: 0.75
 3.escenario: NEON
 3.rondas: 4
-3.texto: La pelea por el título contra la Osa Azul, que pega cuando suena la campana y también un poco después. Remache le dice: «Protégete siempre». | Der Titelkampf gegen die Blaue Bärin, die beim Gong zuschlägt und auch ein bisschen danach. Niete sagt: «Schütz dich immer.» | The title fight against the Blue Bear, who hits at the bell and a little bit after. Rivet tells her: «Always protect yourself.»
-3.victoria: ¡Campeona! Remache, por fin, le traduce el apodo: «Mi tesoro de silicio». Y se le empañan los sensores. | Weltmeisterin! Niete übersetzt endlich den Spitznamen: «Mein Silizium-Schatz.» Und seine Sensoren beschlagen. | Champion! Rivet finally translates the nickname: «My silicon treasure.» And his sensors mist up.
+3.texto: La pelea por el título contra la Osa Azul, que pega cuando suena la campana y también un poco después. Remache le dice: «Protégete siempre». | Der Titelkampf gegen die Blaue Bärin, die beim Gong zuschlägt und auch ein bisschen danach. Niete sagt: «Schütz dich immer.» | The title fight against the Blue Bear, who hits at the bell and a little bit after. Rivet tells her: "Always protect yourself."
+3.victoria: ¡Campeona! Remache, por fin, le traduce el apodo: «Mi tesoro de silicio». Y se le empañan los sensores. | Weltmeisterin! Niete übersetzt endlich den Spitznamen: «Mein Silizium-Schatz.» Und seine Sensoren beschlagen. | Champion! Rivet finally translates the nickname: "My silicon treasure." And his sensors mist up.
 
 [aceropuro]
 titulo: Acero de Saldo | Ramsch-Stahl | Bargain Steel
@@ -476,7 +476,7 @@ musica: artes_marciales
 1.nivel: 0.3
 1.escenario: DESIERTO
 1.rondas: 2
-1.texto: Kurt Escoria llega a una aldea lejana. Su maestro, el anciano Ji-Chip, le señala una palmera de acero: «Patada. Hasta mañana». La palmera parece tranquila. No lo está. | Kurt Schlacke kommt in ein fernes Dorf. Sein Meister, der alte Ji-Chip, zeigt auf eine Stahlpalme: «Treten. Bis morgen.» Die Palme wirkt ruhig. Ist sie nicht. | Kurt Slag arrives in a faraway village. His master, old Ji-Chip, points at a steel palm tree: «Kick. Until tomorrow.» The palm tree looks calm. It isn't.
+1.texto: Kurt Escoria llega a una aldea lejana. Su maestro, el anciano Ji-Chip, le señala una palmera de acero: «Patada. Hasta mañana». La palmera parece tranquila. No lo está. | Kurt Schlacke kommt in ein fernes Dorf. Sein Meister, der alte Ji-Chip, zeigt auf eine Stahlpalme: «Treten. Bis morgen.» Die Palme wirkt ruhig. Ist sie nicht. | Kurt Slag arrives in a faraway village. His master, old Ji-Chip, points at a steel palm tree: "Kick. Until tomorrow." The palm tree looks calm. It isn't.
 1.victoria: La palmera se dobla. Ji-Chip asiente y le da un coco de aceite. Kurt cree que ha terminado. No ha terminado. | Die Palme biegt sich. Ji-Chip nickt und gibt ihm eine Öl-Kokosnuss. Kurt glaubt, er sei fertig. Ist er nicht. | The palm tree bends. Ji-Chip nods and hands him an oil coconut. Kurt thinks he is done. He is not.
 2.rival: Bailarines del Bar | Bartänzer | Bar Dancers
 2.modelo: chispa
@@ -519,4 +519,4 @@ musica: artes_marciales
 3.escenario: NEON
 3.rondas: 4
 3.texto: La final contra Chong Ladrillo, que rompe el ladrillo de abajo del montón sin tocar los de arriba. En mitad de la pelea, le tira polvo de tóner a los ojos. Por suerte, Dux-bit ya ha peleado a ciegas. | Das Finale gegen Chong Ziegel, der den untersten Ziegel im Stapel zerschlägt, ohne die oberen zu berühren. Mitten im Kampf wirft er ihm Tonerstaub in die Augen. Zum Glück hat Dux-Bit schon blind gekämpft. | The final against Chong Brick, who smashes the bottom brick of the stack without touching the ones above. Mid-fight, he throws toner dust in his eyes. Luckily, Dux-bit has fought blind before.
-3.victoria: Con los ojos cerrados, Dux-bit lo oye venir. Chong Ladrillo grita «¡Matte!», que en kumite-bit significa «me rindo y quiero irme a casa». | Mit geschlossenen Augen hört Dux-Bit ihn kommen. Chong Ziegel ruft «Matte!», was im Kumite-Bit heißt: «Ich gebe auf und will nach Hause.» | Eyes closed, Dux-bit hears him coming. Chong Brick shouts «Matte!», which in kumite-bit means «I give up and want to go home.»
+3.victoria: Con los ojos cerrados, Dux-bit lo oye venir. Chong Ladrillo grita «¡Matte!», que en kumite-bit significa «me rindo y quiero irme a casa». | Mit geschlossenen Augen hört Dux-Bit ihn kommen. Chong Ziegel ruft «Matte!», was im Kumite-Bit heißt: «Ich gebe auf und will nach Hause.» | Eyes closed, Dux-bit hears him coming. Chong Brick shouts "Matte!", which in kumite-bit means "I give up and want to go home."

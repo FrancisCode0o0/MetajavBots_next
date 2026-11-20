@@ -207,7 +207,7 @@ senior.de = Textblock-Öffnung ohne Zeilenumbruch.
 senior.en = Text block opening without line break.
 
 [compiler.err.unclosed.text.block]
-noob.es = Un bloque de texto que empieza con """ no se cierra nunca. Añade otras tres comillas """ donde termine el texto.
+noob.es = Un bloque de texto que empieza con tres comillas (""") no se cierra nunca. Añade otras tres comillas (""") donde termine el texto.
 noob.de = Ein Textblock mit """ wird nie geschlossen. Setz drei weitere Anführungszeichen """ dorthin, wo der Text endet.
 noob.en = A text block started with """ is never closed. Add three more quotes """ where the text ends.
 junior.es = Bloque de texto sin cerrar: falta el «"""» final.

@@ -1,0 +1,7 @@
+# Metadatos del juego para el motor y los registros de errores.
+
+[juego]
+nombre = MetajavBots
+heroe = el robot
+mazmorras =
+id_del_heroe = robot

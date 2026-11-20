@@ -44,8 +44,8 @@ final class FichasDePaquetes {
                     "Wird von der Engine ausgelöst, wenn eine Schleife in jedenZug() das Schrittlimit sprengt; vermeide Endlosschleifen.",
                     "Thrown by the engine if a loop in onTick() or an event exceeds the step budget; avoid infinite loops.");
             String pseudo = id.elegir(
-                    "CADA TURNO:\n    REPETIR como maximo 10 veces:\n        hacer calculo corto\n    // sin bucles infinitos",
-                    "JEDEN ZUG:\n    WIEDERHOLE hoechstens 10-mal:\n        kurze Berechnung ausfuehren\n    // keine Endlosschleifen",
+                    "CADA TURNO:\n    REPETIR como máximo 10 veces:\n        hacer cálculo corto\n    // sin bucles infinitos",
+                    "JEDEN ZUG:\n    WIEDERHOLE höchstens 10-mal:\n        kurze Berechnung ausführen\n    // keine Endlosschleifen",
                     "EVERY TICK:\n    REPEAT at most 10 times:\n        run short calculation\n    // no infinite loops");
             return new PanelDePaquetes.FichaMiembro(firma, desc, donde, pseudo);
         }
@@ -185,13 +185,13 @@ final class FichasDePaquetes {
         if (c != null && "metajavbots.junit".equals(c.paquete)) {
             if (c.tipo == Paquetes.Tipo.ANOTACION) {
                 return id.elegir(
-                        "EN clase de pruebas:\n    " + primero + "\n    METODO comprobarCaso():\n        verificar resultado esperado",
-                        "IN Testklasse:\n    " + primero + "\n    METHODE pruefeFall():\n        erwartetes Ergebnis pruefen",
+                        "EN clase de pruebas:\n    " + primero + "\n    MÉTODO comprobarCaso():\n        verificar resultado esperado",
+                        "IN Testklasse:\n    " + primero + "\n    METHODE prüfeFall():\n        erwartetes Ergebnis prüfen",
                         "IN test class:\n    " + primero + "\n    METHOD checkCase():\n        verify expected result");
             }
             return id.elegir(
                     "EN prueba @Test:\n    obtenido ← calcularValor()\n    " + primero + "  // comprueba el resultado",
-                    "IN @Test-Methode:\n    istWert ← berechneWert()\n    " + primero + "  // prueft das Ergebnis",
+                    "IN @Test-Methode:\n    istWert ← berechneWert()\n    " + primero + "  // prüft das Ergebnis",
                     "IN @Test method:\n    actual ← computeValue()\n    " + primero + "  // checks the result");
         }
         if (c != null && (c.tipo == Paquetes.Tipo.EXCEPCION || c.tipo == Paquetes.Tipo.ERROR)) {
@@ -202,8 +202,8 @@ final class FichasDePaquetes {
         }
         if (c != null && (c.tipo == Paquetes.Tipo.ANOTACION || firma.startsWith("@"))) {
             return id.elegir(
-                    "EN cuerpo de tu clase:\n    " + primero + "\n    CADA TURNO:\n        ejecutar logica del robot",
-                    "IM Klassenrumpf:\n    " + primero + "\n    JEDEN ZUG:\n        Roboterlogik ausfuehren",
+                    "EN cuerpo de tu clase:\n    " + primero + "\n    CADA TURNO:\n        ejecutar lógica del robot",
+                    "IM Klassenrumpf:\n    " + primero + "\n    JEDEN ZUG:\n        Roboterlogik ausführen",
                     "IN your class body:\n    " + primero + "\n    EVERY TICK:\n        run robot logic");
         }
         if (esConstanteOCampo(firma)) {
@@ -214,15 +214,15 @@ final class FichasDePaquetes {
         }
         if (c != null && c.soloEjercicio) {
             return id.elegir(
-                    "EN metodo del ejercicio:\n    usar " + primero + " de " + comp + "\n    devolver resultado comprobado",
-                    "IN Uebungsmethode:\n    " + primero + " von " + comp + " verwenden\n    geprueftes Ergebnis zurueckgeben",
+                    "EN método del ejercicio:\n    usar " + primero + " de " + comp + "\n    devolver resultado comprobado",
+                    "IN Übungsmethode:\n    " + primero + " von " + comp + " verwenden\n    geprüftes Ergebnis zurückgeben",
                     "IN exercise method:\n    use " + primero + " from " + comp + "\n    return verified result");
         }
         return id.elegir(
                 "EN cadaTurno() o alVerEnemigo():\n    dato ← " + comp + ": " + primero
                         + "\n    SI dato sirve para decidir:\n        actuar con el resultado",
                 "IN jedenZug() oder beiSicht():\n    wert ← " + comp + ": " + primero
-                        + "\n    WENN wert fuer Entscheidung passt:\n        mit dem Ergebnis handeln",
+                        + "\n    WENN wert für Entscheidung passt:\n        mit dem Ergebnis handeln",
                 "IN onTick() or onSeeEnemy():\n    value ← " + comp + ": " + primero
                         + "\n    IF value helps decide:\n        act on the result");
     }

@@ -26,7 +26,7 @@ de: hängt die Reihenfolge der Ereignisse vom Prozessor ab, und jeder Kampf lief
 de: mit Aufgaben, die Threads benutzen dürfen. Was du hier lernst, steckt in echten Servern, Spielen und Apps.
 en: So why can't your robot create threads? Because the fight must be fair and repeatable: with threads,
 en: the order in which things happen depends on the processor and every fight would be different. That's why
-en: this topic is practised with exercises, which may use them. What you learn here is what real servers,
+en: this topic is practiced with exercises, which may use them. What you learn here is what real servers,
 en: games and apps use.
 --- pagina
 es: Para lanzar un hilo, le das un Runnable (una lambda vale) y llamas a start(). El error clásico es

@@ -78,7 +78,7 @@ de: „Welche verschiedenen Modelle habe ich gesehen?“. HashSet ist schnell, a
 de: Damit ein Set zwei deiner Objekte als gleich erkennt, braucht deine Klasse equals und hashCode.
 en: A Set is a bag with no duplicates: adding the same thing twice does nothing. Good for questions like
 en: "which different models have I seen?". HashSet is fast but keeps no order; TreeSet sorts them.
-en: For a Set to recognise two of your objects as equal, your class needs equals and hashCode.
+en: For a Set to recognize two of your objects as equal, your class needs equals and hashCode.
 --- pagina
 es: Un Map guarda pares clave → valor, como un diccionario: put(clave, valor) guarda, get(clave) busca.
 es: memoria() es un Map<String, Object>, ¡y sobrevive entre rondas aunque cambies el código!

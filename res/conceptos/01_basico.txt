@@ -135,20 +135,20 @@ claves.de: anweisung, anweisungen, semikolon, strichpunkt, was ist eine anweisun
 claves.en: statement, statements, semicolon, what is a statement, instruction, missing semicolon, complete order
 ver: programa, bloque, error_de_compilacion, llamar_metodo
 es:
-    Una sentencia es una orden completa, como una frase: «avanza 50», «guarda este número», «di hola». En Java casi todas terminan con un punto y coma ;.
+    Una sentencia es una orden completa, como una frase: «avanza 50», «guarda este número», «di hola». En Java casi todas terminan con un punto y coma (;).
     El punto y coma es el «¡cambio!» del walkie-talkie del entrenador: hasta que no lo oye, el robot no sabe si la orden ha acabado. Sin él, «avanza 50 gira 10» le suena a un único grito raro y se queda quieto rascándose la antena.
-    En el juego, cada línea como avanzar(50); o decir("¡Hola!"); es una sentencia. Puedes poner dos en la misma línea (avanzar(50); girar(10);), pero se lee mejor una por línea. Las que abren llaves, como if (...) { } o el propio cadaTurno() { }, no llevan ; detrás de la llave.
-    El fallo típico es olvidar el ; del final: el compilador marca en rojo «';' expected», a menudo al final de la línea o en la siguiente, porque se da cuenta tarde. El otro, poner un ; justo después de if (...): eso cierra una orden vacía y lo de debajo se hace siempre.
+    En el juego, cada línea como avanzar(50); o decir("¡Hola!"); es una sentencia. Puedes poner dos en la misma línea (avanzar(50); girar(10);), pero se lee mejor una por línea. Las que abren llaves, como if (...) { } o el propio cadaTurno() { }, no llevan punto y coma (;) detrás de la llave.
+    El fallo típico es olvidar el punto y coma (;) del final: el compilador marca en rojo «';' expected», a menudo al final de la línea o en la siguiente, porque se da cuenta tarde. El otro, poner un punto y coma (;) justo después de if (...): eso cierra una orden vacía y lo de debajo se hace siempre.
 de:
-    Eine Anweisung ist ein vollständiger Befehl, wie ein Satz: „fahr 50 vorwärts“, „merk dir diese Zahl“, „sag hallo“. In Java enden fast alle mit einem Semikolon ;.
+    Eine Anweisung ist ein vollständiger Befehl, wie ein Satz: „fahr 50 vorwärts“, „merk dir diese Zahl“, „sag hallo“. In Java enden fast alle mit einem Semikolon (;).
     Das Semikolon ist das „Over!“ im Funkgerät des Trainers: Bis der Roboter es hört, weiß er nicht, ob der Befehl zu Ende ist. Ohne klingt „fahr 50 dreh 10“ für ihn wie ein einziger seltsamer Schrei, und er bleibt stehen und kratzt sich an der Antenne.
-    Im Spiel ist jede Zeile wie avanzar(50); oder decir("Hallo!"); eine Anweisung (auf Deutsch vorwaerts und sagen). Du kannst zwei in eine Zeile schreiben (avanzar(50); girar(10);, also drehen), lesbarer ist aber eine pro Zeile. Was geschweifte Klammern öffnet, wie if (...) { } oder cadaTurno (jedenZug) selbst, bekommt hinter der Klammer kein ;.
-    Der typische Fehler: das ; am Ende vergessen. Der Compiler markiert dann „';' expected“ in Rot, oft am Zeilenende oder erst in der nächsten Zeile, weil er es spät merkt. Der zweite: ein ; direkt hinter if (...). Das beendet einen leeren Befehl, und das Darunter passiert immer.
+    Im Spiel ist jede Zeile wie vorwaerts(50); oder sagen("Hallo!"); eine Anweisung. Du kannst zwei in eine Zeile schreiben (vorwaerts(50); drehen(10);), lesbarer ist aber eine pro Zeile. Was geschweifte Klammern öffnet, wie if (...) { } oder jedenZug() { } selbst, bekommt hinter der Klammer kein Semikolon (;).
+    Der typische Fehler: das Semikolon (;) am Ende vergessen. Der Compiler markiert dann „';' expected“ in Rot, oft am Zeilenende oder erst in der nächsten Zeile, weil er es spät merkt. Der zweite: ein Semikolon (;) direkt hinter if (...). Das beendet einen leeren Befehl, und das Darunter passiert immer.
 en:
-    A statement is one complete order, like a sentence: "move 50", "remember this number", "say hello". In Java almost all of them end with a semicolon ;.
+    A statement is one complete order, like a sentence: "move 50", "remember this number", "say hello". In Java almost all of them end with a semicolon (;).
     The semicolon is the coach's "over!" on the walkie-talkie: until the robot hears it, it doesn't know whether the order is finished. Without it, "move 50 turn 10" sounds like one strange yell, and the robot just stands there scratching its antenna.
-    In the game, every line like avanzar(50); or decir("Hi!"); is a statement (in English, ahead and say). You can put two on one line (avanzar(50); girar(10);, that is turn), but one per line reads better. Things that open braces, like if (...) { } or cadaTurno (onTick) itself, take no ; after the brace.
-    The classic mistake is forgetting the ; at the end: the compiler shows "';' expected" in red, often at the end of the line or on the next one, because it notices late. The other is putting a ; right after if (...): that ends an empty order, and whatever is below runs every time.
+    In the game, every line like ahead(50); or say("Hi!"); is a statement. You can put two on one line (ahead(50); turn(10);), but one per line reads better. Things that open braces, like if (...) { } or onTick() { } itself, take no semicolon (;) after the brace.
+    The classic mistake is forgetting the semicolon (;) at the end: the compiler shows "';' expected" in red, often at the end of the line or on the next one, because it notices late. The other is putting a semicolon (;) right after if (...): that ends an empty order, and whatever is below runs every time.
 pseudo.es:
     CADA TURNO:
         avanzar 50 ;
@@ -240,19 +240,19 @@ claves.de: block, codeblock, geschweifte klammern, geschweifte klammer, einrück
 claves.en: block, code block, braces, curly braces, brace, indentation, indent, missing brace, open and close braces
 ver: sentencia, if_else, ambito, error_de_compilacion
 es:
-    Un bloque es un grupo de sentencias metidas entre llaves { y }. Todo lo que hay dentro va junto: se ejecuta entero o no se ejecuta.
+    Un bloque es un grupo de sentencias metidas entre llaves ({}). Todo lo que hay dentro va junto: se ejecuta entero o no se ejecuta.
     Las llaves son las cuerdas del ring: lo que está dentro pelea en ese combate y lo de fuera mira desde la grada. Si una cuerda se suelta (falta una llave de cierre), el público se mete en el ring, el árbitro se sube a una silla y se suspende todo.
-    En Java, la clase MiRobot es un bloque, cadaTurno() { } es otro dentro de ella, y un if (...) { } dentro de cadaTurno es otro más, como muñecas rusas. La sangría (los espacios al principio de la línea) a Java le da igual, pero enseña a la vista qué va dentro de qué; en el taller, Tab y Mayús+Tab la ajustan.
-    El fallo típico es dejar una llave sin cerrar o cerrar una de más: el error suele salir al final del archivo («reached end of file while parsing»), lejos del sitio real. Escribe siempre la { y la } a la vez y luego rellena el hueco; y mantén la sangría ordenada, que delata la llave que sobra o falta.
+    En Java, la clase MiRobot es un bloque, cadaTurno() { } es otro dentro de ella, y un if (...) { } dentro de cadaTurno es otro más, como muñecas rusas. La sangría (los espacios al principio de la línea) a Java le da igual, pero enseña a la vista qué va dentro de qué; en el [[Taller]], Tab y Mayús+Tab la ajustan.
+    El fallo típico es dejar una llave sin cerrar o cerrar una de más: el error suele salir al final del archivo («reached end of file while parsing»), lejos del sitio real. Escribe siempre la llave de apertura ({) y la de cierre (}) a la vez y luego rellena el hueco; y mantén la sangría ordenada, que delata la llave que sobra o falta.
 de:
-    Ein Block ist eine Gruppe von Anweisungen zwischen geschweiften Klammern { und }. Alles darin gehört zusammen: Es wird ganz ausgeführt oder gar nicht.
+    Ein Block ist eine Gruppe von Anweisungen zwischen geschweiften Klammern ({}). Alles darin gehört zusammen: Es wird ganz ausgeführt oder gar nicht.
     Die Klammern sind die Seile des Rings: Wer drinnen ist, kämpft in diesem Kampf, wer draußen ist, schaut von der Tribüne zu. Reißt ein Seil (fehlt eine schließende Klammer), stürmt das Publikum den Ring, der Ringrichter flüchtet auf einen Stuhl, und alles wird abgebrochen.
-    In Java ist die Klasse MiRobot ein Block, cadaTurno (jedenZug) mit seinen { } ein zweiter darin, und ein if (...) { } in cadaTurno noch einer, wie bei russischen Puppen. Die Einrückung (die Leerzeichen am Zeilenanfang) ist Java egal, zeigt dir aber auf einen Blick, was wo hineingehört; in der Werkstatt richten Tab und Umschalt+Tab sie aus.
-    Der typische Fehler: eine Klammer nicht schließen oder eine zu viel schließen. Der Fehler erscheint dann oft erst am Dateiende („reached end of file while parsing“), weit weg von der echten Stelle. Schreib { und } immer gleichzeitig und füll dann die Lücke; und halte die Einrückung sauber, sie verrät die überzählige oder fehlende Klammer.
+    In Java ist die Klasse MeinRoboter ein Block, jedenZug() { } ein zweiter darin, und ein if (...) { } in jedenZug() noch einer, wie bei russischen Puppen. Die Einrückung (die Leerzeichen am Zeilenanfang) ist Java egal, zeigt dir aber auf einen Blick, was wo hineingehört; in der [[Werkstatt]] richten Tab und Umschalt+Tab sie aus.
+    Der typische Fehler: eine Klammer nicht schließen oder eine zu viel schließen. Der Fehler erscheint dann oft erst am Dateiende („reached end of file while parsing“), weit weg von der echten Stelle. Schreib die öffnende ({) und die schließende (}) Klammer immer gleichzeitig und füll dann die Lücke; und halte die Einrückung sauber, sie verrät die überzählige oder fehlende Klammer.
 en:
-    A block is a group of statements wrapped in braces { and }. Everything inside belongs together: it runs as a whole or not at all.
+    A block is a group of statements wrapped in curly braces ({}). Everything inside belongs together: it runs as a whole or not at all.
     The braces are the ropes of the ring: whoever is inside fights in that bout, whoever is outside watches from the stands. If a rope snaps (a closing brace is missing), the crowd pours into the ring, the referee climbs onto a chair and the whole thing is called off.
-    In Java, the class MiRobot is a block, cadaTurno (onTick) with its { } is another one inside it, and an if (...) { } inside cadaTurno is yet another, like Russian dolls. Indentation (the spaces at the start of a line) means nothing to Java, but it shows you at a glance what goes inside what; in the workshop, Tab and Shift+Tab adjust it.
+    In Java, the class MyRobot is a block, onTick() { } is another one inside it, and an if (...) { } inside onTick() is yet another, like Russian dolls. Indentation (the spaces at the start of a line) means nothing to Java, but it shows you at a glance what goes inside what; in the [[Workshop]], Tab and Shift+Tab adjust it.
     The classic mistake is leaving a brace unclosed or closing one too many: the error often appears at the end of the file ("reached end of file while parsing"), far from the real spot. Always type the { and the } together and then fill the gap; and keep the indentation tidy, because it gives away the extra or missing brace.
 pseudo.es:
     ROBOT {
@@ -314,7 +314,7 @@ de:
     In Java sagst du zuerst, welche Art von Ding hineinkommt, dann den Namen: int treffer = 0; speichert eine ganze Zahl. Ändern kannst du sie mit treffer = treffer + 1; und lesen, indem du ihren Namen schreibst, zum Beispiel in escribir(treffer).
     Der typische Fehler: sie zu benutzen, bevor sie einen Wert hat, oder sie in cadaTurno (jedenZug) zu deklarieren und sich zu wundern, dass sie jeden Zug wieder 0 ist (die Kiste wird weggeworfen und neu gebaut). Soll sie sich etwas über die Züge hinweg merken, deklariere sie außerhalb, in der Klasse.
 en:
-    A variable is a labelled box where the program keeps a value to use later: a number, some text, a yes or a no.
+    A variable is a labeled box where the program keeps a value to use later: a number, some text, a yes or a no.
     Think of the whiteboard in the corner of the ring: the coach writes "hits taken: 3" and, every time you get hit, wipes it and writes the new number. The whiteboard is the variable; what is written on it is its value.
     In Java you first say what kind of thing it holds, then its name: int hits = 0; holds a whole number. You change it with hits = hits + 1; and read it by writing its name, for example in escribir(hits).
     The classic mistake: using it before giving it a value, or declaring it inside cadaTurno (onTick) and being surprised that it is back to 0 every tick (the box is thrown away and a new one is made). If it must remember between ticks, declare it outside, in the class.
@@ -768,17 +768,17 @@ es:
     if es la forma de que el programa decida: «si pasa esto, haz aquello». Con else añades lo que hay que hacer cuando no pasa.
     Es el robot en su esquina del ring, mirando de reojo: si el rival está cerca, puñetazo; si no, a dar vueltas silbando como si nada. Con else if encadenas más casos, como un portero de discoteca con una lista de normas muy larga y muy rara.
     En Java: if (condición) { … } else { … }. La condición va entre paréntesis y tiene que dar true o false. En el juego: if (e.distancia() < 80) { atacar(); } else { avanzar(e.distancia()); }. Con else if, Java prueba los casos en orden y hace solo el primero que se cumple.
-    El fallo típico es poner un ; tras el paréntesis: if (blindaje() < 30); retroceder(50); retrocede SIEMPRE, porque el ; cierra un if vacío. Otro: olvidar las llaves y creer que dos líneas van dentro cuando solo va la primera. Usa siempre { }, aunque sea una sola línea.
+    El fallo típico es poner un punto y coma (;) tras el paréntesis: if (blindaje() < 30); retroceder(50); retrocede [[siempre]], porque el punto y coma (;) cierra un if vacío. Otro: olvidar las llaves y creer que dos líneas van dentro cuando solo va la primera. Usa siempre llaves ({}), aunque sea una sola línea.
 de:
     Mit if trifft das Programm Entscheidungen: „Wenn das passiert, tu jenes.“ Mit else ergänzt du, was zu tun ist, wenn es nicht passiert.
     Das ist der Roboter in seiner Ringecke, der aus dem Augenwinkel schaut: Ist der Gegner nah, gibt's einen Haken; sonst dreht er pfeifend seine Runden, als wäre nichts. Mit else if hängst du weitere Fälle an, wie ein Türsteher mit einer sehr langen und sehr seltsamen Regelliste.
     In Java: if (Bedingung) { … } else { … }. Die Bedingung steht in Klammern und muss true oder false ergeben. Im Spiel: if (e.distancia() < 80) { atacar(); } else { avanzar(e.distancia()); } (entfernung, angreifen, vorwaerts). Bei else if prüft Java die Fälle der Reihe nach und führt nur den ersten aus, der zutrifft.
-    Der typische Fehler: ein ; hinter der Klammer. if (blindaje() < 30); retroceder(50); (panzerung, rueckwaerts) fährt IMMER zurück, weil das ; ein leeres if abschließt. Ein anderer: die geschweiften Klammern weglassen und glauben, zwei Zeilen gehörten dazu, obwohl nur die erste dazugehört. Setz immer { }, auch bei einer einzigen Zeile.
+    Der typische Fehler: ein Semikolon (;) hinter der Klammer. if (panzerung() < 30); rueckwaerts(50); fährt [[immer]] zurück, weil das Semikolon (;) ein leeres if abschließt. Ein anderer: die geschweiften Klammern weglassen und glauben, zwei Zeilen gehörten dazu, obwohl nur die erste dazugehört. Setz immer geschweifte Klammern ({}), auch bei einer einzigen Zeile.
 en:
     if is how a program makes decisions: "if this happens, do that". With else you add what to do when it doesn't happen.
     It's the robot in its corner of the ring, watching out of the corner of its eye: if the rival is close, punch; otherwise, wander around whistling as if nothing were going on. With else if you chain more cases, like a nightclub bouncer with a very long and very strange list of rules.
     In Java: if (condition) { … } else { … }. The condition goes in brackets and must give true or false. In the game: if (e.distancia() < 80) { atacar(); } else { avanzar(e.distancia()); } (distance, attack, ahead). With else if, Java tries the cases in order and only runs the first one that holds.
-    The classic mistake is putting a ; after the bracket: if (blindaje() < 30); retroceder(50); (armor, back) ALWAYS moves back, because the ; closes an empty if. Another is leaving out the braces and thinking two lines are inside when only the first is. Always use { }, even for a single line.
+    The classic mistake is putting a semicolon (;) after the parentheses: if (armor() < 30); back(50); [[always]] moves back, because the semicolon (;) closes an empty if. Another is leaving out the braces and thinking two lines are inside when only the first is. Always use curly braces ({}), even for a single line.
 pseudo.es:
     AL VER AL RIVAL:
         SI está cerca:
@@ -1024,12 +1024,12 @@ es:
     Un error de compilación es algo de tu código que Java no entiende, y por eso se niega a convertirlo en programa. El robot ni siquiera llega a pisar la arena con ese código.
     Es el inspector del taller devolviéndote el robot con una pegatina roja: «Aquí falta un tornillo». No es un drama: el inspector es un quisquilloso, pero también tu mejor amigo, porque te avisa ANTES de que el brazo se caiga en mitad del combate.
     En el taller, al compilar (Ctrl+S), la línea con el problema sale marcada en rojo; pasa el ratón por encima y el juego te lo explica. Los más típicos: «';' expected» (falta un punto y coma), «cannot find symbol» (un nombre mal escrito, como avanzr(50) o Blindaje()) e «incompatible types» (un texto donde va un número).
-    El fallo típico es intentar arreglar todos los errores a la vez: arregla solo el PRIMERO y vuelve a compilar, porque los demás suelen ser su eco. Y mira también la línea de antes: si a una le falta el ;, Java a veces se queja en la siguiente.
+    El fallo típico es intentar arreglar todos los errores a la vez: arregla solo el [[primero]] y vuelve a compilar, porque los demás suelen ser su eco. Y mira también la línea de antes: si a una le falta el punto y coma (;), Java a veces se queja en la siguiente.
 de:
     Ein Kompilierfehler ist etwas in deinem Code, das Java nicht versteht, und deshalb weigert es sich, daraus ein Programm zu machen. Mit diesem Code betritt der Roboter die Arena gar nicht erst.
     Das ist der Prüfer in der Werkstatt, der dir den Roboter mit rotem Aufkleber zurückgibt: „Hier fehlt eine Schraube.“ Kein Drama: Der Prüfer ist ein Pedant, aber auch dein bester Freund, denn er warnt dich, BEVOR dir mitten im Kampf der Arm abfällt.
     In der Werkstatt wird beim Kompilieren (Strg+S) die Zeile mit dem Problem rot markiert; fahr mit der Maus darüber, und das Spiel erklärt es dir. Die häufigsten: „';' expected“ (ein Semikolon fehlt), „cannot find symbol“ (ein falsch geschriebener Name, etwa vorwaerz(50) oder Panzerung()) und „incompatible types“ (ein Text, wo eine Zahl hingehört).
-    Der typische Fehler: alle Fehler auf einmal beheben wollen. Behebe nur den ERSTEN und kompiliere neu, denn die übrigen sind oft nur sein Echo. Und schau auch in die Zeile davor: Fehlt dort das ;, meckert Java manchmal erst in der nächsten.
+    Der typische Fehler: alle Fehler auf einmal beheben wollen. Behebe nur den [[ersten]] und kompiliere neu, denn die übrigen sind oft nur sein Echo. Und schau auch in die Zeile davor: Fehlt dort das Semikolon (;), meckert Java manchmal erst in der nächsten.
 en:
     A compile error is something in your code that Java doesn't understand, so it refuses to turn it into a program. With that code, the robot never even sets foot in the arena.
     It's the workshop inspector handing your robot back with a red sticker: "there's a screw missing here". No drama: the inspector is a nitpicker, but also your best friend, because they warn you BEFORE the arm falls off in the middle of the fight.

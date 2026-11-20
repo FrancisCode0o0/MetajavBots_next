@@ -124,10 +124,28 @@ public final class MotorDemostracion {
             return;
         }
         pelea.avanzar();
+        ajustarAvanceExacto();
         turnosEnPaso++;
         actualizarMetricas();
         comprobarErrorEnPelea();
         if (debePausar()) pausarEnPaso();
+    }
+
+    private void ajustarAvanceExacto() {
+        if (pasoActual().accion != Demostracion.Accion.AVANZAR) return;
+        Cuerpo yo = pelea.cuerpo(0);
+        if (yo == null) return;
+        double dx = yo.x - inicioX;
+        double dy = yo.y - inicioY;
+        double dist = Math.hypot(dx, dy);
+        if (dist >= 80.0) {
+            double ux = dx / dist;
+            double uy = dy / dist;
+            yo.x = inicioX + ux * 80.0;
+            yo.y = inicioY + uy * 80.0;
+            yo.velocidad = 0;
+            yo.detener();
+        }
     }
 
     private void iniciarPaso() {
@@ -238,7 +256,7 @@ public final class MotorDemostracion {
         Cuerpo yo = pelea.cuerpo(0);
         switch (p.accion) {
             case AVANZAR:
-                return yo != null && yo.restanteAvance() < 0.5 && distanciaRecorrida > 40;
+                return yo != null && (distanciaRecorrida >= 79.5 || (yo.restanteAvance() < 0.5 && distanciaRecorrida > 40));
             case GIRAR:
                 return yo != null && Math.abs(yo.restanteGiro()) < 0.5 && giroAcumulado > 35;
             case RADAR:
@@ -332,7 +350,7 @@ public final class MotorDemostracion {
             enemigoDetectado = true;
             apuntarHacia(e.angulo());
             double error = Math.abs(normalizar(e.angulo() - mira()));
-            if (!disparoRealizado && error < 5) {
+            if (!disparoRealizado && error < 1.0) {
                 if (atacar()) disparoRealizado = true;
                 marcarLineaViva(16, 15, 14);
             } else if (!disparoRealizado) {
@@ -439,5 +457,15 @@ public final class MotorDemostracion {
 
     public String ultimoError() {
         return ultimoError;
+    }
+
+    /** Indica si las barras de blindaje y energía del HUD están listas para mostrarse en la demostración. */
+    public boolean hudBarrasVisible() {
+        return pelea != null && pelea.cuerpo(0) != null;
+    }
+
+    /** Indica si el paso actual llama explícitamente la atención sobre las barras de blindaje y energía. */
+    public boolean resaltarHudBarras() {
+        return pasoActual().accion == Demostracion.Accion.APUNTAR_Y_DISPARAR;
     }
 }

@@ -307,8 +307,8 @@ es: División por cero. Es lo único que no sé calcular.
 de: Division durch null. Das Einzige, was ich nicht rechnen kann.
 en: Division by zero. The one thing I can't compute.
 
-es: {jugador}, me has puesto un ; donde no iba. Lo he notado.
-de: {jugador}, da ist ein ; zu viel. Ich hab's gemerkt.
+es: {jugador}, me has puesto un punto y coma (;) donde no iba. Lo he notado.
+de: {jugador}, da ist ein Semikolon (;) zu viel. Ich hab's gemerkt.
 en: {jugador}, there's a stray semicolon. I noticed.
 
 [espera]

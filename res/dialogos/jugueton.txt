@@ -193,7 +193,7 @@ es: Bah, era la ronda de tutorial.
 de: Pah, das war die Tutorial-Runde.
 en: Bah, that was the tutorial round.
 
-es: ¡Continuar? ¡Sí! ¡Sí! ¡Mil veces sí!
+es: ¿Continuar? ¡Sí! ¡Sí! ¡Mil veces sí!
 de: Weiterspielen? Ja! Ja! Tausendmal ja!
 en: Continue? Yes! Yes! A thousand times yes!
 

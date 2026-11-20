@@ -124,13 +124,13 @@ titulo.es: Al menos una vez, y salidas de emergencia
 titulo.de: Mindestens einmal, und Notausgänge
 titulo.en: At least once, and emergency exits
 --- pagina
-es: do { ... } while (condición); hace la vuelta PRIMERO y pregunta después, así que siempre entra
+es: do { ... } while (condición); hace la vuelta [[primero]] y pregunta después, así que siempre entra
 es: al menos una vez. Viene bien cuando la primera vuelta es obligatoria, como contar las cifras
-es: de un número: hasta el 0 tiene una. No olvides el ; del final, que aquí sí va.
-de: do { ... } while (bedingung); dreht ZUERST eine Runde und fragt danach, läuft also mindestens einmal.
+es: de un número: hasta el 0 tiene una. No olvides el punto y coma (;) del final, que aquí sí va.
+de: do { ... } while (bedingung); dreht [[zuerst]] eine Runde und fragt danach, läuft also mindestens einmal.
 de: Praktisch, wenn die erste Runde Pflicht ist, etwa beim Zählen der Ziffern einer Zahl: Selbst die 0 hat eine.
-de: Vergiss das ; am Ende nicht, hier gehört es hin.
-en: do { ... } while (condition); does the lap FIRST and asks afterwards, so it always runs at least once.
+de: Vergiss das Semikolon (;) am Ende nicht, hier gehört es hin.
+en: do { ... } while (condition); does the lap [[first]] and asks afterward, so it always runs at least once.
 en: Handy when the first lap is mandatory, like counting the digits of a number: even 0 has one.
 en: Don't forget the ; at the end; here it belongs.
 --- pagina

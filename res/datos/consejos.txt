@@ -34,8 +34,8 @@ codigo.en: @Override\npublic void onHit(Hit h) {\n    turn(90);\n    ahead(120);
 [paredes]
 titulo: Que no se choque con las paredes | Nicht gegen Wände fahren | Stop hitting walls
 pregunta: ¿Sabe tu robot dónde está la pared antes de tocarla? ¿Qué datos de la arena tienes a mano? | Weiß dein Roboter, wo die Wand ist, bevor er sie berührt? Welche Daten der Arena hast du? | Does your robot know where the wall is before touching it? What arena data do you have?
-pista: Compara tu x y tu y con el ancho y el alto de la arena: si te acercas a menos de 80, gira hacia el centro. | Vergleiche dein x und y mit Breite und Höhe der Arena: Bist du näher als 80, dreh zur Mitte. | Compare your x and y with the arena's width and height: closer than 80, turn towards the centre.
-pseudo: Si estoy cerca de un borde → giro hacia el centro de la arena. | Wenn ich nah am Rand bin → zur Mitte der Arena drehen. | If I'm near an edge → turn towards the arena's centre.
+pista: Compara tu x y tu y con el ancho y el alto de la arena: si te acercas a menos de 80, gira hacia el centro. | Vergleiche dein x und y mit Breite und Höhe der Arena: Bist du näher als 80, dreh zur Mitte. | Compare your x and y with the arena's width and height: closer than 80, turn toward the center.
+pseudo: Si estoy cerca de un borde → giro hacia el centro de la arena. | Wenn ich nah am Rand bin → zur Mitte der Arena drehen. | If I'm near an edge → turn toward the arena's center.
 codigo.es: if (x() < 80 || x() > anchoArena() - 80) {\n    girarHacia(anguloHacia(anchoArena() / 2, altoArena() / 2));\n}
 codigo.de: if (x() < 80 || x() > arenaBreite() - 80) {\n    drehenNach(winkelZu(arenaBreite() / 2, arenaHoehe() / 2));\n}
 codigo.en: if (x() < 80 || x() > arenaWidth() - 80) {\n    turnTo(angleTo(arenaWidth() / 2, arenaHeight() / 2));\n}
@@ -43,8 +43,8 @@ codigo.en: if (x() < 80 || x() > arenaWidth() - 80) {\n    turnTo(angleTo(arenaW
 [especial]
 titulo: Usar lo especial de la cabeza | Das Spezielle des Kopfes nutzen | Use the head special
 pregunta: ¿Qué hace tu cabeza: escudo, turbo, reparar…? ¿En qué momento te vendría mejor? | Was kann dein Kopf: Schild, Turbo, Reparatur…? Wann wäre es am nützlichsten? | What does your head do: shield, turbo, repair…? When would it help most?
-pista: Lo especial tarda en recargarse: guárdalo para cuando más falte (el escudo, al ver al enemigo cerca; reparar, con poco blindaje). | Das Spezielle lädt langsam nach: Heb es für den richtigen Moment auf (Schild bei nahem Gegner, Reparatur bei wenig Panzerung). | The special recharges slowly: save it for when it matters (shield when the enemy is close, repair when armour is low).
-pseudo: Si me queda poco blindaje y lo especial está listo → lo uso. | Wenn ich wenig Panzerung habe und das Spezielle bereit ist → benutzen. | If my armour is low and the special is ready → use it.
+pista: Lo especial tarda en recargarse: guárdalo para cuando más falte (el escudo, al ver al enemigo cerca; reparar, con poco blindaje). | Das Spezielle lädt langsam nach: Heb es für den richtigen Moment auf (Schild bei nahem Gegner, Reparatur bei wenig Panzerung). | The special recharges slowly: save it for when it matters (shield when the enemy is close, repair when armor is low).
+pseudo: Si me queda poco blindaje y lo especial está listo → lo uso. | Wenn ich wenig Panzerung habe und das Spezielle bereit ist → benutzen. | If my armor is low and the special is ready → use it.
 codigo.es: if (blindaje() < 40 && listoEspecial()) especial();
 codigo.de: if (panzerung() < 40 && bereitSpezial()) spezial();
 codigo.en: if (armor() < 40 && readySpecial()) special();

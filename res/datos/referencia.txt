@@ -2341,9 +2341,9 @@ firma: static void sleep(long milisegundos) throws InterruptedException
 es: Duerme el hilo actual ese tiempo. Pide tratar InterruptedException.
 de: Lässt den aktuellen Thread so lange schlafen. InterruptedException muss behandelt werden.
 en: Puts the current thread to sleep for that long. You must handle InterruptedException.
-donde.es: Úsalo solo dentro de try-catch en ejercicios de concurrencia o pruebas de pausas; NUNCA lo pongas en un robot ni para esperar turnos (en robots usa cadaTurno()).
-donde.de: Nur in try-catch in Nebenläufigkeits-Übungen für Pausen nutzen; NIEMALS im Roboter oder zum Warten auf Züge (dort läuft jedenZug() automatisch).
-donde.en: Use only inside try-catch in concurrency exercises; NEVER put it in a robot or to wait for ticks (robots use onTick() automatically).
+donde.es: Úsalo solo dentro de try-catch en ejercicios de concurrencia o pruebas de pausas; [[nunca]] lo pongas en un robot ni para esperar turnos (en robots usa cadaTurno()).
+donde.de: Nur in try-catch in Nebenläufigkeits-Übungen für Pausen nutzen; [[niemals]] im Roboter oder zum Warten auf Züge (dort läuft jedenZug() automatisch).
+donde.en: Use only inside try-catch in concurrency exercises; [[never]] put it in a robot or to wait for ticks (robots use onTick() automatically).
 ejemplo: try { Thread.sleep(100); } catch (InterruptedException e) { Thread.currentThread().interrupt(); }
 
 === Thread.ofVirtual
@@ -2475,9 +2475,9 @@ firma: tipo f(n) { if (casoBase) return valor; return ... f(nMasPequeño) ...; }
 es: Un método que se llama a sí mismo con un problema más pequeño. Sin caso base, StackOverflowError.
 de: Eine Methode, die sich selbst mit einem kleineren Problem aufruft. Ohne Basisfall: StackOverflowError.
 en: A method that calls itself on a smaller problem. Without a base case: StackOverflowError.
-donde.es: Escríbela en un método auxiliar propio poniendo SIEMPRE el caso base en las primeras líneas antes de llamarse a sí mismo; en robots limita la profundidad para no agotar pasos ni pila.
-donde.de: In einer eigenen Hilfsmethode schreiben und den Basisfall IMMER an den Anfang vor den Selbstaufruf setzen; in Robotern Tiefe begrenzen (Stack und Schrittlimit).
-donde.en: Write in a helper method putting the base case FIRST before the self-call; in robots cap recursion depth to avoid stack overflow and step limits.
+donde.es: Escríbela en un método auxiliar propio poniendo [[siempre]] el caso base en las primeras líneas antes de llamarse a sí mismo; en robots limita la profundidad para no agotar pasos ni pila.
+donde.de: In einer eigenen Hilfsmethode schreiben und den Basisfall [[immer]] an den Anfang vor den Selbstaufruf setzen; in Robotern Tiefe begrenzen (Stack und Schrittlimit).
+donde.en: Write in a helper method putting the base case [[first]] before the self-call; in robots cap recursion depth to avoid stack overflow and step limits.
 ejemplo: int fact(int n) { return n <= 1 ? 1 : n * fact(n - 1); }   // fact(5) = 120
 
 === Random
@@ -2586,7 +2586,7 @@ tema: 22
 firma: @Test void nombreDeLaPrueba() { ... }
 es: Marca un método como prueba de JUnit 5. Cada prueba comprueba un comportamiento concreto.
 de: Markiert eine Methode als JUnit-5-Test. Jeder Test prüft ein bestimmtes Verhalten.
-en: Marks a method as a JUnit 5 test. Each test checks one specific behaviour.
+en: Marks a method as a JUnit 5 test. Each test checks one specific behavior.
 donde.es: Coloca @Test justo encima de cada método de prueba en una clase de pruebas del laboratorio (no dentro del robot de pelea); el método debe ser void y sin parámetros.
 donde.de: @Test direkt über jede Testmethode in einer Labor-Testklasse setzen (nicht im Kampfroboter); die Methode muss void sein und darf keine Parameter haben.
 donde.en: Place @Test directly above each test method in a lab test class (never in a battle robot); the method must return void and take no parameters.
@@ -2618,11 +2618,11 @@ ejemplo: assertTrue(lista.isEmpty());
 tema: 22
 firma: static <T extends Throwable> T assertThrows(Class<T> tipo, Executable codigo)
 es: Falla si el código NO lanza esa excepción. Devuelve la excepción para mirar su mensaje.
-de: Schlägt fehl, wenn der Code diese Ausnahme NICHT wirft. Liefert sie zurück, um die Meldung zu prüfen.
-en: Fails if the code does NOT throw that exception. Returns it so you can inspect the message.
-donde.es: Úsalo dentro de un @Test envolviendo SOLO la llamada exacta que debe fallar en una lambda () -> ...; si envuelves varias líneas puedes ocultar qué falló.
+de: Schlägt fehl, wenn der Code diese Ausnahme [[nicht]] wirft. Liefert sie zurück, um die Meldung zu prüfen.
+en: Fails if the code does [[not]] throw that exception. Returns it so you can inspect the message.
+donde.es: Úsalo dentro de un @Test envolviendo [[solo]] la llamada exacta que debe fallar en una lambda () -> ...; si envuelves varias líneas puedes ocultar qué falló.
 donde.de: In einer @Test-Methode nutzen und nur genau den Aufruf in die Lambda () -> ... packen, der die Ausnahme werfen soll; keine ganzen Blöcke einwickeln.
-donde.en: Use inside a @Test wrapping ONLY the exact call expected to throw inside () -> ...; wrapping multiple lines can hide which one threw.
+donde.en: Use inside a @Test wrapping [[only]] the exact call expected to throw inside () -> ...; wrapping multiple lines can hide which one threw.
 ejemplo: assertThrows(IllegalArgumentException.class, () -> new Vida(-1));
 
 === JUnit.BeforeEach

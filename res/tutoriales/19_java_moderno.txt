@@ -56,7 +56,7 @@ en: if one is missing. And enums can be compared with == without fear: each valu
 robot: usa:enum
 es: Organiza tu robot con un enum de estados y un switch, y pelea una ronda con él.
 de: Organisiere deinen Roboter mit einem enum für Zustände und einem switch und kämpf eine Runde damit.
-en: Organise your robot with an enum of states and a switch, and fight a round with it.
+en: Organize your robot with an enum of states and a switch, and fight a round with it.
 --- tarea
 ejercicio: t19_enum_de_armas
 es: Las armas, en un enum con sus propios datos.
@@ -133,13 +133,13 @@ titulo.es: Familias selladas y patrones
 titulo.de: Versiegelte Familien und Muster
 titulo.en: Sealed families and patterns
 --- pagina
-es: sealed (Java 17) cierra una jerarquía: sealed interface Lectura permits Eco, Ruido, Nada dice que SOLO
+es: sealed (Java 17) cierra una jerarquía: sealed interface Lectura permits Eco, Ruido, Nada dice que [[solo]]
 es: esas tres clases pueden implementarla. Parece una restricción, pero da un superpoder: el compilador
 es: conoce todos los casos posibles y puede comprobar que los tratas todos.
-de: sealed (Java 17) schließt eine Hierarchie ab: sealed interface Lectura permits Eco, Ruido, Nada heißt, NUR
+de: sealed (Java 17) schließt eine Hierarchie ab: sealed interface Lectura permits Eco, Ruido, Nada heißt, [[nur]]
 de: diese drei Klassen dürfen es implementieren. Klingt nach Einschränkung, bringt aber eine Superkraft:
 de: Der Compiler kennt alle möglichen Fälle und kann prüfen, ob du jeden behandelst.
-en: sealed (Java 17) closes off a hierarchy: sealed interface Lectura permits Eco, Ruido, Nada says ONLY
+en: sealed (Java 17) closes off a hierarchy: sealed interface Lectura permits Eco, Ruido, Nada says [[only]]
 en: those three classes may implement it. Sounds restrictive, but it brings a superpower: the compiler
 en: knows every possible case and can check that you handle them all.
 --- pagina

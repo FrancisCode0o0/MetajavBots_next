@@ -13,7 +13,7 @@ titulo.de: Bis zur Flagge
 titulo.en: Up to the flag
 enunciado.es: Tu robot está en x y la bandera en «bandera» (en la misma fila). avanzar() necesita saber cuánto: devuelve cuánto tiene que avanzar (en negativo, hacia atrás).
 enunciado.de: Dein Roboter steht bei x, die Flagge bei «bandera» (in derselben Reihe). vorwaerts() muss wissen, wie weit: Gib zurück, wie weit er fahren muss (negativ heißt rückwärts).
-enunciado.en: Your robot is at x and the flag at «bandera» (in the same row). ahead() needs to know how far: return how far it has to move (negative means backwards).
+enunciado.en: Your robot is at x and the flag at "bandera" (in the same row). ahead() needs to know how far: return how far it has to move (negative means backwards).
 pista.es: Si la bandera está en 400 y tú en 100, ¿cuánto te falta? ¿Y si estás en 500?
 pista.de: Steht die Flagge bei 400 und du bei 100, wie viel fehlt dir? Und wenn du bei 500 stehst?
 pista.en: If the flag is at 400 and you're at 100, how far is left? And if you're at 500?
@@ -98,7 +98,7 @@ titulo.de: Die kürzeste Drehung
 titulo.en: The shortest turn
 enunciado.es: Tu robot mira hacia «rumbo» y el enemigo está hacia «haciaEnemigo» (los dos en grados, de 0 a 359). Devuelve cuánto girar por el camino más corto: positivo a la izquierda, negativo a la derecha, entre -179 y 180.
 enunciado.de: Dein Roboter schaut nach «rumbo», der Gegner steht in Richtung «haciaEnemigo» (beides in Grad, 0 bis 359). Gib zurück, wie weit du dich auf dem kürzesten Weg drehen musst: positiv nach links, negativ nach rechts, zwischen -179 und 180.
-enunciado.en: Your robot faces «rumbo» and the enemy is towards «haciaEnemigo» (both in degrees, 0 to 359). Return how far to turn the shortest way: positive to the left, negative to the right, between -179 and 180.
+enunciado.en: Your robot faces "rumbo" and the enemy is towards "haciaEnemigo" (both in degrees, 0 to 359). Return how far to turn the shortest way: positive to the left, negative to the right, between -179 and 180.
 pista.es: La diferencia es haciaEnemigo - rumbo. Pero de 350 a 10 no hay que girar -340… ¿qué ejercicio anterior te arregla eso?
 pista.de: Die Differenz ist haciaEnemigo - rumbo. Aber von 350 nach 10 dreht man nicht -340 … welche frühere Übung repariert das?
 pista.en: The difference is haciaEnemigo - rumbo. But from 350 to 10 you don't turn -340… which earlier exercise fixes that?
@@ -128,10 +128,10 @@ titulo.de: Wo der Gegner sein wird
 titulo.en: Where the rival will be
 enunciado.es: Para acertar a un robot que se mueve hay que apuntar a donde estará. Está en x, avanza «velocidad» por turno y tu disparo tarda «turnos» en llegar: devuelve su x cuando llegue el disparo.
 enunciado.de: Um einen fahrenden Roboter zu treffen, zielst du dorthin, wo er sein wird. Er steht bei x, fährt «velocidad» pro Zug, und dein Schuss braucht «turnos» Züge: Gib sein x zurück, wenn der Schuss ankommt.
-enunciado.en: To hit a moving robot you aim where it will be. It's at x, moves «velocidad» per tick and your shot takes «turnos» ticks to arrive: return its x when the shot arrives.
+enunciado.en: To hit a moving robot you aim where it will be. It's at x, moves "velocidad" per tick and your shot takes "turnos" ticks to arrive: return its x when the shot arrives.
 pista.es: Cada turno se mueve «velocidad». En «turnos» turnos, ¿cuánto se ha movido en total? Súmalo a donde estaba.
 pista.de: Pro Zug bewegt er sich um «velocidad». Wie weit insgesamt in «turnos» Zügen? Addiere es zu seinem Startpunkt.
-pista.en: Each tick it moves «velocidad». How far in total after «turnos» ticks? Add it to where it was.
+pista.en: Each tick it moves "velocidad". How far in total after "turnos" ticks? Add it to where it was.
 firma: static int dondeEstara(int x, int velocidad, int turnos)
 plantilla:
     return x;

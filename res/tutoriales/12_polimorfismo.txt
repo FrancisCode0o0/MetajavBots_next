@@ -23,7 +23,7 @@ es: solo pregunta qué táctica toca y le dice «muévete». Añadir una táctic
 de: Das Beste: Verhalten wechseln heißt Objekt wechseln. Mit viel Panzerung gehst du aufs Ganze; wird sie
 de: knapp, tauschst du die Taktik gegen eine vorsichtige. jedenZug füllt sich nicht mit ifs für jeden Stil:
 de: Es fragt nur, welche Taktik dran ist, und sagt ihr „beweg dich“. Eine neue Taktik ändert den Rest nicht.
-en: Best of all: changing behaviour means changing objects. With high armor you go all in;
+en: Best of all: changing behavior means changing objects. With high armor you go all in;
 en: when it drops, you swap to a careful tactic. onTick doesn't fill up with ifs for every style:
 en: it just asks which tactic is on and tells it "move". Adding a new tactic doesn't touch the rest of the code.
 codigo:
@@ -132,7 +132,7 @@ de: prüft und gibt dir gleich die umgewandelte Variable a, ohne Cast. Sparsam e
 de: nach dem Typ, sollte das Verhalten vielleicht eine überschriebene Methode sein.
 en: To ask what type of object you have, use instanceof. Since Java 16 with a pattern: if (p instanceof Arma a)
 en: checks and also hands you the variable a already converted, no cast. Use it sparingly: if you find yourself
-en: asking the type everywhere, maybe that behaviour should be an overridden method.
+en: asking the type everywhere, maybe that behavior should be an overridden method.
 codigo:
     Object guardado = memoria().get("tactica");
     if (guardado instanceof String nombre && nombre.equals("prudente")) {

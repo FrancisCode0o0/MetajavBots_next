@@ -635,17 +635,17 @@ claves.de: gültigkeitsbereich, sichtbarkeit einer variable, scope, lokale varia
 claves.en: scope, variable scope, local variable, where a variable lives, cannot find symbol, variable out of scope
 ver: variable, bloque, atributo, metodo
 es:
-    El ámbito de una variable es la parte del código donde esa variable existe y se puede usar. Una variable vive desde que se declara hasta la llave } que cierra el bloque donde nació; fuera de ahí, para Java, no existe.
+    El ámbito de una variable es la parte del código donde esa variable existe y se puede usar. Una variable vive desde que se declara hasta la llave de cierre (}) del bloque donde nació; fuera de ahí, para Java, no existe.
     Es como las taquillas del estadio: lo que guardas en la taquilla de tu vestuario solo lo ves desde tu vestuario. Lo que está colgado en el tablón del pasillo (la clase) lo ve todo el equipo. Y lo que dejas en el banquillo durante un asalto, al acabar el asalto lo barren.
     En Java: una variable declarada dentro de un método (local) solo existe en ese método y vuelve a nacer en cada llamada; una declarada dentro de un if o de un for, solo dentro de esas llaves. Una declarada en la clase, fuera de los métodos (un campo), la ven todos los métodos de MiRobot y dura entre turnos.
     El fallo típico: usar una variable fuera de sus llaves y recibir «cannot find symbol», o declararla en cadaTurno esperando que recuerde algo del turno anterior. Declara cada variable en el sitio más pequeño que sirva; si tiene que durar entre turnos, súbela a la clase.
 de:
-    Der Gültigkeitsbereich einer Variable ist der Teil des Codes, in dem es sie gibt und man sie benutzen kann. Eine Variable lebt von ihrer Deklaration bis zur schließenden Klammer } des Blocks, in dem sie entstanden ist; außerhalb gibt es sie für Java nicht.
+    Der Gültigkeitsbereich einer Variable ist der Teil des Codes, in dem es sie gibt und man sie benutzen kann. Eine Variable lebt von ihrer Deklaration bis zur schließenden Klammer (}) des Blocks, in dem sie entstanden ist; außerhalb gibt es sie für Java nicht.
     Wie die Spinde im Stadion: Was in deinem Kabinen-Spind liegt, siehst nur du von deiner Kabine aus. Was am schwarzen Brett im Gang hängt (die Klasse), sieht die ganze Mannschaft. Und was du während einer Runde auf der Bank liegen lässt, wird am Rundenende weggefegt.
     In Java: Eine in einer Methode deklarierte (lokale) Variable gibt es nur in dieser Methode, und bei jedem Aufruf entsteht sie neu; eine in einem if oder for deklarierte nur in diesen Klammern. Eine in der Klasse außerhalb der Methoden (ein Feld) sehen alle Methoden von MiRobot, und sie hält über die Züge hinweg.
     Der typische Fehler: eine Variable außerhalb ihrer Klammern benutzen und „cannot find symbol“ bekommen, oder sie in cadaTurno (jedenZug) deklarieren und erwarten, dass sie sich etwas aus dem letzten Zug merkt. Deklariere jede Variable im kleinsten Bereich, der reicht; muss sie über Züge halten, zieh sie hoch in die Klasse.
 en:
-    A variable's scope is the part of the code where that variable exists and can be used. A variable lives from where it is declared to the closing brace } of the block it was born in; outside of that, as far as Java is concerned, it doesn't exist.
+    A variable's scope is the part of the code where that variable exists and can be used. A variable lives from where it is declared to the closing brace (}) of the block it was born in; outside of that, as far as Java is concerned, it doesn't exist.
     It's like the lockers at the stadium: what you keep in your dressing-room locker can only be seen from your dressing room. What's pinned on the corridor noticeboard (the class) the whole team can see. And whatever you leave on the bench during a round gets swept away when the round ends.
     In Java: a variable declared inside a method (a local) only exists in that method and is born again on every call; one declared inside an if or a for, only inside those braces. One declared in the class, outside the methods (a field), is visible to every method of MiRobot and lasts between ticks.
     The classic mistake: using a variable outside its braces and getting "cannot find symbol", or declaring it in cadaTurno (onTick) and expecting it to remember something from the last tick. Declare every variable in the smallest place that works; if it has to last between ticks, move it up to the class.
@@ -1008,9 +1008,9 @@ pseudo.de:
 pseudo.en:
     WHEN I see a rival:
         d ← distance to rival              (say 137.8)
-        metres ← d AS WHOLE NUMBER         (137: chops, doesn't round)
+        meters ← d AS WHOLE NUMBER         (137: chops, doesn't round)
         rounded ← round d                  (138)
-        write metres + " " + rounded
+        write meters + " " + rounded
 ejemplo:
     public class MiRobot extends Metajavbot {
         @Override

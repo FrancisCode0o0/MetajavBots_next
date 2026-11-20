@@ -21,15 +21,15 @@ en: it will just bake you a salty cake. In this arena, the recipes are written i
 --- pagina
 es: En el taller verás un código ya escrito. De momento no te asustes por las palabras raras (class, extends,
 es: @Override, public void): las entenderás en los temas 9 a 11. Por ahora solo importa una cosa:
-es: lo que escribas entre las llaves { } de cadaTurno, el robot lo hace en cada turno de la pelea,
+es: lo que escribas entre las llaves ({}) de cadaTurno, el robot lo hace en cada turno de la pelea,
 es: unas 30 veces por segundo. Ese hueco es tu primer campo de pruebas.
 de: In der Werkstatt siehst du schon fertigen Code. Lass dich von den komischen Wörtern (class, extends,
 de: @Override, public void) nicht abschrecken: Die verstehst du in den Themen 9 bis 11. Wichtig ist nur:
-de: Was du zwischen die geschweiften Klammern { } von cadaTurno (onTick, jedenZug) schreibst,
+de: Was du zwischen die geschweiften Klammern ({}) von jedenZug() schreibst,
 de: macht der Roboter in jedem Zug des Kampfes, etwa 30-mal pro Sekunde. Das ist dein erstes Testgelände.
 en: In the workshop you will see some code already written. Don't let the strange words (class, extends,
 en: @Override, public void) scare you: you'll understand them in topics 9 to 11. For now only one thing matters:
-en: whatever you write between the braces { } of cadaTurno (onTick in English), the robot does on every turn
+en: whatever you write between the curly braces ({}) of onTick(), the robot does on every turn
 en: of the fight, about 30 times per second. That gap is your first testing ground.
 codigo:
     public class MiRobot extends Metajavbot {
@@ -39,13 +39,13 @@ codigo:
         }
     }
 --- pagina
-es: Una orden en Java se llama sentencia, y termina SIEMPRE con punto y coma. El punto y coma es el punto
+es: Una orden en Java se llama sentencia, y termina [[siempre]] con punto y coma (;). El punto y coma es el punto
 es: final de la frase: sin él, Java no sabe dónde acaba tu orden y te lo dirá con un error en rojo.
-es: Es el error número uno de todo el que empieza, así que si algo no compila, busca primero el ; que falta.
+es: Es el error número uno de todo el que empieza, así que si algo no compila, busca primero el punto y coma (;) que falta.
 es: Prueba esta: el texto entre comillas es lo que dirá tu robot en un bocadillo.
-de: Ein Befehl heißt in Java Anweisung und endet IMMER mit einem Semikolon. Das Semikolon ist der Punkt
-de: am Satzende: Ohne ihn weiß Java nicht, wo dein Befehl aufhört, und meldet sich mit einem roten Fehler.
-de: Das ist der Anfängerfehler Nummer eins. Wenn etwas nicht kompiliert, such zuerst das fehlende ;.
+de: Ein Befehl heißt in Java Anweisung und endet [[immer]] mit einem Semikolon (;). Das Semikolon ist der Punkt
+de: am Satzende: Ohne es weiß Java nicht, wo dein Befehl aufhört, und meldet sich mit einem roten Fehler.
+de: Das ist der Anfängerfehler Nummer eins. Wenn etwas nicht kompiliert, such zuerst das fehlende Semikolon (;).
 de: Probier diese hier (auf Deutsch heißt die Methode sagen):
 de: Der Text in Anführungszeichen erscheint in einer Sprechblase.
 en: An order in Java is called a statement, and it ALWAYS ends with a semicolon. The semicolon is the full stop
@@ -244,13 +244,13 @@ codigo:
     System.out.println("El robot dijo: \"¡Bip!\"");
 --- pagina
 es: Con printf puedes dar forma a los números: %d para enteros, %.1f para decimales con una cifra y %n para
-es: saltar de línea. Y desde Java 15 existen los bloques de texto: tres comillas """ que dejan escribir
+es: saltar de línea. Y desde Java 15 existen los bloques de texto: tres comillas (""") que dejan escribir
 es: varias líneas tal cual, perfectas para carteles y dibujos con letras.
 de: Mit printf bringst du Zahlen in Form: %d für ganze Zahlen, %.1f für Kommazahlen mit einer Stelle und %n für
-de: einen Zeilenumbruch. Und seit Java 15 gibt es Textblöcke: drei Anführungszeichen """, zwischen denen du
+de: einen Zeilenumbruch. Und seit Java 15 gibt es Textblöcke: drei Anführungszeichen ("""), zwischen denen du
 de: mehrere Zeilen einfach so schreibst, ideal für Schilder und Bilder aus Buchstaben.
 en: With printf you can shape numbers: %d for whole numbers, %.1f for decimals with one digit and %n for a line
-en: break. And since Java 15 there are text blocks: three quotes """ that let you write several lines as they are,
+en: break. And since Java 15 there are text blocks: three double quotes (""") that let you write several lines as they are,
 en: perfect for banners and pictures made of letters.
 codigo:
     System.out.printf("Energía: %.1f%n", energia());

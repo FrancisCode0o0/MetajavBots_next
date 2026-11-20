@@ -321,11 +321,53 @@ public final class Pincel {
 
     private float textoConFuente(String s, float x, float y, float tamano, boolean negrita, boolean codigo, int rgb, float alfa) {
         if (s == null || s.isEmpty()) return 0;
+        if (!codigo && TextoEnriquecido.tieneMarcas(s)) {
+            return dibujarEnriquecido(s, x, y, tamano, negrita, rgb, alfa);
+        }
         BitmapFont f = letra(tamano, negrita, codigo);
         f.setColor(color(rgb, alfa));
         medida.setText(f, s);
         f.draw(lote, s, x, y);
         return medida.width;
+    }
+
+    private BitmapFont letraVersalita(float tamano) {
+        float t = Math.max(10.5f, Math.max(LETRA_MINIMA, tamano) * TextoEnriquecido.ESCALA_VERSALITA);
+        int px = Math.max(6, Math.round(t * escala));
+        int clave = (px << 2) | 1;
+        BitmapFont f = letras.get(clave);
+        if (f == null) {
+            f = generarFuente(px, true, false);
+            letras.put(clave, f);
+        }
+        return f;
+    }
+
+    private float dibujarEnriquecido(String s, float x, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        BitmapFont fGrande = letra(tamano, true, false);
+        BitmapFont fPeq = letraVersalita(tamano);
+        float desfaseY = Math.max(0f, fGrande.getCapHeight() - fPeq.getCapHeight());
+        float cx = x;
+        for (TextoEnriquecido.Trozo t : TextoEnriquecido.aTrozos(s, negrita)) {
+            BitmapFont f = t.pequeno ? fPeq : letra(tamano, t.negrita, false);
+            float ty = t.pequeno ? y + desfaseY : y;
+            f.setColor(color(rgb, alfa));
+            f.draw(lote, t.texto, cx, ty);
+            cx += anchoExacto(f, t.texto);
+        }
+        return cx - x;
+    }
+
+    private float anchoExacto(BitmapFont f, String texto) {
+        if (texto.isEmpty()) return 0;
+        if (texto.charAt(texto.length() - 1) != ' ') {
+            medida.setText(f, texto);
+            return medida.width;
+        }
+        medida.setText(f, texto + "|");
+        float con = medida.width;
+        medida.setText(f, "|");
+        return Math.max(0, con - medida.width);
     }
 
     /** Escribe un texto con un contorno sólido alrededor para garantizar alto contraste sobre cualquier fondo. */
@@ -436,25 +478,36 @@ public final class Pincel {
         String clave = (codigo ? "C" : "U") + (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(tamano * 10) + "/" + escala + "|" + s;
         java.util.List<String> hecho = partidos.get(clave);
         if (hecho != null) return hecho;
+        boolean enriquecido = !codigo && TextoEnriquecido.tieneMarcas(s);
         java.util.List<String> l = new java.util.ArrayList<>();
         for (String parrafo : s.split("\n", -1)) {
             StringBuilder linea = new StringBuilder();
             for (String palabra : parrafo.split(" ", -1)) {
                 String prueba = linea.length() == 0 ? palabra : linea + " " + palabra;
-                if (anchoConFuente(prueba, tamano, negrita, codigo) > anchoMax && linea.length() > 0) {
-                    l.add(linea.toString());
+                String pruebaMedida = enriquecido && TextoEnriquecido.quedaAbierta(prueba) ? prueba + "]]" : prueba;
+                if (anchoConFuente(pruebaMedida, tamano, negrita, codigo) > anchoMax && linea.length() > 0) {
+                    String hecha = linea.toString();
+                    boolean abierta = enriquecido && TextoEnriquecido.quedaAbierta(hecha);
+                    l.add(abierta ? hecha + "]]" : hecha);
                     linea.setLength(0);
-                    linea.append(palabra);
+                    linea.append(abierta ? "[[" + palabra : palabra);
                 } else {
                     linea.setLength(0);
                     linea.append(prueba);
                 }
                 // Una palabra más larga que la línea entera (una ruta, una palabra alemana): se parte por letras.
-                while (linea.length() > 1 && anchoConFuente(linea.toString(), tamano, negrita, codigo) > anchoMax) {
+                while (linea.length() > 1 && anchoConFuente(
+                        enriquecido && TextoEnriquecido.quedaAbierta(linea.toString()) ? linea + "]]" : linea.toString(),
+                        tamano, negrita, codigo) > anchoMax) {
                     int n = linea.length() - 1;
-                    while (n > 1 && anchoConFuente(linea.substring(0, n), tamano, negrita, codigo) > anchoMax) n--;
-                    l.add(linea.substring(0, n));
+                    while (n > 1 && anchoConFuente(
+                            enriquecido && TextoEnriquecido.quedaAbierta(linea.substring(0, n)) ? linea.substring(0, n) + "]]" : linea.substring(0, n),
+                            tamano, negrita, codigo) > anchoMax) n--;
+                    String trozo = linea.substring(0, n);
+                    boolean abierta = enriquecido && TextoEnriquecido.quedaAbierta(trozo);
+                    l.add(abierta ? trozo + "]]" : trozo);
                     linea.delete(0, n);
+                    if (abierta) linea.insert(0, "[[");
                 }
             }
             l.add(linea.toString());
@@ -476,6 +529,15 @@ public final class Pincel {
 
     private float anchoConFuente(String s, float tamano, boolean negrita, boolean codigo) {
         if (s == null || s.isEmpty()) return 0;
+        if (!codigo && TextoEnriquecido.tieneMarcas(s)) {
+            BitmapFont fPeq = letraVersalita(tamano);
+            float w = 0;
+            for (TextoEnriquecido.Trozo t : TextoEnriquecido.aTrozos(s, negrita)) {
+                BitmapFont f = t.pequeno ? fPeq : letra(tamano, t.negrita, false);
+                w += anchoExacto(f, t.texto);
+            }
+            return w;
+        }
         medida.setText(letra(tamano, negrita, codigo), s);
         return medida.width;
     }

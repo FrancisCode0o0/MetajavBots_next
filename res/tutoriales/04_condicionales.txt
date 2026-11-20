@@ -27,12 +27,12 @@ codigo:
         }
     }
 --- pagina
-es: Error clásico número uno: un punto y coma después del if. if (cerca); { atacar(); } compila, pero
-es: el ; termina el if ahí mismo y las llaves se ejecutan SIEMPRE. Número dos: if (x = 5) en vez de
+es: Error clásico número uno: un punto y coma (;) después del if. if (cerca); { atacar(); } compila, pero
+es: el punto y coma (;) termina el if ahí mismo y las llaves se ejecutan [[siempre]]. Número dos: if (x = 5) en vez de
 es: if (x == 5). Y un consejo: pon llaves siempre, aunque solo haya una línea. Algún día añadirás otra
 es: y te preguntarás por qué se ejecuta cuando no toca.
-de: Klassischer Fehler Nummer eins: ein Semikolon nach dem if. if (nah); { angreifen(); } kompiliert, aber
-de: das ; beendet das if sofort, und die Klammern laufen IMMER. Nummer zwei: if (x = 5) statt if (x == 5).
+de: Klassischer Fehler Nummer eins: ein Semikolon (;) nach dem if. if (nah); { angreifen(); } kompiliert, aber
+de: das Semikolon (;) beendet das if sofort, und die Klammern laufen [[immer]]. Nummer zwei: if (x = 5) statt if (x == 5).
 de: Und ein Tipp: Setz immer Klammern, auch bei nur einer Zeile. Irgendwann fügst du eine zweite hinzu
 de: und wunderst dich, warum sie läuft, wenn sie nicht soll.
 en: Classic mistake number one: a semicolon after the if. if (close); { attack(); } compiles, but the ;
@@ -85,11 +85,11 @@ titulo.es: Una cadena de decisiones
 titulo.de: Eine Kette von Entscheidungen
 titulo.en: A chain of decisions
 --- pagina
-es: Con else if encadenas varias preguntas: Java las mira de arriba abajo y hace SOLO la primera que se cumpla.
+es: Con else if encadenas varias preguntas: Java las mira de arriba abajo y hace [[solo]] la primera que se cumpla.
 es: Por eso el orden importa. Si preguntas primero «¿blindaje < 70?» y luego «¿blindaje < 25?»,
 es: la segunda no llegará nunca: cualquier robot con 10 ya entró por la primera puerta.
 es: Regla práctica: lo más concreto (o lo más urgente) va primero.
-de: Mit else if hängst du mehrere Fragen aneinander: Java prüft sie von oben nach unten und führt NUR die erste
+de: Mit else if hängst du mehrere Fragen aneinander: Java prüft sie von oben nach unten und führt [[nur]] die erste
 de: aus, die zutrifft. Darum zählt die Reihenfolge. Fragst du zuerst „Panzerung < 70?“ und dann „< 25?“,
 de: kommt die zweite nie dran: Ein Roboter mit 10 ist längst durch die erste Tür gegangen.
 de: Faustregel: Das Speziellste (oder Dringendste) kommt zuerst.

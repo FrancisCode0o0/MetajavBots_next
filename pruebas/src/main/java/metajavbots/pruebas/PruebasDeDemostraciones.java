@@ -12,10 +12,11 @@ import metajavbots.codigo.Compilador;
 import metajavbots.codigo.Vigilante;
 import metajavbots.ejercicios.Demostracion;
 import metajavbots.ejercicios.MotorDemostracion;
+import metajavbots.pantalla.TextoEnriquecido;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 
-/** Pruebas del motor de demostraciones en vivo y de la Demo 1 (8 pasos) en los tres idiomas (ES, DE, EN). */
+/** Pruebas del motor de demostraciones en vivo, coherencia numérica/visual y versalita en los tres idiomas (ES, DE, EN). */
 final class PruebasDeDemostraciones {
 
     private PruebasDeDemostraciones() {
@@ -24,6 +25,7 @@ final class PruebasDeDemostraciones {
     static void apuntar() {
         apuntarCargaTrilingue();
         apuntarEjecucionCompleta();
+        apuntarCoherenciaYVersalita();
     }
 
     private static void apuntarCargaTrilingue() {
@@ -219,5 +221,92 @@ final class PruebasDeDemostraciones {
         for (int i = 0; i < maxTurnos && !m.pausado(); i++) {
             m.avanzarTurno();
         }
+    }
+
+    private static void apuntarCoherenciaYVersalita() {
+        caso("demo 1: coherencia exacta de cifras, sentido de giro, HUD de barras y líneas resaltadas en ES, DE y EN", () -> {
+            Demostracion d1 = Demostracion.de(Demostracion.ID_DEMO_1);
+            for (Idioma id : Idioma.values()) {
+                MotorDemostracion m = new MotorDemostracion(d1, id);
+                cierto(m.hudBarrasVisible(), id + " barras HUD visibles desde el inicio");
+                falso(m.resaltarHudBarras(), id + " paso 1 no resalta barras HUD");
+
+                // Paso 3: avanzar(80) recorre exactamente ~80, nunca +90, y el texto cita 80.
+                m.continuar();
+                m.continuar();
+                correrHastaPausa(m, 100);
+                cierto(Math.abs(m.distanciaRecorrida() - 80.0) <= 1.0,
+                        id + " avanzar(80) debe recorrer ~80, obtuvo " + m.distanciaRecorrida());
+                cierto(m.pasoActual().texto(id).contains("80"), id + " paso 3 cita 80 en " + id);
+
+                // Paso 4: girar(45) gira ~45° y explica sentido horario/antihorario y 0°/90°.
+                m.continuar();
+                correrHastaPausa(m, 100);
+                cierto(Math.abs(m.giroAcumulado() - 45.0) <= 1.0,
+                        id + " girar(45) debe girar ~45°, obtuvo " + m.giroAcumulado());
+                String txtGiro = m.pasoActual().texto(id);
+                cierto(txtGiro.contains("0°") && txtGiro.contains("90°") && txtGiro.contains("45"),
+                        id + " paso 4 explica 0°, 90° y 45");
+                cierto(txtGiro.contains("-45") && txtGiro.contains("-90"),
+                        id + " paso 4 explica giros negativos");
+                cierto(txtGiro.contains("agujas del reloj") || txtGiro.contains("Uhrzeigersinn") || txtGiro.contains("clockwise"),
+                        id + " paso 4 explica sentido horario/antihorario");
+
+                // Paso 5 y Paso 6 -> Paso 7: HUD de barras visible y resaltado al hablar de las barras.
+                m.continuar();
+                correrHastaPausa(m, 100);
+                m.continuar();
+                correrHastaPausa(m, 150);
+                m.continuar();
+                cierto(m.hudBarrasVisible(), id + " paso 7 muestra barras HUD");
+                cierto(m.resaltarHudBarras(), id + " paso 7 resalta barras HUD");
+                double energiaInicial = m.pelea().cuerpo(0).energia;
+                boolean gastoEnergia = false;
+                boolean entroEnRecarga = false;
+                for (int t = 0; t < 200 && !m.pausado(); t++) {
+                    m.avanzarTurno();
+                    if (m.pelea().cuerpo(0).energia < energiaInicial - 0.01) {
+                        gastoEnergia = true;
+                    }
+                    if (m.pelea().cuerpo(0).enfriamiento(0) > 0 || m.pelea().cuerpo(0).enfriamiento(1) > 0) {
+                        entroEnRecarga = true;
+                    }
+                }
+                cierto(gastoEnergia || entroEnRecarga, id + " paso 7 refleja gasto de energía o recarga en el HUD");
+                cierto(m.pelea().cuerpo(1).blindaje() < 100.0, id + " paso 7 reduce la barra de blindaje del muñeco");
+
+                // Paso 8: usa marca de versalita [[...]] para secciones/botones sin choque «a ¡».
+                m.continuar();
+                String txt8 = m.pasoActual().texto(id);
+                cierto(TextoEnriquecido.tieneMarcas(txt8), id + " paso 8 usa marca [[...]]");
+                falso(txt8.contains("a ¡"), id + " paso 8 sin choque sintáctico «a ¡»");
+            }
+        });
+
+        caso("tipografía: parseo y trozos de versalita y negrita [[...]] (escala 78 %, texto plano y bordes)", () -> {
+            cierto(Math.abs(TextoEnriquecido.ESCALA_VERSALITA - 0.78f) < 0.001f, "escala versalita 78 %");
+            cierto(TextoEnriquecido.tieneMarcas("Ve al botón [[¡A pelear!]] ahora."), "detecta marcas");
+            falso(TextoEnriquecido.tieneMarcas("Texto normal sin marcas."), "sin falsos positivos");
+            falso(TextoEnriquecido.tieneMarcas("Sin cerrar [[hola"), "sin cerrar no cuenta");
+            igual("Ve al botón ¡A pelear! ahora.",
+                    TextoEnriquecido.textoPlano("Ve al botón [[¡A pelear!]] ahora."), "texto plano");
+            cierto(TextoEnriquecido.quedaAbierta("Ve al botón [[¡A"), "detecta marca abierta");
+            falso(TextoEnriquecido.quedaAbierta("Ve al botón [[¡A pelear!]]"), "marca cerrada");
+
+            List<TextoEnriquecido.Trozo> trozos = TextoEnriquecido.aTrozos("En el [[Taller]]", false);
+            igual(3, trozos.size(), "tres trozos: plano + inicial + versalita");
+            igual("En el ", trozos.get(0).texto);
+            falso(trozos.get(0).negrita, "tramo normal sin negrita");
+            falso(trozos.get(0).pequeno, "tramo normal tamaño base");
+            igual("T", trozos.get(1).texto);
+            cierto(trozos.get(1).negrita && !trozos.get(1).pequeno, "inicial mayúscula negrita al 100 %");
+            igual("ALLER", trozos.get(2).texto);
+            cierto(trozos.get(2).negrita && trozos.get(2).pequeno, "resto en mayúsculas negrita al 78 %");
+
+            List<TextoEnriquecido.Trozo> aleman = TextoEnriquecido.aTrozos("[[Beißen]]", false);
+            igual(2, aleman.size(), "alemán con ß en versalita");
+            igual("B", aleman.get(0).texto);
+            igual("EISSEN", aleman.get(1).texto);
+        });
     }
 }

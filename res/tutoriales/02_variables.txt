@@ -12,7 +12,7 @@ es: (3, -40, 1000) y double guarda números con decimales (2.5, 0.1). La caja se
 de: Eine Variable ist eine Schachtel mit Etikett: Du legst einen Wert hinein und benutzt ihn über seinen Namen.
 de: In Java hat jede Schachtel außerdem einen TYP, der sagt, was hineinpasst. int speichert ganze Zahlen
 de: (3, -40, 1000), double Kommazahlen (2.5, 0.1). So entsteht die Schachtel: typ name = wert;
-en: A variable is a labelled box: you put a value inside and then use it by its name. In Java every box also
+en: A variable is a labeled box: you put a value inside and then use it by its name. In Java every box also
 en: has a TYPE that says what fits in it. int stores whole numbers (3, -40, 1000) and double stores numbers
 en: with decimals (2.5, 0.1). You make the box like this: type name = value;
 codigo:

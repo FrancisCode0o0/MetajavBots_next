@@ -8,11 +8,11 @@ titulo.en: A method that calls itself
 --- pagina
 es: Recursión es resolver un problema usando una versión más pequeña del mismo problema. ¿Cuánto es 5!?
 es: 5 por 4!. ¿Y 4!? 4 por 3!... hasta llegar a 1!, que vale 1 sin más preguntas. Ese final es el caso base,
-es: y es OBLIGATORIO: sin él, el método se llama a sí mismo sin parar hasta que la pila se desborda
+es: y es [[obligatorio]]: sin él, el método se llama a sí mismo sin parar hasta que la pila se desborda
 es: con un StackOverflowError (sí, como la web).
 de: Rekursion heißt, ein Problem mit einer kleineren Version desselben Problems zu lösen. Was ist 5!?
 de: 5 mal 4!. Und 4!? 4 mal 3! … bis 1!, das ohne weitere Fragen 1 ist. Dieses Ende ist der Basisfall,
-de: und er ist PFLICHT: Ohne ihn ruft sich die Methode endlos selbst auf, bis der Stapel mit einem
+de: und er ist [[Pflicht]]: Ohne ihn ruft sich die Methode endlos selbst auf, bis der Stapel mit einem
 de: StackOverflowError überläuft (ja, wie die Website).
 en: Recursion means solving a problem using a smaller version of the same problem. What's 5!?
 en: 5 times 4!. And 4!? 4 times 3!... until you reach 1!, which is simply 1. That ending is the base case,

@@ -127,8 +127,8 @@ de:
 en:
     Your results are in three places: at the top of the Menu (your rank, from Noob to Senior, and what you need to level up), in History (every fight with its numbers) and in Exercises (how many you've solved per topic).
     Like the board at the gym where fights are written up: who won, by how much and with which punches.
-    After each fight, «Review code» grades your robot: what it does well, what could be better and why.
-    Don't be put off by losing: every defeat tells you what to practise.
+    After each fight, "Review code" grades your robot: what it does well, what could be better and why.
+    Don't be put off by losing: every defeat tells you what to practice.
 pseudo.es:
     Menú → mi etiqueta y lo que falta
     Historial → cada pelea
@@ -209,7 +209,7 @@ de:
 en:
     A local brain lives on your computer: no internet, no key, and it's free. You need two files: the KoboldCpp program (koboldcpp.exe) and a model (a big .gguf file).
     Like having the commentator in your own gym instead of phoning them: no call charges, but they take up room (memory).
-    Put both in one folder and pick it in Settings › AI brains › «Models folder». Then, in a slot, «Local», the model with ◄ ► and «Test».
+    Put both in one folder and pick it in Settings › AI brains › "Models folder". Then, in a slot, "Local", the model with ◄ ► and "Test".
     The classic mistake: downloading a model too big for the computer's memory. On a laptop, start with Gemma 3 4B (Q4_K_M, about 2.5 GB).
 pseudo.es:
     bajar koboldcpp.exe
@@ -225,7 +225,7 @@ pseudo.en:
     download koboldcpp.exe
     download a .gguf model
     put them together in one folder
-    Settings: folder, «Local» slot, model, Test
+    Settings: folder, "Local" slot, model, Test
 ejemplo:
 
 === cerebro_en_linea
@@ -252,7 +252,7 @@ de:
 en:
     An online brain lives on the internet (Google Gemini, Claude or OpenAI) and needs a key: a long password that's yours alone. It's usually smarter and faster than a local one, but it needs internet.
     Like phoning a famous commentator: they answer right away and know everything, but every call is paid by whoever holds the key (Google offers free use up to a limit).
-    Get the key from the provider's site, paste it in Settings › AI brains › an «Online» slot and press «Save»: it's stored in your user folder, never in the save file.
+    Get the key from the provider's site, paste it in Settings › AI brains › an "Online" slot and press "Save": it's stored in your user folder, never in the save file.
     The classic mistake: sharing the key or uploading it anywhere. That's like handing out your bank password: never.
 pseudo.es:
     entrar en la página del proveedor
@@ -265,7 +265,7 @@ pseudo.de:
 pseudo.en:
     open the provider's site
     create the key and copy it
-    Settings: «Online» slot, provider, paste, Save, Test
+    Settings: "Online" slot, provider, paste, Save, Test
 ejemplo:
 
 === tres_casillas
@@ -292,7 +292,7 @@ de:
 en:
     There are three brain slots, and each takes any kind: three local, three online or any mix. All three work at the same time.
     Like a corner team with three helpers: a quick one handing you water and cheering, a smart one fixing your guard, and a third in reserve in case one fails.
-    In Settings › AI brains, «What each brain does» shares out the work: the fast one for taunts and the announcer; the smarter one for reviewing your code and for the coach. «Recommended» does it for you.
+    In Settings › AI brains, "What each brain does" shares out the work: the fast one for taunts and the announcer; the smarter one for reviewing your code and for the coach. "Recommended" does it for you.
     If the brain for a task fails, another one answers.
 pseudo.es:
     casilla 1 ← local rápido (pullas, locutor)
@@ -330,9 +330,9 @@ de:
     Damit du nicht mitten im Kampf wartest, weck sie vorher mit „Gehirn testen“ in den Einstellungen. Nach 8 Minuten ohne Nutzung schlafen sie wieder ein.
     Wacht eins nicht auf: Prüf Ordner und Modell, schließ speicherhungrige Programme und probier es noch einmal.
 en:
-    Local brains sleep so as not to use memory and wake up by themselves the first time they're needed. Waking takes 20 seconds to a minute; meanwhile you'll see «Thinking…».
+    Local brains sleep so as not to use memory and wake up by themselves the first time they're needed. Waking takes 20 seconds to a minute; meanwhile you'll see "Thinking…".
     Like the sparring partner napping in the locker room: they don't come out until you call, and they come out yawning.
-    So you don't wait mid-fight, wake them beforehand with «Test brain» in Settings. After 8 minutes unused they go back to sleep.
+    So you don't wait mid-fight, wake them beforehand with "Test brain" in Settings. After 8 minutes unused they go back to sleep.
     If one won't wake: check the folder and the model, close memory-hungry programs and try again.
 pseudo.es:
     SI el cerebro duerme:

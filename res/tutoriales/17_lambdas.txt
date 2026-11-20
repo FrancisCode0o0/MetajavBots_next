@@ -4,7 +4,7 @@ tema: 17
 orden: 1
 titulo.es: Comportamiento en una variable
 titulo.de: Verhalten in einer Variablen
-titulo.en: Behaviour in a variable
+titulo.en: Behavior in a variable
 --- pagina
 es: En el tema 13 escribiste una clase entera (Directa) solo para un método. Desde Java 8 hay un atajo:
 es: la lambda, una función sin nombre que cabe en una línea: e -> e.blindaje() < 30.
@@ -109,7 +109,7 @@ de: Funktionen lassen sich zusammenstecken: f.andThen(g) macht erst f, dann g; p
 de: verknüpfen Prädikate. So baust du komplexes Verhalten aus kleinen, getesteten Teilen,
 de: wie einen Roboter aus Modulen.
 en: Functions can be plugged into each other: f.andThen(g) does f and then g; p.and(q) and p.negate()
-en: combine predicates. That way you build complex behaviour from small, tested pieces,
+en: combine predicates. That way you build complex behavior from small, tested pieces,
 en: like a robot made of modules.
 --- pagina
 es: Un Map de nombres a Runnable es un menú de maniobras: tacticas.get("huir").run(). Puedes elegir
@@ -117,7 +117,7 @@ es: la maniobra con un dato que guardaste en memoria(), sin un solo if.
 de: Eine Map von Namen auf Runnables ist ein Manöver-Menü: tacticas.get("huir").run(). Du kannst
 de: das Manöver über einen Wert aus gedaechtnis() wählen, ganz ohne if.
 en: A Map from names to Runnables is a menu of manoeuvres: tacticas.get("huir").run(). You can pick
-en: the manoeuvre with a value you saved in memory(), without a single if.
+en: the maneuver with a value you saved in memory(), without a single if.
 codigo:
     Map<String, Runnable> tacticas = Map.of(
             "huir", () -> { girar(180); avanzar(200); },

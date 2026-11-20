@@ -57,7 +57,7 @@ public final class Voz {
     public void decir(String texto, Idioma idioma, Timbre timbre) {
         if (!activa || texto == null || texto.isBlank()) return;
         long yo = ++pedida;
-        String limpio = texto.strip();
+        String limpio = texto.replace("[[", "").replace("]]", "").strip();
         String clave = idioma.name() + "|" + (clara ? "C" : "R") + "|" + timbre + "|" + limpio;
         float[] cacheada = cache.get(clave);
         if (cacheada != null) {

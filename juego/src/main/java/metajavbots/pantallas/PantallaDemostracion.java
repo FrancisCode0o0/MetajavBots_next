@@ -159,8 +159,11 @@ public final class PantallaDemostracion implements Pantalla {
                 motor.visorTactico() ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true, T.t("pelea.visor_ayuda"))) {
             motor.alternarVisor();
         }
-        float arenaY = y + barraH + 6;
-        float arenaH = Math.max(140, h - barraH - 6);
+        float hudY = y + barraH + 6;
+        float hudH = 68;
+        dibujarBarrasHud(j, x, hudY, w, hudH);
+        float arenaY = hudY + hudH + 6;
+        float arenaH = Math.max(140, h - barraH - hudH - 12);
         vista.letra = Math.min(ui.letra, 22f);
         vista.techo = arenaY + 6;
         vista.visor(motor.visorTactico(), 1);
@@ -173,6 +176,56 @@ public final class PantallaDemostracion implements Pantalla {
         float eh = p.altoDeLinea(tEst) + 8;
         p.caja(x + 10, arenaY + 10, ew, eh, 6, 0x0B0F18, 0.84f);
         p.texto(estado, x + 20, arenaY + 14, tEst, true, motor.pausado() ? ui.tema.aviso : ui.tema.bien, 1);
+    }
+
+    /** Dibuja las barras de blindaje por partes, energía y recarga con el mismo estilo visual que PantallaPelea. */
+    private void dibujarBarrasHud(Juego j, float x, float y, float w, float h) {
+        Pelea pelea = motor.pelea();
+        if (pelea == null) return;
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        boolean resaltar = motor.resaltarHudBarras();
+        float pulso = resaltar ? 0.65f + 0.35f * (float) Math.sin(tiempo * 5f) : 0.9f;
+        p.caja(x, y, w, h, 8, ui.tema.panel, 0.97f);
+        p.bordeRedondeado(x, y, w, h, 8, resaltar ? ui.tema.acento : ui.tema.borde, pulso, resaltar ? 2.2f : 1.2f);
+        float gap = 14;
+        float colW = (w - 20 - gap) / 2f;
+        dibujarBloqueRobotHud(j, pelea, 0, x + 10, y + 6, colW, 0x3FE0FF);
+        dibujarBloqueRobotHud(j, pelea, 1, x + 10 + colW + gap, y + 6, colW, 0xFF4FD8);
+    }
+
+    private void dibujarBloqueRobotHud(Juego j, Pelea pelea, int indice, float x, float y, float w, int color) {
+        Cuerpo c = pelea.cuerpo(indice);
+        if (c == null) return;
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        String nombre = pelea.combatientes[indice].nombre;
+        String extra = indice == 0
+                ? String.format(Locale.ROOT, "%s %.0f", T.t("pelea.energia"), c.energia)
+                : String.format(Locale.ROOT, "%.0f%%", c.blindaje());
+        float tExtra = Math.min(ui.letra * 0.68f, 15.5f);
+        float wExtra = p.ancho(extra, tExtra, false);
+        float tNom = ui.cabe(nombre, Math.max(60, w - wExtra - 10), Math.min(ui.letra * 0.78f, 17f), true);
+        p.texto(nombre, x, y, tNom, true, color, 1);
+        p.textoDerecha(extra, x + w, y + 1, tExtra, false, indice == 0 ? 0xFFD23F : ui.tema.textoSuave, 1);
+
+        float by = y + 22;
+        float barGap = 5;
+        float bw = (w - barGap * 3) / 4f;
+        String[] nombres = {T.t("parte.cabeza"), T.t("parte.izquierda"), T.t("parte.derecha"), T.t("parte.piernas")};
+        float tParte = Math.min(ui.letra * 0.56f, 14f);
+        for (int k = 0; k < 4; k++) {
+            float parte = (float) (c.parte[k] / Math.max(1, c.parteMax[k]));
+            int col = parte > 0.5f ? ui.tema.bien : parte > 0.2f ? ui.tema.aviso : ui.tema.mal;
+            float bx = x + k * (bw + barGap);
+            ui.barra(bx, by, bw, 11, parte, col, null);
+            String et = nombres[k];
+            if (p.ancho(et, tParte, false) > bw) et = et.substring(0, Math.min(4, et.length())) + ".";
+            p.texto(et, bx + 2, by + 13, ui.cabe(et, bw - 2, tParte, false), false, ui.tema.textoSuave, 1);
+        }
+        float ey = by + 31;
+        float ratioEnergia = (float) (c.energia / Math.max(1, c.cifras.energiaMax));
+        ui.barra(x, ey, w, 7, ratioEnergia, 0xFFD23F, null);
     }
 
     private void dibujarIndicadoresArena(Pincel p, Ui ui, float ax, float ay, float aw, float ah) {

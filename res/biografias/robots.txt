@@ -55,7 +55,7 @@ en: He trained by slicing the wind until the wind asked for a truce in writing.
 [faro]
 es: Actuó en un teatro de sombras. El problema es que él daba demasiada luz y no había sombras.
 de: Er spielte in einem Schattentheater. Das Problem: Er war so hell, dass es keine Schatten gab.
-en: He starred in a shadow theatre. Trouble was, he glowed so much there were no shadows.
+en: He starred in a shadow theater. Trouble was, he glowed so much there were no shadows.
 
 [pixel]
 es: Se escapó de una máquina recreativa de los ochenta. Aún suelta monedas cuando estornuda.

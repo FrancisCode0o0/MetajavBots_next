@@ -273,7 +273,7 @@ enunciado.de: Die Arenakarte hat Boden '.' und Mauern '#'. Ab (fila, col) markie
 enunciado.en: The arena map has floor '.' and walls '#'. From (fila, col), the robot paints with 'o' all the floor it can reach moving horizontally or vertically. Return how many cells it painted. If it starts outside the map, on a wall or on something already painted, 0.
 pista.es: Es el «relleno por difusión» (flood fill). Si la casilla no vale, return 0. Si vale, píntala primero (así no vuelves a ella) y devuelve 1 + la suma de las cuatro vecinas.
 pista.de: Das ist «Flood Fill». Ist das Feld ungültig, return 0. Sonst markiere es zuerst (damit du nicht zurückkommst) und gib 1 + die Summe der vier Nachbarn zurück.
-pista.en: This is flood fill. If the cell isn't valid, return 0. Otherwise paint it first (so you don't come back to it) and return 1 + the sum of the four neighbours.
+pista.en: This is flood fill. If the cell isn't valid, return 0. Otherwise paint it first (so you don't come back to it) and return 1 + the sum of the four neighbors.
 firma: static int rellenar(char[][] mapa, int fila, int col)
 plantilla:
     if (mapa[fila][col] != '.') {
@@ -306,10 +306,10 @@ java: 1
 tipo: salida
 titulo.es: Apilar blindajes de un poste a otro
 titulo.de: Panzerplatten von Stange zu Stange
-titulo.en: Moving armour plates between posts
+titulo.en: Moving armor plates between posts
 enunciado.es: Hay n placas de blindaje apiladas en el poste desde, de mayor (n) a menor (1). Pásalas al poste hasta usando el poste libre, moviendo una placa cada vez y sin poner nunca una grande sobre una pequeña. Imprime cada movimiento como "placa 1: A -> C".
 enunciado.de: Auf der Stange desde liegen n Panzerplatten, von der größten (n) bis zur kleinsten (1). Bring sie mit Hilfe der Stange libre auf die Stange hasta, immer nur eine Platte auf einmal und nie eine große auf eine kleine. Gib jeden Zug als "platte 1: A -> C" aus.
-enunciado.en: There are n armour plates stacked on post desde, from largest (n) to smallest (1). Move them to post hasta using post libre, one plate at a time and never putting a large one on a small one. Print each move as "plate 1: A -> C".
+enunciado.en: There are n armor plates stacked on post desde, from largest (n) to smallest (1). Move them to post hasta using post libre, one plate at a time and never putting a large one on a small one. Print each move as "plate 1: A -> C".
 pista.es: Para mover n placas: mueve n - 1 de desde a libre, mueve la placa n de desde a hasta y vuelve a poner las n - 1 de libre a hasta. Con n == 0 no se hace nada.
 pista.de: Um n Platten zu bewegen: Bring n - 1 von desde nach libre, bewege Platte n von desde nach hasta und bring die n - 1 von libre nach hasta. Bei n == 0 passiert nichts.
 pista.en: To move n plates: move n - 1 from desde to libre, move plate n from desde to hasta and put the n - 1 back from libre onto hasta. With n == 0 nothing happens.
@@ -424,7 +424,7 @@ enunciado.de: Auf der Karte gibt es einen Roboter 'R', einen Gegner 'E', Boden '
 enunciado.en: The map has a robot 'R', an enemy 'E', floor '.' and walls '#' (all rows are the same length). Return the smallest number of steps (up, down, left or right) from R to E, or -1 if it can't be done.
 pista.es: Búsqueda en anchura (BFS): una cola ArrayDeque<int[]> con R a distancia 0; saca una casilla, y a cada vecina libre que no hayas visto ponle distancia + 1 y métela en la cola. La primera vez que sacas E, esa es la distancia mínima.
 pista.de: Breitensuche (BFS): eine Queue ArrayDeque<int[]> mit R bei Entfernung 0; nimm ein Feld heraus und gib jedem freien, noch nicht besuchten Nachbarn Entfernung + 1 und leg ihn in die Queue. Beim ersten Herausnehmen von E hast du die kürzeste Entfernung.
-pista.en: Breadth-first search (BFS): an ArrayDeque<int[]> queue with R at distance 0; take a cell out, and give every free neighbour you haven't seen distance + 1 and add it to the queue. The first time you take E out, that is the shortest distance.
+pista.en: Breadth-first search (BFS): an ArrayDeque<int[]> queue with R at distance 0; take a cell out, and give every free neighbor you haven't seen distance + 1 and add it to the queue. The first time you take E out, that is the shortest distance.
 firma: static int pasosHastaEnemigo(String[] mapa)
 plantilla:
     return -1;
