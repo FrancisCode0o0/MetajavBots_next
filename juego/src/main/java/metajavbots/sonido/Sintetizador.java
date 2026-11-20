@@ -22,7 +22,7 @@ public final class Sintetizador {
             "clic", "encima", "bien", "mal", "compilar", "laser", "laser_pesado", "disparo", "ametralladora", "misil",
             "explosion", "explosion_grande", "golpe_metal", "golpe_fuerte", "fallo", "llama", "escudo", "turbo", "pulso",
             "reparar", "chispa", "pared", "choque", "servo", "parte_rota", "campana", "fuegos", "estallido", "subida",
-            "bajada", "tope", "error", "camuflaje"};
+            "bajada", "alerta_bajada", "tope", "error", "camuflaje"};
 
     public static float[] hacer(String nombre, long semilla) {
         Random r = new Random(semilla ^ nombre.hashCode());
@@ -57,6 +57,8 @@ public final class Sintetizador {
             case "estallido": return mezclar(explosion(0.7f, 0.6f, r), chisporroteo(0.9f, r));
             case "subida": return arpegio(new float[]{523, 659, 784, 1046, 1318, 1568}, 0.09f, Onda.CUADRADA, 0.3f, r);
             case "bajada": return arpegio(new float[]{784, 659, 523, 392}, 0.14f, Onda.SIERRA, 0.3f, r);
+            case "alerta_bajada": return mezclar(tono(0.18f, 660, 440, Onda.SIERRA, 0.34f, r),
+                    retrasar(tono(0.26f, 440, 220, Onda.SIERRA, 0.36f, r), 0.16f));
             case "tope": return tono(0.4f, 400, 400, Onda.CUADRADA, 0.2f, r);
             case "ovacion": return mezclar(ruido(1.6f, 0.32f, 3, r), ruido(1.6f, 0.18f, 1, r));
             case "abucheo": return mezclar(tono(1.2f, 150, 115, Onda.SIERRA, 0.12f, r), ruido(1.2f, 0.12f, 6, r));

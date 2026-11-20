@@ -560,7 +560,7 @@ public final class EntrenadorFlotante {
         int sangria = linea.length() - linea.stripLeading().length();
         String visible = linea.strip();
         p.caja(x, yy, w - 20, alto + 22, 8, 0x0E1014, 1);
-        p.texto(ui.recortarTexto(m.linea + "  " + visible, w - 44, tl, false), x + 12, yy + 8, tl, false, ui.tema.cadena, 1);
+        p.textoDeCodigo(ui.recortarTextoDeCodigo(m.linea + "  " + visible, w - 44, tl, false), x + 12, yy + 8, tl, false, ui.tema.cadena, 1);
         int col = Math.max(0, m.columna - 1 - sangria) + (m.linea + "  ").length();
         float ox = x + 12 + col * letra;
         for (int i = 0; i < 5 && ox + i * letra * 0.5f < x + w - 30; i++) {

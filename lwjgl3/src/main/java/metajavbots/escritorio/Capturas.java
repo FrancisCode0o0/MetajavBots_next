@@ -192,6 +192,7 @@ public final class Capturas extends Juego {
         this.salida = salida;
         pantallas.put("01_inicio", metajavbots.pantallas.Inicio::new);
         pantallas.put("02_menu", metajavbots.pantallas.Menu::new);
+        pantallaDeBajada();
         pantallas.put("03_robots", Escaparate::new);
         pantallas.put("03b_armas", Armeria::new);
         pantallas.put("03d_entrenadores", () -> new Pantalla() {
@@ -264,6 +265,16 @@ public final class Capturas extends Juego {
         for (String trozo : solo.isEmpty() ? new String[0] : solo.split(",")) {
             for (String n : pantallas.keySet()) if (n.contains(trozo) && !nombres.contains(n)) nombres.add(n);
         }
+    }
+
+    /** El menú recién entrado tras una bajada de nivel (alarma luminosa roja). */
+    private void pantallaDeBajada() {
+        pantallas.put("02b_menu_bajada", () -> new Pantalla() {
+            private final metajavbots.pantallas.Menu menu = new metajavbots.pantallas.Menu();
+            @Override public void alEntrar(Juego j) { j.alarmaBajada.activar(Etiqueta.JUNIOR_2, Etiqueta.JUNIOR_1); menu.alEntrar(j); }
+            @Override public void alSalir(Juego j) { j.alarmaBajada.cancelar(); }
+            @Override public void fotograma(Juego j, float dt) { menu.fotograma(j, dt); }
+        });
     }
 
     /** El visor táctico (F8) activo en vivo sobre una arena con trampas y enemigo marcado. */

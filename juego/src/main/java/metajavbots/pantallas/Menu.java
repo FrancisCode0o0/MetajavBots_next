@@ -59,6 +59,7 @@ public final class Menu implements Pantalla {
     @Override
     public void alEntrar(Juego j) {
         if (vista == null) vista = new VistaDeArena(j.pincel);
+        j.alarmaBajada.alEntrarAlMenu();
         j.guardar();
     }
 
@@ -136,6 +137,7 @@ public final class Menu implements Pantalla {
             j.guardar();
             j.irSolo(new Inicio());
         }
+        j.alarmaBajada.dibujarBannerEnMenu(j, arriba, dt);
     }
 
     /** Muestra el saldo actual de monedas en la cabecera del menú, respetando letra escalable e idioma. */

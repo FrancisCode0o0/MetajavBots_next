@@ -203,7 +203,7 @@ public final class VentanaDeCodigo {
                 else conAviso = true;
             }
             String numero = Integer.toString(l + 1);
-            p.textoDerecha(numero, x + margen - letra * 1.6f, ly + alto * 0.12f, tamano * 0.9f, l == lineaCursor,
+            p.textoDeCodigoDerecha(numero, x + margen - letra * 1.6f, ly + alto * 0.12f, tamano * 0.9f, l == lineaCursor,
                     l == lineaCursor ? t.texto : t.numeros, 1);
             if (conError || conAviso) p.circulo(x + letra * 0.7f, ly + alto / 2, alto * 0.22f, conError ? t.mal : t.aviso, 1);
             // La selección.
@@ -657,7 +657,7 @@ public final class VentanaDeCodigo {
 
     private static int indiceEnLinea(Pincel p, float rx, float tam, String s) {
         if (rx <= 0 || s.isEmpty()) return 0;
-        for (int i = 0; i < s.length(); i++) if (p.ancho(s.substring(0, i + 1), tam, false) >= rx) return i;
+        for (int i = 0; i < s.length(); i++) if (p.anchoDeCodigo(s.substring(0, i + 1), tam, false) >= rx) return i;
         return s.length();
     }
 
@@ -679,11 +679,11 @@ public final class VentanaDeCodigo {
             p.bordeRedondeado(cx, fy - 2, cw, alto, 5, activo ? t.acento : t.borde, 1, 1.5f);
             p.recortar(cx + 4, fy - 2, cw - 8, alto);
             if (campos[i].haySeleccion()) {
-                float sx = cx + 8 + p.ancho(txt.substring(0, campos[i].inicioDeSeleccion()), t1, false);
-                p.rect(sx, fy, p.ancho(campos[i].seleccion(), t1, false), alto - 6, t.seleccion, 1);
+                float sx = cx + 8 + p.anchoDeCodigo(txt.substring(0, campos[i].inicioDeSeleccion()), t1, false);
+                p.rect(sx, fy, p.anchoDeCodigo(campos[i].seleccion(), t1, false), alto - 6, t.seleccion, 1);
             }
-            p.texto(txt, cx + 8, fy + 2, t1, false, t.texto, 1);
-            if (activo) p.rect(cx + 8 + p.ancho(txt.substring(0, campos[i].cursor()), t1, false), fy, 2, alto - 6, t.acento, 1);
+            p.textoDeCodigo(txt, cx + 8, fy + 2, t1, false, t.texto, 1);
+            if (activo) p.rect(cx + 8 + p.anchoDeCodigo(txt.substring(0, campos[i].cursor()), t1, false), fy, 2, alto - 6, t.acento, 1);
             p.sinRecorte();
             if (ui.e.clic(cx, fy - 2, cw, alto)) {
                 campoReemplazo = i == 1;
@@ -763,7 +763,7 @@ public final class VentanaDeCodigo {
         float px = zx + (doc.columnaDelCursor() - doc.prefijoDelCursor().length()) * letra - desplazamientoX;
         float py = zy + (doc.lineaDelCursor() + 1) * alto - desplazamientoY;
         float w = 0;
-        for (String s : propuestas) w = Math.max(w, p.ancho(s, tamano * 0.9f, false));
+        for (String s : propuestas) w = Math.max(w, p.anchoDeCodigo(s, tamano * 0.9f, false));
         w += 30;
         int primera = Math.max(0, Math.min(propuestaElegida - n + 1, propuestas.size() - n));
         if (py + n * alto > p.alto) py -= (n + 1) * alto;
@@ -774,7 +774,7 @@ public final class VentanaDeCodigo {
             int k = primera + i;
             float y = py + 4 + i * alto;
             if (k == propuestaElegida) p.rect(px + 2, y, w - 4, alto, t.seleccion, 1);
-            p.texto(propuestas.get(k), px + 12, y + alto * 0.12f, tamano * 0.9f, false, t.texto, 1);
+            p.textoDeCodigo(propuestas.get(k), px + 12, y + alto * 0.12f, tamano * 0.9f, false, t.texto, 1);
             if (ui.e.clic(px, y, w, alto)) {
                 propuestaElegida = k;
                 String s = propuestas.get(k);

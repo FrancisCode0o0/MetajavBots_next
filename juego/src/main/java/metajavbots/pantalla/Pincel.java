@@ -10,11 +10,13 @@ import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.GlyphLayout;
+import com.badlogic.gdx.graphics.g2d.PixmapPacker;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.utils.ScissorStack;
+import com.badlogic.gdx.utils.Array;
 
 import space.earlygrey.shapedrawer.ShapeDrawer;
 
@@ -32,7 +34,7 @@ public final class Pincel {
     public final ShapeDrawer formas;
     private final Texture blanco;
     private final OrthographicCamera camara = new OrthographicCamera();
-    private final FreeTypeFontGenerator generadorMono, generadorNegrita;
+    private final FreeTypeFontGenerator generadorUi, generadorTitulo, generadorCodigo, generadorCodigoNegrita, generadorSimbolos, generadorSimbolos2;
     private final Map<Integer, BitmapFont> letras = new HashMap<>();
     private final GlyphLayout medida = new GlyphLayout();
     private final Color color = new Color();
@@ -44,7 +46,7 @@ public final class Pincel {
 
     /** Las letras que se usan (los acentos de los tres idiomas y los símbolos del juego). */
     static final String LETRAS = FreeTypeFontGenerator.DEFAULT_CHARS
-            + "áéíóúüñÁÉÍÓÚÜÑ¿¡«»…—–·×÷±≤≥≠≈°äöüßÄÖÜàèìòùâêîôûçÇ€¢£¥©®™•▲▼►◄■□●○◆◇★☆✓✔✗✘⚠⏱→←↑↓↔⇒│─┌┐└┘├┤┬┴┼█▌▐░▒▓∞λπΣΩµ“”„‹›−⌨▤▶⚔⚙✎✕❚↺⚄";
+            + "áéíóúüñÁÉÍÓÚÜÑ¿¡«»…—–·×÷±≤≥≠≈°äöüßÄÖÜàèìòùâêîôûçÇ€¢£¥©®™•▲▼►◄■□▣●○◆◇★☆✓✔✗✘⚠⏱→←↑↓↔⇒│─┌┐└┘├┤┬┴┼█▌▐░▒▓∞λπΣΩµ“”„‹›−⌨▤▶⚔⚙✎✕❚↺⚄";
 
     public Pincel() {
         lote = new SpriteBatch(4000);
@@ -54,8 +56,12 @@ public final class Pincel {
         blanco = new Texture(p);
         p.dispose();
         formas = new ShapeDrawer(lote, new TextureRegion(blanco, 0, 0, 1, 1));
-        generadorMono = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/DejaVuSansMono.ttf"));
-        generadorNegrita = new FreeTypeFontGenerator(Gdx.files.internal("fuentes/DejaVuSansMono-Bold.ttf"));
+        generadorUi = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.INTERFAZ));
+        generadorTitulo = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.TITULO));
+        generadorCodigo = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.CODIGO));
+        generadorCodigoNegrita = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.CODIGO_NEGRITA));
+        generadorSimbolos = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.SIMBOLOS));
+        generadorSimbolos2 = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.SIMBOLOS_2));
     }
 
     /** Cuando cambia el tamaño de la ventana: la pantalla lógica mide al menos 1600 × 900 de ancho y alto proporcionales. */
@@ -216,27 +222,87 @@ public final class Pincel {
     /** La letra más pequeña que se dibuja (Fran tiene la vista cansada: nada de letra diminuta, ni en los rincones). */
     public static final float LETRA_MINIMA = 14;
 
-    /** La letra de ese tamaño lógico (normal o negrita), creada a los píxeles de verdad. */
+    /** La letra de interfaz/título de ese tamaño lógico (normal o negrita), creada a los píxeles de verdad. */
     public BitmapFont letra(float tamano, boolean negrita) {
+        return letra(tamano, negrita, false);
+    }
+
+    /** La letra monoespaciada de código/depurador de ese tamaño lógico (normal o negrita). */
+    public BitmapFont letraDeCodigo(float tamano, boolean negrita) {
+        return letra(tamano, negrita, true);
+    }
+
+    private BitmapFont letra(float tamano, boolean negrita, boolean codigo) {
         int px = Math.max(6, Math.round(Math.max(LETRA_MINIMA, tamano) * escala));
-        int clave = px * 2 + (negrita ? 1 : 0);
+        int clave = (px << 2) | (codigo ? 2 : 0) | (negrita ? 1 : 0);
         BitmapFont f = letras.get(clave);
         if (f == null) {
-            FreeTypeFontGenerator.FreeTypeFontParameter p = new FreeTypeFontGenerator.FreeTypeFontParameter();
-            p.size = px;
-            p.flip = true;
-            p.characters = LETRAS;
-            p.minFilter = Texture.TextureFilter.Linear;
-            p.magFilter = Texture.TextureFilter.Linear;
-            p.hinting = FreeTypeFontGenerator.Hinting.Full;
-            p.incremental = true;
-            f = (negrita ? generadorNegrita : generadorMono).generateFont(p);
-            f.getData().setScale(1 / escala);
-            f.setUseIntegerPositions(false);
-            f.getData().missingGlyph = f.getData().getGlyph('?');
+            f = generarFuente(px, negrita, codigo);
             letras.put(clave, f);
         }
         return f;
+    }
+
+    private BitmapFont generarFuente(int px, boolean negrita, boolean codigo) {
+        FreeTypeFontGenerator primario = codigo
+                ? (negrita ? generadorCodigoNegrita : generadorCodigo)
+                : (negrita ? generadorTitulo : generadorUi);
+        FreeTypeFontGenerator respaldoCodigo = negrita ? generadorCodigoNegrita : generadorCodigo;
+        StringBuilder enPrimario = new StringBuilder();
+        StringBuilder enCodigo = new StringBuilder();
+        StringBuilder enSimbolos = new StringBuilder();
+        StringBuilder enSimbolos2 = new StringBuilder();
+        for (int i = 0; i < LETRAS.length(); i++) {
+            char c = LETRAS.charAt(i);
+            if (primario.hasGlyph(c)) enPrimario.append(c);
+            else if (!codigo && respaldoCodigo.hasGlyph(c)) enCodigo.append(c);
+            else if (generadorSimbolos.hasGlyph(c)) enSimbolos.append(c);
+            else if (generadorSimbolos2.hasGlyph(c)) enSimbolos2.append(c);
+        }
+        PixmapPacker packer = new PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 2, false);
+        FreeTypeFontGenerator.FreeTypeFontParameter p = parametrosFuente(px, enPrimario.toString(), packer);
+        FreeTypeFontGenerator.FreeTypeBitmapFontData data = primario.generateData(p);
+        anadirGlifosDeRespaldo(data, respaldoCodigo, enCodigo.toString(), px, packer);
+        anadirGlifosDeRespaldo(data, generadorSimbolos, enSimbolos.toString(), px, packer);
+        anadirGlifosDeRespaldo(data, generadorSimbolos2, enSimbolos2.toString(), px, packer);
+        Array<TextureRegion> regiones = new Array<>();
+        packer.updateTextureRegions(regiones, p.minFilter, p.magFilter, false);
+        packer.dispose();
+        BitmapFont f = new BitmapFont(data, regiones, true);
+        f.setOwnsTexture(true);
+        f.getData().setScale(1 / escala);
+        f.setUseIntegerPositions(false);
+        f.getData().missingGlyph = f.getData().getGlyph('?');
+        return f;
+    }
+
+    private static FreeTypeFontGenerator.FreeTypeFontParameter parametrosFuente(int px, String chars, PixmapPacker packer) {
+        FreeTypeFontGenerator.FreeTypeFontParameter p = new FreeTypeFontGenerator.FreeTypeFontParameter();
+        p.size = px;
+        p.flip = true;
+        p.characters = chars;
+        p.minFilter = Texture.TextureFilter.Linear;
+        p.magFilter = Texture.TextureFilter.Linear;
+        p.hinting = FreeTypeFontGenerator.Hinting.Full;
+        p.incremental = false;
+        p.packer = packer;
+        return p;
+    }
+
+    private static void anadirGlifosDeRespaldo(FreeTypeFontGenerator.FreeTypeBitmapFontData destino, FreeTypeFontGenerator respaldo, String chars,
+            int px, PixmapPacker packer) {
+        if (chars.isEmpty()) return;
+        FreeTypeFontGenerator.FreeTypeFontParameter fp = parametrosFuente(px, chars, packer);
+        FreeTypeFontGenerator.FreeTypeBitmapFontData fb = respaldo.generateData(fp);
+        int ajusteY = Math.round((destino.capHeight - fb.capHeight) * 0.5f);
+        for (int i = 0; i < chars.length(); i++) {
+            char c = chars.charAt(i);
+            BitmapFont.Glyph g = fb.getGlyph(c);
+            if (g != null && g.id == c && destino.getGlyph(c) == null) {
+                g.yoffset += ajusteY;
+                destino.setGlyph(c, g);
+            }
+        }
     }
 
     /** Escribe un texto con la esquina de arriba a la izquierda en (x, y). Devuelve su ancho. */
@@ -245,8 +311,17 @@ public final class Pincel {
     }
 
     public float texto(String s, float x, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        return textoConFuente(s, x, y, tamano, negrita, false, rgb, alfa);
+    }
+
+    /** Escribe un texto con la fuente monoespaciada de código/depurador. Devuelve su ancho. */
+    public float textoDeCodigo(String s, float x, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        return textoConFuente(s, x, y, tamano, negrita, true, rgb, alfa);
+    }
+
+    private float textoConFuente(String s, float x, float y, float tamano, boolean negrita, boolean codigo, int rgb, float alfa) {
         if (s == null || s.isEmpty()) return 0;
-        BitmapFont f = letra(tamano, negrita);
+        BitmapFont f = letra(tamano, negrita, codigo);
         f.setColor(color(rgb, alfa));
         medida.setText(f, s);
         f.draw(lote, s, x, y);
@@ -275,7 +350,7 @@ public final class Pincel {
      */
     public void textoDeColores(java.util.List<Object[]> trozos, float x, float y, float tamano) {
         if (trozos.isEmpty()) return;
-        BitmapFont f = letra(tamano, false);
+        BitmapFont f = letraDeCodigo(tamano, false);
         StringBuilder b = new StringBuilder();
         for (Object[] t : trozos) {
             String s = (String) t[0];
@@ -301,6 +376,13 @@ public final class Pincel {
         return w;
     }
 
+    /** Escribe un texto alineado a la derecha con la fuente monoespaciada de código. */
+    public float textoDeCodigoDerecha(String s, float xDerecha, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        float w = anchoDeCodigo(s, tamano, negrita);
+        textoDeCodigo(s, xDerecha - w, y, tamano, negrita, rgb, alfa);
+        return w;
+    }
+
     /** Un texto que se parte en líneas para caber en «ancho». Devuelve el alto que ocupa. */
     public float parrafo(String s, float x, float y, float anchoMax, float tamano, int rgb, float alfa) {
         return parrafo(s, x, y, anchoMax, tamano, false, rgb, alfa);
@@ -308,11 +390,20 @@ public final class Pincel {
 
     /** Lo mismo, en negrita o no (los títulos largos también se parten: nada se sale de su marco). */
     public float parrafo(String s, float x, float y, float anchoMax, float tamano, boolean negrita, int rgb, float alfa) {
+        return parrafoConFuente(s, x, y, anchoMax, tamano, negrita, false, rgb, alfa);
+    }
+
+    /** Párrafo en fuente monoespaciada de código/depurador. Devuelve el alto ocupado. */
+    public float parrafoDeCodigo(String s, float x, float y, float anchoMax, float tamano, boolean negrita, int rgb, float alfa) {
+        return parrafoConFuente(s, x, y, anchoMax, tamano, negrita, true, rgb, alfa);
+    }
+
+    private float parrafoConFuente(String s, float x, float y, float anchoMax, float tamano, boolean negrita, boolean codigo, int rgb, float alfa) {
         if (s == null || s.isEmpty()) return 0;
         float alto = altoDeLinea(tamano);
         float yy = y;
-        for (String linea : partir(s, anchoMax, tamano, negrita)) {
-            texto(linea, x, yy, tamano, negrita, rgb, alfa);
+        for (String linea : partir(s, anchoMax, tamano, negrita, codigo)) {
+            textoConFuente(linea, x, yy, tamano, negrita, codigo, rgb, alfa);
             yy += alto;
         }
         return yy - y;
@@ -324,7 +415,13 @@ public final class Pincel {
 
     public float altoDeParrafo(String s, float anchoMax, float tamano, boolean negrita) {
         if (s == null || s.isEmpty()) return 0;
-        return partir(s, anchoMax, tamano, negrita).size() * altoDeLinea(tamano);
+        return partir(s, anchoMax, tamano, negrita, false).size() * altoDeLinea(tamano);
+    }
+
+    /** Alto de un párrafo en fuente monoespaciada de código/depurador. */
+    public float altoDeParrafoDeCodigo(String s, float anchoMax, float tamano, boolean negrita) {
+        if (s == null || s.isEmpty()) return 0;
+        return partir(s, anchoMax, tamano, negrita, true).size() * altoDeLinea(tamano);
     }
 
     /** Los textos ya partidos (se parten los mismos en cada fotograma: medir cada palabra cuesta). */
@@ -332,7 +429,11 @@ public final class Pincel {
 
     /** Parte un texto en líneas que caben en anchoMax (respeta los saltos de línea; una palabra que no cabe sola, se corta). */
     public java.util.List<String> partir(String s, float anchoMax, float tamano, boolean negrita) {
-        String clave = (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(tamano * 10) + "/" + escala + "|" + s;
+        return partir(s, anchoMax, tamano, negrita, false);
+    }
+
+    private java.util.List<String> partir(String s, float anchoMax, float tamano, boolean negrita, boolean codigo) {
+        String clave = (codigo ? "C" : "U") + (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(tamano * 10) + "/" + escala + "|" + s;
         java.util.List<String> hecho = partidos.get(clave);
         if (hecho != null) return hecho;
         java.util.List<String> l = new java.util.ArrayList<>();
@@ -340,7 +441,7 @@ public final class Pincel {
             StringBuilder linea = new StringBuilder();
             for (String palabra : parrafo.split(" ", -1)) {
                 String prueba = linea.length() == 0 ? palabra : linea + " " + palabra;
-                if (ancho(prueba, tamano, negrita) > anchoMax && linea.length() > 0) {
+                if (anchoConFuente(prueba, tamano, negrita, codigo) > anchoMax && linea.length() > 0) {
                     l.add(linea.toString());
                     linea.setLength(0);
                     linea.append(palabra);
@@ -349,9 +450,9 @@ public final class Pincel {
                     linea.append(prueba);
                 }
                 // Una palabra más larga que la línea entera (una ruta, una palabra alemana): se parte por letras.
-                while (linea.length() > 1 && ancho(linea.toString(), tamano, negrita) > anchoMax) {
+                while (linea.length() > 1 && anchoConFuente(linea.toString(), tamano, negrita, codigo) > anchoMax) {
                     int n = linea.length() - 1;
-                    while (n > 1 && ancho(linea.substring(0, n), tamano, negrita) > anchoMax) n--;
+                    while (n > 1 && anchoConFuente(linea.substring(0, n), tamano, negrita, codigo) > anchoMax) n--;
                     l.add(linea.substring(0, n));
                     linea.delete(0, n);
                 }
@@ -365,8 +466,17 @@ public final class Pincel {
     }
 
     public float ancho(String s, float tamano, boolean negrita) {
+        return anchoConFuente(s, tamano, negrita, false);
+    }
+
+    /** Ancho de un texto medido con la fuente monoespaciada de código. */
+    public float anchoDeCodigo(String s, float tamano, boolean negrita) {
+        return anchoConFuente(s, tamano, negrita, true);
+    }
+
+    private float anchoConFuente(String s, float tamano, boolean negrita, boolean codigo) {
         if (s == null || s.isEmpty()) return 0;
-        medida.setText(letra(tamano, negrita), s);
+        medida.setText(letra(tamano, negrita, codigo), s);
         return medida.width;
     }
 
@@ -378,7 +488,7 @@ public final class Pincel {
     /** El ancho de una letra de la fuente de código (todas iguales: es monoespaciada). */
     public float anchoDeLetra(float tamano) {
         // Lo que avanza cada letra (no lo que mide su dibujo): la diferencia entre dos letras y una.
-        BitmapFont f = letra(tamano, false);
+        BitmapFont f = letraDeCodigo(tamano, false);
         medida.setText(f, "MMMMMMMMMMM");
         float once = medida.width;
         medida.setText(f, "M");
@@ -424,8 +534,12 @@ public final class Pincel {
     public void liberar() {
         for (BitmapFont f : letras.values()) f.dispose();
         letras.clear();
-        generadorMono.dispose();
-        generadorNegrita.dispose();
+        generadorUi.dispose();
+        generadorTitulo.dispose();
+        generadorCodigo.dispose();
+        generadorCodigoNegrita.dispose();
+        generadorSimbolos.dispose();
+        generadorSimbolos2.dispose();
         blanco.dispose();
         lote.dispose();
     }

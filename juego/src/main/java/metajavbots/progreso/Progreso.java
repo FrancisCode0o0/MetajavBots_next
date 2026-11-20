@@ -98,6 +98,18 @@ public final class Progreso {
         public int robotsNuevos;
         public long experiencia;
         public double monedas;
+
+        /** Texto de transición en caso de bajada de etiqueta (p. ej. «Junior II ↓ Junior I»), o vacío si no bajó. */
+        public String transicionBajada() {
+            if (!bajo || antes == null || despues == null) return "";
+            return antes.nombre + " ↓ " + despues.nombre;
+        }
+
+        /** Mensaje explícito de bajada de nivel en el idioma indicado, o vacío si no bajó. */
+        public String mensajeBajada(metajavbots.textos.Idioma idioma) {
+            if (!bajo) return "";
+            return metajavbots.textos.T.en("final.bajas_aviso", idioma);
+        }
     }
 
     /** Monedas otorgadas por ganar una pelea según el rango (Noob: 2, Junior: 3, Senior/Master: 3.5). */

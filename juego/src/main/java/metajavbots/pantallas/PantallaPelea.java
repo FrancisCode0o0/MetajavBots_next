@@ -612,6 +612,7 @@ public final class PantallaPelea implements Pantalla {
             Registro r = new Registro(System.currentTimeMillis(), encuentro.modo, encuentro.rival.nombre, encuentro.rival.montaje.modelo.id,
                     yo.montaje.modelo.id, encuentro.nivelRival, res, yo.danoTotalRecibido, yo.danoTotalHecho, pelea.ronda(), jug.etiqueta.name());
             cambio = Progreso.despuesDeLaPelea(jug, r, encuentro.rival.montaje.modelo.naturaleza.name(), new Random());
+            if (cambio.bajo) j.alarmaBajada.activar(cambio.antes, cambio.despues);
         }
         if (encuentro.rival != null) jug.registrarUltimoRival(encuentro.rival.nombre, metajavbots.rivales.Rivales.codigoDe(encuentro.rival));
         objetivoCumplido = encuentro.objetivo == null ? ganoElJugador
@@ -646,15 +647,19 @@ public final class PantallaPelea implements Pantalla {
         int g = pelea.ganador();
         if (!explotado && tiempoFinal > 0.6f && g >= 0) explotar(j, g);
         celebrar(j, dt);
+        boolean bajoNivel = cambio != null && cambio.bajo;
+        if (bajoNivel && tiempoFinal > 0.6f) j.alarmaBajada.dibujarBordeLuminoso(p, dt, true);
         if (tiempoFinal < 2.2f) return;
         if (repeticion.activa()) {
             repeticion.avanzar(j, pelea, vista, dt);
             repeticion.rotulo(j, 0, 88, p.ancho, p.alto - 88);
             return;
         }
-        float w = 720, h = 470, x = (p.ancho - w) / 2, y = (p.alto - h) / 2;
+        float w = Math.min(p.ancho - 60, bajoNivel ? 820 : 720);
+        float h = Math.min(p.alto - 60, bajoNivel ? 580 : 470);
+        float x = (p.ancho - w) / 2, y = (p.alto - h) / 2;
         p.caja(x, y, w, h, 16, ui.tema.panel, 0.97f);
-        p.bordeRedondeado(x, y, w, h, 16, ganoElJugador ? ui.tema.bien : g == -1 ? ui.tema.aviso : ui.tema.mal, 1, 3);
+        p.bordeRedondeado(x, y, w, h, 16, ganoElJugador ? ui.tema.bien : g == -1 ? ui.tema.aviso : ui.tema.mal, 1, bajoNivel ? 4 : 3);
         String titulo = g == -1 ? T.t("final.empate") : ganoElJugador ? T.t("final.victoria") : T.t("final.derrota");
         p.textoCentrado(titulo, x + w / 2, y + 24, ui.letra * 2.2f, true, ganoElJugador ? ui.tema.bien : ui.tema.texto, 1);
         p.textoCentrado(T.f("final.danos", Math.round(yo.danoTotalRecibido),
@@ -678,8 +683,7 @@ public final class PantallaPelea implements Pantalla {
                 p.textoCentrado(T.f("final.subes", cambio.despues.nombre), x + w / 2, yy, ui.letra * 1.4f, true, 0xFFC857, 1);
                 yy += 44;
             } else if (cambio.bajo) {
-                p.textoCentrado(T.f("final.bajas", cambio.despues.nombre), x + w / 2, yy, ui.letra * 1.1f, true, ui.tema.mal, 1);
-                yy += 40;
+                yy += j.alarmaBajada.dibujarAvisoEnTarjeta(p, ui, x + 32, yy, w - 64) + 12;
             }
             for (Pieza b : cambio.botin) {
                 p.textoCentrado(T.f("final.botin", b.nombre(T.idioma)), x + w / 2, yy, ui.letra, false, ui.tema.bien, 1);
@@ -743,7 +747,7 @@ public final class PantallaPelea implements Pantalla {
             j.sonidos.tocar("subida", 1f);
             narrador.locutor("subida_nivel", true, null);
         } else if (cambio != null && cambio.bajo) {
-            j.sonidos.tocar("bajada", 0.8f);
+            j.sonidos.tocar("alerta_bajada", 0.9f);
             narrador.locutor("bajada_nivel", true, null);
         }
     }

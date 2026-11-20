@@ -210,18 +210,35 @@ public final class Ui {
         return w <= anchoMax ? t : Math.max(t * 0.75f, t * anchoMax / w);
     }
 
+    /** El tamaño de letra de código con que cabe un texto monoespaciado en ese ancho. */
+    public float cabeDeCodigo(String s, float anchoMax, float t, boolean negrita) {
+        if (s == null) return t;
+        float w = p.anchoDeCodigo(s, t, negrita);
+        return w <= anchoMax ? t : Math.max(t * 0.75f, t * anchoMax / w);
+    }
+
     /** Un texto que no cabe se corta con «…». */
     public String recortarTexto(String s, float anchoMax, float t, boolean negrita) {
+        return recortarConFuente(s, anchoMax, t, negrita, false);
+    }
+
+    /** Un texto de código que no cabe se corta con «…» usando métricas monoespaciadas. */
+    public String recortarTextoDeCodigo(String s, float anchoMax, float t, boolean negrita) {
+        return recortarConFuente(s, anchoMax, t, negrita, true);
+    }
+
+    private String recortarConFuente(String s, float anchoMax, float t, boolean negrita, boolean codigo) {
         if (s == null) return "";
-        if (p.ancho(s, t, negrita) <= anchoMax) return s;
-        String clave = (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(t * 10) + "/" + p.escala + "|" + s;
+        if ((codigo ? p.anchoDeCodigo(s, t, negrita) : p.ancho(s, t, negrita)) <= anchoMax) return s;
+        String clave = (codigo ? "C" : "U") + (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(t * 10) + "/" + p.escala + "|" + s;
         String hecho = recortados.get(clave);
         if (hecho != null) return hecho;
         // Se busca el corte por mitades (medir letra a letra cada fotograma hacía lenta la lista de ejercicios).
         int bien = 1, mal = s.length();
         while (mal - bien > 1) {
             int n = (bien + mal) / 2;
-            if (p.ancho(s.substring(0, n) + "…", t, negrita) <= anchoMax) bien = n;
+            String prueba = s.substring(0, n) + "…";
+            if ((codigo ? p.anchoDeCodigo(prueba, t, negrita) : p.ancho(prueba, t, negrita)) <= anchoMax) bien = n;
             else mal = n;
         }
         if (recortados.size() > 600) recortados.clear();

@@ -21,9 +21,11 @@ CastillaFantasX (carpeta `motor/`), del mismo autor, copiado de la Reliquia del 
 
 ## Fuentes
 
-| Qué | Autor | Licencia |
-|---|---|---|
-| DejaVu Sans Mono (normal y negrita) | Proyecto DejaVu, sobre Bitstream Vera | Licencia de Bitstream Vera (libre, redistribuible) y cambios de DejaVu en dominio público. Texto en `res/fuentes/LICENCIA_DejaVu.txt`. **No es CC0 ni CC BY**: a revisar por Fran (docs/ESTADO.md). |
+| Qué | Autor | Licencia | Uso |
+|---|---|---|---|
+| Atkinson Hyperlegible (Regular y Bold) | Braille Institute of America | SIL Open Font License 1.1 (libre, redistribuible). Texto en `res/fuentes/LICENCIA_AtkinsonHyperlegible_OFL.txt`. | Interfaz, lectura (textos, botones, descripciones, tutoriales) y títulos/marcadores (variante Bold) |
+| JetBrains Mono (Regular y Bold) | JetBrains s.r.o. | SIL Open Font License 1.1 (libre, redistribuible). Texto en `res/fuentes/LICENCIA_JetBrainsMono_OFL.txt`. | Editor de código, visor del rival y depurador (`VentanaDeCodigo`, `PanelDepurador`, `CodigoDelRival`), renderizada glifo a glifo sin ligaduras |
+| Noto Sans Symbols y Noto Sans Symbols 2 (Regular) | Google (Proyecto Noto Fonts) | SIL Open Font License 1.1 (libre, redistribuible). Texto en `res/fuentes/LICENCIA_NotoSansSymbols2_OFL.txt`. | Respaldo automático de símbolos técnicos e iconos del juego (`▶ ✎ ✕ ⚔ ⚙ ⚠ …`) |
 
 ## Opcional, fuera del repositorio (el jugador lo pone si quiere)
 

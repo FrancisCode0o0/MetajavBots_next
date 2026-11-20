@@ -61,13 +61,13 @@ final class PanelDepurador {
             ui.barra(x + 16, ty, w - 32, 18, parte, parte > 0.8f ? ui.tema.mal : ui.tema.acento, T.f("pelea.pasos", c.pasosDelTurno, tope));
             ty += 24;
             String pos = String.format(java.util.Locale.ROOT, "x=%.0f  y=%.0f  rumbo=%.0f°  mira=%.0f°", c.x, c.y, c.rumbo(), c.mira());
-            float tamPos = ui.cabe(pos, w - 32, ui.letra * 0.78f, false);
-            p.texto(pos, x + 16, ty, tamPos, false, ui.tema.textoSuave, 1);
+            float tamPos = ui.cabeDeCodigo(pos, w - 32, ui.letra * 0.78f, false);
+            p.textoDeCodigo(pos, x + 16, ty, tamPos, false, ui.tema.textoSuave, 1);
             ty += p.altoDeLinea(tamPos) + 2;
             String est = String.format(java.util.Locale.ROOT, "%s=%.0f  %s=%.0f  %s=%d", T.t("pelea.blindaje"), c.blindaje(),
                     T.t("pelea.energia"), c.energia, T.t("pelea.turno"), pelea.turno());
-            float tamEst = ui.cabe(est, w - 32, ui.letra * 0.78f, false);
-            p.texto(est, x + 16, ty, tamEst, false, ui.tema.textoSuave, 1);
+            float tamEst = ui.cabeDeCodigo(est, w - 32, ui.letra * 0.78f, false);
+            p.textoDeCodigo(est, x + 16, ty, tamEst, false, ui.tema.textoSuave, 1);
             ty += p.altoDeLinea(tamEst) + 6;
         }
         String tabCodigo = T.t("pelea.depurador_codigo") + (c != null && c.tieneConflictoDeOrdenes ? " ⚠" : "");
@@ -93,8 +93,8 @@ final class PanelDepurador {
         float d = ui.desplazable(desplVariables, x + 8, ty, w - 16, zona);
         float yy = ty - d;
         for (String[] v : vars) {
-            p.texto(ui.recortarTexto(v[0], 158, tamVar, false), x + 16, yy, tamVar, false, ui.tema.tipo, 1);
-            p.texto(ui.recortarTexto(v[1], w - 196, tamVar, false), x + 180, yy, tamVar, false, ui.tema.texto, 1);
+            p.textoDeCodigo(ui.recortarTextoDeCodigo(v[0], 158, tamVar, false), x + 16, yy, tamVar, false, ui.tema.tipo, 1);
+            p.textoDeCodigo(ui.recortarTextoDeCodigo(v[1], w - 196, tamVar, false), x + 180, yy, tamVar, false, ui.tema.texto, 1);
             yy += altoVar;
         }
         if (vars.isEmpty()) p.parrafo(T.t("pelea.sin_variables"), x + 16, yy, w - 32, tamVar, ui.tema.textoApagado, 1);
@@ -133,7 +133,7 @@ final class PanelDepurador {
         float yy = y + 4 - d;
         for (String l : yo.consola) {
             int color = l.contains("⚠") ? ui.tema.mal : l.contains("⏱") ? ui.tema.aviso : ui.tema.texto;
-            p.texto(l, x + 8, yy, tam, false, color, 1);
+            p.textoDeCodigo(l, x + 8, yy, tam, false, color, 1);
             yy += alto;
         }
         ui.finDesplazable(desplConsola, yo.consola.size() * alto + 10);
@@ -188,16 +188,16 @@ final class PanelDepurador {
                 if (o.pisada()) {
                     String aviso = "⚠ " + (o.lineaPisada > 0 ? T.f("pelea.depurador_pisado_linea", o.pisadaPor, o.lineaPisada)
                             : T.f("pelea.depurador_pisado", o.pisadaPor));
-                    float hOrd = p.altoDeParrafo(texto, tw - 6, tamOrden, true);
+                    float hOrd = p.altoDeParrafoDeCodigo(texto, tw - 6, tamOrden, true);
                     float hAvi = p.altoDeParrafo(aviso, tw - 6, tamAviso, true);
                     float hCaja = hOrd + hAvi + 8;
                     p.rect(x + 12, yy - 2, w - 24, hCaja, ui.tema.aviso, 0.16f);
                     p.rect(x + 12, yy - 2, 3, hCaja, ui.tema.aviso, 1f);
-                    p.parrafo(texto, x + 20, yy + 1, tw - 6, tamOrden, true, ui.tema.texto, 1);
+                    p.parrafoDeCodigo(texto, x + 20, yy + 1, tw - 6, tamOrden, true, ui.tema.texto, 1);
                     p.parrafo(aviso, x + 20, yy + 3 + hOrd, tw - 6, tamAviso, true, ui.tema.aviso, 1);
                     yy += hCaja + 4;
                 } else {
-                    yy += p.parrafo(texto, x + 18, yy, tw, tamOrden, ui.tema.texto, 1) + 4;
+                    yy += p.parrafoDeCodigo(texto, x + 18, yy, tw, tamOrden, false, ui.tema.texto, 1) + 4;
                 }
             }
         }

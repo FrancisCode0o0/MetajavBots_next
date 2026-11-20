@@ -44,6 +44,8 @@ public class Juego extends ApplicationAdapter {
     private boolean cerrado;
     /** El entrenador flotante: asoma en todas las pantallas y explica cualquier concepto (F2). */
     public final metajavbots.pantallas.EntrenadorFlotante entrenadorFlotante = new metajavbots.pantallas.EntrenadorFlotante();
+    /** Alarma visual luminosa en rojo cuando el jugador baja de nivel tras varias derrotas seguidas. */
+    public final metajavbots.pantallas.AlarmaBajada alarmaBajada = new metajavbots.pantallas.AlarmaBajada();
     /** Si el visor táctico de la arena (F8) está activo durante esta sesión (desactivado por defecto). */
     public boolean visorTactico;
     /** Los archivos que se acaban de soltar en la ventana (el escritorio los pone; los recoge quien los quiera, como el temario). */
@@ -123,6 +125,7 @@ public class Juego extends ApplicationAdapter {
     /** El jugador elegido: idioma, tema y letra de toda la interfaz. */
     public void ponerJugador(Jugador j) {
         jugador = j;
+        alarmaBajada.cancelar();
         if (j != null) {
             T.idioma = j.idioma;
             ui.tema = Tema.de(j.temaClaro);
