@@ -626,10 +626,10 @@ public final class PanelDePaquetes {
         float tCod = ui.letra * 0.8f;
         float rotH = p.parrafo(rotulo, x + 4, y, Math.max(60, w - 8), tRot, true, ui.tema.textoSuave, 1);
         float cy = y + rotH + 4;
-        float ch = p.altoDeParrafo(codigo, Math.max(60, w - 24), tCod) + 14;
+        float ch = p.altoDeParrafoDeCodigo(codigo, Math.max(60, w - 24), tCod, false) + 14;
         p.caja(x, cy, w, ch, 6, ui.tema.fondo, 1);
         p.bordeRedondeado(x, cy, w, ch, 6, ui.tema.borde, 0.8f, 1);
-        p.parrafo(codigo, x + 12, cy + 7, Math.max(60, w - 24), tCod, ui.tema.cadena, 1);
+        p.parrafoDeCodigo(codigo, x + 12, cy + 7, Math.max(60, w - 24), tCod, false, ui.tema.cadena, 1);
         return (cy + ch) - y;
     }
 

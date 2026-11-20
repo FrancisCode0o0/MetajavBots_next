@@ -140,22 +140,53 @@ public final class MiniJuegos implements Pantalla {
     private static void dibujarPseudocodigo(Pincel p, Ui ui, String texto, float x, float y, float w, float disponible) {
         if (disponible <= 12) return;
         String[] lineas = texto.split("\n");
+        float anchoUtil = w - 20;
         float tPseudo = Math.min(ui.letra * 0.76f, 17f);
         if (lineas.length * p.altoDeLinea(tPseudo) + 12 > disponible && disponible > 24) {
-            tPseudo = Math.max(Pincel.LETRA_MINIMA, Math.min(tPseudo, (disponible - 12) / (lineas.length * 1.32f)));
+            tPseudo = Math.max(Pincel.LETRA_MINIMA, Math.min(tPseudo, (disponible - 12) / (lineas.length * 1.42f)));
         }
-        for (String l : lineas) tPseudo = Math.min(tPseudo, ajustarAncho(p, l, w - 20, tPseudo, Pincel.LETRA_MINIMA, false));
+        for (String l : lineas) tPseudo = Math.min(tPseudo, ajustarAnchoDeCodigo(p, l, anchoUtil, tPseudo, Pincel.LETRA_MINIMA, false));
+        // Si alguna línea larga aún no cabe al mínimo, compactar sangrías de 4 a 2 espacios antes de dibujar.
+        boolean desborda = false;
+        for (String l : lineas) {
+            if (p.anchoDeCodigo(l, tPseudo, false) > anchoUtil) {
+                desborda = true;
+                break;
+            }
+        }
+        if (desborda) {
+            for (int i = 0; i < lineas.length; i++) lineas[i] = compactarSangria(lineas[i]);
+        }
         float alto = p.altoDeLinea(tPseudo);
         float cajaAlta = Math.min(lineas.length * alto + 12, disponible);
         p.caja(x, y, w, cajaAlta, 8, 0x1B2430, 1);
         p.recortar(x, y, w, cajaAlta);
-        for (int k = 0; k < lineas.length; k++) p.texto(lineas[k], x + 10, y + 6 + k * alto, tPseudo, false, 0xE8E2C8, 1);
+        for (int k = 0; k < lineas.length; k++) {
+            String l = p.anchoDeCodigo(lineas[k], tPseudo, false) > anchoUtil
+                    ? ui.recortarTextoDeCodigo(lineas[k], anchoUtil, tPseudo, false)
+                    : lineas[k];
+            p.textoDeCodigo(l, x + 10, y + 6 + k * alto, tPseudo, false, 0xE8E2C8, 1);
+        }
         p.sinRecorte();
+    }
+
+    private static String compactarSangria(String linea) {
+        int espacios = 0;
+        while (espacios < linea.length() && linea.charAt(espacios) == ' ') espacios++;
+        if (espacios < 2) return linea;
+        return " ".repeat(espacios / 2) + linea.substring(espacios);
     }
 
     private static float ajustarAncho(Pincel p, String texto, float anchoMax, float tamMax, float tamMin, boolean negrita) {
         if (texto == null || texto.isEmpty()) return tamMax;
         float ancho = p.ancho(texto, tamMax, negrita);
+        if (ancho <= anchoMax || ancho <= 0) return tamMax;
+        return Math.max(tamMin, tamMax * anchoMax / ancho);
+    }
+
+    private static float ajustarAnchoDeCodigo(Pincel p, String texto, float anchoMax, float tamMax, float tamMin, boolean negrita) {
+        if (texto == null || texto.isEmpty()) return tamMax;
+        float ancho = p.anchoDeCodigo(texto, tamMax, negrita);
         if (ancho <= anchoMax || ancho <= 0) return tamMax;
         return Math.max(tamMin, tamMax * anchoMax / ancho);
     }

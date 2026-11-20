@@ -4,17 +4,17 @@ import java.io.InputStream;
 
 /**
  * FUENTES — Las tipografías libres (SIL OFL 1.1) diferenciadas por contexto:
- * interfaz y lectura (Atkinson Hyperlegible Regular), títulos y marcadores
- * (Atkinson Hyperlegible Bold), editor de código y depurador (JetBrains Mono
- * Regular y Bold) y respaldo de símbolos técnicos y del juego (Noto Sans Symbols 2).
+ * interfaz y lectura (IBM Plex Sans Regular), títulos y cabeceras técnicas
+ * (Space Grotesk Bold), editor de código, visores y pseudocódigo (JetBrains Mono
+ * Regular y Bold) y respaldo de símbolos técnicos y del juego (Noto Sans Symbols 1 y 2).
  */
 public final class Fuentes {
 
-    /** Fuente sans-serif de alta legibilidad para interfaz, textos, botones y tutoriales. */
-    public static final String INTERFAZ = "fuentes/AtkinsonHyperlegible-Regular.ttf";
-    /** Variante en negrita para títulos, cabeceras, botones y marcadores. */
-    public static final String TITULO = "fuentes/AtkinsonHyperlegible-Bold.ttf";
-    /** Fuente monoespaciada moderna y clara para el editor de código y el depurador. */
+    /** Fuente sans-serif de alta claridad y regularidad para interfaz, descripciones y tutoriales. */
+    public static final String INTERFAZ = "fuentes/IBMPlexSans-Regular.ttf";
+    /** Fuente geométrica técnica en negrita para títulos, cabeceras, botones y marcadores. */
+    public static final String TITULO = "fuentes/SpaceGrotesk-Bold.ttf";
+    /** Fuente monoespaciada moderna y clara para el editor de código, visores y pseudocódigo. */
     public static final String CODIGO = "fuentes/JetBrainsMono-Regular.ttf";
     /** Variante en negrita de la fuente de código (números de línea activos, avisos del depurador). */
     public static final String CODIGO_NEGRITA = "fuentes/JetBrainsMono-Bold.ttf";
@@ -28,7 +28,8 @@ public final class Fuentes {
 
     /** Archivos de licencia SIL OFL 1.1 junto a las fuentes. */
     public static final String[] LICENCIAS = {
-            "fuentes/LICENCIA_AtkinsonHyperlegible_OFL.txt",
+            "fuentes/LICENCIA_IBMPlexSans_OFL.txt",
+            "fuentes/LICENCIA_SpaceGrotesk_OFL.txt",
             "fuentes/LICENCIA_JetBrainsMono_OFL.txt",
             "fuentes/LICENCIA_NotoSansSymbols2_OFL.txt"};
 

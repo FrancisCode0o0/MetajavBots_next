@@ -80,7 +80,7 @@ final class PruebasDelTemario {
         try (PDDocument doc = new PDDocument(); ByteArrayOutputStream out = new ByteArrayOutputStream()) {
             PDPage pagina = new PDPage();
             doc.addPage(pagina);
-            PDType0Font fuente = PDType0Font.load(doc, Path.of("res", "fuentes", "AtkinsonHyperlegible-Regular.ttf").toFile());
+            PDType0Font fuente = PDType0Font.load(doc, Path.of("res", "fuentes", "IBMPlexSans-Regular.ttf").toFile());
             try (PDPageContentStream cs = new PDPageContentStream(doc, pagina)) {
                 cs.beginText();
                 cs.setFont(fuente, 12);

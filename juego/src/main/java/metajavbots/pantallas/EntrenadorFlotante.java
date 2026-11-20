@@ -530,11 +530,12 @@ public final class EntrenadorFlotante {
             float lx = x + 12, ly = yy + 8 + i * alto;
             if (com >= 0) {
                 String antes = s.substring(0, com);
-                p.texto(antes, lx, ly, tl, false, ui.tema.cadena, 1);
-                lx += p.ancho(antes, tl, false);
+                p.textoDeCodigo(antes, lx, ly, tl, false, ui.tema.cadena, 1);
+                lx += p.anchoDeCodigo(antes, tl, false);
                 s = s.substring(com);
             }
-            p.texto(ui.recortarTexto(s, x + w - 32 - lx, tl, false), lx, ly, tl, false, com >= 0 ? 0x7F8C8D : java ? ui.tema.cadena : 0xE8E2C8, 1);
+            p.textoDeCodigo(ui.recortarTextoDeCodigo(s, x + w - 32 - lx, tl, false), lx, ly, tl, false,
+                    com >= 0 ? 0x7F8C8D : java ? ui.tema.cadena : 0xE8E2C8, 1);
         }
         return yy + lineas.length * alto + 28;
     }

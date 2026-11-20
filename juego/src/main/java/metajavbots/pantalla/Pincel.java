@@ -260,39 +260,42 @@ public final class Pincel {
             else if (generadorSimbolos2.hasGlyph(c)) enSimbolos2.append(c);
         }
         PixmapPacker packer = new PixmapPacker(1024, 1024, Pixmap.Format.RGBA8888, 2, false);
-        FreeTypeFontGenerator.FreeTypeFontParameter p = parametrosFuente(px, enPrimario.toString(), packer);
+        int espacioX = (!codigo && px <= 18) ? 1 : 0;
+        FreeTypeFontGenerator.FreeTypeFontParameter p = parametrosFuente(px, enPrimario.toString(), packer, espacioX);
         FreeTypeFontGenerator.FreeTypeBitmapFontData data = primario.generateData(p);
-        anadirGlifosDeRespaldo(data, respaldoCodigo, enCodigo.toString(), px, packer);
-        anadirGlifosDeRespaldo(data, generadorSimbolos, enSimbolos.toString(), px, packer);
-        anadirGlifosDeRespaldo(data, generadorSimbolos2, enSimbolos2.toString(), px, packer);
+        anadirGlifosDeRespaldo(data, respaldoCodigo, enCodigo.toString(), px, packer, espacioX);
+        anadirGlifosDeRespaldo(data, generadorSimbolos, enSimbolos.toString(), px, packer, espacioX);
+        anadirGlifosDeRespaldo(data, generadorSimbolos2, enSimbolos2.toString(), px, packer, espacioX);
         Array<TextureRegion> regiones = new Array<>();
         packer.updateTextureRegions(regiones, p.minFilter, p.magFilter, false);
         packer.dispose();
         BitmapFont f = new BitmapFont(data, regiones, true);
         f.setOwnsTexture(true);
-        f.getData().setScale(1 / escala);
-        f.setUseIntegerPositions(false);
+        if (Math.abs(escala - 1f) > 1e-4f) f.getData().setScale(1 / escala);
+        f.setUseIntegerPositions(true);
         f.getData().missingGlyph = f.getData().getGlyph('?');
         return f;
     }
 
-    private static FreeTypeFontGenerator.FreeTypeFontParameter parametrosFuente(int px, String chars, PixmapPacker packer) {
+    private static FreeTypeFontGenerator.FreeTypeFontParameter parametrosFuente(int px, String chars, PixmapPacker packer, int espacioX) {
         FreeTypeFontGenerator.FreeTypeFontParameter p = new FreeTypeFontGenerator.FreeTypeFontParameter();
         p.size = px;
         p.flip = true;
         p.characters = chars;
+        p.kerning = true;
+        p.spaceX = espacioX;
         p.minFilter = Texture.TextureFilter.Linear;
         p.magFilter = Texture.TextureFilter.Linear;
-        p.hinting = FreeTypeFontGenerator.Hinting.Full;
+        p.hinting = FreeTypeFontGenerator.Hinting.AutoSlight;
         p.incremental = false;
         p.packer = packer;
         return p;
     }
 
     private static void anadirGlifosDeRespaldo(FreeTypeFontGenerator.FreeTypeBitmapFontData destino, FreeTypeFontGenerator respaldo, String chars,
-            int px, PixmapPacker packer) {
+            int px, PixmapPacker packer, int espacioX) {
         if (chars.isEmpty()) return;
-        FreeTypeFontGenerator.FreeTypeFontParameter fp = parametrosFuente(px, chars, packer);
+        FreeTypeFontGenerator.FreeTypeFontParameter fp = parametrosFuente(px, chars, packer, espacioX);
         FreeTypeFontGenerator.FreeTypeBitmapFontData fb = respaldo.generateData(fp);
         int ajusteY = Math.round((destino.capHeight - fb.capHeight) * 0.5f);
         for (int i = 0; i < chars.length(); i++) {
@@ -542,9 +545,10 @@ public final class Pincel {
         return medida.width;
     }
 
-    /** El alto de una línea de texto (con su espacio). */
+    /** El alto de una línea de texto (con su espacio; algo más de aire en tamaños pequeños). */
     public float altoDeLinea(float tamano) {
-        return Math.max(LETRA_MINIMA, tamano) * 1.35f;
+        float t = Math.max(LETRA_MINIMA, tamano);
+        return t * (t <= 18f ? 1.42f : 1.36f);
     }
 
     /** El ancho de una letra de la fuente de código (todas iguales: es monoespaciada). */

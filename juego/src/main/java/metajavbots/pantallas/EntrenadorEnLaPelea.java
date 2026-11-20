@@ -157,7 +157,7 @@ final class EntrenadorEnLaPelea {
         float w = Math.min(470, ancho * 0.4f), tl = ui.letra * 0.78f, x = ancho - w - 16;
         float th = p.altoDeParrafo(texto, w - 90, tl);
         float trozoAncho = w - 96, tTrozo = tl * 0.95f;
-        float trozoCuerpo = trozo == null ? 0 : p.altoDeParrafo(trozo, trozoAncho, tTrozo);
+        float trozoCuerpo = trozo == null ? 0 : p.altoDeParrafoDeCodigo(trozo, trozoAncho, tTrozo, false);
         float trozoAlto = trozo == null ? 0 : trozoCuerpo + tl * 1.6f + 10;
         float h = Math.max(78, th + trozoAlto + (marcado >= 0 ? 58 : 20)), y = p.alto - 80 - h;
         p.caja(x, y, w, h, 12, ui.tema.panelAlto, 0.9f);
@@ -169,7 +169,7 @@ final class EntrenadorEnLaPelea {
             p.texto(T.t("entrenador.pelea.trozo"), x + 76, yy, tl * 0.9f, true, ui.tema.textoSuave, 1);
             yy += tl * 1.4f;
             p.caja(x + 70, yy - 4, w - 80, trozoCuerpo + 8, 6, 0x1B2430, 1);
-            p.parrafo(trozo, x + 78, yy, trozoAncho, tTrozo, 0xE8E2C8, 1);
+            p.parrafoDeCodigo(trozo, x + 78, yy, trozoAncho, tTrozo, false, 0xE8E2C8, 1);
             yy += trozoCuerpo + 10;
         }
         if (marcado >= 0) {

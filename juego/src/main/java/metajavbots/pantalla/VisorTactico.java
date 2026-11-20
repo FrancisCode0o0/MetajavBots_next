@@ -263,14 +263,14 @@ public final class VisorTactico {
     }
 
     private static void etiqueta(Pincel p, VistaDeArena v, String texto, float cx, float cy, float tl, int color, List<float[]> puestas) {
-        float tw = p.ancho(texto, tl, true), w = tw + 12, h = tl * 1.38f;
+        float tw = p.anchoDeCodigo(texto, tl, true), w = tw + 12, h = tl * 1.38f;
         float[] pos = encajarEtiqueta(cx - w / 2, cy - h / 2, w, h, v.ax(), v.ay(), v.aw(), v.ah(), v.techo);
         for (int intento = 0; intento < 6 && choca(pos[0], pos[1], w, h, puestas); intento++) {
             pos = encajarEtiqueta(pos[0], pos[1] - h - 4, w, h, v.ax(), v.ay(), v.aw(), v.ah(), v.techo);
         }
         puestas.add(new float[]{pos[0], pos[1], w, h});
         p.caja(pos[0], pos[1], w, h, 5, FONDO_ETIQUETA, 0.8f);
-        p.texto(texto, pos[0] + 6, pos[1] + 2, tl, true, color, 0.95f);
+        p.textoDeCodigo(texto, pos[0] + 6, pos[1] + 2, tl, true, color, 0.95f);
     }
 
     private static boolean choca(float x, float y, float w, float h, List<float[]> puestas) {
