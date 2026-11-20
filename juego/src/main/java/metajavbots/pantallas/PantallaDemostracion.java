@@ -1,8 +1,11 @@
 package metajavbots.pantallas;
 
+import java.util.Locale;
+
 import com.badlogic.gdx.Input.Keys;
 
 import metajavbots.Juego;
+import metajavbots.combate.Cuerpo;
 import metajavbots.combate.Pelea;
 import metajavbots.ejercicios.Demostracion;
 import metajavbots.ejercicios.MotorDemostracion;
@@ -19,10 +22,10 @@ import metajavbots.tutor.Entrenador;
 
 /**
  * PANTALLA DE DEMOSTRACIÓN — Reproduce una Demostracion automatizada en vivo:
- * arena a la izquierda (con VisorTactico activable), código de solo lectura a
- * la derecha con resaltado muy visible (▶ y marco) en la línea ejecutada, y
- * viñeta del entrenador abajo con pausas automáticas y botones Continuar,
- * Repetir paso y Salir.
+ * arena a la izquierda (con VisorTactico y señales visuales didácticas), código
+ * de solo lectura a la derecha con resaltado muy visible (▶ y marco) en la línea
+ * explicada, y viñeta del entrenador abajo con scroll suave, pausas automáticas
+ * y botones Continuar, Repetir paso y Salir.
  */
 public final class PantallaDemostracion implements Pantalla {
 
@@ -30,6 +33,7 @@ public final class PantallaDemostracion implements Pantalla {
     private MotorDemostracion motor;
     private VistaDeArena vista;
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
+    private final Ui.Desplazable desplTexto = new Ui.Desplazable();
     private Idioma idioma = Idioma.ES;
     private float acumulado;
     private float tiempo;
@@ -58,6 +62,7 @@ public final class PantallaDemostracion implements Pantalla {
         acumulado = 0;
         pasoAnunciado = -1;
         eraPausado = false;
+        desplTexto.alPrincipio();
         sincronizarEditor();
     }
 
@@ -85,7 +90,7 @@ public final class PantallaDemostracion implements Pantalla {
         float altoVigneta = calcularAltoVigneta(p, ui, wTotal);
         float yVigneta = p.alto - altoVigneta - 14;
         float ySuperior = arriba + 10;
-        float hSuperior = Math.max(220, yVigneta - ySuperior - 12);
+        float hSuperior = Math.max(240, yVigneta - ySuperior - 12);
 
         float gap = 14;
         float wIzq = (wTotal - gap) * 0.52f;
@@ -99,6 +104,7 @@ public final class PantallaDemostracion implements Pantalla {
         if (j.entrada.tecla(Keys.F8)) motor.alternarVisor();
         if (j.entrada.tecla(Keys.R)) {
             motor.repetirPaso();
+            desplTexto.alPrincipio();
             acumulado = 0;
             eraPausado = false;
         }
@@ -159,6 +165,7 @@ public final class PantallaDemostracion implements Pantalla {
         vista.techo = arenaY + 6;
         vista.visor(motor.visorTactico(), 1);
         vista.dibujar(p, motor.pelea(), x, arenaY, w, arenaH, motor.pausado() ? 0 : dt);
+        dibujarIndicadoresArena(p, ui, x, arenaY, w, arenaH);
         p.bordeRedondeado(x, arenaY, w, arenaH, 8, ui.tema.borde, 0.9f, 1.5f);
         String estado = motor.pausado() ? T.t("demo.pausa_paso") : T.t("demo.ejecutando");
         float tEst = Math.min(ui.letra * 0.72f, 17f);
@@ -168,6 +175,128 @@ public final class PantallaDemostracion implements Pantalla {
         p.texto(estado, x + 20, arenaY + 14, tEst, true, motor.pausado() ? ui.tema.aviso : ui.tema.bien, 1);
     }
 
+    private void dibujarIndicadoresArena(Pincel p, Ui ui, float ax, float ay, float aw, float ah) {
+        Pelea pelea = motor.pelea();
+        if (pelea == null) return;
+        Cuerpo yo = pelea.cuerpo(0);
+        Cuerpo rival = pelea.cuerpo(1);
+        if (yo == null) return;
+        float pulso = 0.65f + 0.35f * (float) Math.sin(tiempo * 5f);
+        float tl = Math.min(ui.letra * 0.72f, 17f);
+        p.recortar(ax, ay, aw, ah);
+        switch (motor.pasoActual().accion) {
+            case AVANZAR:
+                dibujarIndicadorAvance(p, yo, tl);
+                break;
+            case GIRAR:
+                dibujarIndicadorGiro(p, yo, tl);
+                break;
+            case RADAR:
+                dibujarIndicadorRadar(p, yo, pulso, tl);
+                break;
+            case DETECTAR:
+                if (motor.enemigoDetectado() && rival != null) {
+                    dibujarIndicadorDeteccion(p, rival, pulso, tl);
+                }
+                break;
+            case APUNTAR_Y_DISPARAR:
+                dibujarIndicadorDisparo(p, yo, rival, pulso, tl);
+                break;
+            default:
+                break;
+        }
+        p.sinRecorte();
+    }
+
+    private void dibujarIndicadorAvance(Pincel p, Cuerpo yo, float tl) {
+        float x1 = vista.sx(motor.inicioX(), motor.inicioY());
+        float y1 = vista.sy(motor.inicioY());
+        float x2 = vista.sx(yo.x, yo.y);
+        float y2 = vista.sy(yo.y);
+        if (Math.hypot(x2 - x1, y2 - y1) < 6) return;
+        p.circulo(x1, y1, 5f, 0x5BD685, 0.9f);
+        p.linea(x1, y1, x2, y2, 3.2f, 0x5BD685, 0.95f);
+        dibujarPuntaFlecha(p, x1, y1, x2, y2, 11f, 0x5BD685);
+        String txt = String.format(Locale.ROOT, "+%.0f", motor.distanciaRecorrida());
+        dibujarEtiquetaArena(p, txt, (x1 + x2) / 2f, Math.min(y1, y2) - 26f, tl, 0x5BD685);
+    }
+
+    private void dibujarIndicadorGiro(Pincel p, Cuerpo yo, float tl) {
+        double r = 74;
+        float ox = vista.sx(yo.x, yo.y);
+        float oy = vista.sy(yo.y);
+        double a0 = Math.toRadians(motor.inicioRumbo());
+        double a1 = Math.toRadians(yo.rumbo);
+        float ex0 = vista.sx(yo.x + Math.cos(a0) * r, yo.y + Math.sin(a0) * r);
+        float ey0 = vista.sy(yo.y + Math.sin(a0) * r);
+        float ex1 = vista.sx(yo.x + Math.cos(a1) * r, yo.y + Math.sin(a1) * r);
+        float ey1 = vista.sy(yo.y + Math.sin(a1) * r);
+        p.linea(ox, oy, ex0, ey0, 2f, 0x9BB0C8, 0.7f);
+        p.linea(ox, oy, ex1, ey1, 3f, 0xFFE27A, 0.95f);
+        dibujarPuntaFlecha(p, ox, oy, ex1, ey1, 10f, 0xFFE27A);
+        double delta = Pelea.normal(yo.rumbo - motor.inicioRumbo());
+        int segs = Math.max(4, (int) Math.ceil(Math.abs(delta) / 6));
+        double rArco = 48;
+        for (int i = 0; i < segs; i++) {
+            double u = Math.toRadians(motor.inicioRumbo() + delta * i / segs);
+            double v = Math.toRadians(motor.inicioRumbo() + delta * (i + 1) / segs);
+            p.linea(vista.sx(yo.x + Math.cos(u) * rArco, yo.y + Math.sin(u) * rArco),
+                    vista.sy(yo.y + Math.sin(u) * rArco),
+                    vista.sx(yo.x + Math.cos(v) * rArco, yo.y + Math.sin(v) * rArco),
+                    vista.sy(yo.y + Math.sin(v) * rArco), 2.6f, 0xFFE27A, 0.95f);
+        }
+        double aMid = Math.toRadians(motor.inicioRumbo() + delta * 0.5);
+        String txt = String.format(Locale.ROOT, "%+.0f°", delta);
+        dibujarEtiquetaArena(p, txt, vista.sx(yo.x + Math.cos(aMid) * 90, yo.y + Math.sin(aMid) * 90),
+                vista.sy(yo.y + Math.sin(aMid) * 90) - 10f, tl, 0xFFE27A);
+    }
+
+    private void dibujarIndicadorRadar(Pincel p, Cuerpo yo, float pulso, float tl) {
+        float ox = vista.sx(yo.x, yo.y);
+        float oy = vista.sy(yo.y);
+        p.aro(ox, oy, 22f + pulso * 7f, 2.2f, 0x3FE0FF, 0.85f);
+        String txt = idioma.elegir("RADAR", "RADAR", "RADAR");
+        dibujarEtiquetaArena(p, txt, ox, oy + 26f, tl, 0x3FE0FF);
+    }
+
+    private void dibujarIndicadorDeteccion(Pincel p, Cuerpo rival, float pulso, float tl) {
+        float rx = vista.sx(rival.x, rival.y);
+        float ry = vista.sy(rival.y);
+        p.aro(rx, ry, 28f + pulso * 10f, 3f, 0xFFE27A, 0.95f);
+        String txt = idioma.elegir("¡alVerEnemigo!", "beiSicht!", "onSeeEnemy!");
+        dibujarEtiquetaArena(p, txt, rx, ry - 68f, tl, 0xFFE27A);
+    }
+
+    private void dibujarIndicadorDisparo(Pincel p, Cuerpo yo, Cuerpo rival, float pulso, float tl) {
+        if (motor.impactoRealizado() && rival != null) {
+            float rx = vista.sx(rival.x, rival.y);
+            float ry = vista.sy(rival.y);
+            p.aro(rx, ry, 26f + pulso * 9f, 3f, 0xFF7A45, 0.95f);
+        }
+        float ox = vista.sx(yo.x, yo.y);
+        float oy = vista.sy(yo.y);
+        String txt = String.format(Locale.ROOT, "%s %.0f",
+                idioma.elegir("Energía", "Energie", "Energy"), yo.energia);
+        dibujarEtiquetaArena(p, txt, ox, oy + 26f, tl, 0x3FE0FF);
+    }
+
+    private static void dibujarPuntaFlecha(Pincel p, float x1, float y1, float x2, float y2, float largo, int color) {
+        double ang = Math.atan2(y2 - y1, x2 - x1);
+        float ax = (float) (x2 - Math.cos(ang - 0.5) * largo);
+        float ay = (float) (y2 - Math.sin(ang - 0.5) * largo);
+        float bx = (float) (x2 - Math.cos(ang + 0.5) * largo);
+        float by = (float) (y2 - Math.sin(ang + 0.5) * largo);
+        p.triangulo(x2, y2, ax, ay, bx, by, color, 0.95f);
+    }
+
+    private static void dibujarEtiquetaArena(Pincel p, String texto, float cx, float cy, float tl, int color) {
+        float w = p.ancho(texto, tl, true) + 14;
+        float h = p.altoDeLinea(tl) + 6;
+        p.caja(cx - w / 2f, cy - h / 2f, w, h, 6, 0x0B0F18, 0.88f);
+        p.bordeRedondeado(cx - w / 2f, cy - h / 2f, w, h, 6, color, 0.85f, 1.4f);
+        p.textoCentrado(texto, cx, cy - h / 2f + 3f, tl, true, color, 1);
+    }
+
     private void dibujarCodigo(Ui ui, float x, float y, float w, float h) {
         editor.tamano = tamanoCodigo(ui.letra, editor.tamano);
         editor.dibujar(ui, x, y, w, h);
@@ -175,13 +304,15 @@ public final class PantallaDemostracion implements Pantalla {
     }
 
     private float calcularAltoVigneta(Pincel p, Ui ui, float wTotal) {
-        float tTit = Math.min(ui.letra * 0.96f, 23f);
-        float tTxt = Math.min(ui.letra * 0.90f, 22f);
-        float anchoTexto = Math.max(260, wTotal - 122);
+        float tTit = Math.min(ui.letra * 0.92f, 23f);
+        float tTxt = Math.min(ui.letra * 0.85f, 21f);
+        float anchoTexto = Math.max(260, wTotal - 134);
         String texto = motor.pasoActual().texto(idioma);
         float hTit = p.altoDeLinea(tTit);
         float hTxt = p.altoDeParrafo(texto, anchoTexto, tTxt);
-        return Math.max(158, Math.min(248, 20 + hTit + 6 + hTxt + 14 + 46 + 14));
+        float deseado = 20 + hTit + 8 + hTxt + 14 + 46 + 14;
+        float tope = Math.min(290f, Math.max(195f, p.alto * 0.34f));
+        return Math.max(176f, Math.min(tope, deseado));
     }
 
     private void dibujarVignetaEntrenador(Juego j, float x, float y, float w, float h) {
@@ -193,24 +324,24 @@ public final class PantallaDemostracion implements Pantalla {
 
         float radio = 30;
         float cx = x + 50;
-        float cy = y + Math.min(h * 0.44f, 64f);
+        float cy = y + Math.min(h * 0.42f, 64f);
         CabezaDeEntrenador.dibujar(p, en, cx, cy, radio, hablando > 0, tiempo);
 
         float tx = x + 98;
         float tw = Math.max(240, w - 118);
-        float tTit = Math.min(ui.letra * 0.96f, 23f);
-        float tTxt = Math.min(ui.letra * 0.90f, 22f);
+        float tTit = Math.min(ui.letra * 0.92f, 23f);
+        float tTxt = Math.min(ui.letra * 0.85f, 21f);
         Demostracion.Paso paso = motor.pasoActual();
         String cab = en.nombre.en(idioma) + " · " + T.f("demo.paso_de", motor.indicePaso() + 1, motor.totalPasos())
                 + " · " + paso.titulo(idioma);
         p.texto(cab, tx, y + 12, ui.cabe(cab, tw, tTit, true), true, ui.tema.acento, 1);
         float ty = y + 12 + p.altoDeLinea(tTit) + 6;
-        float maxTextoH = Math.max(40, h - (ty - y) - 64);
-        p.recortar(tx, ty, tw, maxTextoH);
-        p.parrafo(paso.texto(idioma), tx, ty, tw, tTxt, ui.tema.texto, 1);
-        p.sinRecorte();
+        float maxTextoH = Math.max(48, h - (ty - y) - 62);
+        float d = ui.desplazable(desplTexto, tx, ty, tw, maxTextoH);
+        float hTexto = p.parrafo(paso.texto(idioma), tx, ty - d, tw - 14, tTxt, ui.tema.texto, 1);
+        ui.finDesplazable(desplTexto, hTexto);
 
-        dibujarBotones(j, tx, y + h - 56, tw);
+        dibujarBotones(j, tx, y + h - 54, tw);
     }
 
     private void dibujarBotones(Juego j, float x, float y, float w) {
@@ -234,6 +365,7 @@ public final class PantallaDemostracion implements Pantalla {
         if (ui.boton(txtContinuar, x, y, wCont, 44, estCont)) accionContinuar(j);
         if (ui.boton(txtRepetir, x + wCont + 12, y, wRep, 44, Ui.Estilo.NORMAL)) {
             motor.repetirPaso();
+            desplTexto.alPrincipio();
             acumulado = 0;
             eraPausado = false;
         }
@@ -248,6 +380,7 @@ public final class PantallaDemostracion implements Pantalla {
             return;
         }
         motor.continuar();
+        desplTexto.alPrincipio();
         acumulado = 0;
         eraPausado = false;
     }

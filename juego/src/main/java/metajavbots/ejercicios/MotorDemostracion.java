@@ -33,14 +33,21 @@ public final class MotorDemostracion {
     private int turnosEnPaso;
     private int lineaActiva;
     private final BitSet lineasActivas = new BitSet();
+    private boolean ordenEmitida;
     private boolean enemigoDetectado;
+    private int turnosTrasDeteccion;
     private boolean disparoRealizado;
     private int turnosTrasDisparo;
+    private boolean impactoRealizado;
+    private int turnosTrasImpacto;
     private double inicioX;
     private double inicioY;
     private double inicioRumbo;
+    private double inicioMira;
+    private double blindajeRivalInicial;
     private double distanciaRecorrida;
     private double giroAcumulado;
+    private double giroMiraAcumulado;
     private String ultimoError = "";
 
     public MotorDemostracion(Demostracion demo, Idioma idioma) {
@@ -126,11 +133,16 @@ public final class MotorDemostracion {
     private void iniciarPaso() {
         Demostracion.Paso p = pasoActual();
         turnosEnPaso = 0;
+        ordenEmitida = false;
         enemigoDetectado = false;
+        turnosTrasDeteccion = 0;
         disparoRealizado = false;
         turnosTrasDisparo = 0;
+        impactoRealizado = false;
+        turnosTrasImpacto = 0;
         distanciaRecorrida = 0;
         giroAcumulado = 0;
+        giroMiraAcumulado = 0;
         visorTactico = p.activarVisor;
         prepararPelea(p);
         aplicarLineasDePaso(p);
@@ -155,17 +167,32 @@ public final class MotorDemostracion {
         Cuerpo yo = pelea.cuerpo(0);
         Cuerpo rival = pelea.cuerpo(1);
         if (yo == null || rival == null) return;
-        yo.x = 270;
-        yo.y = 330;
+        yo.x = p.accion == Demostracion.Accion.GIRAR ? 340 : 265;
+        yo.y = 340;
         yo.rumbo = 0;
-        yo.mira = p.accion == Demostracion.Accion.RADAR_Y_DISPARO ? -52 : 0;
-        rival.x = 590;
-        rival.y = 365;
+        switch (p.accion) {
+            case RADAR:
+                yo.mira = -130;
+                break;
+            case DETECTAR:
+                yo.mira = -52;
+                break;
+            case APUNTAR_Y_DISPARAR:
+                yo.mira = -26;
+                break;
+            default:
+                yo.mira = 0;
+                break;
+        }
+        rival.x = p.accion == Demostracion.Accion.APUNTAR_Y_DISPARAR ? 560 : 595;
+        rival.y = 360;
         rival.rumbo = 180;
         rival.mira = 180;
         inicioX = yo.x;
         inicioY = yo.y;
         inicioRumbo = yo.rumbo;
+        inicioMira = yo.mira;
+        blindajeRivalInicial = rival.blindaje();
     }
 
     private Fabrica fabricaDemo() {
@@ -188,10 +215,15 @@ public final class MotorDemostracion {
 
     private void actualizarMetricas() {
         Cuerpo yo = pelea.cuerpo(0);
+        Cuerpo rival = pelea.cuerpo(1);
         if (yo == null) return;
         distanciaRecorrida = Math.max(distanciaRecorrida, Math.hypot(yo.x - inicioX, yo.y - inicioY));
         giroAcumulado = Math.max(giroAcumulado, Math.abs(Pelea.normal(yo.rumbo - inicioRumbo)));
+        giroMiraAcumulado = Math.max(giroMiraAcumulado, Math.abs(Pelea.normal(yo.mira - inicioMira)));
+        if (enemigoDetectado) turnosTrasDeteccion++;
         if (disparoRealizado) turnosTrasDisparo++;
+        if (rival != null && rival.blindaje() < blindajeRivalInicial - 0.01) impactoRealizado = true;
+        if (impactoRealizado) turnosTrasImpacto++;
     }
 
     private void comprobarErrorEnPelea() {
@@ -203,10 +235,21 @@ public final class MotorDemostracion {
         Demostracion.Paso p = pasoActual();
         if (turnosEnPaso >= p.turnosMaximos) return true;
         if (turnosEnPaso < p.turnosMinimos) return false;
-        if (p.accion == Demostracion.Accion.RADAR_Y_DISPARO) {
-            return enemigoDetectado && disparoRealizado && turnosTrasDisparo >= 10;
+        Cuerpo yo = pelea.cuerpo(0);
+        switch (p.accion) {
+            case AVANZAR:
+                return yo != null && yo.restanteAvance() < 0.5 && distanciaRecorrida > 40;
+            case GIRAR:
+                return yo != null && Math.abs(yo.restanteGiro()) < 0.5 && giroAcumulado > 35;
+            case RADAR:
+                return giroMiraAcumulado >= 75;
+            case DETECTAR:
+                return enemigoDetectado && turnosTrasDeteccion >= 2;
+            case APUNTAR_Y_DISPARAR:
+                return enemigoDetectado && disparoRealizado && ((impactoRealizado && turnosTrasImpacto >= 4) || turnosTrasDisparo >= 20);
+            default:
+                return false;
         }
-        return false;
     }
 
     private void pausarEnPaso() {
@@ -239,13 +282,31 @@ public final class MotorDemostracion {
         public void cadaTurno() {
             Demostracion.Paso p = pasoActual();
             switch (p.accion) {
-                case MOVER_Y_GIRAR:
-                    avanzar(120);
-                    girar(12);
-                    if (turnosEnPaso < 24) marcarLineaViva(6, 7);
-                    else marcarLineaViva(7, 6);
+                case AVANZAR:
+                    if (!ordenEmitida) {
+                        avanzar(80);
+                        ordenEmitida = true;
+                    }
+                    marcarLineaViva(6, 5);
                     break;
-                case RADAR_Y_DISPARO:
+                case GIRAR:
+                    if (!ordenEmitida) {
+                        girar(45);
+                        ordenEmitida = true;
+                    }
+                    marcarLineaViva(7, 5);
+                    break;
+                case RADAR:
+                    apuntar(4);
+                    marcarLineaViva(9, 8, 10);
+                    break;
+                case DETECTAR:
+                    if (enemigosVistos().isEmpty()) {
+                        apuntar(5);
+                        marcarLineaViva(9, 8);
+                    }
+                    break;
+                case APUNTAR_Y_DISPARAR:
                     if (enemigosVistos().isEmpty()) {
                         apuntar(5);
                         marcarLineaViva(9, 8);
@@ -261,15 +322,23 @@ public final class MotorDemostracion {
 
         @Override
         public void alVerEnemigo(Enemigo e) {
-            if (pasoActual().accion != Demostracion.Accion.RADAR_Y_DISPARO) return;
+            Demostracion.Accion a = pasoActual().accion;
+            if (a == Demostracion.Accion.DETECTAR) {
+                enemigoDetectado = true;
+                marcarLineaViva(14, 8);
+                return;
+            }
+            if (a != Demostracion.Accion.APUNTAR_Y_DISPARAR) return;
             enemigoDetectado = true;
             apuntarHacia(e.angulo());
             double error = Math.abs(normalizar(e.angulo() - mira()));
-            if (error < 6) {
+            if (!disparoRealizado && error < 5) {
                 if (atacar()) disparoRealizado = true;
-                marcarLineaViva(16, 14, 15);
+                marcarLineaViva(16, 15, 14);
+            } else if (!disparoRealizado) {
+                marcarLineaViva(15, 14, 16);
             } else {
-                marcarLineaViva(15, 14);
+                marcarLineaViva(16, 15, 14);
             }
         }
     }
@@ -340,12 +409,32 @@ public final class MotorDemostracion {
         return disparoRealizado;
     }
 
+    public boolean impactoRealizado() {
+        return impactoRealizado;
+    }
+
+    public double inicioX() {
+        return inicioX;
+    }
+
+    public double inicioY() {
+        return inicioY;
+    }
+
+    public double inicioRumbo() {
+        return inicioRumbo;
+    }
+
     public double distanciaRecorrida() {
         return distanciaRecorrida;
     }
 
     public double giroAcumulado() {
         return giroAcumulado;
+    }
+
+    public double giroMiraAcumulado() {
+        return giroMiraAcumulado;
     }
 
     public String ultimoError() {

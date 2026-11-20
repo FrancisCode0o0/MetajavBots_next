@@ -11,15 +11,18 @@ import metajavbots.textos.Trilingue;
  * DEMOSTRACIÓN — Modelo reutilizable de una demostración automatizada en vivo:
  * código de ejemplo en los tres idiomas (API activa de ES, DE y EN) y una
  * secuencia de pasos con acciones reales en la arena, líneas resaltadas y
- * explicaciones cortas del entrenador.
+ * explicaciones claras del entrenador.
  */
 public final class Demostracion {
 
     /** Acción que ejecuta el robot de demostración en la arena durante un paso. */
     public enum Accion {
         QUIETO,
-        MOVER_Y_GIRAR,
-        RADAR_Y_DISPARO,
+        AVANZAR,
+        GIRAR,
+        RADAR,
+        DETECTAR,
+        APUNTAR_Y_DISPARAR,
         CIERRE
     }
 
@@ -112,71 +115,205 @@ public final class Demostracion {
                 "Demo 1: So funktioniert das Spiel und dein Roboter",
                 "Demo 1: How the game and your robot work");
         Trilingue resumen = new Trilingue(
-                "Flujo del Taller, mover y girar, radar y disparo, y pausa entre rondas.",
-                "Ablauf in der Werkstatt, Fahren und Drehen, Radar und Schuss, Pause zwischen Runden.",
-                "Workshop flow, move and turn, radar and shot, and the pause between rounds.");
+                "Guía paso a paso desde cero: qué es cada línea del código, qué significa cada número, el radar, los disparos y las rondas.",
+                "Schritt-für-Schritt-Anleitung von Anfang an: was jede Codezeile tut, was jede Zahl bedeutet, Radar, Schüsse und Runden.",
+                "Step-by-step guide from scratch: what each line of code does, what every number means, radar, shooting, and rounds.");
         Trilingue codigo = new Trilingue(codigoDemo1Es(), codigoDemo1De(), codigoDemo1En());
         return new Demostracion(ID_DEMO_1, 1, titulo, resumen, VistaDeArena.Escenario.HANGAR, codigo, pasosDemo1());
     }
 
     private static List<Paso> pasosDemo1() {
         return List.of(
-                new Paso(
-                        "taller",
-                        new Trilingue("El Taller", "Die Werkstatt", "The Workshop"),
-                        new Trilingue(
-                                "Empiezas en el Taller. Escribes tu código a la derecha y lo pruebas.\n"
-                                        + "Si tienes dudas, pulsa F2 para preguntarme.\n"
-                                        + "Cuando acabes, pulsa Ctrl+S para compilar.",
-                                "Du startest in der Werkstatt. Rechts schreibst du deinen Code und testest ihn.\n"
-                                        + "Bei Fragen drückst du F2 und fragst mich.\n"
-                                        + "Wenn du fertig bist, drückst du Strg+S zum Kompilieren.",
-                                "You start in the Workshop. Write your code on the right and test it.\n"
-                                        + "If you get stuck, press F2 to ask me.\n"
-                                        + "When you're ready, press Ctrl+S to compile."),
-                        3, new int[]{5}, false, 0, 0, Accion.QUIETO),
-                new Paso(
-                        "mover_girar",
-                        new Trilingue("Mover y girar", "Fahren und drehen", "Move and turn"),
-                        new Trilingue(
-                                "cadaTurno() se ejecuta todo el rato.\n"
-                                        + "avanzar(120) mueve tu robot hacia delante y girar(12) gira su cuerpo.\n"
-                                        + "Mira cómo cambia de sitio y gira en la arena.",
-                                "jedenZug() läuft die ganze Zeit.\n"
-                                        + "vorwaerts(120) fährt deinen Roboter nach vorn und drehen(12) dreht ihn.\n"
-                                        + "Schau, wie er sich in der Arena bewegt und dreht.",
-                                "onTick() runs over and over.\n"
-                                        + "ahead(120) moves your robot forward and turn(12) turns its body.\n"
-                                        + "Watch it move and turn in the arena."),
-                        6, new int[]{7}, false, 45, 55, Accion.MOVER_Y_GIRAR),
-                new Paso(
-                        "radar_disparo",
-                        new Trilingue("Radar y disparo", "Radar und Schuss", "Radar and shot"),
-                        new Trilingue(
-                                "El cono azul es tu radar. enemigosVistos() mira si hay alguien.\n"
-                                        + "Al detectar al muñeco salta alVerEnemigo(e).\n"
-                                        + "Luego apuntarHacia(e.angulo()) apunta y atacar() dispara.",
-                                "Der blaue Kegel ist dein Radar. gesehen() prüft, ob jemand da ist.\n"
-                                        + "Erkennt es die Puppe, startet beiSicht(e).\n"
-                                        + "Dann zielt zielenNach(e.winkel()) und angreifen() schießt.",
-                                "The blue cone is your radar. seenEnemies() checks if anyone is there.\n"
-                                        + "When it spots the dummy, onSeeEnemy(e) runs.\n"
-                                        + "Then aimTo(e.angle()) aims and attack() shoots."),
-                        15, new int[]{8, 14, 16}, true, 25, 110, Accion.RADAR_Y_DISPARO),
-                new Paso(
-                        "pelear_rondas",
-                        new Trilingue("¡A pelear! y rondas", "Auf in den Kampf! und Runden", "Let's fight! and rounds"),
-                        new Trilingue(
-                                "Con el código compilado, pulsa ¡A pelear!.\n"
-                                        + "Entre cada ronda el juego se pausa solo.\n"
-                                        + "Así ves qué falló, cambias tu código o equipas otras piezas antes de seguir.",
-                                "Ist dein Code kompiliert, drückst du Auf in den Kampf!.\n"
-                                        + "Nach jeder Runde pausiert das Spiel von selbst.\n"
-                                        + "So siehst du, was schiefging, änderst den Code oder tauschst Teile.",
-                                "Once your code compiles, press Let's fight!.\n"
-                                        + "Between every round, the game pauses automatically.\n"
-                                        + "That way you can see what went wrong, edit your code, or swap parts before the next round."),
-                        3, new int[]{5, 14}, true, 0, 0, Accion.CIERRE));
+                paso1IntroJuego(),
+                paso2CadaTurno(),
+                paso3Avanzar(),
+                paso4Girar(),
+                paso5Radar(),
+                paso6VerEnemigo(),
+                paso7ApuntarDisparar(),
+                paso8PelearRondas());
+    }
+
+    private static Paso paso1IntroJuego() {
+        return new Paso(
+                "intro_juego",
+                new Trilingue(
+                        "¿De qué va este juego?",
+                        "Worum geht es in diesem Spiel?",
+                        "What is this game about?"),
+                new Trilingue(
+                        "Aquí no mueves al robot con flechas como un coche teledirigido: tu robot pelea solo.\n"
+                                + "El código de la derecha es su hoja de instrucciones, como una receta de cocina que obedece al pie de la letra.\n"
+                                + "En el Taller escribes tu plan, pulsas Ctrl+S para guardarlo y comprobar que no tiene faltas (compilar), y lo pruebas.\n"
+                                + "Si alguna vez te atascas, pulsa F2 para abrir al entrenador.",
+                        "Hier steuerst du den Roboter nicht mit Pfeiltasten wie ein Fernsteuerauto: Dein Roboter kämpft ganz allein.\n"
+                                + "Der Code rechts ist seine Anleitung, wie ein Kochrezept, das er Schritt für Schritt genau befolgt.\n"
+                                + "In der Werkstatt schreibst du deinen Plan, drückst Strg+S zum Speichern und Prüfen "
+                                + "auf Fehler (Kompilieren) und testest ihn.\n"
+                                + "Wenn du einmal nicht weiterweißt, drücke F2 für deinen Trainer.",
+                        "Here you do not drive your robot with arrow keys like a remote-control car: your robot fights on its own.\n"
+                                + "The code on the right is its instruction sheet, like a recipe that it follows word for word.\n"
+                                + "In the Workshop you write your plan, press Ctrl+S to save and check it for mistakes (compile), and test it.\n"
+                                + "If you ever get stuck, press F2 to open the coach."),
+                3, new int[]{5, 14}, false, 0, 0, Accion.QUIETO);
+    }
+
+    private static Paso paso2CadaTurno() {
+        return new Paso(
+                "cada_turno",
+                new Trilingue(
+                        "El latido del robot: cadaTurno()",
+                        "Der Herzschlag des Roboters: jedenZug()",
+                        "The robot's heartbeat: onTick()"),
+                new Trilingue(
+                        "cadaTurno() es el latido del corazón del robot: mientras dura la pelea, se repite unas 30 veces por segundo.\n"
+                                + "Todo lo que pongas entre sus dos llaves { y } se lee de arriba abajo una y otra vez, sin parar.\n"
+                                + "Cada línea que ves ahí dentro es una orden pequeña que le dice al robot qué hacer en ese instante.",
+                        "jedenZug() ist der Herzschlag deines Roboters: Während des Kampfes wiederholt er sich etwa 30 Mal pro Sekunde.\n"
+                                + "Alles, was zwischen den geschweiften Klammern { und } steht, liest der Roboter immer wieder von oben nach unten.\n"
+                                + "Jede Zeile darin ist ein kurzer Befehl, der dem Roboter sagt, was er gerade tun soll.",
+                        "onTick() is the robot's heartbeat: while the fight lasts, it repeats about 30 times every second.\n"
+                                + "Everything you put between its curly braces { and } is read from top to bottom over and over without stopping.\n"
+                                + "Each line inside is a short order telling the robot what to do right now."),
+                5, new int[]{6, 7, 8, 9, 10, 11}, false, 0, 0, Accion.QUIETO);
+    }
+
+    private static Paso paso3Avanzar() {
+        return new Paso(
+                "avanzar",
+                new Trilingue(
+                        "Avanzar y qué significa el número",
+                        "Vorwärts fahren und was die Zahl bedeutet",
+                        "Moving forward and what the number means"),
+                new Trilingue(
+                        "avanzar(80); le dice al robot que camine hacia adelante. Mira la flecha verde en la arena: acaba de recorrer 80 pasos.\n"
+                                + "El número entre paréntesis dice cuánto: 20 es un pasito corto, 150 es una carrera larga y -50 hace que vaya marcha atrás.\n"
+                                + "El punto y coma ; del final es como el punto de una frase: le avisa al robot «aquí termina esta orden».",
+                        "vorwaerts(80); sagt dem Roboter, dass er nach vorn fahren soll. Schau auf den grünen Pfeil in der Arena: genau 80 Schritte.\n"
+                                + "Die Zahl in Klammern bestimmt das Wie viel: 20 ist ein kleiner Schritt, 150 ein langer Sprint und -50 fährt rückwärts.\n"
+                                + "Das Semikolon ; am Ende ist wie der Punkt am Satzende: Es sagt dem Roboter «Hier endet dieser Befehl».",
+                        "ahead(80); tells the robot to move forward. Look at the green arrow in the arena: it just traveled 80 steps.\n"
+                                + "The number in parentheses says how much: 20 is a tiny step, 150 is a long run, and -50 makes it drive backward.\n"
+                                + "The semicolon ; at the end is like a full stop: it tells the robot \"this order ends here\"."),
+                6, new int[]{5}, false, 18, 45, Accion.AVANZAR);
+    }
+
+    private static Paso paso4Girar() {
+        return new Paso(
+                "girar",
+                new Trilingue(
+                        "Girar y el truco del reloj",
+                        "Drehen und der Uhren-Trick",
+                        "Turning and the clock trick"),
+                new Trilingue(
+                        "girar(45); hace que el cuerpo del robot gire sin moverse del sitio. El número entre paréntesis dice hacia dónde, en grados.\n"
+                                + "Imagina un reloj o una esquina: 90 es girar una esquina entera (como de las 12 a las 3), "
+                                + "180 es dar media vuelta completa y 45 es medio giro suave.\n"
+                                + "Si pones un signo menos, como girar(-45);, gira exactamente lo mismo pero hacia el otro lado.",
+                        "drehen(45); dreht den Körper des Roboters auf der Stelle. Die Zahl in Klammern sagt wohin, gemessen in Grad.\n"
+                                + "Stell dir eine Uhr oder eine Zimmerecke vor: 90 ist eine ganze Ecke (wie von 12 auf 3 Uhr), "
+                                + "180 ist eine halbe Kehrtwende und 45 eine sanfte halbe Drehung.\n"
+                                + "Mit einem Minuszeichen, wie drehen(-45);, dreht er genauso weit, aber zur anderen Seite.",
+                        "turn(45); rotates the robot's body on the spot. The number in parentheses says how far to turn, in degrees.\n"
+                                + "Picture a clock or a room corner: 90 is a full corner turn (like from 12 to 3 on a clock), "
+                                + "180 is a full half-turn around, and 45 is a gentle half-corner.\n"
+                                + "With a minus sign, like turn(-45);, it turns the exact same amount the other way."),
+                7, new int[]{5}, false, 10, 35, Accion.GIRAR);
+    }
+
+    private static Paso paso5Radar() {
+        return new Paso(
+                "radar",
+                new Trilingue(
+                        "Los ojos del robot: el radar",
+                        "Die Augen des Roboters: das Radar",
+                        "The robot's eyes: the radar"),
+                new Trilingue(
+                        "Ese abanico azul en la arena es el radar: es como una linterna invisible. "
+                                + "Fuera de esa luz, el robot está ciego y no sabe dónde está el rival.\n"
+                                + "La línea if (enemigosVistos().isEmpty()) pregunta «¿no veo a nadie todavía?». "
+                                + "Si no ve a nadie, ejecuta apuntar(15);.\n"
+                                + "apuntar(15); gira esa linterna (y los brazos) 15 grados para buscar al rival sin tener que girar todo el cuerpo.",
+                        "Dieser blaue Kegel in der Arena ist das Radar: wie eine unsichtbare Taschenlampe. "
+                                + "Außerhalb dieses Lichts ist der Roboter blind und weiß nicht, wo der Gegner ist.\n"
+                                + "Die Zeile if (gesehen().isEmpty()) fragt «Sehe ich noch niemanden?». "
+                                + "Wenn niemand da ist, läuft zielen(15);.\n"
+                                + "zielen(15); dreht diese Taschenlampe (und die Arme) um 15 Grad, "
+                                + "um den Gegner zu suchen, ohne den ganzen Körper zu drehen.",
+                        "That blue cone in the arena is the radar: think of it as an invisible flashlight. "
+                                + "Outside that beam, your robot is blind and cannot tell where the rival is.\n"
+                                + "The line if (seenEnemies().isEmpty()) asks \"do I see nobody yet?\". "
+                                + "When the answer is yes, it runs aim(15);.\n"
+                                + "aim(15); turns that flashlight (and the arms) 15 degrees to scan for a rival without turning the whole body."),
+                9, new int[]{8, 10}, true, 22, 34, Accion.RADAR);
+    }
+
+    private static Paso paso6VerEnemigo() {
+        return new Paso(
+                "ver_enemigo",
+                new Trilingue(
+                        "¡Enemigo a la vista!",
+                        "Gegner in Sicht!",
+                        "Enemy spotted!"),
+                new Trilingue(
+                        "¡Justo en este instante la luz del radar tocó al muñeco y saltó alVerEnemigo(Enemigo e)!\n"
+                                + "Piensa en alVerEnemigo como una alarma que suena solo cuando tu linterna ilumina a un rival.\n"
+                                + "La letra e es una ficha con los datos del enemigo que acabas de ver: "
+                                + "hacia dónde está (e.angulo()) y a qué distancia (e.distancia()).",
+                        "Genau in diesem Moment traf das Radarlicht die Puppe und löste beiSicht(Gegner e) aus!\n"
+                                + "Stell dir beiSicht wie einen Alarm vor, der genau dann klingelt, wenn deine Taschenlampe einen Gegner anleuchtet.\n"
+                                + "Der Buchstabe e ist wie eine Karteikarte über diesen Gegner: "
+                                + "wohin du zielen musst (e.winkel()) und wie weit er weg ist (e.abstand()).",
+                        "Right at this moment the radar beam touched the dummy and triggered onSeeEnemy(Enemy e)!\n"
+                                + "Think of onSeeEnemy as an alarm bell that rings the instant your flashlight shines on a rival.\n"
+                                + "The letter e is a little card with facts about that rival: "
+                                + "which way they are (e.angle()) and how far away (e.distance())."),
+                14, new int[]{8, 9}, true, 6, 90, Accion.DETECTAR);
+    }
+
+    private static Paso paso7ApuntarDisparar() {
+        return new Paso(
+                "apuntar_disparar",
+                new Trilingue(
+                        "Apuntar y disparar",
+                        "Zielen und schießen",
+                        "Aim and shoot"),
+                new Trilingue(
+                        "Primero apuntarHacia(e.angulo()); gira el arma justo hacia el muñeco, como apuntar una manguera antes de abrir el grifo.\n"
+                                + "Después atacar(); dispara hacia donde estás apuntando. ¡Mira cómo impacta el tiro en el muñeco!\n"
+                                + "Fíjate también en las barras del robot: disparar gasta un poco de energía y el arma necesita un instante para recargar.",
+                        "Zuerst dreht zielenNach(e.winkel()); die Waffe genau auf die Puppe, "
+                                + "so wie du einen Gartenschlauch zielst, bevor du den Hahn aufdrehst.\n"
+                                + "Danach feuert angreifen(); genau dorthin. Schau, wie der Schuss die Puppe trifft!\n"
+                                + "Achte auch auf die Balken deines Roboters: Schießen kostet etwas Energie "
+                                + "und die Waffe braucht einen kurzen Moment zum Nachladen.",
+                        "First aimTo(e.angle()); points the weapon straight at the dummy, like aiming a garden hose before turning on the tap.\n"
+                                + "Then attack(); fires where you are aiming. Watch the shot hit the dummy!\n"
+                                + "Also notice your robot's bars: shooting uses a little energy, and the weapon needs a brief moment to reload."),
+                15, new int[]{14, 16}, true, 12, 110, Accion.APUNTAR_Y_DISPARAR);
+    }
+
+    private static Paso paso8PelearRondas() {
+        return new Paso(
+                "pelear_rondas",
+                new Trilingue(
+                        "Cómo se juega una pelea real",
+                        "So läuft ein echter Kampf",
+                        "How a real fight works"),
+                new Trilingue(
+                        "Ya conoces el ciclo completo del juego: en el Taller escribes tu hoja de instrucciones y la pruebas contra el muñeco.\n"
+                                + "Pulsas Ctrl+S para guardarla y comprobar que no hay errores, y luego vas a ¡A pelear! contra rivales de verdad.\n"
+                                + "Entre cada ronda la pelea se pausa sola: así ves qué salió mal, "
+                                + "cambias líneas de tu código o pones piezas nuevas y vuelves a intentarlo.",
+                        "Jetzt kennst du den ganzen Ablauf: In der Werkstatt schreibst du deine Anleitung und testest sie an der Puppe.\n"
+                                + "Du drückst Strg+S zum Speichern und Prüfen und gehst dann auf Auf in den Kampf! gegen echte Gegner.\n"
+                                + "Zwischen den Runden pausiert der Kampf von selbst: So siehst du, was schiefging, "
+                                + "änderst Codezeilen oder baust neue Teile ein und probierst es erneut.",
+                        "Now you know the full game loop: in the Workshop you write your instruction sheet and test it against the dummy.\n"
+                                + "Press Ctrl+S to save and check it, then head to Let's fight! against real rivals.\n"
+                                + "Between every round the fight pauses on its own: you can see what went wrong, "
+                                + "tweak lines of code or swap parts, and try again."),
+                3, new int[]{5, 14, 15, 16}, true, 0, 0, Accion.CIERRE);
     }
 
     private static String codigoDemo1Es() {
@@ -185,8 +322,8 @@ public final class Demostracion {
                 + "public class MiRobot extends Metajavbot {\n"
                 + "    @Override\n"
                 + "    public void cadaTurno() {\n"
-                + "        avanzar(120);\n"
-                + "        girar(12);\n"
+                + "        avanzar(80);\n"
+                + "        girar(45);\n"
                 + "        if (enemigosVistos().isEmpty()) {\n"
                 + "            apuntar(15);\n"
                 + "        }\n"
@@ -206,8 +343,8 @@ public final class Demostracion {
                 + "public class MeinRoboter extends MetajavbotDe {\n"
                 + "    @Override\n"
                 + "    public void jedenZug() {\n"
-                + "        vorwaerts(120);\n"
-                + "        drehen(12);\n"
+                + "        vorwaerts(80);\n"
+                + "        drehen(45);\n"
                 + "        if (gesehen().isEmpty()) {\n"
                 + "            zielen(15);\n"
                 + "        }\n"
@@ -227,8 +364,8 @@ public final class Demostracion {
                 + "public class MyRobot extends MetajavbotEn {\n"
                 + "    @Override\n"
                 + "    public void onTick() {\n"
-                + "        ahead(120);\n"
-                + "        turn(12);\n"
+                + "        ahead(80);\n"
+                + "        turn(45);\n"
                 + "        if (seenEnemies().isEmpty()) {\n"
                 + "            aim(15);\n"
                 + "        }\n"
