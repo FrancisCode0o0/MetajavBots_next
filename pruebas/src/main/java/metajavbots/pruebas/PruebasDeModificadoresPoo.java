@@ -124,8 +124,8 @@ final class PruebasDeModificadoresPoo {
                     + "public class BotStaticEquipo extends Metajavbot {\n"
                     + "    private static int senal = 0;\n"
                     + "    @Override public void cadaTurno() {\n"
-                    + "        if (turnoActual() == 1 && senal == 0) senal = 77;\n"
-                    + "        if (turnoActual() == 2) memoria().put(\"senal\", senal);\n"
+                    + "        if (turnoActual() == 0 && senal == 0) senal = 77;\n"
+                    + "        if (turnoActual() == 1) memoria().put(\"senal\", senal);\n"
                     + "    }\n"
                     + "}\n";
             RobotDelJugador rj = compilar(codigo);

@@ -52,7 +52,7 @@ final class PruebasDeArquetipos {
     public static class PruebaAsalto extends Metajavbot {
         @Override
         public void cadaTurno() {
-            if (turnoActual() == 1) {
+            if (turnoActual() == 0) {
                 memoria().put("arq", arquetipo());
                 memoria().put("ok1", embestir());
                 memoria().put("ok2", embestir());
@@ -64,7 +64,7 @@ final class PruebasDeArquetipos {
     public static class PruebaTactico extends Metajavbot {
         @Override
         public void cadaTurno() {
-            if (turnoActual() == 1) {
+            if (turnoActual() == 0) {
                 memoria().put("arq", arquetipo());
                 memoria().put("antes", enemigosVistos().size());
                 boolean ok = pulsoRadar();
@@ -78,7 +78,7 @@ final class PruebasDeArquetipos {
     public static class PruebaDefensor extends Metajavbot {
         @Override
         public void cadaTurno() {
-            if (turnoActual() == 1) {
+            if (turnoActual() == 0) {
                 avanzar(120);
                 memoria().put("arq", arquetipo());
                 memoria().put("ok", fortificar());
@@ -91,7 +91,7 @@ final class PruebasDeArquetipos {
     public static class PruebaDe extends MetajavbotDe {
         @Override
         public void jedenZug() {
-            if (zug() == 1) {
+            if (zug() == 0) {
                 gedaechtnis().put("arq", archetyp());
                 gedaechtnis().put("asalto", ansturm());
                 gedaechtnis().put("tactico", radarImpuls());
@@ -104,7 +104,7 @@ final class PruebasDeArquetipos {
     public static class PruebaEn extends MetajavbotEn {
         @Override
         public void onTick() {
-            if (tick() == 1) {
+            if (tick() == 0) {
                 memory().put("arq", archetype());
                 memory().put("asalto", charge());
                 memory().put("tactico", radarPulse());

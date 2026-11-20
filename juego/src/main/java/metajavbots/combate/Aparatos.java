@@ -255,7 +255,7 @@ public final class Aparatos {
     /** Un turno: sale el aparato, se coge al tocarlo, se monta y se recarga; la llama del lanzallamas quema. */
     void turno(Pelea p) {
         if (!activos) return;
-        if (p.turno() == SALE && siguiente != null) salir(p);
+        if (p.turno() == SALE - 1 && siguiente != null) salir(p);
         for (Uno a : todos) {
             if (a.recarga > 0) a.recarga--;
             if (a.activo > 0) a.activo--;

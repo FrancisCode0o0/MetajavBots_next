@@ -113,6 +113,24 @@ final class PruebasDeLaPelea {
         }
     }
 
+    /** Registra el valor de turnoActual() en alEmpezar() y en cadaTurno(). */
+    public static class Cronometrador extends Metajavbot {
+        @Override
+        public void alEmpezar() {
+            memoria().put("inicio", turnoActual());
+            memoria().put("turnos", new java.util.ArrayList<Integer>());
+            memoria().put("periodicos", new java.util.ArrayList<Integer>());
+        }
+
+        @Override
+        @SuppressWarnings("unchecked")
+        public void cadaTurno() {
+            int t = turnoActual();
+            ((java.util.List<Integer>) memoria().get("turnos")).add(t);
+            if (t % 45 == 0) ((java.util.List<Integer>) memoria().get("periodicos")).add(t);
+        }
+    }
+
     /** Recorre enemigosVistos() con un bucle for-each para apuntar al enemigo más cercano. */
     public static class CazadorConBucle extends Metajavbot {
         @Override
@@ -186,6 +204,7 @@ final class PruebasDeLaPelea {
         apuntarArenas();
         apuntarAparatos();
         apuntarRondas();
+        apuntarTurnoBaseCero();
         apuntarFrecuenciaMultiples();
         apuntarSimulacionMultiples();
         apuntarAvisoMultiplesObjetivos();
@@ -208,6 +227,42 @@ final class PruebasDeLaPelea {
                     else cierto(total < 99.9 && total >= 49.9, "con 12 rondas arrastra el daño (" + total + ")");
                 }
             }
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void apuntarTurnoBaseCero() {
+        caso("turnoActual(): base 0 real en alEmpezar(), cadaTurno(), módulo 45, RONDA_EMPIEZA y duración de ronda", () -> {
+            Modelo m = Modelo.de("cobalto");
+            Pelea p = new Pelea(con("a", m, de(Cronometrador::new)), con("b", m, de(Cronometrador::new)), 19);
+            p.empezarRonda();
+            igual(0, p.combatientes[0].memoria.get("inicio"), "alEmpezar() observa turnoActual() == 0");
+            igual(0, p.turno(), "tras empezarRonda() el contador es 0");
+            cierto(p.sucesos().stream().anyMatch(s -> s.tipo == metajavbots.combate.Suceso.Tipo.RONDA_EMPIEZA),
+                    "RONDA_EMPIEZA presente tras empezarRonda()");
+
+            p.avanzar();
+            java.util.List<Integer> turnos = (java.util.List<Integer>) p.combatientes[0].memoria.get("turnos");
+            java.util.List<Integer> periodicos = (java.util.List<Integer>) p.combatientes[0].memoria.get("periodicos");
+            igual(1, turnos.size(), "tras 1 avanzar() hubo 1 cadaTurno()");
+            igual(0, turnos.get(0), "el primer cadaTurno() observa 0");
+            igual(1, periodicos.size(), "turnoActual() % 45 == 0 se activa en el primer turno");
+            igual(0, periodicos.get(0), "primer múltiplo periódico observado es 0");
+            cierto(p.sucesos().stream().anyMatch(s -> s.tipo == metajavbots.combate.Suceso.Tipo.RONDA_EMPIEZA),
+                    "RONDA_EMPIEZA sigue presente en el primer tick");
+
+            p.avanzar();
+            igual(2, turnos.size(), "tras 2 avanzar() hubo 2 cadaTurno()");
+            igual(1, turnos.get(1), "el segundo cadaTurno() observa 1");
+            igual(1, periodicos.size(), "en el turno 1 no se activa % 45");
+            cierto(p.sucesos().stream().noneMatch(s -> s.tipo == metajavbots.combate.Suceso.Tipo.RONDA_EMPIEZA),
+                    "RONDA_EMPIEZA se limpia en el segundo tick");
+
+            while (p.estado() == Pelea.Estado.LUCHANDO) p.avanzar();
+            igual(p.turnosPorRonda, turnos.size(), "una ronda completa ejecuta exactamente turnosPorRonda ticks");
+            igual(p.turnosPorRonda - 1, turnos.get(turnos.size() - 1), "el último tick observado es turnosPorRonda - 1");
+            igual(p.turnosPorRonda, p.turno(), "al acabar la ronda p.turno() == turnosPorRonda");
+            igual(p.turnosPorRonda, p.informe(0).turnos, "el informe registra exactamente turnosPorRonda turnos");
         });
     }
 

@@ -231,7 +231,6 @@ public final class Pelea {
     public void avanzar() {
         if (estado != Estado.LUCHANDO) return;
         if (turno > 0) sucesosDelTurno.clear();
-        turno++;
         int n = cuerpos.length;
         // 1) Lo que ve cada uno (una foto del principio del turno): sus enemigos a la vista y sus compañeros.
         for (Cuerpo c : cuerpos) actualizarVistos(c);
@@ -248,6 +247,7 @@ public final class Pelea {
         for (Rayo r : rayos) r.vida--;
         rayos.removeIf(r -> r.vida <= 0);
         // 4) ¿Acaba la ronda? Al acabarse el tiempo, o cuando solo queda en pie un equipo.
+        turno++;
         if (turno >= turnosPorRonda || equiposEnPie() <= 1) acabarRonda();
     }
 
