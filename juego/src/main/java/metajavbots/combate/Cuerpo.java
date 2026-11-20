@@ -25,6 +25,15 @@ import metajavbots.textos.T;
  */
 public final class Cuerpo implements Mando {
 
+    /** Motivo por el que el robot no pudo usar su código en el turno actual. */
+    public enum EstadoPensamiento {
+        EJECUTADO,
+        ATURDIDO,
+        DEUDA_TOPE,
+        FUERA_DE_COMBATE,
+        SIN_CODIGO
+    }
+
     /** Límites de equilibrio anti-abuso para cadencia, recarga, energía y movilidad en combate. */
     public static final int MIN_ENFRIAMIENTO = 3;
     public static final int MAX_ENFRIAMIENTO = 600;
@@ -87,6 +96,9 @@ public final class Cuerpo implements Mando {
     /** Las órdenes pedidas en el último turno que pensó y si alguna fue pisada (para el depurador F9). */
     public List<OrdenDelTurno> ordenesDelTurno = List.of();
     public boolean tieneConflictoDeOrdenes;
+    public EstadoPensamiento estadoPensamiento = EstadoPensamiento.EJECUTADO;
+    /** El turno que acaba de recibir el código del robot (desde 0). */
+    public int turnoPensado;
     private final List<OrdenDelTurno> ordenesEnCurso = new ArrayList<>();
     private String metodoActual = "";
     private int invocacionActual;
@@ -115,7 +127,18 @@ public final class Cuerpo implements Mando {
             parte[i] = bl;
             parteMax[i] = bl;
         }
+        limpiarTelemetriaDeTurno(EstadoPensamiento.EJECUTADO);
         this.azar = new Random(semilla);
+    }
+
+    /** Restablece la telemetría visible del turno y registra por qué no hubo ejecución normal. */
+    public void limpiarTelemetriaDeTurno(EstadoPensamiento estado) {
+        pasosDelTurno = 0;
+        lineasDelTurno.clear();
+        ultimaLinea = -1;
+        ordenesDelTurno = new ArrayList<>();
+        tieneConflictoDeOrdenes = false;
+        estadoPensamiento = estado;
     }
 
     /** Coloca los cuerpos al empezar una ronda: 1v1, 1 contra varios en formación o corro por equipos. */
@@ -212,7 +235,7 @@ public final class Cuerpo implements Mando {
 
     @Override
     public int turno() {
-        return pelea.turno();
+        return turnoPensado;
     }
 
     @Override

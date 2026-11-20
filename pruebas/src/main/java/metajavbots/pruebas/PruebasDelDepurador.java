@@ -31,6 +31,74 @@ final class PruebasDelDepurador {
         apuntarPisada();
         apuntarSinFalsosPositivos();
         apuntarDetenerYTextos();
+        apuntarLimpiezaDeEstados();
+        apuntarTurnoMostrado();
+    }
+
+    private static void apuntarLimpiezaDeEstados() {
+        caso("depurador: aturdido limpia la telemetría del turno", () -> {
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotAturdido extends Metajavbot {\n"
+                    + "    @Override public void cadaTurno() { avanzar(40); }\n"
+                    + "}\n", 19);
+            Cuerpo c = p.cuerpo(0);
+            p.avanzar();
+            cierto(c.pasosDelTurno > 0, "el primer turno ejecuta código");
+            c.aturdido = 1;
+            p.avanzar();
+            igual(0L, c.pasosDelTurno, "pasos limpiados");
+            cierto(c.lineasDelTurno.isEmpty(), "líneas limpias");
+            cierto(c.ordenesDelTurno.isEmpty(), "órdenes limpias");
+            falso(c.tieneConflictoDeOrdenes, "conflicto limpio");
+            igual(Cuerpo.EstadoPensamiento.ATURDIDO, c.estadoPensamiento, "estado aturdido");
+        });
+
+        caso("depurador: deuda de tope limpia la telemetría del turno", () -> {
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotDeuda extends Metajavbot {\n"
+                    + "    @Override public void cadaTurno() { avanzar(20); }\n"
+                    + "}\n", 23);
+            Cuerpo c = p.cuerpo(0);
+            p.avanzar();
+            c.deuda = 1;
+            p.avanzar();
+            igual(0L, c.pasosDelTurno, "pasos limpiados por deuda");
+            cierto(c.lineasDelTurno.isEmpty(), "líneas limpias por deuda");
+            cierto(c.ordenesDelTurno.isEmpty(), "órdenes limpias por deuda");
+            falso(c.tieneConflictoDeOrdenes, "conflicto limpio por deuda");
+            igual(Cuerpo.EstadoPensamiento.DEUDA_TOPE, c.estadoPensamiento, "estado de deuda");
+        });
+
+        caso("depurador: fuera de combate limpia la telemetría del turno", () -> {
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotFuera extends Metajavbot {\n"
+                    + "    @Override public void cadaTurno() { avanzar(20); }\n"
+                    + "}\n", 29);
+            Cuerpo c = p.cuerpo(0);
+            p.avanzar();
+            c.fuera = true;
+            p.avanzar();
+            igual(0L, c.pasosDelTurno, "pasos limpiados al salir");
+            cierto(c.lineasDelTurno.isEmpty(), "líneas limpias al salir");
+            cierto(c.ordenesDelTurno.isEmpty(), "órdenes limpias al salir");
+            falso(c.tieneConflictoDeOrdenes, "conflicto limpio al salir");
+            igual(Cuerpo.EstadoPensamiento.FUERA_DE_COMBATE, c.estadoPensamiento, "estado fuera de combate");
+        });
+    }
+
+    private static void apuntarTurnoMostrado() {
+        caso("depurador: el turno mostrado coincide con el visto por el robot tras el primer tick", () -> {
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotTurno extends Metajavbot {\n"
+                    + "    public int turnoVisto;\n"
+                    + "    @Override public void cadaTurno() { turnoVisto = turnoActual(); }\n"
+                    + "}\n", 31);
+            Cuerpo c = p.cuerpo(0);
+            igual(0, c.turno(), "turno inicial");
+            p.avanzar();
+            igual(0, c.turno(), "turno mostrado tras el primer tick");
+            igual(0, c.turnoPensado, "turno ejecutado registrado");
+        });
     }
 
     private static void apuntarTraza() {
@@ -178,7 +246,9 @@ final class PruebasDelDepurador {
             String[] claves = {
                     "pelea.depurador_vars", "pelea.depurador_codigo", "pelea.depurador_traza",
                     "pelea.depurador_ordenes", "pelea.depurador_sin_ordenes", "pelea.depurador_sin_traza",
-                    "pelea.depurador_pisado_linea", "pelea.depurador_pisado"};
+                    "pelea.depurador_pisado_linea", "pelea.depurador_pisado",
+                    "pelea.estado_aturdido", "pelea.estado_deuda_tope",
+                    "pelea.estado_fuera", "pelea.estado_sin_codigo"};
             Idioma antes = T.idioma;
             try {
                 for (Idioma id : Idioma.values()) {
