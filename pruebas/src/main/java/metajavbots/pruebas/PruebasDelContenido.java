@@ -6,6 +6,9 @@ import static metajavbots.pruebas.Pruebas.falso;
 import static metajavbots.pruebas.Pruebas.igual;
 
 import java.io.IOException;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
+import java.lang.reflect.Type;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ final class PruebasDelContenido {
         apuntarArmasEspeciales();
         apuntarPistasReferencia();
         apuntarDepuracionYTesting();
+        apuntarParidadDeFachadas();
     }
 
     private static void apuntarPistasReferencia() {
@@ -550,5 +554,43 @@ final class PruebasDelContenido {
             igual(List.of("especial.rotos", "especial.laboratorio"), metajavbots.pantallas.DepuracionYTesting.CLAVES_PESTANAS,
                     "DepuracionYTesting agrupa robots rotos y laboratorio");
         });
+    }
+
+    private static void apuntarParidadDeFachadas() {
+        caso("API trilingüe: Metajavbot, MetajavbotDe y MetajavbotEn declaran las mismas firmas públicas", () -> {
+            List<String> es = firmasPublicas(metajavbots.api.Metajavbot.class);
+            List<String> de = firmasPublicas(metajavbots.api.MetajavbotDe.class);
+            List<String> en = firmasPublicas(metajavbots.api.MetajavbotEn.class);
+            igual(es.size(), de.size(), "número de métodos públicos es/de");
+            igual(es.size(), en.size(), "número de métodos públicos es/en");
+            igual(firmasOrdenadas(es), firmasOrdenadas(de), "firmas normalizadas es/de");
+            igual(firmasOrdenadas(es), firmasOrdenadas(en), "firmas normalizadas es/en");
+        });
+    }
+
+    /** Firmas públicas declaradas (retorno y parámetros), con los nombres de tipo de las tres fachadas unificados. */
+    private static List<String> firmasPublicas(Class<?> tipo) {
+        List<String> firmas = new ArrayList<>();
+        for (Method m : tipo.getDeclaredMethods()) {
+            if (!Modifier.isPublic(m.getModifiers()) || m.isSynthetic()) continue;
+            List<String> parametros = new ArrayList<>();
+            for (Type p : m.getGenericParameterTypes()) parametros.add(tipoNormalizado(p.getTypeName()));
+            firmas.add(tipoNormalizado(m.getGenericReturnType().getTypeName()) + "(" + String.join(",", parametros) + ")");
+        }
+        return firmas;
+    }
+
+    private static List<String> firmasOrdenadas(List<String> firmas) {
+        List<String> copia = new ArrayList<>(firmas);
+        copia.sort(null);
+        return copia;
+    }
+
+    private static String tipoNormalizado(String tipo) {
+        String t = tipo.replace("metajavbots.api.", "");
+        t = t.replaceAll("\\bEnemigo\\b|\\bGegner\\b|\\bEnemy\\b", "Enemigo");
+        t = t.replaceAll("\\bGolpe\\b|\\bTreffer\\b|\\bHit\\b", "Golpe");
+        t = t.replaceAll("\\bObstaculo\\b|\\bHindernis\\b|\\bObstacle\\b", "Obstaculo");
+        return t.replaceAll("\\bAparato\\b|\\bGeraet\\b|\\bGadget\\b", "Aparato");
     }
 }

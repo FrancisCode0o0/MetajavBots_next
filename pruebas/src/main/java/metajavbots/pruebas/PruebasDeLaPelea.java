@@ -145,15 +145,15 @@ final class PruebasDeLaPelea {
             }
         }
     }
-    /** Verifica geseheneGegner() en alemán. */
+    /** Verifica gesehen() en alemán. */
     public static class JaegerMitSchleife extends MetajavbotDe {
         @Override
         public void jedenZug() {
             int max = (int) gedaechtnis().getOrDefault("maxVistos", 0);
-            int vistos = geseheneGegner().size();
+            int vistos = gesehen().size();
             if (vistos > max) gedaechtnis().put("maxVistos", vistos);
             Gegner ziel = null;
-            for (Gegner g : geseheneGegner()) {
+            for (Gegner g : gesehen()) {
                 if (ziel == null || g.entfernung() < ziel.entfernung()) ziel = g;
             }
             if (ziel != null) {
@@ -680,7 +680,7 @@ final class PruebasDeLaPelea {
             cierto(p.tieneMultiplesObjetivos(), "detecta múltiples objetivos");
             igual(3, p.enemigosDe(0), "tres objetivos rivales");
             p.empezarRonda();
-            // Al acercarlos dentro del radar, los tres aparecen a la vez en enemigosVistos() / geseheneGegner() / seenEnemies().
+            // Al acercarlos dentro del radar, los tres aparecen a la vez en enemigosVistos() / gesehen() / seenEnemies().
             metajavbots.combate.Cuerpo yo = p.cuerpo(0);
             yo.x = 200;
             yo.y = 350;
@@ -698,7 +698,7 @@ final class PruebasDeLaPelea {
             cierto((int) jugadorEs.memoria.getOrDefault("maxVistos", 0) >= 2, "el bucle sobre enemigosVistos() vio varios objetivos");
             cierto(jugadorEs.danoTotalHecho > 0, "el jugador hace daño en pelea múltiple");
 
-            // También en alemán (geseheneGegner) e inglés (seenEnemies) con encuentro generado en SENIOR.
+            // También en alemán (gesehen) e inglés (seenEnemies) con encuentro generado en SENIOR.
             Combatiente jugDe = con("de", Modelo.de("vigia"), de(JaegerMitSchleife::new));
             Pelea pDe = Pelea.contraMultiples(jugDe, java.util.List.of(
                     Rivales.ligero(Modelo.de("chispa"), 0.5, 0.5, new Random(1), 2),
@@ -712,7 +712,7 @@ final class PruebasDeLaPelea {
             pDe.cuerpo(2).x = 420;
             pDe.cuerpo(2).y = 370;
             pDe.avanzar();
-            cierto((int) jugDe.memoria.getOrDefault("maxVistos", 0) >= 2, "geseheneGegner() ve varios objetivos");
+            cierto((int) jugDe.memoria.getOrDefault("maxVistos", 0) >= 2, "gesehen() ve varios objetivos");
             pDe.jugarEntera();
             igual(Pelea.Estado.TERMINADA, pDe.estado(), "pelea DE termina limpiamente");
 
@@ -741,7 +741,7 @@ final class PruebasDeLaPelea {
             String conBucleEs = "public class MiRobot extends Metajavbot { @Override public void cadaTurno() { "
                     + "for (Enemigo e : enemigosVistos()) { apuntarHacia(e.angulo()); } } }";
             String conBucleDe = "public class MeinRoboter extends MetajavbotDe { @Override public void jedenZug() { "
-                    + "for (Gegner g : geseheneGegner()) { zielenNach(g.winkel()); } } }";
+                    + "for (Gegner g : gesehen()) { zielenNach(g.winkel()); } } }";
             String conBucleEn = "public class MyRobot extends MetajavbotEn { @Override public void onTick() { "
                     + "for (Enemy e : seenEnemies()) { aimTo(e.angle()); } } }";
 
