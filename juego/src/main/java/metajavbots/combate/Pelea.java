@@ -236,7 +236,7 @@ public final class Pelea {
         // 2) El código de cada uno (empieza uno distinto cada turno, para que nadie vaya siempre primero).
         for (int k = 0; k < n; k++) pensar(cuerpos[(turno + k) % n]);
         // 3) Los ataques, el movimiento, los choques, los proyectiles.
-        for (Cuerpo c : cuerpos) atacar(c, objetivo(c));
+        for (Cuerpo c : cuerpos) atacar(c);
         for (Cuerpo c : cuerpos) mover(c);
         for (int i = 0; i < n; i++) for (int k = i + 1; k < n; k++) chocar(cuerpos[i], cuerpos[k]);
         arena.turno(this);
@@ -254,25 +254,6 @@ public final class Pelea {
         java.util.Set<Integer> e = new java.util.HashSet<>();
         for (Cuerpo c : cuerpos) if (!c.fuera) e.add(c.equipo);
         return e.size();
-    }
-
-    /** El enemigo al que apunta: el que queda más cerca de la mira (y, a igualdad, el más cercano). */
-    Cuerpo objetivo(Cuerpo c) {
-        Cuerpo mejor = null;
-        double nota = Double.MAX_VALUE;
-        for (Cuerpo e : cuerpos) {
-            if (e == c || e.equipo == c.equipo || e.fuera) continue;
-            double d = Math.hypot(e.x - c.x, e.y - c.y);
-            double ang = Math.abs(normal(Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x)) - c.mira));
-            double v = ang * 6 + d * 0.05;
-            if (v < nota) {
-                nota = v;
-                mejor = e;
-            }
-        }
-        if (mejor != null) return mejor;
-        for (Cuerpo e : cuerpos) if (e != c && e.equipo != c.equipo) return e;
-        return c;
     }
 
     /** El golpe de un arma especial (la cuenta atrás de la pantalla de la pelea): daño de «de» a «a», con su suceso. */
@@ -499,7 +480,7 @@ public final class Pelea {
 
     // ================================================================ atacar
 
-    private void atacar(Cuerpo c, Cuerpo enemigo) {
+    private void atacar(Cuerpo c) {
         for (int brazo = 0; brazo < 3; brazo++) {
             if (!c.pedido[brazo]) continue;
             c.pedido[brazo] = false;
@@ -509,7 +490,7 @@ public final class Pelea {
             c.ultimoAtaque = turno;
             c.brazoDelUltimoAtaque = brazo;
             if (brazo == Cuerpo.CABEZA) armas.especial(c, p);
-            else armas.usar(c, enemigo, p, brazo);
+            else armas.usar(c, p, brazo);
         }
     }
 
@@ -783,11 +764,7 @@ public final class Pelea {
 
     /** Lleva un ángulo a (-180, 180]. */
     public static double normal(double g) {
-        if (Double.isNaN(g) || Double.isInfinite(g)) return 0;
-        g %= 360;
-        if (g > 180) g -= 360;
-        if (g <= -180) g += 360;
-        return g;
+        return Puente.normalizado(g);
     }
 
     /** Juega la pelea entera de una vez (para las pruebas y para las peleas de práctica rápidas). */

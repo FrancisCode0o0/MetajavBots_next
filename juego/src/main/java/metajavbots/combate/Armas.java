@@ -122,7 +122,7 @@ public final class Armas {
     }
 
     /** Ataca con el arma de un brazo (láser, balas, misiles, golpe, llamas, escudo o reparar). */
-    void usar(Cuerpo c, Cuerpo e, Pieza p, int brazo) {
+    void usar(Cuerpo c, Pieza p, int brazo) {
         Combatiente.Informe inf = pelea.informe(c.indice);
         double sobre = c.sobrecarga > 0 ? factorSeguro(c.factorSobrecarga) : 1;
         double[] boca = boca(c, brazo);

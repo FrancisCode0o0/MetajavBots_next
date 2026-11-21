@@ -9,6 +9,11 @@ public final class Puente {
     private Puente() {
     }
 
+    /** Lleva un ángulo a (-180, 180]. */
+    public static double normalizado(double grados) {
+        return RobotBase.normalizado(grados);
+    }
+
     public static void conectar(RobotBase r, Mando m) {
         r.mando = m;
     }

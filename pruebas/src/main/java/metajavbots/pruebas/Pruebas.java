@@ -48,6 +48,7 @@ public final class Pruebas {
         PruebasDeAlarmaYFuentes.apuntar();
         PruebasDeAparatos.apuntar();
         PruebasDeDemostraciones.apuntar();
+        PruebasDeNormalizacion.apuntar();
 
         List<String> fallos = new ArrayList<>();
         int pasados = 0;
