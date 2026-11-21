@@ -98,20 +98,20 @@ final class Demo2Orden {
                         "Was Zug für Zug passiert",
                         "What happens tick by tick"),
                 new Trilingue(
-                        "En cada turno, el robot sigue siempre este orden exacto: primero ejecuta alVerEnemigo(Enemigo e) si su radar ve un rival, "
-                                + "y justo después ejecuta cadaTurno().\n"
-                                + "Por eso, en el mismo turno, la línea 6 apunta al muñeco con apuntarHacia(e.angulo());, "
-                                + "pero la línea 15 (apuntar(25);) se ejecuta detrás y borra esa orden girando la mira hacia la izquierda.\n"
+                        "En cada turno, el motor ejecuta los avisos en este orden real: alRecibirGolpe, alAcertar, alChocarConPared, "
+                                + "alChocarConEnemigo y alOirAlEquipo; después alVerEnemigo(Enemigo e) por cada rival visible y, al final, cadaTurno().\n"
+                                + "Por eso, en el mismo turno, la línea 6 apunta con apuntarHacia(e.angulo());, "
+                                + "pero la línea 15 (apuntar(25);) corre después dentro de cadaTurno() y pisa esa orden antes del disparo y el movimiento.\n"
                                 + "Es como apuntar con una linterna a un amigo y apartar la mano justo antes de hacer la foto.",
-                        "In jedem Zug hält sich der Roboter genau an diese Reihenfolge: Zuerst läuft beiSicht(Gegner e), "
-                                + "wenn sein Radar einen Gegner sieht, und direkt danach läuft jedenZug().\n"
+                        "In jedem Zug ruft die Engine die Ereignisse genau in dieser Reihenfolge auf: beiTreffer, beiEigenemTreffer, beiWand, "
+                                + "beiZusammenstoss und beiTeamNachricht; danach beiSicht(Gegner e) für jeden sichtbaren Gegner und zuletzt jedenZug().\n"
                                 + "Deshalb zielt Zeile 6 mit zielenNach(e.winkel()); auf die Puppe, "
-                                + "aber Zeile 15 (zielen(25);) läuft danach und überschreibt diesen Befehl, indem sie das Visier weiter nach links dreht.\n"
+                                + "aber Zeile 15 (zielen(25);) läuft später in jedenZug() und überschreibt diesen Befehl vor Angriff und Bewegung.\n"
                                 + "Das ist, als würdest du mit einer Taschenlampe auf einen Freund leuchten und genau vor dem Foto die Hand wegdrehen.",
-                        "On every tick, the robot always follows this exact order: first it runs onSeeEnemy(Enemy e) if its radar sees a rival, "
-                                + "and right after that it runs onTick().\n"
-                                + "So in the very same tick, line 6 aims at the dummy with aimTo(e.angle());, "
-                                + "but line 15 (aim(25);) runs right after it and erases that order by spinning the aim to the left.\n"
+                        "On every tick, the engine runs callbacks in this exact order: onHit, onHitEnemy, onHitWall, "
+                                + "onBump, and onTeamMessage; then onSeeEnemy(Enemy e) for each visible rival, and finally onTick().\n"
+                                + "So in the very same tick, line 6 aims with aimTo(e.angle());, "
+                                + "but line 15 (aim(25);) runs afterward inside onTick() and overwrites that order before attacks and movement.\n"
                                 + "It is like shining a flashlight on a friend and jerking your hand away right before taking the picture."),
                 15, new int[]{5, 6, 11}, true, 0, 0, Accion.ORDEN_TURNO, Resaltado.AVISO, null);
     }
@@ -126,17 +126,18 @@ final class Demo2Orden {
                 new Trilingue(
                         "¡Mira la línea 14 en verde! Hemos subido apuntar(25); una sola línea para meterla dentro de las llaves ({}) "
                                 + "de if (enemigosVistos().isEmpty()).\n"
-                                + "Ahora el robot solo avanza 40 pasos y gira el radar 25 grados a la izquierda cuando no ve a nadie.\n"
+                                + "Ahora el robot solo pide avanzar 40 unidades y gira el radar 25 grados a la izquierda cuando no ve a nadie.\n"
                                 + "En cuanto aparece el muñeco, cadaTurno() deja de girar la mira y alVerEnemigo() trabaja en orden lógico: "
                                 + "primero apunta con apuntarHacia(e.angulo()); y luego dispara con atacar();.",
                         "Schau auf die grün markierte Zeile 14! Wir haben zielen(25); nur eine Zeile nach oben geschoben, "
                                 + "mitten in die geschweiften Klammern ({}) von if (gesehen().isEmpty()).\n"
-                                + "Jetzt fährt der Roboter nur dann 40 Schritte vorwärts und dreht das Radar um 25 Grad nach links, wenn er niemanden sieht.\n"
+                                + "Jetzt fordert der Roboter nur dann 40 Einheiten Vorwärtsfahrt an und dreht das Radar um 25 Grad nach links, "
+                                + "wenn er niemanden sieht.\n"
                                 + "Sobald die Puppe auftaucht, hört jedenZug() auf zu drehen, und beiSicht() arbeitet in logischer Reihenfolge: "
                                 + "zuerst zielen mit zielenNach(e.winkel());, dann schießen mit angreifen();.",
                         "Look at line 14 highlighted in green! We moved aim(25); up by just one line so it sits inside the curly braces ({}) "
                                 + "of if (seenEnemies().isEmpty()).\n"
-                                + "Now the robot only moves forward 40 steps and sweeps the radar 25 degrees left when it sees nobody.\n"
+                                + "Now the robot only requests 40 units forward and sweeps the radar 25 degrees left when it sees nobody.\n"
                                 + "The instant the dummy appears, onTick() stops spinning the aim, and onSeeEnemy() works in logical order: "
                                 + "first aim with aimTo(e.angle());, then shoot with attack();."),
                 14, new int[]{6, 7, 12}, true, 0, 0, Accion.CORREGIR_LINEA, Resaltado.BIEN, codigoFijo);

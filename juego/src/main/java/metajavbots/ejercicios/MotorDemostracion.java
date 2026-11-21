@@ -445,6 +445,11 @@ public final class MotorDemostracion {
         return demo.pasos.size();
     }
 
+    /** Turnos reales de simulación ejecutados dentro del paso actual. */
+    public int turnosEnPaso() {
+        return turnosEnPaso;
+    }
+
     public boolean pausado() {
         return pausado;
     }

@@ -372,9 +372,9 @@ public final class PantallaDemostracion implements Pantalla {
 
     private void dibujarIndicadorOrdenTurno(Pincel p, float ax, float ay, float aw, float tl) {
         String txt = idioma.elegir(
-                "1. alVerEnemigo() → 2. cadaTurno()",
-                "1. beiSicht() → 2. jedenZug()",
-                "1. onSeeEnemy() → 2. onTick()");
+                "1. avisos → 2. alVerEnemigo() → 3. cadaTurno()",
+                "1. Ereignisse → 2. beiSicht() → 3. jedenZug()",
+                "1. events → 2. onSeeEnemy() → 3. onTick()");
         dibujarEtiquetaArena(p, txt, ax + aw / 2f, ay + 64f, tl, 0xFFC857);
     }
 

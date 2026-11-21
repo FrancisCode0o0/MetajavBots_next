@@ -214,16 +214,21 @@ public final class Demostracion {
                         "Vorwärts fahren und was die Zahl bedeutet",
                         "Moving forward and what the number means"),
                 new Trilingue(
-                        "avanzar(80); le dice al robot que camine hacia adelante. Mira la flecha verde en la arena: acaba de recorrer 80 pasos.\n"
-                                + "El número entre paréntesis () dice cuánto: 20 es un pasito corto, "
-                                + "150 es una carrera larga y -50 hace que vaya marcha atrás.\n"
-                                + "El punto y coma (;) del final es como el punto de una frase: le avisa al robot «aquí termina esta orden».",
-                        "vorwaerts(80); sagt dem Roboter, dass er nach vorn fahren soll. Schau auf den grünen Pfeil in der Arena: genau 80 Schritte.\n"
-                                + "Die Zahl in Klammern () bestimmt die Strecke: 20 ist ein kleiner Schritt, 150 ein langer Sprint und -50 fährt rückwärts.\n"
-                                + "Das Semikolon (;) am Ende ist wie der Punkt am Satzende: Es sagt dem Roboter «Hier endet dieser Befehl».",
-                        "ahead(80); tells the robot to move forward. Look at the green arrow in the arena: it just traveled 80 steps.\n"
-                                + "The number in parentheses () says how far: 20 is a tiny step, 150 is a long run, and -50 makes it drive backward.\n"
-                                + "The semicolon (;) at the end is like a period: it tells the robot \"this order ends here\"."),
+                        "avanzar(80); no mueve al robot de golpe: fija una orden solicitada de 80 unidades hacia adelante.\n"
+                                + "El robot cumple esa orden poco a poco durante varios turnos según su velocidad y aceleración: "
+                                + "la distancia efectiva recorrida es menor en cada turno y puede detenerse antes si choca o recibe otra orden.\n"
+                                + "El número entre paréntesis () marca ese objetivo (20 es corto, 150 largo y -50 marcha atrás); "
+                                + "el punto y coma (;) cierra la orden.",
+                        "vorwaerts(80); bewegt den Roboter nicht sofort: Es setzt einen angeforderten Befehl über 80 Einheiten nach vorn.\n"
+                                + "Der Roboter führt diesen Befehl über mehrere Züge hinweg je nach Tempo und Beschleunigung aus: "
+                                + "Die tatsächlich zurückgelegte Strecke ist pro Zug kleiner und kann bei einer Wand oder einem neuen Befehl früher enden.\n"
+                                + "Die Zahl in Klammern () legt dieses Ziel fest (20 kurz, 150 lang, -50 rückwärts); "
+                                + "das Semikolon (;) schließt den Befehl ab.",
+                        "ahead(80); does not teleport the robot: it sets a requested order of 80 units forward.\n"
+                                + "The robot carries it out gradually over several ticks according to its speed and acceleration: "
+                                + "the actual distance traveled each tick is smaller and may stop early on a wall or a new order.\n"
+                                + "The number in parentheses () sets that target (20 is short, 150 is long, -50 goes backward); "
+                                + "the semicolon (;) ends the order."),
                 6, new int[]{5}, false, 18, 45, Accion.AVANZAR);
     }
 
@@ -316,19 +321,20 @@ public final class Demostracion {
                         "Zielen und schießen",
                         "Aim and shoot"),
                 new Trilingue(
-                        "Primero apuntarHacia(e.angulo()); gira el arma justo hacia el muñeco, como apuntar una manguera antes de abrir el grifo.\n"
-                                + "Después atacar(); dispara hacia donde estás apuntando. ¡Mira cómo impacta el tiro en el muñeco!\n"
-                                + "Fíjate también en las barras de blindaje y energía encima de la arena: disparar gasta un poco de energía "
-                                + "y el arma necesita un instante para recargar.",
-                        "Zuerst dreht zielenNach(e.winkel()); die Waffe genau auf die Puppe, "
-                                + "so wie du einen Gartenschlauch ausrichtest, bevor du den Hahn aufdrehst.\n"
-                                + "Danach feuert angreifen(); genau dorthin. Schau, wie der Schuss die Puppe trifft!\n"
-                                + "Achte auch auf die Panzerungs- und Energiebalken über der Arena: Schießen kostet etwas Energie, "
-                                + "und die Waffe braucht einen kurzen Moment zum Nachladen.",
-                        "First aimTo(e.angle()); points the weapon straight at the dummy, like aiming a garden hose before turning on the tap.\n"
-                                + "Then attack(); fires where you are aiming. Watch the shot hit the dummy!\n"
-                                + "Also notice the armor and energy bars above the arena: shooting uses a little energy, "
-                                + "and the weapon needs a brief moment to reload."),
+                        "Primero apuntarHacia(e.angulo()); orienta el arma hacia el muñeco, como apuntar una manguera antes de abrir el grifo.\n"
+                                + "Después atacar(); pide el disparo desde tu posición actual "
+                                + "(en cada turno el motor resuelve los ataques antes del movimiento). "
+                                + "¡Mira cómo impacta el tiro en el muñeco!\n"
+                                + "Fíjate también en las barras de blindaje y energía encima de la arena: disparar gasta energía y el arma necesita recargar.",
+                        "Zuerst richtet zielenNach(e.winkel()); die Waffe auf die Puppe aus, wie einen Gartenschlauch, bevor du den Hahn aufdrehst.\n"
+                                + "Danach fordert angreifen(); den Schuss von deiner aktuellen Position an "
+                                + "(pro Zug löst die Engine Angriffe vor der Bewegung aus). "
+                                + "Schau, wie der Schuss die Puppe trifft!\n"
+                                + "Achte auch auf die Panzerungs- und Energiebalken über der Arena: Schießen kostet Energie, und die Waffe muss nachladen.",
+                        "First aimTo(e.angle()); aligns the weapon with the dummy, like aiming a garden hose before turning on the tap.\n"
+                                + "Then attack(); queues the shot from your current position (each tick the engine resolves attacks before movement). "
+                                + "Watch the shot hit the dummy!\n"
+                                + "Also notice the armor and energy bars above the arena: shooting costs energy, and the weapon needs time to reload."),
                 15, new int[]{14, 16}, true, 12, 110, Accion.APUNTAR_Y_DISPARAR);
     }
 

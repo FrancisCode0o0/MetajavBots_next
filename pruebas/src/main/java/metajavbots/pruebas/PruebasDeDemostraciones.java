@@ -27,6 +27,7 @@ final class PruebasDeDemostraciones {
         apuntarEjecucionCompleta();
         apuntarCoherenciaYVersalita();
         apuntarDemo2TrilingueYEjecucion();
+        apuntarPrecisionPedagogicaYAlcance();
     }
 
     private static void apuntarCargaTrilingue() {
@@ -445,5 +446,79 @@ final class PruebasDeDemostraciones {
         cierto(m.ultimoError().isEmpty(), id + " demo 2 sin error en paso 6");
         m.continuar();
         cierto(m.terminada(), id + " demo 2 finalizada al continuar tras el último paso");
+    }
+
+    private static void apuntarPrecisionPedagogicaYAlcance() {
+        caso("pedagogía: avanzar(80) orden vs distancia efectiva, orden real de callbacks, pseudocódigo de alcance y catálogo sin demos huérfanas", () -> {
+            igual(2, Demostracion.todas().size(), "solo Demo 1 y Demo 2 están implementadas");
+            falso(T.existe("demo.nivel.3"), "no debe existir clave huérfana demo.nivel.3");
+            falso(T.existe("demo.nivel.4"), "no debe existir clave huérfana demo.nivel.4");
+
+            Demostracion d1 = Demostracion.de(Demostracion.ID_DEMO_1);
+            Demostracion d2 = Demostracion.de(Demostracion.ID_DEMO_2);
+            for (Idioma id : Idioma.values()) {
+                MotorDemostracion m1 = new MotorDemostracion(d1, id);
+                m1.irAPaso(2);
+                correrHastaPausa(m1, 100);
+                cierto(m1.turnosEnPaso() > 1, id + " avanzar(80) se cumple en varios turnos: " + m1.turnosEnPaso());
+                verificarTextoAvanzar(id, d1.pasos.get(2).texto(id));
+                verificarTextoAtaqueAntesMovimiento(id, d1.pasos.get(6).texto(id));
+                verificarOrdenRealCallbacks(id, d2.pasos.get(2).texto(id));
+                verificarPseudocodigoAlcance(id);
+            }
+        });
+    }
+
+    private static void verificarTextoAvanzar(Idioma id, String txt) {
+        if (id == Idioma.ES) {
+            cierto(txt.contains("orden solicitada") && txt.contains("distancia efectiva"), "ES distingue orden solicitada y distancia efectiva");
+            falso(txt.contains("acaba de recorrer 80 pasos"), "ES no afirma recorrido instantáneo");
+        } else if (id == Idioma.DE) {
+            cierto(txt.contains("angeforderten Befehl") && txt.contains("tatsächlich zurückgelegte Strecke"),
+                    "DE unterscheidet angeforderten Befehl und tatsächliche Strecke");
+            falso(txt.contains("genau 80 Schritte"), "DE behauptet keine Sofortbewegung");
+        } else {
+            cierto(txt.contains("requested order") && txt.contains("actual distance traveled"),
+                    "EN distinguishes requested order and actual distance traveled");
+            falso(txt.contains("just traveled 80 steps"), "EN does not claim instant travel");
+        }
+    }
+
+    private static void verificarTextoAtaqueAntesMovimiento(Idioma id, String txt) {
+        if (id == Idioma.ES) {
+            cierto(txt.contains("ataques antes del movimiento"), "ES indica que los ataques van antes del movimiento");
+        } else if (id == Idioma.DE) {
+            cierto(txt.contains("Angriffe vor der Bewegung"), "DE erklärt Angriffe vor der Bewegung");
+        } else {
+            cierto(txt.contains("attacks before movement"), "EN explains attacks before movement");
+        }
+    }
+
+    private static void verificarOrdenRealCallbacks(Idioma id, String txt) {
+        String[] nombres = id == Idioma.ES
+                ? new String[]{"alRecibirGolpe", "alAcertar", "alChocarConPared", "alChocarConEnemigo", "alOirAlEquipo", "alVerEnemigo", "cadaTurno"}
+                : id == Idioma.DE
+                ? new String[]{"beiTreffer", "beiEigenemTreffer", "beiWand", "beiZusammenstoss", "beiTeamNachricht", "beiSicht", "jedenZug"}
+                : new String[]{"onHit", "onHitEnemy", "onHitWall", "onBump", "onTeamMessage", "onSeeEnemy", "onTick"};
+        int previo = -1;
+        for (String nombre : nombres) {
+            int pos = txt.indexOf(nombre);
+            cierto(pos > previo, id + " orden real de callbacks debe incluir " + nombre + " en orden");
+            previo = pos;
+        }
+    }
+
+    private static void verificarPseudocodigoAlcance(Idioma id) {
+        String disparar = T.en("mini.disparar.pseudo", id);
+        String acerca = T.en("entrenador.rival.se_acerca.trozo", id);
+        cierto(disparar.contains("<="), id + " mini.disparar.pseudo usa límite inclusivo <=");
+        cierto(acerca.contains("<="), id + " entrenador.rival.se_acerca.trozo usa límite inclusivo <=");
+        if (id == Idioma.ES) {
+            cierto(disparar.contains("normalizar(") && disparar.contains("regla práctica"), "ES normaliza y marca regla práctica");
+        } else if (id == Idioma.DE) {
+            cierto(disparar.contains("normalisieren(") && disparar.contains("Faustregel"), "DE normalisiert und markiert Faustregel");
+        } else {
+            cierto(disparar.contains("normalize(") && disparar.contains("rule of thumb"), "EN normalizes and marks rule of thumb");
+        }
     }
 }
