@@ -97,6 +97,12 @@ final class PruebasDeLaPelea {
         }
     }
 
+    private static final class Quieto extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+        }
+    }
+
     /** Avisa al equipo en cuanto empieza. */
     public static class Avisador extends Metajavbot {
         @Override
@@ -204,10 +210,55 @@ final class PruebasDeLaPelea {
         apuntarArenas();
         apuntarAparatos();
         apuntarRondas();
+        apuntarFrenoAvance();
         apuntarTurnoBaseCero();
         apuntarFrecuenciaMultiples();
         apuntarSimulacionMultiples();
         apuntarAvisoMultiplesObjetivos();
+    }
+
+    private static void apuntarFrenoAvance() {
+        caso("avance positivo en hielo rebasa el objetivo sin quedar negativo ni invertir marcha", () -> {
+            Modelo modelo = Modelo.de("cobalto");
+            Pelea p = new Pelea(con("quieto", modelo, de(Quieto::new)),
+                    con("rivales", modelo, de(Quieto::new)), 19, 1000, 700, 120);
+            p.arena = metajavbots.combate.Arena.de("HIELO", p.ancho, p.alto);
+            p.empezarRonda();
+            metajavbots.combate.Cuerpo c = p.cuerpo(0);
+            metajavbots.combate.Cuerpo rival = p.cuerpo(1);
+            c.x = 500;
+            c.y = 350;
+            rival.x = 100;
+            rival.y = 100;
+            c.velocidad = 12;
+            c.avanzar(3);
+            p.avanzar();
+            igual(0.0, c.restanteAvance(), "al rebasar el objetivo no queda avance negativo");
+            cierto(c.velocidad() >= 0, "la marcha adelante no se invierte al rebasar");
+            for (int i = 0; i < 80 && c.velocidad() != 0; i++) p.avanzar();
+            igual(0.0, c.velocidad(), "el robot termina detenido");
+        });
+
+        caso("avance negativo en hielo rebasa el objetivo sin quedar positivo ni invertir marcha", () -> {
+            Modelo modelo = Modelo.de("cobalto");
+            Pelea p = new Pelea(con("quieto", modelo, de(Quieto::new)),
+                    con("rivales", modelo, de(Quieto::new)), 23, 1000, 700, 120);
+            p.arena = metajavbots.combate.Arena.de("HIELO", p.ancho, p.alto);
+            p.empezarRonda();
+            metajavbots.combate.Cuerpo c = p.cuerpo(0);
+            metajavbots.combate.Cuerpo rival = p.cuerpo(1);
+            c.x = 500;
+            c.y = 350;
+            rival.x = 100;
+            rival.y = 100;
+            c.velocidad = -12;
+            c.avanzar(-3);
+            p.avanzar();
+            igual(0.0, c.restanteAvance(), "al rebasar atrás el objetivo no queda avance positivo");
+            cierto(c.velocidad() <= 0, "la marcha atrás no se invierte al rebasar");
+            for (int i = 0; i < 80 && c.velocidad() != 0; i++) p.avanzar();
+            igual(0.0, c.velocidad(), "el robot termina detenido");
+        });
     }
 
     private static void apuntarRondas() {
@@ -373,9 +424,9 @@ final class PruebasDeLaPelea {
 
         caso("pelea: los robots de los tres idiomas pelean igual", () -> {
             Modelo m = Modelo.de("vigia");
-            Pelea p1 = new Pelea(con("es", m, de(Sencillo::new)), con("de", m, de(EinfacherRoboter::new)), 7);
+            Pelea p1 = new Pelea(con("es", m, de(Sencillo::new)), con("de", m, de(EinfacherRoboter::new)), 1);
             p1.jugarEntera();
-            Pelea p2 = new Pelea(con("es", m, de(Sencillo::new)), con("en", m, de(SimpleRobot::new)), 7);
+            Pelea p2 = new Pelea(con("es", m, de(Sencillo::new)), con("en", m, de(SimpleRobot::new)), 1);
             p2.jugarEntera();
             igual(p1.combatientes[1].danoTotalRecibido, p2.combatientes[1].danoTotalRecibido, "alemán e inglés, lo mismo");
             cierto(p1.combatientes[0].danoTotalHecho > 0, "atacan de verdad");

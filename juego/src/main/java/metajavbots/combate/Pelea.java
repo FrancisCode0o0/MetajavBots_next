@@ -28,7 +28,6 @@ public final class Pelea {
 
     public static final int RONDAS = 4;
     public static final int TURNOS_POR_SEGUNDO = 30;
-
     public final double ancho, alto;
     public final int turnosPorRonda;
     public final Combatiente[] combatientes;
@@ -613,7 +612,6 @@ public final class Pelea {
     }
 
     // ================================================================ moverse
-
     private void mover(Cuerpo c) {
         if (c.fuera) {
             c.velocidad *= 0.8;
@@ -657,7 +655,9 @@ public final class Pelea {
         double rad = Math.toRadians(c.rumbo);
         c.x += Math.cos(rad) * c.velocidad;
         c.y += Math.sin(rad) * c.velocidad;
+        double avanceAntes = c.avance;
         c.avance -= c.velocidad;
+        if ((avanceAntes > 0 && c.avance < 0) || (avanceAntes < 0 && c.avance > 0)) c.avance = 0;
         if (Math.abs(c.avance) < 0.01) c.avance = 0;
         c.paso += Math.abs(c.velocidad);
         // Las paredes.
