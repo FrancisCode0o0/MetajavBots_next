@@ -15,8 +15,10 @@ import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.Pelea;
 import metajavbots.pantallas.CodigoDelRival;
+import metajavbots.pantallas.PantallaPelea;
 import metajavbots.pantallas.RivalesAbsurdos;
 import metajavbots.piezas.Modelo;
+import metajavbots.piezas.Montaje;
 import metajavbots.progreso.Guardado;
 import metajavbots.progreso.Jugador;
 import metajavbots.progreso.Progreso;
@@ -117,6 +119,7 @@ final class PruebasDelCodigoDelRival {
         });
         apuntarAvisosDelEquipo();
         apuntarDescripcionAbsurda();
+        apuntarIdentidadDeRivales();
     }
 
     private static void apuntarAvisosDelEquipo() {
@@ -190,6 +193,65 @@ final class PruebasDelCodigoDelRival {
                     falso(texto.contains(p.nombre), "sparring sin nombre absurdo " + p.nombre + " en " + id);
                     falso(texto.contains(p.biografia(id)), "sparring sin minibiografía en " + id);
                 }
+            }
+        });
+    }
+
+    private static void apuntarIdentidadDeRivales() {
+        caso("identidad de rivales: Rivales.crear, alAzar y ligero usan nombres de RivalesAbsurdos y coinciden en CodigoDelRival tras guardar y cargar", () -> {
+            Random azar = new Random(2024);
+            Combatiente[] rivales = {
+                    Rivales.crear(Modelo.de("cobalto"), 0.5, 0.5, azar),
+                    Rivales.alAzar(0.5, 0.5, azar),
+                    Rivales.ligero(Modelo.de("chispa"), 0.5, 0.5, azar, 3)};
+            for (Combatiente c : rivales) {
+                RivalesAbsurdos.Perfil perfil = RivalesAbsurdos.porNombre(c.nombre);
+                cierto(perfil != null, "nombre del banco absurdo: " + c.nombre);
+                cierto(c.montaje != null && c.montaje.modelo != null, "conserva su modelo: " + c.nombre);
+            }
+            igual("cobalto", rivales[0].montaje.modelo.id, "crear conserva el modelo pedido");
+            igual("chispa", rivales[2].montaje.modelo.id, "ligero conserva el modelo pedido");
+
+            Combatiente c = rivales[0];
+            RivalesAbsurdos.Perfil perfil = RivalesAbsurdos.porNombre(c.nombre);
+            Path antes = Guardado.carpeta;
+            Path tmp = Files.createTempDirectory("metajavbots-identidad");
+            Guardado.carpeta = tmp;
+            try {
+                Jugador j = new Jugador("IdentidadRival");
+                j.registrarUltimoRival(c.nombre, Rivales.codigoDe(c));
+                Guardado.guardar(j);
+                Jugador cargado = Guardado.leer(Guardado.carpetaDe("IdentidadRival"));
+                igual(c.nombre, RivalesAbsurdos.para(cargado).nombre, "misma identidad tras guardar y cargar");
+                for (Idioma id : Idioma.values()) {
+                    String ayuda = CodigoDelRival.ayudaPara(cargado, id);
+                    cierto(ayuda.contains(c.nombre), "nombre en " + id + ": " + ayuda);
+                    cierto(ayuda.contains(perfil.biografia(id)), "biografía en " + id + ": " + ayuda);
+                }
+            } finally {
+                Guardado.carpeta = antes;
+            }
+        });
+
+        caso("identidad de rivales: el marcador de la arena muestra nombre y modelo explícito en ES, DE y EN", () -> {
+            cierto(T.existe("pelea.modelo"), "existe pelea.modelo");
+            for (Idioma id : Idioma.values()) {
+                cierto(!T.en("pelea.modelo", id).isBlank(), "pelea.modelo no vacía en " + id);
+            }
+            Combatiente rival = Rivales.crear(Modelo.de("cobalto"), 0.5, 0.5, new Random(5));
+            Combatiente jugador = new Combatiente("Piloto", new Montaje(Modelo.de("chispa")), null);
+            String[] prefijos = {"Modelo: ", "Modell: ", "Model: "};
+            Idioma[] idiomas = {Idioma.ES, Idioma.DE, Idioma.EN};
+            for (int i = 0; i < idiomas.length; i++) {
+                Idioma id = idiomas[i];
+                String deRival = PantallaPelea.etiquetaMarcador(rival, id);
+                cierto(deRival.contains(rival.nombre), "nombre del rival en " + id + ": " + deRival);
+                cierto(deRival.contains(prefijos[i] + rival.montaje.modelo.nombre(id)), "modelo del rival en " + id + ": " + deRival);
+                cierto(deRival.contains(T.en("pelea.computadora", id)), "marca de computadora en " + id + ": " + deRival);
+                String delJugador = PantallaPelea.etiquetaMarcador(jugador, id);
+                cierto(delJugador.contains(jugador.nombre), "nombre del jugador en " + id + ": " + delJugador);
+                cierto(delJugador.contains(prefijos[i] + jugador.montaje.modelo.nombre(id)), "modelo del jugador en " + id + ": " + delJugador);
+                falso(delJugador.contains(T.en("pelea.computadora", id)), "sin marca de computadora en " + id + ": " + delJugador);
             }
         });
     }

@@ -1,6 +1,7 @@
 package metajavbots.pantallas;
 
 import java.util.List;
+import java.util.Random;
 
 import metajavbots.progreso.Jugador;
 import metajavbots.textos.Idioma;
@@ -8,9 +9,10 @@ import metajavbots.textos.Trilingue;
 
 /**
  * RIVALES ABSURDOS — Banco dedicado de nombres propios absurdos y
- * minibiografías de comedia puramente absurda en pasado (ES, DE y EN),
- * usado exclusivamente en la descripción de {@link CodigoDelRival} en el
- * Taller cuando el jugador ya ha combatido contra un rival.
+ * minibiografías de comedia puramente absurda en pasado (ES, DE y EN).
+ * Provee los nombres propios de los rivales de la computadora en la arena
+ * y su minibiografía en {@link CodigoDelRival} en el Taller cuando el
+ * jugador ya ha combatido contra un rival.
  */
 public final class RivalesAbsurdos {
 
@@ -121,6 +123,21 @@ public final class RivalesAbsurdos {
         return PERFILES;
     }
 
+    /** Elige un perfil absurdo al azar (con el generador dado, o uno nuevo si es nulo). */
+    public static Perfil alAzar(Random azar) {
+        return PERFILES.get((azar == null ? new Random() : azar).nextInt(PERFILES.size()));
+    }
+
+    /** El perfil absurdo con ese nombre propio, o {@code null} si no existe o el nombre está en blanco. */
+    public static Perfil porNombre(String nombre) {
+        if (nombre == null || nombre.isBlank()) return null;
+        String buscado = nombre.trim();
+        for (Perfil p : PERFILES) {
+            if (p.nombre.equals(buscado)) return p;
+        }
+        return null;
+    }
+
     /** Elige de forma determinista un perfil absurdo para el último rival combatido del jugador. */
     public static Perfil para(Jugador jugador) {
         if (jugador == null) return PERFILES.get(0);
@@ -129,6 +146,8 @@ public final class RivalesAbsurdos {
             String r = jugador.historial.get(jugador.historial.size() - 1).rival;
             if (r != null) nombre = r;
         }
+        Perfil exacto = porNombre(nombre);
+        if (exacto != null) return exacto;
         String codigo = jugador.ultimoRivalCodigo == null ? "" : jugador.ultimoRivalCodigo;
         int semilla = 31 * nombre.hashCode() + 17 * codigo.hashCode() + jugador.historial.size();
         return PERFILES.get(Math.floorMod(semilla, PERFILES.size()));
