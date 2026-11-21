@@ -102,7 +102,7 @@ public final class EntradaEpica {
         int color = quien == 0 ? 0x3FA9F5 : quien == 1 ? 0xFF6B6B : 0xFFC857;
         pi.textoCentrado(nombre, nx + 3, y + h * 0.04f + 3, tn, true, 0x000000, 0.6f * entra);
         pi.textoCentrado(nombre, nx, y + h * 0.04f, tn, true, color, entra);
-        String linea = p.combatientes[quien].montaje.modelo.nombre(T.idioma) + " · " + biografia(p, quien);
+        String linea = T.f("pelea.modelo", p.combatientes[quien].montaje.modelo.nombre(T.idioma)) + " · " + biografia(p, quien);
         float bw = ancho, tb = ui.letra * 1.05f;
         float bh = pi.altoDeParrafo(linea, bw - 40, tb) + 24, by = y + h * 0.04f + tn * 1.4f;
         float a = Math.min(1, Math.max(0, (local - 0.5f) / 0.4f));

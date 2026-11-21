@@ -33,6 +33,10 @@ final class Marcadores {
                 ui.barra(x, 34, w - 20, 14, parte, parte > 0.5f ? ui.tema.bien : parte > 0.2f ? ui.tema.aviso : ui.tema.mal, null);
             }
             p.texto(T.f("pelea.dano", Math.round(co.danoTotalRecibido)), x, 54, ui.letra * 0.65f, false, ui.tema.textoSuave, 1);
+            if (co.montaje != null && co.montaje.modelo != null) {
+                String modelo = T.f("pelea.modelo", co.montaje.modelo.nombre(T.idioma));
+                p.texto(ui.recortarTexto(modelo, w - 20, ui.letra * 0.6f, false), x, 70, ui.letra * 0.6f, false, ui.tema.textoSuave, 1);
+            }
         }
         float cx = p.ancho - 130;
         p.textoCentrado(T.f("pelea.ronda", pelea.ronda(), pelea.rondas), cx, 8, ui.letra * 0.9f, true, ui.tema.texto, 1);

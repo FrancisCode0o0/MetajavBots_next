@@ -25,6 +25,7 @@ import metajavbots.progreso.Jugador;
 import metajavbots.progreso.Progreso;
 import metajavbots.progreso.Registro;
 import metajavbots.rivales.Rival;
+import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 
 /**
@@ -413,6 +414,17 @@ public final class PantallaPelea implements Pantalla {
 
     // ================================================================ marcador
 
+    /** La etiqueta del marcador: nombre, modelo explícito y, si es de la computadora, su marca. */
+    public static String etiquetaMarcador(Combatiente co, Idioma idioma) {
+        Idioma id = idioma == null ? Idioma.ES : idioma;
+        String modelo = co.montaje != null && co.montaje.modelo != null
+                ? T.en("pelea.modelo", id).replace("{0}", co.montaje.modelo.nombre(id)) : "";
+        StringBuilder texto = new StringBuilder(co.nombre);
+        if (!modelo.isEmpty()) texto.append("  ·  ").append(modelo);
+        if (co.computadora) texto.append("  ·  ").append(T.en("pelea.computadora", id));
+        return texto.toString();
+    }
+
     /** En una pelea de varios: el jugador arriba a la izquierda y los demás en una fila, con el color de su equipo. */
     private void marcador(Juego j) {
         if (pelea.combatientes.length > 2) {
@@ -431,7 +443,7 @@ public final class PantallaPelea implements Pantalla {
             int color = i == 0 ? 0x3FE0FF : 0xFF4FD8;
             String dano = T.f("pelea.dano", Math.round(co.danoTotalRecibido));
             float danoW = c == null ? 0 : p.ancho(dano, ui.letra * 0.8f, false);
-            String nombre = co.nombre + (co.computadora ? "  ·  " + T.t("pelea.computadora") : "");
+            String nombre = etiquetaMarcador(co, T.idioma);
             p.texto(nombre, x, 8, ui.cabe(nombre, 588 - danoW - 14, ui.letra, true), true, color, 1);
             if (c == null) continue;
             float bx = x, by = 34;
@@ -551,7 +563,9 @@ public final class PantallaPelea implements Pantalla {
             Combatiente.Informe inf = pelea.informe(i);
             float cx = x + i * (col + 20);
             int color = i == 0 ? 0x3FE0FF : 0xFF4FD8;
-            String nombre = pelea.combatientes[i].nombre;
+            Combatiente co = pelea.combatientes[i];
+            String nombre = co.nombre + (co.montaje != null && co.montaje.modelo != null
+                    ? "  ·  " + T.f("pelea.modelo", co.montaje.modelo.nombre(T.idioma)) : "");
             p.texto(nombre, cx, y, ui.cabe(nombre, col - 10, ui.letra * 1.1f, true), true, color, 1);
             String[] lineas = {
                     T.f("informe.dano_recibido", Math.round(inf.danoRecibido)),

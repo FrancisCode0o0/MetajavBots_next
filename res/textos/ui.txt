@@ -154,6 +154,7 @@ pelear.sin_ajenos = No hay ninguno todavía. | Noch keine vorhanden. | None yet.
 pelear.ajeno_no_compila = Ese robot no compila: {0} | Dieser Roboter kompiliert nicht: {0} | That robot does not compile: {0}
 
 pelea.computadora = computadora | Computer | computer
+pelea.modelo = Modelo: {0} | Modell: {0} | Model: {0}
 pelea.ronda = Ronda {0} de {1} | Runde {0} von {1} | Round {0} of {1}
 pelea.dano = Daño recibido: {0} | Erlittener Schaden: {0} | Damage taken: {0}
 pelea.pausa_ayuda = Pausa (Espacio). En pausa, → avanza un turno. | Pause (Leertaste). In der Pause geht → einen Zug weiter. | Pause (Space). While paused, → steps one tick.

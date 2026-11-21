@@ -10,6 +10,7 @@ import java.util.Random;
 import metajavbots.api.RobotBase;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Fabrica;
+import metajavbots.pantallas.RivalesAbsurdos;
 import metajavbots.piezas.CatalogoDePiezas;
 import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
@@ -87,7 +88,7 @@ public final class Rivales {
             Pieza n = c.pieza("naturaleza_" + modelo.naturaleza.name().toLowerCase(java.util.Locale.ROOT) + (marca == 1 ? "" : "_" + marca));
             if (n != null) m.poner(Montaje.Hueco.NATURALEZA, n);
         }
-        return combatiente(modelo.nombre.es, m, nivel, agresividad, estiloPara(m, azar), azar, traza);
+        return combatiente(RivalesAbsurdos.alAzar(azar).nombre, m, nivel, agresividad, estiloPara(m, azar), azar, traza);
     }
 
     /** El muñeco de entrenamiento de los tutoriales (no cuenta para nada). */
@@ -128,7 +129,7 @@ public final class Rivales {
             m.poner(h, opciones.get(azar.nextInt(opciones.size())));
         }
         Estilo[] estilos = Estilo.values();
-        return combatiente("¿" + modelo.nombre.es + "?", m, nivel, agresividad, estilos[azar.nextInt(estilos.length)], azar, false);
+        return combatiente(RivalesAbsurdos.alAzar(azar).nombre, m, nivel, agresividad, estilos[azar.nextInt(estilos.length)], azar, false);
     }
 
     /** Un dron ligero de escolta para encuentros con múltiples objetivos (menos blindaje y daño). */
