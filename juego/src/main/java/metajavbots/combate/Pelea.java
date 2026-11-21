@@ -206,6 +206,7 @@ public final class Pelea {
         Combatiente c = cu.combatiente;
         if (c.fabrica == null) {
             c.robot = null;
+            cu.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.SIN_CODIGO);
             return;
         }
         if (c.robot == null || c.versionDelRobot != c.fabrica.version()) {
@@ -220,7 +221,10 @@ public final class Pelea {
                 Puente.dejarDeContar();
             }
         }
-        if (c.robot == null) return;
+        if (c.robot == null) {
+            cu.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.SIN_CODIGO);
+            return;
+        }
         cu.actualizarEfectosPoo();
         Puente.conectar(c.robot, cu);
         ejecutar(cu, () -> Puente.empezar(c.robot), 2_000_000);

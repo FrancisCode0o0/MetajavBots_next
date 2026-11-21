@@ -138,7 +138,19 @@ public final class Cuerpo implements Mando {
         ultimaLinea = -1;
         ordenesDelTurno = new ArrayList<>();
         tieneConflictoDeOrdenes = false;
-        estadoPensamiento = estado;
+        estadoPensamiento = estado == null ? EstadoPensamiento.EJECUTADO : estado;
+    }
+
+    /** Indica si el robot no pudo ejecutar su código en el turno actual por bloqueo, aturdimiento, deuda o falta de código. */
+    public boolean sinEjecucion() {
+        return estadoPensamiento != null && estadoPensamiento != EstadoPensamiento.EJECUTADO;
+    }
+
+    /** Turnos restantes tras este turno de aturdimiento o deuda de pasos (0 si no aplica). */
+    public int turnosSinEjecucionRestantes() {
+        if (estadoPensamiento == EstadoPensamiento.ATURDIDO) return Math.max(0, aturdido);
+        if (estadoPensamiento == EstadoPensamiento.DEUDA_TOPE) return Math.max(0, deuda);
+        return 0;
     }
 
     /** Descarta los eventos pendientes que el código bloqueado no debe recibir. */

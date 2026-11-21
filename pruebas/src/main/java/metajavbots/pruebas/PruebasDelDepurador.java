@@ -33,6 +33,7 @@ final class PruebasDelDepurador {
         apuntarSinFalsosPositivos();
         apuntarDetenerYTextos();
         apuntarLimpiezaDeEstados();
+        apuntarIndicadorSinEjecucion();
         apuntarLimpiezaDeEventosBloqueados();
         apuntarTurnoMostrado();
         apuntarFormatoYDisposicion();
@@ -86,6 +87,64 @@ final class PruebasDelDepurador {
             cierto(c.ordenesDelTurno.isEmpty(), "órdenes limpias al salir");
             falso(c.tieneConflictoDeOrdenes, "conflicto limpio al salir");
             igual(Cuerpo.EstadoPensamiento.FUERA_DE_COMBATE, c.estadoPensamiento, "estado fuera de combate");
+        });
+    }
+
+    private static void apuntarIndicadorSinEjecucion() {
+        caso("depurador: indicador sin ejecución para aturdimiento, deuda, fuera de combate y sin código", () -> {
+            falso(PanelDepurador.sinEjecucion(null), "cuerpo nulo no marca sin ejecución");
+            igual("", PanelDepurador.tituloSinEjecucion(null), "título vacío con cuerpo nulo");
+            igual("", PanelDepurador.motivoSinEjecucion(null), "motivo vacío con cuerpo nulo");
+
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotEstados extends Metajavbot {\n"
+                    + "    @Override public void cadaTurno() { avanzar(20); }\n"
+                    + "}\n", 37);
+            Cuerpo c = p.cuerpo(0);
+            p.avanzar();
+            falso(PanelDepurador.sinEjecucion(c), "turno normal ejecutado");
+            igual("", PanelDepurador.tituloSinEjecucion(c), "sin título en turno normal");
+            igual("", PanelDepurador.motivoSinEjecucion(c), "sin motivo en turno normal");
+
+            c.aturdido = 3;
+            p.avanzar();
+            cierto(PanelDepurador.sinEjecucion(c), "aturdido marca sin ejecución");
+            igual(2, c.turnosSinEjecucionRestantes(), "quedan 2 turnos de aturdimiento");
+            igual(T.f("pelea.depurador_sin_ejecucion_turnos", 2), PanelDepurador.tituloSinEjecucion(c), "título aturdido con turnos");
+            igual(T.t("pelea.estado_aturdido"), PanelDepurador.motivoSinEjecucion(c), "motivo aturdido");
+            p.avanzar();
+            p.avanzar();
+            igual(0, c.turnosSinEjecucionRestantes(), "último turno de aturdimiento sin turnos restantes");
+            igual(T.t("pelea.depurador_sin_ejecucion"), PanelDepurador.tituloSinEjecucion(c), "título aturdido último turno");
+
+            c.deuda = 2;
+            p.avanzar();
+            cierto(PanelDepurador.sinEjecucion(c), "deuda marca sin ejecución");
+            igual(1, c.turnosSinEjecucionRestantes(), "queda 1 turno de deuda");
+            igual(T.f("pelea.depurador_sin_ejecucion_turnos", 1), PanelDepurador.tituloSinEjecucion(c), "título deuda con turnos");
+            igual(T.t("pelea.estado_deuda_tope"), PanelDepurador.motivoSinEjecucion(c), "motivo deuda de tope");
+            p.avanzar();
+            p.avanzar();
+            falso(PanelDepurador.sinEjecucion(c), "recupera ejecución normal tras agotar la deuda");
+
+            c.fuera = true;
+            p.avanzar();
+            cierto(PanelDepurador.sinEjecucion(c), "fuera de combate marca sin ejecución");
+            igual(0, c.turnosSinEjecucionRestantes(), "fuera de combate no tiene contador de turnos");
+            igual(T.t("pelea.depurador_sin_ejecucion"), PanelDepurador.tituloSinEjecucion(c), "título fuera de combate");
+            igual(T.t("pelea.estado_fuera"), PanelDepurador.motivoSinEjecucion(c), "motivo fuera de combate");
+
+            List<Modelo> ms = Modelo.todos();
+            Pelea sinCodigo = new Pelea(new Combatiente("SinCodigo", new Montaje(ms.get(0)), null),
+                    new Combatiente("Muneco", new Montaje(ms.get(1)), Muneco::new), 41);
+            sinCodigo.rondas = 1;
+            sinCodigo.empezarRonda();
+            Cuerpo cSin = sinCodigo.cuerpo(0);
+            igual(Cuerpo.EstadoPensamiento.SIN_CODIGO, cSin.estadoPensamiento, "sin código ya al iniciar la ronda");
+            cierto(PanelDepurador.sinEjecucion(cSin), "sin código marca sin ejecución");
+            igual(T.t("pelea.estado_sin_codigo"), PanelDepurador.motivoSinEjecucion(cSin), "motivo sin código");
+            sinCodigo.avanzar();
+            igual(Cuerpo.EstadoPensamiento.SIN_CODIGO, cSin.estadoPensamiento, "sin código tras avanzar");
         });
     }
 
@@ -280,6 +339,7 @@ final class PruebasDelDepurador {
                     "pelea.depurador_vars", "pelea.depurador_codigo", "pelea.depurador_traza",
                     "pelea.depurador_ordenes", "pelea.depurador_sin_ordenes", "pelea.depurador_sin_traza",
                     "pelea.depurador_pisado_linea", "pelea.depurador_pisado",
+                    "pelea.depurador_sin_ejecucion", "pelea.depurador_sin_ejecucion_turnos",
                     "pelea.estado_aturdido", "pelea.estado_deuda_tope",
                     "pelea.estado_fuera", "pelea.estado_sin_codigo"};
             Idioma antes = T.idioma;

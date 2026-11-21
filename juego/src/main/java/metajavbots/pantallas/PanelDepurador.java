@@ -80,12 +80,7 @@ public final class PanelDepurador {
             float tamEst = ui.cabeDeCodigo(est, w - 32, ui.letra * 0.78f, false);
             p.textoDeCodigo(est, x + 16, ty, tamEst, false, ui.tema.textoSuave, 1);
             ty += p.altoDeLinea(tamEst) + 6;
-            if (c.estadoPensamiento != Cuerpo.EstadoPensamiento.EJECUTADO) {
-                String motivo = mensajeEstado(c.estadoPensamiento);
-                float tamMotivo = Math.min(18, ui.letra * 0.74f);
-                float anchoInterior = w - 32;
-                ty += p.parrafo(motivo, x + 16, ty, anchoInterior, tamMotivo, ui.tema.aviso, 1) + 4;
-            }
+            ty = indicadorSinEjecucion(j, c, x, ty, w);
         }
         String tabCodigo = T.t("pelea.depurador_codigo") + (c != null && c.tieneConflictoDeOrdenes ? " ⚠" : "");
         String[] pestanas = {T.t("pelea.depurador_vars"), tabCodigo};
@@ -95,7 +90,48 @@ public final class PanelDepurador {
         else variablesYConsola(j, yo, x, ty, w, y + h - 18);
     }
 
+    private float indicadorSinEjecucion(Juego j, Cuerpo c, float x, float ty, float w) {
+        if (!sinEjecucion(c)) return ty;
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        String icono = c.estadoPensamiento == Cuerpo.EstadoPensamiento.DEUDA_TOPE ? "⏱ " : "⚠ ";
+        String titulo = icono + tituloSinEjecucion(c);
+        String motivo = motivoSinEjecucion(c);
+        int color = c.estadoPensamiento == Cuerpo.EstadoPensamiento.FUERA_DE_COMBATE ? ui.tema.mal : ui.tema.aviso;
+        float tamTitulo = Math.min(18, ui.letra * 0.76f);
+        float tamMotivo = Math.min(17, ui.letra * 0.72f);
+        float tw = Math.max(80f, w - 40f);
+        float hTit = p.altoDeParrafo(titulo, tw, tamTitulo, true);
+        float hMot = motivo.isEmpty() ? 0f : p.altoDeParrafo(motivo, tw, tamMotivo, false);
+        float hCaja = hTit + (hMot > 0f ? hMot + 2f : 0f) + 10f;
+        p.rect(x + 12, ty, w - 24, hCaja, color, 0.16f);
+        p.rect(x + 12, ty, 3, hCaja, color, 1f);
+        p.parrafo(titulo, x + 20, ty + 4, tw, tamTitulo, true, color, 1);
+        if (!motivo.isEmpty()) {
+            p.parrafo(motivo, x + 20, ty + 6 + hTit, tw, tamMotivo, false, ui.tema.texto, 1);
+        }
+        return ty + hCaja + 6f;
+    }
+
+    /** Indica si el cuerpo del robot no ejecutó su código en el turno actual. */
+    public static boolean sinEjecucion(Cuerpo c) {
+        return c != null && c.sinEjecucion();
+    }
+
+    /** Encabezado corto del indicador de turno sin ejecución (incluye turnos restantes si aplica). */
+    public static String tituloSinEjecucion(Cuerpo c) {
+        if (!sinEjecucion(c)) return "";
+        int restantes = c.turnosSinEjecucionRestantes();
+        return restantes > 0 ? T.f("pelea.depurador_sin_ejecucion_turnos", restantes) : T.t("pelea.depurador_sin_ejecucion");
+    }
+
+    /** Motivo legible por el que el robot no ejecutó su código en el turno actual. */
+    public static String motivoSinEjecucion(Cuerpo c) {
+        return !sinEjecucion(c) ? "" : mensajeEstado(c.estadoPensamiento);
+    }
+
     private static String mensajeEstado(Cuerpo.EstadoPensamiento estado) {
+        if (estado == null) return "";
         switch (estado) {
             case ATURDIDO:
                 return T.t("pelea.estado_aturdido");
@@ -225,7 +261,9 @@ public final class PanelDepurador {
     private void codigoYTurno(Juego j, Cuerpo c, String fuente, boolean conTraza, float x, float ty, float w, float abajo) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        String cab = T.t("pelea.depurador_traza") + (c != null && c.ultimaLinea > 0 ? " · " + T.t("mcm.linea") + " " + c.ultimaLinea : "");
+        String sufijo = sinEjecucion(c) ? " · " + T.t("pelea.depurador_sin_ejecucion")
+                : (c != null && c.ultimaLinea > 0 ? " · " + T.t("mcm.linea") + " " + c.ultimaLinea : "");
+        String cab = T.t("pelea.depurador_traza") + sufijo;
         float tamCab = ui.cabe(cab, w - 32, ui.letra * 0.85f, true);
         p.texto(cab, x + 16, ty, tamCab, true, ui.tema.texto, 1);
         ty += p.altoDeLinea(tamCab) + 4;
@@ -264,7 +302,9 @@ public final class PanelDepurador {
         float tamAviso = Math.min(17, ui.letra * 0.72f);
         List<OrdenDelTurno> ordenes = c == null ? List.of() : c.ordenesDelTurno;
         if (ordenes.isEmpty()) {
-            yy += p.parrafo(T.t("pelea.depurador_sin_ordenes"), x + 18, yy, tw, tamOrden, ui.tema.textoApagado, 1);
+            String vacio = sinEjecucion(c) ? motivoSinEjecucion(c) : T.t("pelea.depurador_sin_ordenes");
+            int colorVacio = sinEjecucion(c) ? ui.tema.aviso : ui.tema.textoApagado;
+            yy += p.parrafo(vacio, x + 18, yy, tw, tamOrden, colorVacio, 1);
         } else {
             for (OrdenDelTurno o : ordenes) {
                 String texto = (o.metodo.isEmpty() ? "" : o.metodo + " -> ") + o.accion + (o.linea > 0 ? "  (L" + o.linea + ")" : "");
