@@ -1,11 +1,8 @@
 package metajavbots.pruebas;
-
 import static metajavbots.pruebas.Pruebas.caso;
 import static metajavbots.pruebas.Pruebas.cierto;
 import static metajavbots.pruebas.Pruebas.igual;
-
 import java.util.Random;
-
 import metajavbots.api.Enemigo;
 import metajavbots.api.Enemy;
 import metajavbots.api.Gegner;
@@ -21,21 +18,17 @@ import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Pieza;
 import metajavbots.rivales.Rivales;
-
 /** La pelea, las piezas y los modelos. */
 final class PruebasDeLaPelea {
 
     private PruebasDeLaPelea() {
     }
-
     static Combatiente con(String nombre, Modelo m, Fabrica f) {
         return new Combatiente(nombre, new Montaje(m), f);
     }
-
     static Fabrica de(java.util.function.Supplier<RobotBase> s) {
         return s::get;
     }
-
     /** Un robot sencillo en español: gira, ve y ataca. */
     public static class Sencillo extends Metajavbot {
         @Override
@@ -46,14 +39,12 @@ final class PruebasDeLaPelea {
             }
             apuntar(10);
         }
-
         @Override
         public void alVerEnemigo(Enemigo e) {
             apuntarHacia(e.angulo());
             atacar();
         }
     }
-
     public static class EinfacherRoboter extends MetajavbotDe {
         @Override
         public void jedenZug() {
@@ -70,7 +61,6 @@ final class PruebasDeLaPelea {
             angreifen();
         }
     }
-
     public static class SimpleRobot extends MetajavbotEn {
         @Override
         public void onTick() {
@@ -87,7 +77,6 @@ final class PruebasDeLaPelea {
             attack();
         }
     }
-
     /** Un robot que falla siempre. */
     public static class Roto extends Metajavbot {
         @Override
@@ -96,13 +85,11 @@ final class PruebasDeLaPelea {
             a[turnoActual() + 5] = 1;
         }
     }
-
     private static final class Quieto extends Metajavbot {
         @Override
         public void cadaTurno() {
         }
     }
-
     /** Avisa al equipo en cuanto empieza. */
     public static class Avisador extends Metajavbot {
         @Override
@@ -110,7 +97,6 @@ final class PruebasDeLaPelea {
             if (turnoActual() == 2) avisarAlEquipo("hola equipo");
         }
     }
-
     /** Apunta en su memoria lo que oye. */
     public static class Oyente extends Metajavbot {
         @Override
@@ -118,7 +104,6 @@ final class PruebasDeLaPelea {
             memoria().put("oido", mensaje);
         }
     }
-
     /** Registra el valor de turnoActual() en alEmpezar() y en cadaTurno(). */
     public static class Cronometrador extends Metajavbot {
         @Override
@@ -136,7 +121,6 @@ final class PruebasDeLaPelea {
             if (t % 45 == 0) ((java.util.List<Integer>) memoria().get("periodicos")).add(t);
         }
     }
-
     /** Recorre enemigosVistos() con un bucle for-each para apuntar al enemigo más cercano. */
     public static class CazadorConBucle extends Metajavbot {
         @Override
@@ -161,7 +145,6 @@ final class PruebasDeLaPelea {
             }
         }
     }
-
     /** Verifica geseheneGegner() en alemán. */
     public static class JaegerMitSchleife extends MetajavbotDe {
         @Override
@@ -181,7 +164,6 @@ final class PruebasDeLaPelea {
             }
         }
     }
-
     /** Verifica seenEnemies() en inglés. */
     public static class LoopHunterEn extends MetajavbotEn {
         @Override
@@ -201,7 +183,6 @@ final class PruebasDeLaPelea {
             }
         }
     }
-
     static void apuntar() {
         apuntarParte1();
         apuntarParte2();
@@ -216,7 +197,6 @@ final class PruebasDeLaPelea {
         apuntarSimulacionMultiples();
         apuntarAvisoMultiplesObjetivos();
     }
-
     private static void apuntarFrenoAvance() {
         caso("avance positivo en hielo rebasa el objetivo sin quedar negativo ni invertir marcha", () -> {
             Modelo modelo = Modelo.de("cobalto");
@@ -260,7 +240,6 @@ final class PruebasDeLaPelea {
             igual(0.0, c.velocidad(), "el robot termina detenido");
         });
     }
-
     private static void apuntarRondas() {
         caso("rondas como en el boxeo: con 4 o menos cada ronda empieza entera; con 12, el daño se arrastra (nunca por debajo de la mitad)", () -> {
             java.util.List<Modelo> ms = Modelo.todos();
@@ -280,7 +259,6 @@ final class PruebasDeLaPelea {
             }
         });
     }
-
     @SuppressWarnings("unchecked")
     private static void apuntarTurnoBaseCero() {
         caso("turnoActual(): base 0 real en alEmpezar(), cadaTurno(), módulo 45, RONDA_EMPIEZA y duración de ronda", () -> {
@@ -291,7 +269,6 @@ final class PruebasDeLaPelea {
             igual(0, p.turno(), "tras empezarRonda() el contador es 0");
             cierto(p.sucesos().stream().anyMatch(s -> s.tipo == metajavbots.combate.Suceso.Tipo.RONDA_EMPIEZA),
                     "RONDA_EMPIEZA presente tras empezarRonda()");
-
             p.avanzar();
             java.util.List<Integer> turnos = (java.util.List<Integer>) p.combatientes[0].memoria.get("turnos");
             java.util.List<Integer> periodicos = (java.util.List<Integer>) p.combatientes[0].memoria.get("periodicos");
@@ -301,14 +278,12 @@ final class PruebasDeLaPelea {
             igual(0, periodicos.get(0), "primer múltiplo periódico observado es 0");
             cierto(p.sucesos().stream().anyMatch(s -> s.tipo == metajavbots.combate.Suceso.Tipo.RONDA_EMPIEZA),
                     "RONDA_EMPIEZA sigue presente en el primer tick");
-
             p.avanzar();
             igual(2, turnos.size(), "tras 2 avanzar() hubo 2 cadaTurno()");
             igual(1, turnos.get(1), "el segundo cadaTurno() observa 1");
             igual(1, periodicos.size(), "en el turno 1 no se activa % 45");
             cierto(p.sucesos().stream().noneMatch(s -> s.tipo == metajavbots.combate.Suceso.Tipo.RONDA_EMPIEZA),
                     "RONDA_EMPIEZA se limpia en el segundo tick");
-
             while (p.estado() == Pelea.Estado.LUCHANDO) p.avanzar();
             igual(p.turnosPorRonda, turnos.size(), "una ronda completa ejecuta exactamente turnosPorRonda ticks");
             igual(p.turnosPorRonda - 1, turnos.get(turnos.size() - 1), "el último tick observado es turnosPorRonda - 1");
@@ -316,7 +291,6 @@ final class PruebasDeLaPelea {
             igual(p.turnosPorRonda, p.informe(0).turnos, "el informe registra exactamente turnosPorRonda turnos");
         });
     }
-
     private static void apuntarAparatos() {
         caso("aparatos: sale a los 3 s, se coge al tocarlo, solo engancha en su hueco (en cualquier idioma), tarda en montarse, se usa y se recarga", () -> {
             java.util.List<Modelo> ms = Modelo.todos();
@@ -354,7 +328,6 @@ final class PruebasDeLaPelea {
             }
         });
     }
-
     private static void apuntarArenas() {
         caso("arenas con trampas: se pelea entero en cada una, las trampas hacen daño y la API las ve; las de siempre no tienen nada", () -> {
             igual(0, metajavbots.combate.Arena.de("HANGAR", 1000, 700).trampas().size(), "las de siempre, sin trampas");
@@ -377,8 +350,41 @@ final class PruebasDeLaPelea {
             p.empezarRonda();
             igual(p.arena.trampas().size(), p.cuerpo(0).obstaculos().size(), "obstaculos() las ve todas");
         });
+        caso("volteado: vuela sobre pegamento y foso y vuelve a pisar al terminar", () -> {
+            Modelo m = Modelo.de("cobalto");
+            Pelea p = new Pelea(con("quieto", m, de(Quieto::new)), con("rivales", m, de(Quieto::new)), 31);
+            p.arena = metajavbots.combate.Arena.de("HANGAR", p.ancho, p.alto);
+            p.empezarRonda();
+            metajavbots.combate.Cuerpo c = p.cuerpo(0);
+            try {
+                java.lang.reflect.Method ch = metajavbots.combate.Arena.class.getDeclaredMethod("charco",
+                        String.class, double.class, double.class, double.class, int.class);
+                ch.setAccessible(true);
+                ch.invoke(p.arena, "pegamento", 500.0, 350.0, 80.0, 240);
+            } catch (ReflectiveOperationException e) { throw new AssertionError("sin pegamento", e); }
+            c.x = 500; c.y = 350; c.volteado = 24; c.velocidad = 10;
+            cierto(c.vuela(), "volteado reporta vuela()");
+            p.avanzar();
+            cierto(c.velocidad > 8, "pegamento no reduce mientras vuela");
+            c.volteado = 0;
+            cierto(!c.vuela(), "sin volteado vuelve a pisar");
+            c.velocidad = 10;
+            p.avanzar();
+            cierto(c.velocidad < 5, "pegamento reduce al terrestre");
+            Pelea f = new Pelea(con("quieto", m, de(Quieto::new)), con("rivales", m, de(Quieto::new)), 37);
+            f.arena = metajavbots.combate.Arena.de("HIELO", f.ancho, f.alto);
+            f.empezarRonda();
+            c = f.cuerpo(0); c.x = 500; c.y = 350; c.volteado = 24;
+            cierto(c.vuela(), "volteado reporta vuela() ante el foso");
+            f.avanzar();
+            igual(500.0, c.x, "no sale del foso mientras vuela");
+            igual(350.0, c.y, "no cae en el foso mientras vuela");
+            c.volteado = 0;
+            cierto(!c.vuela(), "agotado el volteado vuelve a ser terrestre");
+            f.avanzar();
+            cierto(c.aturdido > 0 || c.x != 500 || c.y != 350, "vuelve a caer en el foso");
+        });
     }
-
     private static void apuntarParte1() {
         caso("piezas: el catálogo se lee sin avisos y tiene cientos", () -> {
             CatalogoDePiezas c = CatalogoDePiezas.delJuego();
@@ -432,7 +438,6 @@ final class PruebasDeLaPelea {
             cierto(p1.combatientes[0].danoTotalHecho > 0, "atacan de verdad");
         });
     }
-
     private static void apuntarParte2() {
         caso("pelea: un robot que falla no rompe nada y apunta la línea", () -> {
             Modelo m = Modelo.de("cobalto");
@@ -491,7 +496,6 @@ final class PruebasDeLaPelea {
             }
         });
     }
-
     private static void apuntarParte3() {
         caso("royale: seis robots todos contra todos acaban la pelea con un ganador", () -> {
             Combatiente[] cs = new Combatiente[6];
@@ -574,7 +578,6 @@ final class PruebasDeLaPelea {
             cierto(g == 0 || g == 1 || g == -1, "gana un equipo: " + g);
         });
     }
-
     private static void apuntarParte4() {
         caso("equipos: el código del jugador oye a su equipo (alOirAlEquipo)", () -> {
             Pelea p = new Pelea(new Combatiente[]{con("a", Modelo.de("vigia"), de(Avisador::new)), con("b", Modelo.de("vigia"), de(Sencillo::new)),
@@ -638,7 +641,6 @@ final class PruebasDeLaPelea {
             metajavbots.textos.T.idioma = metajavbots.textos.Idioma.ES;
         });
     }
-
     private static void apuntarFrecuenciaMultiples() {
         caso("múltiples objetivos: NOOB_1..NOOB_3 nunca los generan y la frecuencia escala en NOOB_4, JUNIOR y SENIOR/MASTER", () -> {
             metajavbots.progreso.Etiqueta[] sinMulti = {
@@ -666,7 +668,6 @@ final class PruebasDeLaPelea {
             cierto(fNoob4 < fJunior && fJunior < fSenior, "escala NOOB_4 < JUNIOR < SENIOR: " + fNoob4 + " / " + fJunior + " / " + fSenior);
         });
     }
-
     private static void apuntarSimulacionMultiples() {
         caso("múltiples objetivos: pelea contra rival + drones y contra escuadrón ligero se simula limpia y llena enemigosVistos()", () -> {
             Random azar = new Random(7);
@@ -733,7 +734,6 @@ final class PruebasDeLaPelea {
             igual(Pelea.Estado.TERMINADA, pEn.estado(), "pelea EN termina limpiamente");
         });
     }
-
     private static void apuntarAvisoMultiplesObjetivos() {
         caso("múltiples objetivos: aviso y pista en pseudocódigo (es, de, en) si no recorre enemigosVistos() con bucle", () -> {
             String sinBucle = "public class MiRobot extends Metajavbot { @Override public void alVerEnemigo(Enemigo e) { "

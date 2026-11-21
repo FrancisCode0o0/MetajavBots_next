@@ -595,7 +595,7 @@ public final class Cuerpo implements Mando {
     }
 
     public boolean vuela() {
-        return cifras.vuela || flotando > 0;
+        return cifras.vuela || flotando > 0 || volteado > 0;
     }
 
     /** Cuánto le queda de blindaje en total (sin porcentaje). */
