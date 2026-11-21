@@ -69,7 +69,7 @@ public final class Puente {
         Tope.Cuenta c = Tope.CUENTA.get();
         if (c != null) c.cancelada = true;
         Tope.CUENTA.remove();
-        return c == null ? 0 : c.pasos;
+        return c == null ? 0 : c.pasos.get();
     }
 
     /** Las líneas que ha ejecutado el código que se está contando, y la última (la traza); null si no hay cuenta. */
