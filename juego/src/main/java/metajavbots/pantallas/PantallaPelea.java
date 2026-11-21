@@ -53,7 +53,7 @@ public final class PantallaPelea implements Pantalla {
     private float velocidad = 1, acumulado, t;
     private boolean pausa, depurador, entreRondas, terminada, compilando;
     private String locutor = "";
-    private float tiempoLocutor, altoDeLaBanda = 64;
+    private float tiempoLocutor;
     private volatile Compilador.Resultado resultadoDeCompilar;
     private String avisoDeCodigo = "";
     private boolean sinJdk;
@@ -355,24 +355,25 @@ public final class PantallaPelea implements Pantalla {
         float ancho = depurador && !entreRondas ? p.ancho - 460 : p.ancho;
         if (especial != null && especial.activa()) ancho = ArmaEspecial.anchoDeLaArena(p.ancho);
         vista.sacudida = Math.max(vista.sacudida, j.sacudida);
-        // Los bocadillos y los nombres, con la letra del jugador y por debajo de la banda del locutor.
+        boolean conBanda = tiempoLocutor > 0 && !locutor.isEmpty() && !entreRondas && !panelDelAparato.estaAbierto()
+                && !(terminada && tiempoFinal >= 2.2f);
+        float letraBanda = Math.min(26f, ui.letra * 1.05f);
+        Marcadores.GeometriaBanda banda = calcularGeometriaBanda(p, ancho, conBanda, encuentro.codigo != null, locutor, letraBanda);
         vista.letra = ui.letra;
-        vista.techo = tiempoLocutor > 0 && !locutor.isEmpty() ? 100 + altoDeLaBanda + 8 : 0;
+        vista.techo = banda.visible() ? banda.techo() : 0;
         vista.visor(j.visorTactico && (entrada == null || !entrada.activa()) && (especial == null || !especial.activa()), entrenador.marcado());
         vista.dibujar(p, pelea, 0, 88, ancho, p.alto - 88, pausa || entreRondas ? 0 : dt);
         if (entrada != null && entrada.activa()) entrada.dibujar(j, pelea, vista, 0, 88, ancho, p.alto - 88);
         if (especial != null) especial.dibujar(j, vista, pelea);
         if (encuentro.codigo != null) reparacion(j, dt);
         marcador(j);
-        if (depurador && !entreRondas) {
-            panelDepurador.dibujar(j, pelea, yo, robot.listo() ? robot.fuente() : "", robot.listo() && robot.conTraza(), ancho);
-        }
-        bandaDelLocutor(j, ancho, dt);
+        if (depurador && !entreRondas) panelDepurador.dibujar(j, pelea, yo, robot.listo() ? robot.fuente() : "", robot.listo() && robot.conTraza(), ancho);
+        bandaDelLocutor(j, banda, letraBanda, dt);
         // El entrenador aconseja contra el enemigo marcado (clic en él); contra un jefe no: está en el hospital.
         if (!terminada && !entreRondas && encuentro.jefe == null && j.jugador.entrenadorActivo && (especial == null || !especial.activa())
                 && (entrada == null || !entrada.activa())) {
             entrenador.dibujar(j, pelea, vista, ancho, dt, !pausa);
-            entrenador.clic(j, pelea, vista);
+            if (!panelDelAparato.estaAbierto()) entrenador.clic(j, pelea, vista);
         }
         if (!terminada && !entreRondas) controles(j);
         if (entreRondas) entreRondas(j);
@@ -427,89 +428,71 @@ public final class PantallaPelea implements Pantalla {
 
     /** En una pelea de varios: el jugador arriba a la izquierda y los demás en una fila, con el color de su equipo. */
     private void marcador(Juego j) {
-        if (pelea.combatientes.length > 2) {
-            Marcadores.deVarios(j, pelea);
-            return;
-        }
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        p.rect(0, 0, p.ancho, 88, ui.tema.panel, 0.97f);
-        p.rect(0, 87, p.ancho, 1, ui.tema.borde, 1);
-        for (int i = 0; i < 2; i++) {
-            Cuerpo c = pelea.cuerpo(i);
-            Combatiente co = pelea.combatientes[i];
-            boolean derecha = i == 1;
-            float x = derecha ? p.ancho - 620 : 20;
-            int color = i == 0 ? 0x3FE0FF : 0xFF4FD8;
-            String dano = T.f("pelea.dano", Math.round(co.danoTotalRecibido));
-            float danoW = c == null ? 0 : p.ancho(dano, ui.letra * 0.8f, false);
-            String nombre = etiquetaMarcador(co, T.idioma);
-            p.texto(nombre, x, 8, ui.cabe(nombre, 588 - danoW - 14, ui.letra, true), true, color, 1);
-            if (c == null) continue;
-            float bx = x, by = 34;
-            p.textoDerecha(dano, x + 588, 10, ui.letra * 0.8f, false, ui.tema.texto, 1);
-            String[] nombres = {T.t("parte.cabeza"), T.t("parte.izquierda"), T.t("parte.derecha"), T.t("parte.piernas")};
-            for (int k = 0; k < 4; k++) {
-                float parte = (float) (c.parte[k] / Math.max(1, c.parteMax[k]));
-                int col = parte > 0.5f ? ui.tema.bien : parte > 0.2f ? ui.tema.aviso : ui.tema.mal;
-                ui.barra(bx + k * 148, by, 140, 14, parte, col, null);
-                p.texto(nombres[k], bx + k * 148 + 4, by + 17, ui.letra * 0.6f, false, ui.tema.textoSuave, 1);
-                if (ui.e.dentro(bx + k * 148, by, 140, 30)) ui.avisar(nombres[k] + ": " + Math.round(c.parte[k]) + " / " + Math.round(c.parteMax[k]));
-            }
-            ui.barra(x, 72, 588, 7, (float) (c.energia / Math.max(1, c.cifras.energiaMax)), 0xFFD23F, null);
-            if (ui.e.dentro(x, 68, 588, 14)) ui.avisar(T.t("pelea.energia") + ": " + Math.round(c.energia));
-        }
-        float cx = p.ancho / 2;
-        p.textoCentrado(T.f("pelea.ronda", pelea.ronda(), pelea.rondas), cx, 8, ui.letra * 1.1f, true, ui.tema.texto, 1);
-        int segundos = (int) Math.ceil((pelea.turnosPorRonda - pelea.turno()) / (double) Pelea.TURNOS_POR_SEGUNDO);
-        p.textoCentrado(String.format("%d:%02d", Math.max(0, segundos) / 60, Math.max(0, segundos) % 60), cx, 38, ui.letra * 1.6f, true,
-                segundos <= 10 ? ui.tema.mal : ui.tema.texto, 1);
-        float centroAncho = Math.max(180, p.ancho - 1250);
-        if (encuentro.objetivo != null) {
-            String obj = Objetivo.texto(encuentro.objetivo);
-            p.textoCentrado(obj, cx, 70, ui.cabe(obj, centroAncho, ui.letra * 0.7f, false), false, ui.tema.aviso, 1);
-        }
-        if (encuentro.jefe != null) {
-            boolean vulnerable = pelea.resistencia[1] >= 1;
-            String jefeTxt = vulnerable ? T.t("pelea.jefe_vulnerable") : T.t("pelea.jefe_inmune");
-            p.textoCentrado(jefeTxt, cx, 70, ui.cabe(jefeTxt, centroAncho, ui.letra * 0.7f, false), false,
-                    vulnerable ? ui.tema.bien : ui.tema.mal, 1);
-        }
+        if (pelea.combatientes.length > 2) Marcadores.deVarios(j, pelea);
+        else Marcadores.deDos(j, pelea, encuentro);
+    }
+
+    private static Marcadores.GeometriaBanda calcularGeometriaBanda(Pincel p, float anchoZona, boolean visible, boolean conReparacion,
+            String texto, float letra) {
+        if (!visible) return Marcadores.geometriaBanda(anchoZona, false, conReparacion, 0f);
+        float minX = conReparacion ? 282f : 30f;
+        float maxAncho = Math.max(220f, anchoZona - minX - 30f);
+        float w = Math.min(1000f, maxAncho);
+        float altoParrafo = p.altoDeParrafo(texto, Math.max(80f, w - 110f), letra);
+        return Marcadores.geometriaBanda(anchoZona, true, conReparacion, altoParrafo);
     }
 
     private void controles(Juego j) {
         Pincel p = j.pincel; Ui ui = j.ui;
-        float y = p.alto - 64, x = 20, der = p.ancho - (depurador ? 460 : 0);
+        float der = p.ancho - (depurador ? 460 : 0);
+        float tBtn = Math.min(ui.letra, PanelDelAparato.ALTO_BOTON * 0.5f);
+        String txtPaso = T.t("pelea.paso"), txtVisor = T.t("pelea.visor"), txtDep = T.t("pelea.depurador"), txtRend = T.t("pelea.rendirse");
+        metajavbots.combate.Aparatos.Tipo sig = pelea.aparatos.siguiente();
+        Marcadores.BarraInferior b = Marcadores.calcularBarraInferior(p.alto, der, pausa, p.ancho(txtPaso, tBtn, true) + 28f,
+                Math.min(160f, p.ancho(txtVisor, tBtn, true) + 32f), Math.min(220f, p.ancho(txtDep, tBtn, true) + 32f),
+                Math.min(190f, p.ancho(txtRend, tBtn, true) + 32f), sig != null, PanelDelAparato.anchoBotonDeseado(p, ui, sig));
+        float x = 20f, y = b.y();
         if (ui.boton(pausa ? "▶" : "❚❚", x, y, 56, 46, Ui.Estilo.NORMAL, true, T.t("pelea.pausa_ayuda"))) pausa = !pausa;
         x += 64;
         for (float v : new float[]{1, 2, 4}) {
             if (ui.boton("×" + (int) v, x, y, 56, 46, velocidad == v ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) velocidad = v;
             x += 62;
         }
-        if (pausa && ui.boton(T.t("pelea.paso"), x, y, 120, 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_ayuda"))) pasoAPaso(j);
-        if (ui.boton(T.t("pelea.visor"), der - 520, y, 130, 46, j.visorTactico ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
+        if (pausa && ui.boton(txtPaso, x, y, b.wPaso(), 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_ayuda"))) pasoAPaso(j);
+        if (ui.boton(txtVisor, b.xVisor(), y, b.wVisor(), 46, j.visorTactico ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
                 T.t("pelea.visor_ayuda"))) j.visorTactico = !j.visorTactico;
-        if (ui.boton(T.t("pelea.depurador"), der - 380, y, 200, 46, depurador ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
+        if (ui.boton(txtDep, b.xDepurador(), y, b.wDepurador(), 46, depurador ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
                 T.t("pelea.depurador_ayuda"))) depurador = !depurador;
-        if (ui.boton(T.t("pelea.rendirse"), der - 170, y, 150, 46, Ui.Estilo.PELIGRO)) preguntarSiSalir(j);
-        if (!avisoDeCodigo.isEmpty()) p.textoConBorde(avisoDeCodigo, 20, y - 30, ui.letra * 0.8f, true, ui.tema.aviso, 0x000000, 1);
-        if (panelDelAparato.dibujar(j, pelea.aparatos.siguiente(), der - 532, y)) pausa = true;
+        if (ui.boton(txtRend, b.xRendirse(), y, b.wRendirse(), 46, Ui.Estilo.PELIGRO)) preguntarSiSalir(j);
+        if (!avisoDeCodigo.isEmpty()) dibujarAvisoDeCodigo(j, der, b);
+        if (panelDelAparato.dibujar(j, sig, b.xAparatoIzq(), b.xAparatoDer(), b.yAparato())) pausa = true;
     }
 
-    private void bandaDelLocutor(Juego j, float anchoZona, float dt) {
+    private void dibujarAvisoDeCodigo(Juego j, float der, Marcadores.BarraInferior b) {
+        Pincel p = j.pincel; Ui ui = j.ui;
+        boolean conEntrenador = encuentro.jefe == null && j.jugador.entrenadorActivo && (especial == null || !especial.activa())
+                && (entrada == null || !entrada.activa());
+        float reservaDer = conEntrenador ? Math.min(470f, der * 0.4f) + 28f : 20f;
+        float anchoAviso = Math.max(220f, der - 20f - reservaDer);
+        float tamAviso = Math.min(18f, ui.letra * 0.78f);
+        float altoTexto = p.altoDeParrafo(avisoDeCodigo, anchoAviso - 16f, tamAviso, true);
+        float yBase = b.aparatoArriba() ? b.yAparato() : b.y();
+        float yAviso = yBase - altoTexto - 18f;
+        p.caja(20f, yAviso, anchoAviso, altoTexto + 10f, 8f, 0x0B0F18, 0.82f);
+        p.parrafo(avisoDeCodigo, 28f, yAviso + 5f, anchoAviso - 16f, tamAviso, true, ui.tema.aviso, 1f);
+    }
+
+    private void bandaDelLocutor(Juego j, Marcadores.GeometriaBanda b, float letra, float dt) {
         if (tiempoLocutor <= 0 || locutor.isEmpty()) return;
         tiempoLocutor -= dt;
-        Pincel p = j.pincel; Ui ui = j.ui;
-        float w = Math.min(1000, anchoZona - 60), x = (anchoZona - w) / 2, y = 100;
+        if (!b.visible()) return;
+        Pincel p = j.pincel;
+        float x = b.x(), y = b.y(), w = b.w(), alto = b.h();
         float a = Math.min(1, tiempoLocutor * 2);
-        // La frase entera, en una o dos líneas (nada cortado).
-        float letra = ui.letra * 1.05f;
-        float alto = Math.max(64, p.altoDeParrafo(locutor, w - 110, letra) + 26);
-        altoDeLaBanda = alto;
         p.caja(x, y, w, alto, 32, 0x0B0F18, 0.88f * a);
         p.bordeRedondeado(x, y, w, alto, 32, 0xFFC857, a, 2);
         // La cabeza del locutor: un robot loco con antena y boca que se mueve.
-        float hx = x + 36, hy = y + 32;
+        float hx = x + 36, hy = Math.max(y + 32f, y + Math.min(alto / 2f, 44f));
         p.caja(hx - 20, hy - 18, 40, 36, 8, 0x8A92A3, a);
         p.circulo(hx - 8, hy - 5, 6, 0xFFFFFF, a);
         p.circulo(hx + 9, hy - 6, 4, 0xFFFFFF, a);
@@ -519,7 +502,7 @@ public final class PantallaPelea implements Pantalla {
         p.rect(hx - 9, hy + 6, 18, boca, 0x111111, a);
         p.linea(hx, hy - 18, hx + 6, hy - 30, 2, 0x8A92A3, a);
         p.circulo(hx + 6, hy - 31, 4, (t % 0.4f) < 0.2f ? 0xFF4F4F : 0xFFC857, a);
-        p.parrafo(locutor, x + 76, y + 13, w - 110, letra, 0xFFF1C1, a);
+        p.parrafo(locutor, x + 76, y + 13, Math.max(80f, w - 110f), letra, 0xFFF1C1, a);
     }
 
     // ================================================================ entre rondas
@@ -530,16 +513,22 @@ public final class PantallaPelea implements Pantalla {
         p.rect(0, 88, p.ancho, p.alto - 88, 0x000000, 0.55f);
         float x = 30, y = 110, w = p.ancho - 60, h = p.alto - 140;
         p.caja(x, y, w, h, 14, ui.tema.panel, 0.98f);
-        p.texto(T.f("pelea.entre_rondas", pelea.ronda(), pelea.ronda() + 1), x + 24, y + 16, ui.letra * 1.4f, true, ui.tema.texto, 1);
+        String titRonda = T.f("pelea.entre_rondas", pelea.ronda(), pelea.ronda() + 1);
+        float tamTit = ui.cabe(titRonda, w - 48, Math.min(32f, ui.letra * 1.3f), true);
+        p.texto(ui.recortarTexto(titRonda, w - 48, tamTit, true), x + 24, y + 14, tamTit, true, ui.tema.texto, 1);
         String[] pest = {T.t("pelea.informe"), T.t("pelea.codigo"), T.t("pelea.piezas")};
-        pestanaEntreRondas = ui.pestanas(pest, pestanaEntreRondas, x + 24, y + 60, 600, 44);
+        pestanaEntreRondas = ui.pestanas(pest, pestanaEntreRondas, x + 24, y + 60, Math.min(600, w - 48), 44);
         float cy = y + 116, ch = h - 116 - 80;
         switch (pestanaEntreRondas) {
             case 1:
                 editor.dibujar(ui, x + 24, cy, w - 48, ch);
                 if (ui.boton(compilando ? T.t("taller.compilando") : T.t("taller.compilar") + "  (Ctrl+S)", x + 24, y + h - 66, 260, 50,
                         Ui.Estilo.NORMAL, !compilando && !sinJdk, sinJdk ? T.t("taller.sin_jdk") : null)) compilar(j);
-                if (!avisoDeCodigo.isEmpty()) p.texto(avisoDeCodigo, x + 300, y + h - 52, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
+                if (!avisoDeCodigo.isEmpty()) {
+                    float maxAvi = Math.max(120f, w - 660f);
+                    float tamAvi = ui.cabe(avisoDeCodigo, maxAvi, ui.letra * 0.85f, false);
+                    p.texto(ui.recortarTexto(avisoDeCodigo, maxAvi, tamAvi, false), x + 300, y + h - 52, tamAvi, false, ui.tema.textoSuave, 1);
+                }
                 break;
             case 2:
                 Taller.piezas(j, yo, x + 24, cy, w - 48, ch);
@@ -713,25 +702,31 @@ public final class PantallaPelea implements Pantalla {
             }
         }
         if (encuentro.jefe != null && ganoElJugador) entrenador.milagro(j, w, dt);
-        if (encuentro.modo.equals("DESAFIO") && ganoElJugador && !premioElegido) {
-            if (ui.boton(T.t("final.premio"), x + w / 2 - 170, y + h - 140, 340, 50,
-                    Ui.Estilo.PRINCIPAL)) j.ir(new PremioDelDesafio(() -> premioElegido = true));
-        }
+        botonesFinales(j, x, y, w, h);
+    }
+
+    private void botonesFinales(Juego j, float x, float y, float w, float h) {
+        Ui ui = j.ui;
         boolean premio = encuentro.modo.equals("DESAFIO") && ganoElJugador && !premioElegido;
+        if (premio && ui.boton(T.t("final.premio"), x + w / 2 - 170, y + h - 140, 340, 50, Ui.Estilo.PRINCIPAL)) {
+            j.ir(new PremioDelDesafio(() -> premioElegido = true));
+        }
         if (repeticion.hay() && ui.boton("▶ " + T.t("repeticion.ver"), x + w - 330, y + h - (premio ? 200 : 140), 300, 50, Ui.Estilo.PLANO)) {
             repeticion.empezar(pelea);
         }
-        if (ui.boton(T.t("final.revancha"), x + 30, y + h - 74, 200, 54, Ui.Estilo.NORMAL)) {
+        float bwFinal = (w - 72f) / 3f;
+        if (ui.boton(T.t("final.revancha"), x + 24f, y + h - 74, bwFinal, 54, Ui.Estilo.NORMAL)) {
             j.volver();
             j.ir(PrepararPelea.repetir(j, encuentro));
         }
-        if (ui.boton(T.t("final.revisar"), x + w / 2 - 110, y + h - 74, 220, 54, Ui.Estilo.NORMAL, true, T.t("final.revisar_ayuda"))) {
+        if (ui.boton(T.t("final.revisar"), x + 36f + bwFinal, y + h - 74, bwFinal, 54, Ui.Estilo.NORMAL, true, T.t("final.revisar_ayuda"))) {
             j.ir(new Revision(editor.doc.texto(), pelea, yo));
         }
         if (encuentro.modo.equals("CAMPANA")) {
-            // Vuelve a la campaña (que sigue debajo): el siguiente capítulo ya está abierto.
-            if (ui.boton(T.t("final.seguir_campana"), x + w - 290, y + h - 74, 260, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.volver();
-        } else if (ui.boton(T.t("final.menu"), x + w - 230, y + h - 74, 200, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.irSolo(new Menu());
+            if (ui.boton(T.t("final.seguir_campana"), x + 48f + 2f * bwFinal, y + h - 74, bwFinal, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) j.volver();
+        } else if (ui.boton(T.t("final.menu"), x + 48f + 2f * bwFinal, y + h - 74, bwFinal, 54, Ui.Estilo.PRINCIPAL) || ui.atras()) {
+            j.irSolo(new Menu());
+        }
     }
 
     private void reparacion(Juego j, float dt) {
