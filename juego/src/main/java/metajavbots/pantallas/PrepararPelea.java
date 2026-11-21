@@ -5,9 +5,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Set;
 import java.util.stream.Stream;
 
 import metajavbots.Juego;
@@ -56,7 +58,12 @@ public final class PrepararPelea implements Pantalla {
         if (anterior.modo.equals("JEFE") || anterior.modo.equals("TUTORIAL") || anterior.modo.equals("TEMARIO") || anterior.modo.equals("AJENO")) {
             Encuentro e = new Encuentro();
             e.rival = Rivales.crear(anterior.rival.montaje.modelo, anterior.nivelRival, j.jugador.agresividad, new Random());
-            e.rival = anterior.modo.equals("AJENO") ? anterior.rival : e.rival;
+            if (anterior.modo.equals("AJENO")) {
+                e.rival = anterior.rival;
+            } else if (anterior.modo.equals("JEFE") && anterior.jefe != null) {
+                e.rival = new Combatiente(anterior.jefe.nombre(T.idioma), e.rival.montaje, e.rival.fabrica);
+                e.rival.computadora = true;
+            }
             e.modo = anterior.modo;
             e.nivelRival = anterior.nivelRival;
             e.jefe = anterior.jefe;
@@ -150,9 +157,10 @@ public final class PrepararPelea implements Pantalla {
         } else {
             // Variante 2: escuadrón de 2 o 3 enemigos ligeros simultáneos.
             int total = noob4 ? 2 : (seniorOMas || azar.nextBoolean() ? 3 : 2);
-            e.rival = Rivales.ligero(modelos.get(azar.nextInt(modelos.size())), e.nivelRival, jug.agresividad, azar, total);
+            Set<String> usados = new HashSet<>();
+            e.rival = Rivales.ligero(modelos.get(azar.nextInt(modelos.size())), e.nivelRival, jug.agresividad, azar, total, usados);
             for (int i = 1; i < total; i++) {
-                e.demas.add(Rivales.ligero(modelos.get(azar.nextInt(modelos.size())), e.nivelRival, jug.agresividad, azar, total));
+                e.demas.add(Rivales.ligero(modelos.get(azar.nextInt(modelos.size())), e.nivelRival, jug.agresividad, azar, total, usados));
                 e.equiposDeLosDemas.add(1);
             }
         }
@@ -315,50 +323,67 @@ public final class PrepararPelea implements Pantalla {
 
     /** Battle royale: todos contra todos. Tú, robots de la computadora con piezas al azar y los robots ajenos que haya (hasta 6 en total). */
     public static Encuentro royale(Juego j, List<Path> ajenos) {
-        Random azar = new Random();
+        return royale(j.jugador, ajenos, new Random());
+    }
+
+    /** Battle royale para un jugador con un azar dado (usable también en pruebas sin ventana). */
+    public static Encuentro royale(Jugador jug, List<Path> ajenos, Random azar) {
+        Random r = azar == null ? new Random() : azar;
         Encuentro e = new Encuentro();
         e.modo = "ROYALE";
-        e.nivelRival = Progreso.nivelParaLaPelea(j.jugador, azar);
+        e.nivelRival = Progreso.nivelParaLaPelea(jug, r);
         e.escenario = escenarioAlAzar();
-        e.rival = Rivales.alAzar(e.nivelRival, j.jugador.agresividad, azar);
+        Set<String> usados = new HashSet<>();
+        if (jug != null && jug.nombre != null) usados.add(jug.nombre);
+        e.rival = Rivales.alAzar(e.nivelRival, jug.agresividad, r, usados);
         int equipo = 2;
-        for (Path a : ajenos) {
-            if (e.demas.size() >= 2) break;
-            Combatiente c = cargarAjeno(a);
-            if (c == null) continue;
-            e.demas.add(c);
-            e.equiposDeLosDemas.add(equipo++);
+        if (ajenos != null) {
+            for (Path a : ajenos) {
+                if (e.demas.size() >= 2) break;
+                Combatiente c = cargarAjeno(a);
+                if (c == null) continue;
+                usados.add(c.nombre);
+                e.demas.add(c);
+                e.equiposDeLosDemas.add(equipo++);
+            }
         }
         while (e.demas.size() < 3) {
-            e.demas.add(Rivales.alAzar(e.nivelRival, j.jugador.agresividad, azar));
+            e.demas.add(Rivales.alAzar(e.nivelRival, jug.agresividad, r, usados));
             e.equiposDeLosDemas.add(equipo++);
         }
-        if (e.rondas == Pelea.RONDAS) e.rondas = j.jugador.rondas;
+        if (e.rondas == Pelea.RONDAS) e.rondas = jug.rondas;
         return e;
     }
 
     /** Por equipos: tú y tu compañero (la computadora, un robot ajeno o el robot de otra partida) contra dos de la computadora. */
     public static Encuentro equipos(Juego j, String[] companero) {
-        Random azar = new Random();
+        return equipos(j.jugador, companero, new Random());
+    }
+
+    /** Pelea por equipos para un jugador con un azar dado (usable también en pruebas sin ventana). */
+    public static Encuentro equipos(Jugador jug, String[] companero, Random azar) {
+        Random r = azar == null ? new Random() : azar;
         Encuentro e = new Encuentro();
         e.modo = "EQUIPOS";
-        e.nivelRival = Progreso.nivelParaLaPelea(j.jugador, azar);
+        e.nivelRival = Progreso.nivelParaLaPelea(jug, r);
         e.escenario = escenarioAlAzar();
         List<Modelo> ms = Modelo.todos();
-        e.rival = Rivales.crear(ms.get(azar.nextInt(ms.size())), e.nivelRival, j.jugador.agresividad, azar);
+        Set<String> usados = new HashSet<>();
+        if (jug != null && jug.nombre != null) usados.add(jug.nombre);
+        e.rival = Rivales.crear(ms.get(r.nextInt(ms.size())), e.nivelRival, jug.agresividad, r, false, usados);
         Combatiente amigo = null;
         if (companero != null && companero[1].equals("ajeno")) amigo = cargarAjeno(Paths.get(companero[2]));
         if (companero != null && companero[1].equals("partida")) amigo = robotDeOtraPartida(companero[2]);
         if (amigo == null) {
-            amigo = Rivales.crear(ms.get(azar.nextInt(ms.size())), Math.max(0.3, e.nivelRival), 0.2, azar);
+            amigo = Rivales.crear(ms.get(r.nextInt(ms.size())), Math.max(0.3, e.nivelRival), 0.2, r);
             amigo = new Combatiente(T.t("pelear.companero_ia") + " (" + amigo.montaje.modelo.nombre(T.idioma) + ")", amigo.montaje, amigo.fabrica);
         }
         amigo.computadora = false;
         e.demas.add(amigo);
         e.equiposDeLosDemas.add(0);
-        e.demas.add(Rivales.crear(ms.get(azar.nextInt(ms.size())), e.nivelRival, j.jugador.agresividad, azar));
+        e.demas.add(Rivales.crear(ms.get(r.nextInt(ms.size())), e.nivelRival, jug.agresividad, r, false, usados));
         e.equiposDeLosDemas.add(1);
-        if (e.rondas == Pelea.RONDAS) e.rondas = j.jugador.rondas;
+        if (e.rondas == Pelea.RONDAS) e.rondas = jug.rondas;
         return e;
     }
 

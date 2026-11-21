@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
+import java.util.Set;
 
 import metajavbots.api.RobotBase;
 import metajavbots.combate.Combatiente;
@@ -74,6 +75,11 @@ public final class Rivales {
 
     /** Con traza: compilado desde su código, para ver qué línea se ejecuta (el modo máquina contra máquina). */
     public static Combatiente crear(Modelo modelo, double nivel, double agresividad, Random azar, boolean traza) {
+        return crear(modelo, nivel, agresividad, azar, traza, null);
+    }
+
+    /** Crea un rival evitando repetir nombres absurdos presentes en {@code nombresUsados} (y registra el elegido). */
+    public static Combatiente crear(Modelo modelo, double nivel, double agresividad, Random azar, boolean traza, Set<String> nombresUsados) {
         Montaje m = new Montaje(modelo);
         int marca = 1 + (int) Math.round(Math.max(0, Math.min(1, nivel)) * 4);
         CatalogoDePiezas c = CatalogoDePiezas.delJuego();
@@ -88,7 +94,7 @@ public final class Rivales {
             Pieza n = c.pieza("naturaleza_" + modelo.naturaleza.name().toLowerCase(java.util.Locale.ROOT) + (marca == 1 ? "" : "_" + marca));
             if (n != null) m.poner(Montaje.Hueco.NATURALEZA, n);
         }
-        return combatiente(RivalesAbsurdos.alAzar(azar).nombre, m, nivel, agresividad, estiloPara(m, azar), azar, traza);
+        return combatiente(elegirNombre(azar, nombresUsados), m, nivel, agresividad, estiloPara(m, azar), azar, traza);
     }
 
     /** El muñeco de entrenamiento de los tutoriales (no cuenta para nada). */
@@ -116,6 +122,11 @@ public final class Rivales {
 
     /** El modo azar: modelo, piezas y estilo al azar (de todas las piezas del juego, también las que el jugador no tiene). */
     public static Combatiente alAzar(double nivel, double agresividad, Random azar) {
+        return alAzar(nivel, agresividad, azar, null);
+    }
+
+    /** Rival al azar evitando repetir nombres absurdos presentes en {@code nombresUsados} (y registra el elegido). */
+    public static Combatiente alAzar(double nivel, double agresividad, Random azar, Set<String> nombresUsados) {
         List<Modelo> modelos = Modelo.todos();
         Modelo modelo = modelos.get(azar.nextInt(modelos.size()));
         Montaje m = new Montaje(modelo);
@@ -129,7 +140,7 @@ public final class Rivales {
             m.poner(h, opciones.get(azar.nextInt(opciones.size())));
         }
         Estilo[] estilos = Estilo.values();
-        return combatiente(RivalesAbsurdos.alAzar(azar).nombre, m, nivel, agresividad, estilos[azar.nextInt(estilos.length)], azar, false);
+        return combatiente(elegirNombre(azar, nombresUsados), m, nivel, agresividad, estilos[azar.nextInt(estilos.length)], azar, false);
     }
 
     /** Un dron ligero de escolta para encuentros con múltiples objetivos (menos blindaje y daño). */
@@ -147,12 +158,23 @@ public final class Rivales {
 
     /** Un robot ligero para escuadrones de 2 o 3 enemigos simultáneos (equilibrado para 1 contra varios). */
     public static Combatiente ligero(Modelo modelo, double nivel, double agresividad, Random azar, int totalEnemigos) {
+        return ligero(modelo, nivel, agresividad, azar, totalEnemigos, null);
+    }
+
+    /** Robot ligero para escuadrones evitando repetir nombres absurdos presentes en {@code nombresUsados}. */
+    public static Combatiente ligero(Modelo modelo, double nivel, double agresividad, Random azar, int totalEnemigos, Set<String> nombresUsados) {
         boolean trio = totalEnemigos >= 3;
         double nivelLigero = Math.max(0.05, nivel * (trio ? 0.75 : 0.85));
-        Combatiente c = crear(modelo, nivelLigero, Math.min(0.7, agresividad), azar, false);
+        Combatiente c = crear(modelo, nivelLigero, Math.min(0.7, agresividad), azar, false, nombresUsados);
         c.escalaBlindaje = trio ? 0.48 : 0.64;
         c.escalaDano = trio ? 0.44 : 0.58;
         return c;
+    }
+
+    private static String elegirNombre(Random azar, Set<String> usados) {
+        String nombre = RivalesAbsurdos.alAzarSinRepetir(azar, usados).nombre;
+        if (usados != null) usados.add(nombre);
+        return nombre;
     }
 
     private static Combatiente combatiente(String nombre, Montaje m, double nivel, double agresividad, Estilo estilo, Random azar, boolean traza) {

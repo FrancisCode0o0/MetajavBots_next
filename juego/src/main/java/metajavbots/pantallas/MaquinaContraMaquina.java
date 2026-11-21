@@ -1,7 +1,9 @@
 package metajavbots.pantallas;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 
 import com.badlogic.gdx.Input.Keys;
 
@@ -68,8 +70,9 @@ public final class MaquinaContraMaquina implements Pantalla {
     private void empezar(Juego j) {
         List<Modelo> ms = Modelo.todos();
         Random r = new Random();
-        Combatiente a = Rivales.crear(ms.get(modelo[0]), nivel[0], j.jugador.agresividad, r, true);
-        Combatiente b = Rivales.crear(ms.get(modelo[1]), nivel[1], j.jugador.agresividad, r, true);
+        Set<String> usados = new HashSet<>();
+        Combatiente a = Rivales.crear(ms.get(modelo[0]), nivel[0], j.jugador.agresividad, r, true, usados);
+        Combatiente b = Rivales.crear(ms.get(modelo[1]), nivel[1], j.jugador.agresividad, r, true, usados);
         pelea = new Pelea(a, b, r.nextLong());
         vista.escenario = PrepararPelea.escenarioAlAzar();
         pelea.arena = metajavbots.combate.Arena.de(vista.escenario.name(), pelea.ancho, pelea.alto);

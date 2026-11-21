@@ -1,5 +1,7 @@
 package metajavbots.pantallas;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 
@@ -126,6 +128,21 @@ public final class RivalesAbsurdos {
     /** Elige un perfil absurdo al azar (con el generador dado, o uno nuevo si es nulo). */
     public static Perfil alAzar(Random azar) {
         return PERFILES.get((azar == null ? new Random() : azar).nextInt(PERFILES.size()));
+    }
+
+    /**
+     * Elige un perfil absurdo al azar cuyo nombre no esté en {@code usados}
+     * (si ya se usaron todos los del banco, elige del banco completo).
+     */
+    public static Perfil alAzarSinRepetir(Random azar, Collection<String> usados) {
+        Random r = azar == null ? new Random() : azar;
+        if (usados == null || usados.isEmpty()) return alAzar(r);
+        List<Perfil> disponibles = new ArrayList<>(PERFILES.size());
+        for (Perfil p : PERFILES) {
+            if (!usados.contains(p.nombre)) disponibles.add(p);
+        }
+        if (disponibles.isEmpty()) return alAzar(r);
+        return disponibles.get(r.nextInt(disponibles.size()));
     }
 
     /** El perfil absurdo con ese nombre propio, o {@code null} si no existe o el nombre está en blanco. */

@@ -8,17 +8,23 @@ import static metajavbots.pruebas.Pruebas.igual;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import metajavbots.campanas.Campana;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.Pelea;
 import metajavbots.pantallas.CodigoDelRival;
+import metajavbots.pantallas.Encuentro;
+import metajavbots.pantallas.Jefe;
 import metajavbots.pantallas.PantallaPelea;
+import metajavbots.pantallas.PrepararPelea;
 import metajavbots.pantallas.RivalesAbsurdos;
 import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
+import metajavbots.progreso.Etiqueta;
 import metajavbots.progreso.Guardado;
 import metajavbots.progreso.Jugador;
 import metajavbots.progreso.Progreso;
@@ -252,6 +258,99 @@ final class PruebasDelCodigoDelRival {
                 cierto(delJugador.contains(jugador.nombre), "nombre del jugador en " + id + ": " + delJugador);
                 cierto(delJugador.contains(prefijos[i] + jugador.montaje.modelo.nombre(id)), "modelo del jugador en " + id + ": " + delJugador);
                 falso(delJugador.contains(T.en("pelea.computadora", id)), "sin marca de computadora en " + id + ": " + delJugador);
+            }
+        });
+        apuntarUnicidadEnPeleasMultiples();
+    }
+
+    private static void apuntarUnicidadEnPeleasMultiples() {
+        caso("identidad de rivales: alAzarSinRepetir agota el banco sin duplicados y no falla al completarlo", () -> {
+            Random azar = new Random(99);
+            int total = RivalesAbsurdos.todos().size();
+            Set<String> usados = new HashSet<>();
+            for (int i = 0; i < total; i++) {
+                RivalesAbsurdos.Perfil p = RivalesAbsurdos.alAzarSinRepetir(azar, usados);
+                cierto(p != null && usados.add(p.nombre), "nombre repetido antes de agotar el banco: " + p);
+            }
+            igual(total, usados.size(), "recorre todos los perfiles sin repetir");
+            RivalesAbsurdos.Perfil extra = RivalesAbsurdos.alAzarSinRepetir(azar, usados);
+            cierto(extra != null && RivalesAbsurdos.porNombre(extra.nombre) != null, "respaldo válido al agotar el banco");
+        });
+
+        caso("identidad de rivales: royale, equipos y escuadrones no repiten nombres absurdos en la misma pelea", () -> {
+            Jugador jug = new Jugador("Robotón");
+            jug.etiqueta = Etiqueta.SENIOR_1;
+            Random azar = new Random(777);
+
+            for (int i = 0; i < 60; i++) {
+                Encuentro royale = PrepararPelea.royale(jug, List.of(), azar);
+                Set<String> nombres = new HashSet<>();
+                cierto(RivalesAbsurdos.porNombre(royale.rival.nombre) != null, "royale rival absurdo: " + royale.rival.nombre);
+                falso(jug.nombre.equals(royale.rival.nombre), "royale no repite nombre del jugador");
+                cierto(nombres.add(royale.rival.nombre), "royale rival único");
+                for (Combatiente c : royale.demas) {
+                    cierto(RivalesAbsurdos.porNombre(c.nombre) != null, "royale extra absurdo: " + c.nombre);
+                    falso(jug.nombre.equals(c.nombre), "royale extra no repite nombre del jugador");
+                    cierto(nombres.add(c.nombre), "royale sin duplicados: " + c.nombre);
+                }
+                igual(1 + royale.demas.size(), nombres.size(), "todos los rivales del royale son únicos");
+            }
+
+            for (int i = 0; i < 60; i++) {
+                Encuentro equipos = PrepararPelea.equipos(jug, null, azar);
+                Set<String> enemigos = new HashSet<>();
+                cierto(RivalesAbsurdos.porNombre(equipos.rival.nombre) != null, "equipos rival absurdo: " + equipos.rival.nombre);
+                cierto(enemigos.add(equipos.rival.nombre), "equipos rival 1 único");
+                for (int k = 0; k < equipos.demas.size(); k++) {
+                    Combatiente c = equipos.demas.get(k);
+                    if (equipos.equiposDeLosDemas.get(k) == 1) {
+                        cierto(RivalesAbsurdos.porNombre(c.nombre) != null, "equipos rival 2 absurdo: " + c.nombre);
+                        cierto(enemigos.add(c.nombre), "equipos enemigos sin duplicados: " + c.nombre);
+                    }
+                }
+                igual(2, enemigos.size(), "dos enemigos distintos en equipos");
+            }
+
+            int escuadronesVistos = 0;
+            for (int i = 0; i < 400 && escuadronesVistos < 25; i++) {
+                Encuentro esc = PrepararPelea.encuentro(jug, "ADAPTADA", new Random(1000L + i));
+                if (esc.demas.isEmpty() || esc.demas.get(0).nombre.startsWith("Dron ")) continue;
+                escuadronesVistos++;
+                Set<String> nombres = new HashSet<>();
+                cierto(RivalesAbsurdos.porNombre(esc.rival.nombre) != null, "escuadrón líder absurdo: " + esc.rival.nombre);
+                cierto(nombres.add(esc.rival.nombre), "escuadrón líder único");
+                for (Combatiente c : esc.demas) {
+                    cierto(RivalesAbsurdos.porNombre(c.nombre) != null, "escuadrón miembro absurdo: " + c.nombre);
+                    cierto(nombres.add(c.nombre), "escuadrón sin duplicados: " + c.nombre);
+                }
+                igual(1 + esc.demas.size(), nombres.size(), "todos los miembros del escuadrón son únicos");
+            }
+            cierto(escuadronesVistos >= 10, "se probaron suficientes escuadrones: " + escuadronesVistos);
+        });
+        apuntarJefesCampanasYSparring();
+    }
+
+    private static void apuntarJefesCampanasYSparring() {
+        caso("identidad de rivales: jefes y campañas conservan sus nombres propios y sparring sigue exento", () -> {
+            for (Jefe jefe : Jefe.TODOS) {
+                for (Idioma id : Idioma.values()) {
+                    String nombre = jefe.nombre(id);
+                    cierto(nombre != null && !nombre.isBlank(), "jefe con nombre en " + id);
+                    igual(null, RivalesAbsurdos.porNombre(nombre), "jefe conserva nombre propio: " + nombre);
+                }
+            }
+            for (Campana campana : Campana.deSerie()) {
+                for (Campana.Capitulo cap : campana.capitulos) {
+                    for (Idioma id : Idioma.values()) {
+                        String nombre = cap.rival.en(id);
+                        cierto(nombre != null && !nombre.isBlank(), "capítulo con nombre en " + id);
+                        igual(null, RivalesAbsurdos.porNombre(nombre), "campaña conserva nombre propio: " + nombre);
+                    }
+                }
+            }
+            Jugador sparring = new Jugador("SinCombates");
+            for (Idioma id : Idioma.values()) {
+                igual(T.en("rival.ayuda_sparring", id), CodigoDelRival.ayudaPara(sparring, id), "sparring exento en " + id);
             }
         });
     }
