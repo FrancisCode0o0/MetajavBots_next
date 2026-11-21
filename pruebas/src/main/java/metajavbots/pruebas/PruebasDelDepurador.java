@@ -31,6 +31,75 @@ final class PruebasDelDepurador {
         apuntarPisada();
         apuntarSinFalsosPositivos();
         apuntarDetenerYTextos();
+        apuntarLimpiezaDeEstados();
+        apuntarLimpiezaDeEventosBloqueados();
+        apuntarTurnoMostrado();
+    }
+
+    private static void apuntarLimpiezaDeEstados() {
+        caso("depurador: aturdido limpia la telemetría del turno", () -> {
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotAturdido extends Metajavbot {\n"
+                    + "    @Override public void cadaTurno() { avanzar(40); }\n"
+                    + "}\n", 19);
+            Cuerpo c = p.cuerpo(0);
+            p.avanzar();
+            cierto(c.pasosDelTurno > 0, "el primer turno ejecuta código");
+            c.aturdido = 1;
+            p.avanzar();
+            igual(0L, c.pasosDelTurno, "pasos limpiados");
+            cierto(c.lineasDelTurno.isEmpty(), "líneas limpias");
+            cierto(c.ordenesDelTurno.isEmpty(), "órdenes limpias");
+            falso(c.tieneConflictoDeOrdenes, "conflicto limpio");
+            igual(Cuerpo.EstadoPensamiento.ATURDIDO, c.estadoPensamiento, "estado aturdido");
+        });
+
+        caso("depurador: deuda de tope limpia la telemetría del turno", () -> {
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotDeuda extends Metajavbot {\n"
+                    + "    @Override public void cadaTurno() { avanzar(20); }\n"
+                    + "}\n", 23);
+            Cuerpo c = p.cuerpo(0);
+            p.avanzar();
+            c.deuda = 1;
+            p.avanzar();
+            igual(0L, c.pasosDelTurno, "pasos limpiados por deuda");
+            cierto(c.lineasDelTurno.isEmpty(), "líneas limpias por deuda");
+            cierto(c.ordenesDelTurno.isEmpty(), "órdenes limpias por deuda");
+            falso(c.tieneConflictoDeOrdenes, "conflicto limpio por deuda");
+            igual(Cuerpo.EstadoPensamiento.DEUDA_TOPE, c.estadoPensamiento, "estado de deuda");
+        });
+
+        caso("depurador: fuera de combate limpia la telemetría del turno", () -> {
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotFuera extends Metajavbot {\n"
+                    + "    @Override public void cadaTurno() { avanzar(20); }\n"
+                    + "}\n", 29);
+            Cuerpo c = p.cuerpo(0);
+            p.avanzar();
+            c.fuera = true;
+            p.avanzar();
+            igual(0L, c.pasosDelTurno, "pasos limpiados al salir");
+            cierto(c.lineasDelTurno.isEmpty(), "líneas limpias al salir");
+            cierto(c.ordenesDelTurno.isEmpty(), "órdenes limpias al salir");
+            falso(c.tieneConflictoDeOrdenes, "conflicto limpio al salir");
+            igual(Cuerpo.EstadoPensamiento.FUERA_DE_COMBATE, c.estadoPensamiento, "estado fuera de combate");
+        });
+    }
+
+    private static void apuntarTurnoMostrado() {
+        caso("depurador: el turno mostrado coincide con el visto por el robot tras el primer tick", () -> {
+            Pelea p = peleaCon("import metajavbots.api.*;\n"
+                    + "public class BotTurno extends Metajavbot {\n"
+                    + "    public int turnoVisto;\n"
+                    + "    @Override public void cadaTurno() { turnoVisto = turnoActual(); }\n"
+                    + "}\n", 31);
+            Cuerpo c = p.cuerpo(0);
+            igual(0, c.turno(), "turno inicial");
+            p.avanzar();
+            igual(0, c.turno(), "turno mostrado tras el primer tick");
+            igual(0, c.turnoPensado, "turno ejecutado registrado");
+        });
     }
 
     private static void apuntarTraza() {
@@ -178,7 +247,9 @@ final class PruebasDelDepurador {
             String[] claves = {
                     "pelea.depurador_vars", "pelea.depurador_codigo", "pelea.depurador_traza",
                     "pelea.depurador_ordenes", "pelea.depurador_sin_ordenes", "pelea.depurador_sin_traza",
-                    "pelea.depurador_pisado_linea", "pelea.depurador_pisado"};
+                    "pelea.depurador_pisado_linea", "pelea.depurador_pisado",
+                    "pelea.estado_aturdido", "pelea.estado_deuda_tope",
+                    "pelea.estado_fuera", "pelea.estado_sin_codigo"};
             Idioma antes = T.idioma;
             try {
                 for (Idioma id : Idioma.values()) {
@@ -192,6 +263,104 @@ final class PruebasDelDepurador {
                 T.idioma = antes;
             }
         });
+    }
+
+    private static void apuntarLimpiezaDeEventosBloqueados() {
+        caso("depurador: aturdido descarta pared y aviso pendientes", () -> {
+            Modelo modelo = Modelo.de("vigia");
+            Pelea p = new Pelea(new Combatiente[]{
+                    PruebasDeLaPelea.con("registro", modelo, PruebasDeLaPelea.de(RegistradorDeEventos::new)),
+                    PruebasDeLaPelea.con("enemigo", modelo, PruebasDeLaPelea.de(PruebasDeLaPelea.Sencillo::new))
+            }, new int[]{0, 1}, 73);
+            p.empezarRonda();
+            Cuerpo receptor = p.cuerpo(0);
+            campoReasignable(receptor, "chocoConPared", true);
+            java.util.List<String[]> avisos = listaCampo(receptor, "avisos");
+            avisos.add(new String[]{"equipo", "mensaje obsoleto"});
+            receptor.aturdido = 1;
+            p.avanzar();
+            p.avanzar();
+            cierto(!receptor.combatiente.memoria.containsKey("pared"), "la pared bloqueada no se entregó");
+            cierto(!receptor.combatiente.memoria.containsKey("avisos"), "el aviso bloqueado no se entregó");
+        });
+
+        caso("depurador: deuda descarta todos los eventos pendientes", () -> {
+            Modelo modelo = Modelo.de("vigia");
+            Pelea p = new Pelea(new Combatiente[]{
+                    PruebasDeLaPelea.con("registro", modelo, PruebasDeLaPelea.de(RegistradorDeEventos::new)),
+                    PruebasDeLaPelea.con("enemigo", modelo, PruebasDeLaPelea.de(PruebasDeLaPelea.Sencillo::new))
+            }, new int[]{0, 1}, 74);
+            p.empezarRonda();
+            Cuerpo receptor = p.cuerpo(0);
+            java.util.List<metajavbots.api.Impacto> golpes =
+                    listaCampo(receptor, "golpesRecibidos");
+            golpes.add(null);
+            java.util.List<metajavbots.api.Impacto> aciertos = listaCampo(receptor, "aciertos");
+            aciertos.add(null);
+            campoReasignable(receptor, "chocoConPared", true);
+            metajavbots.api.Avistado choque = (metajavbots.api.Avistado) java.lang.reflect.Proxy.newProxyInstance(
+                    metajavbots.api.Avistado.class.getClassLoader(),
+                    new Class<?>[]{metajavbots.api.Avistado.class},
+                    (proxy, metodo, argumentos) -> valorPredeterminado(metodo.getReturnType()));
+            campoReasignable(receptor, "chocoCon", choque);
+            java.util.List<String[]> avisos = listaCampo(receptor, "avisos");
+            avisos.add(new String[]{"equipo", "mensaje obsoleto"});
+            receptor.deuda = 1;
+            p.avanzar();
+            p.avanzar();
+            cierto(!receptor.combatiente.memoria.containsKey("golpes"), "los golpes bloqueados no se entregaron");
+            cierto(!receptor.combatiente.memoria.containsKey("aciertos"), "los aciertos bloqueados no se entregaron");
+            cierto(!receptor.combatiente.memoria.containsKey("pared"), "la pared bloqueada no se entregó");
+            cierto(!receptor.combatiente.memoria.containsKey("choques"), "el choque bloqueado no se entregó");
+            cierto(!receptor.combatiente.memoria.containsKey("avisos"), "el aviso bloqueado no se entregó");
+        });
+    }
+
+    @SuppressWarnings("unchecked")
+    private static <T> java.util.List<T> listaCampo(Object objeto, String nombre) throws Exception {
+        java.lang.reflect.Field campo = objeto.getClass().getDeclaredField(nombre);
+        campo.setAccessible(true);
+        return (java.util.List<T>) campo.get(objeto);
+    }
+
+    private static void campoReasignable(Object objeto, String nombre, Object valor) throws Exception {
+        java.lang.reflect.Field campo = objeto.getClass().getDeclaredField(nombre);
+        campo.setAccessible(true);
+        campo.set(objeto, valor);
+    }
+
+    private static Object valorPredeterminado(Class<?> tipo) {
+        if (tipo == boolean.class) return false;
+        if (tipo == byte.class) return (byte) 0;
+        if (tipo == short.class) return (short) 0;
+        if (tipo == int.class) return 0;
+        if (tipo == long.class) return 0L;
+        if (tipo == float.class) return 0.0f;
+        if (tipo == double.class) return 0.0d;
+        if (tipo == char.class) return '\0';
+        return null;
+    }
+
+    public static class RegistradorDeEventos extends metajavbots.api.Metajavbot {
+        @Override
+        public void alRecibirGolpe(metajavbots.api.Golpe g) { contar("golpes"); }
+
+        @Override
+        public void alAcertar(metajavbots.api.Golpe g) { contar("aciertos"); }
+
+        @Override
+        public void alChocarConPared() { contar("pared"); }
+
+        @Override
+        public void alChocarConEnemigo(metajavbots.api.Enemigo e) { contar("choques"); }
+
+        @Override
+        public void alOirAlEquipo(String de, String mensaje) { contar("avisos"); }
+
+        private void contar(String clave) {
+            int valor = memoria().get(clave) instanceof Integer ? (int) memoria().get(clave) : 0;
+            memoria().put(clave, valor + 1);
+        }
     }
 
     private static Pelea peleaCon(String codigo, long semilla) {

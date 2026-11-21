@@ -340,11 +340,6 @@ public abstract class MetajavbotDe extends RobotBase {
         return new ArrayList<>(m().vistos());
     }
 
-    /** Alias für gesehen(): alle Gegner, die dein Radar gerade sieht. */
-    public final List<Gegner> geseheneGegner() {
-        return gesehen();
-    }
-
     /** Die Fallen und Gegenstände der Arena: Stacheln, Sägen, Grube, Fässer … (leer, wenn es keine gibt; Thema 15). */
     public final List<Hindernis> hindernisse() {
         return new ArrayList<>(m().obstaculos());
@@ -417,7 +412,7 @@ public abstract class MetajavbotDe extends RobotBase {
         m().escribir(aTexto(text));
     }
 
-    /** Lo que quieras recordar de una ronda a otra (tema 15: Map). Sobrevive aunque cambies el código. */
+    /** Was du dir von Runde zu Runde merken willst (Thema 15: Map). Bleibt, auch wenn du den Code änderst. */
     public final Map<String, Object> gedaechtnis() {
         return m().memoria();
     }

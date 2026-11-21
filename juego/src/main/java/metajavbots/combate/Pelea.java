@@ -28,7 +28,6 @@ public final class Pelea {
 
     public static final int RONDAS = 4;
     public static final int TURNOS_POR_SEGUNDO = 30;
-
     public final double ancho, alto;
     public final int turnosPorRonda;
     public final Combatiente[] combatientes;
@@ -237,7 +236,7 @@ public final class Pelea {
         // 2) El código de cada uno (empieza uno distinto cada turno, para que nadie vaya siempre primero).
         for (int k = 0; k < n; k++) pensar(cuerpos[(turno + k) % n]);
         // 3) Los ataques, el movimiento, los choques, los proyectiles.
-        for (Cuerpo c : cuerpos) atacar(c, objetivo(c));
+        for (Cuerpo c : cuerpos) atacar(c);
         for (Cuerpo c : cuerpos) mover(c);
         for (int i = 0; i < n; i++) for (int k = i + 1; k < n; k++) chocar(cuerpos[i], cuerpos[k]);
         arena.turno(this);
@@ -255,25 +254,6 @@ public final class Pelea {
         java.util.Set<Integer> e = new java.util.HashSet<>();
         for (Cuerpo c : cuerpos) if (!c.fuera) e.add(c.equipo);
         return e.size();
-    }
-
-    /** El enemigo al que apunta: el que queda más cerca de la mira (y, a igualdad, el más cercano). */
-    Cuerpo objetivo(Cuerpo c) {
-        Cuerpo mejor = null;
-        double nota = Double.MAX_VALUE;
-        for (Cuerpo e : cuerpos) {
-            if (e == c || e.equipo == c.equipo || e.fuera) continue;
-            double d = Math.hypot(e.x - c.x, e.y - c.y);
-            double ang = Math.abs(normal(Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x)) - c.mira));
-            double v = ang * 6 + d * 0.05;
-            if (v < nota) {
-                nota = v;
-                mejor = e;
-            }
-        }
-        if (mejor != null) return mejor;
-        for (Cuerpo e : cuerpos) if (e != c && e.equipo != c.equipo) return e;
-        return c;
     }
 
     /** El golpe de un arma especial (la cuenta atrás de la pantalla de la pelea): daño de «de» a «a», con su suceso. */
@@ -361,21 +341,25 @@ public final class Pelea {
     // ================================================================ el código del robot
 
     private void pensar(Cuerpo c) {
-        if (c.fuera) return;
+        c.turnoPensado = turno;
+        if (c.fuera) { c.limpiarEventosPendientes(); c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.FUERA_DE_COMBATE); return; }
         if (c.tiempoDeBocadillo > 0) c.tiempoDeBocadillo--;
         Combatiente.Informe inf = informe(c.indice);
         if (c.aturdido > 0) {
             inf.turnosAturdido++;
-            c.golpesRecibidos.clear();
-            c.aciertos.clear();
+            c.limpiarEventosPendientes();
+            c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.ATURDIDO);
             return;
         }
         if (c.deuda > 0) {
             c.deuda--;
+            c.limpiarEventosPendientes();
+            c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.DEUDA_TOPE);
             return;
         }
         Combatiente co = c.combatiente;
-        if (co.robot == null) return;
+        if (co.robot == null) { c.limpiarEventosPendientes(); c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.SIN_CODIGO); return; }
+        c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.EJECUTADO);
         long tope = c.topeDePasos();
         List<metajavbots.api.Impacto> golpes = new ArrayList<>(c.golpesRecibidos);
         List<metajavbots.api.Impacto> aciertos = new ArrayList<>(c.aciertos);
@@ -496,7 +480,7 @@ public final class Pelea {
 
     // ================================================================ atacar
 
-    private void atacar(Cuerpo c, Cuerpo enemigo) {
+    private void atacar(Cuerpo c) {
         for (int brazo = 0; brazo < 3; brazo++) {
             if (!c.pedido[brazo]) continue;
             c.pedido[brazo] = false;
@@ -506,7 +490,7 @@ public final class Pelea {
             c.ultimoAtaque = turno;
             c.brazoDelUltimoAtaque = brazo;
             if (brazo == Cuerpo.CABEZA) armas.especial(c, p);
-            else armas.usar(c, enemigo, p, brazo);
+            else armas.usar(c, p, brazo);
         }
     }
 
@@ -609,7 +593,6 @@ public final class Pelea {
     }
 
     // ================================================================ moverse
-
     private void mover(Cuerpo c) {
         if (c.fuera) {
             c.velocidad *= 0.8;
@@ -653,7 +636,9 @@ public final class Pelea {
         double rad = Math.toRadians(c.rumbo);
         c.x += Math.cos(rad) * c.velocidad;
         c.y += Math.sin(rad) * c.velocidad;
+        double avanceAntes = c.avance;
         c.avance -= c.velocidad;
+        if ((avanceAntes > 0 && c.avance < 0) || (avanceAntes < 0 && c.avance > 0)) c.avance = 0;
         if (Math.abs(c.avance) < 0.01) c.avance = 0;
         c.paso += Math.abs(c.velocidad);
         // Las paredes.
@@ -779,11 +764,7 @@ public final class Pelea {
 
     /** Lleva un ángulo a (-180, 180]. */
     public static double normal(double g) {
-        if (Double.isNaN(g) || Double.isInfinite(g)) return 0;
-        g %= 360;
-        if (g > 180) g -= 360;
-        if (g <= -180) g += 360;
-        return g;
+        return Puente.normalizado(g);
     }
 
     /** Juega la pelea entera de una vez (para las pruebas y para las peleas de práctica rápidas). */

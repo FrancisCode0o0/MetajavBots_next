@@ -73,13 +73,21 @@ public class Rival extends Metajavbot {
         String[] partes = mensaje.split(" ");
         if (partes.length != 3 || !partes[0].equals("objetivo")) return;
         if (turnoActual() - turnoDelUltimoAvistamiento < 25) return;
+        Double x = leerNumero(partes[1]);
+        Double y = leerNumero(partes[2]);
+        if (x == null || y == null || !Double.isFinite(x) || !Double.isFinite(y)) return;
+        girarHacia(anguloHacia(x, y));
+        apuntarA(x, y);
+        double avance = Math.min(200, distanciaA(x, y) - 150);
+        if (avance > 0) avanzar(avance);
+    }
+
+    /** Lee un número de un aviso; null si el texto no es un número (un aviso que no entiendo). */
+    private static Double leerNumero(String texto) {
         try {
-            double x = Double.parseDouble(partes[1]), y = Double.parseDouble(partes[2]);
-            girarHacia(anguloHacia(x, y));
-            apuntarA(x, y);
-            avanzar(Math.min(200, distanciaA(x, y) - 150));
+            return Double.parseDouble(texto);
         } catch (NumberFormatException ex) {
-            // un aviso que no entiendo: lo ignoro
+            return null;
         }
     }
 

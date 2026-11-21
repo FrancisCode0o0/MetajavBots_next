@@ -65,10 +65,16 @@ final class PanelDepurador {
             p.textoDeCodigo(pos, x + 16, ty, tamPos, false, ui.tema.textoSuave, 1);
             ty += p.altoDeLinea(tamPos) + 2;
             String est = String.format(java.util.Locale.ROOT, "%s=%.0f  %s=%.0f  %s=%d", T.t("pelea.blindaje"), c.blindaje(),
-                    T.t("pelea.energia"), c.energia, T.t("pelea.turno"), pelea.turno());
+                    T.t("pelea.energia"), c.energia, T.t("pelea.turno"), c.turnoPensado);
             float tamEst = ui.cabeDeCodigo(est, w - 32, ui.letra * 0.78f, false);
             p.textoDeCodigo(est, x + 16, ty, tamEst, false, ui.tema.textoSuave, 1);
             ty += p.altoDeLinea(tamEst) + 6;
+            if (c.estadoPensamiento != Cuerpo.EstadoPensamiento.EJECUTADO) {
+                String motivo = mensajeEstado(c.estadoPensamiento);
+                float tamMotivo = Math.min(18, ui.letra * 0.74f);
+                float anchoInterior = w - 32;
+                ty += p.parrafo(motivo, x + 16, ty, anchoInterior, tamMotivo, ui.tema.aviso, 1) + 4;
+            }
         }
         String tabCodigo = T.t("pelea.depurador_codigo") + (c != null && c.tieneConflictoDeOrdenes ? " ⚠" : "");
         String[] pestanas = {T.t("pelea.depurador_vars"), tabCodigo};
@@ -76,6 +82,21 @@ final class PanelDepurador {
         ty += 42;
         if (pestana == 1) codigoYTurno(j, c, fuente, conTraza, x, ty, w, y + h - 14);
         else variablesYConsola(j, yo, x, ty, w, y + h - 18);
+    }
+
+    private static String mensajeEstado(Cuerpo.EstadoPensamiento estado) {
+        switch (estado) {
+            case ATURDIDO:
+                return T.t("pelea.estado_aturdido");
+            case DEUDA_TOPE:
+                return T.t("pelea.estado_deuda_tope");
+            case FUERA_DE_COMBATE:
+                return T.t("pelea.estado_fuera");
+            case SIN_CODIGO:
+                return T.t("pelea.estado_sin_codigo");
+            default:
+                return "";
+        }
     }
 
     private void variablesYConsola(Juego j, Combatiente yo, float x, float ty, float w, float abajo) {
@@ -97,7 +118,10 @@ final class PanelDepurador {
             p.textoDeCodigo(ui.recortarTextoDeCodigo(v[1], w - 196, tamVar, false), x + 180, yy, tamVar, false, ui.tema.texto, 1);
             yy += altoVar;
         }
-        if (vars.isEmpty()) p.parrafo(T.t("pelea.sin_variables"), x + 16, yy, w - 32, tamVar, ui.tema.textoApagado, 1);
+        if (vars.isEmpty()) {
+            float anchoInterior = w - 32;
+            p.parrafo(T.t("pelea.sin_variables"), x + 16, yy, anchoInterior, tamVar, ui.tema.textoApagado, 1);
+        }
         ui.finDesplazable(desplVariables, Math.max(1, vars.size()) * altoVar + 8);
         ty += zona + 8;
         p.texto(T.t("pelea.consola"), x + 16, ty, tamCab, true, ui.tema.texto, 1);

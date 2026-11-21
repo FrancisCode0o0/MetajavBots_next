@@ -9,6 +9,11 @@ public final class Puente {
     private Puente() {
     }
 
+    /** Lleva un ángulo a (-180, 180]. */
+    public static double normalizado(double grados) {
+        return RobotBase.normalizado(grados);
+    }
+
     public static void conectar(RobotBase r, Mando m) {
         r.mando = m;
     }
@@ -64,7 +69,7 @@ public final class Puente {
         Tope.Cuenta c = Tope.CUENTA.get();
         if (c != null) c.cancelada = true;
         Tope.CUENTA.remove();
-        return c == null ? 0 : c.pasos;
+        return c == null ? 0 : c.pasos.get();
     }
 
     /** Las líneas que ha ejecutado el código que se está contando, y la última (la traza); null si no hay cuenta. */

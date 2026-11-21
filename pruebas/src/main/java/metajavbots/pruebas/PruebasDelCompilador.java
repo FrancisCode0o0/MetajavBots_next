@@ -9,7 +9,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Random;
+import java.util.concurrent.CountDownLatch;
 
+import metajavbots.api.Puente;
+import metajavbots.api.Tope;
 import metajavbots.codigo.Compilador;
 import metajavbots.codigo.Inyector;
 import metajavbots.codigo.RobotDelJugador;
@@ -68,6 +71,7 @@ final class PruebasDelCompilador {
         apuntarParte2();
         apuntarParte3();
         apuntarParte4();
+        apuntarParte5();
     }
 
     private static void apuntarParte1() {
@@ -272,6 +276,37 @@ final class PruebasDelCompilador {
             p.avanzar();
             igual(2, c.memoria.get("version"), "la ronda 2 usa el código nuevo");
             igual(turnos, c.memoria.get("turnos"), "la memoria se conserva");
+        });
+    }
+
+    private static void apuntarParte5() {
+        caso("compilador: la cuenta de pasos no pierde pasos entre hilos", () -> {
+            Puente.contar(1_000_000L, 5_000_000_000L);
+            long devueltos;
+            try {
+                CountDownLatch salida = new CountDownLatch(1);
+                Thread[] hilos = new Thread[4];
+                Throwable[] fallos = new Throwable[hilos.length];
+                for (int i = 0; i < hilos.length; i++) {
+                    int cual = i;
+                    hilos[i] = new Thread(() -> {
+                        try {
+                            salida.await();
+                            for (int j = 0; j < 25_000; j++) Tope.paso();
+                        } catch (Throwable t) {
+                            fallos[cual] = t;
+                        }
+                    });
+                    hilos[i].start();
+                }
+                salida.countDown();
+                for (Thread h : hilos) h.join();
+                for (Throwable t : fallos) if (t != null) throw new AssertionError("un hilo falló", t);
+                igual(100_000L, Tope.pasos(), "pasos contados");
+            } finally {
+                devueltos = Puente.dejarDeContar();
+            }
+            igual(100_000L, devueltos, "pasos devueltos");
         });
     }
 }

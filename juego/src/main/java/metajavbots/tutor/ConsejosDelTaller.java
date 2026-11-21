@@ -51,7 +51,7 @@ public final class ConsejosDelTaller {
     /** ¿Recorre el código la lista de enemigos vistos con un bucle (for / while / forEach)? */
     public static boolean recorreEnemigosVistosConBucle(String codigo) {
         String c = limpio(codigo == null ? "" : codigo);
-        return tiene(c, "enemigosVistos", "gesehen", "geseheneGegner", "seenEnemies") && BUCLE.matcher(c).find();
+        return tiene(c, "enemigosVistos", "gesehen", "seenEnemies") && BUCLE.matcher(c).find();
     }
 
     /** Lo que le llama la atención de ese código, de lo más importante a lo menos (al final, los generales). */
@@ -74,7 +74,7 @@ public final class ConsejosDelTaller {
         if (CONTADOR_EN_TURNO.matcher(c).find()) l.add(new Tip("contador_dentro", "ambito"));
         if (Pattern.compile("(\\.nombre\\(\\)|\\.modelo\\(\\)|\\.modell\\(\\)|\\.name\\(\\)|\\.model\\(\\))\\s*==\\s*\"").matcher(c).find()
                 || Pattern.compile("\"\"\\s*==").matcher(c).find()) l.add(new Tip("string_igual", "string"));
-        if (!tiene(c, "alVerEnemigo", "beiSicht", "onSeeEnemy", "enemigosVistos", "gesehen", "geseheneGegner", "seenEnemies"))
+        if (!tiene(c, "alVerEnemigo", "beiSicht", "onSeeEnemy", "enemigosVistos", "gesehen", "seenEnemies"))
             l.add(new Tip("sin_radar", "turno"));
         if (!tiene(c, "apuntar", "apuntarHacia", "apuntarA", "zielen", "zielenAuf", "zielenNach", "aim", "aimAt", "aimTo"))
             l.add(new Tip("sin_apuntar", "llamar_metodo"));

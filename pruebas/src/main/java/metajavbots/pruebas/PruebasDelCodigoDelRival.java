@@ -12,6 +12,8 @@ import java.util.Random;
 import java.util.Set;
 
 import metajavbots.combate.Combatiente;
+import metajavbots.combate.Cuerpo;
+import metajavbots.combate.Pelea;
 import metajavbots.pantallas.CodigoDelRival;
 import metajavbots.pantallas.RivalesAbsurdos;
 import metajavbots.piezas.Modelo;
@@ -19,6 +21,7 @@ import metajavbots.progreso.Guardado;
 import metajavbots.progreso.Jugador;
 import metajavbots.progreso.Progreso;
 import metajavbots.progreso.Registro;
+import metajavbots.rivales.Rival;
 import metajavbots.rivales.Rivales;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
@@ -112,7 +115,42 @@ final class PruebasDelCodigoDelRival {
                 Guardado.carpeta = antes;
             }
         });
+        apuntarAvisosDelEquipo();
         apuntarDescripcionAbsurda();
+    }
+
+    private static void apuntarAvisosDelEquipo() {
+        caso("rival: un aviso de objetivo cercano no le ordena avanzar en negativo", () -> {
+            Pelea p = peleaConRival();
+            Cuerpo cuerpo = p.cuerpo(0);
+            Rival rival = (Rival) p.combatientes[0].robot();
+            cuerpo.x = 300;
+            cuerpo.y = 300;
+            rival.alOirAlEquipo("compañero", "objetivo 310 310");
+            igual(0.0, cuerpo.restanteAvance(), "a menos de 150 no avanza (ni hacia atrás)");
+        });
+
+        caso("rival: un aviso mal formado se ignora y el rival sigue operativo", () -> {
+            Pelea p = peleaConRival();
+            Cuerpo cuerpo = p.cuerpo(0);
+            Rival rival = (Rival) p.combatientes[0].robot();
+            cuerpo.x = 300;
+            cuerpo.y = 300;
+            rival.alOirAlEquipo("compañero", "objetivo abc 200");
+            rival.alOirAlEquipo("compañero", "objetivo 100 xyz");
+            rival.alOirAlEquipo("compañero", "objetivo NaN 200");
+            igual(0.0, cuerpo.restanteAvance(), "los avisos rotos no mueven al rival");
+            rival.alOirAlEquipo("compañero", "objetivo 1300 300");
+            cierto(cuerpo.restanteAvance() > 0, "sigue operativo tras los avisos rotos: " + cuerpo.restanteAvance());
+        });
+    }
+
+    private static Pelea peleaConRival() {
+        Combatiente a = Rivales.crear(Modelo.de("cobalto"), 0.5, 0.5, new Random(11));
+        Combatiente b = Rivales.crear(Modelo.de("chispa"), 0.5, 0.5, new Random(12));
+        Pelea p = new Pelea(new Combatiente[]{a, b}, new int[]{0, 1}, 11);
+        p.empezarRonda();
+        return p;
     }
 
     private static void apuntarDescripcionAbsurda() {
