@@ -127,23 +127,9 @@ public final class Armas {
         double sobre = c.sobrecarga > 0 ? factorSeguro(c.factorSobrecarga) : 1;
         double[] boca = boca(c, brazo);
         switch (p.arma()) {
-            case LASER: {
-                inf.ataque("laser");
-                double alcance = alcanceSeguro(p.valor("alcance", 500));
-                double danoBase = danoSeguro(p.valor("dano"));
-                double ang = c.mira;
-                double dx = Math.cos(Math.toRadians(ang)), dy = Math.sin(Math.toRadians(ang));
-                // El rayo se para en el primer robot que se cruza (justo en su chapa); a un compañero no le hace daño.
-                double[] fin = {alcance};
-                Cuerpo tocado = primeroEnLaLinea(c, boca[0], boca[1], dx, dy, alcance, fin);
-                boolean da = tocado != null && tocado.equipo != c.equipo;
-                double hx = boca[0] + dx * fin[0], hy = boca[1] + dy * fin[0];
-                pelea.rayos.add(new Pelea.Rayo(c.indice, boca[0], boca[1], hx, hy, da));
-                pelea.suceso(Suceso.Tipo.LASER, c.indice, boca[0], boca[1], ang, danoBase, "laser");
-                if (da) pelea.danar(tocado, c, danoEfectivoSeguro(danoBase * sobre), "laser", ang + 180, false, hx, hy);
-                c.retroceso = 4;
+            case LASER:
+                dispararLaser(c, p, sobre, boca, inf);
                 break;
-            }
             case BALA: {
                 int n = proyectilesSeguros(p.valor("perdigones", 1));
                 double disp = dispersionSegura(p.valor("dispersion", 3)) / Math.max(0.5, c.cifras.precision);
@@ -197,6 +183,30 @@ public final class Armas {
             default:
                 break;
         }
+    }
+
+    /** Dispara un rayo láser: se detiene en el primer robot u obstáculo destructible de la línea. */
+    private void dispararLaser(Cuerpo c, Pieza p, double sobre, double[] boca, Combatiente.Informe inf) {
+        inf.ataque("laser");
+        double alcance = alcanceSeguro(p.valor("alcance", 500));
+        double danoBase = danoSeguro(p.valor("dano"));
+        double ang = c.mira;
+        double dx = Math.cos(Math.toRadians(ang)), dy = Math.sin(Math.toRadians(ang));
+        double[] fin = {alcance};
+        Cuerpo tocado = primeroEnLaLinea(c, boca[0], boca[1], dx, dy, alcance, fin);
+        double[] finObs = {fin[0]};
+        Arena.Trampa obstaculo = pelea.arena.primeroEnLaLinea(boca[0], boca[1], dx, dy, fin[0], finObs);
+        if (obstaculo != null) {
+            fin[0] = finObs[0];
+            tocado = null;
+        }
+        boolean da = (tocado != null && tocado.equipo != c.equipo) || obstaculo != null;
+        double hx = boca[0] + dx * fin[0], hy = boca[1] + dy * fin[0];
+        pelea.rayos.add(new Pelea.Rayo(c.indice, boca[0], boca[1], hx, hy, da));
+        pelea.suceso(Suceso.Tipo.LASER, c.indice, boca[0], boca[1], ang, danoBase, "laser");
+        if (obstaculo != null) pelea.arena.danar(obstaculo, pelea, c.indice, danoEfectivoSeguro(danoBase * sobre), hx, hy, "laser");
+        else if (da) pelea.danar(tocado, c, danoEfectivoSeguro(danoBase * sobre), "laser", ang + 180, false, hx, hy);
+        c.retroceso = 4;
     }
 
     /** Lo especial de la cabeza: escudo, turbo, reparar, camuflaje, pulso o sobrecarga. */
@@ -265,14 +275,26 @@ public final class Armas {
         pelea.suceso(Suceso.Tipo.ATURDIDO, e.indice, e.x, e.y, 0, turnos, "");
     }
 
-    /** Un golpe cuerpo a cuerpo: al enemigo que tenga delante y a su alcance (el más cercano), sea o no al que mira el código. */
+    /** Un golpe cuerpo a cuerpo: al enemigo que tenga delante y a su alcance (el más cercano), o a un obstáculo destructible. */
     private void golpear(Cuerpo c, Pieza p, double sobre) {
-        Cuerpo e = alAlcance(c, alcanceSeguro(p.valor("alcance", 50)), conoSeguro(p.valor("cono", 70)));
+        double alcance = alcanceSeguro(p.valor("alcance", 50));
+        double cono = conoSeguro(p.valor("cono", 70));
+        Cuerpo e = alAlcance(c, alcance, cono);
         // Un golpe cuerpo a cuerpo empuja un poco hacia delante.
         c.x += Math.cos(Math.toRadians(c.mira)) * 6;
         c.y += Math.sin(Math.toRadians(c.mira)) * 6;
         c.retroceso = -8;
         if (e == null) {
+            Arena.Trampa obs = pelea.arena.alAlcance(c, alcance, cono);
+            if (obs != null) {
+                double ang = Math.toDegrees(Math.atan2(obs.y - c.y, obs.x - c.x));
+                double hx = obs.x - Math.cos(Math.toRadians(ang)) * obs.radio * 0.85;
+                double hy = obs.y - Math.sin(Math.toRadians(ang)) * obs.radio * 0.85;
+                double danoBase = danoSeguro(p.valor("dano"));
+                pelea.suceso(Suceso.Tipo.GOLPE_CUERPO, c.indice, hx, hy, c.mira, danoBase, p.id);
+                pelea.arena.danar(obs, pelea, c.indice, danoEfectivoSeguro(danoBase * sobre * c.cifras.cuerpo), hx, hy, "cuerpo");
+                return;
+            }
             pelea.suceso(Suceso.Tipo.FALLO_CUERPO, c.indice, c.x, c.y, c.mira, 0, p.id);
             return;
         }

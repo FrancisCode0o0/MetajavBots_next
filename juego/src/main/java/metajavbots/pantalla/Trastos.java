@@ -12,7 +12,7 @@ import java.util.Random;
  */
 final class Trastos {
 
-    private enum Forma { TORNILLO, TUERCA, ENGRANAJE, CABEZA }
+    private enum Forma { TORNILLO, TUERCA, ENGRANAJE, CABEZA, ESCOMBRO }
 
     private static final class Trasto {
         Forma forma;
@@ -29,6 +29,17 @@ final class Trastos {
             Trasto t = nuevo(x, y, suelo, escala);
             t.forma = i % 3 == 0 ? Forma.ENGRANAJE : i % 3 == 1 ? Forma.TUERCA : Forma.TORNILLO;
             t.color = i % 4 == 0 ? 0xC87533 : 0xB8C0C8;
+        }
+    }
+
+    /** Escombros de un obstáculo destruido que rebotan en el suelo y se desvanecen. */
+    void escombros(float x, float y, float suelo, int n, float escala, int color) {
+        for (int i = 0; i < n; i++) {
+            Trasto t = nuevo(x, y, suelo, escala);
+            t.forma = Forma.ESCOMBRO;
+            t.tam = (5 + azar.nextFloat() * 6) * escala;
+            t.vida = 2.2f + azar.nextFloat() * 1.2f;
+            t.color = i % 3 == 0 ? Pincel.oscurecer(color, 0.25f) : color;
         }
     }
 
@@ -105,6 +116,11 @@ final class Trastos {
                     p.circulo(t.x, t.y, t.tam, t.color, a);
                     p.circulo(t.x, t.y, t.tam * 0.45f, 0x2A2E36, a);
                     break;
+                case ESCOMBRO: {
+                    float c = (float) Math.cos(t.giro) * t.tam, d = (float) Math.sin(t.giro) * t.tam;
+                    p.poligono(new float[]{t.x - c, t.y - d, t.x + d * 0.8f, t.y - c * 0.8f, t.x + c, t.y + d, t.x - d * 0.6f, t.y + c * 0.6f}, t.color, a);
+                    break;
+                }
                 default:
                     p.linea(t.x - (float) Math.cos(t.giro) * t.tam, t.y - (float) Math.sin(t.giro) * t.tam, t.x + (float) Math.cos(t.giro) * t.tam,
                             t.y + (float) Math.sin(t.giro) * t.tam, t.tam * 0.45f, t.color, a);

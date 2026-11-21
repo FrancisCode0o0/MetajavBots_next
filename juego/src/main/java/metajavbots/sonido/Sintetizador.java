@@ -22,7 +22,7 @@ public final class Sintetizador {
             "clic", "encima", "bien", "mal", "compilar", "laser", "laser_pesado", "disparo", "ametralladora", "misil",
             "explosion", "explosion_grande", "golpe_metal", "golpe_fuerte", "fallo", "llama", "escudo", "turbo", "pulso",
             "reparar", "chispa", "pared", "choque", "servo", "parte_rota", "campana", "fuegos", "estallido", "subida",
-            "bajada", "alerta_bajada", "tope", "error", "camuflaje"};
+            "bajada", "alerta_bajada", "tope", "error", "camuflaje", "obstaculo_roto"};
 
     public static float[] hacer(String nombre, long semilla) {
         Random r = new Random(semilla ^ nombre.hashCode());
@@ -65,6 +65,7 @@ public final class Sintetizador {
             case "bip_triste": return eco(tono(1.1f, 880, 160, Onda.CUADRADA, 0.18f, r), 0.25f, 0.3f);
             case "error": return mezclar(tono(0.2f, 160, 160, Onda.CUADRADA, 0.35f, r), ruido(0.2f, 0.25f, 3, r));
             case "camuflaje": return tono(0.5f, 1800, 200, Onda.SENO, 0.3f, r);
+            case "obstaculo_roto": return mezclar(mezclar(ruido(0.35f, 0.85f, 3, r), metal(0.4f, 0.65f, r)), tono(0.18f, 140, 45, Onda.SENO, 0.7f, r));
             default: return tono(0.1f, 440, 440, Onda.SENO, 0.3f, r);
         }
     }

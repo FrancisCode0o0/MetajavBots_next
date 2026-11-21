@@ -17,10 +17,19 @@ public final class Arena {
 
     /** Una trampa o un objeto: dónde está, lo que ocupa y lo que hace. */
     public static final class Trampa {
+        final int id;
         public final String tipo;
         public double x, y;
         public final double radio;
         public final boolean solido;
+        /** Si puede romperse con proyectiles, láseres, golpes o choques (barriles y chimeneas). */
+        public final boolean destructible;
+        /** Resistencia máxima del obstáculo destructible (0 si no se puede romper). */
+        public final double resistenciaMax;
+        private double resistencia;
+        private boolean destruida;
+        /** Turnos breves de restos visibles tras romperse (ya no colisiona ni aparece en obstaculos()). */
+        private int restos;
         /** Para lo que se mueve: su velocidad (vx, vy); para lo que va a ratos, su ciclo y su fase (en turnos). */
         double vx, vy;
         final int ciclo, activo;
@@ -28,7 +37,8 @@ public final class Arena {
         /** Los charcos (aceite, pegamento) se secan: los turnos que les quedan (-1, para siempre). */
         int vida = -1;
 
-        Trampa(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo) {
+        Trampa(int id, String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistenciaMax) {
+            this.id = id;
             this.tipo = tipo;
             this.x = x;
             this.y = y;
@@ -36,16 +46,45 @@ public final class Arena {
             this.solido = solido;
             this.ciclo = ciclo;
             this.activo = activo;
+            this.destructible = resistenciaMax > 0;
+            this.resistenciaMax = Math.max(0, resistenciaMax);
+            this.resistencia = this.resistenciaMax;
         }
 
         /** ¿Hace daño ahora? Los pinchos y el rayo, solo en su rato; las sierras y el carrito, siempre. */
         public boolean peligroso() {
+            if (destruida) return false;
             switch (tipo) {
                 case "pinchos": case "rayo": return fase % ciclo < activo;
-            case "pegamento": return true;
+                case "pegamento": return true;
                 case "sierra": case "carrito": case "foso": return true;
                 default: return false;
             }
+        }
+
+        /** Resistencia actual del obstáculo (0 si ya se rompió o no es destructible). */
+        public double resistencia() {
+            return resistencia;
+        }
+
+        /** Proporción de resistencia restante en [0, 1] (1 si no es destructible). */
+        public double proporcionResistencia() {
+            return resistenciaMax > 0 ? Math.max(0, resistencia / resistenciaMax) : 1;
+        }
+
+        /** Si este obstáculo ya ha sido destruido. */
+        public boolean destruida() {
+            return destruida;
+        }
+
+        /** Si este obstáculo sigue activo en la arena. */
+        public boolean activa() {
+            return !destruida;
+        }
+
+        /** Turnos restantes de restos breves en el suelo tras destruirse. */
+        public int restos() {
+            return restos;
         }
 
         /** De 0 a 1, lo que han salido los pinchos (para dibujarlos subiendo y bajando). */
@@ -153,11 +192,16 @@ public final class Arena {
     /** Lo que agarra el suelo en ese sitio: el de la arena, y en el aceite casi nada. */
     double agarreEn(double x, double y) {
         double a = agarre;
-        for (Trampa t : trampas) if (t.tipo.equals("aceite") && Math.hypot(t.x - x, t.y - y) < t.radio) a = Math.min(a, 0.18);
+        for (Trampa t : trampas) if (!t.destruida && t.tipo.equals("aceite") && Math.hypot(t.x - x, t.y - y) < t.radio) a = Math.min(a, 0.18);
         return a;
     }
 
+    private static final double RESISTENCIA_BARRIL = 30;
+    private static final double RESISTENCIA_CHIMENEA = 50;
+    private static final int TURNOS_RESTOS = 45;
+
     private final List<Trampa> trampas = new ArrayList<>();
+    private int siguienteId;
     /** Lo que agarra el suelo: 1 normal; menos, se resbala (cuesta frenar y cambiar de dirección). */
     public final double agarre;
     /** Cuándo puede volver a hacer daño cada trampa a cada robot (para que no pegue en todos los turnos). */
@@ -171,11 +215,11 @@ public final class Arena {
         return Collections.unmodifiableList(trampas);
     }
 
-    /** Lo que ve ese robot: una vista de cada trampa (vacía en las arenas de siempre). */
+    /** Lo que ve ese robot: una vista de cada trampa activa (vacía en las arenas de siempre). */
     List<Cosa> vistas(Cuerpo c) {
         if (trampas.isEmpty()) return List.of();
         List<Cosa> l = new ArrayList<>(trampas.size());
-        for (Trampa t : trampas) l.add(new Vista(c, t));
+        for (Trampa t : trampas) if (!t.destruida) l.add(new Vista(c, t));
         return l;
     }
 
@@ -185,9 +229,9 @@ public final class Arena {
         switch (escenario) {
             case "CHATARRERIA": {
                 Arena a = new Arena(1);
-                a.poner("barril", ancho * 0.22, alto * 0.7, 30, true, 0, 0);
-                a.poner("barril", ancho * 0.78, alto * 0.3, 30, true, 0, 0);
-                a.poner("barril", ancho * 0.25, alto * 0.25, 26, true, 0, 0);
+                a.ponerDestructible("barril", ancho * 0.22, alto * 0.7, 30, RESISTENCIA_BARRIL);
+                a.ponerDestructible("barril", ancho * 0.78, alto * 0.3, 30, RESISTENCIA_BARRIL);
+                a.ponerDestructible("barril", ancho * 0.25, alto * 0.25, 26, RESISTENCIA_BARRIL);
                 a.poner("pinchos", cx - 170, cy, 55, false, 150, 60);
                 a.poner("pinchos", cx + 170, cy, 55, false, 150, 60).fase = 75;
                 a.poner("iman", cx, cy, 200, false, 0, 0);
@@ -205,14 +249,14 @@ public final class Arena {
             case "HIELO": {
                 Arena a = new Arena(0.3);
                 a.poner("foso", cx, cy, 70, false, 0, 0);
-                a.poner("barril", ancho * 0.2, alto * 0.5, 28, true, 0, 0);
-                a.poner("barril", ancho * 0.8, alto * 0.5, 28, true, 0, 0);
+                a.ponerDestructible("barril", ancho * 0.2, alto * 0.5, 28, RESISTENCIA_BARRIL);
+                a.ponerDestructible("barril", ancho * 0.8, alto * 0.5, 28, RESISTENCIA_BARRIL);
                 return a;
             }
             case "TEJADO": {
                 Arena a = new Arena(0.6);
-                a.poner("chimenea", ancho * 0.3, alto * 0.65, 40, true, 0, 0);
-                a.poner("chimenea", ancho * 0.7, alto * 0.35, 40, true, 0, 0);
+                a.ponerDestructible("chimenea", ancho * 0.3, alto * 0.65, 40, RESISTENCIA_CHIMENEA);
+                a.ponerDestructible("chimenea", ancho * 0.7, alto * 0.35, 40, RESISTENCIA_CHIMENEA);
                 Trampa rayo = a.poner("rayo", cx, cy, 70, false, 200, 30);
                 rayo.vx = 1.4;
                 rayo.vy = 1.0;
@@ -224,24 +268,112 @@ public final class Arena {
     }
 
     private Trampa poner(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo) {
-        Trampa t = new Trampa(tipo, x, y, radio, solido, ciclo, activo);
+        Trampa t = new Trampa(siguienteId++, tipo, x, y, radio, solido, ciclo, activo, 0);
         trampas.add(t);
         return t;
+    }
+
+    private Trampa ponerDestructible(String tipo, double x, double y, double radio, double resistencia) {
+        Trampa t = new Trampa(siguienteId++, tipo, x, y, radio, true, 0, 0, resistencia);
+        trampas.add(t);
+        return t;
+    }
+
+    /** Aplica daño a un obstáculo destructible; al llegar a 0 lo destruye y avisa con OBSTACULO_ROTO. */
+    boolean danar(Trampa t, Pelea p, int quien, double dano, double ix, double iy, String arma) {
+        if (t == null || !t.destructible || t.destruida || !Double.isFinite(dano) || dano <= 0) return false;
+        t.resistencia = Math.max(0, t.resistencia - dano);
+        if (t.resistencia <= 0) {
+            t.destruida = true;
+            t.restos = TURNOS_RESTOS;
+            p.suceso(Suceso.Tipo.OBSTACULO_ROTO, quien, t.x, t.y, 0, t.radio, t.tipo);
+            return true;
+        }
+        p.suceso(Suceso.Tipo.TRAMPA, quien, ix, iy, 0, dano, t.tipo);
+        return false;
+    }
+
+    /** Comprueba si un proyectil impacta contra un obstáculo destructible; devuelve si el proyectil se detuvo. */
+    boolean impactoProyectil(Pelea p, Proyectil pr) {
+        for (Trampa t : trampas) {
+            if (!t.destructible || t.destruida) continue;
+            if (Math.hypot(t.x - pr.x, t.y - pr.y) <= t.radio) {
+                pr.vivo = false;
+                if (pr.misil) p.suceso(Suceso.Tipo.EXPLOSION, pr.dueno, pr.x, pr.y, 0, pr.dano, "misil");
+                danar(t, p, pr.dueno, pr.dano, pr.x, pr.y, pr.misil ? "misil" : "bala");
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** El primer obstáculo destructible activo en la línea (x, y) + t*(dx, dy) hasta «alcance». */
+    Trampa primeroEnLaLinea(double x, double y, double dx, double dy, double alcance, double[] fin) {
+        Trampa primero = null;
+        fin[0] = alcance;
+        for (Trampa t : trampas) {
+            if (!t.destructible || t.destruida) continue;
+            double ox = t.x - x, oy = t.y - y;
+            double proy = ox * dx + oy * dy;
+            double perp = Math.abs(ox * dy - oy * dx);
+            if (proy <= 0 || perp > t.radio) continue;
+            double entrada = Math.max(0, proy - Math.sqrt(t.radio * t.radio - perp * perp));
+            if (entrada <= alcance && entrada < fin[0]) {
+                fin[0] = entrada;
+                primero = t;
+            }
+        }
+        return primero;
+    }
+
+    /** El obstáculo destructible más cercano al alcance de un golpe cuerpo a cuerpo de c; null si no hay. */
+    Trampa alAlcance(Cuerpo c, double alcance, double cono) {
+        Trampa mejor = null;
+        double mejorD = Double.MAX_VALUE;
+        for (Trampa t : trampas) {
+            if (!t.destructible || t.destruida) continue;
+            double d = Math.hypot(t.x - c.x, t.y - c.y);
+            double ang = Math.toDegrees(Math.atan2(t.y - c.y, t.x - c.x));
+            if (d <= c.radio + t.radio + alcance && Math.abs(Pelea.normal(ang - c.mira)) <= cono / 2 && d < mejorD) {
+                mejor = t;
+                mejorD = d;
+            }
+        }
+        return mejor;
+    }
+
+    /** Daña los obstáculos destructibles alcanzados por un cono de llamas. */
+    void quemar(Pelea p, Cuerpo c, double alcance, double cono, double dano) {
+        for (Trampa t : trampas) {
+            if (!t.destructible || t.destruida) continue;
+            double d = Math.hypot(t.x - c.x, t.y - c.y);
+            double ang = Math.toDegrees(Math.atan2(t.y - c.y, t.x - c.x));
+            if (d <= alcance + t.radio && Math.abs(Pelea.normal(ang - c.mira)) <= cono / 2 + 8) {
+                danar(t, p, c.indice, dano, t.x, t.y, "llama");
+            }
+        }
     }
 
     /** Un turno: se mueve lo que se mueve y cada trampa hace lo suyo a los robots que la tocan. */
     void turno(Pelea p) {
         if (trampas.isEmpty()) return;
         for (Trampa t : trampas) {
+            if (t.destruida) {
+                if (t.restos > 0) t.restos--;
+                continue;
+            }
             t.fase++;
             if (t.vida > 0) t.vida--;
             mover(t, p);
         }
-        trampas.removeIf(t -> t.vida == 0);
+        trampas.removeIf(t -> t.vida == 0 || t.destruida && t.restos <= 0);
         for (int i = 0; i < p.combatientes.length; i++) {
             Cuerpo c = p.cuerpo(i);
             if (c == null || c.fuera) continue;
-            for (int k = 0; k < trampas.size(); k++) efecto(p, c, k, trampas.get(k));
+            for (int k = 0; k < trampas.size(); k++) {
+                Trampa t = trampas.get(k);
+                if (!t.destruida) efecto(p, c, t);
+            }
         }
     }
 
@@ -256,7 +388,7 @@ public final class Arena {
         t.y = Math.max(t.radio, Math.min(p.alto - t.radio, t.y));
     }
 
-    private void efecto(Pelea p, Cuerpo c, int k, Trampa t) {
+    private void efecto(Pelea p, Cuerpo c, Trampa t) {
         double dx = c.x - t.x, dy = c.y - t.y, d = Math.hypot(dx, dy);
         boolean suelo = !c.vuela();
         if (t.tipo.equals("pegamento")) {
@@ -275,13 +407,18 @@ public final class Arena {
             return;
         }
         if (t.solido && d < t.radio + c.radio && d > 0.01) {
-            // Lo sólido no se atraviesa: se aparta al robot (y, si iba rápido, se da un golpe).
+            // Lo sólido no se atraviesa: se aparta al robot (y, si iba rápido, se da un golpe y daña destructibles).
             double meter = t.radio + c.radio - d;
             c.x += dx / d * meter;
             c.y += dy / d * meter;
-            if (Math.abs(c.velocidad) > 1.5 && listo(k, c, p, 20)) {
-                p.danar(c, null, 0.5 + Math.abs(c.velocidad) * 0.3, t.tipo, Math.toDegrees(Math.atan2(-dy, -dx)), false);
+            double vel = Math.abs(c.velocidad);
+            if (vel > 1.5 && listo(t.id, c, p, 20)) {
+                p.danar(c, null, 0.5 + vel * 0.3, t.tipo, Math.toDegrees(Math.atan2(-dy, -dx)), false);
                 p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, 0, 1, t.tipo);
+                if (t.destructible) {
+                    double danoChoque = 6 + vel * 2.5 * (c.combatiente.montaje.peso() / 100.0);
+                    danar(t, p, c.indice, danoChoque, t.x + dx / d * t.radio, t.y + dy / d * t.radio, "choque");
+                }
             }
             c.velocidad *= 0.5;
         }
@@ -301,14 +438,14 @@ public final class Arena {
                 c.avance = 0;
                 break;
             case "carrito":
-                if (listo(k, c, p, 25)) {
+                if (listo(t.id, c, p, 25)) {
                     p.danar(c, null, 4, "carrito", Math.toDegrees(Math.atan2(-dy, -dx)), false);
                     p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, 0, 2, "carrito");
                 }
                 break;
             default:
                 // Pinchos, sierras y rayo: daño a golpes, no en cada turno.
-                if (listo(k, c, p, t.tipo.equals("sierra") ? 12 : 30)) {
+                if (listo(t.id, c, p, t.tipo.equals("sierra") ? 12 : 30)) {
                     double dano = t.tipo.equals("sierra") ? 2.5 : t.tipo.equals("rayo") ? 7 : 5;
                     p.danar(c, null, dano, t.tipo, Math.toDegrees(Math.atan2(-dy, -dx)), false);
                     p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, 0, 2, t.tipo);

@@ -693,14 +693,16 @@ public final class Pelea {
         Pieza p = c.piezaDe(c.brazoDeLaLlama);
         if (p == null) return;
         double sobre = c.sobrecarga > 0 ? Armas.factorSeguro(c.factorSobrecarga) : 1;
+        double alc = Armas.alcanceSeguro(p.valor("alcance", 160)), con = Armas.conoSeguro(p.valor("cono", 30));
+        double dano = Armas.danoSeguro(p.valor("dano", 1)) * sobre * c.cifras.cuerpo;
         for (Cuerpo e : cuerpos) {
             if (e == c || e.equipo == c.equipo || e.fuera) continue;
             double d = Math.hypot(e.x - c.x, e.y - c.y), ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
-            double alc = Armas.alcanceSeguro(p.valor("alcance", 160)), con = Armas.conoSeguro(p.valor("cono", 30));
             if (d <= alc + e.radio && Math.abs(normal(ang - c.mira)) <= con / 2 + 8) {
-                danar(e, c, Armas.danoSeguro(p.valor("dano", 1)) * sobre * c.cifras.cuerpo, "llama", ang + 180, false);
+                danar(e, c, dano, "llama", ang + 180, false);
             }
         }
+        arena.quemar(this, c, alc, con, dano);
     }
 
     /** El blanco al que persigue un misil: el enemigo más cercano a él. */
@@ -740,6 +742,7 @@ public final class Pelea {
                 if (p.misil) suceso(Suceso.Tipo.EXPLOSION, p.dueno, p.x, p.y, 0, 0, "misil");
                 continue;
             }
+            if (arena.impactoProyectil(this, p)) continue;
             for (Cuerpo e : cuerpos) {
                 if (e.equipo == dueno.equipo || e.fuera) continue;
                 if (Math.hypot(e.x - p.x, e.y - p.y) <= e.radio) {

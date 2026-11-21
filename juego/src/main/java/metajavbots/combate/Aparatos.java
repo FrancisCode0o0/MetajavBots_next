@@ -289,7 +289,9 @@ public final class Aparatos {
         for (int k = 0; k < 20; k++) {
             double x = p.ancho * (0.15 + 0.7 * azar.nextDouble()), y = p.alto * (0.15 + 0.7 * azar.nextDouble());
             double libre = Double.MAX_VALUE;
-            for (Arena.Trampa t : p.arena.trampas()) libre = Math.min(libre, Math.hypot(t.x - x, t.y - y) - t.radio);
+            for (Arena.Trampa t : p.arena.trampas()) {
+                if (!t.destruida()) libre = Math.min(libre, Math.hypot(t.x - x, t.y - y) - t.radio);
+            }
             if (libre < 40) continue;
             // Una carrera justa: a la misma distancia de todos y lejos de cada uno (que haya que programar cómo ir).
             double cerca = Double.MAX_VALUE, lejos = 0;

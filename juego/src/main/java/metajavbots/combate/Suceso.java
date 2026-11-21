@@ -17,6 +17,8 @@ public final class Suceso {
         DECIR, ERROR_CODIGO, TOPE,
         /** Una trampa de la arena (el texto dice cuál: pinchos, sierra, foso…). */
         TRAMPA,
+        /** Un obstáculo destructible de la arena se ha roto (el texto dice cuál: barril, chimenea…). */
+        OBSTACULO_ROTO,
         /** Un aparato: sale, se coge, se monta, se conecta, se usa o no engancha (el texto dice qué). */
         APARATO
     }

@@ -69,6 +69,19 @@ public final class Efectos {
         for (int k = 0; k < 10 * fuerza; k++) humo(px + azar.nextFloat() * 40 - 20, py + azar.nextFloat() * 20 - 10, fuerza * 1.5f);
     }
 
+    /** Escombros, chispas y polvo al romperse un obstáculo destructible (barril o chimenea). */
+    public void escombros(float px, float py, int colorPrincipal, int colorSecundario) {
+        anadir(Tipo.ONDA, px, py, 0, 0, 0.35f, 55, colorSecundario);
+        chispas(px, py, 10, 0xFFE38A);
+        for (int k = 0; k < 14; k++) {
+            double a = -Math.PI * azar.nextDouble();
+            float v = 90 + azar.nextFloat() * 220;
+            int c = k % 3 == 0 ? colorSecundario : colorPrincipal;
+            anadir(Tipo.TROZO, px, py, (float) Math.cos(a) * v, (float) Math.sin(a) * v, 0.7f + azar.nextFloat() * 0.7f, 4 + azar.nextFloat() * 5, c);
+        }
+        for (int k = 0; k < 6; k++) humo(px + azar.nextFloat() * 24 - 12, py + azar.nextFloat() * 14 - 7, 0.9f);
+    }
+
     /** Un cohete de fuegos artificiales que sube y estalla en colores. */
     public void cohete(float px, float py, float alto, int rgb) {
         anadir(Tipo.COHETE, px, py, azar.nextFloat() * 60 - 30, -alto * 1.6f, 0.62f + azar.nextFloat() * 0.25f, 3, rgb);

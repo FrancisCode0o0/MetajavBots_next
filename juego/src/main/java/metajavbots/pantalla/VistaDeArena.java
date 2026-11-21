@@ -154,6 +154,17 @@ public final class VistaDeArena {
         sonidos.tocar(que, 0.7f);
     }
 
+    /** Partículas, escombros y sonido al romperse un obstáculo destructible. */
+    private void obstaculoRoto(Suceso s, float px, Sonidos sonidos) {
+        float suelo = sy(s.y);
+        float e = escala(s.y);
+        boolean barril = s.texto.equals("barril");
+        efectos.escombros(px, suelo - 18 * e, barril ? 0x9A4A22 : 0x8A3B2E, barril ? 0xFFC857 : 0x5A2620);
+        trastos.escombros(px, suelo - 18 * e, suelo, barril ? 10 : 12, e, barril ? 0x9A4A22 : 0x8A3B2E);
+        sacudida = Math.max(sacudida, 6);
+        if (sonidos != null) sonidos.tocar("obstaculo_roto", 0.8f);
+    }
+
     public void sucesos(Pelea pelea, Sonidos sonidos) {
         sucesos(pelea.sucesos(), sonidos);
     }
@@ -194,6 +205,7 @@ public final class VistaDeArena {
                     if (sonidos != null) sonidos.tocar("escudo", 0.5f);
                     break;
                 case APARATO: aparato(s, px, sonidos); break;
+                case OBSTACULO_ROTO: obstaculoRoto(s, px, sonidos); break;
                 case TRAMPA:
                     efectos.chispas(px, sy(s.y) - 20, s.texto.equals("sierra") ? 10 : 6, s.texto.equals("rayo") ? 0xBFE6FF : 0xFFE38A);
                     if (s.texto.equals("foso")) efectos.anadir(Efectos.Tipo.ONDA, sx(s.x, s.y), sy(s.y), 0, 0, 0.6f, 120 * escalaX, 0x101722);
@@ -262,7 +274,7 @@ public final class VistaDeArena {
         orden.sort((u, v) -> Double.compare(v.y, u.y));
         // Los objetos sólidos (barriles, chimeneas, el carrito) van entre los robots, por profundidad.
         java.util.List<metajavbots.combate.Arena.Trampa> solidos = new java.util.ArrayList<>();
-        for (metajavbots.combate.Arena.Trampa t : pelea.arena.trampas()) if (t.solido) solidos.add(t);
+        for (metajavbots.combate.Arena.Trampa t : pelea.arena.trampas()) if (t.solido && !t.destruida()) solidos.add(t);
         solidos.sort((u, v) -> Double.compare(v.y, u.y));
         int s = 0;
         for (Cuerpo c : orden) {

@@ -126,11 +126,15 @@ final class DibujoDeArenas {
         }
     }
 
-    /** Las trampas planas (en el suelo): pinchos, sierras, imán, foso y rayo. Antes que los robots. */
+    /** Las trampas planas (en el suelo): pinchos, sierras, imán, foso, rayo y restos breves. Antes que los robots. */
     static void delSuelo(Pincel p, VistaDeArena v, Arena arena, float t) {
         for (Arena.Trampa tr : arena.trampas()) {
-            if (tr.solido) continue;
             float cx = v.sx(tr.x, tr.y), cy = v.sy(tr.y), rx = (float) tr.radio * v.escala(tr.y), ry = (float) tr.radio * v.escalaY();
+            if (tr.destruida()) {
+                if (tr.restos() > 0) restos(p, cx, cy, rx, ry, tr);
+                continue;
+            }
+            if (tr.solido) continue;
             switch (tr.tipo) {
                 case "foso":
                     p.elipse(cx, cy, rx * 1.08f, ry * 1.08f, 0, 0x8C9AA6, 1);
@@ -230,8 +234,34 @@ final class DibujoDeArenas {
         }
     }
 
+    /** Restos breves en el suelo tras romperse un barril o una chimenea. */
+    private static void restos(Pincel p, float cx, float cy, float rx, float ry, Arena.Trampa tr) {
+        float a = Math.min(1f, tr.restos() / 20f);
+        boolean barril = tr.tipo.equals("barril");
+        int base = barril ? 0x6E3518 : 0x5A2620;
+        int detalle = barril ? 0x3A3F46 : 0x8A3B2E;
+        p.elipse(cx, cy, rx * 0.95f, ry * 0.7f, 0, 0x1A1816, 0.35f * a);
+        for (int k = 0; k < 5; k++) {
+            double ang = k * 1.25 + 0.4;
+            float ox = cx + (float) Math.cos(ang) * rx * 0.55f;
+            float oy = cy + (float) Math.sin(ang) * ry * 0.4f;
+            p.rect(ox - rx * 0.16f, oy - ry * 0.1f, rx * 0.32f, ry * 0.22f, k % 2 == 0 ? base : detalle, 0.85f * a);
+        }
+    }
+
+    /** Grietas visibles sobre un obstáculo destructible dañado. */
+    private static void grietas(Pincel p, float cx, float cy, float radio, double proporcion) {
+        int trazos = proporcion < 0.4 ? 3 : 2;
+        for (int k = 0; k < trazos; k++) {
+            float dx = (k - 1) * radio * 0.45f;
+            p.linea(cx + dx, cy - radio * 0.4f, cx + dx * 0.4f, cy + radio * 0.1f, 2f, 0x1A1512, 0.85f);
+            p.linea(cx + dx * 0.4f, cy + radio * 0.1f, cx + dx * 0.9f, cy + radio * 0.5f, 1.6f, 0x1A1512, 0.75f);
+        }
+    }
+
     /** Un objeto sólido (barril, chimenea, carrito), con los pies en su sitio. Entre los robots, por profundidad. */
     static void solido(Pincel p, VistaDeArena v, Arena.Trampa tr, float t) {
+        if (tr.destruida()) return;
         float cx = v.sx(tr.x, tr.y), cy = v.sy(tr.y), rx = (float) tr.radio * v.escala(tr.y), ry = (float) tr.radio * v.escalaY();
         p.elipse(cx, cy + ry * 0.2f, rx * 1.1f, ry * 0.9f, 0, 0x000000, 0.3f);
         switch (tr.tipo) {
@@ -243,6 +273,7 @@ final class DibujoDeArenas {
                 p.elipse(cx, cy - alto, rx, ry * 0.7f, 0, 0xB85E30, 1);
                 p.elipse(cx, cy - alto, rx * 0.25f, ry * 0.18f, 0, 0x3A2A22, 1);
                 p.rect(cx - rx * 0.7f, cy - alto * 0.55f, rx * 0.25f, alto * 0.3f, 0xFFC857, 0.9f);
+                if (tr.proporcionResistencia() < 0.75) grietas(p, cx, cy - alto * 0.5f, rx * 0.65f, tr.proporcionResistencia());
                 break;
             }
             case "chimenea": {
@@ -250,6 +281,7 @@ final class DibujoDeArenas {
                 p.rect(cx - rx, cy - alto, rx * 2, alto, 0x8A3B2E, 1);
                 for (int k = 1; k < 7; k++) p.rect(cx - rx, cy - alto * k / 7f, rx * 2, 2, 0x5A2620, 1);
                 p.rect(cx - rx * 1.15f, cy - alto - 8, rx * 2.3f, 12, 0x5A2620, 1);
+                if (tr.proporcionResistencia() < 0.75) grietas(p, cx, cy - alto * 0.45f, rx * 0.7f, tr.proporcionResistencia());
                 for (int k = 0; k < 3; k++) {
                     float f = (t * 0.4f + k / 3f) % 1f;
                     p.circulo(cx + (float) Math.sin(t + k) * 6, cy - alto - 14 - f * 50, 6 + f * 10, 0x9AA3AD, 0.4f * (1 - f));
