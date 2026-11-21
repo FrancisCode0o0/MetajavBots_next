@@ -59,8 +59,11 @@ public final class EntrenadorFlotante {
     /** Márgenes y tamaño del botón «×» en la esquina superior derecha del bocadillo de tips. */
     public static final float MARGEN_TEXTO_IZQ = 12f;
     public static final float BOTON_CERRAR_TAM = 24f;
+    /** Margen vertical mínimo entre el bocadillo de tips y los bordes superior e inferior de la pantalla. */
+    public static final float MARGEN_VERTICAL_TIP = 16f;
     private static final float BOTON_CERRAR_MARGEN = 6f;
     private static final float MARGEN_TEXTO_DER = BOTON_CERRAR_TAM + BOTON_CERRAR_MARGEN + 12f;
+    private static final float RESERVA_VERTICAL_TIP = 70f;
 
     /** Geometría del bocadillo de tips y de su botón «×», compartida entre el bloqueo de clic y el dibujo. */
     public record CajaTip(float x, float y, float w, float h, float anchoTexto, float cerrarX, float cerrarY, float cerrarTam) {
@@ -79,7 +82,7 @@ public final class EntrenadorFlotante {
     private List<Concepto> encontrados = new ArrayList<>();
     private Concepto elegido;
     private int nivel = 1;
-    private final Ui.Desplazable despLista = new Ui.Desplazable(), despTexto = new Ui.Desplazable();
+    private final Ui.Desplazable despLista = new Ui.Desplazable(), despTexto = new Ui.Desplazable(), despTip = new Ui.Desplazable();
     private float t, hablando, dt;
     /** Cuánto ha salido la pestaña (0, recogida en el borde; 1, entera). */
     private float asomada;
@@ -165,6 +168,7 @@ public final class EntrenadorFlotante {
     private void cerrarTip(float enfriamiento) {
         tip = null;
         tiempoDelTip = 0;
+        despTip.alPrincipio();
         esperaDelTip = Math.max(esperaDelTip, enfriamiento);
     }
 
@@ -182,6 +186,7 @@ public final class EntrenadorFlotante {
             if (esperaDelTip > 0) return false;
             tip = siguienteTip(codigo);
             tiempoDelTip = dt;
+            despTip.alPrincipio();
             return tip != null;
         }
         tiempoDelTip += dt;
@@ -191,24 +196,37 @@ public final class EntrenadorFlotante {
         return false;
     }
 
-    /** Calcula la caja del bocadillo y la posición del botón «×» a partir del tamaño de pantalla y la altura del texto. */
+    /** Calcula la caja del bocadillo y la posición del botón «×» garantizando límites seguros dentro de la pantalla. */
     public static CajaTip cajaTip(float pantallaAncho, float pantallaAlto, float altoTexto) {
-        float w = Math.min(420, pantallaAncho * 0.36f);
+        float w = Math.min(420f, Math.max(160f, pantallaAncho * 0.36f));
         float anchoTexto = Math.max(80f, w - MARGEN_TEXTO_IZQ - MARGEN_TEXTO_DER);
-        float h = Math.max(altoTexto, BOTON_CERRAR_TAM) + 70f;
-        float x = pantallaAncho - 80f - w;
-        float y = pantallaAlto * 0.56f - h / 2f;
+        float margenY = Math.min(MARGEN_VERTICAL_TIP, Math.max(0f, pantallaAlto * 0.05f));
+        float altoMax = Math.max(0f, pantallaAlto - 2f * margenY);
+        float hDeseado = Math.max(Math.max(0f, altoTexto), BOTON_CERRAR_TAM) + RESERVA_VERTICAL_TIP;
+        float h = Math.min(hDeseado, altoMax);
+        float x = Math.max(12f, pantallaAncho - 80f - w);
+        float yIdeal = pantallaAlto * 0.56f - h / 2f;
+        float y = Math.max(margenY, Math.min(pantallaAlto - margenY - h, yIdeal));
         float cerrarX = x + w - BOTON_CERRAR_MARGEN - BOTON_CERRAR_TAM;
         float cerrarY = y + BOTON_CERRAR_MARGEN;
         return new CajaTip(x, y, w, h, anchoTexto, cerrarX, cerrarY, BOTON_CERRAR_TAM);
     }
 
+    private float tamanoLetraTip(Pincel p, Ui ui, String texto, float anchoTexto) {
+        float margenY = Math.min(MARGEN_VERTICAL_TIP, Math.max(0f, p.alto * 0.05f));
+        float altoMaxTexto = Math.max(BOTON_CERRAR_TAM, p.alto - 2f * margenY - RESERVA_VERTICAL_TIP);
+        float tl = Math.max(Pincel.LETRA_MINIMA, ui.letra * 0.8f);
+        while (tl > Pincel.LETRA_MINIMA && p.altoDeParrafo(texto, anchoTexto, tl) > altoMaxTexto) {
+            tl = Math.max(Pincel.LETRA_MINIMA, tl - 1f);
+        }
+        return tl;
+    }
+
     private CajaTip cajaTip(Pincel p, Ui ui, String texto) {
-        float w = Math.min(420, p.ancho * 0.36f);
-        float tl = ui.letra * 0.8f;
+        float w = Math.min(420f, Math.max(160f, p.ancho * 0.36f));
         float anchoTexto = Math.max(80f, w - MARGEN_TEXTO_IZQ - MARGEN_TEXTO_DER);
-        float th = p.altoDeParrafo(texto, anchoTexto, tl);
-        return cajaTip(p.ancho, p.alto, th);
+        float tl = tamanoLetraTip(p, ui, texto, anchoTexto);
+        return cajaTip(p.ancho, p.alto, p.altoDeParrafo(texto, anchoTexto, tl));
     }
 
     public void cerrar() {
@@ -321,13 +339,23 @@ public final class EntrenadorFlotante {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         String texto = T.t("entrenador.tip." + tip.id());
-        float tl = ui.letra * 0.8f;
         CajaTip c = cajaTip(p, ui, texto);
+        float tl = tamanoLetraTip(p, ui, texto, c.anchoTexto);
         float aparece = Math.min(1, tiempoDelTip * 4);
         p.caja(c.x + 3, c.y + 4, c.w, c.h, 12, 0x000000, 0.3f * aparece);
         p.caja(c.x, c.y, c.w, c.h, 12, 0xF5F3EA, 0.97f * aparece);
-        p.triangulo(c.x + c.w, c.y + c.h / 2 - 10, c.x + c.w, c.y + c.h / 2 + 10, c.x + c.w + 14, c.y + c.h / 2, 0xF5F3EA, 0.97f * aparece);
-        p.parrafo(texto, c.x + MARGEN_TEXTO_IZQ, c.y + 10, c.anchoTexto, tl, 0x1E1E1E, aparece);
+        float picoY = Math.max(c.y + 22f, Math.min(c.y + c.h - 22f, p.alto * 0.56f));
+        p.triangulo(c.x + c.w, picoY - 10, c.x + c.w, picoY + 10, c.x + c.w + 14, picoY, 0xF5F3EA, 0.97f * aparece);
+        float altoTextoDisp = Math.max(BOTON_CERRAR_TAM, c.h - RESERVA_VERTICAL_TIP);
+        float altoParrafo = p.altoDeParrafo(texto, c.anchoTexto, tl);
+        if (altoParrafo > altoTextoDisp) {
+            float anchoDesp = Math.max(60f, c.anchoTexto - 14f);
+            float d = ui.desplazable(despTip, c.x + MARGEN_TEXTO_IZQ, c.y + 10, c.anchoTexto, altoTextoDisp);
+            float altoReal = p.parrafo(texto, c.x + MARGEN_TEXTO_IZQ, c.y + 10 - d, anchoDesp, tl, 0x1E1E1E, aparece);
+            ui.finDesplazable(despTip, altoReal + 4f);
+        } else {
+            p.parrafo(texto, c.x + MARGEN_TEXTO_IZQ, c.y + 10, c.anchoTexto, tl, 0x1E1E1E, aparece);
+        }
         if (botonCerrarTip(j, c, aparece)) {
             cerrarTipManualmente();
             return;
@@ -342,6 +370,7 @@ public final class EntrenadorFlotante {
         if (ui.boton(T.t("entrenador.tip.otro"), c.x + 16 + bw, by, bw, 40, Ui.Estilo.PLANO)) {
             tip = siguienteTip(codigo);
             tiempoDelTip = 0;
+            despTip.alPrincipio();
             if (tip != null) decir(j, T.t("entrenador.tip." + tip.id()));
             return;
         }

@@ -25,13 +25,24 @@ import metajavbots.textos.T;
  *    (y ▶ en la última), las órdenes pedidas en el turno y avisos en ámbar si
  *    una llamada posterior pisa la orden de un evento anterior.
  */
-final class PanelDepurador {
+public final class PanelDepurador {
+
+    /** Longitud máxima visible de un valor de variable antes de truncarlo explícitamente con «…». */
+    public static final int MAX_LARGO_VALOR = 200;
+    private static final float SEPARACION_COL_VAR = 10f;
+    private static final float SANGRIA_VALOR_APILADO = 10f;
+
+    /** Disposición calculada para una fila de variable (dos columnas o apilada). */
+    public record DisposicionVariable(boolean apilada, float anchoNombre, float xValor, float anchoValor) {
+    }
 
     private final Ui.Desplazable desplConsola = new Ui.Desplazable();
     private final Ui.Desplazable desplVariables = new Ui.Desplazable();
     private final Ui.Desplazable desplOrdenes = new Ui.Desplazable();
     private final VentanaDeCodigo visorCodigo = new VentanaDeCodigo();
     private String fuenteCargada = "";
+    private int cantidadConsola;
+    private String ultimaLineaConsola;
     private int pestana;
 
     PanelDepurador() {
@@ -110,19 +121,45 @@ final class PanelDepurador {
         float restante = Math.max(120, abajo - ty);
         float zona = restante * 0.45f;
         float tamVar = Math.min(20, ui.letra * 0.78f);
-        float altoVar = p.altoDeLinea(tamVar) + 2;
+        float altoLinea = p.altoDeLinea(tamVar);
+        float anchoInterior = anchoTextoVariables(w - 16f);
         float d = ui.desplazable(desplVariables, x + 8, ty, w - 16, zona);
-        float yy = ty - d;
-        for (String[] v : vars) {
-            p.textoDeCodigo(ui.recortarTextoDeCodigo(v[0], 158, tamVar, false), x + 16, yy, tamVar, false, ui.tema.tipo, 1);
-            p.textoDeCodigo(ui.recortarTextoDeCodigo(v[1], w - 196, tamVar, false), x + 180, yy, tamVar, false, ui.tema.texto, 1);
-            yy += altoVar;
+        float inicioY = ty - d, yy = inicioY;
+        for (int i = 0; i < vars.size(); i++) {
+            String[] v = vars.get(i);
+            String nombre = normalizarTexto(v[0]);
+            String valor = normalizarTexto(v[1]);
+            DisposicionVariable disp = disposicionVariable(anchoInterior, p.anchoDeCodigo(nombre, tamVar, false));
+            float altoFila;
+            if (disp.apilada()) {
+                float hNom = Math.max(altoLinea, p.altoDeParrafoDeCodigo(nombre, disp.anchoNombre(), tamVar, false));
+                float hVal = valor.isEmpty() ? altoLinea : p.altoDeParrafoDeCodigo(valor, disp.anchoValor(), tamVar, false);
+                altoFila = hNom + hVal + 4f;
+                if (yy + altoFila >= ty && yy <= ty + zona) {
+                    p.parrafoDeCodigo(nombre, x + 16, yy, disp.anchoNombre(), tamVar, false, ui.tema.tipo, 1);
+                    if (!valor.isEmpty()) {
+                        p.parrafoDeCodigo(valor, x + 16 + disp.xValor(), yy + hNom, disp.anchoValor(), tamVar, false, ui.tema.texto, 1);
+                    }
+                }
+            } else {
+                float hVal = valor.isEmpty() ? altoLinea : p.altoDeParrafoDeCodigo(valor, disp.anchoValor(), tamVar, false);
+                altoFila = Math.max(altoLinea, hVal) + 4f;
+                if (yy + altoFila >= ty && yy <= ty + zona) {
+                    p.textoDeCodigo(nombre, x + 16, yy, tamVar, false, ui.tema.tipo, 1);
+                    if (!valor.isEmpty()) {
+                        p.parrafoDeCodigo(valor, x + 16 + disp.xValor(), yy, disp.anchoValor(), tamVar, false, ui.tema.texto, 1);
+                    }
+                }
+            }
+            if (i + 1 < vars.size() && yy + altoFila >= ty && yy + altoFila <= ty + zona) {
+                p.rect(x + 16, yy + altoFila - 2f, anchoInterior, 1f, ui.tema.borde, 0.25f);
+            }
+            yy += altoFila;
         }
         if (vars.isEmpty()) {
-            float anchoInterior = w - 32;
-            p.parrafo(T.t("pelea.sin_variables"), x + 16, yy, anchoInterior, tamVar, ui.tema.textoApagado, 1);
+            yy += p.parrafo(T.t("pelea.sin_variables"), x + 16, yy, anchoInterior, tamVar, ui.tema.textoApagado, 1);
         }
-        ui.finDesplazable(desplVariables, Math.max(1, vars.size()) * altoVar + 8);
+        ui.finDesplazable(desplVariables, Math.max(altoLinea, yy - inicioY) + 8f);
         ty += zona + 8;
         p.texto(T.t("pelea.consola"), x + 16, ty, tamCab, true, ui.tema.texto, 1);
         ty += p.altoDeLinea(tamCab) + 4;
@@ -151,16 +188,38 @@ final class PanelDepurador {
         Ui ui = j.ui;
         p.caja(x, y, w, h, 6, ui.tema.fondo, 1);
         float tam = Math.min(18, ui.letra * 0.74f);
-        float alto = p.altoDeLinea(tam) + 2;
-        desplConsola.desplazamiento = Math.max(0, yo.consola.size() * alto - h + 10);
-        float d = ui.desplazable(desplConsola, x, y + 4, w, h - 8);
+        float altoLinea = p.altoDeLinea(tam);
+        float espacio = 2f;
+        float anchoTexto = anchoTextoConsola(w);
+        float altoTotal = 8f;
+        for (String l : yo.consola) {
+            String texto = normalizarTexto(l);
+            float hl = texto.isEmpty() ? altoLinea : p.altoDeParrafoDeCodigo(texto, anchoTexto, tam, false);
+            altoTotal += hl + espacio;
+        }
+        float altoVisible = Math.max(1f, h - 8f);
+        float maximoAntes = Math.max(0f, desplConsola.contenido - altoVisible);
+        boolean estabaAbajo = desplConsola.desplazamiento >= maximoAntes - altoLinea;
+        String ultima = yo.consola.isEmpty() ? null : yo.consola.get(yo.consola.size() - 1);
+        boolean hayNuevas = yo.consola.size() != cantidadConsola || (ultima != null && !ultima.equals(ultimaLineaConsola));
+        desplConsola.contenido = altoTotal;
+        if (hayNuevas && (estabaAbajo || cantidadConsola == 0)) {
+            desplConsola.desplazamiento = Math.max(0f, altoTotal - altoVisible);
+        }
+        cantidadConsola = yo.consola.size();
+        ultimaLineaConsola = ultima;
+        float d = ui.desplazable(desplConsola, x, y + 4, w, altoVisible);
         float yy = y + 4 - d;
         for (String l : yo.consola) {
-            int color = l.contains("⚠") ? ui.tema.mal : l.contains("⏱") ? ui.tema.aviso : ui.tema.texto;
-            p.textoDeCodigo(l, x + 8, yy, tam, false, color, 1);
-            yy += alto;
+            String texto = normalizarTexto(l);
+            int color = texto.contains("⚠") ? ui.tema.mal : texto.contains("⏱") ? ui.tema.aviso : ui.tema.texto;
+            float hl = texto.isEmpty() ? altoLinea : p.altoDeParrafoDeCodigo(texto, anchoTexto, tam, false);
+            if (yy + hl >= y && yy <= y + h && !texto.isEmpty()) {
+                p.parrafoDeCodigo(texto, x + 8, yy, anchoTexto, tam, false, color, 1);
+            }
+            yy += hl + espacio;
         }
-        ui.finDesplazable(desplConsola, yo.consola.size() * alto + 10);
+        ui.finDesplazable(desplConsola, altoTotal);
     }
 
     private void codigoYTurno(Juego j, Cuerpo c, String fuente, boolean conTraza, float x, float ty, float w, float abajo) {
@@ -228,8 +287,47 @@ final class PanelDepurador {
         ui.finDesplazable(desplOrdenes, Math.max(1, yy - inicioY) + 8);
     }
 
+    /** Ancho útil para el texto de la consola descontando márgenes y la barra de desplazamiento. */
+    public static float anchoTextoConsola(float anchoCaja) {
+        return Math.max(60f, anchoCaja - 28f);
+    }
+
+    /** Ancho útil para la lista de variables descontando márgenes y la barra de desplazamiento. */
+    public static float anchoTextoVariables(float anchoZona) {
+        return Math.max(80f, anchoZona - 28f);
+    }
+
+    /** Calcula si una variable se dibuja en dos columnas o apilada para evitar recortes opacos y solapamientos. */
+    public static DisposicionVariable disposicionVariable(float anchoInterior, float anchoTextoNombre) {
+        float anchoSeguro = Math.max(80f, anchoInterior);
+        float colNombre = Math.min(180f, anchoSeguro * 0.42f);
+        float colValor = anchoSeguro - colNombre - SEPARACION_COL_VAR;
+        if (anchoTextoNombre <= colNombre && colValor >= 110f) {
+            return new DisposicionVariable(false, colNombre, colNombre + SEPARACION_COL_VAR, colValor);
+        }
+        float sangria = Math.min(SANGRIA_VALOR_APILADO, anchoSeguro * 0.12f);
+        return new DisposicionVariable(true, anchoSeguro, sangria, Math.max(40f, anchoSeguro - sangria));
+    }
+
+    /** Normaliza saltos de línea y tabuladores antes de medir o envolver texto en el depurador. */
+    public static String normalizarTexto(String texto) {
+        if (texto == null) return "";
+        return texto.replace("\r\n", "\n").replace('\r', '\n').replace("\t", "    ");
+    }
+
+    /** Formatea un valor de variable de forma legible, con truncado explícito «…» si supera el límite. */
+    public static String formatearValor(Object v) {
+        String s;
+        if (v == null) s = "null";
+        else if (v.getClass().isArray()) s = java.util.Arrays.deepToString(new Object[]{v});
+        else if (v instanceof Double || v instanceof Float) s = String.format(java.util.Locale.ROOT, "%.2f", ((Number) v).doubleValue());
+        else s = String.valueOf(v);
+        s = normalizarTexto(s);
+        return s.length() > MAX_LARGO_VALOR ? s.substring(0, MAX_LARGO_VALOR) + "…" : s;
+    }
+
     /** Los campos del robot del jugador y lo que valen ahora (con reflexión: es el juego quien mira, no su código). */
-    static List<String[]> variables(RobotBase r) {
+    public static List<String[]> variables(RobotBase r) {
         List<String[]> l = new ArrayList<>();
         if (r == null) return l;
         Class<?> c = r.getClass();
@@ -238,10 +336,7 @@ final class PanelDepurador {
                 if (Modifier.isStatic(f.getModifiers()) && Modifier.isFinal(f.getModifiers())) continue;
                 try {
                     f.setAccessible(true);
-                    Object v = f.get(r);
-                    String s = v == null ? "null" : v.getClass().isArray() ? java.util.Arrays.deepToString(new Object[]{v}) : String.valueOf(v);
-                    if (v instanceof Double || v instanceof Float) s = String.format(java.util.Locale.ROOT, "%.2f", ((Number) v).doubleValue());
-                    l.add(new String[]{f.getType().getSimpleName() + " " + f.getName(), s.length() > 200 ? s.substring(0, 200) + "…" : s});
+                    l.add(new String[]{f.getType().getSimpleName() + " " + f.getName(), formatearValor(f.get(r))});
                 } catch (RuntimeException | IllegalAccessException e) {
                     l.add(new String[]{f.getName(), "?"});
                 }

@@ -14,6 +14,7 @@ import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.OrdenDelTurno;
 import metajavbots.combate.Pelea;
+import metajavbots.pantallas.PanelDepurador;
 import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
 import metajavbots.rivales.Muneco;
@@ -34,6 +35,7 @@ final class PruebasDelDepurador {
         apuntarLimpiezaDeEstados();
         apuntarLimpiezaDeEventosBloqueados();
         apuntarTurnoMostrado();
+        apuntarFormatoYDisposicion();
     }
 
     private static void apuntarLimpiezaDeEstados() {
@@ -99,6 +101,36 @@ final class PruebasDelDepurador {
             p.avanzar();
             igual(0, c.turno(), "turno mostrado tras el primer tick");
             igual(0, c.turnoPensado, "turno ejecutado registrado");
+        });
+    }
+
+    private static void apuntarFormatoYDisposicion() {
+        caso("depurador: la disposición de variables evita solapamientos y recortes en nombres y valores largos", () -> {
+            float anchoInterior = PanelDepurador.anchoTextoVariables(444f);
+            cierto(anchoInterior > 300f && anchoInterior <= 444f - 28f, "ancho útil deja margen para la barra");
+            PanelDepurador.DisposicionVariable corta = PanelDepurador.disposicionVariable(anchoInterior, 90f);
+            falso(corta.apilada(), "nombre corto usa dos columnas");
+            cierto(corta.xValor() > corta.anchoNombre(), "sin solapamiento entre nombre y valor");
+            cierto(corta.xValor() + corta.anchoValor() <= anchoInterior + 0.01f, "valor dentro del ancho útil");
+
+            PanelDepurador.DisposicionVariable larga = PanelDepurador.disposicionVariable(anchoInterior, 280f);
+            cierto(larga.apilada(), "nombre largo se apila en lugar de recortarse");
+            igual(anchoInterior, larga.anchoNombre(), "nombre apilado aprovecha todo el ancho");
+            cierto(larga.xValor() + larga.anchoValor() <= anchoInterior + 0.01f, "valor apilado dentro del ancho útil");
+
+            PanelDepurador.DisposicionVariable estrecha = PanelDepurador.disposicionVariable(180f, 60f);
+            cierto(estrecha.apilada(), "panel estrecho apila para mantener legibilidad");
+            cierto(PanelDepurador.anchoTextoConsola(444f) <= 444f - 28f, "consola respeta márgenes y barra");
+        });
+
+        caso("depurador: formatea valores largos con indicador explícito y normaliza saltos y tabuladores", () -> {
+            String largo = "x".repeat(PanelDepurador.MAX_LARGO_VALOR + 45);
+            String fmt = PanelDepurador.formatearValor(largo);
+            igual(PanelDepurador.MAX_LARGO_VALOR + 1, fmt.length(), "longitud truncada exacta");
+            cierto(fmt.endsWith("…"), "indicador explícito de truncado");
+            igual("a\nb    c", PanelDepurador.formatearValor("a\r\nb\tc"), "normaliza CRLF y tabulador");
+            igual("null", PanelDepurador.formatearValor(null), "null legible");
+            igual("3.14", PanelDepurador.formatearValor(3.14159), "decimales formateados");
         });
     }
 

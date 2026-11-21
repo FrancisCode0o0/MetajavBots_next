@@ -46,6 +46,7 @@ final class PruebasDelEntrenador {
         busqueda();
         ayudas();
         bocadilloDeTips();
+        limitesVerticalesDelBocadillo();
     }
 
     private static void conceptos() {
@@ -292,6 +293,49 @@ final class PruebasDelEntrenador {
                 cierto(T.existe("entrenador.tip.cerrar_x") && !T.t("entrenador.tip.cerrar_x").isBlank(), "tooltip × en " + i);
             }
             T.idioma = Idioma.ES;
+        });
+    }
+
+    private static void limitesVerticalesDelBocadillo() {
+        caso("entrenador: el bocadillo de tips respeta límites verticales seguros con textos largos en ES, DE y EN", () -> {
+            String codigoConMuchosTips = "public class MiRobot extends Metajavbot {\n"
+                    + "    public int a;\n"
+                    + "    public void cadaTurno() {\n"
+                    + "        int n = 0; n++;\n"
+                    + "        while (true) { if (\"a\" == \"b\") avanzar(10); }\n"
+                    + "    }\n}\n";
+            List<ConsejosDelTaller.Tip> tips = ConsejosDelTaller.de(codigoConMuchosTips);
+            cierto(!tips.isEmpty(), "hay tips reales para probar");
+            float[][] pantallas = {{1600, 900}, {1280, 720}, {1024, 768}, {800, 600}, {640, 480}};
+            Idioma antes = T.idioma;
+            try {
+                for (float[] tam : pantallas) {
+                    for (float altoTexto : new float[]{20f, 160f, 420f, 900f, 2000f}) {
+                        EntrenadorFlotante.CajaTip c = EntrenadorFlotante.cajaTip(tam[0], tam[1], altoTexto);
+                        cierto(c.y() >= EntrenadorFlotante.MARGEN_VERTICAL_TIP - 0.01f,
+                                "borde superior seguro en " + tam[0] + "x" + tam[1] + " alto=" + altoTexto);
+                        cierto(c.y() + c.h() <= tam[1] - EntrenadorFlotante.MARGEN_VERTICAL_TIP + 0.01f,
+                                "borde inferior seguro en " + tam[0] + "x" + tam[1] + " alto=" + altoTexto);
+                        cierto(c.x() >= 0f && c.x() + c.w() <= tam[0], "horizontal dentro de pantalla");
+                        cierto(c.contiene(c.cerrarX(), c.cerrarY()), "× dentro del bocadillo");
+                    }
+                    for (Idioma id : Idioma.values()) {
+                        T.idioma = id;
+                        for (ConsejosDelTaller.Tip tip : tips) {
+                            String txt = T.t("entrenador.tip." + tip.id());
+                            EntrenadorFlotante.CajaTip base = EntrenadorFlotante.cajaTip(tam[0], tam[1], 60f);
+                            int charsPorLinea = Math.max(12, (int) (base.anchoTexto() / 11f));
+                            int lineas = (txt.length() + charsPorLinea - 1) / charsPorLinea;
+                            EntrenadorFlotante.CajaTip c = EntrenadorFlotante.cajaTip(tam[0], tam[1], lineas * 28f);
+                            cierto(c.y() >= EntrenadorFlotante.MARGEN_VERTICAL_TIP - 0.01f
+                                    && c.y() + c.h() <= tam[1] - EntrenadorFlotante.MARGEN_VERTICAL_TIP + 0.01f,
+                                    "tip " + tip.id() + " en " + id + " dentro de " + tam[0] + "x" + tam[1]);
+                        }
+                    }
+                }
+            } finally {
+                T.idioma = antes;
+            }
         });
     }
 
