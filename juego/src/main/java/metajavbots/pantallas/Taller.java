@@ -409,7 +409,11 @@ public final class Taller implements Pantalla {
     private void modelos(Juego j, Jugador.Robot r, float x, float y, float w, float h) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        p.parrafo(T.t("taller.modelo_ayuda"), x, y, w, ui.letra * 0.85f, ui.tema.textoSuave, 1);
+        float bwBio = Math.min(260, p.ancho("✎ " + T.t("biografias.editar"), ui.letra * 0.85f, true) + 34);
+        p.parrafo(T.t("taller.modelo_ayuda"), x, y, w - bwBio - 16, ui.letra * 0.85f, ui.tema.textoSuave, 1);
+        if (ui.boton("✎ " + T.t("biografias.editar"), x + w - bwBio, y, bwBio, 40, Ui.Estilo.NORMAL, true, T.t("biografias.editar_ayuda"))) {
+            j.ir(new PantallaBiografias(false, r.modelo));
+        }
         List<Modelo> todos = Modelo.todos();
         int porFila = 8, filas = (todos.size() + porFila - 1) / porFila;
         float cw = w / porFila, chh = (h - 60) / filas;

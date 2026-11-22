@@ -520,3 +520,95 @@ musica: artes_marciales
 3.rondas: 4
 3.texto: La final contra Chong Ladrillo, que rompe el ladrillo de abajo del montón sin tocar los de arriba. En mitad de la pelea, le tira polvo de tóner a los ojos. Por suerte, Dux-bit ya ha peleado a ciegas. | Das Finale gegen Chong Ziegel, der den untersten Ziegel im Stapel zerschlägt, ohne die oberen zu berühren. Mitten im Kampf wirft er ihm Tonerstaub in die Augen. Zum Glück hat Dux-Bit schon blind gekämpft. | The final against Chong Brick, who smashes the bottom brick of the stack without touching the ones above. Mid-fight, he throws toner dust in his eyes. Luckily, Dux-bit has fought blind before.
 3.victoria: Con los ojos cerrados, Dux-bit lo oye venir. Chong Ladrillo grita «¡Matte!», que en kumite-bit significa «me rindo y quiero irme a casa». | Mit geschlossenen Augen hört Dux-Bit ihn kommen. Chong Ziegel ruft «Matte!», was im Kumite-Bit heißt: «Ich gebe auf und will nach Hause.» | Eyes closed, Dux-bit hears him coming. Chong Brick shouts "Matte!", which in kumite-bit means "I give up and want to go home."
+
+[creed1]
+titulo: Credo: el hijo del cromo | Credo: Sohn des Chroms | Credo: Son of Chrome
+lema: El hijo de Apolo Cromo entra al ring con su propio nombre y con tu entrenador en la esquina. | Der Sohn von Apollo Chrom steigt unter eigenem Namen und mit deinem Trainer in den Ring. | Apollo Chrome's son steps into the ring under his own name with your coach in the corner.
+homenaje: Creed (2015)
+entrenador: tuercas
+musica: entrenamiento
+estilo: creed
+1.rival: Léo Tornillo | Leo Schraube | Leo Bolt
+1.modelo: serrucho
+1.nivel: 0.3
+1.escenario: HANGAR
+1.rondas: 3
+1.texto: Adonis Cromo se cansa de arreglar hojas de cálculo y aparece en el gimnasio buscando un entrenador de verdad. Antes de que nadie lo tome en serio, tiene que vencer a Léo Tornillo, el terror del sótano. | Adonis Chrom hat genug von Tabellenkalkulationen und taucht im Gym auf, um einen echten Trainer zu finden. Bevor ihn jemand ernst nimmt, muss er Leo Schraube schlagen, den Schrecken des Kellers. | Adonis Chrome gets tired of fixing spreadsheets and shows up at the gym looking for a real coach. Before anyone takes him seriously, he has to beat Leo Bolt, the terror of the basement.
+1.victoria: Léo Tornillo acaba contando tuercas en la lona. El gimnasio entero deja de burlarse y pregunta cómo se llama ese novato. | Leo Schraube zählt Muttern auf dem Boden. Das ganze Gym hört auf zu lachen und fragt, wie dieser Neuling heißt. | Leo Bolt ends up counting nuts on the canvas. The whole gym stops laughing and asks what this rookie's name is.
+2.rival: Dani «el Cable» | Dani «das Kabel» | Danny "The Cable"
+2.modelo: volteo
+2.nivel: 0.5
+2.escenario: CHATARRERIA
+2.rondas: 3
+2.texto: Tu entrenador prepara un montaje absurdo entre barriles, persecuciones de drones y flexiones de servomotor. Primera pelea televisada contra Dani «el Cable», que nunca ha perdido un asalto. | Dein Trainer startet eine absurde Trainingsmontage mit Fässern, Drohnenjagden und Servo-Liegestützen. Erster Fernsehkampf gegen Dani «das Kabel», der noch nie eine Runde verloren hat. | Your coach launches an absurd training montage with barrels, drone chases, and servo push-ups. First televised bout against Danny "The Cable", who has never dropped a round.
+2.victoria: ¡Adonis lo voltea en el último segundo! La prensa descubre de quién es hijo y el campeón del mundo lanza el reto. | Adonis kippt ihn in der letzten Sekunde! Die Presse erfährt, wessen Sohn er ist, und der Weltmeister spricht die Herausforderung aus. | Adonis flips him in the final second! The press finds out whose son he is, and the world champion issues the challenge.
+3.rival: Ricky Conlan-Bit
+3.modelo: faro
+3.nivel: 0.72
+3.escenario: NEON
+3.rondas: 4
+3.jefe: true
+3.texto: La gran noche por el título contra el campeón Ricky Conlan-Bit. Pero justo antes de sonar la campana, tu entrenador acaba en el hospital por una causa absurda y solo puede ver el combate desde la camilla. ¡Esta pelea va por él! | Die große Titel-Nacht gegen Weltmeister Ricky Conlan-Bit. Doch kurz vor dem Gong landet dein Trainer aus einem absurden Grund im Krankenhaus und schaut von der Trage aus zu. Dieser Kampf ist für ihn! | Championship night against Ricky Conlan-Bit. Right before the bell, your coach lands in the hospital for an absurd reason and can only watch from the stretcher. This fight is for your coach!
+3.victoria: ¡Adonis aguanta cada asalto y se gana el respeto de todo el estadio! Y entre destellos aparece tu entrenador, curado de golpe al verte ganar. | Adonis hält jede Runde durch und verdient sich den Respekt des ganzen Stadions! Und im Blitzlicht taucht dein Trainer auf, vor Freude schlagartig geheilt. | Adonis goes the distance and wins the entire stadium's respect! In a burst of light your coach reappears, miraculously cured the moment you win.
+
+[creed2]
+titulo: Credo II: legado de hierro | Credo II: Erbe aus Eisen | Credo II: Iron Legacy
+lema: Vuelve el apellido Tundrov. Para resistir al coloso, toca entrenar en el desierto. | Der Name Tundrov kehrt zurück. Um dem Koloss standzuhalten, geht es zum Training in die Wüste. | The Tundrov name returns. To withstand the colossus, it is time to train in the desert.
+homenaje: Creed II (2018)
+entrenador: voltaje
+musica: final
+requiere: creed1
+estilo: creed
+1.rival: Danni «el Yunque» | Danni «der Amboss» | Danny "The Anvil"
+1.modelo: bolon
+1.nivel: 0.45
+1.escenario: NEON
+1.rondas: 3
+1.texto: Adonis ya tiene el cinturón, pero le cuesta dormir pensando en el pasado. Defiende el título contra Danni «el Yunque» mientras en la grada aparece un visitante inesperado: el hijo de Igor Tundrov. | Adonis hält bereits den Gürtel, schläft aber schlecht wegen der Vergangenheit. Er verteidigt den Titel gegen Danni «der Amboss», während auf der Tribüne ein unerwarteter Gast sitzt: der Sohn von Igor Tundrov. | Adonis holds the belt, yet loses sleep over the past. He defends the title against Danny "The Anvil" while an unexpected guest watches from the stands: Igor Tundrov's son.
+1.victoria: Cinturón retenido, pero el reto está sobre la mesa: Viktor Tundrov quiere pelea. | Gürtel verteidigt, doch die Herausforderung liegt auf dem Tisch: Viktor Tundrov will den Kampf. | Belt retained, but the challenge is on the table: Viktor Tundrov wants a fight.
+2.rival: Martillo del Desierto | Wüstenhammer | Desert Hammer
+2.modelo: barrena
+2.nivel: 0.62
+2.escenario: DESIERTO
+2.rondas: 3
+2.texto: Tras un primer susto, tu entrenador te lleva a un taller perdido en el desierto sin aire acondicionado: golpear neumáticos gigantes, arrastrar baterías bajo el sol y esquivar al Martillo del Desierto. | Nach einem ersten Schreck bringt dein Trainer dich in eine abgelegene Wüstenwerkstatt ohne Klimaanlage: riesige Reifen schlagen, Batterien durch den Sand ziehen und dem Wüstenhammer ausweichen. | After an early scare, your coach drags you to a desert garage with no air conditioning: sledgehammering giant tires, dragging batteries across sand, and surviving Desert Hammer.
+2.victoria: Chasis templado al sol y código sin una sola duda. Ahora sí estás listo para el coloso. | Chassis in der Sonne gehärtet und Code ohne jeden Zweifel. Jetzt bist du bereit für den Koloss. | Chassis tempered in the sun and code without hesitation. Now you are ready for the colossus.
+3.rival: Viktor Tundrov
+3.modelo: eclipse
+3.nivel: 0.82
+3.escenario: HIELO
+3.rondas: 4
+3.jefe: true
+3.texto: La revancha del legado contra Viktor Tundrov, programado para no sentir frío ni cansancio. Para colmo, tu entrenador vuelve a acabar en el hospital justo antes del combate por un percance disparatado. ¡Demuestra de qué acero estás hecho! | Die Revanche des Vermächtnisses gegen Viktor Tundrov, programmiert ohne Kälte oder Müdigkeit. Zu allem Überfluss landet dein Trainer kurz vor dem Kampf wegen eines verrückten Missgeschicks wieder im Krankenhaus. Zeig, aus welchem Stahl du bist! | The legacy rematch against Viktor Tundrov, coded to feel neither cold nor fatigue. Worse still, your coach ends up back in the hospital right before the bell after a ridiculous mishap. Show what steel you are made of!
+3.victoria: ¡Viktor Tundrov tira la toalla y respeta al nuevo campeón! Tu entrenador irrumpe en la arena con la tirita puesta, celebrando el milagro. | Viktor Tundrov wirft das Handtuch und zollt dem neuen Champion Respekt! Dein Trainer stürmt mit Pflaster in die Arena und feiert das Wunder. | Viktor Tundrov throws in the towel and salutes the new champion! Your coach bursts into the arena still wearing a bandage, celebrating the miracle.
+
+[creed3]
+titulo: Credo III: sombras del patio | Credo III: Schatten des Hofs | Credo III: Shadows of the Yard
+lema: Un viejo amigo del patio de chatarra vuelve a reclamar su oportunidad en el ring. | Ein alter Freund vom Schrottplatz kehrt zurück, um seine Chance im Ring einzufordern. | An old friend from the scrapyard returns to claim his shot in the ring.
+homenaje: Creed III (2023)
+entrenador: remache
+musica: combate
+requiere: creed2
+estilo: creed
+1.rival: Félix «Chispa» Chávez | Felix «Funke» Chavez | Felix "Spark" Chavez
+1.modelo: remolino
+1.nivel: 0.55
+1.escenario: TEJADO
+1.rondas: 3
+1.texto: Adonis ya dirige su propio gimnasio, pero aparece Damián «Diamante» Anders-Bit, un amigo de la infancia con cuentas pendientes. Primero toca medirse a Félix «Chispa» Chávez en una exhibición bajo la lluvia. | Adonis leitet inzwischen sein eigenes Gym, da taucht Damian «Diamant» Anders-Bit auf, ein Jugendfreund mit offenen Rechnungen. Zuerst wartet Felix «Funke» Chavez in einem Schaukampf im Regen. | Adonis now runs his own gym when childhood friend Damian "Diamond" Anders-Bit shows up with unfinished business. First comes Felix "Spark" Chavez in a rain-soaked exhibition.
+1.victoria: Exhibición ganada bajo los relámpagos, pero Damián sube al ring y exige el combate por el título. | Schaukampf im Blitzlicht gewonnen, doch Damian steigt in den Ring und fordert den Titelkampf. | Exhibition won under the lightning, yet Damian climbs into the ring demanding a title shot.
+2.rival: Sombra del Gimnasio | Gym-Schatten | Gym Shadow
+2.modelo: galapago
+2.nivel: 0.7
+2.escenario: COCINA
+2.rondas: 3
+2.texto: Damián pelea sucio y conoce cada truco del patio. Tu entrenador te obliga a reescribir tu defensa desde cero frente a la Sombra del Gimnasio en una pista llena de sierras. | Damian kämpft hart und kennt jeden Trick vom Hof. Dein Trainer zwingt dich, deine Deckung gegen den Gym-Schatten auf einer Bahn voller Sägen neu zu schreiben. | Damian fights rough and knows every trick from the yard. Your coach forces you to rebuild your defense from scratch against Gym Shadow on a saw-filled floor.
+2.victoria: Defensa blindada y cabeza fría. Ya no peleas contra el pasado, sino por tu futuro. | Panzerfeste Deckung und kühler Kopf. Du kämpfst nicht mehr gegen die Vergangenheit, sondern für deine Zukunft. | Ironclad defense and a cool head. You are no longer fighting the past, but for your future.
+3.rival: Damián «Diamante» Anders-Bit | Damian «Diamant» Anders-Bit | Damian "Diamond" Anders-Bit
+3.modelo: mazo
+3.nivel: 0.88
+3.escenario: NEON
+3.rondas: 4
+3.jefe: true
+3.texto: Estadio lleno hasta la bandera contra Damián «Diamante» Anders-Bit. Justo antes del primer golpe, tu entrenador ingresa en el hospital por una ocurrencia absurda y te deja el mando absoluto del ring. ¡Gana el combate de tu vida! | Bis auf den letzten Platz gefülltes Stadion gegen Damian «Diamant» Anders-Bit. Kurz vor dem ersten Schlag landet dein Trainer wegen einer absurden Panne im Krankenhaus und überlässt dir den Ring. Gewinne den Kampf deines Lebens! | A sold-out stadium against Damian "Diamond" Anders-Bit. Right before the opening bell, your coach lands in the hospital over an absurd mishap and leaves the ring entirely in your hands. Win the fight of your life!
+3.victoria: ¡Damián cae y se levanta para chocar los puños contigo! En ese instante baja tu entrenador entre destellos: «¡Sabía que no me necesitabas… aunque vine igual!». | Damian fällt und steht wieder auf, um mit dir abzuklatschen! Im selben Moment schwebt dein Trainer im Glanz herab: «Ich wusste, du brauchst mich nicht … und kam trotzdem!» | Damian drops and gets back up to bump fists with you! Right then your coach descends in a blaze of light: "I knew you didn't need me… and I still came!"

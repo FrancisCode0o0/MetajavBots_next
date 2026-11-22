@@ -136,7 +136,11 @@ public final class Ajustes implements Pantalla {
         if (ui.e.dentro(centroX, y, centroW, alto)) {
             ui.avisar(actual.papel.en(jug.idioma) + "\n\n" + Biografias.deEntrenador(actual.id, jug.idioma));
         }
-        return y + alto + 18f;
+        y += alto + 10f;
+        if (ui.boton("✎ " + T.t("biografias.editar"), x, y, Math.min(w, 280), 42, Ui.Estilo.PLANO, true, T.t("biografias.editar_ayuda"))) {
+            j.ir(new PantallaBiografias(true, actual.id));
+        }
+        return y + 54f;
     }
 
     private void cambiarEntrenador(Juego j, Jugador jug, List<Entrenador> lista, int indice) {

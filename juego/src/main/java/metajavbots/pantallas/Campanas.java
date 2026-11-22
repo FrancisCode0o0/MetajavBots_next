@@ -131,18 +131,29 @@ public final class Campanas implements Pantalla {
         boolean abierta = c.abierta(jug.capitulosGanados);
         if (capitulo < 0) capitulo = Math.min(ganados, c.capitulos.size() - 1);
         Campana.Capitulo cap = c.capitulos.get(capitulo);
-        // El entrenador cuenta el capítulo elegido (o la victoria, si ya se ganó).
-        String cuenta = !abierta ? T.f("campanas.cerrada", tituloDe(c.requiere, jug))
-                : jug.capitulosGanados.contains(c.clave(cap.numero)) ? cap.texto.en(jug.idioma) + "\n\n" + cap.victoria.en(jug.idioma)
+        boolean capGanado = jug.capitulosGanados.contains(c.clave(cap.numero));
+        Entrenador e = c.entrenadorPara(jug);
+        // El entrenador cuenta el capítulo elegido (o la victoria, si ya se ganó); en Creed usa la voz de tu entrenador.
+        String baseCuenta = !abierta ? T.f("campanas.cerrada", tituloDe(c.requiere, jug))
+                : capGanado ? cap.texto.en(jug.idioma) + "\n\n" + cap.victoria.en(jug.idioma)
                 : cap.texto.en(jug.idioma);
-        Entrenador e = Entrenador.de(c.entrenador);
+        String cuenta = c.estiloCreed && abierta
+                ? Campana.vozDeEsquinaCreed(e, jug.idioma, cap.esJefe, capGanado) + "\n\n" + baseCuenta
+                : baseCuenta;
         float r = 46;
         CabezaDeEntrenador.dibujar(p, e, x + 20 + r, cy + r + 10, r, true, t);
+        if (c.estiloCreed && cap.esJefe && !capGanado) {
+            p.rect(x + 20, cy + r * 0.55f, r * 2, r * 0.28f, 0xFFFFFF, 0.94f);
+        }
         float tn = ui.cabe(e.nombre.en(jug.idioma), 2 * r + 30, ui.letra * 0.75f, true);
-        p.textoCentrado(e.nombre.en(jug.idioma), x + 20 + r, cy + 2 * r + 30, tn, true, ui.tema.textoSuave, 1);
+        p.textoCentrado(e.nombre.en(jug.idioma), x + 20 + r, cy + 2 * r + 24, tn, true, ui.tema.textoSuave, 1);
+        if (c.estiloCreed) {
+            dibujarSelectorEntrenadorCreed(j, jug, e, x + 16, cy + 2 * r + 48, 2 * r + 8);
+        }
         float vx = x + 40 + 2 * r, vw = w - (vx - x) - 20;
-        float vh = Math.max(2 * r + 40, p.altoDeParrafo(cuenta, vw - 28, ui.letra * 0.95f) + 24);
-        vh = Math.min(vh, h * 0.42f);
+        float minAlto = c.estiloCreed ? 2 * r + 84 : 2 * r + 40;
+        float vh = Math.max(minAlto, p.altoDeParrafo(cuenta, vw - 28, ui.letra * 0.95f) + 24);
+        vh = Math.min(vh, h * 0.44f);
         p.caja(vx, cy, vw, vh, 12, 0xF4F1E8, 1);
         p.parrafo(cuenta, vx + 14, cy + 12, vw - 28, ui.letra * 0.95f, 0x1C1F26, 1);
         cy += vh + 16;
@@ -163,7 +174,8 @@ public final class Campanas implements Pantalla {
                 String nombre = puede ? k.rival.en(jug.idioma) : "???";
                 p.texto(T.f("campanas.capitulo", k.numero) + "  " + nombre, tx, yy + 12, ui.letra * 1.05f, true,
                         ganado ? ui.tema.bien : puede ? ui.tema.texto : ui.tema.textoApagado, 1);
-                String detalle = puede ? T.f("campanas.detalle", m.nombre(jug.idioma), k.rondas) : T.t("campanas.bloqueado");
+                String detalle = puede ? T.f("campanas.detalle", m.nombre(jug.idioma), k.rondas)
+                        + (k.esJefe ? "  ·  " + T.t("campanas.creed_jefe") : "") : T.t("campanas.bloqueado");
                 p.texto(detalle, tx, yy + 18 + ui.letra * 1.2f, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
                 float bw = 200;
                 if (ui.e.clic(x + 16, yy, w - 32 - bw - 20, fila - 10) && puede) capitulo = i;
@@ -178,6 +190,25 @@ public final class Campanas implements Pantalla {
         ui.finDesplazable(capitulos, yy + d - cy);
     }
 
+    private static void dibujarSelectorEntrenadorCreed(Juego j, Jugador jug, Entrenador actual, float x, float y, float w) {
+        List<Entrenador> todos = Entrenador.todos();
+        int idx = Math.max(0, todos.indexOf(actual));
+        float bw = (w - 6) / 2;
+        if (j.ui.boton("◄", x, y, bw, 30, Ui.Estilo.PLANO, true, T.t("campanas.creed_entrenador"))) {
+            cambiarEntrenadorCreed(j, jug, todos.get(Math.floorMod(idx - 1, todos.size())));
+        }
+        if (j.ui.boton("►", x + bw + 6, y, bw, 30, Ui.Estilo.PLANO, true, T.t("campanas.creed_entrenador"))) {
+            cambiarEntrenadorCreed(j, jug, todos.get(Math.floorMod(idx + 1, todos.size())));
+        }
+    }
+
+    private static void cambiarEntrenadorCreed(Juego j, Jugador jug, Entrenador nuevo) {
+        jug.entrenador = nuevo.id;
+        j.entrenadorFlotante.sincronizarEntrenador(jug);
+        j.voz.decir(nuevo.frase(jug.idioma, 0), jug.idioma, nuevo.timbre);
+        j.guardar();
+    }
+
     private static String tituloDe(String id, Jugador jug) {
         Campana c = Campana.de(id);
         return c == null ? id : c.titulo.en(jug.idioma);
@@ -188,7 +219,7 @@ public final class Campanas implements Pantalla {
         j.ir(new PantallaPelea(encuentro(j, c, k)));
     }
 
-    static Encuentro encuentro(Juego j, Campana c, Campana.Capitulo k) {
+    public static Encuentro encuentro(Juego j, Campana c, Campana.Capitulo k) {
         Jugador jug = j.jugador;
         Encuentro e = new Encuentro();
         e.modo = "CAMPANA";
@@ -201,6 +232,7 @@ public final class Campanas implements Pantalla {
         e.escenario = escenario(k.escenario);
         e.titulo = c.titulo.en(jug.idioma);
         e.alGanar = k.victoria.en(jug.idioma);
+        e.entrenadorHospitalizado = k.esJefe;
         e.musica = musicaDePelea(c.musica);
         e.alAcabar = gano -> {
             if (gano) jug.capitulosGanados.add(c.clave(k.numero));

@@ -205,7 +205,7 @@ public final class PantallaPelea implements Pantalla {
 
     @Override
     public boolean entrenadorEnElHospital() {
-        return encuentro.jefe != null && !(terminada && ganoElJugador);
+        return (encuentro.jefe != null || encuentro.entrenadorHospitalizado) && !(terminada && ganoElJugador);
     }
 
     @Override
@@ -406,8 +406,8 @@ public final class PantallaPelea implements Pantalla {
         if (depurador && !entreRondas) panelDepurador.dibujar(j, pelea, yo, robot.listo() ? robot.fuente() : "", robot.listo() && robot.conTraza(), ancho);
         bandaDelLocutor(j, banda, letraBanda, dt);
         // El entrenador aconseja contra el enemigo marcado (clic en él); contra un jefe no: está en el hospital.
-        if (!terminada && !entreRondas && encuentro.jefe == null && j.jugador.entrenadorActivo && (especial == null || !especial.activa())
-                && (entrada == null || !entrada.activa())) {
+        if (!terminada && !entreRondas && encuentro.jefe == null && !encuentro.entrenadorHospitalizado && j.jugador.entrenadorActivo
+                && (especial == null || !especial.activa()) && (entrada == null || !entrada.activa())) {
             entrenador.dibujar(j, pelea, vista, ancho, dt, !pausa);
             if (!panelDelAparato.estaAbierto()) entrenador.clic(j, pelea, vista);
         }
@@ -506,8 +506,8 @@ public final class PantallaPelea implements Pantalla {
 
     private void dibujarAvisoDeCodigo(Juego j, float der, Marcadores.BarraInferior b) {
         Pincel p = j.pincel; Ui ui = j.ui;
-        boolean conEntrenador = encuentro.jefe == null && j.jugador.entrenadorActivo && (especial == null || !especial.activa())
-                && (entrada == null || !entrada.activa());
+        boolean conEntrenador = encuentro.jefe == null && !encuentro.entrenadorHospitalizado && j.jugador.entrenadorActivo
+                && (especial == null || !especial.activa()) && (entrada == null || !entrada.activa());
         float reservaDer = conEntrenador ? Math.min(470f, der * 0.4f) + 28f : 20f;
         float anchoAviso = Math.max(220f, der - 20f - reservaDer);
         float tamAviso = Math.min(18f, ui.letra * 0.78f);
@@ -737,7 +737,7 @@ public final class PantallaPelea implements Pantalla {
                 yy += 32;
             }
         }
-        if (encuentro.jefe != null && ganoElJugador) entrenador.milagro(j, w, dt);
+        if ((encuentro.jefe != null || encuentro.entrenadorHospitalizado) && ganoElJugador) entrenador.milagro(j, w, dt);
         botonesFinales(j, x, y, w, h);
     }
 

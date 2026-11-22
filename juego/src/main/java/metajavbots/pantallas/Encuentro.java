@@ -30,6 +30,8 @@ public final class Encuentro {
     public String rivalSeniorId = "";
     /** El jefe de un tema (o null): solo se le hace daño si el código usa su tema. */
     public Jefe jefe;
+    /** Si es true (p. ej. jefe final de una campaña Creed), el entrenador está en el hospital y reaparece milagrosamente al ganar. */
+    public boolean entrenadorHospitalizado;
     /** El objetivo de un tutorial («aciertos>=3»…), o null. */
     public String objetivo;
     /** Lo que se hace al acabar (con si se ganó); puede ser null. */

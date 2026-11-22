@@ -1,0 +1,376 @@
+# Diálogos de la personalidad «frenetico» (Serrucho: lo que toco, lo corto en rodajas).
+# Obsesionado con serrar tartas, mesas y rivales a toda revolución. Entusiasta del chisporroteo.
+
+[saludo]
+es: ¡{yo} a diez mil revoluciones! ¿Quién quiere una rodaja, {rival}?
+de: {yo} auf zehntausend Umdrehungen! Wer will eine Scheibe, {rival}?
+en: {yo} at ten thousand RPM! Who wants a slice, {rival}?
+
+es: ¡Motor caliente, dientes afilados! Vamos a cortar el aire, {jugador}.
+de: Motor warm, Zähne scharf! Schneiden wir die Luft, {jugador}.
+en: Motor hot, teeth sharp! Let's slice the air, {jugador}.
+
+es: Empecé cortando tartas de boda y mira dónde estoy, {rival}.
+de: Ich fing mit Hochzeitstorten an, und schau mich jetzt an, {rival}.
+en: I started out cutting wedding cakes, and look at me now, {rival}.
+
+es: ¡Zzzzip! ¡Que empiece el festival de chispas!
+de: Zzzzip! Lasst das Funkenfestival beginnen!
+en: Zzzzip! Let the spark festival begin!
+
+[inicio_ronda]
+es: ¡Ronda {ronda}! ¡Subid las revoluciones!
+de: Runde {ronda}! Dreht die Drehzahl hoch!
+en: Round {ronda}! Crank up the RPM!
+
+es: Ronda {ronda}: hoja limpia, ganas de cortar.
+de: Runde {ronda}: sauberes Sägeblatt, Lust zum Schneiden.
+en: Round {ronda}: clean blade, ready to carve.
+
+es: ¿Otra ronda? ¡Mi sierra ni siquiera ha entrado en calor!
+de: Noch eine Runde? Meine Säge ist noch nicht mal warm!
+en: Another round? My saw hasn't even warmed up yet!
+
+es: Ronda {ronda}, {rival}. Quédate quieto que te corto en juliana.
+de: Runde {ronda}, {rival}. Halt still, ich schneide dich in Streifen.
+en: Round {ronda}, {rival}. Hold still while I julienne you.
+
+[ataque]
+es: ¡Bzzzz! ¡Toma {arma}!
+de: Bzzzz! Nimm das: {arma}!
+en: Bzzzz! Take some {arma}!
+
+es: ¡Por aquí pasa el corte!
+de: Hier geht der Schnitt durch!
+en: Coming through with the cut!
+
+es: ¡Rodaja fina para {rival}!
+de: Eine feine Scheibe für {rival}!
+en: Thin slice coming up for {rival}!
+
+es: ¡A toda sierra, sin frenar!
+de: Volle Säge, ohne Bremse!
+en: Full saw, no brakes!
+
+[acierto]
+es: ¡Qué corte tan limpio! ¡Digno de pastelería!
+de: Was für ein sauberer Schnitt! Konditorei-Niveau!
+en: What a clean cut! Bakery-grade precision!
+
+es: ¡Chispas! ¡Eso es música para mis engranajes!
+de: Funken! Das ist Musik für meine Zahnräder!
+en: Sparks! That's music to my gears!
+
+es: ¡Zas! ¡Un trocito menos de {rival}!
+de: Zisch! Ein Stückchen weniger von {rival}!
+en: Zzzap! One little piece less of {rival}!
+
+es: ¡Borde biselado y listo para servir!
+de: Kante abgeschrägt und servierfertig!
+en: Beveled edge and ready to serve!
+
+[fallo]
+es: ¡Aire! ¡Ni siquiera cruje!
+de: Nur Luft! Die knirscht nicht mal!
+en: Just air! It doesn't even crunch!
+
+es: ¡Eh, {rival}, no te apartes cuando estoy cortando!
+de: Hey, {rival}, geh nicht weg, wenn ich schneide!
+en: Hey, {rival}, don't move while I'm slicing!
+
+es: ¡He serrado el vacío! Qué desperdicio de dientes.
+de: Ich habe ins Leere gesägt! Was für eine Zahnverschwendung.
+en: I just sawed empty space! What a waste of teeth.
+
+es: ¡Casi te rozo la pintura! La próxima entra entera.
+de: Fast den Lack gestreift! Der nächste sitzt voll.
+en: Almost grazed your paint! The next one goes all the way through.
+
+[golpe]
+es: ¡Oye! ¡Me has mellado el brillo!
+de: Hey! Du hast meinen Glanz zerkratzt!
+en: Hey! You scratched my shine!
+
+es: ¡Eso solo afila mis ganas de girar!
+de: Das schärft nur meine Lust aufs Drehen!
+en: That only sharpens my urge to spin!
+
+es: ¡Rasguño aceptado! Ahora me toca a mí.
+de: Kratzer akzeptiert! Jetzt bin ich dran.
+en: Scratch accepted! Now it's my turn.
+
+es: ¡Cuidado, {rival}, que si me golpeas salto chispas!
+de: Vorsicht, {rival}, wenn du mich triffst, sprühe ich Funken!
+en: Careful, {rival}, hit me and I throw sparks!
+
+[golpe_fuerte]
+es: ¡Ay! ¡Eso me ha frenado el disco un segundo!
+de: Autsch! Das hat mein Sägeblatt eine Sekunde gebremst!
+en: Ouch! That stalled my blade for a second!
+
+es: ¡Buf! ¡Me han vibrado hasta los remaches!
+de: Uff! Mir haben sogar die Nieten gewackelt!
+en: Whoa! Even my rivets rattled!
+
+es: ¡Menudo leñazo, {rival}! ¡Ahora pongo la marcha turbo!
+de: Was für ein Kracher, {rival}! Jetzt lege ich den Turbo ein!
+en: What a wallop, {rival}! Now I'm kicking into overdrive!
+
+es: ¡Sigo girando! ¡Nadie para esta sierra!
+de: Ich drehe mich weiter! Niemand stoppt diese Säge!
+en: Still spinning! Nobody stops this saw!
+
+[poco_blindaje]
+es: ¡Me queda poca chapa, pero los dientes siguen nuevos!
+de: Wenig Blech übrig, aber die Zähne sind noch wie neu!
+en: Low on plating, but my teeth are still razor sharp!
+
+es: ¡Echando humo y a tope de revoluciones!
+de: Qualmend und auf voller Drehzahl!
+en: Smoking and revving at redline!
+
+es: ¡Con medio chasis corto el doble de rápido, {rival}!
+de: Mit halbem Chassis schneide ich doppelt so schnell, {rival}!
+en: With half a chassis I slice twice as fast, {rival}!
+
+es: ¡Un último corte antes de fundirme, {jugador}!
+de: Ein letzter Schnitt, bevor ich durchbrenne, {jugador}!
+en: One last slice before I burn out, {jugador}!
+
+[parte_rota]
+es: ¡Me han partido {pieza}! ¡Aún me queda el resto para serrar!
+de: Du hast mir meinen {pieza} abgesägt! Der Rest sägt weiter!
+en: You sawed off my {pieza}! The rest keeps cutting!
+
+es: ¡Adiós, {pieza}! ¡Menos peso, más velocidad de giro!
+de: Ohne meinen {pieza} drehe ich noch schneller!
+en: Without my {pieza} I spin even faster!
+
+es: ¡{pieza} rota! ¡Un corte demasiado apurado!
+de: {pieza} ist hin! Ein etwas zu knapper Schnitt!
+en: {pieza} is wrecked! Cut that one a bit too close!
+
+es: ¡Chispas en {pieza}! ¡Sigo en pie con el motor a tope!
+de: Mit meinem {pieza} ist es vorbei, aber der Motor brüllt!
+en: My {pieza} is done for, but the motor is still roaring!
+
+[esquiva]
+es: ¡Demasiado lento para mi disco!
+de: Zu langsam für mein Sägeblatt!
+en: Too slow for my blade!
+
+es: ¡Ziuuum! ¡Solo has cortado el viento!
+de: Zisch! Du hast nur den Wind getroffen!
+en: Whoosh! You only hit the wind!
+
+es: ¡Quita ese trasto, {rival}, que me estorba el giro!
+de: Weg mit dem Ding, {rival}, es stört meine Drehung!
+en: Get that out of here, {rival}, you're messing up my spin!
+
+es: ¡Esquivado con un derrape de chispas!
+de: Mit einem Funkendrift ausgewichen!
+en: Dodged with a spark-flying drift!
+
+[victoria_ronda]
+es: ¡Ronda cortada a medida! ¡Que traigan otra tarta!
+de: Runde nach Maß geschnitten! Bringt die nächste Torte!
+en: Round sliced to order! Bring out the next cake!
+
+es: ¡Uno a cero para la sierra! ¡Bien programado, {jugador}!
+de: Eins zu null für die Säge! Gut programmiert, {jugador}!
+en: One-zip for the saw! Nice coding, {jugador}!
+
+es: ¡Vaya virutas has dejado en el suelo, {rival}!
+de: Was für Späne du auf dem Boden gelassen hast, {rival}!
+en: Look at all those shavings you left on the floor, {rival}!
+
+es: ¡Ronda mía! ¡Ni una rebaba fuera de sitio!
+de: Meine Runde! Kein einziger Grat am falschen Platz!
+en: My round! Not a single burr out of place!
+
+[derrota_ronda]
+es: ¡Se me ha atascado el disco! ¡En la siguiente no pasa!
+de: Mein Blatt hat geklemmt! Nächste Runde passiert das nicht!
+en: My blade jammed! Won't happen next round!
+
+es: ¡Vale, {rival}, esta vez me cortaste el rollo!
+de: Okay, {rival}, diesmal hast du mich ausgebremst!
+en: Alright, {rival}, you cut my momentum that time!
+
+es: ¡Afilo los dientes en el descanso y vuelvo el doble de rápido!
+de: In der Pause schärfe ich die Zähne und komme doppelt so schnell zurück!
+en: I'll sharpen my teeth in the break and come back twice as fast!
+
+es: ¡Ronda tuya, pero mi sierra todavía tiene cuerda!
+de: Deine Runde, aber meine Säge hat noch reichlich Power!
+en: Your round, but my saw still has plenty of juice!
+
+[victoria]
+es: ¡Partido en dos, {rival}! ¡Menudo banquete de chatarra!
+de: In zwei Hälften gesägt, {rival}! Was für ein Schrottfest!
+en: Sliced right in two, {rival}! What a scrapyard feast!
+
+es: ¡Victoria a diez mil revoluciones, {jugador}! ¡Eres un artista!
+de: Sieg bei zehntausend Umdrehungen, {jugador}! Du bist ein Künstler!
+en: Victory at ten thousand RPM, {jugador}! You're an artist!
+
+es: ¡Que traigan el mantel y la mesa de al lado, que sigo con ganas!
+de: Bringt Tischdecke und Nachbartisch, ich bin noch in Fahrt!
+en: Bring the tablecloth and the next table over, I'm still going!
+
+es: ¡Corte perfecto! ¡Campeón oficial de la rodaja metálica!
+de: Perfekter Schnitt! Offizieller Meister der Metallscheibe!
+en: Perfect cut! Official champion of the metal slice!
+
+[derrota]
+es: ¡Ay, se me ha partido la correa! ¡Buena pelea, {rival}!
+de: Autsch, mein Antriebsriemen ist gerissen! Guter Kampf, {rival}!
+en: Ouch, snapped my drive belt! Good fight, {rival}!
+
+es: ¡Apagando el disco… pero volveré con dientes de diamante!
+de: Schalte das Blatt ab … aber ich komme mit Diamantzähnen zurück!
+en: Powering down the blade… but I'll be back with diamond teeth!
+
+es: ¡{jugador}, ponme aceite nuevo que me he quedado seco!
+de: {jugador}, gib mir frisches Öl, ich bin trocken gelaufen!
+en: {jugador}, top off my oil, I ran dry!
+
+es: ¡Esta vez me han dejado hecho virutas! ¡Chispazo final!
+de: Diesmal wurde ich selbst zu Spänen verarbeitet! Letzter Funke!
+en: Turned into sawdust myself this time! One last spark!
+
+[burla]
+es: ¿Te corto en cubitos o en rodajas, {rival}?
+de: Soll ich dich würfeln oder in Scheiben schneiden, {rival}?
+en: Want me to dice you or slice you, {rival}?
+
+es: ¡Qué chapa tan blandita tienes! ¡Parece bizcocho!
+de: Was für weiches Blech du hast! Wie Biskuitkuchen!
+en: Your armor's so soft it feels like sponge cake!
+
+es: ¡Bzzzz! ¡El sonido favorito de tus pesadillas!
+de: Bzzzz! Der Lieblingsklang deiner Albträume!
+en: Bzzzz! The favorite sound of your nightmares!
+
+es: ¡Con esa defensa no aguantas ni un cuchillo de mantequilla!
+de: Mit der Deckung hältst du nicht mal ein Buttermesser auf!
+en: With that defense you couldn't stop a butter knife!
+
+[pulla]
+es: Tu código gira más despacio que una sierra oxidada, {rival}.
+de: Dein Code dreht sich langsamer als eine verrostete Säge, {rival}.
+en: Your code spins slower than a rusted saw, {rival}.
+
+es: ¡He cortado tartas de boda con más aguante que tú!
+de: Ich habe Hochzeitstorten mit mehr Widerstand geschnitten als dich!
+en: I've cut wedding cakes with more resistance than you!
+
+es: ¡Cuando acabe contigo, {rival}, cabrás en una caja de tornillos!
+de: Wenn ich mit dir fertig bin, {rival}, passt du in eine Schraubenkiste!
+en: When I'm done with you, {rival}, you'll fit in a bolt box!
+
+es: ¡Demasiada chapa y muy pocas revoluciones!
+de: Zu viel Blech und viel zu wenig Umdrehungen!
+en: Too much sheet metal and way too few RPMs!
+
+[subida]
+es: ¡Subimos de nivel, {jugador}! ¡Más dientes y más chispas!
+de: Levelaufstieg, {jugador}! Mehr Zähne und mehr Funken!
+en: Level up, {jugador}! More teeth and more sparks!
+
+es: ¡A toda pastilla! ¡Ahora sí que vamos a cortar fino!
+de: Vollgas! Jetzt schneiden wir erst richtig fein!
+en: Full throttle! Now we're really slicing clean!
+
+es: ¡Nuevo rango! ¡Mi motor ronronea de pura alegría!
+de: Neuer Rang! Mein Motor schnurrt vor lauter Freude!
+en: New rank! My motor is purring with pure joy!
+
+es: ¡Cada nivel me afila un poquito más, {jugador}!
+de: Jedes Level schärft mich noch ein Stück mehr, {jugador}!
+en: Every level sharpens me a little more, {jugador}!
+
+[error_codigo]
+es: ¡Brrr-clac! ¡Excepción en el engranaje, {jugador}!
+de: Brrr-klack! Exception im Getriebe, {jugador}!
+en: Brrr-clank! Exception in the gearbox, {jugador}!
+
+es: ¡Me he quedado girando en vacío por un error!
+de: Wegen eines Fehlers drehe ich mich im Leerlauf!
+en: Spinning in neutral because of an error!
+
+es: ¡Oye, {jugador}, un null se me ha metido entre los dientes!
+de: Hey, {jugador}, ein null steckt zwischen meinen Zähnen!
+en: Hey, {jugador}, a null got jammed in my teeth!
+
+es: ¡Atasco de código! ¡Despeja la línea que quiero cortar!
+de: Code-Stau! Mach die Leitung frei, ich will sägen!
+en: Code jam! Clear the line, I want to saw!
+
+[espera]
+es: ¡Bzz… bzz…! ¿Ya puedo cortar algo, {jugador}?
+de: Bzz … bzz …! Darf ich endlich etwas sägen, {jugador}?
+en: Bzz… bzz…! Can I slice something yet, {jugador}?
+
+es: ¡Estoy afilando el disco mientras escribes!
+de: Ich schärfe das Sägeblatt, während du tippst!
+en: Sharpening my blade while you type!
+
+es: ¡Avísame cuando compiles, que tengo el dedo en el acelerador!
+de: Sag Bescheid, wenn du kompilierst, mein Finger ist am Gas!
+en: Tell me when you compile, my finger's on the throttle!
+
+es: ¡No tardes, que se me enfrían las chispas!
+de: Trödel nicht, sonst werden meine Funken kalt!
+en: Don't take too long or my sparks will cool down!
+
+[elogio]
+es: ¡Ese código corta como el láser, {jugador}!
+de: Dieser Code schneidet wie ein Laser, {jugador}!
+en: That code cuts like a laser, {jugador}!
+
+es: ¡Qué líneas tan afiladas! ¡Ni un bucle sobrante!
+de: Was für scharfe Zeilen! Keine einzige überflüssige Schleife!
+en: What razor-sharp lines! Not a single wasted loop!
+
+es: ¡Con este programa vamos a dejar la arena llena de confeti metálico!
+de: Mit diesem Programm füllen wir die Arena mit Metallkonfetti!
+en: With this program we'll cover the arena in metal confetti!
+
+es: ¡Impecable, {jugador}! ¡Corte limpio de principio a fin!
+de: Makellos, {jugador}! Ein sauberer Schnitt von Anfang bis Ende!
+en: Flawless, {jugador}! A clean cut from start to finish!
+
+[reparar]
+es: ¡Un poco de aceite y a girar otra vez!
+de: Ein bisschen Öl und schon drehe ich mich wieder!
+en: A splash of oil and I'm spinning again!
+
+es: ¡Afilado rápido en plena arena!
+de: Schnellschliff mitten in der Arena!
+en: Quick sharpening right in the arena!
+
+es: ¡Dientes nuevos, chapa brillante, allá voy!
+de: Neue Zähne, glänzendes Blech, los geht's!
+en: Fresh teeth, shiny plating, here I go!
+
+es: ¡Parada en boxes de medio segundo!
+de: Boxenstopp in einer halben Sekunde!
+en: Half-second pit stop!
+
+[especial]
+es: ¡SIERRA AL MÁXIMO! ¡Apártate o acaba en rodajas, {rival}!
+de: SÄGE AUF MAXIMUM! Geh aus dem Weg oder lande in Scheiben, {rival}!
+en: SAW AT MAXIMUM! Move or get sliced, {rival}!
+
+es: ¡Diez millones de chispas para ti, {rival}!
+de: Zehn Millionen Funken für dich, {rival}!
+en: Ten million sparks coming your way, {rival}!
+
+es: ¡Corte maestro en camino!
+de: Meisterschnitt im Anflug!
+en: Master cut incoming!
+
+es: ¡Modo pastelería industrial activado!
+de: Industriebäckerei-Modus aktiviert!
+en: Industrial bakery mode engaged!

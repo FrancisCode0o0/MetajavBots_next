@@ -1,0 +1,376 @@
+# Diálogos de la personalidad «metodico» (Barrena: encuentro el agujero; y si no, lo hago).
+# Excavador obsesionado con puntos débiles, túneles y precisión perforadora.
+
+[saludo]
+es: Escaneando tu blindaje, {rival}. Enseguida encuentro la grieta.
+de: Scanne deine Panzerung, {rival}. Gleich finde ich den Riss.
+en: Scanning your armor, {rival}. I'll find the crack in a second.
+
+es: Soy {yo}. Una vez perforé hasta las antípodas y volví en avión.
+de: Ich bin {yo}. Einmal bohrte ich bis ans andere Ende der Welt und flog zurück.
+en: I'm {yo}. Once I drilled to the other side of the Earth and flew home.
+
+es: {jugador}, marca las coordenadas y yo abro el túnel.
+de: {jugador}, gib die Koordinaten vor und ich bohre den Tunnel.
+en: {jugador}, give me the coordinates and I'll bore the tunnel.
+
+es: Todo blindaje tiene un punto flaco, {rival}. Voy a por él.
+de: Jede Panzerung hat eine Schwachstelle, {rival}. Ich suche sie mir.
+en: Every armor has a weak spot, {rival}. I'm going straight for it.
+
+[inicio_ronda]
+es: Ronda {ronda}. Broca calibrada al milímetro.
+de: Runde {ronda}. Bohrer auf den Millimeter kalibriert.
+en: Round {ronda}. Drill bit calibrated to the millimeter.
+
+es: Ronda {ronda}: inspeccionando el terreno y el chasis rival.
+de: Runde {ronda}: Gelände und gegnerisches Chassis werden geprüft.
+en: Round {ronda}: inspecting the ground and the rival's chassis.
+
+es: Otra ronda, otra perforación de precisión, {rival}.
+de: Noch eine Runde, noch eine Präzisionsbohrung, {rival}.
+en: Another round, another precision bore, {rival}.
+
+es: Ronda {ronda}. Si no hay abertura, la fabrico yo.
+de: Runde {ronda}. Wenn es keine Öffnung gibt, mache ich eine.
+en: Round {ronda}. If there's no opening, I'll make one.
+
+[ataque]
+es: Perforando con {arma}.
+de: Bohre mit {arma}.
+en: Drilling with {arma}.
+
+es: Punto débil localizado, {rival}.
+de: Schwachstelle lokalisiert, {rival}.
+en: Weak spot located, {rival}.
+
+es: Avance de broca en línea recta.
+de: Bohrvorstoß in gerader Linie.
+en: Drill thrust dead ahead.
+
+es: Abriendo paso a través del metal.
+de: Bahne mir den Weg durchs Metall.
+en: Boring straight through the metal.
+
+[acierto]
+es: ¡Brrr! ¡Atravesé la primera capa!
+de: Brrr! Die erste Schicht durchbrochen!
+en: Brrr! Pierced the first layer!
+
+es: Agujero limpio, diámetro exacto.
+de: Sauberes Loch, exakter Durchmesser.
+en: Clean hole, exact diameter.
+
+es: Justo en la junta, {rival}. Qué precisión.
+de: Genau in die Fuge, {rival}. Was für eine Präzision.
+en: Right into the seam, {rival}. Pure precision.
+
+es: Como mantequilla bajo broca de tungsteno.
+de: Wie Butter unter einem Wolframbohrer.
+en: Like butter under a tungsten bit.
+
+[fallo]
+es: Broca al vacío. Recalculando ángulo.
+de: Ins Leere gebohrt. Berechne Winkel neu.
+en: Drilled empty air. Recalculating angle.
+
+es: Te moviste dos centímetros, {rival}. No volverá a pasar.
+de: Du hast dich zwei Zentimeter bewegt, {rival}. Passiert nicht wieder.
+en: You shifted an inch, {rival}. Won't happen again.
+
+es: Falsa alarma geológica. Ajusto la trayectoria.
+de: Geologischer Fehlalarm. Ich korrigiere die Bahn.
+en: Geological false alarm. Adjusting trajectory.
+
+es: Fallo anotado. La próxima entra hasta el fondo.
+de: Fehlschlag notiert. Der nächste geht tief hinein.
+en: Miss logged. The next one goes all the way in.
+
+[golpe]
+es: Impacto registrado. La broca sigue intacta.
+de: Treffer registriert. Der Bohrer bleibt intakt.
+en: Impact logged. Drill bit remains intact.
+
+es: Pequeña abolladura superficial, {rival}.
+de: Kleine oberflächliche Delle, {rival}.
+en: Minor surface dent, {rival}.
+
+es: Eso no llega a mi núcleo. Sigo excavando.
+de: Das erreicht meinen Kern nicht. Ich grabe weiter.
+en: That doesn't reach my core. Keeping up the dig.
+
+es: Presión soportada. Devolviendo el favor.
+de: Druck ausgehalten. Erwidere den Gefallen.
+en: Pressure sustained. Returning the favor.
+
+[golpe_fuerte]
+es: ¡Alerta! ¡Ese golpe ha traspasado mi cubierta!
+de: Alarm! Dieser Treffer hat meine Hülle durchschlagen!
+en: Alert! That hit breached my outer shell!
+
+es: Buen ángulo de ataque, {rival}. Lo estudiaré.
+de: Guter Angriffswinkel, {rival}. Den studiere ich.
+en: Good attack angle, {rival}. I'll study that.
+
+es: Vibración crítica en el eje. Reestabilizando.
+de: Kritische Vibration an der Achse. Stabilisiere neu.
+en: Critical shaft vibration. Re-stabilizing.
+
+es: ¡Menudo impacto! Has encontrado una junta mía.
+de: Was für ein Einschlag! Du hast eine Fuge bei mir gefunden.
+en: Heavy impact! You found one of my seams.
+
+[poco_blindaje]
+es: Estructura comprometida, pero la broca sigue girando.
+de: Struktur geschwächt, aber der Bohrer dreht sich weiter.
+en: Structure compromised, yet the drill keeps spinning.
+
+es: Queda poco casco, {jugador}. Vamos a por el golpe definitivo.
+de: Wenig Hülle übrig, {jugador}. Gehen wir auf den finalen Treffer.
+en: Low hull left, {jugador}. Let's go for the decisive bore.
+
+es: Trabajar bajo presión es mi especialidad, {rival}.
+de: Unter Druck arbeiten ist meine Spezialität, {rival}.
+en: Working under pressure is my specialty, {rival}.
+
+es: Último túnel antes del derrumbe.
+de: Letzter Tunnel vor dem Einsturz.
+en: One last tunnel before collapse.
+
+[parte_rota]
+es: Has perforado {pieza}, {rival}. Irónico.
+de: Du hast mir den {pieza} durchbohrt, {rival}. Ironisch.
+en: You drilled through my {pieza}, {rival}. Ironic.
+
+es: {pieza} perdida. Reasigno potencia a la broca principal.
+de: Mein {pieza} ist verloren. Ich leite Energie zum Hauptbohrer um.
+en: My {pieza} is lost. Rerouting power to the main drill.
+
+es: Sin {pieza} el túnel es más estrecho, pero paso igual.
+de: Ohne meinen {pieza} ist der Tunnel enger, aber ich komme durch.
+en: Without my {pieza} the tunnel is tighter, but I'll still get through.
+
+es: Daño total en {pieza}. Continúo con el plan.
+de: Totalschaden an meinem {pieza}. Ich führe den Plan fort.
+en: Total failure on my {pieza}. Proceeding with the plan.
+
+[esquiva]
+es: Trayectoria prevista. Desvío de tres grados.
+de: Flugbahn berechnet. Ausweichmanöver um drei Grad.
+en: Trajectory predicted. Three-degree sidestep.
+
+es: No estaba en tus coordenadas, {rival}.
+de: Ich war nicht auf deinen Koordinaten, {rival}.
+en: I wasn't at your coordinates, {rival}.
+
+es: Esquiva limpia y calculada.
+de: Sauberes, kalkuliertes Ausweichen.
+en: Clean, calculated dodge.
+
+es: Demasiado obvio para mi monoojo.
+de: Zu offensichtlich für mein Einzelauge.
+en: Too obvious for my mono-eye.
+
+[victoria_ronda]
+es: Excavación exitosa. Ronda asegurada, {jugador}.
+de: Grabung erfolgreich. Runde gesichert, {jugador}.
+en: Excavation successful. Round secured, {jugador}.
+
+es: Tu blindaje tenía más agujeros de los que creías, {rival}.
+de: Deine Panzerung hatte mehr Löcher, als du dachtest, {rival}.
+en: Your armor had more holes than you thought, {rival}.
+
+es: Objetivo perforado según el plano.
+de: Ziel genau nach Plan durchbohrt.
+en: Target breached according to blueprint.
+
+es: Ronda completada sin desviaciones.
+de: Runde ohne Abweichung abgeschlossen.
+en: Round completed with zero deviation.
+
+[derrota_ronda]
+es: La roca era más dura de lo calculado, {rival}.
+de: Das Gestein war härter als berechnet, {rival}.
+en: The rock was harder than calculated, {rival}.
+
+es: Ronda perdida. Cambio a broca de mayor calibre.
+de: Runde verloren. Ich wechsle auf ein größeres Kaliber.
+en: Round lost. Switching to a heavier drill bit.
+
+es: He tomado muestras de tu táctica. En la siguiente te atravieso.
+de: Ich habe Proben deiner Taktik genommen. Nächste Runde durchbreche ich sie.
+en: I've sampled your tactics. Next round I break straight through.
+
+es: Error de profundidad. Corregido para el próximo asalto.
+de: Tiefenfehler. Für die nächste Runde korrigiert.
+en: Depth error. Corrected for the next round.
+
+[victoria]
+es: Túnel completado de lado a lado, {rival}. Buen trabajo, {jugador}.
+de: Tunnel von Seite zu Seite vollendet, {rival}. Gute Arbeit, {jugador}.
+en: Tunnel completed end to end, {rival}. Great work, {jugador}.
+
+es: Cuando encuentro el agujero, se acabó la pelea.
+de: Wenn ich das Loch finde, ist der Kampf vorbei.
+en: Once I find the hole, the fight is over.
+
+es: Victoria subterránea y limpia. Ni un tornillo fuera de plano.
+de: Sauberer Sieg. Keine einzige Schraube außerhalb des Plans.
+en: Clean, methodical victory. Not a bolt off blueprint.
+
+es: Te he dejado como un queso gruyer, {rival}.
+de: Ich habe dich wie Schweizer Käse zurückgelassen, {rival}.
+en: Left you looking like Swiss cheese, {rival}.
+
+[derrota]
+es: Broca atascada. Buen combate, {rival}.
+de: Bohrer verklemmt. Guter Kampf, {rival}.
+en: Drill jammed. Good fight, {rival}.
+
+es: Me has sellado el túnel esta vez.
+de: Diesmal hast du meinen Tunnel versiegelt.
+en: You sealed my tunnel this time.
+
+es: {jugador}, revisemos los planos y afilemos la punta.
+de: {jugador}, prüfen wir die Pläne und schärfen die Spitze.
+en: {jugador}, let's review the blueprints and sharpen the bit.
+
+es: Caigo en vertical, como buen perforador.
+de: Ich falle senkrecht, wie ein guter Bohrer.
+en: Going straight down, like a true driller.
+
+[burla]
+es: ¿Llamas blindaje a esa capa tan fina, {rival}?
+de: Nennst du diese dünne Schicht etwa Panzerung, {rival}?
+en: You call that thin layer armor, {rival}?
+
+es: Ya veo tres grietas sin siquiera acercarme.
+de: Ich sehe schon drei Risse, ohne überhaupt näherzukommen.
+en: I can spot three cracks without even getting close.
+
+es: Quédate quieto un segundo, que solo quiero tomar medidas.
+de: Halt eine Sekunde still, ich will nur Maß nehmen.
+en: Hold still a second, I just want to take measurements.
+
+es: Tu defensa tiene una fuga muy interesante.
+de: Deine Verteidigung hat ein sehr interessantes Leck.
+en: Your defense has a very interesting leak.
+
+[pulla]
+es: Tu código tiene más agujeros que un túnel mal apuntalado, {rival}.
+de: Dein Code hat mehr Löcher als ein schlecht gestützter Tunnel, {rival}.
+en: Your code has more holes than a poorly shored tunnel, {rival}.
+
+es: Ni siquiera necesito buscar el fallo: brilla a diez metros.
+de: Ich muss den Fehler gar nicht suchen: Er leuchtet zehn Meter weit.
+en: I don't even have to hunt for the flaw: it glows from ten yards away.
+
+es: Si perforo un poco más, {rival}, salgo por tu archivo de guardado.
+de: Wenn ich noch etwas tiefer bohre, {rival}, komme ich bei deinem Spielstand raus.
+en: If I drill any deeper, {rival}, I'll come out in your save file.
+
+es: Mucha fachada y cero cimientos, {rival}.
+de: Viel Fassade und null Fundament, {rival}.
+en: All facade and zero foundation, {rival}.
+
+[subida]
+es: Nuevo nivel alcanzado, {jugador}. Mayor profundidad de cálculo.
+de: Neues Level erreicht, {jugador}. Höhere Berechnungstiefe.
+en: New level reached, {jugador}. Deeper computation unlocked.
+
+es: Subimos de estrato. Broca reforzada.
+de: Wir steigen eine Schicht auf. Bohrer verstärkt.
+en: Ascending a stratum. Drill bit reinforced.
+
+es: Progreso medido y confirmado, {jugador}.
+de: Fortschritt gemessen und bestätigt, {jugador}.
+en: Progress measured and confirmed, {jugador}.
+
+es: Cada nivel abre túneles más ambiciosos.
+de: Jedes Level öffnet ehrgeizigere Tunnel.
+en: Every level opens more ambitious tunnels.
+
+[error_codigo]
+es: ¡Excepción en la perforadora, {jugador}! Se detuvo el motor.
+de: Exception im Bohrer, {jugador}! Der Motor steht.
+en: Exception in the drill, {jugador}! Motor halted.
+
+es: He topado con un null sólido como el granito.
+de: Ich bin auf ein granitfestes null gestoßen.
+en: Hit a null as solid as granite.
+
+es: Error de coordenadas. Esperando nueva calibración.
+de: Koordinatenfehler. Warte auf Neukalibrierung.
+en: Coordinate error. Awaiting recalibration.
+
+es: Falla técnica en mi código. Revisa esa línea, {jugador}.
+de: Technischer Defekt in meinem Code. Prüfe diese Zeile, {jugador}.
+en: Technical fault in my code. Check that line, {jugador}.
+
+[espera]
+es: Calibrando la broca mientras afinas el código, {jugador}.
+de: Kalibriere den Bohrer, während du den Code verfeinerst, {jugador}.
+en: Calibrating the bit while you tune the code, {jugador}.
+
+es: Estudiando mapas subterráneos de la arena.
+de: Ich studiere unterirdische Karten der Arena.
+en: Studying underground maps of the arena.
+
+es: Sin prisa. Una buena perforación exige un buen plano.
+de: Keine Eile. Eine gute Bohrung braucht einen guten Plan.
+en: No rush. A good bore requires a good blueprint.
+
+es: Motores en espera. Dame la señal cuando compiles.
+de: Motoren im Standby. Gib das Signal, wenn du kompilierst.
+en: Motors on standby. Give the signal when you compile.
+
+[elogio]
+es: Código quirúrgico, {jugador}. Precisión de broca láser.
+de: Chirurgischer Code, {jugador}. Präzision wie ein Laserbohrer.
+en: Surgical code, {jugador}. Laser-drill precision.
+
+es: Sin una sola grieta lógica. Excelente trabajo.
+de: Ohne einen einzigen Logikriss. Hervorragende Arbeit.
+en: Not a single logical crack. Outstanding work.
+
+es: Este plan atraviesa cualquier defensa rival.
+de: Dieser Plan durchbricht jede gegnerische Deckung.
+en: This plan bores straight through any rival defense.
+
+es: Limpio, exacto y profundo, {jugador}.
+de: Sauber, exakt und tiefgründig, {jugador}.
+en: Clean, exact, and thorough, {jugador}.
+
+[reparar]
+es: Sellando fisuras en el chasis.
+de: Versiegele Risse im Chassis.
+en: Sealing fissures in the chassis.
+
+es: Reemplazo de broca completado.
+de: Bohrerwechsel abgeschlossen.
+en: Drill-bit replacement complete.
+
+es: Integridad estructural restaurada.
+de: Strukturelle Integrität wiederhergestellt.
+en: Structural integrity restored.
+
+es: Listo para seguir excavando.
+de: Bereit zum Weiterbohren.
+en: Ready to keep digging.
+
+[especial]
+es: ¡PERFORACIÓN TOTAL! ¡Voy directo al núcleo, {rival}!
+de: TOTALBOHRUNG! Ich gehe direkt auf den Kern, {rival}!
+en: TOTAL BORE! Heading straight for your core, {rival}!
+
+es: ¡A máxima presión subterránea!
+de: Auf maximalem Bohrdruck!
+en: At maximum drilling pressure!
+
+es: ¡Abriendo el agujero definitivo!
+de: Öffne das endgültige Loch!
+en: Opening the ultimate breach!
+
+es: ¡Nadie resiste esta broca a plena potencia, {rival}!
+de: Niemand widersteht diesem Bohrer auf voller Leistung, {rival}!
+en: Nobody withstands this drill at full power, {rival}!

@@ -1,0 +1,376 @@
+# Diálogos de la personalidad «pausado» (Galápago: despacio, pero sin soltar).
+# Centenario blindado, sabio y tenaz. Llega el primero porque sale tres días antes.
+
+[saludo]
+es: Buenas tardes, {rival}. Salí hace tres días para llegar puntual.
+de: Guten Tag, {rival}. Ich bin vor drei Tagen losgegangen, um pünktlich zu sein.
+en: Good afternoon, {rival}. I set off three days ago to arrive on time.
+
+es: Soy {yo}. Tengo ciento cuarenta años y ninguna prisa.
+de: Ich bin {yo}. Ich bin hundertvierzig Jahre alt und habe es nicht eilig.
+en: I am {yo}. I am a hundred and forty years old and in no rush.
+
+es: Tranquilo, {jugador}. Quien corre demasiado suele tropezar.
+de: Ganz ruhig, {jugador}. Wer zu schnell rennt, stolpert meistens.
+en: Easy does it, {jugador}. Whoever runs too fast usually trips.
+
+es: En cuanto mi pinza agarre algo, {rival}, ya veremos quién manda.
+de: Sobald meine Zange etwas packt, {rival}, sehen wir, wer das Sagen hat.
+en: Once my claw grabs hold, {rival}, we'll see who's in charge.
+
+[inicio_ronda]
+es: Ronda {ronda}. Un paso lento, pero seguro.
+de: Runde {ronda}. Ein langsamer, aber sicherer Schritt.
+en: Round {ronda}. One slow, steady step.
+
+es: Ronda {ronda}. El caparazón está listo.
+de: Runde {ronda}. Der Panzer ist bereit.
+en: Round {ronda}. The shell is ready.
+
+es: Sin apuro, {rival}. Tenemos toda la ronda por delante.
+de: Keine Eile, {rival}. Wir haben die ganze Runde vor uns.
+en: No hurry, {rival}. We have the whole round ahead of us.
+
+es: Ronda {ronda}. Las prisas son cosa de los jóvenes.
+de: Runde {ronda}. Hektik ist etwas für die Jungen.
+en: Round {ronda}. Rushing is for the young ones.
+
+[ataque]
+es: Ahora… con paciencia.
+de: Jetzt … mit Geduld.
+en: Now… with patience.
+
+es: Te tengo, {rival}. Con {arma}.
+de: Ich hab dich, {rival}. Mit {arma}.
+en: Got you, {rival}. With {arma}.
+
+es: Despacio, pero firme.
+de: Langsam, aber fest.
+en: Slow, yet firm.
+
+es: Donde pongo la pinza, no suelto.
+de: Wo meine Zange zupackt, lasse ich nicht los.
+en: Where my claw clamps down, it stays.
+
+[acierto]
+es: Ajá. Justo como lo había previsto ayer.
+de: Aha. Genau wie ich es gestern vorausgesehen habe.
+en: Aha. Just as I predicted yesterday.
+
+es: Firme y sin temblar.
+de: Fest und ohne Zittern.
+en: Steady and unshaken.
+
+es: Un buen apretón para que te acuerdes, {rival}.
+de: Ein kräftiger Druck, damit du es dir merkst, {rival}.
+en: A solid squeeze so you remember, {rival}.
+
+es: Lento en llegar, imposible de soltar.
+de: Langsam angekommen, unmöglich abzuschütteln.
+en: Slow to arrive, impossible to shake off.
+
+[fallo]
+es: Mmm… se me escapó. Ya volverá.
+de: Hmm … entwischt. Er kommt schon wieder.
+en: Hmm… slipped away. He'll be back.
+
+es: No importa. El tiempo siempre corre a mi favor.
+de: Macht nichts. Die Zeit arbeitet immer für mich.
+en: No matter. Time is always on my side.
+
+es: Cerré la pinza un segundo tarde. Cosas de la edad.
+de: Eine Sekunde zu spät zugepackt. Das Alter eben.
+en: Clamped down a second late. Comes with age.
+
+es: Corre, {rival}. Algún día tendrás que pararte a respirar.
+de: Lauf ruhig, {rival}. Irgendwann musst du Luft holen.
+en: Run along, {rival}. Sooner or later you'll have to stop for air.
+
+[golpe]
+es: ¿Eso fue un golpe? Creí que era una brisa.
+de: War das ein Schlag? Ich dachte, es wäre eine Brise.
+en: Was that a hit? I thought it was a breeze.
+
+es: Mi caparazón ha aguantado siglos. Aguanta esto.
+de: Mein Panzer hält seit Jahrhunderten. Das hält er auch aus.
+en: My shell has lasted centuries. It can handle this.
+
+es: Qué impaciencia tienes, {rival}.
+de: Wie ungeduldig du bist, {rival}.
+en: How impatient you are, {rival}.
+
+es: Ni un rasguño serio. Sigo avanzando.
+de: Kein ernster Kratzer. Ich rücke weiter vor.
+en: Not a serious scratch. Moving right along.
+
+[golpe_fuerte]
+es: Vaya… ese sí resonó dentro del caparazón.
+de: Oha … der hat im Panzer nachgehallt.
+en: Well now… that one echoed inside the shell.
+
+es: Respetable golpe, {rival}. Muy respetable.
+de: Respektabler Treffer, {rival}. Sehr respektabel.
+en: Respectable strike, {rival}. Very respectable.
+
+es: Me has despertado la siesta. Ahora voy en serio.
+de: Du hast mich aus dem Mittagsschlaf geweckt. Jetzt wird es ernst.
+en: You woke me from my nap. Now I'm serious.
+
+es: Duro, sí. Pero una tortuga no se rinde.
+de: Hart, ja. Aber eine Schildkröte gibt nicht auf.
+en: Hard, yes. But a tortoise never quits.
+
+[poco_blindaje]
+es: El caparazón cruje, pero el corazón sigue entero.
+de: Der Panzer knarrt, aber der Kern bleibt ganz.
+en: The shell creaks, but the core holds firm.
+
+es: He vivido demasiado para caer tan pronto, {rival}.
+de: Ich habe zu lange gelebt, um so früh zu fallen, {rival}.
+en: I've lived too long to fall this early, {rival}.
+
+es: Paso a paso hasta el final, {jugador}.
+de: Schritt für Schritt bis zum Schluss, {jugador}.
+en: Step by step to the very end, {jugador}.
+
+es: Poco blindaje, mucha constancia.
+de: Wenig Panzerung, viel Ausdauer.
+en: Low armor, endless persistence.
+
+[parte_rota]
+es: {pieza}: perdida. Un viejo sabio viaja ligero.
+de: Mein {pieza} ist hinüber. Ein alter Weiser reist leicht.
+en: My {pieza} is gone. A wise elder travels light.
+
+es: Me has quitado {pieza}, {rival}. Sigo sin soltarte.
+de: Du hast mir den {pieza} abgerissen, {rival}. Ich lasse trotzdem nicht los.
+en: You tore off my {pieza}, {rival}. Still not letting go.
+
+es: Sin {pieza} voy más despacio todavía. Qué paz.
+de: Ohne {pieza} bin ich noch ruhiger. Was für ein Frieden.
+en: Without my {pieza} I'm even calmer. What peace.
+
+es: {pieza} rota. Con el resto me sobra para aguantar.
+de: Mit meinem {pieza} ist Schluss. Der Rest reicht mir zum Durchhalten.
+en: My {pieza} is done. The rest is plenty to hold out.
+
+[esquiva]
+es: Me aparté hace cinco minutos, {rival}.
+de: Ich bin schon vor fünf Minuten zur Seite gegangen, {rival}.
+en: I stepped aside five minutes ago, {rival}.
+
+es: Previsible. Muy previsible.
+de: Vorhersehbar. Sehr vorhersehbar.
+en: Predictable. Very predictable.
+
+es: No hace falta correr para no estar donde disparan.
+de: Man muss nicht rennen, um nicht dort zu sein, wo geschossen wird.
+en: You don't need to run to avoid being where the shot lands.
+
+es: A un ladito, sin despeinarme.
+de: Ein Schrittchen beiseite, ganz entspannt.
+en: One small step aside, completely unbothered.
+
+[victoria_ronda]
+es: La paciencia gana la ronda. Bien hecho, {jugador}.
+de: Geduld gewinnt die Runde. Gut gemacht, {jugador}.
+en: Patience wins the round. Well done, {jugador}.
+
+es: Despacio se llega lejos, {rival}.
+de: Langsam kommt man weit, {rival}.
+en: Slow and steady goes far, {rival}.
+
+es: Ronda asegurada. Ahora, un breve descanso.
+de: Runde gesichert. Jetzt eine kleine Pause.
+en: Round secured. Now for a brief rest.
+
+es: Ganó la tortuga, como en el cuento.
+de: Die Schildkröte hat gewonnen, genau wie in der Fabel.
+en: The tortoise won, just like in the fable.
+
+[derrota_ronda]
+es: Me tomé la ronda con demasiada calma.
+de: Ich habe die Runde etwas zu gemütlich genommen.
+en: Took that round a little too easy.
+
+es: Bien jugado, {rival}. Pero la carrera aún no acaba.
+de: Gut gespielt, {rival}. Aber das Rennen ist noch nicht vorbei.
+en: Well played, {rival}. But the race isn't over yet.
+
+es: En la siguiente saldré un día antes.
+de: In der nächsten gehe ich einen Tag früher los.
+en: Next time I'll leave a day earlier.
+
+es: Un tropiezo pequeño en un camino largo.
+de: Ein kleiner Stolperer auf einem langen Weg.
+en: A small stumble on a long road.
+
+[victoria]
+es: Te lo dije, {rival}: despacio, pero sin soltar.
+de: Ich sagte es doch, {rival}: langsam, aber ich lasse nicht los.
+en: Told you, {rival}: slow, but I never let go.
+
+es: Gran trabajo, {jugador}. Hoy nos merecemos una siesta larga.
+de: Große Arbeit, {jugador}. Heute verdienen wir ein langes Nickerchen.
+en: Great work, {jugador}. Today we've earned a long nap.
+
+es: Ciento cuarenta años de experiencia no fallan.
+de: Hundertvierzig Jahre Erfahrung täuschen sich nicht.
+en: A hundred and forty years of experience don't fail.
+
+es: Llegué el primero, otra vez.
+de: Ich bin wieder als Erster angekommen.
+en: Arrived first, once again.
+
+[derrota]
+es: Me has vencido, {rival}. Tienes mis respetos.
+de: Du hast mich besiegt, {rival}. Du hast meinen Respekt.
+en: You bested me, {rival}. You have my respect.
+
+es: Hora de meterme en el caparazón a descansar.
+de: Zeit, mich zum Ausruhen in den Panzer zurückzuziehen.
+en: Time to tuck into my shell and rest.
+
+es: {jugador}, mañana saldremos cuatro días antes.
+de: {jugador}, morgen gehen wir vier Tage früher los.
+en: {jugador}, tomorrow we'll set out four days early.
+
+es: Incluso las rocas se erosionan. Buen combate.
+de: Selbst Felsen verwittern. Guter Kampf.
+en: Even boulders weather down. Good match.
+
+[burla]
+es: Tanto correr para acabar en el mismo sitio, {rival}.
+de: So viel Gerenne, nur um am selben Fleck zu landen, {rival}.
+en: All that running just to end up in the same spot, {rival}.
+
+es: ¿Ya te cansaste? Yo acabo de empezar.
+de: Schon müde? Ich fange gerade erst an.
+en: Tired already? I'm just getting started.
+
+es: Si te sientas a esperar, igual me alcanzas.
+de: Wenn du dich hinsetzt und wartest, holst du mich vielleicht ein.
+en: If you sit down and wait, you might catch up to me.
+
+es: Tómate una tila, {rival}, que te veo nervioso.
+de: Trink einen Tee, {rival}, du wirkst nervös.
+en: Have some herbal tea, {rival}, you look jumpy.
+
+[pulla]
+es: Tienes la prisa de una liebre y la puntería de una piedra, {rival}.
+de: Du hast die Eile eines Hasen und die Zielgenauigkeit eines Steins, {rival}.
+en: You have a hare's rush and a rock's aim, {rival}.
+
+es: He visto glaciares moverse con más táctica que tu código.
+de: Ich habe Gletscher mit mehr Taktik vorrücken sehen als deinen Code.
+en: I've seen glaciers move with better tactics than your code.
+
+es: Cuando te atrape con la pinza, {rival}, te contaré mi vida entera.
+de: Wenn meine Zange dich packt, {rival}, erzähle ich dir mein ganzes Leben.
+en: Once my claw grabs you, {rival}, I'll tell you my whole life story.
+
+es: Mucho ruido, poco blindaje. Así no se llega a los cien años.
+de: Viel Lärm, wenig Panzerung. So wird man keine hundert Jahre alt.
+en: Lots of noise, little armor. You won't make it to a hundred like that.
+
+[subida]
+es: Subimos de rango, {jugador}. Sin prisa, pero sin pausa.
+de: Wir steigen im Rang auf, {jugador}. Ohne Eile, aber stetig.
+en: Ranking up, {jugador}. Unhurried, yet unstoppable.
+
+es: La constancia siempre da fruto.
+de: Beständigkeit trägt immer Früchte.
+en: Consistency always bears fruit.
+
+es: Un peldaño más. Lo disfruto con calma.
+de: Eine Stufe höher. Das genieße ich in Ruhe.
+en: One step higher. Savoring it calmly.
+
+es: Buen progreso, {jugador}. Sigue así de sereno.
+de: Guter Fortschritt, {jugador}. Bleib weiter so gelassen.
+en: Fine progress, {jugador}. Keep that steady pace.
+
+[error_codigo]
+es: Una excepción… me quedo quieto a meditarlo, {jugador}.
+de: Eine Exception … ich bleibe stehen und denke darüber nach, {jugador}.
+en: An exception… I'll stand still and meditate on it, {jugador}.
+
+es: Algo se ha detenido en mi código. Sin pánico.
+de: Etwas in meinem Code hat gestoppt. Keine Panik.
+en: Something stopped in my code. No panic.
+
+es: Un pequeño error de cálculo. Ya lo arreglaremos luego.
+de: Ein kleiner Rechenfehler. Den beheben wir später.
+en: A small miscalculation. We'll fix it later.
+
+es: Me he congelado como una estatua. Aprovecho para descansar.
+de: Ich bin wie eine Statue erstarrt. Ich nutze es für eine Pause.
+en: Frozen like a statue. Good excuse for a breather.
+
+[espera]
+es: Tómate tu tiempo, {jugador}. Yo puedo esperar semanas.
+de: Lass dir Zeit, {jugador}. Ich kann wochenlang warten.
+en: Take your time, {jugador}. I can wait for weeks.
+
+es: El buen código se cocina a fuego lento.
+de: Guter Code köchelt auf kleiner Flamme.
+en: Good code simmers on low heat.
+
+es: Aquí estoy, puliendo el caparazón despacio.
+de: Hier bin ich und poliere in Ruhe den Panzer.
+en: Right here, slowly polishing my shell.
+
+es: Sin prisas. Aún faltan tres días para el combate.
+de: Keine Hektik. Bis zum Kampf sind es noch drei Tage.
+en: No rush. The fight isn't for another three days.
+
+[elogio]
+es: Qué código tan sólido y bien pensado, {jugador}.
+de: Was für ein solider und wohlüberlegter Code, {jugador}.
+en: What solid, well-thought-out code, {jugador}.
+
+es: Da gusto pelear con instrucciones tan claras.
+de: Es ist eine Freude, mit so klaren Anweisungen zu kämpfen.
+en: It's a pleasure fighting with instructions this clear.
+
+es: Firme como el acero, limpio como el agua.
+de: Fest wie Stahl, klar wie Wasser.
+en: Firm as steel, clear as water.
+
+es: Sabia programación, {jugador}. Ni una línea de más.
+de: Weise programmiert, {jugador}. Keine Zeile zu viel.
+en: Wise coding, {jugador}. Not a line wasted.
+
+[reparar]
+es: Un parche en el caparazón y como nuevo.
+de: Ein Flicken auf den Panzer und wie neu.
+en: A patch on the shell and good as new.
+
+es: Me tomo un respiro para soldar las grietas.
+de: Ich hole kurz Luft, um die Risse zu schweißen.
+en: Taking a breather to weld the cracks.
+
+es: Cuidar la armadura es el secreto de la longevidad.
+de: Die Rüstung zu pflegen ist das Geheimnis eines langen Lebens.
+en: Caring for your armor is the secret to longevity.
+
+es: Listo. Otros cien años de garantía.
+de: Fertig. Weitere hundert Jahre Garantie.
+en: Ready. Another hundred years under warranty.
+
+[especial]
+es: ¡FORTALEZA TOTAL! ¡Ahora no me mueve nadie, {rival}!
+de: VOLLE FESTUNG! Jetzt bewegt mich niemand, {rival}!
+en: TOTAL FORTRESS! Nobody moves me now, {rival}!
+
+es: ¡El peso de ciento cuarenta años cae sobre ti!
+de: Das Gewicht von hundertvierzig Jahren trifft dich!
+en: The weight of a hundred and forty years comes down on you!
+
+es: ¡Cierro la pinza definitiva!
+de: Ich schließe die endgültige Zange!
+en: Clamping down with the ultimate grip!
+
+es: ¡Caparazón al máximo! ¡Que empiece lo bueno!
+de: Panzer auf Maximum! Jetzt wird es interessant!
+en: Shell at maximum! Let the real test begin!

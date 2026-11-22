@@ -1,0 +1,376 @@
+# Diálogos de la personalidad «bromista» (Volteo: ¡Arriba! ¿Y ahora quién manda?).
+# Acróbata bromista que daba la vuelta a tortillas y un día volteó el bar entero.
+
+[saludo]
+es: ¡Hola, {rival}! ¿Cómo te gusta la tortilla: poco hecha o volando por los aires?
+de: Hallo, {rival}! Wie magst du dein Omelett: locker oder hoch in der Luft?
+en: Hey, {rival}! How do you like your omelette: fluffy or airborne?
+
+es: ¡{yo} al mando! Prepárate para ver el techo de cerca, {rival}.
+de: {yo} am Start! Mach dich bereit, die Decke aus der Nähe zu sehen, {rival}.
+en: {yo} reporting in! Get ready to see the ceiling up close, {rival}.
+
+es: ¡Hoy le damos la vuelta al marcador, {jugador}!
+de: Heute drehen wir das Ergebnis auf den Kopf, {jugador}!
+en: Today we flip the scoreboard upside down, {jugador}!
+
+es: ¡Sujétate los tornillos, que viene despegue!
+de: Halt deine Schrauben fest, gleich wird abgehoben!
+en: Hold onto your bolts, it's takeoff time!
+
+[inicio_ronda]
+es: ¡Ronda {ronda}! ¡Vuelta y vuelta!
+de: Runde {ronda}! Einmal wenden, bitte!
+en: Round {ronda}! Flip and turn!
+
+es: Ronda {ronda}: ¿qué lado prefieres hacia arriba, {rival}?
+de: Runde {ronda}: Welche Seite hättest du gern oben, {rival}?
+en: Round {ronda}: which side would you like facing up, {rival}?
+
+es: ¡Otra ronda de acrobacias! ¡A volar!
+de: Noch eine Runde Akrobatik! Auf in die Luft!
+en: Another round of acrobatics! Time to fly!
+
+es: Ronda {ronda}, {jugador}. ¡Que nadie se quede boca abajo!
+de: Runde {ronda}, {jugador}. Bleibt niemand auf dem Rücken!
+en: Round {ronda}, {jugador}. Let's flip them onto their back!
+
+[ataque]
+es: ¡Al aire con {arma}!
+de: Hoch in die Luft mit {arma}!
+en: Up in the air with {arma}!
+
+es: ¡Vuelta de tortilla para {rival}!
+de: Einmal wenden für {rival}!
+en: Omelette flip for {rival}!
+
+es: ¡Arriba, arriba! ¡Sin miedo a las alturas!
+de: Hoch, hoch! Keine Höhenangst!
+en: Up, up! Don't be afraid of heights!
+
+es: ¡Catapulta exprés en camino!
+de: Express-Katapult im Anflug!
+en: Express catapult incoming!
+
+[acierto]
+es: ¡Diez puntos del jurado por ese vuelo, {rival}!
+de: Zehn Punkte von der Jury für diesen Flug, {rival}!
+en: Ten out of ten from the judges for that flight, {rival}!
+
+es: ¡Toma voltereta! ¡Casi tocas las luces!
+de: Was für ein Salto! Fast die Scheinwerfer berührt!
+en: What a somersault! You almost touched the lights!
+
+es: ¡Pim, pam, tortilla lista!
+de: Zack, gewendet, fertig!
+en: Flip, flop, omelette's done!
+
+es: ¿Cómo se ve la arena desde arriba, {rival}?
+de: Wie sieht die Arena von oben aus, {rival}?
+en: How's the view of the arena from up there, {rival}?
+
+[fallo]
+es: ¡Uy, se me resbaló la sartén!
+de: Ups, die Pfanne ist abgerutscht!
+en: Oops, the pan slipped!
+
+es: ¡He volteado una mota de polvo! Muy elegante, eso sí.
+de: Ich habe ein Staubkorn gewendet! Sehr elegant immerhin.
+en: Just flipped a speck of dust! Very stylish, though.
+
+es: ¡Qué escurridizo eres, {rival}! ¡Pareces aceite!
+de: Wie glitschig du bist, {rival}! Wie Öl!
+en: You're slippery, {rival}! Like cooking oil!
+
+es: ¡Ensayo general! El siguiente sí despega.
+de: Generalprobe! Der nächste hebt ab.
+en: Dress rehearsal! The next one launches.
+
+[golpe]
+es: ¡Eh, no vale pegar antes de que yo te lance!
+de: Hey, erst hauen, wenn ich dich geworfen habe!
+en: Hey, no hitting before I launch you!
+
+es: ¡Casi me das la vuelta a mí! Casi.
+de: Fast hättest du mich gewendet! Fast.
+en: Almost flipped me instead! Almost.
+
+es: ¡Choque divertido! ¡Ahora te devuelvo el favor!
+de: Lustiger Rempler! Jetzt revanchiere ich mich!
+en: Fun bump! Now let me return the favor!
+
+es: ¡Mi resorte absorbe eso y se ríe!
+de: Meine Feder schluckt das und lacht darüber!
+en: My spring absorbs that and laughs!
+
+[golpe_fuerte]
+es: ¡Guau! ¡He visto las estrellas girar al revés!
+de: Wow! Ich habe die Sterne rückwärts kreisen sehen!
+en: Whoa! I saw stars spinning backwards!
+
+es: ¡Eso sí que fue un giro inesperado, {rival}!
+de: Das war mal eine unerwartete Wendung, {rival}!
+en: Now that was an unexpected twist, {rival}!
+
+es: ¡Casi aterrizo en la grada! ¡Buena esa!
+de: Fast auf der Tribüne gelandet! Nicht schlecht!
+en: Almost landed in the bleachers! Good one!
+
+es: ¡Aún caigo de pie, como los gatos con ruedas!
+de: Ich lande immer noch auf den Rädern, wie eine Katze!
+en: Still landing right-side up, like a cat on wheels!
+
+[poco_blindaje]
+es: ¡Se me están soltando los muelles, pero sigo saltando!
+de: Meine Federn lockern sich, aber ich hüpfe weiter!
+en: My springs are rattling loose, but I'm still bouncing!
+
+es: ¡Último truco de la noche, {jugador}!
+de: Letzter Trick des Abends, {jugador}!
+en: Last trick of the night, {jugador}!
+
+es: ¡Aunque me quede un tornillo, te volteo igual, {rival}!
+de: Selbst mit einer letzten Schraube kippe ich dich noch, {rival}!
+en: Even down to my last bolt, I'll still flip you, {rival}!
+
+es: ¡Final de infarto y con pirueta!
+de: Herzschlagfinale mit Pirouette!
+en: Nail-biting finish with a spin!
+
+[parte_rota]
+es: ¡Adiós, {pieza}! ¡Has salido volando mejor que {rival}!
+de: Tschüss, {pieza}! Du bist höher geflogen als {rival}!
+en: Bye, {pieza}! You flew higher than {rival}!
+
+es: ¡Me has volado {pieza}! ¡Eso sí que es un lanzamiento!
+de: Du hast mir meinen {pieza} wegkatapultiert! Was für ein Wurf!
+en: You catapulted my {pieza} away! What a launch!
+
+es: ¡Sin {pieza} hago acrobacias todavía más raras!
+de: Ohne meinen {pieza} mache ich noch verrücktere Kunststücke!
+en: Without my {pieza} I pull off even wilder stunts!
+
+es: ¡{pieza} rota! ¡Se ha quedado patas arriba!
+de: {pieza} ist kaputt! Liegt völlig auf dem Kopf!
+en: {pieza} is busted! Landed totally upside down!
+
+[esquiva]
+es: ¡Salto lateral! ¡Ni me has rozado!
+de: Sprung zur Seite! Nicht mal gestreift!
+en: Side hop! Didn't even graze me!
+
+es: ¡Ups, aquí no estaba! ¡Prueba boca abajo!
+de: Ups, da war ich gar nicht! Versuch's mal kopfüber!
+en: Oops, wasn't there! Try upside down!
+
+es: ¡Reflejos de camarero acróbata!
+de: Reflexe eines Akrobaten-Kellners!
+en: Acrobatic waiter reflexes!
+
+es: ¡Pasa de largo, {rival}! ¡Que no te invito a volar todavía!
+de: Vorbei, {rival}! Dein Flugticket kommt erst gleich!
+en: Whiffed right past, {rival}! Your flight leaves in a second!
+
+[victoria_ronda]
+es: ¡Ronda volteada con estilo, {jugador}!
+de: Runde mit Stil gewendet, {jugador}!
+en: Round flipped in style, {jugador}!
+
+es: ¡Aterrizaje perfecto! ¡Y tú boca arriba, {rival}!
+de: Perfekte Landung! Und du liegst auf dem Rücken, {rival}!
+en: Perfect landing! And you're flat on your back, {rival}!
+
+es: ¡Un aplauso para el volteador!
+de: Applaus für den Flipper!
+en: Give it up for the flipper!
+
+es: ¡Le dimos la vuelta entera a esta ronda!
+de: Wir haben diese Runde komplett auf den Kopf gestellt!
+en: Turned this whole round upside down!
+
+[derrota_ronda]
+es: ¡Ay, esta vez la tortilla caí yo!
+de: Autsch, diesmal bin ich als Omelett gelandet!
+en: Ouch, I landed like the omelette that time!
+
+es: ¡Bien hecho, {rival}! Pero a la siguiente te toca volar a ti.
+de: Gut gemacht, {rival}! Aber nächstes Mal fliegst du.
+en: Nice one, {rival}! Next round it's your turn to fly.
+
+es: ¡Me he quedado panza arriba! ¡Dadme la vuelta!
+de: Ich liege auf dem Rücken! Dreht mich um!
+en: I'm stuck belly-up! Flip me back over!
+
+es: ¡Un pequeño patinazo! Ahora ajustamos la palanca.
+de: Ein kleiner Ausrutscher! Jetzt justieren wir den Hebel.
+en: Small slip! Now we tune the lever.
+
+[victoria]
+es: ¡Bar volteado, arena volteada, victoria asegurada!
+de: Bar gewendet, Arena gewendet, Sieg gesichert!
+en: Bar flipped, arena flipped, victory secured!
+
+es: ¡Eres un crack, {jugador}! ¡Menudo espectáculo aéreo!
+de: Du bist genial, {jugador}! Was für eine Flugshow!
+en: You're a star, {jugador}! What an air show!
+
+es: ¡Buen vuelo, {rival}! ¡Gracias por viajar con Aerolíneas Volteo!
+de: Guten Flug, {rival}! Danke fürs Fliegen mit Kipper-Airlines!
+en: Nice flight, {rival}! Thanks for flying Flipside Airlines!
+
+es: ¡Y ahora… la tortilla de la victoria!
+de: Und jetzt … das Sieges-Omelett!
+en: And now… the victory omelette!
+
+[derrota]
+es: ¡Me has dejado mirando al techo, {rival}! ¡Buena pelea!
+de: Du hast mich an die Decke starren lassen, {rival}! Guter Kampf!
+en: Left me staring at the ceiling, {rival}! Good fight!
+
+es: ¡Aterrizaje forzoso! ¡Recoged mis piezas por toda la pista!
+de: Notlandung! Sammelt meine Teile auf der ganzen Bahn ein!
+en: Crash landing! Gather my parts across the arena!
+
+es: ¡{jugador}, ponme muelles nuevos para la revancha!
+de: {jugador}, bau mir neue Federn für die Revanche ein!
+en: {jugador}, fit me with fresh springs for the rematch!
+
+es: ¡Al menos hice una voltereta espectacular al caer!
+de: Wenigstens habe ich beim Fallen einen tollen Salto gemacht!
+en: At least I pulled off a great flip on the way down!
+
+[burla]
+es: ¡Arriba, {rival}! ¡Que desde el suelo no ves nada!
+de: Hoch mit dir, {rival}! Vom Boden siehst du doch nichts!
+en: Up you go, {rival}! You can't see anything from down there!
+
+es: ¿Te mareas fácil? Porque hoy das vueltas gratis.
+de: Wird dir schnell schwindlig? Heute gibt's Drehungen gratis.
+en: Get dizzy easily? Spins are free today.
+
+es: ¡Qué postura tan graciosa tienes boca abajo!
+de: Wie lustig du kopfüber aussiehst!
+en: You look hilarious upside down!
+
+es: ¡Abróchate el cinturón, que despegamos otra vez!
+de: Schnall dich an, wir heben gleich wieder ab!
+en: Buckle up, we're taking off again!
+
+[pulla]
+es: Tu algoritmo tiene menos equilibrio que un taburete cojo, {rival}.
+de: Dein Algorithmus hat weniger Gleichgewicht als ein wackliger Hocker, {rival}.
+en: Your algorithm has less balance than a wobbly barstool, {rival}.
+
+es: ¡Te voy a lanzar tan alto que vas a saludar a los satélites!
+de: Ich werfe dich so hoch, dass du den Satelliten winken kannst!
+en: I'm going to launch you so high you'll wave at satellites!
+
+es: ¡He volteado bares enteros con más estabilidad que tu código!
+de: Ich habe ganze Bars mit mehr Stabilität gewendet als deinen Code!
+en: I've flipped entire bars more stable than your code!
+
+es: ¡Gira todo lo que quieras, {rival}: acabarás mirando al techo!
+de: Dreh dich, so viel du willst, {rival}: Am Ende schaust du an die Decke!
+en: Spin all you want, {rival}: you'll still end up staring at the ceiling!
+
+[subida]
+es: ¡Subimos de nivel, {jugador}! ¡Cada vez saltamos más alto!
+de: Levelaufstieg, {jugador}! Wir springen immer höher!
+en: Level up, {jugador}! Jumping higher every time!
+
+es: ¡Salto mortal de rango! ¡Qué estilo!
+de: Salto in den nächsten Rang! Was für ein Stil!
+en: Somersault into the next rank! What style!
+
+es: ¡Doble vuelta de celebración!
+de: Doppelter Jubelsalto!
+en: Double celebration flip!
+
+es: ¡Nos ponemos por encima de todos, {jugador}!
+de: Wir fliegen über alle hinweg, {jugador}!
+en: Soaring right over everyone, {jugador}!
+
+[error_codigo]
+es: ¡Plof! ¡Me he tropezado con una excepción, {jugador}!
+de: Plumps! Über eine Exception gestolpert, {jugador}!
+en: Plop! Tripped over an exception, {jugador}!
+
+es: ¡He intentado dar una voltereta y me dio un null!
+de: Ich wollte einen Salto machen und bin auf ein null gelandet!
+en: Tried a somersault and landed on a null!
+
+es: ¡Error en el aire! ¡Pide pista de emergencia!
+de: Fehler in der Luft! Notlandebahn anfordern!
+en: Mid-air error! Requesting emergency runway!
+
+es: ¡Se me ha trabado el resorte por un bug!
+de: Meine Feder klemmt wegen eines Bugs!
+en: My spring jammed on a bug!
+
+[espera]
+es: ¡Botando en el sitio mientras programas, {jugador}!
+de: Ich hüpfe auf der Stelle, während du programmierst, {jugador}!
+en: Bouncing in place while you code, {jugador}!
+
+es: ¿A qué le damos la vuelta hoy?
+de: Was stellen wir heute auf den Kopf?
+en: What are we flipping upside down today?
+
+es: ¡Tengo la palanca engrasada y lista para el espectáculo!
+de: Mein Hebel ist geölt und bereit für die Show!
+en: My lever's oiled and ready for showtime!
+
+es: ¡Un código con chispa y hacemos volar la arena!
+de: Ein pfiffiger Code und wir lassen die Arena abheben!
+en: One clever script and we'll make the arena fly!
+
+[elogio]
+es: ¡Ese código es una obra de acrobacia, {jugador}!
+de: Dieser Code ist ein echtes Kunststück, {jugador}!
+en: That code is pure acrobatics, {jugador}!
+
+es: ¡Qué giro tan elegante le has dado a la lógica!
+de: Was für eine elegante Wendung du der Logik gegeben hast!
+en: What a slick twist you put on that logic!
+
+es: ¡Limpio, ágil y con gracia! ¡Me encanta!
+de: Sauber, flink und witzig! Ich liebe es!
+en: Clean, nimble, and witty! Love it!
+
+es: ¡Con esto, {jugador}, dejamos a todos patas arriba!
+de: Damit stellen wir alle auf den Kopf, {jugador}!
+en: With this, {jugador}, we'll flip everyone on their head!
+
+[reparar]
+es: ¡Aprieto un muelle y listo para otro salto!
+de: Eine Feder nachziehen und bereit für den nächsten Sprung!
+en: Tighten a spring and ready for another jump!
+
+es: ¡Recarga acrobática en marcha!
+de: Akrobatische Reparatur läuft!
+en: Acrobatic tune-up underway!
+
+es: ¡Vuelvo a caer de pie!
+de: Ich stehe wieder auf den Beinen!
+en: Back on my feet again!
+
+es: ¡Chapa enderezada y sonrisa puesta!
+de: Blech ausgebeult und Lächeln an!
+en: Plating straightened and smile back on!
+
+[especial]
+es: ¡SUPERLANCE! ¡Prepara el pasaporte, {rival}!
+de: SUPERWURF! Pack den Reisepass ein, {rival}!
+en: SUPER LAUNCH! Pack your passport, {rival}!
+
+es: ¡Vuelo sin escalas hasta la estratosfera!
+de: Direktflug in die Stratosphäre!
+en: Nonstop flight to the stratosphere!
+
+es: ¡Volteo magistral en tres, dos, uno!
+de: Meisterwurf in drei, zwei, eins!
+en: Master flip in three, two, one!
+
+es: ¡Que se agarren las gradas, que hoy doy la vuelta al estadio!
+de: Haltet die Tribünen fest, heute wende ich das ganze Stadion!
+en: Hold onto the stands, today I'm flipping the whole stadium!

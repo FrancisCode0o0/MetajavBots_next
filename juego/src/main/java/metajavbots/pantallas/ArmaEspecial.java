@@ -42,9 +42,9 @@ public final class ArmaEspecial {
         CANON("especial_canon", 1, new Trilingue("Cañón de Plasma", "Plasmakanone", "Plasma Cannon"), true, 65, 26, 0x6B3FA0, 0xD08CFF),
         RAYO("especial_rayo", 1, new Trilingue("Rayo Giratorio", "Drehstrahl", "Gyro Beam"), true, 65, 25, 0x2F7E9E, 0x7CE6FF),
         SIERRA("especial_sierra", 1, new Trilingue("Brazo Sierra", "Sägearm", "Saw Arm"), false, 60, 27, 0xA84A3E, 0xFF9B6A),
-        ARPON("especial_arpon", 2, new Trilingue("Arpón Trueno", "Donnerharpune", "Thunder Harpoon"), true, 90, 36, 0x3A6EA5, 0x9FD8FF),
-        MISIL("especial_misil", 2, new Trilingue("Misil Rastreador", "Suchrakete", "Seeker Missile"), true, 85, 35, 0x8C3A52, 0xFF8FA3),
-        TORRETA("especial_torreta", 2, new Trilingue("Torreta Enjambre", "Schwarmgeschütz", "Swarm Turret"), true, 90, 38, 0x4F5D95, 0xA5C4FF);
+        ARPON("especial_arpon", 2, new Trilingue("Arpón Trueno", "Donnerharpune", "Thunder Harpoon"), true, 90, 30, 0x3A6EA5, 0x9FD8FF),
+        MISIL("especial_misil", 2, new Trilingue("Misil Rastreador", "Suchrakete", "Seeker Missile"), true, 85, 30, 0x8C3A52, 0xFF8FA3),
+        TORRETA("especial_torreta", 2, new Trilingue("Torreta Enjambre", "Schwarmgeschütz", "Swarm Turret"), true, 90, 32, 0x4F5D95, 0xA5C4FF);
 
         final String reto;
         final int nivel;

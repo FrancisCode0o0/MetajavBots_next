@@ -195,9 +195,10 @@ public final class Pelea {
         // Cada ronda, en un sitio distinto: uno a cada lado (o en formación si es 1 contra varios).
         cuerpos = Cuerpo.posicionar(this, ronda, semilla, azar);
         if (ronda > 1 && desgaste() > 0) {
-            // Empieza con lo que arrastra de las rondas de antes (nunca por debajo de la mitad).
+            // Empieza con lo que arrastra de las rondas de antes, escalado al largo de la pelea (nunca por debajo de la mitad).
+            double escalaRondas = Math.max(1.0, rondas / (double) RONDAS);
             for (Cuerpo cu : cuerpos) {
-                double f = Math.max(0.5, 1 - cu.combatiente.estropeado() * desgaste());
+                double f = Math.max(0.5, 1.0 - (cu.combatiente.estropeado() / escalaRondas) * desgaste());
                 for (int k = 0; k < 4; k++) cu.parte[k] *= f;
             }
         }
@@ -271,12 +272,14 @@ public final class Pelea {
         return e.size();
     }
 
-    /** El golpe de un arma especial (la cuenta atrás de la pantalla de la pelea): daño de «de» a «a», con su suceso. */
+    /** El golpe de un arma especial (la cuenta atrás de la pantalla de la pelea): daño de «de» a «a», acotado para evitar KO trivial en 1 turno. */
     public void golpeEspecial(int de, int a, double dano, String arma) {
         Cuerpo d = cuerpos[de], e = cuerpos[a];
+        double tope = Math.max(12.0, e.blindajeMaximoTotal() * 0.30);
+        double efectivo = Math.min(dano, tope);
         double ang = Math.toDegrees(Math.atan2(d.y - e.y, d.x - e.x));
-        danar(e, d, dano, arma, ang, false);
-        suceso(Suceso.Tipo.EXPLOSION, a, e.x, e.y, ang, dano, arma);
+        danar(e, d, efectivo, arma, ang, false);
+        suceso(Suceso.Tipo.EXPLOSION, a, e.x, e.y, ang, efectivo, arma);
     }
 
     /** Un aviso a los compañeros: les llega el turno siguiente (y se ve como un bocadillo). */

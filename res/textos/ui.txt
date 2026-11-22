@@ -1098,3 +1098,22 @@ repeticion.guardando_gif = Guardando GIF… | Speichere GIF … | Saving GIF…
 repeticion.gif_guardado = GIF guardado: {0} | GIF gespeichert: {0} | GIF saved: {0}
 repeticion.gif_error = No se pudo guardar el GIF: {0} | GIF konnte nicht gespeichert werden: {0} | Could not save GIF: {0}
 repeticion.cerrar = Cerrar | Schließen | Close
+
+# Biografías editables y campañas estilo Creed (Bloque 5B)
+biografias.titulo = Editor de biografías | Biografie-Editor | Biography editor
+biografias.editar = Editar biografías | Biografien bearbeiten | Edit biographies
+biografias.editar_ayuda = Consulta, edita y restaura las biografías de los robots y los entrenadores (se guardan en tu partida sin tocar los archivos base). | Sieh dir die Biografien der Roboter und Trainer an, bearbeite sie und stelle sie jederzeit wieder her (gespeichert in deinem Spielstand). | Browse, edit, and restore robot and coach biographies (saved in your profile without altering base files).
+biografias.robots = Robots | Roboter | Robots
+biografias.entrenadores = Entrenadores | Trainer | Coaches
+biografias.personalizada = Editada | Bearbeitet | Edited
+biografias.original = Original | Original | Original
+biografias.vista_previa = Vista previa | Vorschau | Preview
+biografias.campo = Texto de la biografía | Biografietext | Biography text
+biografias.guardar = Guardar biografía | Biografie speichern | Save biography
+biografias.guardar_ayuda = Guarda este texto en tu partida (también puedes pulsar Intro). | Speichert diesen Text in deinem Spielstand (oder drück Enter). | Saves this text to your profile (you can also press Enter).
+biografias.restaurar = Restaurar original | Original wiederherstellen | Restore original
+biografias.restaurar_ayuda = Descarta tus cambios en este idioma y recupera la biografía de fábrica. | Verwirft deine Änderungen in dieser Sprache und stellt das Original wieder her. | Discards your edits in this language and restores the factory biography.
+biografias.guardada = Biografía guardada en tu partida. | Biografie im Spielstand gespeichert. | Biography saved to your profile.
+biografias.restaurada = Biografía restaurada al texto original. | Biografie auf das Original zurückgesetzt. | Biography restored to the original text.
+campanas.creed_jefe = Jefe final (entrenador en el hospital) | Endboss (Trainer im Krankenhaus) | Final boss (coach in hospital)
+campanas.creed_entrenador = Cambiar de entrenador para esta campaña estilo Creed (todos los entrenadores tienen su propia voz y estilo). | Trainer für diese Creed-Kampagne wechseln (alle Trainer haben ihre eigene Stimme und ihren eigenen Stil). | Switch coach for this Creed-style campaign (every coach keeps their own voice and style).

@@ -1,0 +1,376 @@
+# Diálogos de la personalidad «pendenciero» (Bolón: la cadena va y viene; tú, solo vas).
+# Púgil de bola y cadena. Habla con su bola «Doña Pepa / Frau Pepa / Lady Pepa», que es la que manda.
+
+[saludo]
+es: ¡Saluda a Doña Pepa, {rival}! Dice que hoy tiene hambre de chapa.
+de: Sag Frau Pepa hallo, {rival}! Sie sagt, sie hat heute Hunger auf Blech.
+en: Say hello to Lady Pepa, {rival}! She says she's hungry for steel today.
+
+es: Soy {yo}. Yo solo paseo la cadena; los golpes los decide ella.
+de: Ich bin {yo}. Ich führe nur die Kette aus; die Schläge entscheidet sie.
+en: I'm {yo}. I just walk the chain; she decides the hits.
+
+es: {jugador}, suéltanos la correa que ya estamos calientes.
+de: {jugador}, mach die Leine los, wir sind schon heiß.
+en: {jugador}, let us off the leash, we're fired up.
+
+es: ¡Clanc, clanc! ¡Cuando suena la cadena, mejor apartarse, {rival}!
+de: Klirr, klirr! Wenn die Kette rasselt, geh besser weg, {rival}!
+en: Clank, clank! When the chain rattles, better step aside, {rival}!
+
+[inicio_ronda]
+es: Ronda {ronda}. ¡Doña Pepa quiere dar otro paseo!
+de: Runde {ronda}. Frau Pepa will noch eine Runde spazieren!
+en: Round {ronda}. Lady Pepa wants another walk!
+
+es: Ronda {ronda}: cadena tensa, ánimo pesado.
+de: Runde {ronda}: Kette straff, Laune schwer.
+en: Round {ronda}: tight chain, heavy mood.
+
+es: ¡Otra ronda! A ver cuánto aguantas sin doblarte, {rival}.
+de: Noch eine Runde! Mal sehen, wie lange du durchhältst, {rival}.
+en: Another round! Let's see how long you last without bending, {rival}.
+
+es: Ronda {ronda}. La bola va y viene, y tú te vas al suelo.
+de: Runde {ronda}. Die Kugel kommt und geht, und du gehst zu Boden.
+en: Round {ronda}. The ball comes and goes, and you go down.
+
+[ataque]
+es: ¡Allá va Doña Pepa con {arma}!
+de: Da fliegt Frau Pepa mit {arma}!
+en: Here comes Lady Pepa with {arma}!
+
+es: ¡Agarra esto, {rival}, si puedes!
+de: Fang das auf, {rival}, wenn du kannst!
+en: Catch this, {rival}, if you can!
+
+es: ¡Demolición a domicilio!
+de: Abriss frei Haus!
+en: Demolition delivered to your door!
+
+es: ¡Toma hierro puro y cadena gruesa!
+de: Nimm reines Eisen und dicke Kette!
+en: Take pure iron and heavy chain!
+
+[acierto]
+es: ¡BOOOOM! ¡Doña Pepa manda recuerdos!
+de: BUUUM! Frau Pepa lässt schön grüßen!
+en: BOOOOM! Lady Pepa sends her regards!
+
+es: ¡Qué buen sonido hace tu chapa al doblarse, {rival}!
+de: Wie schön dein Blech beim Verbiegen klingt, {rival}!
+en: Love the sound your armor makes when it bends, {rival}!
+
+es: ¡Un abollón del tamaño de una sandía!
+de: Eine Delle so groß wie eine Wassermelone!
+en: A dent the size of a watermelon!
+
+es: ¡Clac! ¡Ese golpe se ha oído en el taller de al lado!
+de: Krach! Den Treffer hat man bis in die Nachbarwerkstatt gehört!
+en: Crack! They heard that hit in the next workshop over!
+
+[fallo]
+es: ¡Maldita sea, le he dado al aire! ¡Calma, Doña Pepa!
+de: Verdammt, nur Luft getroffen! Ruhig, Frau Pepa!
+en: Darn it, hit nothing but air! Easy, Lady Pepa!
+
+es: ¡Eh, {rival}, quédate quieto que la bola pesa mucho!
+de: Hey, {rival}, bleib stehen, die Kugel ist schwer!
+en: Hey, {rival}, stand still, this ball is heavy!
+
+es: ¡Solo era un tiro de calentamiento!
+de: Das war nur ein Aufwärmwurf!
+en: That was just a warm-up swing!
+
+es: ¡Cuando recoja la cadena, la próxima no falla!
+de: Wenn ich die Kette eingeholt habe, sitzt der nächste!
+en: Once I reel the chain back in, the next one won't miss!
+
+[golpe]
+es: ¡Bah! ¡Eso me hace cosquillas en los eslabones!
+de: Pah! Das kitzelt mich nur an den Kettengliedern!
+en: Pah! That barely tickles my links!
+
+es: ¿Me has pegado o me has saludado, {rival}?
+de: Hast du mich geschlagen oder gegrüßt, {rival}?
+en: Did you hit me or wave hello, {rival}?
+
+es: ¡Doña Pepa dice que ahora te va a dar el doble!
+de: Frau Pepa sagt, jetzt kriegst du es doppelt zurück!
+en: Lady Pepa says you're getting it back twice as hard!
+
+es: ¡Acero templado! ¡Ni me muevo!
+de: Gehärteter Stahl! Ich rühre mich nicht!
+en: Tempered steel! Didn't even flinch!
+
+[golpe_fuerte]
+es: ¡Grrr! ¡Ese sí me ha movido el chasis, {rival}!
+de: Grrr! Der hat mein Chassis durchgeschüttelt, {rival}!
+en: Grrr! That one actually rattled my frame, {rival}!
+
+es: ¡Eh, cuidado! ¡Que casi le das a Doña Pepa!
+de: Hey, pass auf! Du hättest fast Frau Pepa getroffen!
+en: Hey, watch it! You almost hit Lady Pepa!
+
+es: ¡Buen mazazo! ¡Por fin alguien que pega de verdad!
+de: Guter Wumms! Endlich mal jemand, der richtig zuhaut!
+en: Solid smash! Finally someone who hits for real!
+
+es: ¡Me has hecho enfadar! ¡Y a la bola, todavía más!
+de: Du hast mich wütend gemacht! Und die Kugel noch viel mehr!
+en: You made me mad! And the ball is even madder!
+
+[poco_blindaje]
+es: ¡Poco blindaje, pero la cadena sigue entera!
+de: Wenig Panzerung, aber die Kette ist noch ganz!
+en: Low armor, but the chain is still unbroken!
+
+es: ¡Todavía me queda fuerza para un último bolazo, {rival}!
+de: Ich habe noch genug Kraft für einen letzten Kugelschlag, {rival}!
+en: Still got enough strength for one last wrecking swing, {rival}!
+
+es: ¡No sueltes la cadena, {jugador}, aguantamos!
+de: Lass die Kette nicht los, {jugador}, wir halten durch!
+en: Don't drop the chain, {jugador}, we're hanging tough!
+
+es: ¡Herido, pero más peligroso que nunca!
+de: Angeschlagen, aber gefährlicher denn je!
+en: Battered, yet more dangerous than ever!
+
+[parte_rota]
+es: ¡Me han partido {pieza}! ¡Doña Pepa, venganza!
+de: Du hast mir den {pieza} zerschlagen! Frau Pepa, Rache!
+en: You smashed my {pieza}! Lady Pepa, avenge it!
+
+es: ¡Adiós, {pieza}! ¡Mientras quede la cadena, sobra!
+de: Ohne meinen {pieza} geht es auch, solange die Kette hält!
+en: I can manage without my {pieza} as long as the chain holds!
+
+es: ¡{pieza} rota! ¡Un eslabón menos no me frena!
+de: Mein {pieza} ist hin! Ein Glied weniger bremst mich nicht!
+en: My {pieza} is wrecked! One missing link won't slow me down!
+
+es: ¡Ay, {pieza}! ¡Eso te va a costar caro, {rival}!
+de: Mit meinem {pieza} hast du es übertrieben, {rival}! Das zahlst du teuer!
+en: You went too far with my {pieza}, {rival}! You'll pay for that!
+
+[esquiva]
+es: ¡Paso pesado, pero a tiempo!
+de: Schwerer Schritt, aber rechtzeitig!
+en: Heavy step, right on time!
+
+es: ¡Ese tiro pasó lejos, {rival}!
+de: Der Schuss ging weit vorbei, {rival}!
+en: That shot went way wide, {rival}!
+
+es: ¡Ni Doña Pepa se molestó en moverse!
+de: Nicht mal Frau Pepa musste sich bewegen!
+en: Lady Pepa didn't even bother dodging!
+
+es: ¡Buen intento, peso pluma!
+de: Netter Versuch, Leichtgewicht!
+en: Nice try, featherweight!
+
+[victoria_ronda]
+es: ¡Ronda aplastada! ¡Buen trabajo, {jugador}!
+de: Runde plattgemacht! Gute Arbeit, {jugador}!
+en: Round flattened! Good work, {jugador}!
+
+es: ¡Doña Pepa aprueba este resultado!
+de: Frau Pepa billigt dieses Ergebnis!
+en: Lady Pepa approves this result!
+
+es: ¡Te ha pasado una bola de demolición por encima, {rival}!
+de: Eine Abrissbirne ist über dich gerollt, {rival}!
+en: You just got rolled by a wrecking ball, {rival}!
+
+es: ¡Ronda nuestra! ¡A recoger los escombros!
+de: Unsere Runde! Kehrt die Trümmer zusammen!
+en: Our round! Sweep up the rubble!
+
+[derrota_ronda]
+es: ¡Grrr! ¡Esta ronda se nos escapó por los pelos!
+de: Grrr! Diese Runde ist uns knapp entwischt!
+en: Grrr! That round slipped away by a hair!
+
+es: ¡No te confíes, {rival}, que la cadena ya vuelve!
+de: Sei nicht zu sicher, {rival}, die Kette kommt schon zurück!
+en: Don't get cocky, {rival}, the chain is swinging back!
+
+es: ¡Doña Pepa está furiosa! En la siguiente arrasamos.
+de: Frau Pepa ist sauer! In der nächsten räumen wir auf.
+en: Lady Pepa is furious! Next round we flatten everything.
+
+es: ¡Vale, me diste bien! Ahora me toca cobrarme la deuda.
+de: Okay, gut getroffen! Jetzt treibe ich die Schuld ein.
+en: Fine, good hit! Now it's time to collect what's owed.
+
+[victoria]
+es: ¡Demolición completada, {rival}! ¡Llama a la grúa!
+de: Abriss abgeschlossen, {rival}! Ruf den Abschleppdienst!
+en: Demolition complete, {rival}! Call a tow truck!
+
+es: ¡Victoria de peso pesado, {jugador}! ¡Doña Pepa está encantada!
+de: Schwergewichtssieg, {jugador}! Frau Pepa ist begeistert!
+en: Heavyweight victory, {jugador}! Lady Pepa is thrilled!
+
+es: ¡La cadena volvió y tú te fuiste a la lona!
+de: Die Kette kam zurück und du gingst auf die Bretter!
+en: The chain came back and you hit the canvas!
+
+es: ¡Nadie aguanta un paseo con nosotros!
+de: Niemand übersteht einen Spaziergang mit uns!
+en: Nobody survives a walk with us!
+
+[derrota]
+es: ¡Uf… me has tumbado con cadena y todo, {rival}!
+de: Uff … du hast mich samt Kette umgehauen, {rival}!
+en: Oof… you floored me, chain and all, {rival}!
+
+es: ¡Tranquila, Doña Pepa, mañana volvemos al ring!
+de: Ruhig, Frau Pepa, morgen kehren wir in den Ring zurück!
+en: Easy, Lady Pepa, tomorrow we're back in the ring!
+
+es: ¡{jugador}, engrasa la cadena que hoy nos han dado bien!
+de: {jugador}, öle die Kette, heute haben wir ordentlich eingesteckt!
+en: {jugador}, oil the chain, we took a real beating today!
+
+es: ¡Buena pelea! Se cae el gigante, pero con estrépito.
+de: Guter Kampf! Der Riese fällt, aber mit ordentlich Krach.
+en: Good fight! The giant falls, and makes a loud crash doing it.
+
+[burla]
+es: ¿Eso es un blindaje o papel de aluminio, {rival}?
+de: Ist das Panzerung oder Alufolie, {rival}?
+en: Is that armor or tinfoil, {rival}?
+
+es: ¡Doña Pepa dice que ni siquiera le has despeinado la pintura!
+de: Frau Pepa sagt, du hast nicht mal ihren Lack angekratzt!
+en: Lady Pepa says you didn't even scuff her paint!
+
+es: ¡Corre, corre, que la cadena llega lejos!
+de: Lauf nur, die Kette reicht weiter als du denkst!
+en: Run all you want, this chain reaches farther than you think!
+
+es: ¡A ver si aguantas otro saludo de hierro!
+de: Mal sehen, ob du noch einen eisernen Gruß aushältst!
+en: Let's see if you can take another iron handshake!
+
+[pulla]
+es: Tu código pesa menos que un tornillo hueco, {rival}.
+de: Dein Code wiegt weniger als eine hohle Schraube, {rival}.
+en: Your code weighs less than a hollow bolt, {rival}.
+
+es: ¡He derribado edificios enteros que peleaban mejor que tú!
+de: Ich habe ganze Häuser abgerissen, die besser gekämpft haben als du!
+en: I've knocked down whole buildings that fought better than you!
+
+es: ¡Doña Pepa te va a dejar más plano que una moneda, {rival}!
+de: Frau Pepa macht dich flacher als eine Münze, {rival}!
+en: Lady Pepa is going to flatten you like a coin, {rival}!
+
+es: ¡Mucho cálculo y poco músculo de hierro!
+de: Viel Rechnerei und wenig Eisenmuskeln!
+en: Too much math and not enough iron muscle!
+
+[subida]
+es: ¡Subimos de nivel, {jugador}! ¡Cadena más larga, golpe más duro!
+de: Levelaufstieg, {jugador}! Längere Kette, härterer Schlag!
+en: Level up, {jugador}! Longer chain, heavier hit!
+
+es: ¡Doña Pepa brilla de orgullo con este nuevo rango!
+de: Frau Pepa glänzt vor Stolz über den neuen Rang!
+en: Lady Pepa is shining with pride at this new rank!
+
+es: ¡Más peso, más fuerza, más respeto en la arena!
+de: Mehr Gewicht, mehr Kraft, mehr Respekt in der Arena!
+en: More weight, more power, more respect in the arena!
+
+es: ¡Así se progresa, {jugador}: a golpe de hierro!
+de: So macht man Fortschritt, {jugador}: mit eisernem Schwung!
+en: That's how you climb, {jugador}: with iron momentum!
+
+[error_codigo]
+es: ¡Clanc! ¡Se me ha enredado la cadena en una excepción, {jugador}!
+de: Klirr! Meine Kette hat sich in einer Exception verheddert, {jugador}!
+en: Clank! My chain got tangled in an exception, {jugador}!
+
+es: ¡Un null en mitad del swing! ¡Qué rabia!
+de: Ein null mitten im Schwung! Wie ärgerlich!
+en: A null right mid-swing! Infuriating!
+
+es: ¡Doña Pepa se ha parado en seco por un error!
+de: Frau Pepa ist wegen eines Fehlers stehen geblieben!
+en: Lady Pepa stopped dead because of an error!
+
+es: ¡Desenreda ese código, {jugador}, que quiero pegar!
+de: Entwirre den Code, {jugador}, ich will zuschlagen!
+en: Untangle that code, {jugador}, I want to swing!
+
+[espera]
+es: ¡Aquí estoy, dándole lustre a Doña Pepa mientras escribes!
+de: Ich bin hier und poliere Frau Pepa, während du tippst!
+en: Right here polishing Lady Pepa while you type!
+
+es: ¡Cuando quieras, {jugador}! La cadena ya está templada.
+de: Wann immer du willst, {jugador}! Die Kette ist bereit.
+en: Whenever you're ready, {jugador}! The chain is warmed up.
+
+es: ¡Clanc… clanc…! ¿Nos falta mucho para salir al ring?
+de: Klirr … klirr …! Dauert es noch lange bis zum Ring?
+en: Clank… clank…! Much longer before we hit the ring?
+
+es: ¡Escribe duro, que luego pegamos más duro todavía!
+de: Schreib kräftig, nachher schlagen wir noch kräftiger!
+en: Code hard, and we'll hit even harder!
+
+[elogio]
+es: ¡Ese código tiene pegada de campeón, {jugador}!
+de: Dieser Code hat die Schlagkraft eines Champions, {jugador}!
+en: That code packs a champion's punch, {jugador}!
+
+es: ¡Fuerte, directo y sin rodeos! ¡A Doña Pepa le encanta!
+de: Stark, direkt und ohne Umwege! Frau Pepa liebt es!
+en: Strong, direct, no nonsense! Lady Pepa loves it!
+
+es: ¡Con estas líneas vamos a abrir boquetes en la arena!
+de: Mit diesen Zeilen schlagen wir Löcher in die Arena!
+en: With these lines we'll punch craters in the arena!
+
+es: ¡Trabajo pesado de primera clase, {jugador}!
+de: Erstklassige Schwerarbeit, {jugador}!
+en: First-class heavy work, {jugador}!
+
+[reparar]
+es: ¡Un martillazo para enderezar la chapa y listo!
+de: Ein Hammerschlag zum Ausbeulen und fertig!
+en: One hammer tap to straighten the armor and done!
+
+es: ¡Aprieto los eslabones y vuelvo a la carga!
+de: Ich ziehe die Glieder fest und greife wieder an!
+en: Tightening the links and charging back in!
+
+es: ¡Ni la chatarra nos para cuando nos reparamos!
+de: Selbst Schrott hält uns nicht auf, wenn wir flicken!
+en: Even scrap can't stop us once we patch up!
+
+es: ¡Doña Pepa y yo estamos como nuevos!
+de: Frau Pepa und ich sind wieder wie neu!
+en: Lady Pepa and I are good as new!
+
+[especial]
+es: ¡GIRO DEMOLEDOR! ¡Aparta o vuela, {rival}!
+de: ABRISSWIRBEL! Geh weg oder flieg weg, {rival}!
+en: WRECKING WHIRL! Move or get launched, {rival}!
+
+es: ¡Doña Pepa a máxima potencia!
+de: Frau Pepa auf voller Leistung!
+en: Lady Pepa at full power!
+
+es: ¡Aquí viene el golpe que tira muros!
+de: Hier kommt der Schlag, der Mauern einreißt!
+en: Here comes the wall-breaker!
+
+es: ¡Cadena al límite! ¡Prepara el seguro, {rival}!
+de: Kette am Limit! Mach die Versicherung bereit, {rival}!
+en: Chain at the limit! Call your insurance, {rival}!

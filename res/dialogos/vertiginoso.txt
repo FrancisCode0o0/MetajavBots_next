@@ -1,0 +1,376 @@
+# Diálogos de la personalidad «vertiginoso» (Remolino: giro, salto, chispa; y vuelta a empezar).
+# Campeón de peonzas perpetuamente mareado. Todo es un torbellino veloz y chispeante.
+
+[saludo]
+es: ¡Hola, {rival}! ¡Espera, que veo dos de ti! ¡Me encargo de los dos!
+de: Hallo, {rival}! Moment, ich sehe dich doppelt! Ich kümmere mich um beide!
+en: Hi, {rival}! Wait, I see two of you! I'll handle both!
+
+es: ¡{yo} girando a tope! ¿Dónde está el norte, {jugador}? ¡Da igual!
+de: {yo} dreht voll auf! Wo ist Norden, {jugador}? Egal!
+en: {yo} spinning full tilt! Which way is north, {jugador}? Doesn't matter!
+
+es: ¡Gané el campeonato de peonzas siendo la peonza! ¡Allá voy!
+de: Ich habe die Kreisel-Meisterschaft als der Kreisel gewonnen! Los geht's!
+en: I won the spinning-top championship by being the top! Here I go!
+
+es: ¡Giro, salto, chispa! ¡Agárrate que viene huracán, {rival}!
+de: Drehen, springen, Funken! Halt dich fest, ein Wirbelsturm kommt, {rival}!
+en: Spin, flip, spark! Hang on, a hurricane's coming, {rival}!
+
+[inicio_ronda]
+es: ¡Ronda {ronda}! ¡Vuelta rápida y a volar chispas!
+de: Runde {ronda}! Schnelle Drehung und Funkenflug!
+en: Round {ronda}! Fast spin and flying sparks!
+
+es: Ronda {ronda}: ¿el techo estaba arriba o abajo? ¡A girar!
+de: Runde {ronda}: War die Decke oben oder unten? Weiterdrehen!
+en: Round {ronda}: was the ceiling up or down? Keep spinning!
+
+es: ¡Trescientos sesenta grados de pura emoción, {rival}!
+de: Dreihundertsechzig Grad pure Aufregung, {rival}!
+en: Three hundred sixty degrees of pure thrill, {rival}!
+
+es: Ronda {ronda}. ¡No parpadees o te pierdes tres vueltas mías!
+de: Runde {ronda}. Blinzle nicht, sonst verpasst du drei Drehungen von mir!
+en: Round {ronda}. Don't blink or you'll miss three of my spins!
+
+[ataque]
+es: ¡Tornado con {arma}!
+de: Tornado mit {arma}!
+en: Tornado with {arma}!
+
+es: ¡Vuelta, látigo y chispa para {rival}!
+de: Drehung, Peitsche und Funken für {rival}!
+en: Spin, whip, and spark for {rival}!
+
+es: ¡Fiuuum! ¡Te ataco desde todos los ángulos a la vez!
+de: Wusch! Ich greife aus allen Winkeln gleichzeitig an!
+en: Whoosh! Attacking from every angle at once!
+
+es: ¡Giro eléctrico sin frenos!
+de: Elektrischer Wirbel ohne Bremsen!
+en: Electric whirlwind with no brakes!
+
+[acierto]
+es: ¡Zas! ¡Doble pirueta con chispa incluida!
+de: Zisch! Doppelte Pirouette samt Funken!
+en: Zap! Double pirouette with sparks included!
+
+es: ¡Pim! ¡Te di mientras daba la vuelta número catorce!
+de: Peng! Getroffen während meiner vierzehnten Umdrehung!
+en: Bam! Hit you on my fourteenth spin!
+
+es: ¡Mareo compartido, {rival}! ¡Ahora tú también ves doble!
+de: Geteilter Schwindel, {rival}! Jetzt siehst du auch doppelt!
+en: Shared dizziness, {rival}! Now you're seeing double too!
+
+es: ¡Impacto supersónico en espiral!
+de: Überschalltreffer in der Spirale!
+en: Supersonic spiral hit!
+
+[fallo]
+es: ¡Uy! ¡He girado media vuelta de más!
+de: Ups! Eine halbe Umdrehung zu viel gedreht!
+en: Oops! Spun half a turn too far!
+
+es: ¡Espera, {rival}, deja de dar vueltas tú también!
+de: Moment, {rival}, hör auf, dich auch zu drehen!
+en: Hey, {rival}, stop spinning around too!
+
+es: ¡Qué vértigo! ¡El siguiente giro sí te engancha!
+de: Was für ein Dreh! Die nächste Kurve erwischt dich!
+en: What a spin! The next curve catches you!
+
+es: ¡Solo hice un bucle decorativo en el aire!
+de: Das war nur eine dekorative Schleife in der Luft!
+en: That was just a decorative loop in midair!
+
+[golpe]
+es: ¡Eh! ¡Me has cambiado el sentido de giro!
+de: Hey! Du hast meine Drehrichtung geändert!
+en: Hey! You reversed my spin direction!
+
+es: ¡Chispa recibida! ¡Eso me da más impulso!
+de: Funke erhalten! Das gibt mir noch mehr Schwung!
+en: Spark received! That just gives me more momentum!
+
+es: ¡Un toquecito no frena un ciclón, {rival}!
+de: Ein kleiner Stups bremst keinen Wirbelsturm, {rival}!
+en: A little tap doesn't stop a cyclone, {rival}!
+
+es: ¡Guau, qué mareo más divertido!
+de: Wow, was für ein lustiger Schwindel!
+en: Whoa, what a fun dizzy spell!
+
+[golpe_fuerte]
+es: ¡Aaaah! ¡Me has dejado girando como una moneda en una mesa!
+de: Aaaah! Du lässt mich kreiseln wie eine Münze auf dem Tisch!
+en: Aaaah! You've got me spinning like a coin on a table!
+
+es: ¡Uf, ese golpe sí que me paró el giroscopio, {rival}!
+de: Uff, der Treffer hat mein Gyroskop kurz gestoppt, {rival}!
+en: Oof, that hit actually stalled my gyroscope, {rival}!
+
+es: ¡Todo da vueltas… más que de costumbre!
+de: Alles dreht sich … noch mehr als sonst!
+en: Everything is spinning… even more than usual!
+
+es: ¡Vaya sacudida! ¡Toca acelerar para no caer!
+de: Was für ein Ruck! Jetzt beschleunigen, damit ich nicht umkippe!
+en: What a jolt! Gotta speed up so I don't topple!
+
+[poco_blindaje]
+es: ¡Me tambaleo como peonza al final, pero aún pico, {rival}!
+de: Ich taumle wie ein Kreisel am Ende, aber ich steche noch, {rival}!
+en: Wobbling like a top at the end, but I still sting, {rival}!
+
+es: ¡Poco blindaje y mil vueltas por minuto, {jugador}!
+de: Wenig Panzerung und tausend Umdrehungen pro Minute, {jugador}!
+en: Low armor and a thousand spins a minute, {jugador}!
+
+es: ¡Antes de caerme te doy tres vueltas más!
+de: Bevor ich umfalle, drehe ich noch drei Runden um dich!
+en: Before I drop, I'll run three more circles around you!
+
+es: ¡Torbellino final en marcha!
+de: Finaler Wirbelsturm gestartet!
+en: Final whirlwind engaged!
+
+[parte_rota]
+es: ¡Salió volando {pieza}! ¡Menos peso, giro el doble de rápido!
+de: Mein {pieza} ist weggeflogen! Weniger Gewicht, doppelt so schneller Dreh!
+en: My {pieza} flew off! Less weight, twice the spin!
+
+es: ¡Me has arrancado {pieza}, {rival}! ¡Ahora soy más aerodinámico!
+de: Du hast mir den {pieza} weggerissen, {rival}! Jetzt bin ich windschnittiger!
+en: You ripped off my {pieza}, {rival}! Now I'm more aerodynamic!
+
+es: ¡Sin {pieza} tambaleo con mucho estilo!
+de: Ohne meinen {pieza} taumle ich mit extra Stil!
+en: Without my {pieza} I wobble with extra style!
+
+es: ¡{pieza} rota! ¡Sigo girando por pura inercia!
+de: {pieza} ist hin! Ich drehe mich aus purer Trägheit weiter!
+en: {pieza} is toast! Still spinning on pure momentum!
+
+[esquiva]
+es: ¡Fiuuu! ¡Solo atrapaste mi corriente de aire!
+de: Wusch! Du hast nur meinen Luftzug erwischt!
+en: Whoosh! You only caught my slipstream!
+
+es: ¡Demasiado rápido para tus sensores, {rival}!
+de: Zu schnell für deine Sensoren, {rival}!
+en: Too fast for your sensors, {rival}!
+
+es: ¡Aquí estoy! ¡No, allá! ¡No, detrás de ti!
+de: Hier bin ich! Nein, dort! Nein, hinter dir!
+en: Over here! Nope, over there! Nope, behind you!
+
+es: ¡Esquiva en espiral de diez puntos!
+de: Spiral-Ausweichmanöver mit Bestnote!
+en: Ten-out-of-ten spiral dodge!
+
+[victoria_ronda]
+es: ¡Ronda en el bolsillo y sin parar de girar, {jugador}!
+de: Runde in der Tasche und ohne anzuhalten, {jugador}!
+en: Round in the pocket without ever stopping, {jugador}!
+
+es: ¿Ves qué rápido fue eso, {rival}? ¡Ni te enteraste!
+de: Siehst du, wie schnell das ging, {rival}? Du hast es kaum gemerkt!
+en: See how fast that was, {rival}? You barely noticed!
+
+es: ¡Torbellino victorioso! ¡Y vuelta a empezar!
+de: Siegreicher Wirbel! Und von vorn!
+en: Victorious whirlwind! And here we go again!
+
+es: ¡El campeón de peonzas se lleva el asalto!
+de: Der Kreisel-Meister holt sich die Runde!
+en: The spinning-top champ takes the round!
+
+[derrota_ronda]
+es: ¡Ay, me mareé en la curva y me pillaste, {rival}!
+de: Autsch, in der Kurve wurde mir schwindlig und du hast mich erwischt, {rival}!
+en: Ouch, got dizzy on the turn and you caught me, {rival}!
+
+es: ¡Buena ronda! En la siguiente giro hacia el otro lado.
+de: Gute Runde! In der nächsten drehe ich andersherum.
+en: Good round! Next time I'll spin the other way.
+
+es: ¡Se me acabó la cuerda justo antes del final!
+de: Kurz vor Schluss ist mir der Schwung ausgegangen!
+en: Ran out of spin right before the bell!
+
+es: ¡Solo fue una pausa para quitarme el vértigo!
+de: Das war nur eine Pause gegen den Schwindel!
+en: Just a quick break to shake off the vertigo!
+
+[victoria]
+es: ¡Giro, salto, chispa y trofeo, {jugador}! ¡Qué fiesta!
+de: Drehen, springen, Funken und Pokal, {jugador}! Was für ein Fest!
+en: Spin, flip, spark, and trophy, {jugador}! What a party!
+
+es: ¡Te dejé mareado hasta el martes que viene, {rival}!
+de: Du bist noch bis nächsten Dienstag schwindlig, {rival}!
+en: Left you dizzy until next Tuesday, {rival}!
+
+es: ¡Victoria a mil revoluciones por segundo!
+de: Sieg bei tausend Umdrehungen pro Sekunde!
+en: Victory at a thousand spins per second!
+
+es: ¡Ahora sí puedo parar… ay, no, que sigo dando vueltas!
+de: Jetzt kann ich anhalten … oh nein, ich drehe mich noch immer!
+en: Now I can stop… oh wait, I'm still spinning!
+
+[derrota]
+es: ¡Se paró la peonza! ¡Buen combate, {rival}!
+de: Der Kreisel steht still! Guter Kampf, {rival}!
+en: The top stopped spinning! Good fight, {rival}!
+
+es: ¡Me voy rodando despacito hasta el taller!
+de: Ich rolle langsam zurück in die Werkstatt!
+en: Rolling slowly back to the workshop!
+
+es: ¡{jugador}, dame cuerda nueva que volvemos a girar!
+de: {jugador}, zieh mich neu auf, dann drehen wir wieder los!
+en: {jugador}, wind me back up and we'll spin again!
+
+es: ¡Uf, por fin el suelo dejó de dar vueltas!
+de: Uff, endlich hört der Boden auf, sich zu drehen!
+en: Whew, finally the floor stopped spinning!
+
+[burla]
+es: ¿Te mareas solo de mirarme, {rival}?
+de: Wird dir schon vom Zuschauen schwindlig, {rival}?
+en: Getting dizzy just watching me, {rival}?
+
+es: ¡A ver si aciertas a un relámpago con ruedas!
+de: Mal sehen, ob du einen Blitz auf Rollen triffst!
+en: Let's see you hit lightning on wheels!
+
+es: ¡Un poquito más lento y pareces una estatua, {rival}!
+de: Noch ein bisschen langsamer und du wirkst wie eine Statue, {rival}!
+en: Any slower and you'll look like a statue, {rival}!
+
+es: ¡Yo ya di tres vueltas mientras tú cargabas el arma!
+de: Ich habe schon drei Runden gedreht, während du deine Waffe lädst!
+en: I did three laps while you were charging your weapon!
+
+[pulla]
+es: Tu código da más vueltas sin sentido que yo después de un tornado, {rival}.
+de: Dein Code dreht mehr sinnlose Runden als ich nach einem Tornado, {rival}.
+en: Your code runs more pointless circles than I do after a tornado, {rival}.
+
+es: ¡Para cuando tu radar me encuentra, yo ya estoy en la otra esquina!
+de: Bis dein Radar mich findet, bin ich längst in der anderen Ecke!
+en: By the time your radar finds me, I'm already in the other corner!
+
+es: ¡Eres tan lento que te adelanto dando volteretas, {rival}!
+de: Du bist so langsam, ich überhole dich mit Saltos, {rival}!
+en: You're so slow I can lap you doing flips, {rival}!
+
+es: ¡Mucho peso y nada de chispa, {rival}!
+de: Zu viel Gewicht und null Funken, {rival}!
+en: Way too heavy and zero spark, {rival}!
+
+[subida]
+es: ¡Subimos de nivel, {jugador}! ¡Giro más rápido que el viento!
+de: Levelaufstieg, {jugador}! Schneller als der Wind!
+en: Level up, {jugador}! Spinning faster than the wind!
+
+es: ¡Nuevo rango! ¡Celebrémoslo con diez piruetas seguidas!
+de: Neuer Rang! Feiern wir mit zehn Pirouetten am Stück!
+en: New rank! Let's celebrate with ten pirouettes in a row!
+
+es: ¡Más velocidad, más chispas, más vértigo!
+de: Mehr Tempo, mehr Funken, mehr Wirbel!
+en: More speed, more sparks, more whirlwind!
+
+es: ¡Imparables, {jugador}! ¡Somos un ciclón de Java!
+de: Unaufhaltsam, {jugador}! Wir sind ein Java-Wirbelsturm!
+en: Unstoppable, {jugador}! We're a Java cyclone!
+
+[error_codigo]
+es: ¡Bucle infinito de mareo! ¡Una excepción, {jugador}!
+de: Endlosschleife im Schwindel! Eine Exception, {jugador}!
+en: Infinite dizzy loop! An exception, {jugador}!
+
+es: ¡Un null me ha frenado en seco! ¡Casi salgo disparado!
+de: Ein null hat mich abrupt gebremst! Fast wäre ich weggeflogen!
+en: A null slammed on my brakes! Nearly flew off!
+
+es: ¡Error en el giroscopio! ¡Ayuda, {jugador}!
+de: Fehler im Gyroskop! Hilfe, {jugador}!
+en: Gyroscope error! Help, {jugador}!
+
+es: ¡Me he quedado girando en el mismo píxel por un bug!
+de: Wegen eines Bugs drehe ich mich auf demselben Pixel!
+en: Stuck spinning on the same pixel because of a bug!
+
+[espera]
+es: ¡Dando vueltecitas en el taller mientras programas, {jugador}!
+de: Ich drehe kleine Runden in der Werkstatt, während du codest, {jugador}!
+en: Doing little spins in the workshop while you code, {jugador}!
+
+es: ¡Venga, venga, que me pican las chispas por salir!
+de: Los, los, meine Funken jucken schon vor Ungeduld!
+en: Come on, come on, my sparks are itching to get out there!
+
+es: ¡Un poquito de código veloz y arrasamos la arena!
+de: Ein bisschen flotter Code und wir fegen über die Arena!
+en: A dash of fast code and we'll sweep the arena!
+
+es: ¡Si me quedo quieto mucho rato me caigo de lado!
+de: Wenn ich zu lange stillstehe, kippe ich zur Seite um!
+en: If I stand still too long I tip over sideways!
+
+[elogio]
+es: ¡Qué código tan eléctrico y ágil, {jugador}!
+de: Was für ein elektrischer und flinker Code, {jugador}!
+en: What electric, nimble code, {jugador}!
+
+es: ¡Fluye como un remolino perfecto! ¡Me encanta!
+de: Fließt wie ein perfekter Wirbel! Ich liebe es!
+en: Flows like a perfect whirlwind! Love it!
+
+es: ¡Rápido, limpio y con chispa! ¡A volar!
+de: Schnell, sauber und voller Funken! Ab geht die Post!
+en: Fast, clean, and full of spark! Let's fly!
+
+es: ¡Con este programa vamos a marear a toda la liga, {jugador}!
+de: Mit diesem Programm machen wir die ganze Liga schwindlig, {jugador}!
+en: With this program we'll make the whole league dizzy, {jugador}!
+
+[reparar]
+es: ¡Ajusto el eje y a girar más fuerte!
+de: Achse richten und noch schneller drehen!
+en: Aligning the axis and spinning harder!
+
+es: ¡Recarga relámpago sobre la marcha!
+de: Blitzreparatur mitten im Lauf!
+en: Lightning repair on the fly!
+
+es: ¡Chispas nuevas, equilibrio nuevo!
+de: Neue Funken, neues Gleichgewicht!
+en: Fresh sparks, fresh balance!
+
+es: ¡Listo en media vuelta!
+de: In einer halben Drehung wieder fit!
+en: Ready in half a spin!
+
+[especial]
+es: ¡HURACÁN ELÉCTRICO! ¡Agárrate a la pared, {rival}!
+de: ELEKTRO-ORKAN! Halt dich an der Wand fest, {rival}!
+en: ELECTRIC HURRICANE! Hang onto the wall, {rival}!
+
+es: ¡Diez mil voltios en espiral!
+de: Zehntausend Volt in der Spirale!
+en: Ten thousand volts in a spiral!
+
+es: ¡Vuelta definitiva! ¡Giro, salto y chispa!
+de: Endgültige Drehung! Drehen, springen und Funken!
+en: Ultimate spin! Spin, flip, and spark!
+
+es: ¡Todo el estadio va a girar conmigo, {rival}!
+de: Das ganze Stadion dreht sich gleich mit mir, {rival}!
+en: The whole stadium is about to spin with me, {rival}!

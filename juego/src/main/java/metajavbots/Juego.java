@@ -139,6 +139,7 @@ public class Juego extends ApplicationAdapter {
         alarmaBajada.cancelar();
         avisoCompilar.cerrar();
         if (j != null) {
+            metajavbots.tutor.Biografias.usarPartida(j);
             T.idioma = j.idioma;
             ui.tema = Tema.de(j.temaClaro);
             ui.letra = Math.max(14, Math.min(28, j.tamanoDeLetra));
