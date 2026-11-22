@@ -1,8 +1,9 @@
-# 07_juego.txt: preguntas sobre el propio juego (cómo se juega, por qué pierdo, las notas y los cerebros de IA).
+# 07_juego.txt: preguntas sobre el propio juego (todas las pantallas, modos, mecánicas y cerebros de IA).
+# Nivel 6 = pestaña «El juego» / «Das Spiel» / «The game».
 # «guia: N» abre la guía con dibujos (pantallas/GuiaDeCerebros) en su página N (desde 1).
 
 === como_jugar
-nivel: 1
+nivel: 6
 tema: --
 guia: 9
 titulo.es: Cómo se juega
@@ -11,22 +12,22 @@ titulo.en: How to play
 claves.es: como se juega, como jugar, jugar, que hago, por donde empiezo, instrucciones
 claves.de: wie spielt man, spielen, was soll ich tun, wo fange ich an, anleitung
 claves.en: how to play, how do i play, what do i do, where do i start, instructions
-ver: programa, turno, compilar
+ver: tutoriales_y_demos, taller_y_compilar, arena_y_modos
 es:
     En MetajavBots no mueves tu robot con el mando: le escribes en Java lo que tiene que hacer, y en la pelea lo hace él solo.
     Es como ser el entrenador de un boxeador muy obediente: en el gimnasio (el Taller) le enseñas los golpes; en el ring (Pelear) solo puedes mirar y gritar desde la esquina; entre asalto y asalto (la pausa entre rondas) le cambias la táctica.
-    Empieza por los Tutoriales: van de cero a senior y cada uno mejora tu robot. Los Ejercicios son cortos y se comprueban solos. Gana la pelea quien menos daño recibe.
-    Y si algo no lo entiendes, pulsa F2 y pregúntamelo: variable, clase, por qué pierdo… lo que sea.
+    Empieza por los Tutoriales y las Demostraciones: van de cero a senior y cada lección mejora tu robot. Los Ejercicios son cortos y se comprueban solos. Gana la pelea quien menos daño recibe.
+    Y si algo no lo entiendes, pulsa F2 y pregúntamelo: variable, clase, tienda, depurador, por qué pierdo… lo que sea.
 de:
     In MetajavBots steuerst du deinen Roboter nicht mit dem Controller: Du schreibst ihm in Java, was er tun soll, und im Kampf macht er es allein.
     Das ist, als wärst du Trainer eines sehr gehorsamen Boxers: Im Gym (der Werkstatt) bringst du ihm die Schläge bei; im Ring (Kämpfen) kannst du nur zuschauen und aus der Ecke rufen; zwischen den Runden (der Pause) änderst du die Taktik.
-    Fang mit den Tutorials an: Sie gehen von null bis Senior, und jedes verbessert deinen Roboter. Die Übungen sind kurz und prüfen sich selbst. Den Kampf gewinnt, wer weniger Schaden nimmt.
-    Und wenn du etwas nicht verstehst, drück F2 und frag mich: Variable, Klasse, warum ich verliere … egal was.
+    Fang mit den Tutorials und Demonstrationen an: Sie gehen von null bis Senior, und jede Lektion verbessert deinen Roboter. Die Übungen sind kurz und prüfen sich selbst. Den Kampf gewinnt, wer weniger Schaden nimmt.
+    Und wenn du etwas nicht verstehst, drück F2 und frag mich: Variable, Klasse, Laden, Debugger, warum ich verliere … egal was.
 en:
     In MetajavBots you don't steer your robot with a controller: you write in Java what it should do, and in the fight it does it on its own.
     It's like coaching a very obedient boxer: in the gym (the Workshop) you teach it the punches; in the ring (Fight) you can only watch and shout from the corner; between rounds (the break) you change its tactics.
-    Start with the Tutorials: they go from zero to senior and each one improves your robot. The Exercises are short and check themselves. Whoever takes less damage wins the fight.
-    And if you don't understand something, press F2 and ask me: variable, class, why am I losing… anything.
+    Start with Tutorials and Demonstrations: they go from zero to senior and each lesson improves your robot. The Exercises are short and check themselves. Whoever takes less damage wins the fight.
+    And if you don't understand something, press F2 and ask me: variable, class, shop, debugger, why am I losing… anything.
 pseudo.es:
     REPETIR:
         en el Taller, escribir y compilar (Ctrl+S)
@@ -51,8 +52,333 @@ ejemplo:
         }
     }
 
+=== tutoriales_y_demos
+nivel: 6
+tema: --
+titulo.es: Tutoriales y Demostraciones
+titulo.de: Tutorials und Demonstrationen
+titulo.en: Tutorials and Demonstrations
+claves.es: como empiezo, empezar, principiante, tutorial, tutoriales, demostracion, demostraciones, demos, aprender desde cero, primeros pasos
+claves.de: wie fange ich an, anfangen, anfanger, tutorial, tutorials, demonstration, demonstrationen, demos, von null lernen, erste schritte
+claves.en: how do i start, get started, beginner, tutorial, tutorials, demonstration, demonstrations, demos, learn from scratch, first steps
+ver: como_jugar, minijuegos_y_ejercicios, taller_y_compilar
+es:
+    Si acabas de llegar o no sabes por dónde empezar, tu mejor puerta de entrada son los Tutoriales y las Demostraciones en el bloque Aprender del Menú.
+    Los Tutoriales te guían paso a paso desde cero hasta nivel senior: en cada lección aprendes un concepto de Java y lo aplicas enseguida a tu robot, sin abrumarte.
+    En Demostraciones puedes ver peleas explicadas con robots reales en acción, con comentarios del entrenador, para entender cómo se mueven, apuntan y esquivan antes de escribir tu propio código.
+    Un truco de entrenador: mira una Demostración corta, haz el primer Tutorial y enseguida estarás listo para tu primer combate.
+de:
+    Wenn du gerade erst anfängst oder nicht weißt, wo du starten sollst, sind Tutorials und Demonstrationen im Bereich Lernen des Menüs der beste Einstieg.
+    Die Tutorials führen dich Schritt für Schritt von null bis Senior: In jeder Lektion lernst du ein Java-Konzept und wendest es sofort auf deinen Roboter an.
+    In den Demonstrationen siehst du erklärte Kämpfe echter Beispielroboter mit Trainerkommentar, damit du verstehst, wie sie fahren, zielen und ausweichen, bevor du selbst codest.
+    Ein Trainer-Tipp: Schau dir eine kurze Demonstration an, mach das erste Tutorial, und schon bist du bereit für deinen ersten Kampf.
+en:
+    If you just arrived or aren't sure where to begin, your best starting point is Tutorials and Demonstrations in the Learn section of the Menu.
+    Tutorials guide you step by step from scratch to senior level: each lesson teaches a Java concept and lets you apply it to your robot right away.
+    In Demonstrations you can watch guided fights with real example robots and coach commentary, so you see how they move, aim and dodge before writing your own code.
+    Coach's tip: watch one short Demonstration, finish the first Tutorial, and you'll be ready for your first match in minutes.
+pseudo.es:
+    Menú → Aprender → Demostraciones (ver cómo pelean los ejemplos)
+    Menú → Aprender → Tutoriales (lección a lección)
+    aplicar lo aprendido en el Taller
+pseudo.de:
+    Menü → Lernen → Demonstrationen (Beispielkämpfe ansehen)
+    Menü → Lernen → Tutorials (Lektion für Lektion)
+    das Gelernte in der Werkstatt anwenden
+pseudo.en:
+    Menu → Learn → Demonstrations (watch example fights)
+    Menu → Learn → Tutorials (lesson by lesson)
+    apply what you learned in the Workshop
+ejemplo:
+    // Empieza sin miedo: Tutoriales + Demostraciones || Fang ohne Scheu an: Tutorials + Demonstrationen || Start without fear: Tutorials + Demonstrations
+    // Cada lección desbloquea ideas reales para tu robot || Jede Lektion liefert echte Ideen für deinen Roboter || Every lesson gives real ideas for your robot
+
+=== minijuegos_y_ejercicios
+nivel: 6
+tema: --
+titulo.es: Minijuegos y Ejercicios
+titulo.de: Minispiele und Übungen
+titulo.en: Minigames and Exercises
+claves.es: minijuegos, minijuego, ejercicios, ejercicio, codingbat, practicar, entrenar, oxidado, muñeco, calentar, retos cortos
+claves.de: minispiele, minispiel, ubungen, ubung, codingbat, uben, trainieren, eingerostet, puppe, aufwarmen, kurze aufgaben
+claves.en: minigames, minigame, exercises, exercise, codingbat, practice, train, rusty, dummy, warm up, short drills
+ver: tutoriales_y_demos, hora_de_hoy_y_temario, por_que_pierdo
+es:
+    Si llevas varias derrotas, te sientes oxidado o quieres practicar una habilidad concreta sin la presión del ring, entra en Minijuegos y en Ejercicios.
+    Los Minijuegos son cinco retos cortos contra el muñeco de entrenamiento: moverse sin chocar, girar el radar, apuntar, disparar con cabeza y esquivar obstáculos.
+    Los Ejercicios son problemas breves de Java al estilo CodingBat que se comprueban solos al instante y te dan monedas y experiencia para subir de rango.
+    Alternar un minijuego con dos o tres ejercicios rápidos es la mejor forma de coger soltura antes de volver a la Arena.
+de:
+    Wenn du ein paar Niederlagen hintereinander hast, dich eingerostet fühlst oder gezielt üben willst, öffne Minispiele und Übungen.
+    Die Minispiele sind fünf kurze Aufgaben gegen die Trainingspuppe: fahren ohne hängen zu bleiben, das Radar drehen, zielen, mit Köpfchen schießen und Hindernissen ausweichen.
+    Die Übungen sind kurze Java-Aufgaben im CodingBat-Stil, die sich sofort selbst prüfen und dir Münzen sowie Erfahrung für den Aufstieg bringen.
+    Ein Minispiel im Wechsel mit zwei oder drei schnellen Übungen ist das beste Aufwärmtraining vor dem nächsten Kampf.
+en:
+    If you've had a few losses, feel rusty, or want to sharpen one skill without ring pressure, open Minigames and Exercises.
+    Minigames are five short drills against the training dummy: moving cleanly, sweeping the radar, aiming, shooting smart, and dodging obstacles.
+    Exercises are bite-sized CodingBat-style Java problems that self-check immediately and reward coins and experience toward your next rank.
+    Mixing one minigame with two or three quick exercises is the fastest way to warm up before heading back to the Arena.
+pseudo.es:
+    Minijuegos → practicar moverse, radar, apuntar, disparar y esquivar
+    Ejercicios → resolver retos cortos con pruebas automáticas
+    ganar monedas y experiencia para subir de rango
+pseudo.de:
+    Minispiele → fahren, Radar, zielen, schießen und ausweichen üben
+    Übungen → kurze Aufgaben mit automatischen Tests lösen
+    Münzen und Erfahrung für den Aufstieg sammeln
+pseudo.en:
+    Minigames → practice moving, radar, aiming, shooting and dodging
+    Exercises → solve short problems with automatic checks
+    earn coins and experience to rank up
+ejemplo:
+    // Minijuegos: práctica directa contra el muñeco || Minispiele: direktes Training gegen die Puppe || Minigames: direct practice against the dummy
+    // Ejercicios: pequeños métodos Java con casos de prueba || Übungen: kleine Java-Methoden mit Testfällen || Exercises: small Java methods with test cases
+
+=== hora_de_hoy_y_temario
+nivel: 6
+tema: --
+titulo.es: La hora de hoy y Mi temario
+titulo.de: Die Stunde heute und Mein Lehrplan
+titulo.en: Today's hour and My syllabus
+claves.es: la hora de hoy, hora de hoy, sesion, rutina, que estudio hoy, mi temario, temario, pegar temario, clase, examen, asignatura
+claves.de: die stunde heute, stunde heute, sitzung, routine, was lerne ich heute, mein lehrplan, lehrplan, lehrplan einfugen, kurs, prufung
+claves.en: today's hour, todays hour, session, routine, what to study today, my syllabus, syllabus, paste syllabus, class, exam, course
+ver: minijuegos_y_ejercicios, tutoriales_y_demos, ver_notas
+es:
+    ¿No sabes qué entrenar hoy o tienes un examen de programación cerca? Para eso están La hora de hoy y Mi temario.
+    La hora de hoy te organiza una sesión completa de entrenamiento: primero repasa los temas que llevas más flojos, luego te propone una lección nueva y termina con una pelea para ponerlo a prueba.
+    En Mi temario puedes pegar o cargar el temario de tu clase o curso; el juego detecta los temas de Java que aparecen y te prepara ejercicios y lecciones a medida.
+    Es como tener un plan de gimnasio personalizado: no pierdes tiempo pensando qué hacer y atacas justo lo que necesitas.
+de:
+    Weißt du nicht, was du heute üben sollst, oder steht eine Prüfung an? Genau dafür gibt es Die Stunde heute und Mein Lehrplan.
+    Die Stunde heute stellt dir eine komplette Trainingseinheit zusammen: Zuerst wiederholst du deine schwächeren Themen, dann lernst du etwas Neues und testest es zum Schluss im Kampf.
+    In Mein Lehrplan kannst du den Lehrplan deines Kurses einfügen oder laden; das Spiel erkennt die Java-Themen und stellt passende Übungen und Lektionen zusammen.
+    Wie ein persönlicher Trainingsplan: Du verlierst keine Zeit mit Suchen und trainierst genau das, was du brauchst.
+en:
+    Not sure what to practice today or preparing for a coding exam? That's what Today's hour and My syllabus are for.
+    Today's hour builds a full training session for you: first it reviews your weak spots, then introduces a new topic, and finishes with a fight to put it to the test.
+    In My syllabus you can paste or load your class syllabus; the game matches the Java topics and lines up tailored exercises and lessons.
+    Think of it as a custom gym plan: no guesswork, straight to what matters most.
+pseudo.es:
+    La hora de hoy → repaso de lo flojo + tema nuevo + pelea
+    Mi temario → pegar o cargar tu temario → practicar justo esos temas
+pseudo.de:
+    Die Stunde heute → Schwaches wiederholen + neues Thema + Kampf
+    Mein Lehrplan → Lehrplan einfügen oder laden → genau diese Themen üben
+pseudo.en:
+    Today's hour → review weak spots + new topic + fight
+    My syllabus → paste or load your syllabus → practice those exact topics
+ejemplo:
+    // Una sesión diaria constante vale más que un atracón || Regelmäßiges Training schlägt jeden Marathon || Steady daily sessions beat cramming
+    // Pega tu temario en «Mi temario» para filtrar ejercicios || Füge deinen Lehrplan in „Mein Lehrplan“ ein || Paste your syllabus in «My syllabus» to filter exercises
+
+=== taller_y_compilar
+nivel: 6
+tema: --
+titulo.es: El Taller: programar, compilar y piezas
+titulo.de: Die Werkstatt: programmieren, kompilieren und Teile
+titulo.en: The Workshop: coding, compiling and parts
+claves.es: taller, el taller, compilar en el taller, compilar, ctrl+s, piezas, equipar, modelo, probar aqui, banco de pruebas, documentacion, api, editor, guardar codigo
+claves.de: werkstatt, die werkstatt, in der werkstatt kompilieren, kompilieren, strg+s, teile, ausrusten, modell, hier testen, prufstand, dokumentation, api, editor, code speichern
+claves.en: workshop, the workshop, compile in workshop, compile, ctrl+s, parts, equip, model, test here, test bench, documentation, api, editor, save code
+ver: como_jugar, tienda_y_monedas, depuracion_y_testing
+es:
+    El Taller es el gimnasio y el banco de trabajo de tu robot: aquí escribes su código Java, lo compilas, cambias sus piezas y consultas la documentación de la API.
+    Muy importante: después de editar tu código, no olvides pulsar Compilar (o Ctrl+S). Si no compilas, tu robot peleará con la última versión válida; si hay algún fallo, el editor lo subraya en rojo y F2 te lo explica.
+    Con «Probar aquí» abres un banco de pruebas en vivo junto al editor contra un muñeco, sin afectar a tu historial, y en la pestaña Documentación tienes todos los métodos de la API.
+    Además puedes gestionar varios robots, cambiar su modelo y equipar las piezas que hayas ganado o activado en la Tienda.
+de:
+    Die Werkstatt ist Gym und Werkbank deines Roboters: Hier schreibst du seinen Java-Code, kompilierst ihn, wechselst Teile und schlägst die API-Dokumentation nach.
+    Ganz wichtig: Nach jeder Änderung unbedingt Kompilieren (oder Strg+S) drücken. Sonst kämpft dein Roboter mit der alten Version; bei Fehlern markiert der Editor sie rot und F2 erklärt sie dir.
+    Mit „Hier testen“ öffnest du direkt neben dem Editor einen Live-Prüfstand gegen eine Puppe, ohne deinen Verlauf zu beeinflussen, und unter Dokumentation findest du die ganze API.
+    Außerdem verwaltest du hier mehrere Roboter, wechselst Modelle und rüstest gewonnene oder aktivierte Teile aus dem Laden aus.
+en:
+    The Workshop is your robot's gym and workbench: you write its Java code, compile it, swap its parts, and browse the API documentation.
+    Very important: after editing your code, don't forget to hit Compile (or Ctrl+S). Otherwise your robot fights with the previous compiled version; if anything is wrong, the editor underlines it in red and F2 explains it.
+    "Test here" opens a live test bench next to the editor against a dummy without touching your match history, and the Documentation tab lists every API method.
+    You can also manage multiple robots, switch models, and equip parts you've won or activated from the Shop.
+pseudo.es:
+    Taller → editar código → Compilar (Ctrl+S)
+    Probar aquí → ver al robot en vivo contra el muñeco
+    Piezas / Documentación → equipar mejoras y consultar la API
+pseudo.de:
+    Werkstatt → Code bearbeiten → Kompilieren (Strg+S)
+    Hier testen → Roboter live gegen die Puppe sehen
+    Teile / Dokumentation → Upgrades ausrüsten und API nachschlagen
+pseudo.en:
+    Workshop → edit code → Compile (Ctrl+S)
+    Test here → watch your robot live against the dummy
+    Parts / Documentation → equip upgrades and browse the API
+ejemplo:
+    // Atajos útiles del Taller: Ctrl+S compila, F1 documentación, F2 entrenador || Nützliche Kürzel: Strg+S kompiliert, F1 Doku, F2 Trainer || Useful shortcuts: Ctrl+S compiles, F1 docs, F2 coach
+    // Ctrl+Espacio autocompleta métodos del robot || Strg+Leertaste vervollständigt Methoden || Ctrl+Space autocompletes robot methods
+
+=== tienda_y_monedas
+nivel: 6
+tema: --
+titulo.es: Tienda, monedas y rangos
+titulo.de: Laden, Münzen und Stufen
+titulo.en: Shop, coins and ranks
+claves.es: tienda, monedas, comprar, piezas, complementos, activar pieza, rango, etiqueta, subir de rango, inventario, saldo
+claves.de: laden, munzen, kaufen, teile, zubehor, teil aktivieren, stufe, abzeichen, aufsteigen, inventar, guthaben
+claves.en: shop, coins, buy, parts, gear, activate part, rank, badge, rank up, inventory, balance
+ver: taller_y_compilar, minijuegos_y_ejercicios, ver_notas
+es:
+    Cada pelea ganada y cada ejercicio resuelto te da experiencia (para subir de rango, de Noob a Senior) y monedas gastables para la Tienda.
+    En la Tienda puedes comprar piezas y complementos (cabezas, brazos, piernas, núcleos y naturaleza) desbloqueados según tu rango actual.
+    Cuando compras una pieza, queda pendiente de activar hasta que superas un breve reto de código en Java (desde la propia Tienda o desde el Taller); así la haces tuya y puedes equiparla.
+    Si te falta rango para una pieza potente, sube de etiqueta ganando combates y completando los ejercicios de tu nivel.
+de:
+    Jeder gewonnene Kampf und jede gelöste Übung bringt dir Erfahrung (für den Aufstieg von Noob bis Senior) sowie ausgbare Münzen für den Laden.
+    Im Laden kaufst du Teile und Zubehör (Köpfe, Arme, Beine, Kerne und Natur), die passend zu deiner aktuellen Stufe freigeschaltet werden.
+    Nach dem Kauf bleibt ein Teil ausstehend, bis du eine kurze Java-Code-Aufgabe löst (im Laden oder in der Werkstatt); danach kannst du es ausrüsten.
+    Fehlt dir die Stufe für ein starkes Teil, steige durch Siege und gelöste Übungen deines Levels auf.
+en:
+    Every fight you win and exercise you solve earns experience (to climb from Noob to Senior) plus spendable coins for the Shop.
+    In the Shop you can buy parts and gear (heads, arms, legs, cores and nature) unlocked according to your current rank.
+    After buying a part, it stays pending until you pass a short Java code challenge (from the Shop or the Workshop); once activated, you can equip it.
+    If a strong part requires a higher rank, level up by winning fights and solving exercises at your tier.
+pseudo.es:
+    ganar peleas y resolver ejercicios → ganar monedas y experiencia
+    Tienda → comprar pieza → superar reto breve de código → activar
+    Taller → Piezas → equipar en tu robot
+pseudo.de:
+    Kämpfe gewinnen und Übungen lösen → Münzen und Erfahrung verdienen
+    Laden → Teil kaufen → kurze Code-Aufgabe lösen → aktivieren
+    Werkstatt → Teile → am Roboter ausrüsten
+pseudo.en:
+    win fights and solve exercises → earn coins and experience
+    Shop → buy part → pass short code challenge → activate
+    Workshop → Parts → equip on your robot
+ejemplo:
+    // Monedas: se ganan en peleas y ejercicios || Münzen: verdient in Kämpfen und Übungen || Coins: earned in fights and exercises
+    // Las piezas compradas se activan con un breve reto de código || Gekaufte Teile werden per kurzer Code-Aufgabe aktiviert || Purchased parts activate via a short code challenge
+
+=== depuracion_y_testing
+nivel: 6
+tema: --
+titulo.es: Depuración y Testing
+titulo.de: Debugging und Testing
+titulo.en: Debugging and Testing
+claves.es: depuracion, depurador, depurador en vivo, testing, robots rotos, reparar robot, paso a paso, breakpoint, laboratorio, laboratorio de pruebas, pruebas, junit, mutantes, caja negra, caja blanca
+claves.de: debugging, debugger, live-debugger, testing, kaputte roboter, roboter reparieren, schritt fur schritt, breakpoint, test-labor, tests, junit, mutanten, blackbox, whitebox
+claves.en: debugging, debugger, live debugger, testing, broken robots, repair robot, step by step, breakpoint, testing lab, tests, junit, mutants, blackbox, whitebox
+ver: taller_y_compilar, por_que_pierdo, depurar
+es:
+    En Depuración y Testing entrenas el ojo de ingeniero: encontrar fallos rápido y demostrar con pruebas que tu código funciona de verdad.
+    Tienes tres herramientas en un mismo sitio: Robots rotos (encuentra y corrige el fallo de robots con bugs reales), Depurador en vivo (avanza turno a turno viendo variables y decisiones) y Laboratorio de pruebas.
+    En el Laboratorio escribes pruebas estilo JUnit (@Test, assertEquals) con técnicas de caja negra, caja blanca y mutantes para comprobar si tus tests cazan errores escondidos.
+    Si tu robot hace cosas raras en la arena, pasar cinco minutos en Depuración y Testing te ahorra una hora de adivinar a ciegas.
+de:
+    Unter Debugging & Testing trainierst du dein Entwicklerauge: Fehler schnell finden und mit Tests beweisen, dass dein Code wirklich stimmt.
+    Drei Werkzeuge warten hier: Kaputte Roboter (echte Bugs finden und beheben), der Live-Debugger (Zug für Zug Variablen und Entscheidungen beobachten) und das Test-Labor.
+    Im Test-Labor schreibst du JUnit-Tests (@Test, assertEquals) mit Blackbox-, Whitebox- und Mutanten-Techniken, um zu prüfen, ob deine Tests versteckte Fehler aufspüren.
+    Wenn sich dein Roboter in der Arena seltsam verhält, sparen dir fünf Minuten hier eine Stunde blindes Raten.
+en:
+    In Debugging & Testing you train your engineering eye: spotting bugs fast and proving with tests that your code truly works.
+    Three tools live here: Broken robots (find and fix real bugs in faulty robots), the Live debugger (step through ticks watching variables and decisions), and the Testing lab.
+    In the Testing lab you write JUnit-style tests (@Test, assertEquals) using blackbox, whitebox and mutant testing to see whether your suite catches hidden bugs.
+    Whenever your robot behaves strangely in the arena, five minutes here saves an hour of blind guessing.
+pseudo.es:
+    Robots rotos → leer el síntoma, localizar el bug y arreglarlo
+    Depurador en vivo → pausar, avanzar paso a paso e inspeccionar variables
+    Laboratorio → escribir @Test y cazar mutantes
+pseudo.de:
+    Kaputte Roboter → Symptom lesen, Bug finden und beheben
+    Live-Debugger → pausieren, Schritt für Schritt Variablen prüfen
+    Test-Labor → @Test schreiben und Mutanten fangen
+pseudo.en:
+    Broken robots → read the symptom, locate the bug and fix it
+    Live debugger → pause, step through and inspect variables
+    Testing lab → write @Test cases and catch mutants
+ejemplo:
+    // Depurar es mirar qué pasa de verdad, no adivinar || Debuggen heißt nachsehen, nicht raten || Debugging means observing what actually happens, not guessing
+    // Usa @Test y assertEquals en el Laboratorio de pruebas || Nutze @Test und assertEquals im Test-Labor || Use @Test and assertEquals in the Testing lab
+
+=== arena_y_modos
+nivel: 6
+tema: --
+titulo.es: Arena, Modo especial e Historial
+titulo.de: Arena, Spezialmodus und Verlauf
+titulo.en: Arena, Special mode and History
+claves.es: arena, a pelear, pelear, combate, modo especial, jefes, jefe, campanas, campana, desafios, historial, estadisticas, rivales
+claves.de: arena, auf in den kampf, kampfen, kampf, spezialmodus, bosse, boss, kampagnen, kampagne, herausforderungen, verlauf, statistik, gegner
+claves.en: arena, lets fight, fight, match, special mode, bosses, boss, campaigns, campaign, challenges, history, stats, rivals
+ver: por_que_pierdo, ver_notas, como_jugar
+es:
+    El bloque Arena reúne todas las formas de poner a prueba tu robot en combate real y analizar tus resultados.
+    «¡A pelear!» lanza al instante un combate rápido de cuatro rondas contra la computadora a tu nivel; «Pelear» te deja elegir rival, modo al azar, desafíos o robots de otros jugadores.
+    En Modo especial te esperan los jefes de tema (¡ojo: contra los jefes estoy en el hospital y peleas solo!), las campañas con historia, el tope de cálculo y retos de programación.
+    Y en Historial puedes revisar cada combate, tus victorias, derrotas y estadísticas para ver en qué estás mejorando.
+de:
+    Der Bereich Arena vereint alle Möglichkeiten, deinen Roboter im echten Kampf zu testen und Ergebnisse auszuwerten.
+    „Auf in den Kampf!“ startet sofort ein schnelles Vier-Runden-Match gegen den Computer auf deiner Stufe; unter „Kämpfen“ wählst du Gegner, Zufallskämpfe, Herausforderungen oder fremde Roboter.
+    Im Spezialmodus warten Themen-Bosse (Achtung: Gegen Bosse liege ich im Krankenhaus, da kämpfst du allein!), Kampagnen mit Story, Rechenlimit und Programmier-Herausforderungen.
+    Im Verlauf siehst du jeden Kampf mit Siegen, Niederlagen und Statistiken, um deinen Fortschritt zu verfolgen.
+en:
+    The Arena section brings together every way to test your robot in live combat and review your results.
+    "Let's fight!" launches an instant four-round match against the computer at your rank; "Fight" lets you pick opponents, random matches, challenges, or other players' robots.
+    In Special mode you'll face topic bosses (heads up: against bosses I'm in the hospital, so you're on your own!), story campaigns, step-limit matches and coding challenges.
+    And History records every fight, your wins, losses and stats so you can track how you improve.
+pseudo.es:
+    ¡A pelear! → combate rápido a tu nivel
+    Pelear → elegir rival, al azar o robots de otros
+    Modo especial → jefes, campañas y retos
+    Historial → revisar estadísticas y resultados
+pseudo.de:
+    Auf in den Kampf! → schneller Kampf auf deiner Stufe
+    Kämpfen → Gegner, Zufall oder fremde Roboter wählen
+    Spezialmodus → Bosse, Kampagnen und Herausforderungen
+    Verlauf → Statistiken und Ergebnisse prüfen
+pseudo.en:
+    Let's fight! → quick match at your rank
+    Fight → pick rival, random or other players' robots
+    Special mode → bosses, campaigns and challenges
+    History → check stats and results
+ejemplo:
+    // En combate, haz clic en un enemigo para que lo analice || Klick im Kampf einen Gegner an, damit ich ihn analysiere || During a fight, click an enemy so I can analyze it
+    // En la pausa entre rondas puedes ajustar tu código || In der Rundenpause kannst du deinen Code anpassen || Between rounds you can tweak your code
+
+=== panel_ia_y_ajustes
+nivel: 6
+tema: --
+titulo.es: Panel de la IA, Ajustes y entrenadores
+titulo.de: KI-Steuerung, Einstellungen und Trainer
+titulo.en: AI Panel, Settings and coaches
+claves.es: panel de la ia, panel ia, dificultad, agresividad, humor, cortesia, ajustes, configuracion, voz, idioma, letra, tamano de letra, cambiar entrenador, elegir entrenador
+claves.de: ki-steuerung, ki-panel, schwierigkeit, aggressivitat, humor, hoflichkeit, einstellungen, konfiguration, stimme, sprache, schrift, schriftgrosse, trainer wechseln, trainer wahlen
+claves.en: ai panel, difficulty, aggressiveness, humor, politeness, settings, configuration, voice, language, font, font size, change coach, choose coach
+ver: cerebro_ia, cerebro_local, cerebro_en_linea
+es:
+    Desde el Panel de la IA y desde Ajustes personalizas tanto el comportamiento de tus rivales como toda tu experiencia en MetajavBots.
+    En Panel de la IA regulas la dificultad de la computadora (adaptada a ti o fija) y su personalidad: agresividad, humor y cortesía en sus comentarios.
+    En Ajustes cambias el idioma (español, alemán o inglés), el tamaño de letra, el tema visual, el volumen y la voz, activas o desactivas al entrenador flotante, eliges qué entrenador quieres que te acompañe y configuras las tres casillas de cerebros de IA (locales o en línea).
+    Recuerda que el juego funciona al completo sin IA, y si cambias de entrenador la cabecita, el nombre y la voz se actualizan al instante.
+de:
+    Über KI-Steuerung und Einstellungen passt du sowohl das Verhalten deiner Gegner als auch dein gesamtes Erlebnis in MetajavBots an.
+    In der KI-Steuerung stellst du die Schwierigkeit des Computers (angepasst oder fest) sowie Aggressivität, Humor und Höflichkeit seiner Sprüche ein.
+    In den Einstellungen änderst du Sprache (Spanisch, Deutsch oder Englisch), Schriftgröße, Design, Lautstärke und Stimme, schaltest den schwebenden Trainer ein oder aus, wählst deinen Trainer und richtest die drei Plätze für KI-Gehirne (lokal oder online) ein.
+    Denk daran: Das Spiel läuft komplett ohne KI, und beim Trainerwechsel passen sich Kopf, Name und Stimme sofort an.
+en:
+    Through AI Panel and Settings you customize both your computer rivals' behavior and your entire MetajavBots setup.
+    In AI Panel you tune the computer's difficulty (adaptive or fixed) along with its aggressiveness, humor and politeness.
+    In Settings you change language (Spanish, German or English), font size, theme, audio and voice, toggle the floating coach, pick which coach accompanies you, and configure the three AI brain slots (local or online).
+    Remember the whole game works without AI, and switching coaches updates the portrait, name and voice immediately.
+pseudo.es:
+    Panel de la IA → dificultad, agresividad, humor y cortesía
+    Ajustes → idioma, letra, sonido/voz, tipo de entrenador y cerebros de IA
+pseudo.de:
+    KI-Steuerung → Schwierigkeit, Aggressivität, Humor und Höflichkeit
+    Einstellungen → Sprache, Schrift, Ton/Stimme, Trainertyp und KI-Gehirne
+pseudo.en:
+    AI Panel → difficulty, aggressiveness, humor and politeness
+    Settings → language, font, audio/voice, coach type and AI brains
+ejemplo:
+    // Cambia de entrenador en Ajustes o en el Panel del Tutor || Wechsle den Trainer in den Einstellungen oder im Tutor-Panel || Switch coaches in Settings or the Tutor Panel
+    // Pulsa F2 en cualquier momento para abrir mi consulta || Drück jederzeit F2, um meine Sprechstunde zu öffnen || Press F2 anytime to open my consultation window
+
 === por_que_pierdo
-nivel: 1
+nivel: 6
 tema: --
 titulo.es: ¿Por qué pierdo?
 titulo.de: Warum verliere ich?
@@ -60,7 +386,7 @@ titulo.en: Why am I losing?
 claves.es: por que pierdo, pierdo, perder, siempre pierdo, no gano, como gano, ganar
 claves.de: warum verliere ich, verliere, verlieren, ich verliere immer, wie gewinne ich, gewinnen
 claves.en: why am i losing, why do i lose, losing, i always lose, how do i win, win
-ver: turno, depurar, if_else
+ver: turno, depurar, minijuegos_y_ejercicios
 es:
     Casi siempre se pierde por una de estas tres cosas: el robot no ve al enemigo, no le apunta, o se queda quieto recibiendo.
     Piensa en un boxeador con los ojos vendados que lanza puñetazos al aire mientras el otro le zurra: no le falta fuerza, le falta saber dónde está el rival.
@@ -104,7 +430,7 @@ ejemplo:
     }
 
 === ver_notas
-nivel: 1
+nivel: 6
 tema: --
 guia: 10
 titulo.es: Ver tus notas
@@ -113,7 +439,7 @@ titulo.en: Your results
 claves.es: notas, mis notas, ver las notas, progreso, estadisticas, historial, nivel, experiencia
 claves.de: ergebnisse, noten, meine noten, fortschritt, statistik, verlauf, stufe, erfahrung
 claves.en: results, grades, my grades, progress, stats, statistics, history, rank, experience
-ver: como_jugar, por_que_pierdo
+ver: como_jugar, por_que_pierdo, arena_y_modos
 es:
     Tus notas están en tres sitios: arriba del Menú (tu etiqueta, de Noob a Senior, y lo que te falta para subir), en Historial (cada pelea con sus números) y en Ejercicios (los que llevas resueltos de cada tema).
     Es como el cartel del gimnasio donde se apuntan los combates: quién ganó, por cuánto y con qué golpes.
@@ -146,7 +472,7 @@ ejemplo:
     // Puntería 34 %: ¿apuntas antes de atacar? || Trefferquote 34 %: Zielst du vor dem Angriff? || Accuracy 34%: do you aim before attacking?
 
 === cerebro_ia
-nivel: 1
+nivel: 6
 tema: --
 guia: 1
 titulo.es: Cerebro de IA
@@ -186,7 +512,7 @@ pseudo.en:
 ejemplo:
 
 === cerebro_local
-nivel: 1
+nivel: 6
 tema: --
 guia: 2
 titulo.es: Cerebro local
@@ -229,7 +555,7 @@ pseudo.en:
 ejemplo:
 
 === cerebro_en_linea
-nivel: 1
+nivel: 6
 tema: --
 guia: 6
 titulo.es: Cerebro en línea
@@ -269,7 +595,7 @@ pseudo.en:
 ejemplo:
 
 === tres_casillas
-nivel: 1
+nivel: 6
 tema: --
 guia: 7
 titulo.es: Las tres casillas
@@ -309,7 +635,7 @@ pseudo.en:
 ejemplo:
 
 === despertar_cerebros
-nivel: 1
+nivel: 6
 tema: --
 guia: 8
 titulo.es: Despertar los cerebros

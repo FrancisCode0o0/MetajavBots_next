@@ -1,9 +1,8 @@
 package metajavbots.pantallas;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 import com.badlogic.gdx.Input;
 
@@ -24,68 +23,78 @@ import metajavbots.tutor.ConsejosDelTaller;
 import metajavbots.tutor.Entrenador;
 
 /**
- * ENTRENADOR FLOTANTE — En cualquier pantalla, la cabecita del entrenador
- * asoma por el borde derecho («Pregúntame», o F2). Al pulsarla se abre su
- * consulta: se le pregunta lo que sea («¿qué es una variable?», «hilos
- * virtuales», «Vererbung») y explica el concepto desde cero, con una
- * metáfora de peleas, pseudocódigo y un ejemplo del propio juego, con las
- * explicaciones escritas de serie (res/conceptos, sin IA); a la izquierda,
- * todos los conceptos por nivel, de lo más básico a lo de senior. Con
- * cerebro de IA, además, contesta cualquier pregunta con sus palabras,
- * mirando el código y la situación del jugador (Pantalla.contextoParaElEntrenador).
+ * ENTRENADOR FLOTANTE — En cualquier pantalla (salvo la portada Inicio),
+ * permanece recogido en la esquina inferior derecha con una discreta flechita
+ * («◀») que invita a desplegarlo. Al pulsarla aparece su cabecita completa (con
+ * «▶» para volver a recogerlo), y al hacer clic en la cabecita se abre su
+ * ventana de consulta («Pregúntale a …»), donde responde dudas de programación
+ * (Java, POO, errores) y de cualquier funcionalidad del juego (sin IA y con IA).
  *
- * Los errores del editor: con el ratón encima de uno (o el cursor en su
- * línea), F2 o un clic en el punto rojo del margen abre al entrenador con
- * ese error, y lo explica paso a paso a elección del jugador: con una pelea,
- * en pseudocódigo, con un ejemplo y, según la barra «Dame menos / Dame más»,
- * con una pregunta para pensar o con la pista de cómo arreglarlo (nunca la
- * solución entera). En el taller da tips mientras se programa
- * (tutor/ConsejosDelTaller); en la pelea aconseja contra el enemigo marcado
- * (EntrenadorEnLaPelea); contra los jefes está en el hospital (Hospital).
- * Se desactiva en Ajustes o con su botón (F2 lo abre igual).
- * Mientras está abierta, lo de debajo no recibe ni ratón ni teclado.
+ * Con recurrencia moderada, asoma en la esquina con un cartelito de consejos
+ * pegado a él y botón «×» para cerrarlo; tras cerrarlo a mano tarda más en
+ * volver y, si no estaba fijado abierto, vuelve a meterse en la esquina.
  */
 public final class EntrenadorFlotante {
 
-    // ================================================================ frecuencia y enfriamiento del bocadillo de tips
-    /** Segundos antes de que salga el primer tip automático al entrar al taller (antes: 20 s). */
+    // ================================================================ frecuencia y enfriamiento del cartelito
+    /** Segundos antes de que salga el primer consejo automático. */
     public static final float ESPERA_INICIAL_TIP = 75f;
-    /** Segundos de enfriamiento entre tips automáticos tras caducar solos o abrir «Explícamelo» (antes: 45 s). */
+    /** Segundos de enfriamiento entre consejos automáticos tras caducar solos o abrir «Explícamelo». */
     public static final float ESPERA_ENTRE_TIPS = 180f;
-    /** Segundos de enfriamiento cuando el jugador cierra el bocadillo a mano con «×» o «Gracias»/«Danke». */
+    /** Segundos de enfriamiento cuando el jugador cierra el cartelito a mano con «×» o «Gracias». */
     public static final float ESPERA_TRAS_CERRAR_MANUAL = 300f;
-    /** Segundos que permanece visible un tip automático antes de ocultarse solo. */
+    /** Segundos que permanece visible un consejo automático antes de ocultarse solo. */
     public static final float DURACION_VISIBLE_TIP = 16f;
 
-    /** Márgenes y tamaño del botón «×» en la esquina superior derecha del bocadillo de tips. */
-    public static final float MARGEN_TEXTO_IZQ = 12f;
-    public static final float BOTON_CERRAR_TAM = 24f;
-    /** Margen vertical mínimo entre el bocadillo de tips y los bordes superior e inferior de la pantalla. */
-    public static final float MARGEN_VERTICAL_TIP = 16f;
-    private static final float BOTON_CERRAR_MARGEN = 6f;
-    private static final float MARGEN_TEXTO_DER = BOTON_CERRAR_TAM + BOTON_CERRAR_MARGEN + 12f;
-    private static final float RESERVA_VERTICAL_TIP = 70f;
+    /** Márgenes y tamaño del botón «×» en la esquina superior derecha del cartelito de consejos. */
+    public static final float MARGEN_TEXTO_IZQ = GeometriaEntrenador.MARGEN_TEXTO_IZQ;
+    public static final float BOTON_CERRAR_TAM = GeometriaEntrenador.BOTON_CERRAR_TAM;
+    /** Margen vertical mínimo entre el cartelito y los bordes superior e inferior de la pantalla. */
+    public static final float MARGEN_VERTICAL_TIP = GeometriaEntrenador.MARGEN_VERTICAL_TIP;
 
-    /** Geometría del bocadillo de tips y de su botón «×», compartida entre el bloqueo de clic y el dibujo. */
+    /** Geometría de la pestaña discreta recogida en la esquina inferior derecha con su flecha «◀». */
+    public record CajaRecogida(float x, float y, float w, float h, float flechaX, float flechaY) {
+        /** Indica si un punto de pantalla cae dentro de la pestaña recogida. */
+        public boolean contiene(float px, float py) {
+            return px >= x && px < x + w && py >= y && py < y + h;
+        }
+    }
+
+    /** Geometría del cartelito de consejos y de su botón «×», compartida entre clics y dibujo. */
     public record CajaTip(float x, float y, float w, float h, float anchoTexto, float cerrarX, float cerrarY, float cerrarTam) {
+        /** Indica si un punto de pantalla cae dentro del cartelito. */
         public boolean contiene(float px, float py) {
             return px >= x && px < x + w && py >= y && py < y + h;
         }
 
+        /** Indica si un punto de pantalla cae dentro del botón «×». */
         public boolean enCerrar(float px, float py) {
             return px >= cerrarX && px < cerrarX + cerrarTam && py >= cerrarY && py < cerrarY + cerrarTam;
         }
     }
 
-    /** Geometría de la pestaña con la cabecita flotante del entrenador, siempre dentro del área visible. */
-    public record CajaPestana(float x, float y, float w, float h, float cabezaX, float cabezaY, float radio, float insigniaX, float insigniaY) {
-        /** Indica si un punto de pantalla cae dentro de la pestaña clicable. */
+    /** Geometría de la pestaña desplegada con la cabecita del entrenador y la franja «▶» para recogerlo. */
+    public record CajaPestana(float x, float y, float w, float h, float cabezaX, float cabezaY, float radio,
+            float insigniaX, float insigniaY, float recogerX, float recogerY, float recogerW, float recogerH) {
+        /** Indica si un punto de pantalla cae dentro de la pestaña desplegada. */
         public boolean contiene(float px, float py) {
             return px >= x && px < x + w && py >= y && py < y + h;
+        }
+
+        /** Indica si un punto cae sobre la flecha «▶» para recoger al entrenador. */
+        public boolean enRecoger(float px, float py) {
+            return px >= recogerX && px < recogerX + recogerW && py >= recogerY && py < recogerY + recogerH;
+        }
+
+        /** Indica si un punto cae sobre la zona de la cabecita (abre la ventana de consulta). */
+        public boolean enCabeza(float px, float py) {
+            return contiene(px, py) && !enRecoger(px, py);
         }
     }
 
     private boolean abierto;
+    /** Si el jugador desplegó manualmente al entrenador con la flechita «◀». */
+    private boolean desplegadoFijo;
     private String ultimoEntrenadorId;
     private final CampoDeTexto pregunta = new CampoDeTexto();
     private String ultimaPregunta = "";
@@ -94,30 +103,49 @@ public final class EntrenadorFlotante {
     private int nivel = 1;
     private final Ui.Desplazable despLista = new Ui.Desplazable(), despTexto = new Ui.Desplazable(), despTip = new Ui.Desplazable();
     private float t, hablando, dt;
-    /** Cuánto ha salido la pestaña (0, recogida en el borde; 1, entera). */
     private float asomada;
     private CerebroDelJuego.Peticion peticion;
     private String respuestaIa;
     private Cerebro cerebro;
-    /** El error del editor que explica (o null), y lo que el jugador ya ha pedido de él, en orden. */
     private VentanaDeCodigo.Senalado error;
     private final List<Integer> pasosDelError = new ArrayList<>();
-    /** El tip del taller que enseña ahora (o null), cuánto lleva a la vista y cuánto falta para el siguiente. */
-    private ConsejosDelTaller.Tip tip;
-    private float tiempoDelTip, esperaDelTip = ESPERA_INICIAL_TIP;
-    private final Set<String> tipsDados = new HashSet<>();
-    private int tipGeneral;
+    private final PlanificadorDeConsejos planificador = new PlanificadorDeConsejos();
 
+    /** Indica si la ventana completa de consulta está abierta. */
     public boolean abierto() {
         return abierto;
     }
 
-    /** Lo abre (con un concepto ya elegido, si se da su id). */
+    /** Indica si la cabecita está visible (porque el jugador la desplegó o porque asoma con un consejo). */
+    public boolean desplegado() {
+        return desplegadoFijo || planificador.tipActual() != null;
+    }
+
+    /** Indica si el jugador fijó desplegado al entrenador pulsando la flechita «◀». */
+    public boolean desplegadoFijo() {
+        return desplegadoFijo;
+    }
+
+    /** Despliega la cabecita del entrenador en la esquina inferior derecha. */
+    public void desplegar() {
+        desplegadoFijo = true;
+    }
+
+    /** Vuelve a meter al entrenador en la esquina inferior derecha con su flechita «◀». */
+    public void recoger() {
+        desplegadoFijo = false;
+        asomada = 0f;
+    }
+
+    /** Abre la ventana de consulta (con un concepto ya elegido, si se da su id). */
     public void abrir(Juego j, String concepto) {
         abierto = true;
         pregunta.enfocado = true;
         error = null;
-        if (tip != null) cerrarTip(ESPERA_ENTRE_TIPS);
+        if (planificador.tipActual() != null) {
+            planificador.cerrarNormal();
+            despTip.alPrincipio();
+        }
         sincronizarEntrenador(j.jugador);
         cerebro = j.jugador == null ? null : CerebroDelJuego.tutor(j.jugador);
         String tema = j.pantalla() == null ? null : j.pantalla().temaDeJava();
@@ -128,7 +156,7 @@ public final class EntrenadorFlotante {
         else if (elegido == null && !Concepto.todos().isEmpty()) elegir(Concepto.todos().get(0));
     }
 
-    /** Lo abre con un error del editor: lo explica paso a paso, y el concepto que hay detrás, debajo. */
+    /** Abre la consulta con un error del editor: lo explica paso a paso y muestra el concepto detrás. */
     public void abrirConError(Juego j, VentanaDeCodigo.Senalado s) {
         abrir(j, null);
         pregunta.ponerTexto("");
@@ -142,7 +170,7 @@ public final class EntrenadorFlotante {
         decir(j, s.marca().texto.split("\n\njavac:")[0]);
     }
 
-    /** Escribe una pregunta (como si la tecleara el jugador; para las capturas y las pruebas) y elige lo primero que encuentra. */
+    /** Escribe una pregunta (como si la tecleara el jugador) y elige lo primero que encuentra. */
     public void preguntar(String texto) {
         pregunta.ponerTexto(texto);
         ultimaPregunta = texto;
@@ -151,63 +179,48 @@ public final class EntrenadorFlotante {
         if (!encontrados.isEmpty()) elegir(encontrados.get(0));
     }
 
-    /** Pide un paso del error que explica (0 con una pelea, 1 pseudocódigo, 2 ejemplo, 3 cómo arreglarlo; para las capturas). */
+    /** Pide un paso del error que explica (0 pelea, 1 pseudocódigo, 2 ejemplo, 3 cómo arreglarlo). */
     public void pedirPasoDelError(int paso) {
         if (error != null && !pasosDelError.contains(paso)) pasosDelError.add(paso);
     }
 
-    /** El próximo tip del taller, ya (para las capturas). */
+    /** Dispara el próximo consejo de inmediato (útil para capturas y pruebas). */
     public void tipAhora() {
-        esperaDelTip = 0;
+        planificador.tipAhora();
     }
 
-    /** El tip que está mostrando el bocadillo ahora mismo (o null si está oculto). */
+    /** El consejo que está mostrando el cartelito ahora mismo (o null si está oculto). */
     public ConsejosDelTaller.Tip tipActual() {
-        return tip;
+        return planificador.tipActual();
     }
 
-    /** Segundos que faltan para el próximo tip automático. */
+    /** Segundos que faltan para el próximo consejo automático. */
     public float esperaDelTip() {
-        return esperaDelTip;
+        return planificador.esperaDelTip();
     }
 
-    /** Cierra el bocadillo de tips manualmente («×» o «Gracias»/«Danke») aplicando el enfriamiento largo. */
+    /** Cierra el cartelito manualmente («×» o «Gracias») aplicando enfriamiento largo y recogiendo si no estaba fijado. */
     public void cerrarTipManualmente() {
-        cerrarTip(ESPERA_TRAS_CERRAR_MANUAL);
-    }
-
-    private void cerrarTip(float enfriamiento) {
-        tip = null;
-        tiempoDelTip = 0;
+        planificador.cerrarManual();
         despTip.alPrincipio();
-        esperaDelTip = Math.max(esperaDelTip, enfriamiento);
+        if (!desplegadoFijo) asomada = 0f;
     }
 
-    /**
-     * Avanza el temporizador de tips automáticos del taller.
-     * Devuelve true si acaba de aparecer un tip nuevo en este paso.
-     */
+    /** Avanza el temporizador de tips del taller (sobrecarga de compatibilidad para pruebas). */
     public boolean avanzarTemporizadorDeTip(String codigo, float dt) {
-        if (codigo == null) {
-            if (tip != null) cerrarTip(ESPERA_ENTRE_TIPS);
-            return false;
-        }
-        if (tip == null) {
-            esperaDelTip -= dt;
-            if (esperaDelTip > 0) return false;
-            tip = siguienteTip(codigo);
-            tiempoDelTip = dt;
-            despTip.alPrincipio();
-            return tip != null;
-        }
-        tiempoDelTip += dt;
-        if (tiempoDelTip > DURACION_VISIBLE_TIP) {
-            cerrarTip(ESPERA_ENTRE_TIPS);
-        }
-        return false;
+        boolean nuevo = planificador.avanzar(null, codigo, dt, false);
+        if (nuevo) despTip.alPrincipio();
+        return nuevo;
     }
 
-    /** Indica si el entrenador flotante aplica en esta pantalla (nunca sin partida cargada ni en la portada Inicio). */
+    /** Avanza el temporizador de consejos en cualquier pantalla, adaptado al progreso del jugador. */
+    public boolean avanzarTemporizadorDeTip(Jugador jugador, String codigo, float dt) {
+        boolean nuevo = planificador.avanzar(jugador, codigo, dt, true);
+        if (nuevo) despTip.alPrincipio();
+        return nuevo;
+    }
+
+    /** Indica si el entrenador flotante aplica en esta pantalla (nunca sin partida ni en Inicio). */
     public static boolean debeMostrarse(Jugador jugador, Pantalla pantalla) {
         return jugador != null && !(pantalla instanceof Inicio);
     }
@@ -219,11 +232,8 @@ public final class EntrenadorFlotante {
             respuestaIa = null;
             peticion = null;
             hablando = 0f;
-            tip = null;
-            tiempoDelTip = 0f;
+            planificador.alCambiarEntrenador();
             despTip.alPrincipio();
-            tipsDados.clear();
-            tipGeneral = 0;
             if (abierto && jugador != null) cerebro = CerebroDelJuego.tutor(jugador);
         }
         ultimoEntrenadorId = actual.id;
@@ -235,51 +245,27 @@ public final class EntrenadorFlotante {
         return ultimoEntrenadorId;
     }
 
-    /** Calcula la caja de la pestaña con la cabecita del entrenador siempre visible dentro de la pantalla. */
+    /** Calcula la pestaña discreta recogida en la esquina inferior derecha con su flechita «◀». */
+    public static CajaRecogida cajaRecogida(float pantallaAncho, float pantallaAlto, float tamanoLetra) {
+        return GeometriaEntrenador.cajaRecogida(pantallaAncho, pantallaAlto, tamanoLetra);
+    }
+
+    /** Calcula la pestaña desplegada con la cabecita del entrenador en la esquina inferior derecha. */
     public static CajaPestana cajaPestana(float pantallaAncho, float pantallaAlto, float asomada, float tamanoLetra) {
-        float factor = Math.max(0f, Math.min(1f, asomada));
-        float r = Math.max(20f, Math.min(24f, tamanoLetra * 0.9f));
-        float w = Math.round(r * 3.6f), h = Math.round(r * 3.4f);
-        float margenDer = 8f + factor * 10f;
-        float x = Math.max(0f, Math.min(pantallaAncho - w, pantallaAncho - w - margenDer));
-        float margenY = Math.min(MARGEN_VERTICAL_TIP, Math.max(0f, pantallaAlto * 0.05f));
-        float y = Math.max(margenY, Math.min(pantallaAlto - margenY - h, pantallaAlto * 0.56f - h / 2f));
-        return new CajaPestana(x, y, w, h, x + w * 0.44f, y + h * 0.50f, r, x + w - 13f, y + 6f);
+        return GeometriaEntrenador.cajaPestana(pantallaAncho, pantallaAlto, asomada, tamanoLetra);
     }
 
-    /** Calcula la caja del bocadillo y la posición del botón «×» garantizando límites seguros dentro de la pantalla. */
+    /** Calcula la caja del cartelito pegado a la cabecita desplegada con tamaño de letra estándar (18). */
     public static CajaTip cajaTip(float pantallaAncho, float pantallaAlto, float altoTexto) {
-        float w = Math.min(420f, Math.max(160f, pantallaAncho * 0.36f));
-        float anchoTexto = Math.max(80f, w - MARGEN_TEXTO_IZQ - MARGEN_TEXTO_DER);
-        float margenY = Math.min(MARGEN_VERTICAL_TIP, Math.max(0f, pantallaAlto * 0.05f));
-        float altoMax = Math.max(0f, pantallaAlto - 2f * margenY);
-        float hDeseado = Math.max(Math.max(0f, altoTexto), BOTON_CERRAR_TAM) + RESERVA_VERTICAL_TIP;
-        float h = Math.min(hDeseado, altoMax);
-        float x = Math.max(12f, pantallaAncho - 106f - w);
-        float yIdeal = pantallaAlto * 0.56f - h / 2f;
-        float y = Math.max(margenY, Math.min(pantallaAlto - margenY - h, yIdeal));
-        float cerrarX = x + w - BOTON_CERRAR_MARGEN - BOTON_CERRAR_TAM;
-        float cerrarY = y + BOTON_CERRAR_MARGEN;
-        return new CajaTip(x, y, w, h, anchoTexto, cerrarX, cerrarY, BOTON_CERRAR_TAM);
+        return GeometriaEntrenador.cajaTip(pantallaAncho, pantallaAlto, altoTexto, 18f);
     }
 
-    private float tamanoLetraTip(Pincel p, Ui ui, String texto, float anchoTexto) {
-        float margenY = Math.min(MARGEN_VERTICAL_TIP, Math.max(0f, p.alto * 0.05f));
-        float altoMaxTexto = Math.max(BOTON_CERRAR_TAM, p.alto - 2f * margenY - RESERVA_VERTICAL_TIP);
-        float tl = Math.max(Pincel.LETRA_MINIMA, ui.letra * 0.8f);
-        while (tl > Pincel.LETRA_MINIMA && p.altoDeParrafo(texto, anchoTexto, tl) > altoMaxTexto) {
-            tl = Math.max(Pincel.LETRA_MINIMA, tl - 1f);
-        }
-        return tl;
+    /** Calcula la caja del cartelito pegado a la cabecita desplegada para un tamaño de letra dado. */
+    public static CajaTip cajaTip(float pantallaAncho, float pantallaAlto, float altoTexto, float tamanoLetra) {
+        return GeometriaEntrenador.cajaTip(pantallaAncho, pantallaAlto, altoTexto, tamanoLetra);
     }
 
-    private CajaTip cajaTip(Pincel p, Ui ui, String texto) {
-        float w = Math.min(420f, Math.max(160f, p.ancho * 0.36f));
-        float anchoTexto = Math.max(80f, w - MARGEN_TEXTO_IZQ - MARGEN_TEXTO_DER);
-        float tl = tamanoLetraTip(p, ui, texto, anchoTexto);
-        return cajaTip(p.ancho, p.alto, p.altoDeParrafo(texto, anchoTexto, tl));
-    }
-
+    /** Cierra la ventana completa de consulta. */
     public void cerrar() {
         abierto = false;
         pregunta.enfocado = false;
@@ -287,14 +273,13 @@ public final class EntrenadorFlotante {
 
     private void elegir(Concepto c) {
         elegido = c;
-        nivel = Math.max(1, Math.min(5, c.nivel));
+        nivel = Math.max(1, Math.min(Concepto.NIVEL_MAX, c.nivel));
         hablando = 2.5f;
         respuestaIa = null;
         peticion = null;
         despTexto.alPrincipio();
     }
 
-    /** Dice algo con su voz (la de su Timbre) y mueve la boca un rato. */
     private void decir(Juego j, String texto) {
         hablando = Math.min(6, 0.6f + texto.length() * 0.045f);
         j.voz.decir(texto.replace("\n", " "), j.jugador.idioma, Entrenador.de(j.jugador.entrenador).timbre);
@@ -304,7 +289,7 @@ public final class EntrenadorFlotante {
         return j.pantalla() != null && j.pantalla().entrenadorEnElHospital();
     }
 
-    /** Al principio del fotograma: abierta, lo de debajo no se entera de nada; F2 la abre o la cierra (con el error que se mira, si hay). */
+    /** Al principio del fotograma: bloquea entradas si está abierta o si el ratón está encima; gestiona F2. */
     public void antes(Juego j) {
         if (!debeMostrarse(j.jugador, j.pantalla())) return;
         sincronizarEntrenador(j.jugador);
@@ -324,17 +309,20 @@ public final class EntrenadorFlotante {
         if (!debeMostrarse(j.jugador, j.pantalla()) || !j.jugador.entrenadorActivo) return false;
         Pincel p = j.pincel;
         float letra = j.ui == null ? 18f : j.ui.letra;
+        if (!desplegado()) {
+            return cajaRecogida(p.ancho, p.alto, letra).contiene(j.entrada.ratonX, j.entrada.ratonY);
+        }
         CajaPestana actual = cajaPestana(p.ancho, p.alto, asomada, letra);
-        CajaPestana reposo = cajaPestana(p.ancho, p.alto, 0f, letra);
-        if (actual.contiene(j.entrada.ratonX, j.entrada.ratonY) || reposo.contiene(j.entrada.ratonX, j.entrada.ratonY)) return true;
-        if (tip != null && j.pantalla() != null && j.pantalla().codigoParaConsejos() != null) {
-            CajaTip c = cajaTip(p, j.ui, T.t("entrenador.tip." + tip.id()));
+        if (actual.contiene(j.entrada.ratonX, j.entrada.ratonY)) return true;
+        ConsejosDelTaller.Tip tip = planificador.tipActual();
+        if (tip != null && !hospital(j)) {
+            CajaTip c = GeometriaEntrenador.cajaTip(p, j.ui, T.t("entrenador.tip." + tip.id()));
             return j.entrada.dentro(c.x, c.y, c.w, c.h);
         }
         return false;
     }
 
-    /** Al final del fotograma: la pestaña con la cabecita y el tip (cerrada) o la consulta entera (abierta). */
+    /** Al final del fotograma: la esquina (recogida o desplegada con consejo) o la consulta completa. */
     public void dibujar(Juego j, float dt) {
         if (!debeMostrarse(j.jugador, j.pantalla())) return;
         j.entrada.bloqueada = false;
@@ -344,8 +332,9 @@ public final class EntrenadorFlotante {
         Entrenador en = sincronizarEntrenador(j.jugador);
         if (!abierto) {
             if (!j.jugador.entrenadorActivo) return;
-            pestana(j, en);
-            tipDelTaller(j, en, dt);
+            actualizarConsejoEspontaneo(j, dt);
+            esquina(j, en);
+            dibujarCartelConsejo(j);
             return;
         }
         Ui ui = j.ui;
@@ -361,15 +350,44 @@ public final class EntrenadorFlotante {
         consulta(j, en);
     }
 
-    /** Cerrada: la cabecita asoma completa por el borde derecho (vendada en el hospital); al pasar el ratón, se adelanta. */
-    private void pestana(Juego j, Entrenador en) {
+    /** Esquina inferior derecha: recogida con flechita «◀» o desplegada con cabecita completa y «▶». */
+    private void esquina(Juego j, Entrenador en) {
+        if (!desplegado()) {
+            dibujarRecogida(j, en);
+            return;
+        }
+        dibujarDesplegada(j, en);
+    }
+
+    private void dibujarRecogida(Juego j, Entrenador en) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        boolean enfermo = hospital(j);
+        CajaRecogida r = cajaRecogida(p.ancho, p.alto, ui.letra);
+        boolean encima = r.contiene(j.entrada.ratonX, j.entrada.ratonY);
+        p.caja(r.x + 2, r.y + 3, r.w, r.h, 10, 0x000000, 0.28f);
+        p.caja(r.x, r.y, r.w, r.h, 10, enfermo ? 0xE8ECEF : (encima ? ui.tema.panelAlto : ui.tema.panel), 0.94f);
+        p.bordeRedondeado(r.x, r.y, r.w, r.h, 10, enfermo ? 0xFF4D4D : ui.tema.acento, encima ? 1f : 0.85f, 1.8f);
+        float fx = r.flechaX;
+        float fy = r.flechaY;
+        float s = Math.min(7f, r.w * 0.22f);
+        p.triangulo(fx - s, fy, fx + s * 0.7f, fy - s, fx + s * 0.7f, fy + s, enfermo ? 0xFF4D4D : ui.tema.acento, 1f);
+        if (encima) {
+            ui.avisar(en.nombre.en(j.jugador.idioma) + " — " + T.t("entrenador.desplegar"));
+        }
+        if (j.entrada.clic(r.x, r.y, r.w, r.h)) {
+            if (ui.sonidoDeClic != null) ui.sonidoDeClic.run();
+            desplegar();
+        }
+    }
+
+    private void dibujarDesplegada(Juego j, Entrenador en) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         boolean enfermo = hospital(j);
         CajaPestana actual = cajaPestana(p.ancho, p.alto, asomada, ui.letra);
-        CajaPestana reposo = cajaPestana(p.ancho, p.alto, 0f, ui.letra);
-        boolean encima = actual.contiene(j.entrada.ratonX, j.entrada.ratonY) || reposo.contiene(j.entrada.ratonX, j.entrada.ratonY);
-        asomada += (encima || tip != null ? 1 - asomada : -asomada) * Math.min(1, dt * 12);
+        boolean encima = actual.contiene(j.entrada.ratonX, j.entrada.ratonY);
+        asomada += (encima || planificador.tipActual() != null ? 1 - asomada : -asomada) * Math.min(1, dt * 12);
         CajaPestana c = cajaPestana(p.ancho, p.alto, asomada, ui.letra);
         p.caja(c.x + 2, c.y + 3, c.w, c.h, 14, 0x000000, 0.28f);
         p.caja(c.x, c.y, c.w, c.h, 14, enfermo ? 0xE8ECEF : ui.tema.panelAlto, 0.94f);
@@ -381,30 +399,54 @@ public final class EntrenadorFlotante {
         } else {
             p.textoCentrado("?", c.insigniaX, c.insigniaY, 16, true, 0xFFD23F, 1);
         }
-        if (encima) ui.avisar(en.nombre.en(j.jugador.idioma) + " — " + (enfermo ? T.t("entrenador.hospital.ayuda") : T.t("entrenador.pestana")));
-        if (j.entrada.clic(c.x, c.y, c.w, c.h)) abrir(j, null);
+        boolean enRecoger = c.enRecoger(j.entrada.ratonX, j.entrada.ratonY);
+        p.linea(c.recogerX, c.y + 8, c.recogerX, c.y + c.h - 8, 1f, ui.tema.textoApagado, 0.35f);
+        float rx = c.recogerX + c.recogerW * 0.50f;
+        float ry = c.recogerY + c.recogerH * 0.50f;
+        p.triangulo(rx + 5f, ry, rx - 4f, ry - 6f, rx - 4f, ry + 6f, enRecoger ? ui.tema.acento : ui.tema.textoSuave, 1f);
+        if (enRecoger) {
+            ui.avisar(T.t("entrenador.recoger"));
+        } else if (encima) {
+            ui.avisar(en.nombre.en(j.jugador.idioma) + " — " + (enfermo ? T.t("entrenador.hospital.ayuda") : T.t("entrenador.pestana")));
+        }
+        if (j.entrada.clic(c.recogerX, c.recogerY, c.recogerW, c.recogerH)) {
+            if (ui.sonidoDeClic != null) ui.sonidoDeClic.run();
+            recoger();
+            if (planificador.tipActual() != null) {
+                cerrarTipManualmente();
+                if (j.voz != null) j.voz.detener();
+            }
+            return;
+        }
+        if (j.entrada.clic(c.x, c.y, c.w - c.recogerW, c.h)) abrir(j, null);
     }
 
-    // ================================================================ los tips del taller
+    // ================================================================ consejos espontáneos
 
-    /** Mientras se programa un robot: de vez en cuando, un tip en una viñeta junto a la cabecita. */
-    private void tipDelTaller(Juego j, Entrenador en, float dt) {
+    private void actualizarConsejoEspontaneo(Juego j, float dt) {
+        if (hospital(j)) return;
         String codigo = j.pantalla() == null ? null : j.pantalla().codigoParaConsejos();
-        if (avanzarTemporizadorDeTip(codigo, dt)) {
-            decir(j, T.t("entrenador.tip." + tip.id()));
+        if (avanzarTemporizadorDeTip(j.jugador, codigo, dt)) {
+            ConsejosDelTaller.Tip nuevo = planificador.tipActual();
+            if (nuevo != null) decir(j, T.t("entrenador.tip." + nuevo.id()));
         }
-        if (tip == null) return;
+    }
+
+    private void dibujarCartelConsejo(Juego j) {
+        ConsejosDelTaller.Tip tip = planificador.tipActual();
+        if (tip == null || hospital(j)) return;
         Pincel p = j.pincel;
         Ui ui = j.ui;
         String texto = T.t("entrenador.tip." + tip.id());
-        CajaTip c = cajaTip(p, ui, texto);
-        float tl = tamanoLetraTip(p, ui, texto, c.anchoTexto);
-        float aparece = Math.min(1, tiempoDelTip * 4);
+        CajaTip c = GeometriaEntrenador.cajaTip(p, ui, texto);
+        CajaPestana pestana = cajaPestana(p.ancho, p.alto, asomada, ui.letra);
+        float tl = GeometriaEntrenador.tamanoLetraTip(p, ui, texto, c.anchoTexto);
+        float aparece = Math.min(1, planificador.tiempoDelTip() * 4);
         p.caja(c.x + 3, c.y + 4, c.w, c.h, 12, 0x000000, 0.3f * aparece);
         p.caja(c.x, c.y, c.w, c.h, 12, 0xF5F3EA, 0.97f * aparece);
-        float picoY = Math.max(c.y + 22f, Math.min(c.y + c.h - 22f, p.alto * 0.56f));
-        p.triangulo(c.x + c.w, picoY - 10, c.x + c.w, picoY + 10, c.x + c.w + 14, picoY, 0xF5F3EA, 0.97f * aparece);
-        float altoTextoDisp = Math.max(BOTON_CERRAR_TAM, c.h - RESERVA_VERTICAL_TIP);
+        float picoY = Math.max(c.y + 22f, Math.min(c.y + c.h - 22f, pestana.cabezaY));
+        p.triangulo(c.x + c.w, picoY - 10, c.x + c.w, picoY + 10, c.x + c.w + 12, picoY, 0xF5F3EA, 0.97f * aparece);
+        float altoTextoDisp = Math.max(BOTON_CERRAR_TAM, c.h - GeometriaEntrenador.RESERVA_VERTICAL_TIP);
         float altoParrafo = p.altoDeParrafo(texto, c.anchoTexto, tl);
         if (altoParrafo > altoTextoDisp) {
             float anchoDesp = Math.max(60f, c.anchoTexto - 14f);
@@ -419,18 +461,25 @@ public final class EntrenadorFlotante {
             if (j.voz != null) j.voz.detener();
             return;
         }
-        float by = c.y + c.h - 50, bw = (c.w - 32) / 3;
+        botonesDelCartel(j, c, tip);
+    }
+
+    private void botonesDelCartel(Juego j, CajaTip c, ConsejosDelTaller.Tip tip) {
+        Ui ui = j.ui;
+        float by = c.y + c.h - 50;
+        float bw = (c.w - 32) / 3;
         if (ui.boton(T.t("entrenador.tip.explica"), c.x + 8, by, bw, 40, Ui.Estilo.PLANO)) {
             String concepto = tip.concepto();
-            cerrarTip(ESPERA_ENTRE_TIPS);
+            planificador.cerrarNormal();
+            despTip.alPrincipio();
             abrir(j, concepto);
             return;
         }
         if (ui.boton(T.t("entrenador.tip.otro"), c.x + 16 + bw, by, bw, 40, Ui.Estilo.PLANO)) {
-            tip = siguienteTip(codigo);
-            tiempoDelTip = 0;
+            String codigo = j.pantalla() == null ? null : j.pantalla().codigoParaConsejos();
+            ConsejosDelTaller.Tip otro = planificador.siguiente(j.jugador, codigo);
             despTip.alPrincipio();
-            if (tip != null) decir(j, T.t("entrenador.tip." + tip.id()));
+            if (otro != null) decir(j, T.t("entrenador.tip." + otro.id()));
             return;
         }
         if (ui.boton(T.t("entrenador.tip.cerrar"), c.x + 24 + 2 * bw, by, bw, 40, Ui.Estilo.PLANO)) {
@@ -439,7 +488,6 @@ public final class EntrenadorFlotante {
         }
     }
 
-    /** Botón pequeño «×» en la esquina superior derecha del bocadillo: cierra el tip y consume el clic. */
     private boolean botonCerrarTip(Juego j, CajaTip c, float aparece) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
@@ -460,20 +508,8 @@ public final class EntrenadorFlotante {
         return false;
     }
 
-    /** El primer tip del código que aún no ha dado; si ya los dio todos, uno de los generales (por turnos). */
-    private ConsejosDelTaller.Tip siguienteTip(String codigo) {
-        List<ConsejosDelTaller.Tip> l = ConsejosDelTaller.de(codigo);
-        List<ConsejosDelTaller.Tip> generales = new ArrayList<>();
-        for (ConsejosDelTaller.Tip x : l) {
-            if (x.id().startsWith("general_")) generales.add(x);
-            else if (tipsDados.add(x.id())) return x;
-        }
-        return generales.isEmpty() ? null : generales.get(tipGeneral++ % generales.size());
-    }
-
     // ================================================================ la consulta
 
-    /** Abierta: a la izquierda, el entrenador, la pregunta y la lista; a la derecha, la explicación (o el hospital). */
     private void consulta(Juego j, Entrenador en) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
@@ -492,16 +528,17 @@ public final class EntrenadorFlotante {
             Hospital.dibujarEnConsulta(j, en, x, y, w, h, t);
             return;
         }
-        float lw = Math.min(380, w * 0.32f);
-        // El entrenador, que habla un rato al explicar.
-        CabezaDeEntrenador.dibujar(p, en, x + 56, y + 62, 34, hablando > 0, t);
-        p.texto(T.f("entrenador.titulo", en.nombre.en(idioma)), x + 104, y + 30, ui.letra * 1.1f, true, ui.tema.texto, 1);
-        p.texto(ui.recortarTexto(en.papel.en(idioma), lw - 110, ui.letra * 0.75f, false), x + 104, y + 30 + ui.letra * 1.5f, ui.letra * 0.75f, false,
-                ui.tema.textoSuave, 1);
-        // Desactivarlo (y volver a activarlo) sin ir a Ajustes.
+        float lw = Math.min(420, w * 0.34f);
         String quitar = j.jugador.entrenadorActivo ? T.t("entrenador.desactivar") : T.t("ajustes.entrenador");
-        float qw = Math.min(320, p.ancho(quitar, ui.letra * 0.75f, false) + 30);
-        if (ui.boton(quitar, x + w - 70 - qw, y + 12, qw, 42, Ui.Estilo.PLANO)) {
+        float qw = Math.min(Math.max(210f, w - lw - 110f), Math.min(340f, p.ancho(quitar, ui.letra * 0.78f, false) + 34f));
+        float qx = x + w - 70 - qw;
+        float anchoTitulo = Math.max(120f, Math.min(qx - (x + 112f), lw - 104f));
+        CabezaDeEntrenador.dibujar(p, en, x + 56, y + 62, 34, hablando > 0, t);
+        String titulo = T.f("entrenador.titulo", en.nombre.en(idioma));
+        p.texto(ui.recortarTexto(titulo, anchoTitulo, ui.letra * 1.05f, true), x + 104, y + 28, ui.letra * 1.05f, true, ui.tema.texto, 1);
+        p.texto(ui.recortarTexto(en.papel.en(idioma), anchoTitulo, ui.letra * 0.75f, false), x + 104, y + 28 + ui.letra * 1.45f,
+                ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
+        if (ui.boton(quitar, qx, y + 12, qw, 42, Ui.Estilo.PLANO)) {
             j.jugador.entrenadorActivo = !j.jugador.entrenadorActivo;
             if (!j.jugador.entrenadorActivo) {
                 decir(j, T.t("entrenador.desactivado"));
@@ -521,7 +558,6 @@ public final class EntrenadorFlotante {
             error = null;
             elegir(encontrados.get(0));
         } else if (intro && !ultimaPregunta.isBlank() && cerebro != null && peticion == null) {
-            // Nada escrito de serie que se le parezca: con IA, se lo pregunta a ella.
             preguntarALaIa(j, elegido, idioma, en);
         }
         float altoAyuda = ui.letra * 1.1f + 68;
@@ -530,7 +566,6 @@ public final class EntrenadorFlotante {
         explicacion(j, x + lw + 20, y + 70, w - lw - 40, h - 86, idioma, en);
     }
 
-    /** «− Dame menos» y «+ Dame más» (la misma barra del tutor del taller): regula cuánto ayuda. */
     private void barraDeAyuda(Juego j, float x, float y, float w) {
         Ui ui = j.ui;
         Jugador jug = j.jugador;
@@ -547,7 +582,6 @@ public final class EntrenadorFlotante {
                 ui.tema.textoApagado, 1);
     }
 
-    /** Lo que se parece a la pregunta; sin pregunta, todos los conceptos de un nivel (con pestañas del 1 al 5). */
     private void lista(Juego j, float x, float y, float w, float h, Idioma idioma) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
@@ -559,14 +593,9 @@ public final class EntrenadorFlotante {
                 return;
             }
         } else {
-            String[] niveles = T.t("entrenador.niveles").split(";");
-            int elegida = ui.pestanas(niveles, nivel - 1, x, y, w, 40);
-            if (elegida != nivel - 1) {
-                nivel = elegida + 1;
-                despLista.alPrincipio();
-            }
-            y += 50;
-            h -= 50;
+            float ocupado = dibujarPestanasNiveles(ui, x, y, w);
+            y += ocupado;
+            h -= ocupado;
             l = new ArrayList<>();
             for (Concepto c : Concepto.todos()) if (c.nivel == nivel) l.add(c);
         }
@@ -584,7 +613,28 @@ public final class EntrenadorFlotante {
         ui.finDesplazable(despLista, yy + d - y);
     }
 
-    /** El error (si lo hay), el concepto elegido (título, párrafos, pseudocódigo, ejemplo), la IA y los botones. */
+    /** Dibuja las 6 pestañas (programación 1-5 + El juego 6) en dos filas de 3 para que nunca se recorten. */
+    private float dibujarPestanasNiveles(Ui ui, float x, float y, float w) {
+        String[] niveles = T.t("entrenador.niveles").split(";");
+        int corte = Math.min(3, niveles.length);
+        String[] fila1 = Arrays.copyOfRange(niveles, 0, corte);
+        int sel1 = nivel <= corte ? nivel - 1 : -1;
+        int e1 = ui.pestanas(fila1, sel1, x, y, w, 36);
+        if (e1 >= 0 && e1 != sel1) {
+            nivel = e1 + 1;
+            despLista.alPrincipio();
+        }
+        if (niveles.length <= corte) return 44f;
+        String[] fila2 = Arrays.copyOfRange(niveles, corte, niveles.length);
+        int sel2 = nivel > corte ? nivel - corte - 1 : -1;
+        int e2 = ui.pestanas(fila2, sel2, x, y + 40, w, 36);
+        if (e2 >= 0 && e2 != sel2) {
+            nivel = corte + e2 + 1;
+            despLista.alPrincipio();
+        }
+        return 84f;
+    }
+
     private void explicacion(Juego j, float x, float y, float w, float h, Idioma idioma, Entrenador en) {
         Ui ui = j.ui;
         Pincel p = j.pincel;
@@ -593,119 +643,21 @@ public final class EntrenadorFlotante {
         float abajo = 56;
         float d = ui.desplazable(despTexto, x, y, w, h - abajo);
         float yy = y - d;
-        if (error != null) yy = explicarError(j, c, x, yy, w, idioma) + ui.letra;
+        if (error != null) {
+            yy = PanelErrorConsulta.explicarError(j, error, pasosDelError, c, x, yy, w, idioma, texto -> decir(j, texto)) + ui.letra;
+        }
         p.texto(c.titulo.en(idioma), x, yy, ui.letra * 1.5f, true, ui.tema.acento, 1);
         yy += ui.letra * 2.2f;
         for (String par : c.parrafos(idioma)) yy += p.parrafo(par, x, yy, w - 20, ui.letra, ui.tema.texto, 1) + ui.letra * 0.6f;
-        yy = bloqueDeCodigo(j, T.t("entrenador.pseudo"), c.pseudo(idioma), false, x, yy, w);
-        yy = bloqueDeCodigo(j, T.t("entrenador.ejemplo"), c.ejemplo(idioma), true, x, yy, w);
+        yy = PanelErrorConsulta.bloqueDeCodigo(j, T.t("entrenador.pseudo"), c.pseudo(idioma), false, x, yy, w);
+        yy = PanelErrorConsulta.bloqueDeCodigo(j, T.t("entrenador.ejemplo"), c.ejemplo(idioma), true, x, yy, w);
         yy = respuestaDeLaIa(j, x, yy, w);
         ui.finDesplazable(despTexto, yy + d - y);
         botones(j, c, x, y + h - abajo + 8, w, idioma, en);
     }
 
-    /** Un recuadro de código (Java, con los comentarios en gris) o de pseudocódigo, con su rótulo encima. Devuelve dónde acaba. */
-    private float bloqueDeCodigo(Juego j, String rotulo, String texto, boolean java, float x, float yy, float w) {
-        if (texto == null || texto.isBlank()) return yy;
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        p.texto(rotulo, x, yy, ui.letra * 0.85f, true, ui.tema.textoSuave, 1);
-        yy += ui.letra * 1.4f;
-        String[] lineas = texto.split("\n");
-        float tl = ui.letra * 0.85f, alto = p.altoDeLinea(tl);
-        p.caja(x, yy, w - 20, lineas.length * alto + 16, 8, java ? 0x0E1014 : 0x1B2430, 1);
-        for (int i = 0; i < lineas.length; i++) {
-            String s = lineas[i];
-            int com = java ? s.indexOf("//") : -1;
-            float lx = x + 12, ly = yy + 8 + i * alto;
-            if (com >= 0) {
-                String antes = s.substring(0, com);
-                p.textoDeCodigo(antes, lx, ly, tl, false, ui.tema.cadena, 1);
-                lx += p.anchoDeCodigo(antes, tl, false);
-                s = s.substring(com);
-            }
-            p.textoDeCodigo(ui.recortarTextoDeCodigo(s, x + w - 32 - lx, tl, false), lx, ly, tl, false,
-                    com >= 0 ? 0x7F8C8D : java ? ui.tema.cadena : 0xE8E2C8, 1);
-        }
-        return yy + lineas.length * alto + 28;
-    }
-
-    // ================================================================ los errores del editor
-
-    /** Los pasos que se pueden pedir de un error: con una pelea, en pseudocódigo, con un ejemplo y cómo arreglarlo. */
-    private static final String[] PASOS = {"entrenador.error.pelea", "entrenador.error.pseudo", "entrenador.error.ejemplo", "entrenador.error.arreglo"};
-
-    /**
-     * El error del editor: la línea (con el subrayado), lo que dice el editor a su nivel, el concepto de detrás y
-     * los pasos que el jugador vaya pidiendo, cada uno debajo del anterior (y el entrenador lo dice en voz alta).
-     */
-    private float explicarError(Juego j, Concepto c, float x, float yy, float w, Idioma idioma) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        VentanaDeCodigo.Marca m = error.marca();
-        p.texto(T.f("entrenador.error.titulo", m.linea), x, yy, ui.letra, true, ui.tema.mal, 1);
-        yy += ui.letra * 1.6f;
-        // La línea tal cual, con la ola roja debajo de donde marca javac.
-        float tl = ui.letra * 0.9f, letra = p.anchoDeLetra(tl), alto = p.altoDeLinea(tl);
-        String linea = error.linea() == null ? "" : error.linea().replace("\t", "    ");
-        int sangria = linea.length() - linea.stripLeading().length();
-        String visible = linea.strip();
-        p.caja(x, yy, w - 20, alto + 22, 8, 0x0E1014, 1);
-        p.textoDeCodigo(ui.recortarTextoDeCodigo(m.linea + "  " + visible, w - 44, tl, false), x + 12, yy + 8, tl, false, ui.tema.cadena, 1);
-        int col = Math.max(0, m.columna - 1 - sangria) + (m.linea + "  ").length();
-        float ox = x + 12 + col * letra;
-        for (int i = 0; i < 5 && ox + i * letra * 0.5f < x + w - 30; i++) {
-            float a = ox + i * letra * 0.5f;
-            p.linea(a, yy + alto + 12, a + letra * 0.25f, yy + alto + 8 + (i % 2) * 6, 2, ui.tema.mal, 1);
-        }
-        yy += alto + 34;
-        String dice = m.texto.split("\n\njavac:")[0];
-        yy += p.parrafo(dice, x, yy, w - 20, ui.letra, ui.tema.texto, 1) + ui.letra * 0.5f;
-        if (m.mensaje != null && !m.mensaje.isBlank())
-            yy += p.parrafo("javac: " + m.mensaje, x, yy, w - 20, ui.letra * 0.8f, ui.tema.textoApagado, 1) + ui.letra * 0.6f;
-        yy += p.parrafo(T.f("entrenador.error.concepto", c.titulo.en(idioma)), x, yy, w - 20, ui.letra * 0.9f, ui.tema.textoSuave, 1) + 8;
-        // Los pasos, de botón en botón: el jugador decide qué quiere ver.
-        float bw = (w - 20 - 24) / 4;
-        for (int i = 0; i < PASOS.length; i++) {
-            boolean visto = pasosDelError.contains(i);
-            if (ui.boton(T.t(PASOS[i]), x + i * (bw + 8), yy, bw, 44, visto ? Ui.Estilo.ELEGIDO : Ui.Estilo.NORMAL) && !visto) {
-                pasosDelError.add(i);
-                decir(j, textoDelPaso(j, i, c, idioma));
-            }
-        }
-        yy += 58;
-        for (int i : pasosDelError) {
-            p.texto(T.t(PASOS[i]), x, yy, ui.letra * 0.85f, true, ui.tema.acento, 1);
-            yy += ui.letra * 1.4f;
-            if (i == 1) yy = bloqueDeCodigo(j, "", c.pseudo(idioma), false, x, yy - ui.letra * 1.4f, w);
-            else if (i == 2) yy = bloqueDeCodigo(j, "", c.ejemplo(idioma), true, x, yy - ui.letra * 1.4f, w);
-            else yy += p.parrafo(textoDelPaso(j, i, c, idioma), x, yy, w - 20, ui.letra, ui.tema.texto, 1) + ui.letra * 0.8f;
-        }
-        p.linea(x, yy, x + w - 20, yy, 1, ui.tema.textoApagado, 0.5f);
-        return yy + 12;
-    }
-
-    /**
-     * Lo que dice cada paso: la pelea es la metáfora del concepto (su segundo párrafo); el arreglo, según la
-     * ayuda: con poca, la pregunta para pensar (lo de nivel junior, más escueto); con más, la pista con ejemplo
-     * (lo de nivel noob). Nunca el código arreglado entero.
-     */
-    private String textoDelPaso(Juego j, int paso, Concepto c, Idioma idioma) {
-        VentanaDeCodigo.Marca m = error.marca();
-        if (paso == 0) {
-            List<String> ps = c.parrafos(idioma);
-            return ps.size() > 1 ? ps.get(1) : ps.isEmpty() ? "" : ps.get(0);
-        }
-        if (paso == 1) return c.pseudo(idioma);
-        if (paso == 2) return T.t("entrenador.ejemplo");
-        boolean poca = PanelDelTutor.ayuda(j.jugador, 0) < 0.45f;
-        String s = Explicador.enNivel(m.codigo, m.mensaje, m.linea, poca ? "junior" : "noob", idioma);
-        return s == null ? T.t("entrenador.error.sin_pista") : poca ? T.t("entrenador.error.piensa") + " " + s : s;
-    }
-
     // ================================================================ la IA
 
-    /** Lo que contestó la IA (o «pensando…»), debajo de la explicación de serie. */
     private float respuestaDeLaIa(Juego j, float x, float yy, float w) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
@@ -730,13 +682,11 @@ public final class EntrenadorFlotante {
         List<Concepto> relacionados = new ArrayList<>();
         textos.add("♪ " + T.t("entrenador.leer"));
         textos.add(T.t("entrenador.ia"));
-        // Lo del juego y los cerebros de IA se enseña además con dibujos.
         int fijos = 2;
         if (c.guia > 0) {
             textos.add(T.t("guia.abrir"));
             fijos = 3;
         }
-        // Los relacionados, solo los que caben en una fila (la botonera saltaría de línea y se saldría del recuadro).
         float ocupado = 0;
         for (String s : textos) ocupado += j.pincel.ancho(s, ui.letra, true) + 48;
         for (String id : c.ver) {
@@ -751,8 +701,8 @@ public final class EntrenadorFlotante {
         Ui.Estilo[] estilos = new Ui.Estilo[textos.size()];
         boolean[] activos = new boolean[textos.size()];
         String[] ayudas = new String[textos.size()];
-        java.util.Arrays.fill(estilos, Ui.Estilo.PLANO);
-        java.util.Arrays.fill(activos, true);
+        Arrays.fill(estilos, Ui.Estilo.PLANO);
+        Arrays.fill(activos, true);
         activos[1] = cerebro != null && peticion == null;
         ayudas[1] = cerebro == null ? T.t("cerebro.sin") : null;
         int pulsado = ui.botonera(textos.toArray(new String[0]), estilos, activos, ayudas, x, y, w - 20, 42);
@@ -769,16 +719,12 @@ public final class EntrenadorFlotante {
         }
     }
 
-    /**
-     * Con IA: contesta la pregunta del jugador (o explica el concepto, o el error) con sus palabras, mirando lo
-     * que tiene delante (el código con números de línea, los errores, cómo va la pelea).
-     */
     private void preguntarALaIa(Juego j, Concepto c, Idioma idioma, Entrenador en) {
         peticion = ConsultaIaEntrenador.lanzar(cerebro, j, c, error, ultimaPregunta, idioma, en);
         respuestaIa = null;
     }
 
-    /** El código con su número delante de cada línea (como mucho «max» líneas), para que la IA hable de líneas concretas. */
+    /** El código con su número delante de cada línea (como mucho «max» líneas). */
     public static String conNumeros(String codigo, int max) {
         return ConsultaIaEntrenador.conNumeros(codigo, max);
     }

@@ -16,15 +16,19 @@ import metajavbots.codigo.Compilador;
 import metajavbots.codigo.Vigilante;
 import metajavbots.pantalla.Entrada;
 import metajavbots.pantallas.Ajustes;
+import metajavbots.pantallas.ConsultaIaEntrenador;
 import metajavbots.pantallas.EntrenadorFlotante;
 import metajavbots.pantallas.Inicio;
 import metajavbots.pantallas.Menu;
+import metajavbots.pantallas.Taller;
 import metajavbots.progreso.Jugador;
+import metajavbots.progreso.Registro;
 import metajavbots.sonido.Timbre;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 import metajavbots.tutor.CabezaDeEntrenador;
 import metajavbots.tutor.Concepto;
+import metajavbots.tutor.ConsejosDelJuego;
 import metajavbots.tutor.ConsejosDelTaller;
 import metajavbots.tutor.Entrenador;
 import metajavbots.tutor.LecturaDelRival;
@@ -52,25 +56,27 @@ final class PruebasDelEntrenador {
         ayudas();
         bocadilloDeTips();
         limitesVerticalesDelBocadillo();
-        cabecitaFlotanteYCambioDeEntrenador();
+        esquinaInferiorDerechaYGeometria();
+        cambioDeEntrenador();
+        cierreConXYEnfriamiento();
+        consejosDelJuegoYConsultaIa();
     }
 
     private static void conceptos() {
-        caso("entrenador: los conceptos, de cero a senior, en tres idiomas, con pseudocódigo, ejemplo y relacionados que existen", () -> {
+        caso("entrenador: los conceptos, de cero a senior y el juego, en tres idiomas, con pseudocódigo, ejemplo y relacionados", () -> {
             List<Concepto> todos = Concepto.todos();
-            cierto(todos.size() >= 130, "al menos 130 conceptos: " + todos.size());
+            cierto(todos.size() >= 145, "al menos 145 conceptos: " + todos.size());
             Set<String> ids = new HashSet<>();
-            int[] porNivel = new int[6];
+            int[] porNivel = new int[Concepto.NIVEL_MAX + 1];
             for (Concepto c : todos) {
                 cierto(ids.add(c.id), "id repetido: " + c.id);
-                cierto(c.nivel >= 1 && c.nivel <= 5, c.id + ": nivel 1-5");
+                cierto(c.nivel >= 1 && c.nivel <= Concepto.NIVEL_MAX, c.id + ": nivel 1-" + Concepto.NIVEL_MAX);
                 porNivel[c.nivel]++;
                 for (Idioma i : Idioma.values()) {
                     cierto(!c.titulo.en(i).isBlank(), c.id + ": título en " + i);
                     cierto(c.parrafos(i).size() >= 2, c.id + ": explicación en " + i);
                     cierto(!c.claves(i).isEmpty(), c.id + ": claves en " + i);
                     cierto(!c.pseudo(i).isBlank(), c.id + ": pseudocódigo en " + i);
-                    // El ejemplo, en el idioma del jugador: su comentario y no los tres.
                     for (String l : c.ejemplo(i).split("\n")) {
                         int com = l.indexOf("//");
                         cierto(com < 0 || !l.substring(com).contains(" || "), c.id + ": comentario sin elegir en " + i + ": " + l);
@@ -79,10 +85,15 @@ final class PruebasDelEntrenador {
                 cierto(c.guia > 0 || !c.ejemplo.isBlank(), c.id + ": ejemplo");
                 cierto(c.guia <= metajavbots.pantallas.GuiaDeCerebros.PAGINAS, c.id + ": página de la guía");
             }
-            for (int n = 1; n <= 5; n++) cierto(porNivel[n] >= 10, "nivel " + n + " con conceptos: " + porNivel[n]);
+            for (int n = 1; n <= Concepto.NIVEL_MAX; n++) cierto(porNivel[n] >= 10, "nivel " + n + " con conceptos: " + porNivel[n]);
             for (Concepto c : todos) for (String v : c.ver) cierto(Concepto.de(v) != null, c.id + " → «ver» que no existe: " + v);
+            for (Idioma i : Idioma.values()) {
+                T.idioma = i;
+                igual(Concepto.NIVEL_MAX, T.t("entrenador.niveles").split(";").length, "6 pestañas en " + i);
+            }
+            T.idioma = Idioma.ES;
             System.out.println("            " + todos.size() + " conceptos (por nivel: " + porNivel[1] + ", " + porNivel[2] + ", " + porNivel[3] + ", "
-                    + porNivel[4] + ", " + porNivel[5] + ")");
+                    + porNivel[4] + ", " + porNivel[5] + ", juego=" + porNivel[6] + ")");
         });
 
         caso("entrenador: el ejemplo de cada concepto se ve con la API y los comentarios del idioma del jugador", () -> {
@@ -128,6 +139,18 @@ final class PruebasDelEntrenador {
                 {"where can I see my grades", "ver_notas", "EN"},
                 {"qué es una clase abstracta", "clase_abstracta", "ES"},
                 {"modelo de memoria", "modelo_de_memoria", "ES"},
+                {"cómo empiezo", "tutoriales_y_demos", "ES"},
+                {"demostraciones", "tutoriales_y_demos", "ES"},
+                {"minijuegos", "minijuegos_y_ejercicios", "ES"},
+                {"tienda y monedas", "tienda_y_monedas", "ES"},
+                {"depurador en vivo", "depuracion_y_testing", "ES"},
+                {"mi temario", "hora_de_hoy_y_temario", "ES"},
+                {"panel de la ia", "panel_ia_y_ajustes", "ES"},
+                {"modo especial", "arena_y_modos", "ES"},
+                {"compilar en el taller", "taller_y_compilar", "ES"},
+                {"Minispiele", "minijuegos_y_ejercicios", "DE"},
+                {"shop coins", "tienda_y_monedas", "EN"},
+                {"testing lab", "depuracion_y_testing", "EN"},
             };
             for (String[] q : preguntas) {
                 List<Concepto> l = Concepto.buscar(q[0], Idioma.valueOf(q[2]), 3);
@@ -345,30 +368,41 @@ final class PruebasDelEntrenador {
         });
     }
 
-    private static void cabecitaFlotanteYCambioDeEntrenador() {
-        caso("entrenador: la cabecita flotante permanece visible y clicable dentro de pantalla con letra normal y grande", () -> {
+    private static void esquinaInferiorDerechaYGeometria() {
+        caso("entrenador: en esquina inferior derecha recogido con flecha, desplegado y cartelito sin solapar en letra 18 y 26", () -> {
             float[][] pantallas = {{1600, 900}, {1280, 720}, {1024, 768}, {800, 600}, {640, 480}};
             for (float[] tam : pantallas) {
                 for (float letra : new float[]{18f, 26f}) {
+                    EntrenadorFlotante.CajaRecogida rec = EntrenadorFlotante.cajaRecogida(tam[0], tam[1], letra);
                     EntrenadorFlotante.CajaPestana reposo = EntrenadorFlotante.cajaPestana(tam[0], tam[1], 0f, letra);
                     EntrenadorFlotante.CajaPestana desplegada = EntrenadorFlotante.cajaPestana(tam[0], tam[1], 1f, letra);
+                    EntrenadorFlotante.CajaTip tip = EntrenadorFlotante.cajaTip(tam[0], tam[1], 110f, letra);
+                    cierto(rec.x() >= tam[0] * 0.75f && rec.x() + rec.w() <= tam[0], "recogida en borde derecho " + tam[0] + "x" + tam[1]);
+                    cierto(rec.y() >= tam[1] * 0.65f && rec.y() + rec.h() <= tam[1], "recogida en esquina inferior " + tam[0] + "x" + tam[1]);
+                    cierto(rec.w() < desplegada.w(), "recogida más compacta que desplegada");
+                    cierto(rec.contiene(rec.flechaX(), rec.flechaY()), "flecha dentro de pestaña recogida");
                     for (EntrenadorFlotante.CajaPestana c : new EntrenadorFlotante.CajaPestana[]{reposo, desplegada}) {
                         cierto(c.w() > 0f && c.h() > 0f && c.radio() >= 20f, "dimensiones positivas");
                         cierto(c.x() >= 0f && c.x() + c.w() <= tam[0], "horizontal dentro de " + tam[0] + "x" + tam[1]);
-                        cierto(c.y() >= 0f && c.y() + c.h() <= tam[1], "vertical dentro de " + tam[0] + "x" + tam[1]);
+                        cierto(c.y() >= tam[1] * 0.60f && c.y() + c.h() <= tam[1], "anclada abajo en " + tam[0] + "x" + tam[1]);
                         cierto(c.cabezaX() - c.radio() * 1.15f >= 0f && c.cabezaX() + c.radio() * 1.15f <= tam[0],
                                 "cabeza completa visible en X en " + tam[0] + "x" + tam[1]);
                         cierto(c.cabezaY() - c.radio() * 1.25f >= 0f && c.cabezaY() + c.radio() * 1.45f <= tam[1],
                                 "cabeza completa visible en Y en " + tam[0] + "x" + tam[1]);
                         cierto(c.contiene(c.insigniaX(), c.insigniaY()), "insignia dentro de la pestaña");
+                        cierto(c.enCabeza(c.cabezaX(), c.cabezaY()), "centro de cabeza abre consulta");
+                        cierto(c.enRecoger(c.recogerX() + c.recogerW() / 2f, c.recogerY() + c.recogerH() / 2f), "franja recoger clicable");
+                        cierto(!c.enCabeza(c.recogerX() + c.recogerW() / 2f, c.recogerY() + c.recogerH() / 2f), "recoger separado de cabeza");
                         Entrada e = new Entrada(null);
                         e.ratonX = c.cabezaX();
                         e.ratonY = c.cabezaY();
                         e.recienPulsado = true;
-                        cierto(c.contiene(e.ratonX, e.ratonY), "centro de cabeza clicable");
-                        cierto(e.clic(c.x(), c.y(), c.w(), c.h()), "clic en pestaña reconocido");
+                        cierto(e.clic(c.x(), c.y(), c.w() - c.recogerW(), c.h()), "clic en cabeza reconocido");
                     }
-                    cierto(desplegada.x() < reposo.x(), "al desplegarse se adelanta hacia dentro");
+                    cierto(desplegada.x() < reposo.x(), "al asomar se adelanta ligeramente hacia dentro");
+                    cierto(tip.x() >= 0f && tip.x() + tip.w() + 10f <= desplegada.x(),
+                            "cartelito pegado a la izquierda sin solapar cabecita en " + tam[0] + "x" + tam[1] + " letra=" + letra);
+                    cierto(tip.y() >= 0f && tip.y() + tip.h() <= tam[1], "cartelito dentro de pantalla en Y");
                 }
             }
             Jugador jug = new Jugador("Prueba");
@@ -377,7 +411,9 @@ final class PruebasDelEntrenador {
             cierto(EntrenadorFlotante.debeMostrarse(jug, new Menu()), "en Menú sí se muestra");
             cierto(EntrenadorFlotante.debeMostrarse(jug, new Ajustes()), "en Ajustes sí se muestra");
         });
+    }
 
+    private static void cambioDeEntrenador() {
         caso("entrenador: cambiar de entrenador actualiza la cabecita al instante, limpia caché y diferencia cada retrato", () -> {
             List<Entrenador> todos = Entrenador.todos();
             cierto(todos.size() >= 7, "al menos 7 entrenadores definidos");
@@ -417,6 +453,102 @@ final class PruebasDelEntrenador {
                         "etiqueta de selector en Ajustes en " + id);
             }
             T.idioma = Idioma.ES;
+        });
+    }
+
+    private static void cierreConXYEnfriamiento() {
+        caso("entrenador: cierre con × recoge si no estaba fijado y conserva enfriamiento al cambiar de pantalla", () -> {
+            Jugador principiante = new Jugador("Novato");
+            EntrenadorFlotante ef = new EntrenadorFlotante();
+            cierto(!ef.desplegado() && !ef.desplegadoFijo(), "empieza recogido en esquina");
+            ef.tipAhora();
+            cierto(ef.avanzarTemporizadorDeTip(principiante, null, 0.1f), "sale consejo en menú");
+            cierto(ef.desplegado() && !ef.desplegadoFijo(), "asoma con el consejo sin quedar fijado");
+            ef.cerrarTipManualmente();
+            cierto(ef.tipActual() == null && !ef.desplegado(), "cerrar con × oculta el cartelito y vuelve a recoger");
+            cierto(ef.esperaDelTip() >= EntrenadorFlotante.ESPERA_TRAS_CERRAR_MANUAL, "enfriamiento largo aplicado");
+            cierto(!ef.avanzarTemporizadorDeTip(principiante, "class MiRobot {}", 1f), "no sale al cambiar a taller");
+            cierto(ef.esperaDelTip() > EntrenadorFlotante.ESPERA_ENTRE_TIPS, "conserva el enfriamiento largo al cambiar de pantalla");
+            cierto(!ef.avanzarTemporizadorDeTip(principiante, null, 1f), "tampoco sale al volver al menú");
+            ef.desplegar();
+            cierto(ef.desplegado() && ef.desplegadoFijo(), "desplegado manual");
+            ef.tipAhora();
+            cierto(ef.avanzarTemporizadorDeTip(principiante, null, 0.1f), "nuevo consejo estando fijado");
+            ef.cerrarTipManualmente();
+            cierto(ef.tipActual() == null && ef.desplegado(), "al cerrar × sigue desplegado si estaba fijado");
+            ef.recoger();
+            cierto(!ef.desplegado() && !ef.desplegadoFijo(), "recoger lo devuelve a la esquina");
+        });
+    }
+
+    private static void consejosDelJuegoYConsultaIa() {
+        caso("entrenador: consejos espontáneos cubren todo el juego y programación y se adaptan a principiante y oxidado en ES/DE/EN", () -> {
+            Jugador principiante = new Jugador("Nuevo");
+            cierto(ConsejosDelJuego.esPrincipiante(principiante), "detecta principiante");
+            List<ConsejosDelTaller.Tip> dePrincipiante = ConsejosDelJuego.consejosDeJuego(principiante);
+            igual("juego_empezar_tutoriales", dePrincipiante.get(0).id(), "principiante prioriza tutoriales y demos");
+            igual("juego_demostraciones", dePrincipiante.get(1).id(), "principiante recomienda demostraciones");
+
+            Jugador oxidado = new Jugador("Oxidado");
+            oxidado.tutorialesHechos.addAll(List.of("t1", "t2"));
+            oxidado.derrotasSeguidas = 3;
+            oxidado.historial.add(new Registro(1L, "MiRobot", "equilibrado", "Rival", "tanque", 0.5, Registro.Resultado.DERROTA, 10, 50, 0, ""));
+            cierto(!ConsejosDelJuego.esPrincipiante(oxidado) && ConsejosDelJuego.estaOxidado(oxidado), "detecta jugador oxidado");
+            List<ConsejosDelTaller.Tip> deOxidado = ConsejosDelJuego.consejosDeJuego(oxidado);
+            igual("juego_oxidado_minijuegos", deOxidado.get(0).id(), "oxidado prioriza minijuegos y ejercicios");
+            igual("juego_hora_de_hoy", deOxidado.get(1).id(), "oxidado sugiere La hora de hoy");
+
+            // Cobertura completa de funcionalidades del juego y trilingüe sin cadenas vacías.
+            Set<String> idsJuego = new HashSet<>();
+            for (ConsejosDelTaller.Tip t : ConsejosDelJuego.todosLosConsejosDeJuego()) {
+                idsJuego.add(t.id());
+                cierto(Concepto.de(t.concepto()) != null, "concepto existente para " + t.id() + ": " + t.concepto());
+            }
+            for (String esperado : new String[]{"juego_empezar_tutoriales", "juego_demostraciones", "juego_oxidado_minijuegos",
+                "juego_hora_de_hoy", "juego_taller", "juego_tienda", "juego_depuracion", "juego_temario", "juego_arena",
+                "juego_panel_ia", "juego_ajustes"}) {
+                cierto(idsJuego.contains(esperado), "cubre consejo " + esperado);
+            }
+            Idioma antes = T.idioma;
+            try {
+                for (Idioma id : Idioma.values()) {
+                    T.idioma = id;
+                    for (String k : new String[]{"entrenador.desplegar", "entrenador.recoger", "entrenador.pestana"}) {
+                        cierto(T.existe(k) && !T.t(k).isBlank(), k + " en " + id);
+                    }
+                    for (ConsejosDelTaller.Tip t : ConsejosDelJuego.todosLosConsejosDeJuego()) {
+                        cierto(T.existe("entrenador.tip." + t.id()) && !T.t("entrenador.tip." + t.id()).isBlank(),
+                                "texto de " + t.id() + " en " + id);
+                    }
+                }
+            } finally {
+                T.idioma = antes;
+            }
+            // No repite dos consejos seguidos.
+            EntrenadorFlotante ef = new EntrenadorFlotante();
+            String anterior = null;
+            for (int k = 0; k < 15; k++) {
+                ef.tipAhora();
+                cierto(ef.avanzarTemporizadorDeTip(principiante, null, 0.1f), "consejo #" + k);
+                String actual = ef.tipActual().id();
+                cierto(!actual.equals(anterior), "no repite seguidos: " + actual);
+                anterior = actual;
+                ef.cerrarTipManualmente();
+            }
+        });
+
+        caso("entrenador: ConsultaIaEntrenador incluye programación, funcionalidades del juego, progreso y personalidad", () -> {
+            Jugador novato = new Jugador("Ana");
+            Entrenador en = Entrenador.de("miyagi");
+            String sistema = ConsultaIaEntrenador.construirSistema(novato, Idioma.ES, en);
+            cierto(sistema.contains(en.nombre.en) && sistema.contains("Metajavbot"), "personalidad y Java");
+            cierto(sistema.contains("Tutorials") && sistema.contains("Demonstrations") && sistema.contains("Minigames"), "guía del juego");
+            cierto(sistema.contains("Shop") && sistema.contains("Debugging & Testing") && sistema.contains("Settings"), "todas las pantallas");
+            cierto(sistema.contains("NEVER the complete solution"), "nunca da la solución completa");
+            String ctx = ConsultaIaEntrenador.construirContexto(novato, new Taller(), Concepto.de("tienda_y_monedas"), null,
+                    "¿Cómo consigo piezas en la tienda?", Idioma.ES);
+            cierto(ctx.contains("Player progress:") && ctx.contains("[BEGINNER]") && ctx.contains("Taller"), "progreso y pantalla");
+            cierto(ctx.contains("¿Cómo consigo piezas en la tienda?"), "pregunta del jugador");
         });
     }
 

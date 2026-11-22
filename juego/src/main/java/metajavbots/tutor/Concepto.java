@@ -24,7 +24,12 @@ import metajavbots.textos.Trilingue;
  */
 public final class Concepto {
 
-    /** Los archivos de conceptos, en orden (de lo básico a lo avanzado). */
+    /** Nivel reservado a las fichas sobre pantallas, modos y mecánicas del propio juego. */
+    public static final int NIVEL_JUEGO = 6;
+    /** Nivel máximo admitido en las pestañas de consulta del entrenador (1-5 programación, 6 el juego). */
+    public static final int NIVEL_MAX = NIVEL_JUEGO;
+
+    /** Los archivos de conceptos, en orden (de lo básico a lo avanzado, y al final el propio juego). */
     static final String[] ARCHIVOS = {"01_basico.txt", "02_control.txt", "03_objetos.txt", "04_intermedio.txt", "05_moderno.txt", "06_senior.txt",
         "07_juego.txt"};
 
