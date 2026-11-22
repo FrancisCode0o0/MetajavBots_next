@@ -12,7 +12,8 @@ public interface Obstacle {
 
     /**
      * What it is: "pinchos" (spikes), "sierra" (saw), "iman" (magnet), "foso" (pit), "barril" (barrel),
-     * "carrito" (cart), "trampa_mortal" (lethal trap), "impulso" (speed boost), "reparacion" (repair pickup)…
+     * "carrito" (cart), "trampa_mortal" (lethal trap), "impulso" (speed boost), "reparacion" (repair pickup),
+     * "moneda" (bonus coin), "rampa" (jump ramp), "agua" (water short-circuit zone)…
      */
     String type();
 

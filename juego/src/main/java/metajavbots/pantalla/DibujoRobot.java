@@ -28,7 +28,7 @@ public final class DibujoRobot {
         public final float[] partes = {1, 1, 1, 1};
         public List<Combatiente.Abolladura> abolladuras;
         public float retroceso, sacudida, alegria;
-        public boolean escudo, turbo, camuflaje, aturdido, sobrecarga, fuera, atacando;
+        public boolean escudo, turbo, camuflaje, aturdido, sobrecarga, fuera, atacando, cortocircuito;
         public int brazoQueAtaca = -1;
         /** La cara de la pantalla (PANTALLA): 0 normal, 1 contento, 2 enfadado, 3 dolorido. */
         public int cara;
@@ -36,6 +36,8 @@ public final class DibujoRobot {
         public float faseDelAtaque = 1;
         /** Lo que le queda en el aire tras un volteador (0..1). */
         public float volteo;
+        /** Elevación normalizada (0..1) durante un salto desde una rampa. */
+        public float salto;
     }
 
     private final Pincel p;
@@ -112,9 +114,10 @@ public final class DibujoRobot {
         Pieza.Locomocion loco = mo.pieza(Montaje.Hueco.PIERNAS) == null ? Pieza.Locomocion.BIPEDO : mo.pieza(Montaje.Hueco.PIERNAS).locomocion();
         float flota = loco == Pieza.Locomocion.VUELO ? 22 + 3 * (float) Math.sin(e.tiempo * 3)
                 : loco == Pieza.Locomocion.FLOTANTE ? 7 + 2 * (float) Math.sin(e.tiempo * 4) : 0;
-        // La sombra en el suelo.
-        p.elipse(x, y, 26 * u * (flota > 10 ? 0.7f : 1), 7 * u, 0, 0x000000, 0.35f * alfa);
-        float aire = e.volteo > 0 ? (float) Math.sin(Math.PI * Math.min(1, e.volteo)) * 34 : 0;
+        // La sombra en el suelo (se encoge ligeramente al saltar o volar).
+        float escalaSombra = flota > 10 ? 0.7f : e.salto > 0 ? Math.max(0.55f, 1f - e.salto * 0.35f) : 1f;
+        p.elipse(x, y, 26 * u * escalaSombra, 7 * u * escalaSombra, 0, 0x000000, 0.35f * alfa);
+        float aire = (e.volteo > 0 ? (float) Math.sin(Math.PI * Math.min(1, e.volteo)) * 34 : 0) + e.salto * 30;
         y0 = y - (flota + bote + aire) * u;
         if (e.fuera) {
             // Fuera de combate: se dibuja más abajo, torcido y apagado (se ve en Arena).
@@ -759,6 +762,15 @@ public final class DibujoRobot {
             for (int i = 0; i < 2; i++) {
                 float ax = (float) (Math.random() * 20 - 10), ay = (float) (base + Math.random() * (cima - base));
                 p.linea(enX(ax), enY(ay), enX(ax + 5), enY(ay + 6), 1.2f * u, 0x9BE7FF, 0.9f);
+            }
+        }
+        if (e.cortocircuito) {
+            for (int i = 0; i < 4; i++) {
+                float ax = (float) Math.sin(e.tiempo * 31 + i * 2.3) * (ancho * 0.55f);
+                float ay = base + ((i + 0.5f) / 4f) * (cima - base);
+                int col = i % 2 == 0 ? 0x3FE0FF : 0xFFE066;
+                p.linea(enX(ax), enY(ay), enX(ax + 7), enY(ay + 5), 1.6f * u, col, 0.95f);
+                p.linea(enX(ax + 7), enY(ay + 5), enX(ax + 2), enY(ay + 10), 1.6f * u, col, 0.95f);
             }
         }
     }

@@ -13,33 +13,34 @@ import metajavbots.textos.T;
  */
 public enum DificultadCarrera {
 
-    /** Nivel inicial: pista despejada, pocos repentinos y defectuosos, más impulsos y rival accesible. */
-    NOOB("Noob", "Noob", "Noob", "carrera_obs.dif_noob_resumen", false, 2.2,
-            new Pista(10, 2, 0.15, 0.30, 4, 250.0, 12, 2, 5),
+    /** Nivel inicial: pista base (1,0×), pocos repentinos y defectuosos, más impulsos y rival accesible. */
+    NOOB("Noob", "Noob", "Noob", "carrera_obs.dif_noob_resumen", false, 2.2, 1.0,
+            new Pista(10, 2, 0.15, 0.30, 4, 250.0, 12, 2, 5, 3, 3),
             new Defectuosos(3, 30, 0.33, 0.18, 0.25),
             new Rival(0.28, 18.0, 56.0, 180.0, 0.75)),
 
-    /** Nivel intermedio: equilibrio entre obstáculos ocultos, repentinos, defectuosos e impulsos. */
-    JUNIOR("Junior", "Junior", "Junior", "carrera_obs.dif_junior_resumen", false, 2.8,
-            new Pista(14, 3, 0.35, 0.48, 8, 200.0, 8, 3, 4),
+    /** Nivel intermedio: pista ×4/3, equilibrio entre ocultos, repentinos, defectuosos, rampas, agua e impulsos. */
+    JUNIOR("Junior", "Junior", "Junior", "carrera_obs.dif_junior_resumen", false, 2.8, 4.0 / 3.0,
+            new Pista(14, 3, 0.35, 0.48, 8, 200.0, 8, 3, 5, 4, 5),
             new Defectuosos(6, 18, 0.50, 0.24, 0.35),
             new Rival(0.55, 9.0, 78.0, 240.0, 1.00)),
 
-    /** Nivel exigente: alta densidad de trampas, varios modelos defectuosos activos y rival agresivo. */
-    SENIOR("Senior", "Senior", "Senior", "carrera_obs.dif_senior_resumen", false, 3.5,
-            new Pista(18, 3, 0.55, 0.62, 13, 165.0, 5, 5, 3),
+    /** Nivel exigente: pista ×(4/3)², alta densidad de trampas, varios modelos defectuosos activos y rival agresivo. */
+    SENIOR("Senior", "Senior", "Senior", "carrera_obs.dif_senior_resumen", false, 3.5, 16.0 / 9.0,
+            new Pista(18, 3, 0.55, 0.62, 13, 165.0, 5, 5, 4, 5, 7),
             new Defectuosos(10, 11, 0.70, 0.32, 0.50),
             new Rival(0.80, 3.5, 94.0, 290.0, 1.10)),
 
-    /** Dificultad máxima: requiere desbloquear el Modo especial; máxima densidad y rival de élite. */
-    ESPECIAL("Especial", "Spezial", "Special", "carrera_obs.dif_especial_resumen", true, 4.3,
-            new Pista(22, 4, 0.72, 0.72, 18, 145.0, 3, 7, 2),
+    /** Dificultad máxima: pista ×(4/3)³, requiere Modo especial; máxima densidad y rival de élite. */
+    ESPECIAL("Especial", "Spezial", "Special", "carrera_obs.dif_especial_resumen", true, 4.3, 64.0 / 27.0,
+            new Pista(22, 4, 0.72, 0.72, 18, 145.0, 3, 7, 3, 6, 9),
             new Defectuosos(14, 7, 0.86, 0.40, 0.65),
             new Rival(1.00, 0.5, 112.0, 340.0, 1.20));
 
     private record Pista(int sectores, int obstaculosPorSector, double proporcionOcultos,
             double proporcionIndestructibles, int cantidadRepentinos, double margenRepentino,
-            int cantidadImpulsos, int cantidadTrampasMortales, int cantidadReparaciones) {
+            int cantidadImpulsos, int cantidadTrampasMortales, int cantidadReparaciones,
+            int cantidadRampas, int cantidadAguas) {
     }
 
     private record Defectuosos(int cantidad, int cadenciaDisparo, double proporcionMoviles,
@@ -82,6 +83,12 @@ public enum DificultadCarrera {
     public final int cantidadTrampasMortales;
     /** Cantidad de bonos de reparación espaciados a lo largo de la pista. */
     public final int cantidadReparaciones;
+    /** Cantidad de rampas de salto colocadas delante de zonas peligrosas. */
+    public final int cantidadRampas;
+    /** Cantidad de zonas de caída de agua (cortocircuito breve) en la pista. */
+    public final int cantidadAguas;
+    /** Multiplicador de longitud de la pista respecto al tamaño base Noob (1, 4/3, (4/3)², (4/3)³). */
+    public final double escalaPista;
     /** Multiplicador de daño recibido por los robots específico de Carrera de obstáculos (> 1.0). */
     public final double multiplicadorDano;
     /** Nivel táctico del rival de la máquina en [0, 1]. */
@@ -98,13 +105,14 @@ public enum DificultadCarrera {
     public final boolean requiereModoEspecial;
 
     DificultadCarrera(String es, String de, String en, String claveResumen, boolean requiereModoEspecial,
-            double multiplicadorDano, Pista pista, Defectuosos defectuosos, Rival rival) {
+            double multiplicadorDano, double escalaPista, Pista pista, Defectuosos defectuosos, Rival rival) {
         this.es = es;
         this.de = de;
         this.en = en;
         this.claveResumen = claveResumen;
         this.requiereModoEspecial = requiereModoEspecial;
         this.multiplicadorDano = multiplicadorDano;
+        this.escalaPista = escalaPista;
         this.sectores = pista.sectores;
         this.obstaculosPorSector = pista.obstaculosPorSector;
         this.proporcionOcultos = pista.proporcionOcultos;
@@ -114,6 +122,8 @@ public enum DificultadCarrera {
         this.cantidadImpulsos = pista.cantidadImpulsos;
         this.cantidadTrampasMortales = pista.cantidadTrampasMortales;
         this.cantidadReparaciones = pista.cantidadReparaciones;
+        this.cantidadRampas = pista.cantidadRampas;
+        this.cantidadAguas = pista.cantidadAguas;
         this.cantidadDefectuosos = defectuosos.cantidad;
         this.cadenciaDisparoDefectuosos = defectuosos.cadenciaDisparo;
         this.proporcionDefectuososMoviles = defectuosos.proporcionMoviles;

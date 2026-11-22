@@ -193,9 +193,34 @@ public final class VistaDeArena {
             if (sonidos != null) sonidos.tocar("explosion", 0.9f);
             return;
         }
+        if (s.texto.equals("agua")) {
+            efectos.chispas(px, sy(s.y) - 22, 12, 0x3FE0FF);
+            efectos.chispas(px, sy(s.y) - 24, 8, 0xFFE066);
+            if (sonidos != null) sonidos.tocar("chispa", 0.7f);
+            return;
+        }
         efectos.chispas(px, sy(s.y) - 20, s.texto.equals("sierra") ? 10 : 6, s.texto.equals("rayo") ? 0xBFE6FF : 0xFFE38A);
         if (s.texto.equals("foso")) efectos.anadir(Efectos.Tipo.ONDA, sx(s.x, s.y), sy(s.y), 0, 0, 0.6f, 120 * escalaX, 0x101722);
         if (sonidos != null) sonidos.tocar(s.texto.equals("foso") ? "pared" : "choque", 0.7f);
+    }
+
+    /** Efectos y sonido de un suceso ESPECIAL (habilidades, impulsos, monedas extra y rampas). */
+    private void especialSuceso(Suceso s, float px, float py, Sonidos sonidos) {
+        if (sonidos != null) {
+            String que = s.texto.equals("escudo") || s.texto.equals("escudo_brazo") ? "escudo"
+                    : s.texto.equals("turbo") || s.texto.equals("impulso") ? "turbo" : s.texto.equals("moneda") ? "subida"
+                    : s.texto.equals("pulso") ? "pulso" : s.texto.equals("camuflaje") ? "camuflaje" : "servo";
+            sonidos.tocar(que, 0.7f);
+        }
+        float sy = sy(s.y);
+        if (s.texto.equals("pulso")) efectos.anadir(Efectos.Tipo.ONDA, px, py, 0, 0, 0.5f, 240 * escalaX, 0x9BE7FF);
+        else if (s.texto.equals("impulso")) {
+            efectos.anadir(Efectos.Tipo.ONDA, px, sy - 16 * escalaX, 0, 0, 0.45f, 120 * escalaX, 0x3FE0FF);
+            efectos.chispas(px, sy - 20 * escalaX, 14, 0x5BD685);
+        } else if (s.texto.equals("moneda")) {
+            efectos.anadir(Efectos.Tipo.ONDA, px, sy - 18 * escalaX, 0, 0, 0.5f, 110 * escalaX, 0xFFD23F);
+            efectos.chispas(px, sy - 22 * escalaX, 16, 0xFFF3B0);
+        } else if (s.texto.equals("rampa")) efectos.anadir(Efectos.Tipo.ONDA, px, sy - 8 * escalaX, 0, 0, 0.35f, 95 * escalaX, 0xFFC857);
     }
 
     public void sucesos(Pelea pelea, Sonidos sonidos) {
@@ -240,6 +265,7 @@ public final class VistaDeArena {
                 case APARATO: aparato(s, px, sonidos); break;
                 case OBSTACULO_ROTO: obstaculoRoto(s, px, sonidos); break;
                 case TRAMPA: trampaSuceso(s, px, sonidos); break;
+                case ESPECIAL: especialSuceso(s, px, py, sonidos); break;
                 case PARED: case CHOQUE:
                     efectos.chispas(px, sy(s.y) - 10, 6, 0xFFFFFF);
                     if (sonidos != null) sonidos.tocar(s.tipo == Suceso.Tipo.PARED ? "pared" : "choque", 0.6f);
@@ -253,19 +279,6 @@ public final class VistaDeArena {
                     efectos.explosion(px, py, 1f);
                     if (sonidos != null) sonidos.tocar("explosion", 1f);
                     sacudida = Math.max(sacudida, 12);
-                    break;
-                case ESPECIAL:
-                    if (sonidos != null) {
-                        String que = s.texto.equals("escudo") || s.texto.equals("escudo_brazo") ? "escudo"
-                                : s.texto.equals("turbo") || s.texto.equals("impulso") ? "turbo"
-                                : s.texto.equals("pulso") ? "pulso" : s.texto.equals("camuflaje") ? "camuflaje" : "servo";
-                        sonidos.tocar(que, 0.7f);
-                    }
-                    if (s.texto.equals("pulso")) efectos.anadir(Efectos.Tipo.ONDA, px, py, 0, 0, 0.5f, 240 * escalaX, 0x9BE7FF);
-                    if (s.texto.equals("impulso")) {
-                        efectos.anadir(Efectos.Tipo.ONDA, px, sy(s.y) - 16 * escalaX, 0, 0, 0.45f, 120 * escalaX, 0x3FE0FF);
-                        efectos.chispas(px, sy(s.y) - 20 * escalaX, 14, 0x5BD685);
-                    }
                     break;
                 case REPARACION:
                     efectos.anadir(Efectos.Tipo.ONDA, px, sy(s.y) - 16 * escalaX, 0, 0, 0.55f, 130 * escalaX, 0x2EE58D);
@@ -507,11 +520,13 @@ public final class VistaDeArena {
         e.turbo = c.turbo > 0;
         e.camuflaje = c.camuflaje > 0;
         e.aturdido = c.aturdido > 0;
+        e.cortocircuito = c.cortocircuito > 0;
         e.sobrecarga = c.sobrecarga > 0;
         e.fuera = c.fuera;
         e.brazoQueAtaca = pelea.turno() - c.ultimoAtaque < 24 ? c.brazoDelUltimoAtaque : -1;
         e.faseDelAtaque = Math.min(1, (pelea.turno() - c.ultimoAtaque) / 24f);
         e.volteo = c.volteado / 24f;
+        e.salto = c.saltando > 0 ? (float) Math.sin(Math.PI * c.saltando / metajavbots.combate.Arena.TURNOS_SALTO) : 0f;
         e.alegria = alegria;
         e.cara = c.fuera ? 3 : pelea.turno() - c.ultimoGolpe < 20 ? 3 : pelea.turno() - c.ultimoAtaque < 20 ? 2 : 0;
         float px = sx(c.x, c.y), py = sy(c.y);

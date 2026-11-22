@@ -12,7 +12,8 @@ public interface Hindernis {
 
     /**
      * Was es ist: "pinchos" (Stacheln), "sierra" (Säge), "iman" (Magnet), "foso" (Grube), "barril" (Fass),
-     * "carrito" (Wagen), "trampa_mortal" (tödliche Falle), "impulso" (Boost), "reparacion" (Reparaturbonus) …
+     * "carrito" (Wagen), "trampa_mortal" (tödliche Falle), "impulso" (Boost), "reparacion" (Reparaturbonus),
+     * "moneda" (Extramünze), "rampa" (Sprungrampe), "agua" (Wasserzone mit Kurzschluss) …
      */
     String typ();
 

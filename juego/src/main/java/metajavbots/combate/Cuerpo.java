@@ -74,6 +74,12 @@ public final class Cuerpo implements Mando {
     public double miraDeLaLlama;
     /** Los turnos que le quedan en el aire tras un volteador (se ve levantado; no se mueve). */
     public int volteado;
+    /** Turnos en el aire tras pasar por una rampa de salto (evita trampas de suelo y mantiene el avance). */
+    public int saltando;
+    /** Turnos de cortocircuito eléctrico tras tocar una zona de agua (desorientación breve del rumbo). */
+    public int cortocircuito;
+    /** Índice del último combatiente que le infligió daño (-1 si fue el entorno o ninguno). */
+    public int ultimoAtacante = -1;
     /** Turnos de barrido táctico en 360°, enfriamiento de la habilidad de arquetipo y cadencia del aviso. */
     public int pulsoTactico;
     int enfriamientoArquetipo, avisoArquetipo;
@@ -454,6 +460,24 @@ public final class Cuerpo implements Mando {
         return false;
     }
 
+    void pasoEstados(int turnoActual) {
+        if (escudoBrazo > 0) escudoBrazo--;
+        if (escudoCabeza > 0) escudoCabeza--;
+        if (turbo > 0) turbo--;
+        if (camuflaje > 0) camuflaje--;
+        if (sobrecarga > 0) sobrecarga--;
+        if (aturdido > 0) aturdido--;
+        if (volteado > 0) volteado--;
+        if (flotando > 0) flotando--;
+        if (saltando > 0) saltando--;
+        if (cortocircuito > 0) {
+            cortocircuito--;
+            double desvio = (azar.nextDouble() * 2.0 - 1.0) * 14.0 + Math.sin(turnoActual * 0.9 + indice) * 8.0;
+            rumbo = Pelea.normal(rumbo + desvio);
+        }
+        pasoArquetipo();
+    }
+
     void pasoArquetipo() {
         if (pulsoTactico > 0) pulsoTactico--;
         if (enfriamientoArquetipo > 0) enfriamientoArquetipo--;
@@ -607,7 +631,7 @@ public final class Cuerpo implements Mando {
     }
 
     public boolean vuela() {
-        return cifras.vuela || flotando > 0 || volteado > 0;
+        return cifras.vuela || flotando > 0 || volteado > 0 || saltando > 0;
     }
 
     /** Cuánto le queda de blindaje en total (sin porcentaje). */

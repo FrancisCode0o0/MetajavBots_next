@@ -116,6 +116,9 @@ public final class PistaDeCarrera {
             poblarSector(a, r, s, sx, alto, tema, dif);
         }
         colocarTrampasMortales(a, r, ancho, alto, dif);
+        colocarMonedasExtra(a, r, ancho, alto);
+        colocarRampas(a, r, ancho, alto, dif);
+        colocarZonasAgua(a, r, ancho, alto, dif);
         colocarReparaciones(a, r, ancho, alto, dif);
         colocarImpulsos(a, r, ancho, alto, dif);
         return a;
@@ -183,6 +186,67 @@ public final class PistaDeCarrera {
                     : alto * (0.24 + ((i * 29 + Math.abs(r.nextInt(24))) % 52) / 100.0);
             y = Math.max(130, Math.min(alto - 130, y));
             a.agregarTrampaMortal(x, y, 34);
+        }
+    }
+
+    private static void colocarMonedasExtra(Arena a, Random r, double ancho, double alto) {
+        int cantidad = 1 + r.nextInt(2);
+        List<Arena.Trampa> peligros = new ArrayList<>();
+        for (Arena.Trampa t : a.trampas()) {
+            if (t.tipo.equals(Arena.TIPO_TRAMPA_MORTAL)) peligros.add(t);
+        }
+        for (int i = 0; i < cantidad; i++) {
+            Arena.Trampa ref = !peligros.isEmpty() ? peligros.get(i % peligros.size()) : null;
+            double mx, my;
+            if (ref != null) {
+                double dirY = ref.y > alto * 0.5 ? -1.0 : 1.0;
+                mx = Math.max(580, Math.min(ancho - 380, ref.x + (i % 2 == 0 ? 18 : -18)));
+                my = Math.max(115, Math.min(alto - 115, ref.y + dirY * 86.0));
+            } else {
+                mx = ancho * (0.35 + i * 0.32);
+                my = alto * (0.30 + i * 0.36);
+            }
+            a.agregarMonedaExtra(mx, my, 24);
+        }
+    }
+
+    private static void colocarRampas(Arena a, Random r, double ancho, double alto, DificultadCarrera dif) {
+        int cantidad = dif.cantidadRampas;
+        List<Arena.Trampa> trampasSuelo = new ArrayList<>();
+        for (Arena.Trampa t : a.trampas()) {
+            if (t.tipo.equals(Arena.TIPO_TRAMPA_MORTAL) || t.tipo.equals("foso") || t.tipo.equals("pinchos")) {
+                trampasSuelo.add(t);
+            }
+        }
+        int colocadas = 0;
+        for (int i = 0; i < trampasSuelo.size() && colocadas < cantidad; i += Math.max(1, trampasSuelo.size() / Math.max(1, cantidad))) {
+            Arena.Trampa obj = trampasSuelo.get(i);
+            double rx = Math.max(480, obj.x - 94.0);
+            double ry = Math.max(115, Math.min(alto - 115, obj.y));
+            a.agregarRampa(rx, ry, 32);
+            colocadas++;
+        }
+        double inicio = Math.max(700, ancho * 0.14);
+        double fin = ancho * 0.86;
+        while (colocadas < cantidad) {
+            double frac = cantidad <= 1 ? 0.5 : (double) colocadas / (cantidad - 1);
+            double rx = inicio + (fin - inicio) * frac + jitter(r, 40);
+            double ry = Math.max(115, Math.min(alto - 115, alto * (0.28 + (colocadas % 3) * 0.22)));
+            a.agregarRampa(rx, ry, 32);
+            colocadas++;
+        }
+    }
+
+    private static void colocarZonasAgua(Arena a, Random r, double ancho, double alto, DificultadCarrera dif) {
+        int cantidad = dif.cantidadAguas;
+        double inicio = Math.max(820, ancho * 0.13);
+        double fin = ancho * 0.88;
+        for (int i = 0; i < cantidad; i++) {
+            double frac = cantidad <= 1 ? 0.5 : (double) i / (cantidad - 1);
+            double ax = inicio + (fin - inicio) * frac + jitter(r, 55);
+            double ay = alto * (0.22 + ((i * 33 + Math.abs(r.nextInt(28))) % 56) / 100.0);
+            ay = Math.max(118, Math.min(alto - 118, ay));
+            a.agregarAgua(ax, ay, 44);
         }
     }
 
@@ -278,13 +342,14 @@ public final class PistaDeCarrera {
     }
 
     private static double[] asegurarPosicionLibre(double ox, double oy, double radio, Pelea pelea, Cuerpo c0, Cuerpo c1) {
-        double x = Math.max(CarreraDeObstaculos.SALIDA_X + 160, Math.min(CarreraDeObstaculos.META_X - 100, ox));
+        double maxX = Math.max(CarreraDeObstaculos.SALIDA_X + 300, pelea.ancho - 260);
+        double x = Math.max(CarreraDeObstaculos.SALIDA_X + 160, Math.min(maxX, ox));
         double y = Math.max(95, Math.min(pelea.alto - 95, oy));
         for (int intento = 0; intento < 8; intento++) {
             boolean libre0 = c0 == null || c0.fuera || Math.hypot(x - c0.x, y - c0.y) >= c0.radio + radio + 120;
             boolean libre1 = c1 == null || c1.fuera || Math.hypot(x - c1.x, y - c1.y) >= c1.radio + radio + 120;
             if (libre0 && libre1) break;
-            x = Math.min(CarreraDeObstaculos.META_X - 95, x + 90);
+            x = Math.min(maxX + 5, x + 90);
             y = y > pelea.alto * 0.5 ? Math.max(95, y - 85) : Math.min(pelea.alto - 95, y + 85);
         }
         return new double[]{x, y};
@@ -492,7 +557,8 @@ public final class PistaDeCarrera {
             Obstaculo amenaza = null;
             double mejorDist = dificultad.alcanceEvasionRival;
             for (Obstaculo o : obstaculos()) {
-                if (o.tipo().equals("impulso") || o.tipo().equals(Arena.TIPO_REPARACION)) continue;
+                if (o.tipo().equals("impulso") || o.tipo().equals(Arena.TIPO_REPARACION)
+                        || o.tipo().equals(Arena.TIPO_MONEDA_EXTRA) || o.tipo().equals(Arena.TIPO_RAMPA)) continue;
                 boolean mortal = o.tipo().equals(Arena.TIPO_TRAMPA_MORTAL);
                 double alcance = mortal ? mejorDist + 70 : mejorDist;
                 double diff = Math.abs(normalizar(o.angulo()));

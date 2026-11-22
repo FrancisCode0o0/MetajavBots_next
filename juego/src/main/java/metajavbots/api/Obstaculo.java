@@ -12,7 +12,8 @@ public interface Obstaculo {
 
     /**
      * Qué es: "pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea",
-     * "rayo", "bloque", "trampa_mortal" (destrucción instantánea), "impulso" o "reparacion".
+     * "rayo", "bloque", "trampa_mortal" (destrucción instantánea), "impulso", "reparacion",
+     * "moneda" (moneda extra en zona peligrosa), "rampa" (salto breve) o "agua" (cortocircuito breve).
      */
     String tipo();
 

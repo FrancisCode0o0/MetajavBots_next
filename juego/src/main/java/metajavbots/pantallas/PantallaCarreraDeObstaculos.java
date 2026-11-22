@@ -105,7 +105,8 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         if (!dificultadDesbloqueada(jugador, nueva)) return false;
         dificultad = nueva;
         if (escenarioActual != null) {
-            vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
+            vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.anchoPara(dificultad),
+                    CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
         }
         return true;
     }
@@ -123,7 +124,8 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         dificultad = DificultadCarrera.seleccionarPara(j.jugador, dificultad);
         escenarioActual = CarreraDeObstaculos.siguienteArena(escenarioActual, semilla);
         vista.escenario = escenarioDe(escenarioActual);
-        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
+        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.anchoPara(dificultad),
+                CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
         editor.palabras = Palabras.api(j.jugador.idioma);
         editor.documentacion = w -> Referencia.de(w, j.jugador.idioma);
         editor.tamano = j.jugador.tamanoDeLetra;
@@ -137,12 +139,13 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     public String contextoParaElEntrenador() {
         return EntrenadorFlotante.contextoDeCodigo(
                 "The player is in Obstacle race (Special mode), difficulty " + dificultad.name()
-                        + " (Noob/Junior/Senior/Special; Special unlocks with Special mode), on a 6x track with rotating arenas, "
-                        + "multiplied damage scaling with difficulty (driving straight into hazards destroys the robot), "
-                        + "instant-kill lethal traps (\"trampa_mortal\"), spaced repair pickups (\"reparacion\"), "
-                        + "sudden obstacles (destructible barrels/chimneys and indestructible traps), broken malfunctioning robots "
-                        + "shooting randomly, speed boost pickups (\"impulso\"), live combat against the rival, and perfection medals "
-                        + "(Gold/Silver/Bronze; perfect Gold wins award +1/4 extra coin, 4 quarters = +1 full coin).",
+                        + " (Noob/Junior/Senior/Special; Special unlocks with Special mode; track length grows by 4/3 per tier from Noob to Special), "
+                        + "with rotating arenas, multiplied damage scaling with difficulty, instant-kill lethal traps (\"trampa_mortal\"), "
+                        + "1-2 bonus coins in risky zones (\"moneda\", +1 coin each), jump ramps (\"rampa\") that briefly lift the robot over ground traps, "
+                        + "falling water zones (\"agua\") causing a brief electrical short-circuit and heading wobble, "
+                        + "spaced repair pickups (\"reparacion\"), speed boosts (\"impulso\"), sudden obstacles, broken robots, "
+                        + "destruction bounties (+0.2 per destructible obstacle, +0.4 per broken robot, +1.0 for destroying the rival), "
+                        + "and perfection medals (+1/4 coin for Gold).",
                 editor);
     }
 
@@ -288,10 +291,11 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         float cy = ui.panel(x, y, w, h, T.t("carrera_obs.mapa_titulo"));
         float mx = x + 16, mw = w - 32;
         float mh = Math.min(h * 0.36f, mw * 0.42f);
-        DibujoCarreraDeObstaculos.mapaGeneral(p, ui, vistaPrevia, mx, cy + 4, mw, mh);
+        DibujoCarreraDeObstaculos.mapaGeneral(p, ui, vistaPrevia, CarreraDeObstaculos.anchoPara(dificultad),
+                CarreraDeObstaculos.metaPara(dificultad), mx, cy + 4, mw, mh);
         float ly = cy + mh + 10;
-        float paso = ui.letra * 1.18f;
-        float tl = ui.letra * 0.70f;
+        float paso = ui.letra * 1.06f;
+        float tl = ui.letra * 0.66f;
         p.circulo(mx + 9, ly + 7, 5.5f, 0xD97236, 1);
         p.texto(T.t("carrera_obs.leyenda_destructible"), mx + 24, ly, tl, false, ui.tema.texto, 1);
         ly += paso;
@@ -301,6 +305,15 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         p.circulo(mx + 9, ly + 7, 6.5f, 0xFFC857, 1);
         p.circulo(mx + 9, ly + 7, 4.5f, 0xFF1E42, 1);
         p.texto(T.t("carrera_obs.leyenda_mortal"), mx + 24, ly, tl, true, 0xFF6B7A, 1);
+        ly += paso;
+        p.circulo(mx + 9, ly + 7, 5.5f, 0xFFD23F, 1);
+        p.texto(T.t("carrera_obs.leyenda_moneda"), mx + 24, ly, tl, true, 0xFFD23F, 1);
+        ly += paso;
+        p.triangulo(mx + 3, ly + 12, mx + 15, ly + 12, mx + 15, ly + 2, 0xFF9F1C, 1);
+        p.texto(T.t("carrera_obs.leyenda_rampa"), mx + 24, ly, tl, false, 0xFFC857, 1);
+        ly += paso;
+        p.circulo(mx + 9, ly + 7, 5.5f, 0x33A8E8, 0.95f);
+        p.texto(T.t("carrera_obs.leyenda_agua"), mx + 24, ly, tl, false, 0x6FD3FF, 1);
         ly += paso;
         p.circulo(mx + 9, ly + 7, 5.5f, 0x3FE0FF, 0.95f);
         p.texto(T.t("carrera_obs.leyenda_impulso"), mx + 24, ly, tl, false, 0x9CFF57, 1);
@@ -428,7 +441,8 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         semilla = semilla * 6364136223846793005L + 1442695040888963407L;
         escenarioActual = CarreraDeObstaculos.siguienteArena(escenarioAnterior, semilla);
         if (vista != null) vista.escenario = escenarioDe(escenarioActual);
-        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
+        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.anchoPara(dificultad),
+                CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
     }
 
     private void dibujarCarrera(Juego j, float arriba, float dt) {
@@ -460,7 +474,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         float ay = y + hudH + 10;
         float ah = p.alto - ay - 16;
         vista.dibujar(p, carrera.pelea, x, ay, w, ah, dt);
-        DibujoCarreraDeObstaculos.lineasPista(p, ui, vista);
+        DibujoCarreraDeObstaculos.lineasPista(p, ui, vista, carrera.metaX());
         float mmW = Math.min(w - 40, 680);
         float mmH = 44;
         DibujoCarreraDeObstaculos.minimapa(p, ui, carrera, vista, x + (w - mmW) / 2, ay + ah - mmH - 12, mmW, mmH);

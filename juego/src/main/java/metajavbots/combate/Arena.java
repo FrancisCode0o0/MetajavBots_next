@@ -77,7 +77,7 @@ public final class Arena {
             if (destruida) return false;
             switch (tipo) {
                 case "pinchos": case "rayo": return fase % ciclo < activo;
-                case "pegamento": return true;
+                case "pegamento": case TIPO_AGUA: return true;
                 case "sierra": case "carrito": case "foso": case TIPO_TRAMPA_MORTAL: return true;
                 default: return false;
             }
@@ -239,8 +239,18 @@ public final class Arena {
     public static final String TIPO_TRAMPA_MORTAL = "trampa_mortal";
     /** Tipo identificador de un bono recogible de reparación en Carrera de obstáculos. */
     public static final String TIPO_REPARACION = "reparacion";
+    /** Tipo identificador de una moneda extra en zona peligrosa (+1 moneda al recogerla). */
+    public static final String TIPO_MONEDA_EXTRA = "moneda";
+    /** Tipo identificador de una rampa de salto en pista (activa salto breve sobre trampas de suelo). */
+    public static final String TIPO_RAMPA = "rampa";
+    /** Tipo identificador de una zona de caída de agua (provoca cortocircuito eléctrico breve). */
+    public static final String TIPO_AGUA = "agua";
     /** Fracción del blindaje máximo restaurada al recoger un bono de reparación. */
     public static final double FRACCION_REPARACION = 0.28;
+    /** Turnos que dura el salto breve activado por una rampa. */
+    public static final int TURNOS_SALTO = 24;
+    /** Turnos que dura el cortocircuito eléctrico al entrar en una zona de agua. */
+    public static final int TURNOS_CORTOCIRCUITO = 22;
     /** Turnos que dura el impulso de velocidad recogido en pista. */
     public static final int TURNOS_IMPULSO = 90;
     /** Multiplicador de velocidad al recoger un impulso en pista. */
@@ -369,6 +379,18 @@ public final class Arena {
 
     Trampa agregarReparacion(double x, double y, double radio) {
         return poner(TIPO_REPARACION, x, y, radio, false, 0, 0, false);
+    }
+
+    Trampa agregarMonedaExtra(double x, double y, double radio) {
+        return poner(TIPO_MONEDA_EXTRA, x, y, radio, false, 0, 0, false);
+    }
+
+    Trampa agregarRampa(double x, double y, double radio) {
+        return poner(TIPO_RAMPA, x, y, radio, false, 0, 0, false);
+    }
+
+    Trampa agregarAgua(double x, double y, double radio) {
+        return poner(TIPO_AGUA, x, y, radio, false, 0, 0, false);
     }
 
     Trampa agregarRepentina(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistencia) {
@@ -532,8 +554,32 @@ public final class Arena {
             return true;
         }
         if (t.tipo.equals(TIPO_TRAMPA_MORTAL)) {
-            if (!c.combatiente.defectuoso && d < t.radio + c.radio * 0.55) {
+            if (!c.combatiente.defectuoso && !c.vuela() && d < t.radio + c.radio * 0.55) {
                 p.destruirInstantaneamente(c, TIPO_TRAMPA_MORTAL);
+            }
+            return true;
+        }
+        if (t.tipo.equals(TIPO_MONEDA_EXTRA)) {
+            if (c.indice == 0 && !c.combatiente.defectuoso && d < t.radio + c.radio) {
+                t.destruida = true;
+                t.restos = 0;
+                p.suceso(Suceso.Tipo.ESPECIAL, c.indice, t.x, t.y, 0, 1.0, TIPO_MONEDA_EXTRA);
+            }
+            return true;
+        }
+        if (t.tipo.equals(TIPO_RAMPA)) {
+            if (!c.vuela() && d < t.radio + c.radio * 0.7 && listo(t.id, c, p, TURNOS_SALTO + 12)) {
+                c.saltando = TURNOS_SALTO;
+                c.velocidad = Math.max(c.velocidad, Cuerpo.velocidadSegura(c.cifras.velocidad) * 0.95);
+                if (c.avance < 110) c.avance = 110;
+                p.suceso(Suceso.Tipo.ESPECIAL, c.indice, t.x, t.y, c.rumbo, TURNOS_SALTO, TIPO_RAMPA);
+            }
+            return true;
+        }
+        if (t.tipo.equals(TIPO_AGUA)) {
+            if (!c.vuela() && d < t.radio + c.radio * 0.65 && listo(t.id, c, p, TURNOS_CORTOCIRCUITO + 24)) {
+                c.cortocircuito = Math.max(c.cortocircuito, TURNOS_CORTOCIRCUITO);
+                p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, c.rumbo, TURNOS_CORTOCIRCUITO, TIPO_AGUA);
             }
             return true;
         }

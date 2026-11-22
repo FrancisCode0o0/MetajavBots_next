@@ -95,8 +95,7 @@ public final class Guardado {
         v.put("etiqueta", j.etiqueta.name());
         v.put("pruebaHecha", Boolean.toString(j.pruebaHecha));
         v.put("experiencia", Long.toString(j.experiencia));
-        v.put("monedas", String.format(Locale.ROOT, "%.2f", Jugador.redondearMonedas(j.monedas)));
-        v.put("cuartosDeMoneda", Integer.toString(Math.max(0, Math.min(3, j.cuartosDeMoneda))));
+        guardarMonedas(v, j);
         v.put("victoriasEnLaEtiqueta", Integer.toString(j.victoriasEnLaEtiqueta));
         v.put("derrotasEnLaEtiqueta", Integer.toString(j.derrotasEnLaEtiqueta));
         v.put("derrotasSeguidas", Integer.toString(j.derrotasSeguidas));
@@ -215,8 +214,7 @@ public final class Guardado {
         j.etiqueta = Etiqueta.de(v.getOrDefault("etiqueta", "NOOB_1"));
         j.pruebaHecha = Boolean.parseBoolean(v.get("pruebaHecha"));
         j.experiencia = largo(v.get("experiencia"));
-        j.monedas = Math.max(0, Jugador.redondearMonedas(decimal(v.get("monedas"), 0)));
-        j.cuartosDeMoneda = Math.max(0, Math.min(3, (int) largo(v.get("cuartosDeMoneda"))));
+        leerMonedas(v, j);
         leerEstadisticas(v, j);
         int n = (int) largo(v.get("robots"));
         for (int i = 0; i < n; i++) {
@@ -276,6 +274,26 @@ public final class Guardado {
         Path ultimoRival = dir.resolve("ultimo_rival.java");
         if (Files.exists(ultimoRival)) j.ultimoRivalCodigo = Files.readString(ultimoRival, StandardCharsets.UTF_8);
         return j;
+    }
+
+    /** Persiste monedas y centésimas exactas (manteniendo cuartosDeMoneda sincronizado). */
+    private static void guardarMonedas(Map<String, String> v, Jugador j) {
+        v.put("monedas", String.format(Locale.ROOT, "%.2f", Jugador.redondearMonedas(j.monedas)));
+        int centimos = Math.max(0, Math.min(99, j.centimosDeMoneda));
+        v.put("centimosDeMoneda", Integer.toString(centimos));
+        v.put("cuartosDeMoneda", Integer.toString(centimos / 25));
+    }
+
+    /** Lee monedas y centésimas exactas migrando partidas antiguas que solo tenían cuartosDeMoneda. */
+    private static void leerMonedas(Map<String, String> v, Jugador j) {
+        j.monedas = Math.max(0, Jugador.redondearMonedas(decimal(v.get("monedas"), 0)));
+        if (v.containsKey("centimosDeMoneda")) {
+            j.centimosDeMoneda = Math.max(0, Math.min(99, (int) largo(v.get("centimosDeMoneda"))));
+        } else {
+            int cuartosPrevios = Math.max(0, Math.min(3, (int) largo(v.get("cuartosDeMoneda"))));
+            j.centimosDeMoneda = cuartosPrevios * 25;
+        }
+        j.cuartosDeMoneda = j.centimosDeMoneda / 25;
     }
 
     /** Contadores de victorias, derrotas, rachas y robot seleccionado. */

@@ -28,10 +28,20 @@ public final class CarreraDeObstaculos {
     public static final double SALIDA_X = 110;
     /** Coordenada X de la línea de meta. */
     public static final double META_X = 8240;
-    /** Duración máxima de una carrera en turnos (proporcional 6× para pista larga). */
+    /** Duración máxima base de una carrera en turnos (nivel Noob; escala con la longitud de pista). */
     public static final int MAX_TURNOS = 7200;
     /** Recompensa exacta en monedas por cada carrera ganada por el jugador. */
     public static final double RECOMPENSA_MONEDAS = 1.0;
+    /** Centésimas de moneda otorgadas por cada obstáculo destructible (barril o chimenea) destruido (+0,2). */
+    public static final int CENTIMOS_OBJETO_DESTRUIDO = 20;
+    /** Centésimas de moneda otorgadas por cada robot defectuoso destruido (+0,4). */
+    public static final int CENTIMOS_DEFECTUOSO_DESTRUIDO = 40;
+    /** Centésimas de moneda otorgadas por destruir al rival principal antes de terminar (+1,0). */
+    public static final int CENTIMOS_RIVAL_DESTRUIDO = 100;
+    /** Centésimas de moneda otorgadas por cada moneda extra recogida en zona peligrosa (+1,0). */
+    public static final int CENTIMOS_MONEDA_EXTRA = 100;
+    /** Centésimas de moneda otorgadas por carrera perfecta con medalla de oro (+1/4 = +0,25). */
+    public static final int CENTIMOS_PERFECCION = 25;
     /** Umbral máximo de daño recibido (%) para considerar la victoria como carrera perfecta (medalla de oro y +1/4 de moneda). */
     public static final double UMBRAL_PERFECTO = 1.0;
     /** Umbral máximo de daño recibido (%) para obtener medalla de plata. */
@@ -70,6 +80,12 @@ public final class CarreraDeObstaculos {
     public final boolean contraMaquina;
     /** Nivel de dificultad aplicado a esta carrera. */
     public final DificultadCarrera dificultad;
+    /** Longitud total de esta pista en unidades de arena (escala ×4/3 por nivel desde Noob). */
+    public final double anchoPista;
+    /** Coordenada X de la línea de meta para esta dificultad. */
+    public final double metaX;
+    /** Límite máximo de turnos escalado proporcionalmente a la longitud de la pista. */
+    public final int maxTurnos;
 
     private final List<PistaDeCarrera.ObstaculoRepentino> repentinos;
     private final List<PistaDeCarrera.DefectuosoEnPista> defectuosos;
@@ -79,6 +95,29 @@ public final class CarreraDeObstaculos {
     private boolean recompensaAplicada;
     private int cuartosGanados;
     private int monedasExtraPorCuartos;
+    private int monedasExtraRecogidas;
+    private int objetosDestruidos;
+    private int defectuososDestruidos;
+    private boolean rivalDestruido;
+    private int centimosGanadosTotal;
+    private int monedasEnterasGanadas;
+
+    /** Longitud de la pista para la dificultad indicada (Noob = 8400, ×4/3 cada nivel). */
+    public static double anchoPara(DificultadCarrera dificultad) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        return Math.round(ANCHO * dif.escalaPista);
+    }
+
+    /** Coordenada X de la línea de meta para la dificultad indicada. */
+    public static double metaPara(DificultadCarrera dificultad) {
+        return anchoPara(dificultad) - 160.0;
+    }
+
+    /** Límite máximo de turnos para la dificultad indicada, proporcional a la longitud de pista. */
+    public static int maxTurnosPara(DificultadCarrera dificultad) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        return (int) Math.round(MAX_TURNOS * dif.escalaPista);
+    }
 
     /** Crea una nueva carrera de obstáculos lista para ejecutarse turno a turno (dificultad por defecto). */
     public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina) {
@@ -96,9 +135,12 @@ public final class CarreraDeObstaculos {
         this.semilla = semilla;
         this.contraMaquina = contraMaquina;
         this.dificultad = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        this.anchoPista = anchoPara(this.dificultad);
+        this.metaX = metaPara(this.dificultad);
+        this.maxTurnos = maxTurnosPara(this.dificultad);
         this.escenario = PistaDeCarrera.siguienteArena(arenaAnterior, semilla);
-        this.defectuosos = PistaDeCarrera.crearRobotsDefectuosos(ANCHO, ALTO, semilla, this.dificultad);
-        this.repentinos = PistaDeCarrera.planearRepentinos(ANCHO, ALTO, semilla, this.dificultad);
+        this.defectuosos = PistaDeCarrera.crearRobotsDefectuosos(anchoPista, ALTO, semilla, this.dificultad);
+        this.repentinos = PistaDeCarrera.planearRepentinos(anchoPista, ALTO, semilla, this.dificultad);
 
         int total = 2 + defectuosos.size();
         Combatiente[] cs = new Combatiente[total];
@@ -111,10 +153,10 @@ public final class CarreraDeObstaculos {
             cs[2 + i] = defectuosos.get(i).combatiente();
             equipos[2 + i] = 2;
         }
-        this.pelea = new Pelea(cs, equipos, semilla, ANCHO, ALTO, MAX_TURNOS);
+        this.pelea = new Pelea(cs, equipos, semilla, anchoPista, ALTO, maxTurnos);
         this.pelea.rondas = 1;
         this.pelea.multiplicadorDano = this.dificultad.multiplicadorDano;
-        this.pelea.arena = PistaDeCarrera.generarArena(ANCHO, ALTO, semilla, escenario, this.dificultad);
+        this.pelea.arena = PistaDeCarrera.generarArena(anchoPista, ALTO, semilla, escenario, this.dificultad);
         this.pelea.empezarRonda();
         colocarEnSalida();
     }
@@ -152,12 +194,31 @@ public final class CarreraDeObstaculos {
         }
     }
 
-    /** Avanza un turno de la carrera, activa obstáculos repentinos y evalúa las condiciones de victoria. */
+    /** Avanza un turno de la carrera, activa obstáculos repentinos, registra botín y evalúa las condiciones de victoria. */
     public void avanzar() {
         if (terminada) return;
         pelea.avanzar();
+        procesarSucesosDelTurno();
         PistaDeCarrera.actualizarRepentinos(repentinos, pelea, dificultad);
         evaluarFin();
+    }
+
+    private void procesarSucesosDelTurno() {
+        for (Suceso s : pelea.sucesos()) {
+            if (s.tipo == Suceso.Tipo.OBSTACULO_ROTO && s.quien == 0
+                    && (s.texto.equals("barril") || s.texto.equals("chimenea"))) {
+                objetosDestruidos++;
+            } else if (s.tipo == Suceso.Tipo.ESPECIAL && s.quien == 0
+                    && s.texto.equals(Arena.TIPO_MONEDA_EXTRA)) {
+                monedasExtraRecogidas++;
+            } else if (s.tipo == Suceso.Tipo.FUERA_DE_COMBATE) {
+                Cuerpo caido = pelea.cuerpo(s.quien);
+                if (caido != null && caido.ultimoAtacante == 0) {
+                    if (s.quien == 1) rivalDestruido = true;
+                    else if (s.quien >= 2 && caido.combatiente.defectuoso) defectuososDestruidos++;
+                }
+            }
+        }
     }
 
     private void evaluarFin() {
@@ -165,8 +226,8 @@ public final class CarreraDeObstaculos {
         Cuerpo c1 = pelea.cuerpo(1);
         boolean fuera0 = c0 == null || c0.fuera;
         boolean fuera1 = c1 == null || c1.fuera;
-        boolean meta0 = !fuera0 && c0.x >= META_X;
-        boolean meta1 = !fuera1 && c1.x >= META_X;
+        boolean meta0 = !fuera0 && c0.x >= metaX;
+        boolean meta1 = !fuera1 && c1.x >= metaX;
         if (meta0 || meta1) {
             terminada = true;
             motivoFin = "meta";
@@ -222,19 +283,35 @@ public final class CarreraDeObstaculos {
         return dificultad != null && dificultad.disponiblePara(jugador);
     }
 
+    /** Longitud total de esta pista en unidades de arena. */
+    public double anchoPista() {
+        return anchoPista;
+    }
+
+    /** Coordenada X de la línea de meta de esta pista. */
+    public double metaX() {
+        return metaX;
+    }
+
+    /** Límite máximo de turnos de esta carrera. */
+    public int maxTurnos() {
+        return maxTurnos;
+    }
+
     /** Progreso normalizado [0, 1] del corredor indicado hacia la línea de meta. */
     public double progreso(int indice) {
         Cuerpo c = pelea.cuerpo(indice);
         if (c == null) return 0;
-        return Math.max(0, Math.min(1, (c.x - SALIDA_X) / (META_X - SALIDA_X)));
+        return Math.max(0, Math.min(1, (c.x - SALIDA_X) / (metaX - SALIDA_X)));
     }
 
-    /** Obstáculos visibles en el mapa general previo (excluye ocultos, impulsos y bonos de reparación). */
+    /** Obstáculos visibles en el mapa general previo (excluye ocultos, impulsos, reparaciones, monedas y rampas). */
     public List<Arena.Trampa> obstaculosVisiblesEnMapa() {
         List<Arena.Trampa> visibles = new ArrayList<>();
         for (Arena.Trampa t : pelea.arena.trampas()) {
             if (!t.ocultoEnMapa && !t.repentino
-                    && !t.tipo.equals("impulso") && !t.tipo.equals(Arena.TIPO_REPARACION)) {
+                    && !t.tipo.equals("impulso") && !t.tipo.equals(Arena.TIPO_REPARACION)
+                    && !t.tipo.equals(Arena.TIPO_MONEDA_EXTRA) && !t.tipo.equals(Arena.TIPO_RAMPA)) {
                 visibles.add(t);
             }
         }
@@ -275,6 +352,63 @@ public final class CarreraDeObstaculos {
             if (!t.destruida() && t.tipo.equals(Arena.TIPO_REPARACION)) reparaciones.add(t);
         }
         return reparaciones;
+    }
+
+    /** Monedas extra en zonas peligrosas actualmente activas en la pista. */
+    public List<Arena.Trampa> monedasExtraActivas() {
+        List<Arena.Trampa> monedas = new ArrayList<>();
+        for (Arena.Trampa t : pelea.arena.trampas()) {
+            if (!t.destruida() && t.tipo.equals(Arena.TIPO_MONEDA_EXTRA)) monedas.add(t);
+        }
+        return monedas;
+    }
+
+    /** Rampas de salto actualmente activas en la pista. */
+    public List<Arena.Trampa> rampasActivas() {
+        List<Arena.Trampa> rampas = new ArrayList<>();
+        for (Arena.Trampa t : pelea.arena.trampas()) {
+            if (!t.destruida() && t.tipo.equals(Arena.TIPO_RAMPA)) rampas.add(t);
+        }
+        return rampas;
+    }
+
+    /** Zonas de caída de agua actualmente activas en la pista. */
+    public List<Arena.Trampa> zonasAguaActivas() {
+        List<Arena.Trampa> aguas = new ArrayList<>();
+        for (Arena.Trampa t : pelea.arena.trampas()) {
+            if (!t.destruida() && t.tipo.equals(Arena.TIPO_AGUA)) aguas.add(t);
+        }
+        return aguas;
+    }
+
+    /** Cantidad de monedas extra en zonas peligrosas recogidas por el jugador durante la carrera. */
+    public int monedasExtraRecogidas() {
+        return monedasExtraRecogidas;
+    }
+
+    /** Cantidad de obstáculos destructibles (barriles o chimeneas) destruidos por el jugador. */
+    public int objetosDestruidos() {
+        return objetosDestruidos;
+    }
+
+    /** Cantidad de robots defectuosos destruidos por el jugador. */
+    public int defectuososDestruidos() {
+        return defectuososDestruidos;
+    }
+
+    /** Indica si el jugador destruyó al rival principal antes de terminar la carrera. */
+    public boolean rivalDestruido() {
+        return rivalDestruido;
+    }
+
+    /** Total de centésimas de moneda ganadas en esta carrera (victoria, perfección, monedas extra y bajas). */
+    public int centimosGanadosTotal() {
+        return centimosGanadosTotal;
+    }
+
+    /** Total de monedas enteras sumadas al saldo del jugador al aplicar la recompensa. */
+    public int monedasEnterasGanadas() {
+        return monedasEnterasGanadas;
     }
 
     /** Porcentaje de daño recibido por el robot del jugador durante toda la carrera respecto a su blindaje máximo. */
@@ -321,14 +455,25 @@ public final class CarreraDeObstaculos {
         return lista;
     }
 
-    /** Aplica la recompensa de 1 moneda (+1/4 si carrera perfecta) al ganar la carrera (idempotente). */
+    /**
+     * Aplica todas las recompensas exactas en centésimas (victoria, perfección +0,25, monedas extra +1,0,
+     * objetos destruidos +0,2, robots defectuosos +0,4 y rival destruido +1,0). Idempotente.
+     */
     public boolean aplicarRecompensa(Jugador jugador) {
-        if (!terminada || ganador != 0 || recompensaAplicada || jugador == null) return false;
-        jugador.sumarMonedas(RECOMPENSA_MONEDAS);
-        if (medallaObtenida().esPerfecta) {
-            cuartosGanados = 1;
-            monedasExtraPorCuartos = jugador.sumarCuartosDeMoneda(1);
-        }
+        if (!terminada || recompensaAplicada || jugador == null) return false;
+        int centVictoria = ganador == 0 ? 100 : 0;
+        int centPerfeccion = ganador == 0 && medallaObtenida().esPerfecta ? CENTIMOS_PERFECCION : 0;
+        int centMonedasExtra = monedasExtraRecogidas * CENTIMOS_MONEDA_EXTRA;
+        int centObjetos = objetosDestruidos * CENTIMOS_OBJETO_DESTRUIDO;
+        int centDefectuosos = defectuososDestruidos * CENTIMOS_DEFECTUOSO_DESTRUIDO;
+        int centRival = rivalDestruido ? CENTIMOS_RIVAL_DESTRUIDO : 0;
+        int totalCentimos = centVictoria + centPerfeccion + centMonedasExtra + centObjetos + centDefectuosos + centRival;
+        if (totalCentimos <= 0) return false;
+        if (centPerfeccion > 0) cuartosGanados = 1;
+        int centAntes = jugador.centimosDeMoneda;
+        monedasExtraPorCuartos = centPerfeccion > 0 && (centAntes + centPerfeccion) >= 100 ? 1 : 0;
+        monedasEnterasGanadas = jugador.sumarCentimosDeMoneda(totalCentimos);
+        centimosGanadosTotal = totalCentimos;
         recompensaAplicada = true;
         return true;
     }

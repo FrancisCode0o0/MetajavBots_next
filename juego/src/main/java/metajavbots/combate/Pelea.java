@@ -560,6 +560,7 @@ public final class Pelea {
         informe(e.indice).danoRecibido += hecho;
         informe(e.indice).danoPorArmaRecibido.merge(arma, hecho, Double::sum);
         if (de != null) {
+            e.ultimoAtacante = de.indice;
             de.combatiente.danoTotalHecho += hecho;
             informe(de.indice).danoHecho += hecho;
             informe(de.indice).acierto(arma);
@@ -620,15 +621,7 @@ public final class Pelea {
         c.energia = Math.min(Cuerpo.energiaMaxSegura(c.cifras.energiaMax),
                 c.energia + Cuerpo.recargaSegura(c.cifras.recarga * c.efectosPoo().factorRecarga));
         for (int i = 0; i < 3; i++) if (c.enfriamiento[i] > 0) c.enfriamiento[i]--;
-        if (c.escudoBrazo > 0) c.escudoBrazo--;
-        if (c.escudoCabeza > 0) c.escudoCabeza--;
-        if (c.turbo > 0) c.turbo--;
-        if (c.camuflaje > 0) c.camuflaje--;
-        if (c.sobrecarga > 0) c.sobrecarga--;
-        if (c.aturdido > 0) c.aturdido--;
-        if (c.volteado > 0) c.volteado--;
-        if (c.flotando > 0) c.flotando--;
-        c.pasoArquetipo();
+        c.pasoEstados(turno);
         if (c.sacudida > 0) c.sacudida *= 0.8;
         c.retroceso *= 0.75;
         boolean piernasRotas = c.parteRota(Montaje.PIERNAS);

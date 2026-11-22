@@ -68,7 +68,9 @@ public final class Jugador {
     public long experiencia;
     /** Monedas gastables (separadas de la experiencia), con precisión de centésimas (p. ej. 0.25, 3.5). */
     public double monedas;
-    /** Cuartos de moneda acumulados por carreras perfectas (0..3; cada 4 cuartos suman +1 moneda entera). */
+    /** Centésimas de moneda acumuladas (0..99; cada 100 centésimas suman +1 moneda entera). */
+    public int centimosDeMoneda;
+    /** Cuartos de moneda equivalentes (centimosDeMoneda / 25; mantenido sincronizado por compatibilidad). */
     public int cuartosDeMoneda;
     public int victoriasEnLaEtiqueta, derrotasEnLaEtiqueta, derrotasSeguidas, victoriasSeguidas;
     /** Las peleas desde el último desafío (hay que esperar para el siguiente). */
@@ -244,16 +246,27 @@ public final class Jugador {
     }
 
     /**
-     * Suma cuartos de moneda (p. ej. +1 por carrera perfecta) y convierte cada 4 cuartos en +1 moneda entera.
+     * Suma centésimas exactas de moneda (p. ej. +20 por objeto destruido, +25 por perfección, +40 por robot defectuoso)
+     * y convierte cada 100 centésimas en +1 moneda entera sin errores de coma flotante.
+     * Devuelve cuántas monedas enteras extra se han completado con esta suma.
+     */
+    public int sumarCentimosDeMoneda(int centimos) {
+        if (centimos <= 0) return 0;
+        int total = Math.max(0, centimosDeMoneda) + centimos;
+        int extra = total / 100;
+        centimosDeMoneda = total % 100;
+        cuartosDeMoneda = centimosDeMoneda / 25;
+        if (extra > 0) sumarMonedas(extra);
+        return extra;
+    }
+
+    /**
+     * Suma cuartos de moneda (p. ej. +1 = +25 centésimas por carrera perfecta) y convierte cada 4 cuartos en +1 moneda entera.
      * Devuelve cuántas monedas enteras extra se han completado con esta suma.
      */
     public int sumarCuartosDeMoneda(int cuartos) {
         if (cuartos <= 0) return 0;
-        int total = Math.max(0, cuartosDeMoneda) + cuartos;
-        int extra = total / 4;
-        cuartosDeMoneda = total % 4;
-        if (extra > 0) sumarMonedas(extra);
-        return extra;
+        return sumarCentimosDeMoneda(cuartos * 25);
     }
 
     /** Gasta monedas si hay saldo suficiente; devuelve si se pudo realizar el gasto. */

@@ -168,7 +168,8 @@ final class PruebasDeCarreraDeObstaculos {
 
             int destructibles = 0, indestructibles = 0;
             for (Arena.Trampa t : carrera.pelea.arena.trampas()) {
-                if (t.tipo.equals("impulso") || t.tipo.equals(Arena.TIPO_REPARACION)) continue;
+                if (t.tipo.equals("impulso") || t.tipo.equals(Arena.TIPO_REPARACION)
+                        || t.tipo.equals(Arena.TIPO_MONEDA_EXTRA) || t.tipo.equals(Arena.TIPO_RAMPA)) continue;
                 if (t.destructible) destructibles++;
                 else indestructibles++;
             }
@@ -329,7 +330,7 @@ final class PruebasDeCarreraDeObstaculos {
 
                 Combatiente cJug = new Combatiente("Piloto", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                 CarreraDeObstaculos ganada = new CarreraDeObstaculos(cJug, CarreraDeObstaculos.rivalMaquina("IA"), 101L, true);
-                ganada.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                ganada.pelea.cuerpo(0).x = ganada.metaX() + 5;
                 ganada.avanzar();
                 cierto(ganada.terminada(), "la carrera termina al cruzar la meta");
                 igual(0, ganada.ganador(), "gana el jugador");
@@ -341,7 +342,7 @@ final class PruebasDeCarreraDeObstaculos {
                 igual(3.0, recargado.monedas, "el saldo con la moneda ganada persiste tras guardar");
 
                 CarreraDeObstaculos perdida = new CarreraDeObstaculos(cJug, CarreraDeObstaculos.rivalMaquina("IA"), 102L, true);
-                perdida.pelea.cuerpo(1).x = CarreraDeObstaculos.META_X + 5;
+                perdida.pelea.cuerpo(1).x = perdida.metaX() + 5;
                 perdida.avanzar();
                 cierto(perdida.terminada(), "la carrera termina cuando gana la máquina");
                 igual(1, perdida.ganador(), "gana la máquina");
@@ -582,13 +583,13 @@ final class PruebasDeCarreraDeObstaculos {
                 Combatiente ingenuo = new Combatiente("Recto-" + d, new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Recto::new));
                 Combatiente quieto = new Combatiente("Quieto", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                 CarreraDeObstaculos c = new CarreraDeObstaculos(ingenuo, quieto, 1234L, false, null, d);
-                for (int t = 0; t < CarreraDeObstaculos.MAX_TURNOS && !c.terminada(); t++) {
+                for (int t = 0; t < c.maxTurnos() && !c.terminada(); t++) {
                     c.avanzar();
                 }
                 cierto(c.terminada(), "carrera con robot ingenuo termina en " + d);
                 cierto(c.pelea.cuerpo(0).fuera, "robot ingenuo queda destruido antes de cruzar la meta en " + d);
                 falso(c.ganador() == 0, "robot ingenuo NO gana la carrera en " + d);
-                cierto(c.pelea.cuerpo(0).x < CarreraDeObstaculos.META_X, "destruido antes de la línea de meta en " + d);
+                cierto(c.pelea.cuerpo(0).x < c.metaX(), "destruido antes de la línea de meta en " + d);
             }
         });
     }
@@ -653,7 +654,7 @@ final class PruebasDeCarreraDeObstaculos {
                 for (int i = 1; i <= 3; i++) {
                     Combatiente cJug = new Combatiente("Jug", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                     CarreraDeObstaculos c = new CarreraDeObstaculos(cJug, CarreraDeObstaculos.rivalMaquina("IA"), 200L + i, true);
-                    c.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                    c.pelea.cuerpo(0).x = c.metaX() + 5;
                     c.avanzar();
                     igual(CarreraDeObstaculos.Medalla.ORO, c.medallaObtenida(), "victoria sin daño obtiene medalla de oro");
                     cierto(c.aplicarRecompensa(jug), "aplica recompensa perfecta #" + i);
@@ -670,7 +671,7 @@ final class PruebasDeCarreraDeObstaculos {
                 // Cuarta carrera perfecta: 3/4 + 1/4 = 4/4 -> +1 moneda base + 1 moneda extra, cuartos reinicia a 0.
                 Combatiente cJug4 = new Combatiente("Jug4", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                 CarreraDeObstaculos c4 = new CarreraDeObstaculos(cJug4, CarreraDeObstaculos.rivalMaquina("IA"), 204L, true);
-                c4.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                c4.pelea.cuerpo(0).x = c4.metaX() + 5;
                 c4.avanzar();
                 cierto(c4.aplicarRecompensa(recargado), "aplica cuarta recompensa perfecta");
                 igual(1, c4.monedasExtraPorCuartos(), "al llegar a 4/4 otorga +1 moneda extra");
@@ -686,7 +687,7 @@ final class PruebasDeCarreraDeObstaculos {
                 Combatiente cPlata = new Combatiente("Plata", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                 CarreraDeObstaculos cp = new CarreraDeObstaculos(cPlata, CarreraDeObstaculos.rivalMaquina("IA"), 205L, true);
                 cPlata.danoTotalRecibido = cp.pelea.cuerpo(0).blindajeMaximoTotal() * 0.12;
-                cp.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                cp.pelea.cuerpo(0).x = cp.metaX() + 5;
                 cp.avanzar();
                 igual(CarreraDeObstaculos.Medalla.PLATA, cp.medallaObtenida(), "12 % daño -> medalla de plata");
                 cp.aplicarRecompensa(trasCuatro);
@@ -696,7 +697,7 @@ final class PruebasDeCarreraDeObstaculos {
                 Combatiente cBronce = new Combatiente("Bronce", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                 CarreraDeObstaculos cb = new CarreraDeObstaculos(cBronce, CarreraDeObstaculos.rivalMaquina("IA"), 206L, true);
                 cBronce.danoTotalRecibido = cb.pelea.cuerpo(0).blindajeMaximoTotal() * 0.35;
-                cb.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                cb.pelea.cuerpo(0).x = cb.metaX() + 5;
                 cb.avanzar();
                 igual(CarreraDeObstaculos.Medalla.BRONCE, cb.medallaObtenida(), "35 % daño -> medalla de bronce");
             } finally {

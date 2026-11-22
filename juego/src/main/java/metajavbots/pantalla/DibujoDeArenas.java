@@ -185,6 +185,15 @@ final class DibujoDeArenas {
                 case "trampa_mortal":
                     trampaMortal(p, cx, cy, rx, ry, t);
                     break;
+                case "moneda":
+                    monedaExtra(p, cx, cy, rx, ry, t);
+                    break;
+                case "rampa":
+                    rampa(p, cx, cy, rx, ry, t);
+                    break;
+                case "agua":
+                    agua(p, cx, cy, rx, ry, t);
+                    break;
                 default:
                     break;
             }
@@ -216,6 +225,47 @@ final class DibujoDeArenas {
         p.elipse(cx, cy, rx * 0.84f * pulso, ry * 0.84f * pulso, 0, 0x2EE58D, 0.55f);
         p.rect(cx - rx * 0.18f, cy - ry * 0.56f, rx * 0.36f, ry * 1.12f, 0xF2FFF8, 0.96f);
         p.rect(cx - rx * 0.56f, cy - ry * 0.18f, rx * 1.12f, ry * 0.36f, 0xF2FFF8, 0.96f);
+    }
+
+    /** Moneda de oro extra en zona peligrosa: gira con brillo dorado inconfundible. */
+    private static void monedaExtra(Pincel p, float cx, float cy, float rx, float ry, float t) {
+        float flote = (float) Math.sin(t * 5.2) * ry * 0.35f;
+        float giro = Math.max(0.24f, Math.abs((float) Math.cos(t * 3.8)));
+        float my = cy - ry * 0.8f + flote;
+        p.elipse(cx, cy + ry * 0.15f, rx * 0.75f, ry * 0.35f, 0, 0x000000, 0.32f);
+        p.brillo(cx, my, rx * 1.35f, 0xFFD23F, 0.52f + 0.18f * (float) Math.sin(t * 7));
+        p.elipse(cx, my, rx * 0.82f * giro, rx * 0.82f, 0, 0xD99616, 1);
+        p.elipse(cx, my, rx * 0.66f * giro, rx * 0.66f, 0, 0xFFD23F, 1);
+        p.elipse(cx - rx * 0.14f * giro, my - rx * 0.18f, rx * 0.22f * giro, rx * 0.26f, 0, 0xFFF7C2, 0.9f);
+    }
+
+    /** Rampa de salto en el suelo: cuña inclinada con flechas hacia la derecha. */
+    private static void rampa(Pincel p, float cx, float cy, float rx, float ry, float t) {
+        float[] base = {cx - rx * 1.15f, cy + ry * 0.65f, cx + rx * 1.15f, cy + ry * 0.65f,
+                cx + rx * 1.05f, cy - ry * 0.75f, cx - rx * 1.15f, cy - ry * 0.25f};
+        p.poligono(base, 0x2F3947, 0.95f);
+        p.linea(cx + rx * 1.05f, cy - ry * 0.75f, cx + rx * 1.15f, cy + ry * 0.65f, 3.2f, 0xFF9F1C, 0.95f);
+        p.linea(cx - rx * 1.15f, cy - ry * 0.25f, cx + rx * 1.05f, cy - ry * 0.75f, 2.5f, 0xFFC857, 0.9f);
+        float pulso = (float) Math.sin(t * 7) * rx * 0.08f;
+        for (int k = -1; k <= 0; k++) {
+            float ox = cx + k * rx * 0.45f + pulso;
+            p.linea(ox - rx * 0.16f, cy - ry * 0.25f, ox + rx * 0.20f, cy + ry * 0.05f, 2.8f, 0xFFC857, 0.95f);
+            p.linea(ox + rx * 0.20f, cy + ry * 0.05f, ox - rx * 0.16f, cy + ry * 0.35f, 2.8f, 0xFFC857, 0.95f);
+        }
+    }
+
+    /** Zona de caída de agua: charco azul con ondas y gotas cayendo desde arriba. */
+    private static void agua(Pincel p, float cx, float cy, float rx, float ry, float t) {
+        p.elipse(cx, cy, rx * 1.04f, ry * 1.04f, 0, 0x165E8A, 0.78f);
+        p.elipse(cx, cy, rx * 0.86f, ry * 0.82f, 0, 0x33A8E8, 0.65f);
+        float onda = (t * 1.4f) % 1f;
+        p.elipse(cx, cy, rx * (0.25f + onda * 0.65f), ry * (0.25f + onda * 0.65f), 0, 0xB8EEFF, (1 - onda) * 0.55f);
+        for (int k = 0; k < 5; k++) {
+            float f = (t * 2.1f + k * 0.21f) % 1f;
+            float gx = cx + ((k - 2) * rx * 0.32f);
+            float gy = cy - rx * 1.8f * (1 - f);
+            p.linea(gx, gy - 10, gx, gy, 2.0f, 0x9BE7FF, 0.85f);
+        }
     }
 
     /** Trampa mortal de destrucción instantánea: anillo de peligro amarillo-negro y núcleo carmesí pulsante. */
