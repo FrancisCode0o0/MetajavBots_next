@@ -154,18 +154,20 @@ final class PruebasDeBloque5B {
             for (Campana.Capitulo k : c2.capitulos) ganados.add(c2.clave(k.numero));
             cierto(c3.abierta(ganados), "creed3 se abre tras creed2");
 
-            // Jefe final en cada campaña Creed con hospitalización de entrenador.
+            // Jefe en cada campaña Creed con hospitalización de entrenador.
             Juego juego = new Juego();
             juego.jugador = new Jugador("Adonis");
+            cierto(c1.capitulos.size() >= 8, "creed1 ampliada tiene al menos 8 capítulos: " + c1.capitulos.size());
             for (Campana c : List.of(c1, c2, c3)) {
-                igual(3, c.capitulos.size(), c.id + " tiene 3 capítulos");
+                cierto(c.capitulos.size() >= 3, c.id + " tiene al menos 3 capítulos");
                 falso(c.capitulos.get(0).esJefe, c.id + " cap 1 no es jefe");
                 falso(c.capitulos.get(1).esJefe, c.id + " cap 2 no es jefe");
-                cierto(c.capitulos.get(2).esJefe, c.id + " cap 3 es jefe final");
+                cierto(c.capitulos.get(2).esJefe, c.id + " cap 3 es jefe");
+                cierto(c.capitulos.get(c.capitulos.size() - 1).esJefe, c.id + " último capítulo es jefe final");
                 Encuentro normal = Campanas.encuentro(juego, c, c.capitulos.get(0));
-                Encuentro jefe = Campanas.encuentro(juego, c, c.capitulos.get(2));
+                Encuentro jefe = Campanas.encuentro(juego, c, c.capitulos.get(c.capitulos.size() - 1));
                 falso(normal.entrenadorHospitalizado, c.id + " cap 1 sin hospitalización");
-                cierto(jefe.entrenadorHospitalizado, c.id + " cap 3 activa hospitalización");
+                cierto(jefe.entrenadorHospitalizado, c.id + " jefe final activa hospitalización");
             }
 
             // Compatibilidad y voces propias para todos los entrenadores de Entrenador.java.

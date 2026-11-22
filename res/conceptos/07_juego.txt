@@ -1039,38 +1039,44 @@ ejemplo:
 === campanas_creed_y_biografias
 nivel: 6
 tema: --
-titulo.es: Campañas Creed y biografías editables
-titulo.de: Creed-Kampagnen und bearbeitbare Biografien
-titulo.en: Creed campaigns and editable biographies
-claves.es: creed, credo, adonis, campanas creed, hospital, milagro, entrenador, biografias, editar biografias, restaurar biografia, personalidades
-claves.de: creed, credo, adonis, creed kampagnen, krankenhaus, wunder, trainer, biografien, biografien bearbeiten, biografie wiederherstellen, personlichkeiten
-claves.en: creed, credo, adonis, creed campaigns, hospital, miracle, coach, biographies, edit biographies, restore biography, personalities
-resumen.ia: Creed-style campaigns (Credo I-III in Fight › Campaigns: integrate all 7 selectable coaches with their own voice, personality, and corner talk — never reduced to a single archetype — and trigger the absurd-cause coach hospitalization against final chapter bosses with a miraculous reappearance upon victory) and Editable Biographies (accessible from Workshop › Model and Settings › Coach: browse, edit, save to the player profile without modifying base res/biografias files, and restore original text for all 22 robots and 7 coaches in ES, DE, and EN)
+titulo.es: Campañas ampliadas con escenas y biografías editables
+titulo.de: Erweiterte Kampagnen mit Szenen und bearbeitbaren Biografien
+titulo.en: Expanded story campaigns with scenes and editable biographies
+claves.es: creed, credo, adonis, campanas creed, isla clandestina, torneo 1000 voltios, enchufe dorado, escenas, vinetas, historia, hospital, milagro, entrenador, biografias, editar biografias, restaurar biografia, personalidades
+claves.de: creed, credo, adonis, creed kampagnen, geheime insel, 1000 volt turnier, goldener stecker, szenen, bilder, geschichte, krankenhaus, wunder, trainer, biografien, biografien bearbeiten, biografie wiederherstellen, personlichkeiten
+claves.en: creed, credo, adonis, creed campaigns, secret island, 1000-volt tournament, golden plug, scenes, panels, story, hospital, miracle, coach, biographies, edit biographies, restore biography, personalities
+resumen.ia: Expanded Story Campaigns with Illustrated Scenes (two featured 8-chapter campaigns in Fight › Campaigns, with independent saved progress across Noob, Junior, Senior, and Special ranks: expanded Creed campaign "Credo: Son of Chrome" with 8 chapters and 3 hospital-and-miracle bosses, plus the brand-new second campaign "Secret Island: The 1000-Volt Tournament" set on Short-Circuit Island for the Golden Plug; both integrate all 7 selectable coaches with their own voice and corner talk, and every chapter includes code-drawn illustrated comic-panel scenes with speech bubbles, narration, animations, and instant skip) and Editable Biographies (accessible from Workshop › Model and Settings › Coach: browse, edit, save to the player profile without modifying base res/biografias files, and restore original text for all 22 robots and 7 coaches in ES, DE, and EN)
 tip.juego_creed_y_biografias.condicion: aleatorio
-tip.juego_creed_y_biografias.es: ¡Ya tienes las campañas estilo [[Creed]] (Credo I–III) compatibles con cualquiera de los 7 entrenadores y con hospitalización en los jefes finales, además del editor de [[biografías]] en Taller › Modelo y Ajustes!
-tip.juego_creed_y_biografias.de: Neu dabei: die [[Creed]]-Kampagnen (Credo I–III) für alle 7 Trainer samt Krankenhaus-Drama bei Endbossen sowie der [[Biografie]]-Editor unter Werkstatt › Modell und Einstellungen!
-tip.juego_creed_y_biografias.en: Check out the [[Creed]]-style campaigns (Credo I–III) supporting all 7 coaches with boss-fight hospitalization and miraculous victory comebacks, plus the [[biography]] editor in Workshop › Model and Settings!
+tip.juego_creed_y_biografias.es: En Pelear › [[Campañas]] te esperan dos campañas largas de 8 capítulos ([[Creed]] ampliada e Isla Clandestina: Torneo de los 1000 Voltios) con escenas ilustradas por capítulo, los 7 entrenadores con voz propia y progreso guardado por separado.
+tip.juego_creed_y_biografias.de: Unter Kämpfen › [[Kampagnen]] warten zwei große 8-Kapitel-Kampagnen (erweitertes [[Creed]] und Geheime Insel: Das 1000-Volt-Turnier) mit illustrierten Szenen pro Kapitel, allen 7 Trainern mit eigener Stimme und getrennt gespeichertem Fortschritt.
+tip.juego_creed_y_biografias.en: Under Fight › [[Campaigns]], play two full 8-chapter campaigns (expanded [[Creed]] and Secret Island: The 1000-Volt Tournament) with code-drawn illustrated scenes in every chapter, all 7 coaches keeping their own voice, and separately saved progress.
 ver: arena_y_modos, modelos_y_armas, como_jugar
 es:
-    En Pelear › Campañas te esperan las tres campañas estilo Creed (Credo I, Credo II y Credo III), protagonizadas por Adonis Cromo. A diferencia de las campañas con entrenador fijo, estas integran a cualquiera de los siete entrenadores seleccionables (Don Tuercas, Maestro Aceite, Capitán Voltaje, Sargento Remache, Sensei Cobra-7, Maestro Yanobit y Gran Maestro Pelobit), respetando su voz, su personalidad y sus propios consejos de esquina.
-    En el combate contra el jefe final de cada campaña Creed, tu entrenador ingresa en el hospital por una causa absurda (aceite caducado, óxido playero, barba enredada…) y no puede ayudarte durante la pelea; si logras la victoria, reaparece milagrosamente entre destellos para celebrarlo contigo.
-    Además, desde Taller › Modelo y desde Ajustes puedes abrir el Editor de biografías para consultar, editar y guardar tus propias biografías de los 22 robots y los 7 entrenadores en español, alemán e inglés. Tus cambios se guardan aparte en tu partida sin tocar los archivos originales, y puedes restaurar el texto de fábrica en cualquier momento.
+    En Pelear › Campañas destacan dos campañas principales de ocho capítulos cada una, con progresión de dificultad por rangos (Noob, Junior, Senior y Especial) y avance guardado por separado en tu partida: la campaña estilo Creed ampliada («Credo: el hijo del cromo») y una segunda historia original («Isla Clandestina: Torneo de los 1000 Voltios» en Isla Cortocircuito por el Enchufe Dorado).
+    Ambas integran a cualquiera de los siete entrenadores seleccionables (Don Tuercas, Maestro Aceite, Capitán Voltaje, Sargento Remache, Sensei Cobra-7, Maestro Yanobit y Gran Maestro Pelobit), respetando su voz, su personalidad y sus propios comentarios de esquina. En los combates contra jefes, tu entrenador ingresa en el hospital por causas absurdas y reaparece milagrosamente al ganar.
+    Cada capítulo incluye escenas ilustradas dibujadas por código con viñetas, robots, entrenadores, público, bocadillos y animaciones (entrada, zoom, sacudida, destello, lluvia o confeti), que puedes ver desde el botón «Escena», avanzar con clic/tecla o saltar al instante con Esc.
+    Además, desde Taller › Modelo y desde Ajustes puedes abrir el Editor de biografías para consultar, editar y guardar tus propias biografías de los 22 robots y los 7 entrenadores en español, alemán e inglés, sin alterar los archivos originales.
 de:
-    Unter Kämpfen › Kampagnen warten die drei Creed-Kampagnen (Credo I, Credo II und Credo III) rund um Adonis Chrom. Im Gegensatz zu Kampagnen mit festem Trainer funktionieren sie mit allen sieben wählbaren Trainern (Meister Mutter, Meister Öl, Kapitän Volt, Feldwebel Niete, Sensei Kobra-7, Meister Yanobit und Großmeister Pelobit) samt eigener Stimme, Persönlichkeit und eigenem Ecken-Kommentar.
-    Beim Endboss jeder Creed-Kampagne landet dein Trainer aus einem absurden Grund im Krankenhaus (verdorbenes Öl, Strandrost, verhedderter Kabelbart …) und kann dir im Ring nicht helfen; gewinnst du, taucht er wie durch ein Wunder blitzartig geheilt zur Feier auf.
-    Außerdem findest du unter Werkstatt › Modell sowie in den Einstellungen den Biografie-Editor: Dort kannst du die Biografien aller 22 Roboter und 7 Trainer auf Spanisch, Deutsch und Englisch ansehen, bearbeiten, im eigenen Spielstand speichern (ohne Originaldateien zu verändern) und jederzeit auf das Original zurücksetzen.
+    Unter Kämpfen › Kampagnen stehen zwei große Hauptkampagnen mit je acht Kapiteln, Schwierigkeitsprogression über alle Stufen (Noob, Junior, Senior und Spezial) und getrennt gespeichertem Fortschritt bereit: die erweiterte Creed-Kampagne („Credo: Sohn des Chroms“) sowie die neue zweite Geschichte („Geheime Insel: Das 1000-Volt-Turnier“ auf Insel Kurzschluss um den Goldenen Stecker).
+    Beide funktionieren mit allen sieben wählbaren Trainern (Meister Mutter, Meister Öl, Kapitän Volt, Feldwebel Niete, Sensei Kobra-7, Meister Yanobit und Großmeister Pelobit) samt eigener Stimme, Persönlichkeit und Ecken-Kommentar. Gegen Bosse landet dein Trainer aus absurden Gründen im Krankenhaus und kehrt beim Sieg wie durch ein Wunder zurück.
+    Jedes Kapitel bietet per Code gezeichnete illustrierte Szenen mit Bildern, Robotern, Trainern, Publikum, Sprechblasen und Animationen (Einblendung, Zoom, Beben, Blitz, Regen oder Konfetti), die du jederzeit per „Szene“ ansehen, per Klick/Taste weiterschalten oder mit Esc sofort überspringen kannst.
+    Außerdem findest du unter Werkstatt › Modell und in den Einstellungen den Biografie-Editor für alle 22 Roboter und 7 Trainer auf Spanisch, Deutsch und Englisch.
 en:
-    Under Fight › Campaigns you can play the three Creed-style campaigns (Credo I, Credo II, and Credo III) starring Adonis Chrome. Unlike fixed-coach stories, they integrate all seven selectable coaches (Old Man Nuts, Master Oil, Captain Voltage, Sergeant Rivet, Sensei Cobra-7, Master Yanobit, and Grandmaster Pelobit), preserving each coach's own voice, personality, and corner talk.
-    Against the final boss of each Creed campaign, your coach is hospitalized for an absurd reason (bad oil, beach rust, tangled cable beard…) and cannot assist during the fight; win the bout and your coach miraculously reappears in a burst of light to celebrate.
-    You can also open the Biography Editor from Workshop › Model or Settings to read, edit, and save custom biographies for all 22 robots and 7 coaches in Spanish, German, and English. Edits persist in your profile without modifying base resource files, and you can restore the original text at any time.
+    Under Fight › Campaigns, two featured 8-chapter story campaigns lead the list with difficulty scaling across Noob, Junior, Senior, and Special ranks and independently saved progress: the expanded Creed campaign ("Credo: Son of Chrome") and a brand-new original tournament story ("Secret Island: The 1000-Volt Tournament" on Short-Circuit Island for the Golden Plug).
+    Both support all seven selectable coaches (Old Man Nuts, Master Oil, Captain Voltage, Sergeant Rivet, Sensei Cobra-7, Master Yanobit, and Grandmaster Pelobit), preserving each coach's own voice, personality, and corner talk. Against campaign bosses, your coach lands in the hospital for absurd reasons and makes a miraculous comeback when you win.
+    Every chapter features code-drawn illustrated scenes with comic panels, robots, coaches, crowds, speech bubbles, and animations (entrance, zoom, shake, flash, rain, or confetti), which you can preview anytime via "Scene", advance with click/key, or skip instantly with Esc.
+    You can also open the Biography Editor from Workshop › Model or Settings to read, edit, save, and restore biographies for all 22 robots and 7 coaches in Spanish, German, and English.
 pseudo.es:
-    Pelear → Campañas → Credo I / II / III → elegir entrenador (◄ ►) → vencer al jefe para el milagro
+    Pelear → Campañas → elegir Credo (8 caps.) o Isla Clandestina (8 caps.) → elegir entrenador (◄ ►)
+    Ver escena ilustrada (clic/Espacio avanza, Esc salta) → vencer jefes para el milagro del hospital
     Taller → Modelo (o Ajustes) → Editar biografías → Guardar o Restaurar original
 pseudo.de:
-    Kämpfen → Kampagnen → Credo I / II / III → Trainer wählen (◄ ►) → Boss besiegen für das Wunder
+    Kämpfen → Kampagnen → Credo (8 Kap.) oder Geheime Insel (8 Kap.) wählen → Trainer wählen (◄ ►)
+    Illustrierte Szene ansehen (Klick/Leertaste weiter, Esc überspringen) → Bosse besiegen für das Wunder
     Werkstatt → Modell (oder Einstellungen) → Biografien bearbeiten → Speichern oder Original wiederherstellen
 pseudo.en:
-    Fight → Campaigns → Credo I / II / III → pick any coach (◄ ►) → beat the boss for the miracle
+    Fight → Campaigns → pick Credo (8 ch.) or Secret Island (8 ch.) → pick any coach (◄ ►)
+    Watch illustrated scene (click/Space advances, Esc skips) → beat bosses for the hospital miracle
     Workshop → Model (or Settings) → Edit biographies → Save or Restore original
 ejemplo:
     public class CampeonCreed extends Metajavbot {

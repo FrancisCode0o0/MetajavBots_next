@@ -31,7 +31,7 @@ public final class Campana {
     /** Un capítulo: el rival (su nombre y su modelo), lo fuerte que sale, dónde se pelea y lo que se cuenta antes y después. */
     public static final class Capitulo {
         public final int numero;
-        public final String modelo, escenario;
+        public final String modelo, escenario, rango;
         /** El nombre del rival (con uno solo, el mismo en los tres idiomas). */
         public final Trilingue rival;
         public final double nivel;
@@ -46,10 +46,18 @@ public final class Campana {
             this.modelo = v.getOrDefault("modelo", "cobalto");
             this.escenario = v.getOrDefault("escenario", "HANGAR").toUpperCase();
             this.nivel = decimal(v.get("nivel"), 0.3);
+            this.rango = v.getOrDefault("rango", rangoPorNivel(this.nivel));
             this.rondas = (int) Math.max(1, Math.min(6, decimal(v.get("rondas"), 3)));
             this.esJefe = "true".equalsIgnoreCase(v.getOrDefault("jefe", "false"));
             this.texto = trilingue(v.getOrDefault("texto", ""));
             this.victoria = trilingue(v.getOrDefault("victoria", ""));
+        }
+
+        private static String rangoPorNivel(double n) {
+            if (n < 0.38) return "Noob";
+            if (n < 0.60) return "Junior";
+            if (n < 0.80) return "Senior";
+            return "Especial";
         }
     }
 
@@ -63,6 +71,10 @@ public final class Campana {
     public final String requiere;
     /** Si es una campaña estilo Creed (integra cualquier entrenador seleccionable y hospitalización en jefes). */
     public final boolean estiloCreed;
+    /** Si es una de las dos campañas principales con historia ampliada y escenas ilustradas destacadas. */
+    public final boolean destacada;
+    /** Si permite elegir cualquiera de los entrenadores de Entrenador.java con su propia voz. */
+    public final boolean usaEntrenadorJugador;
     public final List<Capitulo> capitulos;
     /** Si la inventó la IA (se guarda en la partida, no en el juego). */
     public final boolean inventada;
@@ -76,7 +88,10 @@ public final class Campana {
         this.entrenador = v.getOrDefault("entrenador", "tuercas");
         this.musica = v.getOrDefault("musica", "combate");
         this.requiere = v.getOrDefault("requiere", "");
-        this.estiloCreed = "creed".equalsIgnoreCase(v.getOrDefault("estilo", ""));
+        String estilo = v.getOrDefault("estilo", "");
+        this.estiloCreed = "creed".equalsIgnoreCase(estilo);
+        this.destacada = "true".equalsIgnoreCase(v.getOrDefault("destacada", "false"));
+        this.usaEntrenadorJugador = this.estiloCreed || "historia".equalsIgnoreCase(estilo);
         // Los capítulos: «1.rival», «1.texto»… agrupados por su número.
         Map<Integer, Map<String, String>> porNumero = new TreeMap<>();
         for (Map.Entry<String, String> e : v.entrySet()) {
@@ -118,15 +133,76 @@ public final class Campana {
     }
 
     /**
-     * El entrenador que acompaña esta campaña: en las campañas estilo Creed se integra el entrenador
-     * elegido por el jugador (respetando todos los modelos y estilos de Entrenador.java); en las demás,
-     * el entrenador propio de la historia.
+     * El entrenador que acompaña esta campaña: en las campañas estilo Creed e historias principales se integra
+     * el entrenador elegido por el jugador (respetando todos los modelos y estilos de Entrenador.java); en las
+     * demás, el entrenador propio de la historia.
      */
     public Entrenador entrenadorPara(Jugador jug) {
-        if (estiloCreed && jug != null && jug.entrenador != null && !jug.entrenador.isBlank()) {
+        if (usaEntrenadorJugador && jug != null && jug.entrenador != null && !jug.entrenador.isBlank()) {
             return Entrenador.de(jug.entrenador);
         }
         return Entrenador.de(entrenador);
+    }
+
+    /** Devuelve la escena ilustrada (viñetas dibujadas por código) correspondiente a ese capítulo. */
+    public EscenaDeCampana escenaDe(Capitulo k) {
+        return CatalogoDeEscenas.paraCapitulo(this, k);
+    }
+
+    /** Las dos campañas principales ampliadas y destacadas (Credo ampliada e Isla Clandestina). */
+    public static List<Campana> principales() {
+        List<Campana> res = new ArrayList<>();
+        for (Campana c : deSerie()) if (c.destacada) res.add(c);
+        return Collections.unmodifiableList(res);
+    }
+
+    /** Comentario de esquina adaptado a la campaña y a la personalidad de cada entrenador seleccionable. */
+    public static String vozDeEsquina(Campana c, Entrenador en, Idioma idioma, boolean esJefe, boolean ganado) {
+        if (c != null && "isla_torneo".equals(c.id)) {
+            return vozDeEsquinaIsla(en, idioma, esJefe, ganado);
+        }
+        return vozDeEsquinaCreed(en, idioma, esJefe, ganado);
+    }
+
+    /** Comentario de esquina de la campaña Isla Clandestina con la voz propia de los 7 entrenadores. */
+    public static String vozDeEsquinaIsla(Entrenador en, Idioma idioma, boolean esJefe, boolean ganado) {
+        String id = en == null ? "tuercas" : en.id;
+        if (esJefe && !ganado) return vozHospitalCreed(id, idioma);
+        if (esJefe) return vozMilagroCreed(id, idioma);
+        return vozTorneoIsla(id, idioma);
+    }
+
+    private static String vozTorneoIsla(String id, Idioma idi) {
+        switch (id) {
+            case "aceite":
+                return idi.elegir("«En esta isla cada eliminatoria es un bonsái eléctrico: poda lo que sobra y vencerás.»",
+                        "«Auf dieser Insel ist jede K.-o.-Runde ein elektrischer Bonsai: Schneide Überflüssiges weg und du siegst.»",
+                        "\"On this island every bracket round is an electric bonsai: trim the excess and you'll win.\"");
+            case "voltaje":
+                return idi.elegir("«¡Mil voltios de espectáculo! ¡Haz que toda Isla Cortocircuito coree tu nombre!»",
+                        "«Tausend Volt Show! Bring ganz Insel Kurzschluss dazu, deinen Namen zu rufen!»",
+                        "\"A thousand volts of showtime! Make all of Short-Circuit Island chant your name!\"");
+            case "remache":
+                return idi.elegir("«Odie este ferry y odio los torneos secretos. Así que gana rápido y vámonos a casa.»",
+                        "«Ich hasse diese Fähre und ich hasse Geheimturniere. Gewinn also schnell, dann fahren wir heim.»",
+                        "\"I hated that ferry and I hate secret tournaments. So win fast and let's go home.\"");
+            case "cobra":
+                return idi.elegir("«¡Sin piedad en el cuadro eliminatorio! ¡Que el Enchufe Dorado tema tu código!»",
+                        "«Keine Gnade im Turnierbaum! Der Goldene Stecker soll deinen Code fürchten!»",
+                        "\"No mercy in the knockout bracket! Make the Golden Plug fear your code!\"");
+            case "yanobit":
+                return idi.elegir("«Quien busca el trofeo con prisa cae al mar; quien cede ante el rayo, domina la isla.»",
+                        "«Wer den Pokal in Eile jagt, fällt ins Meer; wer dem Blitz nachgibt, beherrscht die Insel.»",
+                        "\"Whoever chases the trophy in haste falls into the sea; whoever yields to lightning rules the island.\"");
+            case "pelobit":
+                return idi.elegir("«¡Ja! ¿Un torneo clandestino de mil voltios? ¡Inclínate ante el punto y coma y pásalos por encima!»",
+                        "«Ha! Ein geheimes 1000-Volt-Turnier? Verneige dich vor dem Semikolon und fege sie weg!»",
+                        "\"Ha! An underground thousand-volt tournament? Bow to the semicolon and sweep the bracket!\"");
+            default:
+                return idi.elegir("«¡Vaya isla más loca, chatarra! Agarra bien tus tornillos y llévate ese Enchufe Dorado.»",
+                        "«Was für eine verrückte Insel, Schrotthaufen! Halt deine Schrauben fest und hol dir den Goldenen Stecker.»",
+                        "\"What a crazy island, scrap heap! Tighten your bolts and bring home that Golden Plug.\"");
+        }
     }
 
     /**

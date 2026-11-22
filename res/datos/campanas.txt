@@ -523,33 +523,79 @@ musica: artes_marciales
 
 [creed1]
 titulo: Credo: el hijo del cromo | Credo: Sohn des Chroms | Credo: Son of Chrome
-lema: El hijo de Apolo Cromo entra al ring con su propio nombre y con tu entrenador en la esquina. | Der Sohn von Apollo Chrom steigt unter eigenem Namen und mit deinem Trainer in den Ring. | Apollo Chrome's son steps into the ring under his own name with your coach in the corner.
+lema: El hijo de Apolo Cromo entra al ring con su propio nombre y con tu entrenador en la esquina: ocho capítulos de Noob a Especial. | Der Sohn von Apollo Chrom steigt unter eigenem Namen und mit deinem Trainer in den Ring: acht Kapitel von Noob bis Spezial. | Apollo Chrome's son steps into the ring under his own name with your coach in the corner: eight chapters from Noob to Special.
 homenaje: Creed (2015)
 entrenador: tuercas
 musica: entrenamiento
 estilo: creed
+destacada: true
 1.rival: Léo Tornillo | Leo Schraube | Leo Bolt
 1.modelo: serrucho
-1.nivel: 0.3
+1.nivel: 0.25
+1.rango: Noob
 1.escenario: HANGAR
-1.rondas: 3
+1.rondas: 2
 1.texto: Adonis Cromo se cansa de arreglar hojas de cálculo y aparece en el gimnasio buscando un entrenador de verdad. Antes de que nadie lo tome en serio, tiene que vencer a Léo Tornillo, el terror del sótano. | Adonis Chrom hat genug von Tabellenkalkulationen und taucht im Gym auf, um einen echten Trainer zu finden. Bevor ihn jemand ernst nimmt, muss er Leo Schraube schlagen, den Schrecken des Kellers. | Adonis Chrome gets tired of fixing spreadsheets and shows up at the gym looking for a real coach. Before anyone takes him seriously, he has to beat Leo Bolt, the terror of the basement.
 1.victoria: Léo Tornillo acaba contando tuercas en la lona. El gimnasio entero deja de burlarse y pregunta cómo se llama ese novato. | Leo Schraube zählt Muttern auf dem Boden. Das ganze Gym hört auf zu lachen und fragt, wie dieser Neuling heißt. | Leo Bolt ends up counting nuts on the canvas. The whole gym stops laughing and asks what this rookie's name is.
 2.rival: Dani «el Cable» | Dani «das Kabel» | Danny "The Cable"
 2.modelo: volteo
-2.nivel: 0.5
+2.nivel: 0.34
+2.rango: Noob
 2.escenario: CHATARRERIA
 2.rondas: 3
-2.texto: Tu entrenador prepara un montaje absurdo entre barriles, persecuciones de drones y flexiones de servomotor. Primera pelea televisada contra Dani «el Cable», que nunca ha perdido un asalto. | Dein Trainer startet eine absurde Trainingsmontage mit Fässern, Drohnenjagden und Servo-Liegestützen. Erster Fernsehkampf gegen Dani «das Kabel», der noch nie eine Runde verloren hat. | Your coach launches an absurd training montage with barrels, drone chases, and servo push-ups. First televised bout against Danny "The Cable", who has never dropped a round.
-2.victoria: ¡Adonis lo voltea en el último segundo! La prensa descubre de quién es hijo y el campeón del mundo lanza el reto. | Adonis kippt ihn in der letzten Sekunde! Die Presse erfährt, wessen Sohn er ist, und der Weltmeister spricht die Herausforderung aus. | Adonis flips him in the final second! The press finds out whose son he is, and the world champion issues the challenge.
-3.rival: Ricky Conlan-Bit
+2.texto: Tu entrenador prepara un montaje absurdo entre barriles, persecuciones de drones tostadores y flexiones de servomotor. Primera pelea televisada contra Dani «el Cable», que nunca ha perdido un asalto. | Dein Trainer startet eine absurde Trainingsmontage mit Fässern, Toaster-Drohnenjagden und Servo-Liegestützen. Erster Fernsehkampf gegen Dani «das Kabel», der noch nie eine Runde verloren hat. | Your coach launches an absurd training montage with barrels, toaster-drone chases, and servo push-ups. First televised bout against Danny "The Cable", who has never dropped a round.
+2.victoria: ¡Adonis lo voltea en el último segundo! La prensa descubre su talento y el campeón regional lanza el reto. | Adonis kippt ihn in der letzten Sekunde! Die Presse entdeckt sein Talent, und der Regionalmeister fordert ihn heraus. | Adonis flips him in the final second! The press discovers his talent, and the regional champion issues a challenge.
+3.rival: Ricky Voltio-Rey | Ricky Volt-König | Ricky Volt-King
 3.modelo: faro
-3.nivel: 0.72
+3.nivel: 0.48
+3.rango: Junior
 3.escenario: NEON
-3.rondas: 4
+3.rondas: 3
 3.jefe: true
-3.texto: La gran noche por el título contra el campeón Ricky Conlan-Bit. Pero justo antes de sonar la campana, tu entrenador acaba en el hospital por una causa absurda y solo puede ver el combate desde la camilla. ¡Esta pelea va por él! | Die große Titel-Nacht gegen Weltmeister Ricky Conlan-Bit. Doch kurz vor dem Gong landet dein Trainer aus einem absurden Grund im Krankenhaus und schaut von der Trage aus zu. Dieser Kampf ist für ihn! | Championship night against Ricky Conlan-Bit. Right before the bell, your coach lands in the hospital for an absurd reason and can only watch from the stretcher. This fight is for your coach!
-3.victoria: ¡Adonis aguanta cada asalto y se gana el respeto de todo el estadio! Y entre destellos aparece tu entrenador, curado de golpe al verte ganar. | Adonis hält jede Runde durch und verdient sich den Respekt des ganzen Stadions! Und im Blitzlicht taucht dein Trainer auf, vor Freude schlagartig geheilt. | Adonis goes the distance and wins the entire stadium's respect! In a burst of light your coach reappears, miraculously cured the moment you win.
+3.texto: La gran noche por el título regional contra Ricky Voltio-Rey. Pero justo antes de sonar la campana, tu entrenador bebe limpiaparabrisas con gas creyendo que era aceite energético y acaba en el hospital. ¡Esta pelea va por él! | Die große Nacht um den Regionaltitel gegen Ricky Volt-König. Doch kurz vor dem Gong trinkt dein Trainer Sprudel-Scheibenreiniger, hält ihn für Energieöl und landet im Krankenhaus. Dieser Kampf ist für ihn! | Regional title night against Ricky Volt-King. Right before the bell, your coach drinks sparkling windshield fluid thinking it was energy oil and lands in the hospital. This fight is for your coach!
+3.victoria: ¡Adonis se lleva el cinturón regional! Y entre destellos aparece tu entrenador, curado de golpe al verte ganar. | Adonis holt den Regionalgürtel! Und im Blitzlicht taucht dein Trainer auf, vor Freude schlagartig geheilt. | Adonis wins the regional belt! In a burst of light your coach reappears, miraculously cured the moment you win.
+4.rival: Barón Chatarra-Sol | Baron Sonnenschrott | Baron Sun-Scrap
+4.modelo: barrena
+4.nivel: 0.56
+4.rango: Junior
+4.escenario: DESIERTO
+4.rondas: 3
+4.texto: Para subir de categoría, tu entrenador te arrastra a un taller perdido en el desierto sin aire acondicionado: golpear neumáticos gigantes, arrastrar baterías bajo el sol y resistir al Barón Chatarra-Sol. | Für die nächste Klasse schleppt dich dein Trainer in eine abgelegene Wüstenwerkstatt ohne Klimaanlage: riesige Reifen bearbeiten, Batterien durch den Sand ziehen und Baron Sonnenschrott standhalten. | To climb a tier, your coach drags you to a desert garage with no AC: hammering giant tires, dragging batteries through the sand, and surviving Baron Sun-Scrap.
+4.victoria: Chasis templado al sol y código sin una sola duda. Ya compites en las grandes ligas. | Chassis in der Sonne gehärtet und Code ohne jeden Zweifel. Jetzt spielst du in der Oberliga mit. | Chassis tempered in the sun and code without hesitation. Now you are in the big leagues.
+5.rival: Chef Licuadora X | Chef Mixer X | Chef Blender X
+5.modelo: remolino
+5.nivel: 0.66
+5.rango: Senior
+5.escenario: COCINA
+5.rondas: 3
+5.texto: Una exhibición benéfica se tuerce cuando Chef Licuadora X enciende las sierras de una cocina gigante y promete convertir a los aspirantes en batido de tornillos. | Ein Wohltätigkeitskampf eskaliert, als Chef Mixer X die Sägen einer Riesenküche startet und verspricht, alle Herausforderer zu Schrauben-Smoothies zu verarbeiten. | A charity exhibition goes off the rails when Chef Blender X fires up a giant kitchen's saws and promises to turn contenders into bolt smoothies.
+5.victoria: Chef Licuadora X se queda sin enchufe y el público aplaude a rabiar. Toca preparar el asalto al coloso de hielo. | Chef Mixer X fliegt die Sicherung raus und das Publikum jubelt. Jetzt wartet der Eiskoloss. | Chef Blender X blows a fuse and the crowd goes wild. Next up: the ice colossus.
+6.rival: Coloso Frío-99 | Koloss Kalt-99 | Colossus Cold-99
+6.modelo: eclipse
+6.nivel: 0.75
+6.rango: Senior
+6.escenario: HIELO
+6.rondas: 4
+6.jefe: true
+6.texto: Semifinal internacional contra Coloso Frío-99, programado para no sentir frío ni cansancio. Para colmo, tu entrenador resbala con un cubito de hielo decorativo en el vestuario y vuelve a la camilla del hospital. | Internationales Halbfinale gegen Koloss Kalt-99, programmiert ohne Kälte oder Müdigkeit. Zu allem Überfluss rutscht dein Trainer in der Kabine auf einem Deko-Eiswürfel aus und landet wieder im Krankenhaus. | International semifinal against Colossus Cold-99, coded to feel neither cold nor fatigue. Worse still, your coach slips on a decorative ice cube in the locker room and lands back in the hospital.
+6.victoria: ¡Coloso Frío-99 se recalienta y saluda al vencedor! Tu entrenador irrumpe patinando con la tirita puesta: ¡otro milagro! | Koloss Kalt-99 überhitzt und grüßt den Sieger! Dein Trainer schlittert mit Pflaster herein: noch ein Wunder! | Colossus Cold-99 overheats and salutes the winner! Your coach skates in wearing a bandage: another miracle!
+7.rival: Sombra del Taller | Werkstattschatten | Workshop Shadow
+7.modelo: galapago
+7.nivel: 0.84
+7.rango: Especial
+7.escenario: TEJADO
+7.rondas: 4
+7.texto: Bajo un aguacero nocturno en la azotea, aparece un antiguo compañero de sparring que copió cada truco de tu viejo código. Nadie sale de aquí sin mejorar su propia arquitectura. | Im nächtlichen Platzregen auf dem Dach taucht ein alter Sparringspartner auf, der jeden Trick deines alten Codes kopiert hat. Hier kommt nur weiter, wer seine Architektur erneuert. | Under a nighttime rooftop downpour, an old sparring partner shows up having copied every trick from your old code. Nobody walks away without upgrading their architecture.
+7.victoria: Bajo los relámpagos, la Sombra reconoce tu evolución y choca puños contigo. Solo queda la gran final mundial. | Im Blitzlicht erkennt der Schatten deine Entwicklung an und schlägt ein. Jetzt wartet nur noch das Weltfinale. | Under the lightning, the Shadow respects your growth and bumps fists. Only the world final remains.
+8.rival: Campeón Supremo Krono-Bit | Oberchampion Krono-Bit | Supreme Champion Krono-Bit
+8.modelo: mazo
+8.nivel: 0.92
+8.rango: Especial
+8.escenario: NEON
+8.rondas: 4
+8.jefe: true
+8.texto: La gran final mundial en un estadio a rebosar contra el Campeón Supremo Krono-Bit. Justo antes del primer gong, tu entrenador se pega la gorra al monitor cardíaco con pegamento industrial y acaba otra vez en el hospital. ¡Demuestra tu legado! | Das große Weltfinale im ausverkauften Stadion gegen Oberchampion Krono-Bit. Kurz vor dem ersten Gong klebt sich dein Trainer die Mütze mit Industriekleber an den Herzmonitor und landet erneut im Krankenhaus. Zeig dein Vermächtnis! | The world championship final in a sold-out stadium against Supreme Champion Krono-Bit. Right before the opening bell, your coach superglues their cap to the heart monitor and lands back in the hospital. Prove your legacy!
+8.victoria: ¡Campeón mundial bajo una lluvia de confeti! En ese instante baja tu entrenador entre destellos: «¡Sabía que no me necesitabas… aunque vine igual!». | Weltmeister im Konfettiregen! Im selben Moment schwebt dein Trainer im Glanz herab: «Ich wusste, du brauchst mich nicht … und kam trotzdem!» | World champion under a shower of confetti! Right then your coach descends in a blaze of light: "I knew you didn't need me… and I still came!"
 
 [creed2]
 titulo: Credo II: legado de hierro | Credo II: Erbe aus Eisen | Credo II: Iron Legacy
@@ -612,3 +658,78 @@ estilo: creed
 3.jefe: true
 3.texto: Estadio lleno hasta la bandera contra Damián «Diamante» Anders-Bit. Justo antes del primer golpe, tu entrenador ingresa en el hospital por una ocurrencia absurda y te deja el mando absoluto del ring. ¡Gana el combate de tu vida! | Bis auf den letzten Platz gefülltes Stadion gegen Damian «Diamant» Anders-Bit. Kurz vor dem ersten Schlag landet dein Trainer wegen einer absurden Panne im Krankenhaus und überlässt dir den Ring. Gewinne den Kampf deines Lebens! | A sold-out stadium against Damian "Diamond" Anders-Bit. Right before the opening bell, your coach lands in the hospital over an absurd mishap and leaves the ring entirely in your hands. Win the fight of your life!
 3.victoria: ¡Damián cae y se levanta para chocar los puños contigo! En ese instante baja tu entrenador entre destellos: «¡Sabía que no me necesitabas… aunque vine igual!». | Damian fällt und steht wieder auf, um mit dir abzuklatschen! Im selben Moment schwebt dein Trainer im Glanz herab: «Ich wusste, du brauchst mich nicht … und kam trotzdem!» | Damian drops and gets back up to bump fists with you! Right then your coach descends in a blaze of light: "I knew you didn't need me… and I still came!"
+
+[isla_torneo]
+titulo: Isla Clandestina: Torneo de los 1000 Voltios | Geheime Insel: Das 1000-Volt-Turnier | Secret Island: The 1000-Volt Tournament
+lema: Un torneo clandestino por eliminatorias en Isla Cortocircuito: ocho combates de Noob a Especial por el mítico Enchufe Dorado. | Ein geheimes K.-o.-Turnier auf Insel Kurzschluss: acht Kämpfe von Noob bis Spezial um den legendären Goldenen Stecker. | An underground knockout tournament on Short-Circuit Island: eight bouts from Noob to Special for the mythical Golden Plug.
+entrenador: yanobit
+musica: artes_marciales
+estilo: historia
+destacada: true
+1.rival: Capitán Babor-Bot | Kapitän Backbord-Bot | Captain Portside-Bot
+1.modelo: chatarra
+1.nivel: 0.24
+1.rango: Noob
+1.escenario: DESIERTO
+1.rondas: 2
+1.texto: Una invitación sellada con cable dorado te lleva en un transbordador oxidado hasta Isla Cortocircuito. Para conseguir tu pulsera del torneo, primero debes vencer al Capitán Babor-Bot en la playa de desembarco. | Eine mit Goldkabel versiegelte Einladung bringt dich per rostiger Fähre nach Insel Kurzschluss. Für dein Turnierarmband musst du zuerst Kapitän Backbord-Bot am Landungsstrand schlagen. | An invitation sealed with golden wire takes you by rusty ferry to Short-Circuit Island. To earn your tournament wristband, you first have to beat Captain Portside-Bot on the landing beach.
+1.victoria: El capitán te entrega la pulsera y un mapa mojado. Ya estás dentro del cuadro del torneo clandestino. | Der Kapitän überreicht dir das Armband und eine nasse Karte. Du bist im Feld des geheimen Turniers. | The captain hands over the wristband and a soggy map. You are officially in the underground bracket.
+2.rival: Monje Coco-Cobre | Kupferkokos-Mönch | Copper-Coconut Monk
+2.modelo: tejedora
+2.nivel: 0.34
+2.rango: Noob
+2.escenario: HANGAR
+2.rondas: 3
+2.texto: Un ermitaño excéntrico de la isla te exige pasar la prueba previa: pelear con el radar mareado mientras el Monje Coco-Cobre lanza cocos metálicos a ritmo de gong. | Ein exzentrischer Inseleinsiedler verlangt die Vorprüfung: kämpfen mit schwindligem Radar, während der Kupferkokos-Mönch im Gong-Takt Metallkokosnüsse wirft. | An eccentric island hermit demands a qualifying trial: fighting with a dizzy radar while the Copper-Coconut Monk hurls metal coconuts to the beat of a gong.
+2.victoria: Ni un solo coco te rozó la antena. El ermitaño asiente y te regala un silbato de cobre para los octavos de final. | Keine einzige Kokosnuss hat deine Antenne gestreift. Der Einsiedler nickt und schenkt dir eine Kupferpfeife fürs Achtelfinale. | Not a single coconut grazed your antenna. The hermit nods and gifts you a copper whistle for the round of 16.
+3.rival: Duque Imán-Loco | Herzog Irr-Magnet | Duke Mad-Magnet
+3.modelo: bolon
+3.nivel: 0.46
+3.rango: Junior
+3.escenario: CHATARRERIA
+3.rondas: 3
+3.texto: Octavos de final en la chatarrería del muelle contra el Duque Imán-Loco, que intenta arrancar los tornillos a sus rivales con un electroimán gigante y risas teatrales. | Achtelfinale auf dem Hafenschrottplatz gegen Herzog Irr-Magnet, der versucht, seinen Gegnern mit einem Riesenmagneten und theatralischem Gelächter die Schrauben auszuziehen. | Round of 16 in the dock scrapyard against Duke Mad-Magnet, who tries to yank his rivals' bolts out with a giant electromagnet and theatrical laughter.
+3.victoria: El electroimán se pega a una farola y el duque sale despedido al mar. ¡Pasas a cuartos de final! | Der Elektromagnet klebt an einer Laterne und der Herzog fliegt ins Meer. Ab ins Viertelfinale! | The electromagnet sticks to a lamppost and the duke splashes into the sea. On to the quarterfinals!
+4.rival: Señora Sartén-Turbo | Frau Turbo-Pfanne | Lady Turbo-Skillet
+4.modelo: serrucho
+4.nivel: 0.56
+4.rango: Junior
+4.escenario: COCINA
+4.rondas: 3
+4.jefe: true
+4.texto: Cuartos de final en la cocina volcánica del torneo contra la temida Señora Sartén-Turbo. Para colmo, tu entrenador probó sopa de litio extrapicante en el bufé y acabó ingresado en la enfermería de la isla. | Viertelfinale in der Vulkanküche des Turniers gegen die gefürchtete Frau Turbo-Pfanne. Zu allem Überfluss kostete dein Trainer extrascharfe Lithium-Suppe am Buffet und landete auf der Insel-Krankenstation. | Quarterfinal in the tournament's volcanic kitchen against the feared Lady Turbo-Skillet. Worse yet, your coach sampled extra-spicy lithium soup at the buffet and landed in the island infirmary.
+4.victoria: ¡La sartén supersónica se apaga entre chispas! Tu entrenador baja en patinete desde la enfermería, curado de golpe al oír el gong de tu victoria. | Die Überschallpfanne erlischt im Funkenregen! Dein Trainer rollt auf dem Roller aus der Krankenstation, beim Siegesgong sofort geheilt. | The supersonic skillet shorts out in a shower of sparks! Your coach scoots down from the infirmary, miraculously cured at the sound of your victory bell.
+5.rival: Doctor Calambrazo | Doktor Stromschlag | Doctor Zappo
+5.modelo: voltio
+5.nivel: 0.66
+5.rango: Senior
+5.escenario: LABORATORIO
+5.rondas: 3
+5.texto: En los laboratorios subterráneos de la isla, el hiperactivo Doctor Calambrazo combate a base de electricidad estática y discursos interminables sobre su propio genio. | In den unterirdischen Laboren der Insel kämpft der überdrehte Doktor Stromschlag mit statischer Elektrizität und endlosen Reden über sein eigenes Genie. | In the island's underground labs, the hyperactive Doctor Zappo fights with static electricity and endless speeches about his own brilliance.
+5.victoria: Al Doctor Calambrazo se le corta el micrófono y pierde el hilo de su discurso. ¡Directo a las semifinales! | Doktor Stromschlag fällt das Mikrofon aus und er verliert den Faden. Direkt ins Halbfinale! | Doctor Zappo's microphone cuts out and he loses his train of thought. Straight to the semifinals!
+6.rival: Yeti de Tungsteno | Wolfram-Yeti | Tungsten Yeti
+6.modelo: bastion
+6.nivel: 0.76
+6.rango: Senior
+6.escenario: HIELO
+6.rondas: 4
+6.texto: Semifinal en la cumbre helada del Monte Voltio. El Yeti de Tungsteno pide disculpas con reverencia antes de cada embestida sobre el suelo resbaladizo. | Halbfinale auf dem vereisten Gipfel des Berges Volt. Der Wolfram-Yeti entschuldigt sich vor jedem Rammstoß höflich mit einer Verbeugung auf dem glatten Eis. | Semifinal atop the frozen peak of Mount Volt. Tungsten Yeti bows politely and apologizes before every charge across the slippery ice.
+6.victoria: El Yeti patina con elegancia fuera del círculo y te aplaude con guantes térmicos. Solo te separa un coloso de la gran final. | Der Yeti schlittert elegant aus dem Ring und klatscht mit Thermohandschuhen. Nur noch ein Koloss trennt dich vom Finale. | The Yeti glides gracefully out of bounds and applauds in thermal mittens. Only one colossus stands between you and the final.
+7.rival: Cero-Absoluto V9 | Absolut-Null V9 | Absolute-Zero V9
+7.modelo: eclipse
+7.nivel: 0.85
+7.rango: Especial
+7.escenario: LUNA
+7.rondas: 4
+7.jefe: true
+7.texto: Ante la gran final aguarda Cero-Absoluto V9, el campeón invicto y frío que nunca parpadea. Tu entrenador intentó meditar dentro de una nevera industrial para estudiarlo y acabó congelado en el hospital. | Vor dem großen Finale wartet Absolut-Null V9, der kalte, ungeschlagene Champion, der nie blinzelt. Dein Trainer meditierte zur Analyse in einem Industriekühlschrank und landete tiefgefroren im Krankenhaus. | Before the grand final waits Absolute-Zero V9, the cold unbeaten champion who never blinks. Your coach tried meditating inside an industrial fridge to study it and ended up frozen solid in the hospital.
+7.victoria: ¡El campeón invicto conoce por fin la derrota y asiente con respeto! Tu entrenador se descongela al instante y entra corriendo con bufanda y confeti. | Der ungeschlagene Champion lernt endlich die Niederlage kennen und nickt respektvoll! Dein Trainer taut sofort auf und stürmt mit Schal und Konfetti herein. | The unbeaten champion finally tastes defeat and nods in respect! Your coach thaws instantly and sprints in wearing a scarf and confetti.
+8.rival: Barón Tostada Suprema | Baron Obertoster | Baron Supreme Toast
+8.modelo: barrena
+8.nivel: 0.93
+8.rango: Especial
+8.escenario: TEJADO
+8.rondas: 4
+8.jefe: true
+8.texto: Gran final bajo la lluvia y los relámpagos en la azotea del faro. El excéntrico anfitrión, Barón Tostada Suprema, salta al ring para defender el Enchufe Dorado mientras tu entrenador se enreda en la pancarta de fuegos artificiales VIP y acaba en la camilla. | Großes Finale im Regen und Blitzlicht auf dem Leuchtturmdach. Der exzentrische Gastgeber Baron Obertoster steigt selbst in den Ring, um den Goldenen Stecker zu verteidigen, während sich dein Trainer im VIP-Feuerwerksbanner verheddert und auf der Trage landet. | Grand final under pouring rain and lightning on the lighthouse rooftop. The eccentric host, Baron Supreme Toast, enters the ring himself to defend the Golden Plug while your coach gets tangled in the VIP fireworks banner and lands on the stretcher.
+8.victoria: ¡Campeón del Torneo de los 1000 Voltios! El Enchufe Dorado brilla bajo la tormenta mientras tu entrenador aterriza en paracaídas entre destellos: «¡Al final no me perdí el último asalto!». | Champion des 1000-Volt-Turniers! Der Goldene Stecker leuchtet im Sturm, während dein Trainer im Blitzlicht per Fallschirm landet: «Die letzte Runde wollte ich doch nicht verpassen!» | Champion of the 1000-Volt Tournament! The Golden Plug gleams through the storm as your coach parachutes in amid flashes of light: "No way I was missing the final round!"
