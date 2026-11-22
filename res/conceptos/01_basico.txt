@@ -802,7 +802,7 @@ pseudo.en:
         ELSE, IF my armor is low:
             move back
         ELSE:
-            move towards them
+            move toward them
 ejemplo:
     @Override
     public void alVerEnemigo(Enemigo e) {
@@ -925,7 +925,7 @@ pseudo.en:
         IF they're closer than 80:
             attack
         ELSE:
-            turn towards them
+            turn toward them
             move up to them
 ejemplo:
     @Override

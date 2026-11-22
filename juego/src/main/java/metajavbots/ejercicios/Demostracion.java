@@ -290,13 +290,13 @@ public final class Demostracion {
                                 + "con números negativos, hacia la derecha) sin girar todo el cuerpo.",
                         "Dieser blaue Kegel in der Arena ist das Radar: wie eine unsichtbare Taschenlampe. "
                                 + "Außerhalb dieses Lichts ist der Roboter blind und weiß nicht, wo der Gegner ist.\n"
-                                + "Die Zeile if (gesehen().isEmpty()) fragt «Sehe ich noch niemanden?». "
+                                + "Die Zeile if (gesehen().isEmpty()) fragt „Sehe ich noch niemanden?“. "
                                 + "Wenn niemand da ist, läuft zielen(15);.\n"
                                 + "zielen(15); dreht diese Taschenlampe samt Armen um 15 Grad nach links (gegen den Uhrzeigersinn; "
                                 + "mit negativen Zahlen nach rechts), ohne den ganzen Körper zu drehen.",
                         "That blue cone in the arena is the radar: think of it as an invisible flashlight. "
                                 + "Outside that beam, your robot is blind and cannot tell where the rival is.\n"
-                                + "The line if (seenEnemies().isEmpty()) asks \"do I see nobody yet?\". "
+                                + "The line if (seenEnemies().isEmpty()) asks \"do I see nobody yet?\" "
                                 + "When the answer is yes, it runs aim(15);.\n"
                                 + "aim(15); turns that flashlight and the arms 15 degrees to the left (counter-clockwise; "
                                 + "negative numbers turn right) without turning the whole body."),
@@ -318,7 +318,7 @@ public final class Demostracion {
                         "Genau in diesem Moment traf das Radarlicht die Puppe und löste beiSicht(Gegner e) aus!\n"
                                 + "Stell dir beiSicht wie einen Alarm vor, der genau dann klingelt, wenn deine Taschenlampe einen Gegner anleuchtet.\n"
                                 + "Der Buchstabe e ist wie eine Karteikarte über diesen Gegner: "
-                                + "wohin du zielen musst (e.winkel()) und wie weit er entfernt ist (e.abstand()).",
+                                + "wohin du zielen musst (e.winkel()) und wie weit er entfernt ist (e.entfernung()).",
                         "Right at this moment the radar beam touched the dummy and triggered onSeeEnemy(Enemy e)!\n"
                                 + "Think of onSeeEnemy as an alarm bell that rings the instant your flashlight shines on a rival.\n"
                                 + "The letter e is a little card with facts about that rival: "

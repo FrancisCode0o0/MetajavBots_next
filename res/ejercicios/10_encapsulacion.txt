@@ -380,7 +380,7 @@ java: 8
 tipo: clase
 titulo.es: El candado del arsenal
 titulo.de: Das Schloss des Arsenals
-titulo.en: The armoury lock
+titulo.en: The armory lock
 enunciado.es: Escribe la clase Candado: Candado(String clave), boolean abrir(String intento) (true si el intento es la clave), boolean estaBloqueado() e int intentosRestantes() (empieza en 3). Cada intento fallido gasta uno; con 0, el candado se bloquea para siempre y abrir siempre da false. La clave no tiene getter: no sale de la clase.
 enunciado.de: Schreibe die Klasse Candado: Candado(String clave), boolean abrir(String intento) (true, wenn der Versuch das Passwort ist), boolean estaBloqueado() und int intentosRestantes() (beginnt bei 3). Jeder Fehlversuch verbraucht einen; bei 0 sperrt das Schloss für immer, und abrir liefert nur noch false. Das Passwort hat keinen Getter: Es verlässt die Klasse nicht.
 enunciado.en: Write the class Candado: Candado(String clave), boolean abrir(String intento) (true if the attempt is the password), boolean estaBloqueado() and int intentosRestantes() (starts at 3). Each failed attempt uses one up; at 0 the lock is blocked forever and abrir always returns false. The password has no getter: it never leaves the class.

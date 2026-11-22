@@ -62,7 +62,7 @@ de: Bzzzt! Direkt in den Schaltkreis!
 en: Bzzzt! Straight to the circuits!
 
 es: ¡Qué golpe! ¡Que alguien lo repita a cámara lenta!
-de: Was für ein Treffer! Bitte in Zeitlupe nochmal!
+de: Was für ein Treffer! Bitte in Zeitlupe noch mal!
 en: What a hit! Somebody replay that in slow motion!
 
 es: ¡{jugador}, has visto eso! ¡Lo has visto!
@@ -219,7 +219,7 @@ de: {jugador}, wir sind unaufhaltsam! Elektrische Umarmung!
 en: {jugador}, we're unstoppable! Electric hug!
 
 es: ¡{rival}, has sido un rival GENIAL! ¡Repetimos!
-de: {rival}, du warst ein GENIALER Gegner! Nochmal!
+de: {rival}, du warst ein GENIALER Gegner! Noch mal!
 en: {rival}, you were an AWESOME opponent! Again!
 
 [derrota]
@@ -245,7 +245,7 @@ de: Komm schon, {rival}, du schaffst das! Na ja, fast!
 en: Come on, {rival}, you can do it! Well, almost!
 
 es: ¡Qué ataque tan mono! ¡Otra vez, otra vez!
-de: Was für ein süßer Angriff! Nochmal, nochmal!
+de: Was für ein süßer Angriff! Noch mal, noch mal!
 en: What a cute attack! Again, again!
 
 es: ¡Más energía, {rival}! ¡Que te veo flojito!

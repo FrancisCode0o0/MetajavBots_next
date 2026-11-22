@@ -17,15 +17,15 @@ public interface Obstacle {
      */
     String type();
 
-    /** Where its centre is (in the arena). */
+    /** Where its center is (in the arena). */
     double x();
 
     double y();
 
-    /** What it takes up: a circle of this radius around its centre. */
+    /** What it takes up: a circle of this radius around its center. */
     double radius();
 
-    /** How far its centre is from you. */
+    /** How far its center is from you. */
     double distance();
 
     /** The angle (in degrees, absolute) at which you see it from where you are. */

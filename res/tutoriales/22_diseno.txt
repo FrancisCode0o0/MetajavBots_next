@@ -205,7 +205,7 @@ de: die Entscheidungen, seitliches Ausweichen zur Seite mit mehr Platz und gedae
 de: Runde zu lernen. Jedes Teil ist klein und getestet; zusammen machen sie Angst.
 en: Time to put it all together. A Master-level robot usually has the same shape: a record for what it knows
 en: about the enemy, a swappable Punteria (direct or leading), an enum of states to decide what to do,
-en: perpendicular dodging towards the roomier side and memory() to learn from round to round.
+en: perpendicular dodging toward the roomier side and memory() to learn from round to round.
 en: Each piece is small and tested; together, they're terrifying.
 codigo:
     public class MiRobot extends Metajavbot {

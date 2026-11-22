@@ -20,7 +20,7 @@ public final class EscenasDelRobotito {
     /** Un escenario por concepto, con su nombre en tres idiomas (sale abajo, en el suelo). */
     enum Escena {
         DESPERTAR("01", "Primeros pasos: el robot se enciende", "Erste Schritte: der Roboter startet", "First steps: the robot boots up"),
-        TARROS("02", "Variables: tarros con etiqueta", "Variablen: Gläser mit Etikett", "Variables: labelled jars"),
+        TARROS("02", "Variables: tarros con etiqueta", "Variablen: Gläser mit Etikett", "Variables: labeled jars"),
         BALANZA("03", "Operadores: la balanza", "Operatoren: die Waage", "Operators: the scales"),
         APARCAMIENTO("04", "Condicionales: ¿qué plaza?", "Bedingungen: welcher Parkplatz?", "Conditionals: which parking spot?"),
         OBRA("05", "Bucles: vuelta a vuelta, la torre", "Schleifen: Runde um Runde, der Turm", "Loops: lap by lap, the tower"),

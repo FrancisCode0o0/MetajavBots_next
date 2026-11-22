@@ -16,11 +16,17 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Stream;
 
+import metajavbots.campanas.Campana;
 import metajavbots.codigo.Compilador;
 import metajavbots.ejercicios.Banco;
 import metajavbots.ejercicios.Comprobador;
 import metajavbots.ejercicios.Ejercicio;
 import metajavbots.ejercicios.Tema;
+import metajavbots.piezas.Modelo;
+import metajavbots.textos.Idioma;
+import metajavbots.textos.Trilingue;
+import metajavbots.tutor.Biografias;
+import metajavbots.tutor.Concepto;
 
 /** El contenido: ejercicios (cada solución pasa sus casos), temas, diálogos y tutoriales, en los tres idiomas. */
 final class PruebasDelContenido {
@@ -50,6 +56,7 @@ final class PruebasDelContenido {
         apuntarDepuracionYTesting();
         apuntarParidadDeFachadas();
         apuntarPruebaDeNivel();
+        apuntarIntegridadTrilingue();
     }
 
     private static void apuntarPistasReferencia() {
@@ -624,5 +631,170 @@ final class PruebasDelContenido {
                 }
             }
         });
+    }
+
+    private static final java.util.regex.Pattern MARCADOR = java.util.regex.Pattern.compile("\\{[a-zA-Z0-9_]+\\}");
+    private static final java.util.regex.Pattern BRITANICO = java.util.regex.Pattern.compile(
+            "\\b(armour(?:y|ed|s)?|colour(?:s|ed)?|behaviour(?:s|al)?|defence(?:s)?|favourite(?:s)?|"
+                    + "neighbourhood(?:s)?|harbour(?:s)?|manoeuvre(?:s)?|flavour(?:s)?|optimis(?:e|es|ation|ations)|"
+                    + "normalised|specialised|labelled|omelette(?:s)?|yoghurt|centre(?:s)?)\\b",
+            java.util.regex.Pattern.CASE_INSENSITIVE);
+    private static final java.util.regex.Pattern API_ES_FUGA = java.util.regex.Pattern.compile(
+            "\\b(avanzar|retroceder|girar|apuntarHacia|atacar|cadaTurno|alVerEnemigo|enemigosVistos|miAparato|usarAparato)\\(");
+    private static final java.util.regex.Pattern API_DE_FUGA = java.util.regex.Pattern.compile(
+            "\\b(vorwaerts|rueckwaerts|drehen|zielenNach|angreifen|jedenZug|jederZug|beiSicht|meinGeraet|geraetBenutzen)\\(");
+    private static final java.util.regex.Pattern API_EN_FUGA = java.util.regex.Pattern.compile(
+            "\\b(ahead|aimTo|onTick|onSeeEnemy|seenEnemies|myGadget|useGadget|plugIn|tellTeam)\\(");
+
+    private static void apuntarIntegridadTrilingue() {
+        caso("integridad trilingüe: diálogos, conceptos, tutoriales, biografías, aparatos, campañas y tienda cargan con ES/DE/EN", () -> {
+            verificarDialogosYAparatos();
+            verificarConceptosYTutoriales();
+            verificarBiografiasCampanasYTienda();
+        });
+
+        caso("integridad trilingüe: marcadores {...} coinciden entre ES, DE y EN en UI, diálogos y escenas", () -> {
+            for (java.util.Map.Entry<String, metajavbots.textos.Trilingue> e : metajavbots.textos.T.todos().entrySet()) {
+                verificarMarcadores(e.getValue(), "ui:" + e.getKey());
+            }
+            for (String archivo : archivosDe("dialogos")) {
+                metajavbots.dialogos.Dialogos d = metajavbots.dialogos.Dialogos.de(archivo.substring(0, archivo.length() - 4));
+                for (String ev : eventosDeArchivoDialogo(archivo)) {
+                    for (metajavbots.textos.Trilingue t : d.frases(ev)) verificarMarcadores(t, archivo + "/" + ev);
+                }
+            }
+            for (metajavbots.campanas.Campana c : metajavbots.campanas.Campana.deSerie()) {
+                for (metajavbots.campanas.Campana.Capitulo k : c.capitulos) {
+                    metajavbots.campanas.EscenaDeCampana esc = c.escenaDe(k);
+                    verificarMarcadores(esc.titulo, esc.id + ":titulo");
+                    for (metajavbots.campanas.EscenaDeCampana.Vineta v : esc.vinetas) {
+                        verificarMarcadores(v.narracion, esc.id + ":narracion");
+                        verificarMarcadores(v.bocadilloIzq, esc.id + ":izq");
+                        verificarMarcadores(v.bocadilloDer, esc.id + ":der");
+                    }
+                }
+            }
+        });
+
+        caso("integridad trilingüe: sin mezcla ortográfica británica en EN ni fugas de API entre idiomas", () -> {
+            verificarOrtografiaEn();
+            verificarFugasDeApi();
+        });
+    }
+
+    private static void verificarDialogosYAparatos() throws IOException {
+        List<String> dialogos = archivosDe("dialogos");
+        cierto(dialogos.size() >= 20, "archivos de diálogos: " + dialogos.size());
+        for (String a : dialogos) {
+            metajavbots.dialogos.Dialogos d = metajavbots.dialogos.Dialogos.de(a.substring(0, a.length() - 4));
+            List<String> evs = eventosDeArchivoDialogo(a);
+            cierto(!evs.isEmpty(), a + " sin eventos");
+            for (String ev : evs) {
+                cierto(!d.frases(ev).isEmpty(), a + "/" + ev + " sin frases");
+                for (metajavbots.textos.Trilingue t : d.frases(ev)) cierto(!t.es.isBlank() && !t.de.isBlank() && !t.en.isBlank(), a + "/" + ev);
+            }
+        }
+        List<String> aparatos = archivosDe("aparatos");
+        cierto(aparatos.size() >= 9, "archivos de aparatos: " + aparatos.size());
+        for (String a : aparatos) {
+            String txt = Files.readString(Path.of("res", "aparatos", a));
+            for (String sec : new String[]{"== es", "== de", "== en"}) cierto(txt.contains(sec), "res/aparatos/" + a + " falta " + sec);
+        }
+    }
+
+    private static void verificarConceptosYTutoriales() {
+        List<metajavbots.tutor.Concepto> conceptos = metajavbots.tutor.Concepto.todos();
+        cierto(conceptos.size() >= 140, "conceptos cargados: " + conceptos.size());
+        for (metajavbots.tutor.Concepto c : conceptos) {
+            for (metajavbots.textos.Idioma i : metajavbots.textos.Idioma.values()) {
+                cierto(!c.titulo.en(i).isBlank() && !c.parrafos(i).isEmpty(), "concepto " + c.id + "/" + i);
+            }
+        }
+        for (metajavbots.ejercicios.Leccion l : metajavbots.ejercicios.Leccion.todas()) {
+            cierto(!l.titulo.es.isBlank() && !l.titulo.de.isBlank() && !l.titulo.en.isBlank(), "lección " + l.id);
+            for (metajavbots.ejercicios.Leccion.Pagina p : l.paginas) {
+                cierto(!p.texto.es.isBlank() && !p.texto.de.isBlank() && !p.texto.en.isBlank(), "página " + l.id);
+            }
+        }
+    }
+
+    private static void verificarBiografiasCampanasYTienda() {
+        for (Modelo m : Modelo.todos()) for (Idioma i : Idioma.values()) cierto(!Biografias.baseDeRobot(m.id, i).isBlank(), m.id);
+        for (metajavbots.tutor.Entrenador e : metajavbots.tutor.Entrenador.todos()) {
+            for (Idioma i : Idioma.values()) cierto(!Biografias.baseDeEntrenador(e.id, i).isBlank(), e.id);
+        }
+        for (Campana c : Campana.deSerie()) for (Idioma i : Idioma.values()) cierto(!c.titulo.en(i).isBlank() && !c.lema.en(i).isBlank(), c.id);
+        for (metajavbots.piezas.Pieza p : metajavbots.piezas.CatalogoDePiezas.delJuego().todas()) {
+            for (Idioma i : Idioma.values()) cierto(!p.nombre(i).isBlank(), "pieza " + p.id + "/" + i);
+        }
+    }
+
+    private static void verificarOrtografiaEn() throws IOException {
+        for (java.util.Map.Entry<String, Trilingue> e : metajavbots.textos.T.todos().entrySet()) sinBritanico(e.getValue().en, "ui:" + e.getKey());
+        for (String a : archivosDe("dialogos")) {
+            metajavbots.dialogos.Dialogos d = metajavbots.dialogos.Dialogos.de(a.substring(0, a.length() - 4));
+            for (String ev : eventosDeArchivoDialogo(a)) for (Trilingue t : d.frases(ev)) sinBritanico(t.en, a + "/" + ev);
+        }
+        for (Campana c : Campana.deSerie()) {
+            sinBritanico(c.titulo.en + " " + c.lema.en, "campaña:" + c.id);
+            for (Campana.Capitulo k : c.capitulos) sinBritanico(k.rival.en + " " + k.texto.en + " " + k.victoria.en, c.id + "." + k.numero);
+        }
+        for (Concepto c : Concepto.todos()) sinBritanico(c.titulo.en + " " + String.join(" ", c.parrafos(Idioma.EN)), c.id);
+        for (metajavbots.ejercicios.Leccion l : metajavbots.ejercicios.Leccion.todas()) {
+            sinBritanico(l.titulo.en, "tutorial:" + l.id);
+            for (metajavbots.ejercicios.Leccion.Pagina p : l.paginas) sinBritanico(p.texto.en, "tutorial:" + l.id);
+        }
+        for (Ejercicio e : Banco.delJuego().todos()) sinBritanico(e.titulo.en + " " + e.enunciado.en + " " + e.pista.en, "ejercicio:" + e.id);
+        for (Modelo m : Modelo.todos()) sinBritanico(Biografias.baseDeRobot(m.id, Idioma.EN), m.id);
+    }
+
+    private static void verificarFugasDeApi() {
+        for (metajavbots.ejercicios.Demostracion d : metajavbots.ejercicios.Demostracion.todas()) {
+            for (metajavbots.ejercicios.Demostracion.Paso p : d.pasos) sinFugaApi(p.texto, d.id + "/" + p.id);
+        }
+        for (metajavbots.rivales.RivalSenior.Tipo r : metajavbots.rivales.RivalSenior.todos()) {
+            sinFugaApi(r.descripcion, "senior:" + r.id + ":desc");
+            sinFugaApi(r.consejoRevision, "senior:" + r.id + ":consejo");
+        }
+        for (metajavbots.tutor.ConocimientoDelEntrenador.Entrada e : metajavbots.tutor.ConocimientoDelEntrenador.entradas()) {
+            String es = String.join("\n", e.parrafos().get(Idioma.ES)) + "\n" + e.pseudo().get(Idioma.ES);
+            String de = String.join("\n", e.parrafos().get(Idioma.DE)) + "\n" + e.pseudo().get(Idioma.DE);
+            String en = String.join("\n", e.parrafos().get(Idioma.EN)) + "\n" + e.pseudo().get(Idioma.EN);
+            sinFugaApi(new Trilingue(es, de, en), "juego:" + e.id());
+        }
+    }
+
+    private static void sinFugaApi(metajavbots.textos.Trilingue t, String ctx) {
+        falso(API_DE_FUGA.matcher(t.es).find() || API_EN_FUGA.matcher(t.es).find(), "fuga de API en ES (" + ctx + ")");
+        falso(API_ES_FUGA.matcher(t.de).find() || API_EN_FUGA.matcher(t.de).find(), "fuga de API en DE (" + ctx + ")");
+        falso(API_ES_FUGA.matcher(t.en).find() || API_DE_FUGA.matcher(t.en).find(), "fuga de API en EN (" + ctx + ")");
+    }
+
+    private static void sinBritanico(String texto, String ctx) {
+        java.util.regex.Matcher m = BRITANICO.matcher(texto);
+        falso(m.find(), "ortografía británica en EN (" + ctx + "): " + (m.find(0) ? m.group() : ""));
+    }
+
+    private static void verificarMarcadores(metajavbots.textos.Trilingue t, String ctx) {
+        List<String> es = marcadoresDe(t.es), de = marcadoresDe(t.de), en = marcadoresDe(t.en);
+        igual(es, de, "marcadores ES/DE en " + ctx);
+        igual(es, en, "marcadores ES/EN en " + ctx);
+    }
+
+    private static List<String> marcadoresDe(String texto) {
+        List<String> l = new ArrayList<>();
+        java.util.regex.Matcher m = MARCADOR.matcher(texto);
+        while (m.find()) l.add(m.group());
+        l.sort(null);
+        return l;
+    }
+
+    private static List<String> eventosDeArchivoDialogo(String archivo) throws IOException {
+        List<String> evs = new ArrayList<>();
+        for (String l : Files.readAllLines(Path.of("res", "dialogos", archivo))) {
+            String s = l.strip();
+            if (s.startsWith("[") && s.endsWith("]")) evs.add(s.substring(1, s.length() - 1).strip());
+        }
+        return evs;
     }
 }

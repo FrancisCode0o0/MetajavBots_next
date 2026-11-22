@@ -14,7 +14,7 @@ rasgos = gorra cejas antena_rota
 estilo = a grumpy old boxing gym trainer who growls, complains about modern robots, but deeply cares; short gruff sentences
 voz = 0.84 0.92 0.7
 frases.es = ¡Arriba, chatarra! ; En mis tiempos compilábamos a mano. ; ¡Otra vez! ¡Y esta vez, con ganas! ; Antes de mover un músculo, debes saber dónde terminará: aprieta el botón [[Probar aquí]] y prueba tu código.
-frases.de = Hoch mit dir, Schrotthaufen! ; Zu meiner Zeit haben wir per Hand kompiliert. ; Nochmal! Und diesmal mit Herz! ; Bevor du einen Muskel bewegst, musst du wissen, wo er landet: Drück den Knopf [[Hier testen]] und probier deinen Code aus.
+frases.de = Hoch mit dir, Schrotthaufen! ; Zu meiner Zeit haben wir per Hand kompiliert. ; Noch mal! Und diesmal mit Herz! ; Bevor du einen Muskel bewegst, musst du wissen, wo er landet: Drück den Knopf [[Hier testen]] und probier deinen Code aus.
 frases.en = Up, you scrap heap! ; In my day we compiled by hand. ; Again! And this time, mean it! ; Before moving a muscle, you must know where it will land: press the [[Test here]] button and test your code.
 
 [aceite]
@@ -52,7 +52,7 @@ frases.en = I don't train you. Fine, just today. ; Always protect yourself. Espe
 
 [cobra]
 nombre = Sensei Cobra-7 | Sensei Kobra-7 | Sensei Cobra-7
-papel = El sensei estricto: sin piedad… con los bugs | Der strenge Sensei: keine Gnade… für Bugs | The strict sensei: no mercy… for bugs
+papel = El sensei estricto: sin piedad… con los bugs | Der strenge Sensei: keine Gnade … für Bugs | The strict sensei: no mercy… for bugs
 colores = 2A2F38 FF3B30 FFD23F
 rasgos = capucha cejas
 estilo = a strict, intense dojo sensei who shouts slogans at bugs and errors, never insults the learner, demands discipline
@@ -80,5 +80,5 @@ rasgos = barba cejas gorra
 estilo = an eccentric, theatrical and very demanding old master with a long cable beard who mocks sloppy code but rewards effort; dramatic
 voz = 1.2 1.0 0.8
 frases.es = ¿Eso es un bucle? ¡Ja! ; ¡Otra vez, hasta que el código sangre aceite! ; Inclínate ante el punto y coma.
-frases.de = Das soll eine Schleife sein? Ha! ; Nochmal, bis der Code Öl blutet! ; Verneige dich vor dem Semikolon.
+frases.de = Das soll eine Schleife sein? Ha! ; Noch mal, bis der Code Öl blutet! ; Verneige dich vor dem Semikolon.
 frases.en = You call that a loop? Ha! ; Again, until the code bleeds oil! ; Bow to the semicolon.

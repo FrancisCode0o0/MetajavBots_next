@@ -115,7 +115,7 @@ de: kürzeste Drehung. Damit ist ein Radar, das den Gegner nicht verliert, ein k
 de: kürzestem Weg zum zuletzt gesehenen Winkel, nie mehr als die maximale Drehung pro Zug, und erinnerst du
 de: dich an niemanden, such.
 en: Angles are treacherous: 170 and -170 are only 20 degrees apart, but subtracting them gives 340. That's why
-en: normalize() exists: it brings any angle into (-180, 180], and the normalised difference is the shortest turn.
+en: normalize() exists: it brings any angle into (-180, 180], and the normalized difference is the shortest turn.
 en: With that, a radar that never loses the enemy is a small algorithm: head for the last angle seen
 en: the short way round, never beyond the maximum turn per tick, and if you remember nobody, sweep.
 codigo:
@@ -143,7 +143,7 @@ en: Challenge: write the sweep of a radar that never loses the enemy. Beating it
 ejercicio: reto_esquiva
 es: Reto: esquiva siempre hacia el lado con más sitio. Superarlo desbloquea una pieza.
 de: Herausforderung: Weich immer zur Seite mit mehr Platz aus. Wer sie schafft, schaltet ein Teil frei.
-en: Challenge: always dodge towards the side with more room. Beating it unlocks a part.
+en: Challenge: always dodge toward the side with more room. Beating it unlocks a part.
 
 === l21_disparar_adonde_estara
 tema: 21

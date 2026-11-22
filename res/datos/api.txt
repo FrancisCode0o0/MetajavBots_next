@@ -250,7 +250,7 @@ firma.de: void rueckwaerts(double strecke)
 firma.en: void back(double distance)
 es: Orden de movimiento no bloqueante, sin retorno. Parámetro: distancia en píxeles que quieres retroceder (equivale a avanzar(-distancia)). Sustituye a la orden de avance anterior.
 de: Nicht-blockierender Fahrbefehl ohne Rückgabewert. Parameter: strecke in Pixeln rückwärts (entspricht vorwaerts(-strecke)). Ersetzt den vorigen Fahrbefehl.
-en: Non-blocking movement order with no return value. Parameter: distance in pixels to move backwards (same as ahead(-distance)). Replaces the previous move order.
+en: Non-blocking movement order with no return value. Parameter: distance in pixels to move backward (same as ahead(-distance)). Replaces the previous move order.
 donde.es: Úsalo dentro de alChocarConPared(), alRecibirGolpe() o cadaTurno() para recular; no lo pongas en el constructor ni en inicializadores de campos.
 donde.de: In beiWand(), beiTreffer() oder jedenZug() zum Zurücksetzen aufrufen; nicht im Konstruktor oder in Feld-Initialisierern verwenden.
 donde.en: Call inside onHitWall(), onHit(), or onTick() to back off; never place it in the constructor or field initializers.

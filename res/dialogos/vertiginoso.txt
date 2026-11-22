@@ -15,7 +15,7 @@ de: Ich habe die Kreisel-Meisterschaft als der Kreisel gewonnen! Los geht's!
 en: I won the spinning-top championship by being the top! Here I go!
 
 es: ¡Giro, salto, chispa! ¡Agárrate que viene huracán, {rival}!
-de: Drehen, springen, Funken! Halt dich fest, ein Wirbelsturm kommt, {rival}!
+de: Drehen, Springen, Funken! Halt dich fest, ein Wirbelsturm kommt, {rival}!
 en: Spin, flip, spark! Hang on, a hurricane's coming, {rival}!
 
 [inicio_ronda]
@@ -368,7 +368,7 @@ de: Zehntausend Volt in der Spirale!
 en: Ten thousand volts in a spiral!
 
 es: ¡Vuelta definitiva! ¡Giro, salto y chispa!
-de: Endgültige Drehung! Drehen, springen und Funken!
+de: Endgültige Drehung! Drehen, Springen und Funken!
 en: Ultimate spin! Spin, flip, and spark!
 
 es: ¡Todo el estadio va a girar conmigo, {rival}!

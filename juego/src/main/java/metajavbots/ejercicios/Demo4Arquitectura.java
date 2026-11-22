@@ -181,7 +181,7 @@ final class Demo4Arquitectura {
                                 + "Die Engine bricht den Zug mit TopeDeCalculo ab.\n"
                                 + "Als Strafe entsteht Zugschuld, und der Roboter bleibt ohne Code-Ausführung blockiert, bis sie abgebaut ist.",
                         "On every tick your code has a finite budget of computation steps.\n"
-                                + "The nested 200 x 200 loop on lines 7 and 8 blows past that cap: the engine aborts the tick with TopeDeCalculo.\n"
+                                + "The nested 200 × 200 loop on lines 7 and 8 blows past that cap: the engine aborts the tick with TopeDeCalculo.\n"
                                 + "As a penalty, the robot incurs turn debt and stays locked out of running your code until the debt is paid off."),
                 8, new int[]{7, 9}, true, 8, 45, Accion.TOPE_DEUDA, Resaltado.ERROR, codigo);
     }

@@ -473,7 +473,7 @@ de: Oh nein! {jugador} verliert! Ab in die Werkstatt, debuggen, zurückkommen!
 en: Oh no! {jugador} loses! To the workshop, debug, come back!
 
 es: ¡Hoy no ha podido ser! ¡Control zeta y otra vez, {jugador}!
-de: Heute hat es nicht gereicht! Rückgängig und nochmal, {jugador}!
+de: Heute hat es nicht gereicht! Rückgängig und noch mal, {jugador}!
 en: Not today! Hit undo and try again, {jugador}!
 
 es: ¡Derrota! ¡Mis sensores de tristeza al ciento por ciento!

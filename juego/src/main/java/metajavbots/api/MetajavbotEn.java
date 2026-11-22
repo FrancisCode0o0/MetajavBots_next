@@ -121,13 +121,13 @@ public abstract class MetajavbotEn extends RobotBase {
 
     // ================================================================ moving
 
-    /** Moves forward this distance (negative: backwards). Replaces the previous move order. */
+    /** Moves forward this distance (negative: backward). Replaces the previous move order. */
     public final void ahead(double distance) {
         m().avanzar(distance);
         anotarOrden("ahead(" + redondear(distance) + ")", Mando.CANAL_AVANCE);
     }
 
-    /** Moves backwards this distance. */
+    /** Moves backward this distance. */
     public final void back(double distance) {
         m().avanzar(-distance);
         anotarOrden("back(" + redondear(distance) + ")", Mando.CANAL_AVANCE);
@@ -175,7 +175,7 @@ public abstract class MetajavbotEn extends RobotBase {
         anotarOrden("aimTo(" + redondear(angle) + "°)", Mando.CANAL_MIRA);
     }
 
-    /** Turns the sight towards this point of the arena. */
+    /** Turns the sight toward this point of the arena. */
     public final void aimAt(double x, double y) {
         m().apuntar(normalize(anguloHasta(x, y) - m().mira()));
         anotarOrden("aimAt(" + redondear(x) + ", " + redondear(y) + ")", Mando.CANAL_MIRA);
@@ -412,7 +412,7 @@ public abstract class MetajavbotEn extends RobotBase {
         m().escribir(aTexto(text));
     }
 
-    /** Lo que quieras recordar de una ronda a otra (tema 15: Map). Sobrevive aunque cambies el código. */
+    /** What you want to remember from round to round (topic 15: Map). Survives even if you change the code. */
     public final Map<String, Object> memory() {
         return m().memoria();
     }

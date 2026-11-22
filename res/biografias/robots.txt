@@ -9,7 +9,7 @@ en: Born in a fridge factory, and nobody noticed for three years. He still chill
 
 [chispa]
 es: Fue el primer robot en correr una maratón… dentro de una lavadora. Desde entonces no sabe estarse quieta.
-de: Sie lief als erster Roboter einen Marathon… in einer Waschmaschine. Seitdem kann sie nicht stillsitzen.
+de: Sie lief als erster Roboter einen Marathon … in einer Waschmaschine. Seitdem kann sie nicht stillsitzen.
 en: The first robot ever to run a marathon… inside a washing machine. She has not sat still since.
 
 [vigia]
@@ -95,7 +95,7 @@ en: He is a hundred and forty years old and still arrives first, because he sets
 [volteo]
 es: Trabajó dando la vuelta a tortillas en un bar. Un día dio la vuelta al bar.
 de: Er wendete in einer Bar Tortillas. Eines Tages wendete er die Bar.
-en: He used to flip omelettes in a bar. One day he flipped the bar.
+en: He used to flip omelets in a bar. One day he flipped the bar.
 
 [bolon]
 es: Su bola tiene nombre: se llama Doña Pepa y es la que manda. Él solo la saca a pasear.

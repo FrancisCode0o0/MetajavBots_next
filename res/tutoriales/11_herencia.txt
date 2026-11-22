@@ -100,7 +100,7 @@ de: Methode mover) und Unterklassen, die sie spezialisieren. Jede überschreibt 
 de: Roboter merkt sich eine Tactica und benutzt sie, ohne zu wissen, welche: Das ist der Anfang der
 de: Polymorphie (Thema 12).
 en: Build your own hierarchy: a Tactica class with the common parts (say, a name and a mover method)
-en: and subclasses that specialise it. Each one overrides mover in its own way. The robot keeps a Tactica
+en: and subclasses that specialize it. Each one overrides mover in its own way. The robot keeps a Tactica
 en: and uses it without knowing which one it is: that's the start of polymorphism (topic 12).
 codigo:
     class Tactica {

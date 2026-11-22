@@ -4,7 +4,7 @@ tema: 06
 orden: 1
 titulo.es: Ponle nombre a tus maniobras
 titulo.de: Gib deinen Manövern Namen
-titulo.en: Give your manoeuvres names
+titulo.en: Give your maneuvers names
 --- pagina
 es: Ya has escrito métodos sin darte cuenta: cadaTurno y alVerEnemigo lo son. Un método es un trozo de código
 es: con nombre que puedes llamar cuando quieras. ¿Por qué molestarse? Porque cadaTurno empieza a ser una selva,

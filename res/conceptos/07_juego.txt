@@ -196,7 +196,7 @@ pseudo.en:
     My syllabus → paste or load your syllabus → practice those exact topics
 ejemplo:
     // Una sesión diaria constante vale más que un atracón || Regelmäßiges Training schlägt jeden Marathon || Steady daily sessions beat cramming
-    // Pega tu temario en «Mi temario» para filtrar ejercicios || Füge deinen Lehrplan in „Mein Lehrplan“ ein || Paste your syllabus in «My syllabus» to filter exercises
+    // Pega tu temario en «Mi temario» para filtrar ejercicios || Füge deinen Lehrplan in „Mein Lehrplan“ ein || Paste your syllabus in "My syllabus" to filter exercises
 
 === taller_y_compilar
 nivel: 6
@@ -963,12 +963,12 @@ pseudo.es:
     normalizar(objetivo - mira()), comprobar != null y sincronizar estado compartido
 pseudo.de:
     Spezialmodus → Senior-Kämpfe → Budget, Parallelkampf oder Senior-Gegner wählen
-    new in jederZug() vermeiden und primitive Felder wiederverwenden
+    new in jedenZug() vermeiden und primitive Felder wiederverwenden
     normalisieren(ziel - blick()), != null prüfen und geteilten Zustand synchronisieren
 pseudo.en:
     Special mode → Senior Fights → pick budget, parallel fight, or Senior rival
     avoid new inside onTick() and reuse primitive fields
-    normalize(target - heading()), check != null, and synchronize shared state
+    normalize(target - aimDirection()), check != null, and synchronize shared state
 ejemplo:
     public class RobotSenior extends Metajavbot {
         private static final int MASCARA_FASE = 0x0F; // constante primitiva sin autoboxing || primitive Konstante ohne Autoboxing || primitive constant without autoboxing

@@ -71,7 +71,7 @@ en: One hit for every time you worried, {jugador}.
 
 [fallo]
 es: Ups. No pasa nada, lo intento otra vez.
-de: Ups. Macht nichts, ich versuch's nochmal.
+de: Ups. Macht nichts, ich versuch's noch mal.
 en: Oops. No worries, I'll try again.
 
 es: Fallar también es aprender.
@@ -195,7 +195,7 @@ en: Sorry, {jugador}. I couldn't stop everything.
 
 es: No pasa nada. Nos levantamos.
 de: Macht nichts. Wir stehen wieder auf.
-en: It's alright. We get back up.
+en: It's all right. We get back up.
 
 es: Bien hecho, {rival}. Pero la próxima la defiendo yo.
 de: Gut gemacht, {rival}. Aber die nächste verteidige ich.

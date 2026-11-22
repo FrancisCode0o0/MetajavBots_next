@@ -75,7 +75,8 @@ public final class Concordancia {
     }
 
     private static final Pattern ADJETIVO = Pattern.compile("(\\{pieza\\}:?\\s+)(rota|perdida)\\b");
-    private static final Pattern VERBO_DELANTE = Pattern.compile("\\b(roto|quitado|[Ee]limino|rompen?|eran?|quedado|fue|fueron)\\s+\\{pieza\\}");
+    private static final Pattern VERBO_DELANTE = Pattern.compile(
+            "\\b(roto|quitado|[Ee]limino|rompen?|eran?|quedado|fue|fueron|volado|partido|perforado|arrancado|volando)\\s+\\{pieza\\}");
 
     private static final Pattern DE_DET = Pattern.compile(
             "(?i)\\b(der|den|dem|die|mein(?:en|em|e)?|dein(?:en|em|e)?|sein(?:en|em|e)?|ihr(?:en|em|e)?|kein(?:en|em|e)?|ein(?:en|em|e)?)\\s+\\{pieza\\}");

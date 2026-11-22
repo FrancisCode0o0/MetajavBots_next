@@ -146,7 +146,7 @@ de: und zähl mit, wo du den Gegner gesehen hast: visto[spalte][zeile]++. Mit de
 de: seine Lieblingsecken. visto.length sind die Spalten, visto[0].length die Zeilen.
 en: An array can hold arrays: that's a table, rows and columns. Split the arena into 100-unit squares
 en: and count where you've seen the enemy: visto[column][row]++. Over time you'll learn
-en: its favourite corners. visto.length is the number of columns and visto[0].length the rows.
+en: its favorite corners. visto.length is the number of columns and visto[0].length the rows.
 codigo:
     int[][] visto = new int[20][20];
     @Override

@@ -23,7 +23,7 @@ en: He didn't want to train you. He said no seven times and locked the workshop 
 
 [cobra]
 es: Su lema es «sin compasión con los bugs». Grita mucho, pero solo a los errores de compilación; a ti, nunca.
-de: Sein Motto ist «keine Gnade für Bugs». Er schreit viel, aber nur Kompilierfehler an; dich nie.
+de: Sein Motto ist „keine Gnade für Bugs“. Er schreit viel, aber nur Kompilierfehler an; dich nie.
 en: His motto is "no mercy for bugs". He shouts a lot, but only at compile errors; never at you.
 
 [yanobit]

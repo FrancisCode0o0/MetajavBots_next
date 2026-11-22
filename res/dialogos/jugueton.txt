@@ -19,7 +19,7 @@ de: {jugador}, zocken wir? Das Level sieht easy aus!
 en: {jugador}, wanna play? This level looks easy!
 
 [inicio_ronda]
-es: ¡Nivel {ronda}! ¡Ready? GO!
+es: ¡Nivel {ronda}! ¿Ready? ¡GO!
 de: Level {ronda}! Ready? GO!
 en: Level {ronda}! Ready? GO!
 
@@ -236,7 +236,7 @@ de: Weiter-Bildschirm… zehn… neun… acht…
 en: Continue screen… ten… nine… eight…
 
 es: Bien jugado, {rival}. ¡Pero te reto otra vez!
-de: Gut gespielt, {rival}. Aber ich fordere dich nochmal heraus!
+de: Gut gespielt, {rival}. Aber ich fordere dich noch mal heraus!
 en: Good game, {rival}. But I'm challenging you again!
 
 [burla]

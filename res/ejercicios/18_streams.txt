@@ -315,7 +315,7 @@ java: 8
 tipo: metodo
 titulo.es: El arma favorita
 titulo.de: Die Lieblingswaffe
-titulo.en: The favourite weapon
+titulo.en: The favorite weapon
 enunciado.es: Devuelve el arma que más veces aparece. Si hay empate, la primera en orden alfabético. Si la lista está vacía, "".
 enunciado.de: Gib die Waffe zurück, die am häufigsten vorkommt. Bei Gleichstand die alphabetisch erste. Ist die Liste leer, "".
 enunciado.en: Return the weapon that appears most often. On a tie, the first one alphabetically. If the list is empty, "".

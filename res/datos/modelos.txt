@@ -179,7 +179,7 @@ desbloqueo = victorias:8
 
 [faro]
 nombre = Faro | Leuchtturm | Beacon
-lema = ¡Que se haga la luz… y que queme! | Es werde Licht… und es brenne! | Let there be light… and let it burn!
+lema = ¡Que se haga la luz… y que queme! | Es werde Licht … und es brenne! | Let there be light… and let it burn!
 naturaleza = FOCO
 arquetipo = TACTICO
 personalidad = teatral
@@ -213,7 +213,7 @@ desbloqueo = victorias:10
 
 [nimbo]
 nombre = Nimbo | Nimbus | Nimbus
-lema = Mmm… ¿ya ha empezado? | Hmm… hat es schon angefangen? | Hmm… has it started yet?
+lema = Mmm… ¿ya ha empezado? | Hmm … hat es schon angefangen? | Hmm… has it started yet?
 naturaleza = ETER
 arquetipo = DEFENSOR
 personalidad = sonador
@@ -369,7 +369,7 @@ desbloqueo = nivel:JUNIOR_2
 
 [remolino]
 nombre = Remolino | Wirbel | Whirl
-lema = Giro, salto, chispa. Y vuelta a empezar. | Drehen, springen, Funken. Und von vorn. | Spin, flip, spark. And again.
+lema = Giro, salto, chispa. Y vuelta a empezar. | Drehen, Springen, Funken. Und von vorn. | Spin, flip, spark. And again.
 naturaleza = RAYO
 arquetipo = ASALTO
 personalidad = vertiginoso

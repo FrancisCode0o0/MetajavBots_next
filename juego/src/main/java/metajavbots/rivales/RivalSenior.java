@@ -40,7 +40,7 @@ public final class RivalSenior extends Metajavbot {
                         "Strict time budget (2.5 ms and 260 steps/tick): punishes expensive loops and O(n²) algorithms."),
                 new Trilingue(
                         "Reduce la complejidad de cadaTurno(): evita bucles anidados y precalcula valores constantes fuera del turno.",
-                        "Reduziere die Komplexität von jederZug(): Vermeide verschachtelte Schleifen und berechne Konstanten vorab.",
+                        "Reduziere die Komplexität von jedenZug(): Vermeide verschachtelte Schleifen und berechne Konstanten vorab.",
                         "Lower onTick() complexity: avoid nested loops and precompute constants outside the tick.")),
         ANGULOS("senior_angulos", "avispa", 0.80, 0L, 0L, 0L, false,
                 new Trilingue("Barón 361°", "Baron 361°", "Baron 361°"),
@@ -55,7 +55,7 @@ public final class RivalSenior extends Metajavbot {
                 new Trilingue(
                         "Normaliza siempre las diferencias angulares con normalizar(objetivo - mira()) para girar por el camino corto en (-180, 180].",
                         "Normalisiere Winkeldifferenzen immer mit normalisieren(ziel - blick()), um den kürzesten Weg in (-180, 180] zu drehen.",
-                        "Always normalize angle deltas with normalize(target - heading()) so you turn the shortest way in (-180, 180].")),
+                        "Always normalize angle deltas with normalize(target - aimDirection()) so you turn the shortest way in (-180, 180].")),
         CONCURRENCIA("senior_concurrencia", "tejedora", 0.82, 0L, 0L, 0L, true,
                 new Trilingue("Condesa Carrera de Datos", "Gräfin Datenrennen", "Countess Data-Race"),
                 new Trilingue(
@@ -69,7 +69,7 @@ public final class RivalSenior extends Metajavbot {
                 new Trilingue(
                         "En paralelo, evita campos static mutables y usa AtomicInteger, ConcurrentHashMap, synchronized o avisarAlEquipo().",
                         "Vermeide im Parallelmodus veränderliche static-Felder und nutze AtomicInteger, ConcurrentHashMap, synchronized oder teamMelden().",
-                        "In parallel mode, avoid mutable static fields and use AtomicInteger, ConcurrentHashMap, synchronized, or alertTeam().")),
+                        "In parallel mode, avoid mutable static fields and use AtomicInteger, ConcurrentHashMap, synchronized, or tellTeam().")),
         NULOS("senior_nulos", "eclipse", 0.80, 0L, 0L, 0L, false,
                 new Trilingue("Señor NullPointer", "Herr Nullzeiger", "Sir NullPointer"),
                 new Trilingue(
@@ -78,12 +78,12 @@ public final class RivalSenior extends Metajavbot {
                         "Tried to drink from a null mug in the cafeteria and threw an exception that blacked out the stadium."),
                 new Trilingue(
                         "Rompe el contacto de radar con camuflaje y flanqueos: castiga leer miAparato(), memoria() o listas sin comprobar null.",
-                        "Bricht den Radarkontakt mit Tarnung ab: bestraft Zugriffe auf meinGeraet(), speicher() oder Listen ohne null-Prüfung.",
+                        "Bricht den Radarkontakt mit Tarnung ab: bestraft Zugriffe auf meinGeraet(), gedaechtnis() oder Listen ohne null-Prüfung.",
                         "Breaks radar lock with stealth dashes: punishes using myGadget(), memory(), or lists without null/empty checks."),
                 new Trilingue(
-                        "Comprueba siempre != null y !isEmpty() antes de acceder a miAparato(), memoria().get(...) o enemigos().get(0).",
-                        "Prüfe immer != null und !isEmpty(), bevor du auf meinGeraet(), speicher().get(...) oder gegner().get(0) zugreifst.",
-                        "Always check != null and !isEmpty() before reading myGadget(), memory().get(...), or enemies().get(0).")),
+                        "Comprueba siempre != null y !isEmpty() antes de acceder a miAparato(), memoria().get(...) o enemigosVistos().get(0).",
+                        "Prüfe immer != null und !isEmpty(), bevor du auf meinGeraet(), gedaechtnis().get(...) oder gesehen().get(0) zugreifst.",
+                        "Always check != null and !isEmpty() before reading myGadget(), memory().get(...), or seenEnemies().get(0).")),
         MEMORIA_ENERGIA("senior_memoria", "galapago", 0.82, 0L, 0L, 8_192L, false,
                 new Trilingue("Baronesa Basura GC", "Baronin Müllsammler", "Baroness GC-Storm"),
                 new Trilingue(
@@ -92,11 +92,11 @@ public final class RivalSenior extends Metajavbot {
                         "Bought a brand-new chassis every 33 milliseconds until the garbage collector repossessed its garage."),
                 new Trilingue(
                         "Presupuesto estricto de memoria (8 KB/turno) y desgaste de energía: castiga crear objetos en bucles y malgastar disparos.",
-                        "Strenges Speicherbudget (8 KB/Zug) und Energiedruck: bestraft Objekt-Erzeugung in Schleifen und Fehlschüsse.",
+                        "Strenges Speicherbudget (8 KB/Zug) und Energiedruck: bestraft Objekterzeugung in Schleifen und Fehlschüsse.",
                         "Strict memory budget (8 KB/tick) and energy pressure: punishes per-tick allocations and wasteful firing."),
                 new Trilingue(
                         "Reutiliza campos primitivos, evita new dentro de bucles/cadaTurno() y dispara solo cuando tengas energía y puntería.",
-                        "Verwende primitive Felder wieder, vermeide new in Schleifen/jederZug() und feuere nur mit Energie und Zielgenauigkeit.",
+                        "Verwende primitive Felder wieder, vermeide new in Schleifen/jedenZug() und feuere nur mit Energie und Zielgenauigkeit.",
                         "Reuse primitive fields, avoid new inside loops/onTick(), and fire only when energy and aim line up."));
 
         public final String id, modelo;

@@ -4,7 +4,7 @@
 [saludo]
 es: ¡Hola, {rival}! ¿Cómo te gusta la tortilla: poco hecha o volando por los aires?
 de: Hallo, {rival}! Wie magst du dein Omelett: locker oder hoch in der Luft?
-en: Hey, {rival}! How do you like your omelette: fluffy or airborne?
+en: Hey, {rival}! How do you like your omelet: fluffy or airborne?
 
 es: ¡{yo} al mando! Prepárate para ver el techo de cerca, {rival}.
 de: {yo} am Start! Mach dich bereit, die Decke aus der Nähe zu sehen, {rival}.
@@ -42,7 +42,7 @@ en: Up in the air with {arma}!
 
 es: ¡Vuelta de tortilla para {rival}!
 de: Einmal wenden für {rival}!
-en: Omelette flip for {rival}!
+en: Omelet flip for {rival}!
 
 es: ¡Arriba, arriba! ¡Sin miedo a las alturas!
 de: Hoch, hoch! Keine Höhenangst!
@@ -63,7 +63,7 @@ en: What a somersault! You almost touched the lights!
 
 es: ¡Pim, pam, tortilla lista!
 de: Zack, gewendet, fertig!
-en: Flip, flop, omelette's done!
+en: Flip, flop, omelet's done!
 
 es: ¿Cómo se ve la arena desde arriba, {rival}?
 de: Wie sieht die Arena von oben aus, {rival}?
@@ -106,7 +106,7 @@ en: My spring absorbs that and laughs!
 [golpe_fuerte]
 es: ¡Guau! ¡He visto las estrellas girar al revés!
 de: Wow! Ich habe die Sterne rückwärts kreisen sehen!
-en: Whoa! I saw stars spinning backwards!
+en: Whoa! I saw stars spinning backward!
 
 es: ¡Eso sí que fue un giro inesperado, {rival}!
 de: Das war mal eine unerwartete Wendung, {rival}!
@@ -191,7 +191,7 @@ en: Turned this whole round upside down!
 [derrota_ronda]
 es: ¡Ay, esta vez la tortilla caí yo!
 de: Autsch, diesmal bin ich als Omelett gelandet!
-en: Ouch, I landed like the omelette that time!
+en: Ouch, I landed like the omelet that time!
 
 es: ¡Bien hecho, {rival}! Pero a la siguiente te toca volar a ti.
 de: Gut gemacht, {rival}! Aber nächstes Mal fliegst du.
@@ -220,7 +220,7 @@ en: Nice flight, {rival}! Thanks for flying Flipside Airlines!
 
 es: ¡Y ahora… la tortilla de la victoria!
 de: Und jetzt … das Sieges-Omelett!
-en: And now… the victory omelette!
+en: And now… the victory omelet!
 
 [derrota]
 es: ¡Me has dejado mirando al techo, {rival}! ¡Buena pelea!
@@ -296,7 +296,7 @@ de: Plumps! Über eine Exception gestolpert, {jugador}!
 en: Plop! Tripped over an exception, {jugador}!
 
 es: ¡He intentado dar una voltereta y me dio un null!
-de: Ich wollte einen Salto machen und bin auf ein null gelandet!
+de: Ich wollte einen Salto machen und bin auf einem null gelandet!
 en: Tried a somersault and landed on a null!
 
 es: ¡Error en el aire! ¡Pide pista de emergencia!

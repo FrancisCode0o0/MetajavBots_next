@@ -274,9 +274,9 @@ public final class CatalogoDeEscenas {
                                                 "Auf dem eisigen Gipfel des Berges Volt verbeugt sich {rival} höflich vor jedem Rammstoß.",
                                                 "On the icy peak of Mount Volt, {rival} bows politely before every charge."),
                                         tr("¡Qué suelo tan resbaladizo!", "Was für ein rutschiger Boden!", "What a slippery floor!"),
-                                        tr("Disculpe las molestias, voy a lanzarle muy lejos.",
-                                                "Entschuldigen Sie die Umstände, ich werfe Sie gleich sehr weit.",
-                                                "Pardon the inconvenience, I am about to launch you very far."))));
+                                        tr("Disculpe las molestias; voy a lanzarle muy lejos.",
+                                                "Entschuldigen Sie die Umstände; ich werfe Sie gleich sehr weit.",
+                                                "Pardon the inconvenience; I am about to launch you very far."))));
             case 7:
                 return new EscenaDeCampana(id, Momento.GIRO,
                         tr("El campeón invicto de la isla", "Der ungeschlagene Insel-Champion", "The Unbeaten Island Champion"),

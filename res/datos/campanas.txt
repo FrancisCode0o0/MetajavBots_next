@@ -9,7 +9,7 @@
 
 [rocko]
 titulo: Rocko | Rocko | Rocko
-lema: Un robot de chatarrería con gorrito de lana contra el campeón del mundo. | Ein Schrottplatz-Roboter mit Wollmütze gegen den Weltmeister. | A scrapyard robot in a woolly hat against the world champion.
+lema: Un robot de chatarrería con gorrito de lana contra el campeón del mundo. | Ein Schrottplatz-Roboter mit Wollmütze gegen den Weltmeister. | A scrapyard robot in a wool hat against the world champion.
 homenaje: Rocky (1976)
 entrenador: tuercas
 musica: entrenamiento
@@ -26,7 +26,7 @@ musica: entrenamiento
 2.escenario: LABORATORIO
 2.rondas: 3
 2.texto: El campeón Apolo Cromo elige rival al azar en la guía de teléfonos... y sale Rocko. Para entrenar, golpea un frigorífico en la cámara de la fábrica de hielo. El frigorífico devuelve los golpes. | Weltmeister Apollo Chrom sucht seinen Gegner zufällig im Telefonbuch aus ... und es trifft Rocko. Zum Training schlägt er im Kühlhaus auf einen Kühlschrank ein. Der Kühlschrank schlägt zurück. | Champion Apollo Chrome picks an opponent at random from the phone book... and gets Rocko. To train, he punches a fridge in the ice factory. The fridge punches back.
-2.victoria: El frigorífico se rinde y se abre: dentro había un yogur. Rocko sube la escalerita del museo con su pullover y levanta los brazos. Se le congela el aceite. | Der Kühlschrank gibt auf und geht auf: Drinnen ist ein Joghurt. Rocko läuft im Pullover die Museumstreppe hoch und reißt die Arme hoch. Sein Öl gefriert. | The fridge gives up and swings open: there was a yoghurt inside. Rocko runs up the museum steps in his pullover and raises his arms. His oil freezes.
+2.victoria: El frigorífico se rinde y se abre: dentro había un yogur. Rocko sube la escalerita del museo con su pullover y levanta los brazos. Se le congela el aceite. | Der Kühlschrank gibt auf und geht auf: Drinnen ist ein Joghurt. Rocko läuft im Pullover die Museumstreppe hoch und reißt die Arme hoch. Sein Öl gefriert. | The fridge gives up and swings open: there was a yogurt inside. Rocko runs up the museum steps in his pullover and raises his arms. His oil freezes.
 3.rival: Apolo Cromo | Apollo Chrom | Apollo Chrome
 3.modelo: faro
 3.nivel: 0.4
@@ -42,13 +42,13 @@ homenaje: Rocky II (1979)
 entrenador: tuercas
 musica: entrenamiento
 requiere: rocko
-1.rival: Anuncio Cutre | Billigwerbung | Cheap Advert
+1.rival: Anuncio Cutre | Billigwerbung | Cheap Commercial
 1.modelo: pixel
 1.nivel: 0.25
 1.escenario: NEON
 1.rondas: 3
-1.texto: Rocko se gasta los premios en una moto que no sabe conducir y lo contratan para un anuncio de aftershave. No sabe leer el guion. El robot del anuncio se enfada. | Rocko verprasst sein Preisgeld für ein Motorrad, das er nicht fahren kann, und dreht einen Werbespot für Rasierwasser. Er kann das Drehbuch nicht lesen. Der Werbe-Roboter wird sauer. | Rocko blows his prize money on a motorbike he can't ride and lands an aftershave advert. He can't read the script. The advert robot gets angry.
-1.victoria: Lo despiden del anuncio, pero el director dice que «tiene algo». Probablemente óxido. | Er fliegt aus dem Spot, aber der Regisseur sagt, er «hat was». Wahrscheinlich Rost. | He's fired from the advert, but the director says he "has something". Probably rust.
+1.texto: Rocko se gasta los premios en una moto que no sabe conducir y lo contratan para un anuncio de aftershave. No sabe leer el guion. El robot del anuncio se enfada. | Rocko verprasst sein Preisgeld für ein Motorrad, das er nicht fahren kann, und dreht einen Werbespot für Rasierwasser. Er kann das Drehbuch nicht lesen. Der Werbe-Roboter wird sauer. | Rocko blows his prize money on a motorbike he can't ride and lands an aftershave commercial. He can't read the script. The commercial robot gets angry.
+1.victoria: Lo despiden del anuncio, pero el director dice que «tiene algo». Probablemente óxido. | Er fliegt aus dem Spot, aber der Regisseur sagt, er «hat was». Wahrscheinlich Rost. | He's fired from the commercial, but the director says he "has something." Probably rust.
 2.rival: Aspiradora Veloz | Flinker Sauger | Speedy Vacuum
 2.modelo: avispa
 2.nivel: 0.35
@@ -134,7 +134,7 @@ requiere: rocko4
 1.nivel: 0.45
 1.escenario: HANGAR
 1.rondas: 3
-1.texto: Rocko vuelve al gimnasio del barrio. Aparece Tomi Cañón, un robot joven con mucho brazo y poca paciencia. Primero, a ver qué sabe. | Rocko kehrt in die Halle im Viertel zurück. Tomi Kanone taucht auf, ein junger Roboter mit viel Arm und wenig Geduld. Erst mal sehen, was er kann. | Rocko goes back to the neighbourhood gym. Tommy Cannon shows up, a young robot with a big arm and little patience. First, let's see what he's got.
+1.texto: Rocko vuelve al gimnasio del barrio. Aparece Tomi Cañón, un robot joven con mucho brazo y poca paciencia. Primero, a ver qué sabe. | Rocko kehrt in die Halle im Viertel zurück. Tomi Kanone taucht auf, ein junger Roboter mit viel Arm und wenig Geduld. Erst mal sehen, was er kann. | Rocko goes back to the neighborhood gym. Tommy Cannon shows up, a young robot with a big arm and little patience. First, let's see what he's got.
 1.victoria: Tomi aprende rápido. Demasiado rápido: ya pide un representante con gafas de sol. | Tomi lernt schnell. Zu schnell: Er will schon einen Manager mit Sonnenbrille. | Tommy learns fast. Too fast: he already wants an agent with sunglasses.
 2.rival: Representante Tiburón | Manager Hai | Agent Shark
 2.modelo: tejedora
@@ -170,7 +170,7 @@ requiere: rocko5
 2.nivel: 0.55
 2.escenario: HANGAR
 2.rondas: 3
-2.texto: Para entrenar, Rocko levanta bombonas de aceite, sube otra vez la escalerita (ahora con ascensor) y golpea un saco que se oxida más rápido que él. | Zum Training stemmt Rocko Ölfässer, läuft wieder die Treppe hoch (jetzt mit Aufzug) und schlägt auf einen Sack, der schneller rostet als er. | To train, Rocko lifts oil drums, climbs the steps again (now with a lift) and punches a bag that rusts faster than he does.
+2.texto: Para entrenar, Rocko levanta bombonas de aceite, sube otra vez la escalerita (ahora con ascensor) y golpea un saco que se oxida más rápido que él. | Zum Training stemmt Rocko Ölfässer, läuft wieder die Treppe hoch (jetzt mit Aufzug) und schlägt auf einen Sack, der schneller rostet als er. | To train, Rocko lifts oil drums, climbs the steps again (now with an elevator) and punches a bag that rusts faster than he does.
 2.victoria: Le duelen todas las bisagras. Está listo. | Ihm tun alle Scharniere weh. Er ist bereit. | Every hinge aches. He's ready.
 3.rival: Masón Diésel | Maurer Diesel | Mason Diesel
 3.modelo: barrena
@@ -178,7 +178,7 @@ requiere: rocko5
 3.escenario: NEON
 3.rondas: 4
 3.texto: El último asalto. Nadie apuesta por Rocko. Rocko tampoco, pero va igual: «No se trata de lo fuerte que pegas, sino de lo fuerte que te pegan y sigues compilando». | Die letzte Runde. Niemand wettet auf Rocko. Rocko auch nicht, aber er geht trotzdem: «Es geht nicht darum, wie hart du schlägst, sondern wie hart du getroffen wirst und weiter kompilierst.» | The last round. No one bets on Rocko. Neither does Rocko, but he goes anyway: "It's not about how hard you hit, it's about how hard you get hit and keep compiling."
-3.victoria: Rocko aguanta hasta la campana. Saluda al público, se quita el gorrito de lana y se va a casa. Aceituna lo espera con aceite caliente. | Rocko hält bis zum Gong durch. Er grüßt das Publikum, nimmt die Wollmütze ab und geht nach Hause. Olivia wartet mit warmem Öl. | Rocko lasts until the bell. He waves to the crowd, takes off his woolly hat and goes home. Olivette is waiting with warm oil.
+3.victoria: Rocko aguanta hasta la campana. Saluda al público, se quita el gorrito de lana y se va a casa. Aceituna lo espera con aceite caliente. | Rocko hält bis zum Gong durch. Er grüßt das Publikum, nimmt die Wollmütze ab und geht nach Hause. Olivia wartet mit warmem Öl. | Rocko lasts until the bell. He waves to the crowd, takes off his wool hat and goes home. Olivette is waiting with warm oil.
 
 [karatebit]
 titulo: Kárate-bit | Karate-Bit | Karate-Bit
@@ -292,7 +292,7 @@ requiere: karatebit3
 3.nivel: 0.6
 3.escenario: NEON
 3.rondas: 4
-3.texto: El jefe de los Alfa-Beta reta a Julia en el puerto, de noche, delante de todo el instituto. Julia se acuerda de la bola: sin prisa. | Der Chef der Alpha-Betas fordert Julia nachts am Hafen heraus, vor der ganzen Schule. Julia denkt an die Kugel: keine Eile. | The head of the Alpha-Betas challenges Julia at the harbour, at night, in front of the whole school. Julia remembers the ball: no hurry.
+3.texto: El jefe de los Alfa-Beta reta a Julia en el puerto, de noche, delante de todo el instituto. Julia se acuerda de la bola: sin prisa. | Der Chef der Alpha-Betas fordert Julia nachts am Hafen heraus, vor der ganzen Schule. Julia denkt an die Kugel: keine Eile. | The head of the Alpha-Betas challenges Julia at the harbor, at night, in front of the whole school. Julia remembers the ball: no hurry.
 3.victoria: El Capitán Alfa acaba en el agua. Julia baila el vals con Miyaceite en la azotea. | Kapitän Alpha landet im Wasser. Julia tanzt mit Miyaöl auf dem Dach Walzer. | Captain Alpha ends up in the water. Julia waltzes with Miyoili on the roof.
 
 [kungbit]
@@ -307,8 +307,8 @@ requiere: karatebit4
 1.nivel: 0.35
 1.escenario: NEON
 1.rondas: 3
-1.texto: Dre-bit se muda con su madre a una ciudad enorme. En el parque, Chen Cuchilla lo tumba por mirar a quien no debía. El conserje, el señor Jandro, lo ve todo desde su escoba. | Dre-Bit zieht mit seiner Mutter in eine riesige Stadt. Im Park legt ihn Chen Klinge um, weil er die Falsche angeschaut hat. Hausmeister Herr Jandro sieht alles von seinem Besen aus. | Dre-bit moves with his mum to a huge city. In the park, Chen Blade knocks him down for looking at the wrong girl. The janitor, Mr Jandro, sees it all from behind his broom.
-1.victoria: El señor Jandro para la pelea con cuatro movimientos y sin soltar la escoba. Dre-bit quiere aprender eso. | Herr Jandro beendet den Kampf mit vier Bewegungen, ohne den Besen loszulassen. Dre-Bit will das lernen. | Mr Jandro stops the fight in four moves without letting go of the broom. Dre-bit wants to learn that.
+1.texto: Dre-bit se muda con su madre a una ciudad enorme. En el parque, Chen Cuchilla lo tumba por mirar a quien no debía. El conserje, el señor Jandro, lo ve todo desde su escoba. | Dre-Bit zieht mit seiner Mutter in eine riesige Stadt. Im Park legt ihn Chen Klinge um, weil er die Falsche angeschaut hat. Hausmeister Herr Jandro sieht alles von seinem Besen aus. | Dre-bit moves with his mom to a huge city. In the park, Chen Blade knocks him down for looking at the wrong girl. The janitor, Mr. Jandro, sees it all from behind his broom.
+1.victoria: El señor Jandro para la pelea con cuatro movimientos y sin soltar la escoba. Dre-bit quiere aprender eso. | Herr Jandro beendet den Kampf mit vier Bewegungen, ohne den Besen loszulassen. Dre-Bit will das lernen. | Mr. Jandro stops the fight in four moves without letting go of the broom. Dre-bit wants to learn that.
 2.rival: Percha Rebelde | Rebellischer Haken | Rebel Hanger
 2.modelo: tejedora
 2.nivel: 0.45
@@ -422,7 +422,7 @@ musica: drama
 1.rondas: 2
 1.texto: Magui Fitz-Bit paga el gimnasio con propinas y golpea el saco hasta que cierran. El Sargento Remache dice que no entrena a nadie. Y menos a una versión 31. | Magi Fitz-Bit bezahlt die Halle mit Trinkgeld und schlägt auf den Sack, bis zugesperrt wird. Feldwebel Niete sagt, er trainiere niemanden. Schon gar nicht Version 31. | Maggie Fitz-Bit pays for the gym with tips and punches the bag until closing. Sergeant Rivet says he trains nobody. Least of all a version 31.
 1.victoria: El saco se rinde antes que ella. Remache refunfuña: «Mañana a las seis. Y no me hables». | Der Sack gibt vor ihr auf. Niete brummt: «Morgen um sechs. Und red nicht mit mir.» | The bag gives up before she does. Rivet grumbles: "Six tomorrow. And don't talk to me."
-2.rival: Campeona del Barrio | Viertelmeisterin | Neighbourhood Champ
+2.rival: Campeona del Barrio | Viertelmeisterin | Neighborhood Champ
 2.modelo: avispa
 2.nivel: 0.55
 2.escenario: NEON
@@ -467,7 +467,7 @@ musica: combate
 
 [patadaspalmera]
 titulo: Patadas a la Palmera | Tritte gegen die Palme | Palm Tree Kicker
-lema: Para vengar a su hermano, un robot extranjero aprende a dar patadas a una palmera hasta que la palmera pida perdón. | Um seinen Bruder zu rächen, lernt ein fremder Roboter, gegen eine Palme zu treten, bis die Palme um Verzeihung bittet. | To avenge his brother, a foreign robot learns to kick a palm tree until the palm tree apologises.
+lema: Para vengar a su hermano, un robot extranjero aprende a dar patadas a una palmera hasta que la palmera pida perdón. | Um seinen Bruder zu rächen, lernt ein fremder Roboter, gegen eine Palme zu treten, bis die Palme um Verzeihung bittet. | To avenge his brother, a foreign robot learns to kick a palm tree until the palm tree apologizes.
 homenaje: Kickboxer (1989)
 entrenador: pelobit
 musica: artes_marciales
@@ -529,14 +529,14 @@ entrenador: tuercas
 musica: entrenamiento
 estilo: creed
 destacada: true
-1.rival: Léo Tornillo | Leo Schraube | Leo Bolt
+1.rival: Leo Tornillo | Leo Schraube | Leo Bolt
 1.modelo: serrucho
 1.nivel: 0.25
 1.rango: Noob
 1.escenario: HANGAR
 1.rondas: 2
-1.texto: Adonis Cromo se cansa de arreglar hojas de cálculo y aparece en el gimnasio buscando un entrenador de verdad. Antes de que nadie lo tome en serio, tiene que vencer a Léo Tornillo, el terror del sótano. | Adonis Chrom hat genug von Tabellenkalkulationen und taucht im Gym auf, um einen echten Trainer zu finden. Bevor ihn jemand ernst nimmt, muss er Leo Schraube schlagen, den Schrecken des Kellers. | Adonis Chrome gets tired of fixing spreadsheets and shows up at the gym looking for a real coach. Before anyone takes him seriously, he has to beat Leo Bolt, the terror of the basement.
-1.victoria: Léo Tornillo acaba contando tuercas en la lona. El gimnasio entero deja de burlarse y pregunta cómo se llama ese novato. | Leo Schraube zählt Muttern auf dem Boden. Das ganze Gym hört auf zu lachen und fragt, wie dieser Neuling heißt. | Leo Bolt ends up counting nuts on the canvas. The whole gym stops laughing and asks what this rookie's name is.
+1.texto: Adonis Cromo se cansa de arreglar hojas de cálculo y aparece en el gimnasio buscando un entrenador de verdad. Antes de que nadie lo tome en serio, tiene que vencer a Leo Tornillo, el terror del sótano. | Adonis Chrom hat genug von Tabellenkalkulationen und taucht im Gym auf, um einen echten Trainer zu finden. Bevor ihn jemand ernst nimmt, muss er Leo Schraube schlagen, den Schrecken des Kellers. | Adonis Chrome gets tired of fixing spreadsheets and shows up at the gym looking for a real coach. Before anyone takes him seriously, he has to beat Leo Bolt, the terror of the basement.
+1.victoria: Leo Tornillo acaba contando tuercas en la lona. El gimnasio entero deja de burlarse y pregunta cómo se llama ese novato. | Leo Schraube zählt Muttern auf dem Boden. Das ganze Gym hört auf zu lachen und fragt, wie dieser Neuling heißt. | Leo Bolt ends up counting nuts on the canvas. The whole gym stops laughing and asks what this rookie's name is.
 2.rival: Dani «el Cable» | Dani «das Kabel» | Danny "The Cable"
 2.modelo: volteo
 2.nivel: 0.34

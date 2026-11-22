@@ -249,7 +249,7 @@ de: Frau Pepa sagt, du hast nicht mal ihren Lack angekratzt!
 en: Lady Pepa says you didn't even scuff her paint!
 
 es: ¡Corre, corre, que la cadena llega lejos!
-de: Lauf nur, die Kette reicht weiter als du denkst!
+de: Lauf nur, die Kette reicht weiter, als du denkst!
 en: Run all you want, this chain reaches farther than you think!
 
 es: ¡A ver si aguantas otro saludo de hierro!

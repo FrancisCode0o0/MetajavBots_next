@@ -116,7 +116,7 @@ es: Un Map de nombres a Runnable es un menú de maniobras: tacticas.get("huir").
 es: la maniobra con un dato que guardaste en memoria(), sin un solo if.
 de: Eine Map von Namen auf Runnables ist ein Manöver-Menü: tacticas.get("huir").run(). Du kannst
 de: das Manöver über einen Wert aus gedaechtnis() wählen, ganz ohne if.
-en: A Map from names to Runnables is a menu of manoeuvres: tacticas.get("huir").run(). You can pick
+en: A Map from names to Runnables is a menu of maneuvers: tacticas.get("huir").run(). You can pick
 en: the maneuver with a value you saved in memory(), without a single if.
 codigo:
     Map<String, Runnable> tacticas = Map.of(

@@ -228,7 +228,7 @@ en: {jugador}, your code and my fists! Unbeatable!
 
 [derrota]
 es: ¡Imposible! ¡{yo} nunca pierde! ¡{yo} solo... explota!
-de: Unmöglich! {yo} verliert nie! Er... explodiert nur!
+de: Unmöglich! {yo} verliert nie! {yo} … explodiert nur!
 en: Impossible! {yo} never loses! {yo} just... explodes!
 
 es: ¡Esto no ha terminado! ¡Bueno, sí! ¡Pero volveré!
@@ -278,7 +278,7 @@ de: Wenn ich mit dir fertig bin, gibt's dich nur noch als Ersatzteile!
 en: When I'm done, you'll be sold as spare parts!
 
 es: ¡{yo} ha venido a dos cosas: a pegar y a pegar otra vez!
-de: {yo} ist für zwei Dinge hier: hauen und nochmal hauen!
+de: {yo} ist für zwei Dinge hier: hauen und noch mal hauen!
 en: {yo} came for two things: hitting, and hitting again!
 
 [subida]
@@ -329,7 +329,7 @@ de: Wie lange noch?! Ich will was kaputt machen!
 en: How much longer?! I wanna break something!
 
 es: ¡{yo} espera! ¡{yo} no se queja! ¡{yo} se queja un poco!
-de: {yo} wartet! {yo} meckert nicht! Na gut, ein bisschen!
+de: {yo} wartet! {yo} meckert nicht! Na gut, {yo} meckert ein bisschen!
 en: {yo} waits! {yo} doesn't complain! {yo} complains a little!
 
 [elogio]

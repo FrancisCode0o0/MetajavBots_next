@@ -195,7 +195,7 @@ en: My blade jammed! Won't happen next round!
 
 es: ¡Vale, {rival}, esta vez me cortaste el rollo!
 de: Okay, {rival}, diesmal hast du mich ausgebremst!
-en: Alright, {rival}, you cut my momentum that time!
+en: All right, {rival}, you cut my momentum that time!
 
 es: ¡Afilo los dientes en el descanso y vuelvo el doble de rápido!
 de: In der Pause schärfe ich die Zähne und komme doppelt so schnell zurück!

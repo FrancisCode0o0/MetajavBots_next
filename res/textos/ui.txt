@@ -1054,7 +1054,7 @@ destruccion.bono_supervivencia = Supervivencia: {0} + {1} bono = +{2} monedas | 
 destruccion.derrota_cuarto = Muerte anticipada: 1/4 del botín ({0} → +{1} monedas) | Vorzeitiges Aus: 1/4 der Beute ({0} → +{1} Münzen) | Early death: 1/4 of loot ({0} → +{1} coins)
 destruccion.derrota_cero = Sin destrucciones: 0 monedas esta vez. | Keine Zerstörungen: Diesmal 0 Münzen. | No destructions: 0 coins this time.
 destruccion.saldo_final = Cobrado: +{0} monedas · Saldo: {1} (+{2}/100) | Erhalten: +{0} Münzen · Guthaben: {1} (+{2}/100) | Collected: +{0} coins · Balance: {1} (+{2}/100)
-destruccion.repetir = Jugar otra vez | Nochmal spielen | Play again
+destruccion.repetir = Jugar otra vez | Noch mal spielen | Play again
 
 especial.senior = Peleas Senior | Senior-Kämpfe | Senior Fights
 especial.senior_ayuda = Retos de nivel Senior: presupuesto real de tiempo y memoria por turno, robots ejecutándose en paralelo y cinco rivales absurdos que castigan los fallos típicos de programación. | Herausforderungen auf Senior-Niveau: echtes Zeit- und Speicherbudget pro Zug, parallele Roboter und fünf absurde Gegner, die typische Programmierfehler bestrafen. | Senior-level challenges: real per-tick time and memory budgets, robots running in parallel, and five absurd rivals that punish classic programming pitfalls.
