@@ -435,3 +435,206 @@ casos:
     ajustar("  uno   dos ", 20) => "uno dos"
     ajustar("", 5) => ""
     ajustar("ok megalaser ok", 4) => "ok\nmegalaser\nok"
+
+
+=== t08_etiqueta_doble
+tema: 08
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Enmarcar el apodo del robot
+titulo.de: Den Spitznamen einrahmen
+titulo.en: Frame the robot's nickname
+enunciado.es: Recibes un marco de exactamente 4 caracteres (como "[[]]" o "<<>>") y el apodo del robot. Devuelve una cadena con el apodo metido justo en el centro del marco. Ejemplos: enmarcar("<<>>", "Rex") devuelve "<<Rex>>" y enmarcar("[[]]", "Zap") devuelve "[[Zap]]".
+enunciado.de: Du bekommst einen Rahmen aus genau 4 Zeichen (wie "[[]]" oder "<<>>") und den Spitznamen des Roboters. Gib einen Text zurück, bei dem der Spitzname genau in der Mitte des Rahmens sitzt. Beispiele: enmarcar("<<>>", "Rex") gibt "<<Rex>>" zurück und enmarcar("[[]]", "Zap") "[[Zap]]".
+enunciado.en: You are given a 4-character frame (such as "[[]]" or "<<>>") and a robot's nickname. Return a string with the nickname placed right in the middle of the frame. Examples: enmarcar("<<>>", "Rex") returns "<<Rex>>" and enmarcar("[[]]", "Zap") returns "[[Zap]]".
+pista.es: Usa marco.substring(0, 2) para la primera mitad y marco.substring(2) para la segunda.
+pista.de: Nutze marco.substring(0, 2) für die erste Hälfte und marco.substring(2) für die zweite.
+pista.en: Use marco.substring(0, 2) for the first half and marco.substring(2) for the second.
+firma: static String enmarcar(String marco, String apodo)
+plantilla:
+    return marco + apodo;
+solucion:
+    return marco.substring(0, 2) + apodo + marco.substring(2);
+casos:
+    enmarcar("<<>>", "Rex") => "<<Rex>>"
+    enmarcar("[[]]", "Zap") => "[[Zap]]"
+    enmarcar("{{}}", "") => "{{}}"
+    enmarcar("(())", "Mk2") => "((Mk2))"
+
+=== t08_codigo_sandwich
+tema: 08
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Código sándwich
+titulo.de: Sandwich-Code
+titulo.en: Sandwich code
+enunciado.es: Dados dos códigos a y b, devuelve corto + largo + corto (el más corto envuelve al más largo). Si miden igual, usa a como el corto (a + b + a). Ejemplos: sandwich("RX", "TURBO") devuelve "RXTURBORX" y sandwich("MEGA", "OK") devuelve "OKMEGAOK".
+enunciado.de: Gegeben sind zwei Codes a und b. Gib kurz + lang + kurz zurück (der kürzere umrahmt den längeren). Sind beide gleich lang, gilt a als der kürzere (a + b + a). Beispiele: sandwich("RX", "TURBO") gibt "RXTURBORX" zurück und sandwich("MEGA", "OK") "OKMEGAOK".
+enunciado.en: Given two codes a and b, return short + long + short (the shorter string wraps the longer one). If they have the same length, treat a as the shorter one (a + b + a). Examples: sandwich("RX", "TURBO") returns "RXTURBORX" and sandwich("MEGA", "OK") returns "OKMEGAOK".
+pista.es: Compara a.length() <= b.length() para decidir cuál va en los extremos y cuál en el centro.
+pista.de: Vergleiche a.length() <= b.length(), um zu entscheiden, welcher Code außen und welcher in der Mitte steht.
+pista.en: Compare a.length() <= b.length() to decide which string goes on the outside and which goes in the middle.
+firma: static String sandwich(String a, String b)
+plantilla:
+    return a + b;
+solucion:
+    if (a.length() <= b.length()) {
+        return a + b + a;
+    }
+    return b + a + b;
+casos:
+    sandwich("RX", "TURBO") => "RXTURBORX"
+    sandwich("MEGA", "OK") => "OKMEGAOK"
+    sandwich("", "ZAP") => "ZAP"
+    sandwich("AA", "BB") => "AABBAA"
+    sandwich("", "") => ""
+
+=== t08_empate_bip_zap
+tema: 08
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: ¿Empate de bips y zaps?
+titulo.de: Gleichstand bei bip und zap?
+titulo.en: Tie between bip and zap?
+enunciado.es: Un robot parlanchín llena el registro con "bip" y "zap" (en minúsculas). Devuelve true si "bip" y "zap" aparecen exactamente el mismo número de veces en registro. Ejemplos: empateBipZap("bipzap") devuelve true, empateBipZap("bipbip") devuelve false y empateBipZap("1bip2zap3") devuelve true.
+enunciado.de: Ein geschwätziger Roboter füllt das Protokoll mit "bip" und "zap" (kleingeschrieben). Gib true zurück, wenn "bip" und "zap" genau gleich oft in registro vorkommen. Beispiele: empateBipZap("bipzap") gibt true zurück, empateBipZap("bipbip") false und empateBipZap("1bip2zap3") true.
+enunciado.en: A chatty robot fills the log with "bip" and "zap" (lowercase). Return true if "bip" and "zap" appear the exact same number of times in registro. Examples: empateBipZap("bipzap") returns true, empateBipZap("bipbip") returns false, and empateBipZap("1bip2zap3") returns true.
+pista.es: Recorre las subcadenas de 3 letras (i <= registro.length() - 3) y lleva dos contadores, uno para "bip" y otro para "zap".
+pista.de: Geh die 3-Zeichen-Teiltexte durch (i <= registro.length() - 3) und führe zwei Zähler, einen für "bip" und einen für "zap".
+pista.en: Walk through all 3-letter substrings (i <= registro.length() - 3) and keep two counters, one for "bip" and one for "zap".
+firma: static boolean empateBipZap(String registro)
+plantilla:
+    return false;
+solucion:
+    int bips = 0;
+    int zaps = 0;
+    for (int i = 0; i <= registro.length() - 3; i++) {
+        String trozo = registro.substring(i, i + 3);
+        if (trozo.equals("bip")) {
+            bips++;
+        } else if (trozo.equals("zap")) {
+            zaps++;
+        }
+    }
+    return bips == zaps;
+casos:
+    empateBipZap("bipzap") => true
+    empateBipZap("bipbip") => false
+    empateBipZap("1bip2zap3") => true
+    empateBipZap("silencio") => true
+    empateBipZap("") => true
+    empateBipZap("bipzapzap") => false
+
+=== t08_quitar_interferencias
+tema: 08
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Limpiar interferencias del radar
+titulo.de: Radarstörungen entfernen
+titulo.en: Clear radar interference
+enunciado.es: Cada asterisco '*' en la señal es una chispa que borra el propio '*' y también el carácter inmediatamente a su izquierda y a su derecha. Devuelve la señal limpia. Ejemplos: limpiarRuido("ab*cd") devuelve "ad", limpiarRuido("ab**cd") devuelve "ad" y limpiarRuido("sm*eilly") devuelve "silly".
+enunciado.de: Jeder Stern '*' im Signal ist ein Funke, der das '*' selbst sowie das Zeichen direkt links und direkt rechts daneben auslöscht. Gib das bereinigte Signal zurück. Beispiele: limpiarRuido("ab*cd") gibt "ad" zurück, limpiarRuido("ab**cd") "ad" und limpiarRuido("sm*eilly") "silly".
+enunciado.en: Each asterisk '*' in the signal is a spark that erases the '*' itself as well as the character immediately to its left and right. Return the cleaned signal. Examples: limpiarRuido("ab*cd") returns "ad", limpiarRuido("ab**cd") returns "ad", and limpiarRuido("sm*eilly") returns "silly".
+pista.es: Un carácter en la posición i sobrevive solo si ni i, ni i - 1 (si existe), ni i + 1 (si existe) es '*'.
+pista.de: Ein Zeichen an Position i überlebt nur, wenn weder i noch i - 1 (falls vorhanden) noch i + 1 (falls vorhanden) ein '*' ist.
+pista.en: A character at position i survives only if neither i, nor i - 1 (if in bounds), nor i + 1 (if in bounds) is '*'.
+firma: static String limpiarRuido(String senal)
+plantilla:
+    return senal.replace("*", "");
+solucion:
+    StringBuilder res = new StringBuilder();
+    for (int i = 0; i < senal.length(); i++) {
+        boolean chispa = senal.charAt(i) == '*'
+                || (i > 0 && senal.charAt(i - 1) == '*')
+                || (i + 1 < senal.length() && senal.charAt(i + 1) == '*');
+        if (!chispa) {
+            res.append(senal.charAt(i));
+        }
+    }
+    return res.toString();
+casos:
+    limpiarRuido("ab*cd") => "ad"
+    limpiarRuido("ab**cd") => "ad"
+    limpiarRuido("sm*eilly") => "silly"
+    limpiarRuido("*a") => ""
+    limpiarRuido("a*") => ""
+    limpiarRuido("robot") => "robot"
+    limpiarRuido("") => ""
+
+=== t08_extremos_espejo
+tema: 08
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Extremos en espejo
+titulo.de: Gespiegelte Enden
+titulo.en: Mirror ends
+enunciado.es: Busca el prefijo más largo de senal que aparece también al final de senal en orden inverso (pueden solaparse si toda la señal es capicúa). Ejemplos: extremosEspejo("abXYZba") devuelve "ab", extremosEspejo("abca") devuelve "a" y extremosEspejo("aba") devuelve "aba".
+enunciado.de: Suche das längste Präfix von senal, das auch am Ende von senal in umgekehrter Reihenfolge vorkommt (bei einem Palindrom dürfen sich beide Teile überlappen). Beispiele: extremosEspejo("abXYZba") gibt "ab" zurück, extremosEspejo("abca") "a" und extremosEspejo("aba") "aba".
+enunciado.en: Find the longest prefix of senal that also appears at the end of senal in reverse order (they may overlap if the whole string is a palindrome). Examples: extremosEspejo("abXYZba") returns "ab", extremosEspejo("abca") returns "a", and extremosEspejo("aba") returns "aba".
+pista.es: Recorre i desde 0 hasta senal.length() - 1 comparando senal.charAt(i) con senal.charAt(senal.length() - 1 - i); para en cuanto difieran.
+pista.de: Lauf mit i von 0 bis senal.length() - 1 und vergleiche senal.charAt(i) mit senal.charAt(senal.length() - 1 - i); brich ab, sobald sie sich unterscheiden.
+pista.en: Loop i from 0 to senal.length() - 1 comparing senal.charAt(i) with senal.charAt(senal.length() - 1 - i); stop as soon as they differ.
+firma: static String extremosEspejo(String senal)
+plantilla:
+    return "";
+solucion:
+    StringBuilder res = new StringBuilder();
+    int n = senal.length();
+    for (int i = 0; i < n; i++) {
+        if (senal.charAt(i) == senal.charAt(n - 1 - i)) {
+            res.append(senal.charAt(i));
+        } else {
+            break;
+        }
+    }
+    return res.toString();
+casos:
+    extremosEspejo("abXYZba") => "ab"
+    extremosEspejo("abca") => "a"
+    extremosEspejo("aba") => "aba"
+    extremosEspejo("robot") => ""
+    extremosEspejo("x") => "x"
+    extremosEspejo("") => ""
+
+=== t08_sumar_numeros_texto
+tema: 08
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Sumar códigos ocultos en el informe
+titulo.de: Versteckte Zahlen im Bericht summieren
+titulo.en: Sum hidden numbers in the report
+enunciado.es: El informe del taller mezcla texto con números enteros no negativos (un número es una secuencia continua de cifras). Devuelve la suma de todos los números que aparecen en texto. Ejemplos: sumarNumeros("mk12v3") devuelve 15, sumarNumeros("aa11b33") devuelve 44 y sumarNumeros("sin cifras") devuelve 0.
+enunciado.de: Der Werkstattbericht mischt Text mit nichtnegativen ganzen Zahlen (eine Zahl ist eine zusammenhängende Folge von Ziffern). Gib die Summe aller Zahlen im Text zurück. Beispiele: sumarNumeros("mk12v3") gibt 15 zurück, sumarNumeros("aa11b33") 44 und sumarNumeros("ohne ziffern") 0.
+enunciado.en: The workshop report mixes text with non-negative integers (a number is a contiguous run of digits). Return the sum of all numbers appearing in texto. Examples: sumarNumeros("mk12v3") returns 15, sumarNumeros("aa11b33") returns 44, and sumarNumeros("no digits") returns 0.
+pista.es: Lleva un acumulador actual para el número que estás leyendo: con cada dígito haz actual = actual * 10 + (c - '0'); cuando venga un no dígito (y al final del bucle), suma actual al total y pon actual = 0.
+pista.de: Führe einen Zwischenwert actual für die laufende Zahl: Bei jeder Ziffer rechne actual = actual * 10 + (c - '0'); bei einem anderen Zeichen (und nach der Schleife) addiere actual zur Summe und setze actual = 0.
+pista.en: Keep a running value actual for the current number: on each digit do actual = actual * 10 + (c - '0'); on any non-digit (and after the loop), add actual to total and reset actual = 0.
+firma: static int sumarNumeros(String texto)
+plantilla:
+    return 0;
+solucion:
+    int total = 0;
+    int actual = 0;
+    for (int i = 0; i < texto.length(); i++) {
+        char c = texto.charAt(i);
+        if (Character.isDigit(c)) {
+            actual = actual * 10 + (c - '0');
+        } else {
+            total += actual;
+            actual = 0;
+        }
+    }
+    return total + actual;
+casos:
+    sumarNumeros("mk12v3") => 15
+    sumarNumeros("aa11b33") => 44
+    sumarNumeros("7 11") => 18
+    sumarNumeros("sin cifras") => 0
+    sumarNumeros("100") => 100
+    sumarNumeros("") => 0

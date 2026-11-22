@@ -114,27 +114,27 @@ titulo.en: Minigames and Exercises
 claves.es: minijuegos, minijuego, ejercicios, ejercicio, codingbat, practicar, entrenar, oxidado, muñeco, calentar, retos cortos
 claves.de: minispiele, minispiel, ubungen, ubung, codingbat, uben, trainieren, eingerostet, puppe, aufwarmen, kurze aufgaben
 claves.en: minigames, minigame, exercises, exercise, codingbat, practice, train, rusty, dummy, warm up, short drills
-resumen.ia: Minigames (5 short drills: move, radar, aim, shoot smart, dodge obstacles) and Exercises (CodingBat-style short Java problems with a live preview of the little robot waiting in its scene before you press Check, plus auto-checks)
+resumen.ia: Minigames (5 short drills: move, radar, aim, shoot smart, dodge obstacles) and Exercises (300+ CodingBat- and CodeStepByStep-style Java problems scaling from warmup to hard strings, logic, loops, 1D/2D arrays, collections, recursive backtracking, OOP classes/inheritance/exceptions, with a live preview of the little robot waiting in its scene before you press Check, plus auto-checks)
 tip.juego_oxidado_minijuegos.condicion: oxidado
-tip.juego_oxidado_minijuegos.es: ¿Un poco oxidado tras las últimas peleas? Pásate por [[Minijuegos]] o resuelve un par de [[Ejercicios]] cortos para calentar.
-tip.juego_oxidado_minijuegos.de: Etwas eingerostet nach den letzten Kämpfen? Schau bei den [[Minispielen]] vorbei oder löse ein paar kurze [[Übungen]] zum Aufwärmen.
-tip.juego_oxidado_minijuegos.en: Feeling a bit rusty after recent fights? Drop into [[Minigames]] or solve a couple of short [[Exercises]] to warm up.
+tip.juego_oxidado_minijuegos.es: ¿Un poco oxidado tras las últimas peleas? En [[Minijuegos]] y [[Ejercicios]] tienes más de 300 retos progresivos (de calentamiento a algoritmos, matrices, colecciones y POO) para volver a punto.
+tip.juego_oxidado_minijuegos.de: Etwas eingerostet nach den letzten Kämpfen? In [[Minispielen]] und [[Übungen]] warten über 300 gestaffelte Aufgaben (vom Aufwärmen bis zu Algorithmen, Matrizen, Collections und OOP) auf dich.
+tip.juego_oxidado_minijuegos.en: Feeling a bit rusty after recent fights? [[Minigames]] and [[Exercises]] pack over 300 progressive drills—from quick warmups to algorithms, 2D matrices, collections, and OOP—to get you sharp again.
 ver: tutoriales_y_demos, hora_de_hoy_y_temario, por_que_pierdo, minijuego_destruccion
 es:
     Si llevas varias derrotas, te sientes oxidado o quieres practicar una habilidad concreta sin la presión del ring, entra en Minijuegos y en Ejercicios.
     Los Minijuegos son cinco retos cortos contra el muñeco de entrenamiento: moverse sin chocar, girar el radar, apuntar, disparar con cabeza y esquivar obstáculos.
-    Los Ejercicios son problemas breves de Java al estilo CodingBat que se comprueban solos al instante y te dan monedas y experiencia para subir de rango. Cada ejercicio muestra desde el inicio una vista previa del robotito en su escenario esperando a que pulses Comprobar para ver en vivo cómo ejecuta tu código.
-    Alternar un minijuego con dos o tres ejercicios rápidos es la mejor forma de coger soltura antes de volver a la Arena.
+    Los Ejercicios reúnen más de 300 problemas de Java al estilo CodingBat y CodeStepByStep con progresión real de dificultad (de 1 a 5 estrellas): desde calentamientos de lógica, cadenas y bucles hasta retos avanzados de arrays 1D/2D, colecciones (List, Set, Map), recursión con retroceso, clases, herencia y excepciones. Se comprueban solos al instante, dan monedas y experiencia para subir de rango, y cada uno muestra desde el inicio una vista previa del robotito en su escenario esperando a que pulses Comprobar para ver en vivo cómo ejecuta tu código.
+    Alternar un minijuego con dos o tres ejercicios de dificultad creciente es la mejor forma de coger soltura antes de volver a la Arena.
 de:
     Wenn du ein paar Niederlagen hintereinander hast, dich eingerostet fühlst oder gezielt üben willst, öffne Minispiele und Übungen.
     Die Minispiele sind fünf kurze Aufgaben gegen die Trainingspuppe: fahren ohne hängen zu bleiben, das Radar drehen, zielen, mit Köpfchen schießen und Hindernissen ausweichen.
-    Die Übungen sind kurze Java-Aufgaben im CodingBat-Stil, die sich sofort selbst prüfen und dir Münzen sowie Erfahrung für den Aufstieg bringen. Jede Übung zeigt von Anfang an eine Vorschau des kleinen Roboters in seiner Szene, der darauf wartet, dass du auf Prüfen drückst, um deinen Code live in Aktion zu sehen.
-    Ein Minispiel im Wechsel mit zwei oder drei schnellen Übungen ist das beste Aufwärmtraining vor dem nächsten Kampf.
+    Die Übungen umfassen über 300 Java-Aufgaben im Stil von CodingBat und CodeStepByStep mit echter Schwierigkeitsprogression (1 bis 5 Sterne): von leichten Aufwärmübungen zu Logik, Texten und Schleifen bis zu anspruchsvollen Aufgaben mit 1D-/2D-Arrays, Collections (List, Set, Map), Backtracking-Rekursion, Klassen, Vererbung und Ausnahmen. Sie prüfen sich sofort selbst, bringen Münzen sowie Erfahrung für den Aufstieg, und jede Übung zeigt von Anfang an eine Vorschau des kleinen Roboters in seiner Szene, der darauf wartet, dass du auf Prüfen drückst, um deinen Code live in Aktion zu sehen.
+    Ein Minispiel im Wechsel mit zwei oder drei Übungen steigender Schwierigkeit ist das beste Training vor dem nächsten Kampf.
 en:
     If you've had a few losses, feel rusty, or want to sharpen one skill without ring pressure, open Minigames and Exercises.
     Minigames are five short drills against the training dummy: moving cleanly, sweeping the radar, aiming, shooting smart, and dodging obstacles.
-    Exercises are bite-sized CodingBat-style Java problems that self-check immediately and reward coins and experience toward your next rank. Each exercise shows a preview of the little robot waiting in its scene right away until you press Check to watch it run your code live.
-    Mixing one minigame with two or three quick exercises is the fastest way to warm up before heading back to the Arena.
+    Exercises gather over 300 CodingBat- and CodeStepByStep-style Java problems with a real difficulty progression (1 to 5 stars): from quick warmups in logic, strings, and loops up to tough challenges in 1D/2D arrays, collections (List, Set, Map), recursive backtracking, classes, inheritance, and exceptions. They self-check immediately, reward coins and experience toward your next rank, and each exercise shows a preview of the little robot waiting in its scene right away until you press Check to watch it run your code live.
+    Mixing one minigame with two or three exercises of rising difficulty is the fastest way to warm up before heading back to the Arena.
 pseudo.es:
     Minijuegos → practicar moverse, radar, apuntar, disparar y esquivar
     Ejercicios → resolver retos cortos con pruebas automáticas

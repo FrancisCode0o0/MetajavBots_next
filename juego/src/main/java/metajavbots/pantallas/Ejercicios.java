@@ -84,13 +84,13 @@ public final class Ejercicios implements Pantalla {
             int hechos = 0;
             for (Ejercicio e : es) if (jug.ejerciciosResueltos.contains(e.id)) hechos++;
             boolean elegido = tm.id.equals(tema);
-            float fh = 54;
+            float fh = Math.max(54, ui.letra * 2.3f);
             if (elegido) p.caja(32, yy, tw - 40, fh - 4, 8, ui.tema.seleccion, 1);
             else if (ui.e.dentro(32, yy, tw - 40, fh - 4)) p.caja(32, yy, tw - 40, fh - 4, 8, ui.tema.panelAlto, 1);
             p.texto(tm.id + "  " + ui.recortarTexto(tm.nombre(T.idioma), tw - 160, ui.letra * 0.85f, false), 44, yy + 6, ui.letra * 0.85f, false,
                     ui.tema.texto, 1);
-            ui.barra(44, yy + 32, tw - 170, 8, es.isEmpty() ? 0 : (float) hechos / es.size(), ui.tema.bien, null);
-            p.textoDerecha(hechos + "/" + es.size(), tw - 30, yy + 24, ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
+            ui.barra(44, yy + fh - 22, tw - 170, 8, es.isEmpty() ? 0 : (float) hechos / es.size(), ui.tema.bien, null);
+            p.textoDerecha(hechos + "/" + es.size(), tw - 30, yy + fh - 30, ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
             if (ui.e.clic(32, yy, tw - 40, fh - 4)) {
                 tema = tm.id;
                 lista.alPrincipio();
@@ -125,15 +125,16 @@ public final class Ejercicios implements Pantalla {
         for (Ejercicio e : banco.deTema(tema)) {
             boolean hecho = jug.ejerciciosResueltos.contains(e.id);
             boolean puede = e.java <= Compilador.versionDeJava();
-            float fh = 70;
+            float fh = Math.max(70, ui.letra * 3.1f);
+            float fila2 = Math.max(38, ui.letra * 1.55f);
             boolean encima = ui.e.dentro(lx + 16, y2, lw - 44, fh - 6);
             p.caja(lx + 16, y2, lw - 44, fh - 6, 10, encima ? ui.tema.panelAlto : ui.tema.fondo, 1);
-            p.texto(hecho ? "✔" : "○", lx + 32, y2 + 18, ui.letra * 1.2f, true, hecho ? ui.tema.bien : ui.tema.textoApagado, 1);
-            p.texto(e.titulo(T.idioma), lx + 72, y2 + 10, ui.letra, true, ui.tema.texto, 1);
-            p.texto(ui.recortarTexto(e.enunciado.en(T.idioma), lw - 330, ui.letra * 0.75f, false), lx + 72, y2 + 38, ui.letra * 0.75f, false,
-                    ui.tema.textoSuave, 1);
+            p.texto(hecho ? "✔" : "○", lx + 32, y2 + fh * 0.25f, ui.letra * 1.2f, true, hecho ? ui.tema.bien : ui.tema.textoApagado, 1);
+            p.texto(ui.recortarTexto(e.titulo(T.idioma), Math.max(120, lw - 280), ui.letra, true), lx + 72, y2 + 10, ui.letra, true, ui.tema.texto, 1);
+            p.texto(ui.recortarTexto(e.enunciado.en(T.idioma), Math.max(120, lw - 330), ui.letra * 0.75f, false), lx + 72, y2 + fila2, ui.letra * 0.75f,
+                    false, ui.tema.textoSuave, 1);
             p.textoDerecha("★".repeat(e.dificultad) + "☆".repeat(5 - e.dificultad), lx + lw - 50, y2 + 10, ui.letra * 0.9f, false, 0xFFC857, 1);
-            p.textoDerecha((e.java > 8 ? "Java " + e.java + " · " : "") + T.t("tipo." + e.tipo.name().toLowerCase()), lx + lw - 50, y2 + 38,
+            p.textoDerecha((e.java > 8 ? "Java " + e.java + " · " : "") + T.t("tipo." + e.tipo.name().toLowerCase()), lx + lw - 50, y2 + fila2,
                     ui.letra * 0.7f, false, puede ? ui.tema.textoApagado : ui.tema.mal, 1);
             if (puede && ui.e.clic(lx + 16, y2, lw - 44, fh - 6)) j.ir(new PantallaEjercicio(e));
             y2 += fh;

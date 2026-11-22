@@ -893,3 +893,223 @@ terminos.de:
     // minimo(), apilar y desapilar ==> // minimo(), apilar und desapilar
 terminos.en:
     // minimo(), apilar y desapilar ==> // minimo(), apilar and desapilar
+
+
+=== t11_sensor_calibrado
+tema: 11
+dificultad: 3
+java: 8
+tipo: clase
+titulo.es: Sensor base y sensor calibrado
+titulo.de: Basissensor und kalibrierter Sensor
+titulo.en: Base sensor and calibrated sensor
+enunciado.es: La clase Sensor(int desplazamiento) tiene int medir(int lectura) que devuelve lectura + desplazamiento. Completa SensorCalibrado extends Sensor con SensorCalibrado(int desplazamiento, int minimo, int maximo) (lanza IllegalArgumentException si minimo > maximo) y sobrescribe medir(int lectura) para reutilizar super.medir(lectura) y recortar el resultado al rango [minimo, maximo]. Ejemplos: new SensorCalibrado(5, 0, 10).medir(8) devuelve 10 y new SensorCalibrado(-5, 0, 10).medir(2) devuelve 0.
+enunciado.de: Die Klasse Sensor(int desplazamiento) besitzt int medir(int lectura), das lectura + desplazamiento zurückgibt. Vervollständige SensorCalibrado extends Sensor mit SensorCalibrado(int desplazamiento, int minimo, int maximo) (wirft IllegalArgumentException bei minimo > maximo) und überschreibe medir(int lectura), sodass super.medir(lectura) wiederverwendet und auf den Bereich [minimo, maximo] begrenzt wird. Beispiele: new SensorCalibrado(5, 0, 10).medir(8) gibt 10 zurück und new SensorCalibrado(-5, 0, 10).medir(2) 0.
+enunciado.en: The class Sensor(int desplazamiento) has int medir(int lectura) returning lectura + desplazamiento. Complete SensorCalibrado extends Sensor with SensorCalibrado(int desplazamiento, int minimo, int maximo) (throws IllegalArgumentException if minimo > maximo) and override medir(int lectura) to reuse super.medir(lectura) and clamp the result to [minimo, maximo]. Examples: new SensorCalibrado(5, 0, 10).medir(8) returns 10 and new SensorCalibrado(-5, 0, 10).medir(2) returns 0.
+pista.es: Llama a super(desplazamiento) en el constructor, valida minimo <= maximo y en medir usa Math.max(minimo, Math.min(maximo, super.medir(lectura))).
+pista.de: Ruf im Konstruktor super(desplazamiento) auf, prüfe minimo <= maximo und nutze in medir Math.max(minimo, Math.min(maximo, super.medir(lectura))).
+pista.en: Call super(desplazamiento) in the constructor, validate minimo <= maximo, and in medir use Math.max(minimo, Math.min(maximo, super.medir(lectura))).
+plantilla:
+    class Sensor {
+        private final int desplazamiento;
+
+        Sensor(int desplazamiento) {
+            this.desplazamiento = desplazamiento;
+        }
+
+        int medir(int lectura) {
+            return lectura + desplazamiento;
+        }
+    }
+
+    public class SensorCalibrado extends Sensor {
+        private final int minimo;
+        private final int maximo;
+
+        public SensorCalibrado(int desplazamiento, int minimo, int maximo) {
+            super(desplazamiento);
+            this.minimo = minimo;
+            this.maximo = maximo;
+        }
+
+        @Override
+        int medir(int lectura) {
+            return super.medir(lectura);
+        }
+    }
+solucion:
+    class Sensor {
+        private final int desplazamiento;
+
+        Sensor(int desplazamiento) {
+            this.desplazamiento = desplazamiento;
+        }
+
+        int medir(int lectura) {
+            return lectura + desplazamiento;
+        }
+    }
+
+    public class SensorCalibrado extends Sensor {
+        private final int minimo;
+        private final int maximo;
+
+        public SensorCalibrado(int desplazamiento, int minimo, int maximo) {
+            super(desplazamiento);
+            if (minimo > maximo) {
+                throw new IllegalArgumentException("rango invalido");
+            }
+            this.minimo = minimo;
+            this.maximo = maximo;
+        }
+
+        @Override
+        int medir(int lectura) {
+            int ajustado = super.medir(lectura);
+            return Math.max(minimo, Math.min(maximo, ajustado));
+        }
+    }
+casos:
+    new Sensor(5).medir(8) => 13
+    new SensorCalibrado(5, 0, 10).medir(8) => 10
+    new SensorCalibrado(-5, 0, 10).medir(2) => 0
+    new SensorCalibrado(2, 0, 10).medir(4) => 6
+    ((Sensor) new SensorCalibrado(5, 0, 10)).medir(20) => 10
+    new SensorCalibrado(0, 10, 5) => !IllegalArgumentException
+
+=== t11_cuenta_vip
+tema: 11
+dificultad: 4
+java: 8
+tipo: clase
+titulo.es: Cuenta de premios con comisión
+titulo.de: Prämienkonto mit Gebühr
+titulo.en: Prize account with fee
+enunciado.es: La clase CuentaPremios(int saldoInicial) gestiona las monedas del club (saldo(), ingresar(int), retirar(int)). Completa CuentaVip extends CuentaPremios con CuentaVip(int saldoInicial, int comision) (lanza IllegalArgumentException si comision < 0): cada retirada exitosa cobra además comision monedas (si cantidad <= 0, lanza IllegalArgumentException; si cantidad + comision > saldo(), devuelve false sin tocar el saldo) y suma esa comisión a int comisionesCobradas(). Ejemplos: con saldo 100 y comisión 5, retirar(20) deja saldo en 75 y comisionesCobradas() en 5; retirar(96) con saldo 100 devuelve false.
+enunciado.de: Die Klasse CuentaPremios(int saldoInicial) verwaltet Clubmünzen (saldo(), ingresar(int), retirar(int)). Vervollständige CuentaVip extends CuentaPremios mit CuentaVip(int saldoInicial, int comision) (wirft IllegalArgumentException bei comision < 0): Jede erfolgreiche Abhebung kostet zusätzlich comision Münzen (bei cantidad <= 0 IllegalArgumentException; bei cantidad + comision > saldo() false ohne Saldoänderung) und addiert die Gebühr zu int comisionesCobradas(). Beispiele: Bei Saldo 100 und Gebühr 5 lässt retirar(20) den Saldo bei 75 und comisionesCobradas() bei 5; retirar(96) bei Saldo 100 gibt false zurück.
+enunciado.en: The class CuentaPremios(int saldoInicial) manages club coins (saldo(), ingresar(int), retirar(int)). Complete CuentaVip extends CuentaPremios with CuentaVip(int saldoInicial, int comision) (throws IllegalArgumentException if comision < 0): every successful withdrawal also charges comision coins (if cantidad <= 0, throw IllegalArgumentException; if cantidad + comision > saldo(), return false without changing the balance) and adds that fee to int comisionesCobradas(). Examples: with balance 100 and fee 5, retirar(20) leaves balance at 75 and comisionesCobradas() at 5; retirar(96) on balance 100 returns false.
+pista.es: En CuentaVip.retirar(int cantidad), valida primero cantidad <= 0 y luego llama a super.retirar(cantidad + comision); si devuelve true, acumula comision.
+pista.de: Prüfe in CuentaVip.retirar(int cantidad) zuerst cantidad <= 0 und rufe dann super.retirar(cantidad + comision) auf; bei true addiere comision.
+pista.en: In CuentaVip.retirar(int cantidad), check cantidad <= 0 first and then call super.retirar(cantidad + comision); if it returns true, add comision.
+plantilla:
+    class CuentaPremios {
+        private int saldo;
+
+        CuentaPremios(int saldoInicial) {
+            if (saldoInicial < 0) {
+                throw new IllegalArgumentException("saldo negativo");
+            }
+            this.saldo = saldoInicial;
+        }
+
+        int saldo() {
+            return saldo;
+        }
+
+        void ingresar(int cantidad) {
+            if (cantidad <= 0) {
+                throw new IllegalArgumentException("ingreso no positivo");
+            }
+            saldo += cantidad;
+        }
+
+        boolean retirar(int cantidad) {
+            if (cantidad <= 0) {
+                throw new IllegalArgumentException("retirada no positiva");
+            }
+            if (cantidad > saldo) {
+                return false;
+            }
+            saldo -= cantidad;
+            return true;
+        }
+    }
+
+    public class CuentaVip extends CuentaPremios {
+        private final int comision;
+        private int cobradas;
+
+        public CuentaVip(int saldoInicial, int comision) {
+            super(saldoInicial);
+            this.comision = comision;
+        }
+
+        @Override
+        boolean retirar(int cantidad) {
+            return super.retirar(cantidad);
+        }
+
+        public int comisionesCobradas() {
+            return cobradas;
+        }
+    }
+solucion:
+    class CuentaPremios {
+        private int saldo;
+
+        CuentaPremios(int saldoInicial) {
+            if (saldoInicial < 0) {
+                throw new IllegalArgumentException("saldo negativo");
+            }
+            this.saldo = saldoInicial;
+        }
+
+        int saldo() {
+            return saldo;
+        }
+
+        void ingresar(int cantidad) {
+            if (cantidad <= 0) {
+                throw new IllegalArgumentException("ingreso no positivo");
+            }
+            saldo += cantidad;
+        }
+
+        boolean retirar(int cantidad) {
+            if (cantidad <= 0) {
+                throw new IllegalArgumentException("retirada no positiva");
+            }
+            if (cantidad > saldo) {
+                return false;
+            }
+            saldo -= cantidad;
+            return true;
+        }
+    }
+
+    public class CuentaVip extends CuentaPremios {
+        private final int comision;
+        private int cobradas;
+
+        public CuentaVip(int saldoInicial, int comision) {
+            super(saldoInicial);
+            if (comision < 0) {
+                throw new IllegalArgumentException("comision negativa");
+            }
+            this.comision = comision;
+        }
+
+        @Override
+        boolean retirar(int cantidad) {
+            if (cantidad <= 0) {
+                throw new IllegalArgumentException("retirada no positiva");
+            }
+            if (super.retirar(cantidad + comision)) {
+                cobradas += comision;
+                return true;
+            }
+            return false;
+        }
+
+        public int comisionesCobradas() {
+            return cobradas;
+        }
+    }
+casos:
+    ((Supplier<Integer>) () -> { CuentaVip c = new CuentaVip(100, 5); c.retirar(20); return c.saldo(); }).get() => 75
+    ((Supplier<Integer>) () -> { CuentaVip c = new CuentaVip(100, 5); c.retirar(20); c.retirar(10); return c.comisionesCobradas(); }).get() => 10
+    new CuentaVip(100, 5).retirar(96) => false
+    ((Supplier<Integer>) () -> { CuentaVip c = new CuentaVip(100, 5); c.retirar(96); return c.comisionesCobradas(); }).get() => 0
+    new CuentaVip(50, -1) => !IllegalArgumentException
+    new CuentaVip(50, 5).retirar(0) => !IllegalArgumentException
+    ((CuentaPremios) new CuentaVip(50, 5)).retirar(45) => true

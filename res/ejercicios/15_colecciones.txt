@@ -462,3 +462,158 @@ casos:
     mejores(Map.of("Rex", 1), 5) => List.of("Rex")
     mejores(Map.of("Rex", 5, "Tita", 9), 0) => List.of()
     mejores(Map.of(), 3) => List.of()
+
+
+=== t15_unicos_ordenados
+tema: 15
+dificultad: 2
+java: 11
+tipo: metodo
+titulo.es: Piezas sin repetir en orden
+titulo.de: Teile ohne Duplikate in Reihenfolge
+titulo.en: Unique parts in original order
+enunciado.es: El pedido del taller trae piezas repetidas. Devuelve una nueva List<String> sin duplicados, conservando exactamente el orden en que apareció cada pieza por primera vez. Ejemplos: sinRepetidos(List.of("tuerca", "laser", "tuerca", "motor")) devuelve ["tuerca", "laser", "motor"].
+enunciado.de: Die Werkstattbestellung enthält doppelte Teile. Gib eine neue List<String> ohne Duplikate zurück, in genau der Reihenfolge, in der jedes Teil zum ersten Mal vorkam. Beispiel: sinRepetidos(List.of("mutter", "laser", "mutter", "motor")) gibt ["mutter", "laser", "motor"] zurück.
+enunciado.en: The workshop order lists duplicate parts. Return a new List<String> without duplicates, preserving the exact order in which each part first appeared. Example: sinRepetidos(List.of("nut", "laser", "nut", "motor")) returns ["nut", "laser", "motor"].
+pista.es: LinkedHashSet elimina duplicados manteniendo el orden de inserción: new ArrayList<>(new LinkedHashSet<>(piezas)).
+pista.de: LinkedHashSet entfernt Duplikate und behält die Einfügereihenfolge: new ArrayList<>(new LinkedHashSet<>(piezas)).
+pista.en: LinkedHashSet removes duplicates while keeping insertion order: new ArrayList<>(new LinkedHashSet<>(piezas)).
+firma: static List<String> sinRepetidos(List<String> piezas)
+plantilla:
+    return new ArrayList<>(piezas);
+solucion:
+    return new ArrayList<>(new LinkedHashSet<>(piezas));
+casos:
+    sinRepetidos(List.of("tuerca", "laser", "tuerca", "motor")) => List.of("tuerca", "laser", "motor")
+    sinRepetidos(List.of("a", "a", "a")) => List.of("a")
+    sinRepetidos(List.of("z", "a", "m")) => List.of("z", "a", "m")
+    sinRepetidos(List.of()) => List.of()
+
+=== t15_mapa_longitudes
+tema: 15
+dificultad: 2
+java: 11
+tipo: metodo
+titulo.es: Longitud de cada modelo (Map)
+titulo.de: Länge jedes Modellnamens (Map)
+titulo.en: Length of each model name (Map)
+enunciado.es: Recibes un array de nombres de modelos. Devuelve un Map<String, Integer> donde cada nombre distinto del array sea clave y su valor sea la longitud de ese nombre. Ejemplos: longitudes(new String[]{"Rex", "Tita", "Rex"}) devuelve {Rex=3, Tita=4}.
+enunciado.de: Du bekommst ein Array von Modellnamen. Gib eine Map<String, Integer> zurück, in der jeder eindeutige Name aus dem Array der Schlüssel und seine Länge der Wert ist. Beispiel: longitudes(new String[]{"Rex", "Tita", "Rex"}) gibt {Rex=3, Tita=4} zurück.
+enunciado.en: You receive an array of model names. Return a Map<String, Integer> where each distinct name in the array is a key mapped to its string length. Example: longitudes(new String[]{"Rex", "Tita", "Rex"}) returns {Rex=3, Tita=4}.
+pista.es: Crea un HashMap<String, Integer>() y en un for-each haz mapa.put(nombre, nombre.length()).
+pista.de: Erzeuge eine HashMap<String, Integer>() und mache in einer for-each-Schleife mapa.put(nombre, nombre.length()).
+pista.en: Create a HashMap<String, Integer>() and in a for-each loop do mapa.put(nombre, nombre.length()).
+firma: static Map<String, Integer> longitudes(String[] modelos)
+plantilla:
+    return new HashMap<>();
+solucion:
+    Map<String, Integer> mapa = new HashMap<>();
+    for (String modelo : modelos) {
+        mapa.put(modelo, modelo.length());
+    }
+    return mapa;
+casos:
+    longitudes(new String[]{"Rex", "Tita", "Rex"}) => Map.of("Rex", 3, "Tita", 4)
+    longitudes(new String[]{"a", "bb", "ccc"}) => Map.of("a", 1, "bb", 2, "ccc", 3)
+    longitudes(new String[]{""}) => Map.of("", 0)
+    longitudes(new String[]{}) => Map.of()
+
+=== t15_agrupar_por_inicial
+tema: 15
+dificultad: 3
+java: 11
+tipo: metodo
+titulo.es: Catálogo por letra inicial (Map)
+titulo.de: Katalog nach Anfangsbuchstaben (Map)
+titulo.en: Catalog by starting letter (Map)
+enunciado.es: Recibes un array de palabras no vacías. Devuelve un Map<String, String> con una clave por cada letra inicial distinta (como texto de 1 carácter), cuyo valor sea la concatenación de todas las palabras que empiezan por esa letra en el orden en que aparecen. Ejemplos: porInicial(new String[]{"salto", "sierra", "torre", "turbo"}) devuelve {s="saltosierra", t="torreturbo"}.
+enunciado.de: Du bekommst ein Array nicht leerer Wörter. Gib eine Map<String, String> mit einem Schlüssel für jeden Anfangsbuchstaben (als Text der Länge 1) zurück, dessen Wert die Verkettung aller Wörter mit diesem Anfangsbuchstaben in ihrer Reihenfolge ist. Beispiel: porInicial(new String[]{"salto", "sierra", "torre", "turbo"}) gibt {s="saltosierra", t="torreturbo"} zurück.
+enunciado.en: You receive an array of non-empty words. Return a Map<String, String> with a key for each distinct first letter (as a 1-character String), mapped to the concatenation of all words starting with that letter in the order they appear. Example: porInicial(new String[]{"salto", "sierra", "torre", "turbo"}) returns {s="saltosierra", t="torreturbo"}.
+pista.es: Saca la inicial con palabra.substring(0, 1) y concatena usando mapa.getOrDefault(inicial, "") + palabra.
+pista.de: Hol den Anfangsbuchstaben mit palabra.substring(0, 1) und hänge mit mapa.getOrDefault(inicial, "") + palabra an.
+pista.en: Extract the initial with palabra.substring(0, 1) and append using mapa.getOrDefault(inicial, "") + palabra.
+firma: static Map<String, String> porInicial(String[] palabras)
+plantilla:
+    return new HashMap<>();
+solucion:
+    Map<String, String> mapa = new HashMap<>();
+    for (String palabra : palabras) {
+        String clave = palabra.substring(0, 1);
+        mapa.put(clave, mapa.getOrDefault(clave, "") + palabra);
+    }
+    return mapa;
+casos:
+    porInicial(new String[]{"salto", "sierra", "torre", "turbo"}) => Map.of("s", "saltosierra", "t", "torreturbo")
+    porInicial(new String[]{"aa", "bb", "cc", "aAA", "cCC", "d"}) => Map.of("a", "aaaAA", "b", "bb", "c", "cccCC", "d", "d")
+    porInicial(new String[]{"rex"}) => Map.of("r", "rex")
+    porInicial(new String[]{}) => Map.of()
+
+=== t15_intercambiar_parejas
+tema: 15
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Intercambiar parejas por inicial (Map)
+titulo.de: Paare nach Anfangsbuchstaben tauschen (Map)
+titulo.en: Swap pairs by starting letter (Map)
+enunciado.es: Dos robots del array palabras (cadenas no vacías) forman pareja si comparten la primera letra. Recorre el array de izquierda a derecha y, cuando aparezca una segunda palabra con la misma inicial que una que estaba esperando, intercámbialas en el resultado; tras el intercambio la inicial vuelve a quedar libre para futuras parejas. No modifiques el array original. Ejemplos: intercambiarParejas(new String[]{"ab", "ac"}) devuelve {"ac", "ab"} y intercambiarParejas(new String[]{"ax", "bx", "cx", "cy", "by", "ay", "aaa", "azz"}) devuelve {"ay", "by", "cy", "cx", "bx", "ax", "azz", "aaa"}.
+enunciado.de: Zwei Roboter im Array palabras (nicht leere Texte) bilden ein Paar, wenn sie denselben Anfangsbuchstaben haben. Geh das Array von links nach rechts durch: Trifft ein zweites Wort auf denselben Anfangsbuchstaben eines wartenden Wortes, tausche beide im Ergebnis; danach ist der Buchstabe wieder frei für das nächste Paar. Ändere das Original nicht. Beispiele: intercambiarParejas(new String[]{"ab", "ac"}) gibt {"ac", "ab"} zurück.
+enunciado.en: Two robots in the array palabras (non-empty strings) match if they share the same first letter. Scan left to right: when a second string matches a waiting one with the same first letter, swap them in the result; after swapping, that letter becomes free again for future pairs. Do not modify the original array. Examples: intercambiarParejas(new String[]{"ab", "ac"}) returns {"ac", "ab"}.
+pista.es: Usa un Map<String, Integer> que guarde el índice en espera para cada inicial: si ya está en el mapa, intercambia y borra la clave con remove; si no, guárdala con put.
+pista.de: Nutze eine Map<String, Integer>, die den wartenden Index pro Anfangsbuchstaben speichert: Ist der Schlüssel schon drin, tausche und lösche ihn mit remove; sonst speichere ihn mit put.
+pista.en: Use a Map<String, Integer> holding the waiting index for each first letter: if the key is already present, swap and remove it; otherwise store the index with put.
+firma: static String[] intercambiarParejas(String[] palabras)
+plantilla:
+    return palabras.clone();
+solucion:
+    String[] res = palabras.clone();
+    Map<String, Integer> espera = new HashMap<>();
+    for (int i = 0; i < res.length; i++) {
+        String clave = res[i].substring(0, 1);
+        Integer anterior = espera.remove(clave);
+        if (anterior != null) {
+            String tmp = res[anterior];
+            res[anterior] = res[i];
+            res[i] = tmp;
+        } else {
+            espera.put(clave, i);
+        }
+    }
+    return res;
+casos:
+    intercambiarParejas(new String[]{"ab", "ac"}) => new String[]{"ac", "ab"}
+    intercambiarParejas(new String[]{"ax", "bx", "cx", "cy", "by", "ay", "aaa", "azz"}) => new String[]{"ay", "by", "cy", "cx", "bx", "ax", "azz", "aaa"}
+    intercambiarParejas(new String[]{"ax", "bx", "ay", "by", "ai", "aj", "bx", "by"}) => new String[]{"ay", "by", "ax", "bx", "aj", "ai", "by", "bx"}
+    intercambiarParejas(new String[]{"uno", "dos", "tres"}) => new String[]{"uno", "dos", "tres"}
+    intercambiarParejas(new String[]{}) => new String[]{}
+
+=== t15_diferencia_simetrica
+tema: 15
+dificultad: 5
+java: 11
+tipo: metodo
+titulo.es: Piezas exclusivas de cada taller (Set)
+titulo.de: Exklusive Teile jeder Werkstatt (Set)
+titulo.en: Exclusive parts of each workshop (Set)
+enunciado.es: Dos talleres tienen los conjuntos de piezas a y b. Devuelve un TreeSet<String> (orden alfabético) con las piezas que están en a o en b, pero NO en ambos a la vez (diferencia simétrica). No modifiques ni a ni b. Ejemplos: piezasExclusivas(Set.of("laser", "rueda"), Set.of("rueda", "misil")) devuelve [laser, misil].
+enunciado.de: Zwei Werkstätten haben die Teilemengen a und b. Gib ein TreeSet<String> (alphabetisch sortiert) mit den Teilen zurück, die in a oder b vorkommen, aber NICHT in beiden zugleich (symmetrische Differenz). Ändere weder a noch b. Beispiel: piezasExclusivas(Set.of("laser", "rad"), Set.of("rad", "rakete")) gibt [laser, rakete] zurück.
+enunciado.en: Two workshops have part sets a and b. Return a TreeSet<String> (alphabetical order) containing the parts that are in a or b, but NOT in both (symmetric difference). Do not modify a or b. Example: piezasExclusivas(Set.of("laser", "wheel"), Set.of("wheel", "missile")) returns [laser, missile].
+pista.es: Calcula la unión (new TreeSet<>(a) más addAll(b)) y la intersección (new HashSet<>(a) con retainAll(b)), y quita la intersección de la unión con removeAll.
+pista.de: Bilde die Vereinigung (new TreeSet<>(a) plus addAll(b)) und den Schnitt (new HashSet<>(a) mit retainAll(b)), und entferne dann den Schnitt mit removeAll.
+pista.en: Build the union (new TreeSet<>(a) plus addAll(b)) and the intersection (new HashSet<>(a) with retainAll(b)), then remove the intersection from the union with removeAll.
+firma: static Set<String> piezasExclusivas(Set<String> a, Set<String> b)
+plantilla:
+    return new TreeSet<>();
+solucion:
+    Set<String> union = new TreeSet<>(a);
+    union.addAll(b);
+    Set<String> comunes = new HashSet<>(a);
+    comunes.retainAll(b);
+    union.removeAll(comunes);
+    return union;
+casos:
+    piezasExclusivas(Set.of("laser", "rueda"), Set.of("rueda", "misil")).toString() => "[laser, misil]"
+    piezasExclusivas(Set.of("a", "b"), Set.of("a", "b")).isEmpty() => true
+    piezasExclusivas(Set.of("z", "a"), Set.of()).toString() => "[a, z]"
+    piezasExclusivas(Set.of(), Set.of("c", "b")).toString() => "[b, c]"
+    ((Supplier<Integer>) () -> { Set<String> a = new HashSet<>(List.of("x", "y")); piezasExclusivas(a, Set.of("y", "z")); return a.size(); }).get() => 2

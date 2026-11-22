@@ -692,3 +692,92 @@ terminos.de:
 terminos.en:
     // el constructor privado, getVelocidad, toString y la clase static Builder ==> // the private constructor, getVelocidad, toString and the static Builder class
     puno ==> fist
+
+
+=== t10_bateria_recargable
+tema: 10
+dificultad: 2
+java: 8
+tipo: clase
+titulo.es: Batería con tope y carga
+titulo.de: Akku mit Obergrenze und Ladung
+titulo.en: Battery with cap and recharge
+enunciado.es: Completa la clase Bateria con Bateria(int capacidad) (lanza IllegalArgumentException si capacidad <= 0; empieza llena con nivel igual a capacidad), int nivel(), int capacidad(), boolean gastar(int cantidad) (lanza IllegalArgumentException si cantidad < 0; si cantidad > nivel devuelve false sin cambiar el nivel; si no, resta y devuelve true) y void recargar(int cantidad) (lanza IllegalArgumentException si cantidad < 0; suma sin pasar de capacidad). Ejemplos: new Bateria(100).gastar(40) devuelve true y deja nivel en 60; recargar(80) lo deja en 100.
+enunciado.de: Vervollständige die Klasse Bateria mit Bateria(int capacidad) (wirft IllegalArgumentException bei capacidad <= 0; startet voll mit nivel == capacidad), int nivel(), int capacidad(), boolean gastar(int cantidad) (wirft IllegalArgumentException bei cantidad < 0; ist cantidad > nivel, gib false zurück ohne Änderung; sonst ziehe ab und gib true zurück) und void recargar(int cantidad) (wirft IllegalArgumentException bei cantidad < 0; addiert bis höchstens capacidad). Beispiele: new Bateria(100).gastar(40) gibt true zurück und setzt nivel auf 60; recargar(80) setzt es auf 100.
+enunciado.en: Complete the class Bateria with Bateria(int capacidad) (throws IllegalArgumentException if capacidad <= 0; starts full with nivel equal to capacidad), int nivel(), int capacidad(), boolean gastar(int cantidad) (throws IllegalArgumentException if cantidad < 0; if cantidad > nivel returns false without changing nivel; otherwise subtracts and returns true), and void recargar(int cantidad) (throws IllegalArgumentException if cantidad < 0; adds without exceeding capacidad). Examples: new Bateria(100).gastar(40) returns true leaving nivel at 60; recargar(80) caps it at 100.
+pista.es: Guarda capacidad como private final int y nivel como private int. En recargar usa Math.min(capacidad, nivel + cantidad).
+pista.de: Speichere capacidad als private final int und nivel als private int. Nutze in recargar Math.min(capacidad, nivel + cantidad).
+pista.en: Store capacidad as private final int and nivel as private int. In recargar use Math.min(capacidad, nivel + cantidad).
+plantilla:
+    public class Bateria {
+        private final int capacidad;
+        private int nivel;
+
+        public Bateria(int capacidad) {
+            this.capacidad = capacidad;
+            this.nivel = 0;
+        }
+
+        public int nivel() {
+            return nivel;
+        }
+
+        public int capacidad() {
+            return capacidad;
+        }
+
+        public boolean gastar(int cantidad) {
+            return false;
+        }
+
+        public void recargar(int cantidad) {
+        }
+    }
+solucion:
+    public class Bateria {
+        private final int capacidad;
+        private int nivel;
+
+        public Bateria(int capacidad) {
+            if (capacidad <= 0) {
+                throw new IllegalArgumentException("capacidad no positiva");
+            }
+            this.capacidad = capacidad;
+            this.nivel = capacidad;
+        }
+
+        public int nivel() {
+            return nivel;
+        }
+
+        public int capacidad() {
+            return capacidad;
+        }
+
+        public boolean gastar(int cantidad) {
+            if (cantidad < 0) {
+                throw new IllegalArgumentException("cantidad negativa");
+            }
+            if (cantidad > nivel) {
+                return false;
+            }
+            nivel -= cantidad;
+            return true;
+        }
+
+        public void recargar(int cantidad) {
+            if (cantidad < 0) {
+                throw new IllegalArgumentException("cantidad negativa");
+            }
+            nivel = Math.min(capacidad, nivel + cantidad);
+        }
+    }
+casos:
+    new Bateria(100).nivel() => 100
+    new Bateria(100).gastar(40) => true
+    new Bateria(50).gastar(60) => false
+    ((Supplier<Integer>) () -> { Bateria b = new Bateria(100); b.gastar(40); b.recargar(80); return b.nivel(); }).get() => 100
+    ((Supplier<Integer>) () -> { Bateria b = new Bateria(50); b.gastar(60); return b.nivel(); }).get() => 50
+    new Bateria(0) => !IllegalArgumentException
+    new Bateria(50).gastar(-1) => !IllegalArgumentException
+    ((Supplier<Integer>) () -> { new Bateria(50).recargar(-5); return 0; }).get() => !IllegalArgumentException

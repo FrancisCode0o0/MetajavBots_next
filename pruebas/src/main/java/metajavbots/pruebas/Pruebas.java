@@ -63,6 +63,7 @@ public final class Pruebas {
         PruebasDeMinijuegoDestruccion.apuntar();
         PruebasDePiezaPropiaYRepeticion.apuntar();
         PruebasDeTiendaYEconomia.apuntar();
+        PruebasDeDiversidadEjercicios.apuntar();
 
         List<String> fallos = new ArrayList<>();
         int pasados = 0;

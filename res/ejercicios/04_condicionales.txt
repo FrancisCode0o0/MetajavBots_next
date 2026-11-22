@@ -458,3 +458,159 @@ casos:
     danioFinal(4, 4, false, false) => 1
     danioFinal(0, 5, true, false) => 0
     danioFinal(-3, 0, false, false) => 0
+
+
+=== t04_siesta_en_taller
+tema: 04
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: ¿Pausa de mantenimiento?
+titulo.de: Wartungspause?
+titulo.en: Maintenance nap?
+enunciado.es: Tu robot solo puede echarse una siesta en el taller si hoy no hay torneo (torneo es false) o si está en reparación (reparando es true). Devuelve true si puede descansar. Ejemplos: puedeDescansar(false, false) devuelve true, puedeDescansar(true, false) devuelve false y puedeDescansar(true, true) devuelve true.
+enunciado.de: Dein Roboter darf in der Werkstatt nur ein Nickerchen machen, wenn heute kein Turnier ist (torneo ist false) oder wenn er gerade repariert wird (reparando ist true). Gib true zurück, wenn er pausieren darf. Beispiele: puedeDescansar(false, false) gibt true zurück, puedeDescansar(true, false) false und puedeDescansar(true, true) true.
+enunciado.en: Your robot can only take a nap in the workshop if there is no tournament today (torneo is false) or if it is under repair (reparando is true). Return true if it can rest. Examples: puedeDescansar(false, false) returns true, puedeDescansar(true, false) returns false, and puedeDescansar(true, true) returns true.
+pista.es: Usa ! para negar torneo y || para unir las dos condiciones: basta con que se cumpla una.
+pista.de: Benutze ! zum Verneinen von torneo und || zum Verbinden der beiden Bedingungen: Eine davon reicht.
+pista.en: Use ! to negate torneo and || to join both conditions: either one is enough.
+firma: static boolean puedeDescansar(boolean torneo, boolean reparando)
+plantilla:
+    return false;
+solucion:
+    return !torneo || reparando;
+casos:
+    puedeDescansar(false, false) => true
+    puedeDescansar(true, false) => false
+    puedeDescansar(false, true) => true
+    puedeDescansar(true, true) => true
+
+=== t04_cerca_de_cien
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Casi al cien por cien
+titulo.de: Fast bei hundert Prozent
+titulo.en: Almost at one hundred percent
+enunciado.es: El cargador del taller solo pita cuando la batería está a 10 unidades o menos de 100 o de 200 (ambos extremos incluidos). Devuelve true si bateria cumple esa condición. Ejemplos: cercaDeCien(93) devuelve true, cercaDeCien(190) devuelve true y cercaDeCien(89) devuelve false.
+enunciado.de: Das Ladegerät in der Werkstatt piept nur, wenn der Akku höchstens 10 Einheiten von 100 oder von 200 entfernt ist (beide Grenzen eingeschlossen). Gib true zurück, wenn bateria das erfüllt. Beispiele: cercaDeCien(93) gibt true zurück, cercaDeCien(190) true und cercaDeCien(89) false.
+enunciado.en: The workshop charger only beeps when the battery is within 10 units of 100 or 200 (inclusive). Return true if bateria meets that condition. Examples: cercaDeCien(93) returns true, cercaDeCien(190) returns true, and cercaDeCien(89) returns false.
+pista.es: Math.abs(100 - bateria) <= 10 comprueba si está cerca de 100; haz lo mismo con 200 y únelo con ||.
+pista.de: Math.abs(100 - bateria) <= 10 prüft die Nähe zu 100; mach dasselbe für 200 und verbinde beides mit ||.
+pista.en: Math.abs(100 - bateria) <= 10 checks whether it is near 100; do the same for 200 and join them with ||.
+firma: static boolean cercaDeCien(int bateria)
+plantilla:
+    return bateria == 100;
+solucion:
+    return Math.abs(100 - bateria) <= 10 || Math.abs(200 - bateria) <= 10;
+casos:
+    cercaDeCien(93) => true
+    cercaDeCien(90) => true
+    cercaDeCien(89) => false
+    cercaDeCien(110) => true
+    cercaDeCien(111) => false
+    cercaDeCien(190) => true
+    cercaDeCien(210) => true
+    cercaDeCien(-100) => false
+
+=== t04_suma_sin_clones
+tema: 04
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Suma de sensores sin clones
+titulo.de: Sensorsumme ohne Klone
+titulo.en: Sensor sum without clones
+enunciado.es: Tres sensores devuelven las lecturas a, b y c. Suma los valores, pero si dos (o los tres) coinciden exactamente, sospechamos que están clonados y ninguno de esos repetidos cuenta. Ejemplos: sumaSinClones(1, 2, 3) devuelve 6, sumaSinClones(3, 2, 3) devuelve 2 y sumaSinClones(3, 3, 3) devuelve 0.
+enunciado.de: Drei Sensoren liefern die Werte a, b und c. Addiere sie, aber wenn zwei (oder alle drei) exakt gleich sind, gelten sie als verdächtige Klone und keiner der doppelten zählt mit. Beispiele: sumaSinClones(1, 2, 3) gibt 6 zurück, sumaSinClones(3, 2, 3) 2 und sumaSinClones(3, 3, 3) 0.
+enunciado.en: Three sensors report readings a, b, and c. Return their sum, except that if two (or all three) values are equal, those suspicious clones do not count toward the sum. Examples: sumaSinClones(1, 2, 3) returns 6, sumaSinClones(3, 2, 3) returns 2, and sumaSinClones(3, 3, 3) returns 0.
+pista.es: Empieza con suma = 0 y suma a solo si a != b && a != c; haz la misma comprobación para b y para c.
+pista.de: Starte mit suma = 0 und addiere a nur, wenn a != b && a != c gilt; prüfe b und c genauso.
+pista.en: Start with suma = 0 and add a only if a != b && a != c; repeat the same check for b and c.
+firma: static int sumaSinClones(int a, int b, int c)
+plantilla:
+    return a + b + c;
+solucion:
+    int suma = 0;
+    if (a != b && a != c) {
+        suma += a;
+    }
+    if (b != a && b != c) {
+        suma += b;
+    }
+    if (c != a && c != b) {
+        suma += c;
+    }
+    return suma;
+casos:
+    sumaSinClones(1, 2, 3) => 6
+    sumaSinClones(3, 2, 3) => 2
+    sumaSinClones(3, 3, 3) => 0
+    sumaSinClones(9, 2, 2) => 9
+    sumaSinClones(0, -4, 0) => -4
+    sumaSinClones(-1, -2, -3) => -6
+
+=== t04_cerca_y_lejos
+tema: 04
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Un rival cerca y otro lejos
+titulo.de: Ein Gegner nah, einer fern
+titulo.en: One rival close and one far
+enunciado.es: Tu robot está en la posición a y detecta dos rivales en b y c. Devuelve true si uno de los dos rivales está cerca de a (diferencia de 1 o menos) y el otro está lejos tanto de a como del primer rival (diferencia de 2 o más con ambos). Ejemplos: cercaYLejos(1, 2, 10) devuelve true, cercaYLejos(1, 2, 3) devuelve false y cercaYLejos(4, 1, 3) devuelve true.
+enunciado.de: Dein Roboter steht bei a und erkennt zwei Gegner bei b und c. Gib true zurück, wenn einer der beiden nah an a ist (Abstand höchstens 1) und der andere sowohl von a als auch vom ersten Gegner weit weg ist (Abstand mindestens 2 zu beiden). Beispiele: cercaYLejos(1, 2, 10) gibt true zurück, cercaYLejos(1, 2, 3) false und cercaYLejos(4, 1, 3) true.
+enunciado.en: Your robot is at position a and spots two rivals at b and c. Return true if one rival is close to a (differing by at most 1) while the other is far from both a and the first rival (differing by 2 or more from both). Examples: cercaYLejos(1, 2, 10) returns true, cercaYLejos(1, 2, 3) returns false, and cercaYLejos(4, 1, 3) returns true.
+pista.es: Hay dos casos simétricos: que b esté cerca y c lejos, o al revés. Usa Math.abs para cada distancia.
+pista.de: Es gibt zwei symmetrische Fälle: b ist nah und c fern, oder umgekehrt. Nutze Math.abs für jeden Abstand.
+pista.en: There are two symmetric cases: b is close and c is far, or the other way around. Use Math.abs for each distance.
+firma: static boolean cercaYLejos(int a, int b, int c)
+plantilla:
+    return false;
+solucion:
+    boolean bCerca = Math.abs(a - b) <= 1 && Math.abs(a - c) >= 2 && Math.abs(b - c) >= 2;
+    boolean cCerca = Math.abs(a - c) <= 1 && Math.abs(a - b) >= 2 && Math.abs(b - c) >= 2;
+    return bCerca || cCerca;
+casos:
+    cercaYLejos(1, 2, 10) => true
+    cercaYLejos(1, 2, 3) => false
+    cercaYLejos(4, 1, 3) => true
+    cercaYLejos(4, 5, 3) => false
+    cercaYLejos(4, 3, 5) => false
+    cercaYLejos(-1, 10, 0) => true
+    cercaYLejos(10, 10, 8) => true
+
+=== t04_placas_de_blindaje
+tema: 04
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Encajar placas de blindaje
+titulo.de: Panzerplatten passend legen
+titulo.en: Fitting armor plates
+enunciado.es: En el taller tienes pequenas placas cortas de 1 cm y grandes placas largas de 5 cm. Devuelve true si puedes cubrir exactamente objetivo cm sin cortar ninguna placa (sin usar bucles). Si objetivo es negativo, devuelve false. Ejemplos: encajarPlacas(3, 1, 8) devuelve true, encajarPlacas(3, 1, 9) devuelve false y encajarPlacas(3, 2, 10) devuelve true.
+enunciado.de: In der Werkstatt hast du pequenas kurze Platten von 1 cm und grandes lange Platten von 5 cm. Gib true zurück, wenn du genau objetivo cm abdecken kannst, ohne eine Platte zu zersägen (ohne Schleifen). Ist objetivo negativ, gib false zurück. Beispiele: encajarPlacas(3, 1, 8) gibt true zurück, encajarPlacas(3, 1, 9) false und encajarPlacas(3, 2, 10) true.
+enunciado.en: In the workshop you have pequenas small 1 cm plates and grandes large 5 cm plates. Return true if you can cover exactly objetivo cm without cutting any plate (without loops). If objetivo is negative, return false. Examples: encajarPlacas(3, 1, 8) returns true, encajarPlacas(3, 1, 9) returns false, and encajarPlacas(3, 2, 10) returns true.
+pista.es: Usa como mucho Math.min(grandes, objetivo / 5) placas grandes y comprueba si las pequeñas bastan para cubrir lo que falta.
+pista.de: Verwende höchstens Math.min(grandes, objetivo / 5) große Platten und prüfe, ob die kleinen für den Rest ausreichen.
+pista.en: Use at most Math.min(grandes, objetivo / 5) large plates and check whether the small plates cover the remaining gap.
+firma: static boolean encajarPlacas(int pequenas, int grandes, int objetivo)
+plantilla:
+    return pequenas + grandes * 5 >= objetivo;
+solucion:
+    if (objetivo < 0) {
+        return false;
+    }
+    int usadasGrandes = Math.min(grandes, objetivo / 5);
+    int restante = objetivo - usadasGrandes * 5;
+    return restante <= pequenas;
+casos:
+    encajarPlacas(3, 1, 8) => true
+    encajarPlacas(3, 1, 9) => false
+    encajarPlacas(3, 2, 10) => true
+    encajarPlacas(3, 2, 9) => false
+    encajarPlacas(1, 4, 12) => false
+    encajarPlacas(0, 2, 10) => true
+    encajarPlacas(0, 0, 0) => true
+    encajarPlacas(5, 5, -1) => false

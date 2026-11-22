@@ -378,3 +378,181 @@ casos:
     rombo(3); => "  *\n ***\n*****\n ***\n  *\n"
     rombo(1); => "*\n"
     rombo(0); => ""
+
+
+=== t05_sumar_pares_rango
+tema: 05
+dificultad: 1
+java: 8
+tipo: metodo
+titulo.es: Sumar rondas pares
+titulo.de: Gerade Runden addieren
+titulo.en: Sum even rounds
+enunciado.es: En el torneo solo dan bonificación las rondas con número par. Devuelve la suma de todos los enteros pares entre desde y hasta (ambos incluidos). Si desde es mayor que hasta, devuelve 0. Ejemplos: sumarPares(1, 6) devuelve 12, sumarPares(2, 2) devuelve 2 y sumarPares(5, 2) devuelve 0.
+enunciado.de: Im Turnier geben nur Runden mit gerader Nummer einen Bonus. Gib die Summe aller geraden ganzen Zahlen von desde bis hasta (beide eingeschlossen) zurück. Ist desde größer als hasta, gib 0 zurück. Beispiele: sumarPares(1, 6) gibt 12 zurück, sumarPares(2, 2) 2 und sumarPares(5, 2) 0.
+enunciado.en: In the tournament only even-numbered rounds grant a bonus. Return the sum of all even integers from desde to hasta (inclusive). If desde is greater than hasta, return 0. Examples: sumarPares(1, 6) returns 12, sumarPares(2, 2) returns 2, and sumarPares(5, 2) returns 0.
+pista.es: Recorre con un for desde desde hasta hasta y acumula i solo cuando i % 2 == 0.
+pista.de: Lauf mit einer for-Schleife von desde bis hasta und addiere i nur, wenn i % 2 == 0 ist.
+pista.en: Loop with a for from desde to hasta and add i only when i % 2 == 0.
+firma: static int sumarPares(int desde, int hasta)
+plantilla:
+    return 0;
+solucion:
+    int suma = 0;
+    for (int i = desde; i <= hasta; i++) {
+        if (i % 2 == 0) {
+            suma += i;
+        }
+    }
+    return suma;
+casos:
+    sumarPares(1, 6) => 12
+    sumarPares(2, 2) => 2
+    sumarPares(3, 3) => 0
+    sumarPares(-4, 2) => -4
+    sumarPares(5, 2) => 0
+
+=== t05_potencia_de_dos
+tema: 05
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: ¿Es potencia de dos?
+titulo.de: Ist es eine Zweierpotenz?
+titulo.en: Is it a power of two?
+enunciado.es: Los chips de memoria del taller siempre vienen en capacidades que son potencias de 2: 1, 2, 4, 8, 16… Devuelve true si n es una potencia de 2 y false si no (incluidos 0 y negativos). Ejemplos: esPotenciaDeDos(1) devuelve true, esPotenciaDeDos(16) devuelve true y esPotenciaDeDos(12) devuelve false.
+enunciado.de: Die Speicherchips der Werkstatt haben immer Größen, die Zweierpotenzen sind: 1, 2, 4, 8, 16 … Gib true zurück, wenn n eine Zweierpotenz ist, sonst false (auch bei 0 und negativen Zahlen). Beispiele: esPotenciaDeDos(1) gibt true zurück, esPotenciaDeDos(16) true und esPotenciaDeDos(12) false.
+enunciado.en: Workshop memory chips always come in power-of-two sizes: 1, 2, 4, 8, 16… Return true if n is a power of 2 and false otherwise (including 0 and negatives). Examples: esPotenciaDeDos(1) returns true, esPotenciaDeDos(16) returns true, and esPotenciaDeDos(12) returns false.
+pista.es: Si n <= 0, devuelve false. Mientras n sea divisible entre 2, divídelo entre 2; al final, solo es potencia de 2 si queda 1.
+pista.de: Ist n <= 0, gib false zurück. Solange n durch 2 teilbar ist, teile es durch 2; am Ende ist es nur dann eine Zweierpotenz, wenn 1 übrig bleibt.
+pista.en: If n <= 0, return false. While n is divisible by 2, divide it by 2; at the end, it is a power of 2 only if 1 remains.
+firma: static boolean esPotenciaDeDos(int n)
+plantilla:
+    return n % 2 == 0;
+solucion:
+    if (n <= 0) {
+        return false;
+    }
+    while (n % 2 == 0) {
+        n /= 2;
+    }
+    return n == 1;
+casos:
+    esPotenciaDeDos(1) => true
+    esPotenciaDeDos(2) => true
+    esPotenciaDeDos(16) => true
+    esPotenciaDeDos(12) => false
+    esPotenciaDeDos(0) => false
+    esPotenciaDeDos(-8) => false
+    esPotenciaDeDos(1024) => true
+
+=== t05_mesetas_de_energia
+tema: 05
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Contar mesetas de energía
+titulo.de: Energie-Plateaus zählen
+titulo.en: Count energy plateaus
+enunciado.es: El medidor de energía registra una secuencia de lecturas. Llamamos «meseta» a una serie de dos o más lecturas iguales seguidas. Devuelve cuántas mesetas hay en lecturas. Ejemplos: contarMesetas(new int[]{1, 2, 2, 3, 4, 4}) devuelve 2, contarMesetas(new int[]{1, 1, 2, 1, 1}) devuelve 2 y contarMesetas(new int[]{1, 1, 1, 1}) devuelve 1.
+enunciado.de: Das Energiemessgerät zeichnet eine Folge von Messwerten auf. Ein „Plateau“ ist eine Serie von zwei oder mehr gleichen Werten hintereinander. Gib zurück, wie viele Plateaus in lecturas vorkommen. Beispiele: contarMesetas(new int[]{1, 2, 2, 3, 4, 4}) gibt 2 zurück, contarMesetas(new int[]{1, 1, 2, 1, 1}) 2 und contarMesetas(new int[]{1, 1, 1, 1}) 1.
+enunciado.en: The energy meter logs a sequence of readings. A "plateau" is a run of two or more equal readings in a row. Return how many plateaus appear in lecturas. Examples: contarMesetas(new int[]{1, 2, 2, 3, 4, 4}) returns 2, contarMesetas(new int[]{1, 1, 2, 1, 1}) returns 2, and contarMesetas(new int[]{1, 1, 1, 1}) returns 1.
+pista.es: Lleva un boolean enMeseta para no contar dos veces el mismo bloque: suma 1 solo cuando empieza una pareja igual y aún no estabas en meseta.
+pista.de: Merk dir mit einem boolean enMeseta, ob du schon in einem Block bist: Zähle nur dann +1, wenn ein gleiches Paar beginnt und du noch nicht in einem Plateau warst.
+pista.en: Track a boolean enMeseta so you don't count the same run twice: add 1 only when a matching pair starts and you weren't already in a plateau.
+firma: static int contarMesetas(int[] lecturas)
+plantilla:
+    return 0;
+solucion:
+    int mesetas = 0;
+    boolean enMeseta = false;
+    for (int i = 1; i < lecturas.length; i++) {
+        if (lecturas[i] == lecturas[i - 1]) {
+            if (!enMeseta) {
+                mesetas++;
+                enMeseta = true;
+            }
+        } else {
+            enMeseta = false;
+        }
+    }
+    return mesetas;
+casos:
+    contarMesetas(new int[]{1, 2, 2, 3, 4, 4}) => 2
+    contarMesetas(new int[]{1, 1, 2, 1, 1}) => 2
+    contarMesetas(new int[]{1, 1, 1, 1}) => 1
+    contarMesetas(new int[]{1, 2, 3, 4}) => 0
+    contarMesetas(new int[]{7}) => 0
+    contarMesetas(new int[]{}) => 0
+
+=== t05_pasos_calibracion
+tema: 05
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Pasos de calibración (Collatz)
+titulo.de: Kalibrierungsschritte (Collatz)
+titulo.en: Calibration steps (Collatz)
+enunciado.es: Un motor rebelde se calibra repitiendo esta regla hasta llegar a 1: si el valor actual es par, se divide entre 2; si es impar, pasa a 3 * valor + 1. Devuelve cuántos pasos hace falta dar desde n (si n <= 1, devuelve 0). Ejemplos: pasosCalibracion(6) devuelve 8, pasosCalibracion(1) devuelve 0 y pasosCalibracion(3) devuelve 7.
+enunciado.de: Ein widerspenstiger Motor wird kalibriert, indem man diese Regel bis zur 1 wiederholt: Ist der aktuelle Wert gerade, teile durch 2; ist er ungerade, wird er zu 3 * wert + 1. Gib die Anzahl der Schritte ab n zurück (bei n <= 1 gib 0 zurück). Beispiele: pasosCalibracion(6) gibt 8 zurück, pasosCalibracion(1) 0 und pasosCalibracion(3) 7.
+enunciado.en: A stubborn motor is calibrated by repeating this rule until reaching 1: if the current value is even, divide by 2; if it is odd, replace it with 3 * value + 1. Return how many steps it takes starting from n (if n <= 1, return 0). Examples: pasosCalibracion(6) returns 8, pasosCalibracion(1) returns 0, and pasosCalibracion(3) returns 7.
+pista.es: Usa long para el valor actual por si crece mucho, y un while (actual > 1) que cuente cada iteración.
+pista.de: Nutze long für den aktuellen Wert, falls er groß wird, und eine while (actual > 1)-Schleife, die jeden Schritt zählt.
+pista.en: Use a long for the current value in case it grows large, and a while (actual > 1) loop counting each step.
+firma: static int pasosCalibracion(int n)
+plantilla:
+    return 0;
+solucion:
+    if (n <= 1) {
+        return 0;
+    }
+    long actual = n;
+    int pasos = 0;
+    while (actual > 1) {
+        if (actual % 2 == 0) {
+            actual /= 2;
+        } else {
+            actual = 3 * actual + 1;
+        }
+        pasos++;
+    }
+    return pasos;
+casos:
+    pasosCalibracion(1) => 0
+    pasosCalibracion(2) => 1
+    pasosCalibracion(3) => 7
+    pasosCalibracion(6) => 8
+    pasosCalibracion(27) => 111
+    pasosCalibracion(0) => 0
+    pasosCalibracion(-5) => 0
+
+=== t05_piramide_circuitos
+tema: 05
+dificultad: 4
+java: 8
+tipo: salida
+titulo.es: Pirámide de circuitos
+titulo.de: Schaltkreis-Pyramide
+titulo.en: Circuit pyramid
+enunciado.es: El panel de diagnóstico imprime una pirámide numérica de n filas: la fila 1 imprime "1", la fila 2 imprime "12", la fila 3 imprime "123", y así hasta n (sin espacios). Con n <= 0 no imprime nada. Ejemplos: piramideCircuitos(3) imprime "1\n12\n123\n" y piramideCircuitos(1) imprime "1\n".
+enunciado.de: Das Diagnosefeld gibt eine Zahlenpyramide mit n Zeilen aus: Zeile 1 gibt "1" aus, Zeile 2 "12", Zeile 3 "123" und so weiter bis n (ohne Leerzeichen). Bei n <= 0 wird nichts ausgegeben. Beispiele: piramideCircuitos(3) gibt "1\n12\n123\n" aus und piramideCircuitos(1) "1\n".
+enunciado.en: The diagnostic panel prints a number pyramid of n rows: row 1 prints "1", row 2 prints "12", row 3 prints "123", and so on up to n (no spaces). With n <= 0 it prints nothing. Examples: piramideCircuitos(3) prints "1\n12\n123\n" and piramideCircuitos(1) prints "1\n".
+pista.es: Dos bucles for anidados: el exterior cuenta las filas de 1 a n y el interior imprime los números de 1 a fila con System.out.print, cerrando cada fila con println().
+pista.de: Zwei verschachtelte for-Schleifen: Die äußere zählt die Zeilen von 1 bis n, die innere gibt die Zahlen von 1 bis fila mit System.out.print aus, gefolgt von println().
+pista.en: Two nested for loops: the outer one counts rows from 1 to n and the inner one prints numbers from 1 to fila with System.out.print, ending each row with println().
+firma: static void piramideCircuitos(int n)
+plantilla:
+    System.out.println("1");
+solucion:
+    for (int fila = 1; fila <= n; fila++) {
+        for (int num = 1; num <= fila; num++) {
+            System.out.print(num);
+        }
+        System.out.println();
+    }
+casos:
+    piramideCircuitos(3); => "1\n12\n123\n"
+    piramideCircuitos(1); => "1\n"
+    piramideCircuitos(5); => "1\n12\n123\n1234\n12345\n"
+    piramideCircuitos(0); => ""
+    piramideCircuitos(-2); => ""

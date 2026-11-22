@@ -656,3 +656,51 @@ terminos.en:
     " intentos" ==> " attempts"
      intentos / ==>  attempts /
     "conectado" ==> "connected"
+
+
+=== t14_lote_de_baterias
+tema: 14
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Validar un lote de baterías
+titulo.de: Eine Akkulieferung prüfen
+titulo.en: Validate a batch of batteries
+enunciado.es: Recibes un array de lecturas de voltaje en texto y un rango válido [minimo, maximo]. Si lecturas es null, lanza NullPointerException; si minimo > maximo, lanza IllegalArgumentException. Recorre lecturas, convierte cada entrada con Integer.parseInt (ignorando entradas null, textos que no sean enteros válidos o valores fuera de [minimo, maximo]) y devuelve la suma de las válidas. Ejemplos: sumarValidas(new String[]{"10", "mal", "25", "50"}, 0, 30) devuelve 35 y sumarValidas(new String[]{}, 0, 10) devuelve 0.
+enunciado.de: Du erhältst ein Array mit Spannungswerten als Text und einen gültigen Bereich [minimo, maximo]. Ist lecturas null, wirf eine NullPointerException; ist minimo > maximo, eine IllegalArgumentException. Geh lecturas durch, wandle jeden Eintrag mit Integer.parseInt um (ignoriere null-Einträge, ungültige Texte und Werte außerhalb von [minimo, maximo]) und gib die Summe der gültigen zurück. Beispiele: sumarValidas(new String[]{"10", "mal", "25", "50"}, 0, 30) gibt 35 zurück und sumarValidas(new String[]{}, 0, 10) 0.
+enunciado.en: You receive an array of voltage readings as strings and a valid range [minimo, maximo]. If lecturas is null, throw NullPointerException; if minimo > maximo, throw IllegalArgumentException. Walk through lecturas, parse each entry with Integer.parseInt (ignoring null entries, non-integer strings, and values outside [minimo, maximo]), and return the sum of valid ones. Examples: sumarValidas(new String[]{"10", "bad", "25", "50"}, 0, 30) returns 35 and sumarValidas(new String[]{}, 0, 10) returns 0.
+pista.es: Valida primero lecturas == null y minimo > maximo. Dentro del bucle, si la lectura no es null, envuelve Integer.parseInt en un try/catch (NumberFormatException).
+pista.de: Prüfe zuerst lecturas == null und minimo > maximo. In der Schleife umgibst du Integer.parseInt bei nicht-null-Einträgen mit try/catch (NumberFormatException).
+pista.en: Validate lecturas == null and minimo > maximo first. Inside the loop, for non-null entries, wrap Integer.parseInt in a try/catch (NumberFormatException).
+firma: static int sumarValidas(String[] lecturas, int minimo, int maximo)
+plantilla:
+    return 0;
+solucion:
+    if (lecturas == null) {
+        throw new NullPointerException("lote nulo");
+    }
+    if (minimo > maximo) {
+        throw new IllegalArgumentException("rango invalido");
+    }
+    int suma = 0;
+    for (String texto : lecturas) {
+        if (texto == null) {
+            continue;
+        }
+        try {
+            int valor = Integer.parseInt(texto.trim());
+            if (valor >= minimo && valor <= maximo) {
+                suma += valor;
+            }
+        } catch (NumberFormatException e) {
+            // se ignora la lectura corrupta
+        }
+    }
+    return suma;
+casos:
+    sumarValidas(new String[]{"10", "mal", "25", "50"}, 0, 30) => 35
+    sumarValidas(new String[]{"-5", "0", null, "10"}, -5, 5) => -5
+    sumarValidas(new String[]{"abc", ""}, 0, 100) => 0
+    sumarValidas(new String[]{}, 0, 10) => 0
+    sumarValidas(null, 0, 10) => !NullPointerException
+    sumarValidas(new String[]{"5"}, 10, 5) => !IllegalArgumentException

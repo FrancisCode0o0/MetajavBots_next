@@ -429,3 +429,217 @@ casos:
     mezclar(new int[]{1, 1}, new int[]{1}) => new int[]{1, 1, 1}
     mezclar(new int[]{-3, 0}, new int[]{-5, 7}) => new int[]{-5, -3, 0, 7}
     mezclar(new int[]{}, new int[]{}) => new int[]{}
+
+
+=== t07_rotar_izquierda
+tema: 07
+dificultad: 2
+java: 8
+tipo: metodo
+titulo.es: Rotar turno de sensores
+titulo.de: Sensoren nach links rotieren
+titulo.en: Rotate sensor queue left
+enunciado.es: Los sensores se turnan para vigilar la arena. Devuelve un array nuevo con todos los elementos de sensores desplazados una posición a la izquierda, de modo que el primero pase al final. No modifiques el array original. Ejemplos: rotarIzquierda(new int[]{1, 2, 3}) devuelve {2, 3, 1} y rotarIzquierda(new int[]{7}) devuelve {7}.
+enunciado.de: Die Sensoren wechseln sich beim Wachestehen ab. Gib ein neues Array zurück, in dem alle Elemente von sensores um eine Position nach links verschoben sind, sodass das erste ans Ende wandert. Ändere das Original nicht. Beispiele: rotarIzquierda(new int[]{1, 2, 3}) gibt {2, 3, 1} zurück und rotarIzquierda(new int[]{7}) {7}.
+enunciado.en: The sensors take turns watching the arena. Return a new array with every element of sensores shifted one position to the left so that the first moves to the end. Do not modify the original array. Examples: rotarIzquierda(new int[]{1, 2, 3}) returns {2, 3, 1} and rotarIzquierda(new int[]{7}) returns {7}.
+pista.es: Si tiene menos de 2 elementos, devuelve sensores.clone(). Si no, copia sensores[i + 1] en res[i] y pon sensores[0] en la última posición.
+pista.de: Bei weniger als 2 Elementen gib sensores.clone() zurück. Sonst kopiere sensores[i + 1] nach res[i] und setze sensores[0] ans Ende.
+pista.en: If it has fewer than 2 elements, return sensores.clone(). Otherwise copy sensores[i + 1] into res[i] and put sensores[0] at the last position.
+firma: static int[] rotarIzquierda(int[] sensores)
+plantilla:
+    return sensores;
+solucion:
+    if (sensores.length <= 1) {
+        return sensores.clone();
+    }
+    int[] res = new int[sensores.length];
+    for (int i = 0; i < sensores.length - 1; i++) {
+        res[i] = sensores[i + 1];
+    }
+    res[res.length - 1] = sensores[0];
+    return res;
+casos:
+    rotarIzquierda(new int[]{1, 2, 3}) => new int[]{2, 3, 1}
+    rotarIzquierda(new int[]{5, 11, 9, 2}) => new int[]{11, 9, 2, 5}
+    rotarIzquierda(new int[]{7}) => new int[]{7}
+    rotarIzquierda(new int[]{}) => new int[]{}
+    ((Supplier<int[]>) () -> { int[] a = {4, 8, 12}; rotarIzquierda(a); return a; }).get() => new int[]{4, 8, 12}
+
+=== t07_picos_del_radar
+tema: 07
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Contar picos del radar
+titulo.de: Radarspitzen zählen
+titulo.en: Count radar peaks
+enunciado.es: El radar devuelve una fila de intensidades. Un «pico» es una posición interior que es estrictamente mayor que sus dos vecinas (izquierda y derecha). El primero y el último nunca cuentan como picos. Devuelve cuántos picos hay. Ejemplos: contarPicos(new int[]{1, 5, 2, 8, 3}) devuelve 2 y contarPicos(new int[]{3, 3, 3}) devuelve 0.
+enunciado.de: Das Radar liefert eine Reihe von Signalstärken. Eine „Spitze“ ist eine innere Position, die echt größer als ihre beiden Nachbarn (links und rechts) ist. Das erste und das letzte Element zählen nie als Spitze. Gib zurück, wie viele Spitzen es gibt. Beispiele: contarPicos(new int[]{1, 5, 2, 8, 3}) gibt 2 zurück und contarPicos(new int[]{3, 3, 3}) 0.
+enunciado.en: The radar returns a row of signal strengths. A "peak" is an interior position strictly greater than both its left and right neighbors. The first and last elements never count as peaks. Return how many peaks there are. Examples: contarPicos(new int[]{1, 5, 2, 8, 3}) returns 2 and contarPicos(new int[]{3, 3, 3}) returns 0.
+pista.es: Recorre con i desde 1 hasta senal.length - 2 (incluido) y comprueba senal[i] > senal[i - 1] && senal[i] > senal[i + 1].
+pista.de: Lauf mit i von 1 bis senal.length - 2 (einschließlich) und prüfe senal[i] > senal[i - 1] && senal[i] > senal[i + 1].
+pista.en: Loop i from 1 to senal.length - 2 (inclusive) and check senal[i] > senal[i - 1] && senal[i] > senal[i + 1].
+firma: static int contarPicos(int[] senal)
+plantilla:
+    return 0;
+solucion:
+    int picos = 0;
+    for (int i = 1; i < senal.length - 1; i++) {
+        if (senal[i] > senal[i - 1] && senal[i] > senal[i + 1]) {
+            picos++;
+        }
+    }
+    return picos;
+casos:
+    contarPicos(new int[]{1, 5, 2, 8, 3}) => 2
+    contarPicos(new int[]{3, 3, 3}) => 0
+    contarPicos(new int[]{-5, -2, -9}) => 1
+    contarPicos(new int[]{10, 2}) => 0
+    contarPicos(new int[]{}) => 0
+
+=== t07_serie_creciente
+tema: 07
+dificultad: 3
+java: 8
+tipo: metodo
+titulo.es: Secuencia de pruebas escalonada
+titulo.de: Gestaffelte Testfolge
+titulo.en: Stepped test sequence
+enunciado.es: Para calibrar el cañón en n niveles, genera el array {1, 1, 2, 1, 2, 3, ..., 1, 2, ..., n} de longitud n * (n + 1) / 2 (con n >= 0). Ejemplos: serieCreciente(3) devuelve {1, 1, 2, 1, 2, 3}, serieCreciente(2) devuelve {1, 1, 2} y serieCreciente(0) devuelve {}.
+enunciado.de: Um die Kanone in n Stufen zu kalibrieren, erzeuge das Array {1, 1, 2, 1, 2, 3, ..., 1, 2, ..., n} der Länge n * (n + 1) / 2 (mit n >= 0). Beispiele: serieCreciente(3) gibt {1, 1, 2, 1, 2, 3} zurück, serieCreciente(2) {1, 1, 2} und serieCreciente(0) {}.
+enunciado.en: To calibrate the cannon across n levels, build the array {1, 1, 2, 1, 2, 3, ..., 1, 2, ..., n} of length n * (n + 1) / 2 (with n >= 0). Examples: serieCreciente(3) returns {1, 1, 2, 1, 2, 3}, serieCreciente(2) returns {1, 1, 2}, and serieCreciente(0) returns {}.
+pista.es: Crea un array de tamaño n * (n + 1) / 2, lleva un índice pos y usa dos bucles anidados: grupo de 1 a n, y valor de 1 a grupo.
+pista.de: Leg ein Array der Größe n * (n + 1) / 2 an, führe einen Index pos und nutze zwei verschachtelte Schleifen: Gruppe von 1 bis n und Wert von 1 bis Gruppe.
+pista.en: Create an array of size n * (n + 1) / 2, keep an index pos, and use two nested loops: group from 1 to n and value from 1 to group.
+firma: static int[] serieCreciente(int n)
+plantilla:
+    return new int[0];
+solucion:
+    int[] res = new int[n * (n + 1) / 2];
+    int pos = 0;
+    for (int grupo = 1; grupo <= n; grupo++) {
+        for (int v = 1; v <= grupo; v++) {
+            res[pos++] = v;
+        }
+    }
+    return res;
+casos:
+    serieCreciente(3) => new int[]{1, 1, 2, 1, 2, 3}
+    serieCreciente(4) => new int[]{1, 1, 2, 1, 2, 3, 1, 2, 3, 4}
+    serieCreciente(2) => new int[]{1, 1, 2}
+    serieCreciente(1) => new int[]{1}
+    serieCreciente(0) => new int[]{}
+
+=== t07_mayor_alcance
+tema: 07
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: Mayor distancia entre clones
+titulo.de: Größte Spanne zwischen Klonen
+titulo.en: Widest span between clones
+enunciado.es: El «alcance» de un código en el array es el número de posiciones desde su primera aparición hasta la última, ambas incluidas (un elemento único tiene alcance 1). Devuelve el mayor alcance del array (0 si está vacío). Ejemplos: mayorAlcance(new int[]{1, 2, 1, 1, 3}) devuelve 4, mayorAlcance(new int[]{1, 4, 2, 1, 4, 1, 4}) devuelve 6 y mayorAlcance(new int[]{9}) devuelve 1.
+enunciado.de: Die „Spanne“ eines Codes im Array ist die Anzahl der Positionen von seinem ersten bis zu seinem letzten Vorkommen, beide eingeschlossen (ein einzelnes Element hat Spanne 1). Gib die größte Spanne im Array zurück (0, wenn es leer ist). Beispiele: mayorAlcance(new int[]{1, 2, 1, 1, 3}) gibt 4 zurück, mayorAlcance(new int[]{1, 4, 2, 1, 4, 1, 4}) 6 und mayorAlcance(new int[]{9}) 1.
+enunciado.en: The "span" of a value in the array is the number of positions from its leftmost to its rightmost appearance, inclusive (a single value has span 1). Return the largest span in the array (0 if empty). Examples: mayorAlcance(new int[]{1, 2, 1, 1, 3}) returns 4, mayorAlcance(new int[]{1, 4, 2, 1, 4, 1, 4}) returns 6, and mayorAlcance(new int[]{9}) returns 1.
+pista.es: Para cada posición i, busca desde el final hacia atrás la última posición j con datos[j] == datos[i]; su alcance es j - i + 1.
+pista.de: Such für jede Position i von hinten rückwärts die letzte Position j mit datos[j] == datos[i]; ihre Spanne ist j - i + 1.
+pista.en: For each position i, scan backwards from the end for the last position j with datos[j] == datos[i]; its span is j - i + 1.
+firma: static int mayorAlcance(int[] datos)
+plantilla:
+    return 0;
+solucion:
+    int mejor = 0;
+    for (int i = 0; i < datos.length; i++) {
+        for (int j = datos.length - 1; j >= i; j--) {
+            if (datos[j] == datos[i]) {
+                int alcance = j - i + 1;
+                if (alcance > mejor) {
+                    mejor = alcance;
+                }
+                break;
+            }
+        }
+    }
+    return mejor;
+casos:
+    mayorAlcance(new int[]{1, 2, 1, 1, 3}) => 4
+    mayorAlcance(new int[]{1, 4, 2, 1, 4, 1, 4}) => 6
+    mayorAlcance(new int[]{1, 4, 2, 1, 4, 4, 4}) => 6
+    mayorAlcance(new int[]{9}) => 1
+    mayorAlcance(new int[]{}) => 0
+    mayorAlcance(new int[]{3, 3}) => 2
+
+=== t07_equilibrar_chasis
+tema: 07
+dificultad: 4
+java: 8
+tipo: metodo
+titulo.es: ¿Se puede equilibrar el chasis?
+titulo.de: Lässt sich das Fahrgestell ausbalancieren?
+titulo.en: Can the chassis be balanced?
+enunciado.es: Los pesos de las piezas están alineados a lo largo del chasis. Devuelve true si existe un punto de corte tal que la suma de la parte izquierda sea igual a la suma de la parte derecha (ambas partes con al menos un elemento). Ejemplos: equilibrarChasis(new int[]{1, 1, 1, 2, 1}) devuelve true, equilibrarChasis(new int[]{2, 1, 1, 2, 1}) devuelve false y equilibrarChasis(new int[]{10, 10}) devuelve true.
+enunciado.de: Die Gewichte der Teile liegen entlang des Fahrgestells. Gib true zurück, wenn es eine Trennstelle gibt, an der die Summe links gleich der Summe rechts ist (beide Seiten mit mindestens einem Element). Beispiele: equilibrarChasis(new int[]{1, 1, 1, 2, 1}) gibt true zurück, equilibrarChasis(new int[]{2, 1, 1, 2, 1}) false und equilibrarChasis(new int[]{10, 10}) true.
+enunciado.en: Part weights are lined up along the chassis. Return true if there is a split point where the sum of the left side equals the sum of the right side (both sides having at least one element). Examples: equilibrarChasis(new int[]{1, 1, 1, 2, 1}) returns true, equilibrarChasis(new int[]{2, 1, 1, 2, 1}) returns false, and equilibrarChasis(new int[]{10, 10}) returns true.
+pista.es: Calcula primero la suma total. Luego ve acumulando izquierda en un bucle hasta length - 1 y comprueba si izquierda == total - izquierda.
+pista.de: Berechne zuerst die Gesamtsumme. Sammle dann links in einer Schleife bis length - 1 und prüfe, ob links == total - links gilt.
+pista.en: Compute the total sum first. Then accumulate the left sum in a loop up to length - 1 and check whether left == total - left.
+firma: static boolean equilibrarChasis(int[] pesos)
+plantilla:
+    return false;
+solucion:
+    int total = 0;
+    for (int p : pesos) {
+        total += p;
+    }
+    int izquierda = 0;
+    for (int i = 0; i < pesos.length - 1; i++) {
+        izquierda += pesos[i];
+        if (izquierda == total - izquierda) {
+            return true;
+        }
+    }
+    return false;
+casos:
+    equilibrarChasis(new int[]{1, 1, 1, 2, 1}) => true
+    equilibrarChasis(new int[]{2, 1, 1, 2, 1}) => false
+    equilibrarChasis(new int[]{10, 10}) => true
+    equilibrarChasis(new int[]{1}) => false
+    equilibrarChasis(new int[]{}) => false
+    equilibrarChasis(new int[]{-2, 2, 0}) => true
+
+=== t07_transponer_matriz
+tema: 07
+dificultad: 5
+java: 8
+tipo: metodo
+titulo.es: Transponer el mapa de calor
+titulo.de: Die Wärmekarte transponieren
+titulo.en: Transpose the heat map
+enunciado.es: El escáner guarda el mapa de calor de la arena en una matriz rectangular mapa (todas las filas tienen la misma longitud). Devuelve su transpuesta: una matriz nueva donde la fila f y columna c pasan a estar en [c][f]. Si mapa está vacío o tiene 0 columnas, devuelve un array 2D vacío. Ejemplos: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) devuelve {{1, 4}, {2, 5}, {3, 6}}.
+enunciado.de: Der Scanner speichert die Wärmekarte der Arena in einer rechteckigen Matrix mapa (alle Zeilen sind gleich lang). Gib ihre Transponierte zurück: eine neue Matrix, in der Zeile f und Spalte c an [c][f] stehen. Ist mapa leer oder hat 0 Spalten, gib ein leeres 2D-Array zurück. Beispiel: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) gibt {{1, 4}, {2, 5}, {3, 6}} zurück.
+enunciado.en: The scanner stores the arena heat map in a rectangular matrix mapa (all rows have the same length). Return its transpose: a new matrix where row f and column c move to [c][f]. If mapa is empty or has 0 columns, return an empty 2D array. Example: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) returns {{1, 4}, {2, 5}, {3, 6}}.
+pista.es: Si filas == 0 o columnas == 0, devuelve new int[0][0]. Si no, crea new int[columnas][filas] y copia res[c][f] = mapa[f][c].
+pista.de: Bei filas == 0 oder columnas == 0 gib new int[0][0] zurück. Sonst erzeuge new int[columnas][filas] und kopiere res[c][f] = mapa[f][c].
+pista.en: If filas == 0 or columnas == 0, return new int[0][0]. Otherwise create new int[columnas][filas] and copy res[c][f] = mapa[f][c].
+firma: static int[][] transponer(int[][] mapa)
+plantilla:
+    return mapa;
+solucion:
+    if (mapa.length == 0 || mapa[0].length == 0) {
+        return new int[0][0];
+    }
+    int filas = mapa.length;
+    int columnas = mapa[0].length;
+    int[][] res = new int[columnas][filas];
+    for (int f = 0; f < filas; f++) {
+        for (int c = 0; c < columnas; c++) {
+            res[c][f] = mapa[f][c];
+        }
+    }
+    return res;
+casos:
+    transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) => new int[][]{{1, 4}, {2, 5}, {3, 6}}
+    transponer(new int[][]{{7}}) => new int[][]{{7}}
+    transponer(new int[][]{{1, 2}, {3, 4}}) => new int[][]{{1, 3}, {2, 4}}
+    transponer(new int[][]{{1, 2, 3}}) => new int[][]{{1}, {2}, {3}}
+    transponer(new int[][]{}) => new int[][]{}
