@@ -84,7 +84,7 @@ public final class VentanaDeCodigo {
     private float agarre;
     /** Lo que mide la línea más larga (en letras), para la barra horizontal; se recalcula cuando cambia el texto. */
     private int columnasMaximas;
-    private long versionDeColumnas = -1;
+    private long versionDeColumnas = -1, versionDeDesplazamiento = -1;
     private float parpadeo;
     private long versionColoreada = -1;
     private List<Lexico.Trozo> trozos = new ArrayList<>();
@@ -99,7 +99,34 @@ public final class VentanaDeCodigo {
     public void ponerTexto(String s) {
         doc.ponerTexto(s);
         desplazamientoX = desplazamientoY = 0;
+        seguirCursor = true;
         marcas.clear();
+    }
+
+    /** Geometría del editor (margen de números y área útil de texto con recorte estricto). */
+    public VistaDeCodigo.Geometria geometria(float x, float y, float w, float h, float alto, float letra) {
+        return VistaDeCodigo.geometria(x, y, w, h, alto, letra, doc.lineas(), buscando, reemplazando);
+    }
+
+    /** Desplazamiento horizontal actual del contenido de código (siempre en [0, maxX]). */
+    public float desplazamientoX() {
+        return desplazamientoX;
+    }
+
+    /** Desplazamiento vertical actual del contenido de código (siempre en [0, maxY]). */
+    public float desplazamientoY() {
+        return desplazamientoY;
+    }
+
+    /** Desplazamiento horizontal máximo del documento actual para el ancho útil indicado. */
+    public float maximoDesplazamientoX(float zw, float letra) {
+        return maxX(zw, letra);
+    }
+
+    /** Recalcula y acota el desplazamiento horizontal y vertical según el estado actual del documento. */
+    public void ajustarDesplazamiento(float zw, float zh, float alto, float letra, boolean seguir) {
+        if (seguir) seguirCursor = true;
+        desplazar(zw, zh, alto, letra);
     }
 
     // ================================================================ como un IDE: errores al escribir y documentación
@@ -130,29 +157,28 @@ public final class VentanaDeCodigo {
 
     // ================================================================ dibujar
 
-    /**
-     * Las olas de los errores de la línea l, su explicación al pasar el ratón y cuál se está mirando (para el
-     * entrenador flotante: el del ratón, el del punto del margen pulsado o, si no, el de la línea del cursor).
-     */
-    private void marcasDeLaLinea(Ui ui, int l, float x, float zx, float ly, float alto, float letra, int lineaCursor) {
+    /** Las olas de los errores de la línea l, su explicación al pasar el ratón y cuál se está mirando. */
+    private void marcasDeLaLinea(Ui ui, int l, float x, VistaDeCodigo.Geometria g, float ly, float alto, float letra, int lineaCursor) {
         Entrada e = ui.e;
         String texto = doc.linea(l);
+        boolean enZonaCodigo = e.dentro(g.clipX(), g.clipY(), g.clipW(), g.clipH());
+        boolean enGutter = e.dentro(x, g.zy(), g.anchoGutter(), g.zh());
         for (Marca m : marcas) {
             if (m.linea != l + 1) continue;
-            // El punto del margen se pulsa: el entrenador explica ese error.
-            if (e.clic(x, ly, letra * 1.4f, alto)) ui.errorSenalado = new Senalado(m, texto, doc.texto(), true);
+            if (enGutter && e.clic(x, ly, letra * 1.4f, alto)) ui.errorSenalado = new Senalado(m, texto, doc.texto(), true);
             int c0 = Math.max(0, Math.min(texto.length(), m.columna - 1));
             int c1 = c0;
             while (c1 < texto.length() && Character.isJavaIdentifierPart(texto.charAt(c1))) c1++;
             if (c1 == c0) c1 = Math.min(texto.length(), c0 + 1);
             if (c1 == c0) c1 = c0 + 1;
-            ondas(ui.p, zx + c0 * letra - desplazamientoX, ly + alto - 3, (c1 - c0) * letra, m.grave ? ui.tema.mal : ui.tema.aviso);
-            if (e.dentro(zx + c0 * letra - desplazamientoX, ly, Math.max(letra, (c1 - c0) * letra), alto) || e.dentro(x, ly, letra * 1.4f, alto)) {
+            float ox = g.zx() + c0 * letra - desplazamientoX;
+            VistaDeCodigo.ondas(ui.p, ox, ly + alto - 3, (c1 - c0) * letra, m.grave ? ui.tema.mal : ui.tema.aviso);
+            boolean sobreOnda = enZonaCodigo && e.dentro(ox, ly, Math.max(letra, (c1 - c0) * letra), alto);
+            if (sobreOnda || (enGutter && e.dentro(x, ly, letra * 1.4f, alto))) {
                 ui.avisar(m.texto + "\n\n" + metajavbots.textos.T.t("entrenador.error_f2"));
                 if (ui.errorSenalado == null) ui.errorSenalado = new Senalado(m, texto, doc.texto(), false);
             }
         }
-        // Sin el ratón encima de ninguno: el de la línea del cursor.
         if (ui.errorSenalado == null && enfocada && l == lineaCursor) for (Marca m : marcas) if (m.linea == l + 1) {
             ui.errorSenalado = new Senalado(m, texto, doc.texto(), false);
             break;
@@ -165,9 +191,7 @@ public final class VentanaDeCodigo {
         Entrada e = ui.e;
         parpadeo += Gdx.graphics == null ? 0.016f : Gdx.graphics.getDeltaTime();
         float alto = p.altoDeLinea(tamano), letra = p.anchoDeLetra(tamano);
-        float margen = letra * (String.valueOf(doc.lineas()).length() + 3.5f);
-        float barra = buscando ? alto * (reemplazando ? 2.4f : 1.4f) : 0;
-        float zx = x + margen, zy = y + barra, zw = w - margen - 12, zh = h - barra - 12;
+        VistaDeCodigo.Geometria g = geometria(x, y, w, h, alto, letra);
 
         if (!e.bloqueada && e.recienPulsado) {
             if (e.dentro(x, y, w, h)) enfocada = true;
@@ -175,68 +199,84 @@ public final class VentanaDeCodigo {
         } else if (ui.tieneOtroFoco(this)) enfocada = false;
         if (enfocada) ui.registrarFoco(this, () -> enfocada = false);
         if (revisarAlEscribir != null && !soloLectura) revisor.fotograma(doc, marcas, revisarAlEscribir);
-        if (enfocada) teclas(ui, zh, alto);
-        raton(ui, zx, zy, zw, zh, alto, letra);
-        float maxY = desplazar(zw, zh, alto, letra);
-        arrastrarBarras(e, x, zx, zy, w, zw, zh, letra, maxY);
+        if (enfocada) teclas(ui, g.zh(), alto);
+        raton(ui, g.zx(), g.zy(), g.zw(), g.zh(), alto, letra);
+        float maxY = desplazar(g.zw(), g.zh(), alto, letra);
+        arrastrarBarras(e, x, g.zx(), g.zy(), w, g.zw(), g.zh(), letra, maxY);
 
         p.rect(x, y, w, h, t.fondo, 1);
-        p.rect(x, y + barra, margen - letra * 0.8f, h - barra, t.panel, 1);
-        p.recortar(x, zy, w, zh + 12);
+        p.rect(x, g.zy(), g.anchoGutter(), h - (g.zy() - y), t.panel, 1);
         int primera = Math.max(0, (int) (desplazamientoY / alto));
-        int ultima = Math.min(doc.lineas() - 1, (int) ((desplazamientoY + zh) / alto) + 1);
+        int ultima = Math.min(doc.lineas() - 1, (int) ((desplazamientoY + g.zh()) / alto) + 1);
         int lineaCursor = doc.lineaDelCursor();
+        int col = colorLineaActiva != 0 ? colorLineaActiva : t.bien;
         coloreado();
-        int pareja = parejaDelCursor();
-        String palabra = palabraDelCursor();
-        for (int l = primera; l <= ultima; l++) {
-            float ly = zy + l * alto - desplazamientoY;
-            if (l == lineaCursor && enfocada) p.rect(zx - 4, ly, zw + 4, alto, t.lineaActual, 1);
-            if (lineaResaltada == l + 1) p.rect(zx - 4, ly, zw + 4, alto, t.mal, 0.18f);
-            int col = colorLineaActiva != 0 ? colorLineaActiva : t.bien;
-            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) p.rect(zx - 4, ly, zw + 4, alto, col, lineaActiva == l + 1 ? 0.34f : 0.18f);
-            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) p.rect(zx - 4, ly, 5, alto, col, lineaActiva == l + 1 ? 1f : 0.75f);
-            if (lineaActiva == l + 1) p.marco(zx - 4, ly, zw + 4, alto, col, 0.98f, 2f);
-            if (lineaActiva == l + 1) p.texto("▶", x + 2, ly + alto * 0.08f, tamano * 0.95f, true, col, 1);
-            boolean conError = false, conAviso = false;
-            for (Marca m : marcas) if (m.linea == l + 1) { if (m.grave) conError = true; else conAviso = true; }
-            String numero = Integer.toString(l + 1);
-            p.textoDeCodigoDerecha(numero, x + margen - letra * 1.6f, ly + alto * 0.12f, tamano * 0.9f, l == lineaCursor,
-                    l == lineaCursor ? t.texto : t.numeros, 1);
-            if (conError || conAviso) p.circulo(x + letra * 0.7f, ly + alto / 2, alto * 0.22f, conError ? t.mal : t.aviso, 1);
-            // La selección.
-            if (doc.haySeleccion()) {
-                int ini = doc.inicioDeLinea(l), fin = doc.finDeLinea(l);
-                int s0 = Math.max(ini, doc.inicioDeSeleccion()), s1 = Math.min(fin, doc.finDeSeleccion());
-                boolean conSalto = doc.finDeSeleccion() > fin;
-                if (s0 < s1 || conSalto && s0 <= fin && doc.inicioDeSeleccion() <= fin) {
-                    float sx = zx + (s0 - ini) * letra - desplazamientoX, ex = zx + (s1 - ini) * letra - desplazamientoX + (conSalto ? letra * 0.6f : 0);
-                    p.rect(sx, ly, Math.max(2, ex - sx), alto, t.seleccion, 1);
-                }
-            }
-            dibujarLinea(p, t, l, zx - desplazamientoX, ly, alto, letra, pareja, palabra);
-            marcasDeLaLinea(ui, l, x, zx, ly, alto, letra, lineaCursor);
-        }
-        documentacionAlPasar(ui, zx, zy, zw, zh, alto, letra);
-        // El cursor (parpadea, pero no mientras se escribe).
-        if (enfocada && !soloLectura && (parpadeo % 1.0f) < 0.6f) {
-            float cx = zx + doc.columnaDelCursor() * letra - desplazamientoX;
-            float cy = zy + lineaCursor * alto - desplazamientoY;
-            p.rect(cx - 1, cy + 2, 2.5f, alto - 4, t.acento, 1);
-        }
-        p.sinRecorte();
-        barras(ui, x, zx, zy, w, zw, zh, letra, maxY);
+        dibujarMargen(p, t, x, g, primera, ultima, lineaCursor, col, alto, letra);
+        dibujarZonaDeCodigo(ui, x, g, primera, ultima, lineaCursor, col, alto, letra);
+        documentacionAlPasar(ui, g.zx(), g.zy(), g.zw(), g.zh(), alto, letra);
+        barras(ui, x, g.zx(), g.zy(), w, g.zw(), g.zh(), letra, maxY);
         if (buscando) barraDeBuscar(ui, x, y, w, alto);
-        if (proponiendo) dibujarPropuestas(ui, zx, zy, alto, letra);
-        // Con la barra de buscar o las propuestas abiertas, Esc las cierra (y no vuelve atrás).
+        if (proponiendo) dibujarPropuestas(ui, g.zx(), g.zy(), alto, letra);
         if (buscando || proponiendo) ui.reservarEscape();
         if (soloLectura) {
-            // Una etiqueta con su fondo, arriba a la derecha: no se mezcla con el código.
             String s = "■ " + metajavbots.textos.T.t("editor.solo_lectura");
             float tl = tamano * 0.8f, ew = p.ancho(s, tl, false) + 16;
             p.caja(x + w - 22 - ew, y + 4, ew, tl * 1.5f, 6, t.panelAlto, 0.95f);
             p.texto(s, x + w - 14 - ew, y + 4 + tl * 0.2f, tl, false, t.textoSuave, 1);
         }
+    }
+
+    private void dibujarMargen(Pincel p, Tema t, float x, VistaDeCodigo.Geometria g, int primera, int ultima,
+            int lineaCursor, int col, float alto, float letra) {
+        p.recortar(x, g.zy(), g.anchoGutter(), g.zh());
+        for (int l = primera; l <= ultima; l++) {
+            float ly = g.zy() + l * alto - desplazamientoY;
+            if (lineaActiva == l + 1) p.texto("▶", x + 2, ly + alto * 0.08f, tamano * 0.95f, true, col, 1);
+            boolean conError = false, conAviso = false;
+            for (Marca m : marcas) if (m.linea == l + 1) { if (m.grave) conError = true; else conAviso = true; }
+            p.textoDeCodigoDerecha(Integer.toString(l + 1), g.zx() - letra * 1.6f, ly + alto * 0.12f, tamano * 0.9f,
+                    l == lineaCursor, l == lineaCursor ? t.texto : t.numeros, 1);
+            if (conError || conAviso) p.circulo(x + letra * 0.7f, ly + alto / 2, alto * 0.22f, conError ? t.mal : t.aviso, 1);
+        }
+        p.sinRecorte();
+    }
+
+    private void dibujarZonaDeCodigo(Ui ui, float x, VistaDeCodigo.Geometria g, int primera, int ultima,
+            int lineaCursor, int col, float alto, float letra) {
+        Pincel p = ui.p;
+        Tema t = ui.tema;
+        int pareja = parejaDelCursor();
+        String palabra = palabraDelCursor();
+        p.recortar(g.clipX(), g.clipY(), g.clipW(), g.clipH());
+        for (int l = primera; l <= ultima; l++) {
+            float ly = g.zy() + l * alto - desplazamientoY;
+            if (l == lineaCursor && enfocada) p.rect(g.zx(), ly, g.zw(), alto, t.lineaActual, 1);
+            if (lineaResaltada == l + 1) p.rect(g.zx(), ly, g.zw(), alto, t.mal, 0.18f);
+            if (lineasActivas.get(l + 1) || lineaActiva == l + 1) {
+                p.rect(g.zx(), ly, g.zw(), alto, col, lineaActiva == l + 1 ? 0.34f : 0.18f);
+                p.rect(g.zx(), ly, 5, alto, col, lineaActiva == l + 1 ? 1f : 0.75f);
+            }
+            if (lineaActiva == l + 1) p.marco(g.zx(), ly, g.zw(), alto, col, 0.98f, 2f);
+            if (doc.haySeleccion()) {
+                int ini = doc.inicioDeLinea(l), fin = doc.finDeLinea(l);
+                int s0 = Math.max(ini, doc.inicioDeSeleccion()), s1 = Math.min(fin, doc.finDeSeleccion());
+                boolean conSalto = doc.finDeSeleccion() > fin;
+                if (s0 < s1 || conSalto && s0 <= fin && doc.inicioDeSeleccion() <= fin) {
+                    float sx = g.zx() + (s0 - ini) * letra - desplazamientoX;
+                    float ex = g.zx() + (s1 - ini) * letra - desplazamientoX + (conSalto ? letra * 0.6f : 0);
+                    p.rect(sx, ly, Math.max(2, ex - sx), alto, t.seleccion, 1);
+                }
+            }
+            dibujarLinea(p, t, l, g.zx() - desplazamientoX, ly, alto, letra, pareja, palabra);
+            marcasDeLaLinea(ui, l, x, g, ly, alto, letra, lineaCursor);
+        }
+        if (enfocada && !soloLectura && (parpadeo % 1.0f) < 0.6f) {
+            float cx = g.zx() + doc.columnaDelCursor() * letra - desplazamientoX;
+            float cy = g.zy() + lineaCursor * alto - desplazamientoY;
+            float rx = cx < g.clipX() && cx >= g.clipX() - 1 ? g.clipX() : cx - 1;
+            p.rect(rx, cy + 2, 2.5f, alto - 4, t.acento, 1);
+        }
+        p.sinRecorte();
     }
 
     private void dibujarLinea(Pincel p, Tema t, int l, float x0, float y, float alto, float letra, int pareja, String palabra) {
@@ -247,7 +287,7 @@ public final class VentanaDeCodigo {
         int sangria = Documento.sangriaDe(texto);
         for (int s = Documento.SANGRIA; s < sangria; s += Documento.SANGRIA) p.rect(x0 + s * letra, y, 1, alto, t.borde, 0.6f);
         int col = 0;
-        int k = buscarTrozo(ini);
+        int k = VistaDeCodigo.buscarTrozo(trozos, ini);
         List<Object[]> colores = new ArrayList<>();
         while (col < texto.length()) {
             int pos = ini + col;
@@ -256,7 +296,7 @@ public final class VentanaDeCodigo {
             int color;
             if (tr != null && tr.inicio <= pos && tr.fin > pos) {
                 hasta = Math.min(fin, tr.fin) - ini;
-                color = colorDe(t, tr, k);
+                color = VistaDeCodigo.colorDe(t, trozos, tr, k);
                 if (tr.fin <= fin) k++;
             } else {
                 int siguiente = tr != null && tr.inicio > pos ? Math.min(fin, tr.inicio) : fin;
@@ -275,41 +315,6 @@ public final class VentanaDeCodigo {
             for (int pos : new int[]{pareja, cursorPareja}) {
                 if (pos >= ini && pos <= fin && pos < doc.largo()) p.marco(x0 + (pos - ini) * letra, y + 1, letra, alto - 2, t.acento, 0.9f, 1.5f);
             }
-        }
-    }
-
-    private int buscarTrozo(int pos) {
-        int lo = 0, hi = trozos.size();
-        while (lo < hi) {
-            int m = (lo + hi) >>> 1;
-            if (trozos.get(m).fin <= pos) lo = m + 1;
-            else hi = m;
-        }
-        return lo;
-    }
-
-    private int colorDe(Tema t, Lexico.Trozo tr, int k) {
-        switch (tr.clase) {
-            case CLAVE: return t.clave;
-            case TIPO_PRIMITIVO: return t.tipo;
-            case NUMERO: return t.numero;
-            case TEXTO: case LETRA: case BLOQUE_DE_TEXTO: return t.cadena;
-            case COMENTARIO: case COMENTARIO_BLOQUE: case JAVADOC: return t.comentario;
-            case ANOTACION: return t.anotacion;
-            case OPERADOR: return t.operador;
-            case NOMBRE:
-                if (k + 1 < trozos.size() && trozos.get(k + 1).es("(")) return t.metodo;
-                if (!tr.texto.isEmpty() && Character.isUpperCase(tr.texto.charAt(0))) return t.tipo;
-                return t.nombre;
-            default: return t.texto;
-        }
-    }
-
-    private void ondas(Pincel p, float x, float y, float w, int color) {
-        float paso = 3;
-        for (float i = 0; i < w; i += paso) {
-            float a = (i / paso) % 2 == 0 ? 0 : 2.5f, b = (i / paso) % 2 == 0 ? 2.5f : 0;
-            p.linea(x + i, y + a, x + Math.min(w, i + paso), y + b, 1.5f, color, 1);
         }
     }
 
@@ -343,44 +348,34 @@ public final class VentanaDeCodigo {
             for (int l = 0; l < doc.lineas(); l++) m = Math.max(m, doc.linea(l).length());
             columnasMaximas = m;
         }
-        return Math.max(0, columnasMaximas * letra + letra * 4 - zw);
+        return VistaDeCodigo.maxX(columnasMaximas, zw, letra);
     }
 
-    /** El tirador de una barra: dónde empieza y cuánto mide, en un carril de largo «carril» que enseña «visible» de «visible + max». */
-    private static float[] tirador(float carril, float visible, float max, float desplazamiento) {
-        float largo = Math.max(30, carril * visible / (visible + max));
-        return new float[]{(carril - largo) * (max <= 0 ? 0 : desplazamiento / max), largo};
-    }
-
-    /**
-     * Las barras se manejan con el ratón, como en los editores de verdad: se arrastra el tirador (vertical a la derecha,
-     * horizontal abajo) y un clic en el carril salta a ese sitio (y se sigue arrastrando desde ahí).
-     */
+    /** Las barras se manejan con el ratón: se arrastra el tirador y un clic en el carril salta ahí. */
     private void arrastrarBarras(Entrada e, float x, float zx, float zy, float w, float zw, float zh, float letra, float maxY) {
         float maxX = maxX(zw, letra);
         if (!e.pulsado) barraArrastrada = 0;
         if (e.recienPulsado && !e.clicUsado) {
             if (maxY > 0 && e.dentro(x + w - 12, zy, 12, zh)) {
                 e.clicUsado = true;
-                float[] t = tirador(zh, zh, maxY, desplazamientoY);
+                float[] t = VistaDeCodigo.tirador(zh, zh, maxY, desplazamientoY);
                 float enCarril = e.ratonY - zy;
-                // Sobre el tirador: se agarra por ahí; en el carril: el tirador salta con su centro al ratón.
                 agarre = enCarril >= t[0] && enCarril <= t[0] + t[1] ? enCarril - t[0] : t[1] / 2;
                 barraArrastrada = 1;
             } else if (maxX > 0 && e.dentro(zx, zy + zh, zw, 12)) {
                 e.clicUsado = true;
-                float[] t = tirador(zw, zw, maxX, desplazamientoX);
+                float[] t = VistaDeCodigo.tirador(zw, zw, maxX, desplazamientoX);
                 float enCarril = e.ratonX - zx;
                 agarre = enCarril >= t[0] && enCarril <= t[0] + t[1] ? enCarril - t[0] : t[1] / 2;
                 barraArrastrada = 2;
             }
         }
         if (barraArrastrada == 1) {
-            float[] t = tirador(zh, zh, maxY, desplazamientoY);
+            float[] t = VistaDeCodigo.tirador(zh, zh, maxY, desplazamientoY);
             float u = (e.ratonY - zy - agarre) / Math.max(1, zh - t[1]);
             desplazamientoY = Math.max(0, Math.min(maxY, u * maxY));
         } else if (barraArrastrada == 2) {
-            float[] t = tirador(zw, zw, maxX, desplazamientoX);
+            float[] t = VistaDeCodigo.tirador(zw, zw, maxX, desplazamientoX);
             float u = (e.ratonX - zx - agarre) / Math.max(1, zw - t[1]);
             desplazamientoX = Math.max(0, Math.min(maxX, u * maxX));
         }
@@ -391,17 +386,16 @@ public final class VentanaDeCodigo {
         Entrada e = ui.e;
         float maxX = maxX(zw, letra);
         if (maxX > 0) {
-            float[] t = tirador(zw, zw, maxX, desplazamientoX);
+            float[] t = VistaDeCodigo.tirador(zw, zw, maxX, desplazamientoX);
             boolean viva = barraArrastrada == 2 || e.dentro(zx, zy + zh, zw, 12);
             p.caja(zx, zy + zh + 2, zw, 9, 4, ui.tema.panel, viva ? 0.9f : 0.5f);
             p.caja(zx + t[0], zy + zh + 2, t[1], 9, 4, viva ? ui.tema.acento : ui.tema.borde, 0.9f);
         }
         if (maxY <= 0) return;
-        float[] t = tirador(zh, zh, maxY, desplazamientoY);
+        float[] t = VistaDeCodigo.tirador(zh, zh, maxY, desplazamientoY);
         boolean viva = barraArrastrada == 1 || e.dentro(x + w - 12, zy, 12, zh);
         p.caja(x + w - 12, zy, 10, zh, 4, ui.tema.panel, viva ? 0.9f : 0.5f);
         p.caja(x + w - 12, zy + t[0], 10, t[1], 4, viva ? ui.tema.acento : ui.tema.borde, 0.9f);
-        // Las marcas de error, también en la barra (para encontrarlas en un código largo).
         for (Marca m : marcas) {
             float my = zy + zh * (m.linea - 1) / Math.max(1f, doc.lineas());
             p.rect(x + w - 12, my, 10, 3, m.grave ? ui.tema.mal : ui.tema.aviso, 1);
@@ -436,6 +430,8 @@ public final class VentanaDeCodigo {
             doc.moverA(pos, true);
             if (e.ratonY < zy) desplazamientoY -= alto * 0.5f;
             if (e.ratonY > zy + zh) desplazamientoY += alto * 0.5f;
+            if (e.ratonX < zx) desplazamientoX -= letra * 2;
+            if (e.ratonX > zx + zw) desplazamientoX += letra * 2;
         }
     }
 
@@ -445,14 +441,6 @@ public final class VentanaDeCodigo {
         if (linea < 0) return 0;
         if (linea >= doc.lineas()) return doc.largo();
         return doc.posicion(linea, Math.max(0, col));
-    }
-
-    private void llevarAlCursor(float zw, float zh, float alto, float letra) {
-        float cy = doc.lineaDelCursor() * alto, cx = doc.columnaDelCursor() * letra;
-        if (cy < desplazamientoY) desplazamientoY = cy;
-        if (cy + alto * 2 > desplazamientoY + zh) desplazamientoY = cy + alto * 2 - zh;
-        if (cx < desplazamientoX + letra * 2) desplazamientoX = Math.max(0, cx - letra * 6);
-        if (cx > desplazamientoX + zw - letra * 4) desplazamientoX = cx - zw + letra * 8;
     }
 
     // ================================================================ las teclas
@@ -653,12 +641,6 @@ public final class VentanaDeCodigo {
         return algo || buscando;
     }
 
-    private static int indiceEnLinea(Pincel p, float rx, float tam, String s) {
-        if (rx <= 0 || s.isEmpty()) return 0;
-        for (int i = 0; i < s.length(); i++) if (p.anchoDeCodigo(s.substring(0, i + 1), tam, false) >= rx) return i;
-        return s.length();
-    }
-
     private void barraDeBuscar(Ui ui, float x, float y, float w, float alto) {
         Pincel p = ui.p;
         Tema t = ui.tema;
@@ -685,7 +667,7 @@ public final class VentanaDeCodigo {
             p.sinRecorte();
             if (ui.e.clic(cx, fy - 2, cw, alto)) {
                 campoReemplazo = i == 1;
-                campos[i].moverA(indiceEnLinea(p, ui.e.ratonX - (cx + 8), t1, txt), ui.e.mayus());
+                campos[i].moverA(VistaDeCodigo.indiceEnLinea(p, ui.e.ratonX - (cx + 8), t1, txt), ui.e.mayus());
             }
         }
         int n = doc.apariciones(busqueda.texto(), false).size();
@@ -782,17 +764,16 @@ public final class VentanaDeCodigo {
         }
     }
 
-    /** Lleva la vista al cursor (o a la línea que se ejecuta) y la mantiene dentro del texto. Devuelve hasta dónde se puede bajar. */
+    /** Lleva la vista al cursor (o a la línea que se ejecuta) y la mantiene acotada dentro del texto. */
     private float desplazar(float zw, float zh, float alto, float letra) {
-        if (seguirCursor) llevarAlCursor(zw, zh, alto, letra);
-        if (seguirActiva && lineaActiva > 0) {
-            float ay = (lineaActiva - 1) * alto;
-            if (ay < desplazamientoY + alto * 2 || ay > desplazamientoY + zh - alto * 3) desplazamientoY = ay - zh / 2;
-        }
+        maxX(zw, letra);
+        boolean cambio = versionDeDesplazamiento != doc.version();
+        versionDeDesplazamiento = doc.version();
+        VistaDeCodigo.Desplazamiento d = VistaDeCodigo.ajustar(doc, desplazamientoX, desplazamientoY, zw, zh, alto, letra,
+                columnasMaximas, seguirCursor || cambio, seguirActiva, lineaActiva);
         seguirCursor = false;
-        float maxY = Math.max(0, doc.lineas() * alto - zh + alto * 2);
-        desplazamientoY = Math.max(0, Math.min(maxY, desplazamientoY));
-        desplazamientoX = Math.max(0, desplazamientoX);
-        return maxY;
+        desplazamientoX = d.x();
+        desplazamientoY = d.y();
+        return d.maxY();
     }
 }

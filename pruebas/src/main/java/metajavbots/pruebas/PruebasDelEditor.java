@@ -9,6 +9,8 @@ import java.util.Random;
 import metajavbots.codigo.Documento;
 import metajavbots.codigo.Formateo;
 import metajavbots.codigo.Lexico;
+import metajavbots.pantalla.VentanaDeCodigo;
+import metajavbots.pantalla.VistaDeCodigo;
 
 /** El editor de código: que no se rompa nunca y que ayude como los editores profesionales. */
 final class PruebasDelEditor {
@@ -26,6 +28,7 @@ final class PruebasDelEditor {
         apuntarParte2();
         apuntarParte3();
         apuntarParte4();
+        apuntarParte5();
     }
 
     private static void apuntarParte1() {
@@ -246,6 +249,74 @@ final class PruebasDelEditor {
                 igual(sinEspacios(s), sinEspacios(f), "las letras siguen iguales");
                 igual(f, Formateo.formatear(f), "formatear dos veces da lo mismo");
             }
+        });
+    }
+
+    private static void apuntarParte5() {
+        caso("editor: Backspace uniendo con línea larga mantiene scrollX acotado y vuelve a 0", () -> {
+            VentanaDeCodigo ed = new VentanaDeCodigo();
+            String larga = "int valorMuyLargoParaDesbordarElAnchoVisibleDelEditor = 1234567890 + 987654321;";
+            ed.ponerTexto(larga + "\nfin();");
+            float ex = 80, ey = 60, ew = 420, eh = 300, alto = 24, letra = 10;
+            VistaDeCodigo.Geometria g = ed.geometria(ex, ey, ew, eh, alto, letra);
+            ed.doc.moverA(ed.doc.posicion(1, 0), false);
+            ed.ajustarDesplazamiento(g.zw(), g.zh(), alto, letra, true);
+            igual(0f, ed.desplazamientoX(), "antes de unir líneas scrollX es 0");
+
+            ed.doc.borrarAtras();
+            ed.ajustarDesplazamiento(g.zw(), g.zh(), alto, letra, true);
+            float maxX = ed.maximoDesplazamientoX(g.zw(), letra);
+            cierto(maxX > 0, "la línea unida supera el ancho visible");
+            cierto(ed.desplazamientoX() > 0 && ed.desplazamientoX() <= maxX, "scrollX acotado en (0, maxX]");
+            float cursorX = g.zx() + ed.doc.columnaDelCursor() * letra - ed.desplazamientoX();
+            cierto(cursorX >= g.clipX() && cursorX <= g.clipX() + g.clipW(), "cursor visible dentro del área de texto");
+            cierto(cursorX > ex + g.anchoGutter(), "cursor estrictamente a la derecha del gutter");
+
+            ed.doc.inicio(false);
+            ed.ajustarDesplazamiento(g.zw(), g.zh(), alto, letra, true);
+            igual(0f, ed.desplazamientoX(), "al volver al inicio de la línea scrollX vuelve a 0");
+
+            ed.doc.fin(false);
+            ed.ajustarDesplazamiento(g.zw(), g.zh(), alto, letra, true);
+            cierto(ed.desplazamientoX() > 0, "al ir al final de la línea larga vuelve a desplazarse");
+            while (ed.doc.linea(0).length() > 12) ed.doc.borrarAtras();
+            ed.ajustarDesplazamiento(g.zw(), g.zh(), alto, letra, true);
+            igual(0f, ed.desplazamientoX(), "al borrar el exceso hasta caber scrollX vuelve a 0");
+        });
+
+        caso("editor: recorte del área de texto nunca invade el gutter de números", () -> {
+            VentanaDeCodigo ed = new VentanaDeCodigo();
+            for (int n : new int[]{1, 15, 250, 1200}) {
+                ed.ponerTexto("a\n".repeat(n));
+                float ex = 120, ey = 40, ew = 600, eh = 400, alto = 25, letra = 11;
+                VistaDeCodigo.Geometria g = ed.geometria(ex, ey, ew, eh, alto, letra);
+                cierto(g.anchoGutter() > 0, "gutter con ancho positivo");
+                cierto(g.clipX() >= ex + g.anchoGutter(), "clipX a la derecha del gutter con " + n + " líneas");
+                cierto(g.clipX() + g.clipW() <= ex + ew - 12 + 0.01f, "clipW no invade la barra vertical");
+                cierto(g.clipY() + g.clipH() <= ey + eh - 12 + 0.01f, "clipH no invade la barra horizontal");
+            }
+        });
+
+        caso("editor: sustituir por texto más corto restablece scrollX a 0 en el acto", () -> {
+            VentanaDeCodigo ed = new VentanaDeCodigo();
+            ed.ponerTexto("a".repeat(140));
+            float zw = 320, zh = 240, alto = 24, letra = 10;
+            ed.doc.fin(false);
+            ed.ajustarDesplazamiento(zw, zh, alto, letra, true);
+            cierto(ed.desplazamientoX() > 0, "desplazado en línea larga");
+
+            ed.doc.cambiarTodo("int x = 1;");
+            ed.ajustarDesplazamiento(zw, zh, alto, letra, false);
+            igual(0f, ed.desplazamientoX(), "cambiarTodo por texto corto devuelve scrollX a 0 sin recrear editor");
+
+            ed.doc.cambiarTodo("b".repeat(140));
+            ed.doc.fin(false);
+            ed.ajustarDesplazamiento(zw, zh, alto, letra, true);
+            cierto(ed.desplazamientoX() > 0, "desplazado de nuevo");
+
+            ed.ponerTexto("corto();");
+            ed.ajustarDesplazamiento(zw, zh, alto, letra, false);
+            igual(0f, ed.desplazamientoX(), "ponerTexto corto mantiene scrollX en 0");
         });
     }
 
