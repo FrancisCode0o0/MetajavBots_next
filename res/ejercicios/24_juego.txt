@@ -13,7 +13,7 @@ titulo.de: Bis zur Flagge
 titulo.en: Up to the flag
 enunciado.es: Tu robot está en x y la bandera en «bandera» (en la misma fila). avanzar() necesita saber cuánto: devuelve cuánto tiene que avanzar (en negativo, hacia atrás).
 enunciado.de: Dein Roboter steht bei x, die Flagge bei «bandera» (in derselben Reihe). vorwaerts() muss wissen, wie weit: Gib zurück, wie weit er fahren muss (negativ heißt rückwärts).
-enunciado.en: Your robot is at x and the flag at "bandera" (in the same row). ahead() needs to know how far: return how far it has to move (negative means backwards).
+enunciado.en: Your robot is at x and the flag at "bandera" (in the same row). ahead() needs to know how far: return how far it has to move (negative means backward).
 pista.es: Si la bandera está en 400 y tú en 100, ¿cuánto te falta? ¿Y si estás en 500?
 pista.de: Steht die Flagge bei 400 und du bei 100, wie viel fehlt dir? Und wenn du bei 500 stehst?
 pista.en: If the flag is at 400 and you're at 100, how far is left? And if you're at 500?
@@ -36,10 +36,10 @@ tipo: metodo
 escena: giro
 titulo.es: Girar hacia el muñeco
 titulo.de: Zur Übungspuppe drehen
-titulo.en: Turn towards the dummy
+titulo.en: Turn toward the dummy
 enunciado.es: El muñeco de prácticas está dx a la derecha y dy hacia arriba de tu robot. Devuelve el ángulo hacia él en grados enteros (0 = derecha, 90 = arriba, 180 = izquierda, -90 = abajo).
 enunciado.de: Die Übungspuppe steht dx rechts und dy oberhalb deines Roboters. Gib den Winkel zu ihr in ganzen Grad zurück (0 = rechts, 90 = oben, 180 = links, -90 = unten).
-enunciado.en: The training dummy is dx to the right and dy above your robot. Return the angle towards it in whole degrees (0 = right, 90 = up, 180 = left, -90 = down).
+enunciado.en: The training dummy is dx to the right and dy above your robot. Return the angle toward it in whole degrees (0 = right, 90 = up, 180 = left, -90 = down).
 pista.es: Math.atan2(dy, dx) da el ángulo en radianes (¡ojo al orden: primero dy!). ¿Qué método de Math pasa radianes a grados? Luego, redondea.
 pista.de: Math.atan2(dy, dx) liefert den Winkel im Bogenmaß (Achtung Reihenfolge: zuerst dy!). Welche Math-Methode macht daraus Grad? Dann runden.
 pista.en: Math.atan2(dy, dx) gives the angle in radians (mind the order: dy first!). Which Math method turns radians into degrees? Then round.
@@ -98,7 +98,7 @@ titulo.de: Die kürzeste Drehung
 titulo.en: The shortest turn
 enunciado.es: Tu robot mira hacia «rumbo» y el enemigo está hacia «haciaEnemigo» (los dos en grados, de 0 a 359). Devuelve cuánto girar por el camino más corto: positivo a la izquierda, negativo a la derecha, entre -179 y 180.
 enunciado.de: Dein Roboter schaut nach «rumbo», der Gegner steht in Richtung «haciaEnemigo» (beides in Grad, 0 bis 359). Gib zurück, wie weit du dich auf dem kürzesten Weg drehen musst: positiv nach links, negativ nach rechts, zwischen -179 und 180.
-enunciado.en: Your robot faces "rumbo" and the enemy is towards "haciaEnemigo" (both in degrees, 0 to 359). Return how far to turn the shortest way: positive to the left, negative to the right, between -179 and 180.
+enunciado.en: Your robot faces "rumbo" and the enemy is toward "haciaEnemigo" (both in degrees, 0 to 359). Return how far to turn the shortest way: positive to the left, negative to the right, between -179 and 180.
 pista.es: La diferencia es haciaEnemigo - rumbo. Pero de 350 a 10 no hay que girar -340… ¿qué ejercicio anterior te arregla eso?
 pista.de: Die Differenz ist haciaEnemigo - rumbo. Aber von 350 nach 10 dreht man nicht -340 … welche frühere Übung repariert das?
 pista.en: The difference is haciaEnemigo - rumbo. But from 350 to 10 you don't turn -340… which earlier exercise fixes that?
@@ -244,8 +244,8 @@ titulo.es: Memoria entre rondas
 titulo.de: Gedächtnis zwischen den Runden
 titulo.en: Memory between rounds
 enunciado.es: memoria() es un Map que dura toda la pelea. Cada vez que el rival huye por la izquierda, súmale uno a la clave "izq" (empieza en 0 si no está) y devuelve cuántas veces lleva.
-enunciado.de: memoria() ist eine Map, die den ganzen Kampf hält. Jedes Mal, wenn der Gegner nach links flieht, erhöhe den Schlüssel "links" um eins (bei 0 anfangen, wenn er fehlt) und gib zurück, wie oft schon.
-enunciado.en: memoria() is a Map that lasts the whole fight. Each time the rival flees to the left, add one to the key "left" (start at 0 if missing) and return how many times so far.
+enunciado.de: gedaechtnis() ist eine Map, die den ganzen Kampf hält. Jedes Mal, wenn der Gegner nach links flieht, erhöhe den Schlüssel "links" um eins (bei 0 anfangen, wenn er fehlt) und gib zurück, wie oft schon.
+enunciado.en: memory() is a Map that lasts the whole fight. Each time the rival flees to the left, add one to the key "left" (start at 0 if missing) and return how many times so far.
 pista.es: getOrDefault te da el valor o uno por defecto. Y no olvides volver a guardarlo con put: si no, la memoria no se entera.
 pista.de: getOrDefault liefert den Wert oder einen Standardwert. Und vergiss nicht, ihn mit put wieder zu speichern, sonst merkt sich das Gedächtnis nichts.
 pista.en: getOrDefault gives you the value or a default. And don't forget to store it back with put, or the memory won't know.

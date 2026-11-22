@@ -117,8 +117,8 @@ enunciado.es: El medidor solo enseña números enteros. Convierte la potencia a 
 enunciado.de: Die Anzeige kann nur ganze Zahlen. Wandle die Leistung in einen int um, indem du die Nachkommastellen abschneidest (nicht runden). Beispiel: potenciaEntera(7.9) gibt 7 zurück.
 enunciado.en: The gauge can only show whole numbers. Convert the power to an int by cutting off the decimals (no rounding). Example: potenciaEntera(7.9) returns 7.
 pista.es: Un double no cabe solo en un int: hay que pedirlo con un cast, (int) potencia. Corta hacia el cero: (int) -2.5 es -2.
-pista.de: Ein double passt nicht von allein in einen int: du brauchst einen Cast, (int) potencia. Er schneidet Richtung null ab: (int) -2.5 ist -2.
-pista.en: A double won't go into an int by itself: you need a cast, (int) potencia. It cuts towards zero: (int) -2.5 is -2.
+pista.de: Ein double passt nicht von allein in einen int: Du brauchst einen Cast, (int) potencia. Er schneidet Richtung null ab: (int) -2.5 ist -2.
+pista.en: A double won't go into an int by itself: you need a cast, (int) potencia. It cuts toward zero: (int) -2.5 is -2.
 firma: static int potenciaEntera(double potencia)
 plantilla:
     return 0;

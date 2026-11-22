@@ -240,7 +240,7 @@ bien: 2
 === SENIOR_2
 pregunta.es: Dos hilos hacen cuenta++ mil veces cada uno sobre un int compartido. ¿Qué pasa?
 pregunta.de: Zwei Threads machen je tausendmal cuenta++ auf einem gemeinsamen int. Was passiert?
-pregunta.en: Two threads each do count++ a thousand times on a shared int. What happens?
+pregunta.en: Two threads each do cuenta++ a thousand times on a shared int. What happens?
 codigo:
     static int cuenta = 0;
     // hilo A: for (int i = 0; i < 1000; i++) cuenta++;

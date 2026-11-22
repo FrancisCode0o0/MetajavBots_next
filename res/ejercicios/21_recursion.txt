@@ -71,7 +71,7 @@ titulo.de: Palindrom-Signale
 titulo.en: Palindrome signals
 enunciado.es: Devuelve true si la señal se lee igual al derecho y al revés. Hazlo recursivo: compara los extremos y, si son iguales, mira lo que queda en medio.
 enunciado.de: Gib true zurück, wenn sich das Signal vorwärts und rückwärts gleich liest. Mach es rekursiv: Vergleich die Enden und schau dir, wenn sie gleich sind, den Rest in der Mitte an.
-enunciado.en: Return true if the signal reads the same forwards and backwards. Make it recursive: compare the ends and, if they match, look at what is left in the middle.
+enunciado.en: Return true if the signal reads the same forward and backward. Make it recursive: compare the ends and, if they match, look at what is left in the middle.
 pista.es: Caso base: un texto de 0 o 1 letras es capicúa. Si no, s.charAt(0) == s.charAt(s.length() - 1) && esPalindromo(s.substring(1, s.length() - 1)).
 pista.de: Basisfall: Ein Text mit 0 oder 1 Zeichen ist ein Palindrom. Sonst s.charAt(0) == s.charAt(s.length() - 1) && esPalindromo(s.substring(1, s.length() - 1)).
 pista.en: Base case: a text with 0 or 1 characters is a palindrome. Otherwise s.charAt(0) == s.charAt(s.length() - 1) && esPalindromo(s.substring(1, s.length() - 1)).
@@ -99,7 +99,7 @@ tipo: metodo
 titulo.es: Potencias a toda velocidad
 titulo.de: Potenzen im Eiltempo
 titulo.en: Powers at full speed
-enunciado.es: Devuelve base elevado a exp (exp >= 0) dando pocos pasos: base^exp es (base^(exp/2))², multiplicado una vez más por base si exp es impar. Así, exp = 2.000 millones necesita solo unas 31 llamadas; un bucle que multiplica exp veces no acaba a tiempo.
+enunciado.es: Devuelve base elevado a exp (exp >= 0) dando pocos pasos: base^exp es (base^(exp/2))², multiplicado una vez más por base si exp es impar. Así, exp = 2000 millones necesita solo unas 31 llamadas; un bucle que multiplica exp veces no acaba a tiempo.
 enunciado.de: Gib base hoch exp (exp >= 0) mit wenigen Schritten zurück: base^exp ist (base^(exp/2))², bei ungeradem exp noch einmal mit base multipliziert. So braucht exp = 2 Milliarden nur etwa 31 Aufrufe; eine Schleife, die exp-mal multipliziert, wird nicht rechtzeitig fertig.
 enunciado.en: Return base raised to exp (exp >= 0) in few steps: base^exp is (base^(exp/2))², multiplied by base once more if exp is odd. That way exp = 2 billion needs only about 31 calls; a loop multiplying exp times won't finish in time.
 pista.es: if (exp == 0) return 1; long mitad = potencia(base, exp / 2); Calcula la mitad una sola vez y úsala dos veces: llamar dos veces lo haría lento otra vez.

@@ -395,7 +395,7 @@ titulo.es: Juntar dos clasificaciones ordenadas
 titulo.de: Zwei sortierte Ranglisten zusammenführen
 titulo.en: Merge two sorted rankings
 enunciado.es: a y b son dos clasificaciones de puntos, cada una ordenada de menor a mayor. Devuelve un array con todos los puntos de las dos, también ordenado, sin ordenar al final: recórrelas a la vez. Ejemplo: mezclar(new int[]{1, 4, 9}, new int[]{2, 3, 10}) devuelve {1, 2, 3, 4, 9, 10}.
-enunciado.de: a und b sind zwei Punkteranglisten, jede aufsteigend sortiert. Gib ein Array mit allen Punkten aus beiden zurück, ebenfalls sortiert, ohne am Ende zu sortieren: geh beide gleichzeitig durch. Beispiel: mezclar(new int[]{1, 4, 9}, new int[]{2, 3, 10}) gibt {1, 2, 3, 4, 9, 10} zurück.
+enunciado.de: a und b sind zwei Punkteranglisten, jede aufsteigend sortiert. Gib ein Array mit allen Punkten aus beiden zurück, ebenfalls sortiert, ohne am Ende zu sortieren: Geh beide gleichzeitig durch. Beispiel: mezclar(new int[]{1, 4, 9}, new int[]{2, 3, 10}) gibt {1, 2, 3, 4, 9, 10} zurück.
 enunciado.en: a and b are two point rankings, each sorted from lowest to highest. Return an array with all the points from both, also sorted, without sorting at the end: walk through both at the same time. Example: mezclar(new int[]{1, 4, 9}, new int[]{2, 3, 10}) returns {1, 2, 3, 4, 9, 10}.
 pista.es: Un índice para a, otro para b y otro para el resultado. Copia siempre el menor de a[i] y b[j]; cuando uno se acabe, copia lo que quede del otro.
 pista.de: Ein Index für a, einer für b und einer für das Ergebnis. Kopier immer den kleineren von a[i] und b[j]; ist eines zu Ende, kopier den Rest des anderen.

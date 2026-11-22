@@ -66,7 +66,7 @@ codigo:
 modelo: pixel
 titulo: El Tímido | Der Schüchterne | The Shy One
 sintoma: Se acerca al enemigo, lo mira fijamente... y nunca ataca. | Fährt an den Gegner heran, starrt ihn an ... und greift nie an. | It drives up to the enemy, stares at it... and never attacks.
-pista: Lee la condición del «if» en voz alta. ¿Puede una distancia ser menor que cero? | Lies die Bedingung des «if» laut vor. Kann ein Abstand kleiner als null sein? | Read the «if» condition out loud. Can a distance be less than zero?
+pista: Lee la condición del «if» en voz alta. ¿Puede una distancia ser menor que cero? | Lies die Bedingung des «if» laut vor. Kann ein Abstand kleiner als null sein? | Read the "if" condition out loud. Can a distance be less than zero?
 objetivo: aciertos>=3
 rival: grulla
 nivel: 0.15

@@ -143,10 +143,10 @@ java: 8
 tipo: metodo
 titulo.es: El mensaje al revés
 titulo.de: Die Nachricht rückwärts
-titulo.en: The message backwards
+titulo.en: The message backward
 enunciado.es: El rival manda sus órdenes escritas al revés para despistar. Devuelve el mensaje dado la vuelta, con la ayuda de un StringBuilder.
 enunciado.de: Der Gegner schickt seine Befehle rückwärts, um uns zu verwirren. Gib die Nachricht umgedreht zurück, mit Hilfe eines StringBuilder.
-enunciado.en: The rival sends its orders written backwards to confuse us. Return the message reversed, with the help of a StringBuilder.
+enunciado.en: The rival sends its orders written backward to confuse us. Return the message reversed, with the help of a StringBuilder.
 pista.es: new StringBuilder(mensaje).reverse().toString()
 pista.de: new StringBuilder(mensaje).reverse().toString()
 pista.en: new StringBuilder(mensaje).reverse().toString()

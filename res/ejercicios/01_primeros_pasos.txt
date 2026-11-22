@@ -66,7 +66,7 @@ titulo.es: Eco en el taller
 titulo.de: Echo in der Werkstatt
 titulo.en: Echo in the workshop
 enunciado.es: El taller tiene eco: imprime el sonido dos veces, cada vez en su propia línea. Ejemplo: eco("BIP") imprime BIP y otra vez BIP debajo.
-enunciado.de: Die Werkstatt hallt: gib das Geräusch zweimal aus, jedes Mal in einer eigenen Zeile. Beispiel: eco("BIP") gibt BIP und darunter noch einmal BIP aus.
+enunciado.de: Die Werkstatt hallt: Gib das Geräusch zweimal aus, jedes Mal in einer eigenen Zeile. Beispiel: eco("BIP") gibt BIP und darunter noch einmal BIP aus.
 enunciado.en: The workshop echoes: print the sound twice, each time on its own line. Example: eco("BIP") prints BIP and then BIP again below it.
 pista.es: Un programa son sentencias que se ejecutan una tras otra. Escribe dos veces la misma sentencia.
 pista.de: Ein Programm sind Anweisungen, die nacheinander ausgeführt werden. Schreib dieselbe Anweisung zweimal.
@@ -227,7 +227,7 @@ enunciado.es: Dibuja el robot en tres líneas: " [" + cara + "]", luego " /|_|\"
 enunciado.de: Zeichne den Roboter in drei Zeilen: " [" + cara + "]", dann " /|_|\" und dann "  / \" (mit den Leerzeichen am Anfang). Beispiel mit cara "o_o": oben [o_o], darunter Körper und Beine.
 enunciado.en: Draw the robot in three lines: " [" + cara + "]", then " /|_|\" and then "  / \" (with the leading spaces). Example with cara "o_o": [o_o] on top, body and legs below.
 pista.es: La barra invertida \ es especial dentro de un texto: para escribir una tienes que poner dos, "\\".
-pista.de: Der Backslash \ ist in einem Text etwas Besonderes: für einen musst du zwei schreiben, "\\".
+pista.de: Der Backslash \ ist in einem Text etwas Besonderes: Für einen musst du zwei schreiben, "\\".
 pista.en: The backslash \ is special inside a text: to write one you must type two, "\\".
 firma: static void dibujarRobot(String cara)
 plantilla:

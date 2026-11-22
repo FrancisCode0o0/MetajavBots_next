@@ -96,7 +96,7 @@ enunciado.es: n piezas distintas se pueden montar en n! órdenes: n! = 1 · 2 ·
 enunciado.de: n verschiedene Teile lassen sich in n! Reihenfolgen einbauen: n! = 1 · 2 · … · n, und 0! ist 1. Gib n! als long zurück. Beispiel: factorial(5) gibt 120 zurück.
 enunciado.en: n different parts can be fitted in n! orders: n! = 1 · 2 · … · n, and 0! is 1. Return n! as a long. Example: factorial(5) returns 120.
 pista.es: Como sumar, pero multiplicando: empieza en long resultado = 1; y haz resultado *= i; para i de 2 a n.
-pista.de: Wie beim Addieren, nur mit Malnehmen: fang mit long resultado = 1; an und rechne resultado *= i; für i von 2 bis n.
+pista.de: Wie beim Addieren, nur mit Malnehmen: Fang mit long resultado = 1; an und rechne resultado *= i; für i von 2 bis n.
 pista.en: Like adding up, but multiplying: start with long resultado = 1; and do resultado *= i; for i from 2 to n.
 firma: static long factorial(int n)
 plantilla:
@@ -247,12 +247,12 @@ java: 8
 tipo: metodo
 titulo.es: El código del revés
 titulo.de: Der Code rückwärts
-titulo.en: The code backwards
+titulo.en: The code backward
 enunciado.es: La cerradura del taller se abre con el código al revés. Devuelve n con sus cifras en orden inverso (n es 0 o positivo; los ceros que quedan delante desaparecen). Ejemplo: invertirCifras(1230) devuelve 321.
 enunciado.de: Das Werkstattschloss öffnet sich mit dem Code rückwärts. Gib n mit umgekehrter Ziffernfolge zurück (n ist 0 oder positiv; Nullen, die vorne landen, fallen weg). Beispiel: invertirCifras(1230) gibt 321 zurück.
 enunciado.en: The workshop lock opens with the code reversed. Return n with its digits in reverse order (n is 0 or positive; zeros that end up at the front disappear). Example: invertirCifras(1230) returns 321.
 pista.es: Mientras n > 0: coge la última cifra con n % 10, ponla al final del resultado (resultado * 10 + cifra) y quítasela a n con n / 10.
-pista.de: Solange n > 0: nimm die letzte Ziffer mit n % 10, häng sie ans Ergebnis an (resultado * 10 + cifra) und entferne sie mit n / 10 aus n.
+pista.de: Solange n > 0: Nimm die letzte Ziffer mit n % 10, häng sie ans Ergebnis an (resultado * 10 + cifra) und entferne sie mit n / 10 aus n.
 pista.en: While n > 0: take the last digit with n % 10, append it to the result (resultado * 10 + cifra) and remove it from n with n / 10.
 firma: static int invertirCifras(int n)
 plantilla:

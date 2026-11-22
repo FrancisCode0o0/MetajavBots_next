@@ -267,7 +267,7 @@ tipo: metodo
 titulo.es: Puntos del torneo (switch con flechas, Java 14)
 titulo.de: Turnierpunkte (switch mit Pfeilen, Java 14)
 titulo.en: Tournament points (arrow switch, Java 14)
-enunciado.es: Java 14 trajo las expresiones switch: con -> no hace falta break y el switch entero da un valor. Devuelve los puntos del puesto: 1º 10, 2º 6, 3º 4, 4º y 5º 1, y cualquier otro 0. Ejemplo: puntos(2) devuelve 6.
+enunciado.es: Java 14 trajo las expresiones switch: con -> no hace falta break y el switch entero da un valor. Devuelve los puntos del puesto: 1.º 10, 2.º 6, 3.º 4, 4.º y 5.º 1, y cualquier otro 0. Ejemplo: puntos(2) devuelve 6.
 enunciado.de: Java 14 hat switch-Ausdrücke eingeführt: Mit -> braucht man kein break, und der ganze switch liefert einen Wert. Gib die Punkte für die Platzierung zurück: Platz 1 bekommt 10, Platz 2 6, Platz 3 4, Platz 4 und 5 je 1, alle anderen 0. Beispiel: puntos(2) gibt 6 zurück.
 enunciado.en: Java 14 introduced switch expressions: with -> you don't need break and the whole switch produces a value. Return the points for the position: 1st 10, 2nd 6, 3rd 4, 4th and 5th 1, anything else 0. Example: puntos(2) returns 6.
 pista.es: return switch (puesto) { case 1 -> 10; case 4, 5 -> 1; ... default -> 0; }; Varios valores van en el mismo case, separados por comas.

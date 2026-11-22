@@ -103,7 +103,7 @@ enunciado.de: Gib den ersten und den letzten Roboter der Schlange zurück, getre
 enunciado.en: Return the first and the last robot in the queue, separated by "-". Use getFirst() and getLast(), which lists have had since Java 21 (sequenced collections); with an empty queue they throw NoSuchElementException, and that's how it should be.
 pista.es: return cola.getFirst() + "-" + cola.getLast(); — también existe reversed(), que da la lista al revés.
 pista.de: return cola.getFirst() + "-" + cola.getLast(); — es gibt auch reversed(), das die Liste umgedreht liefert.
-pista.en: return cola.getFirst() + "-" + cola.getLast(); — there is also reversed(), which gives the list backwards.
+pista.en: return cola.getFirst() + "-" + cola.getLast(); — there is also reversed(), which gives the list backward.
 firma: static String primeroYUltimo(List<String> cola)
 plantilla:
     return cola.get(0) + "-" + cola.get(0);

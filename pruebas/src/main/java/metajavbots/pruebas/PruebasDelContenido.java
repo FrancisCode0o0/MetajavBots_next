@@ -49,6 +49,7 @@ final class PruebasDelContenido {
         apuntarPistasReferencia();
         apuntarDepuracionYTesting();
         apuntarParidadDeFachadas();
+        apuntarPruebaDeNivel();
     }
 
     private static void apuntarPistasReferencia() {
@@ -125,10 +126,7 @@ final class PruebasDelContenido {
                 }
             }
             for (metajavbots.ejercicios.Ejercicio e : l) {
-                for (String s : new String[]{e.titulo.es, e.titulo.de, e.titulo.en, e.enunciado.es, e.enunciado.de, e.enunciado.en,
-                    e.pista.es, e.pista.de, e.pista.en}) {
-                    cierto(!s.isEmpty(), e.id + ": título, enunciado y pista en los tres idiomas");
-                }
+                verificarParidadTrilingue(e, e.id);
             }
             metajavbots.progreso.Etiqueta[] etiquetas = {
                 metajavbots.progreso.Etiqueta.NOOB_1,
@@ -194,6 +192,10 @@ final class PruebasDelContenido {
             igual("public void beiSicht(Gegner e) { zielenNach(e.winkel()); sagen(\"atacar\"); }", de, "las comillas no se traducen");
             if (!metajavbots.codigo.Compilador.hayCompilador()) return;
             for (metajavbots.ejercicios.RobotRoto r : metajavbots.ejercicios.RobotRoto.todos()) {
+                for (metajavbots.textos.Trilingue t : new metajavbots.textos.Trilingue[]{r.titulo, r.sintoma, r.pista}) {
+                    cierto(!t.es.isBlank() && !t.de.isBlank() && !t.en.isBlank(), r.id + ": textos en los tres idiomas");
+                    cierto(!t.de.equals(t.es) && !t.en.equals(t.es), r.id + ": textos traducidos en DE y EN");
+                }
                 for (metajavbots.textos.Idioma i : metajavbots.textos.Idioma.values()) {
                     metajavbots.codigo.Compilador.Resultado res = metajavbots.codigo.Compilador.compilar(r.codigo(i), false,
                             metajavbots.codigo.Vigilante.Modo.ROBOT, java.util.Locale.ROOT);
@@ -277,9 +279,7 @@ final class PruebasDelContenido {
                 String q = e.id + " (" + e.archivo + ")";
                 cierto(e.id.matches("[a-z0-9_]+"), "id en minúsculas: " + q);
                 cierto(Tema.de(e.tema) != null, "tema que existe: " + q);
-                for (String s : new String[]{e.titulo.es, e.titulo.de, e.titulo.en, e.enunciado.es, e.enunciado.de, e.enunciado.en}) {
-                    cierto(!s.isEmpty(), "título y enunciado en los tres idiomas: " + q);
-                }
+                verificarParidadTrilingue(e, q);
                 cierto(e.casos.size() >= 3, "al menos tres casos: " + q);
                 cierto(e.dificultad >= 1 && e.dificultad <= 5, "dificultad de 1 a 5: " + q);
                 cierto(e.tipo == Ejercicio.Tipo.CLASE || !e.firma.isEmpty(), "tiene firma: " + q);
@@ -592,5 +592,37 @@ final class PruebasDelContenido {
         t = t.replaceAll("\\bGolpe\\b|\\bTreffer\\b|\\bHit\\b", "Golpe");
         t = t.replaceAll("\\bObstaculo\\b|\\bHindernis\\b|\\bObstacle\\b", "Obstaculo");
         return t.replaceAll("\\bAparato\\b|\\bGeraet\\b|\\bGadget\\b", "Aparato");
+    }
+
+    private static void verificarParidadTrilingue(Ejercicio e, String q) {
+        for (String s : new String[]{e.titulo.es, e.titulo.de, e.titulo.en, e.enunciado.es, e.enunciado.de, e.enunciado.en,
+            e.pista.es, e.pista.de, e.pista.en}) {
+            cierto(!s.isBlank(), "título, enunciado y pista en los tres idiomas: " + q);
+        }
+        cierto(!e.titulo.de.equals(e.titulo.es) && !e.titulo.en.equals(e.titulo.es), "título traducido en DE y EN: " + q);
+        cierto(!e.enunciado.de.equals(e.enunciado.es) && !e.enunciado.en.equals(e.enunciado.es), "enunciado traducido en DE y EN: " + q);
+        java.util.regex.Pattern apiEs = java.util.regex.Pattern.compile(
+                "\\b(avanzar|retroceder|girar|apuntar|apuntarHacia|atacar|memoria|obstaculos|alVerEnemigo|cadaTurno|enemigosVistos)\\(\\)");
+        for (String s : new String[]{e.enunciado.de, e.enunciado.en, e.pista.de, e.pista.en}) {
+            falso(apiEs.matcher(s).find(), "fuga de método de API en español en texto DE/EN: " + q);
+        }
+    }
+
+    private static void apuntarPruebaDeNivel() {
+        caso("prueba de nivel: preguntas y opciones completas y traducidas en ES, DE y EN", () -> {
+            List<metajavbots.progreso.PruebaDeNivel.Pregunta> preguntas = metajavbots.progreso.PruebaDeNivel.preguntas();
+            cierto(preguntas.size() >= 18, "al menos 18 preguntas: " + preguntas.size());
+            for (int idx = 0; idx < preguntas.size(); idx++) {
+                metajavbots.progreso.PruebaDeNivel.Pregunta p = preguntas.get(idx);
+                String q = "pregunta #" + (idx + 1) + " (" + p.nivel + ")";
+                cierto(!p.pregunta.es.isBlank() && !p.pregunta.de.isBlank() && !p.pregunta.en.isBlank(), q + ": tres idiomas");
+                cierto(!p.pregunta.de.equals(p.pregunta.es) && !p.pregunta.en.equals(p.pregunta.es), q + ": traducida");
+                cierto(p.opciones.size() >= 4, q + ": al menos 4 opciones");
+                cierto(p.bien >= 0 && p.bien < p.opciones.size(), q + ": índice correcto válido");
+                for (metajavbots.textos.Trilingue op : p.opciones) {
+                    cierto(!op.es.isBlank() && !op.de.isBlank() && !op.en.isBlank(), q + ": opción en tres idiomas");
+                }
+            }
+        });
     }
 }

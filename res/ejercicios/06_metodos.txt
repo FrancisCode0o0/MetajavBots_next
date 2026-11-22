@@ -197,7 +197,7 @@ enunciado.es: En la clase Reparacion, reparar(vida, cantidad) suma cantidad a la
 enunciado.de: In der Klasse Reparacion addiert reparar(vida, cantidad) die cantidad zum Leben, aber nie über 100. Füge ein zweites reparar(vida) mit nur einem Parameter hinzu, das um 10 repariert, indem es das erste aufruft. Beispiel: Reparacion.reparar(95) gibt 100 zurück.
 enunciado.en: In the class Reparacion, reparar(vida, cantidad) adds cantidad to the life but never goes over 100. Add a second reparar(vida), with just one parameter, that repairs 10 by calling the first one. Example: Reparacion.reparar(95) returns 100.
 pista.es: Dos métodos pueden llamarse igual si sus parámetros son distintos: es la sobrecarga. Java elige cuál según lo que le pases. Para el tope: Math.min(100, vida + cantidad).
-pista.de: Zwei Methoden dürfen gleich heißen, wenn ihre Parameter verschieden sind: das ist Überladung. Java wählt je nach Argumenten die passende. Für die Obergrenze: Math.min(100, vida + cantidad).
+pista.de: Zwei Methoden dürfen gleich heißen, wenn ihre Parameter verschieden sind: Das ist Überladung. Java wählt je nach Argumenten die passende. Für die Obergrenze: Math.min(100, vida + cantidad).
 pista.en: Two methods can share a name if their parameters differ: that's overloading. Java picks one based on what you pass. For the cap: Math.min(100, vida + cantidad).
 plantilla:
     public class Reparacion {
@@ -298,7 +298,7 @@ titulo.de: Palindrom-Seriennummern
 titulo.en: Palindrome serial numbers
 enunciado.es: Escribe la clase Cifras con dos métodos: invertir(n), que da la vuelta a las cifras de n (n >= 0), y esCapicua(n), que devuelve true si n se lee igual al revés. esCapicua tiene que usar invertir. Ejemplo: Cifras.invertir(123) devuelve 321 y Cifras.esCapicua(121), true.
 enunciado.de: Schreib die Klasse Cifras mit zwei Methoden: invertir(n), das die Ziffern von n umdreht (n >= 0), und esCapicua(n), das true zurückgibt, wenn n rückwärts gleich gelesen wird. esCapicua muss invertir benutzen. Beispiel: Cifras.invertir(123) gibt 321 zurück, Cifras.esCapicua(121) true.
-enunciado.en: Write the class Cifras with two methods: invertir(n), which reverses the digits of n (n >= 0), and esCapicua(n), which returns true if n reads the same backwards. esCapicua must use invertir. Example: Cifras.invertir(123) returns 321 and Cifras.esCapicua(121) returns true.
+enunciado.en: Write the class Cifras with two methods: invertir(n), which reverses the digits of n (n >= 0), and esCapicua(n), which returns true if n reads the same backward. esCapicua must use invertir. Example: Cifras.invertir(123) returns 321 and Cifras.esCapicua(121) returns true.
 pista.es: Dividir el problema en métodos pequeños lo hace fácil: si ya tienes invertir, esCapicua es una sola línea: return invertir(n) == n;
 pista.de: Teilt man das Problem in kleine Methoden, wird es leicht: Hast du invertir schon, ist esCapicua nur eine Zeile: return invertir(n) == n;
 pista.en: Splitting the problem into small methods makes it easy: once you have invertir, esCapicua is a single line: return invertir(n) == n;

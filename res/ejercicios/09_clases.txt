@@ -591,7 +591,7 @@ tipo: clase
 titulo.es: Dos casillas iguales (equals y hashCode)
 titulo.de: Zwei gleiche Felder (equals und hashCode)
 titulo.en: Two equal squares (equals and hashCode)
-enunciado.es: Escribe la clase Coordenada con Coordenada(int x, int y) y sobrescribe boolean equals(Object otro) (iguales si tienen la misma x y la misma y) y int hashCode() (igual para coordenadas iguales), para que, por ejemplo, un HashSet no guarde dos veces la misma casilla. == sigue comparando si son el mismo objeto.
+enunciado.es: Escribe la clase Coordenada con Coordenada(int x, int y) y sobrescribe boolean equals(Object otro) (iguales si tienen la misma x y la misma y) e int hashCode() (igual para coordenadas iguales), para que, por ejemplo, un HashSet no guarde dos veces la misma casilla. == sigue comparando si son el mismo objeto.
 enunciado.de: Schreibe die Klasse Coordenada mit Coordenada(int x, int y) und überschreibe boolean equals(Object otro) (gleich bei gleichem x und gleichem y) und int hashCode() (gleich für gleiche Koordinaten), damit z. B. ein HashSet dasselbe Feld nicht zweimal speichert. == prüft weiterhin, ob es dasselbe Objekt ist.
 enunciado.en: Write the class Coordenada with Coordenada(int x, int y) and override boolean equals(Object otro) (equal when x and y are the same) and int hashCode() (the same for equal coordinates), so that, for example, a HashSet doesn't store the same square twice. == still checks whether they are the same object.
 pista.es: En equals: si otro no es una Coordenada (instanceof), false; si lo es, conviértelo y compara x e y. Para hashCode vale Objects.hash(x, y).
