@@ -90,6 +90,8 @@ public final class Combatiente {
     public ModificadoresPoo efectosPoo = ModificadoresPoo.NINGUNO;
     /** Es la computadora (para el locutor y los diálogos). */
     public boolean computadora;
+    /** Robot averiado/defectuoso de la pista de Carrera de obstáculos (chispas, humo y fallo visual). */
+    public boolean defectuoso;
     /** Escalas de blindaje y daño (1.0 por defecto; reducidas en drones y robots ligeros de encuentros múltiples). */
     public double escalaBlindaje = 1.0;
     public double escalaDano = 1.0;

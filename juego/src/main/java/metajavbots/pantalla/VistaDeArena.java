@@ -50,6 +50,11 @@ public final class VistaDeArena {
     // El rectángulo de pantalla donde está la arena.
     private float ax, ay, aw, ah, escalaX;
     private double ancho = 1000, alto = 700;
+    /** Si > 0, activa cámara horizontal de seguimiento con esa anchura visible en unidades de arena. */
+    public double anchoVentana;
+    /** Centro horizontal actual y objetivo de la cámara (solo si anchoVentana > 0). */
+    public double camaraX, objetivoCamaraX;
+    private boolean camaraIniciada;
     public float sacudida;
     /** Una pausa cortísima tras un golpe fuerte (los segundos que quedan): hace que el golpe se sienta. */
     public float parada;
@@ -86,7 +91,16 @@ public final class VistaDeArena {
     }
 
     public float sx(double x, double y) {
-        return (float) (ax + aw / 2 + (x - ancho / 2) * escalaX * f(y));
+        double centro = anchoVentana > 0 ? camaraX : ancho / 2;
+        return (float) (ax + aw / 2 + (x - centro) * escalaX * f(y));
+    }
+
+    /** Reinicia el seguimiento de la cámara sobre una posición concreta al comenzar una carrera larga. */
+    public void enfocarCamara(double xObjetivo, double anchoVisible) {
+        this.anchoVentana = anchoVisible;
+        this.objetivoCamaraX = xObjetivo;
+        this.camaraX = xObjetivo;
+        this.camaraIniciada = true;
     }
 
     /** Píxeles por unidad de la arena, a lo ancho, a esa profundidad. */
@@ -165,6 +179,19 @@ public final class VistaDeArena {
         if (sonidos != null) sonidos.tocar("obstaculo_roto", 0.8f);
     }
 
+    /** Efectos y sonido cuando salta una trampa o aparece un obstáculo repentino. */
+    private void trampaSuceso(Suceso s, float px, Sonidos sonidos) {
+        if (s.texto.startsWith("repentino_")) {
+            efectos.anadir(Efectos.Tipo.ONDA, px, sy(s.y), 0, 0, 0.55f, 110 * escalaX, 0xFF7A45);
+            efectos.chispas(px, sy(s.y) - 14, 10, 0xFFC857);
+            if (sonidos != null) sonidos.tocar("choque", 0.65f);
+            return;
+        }
+        efectos.chispas(px, sy(s.y) - 20, s.texto.equals("sierra") ? 10 : 6, s.texto.equals("rayo") ? 0xBFE6FF : 0xFFE38A);
+        if (s.texto.equals("foso")) efectos.anadir(Efectos.Tipo.ONDA, sx(s.x, s.y), sy(s.y), 0, 0, 0.6f, 120 * escalaX, 0x101722);
+        if (sonidos != null) sonidos.tocar(s.texto.equals("foso") ? "pared" : "choque", 0.7f);
+    }
+
     public void sucesos(Pelea pelea, Sonidos sonidos) {
         sucesos(pelea.sucesos(), sonidos);
     }
@@ -206,11 +233,7 @@ public final class VistaDeArena {
                     break;
                 case APARATO: aparato(s, px, sonidos); break;
                 case OBSTACULO_ROTO: obstaculoRoto(s, px, sonidos); break;
-                case TRAMPA:
-                    efectos.chispas(px, sy(s.y) - 20, s.texto.equals("sierra") ? 10 : 6, s.texto.equals("rayo") ? 0xBFE6FF : 0xFFE38A);
-                    if (s.texto.equals("foso")) efectos.anadir(Efectos.Tipo.ONDA, sx(s.x, s.y), sy(s.y), 0, 0, 0.6f, 120 * escalaX, 0x101722);
-                    if (sonidos != null) sonidos.tocar(s.texto.equals("foso") ? "pared" : "choque", 0.7f);
-                    break;
+                case TRAMPA: trampaSuceso(s, px, sonidos); break;
                 case PARED: case CHOQUE:
                     efectos.chispas(px, sy(s.y) - 10, 6, 0xFFFFFF);
                     if (sonidos != null) sonidos.tocar(s.tipo == Suceso.Tipo.PARED ? "pared" : "choque", 0.6f);
@@ -227,11 +250,16 @@ public final class VistaDeArena {
                     break;
                 case ESPECIAL:
                     if (sonidos != null) {
-                        String que = s.texto.equals("escudo") || s.texto.equals("escudo_brazo") ? "escudo" : s.texto.equals("turbo") ? "turbo"
+                        String que = s.texto.equals("escudo") || s.texto.equals("escudo_brazo") ? "escudo"
+                                : s.texto.equals("turbo") || s.texto.equals("impulso") ? "turbo"
                                 : s.texto.equals("pulso") ? "pulso" : s.texto.equals("camuflaje") ? "camuflaje" : "servo";
                         sonidos.tocar(que, 0.7f);
                     }
                     if (s.texto.equals("pulso")) efectos.anadir(Efectos.Tipo.ONDA, px, py, 0, 0, 0.5f, 240 * escalaX, 0x9BE7FF);
+                    if (s.texto.equals("impulso")) {
+                        efectos.anadir(Efectos.Tipo.ONDA, px, sy(s.y) - 16 * escalaX, 0, 0, 0.45f, 120 * escalaX, 0x3FE0FF);
+                        efectos.chispas(px, sy(s.y) - 20 * escalaX, 14, 0x5BD685);
+                    }
                     break;
                 case REPARACION: if (sonidos != null) sonidos.tocar("reparar", 0.6f); break;
                 case ATURDIDO: if (sonidos != null) sonidos.tocar("pulso", 0.4f, 1.5f); break;
@@ -256,7 +284,20 @@ public final class VistaDeArena {
         ay = y + temblor * 0.6f;
         aw = w;
         ah = h;
-        escalaX = (float) (aw * 0.94 / ancho);
+        if (anchoVentana > 0 && ancho > anchoVentana) {
+            double minCam = anchoVentana / 2;
+            double maxCam = ancho - anchoVentana / 2;
+            double destino = Math.max(minCam, Math.min(maxCam, objetivoCamaraX));
+            if (!camaraIniciada) {
+                camaraX = destino;
+                camaraIniciada = true;
+            } else {
+                camaraX += (destino - camaraX) * Math.min(1f, dt * 6.5f);
+            }
+            escalaX = (float) (aw * 0.94 / anchoVentana);
+        } else {
+            escalaX = (float) (aw * 0.94 / ancho);
+        }
         p.recortar(x, y, w, h);
         fondo(p);
         if (conPublico) publico.dibujar(p, ax, ay + ah * 0.3f, aw, ah * 0.09f, dt, ultimosSonidos);
@@ -390,9 +431,15 @@ public final class VistaDeArena {
         p.degradado(ax - 20, horizonte, aw + 40, ah - (horizonte - ay) + 20, Pincel.oscurecer(suelo2, 0.35f), Pincel.oscurecer(suelo2, 0.6f), 1);
         float[] v = {sx(0, alto), sy(alto), sx(ancho, alto), sy(alto), sx(ancho, 0), sy(0), sx(0, 0), sy(0)};
         p.poligono(v, suelo2, 1);
-        // Baldosas a cuadros, con la perspectiva.
-        int nx = 10, ny = 7;
-        for (int i = 0; i < nx; i++) {
+        // Baldosas a cuadros, con la perspectiva (en pistas largas solo dibuja el tramo visible).
+        int ny = 7;
+        double pasoX = anchoVentana > 0 ? 140.0 : ancho / 10.0;
+        int nx = Math.max(10, (int) Math.round(ancho / pasoX));
+        double minVis = anchoVentana > 0 ? Math.max(0, camaraX - anchoVentana * 0.75) : 0;
+        double maxVis = anchoVentana > 0 ? Math.min(ancho, camaraX + anchoVentana * 0.75) : ancho;
+        int iMin = Math.max(0, (int) Math.floor(minVis / (ancho / nx)));
+        int iMax = Math.min(nx - 1, (int) Math.ceil(maxVis / (ancho / nx)));
+        for (int i = iMin; i <= iMax; i++) {
             for (int j = 0; j < ny; j++) {
                 if ((i + j) % 2 != 0) continue;
                 double x0 = ancho * i / nx, x1 = ancho * (i + 1) / nx, y0 = alto * j / ny, y1 = alto * (j + 1) / ny;
@@ -401,8 +448,12 @@ public final class VistaDeArena {
         }
         float grosor = escenario == Escenario.NEON ? 2 : 1;
         float brilloNeon = escenario == Escenario.NEON ? 0.35f + 0.25f * (float) Math.sin(tiempo * 2) : 0.5f;
-        for (int i = 0; i <= nx; i++) p.linea(sx(ancho * i / nx, alto), sy(alto), sx(ancho * i / nx, 0), sy(0), grosor, linea, brilloNeon);
-        for (int j = 0; j <= ny; j++) p.linea(sx(0, alto * j / ny), sy(alto * j / ny), sx(ancho, alto * j / ny), sy(alto * j / ny), grosor, linea, brilloNeon);
+        for (int i = iMin; i <= iMax + 1; i++) {
+            p.linea(sx(ancho * i / nx, alto), sy(alto), sx(ancho * i / nx, 0), sy(0), grosor, linea, brilloNeon);
+        }
+        for (int j = 0; j <= ny; j++) {
+            p.linea(sx(minVis, alto * j / ny), sy(alto * j / ny), sx(maxVis, alto * j / ny), sy(alto * j / ny), grosor, linea, brilloNeon);
+        }
         // El borde de la arena: una banda con luces.
         int borde = escenario == Escenario.NEON ? 0xFF3CAC : escenario == Escenario.LABORATORIO ? 0xFFB000 : 0xFFC857;
         p.linea(sx(0, 0), sy(0), sx(ancho, 0), sy(0), 6, 0x111111, 0.8f);
@@ -441,7 +492,7 @@ public final class VistaDeArena {
         for (int i = 0; i < 4; i++) e.partes[i] = (float) (c.parte[i] / Math.max(1, c.parteMax[i]));
         e.abolladuras = co.abolladuras;
         e.retroceso = (float) c.retroceso;
-        e.sacudida = (float) c.sacudida;
+        e.sacudida = co.defectuoso && !c.fuera ? Math.max((float) c.sacudida, 1.8f + (float) Math.abs(Math.sin(tiempo * 17 + c.indice))) : (float) c.sacudida;
         e.escudo = c.escudoCabeza > 0 || c.escudoBrazo > 0;
         e.turbo = c.turbo > 0;
         e.camuflaje = c.camuflaje > 0;
@@ -463,11 +514,17 @@ public final class VistaDeArena {
         }
         metajavbots.combate.Aparatos.Uno lleva = pelea.aparatos.delCuerpo(c.indice);
         if (lleva != null) DibujoDeAparatos.montado(p, lleva, px, py, (float) (62 * talla * co.montaje.modelo.tamano / 30), e.lado, tiempo);
-        // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea.
-        double dano = Math.min(1.2, Math.max(co.estropeado(), c.indice == 0 ? averiaDelJugador : 0));
+        // El humo y las chispas de lo dañado: más cuanto más daño lleva en toda la pelea (y en robots defectuosos).
+        double dano = Math.min(1.2, Math.max(co.estropeado(), co.defectuoso ? 0.85 : c.indice == 0 ? averiaDelJugador : 0));
         float alto = (float) (62 * talla * co.montaje.modelo.tamano / 30);
         // El humo, menos y por encima de la cabeza: que no tape al robot.
         if (dano > 0.15 && azar.nextFloat() < dano * 0.22f) efectos.humo(px + azar.nextFloat() * 20 - 10, py - alto * 1.1f, (float) dano * 0.8f);
+        if (co.defectuoso && !c.fuera && azar.nextFloat() < 0.22f) {
+            efectos.chispas(px + azar.nextFloat() * 28 - 14, py - alto * (0.4f + azar.nextFloat() * 0.45f), 4, 0xFF9F1C);
+        }
+        if (c.turbo > 0 && !c.fuera && azar.nextFloat() < 0.45f) {
+            efectos.chispas(px - e.lado * 18 * talla, py - alto * 0.35f, 2, 0x3FE0FF);
+        }
         if (c.indice == 0 && averiaDelJugador > 0.3f && azar.nextFloat() < averiaDelJugador * 0.1f) {
             efectos.chispas(px + azar.nextFloat() * 30 - 15, py - alto * 0.6f, 3, 0xFFE38A);
         }

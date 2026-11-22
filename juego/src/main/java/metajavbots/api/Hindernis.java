@@ -10,7 +10,7 @@ package metajavbots.api;
  */
 public interface Hindernis {
 
-    /** Was es ist: "pinchos" (Stacheln), "sierra" (Säge), "iman" (Magnet), "foso" (Grube), "barril" (Fass), "carrito" (Wagen) … */
+    /** Was es ist: "pinchos" (Stacheln), "sierra" (Säge), "iman" (Magnet), "foso" (Grube), "barril" (Fass), "carrito" (Wagen), "impulso" (Boost) … */
     String typ();
 
     /** Wo seine Mitte ist (in der Arena). */

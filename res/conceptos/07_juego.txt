@@ -767,46 +767,49 @@ tema: --
 titulo.es: Carrera de obstáculos
 titulo.de: Hindernislauf
 titulo.en: Obstacle race
-claves.es: carrera de obstaculos, carrera, obstaculos, hindernislauf, obstacle race, mapa parcial, obstaculos ocultos, destructibles, indestructibles, barril, chimenea, robots ajenos, meta, moneda
-claves.de: hindernislauf, hindernisrennen, rennen, hindernisse, teilkarte, versteckte hindernisse, zerstoerbare, unzerstoerbare, fass, schornstein, fremde roboter, ziel, munze
-claves.en: obstacle race, race, obstacles, partial map, hidden obstacles, destructible, indestructible, barrel, chimney, other players robots, finish line, coin
-resumen.ia: Obstacle race (in Special mode: race to the finish line against the computer or another player's robot from robots_ajenos/; overview map reveals only some obstacles while hidden ones are detected live via radar/obstacles() requiring if conditionals; destructible barrels and chimneys can be shot down while indestructible blocks, pits and spikes must be dodged; each win awards 1 coin)
+claves.es: carrera de obstaculos, carrera, obstaculos, hindernislauf, obstacle race, pista 6x, arena distinta, obstaculos ocultos, obstaculos repentinos, destructibles, indestructibles, robots defectuosos, impulso, combate en carrera, robots ajenos, meta, moneda
+claves.de: hindernislauf, hindernisrennen, rennen, hindernisse, 6x strecke, wechselnde arena, versteckte hindernisse, ploetzliche hindernisse, zerstoerbare, unzerstoerbare, defekte roboter, impulso, tempo boost, kampf im rennen, fremde roboter, ziel, munze
+claves.en: obstacle race, race, obstacles, 6x track, rotating arena, hidden obstacles, sudden obstacles, destructible, indestructible, broken robots, malfunctioning robots, speed boost, impulso, race combat, other players robots, finish line, coin
+resumen.ia: Obstacle race (in Special mode: 6x long track rotating to a different arena every race with smooth camera and minimap; choose any of your available robots with their real parts and race against the computer or another player's robot from robots_ajenos/; features hidden and sudden obstacles both destructible like barrels/chimneys and indestructible traps, malfunctioning broken robots firing randomly that can be destroyed, pickup speed boosts "impulso", and live combat against your rival while crossing the finish line first remains the main goal; factory code is deliberately clumsy so you must code and compile your own strategy; each win awards 1 coin)
 tip.juego_carrera_obstaculos.condicion: aleatorio
-tip.juego_carrera_obstaculos.es: Prueba la [[Carrera de obstáculos]] en Modo especial: combina radar y condicionales if para romper barriles, esquivar trampas ocultas y ganar 1 moneda por victoria.
-tip.juego_carrera_obstaculos.de: Probier den [[Hindernislauf]] im Spezialmodus aus: Kombiniere Radar und if-Bedingungen, um Fässer zu zerstören, versteckte Fallen zu umfahren und 1 Münze pro Sieg zu gewinnen.
-tip.juego_carrera_obstaculos.en: Try the [[Obstacle race]] in Special mode: combine radar and if conditionals to blast barrels, dodge hidden traps, and earn 1 coin per win.
+tip.juego_carrera_obstaculos.es: Prueba la [[Carrera de obstáculos]] (pista 6× con arena distinta cada vez): sustituye el código torpe de fábrica, recoge impulsos, destruye robots defectuosos, dispara al rival y cruza primero la meta para ganar 1 moneda.
+tip.juego_carrera_obstaculos.de: Probier den [[Hindernislauf]] (6×-Strecke mit neuer Arena pro Lauf): Ersetze den absichtlich ungeschickten Werkscode, sammle Tempo-Boosts, zerstöre defekte Roboter, beschieße den Gegner und hol dir 1 Münze pro Sieg.
+tip.juego_carrera_obstaculos.en: Try the [[Obstacle race]] (6× track with a new arena every run): replace the deliberately clumsy factory code, grab speed boosts, blast broken robots, shoot your rival, and cross the finish line first to earn 1 coin.
 ver: arena_y_modos, if_else, tienda_y_monedas
 es:
-    La Carrera de obstáculos está dentro de Modo especial y reta a tu robot a cruzar la línea de meta antes que el rival.
-    Antes de arrancar verás un mapa general con visibilidad parcial: muestra la salida, la meta y parte de los obstáculos, pero otros permanecen ocultos y solo los detectas en carrera con el radar y obstaculos(), así que necesitas condicionales if para reaccionar en vivo.
-    En la pista hay dos tipos de obstáculos: destructibles (barriles y chimeneas, que puedes romper disparando o golpeando para abrirte paso) e indestructibles (bloques, fosos y pinchos, que no se rompen y debes rodear).
-    Puedes competir contra la computadora o contra el robot de otro usuario cargado desde robots_ajenos/. Cada carrera que ganas te otorga exactamente 1 moneda para la Tienda.
+    La Carrera de obstáculos está dentro de Modo especial y se disputa en una pista larga (6× más grande que la arena base) con cámara de seguimiento fluida, minimapa panorámico y una arena distinta en cada nueva carrera.
+    Antes de correr eliges con cuál de tus robots disponibles quieres participar (usando su montaje real y piezas compradas) y decides si compites contra la máquina o contra el robot de otro usuario cargado desde robots_ajenos/.
+    En el recorrido encontrarás obstáculos ocultos y obstáculos repentinos que aparecen en marcha (destructibles como barriles y chimeneas frente a indestructibles como bloques, fosos y pinchos), robots defectuosos averiados que se mueven y disparan al azar y pueden destruirse a tiros, y objetos recogibles de impulso de velocidad ("impulso") para acelerar temporalmente.
+    El combate contra tu adversario está permitido durante toda la carrera para frenarlo, entorpecerlo o destruirlo, aunque el objetivo principal sigue siendo cruzar primero la línea de meta. El código de fábrica es torpe a propósito y nunca gana solo: debes programar tu estrategia y pulsar Compilar. Cada victoria suma exactamente 1 moneda.
 de:
-    Der Hindernislauf befindet sich im Spezialmodus und fordert deinen Roboter heraus, vor dem Gegner die Ziellinie zu überqueren.
-    Vor dem Start siehst du eine Übersichtskarte mit teilweiser Sicht: Sie zeigt Start, Ziel und einen Teil der Hindernisse, doch andere bleiben verborgen und werden erst im Lauf über Radar und hindernisse() erkannt — deshalb brauchst du if-Bedingungen für Live-Reaktionen.
-    Auf der Strecke gibt es zwei Arten von Hindernissen: zerstörbare (Fässer und Schornsteine, die du freischießen oder rammen kannst) und unzerstörbare (Blöcke, Gruben und Stacheln, die du umfahren musst).
-    Du trittst gegen den Computer oder gegen fremde Roboter aus robots_ajenos/ an. Jeder gewonnene Lauf bringt dir genau 1 Münze für den Laden.
+    Der Hindernislauf befindet sich im Spezialmodus und führt über eine lange 6×-Strecke mit weicher Verfolgungskamera, kompakter Übersichtskarte und einer neuen Arena in jedem Lauf.
+    Vor dem Start wählst du einen deiner verfügbaren Roboter (mit seiner echten Ausstattung und gekauften Teilen) und trittst gegen den Computer oder gegen fremde Roboter aus robots_ajenos/ an.
+    Auf der Strecke erwarten dich versteckte sowie plötzlich auftauchende Hindernisse (zerstörbare Fässer und Schornsteine sowie unzerstörbare Blöcke, Gruben und Stacheln), defekte Roboter, die planlos umherfahren, zufällig schießen und abgeschossen werden können, sowie einsammelbare Tempo-Boosts ("impulso") für vorübergehend höheres Tempo.
+    Kampf gegen den Gegner ist während des gesamten Laufs erlaubt, um ihn auszubremsen oder auszuschalten — das Hauptziel bleibt jedoch, als Erster die Ziellinie zu überqueren. Der Werkscode ist absichtlich ungeschickt und gewinnt nie allein: Programmiere deine eigene Strategie und drück Kompilieren. Jeder Sieg bringt genau 1 Münze.
 en:
-    Obstacle race lives inside Special mode and challenges your robot to cross the finish line before its rival.
-    Before starting, you see an overview map with partial visibility: it shows the start, finish line, and part of the course, while hidden obstacles only appear live through radar and obstacles(), requiring reactive if conditionals.
-    Two obstacle types fill the track: destructible ones (barrels and chimneys you can blast or smash through) and indestructible ones (blocks, pits, and spikes you must steer around).
-    You can race against the computer or against another player's robot loaded from robots_ajenos/. Every race you win awards exactly 1 coin for the Shop.
+    Obstacle race lives inside Special mode and runs on a long 6× track with a smooth follow camera, compact panoramic minimap, and a different arena on every new race.
+    Before starting, you pick any of your available robots (using its real mounted parts and stats) and race against the computer or another player's robot loaded from robots_ajenos/.
+    Along the course you face hidden and sudden obstacles appearing mid-race (destructible barrels and chimneys versus indestructible blocks, pits, and spikes), malfunctioning broken robots that wander and fire randomly and can be destroyed with gunfire, and pickup speed boosts ("impulso") that temporarily increase your speed.
+    Combat against your rival is allowed throughout the race to slow, disrupt, or knock them out, while crossing the finish line first remains the main goal. The factory code is deliberately clumsy and never wins on its own: write your own strategy and press Compile. Each win awards exactly 1 coin.
 pseudo.es:
-    Modo especial → Carrera de obstáculos → elegir rival (máquina o robots_ajenos/)
-    SI obstáculo cerca:
-        SI es barril o chimenea → apuntar y atacar
+    Modo especial → Carrera de obstáculos → elegir tu robot y rival (máquina o robots_ajenos/)
+    SI hay impulso ("impulso") delante → ir a recogerlo
+    SI hay obstáculo o robot defectuoso / rival cerca:
+        SI es barril, chimenea o enemigo → apuntar y atacar
         SI NO → esquivar rodeándolo
     avanzar hacia la meta → ganar = +1 moneda
 pseudo.de:
-    Spezialmodus → Hindernislauf → Gegner wählen (Computer oder robots_ajenos/)
-    WENN Hindernis nah:
-        WENN Fass oder Schornstein → zielen und angreifen
+    Spezialmodus → Hindernislauf → eigenen Roboter und Gegner wählen (Computer oder robots_ajenos/)
+    WENN Tempo-Boost ("impulso") voraus → einsammeln
+    WENN Hindernis oder defekter Roboter / Gegner nah:
+        WENN Fass, Schornstein oder Gegner → zielen und angreifen
         SONST → außen herum ausweichen
     Richtung Ziel fahren → Sieg = +1 Münze
 pseudo.en:
-    Special mode → Obstacle race → pick rival (computer or robots_ajenos/)
-    IF obstacle ahead:
-        IF barrel or chimney → aim and attack
+    Special mode → Obstacle race → pick your robot and rival (computer or robots_ajenos/)
+    IF speed boost ("impulso") ahead → steer to collect it
+    IF obstacle or broken robot / rival nearby:
+        IF barrel, chimney, or enemy → aim and attack
         ELSE → steer around it
     head for the finish line → win = +1 coin
 ejemplo:

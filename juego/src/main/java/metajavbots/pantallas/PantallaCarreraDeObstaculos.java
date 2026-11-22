@@ -13,6 +13,7 @@ import metajavbots.codigo.RobotDelJugador;
 import metajavbots.combate.Arena;
 import metajavbots.combate.CarreraDeObstaculos;
 import metajavbots.combate.Combatiente;
+import metajavbots.combate.Cuerpo;
 import metajavbots.combate.Pelea;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
@@ -25,9 +26,10 @@ import metajavbots.progreso.Jugador;
 import metajavbots.textos.T;
 
 /**
- * PANTALLA CARRERA DE OBSTÁCULOS — Combina mapa general con visibilidad parcial,
- * editor trilingüe con compilación y carrera en tiempo real contra la máquina o
- * contra un robot de otro usuario (robots_ajenos/), otorgando 1 moneda por victoria.
+ * PANTALLA CARRERA DE OBSTÁCULOS — Selección de robot del jugador, elección de
+ * rival (máquina o robots_ajenos/), rotación de arena 6×, mapa general parcial,
+ * editor trilingüe, cámara de seguimiento suave, minimapa panorámico y premio
+ * de 1 moneda por victoria.
  */
 public final class PantallaCarreraDeObstaculos implements Pantalla {
 
@@ -39,12 +41,17 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         }
     }
 
+    private static final double VENTANA_CAMARA = 1400.0;
+
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
     private final RobotDelJugador compilado = new RobotDelJugador();
     private VistaDeArena vista;
     private CarreraDeObstaculos carrera;
     private Arena vistaPrevia;
     private long semilla = (System.nanoTime() & 0xFFFFFL) + 17L;
+    private String escenarioAnterior;
+    private String escenarioActual;
+    private int robotElegido;
     private boolean preparando = true;
     private boolean contraMaquina = true;
     private List<Path> ajenos = new ArrayList<>();
@@ -89,9 +96,11 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     @Override
     public void alEntrar(Juego j) {
         vista = new VistaDeArena(j.pincel);
-        vista.escenario = VistaDeArena.Escenario.CHATARRERIA;
         ajenos = PrepararPelea.robotsAjenos();
-        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla);
+        robotElegido = j.jugador != null ? j.jugador.robotElegido : 0;
+        escenarioActual = CarreraDeObstaculos.siguienteArena(escenarioActual, semilla);
+        vista.escenario = escenarioDe(escenarioActual);
+        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual);
         editor.palabras = Palabras.api(j.jugador.idioma);
         editor.documentacion = w -> Referencia.de(w, j.jugador.idioma);
         editor.tamano = j.jugador.tamanoDeLetra;
@@ -104,8 +113,9 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     @Override
     public String contextoParaElEntrenador() {
         return EntrenadorFlotante.contextoDeCodigo(
-                "The player is in Obstacle race (Special mode), programming a robot to race to the finish line "
-                        + "using radar/obstacles() and if conditionals to shoot destructible barrels/chimneys and dodge indestructibles.",
+                "The player is in Obstacle race (Special mode), on a 6x track with rotating arenas, sudden obstacles "
+                        + "(destructible barrels/chimneys and indestructible traps), broken malfunctioning robots shooting randomly, "
+                        + "speed boost pickups (\"impulso\"), and live combat against the rival while racing to the finish line.",
                 editor);
     }
 
@@ -129,30 +139,30 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
 
     private void dibujarPreparacion(Juego j, float arriba) {
         Pincel p = j.pincel;
-        Ui ui = j.ui;
         float x = 20, y = arriba + 12, w = p.ancho - 40;
-        float yTrasRival = barraRival(j, x, y, w);
-        float altoCuerpo = p.alto - yTrasRival - 16;
+        float yTrasBarra = barraSeleccion(j, x, y, w);
+        float altoCuerpo = p.alto - yTrasBarra - 16;
         float anchoMapa = Math.max(360, w * 0.42f);
         float anchoEditor = w - anchoMapa - 16;
-        dibujarPanelMapa(j, x, yTrasRival, anchoMapa, altoCuerpo);
-        dibujarPanelEditor(j, x + anchoMapa + 16, yTrasRival, anchoEditor, altoCuerpo);
+        dibujarPanelMapa(j, x, yTrasBarra, anchoMapa, altoCuerpo);
+        dibujarPanelEditor(j, x + anchoMapa + 16, yTrasBarra, anchoEditor, altoCuerpo);
     }
 
-    private float barraRival(Juego j, float x, float y, float w) {
+    private float barraSeleccion(Juego j, float x, float y, float w) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        float h = contraMaquina ? 64 : 116;
+        float h = contraMaquina ? 114 : 162;
         p.caja(x, y, w, h, 10, ui.tema.panel, 1);
-        float bx = x + 14, by = y + 10;
-        p.texto(T.t("carrera_obs.rival"), bx, by + 11, ui.letra * 0.9f, true, ui.tema.textoSuave, 1);
-        bx += Math.max(90, p.ancho(T.t("carrera_obs.rival"), ui.letra * 0.9f, true) + 16);
-        if (ui.boton(T.t("carrera_obs.vs_maquina"), bx, by, 220, 42, contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
+        dibujarSelectorRobot(j, x + 14, y + 10, w - 28);
+        float bx = x + 14, by = y + 60;
+        p.texto(T.t("carrera_obs.rival"), bx, by + 11, ui.letra * 0.88f, true, ui.tema.textoSuave, 1);
+        bx += Math.max(82, p.ancho(T.t("carrera_obs.rival"), ui.letra * 0.88f, true) + 14);
+        if (ui.boton(T.t("carrera_obs.vs_maquina"), bx, by, 210, 42, contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
             contraMaquina = true;
             aviso = "";
         }
-        bx += 230;
-        if (ui.boton(T.t("carrera_obs.vs_usuario"), bx, by, 260, 42, !contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
+        bx += 220;
+        if (ui.boton(T.t("carrera_obs.vs_usuario"), bx, by, 240, 42, !contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
             contraMaquina = false;
             ajenos = PrepararPelea.robotsAjenos();
             aviso = "";
@@ -161,9 +171,34 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             regenerarPista();
         }
         if (!contraMaquina) {
-            dibujarSelectorAjeno(j, x + 14, y + 62, w - 28);
+            dibujarSelectorAjeno(j, x + 14, y + 112, w - 28);
         }
         return y + h + 12;
+    }
+
+    private void dibujarSelectorRobot(Juego j, float x, float y, float w) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        List<Jugador.Robot> lista = j.jugador.robots;
+        p.texto(T.t("carrera_obs.tu_robot"), x, y + 10, ui.letra * 0.88f, true, ui.tema.textoSuave, 1);
+        float rx = x + Math.max(106, p.ancho(T.t("carrera_obs.tu_robot"), ui.letra * 0.88f, true) + 14);
+        if (!lista.isEmpty()) {
+            robotElegido = Math.max(0, Math.min(robotElegido, lista.size() - 1));
+            if (ui.boton("◄", rx, y, 40, 38, Ui.Estilo.PLANO, lista.size() > 1, null)) {
+                robotElegido = (robotElegido - 1 + lista.size()) % lista.size();
+            }
+            Jugador.Robot r = lista.get(robotElegido);
+            Montaje m = j.jugador.montajeDe(r);
+            Montaje.Cifras c = m != null ? m.cifras() : new Montaje(Modelo.de("cobalto")).cifras();
+            String desc = r.nombre + " (" + Modelo.de(r.modelo).nombre(T.idioma) + ") · "
+                    + String.format(Locale.ROOT, "VEL %.1f · BLIND %.0f", c.velocidad, c.blindajeTotal());
+            p.texto(ui.recortarTexto(desc, w - 420, ui.letra * 0.86f, true), rx + 50, y + 9, ui.letra * 0.86f, true, ui.tema.texto, 1);
+            if (ui.boton("►", x + w - 260, y, 40, 38, Ui.Estilo.PLANO, lista.size() > 1, null)) {
+                robotElegido = (robotElegido + 1) % lista.size();
+            }
+        }
+        String arenaTxt = T.f("carrera_obs.arena_actual", escenarioActual);
+        p.texto(arenaTxt, x + w - Math.max(196, p.ancho(arenaTxt, ui.letra * 0.82f, true)), y + 10, ui.letra * 0.82f, true, 0xFFC857, 1);
     }
 
     private void dibujarSelectorAjeno(Juego j, float x, float y, float w) {
@@ -193,50 +228,26 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         Ui ui = j.ui;
         float cy = ui.panel(x, y, w, h, T.t("carrera_obs.mapa_titulo"));
         float mx = x + 16, mw = w - 32;
-        float mh = Math.min(h * 0.50f, mw * 0.56f);
-        dibujarMapaGeneral(p, ui, mx, cy + 4, mw, mh);
-        float ly = cy + mh + 18;
-        p.circulo(mx + 10, ly + 8, 7, 0xD97236, 1);
-        p.texto(T.t("carrera_obs.leyenda_destructible"), mx + 26, ly, ui.letra * 0.78f, false, ui.tema.texto, 1);
-        ly += ui.letra * 1.45f;
-        p.rect(mx + 3, ly + 1, 14, 14, 0xE05A4F, 1);
-        p.texto(T.t("carrera_obs.leyenda_indestructible"), mx + 26, ly, ui.letra * 0.78f, false, ui.tema.texto, 1);
-        ly += ui.letra * 1.45f;
-        p.circulo(mx + 10, ly + 8, 7, 0x3FE0FF, 0.55f);
-        p.texto(T.t("carrera_obs.leyenda_ocultos"), mx + 26, ly, ui.letra * 0.78f, true, ui.tema.aviso, 1);
-        ly += ui.letra * 1.65f;
-        p.parrafo(T.t("carrera_obs.mapa_ayuda"), mx, ly, mw, ui.letra * 0.78f, ui.tema.textoSuave, 1);
-    }
-
-    private void dibujarMapaGeneral(Pincel p, Ui ui, float x, float y, float w, float h) {
-        p.caja(x, y, w, h, 8, 0x1A202C, 1);
-        p.bordeRedondeado(x, y, w, h, 8, ui.tema.borde, 1, 1.5f);
-        float sxSalida = (float) (x + (CarreraDeObstaculos.SALIDA_X / CarreraDeObstaculos.ANCHO) * w);
-        float sxMeta = (float) (x + (CarreraDeObstaculos.META_X / CarreraDeObstaculos.ANCHO) * w);
-        p.rect(sxSalida, y + 6, 3, h - 12, 0x5BD685, 0.85f);
-        dibujarMetaCuadros(p, sxMeta, y + 6, h - 12, 8);
-        // Zona de niebla de radar en el tramo central (obstáculos ocultos no revelados en el mapa general).
-        p.rect(x + w * 0.30f, y + 8, w * 0.52f, h - 16, 0x3FE0FF, 0.06f);
-        p.textoCentrado("? RADAR ?", x + w * 0.56f, y + 10, ui.letra * 0.65f, true, 0x3FE0FF, 0.45f);
-        // Salida de los dos corredores.
-        p.circulo(sxSalida - 6, y + h * 0.66f, 6, VistaDeArena.COLORES[0], 1);
-        p.circulo(sxSalida - 6, y + h * 0.34f, 6, VistaDeArena.COLORES[1], 1);
-        // Solo los obstáculos visibles en el mapa general (!ocultoEnMapa).
-        for (Arena.Trampa t : vistaPrevia.trampas()) {
-            if (t.ocultoEnMapa) continue;
-            float ox = (float) (x + (t.x / CarreraDeObstaculos.ANCHO) * w);
-            float oy = (float) (y + (1.0 - t.y / CarreraDeObstaculos.ALTO) * h);
-            float r = Math.max(6f, (float) (t.radio / CarreraDeObstaculos.ANCHO) * w);
-            if (t.destructible) {
-                p.circulo(ox, oy, r, 0xD97236, 0.95f);
-                p.linea(ox - r * 0.5f, oy - r * 0.3f, ox + r * 0.4f, oy + r * 0.4f, 1.8f, 0x1A1512, 0.9f);
-            } else {
-                p.rect(ox - r, oy - r, r * 2, r * 2, 0xE05A4F, 0.9f);
-                p.bordeRedondeado(ox - r, oy - r, r * 2, r * 2, 2, 0xFFC857, 0.85f, 1.5f);
-            }
-        }
-        p.texto(T.t("carrera_obs.salida"), x + 6, y + h - 22, ui.letra * 0.62f, true, 0x5BD685, 1);
-        p.texto(T.t("carrera_obs.meta"), sxMeta - 46, y + h - 22, ui.letra * 0.62f, true, 0xFFC857, 1);
+        float mh = Math.min(h * 0.42f, mw * 0.46f);
+        DibujoCarreraDeObstaculos.mapaGeneral(p, ui, vistaPrevia, mx, cy + 4, mw, mh);
+        float ly = cy + mh + 14;
+        float paso = ui.letra * 1.32f;
+        p.circulo(mx + 9, ly + 7, 6, 0xD97236, 1);
+        p.texto(T.t("carrera_obs.leyenda_destructible"), mx + 24, ly, ui.letra * 0.74f, false, ui.tema.texto, 1);
+        ly += paso;
+        p.rect(mx + 3, ly + 1, 12, 12, 0xE05A4F, 1);
+        p.texto(T.t("carrera_obs.leyenda_indestructible"), mx + 24, ly, ui.letra * 0.74f, false, ui.tema.texto, 1);
+        ly += paso;
+        p.circulo(mx + 9, ly + 7, 6, 0x3FE0FF, 0.95f);
+        p.texto(T.t("carrera_obs.leyenda_impulso"), mx + 24, ly, ui.letra * 0.74f, false, 0x9CFF57, 1);
+        ly += paso;
+        p.circulo(mx + 9, ly + 7, 6, 0xFF7A45, 0.95f);
+        p.texto(T.t("carrera_obs.leyenda_rotos"), mx + 24, ly, ui.letra * 0.74f, false, ui.tema.aviso, 1);
+        ly += paso;
+        p.circulo(mx + 9, ly + 7, 6, 0x3FE0FF, 0.45f);
+        p.texto(T.t("carrera_obs.leyenda_ocultos"), mx + 24, ly, ui.letra * 0.74f, true, ui.tema.textoSuave, 1);
+        ly += paso + 6;
+        p.parrafo(T.t("carrera_obs.mapa_ayuda"), mx, ly, mw, ui.letra * 0.74f, ui.tema.textoSuave, 1);
     }
 
     private void dibujarPanelEditor(Juego j, float x, float y, float w, float h) {
@@ -260,7 +271,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
                 break;
             case 2:
                 if (compilado.listo() && editor.doc.texto().equals(compilado.fuente())) {
-                    iniciarCarrera(j);
+                    iniciarCarrera(j, false);
                 } else {
                     lanzarCompilacion(j, true);
                 }
@@ -308,11 +319,11 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         boolean arrancar = arrancarTrasCompilar;
         arrancarTrasCompilar = false;
         if (r.bien && arrancar) {
-            iniciarCarrera(j);
+            iniciarCarrera(j, false);
         }
     }
 
-    private void iniciarCarrera(Juego j) {
+    private void iniciarCarrera(Juego j, boolean rotarArena) {
         Combatiente rival;
         if (contraMaquina) {
             rival = CarreraDeObstaculos.rivalMaquina(T.t("carrera_obs.maquina_nombre"));
@@ -328,11 +339,14 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             }
             rival = carga.combatiente();
         }
-        Jugador.Robot r = j.jugador.robot();
-        Montaje montajeJug = r != null ? j.jugador.montajeDe(r) : new Montaje(Modelo.de("cobalto"));
-        String nombreJug = r != null ? r.nombre : j.jugador.nombre;
-        Combatiente cJug = new Combatiente(nombreJug, montajeJug, compilado);
-        carrera = new CarreraDeObstaculos(cJug, rival, semilla, contraMaquina);
+        if (rotarArena) {
+            regenerarPista();
+        }
+        Combatiente cJug = CarreraDeObstaculos.combatienteDeJugador(j.jugador, robotElegido, compilado);
+        carrera = new CarreraDeObstaculos(cJug, rival, semilla, contraMaquina, escenarioAnterior);
+        escenarioActual = carrera.escenario();
+        vista.escenario = escenarioDe(escenarioActual);
+        vista.enfocarCamara(VENTANA_CAMARA / 2, VENTANA_CAMARA);
         preparando = false;
         pausado = false;
         acumulador = 0;
@@ -341,8 +355,11 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     }
 
     private void regenerarPista() {
+        escenarioAnterior = escenarioActual;
         semilla = semilla * 6364136223846793005L + 1442695040888963407L;
-        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla);
+        escenarioActual = CarreraDeObstaculos.siguienteArena(escenarioAnterior, semilla);
+        if (vista != null) vista.escenario = escenarioDe(escenarioActual);
+        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual);
     }
 
     private void dibujarCarrera(Juego j, float arriba, float dt) {
@@ -367,12 +384,29 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
                 j.sonidos.tocar("subida", 0.6f);
             }
         }
+        Cuerpo c0 = carrera.pelea.cuerpo(0);
+        if (c0 != null) {
+            vista.objetivoCamaraX = c0.x + 240;
+        }
         float ay = y + hudH + 10;
         float ah = p.alto - ay - 16;
         vista.dibujar(p, carrera.pelea, x, ay, w, ah, dt);
-        dibujarLineasPista(p, ui);
+        DibujoCarreraDeObstaculos.lineasPista(p, ui, vista);
+        float mmW = Math.min(w - 40, 680);
+        float mmH = 44;
+        DibujoCarreraDeObstaculos.minimapa(p, ui, carrera, vista, x + (w - mmW) / 2, ay + ah - mmH - 12, mmW, mmH);
         if (carrera.terminada()) {
-            dibujarResultado(j, x, ay, w, ah);
+            int accion = DibujoCarreraDeObstaculos.resultado(j, carrera, monedaGanada, x, ay, w, ah);
+            if (accion == 1) {
+                regenerarPista();
+                iniciarCarrera(j, false);
+            } else if (accion == 2) {
+                regenerarPista();
+                preparando = true;
+            } else if (accion == 3) {
+                regenerarPista();
+                iniciarCarrera(j, false);
+            }
         }
     }
 
@@ -380,12 +414,12 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         p.caja(x, y, w, h, 10, ui.tema.panel, 0.96f);
-        float bw = Math.min(240, w * 0.20f);
+        float bw = Math.min(220, w * 0.18f);
         double p0 = carrera.progreso(0), p1 = carrera.progreso(1);
-        p.texto(carrera.pelea.combatientes[0].nombre + " " + Math.round(p0 * 100) + "%", x + 14, y + 8, ui.letra * 0.75f, true, VistaDeArena.COLORES[0], 1);
+        p.texto(carrera.pelea.combatientes[0].nombre + " " + Math.round(p0 * 100) + "%", x + 14, y + 8, ui.letra * 0.74f, true, VistaDeArena.COLORES[0], 1);
         ui.barra(x + 14, y + 34, bw, 18, (float) p0, VistaDeArena.COLORES[0], null);
         float x1 = x + 28 + bw;
-        p.texto(carrera.pelea.combatientes[1].nombre + " " + Math.round(p1 * 100) + "%", x1, y + 8, ui.letra * 0.75f, true, VistaDeArena.COLORES[1], 1);
+        p.texto(carrera.pelea.combatientes[1].nombre + " " + Math.round(p1 * 100) + "%", x1, y + 8, ui.letra * 0.74f, true, VistaDeArena.COLORES[1], 1);
         ui.barra(x1, y + 34, bw, 18, (float) p1, VistaDeArena.COLORES[1], null);
         float cx = x + w - 460;
         if (ui.boton(pausado ? T.t("carrera_obs.reanudar") : T.t("carrera_obs.pausar"), cx, y + 12, 120, 42, Ui.Estilo.NORMAL)) {
@@ -395,73 +429,21 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             velocidad = velocidad == 1 ? 2 : velocidad == 2 ? 4 : 1;
         }
         if (ui.boton(T.t("carrera_obs.editar"), cx + 200, y + 12, 124, 42, Ui.Estilo.PLANO)) {
+            regenerarPista();
             preparando = true;
         }
         if (ui.boton(T.t("carrera_obs.nueva_pista"), cx + 332, y + 12, 118, 42, Ui.Estilo.PLANO)) {
             regenerarPista();
-            iniciarCarrera(j);
+            iniciarCarrera(j, false);
         }
     }
 
-    private void dibujarLineasPista(Pincel p, Ui ui) {
-        float yArriba = vista.sy(CarreraDeObstaculos.ALTO);
-        float yAbajo = vista.sy(0);
-        float xSalidaArriba = vista.sx(CarreraDeObstaculos.SALIDA_X, CarreraDeObstaculos.ALTO);
-        float xSalidaAbajo = vista.sx(CarreraDeObstaculos.SALIDA_X, 0);
-        p.linea(xSalidaArriba, yArriba, xSalidaAbajo, yAbajo, 3f, 0x5BD685, 0.75f);
-        int cuadros = 16;
-        for (int i = 0; i < cuadros; i++) {
-            double y0 = CarreraDeObstaculos.ALTO * i / cuadros;
-            double y1 = CarreraDeObstaculos.ALTO * (i + 1) / cuadros;
-            float sx0 = vista.sx(CarreraDeObstaculos.META_X, y0);
-            float sx1 = vista.sx(CarreraDeObstaculos.META_X, y1);
-            float sy0 = vista.sy(y0);
-            float sy1 = vista.sy(y1);
-            int c1 = i % 2 == 0 ? 0xFFFFFF : 0x111318;
-            int c2 = i % 2 == 0 ? 0x111318 : 0xFFFFFF;
-            p.linea(sx0, sy0, sx1, sy1, 8f, c1, 0.92f);
-            p.linea(sx0 + 8, sy0, sx1 + 8, sy1, 8f, c2, 0.92f);
-        }
-        p.textoCentrado(T.t("carrera_obs.meta"), vista.sx(CarreraDeObstaculos.META_X, CarreraDeObstaculos.ALTO),
-                yArriba - 24, ui.letra * 0.85f, true, 0xFFC857, 1);
-    }
-
-    private void dibujarResultado(Juego j, float x, float y, float w, float h) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        float cw = Math.min(540, w - 40), ch = 220;
-        float cx = x + (w - cw) / 2, cy = y + (h - ch) / 2;
-        p.caja(cx, cy, cw, ch, 14, ui.tema.panel, 0.96f);
-        p.bordeRedondeado(cx, cy, cw, ch, 14, carrera.ganador() == 0 ? ui.tema.bien : ui.tema.aviso, 1, 2.5f);
-        String titulo = carrera.ganador() == 0 ? T.t("carrera_obs.ganas")
-                : carrera.ganador() == 1 ? T.t("carrera_obs.pierdes") : T.t("carrera_obs.empate");
-        p.textoCentrado(titulo, cx + cw / 2, cy + 24, ui.letra * 1.4f, true,
-                carrera.ganador() == 0 ? ui.tema.bien : ui.tema.texto, 1);
-        String premio = monedaGanada
-                ? T.f("carrera_obs.premio_moneda", Jugador.formatearMonedas(j.jugador.monedas))
-                : T.t("carrera_obs.sin_moneda");
-        p.textoCentrado(premio, cx + cw / 2, cy + 78, ui.letra * 0.95f, true,
-                monedaGanada ? 0xFFC857 : ui.tema.textoSuave, 1);
-        float bw = (cw - 60) / 3;
-        if (ui.boton(T.t("carrera_obs.repetir"), cx + 20, cy + ch - 68, bw, 46, Ui.Estilo.PRINCIPAL)) {
-            iniciarCarrera(j);
-        }
-        if (ui.boton(T.t("carrera_obs.editar"), cx + 30 + bw, cy + ch - 68, bw, 46, Ui.Estilo.NORMAL)) {
-            preparando = true;
-        }
-        if (ui.boton(T.t("carrera_obs.nueva_pista"), cx + 40 + bw * 2, cy + ch - 68, bw, 46, Ui.Estilo.PLANO)) {
-            regenerarPista();
-            iniciarCarrera(j);
-        }
-    }
-
-    private static void dibujarMetaCuadros(Pincel p, float x, float y, float h, int paso) {
-        int filas = Math.max(2, (int) (h / paso));
-        for (int i = 0; i < filas; i++) {
-            float fy = y + i * paso;
-            float fh = Math.min(paso, y + h - fy);
-            p.rect(x, fy, 5, fh, i % 2 == 0 ? 0xFFFFFF : 0x111318, 1);
-            p.rect(x + 5, fy, 5, fh, i % 2 == 0 ? 0x111318 : 0xFFFFFF, 1);
+    private static VistaDeArena.Escenario escenarioDe(String nombre) {
+        if (nombre == null) return VistaDeArena.Escenario.CHATARRERIA;
+        try {
+            return VistaDeArena.Escenario.valueOf(nombre);
+        } catch (IllegalArgumentException ex) {
+            return VistaDeArena.Escenario.CHATARRERIA;
         }
     }
 }

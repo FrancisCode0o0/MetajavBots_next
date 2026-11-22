@@ -10,7 +10,7 @@ package metajavbots.api;
  */
 public interface Obstacle {
 
-    /** What it is: "pinchos" (spikes), "sierra" (saw), "iman" (magnet), "foso" (pit), "barril" (barrel), "carrito" (cart)… */
+    /** What it is: "pinchos" (spikes), "sierra" (saw), "iman" (magnet), "foso" (pit), "barril" (barrel), "carrito" (cart), "impulso" (speed boost)… */
     String type();
 
     /** Where its centre is (in the arena). */

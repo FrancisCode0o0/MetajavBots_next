@@ -176,9 +176,29 @@ final class DibujoDeArenas {
                     }
                     break;
                 }
+                case "impulso":
+                    impulso(p, cx, cy, rx, ry, t);
+                    break;
                 default:
                     break;
             }
+            if (tr.aparicion() > 0) {
+                float f = tr.aparicion() / 36f;
+                p.aro(cx, cy, rx * (1.1f + (1 - f) * 0.9f), 3.5f * f + 1, 0xFF7A45, 0.85f * f);
+            }
+        }
+    }
+
+    /** Objeto recogible de impulso de velocidad: plataforma brillante con flechas hacia la meta. */
+    private static void impulso(Pincel p, float cx, float cy, float rx, float ry, float t) {
+        float pulso = 0.88f + 0.14f * (float) Math.sin(t * 7);
+        p.brillo(cx, cy - ry * 0.35f, rx * 1.45f * pulso, 0x3FE0FF, 0.55f);
+        p.elipse(cx, cy, rx * 1.05f, ry * 1.05f, 0, 0x102838, 0.92f);
+        p.elipse(cx, cy, rx * 0.85f * pulso, ry * 0.85f * pulso, 0, 0x3FE0FF, 0.45f);
+        for (int k = -1; k <= 0; k++) {
+            float ox = cx + k * rx * 0.38f + (float) Math.sin(t * 6) * rx * 0.08f;
+            p.linea(ox - rx * 0.14f, cy - ry * 0.42f, ox + rx * 0.22f, cy, 3.2f, 0x9CFF57, 0.95f);
+            p.linea(ox + rx * 0.22f, cy, ox - rx * 0.14f, cy + ry * 0.42f, 3.2f, 0x9CFF57, 0.95f);
         }
     }
 
@@ -264,6 +284,11 @@ final class DibujoDeArenas {
     static void solido(Pincel p, VistaDeArena v, Arena.Trampa tr, float t) {
         if (tr.destruida() || tr.ocultoEnMapa && !tr.revelado()) return;
         float cx = v.sx(tr.x, tr.y), cy = v.sy(tr.y), rx = (float) tr.radio * v.escala(tr.y), ry = (float) tr.radio * v.escalaY();
+        if (tr.aparicion() > 0) {
+            float f = tr.aparicion() / 36f;
+            p.aro(cx, cy, rx * (1.1f + (1 - f) * 1.1f), 3.5f * f + 1, 0xFF7A45, 0.9f * f);
+            cy -= f * rx * 1.4f;
+        }
         p.elipse(cx, cy + ry * 0.2f, rx * 1.1f, ry * 0.9f, 0, 0x000000, 0.3f);
         switch (tr.tipo) {
             case "bloque": {

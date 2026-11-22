@@ -28,7 +28,11 @@ public final class Arena {
         public final double resistenciaMax;
         /** Si permanece oculto en el mapa general inicial hasta ser detectado por sensores en carrera. */
         public final boolean ocultoEnMapa;
+        /** Si apareció repentinamente durante la carrera (no estaba en turno 0). */
+        public final boolean repentino;
         private boolean reveladoEnCarrera;
+        /** Turnos restantes de señal visual de aparición repentina (0 cuando ya está asentado). */
+        private int aparicion;
         private double resistencia;
         private boolean destruida;
         /** Turnos breves de restos visibles tras romperse (ya no colisiona ni aparece en obstaculos()). */
@@ -41,10 +45,16 @@ public final class Arena {
         int vida = -1;
 
         Trampa(int id, String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistenciaMax) {
-            this(id, tipo, x, y, radio, solido, ciclo, activo, resistenciaMax, false);
+            this(id, tipo, x, y, radio, solido, ciclo, activo, resistenciaMax, false, false);
         }
 
-        Trampa(int id, String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistenciaMax, boolean ocultoEnMapa) {
+        Trampa(int id, String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistenciaMax,
+                boolean ocultoEnMapa) {
+            this(id, tipo, x, y, radio, solido, ciclo, activo, resistenciaMax, ocultoEnMapa, false);
+        }
+
+        Trampa(int id, String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistenciaMax,
+                boolean ocultoEnMapa, boolean repentino) {
             this.id = id;
             this.tipo = tipo;
             this.x = x;
@@ -57,7 +67,9 @@ public final class Arena {
             this.resistenciaMax = Math.max(0, resistenciaMax);
             this.resistencia = this.resistenciaMax;
             this.ocultoEnMapa = ocultoEnMapa;
+            this.repentino = repentino;
             this.reveladoEnCarrera = !ocultoEnMapa;
+            this.aparicion = repentino ? 36 : 0;
         }
 
         /** ¿Hace daño ahora? Los pinchos y el rayo, solo en su rato; las sierras y el carrito, siempre. */
@@ -104,6 +116,11 @@ public final class Arena {
         /** Turnos restantes de restos breves en el suelo tras destruirse. */
         public int restos() {
             return restos;
+        }
+
+        /** Turnos restantes de señal visual de aparición repentina (0 si ya está asentado). */
+        public int aparicion() {
+            return aparicion;
         }
 
         /** De 0 a 1, lo que han salido los pinchos (para dibujarlos subiendo y bajando). */
@@ -215,9 +232,13 @@ public final class Arena {
         return a;
     }
 
-    private static final double RESISTENCIA_BARRIL = 30;
-    private static final double RESISTENCIA_CHIMENEA = 50;
+    static final double RESISTENCIA_BARRIL = 30;
+    static final double RESISTENCIA_CHIMENEA = 50;
     private static final int TURNOS_RESTOS = 45;
+    /** Turnos que dura el impulso de velocidad recogido en pista. */
+    public static final int TURNOS_IMPULSO = 90;
+    /** Multiplicador de velocidad al recoger un impulso en pista. */
+    public static final double FACTOR_IMPULSO = 1.75;
     /** Alcance mínimo de detección por radar/sensores para obstáculos ocultos de la carrera. */
     public static final double ALCANCE_SENSOR_OCULTOS = 260;
 
@@ -320,39 +341,36 @@ public final class Arena {
         return t;
     }
 
-    /** Crea una pista propia para la Carrera de obstáculos con obstáculos visibles, ocultos, destructibles e indestructibles. */
-    public static Arena carreraDeObstaculos(double ancho, double alto, long semilla) {
-        Arena a = new Arena(1);
-        java.util.Random r = new java.util.Random(semilla);
-        double[] cols = {ancho * 0.24, ancho * 0.43, ancho * 0.62, ancho * 0.79};
-        double[][] filasBase = {
-                {alto * 0.26, alto * 0.74},
-                {alto * 0.50, alto * 0.22, alto * 0.78},
-                {alto * 0.32, alto * 0.68},
-                {alto * 0.50, alto * 0.24, alto * 0.76}
-        };
-        // Columna 0 (visible en mapa): barril destructible + bloque indestructible.
-        a.ponerDestructible("barril", cols[0] + jitter(r, 20), filasBase[0][0] + jitter(r, 20), 28, RESISTENCIA_BARRIL, false);
-        a.poner("bloque", cols[0] + jitter(r, 20), filasBase[0][1] + jitter(r, 20), 34, true, 0, 0, false);
-        // Columna 1 (mixta): foso visible en el centro + dos barriles/chimeneas ocultos en los flancos.
-        a.poner("foso", cols[1] + jitter(r, 22), filasBase[1][0] + jitter(r, 20), 52, false, 0, 0, false);
-        a.ponerDestructible("barril", cols[1] + jitter(r, 22), filasBase[1][1] + jitter(r, 18), 28, RESISTENCIA_BARRIL, true);
-        a.ponerDestructible("chimenea", cols[1] + jitter(r, 22), filasBase[1][2] + jitter(r, 18), 34, RESISTENCIA_CHIMENEA, true);
-        // Columna 2 (oculta en mapa): chimenea destructible + pinchos indestructibles + bloque oculto.
-        boolean arribaDestructible = r.nextBoolean();
-        double yA = filasBase[2][0] + jitter(r, 18);
-        double yB = filasBase[2][1] + jitter(r, 18);
-        a.ponerDestructible("chimenea", cols[2] + jitter(r, 20), arribaDestructible ? yA : yB, 34, RESISTENCIA_CHIMENEA, false);
-        a.poner("pinchos", cols[2] + jitter(r, 20), arribaDestructible ? yB : yA, 48, false, 120, 55, true);
-        // Columna 3 (recta final, mixta): bloque oculto en el centro + barril visible + pinchos visibles.
-        a.poner("bloque", cols[3] + jitter(r, 18), filasBase[3][0] + jitter(r, 20), 34, true, 0, 0, true);
-        a.ponerDestructible("barril", cols[3] + jitter(r, 18), filasBase[3][1] + jitter(r, 18), 28, RESISTENCIA_BARRIL, false);
-        a.poner("pinchos", cols[3] + jitter(r, 18), filasBase[3][2] + jitter(r, 18), 46, false, 130, 55, false).fase = 65;
-        return a;
+    static Arena crearParaCarrera(double agarre) {
+        return new Arena(agarre);
     }
 
-    private static double jitter(java.util.Random r, double amplitud) {
-        return (r.nextDouble() * 2 - 1) * amplitud;
+    Trampa agregarTrampa(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, boolean ocultoEnMapa) {
+        return poner(tipo, x, y, radio, solido, ciclo, activo, ocultoEnMapa);
+    }
+
+    Trampa agregarDestructible(String tipo, double x, double y, double radio, double resistencia, boolean ocultoEnMapa) {
+        return ponerDestructible(tipo, x, y, radio, resistencia, ocultoEnMapa);
+    }
+
+    Trampa agregarImpulso(double x, double y, double radio) {
+        return poner("impulso", x, y, radio, false, 0, 0, false);
+    }
+
+    Trampa agregarRepentina(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistencia) {
+        Trampa t = new Trampa(siguienteId++, tipo, x, y, radio, solido, ciclo, activo, resistencia, false, true);
+        trampas.add(t);
+        return t;
+    }
+
+    /** Crea una pista propia para la Carrera de obstáculos con obstáculos visibles, ocultos, destructibles, indestructibles e impulsos. */
+    public static Arena carreraDeObstaculos(double ancho, double alto, long semilla) {
+        return PistaDeCarrera.generarArena(ancho, alto, semilla, PistaDeCarrera.siguienteArena(null, semilla));
+    }
+
+    /** Crea la pista de Carrera de obstáculos con la estética y agarre del escenario indicado. */
+    public static Arena carreraDeObstaculos(double ancho, double alto, long semilla, String escenario) {
+        return PistaDeCarrera.generarArena(ancho, alto, semilla, escenario);
     }
 
     /** Aplica daño a un obstáculo destructible; al llegar a 0 lo destruye y avisa con OBSTACULO_ROTO. */
@@ -444,6 +462,7 @@ public final class Arena {
                 continue;
             }
             t.fase++;
+            if (t.aparicion > 0) t.aparicion--;
             if (t.vida > 0) t.vida--;
             mover(t, p);
         }
@@ -478,6 +497,16 @@ public final class Arena {
             return;
         }
         if (t.tipo.equals("aceite")) return;
+        if (t.tipo.equals("impulso")) {
+            if (!c.combatiente.defectuoso && d < t.radio + c.radio) {
+                t.destruida = true;
+                t.restos = 0;
+                c.turbo = Math.max(c.turbo, TURNOS_IMPULSO);
+                c.factorTurbo = Math.max(c.factorTurbo, FACTOR_IMPULSO);
+                p.suceso(Suceso.Tipo.ESPECIAL, c.indice, t.x, t.y, c.rumbo, TURNOS_IMPULSO, "impulso");
+            }
+            return;
+        }
         if (t.tipo.equals("iman")) {
             // El imán tira de todos los que pisan el suelo, más cuanto más cerca.
             if (suelo && d < t.radio && d > 1) {

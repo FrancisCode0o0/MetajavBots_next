@@ -1,10 +1,9 @@
 package metajavbots.combate;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-import metajavbots.api.Metajavbot;
-import metajavbots.api.Obstaculo;
 import metajavbots.api.RobotBase;
 import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
@@ -12,24 +11,25 @@ import metajavbots.progreso.Jugador;
 import metajavbots.textos.Idioma;
 
 /**
- * CARRERA DE OBSTÁCULOS — Lógica headless de una carrera en pista desde la
- * salida (izquierda) hasta la meta (derecha) combinando obstáculos visibles en
- * el mapa general, obstáculos ocultos detectables mediante radar/sensores y
- * obstáculos destructibles (barriles/chimeneas) frente a indestructibles
- * (bloques, fosos y pinchos).
+ * CARRERA DE OBSTÁCULOS — Lógica headless de una carrera en pista larga (6×)
+ * desde la salida (izquierda) hasta la meta (derecha), con rotación de arenas,
+ * obstáculos visibles/ocultos/repentinos, robots defectuosos destructibles,
+ * objetos recogibles de impulso de velocidad y combate permitido contra el rival.
  */
 public final class CarreraDeObstaculos {
 
-    /** Ancho de la pista de carrera en unidades de arena. */
-    public static final double ANCHO = 1400;
+    /** Ancho de referencia de la pista base original (antes de la ampliación 6×). */
+    public static final double ANCHO_BASE_REFERENCIA = 1400;
+    /** Ancho de la pista de carrera en unidades de arena (exactamente 6× la pista base). */
+    public static final double ANCHO = 8400;
     /** Alto de la pista de carrera en unidades de arena. */
-    public static final double ALTO = 700;
+    public static final double ALTO = 800;
     /** Coordenada X de la línea de salida. */
-    public static final double SALIDA_X = 95;
+    public static final double SALIDA_X = 110;
     /** Coordenada X de la línea de meta. */
-    public static final double META_X = 1280;
-    /** Duración máxima de una carrera en turnos (30 turnos/s = 40 s). */
-    public static final int MAX_TURNOS = 1200;
+    public static final double META_X = 8240;
+    /** Duración máxima de una carrera en turnos (proporcional 6× para pista larga). */
+    public static final int MAX_TURNOS = 7200;
     /** Recompensa exacta en monedas por cada carrera ganada por el jugador. */
     public static final double RECOMPENSA_MONEDAS = 1.0;
 
@@ -37,9 +37,13 @@ public final class CarreraDeObstaculos {
     public final Pelea pelea;
     /** Semilla determinista de la pista. */
     public final long semilla;
+    /** Escenario/arena seleccionado para esta carrera (nunca repite el inmediato anterior). */
+    public final String escenario;
     /** Si el rival es la computadora (true) o un robot ajeno (false). */
     public final boolean contraMaquina;
 
+    private final List<PistaDeCarrera.ObstaculoRepentino> repentinos;
+    private final List<PistaDeCarrera.DefectuosoEnPista> defectuosos;
     private boolean terminada;
     private int ganador = -2;
     private String motivoFin = "";
@@ -47,11 +51,31 @@ public final class CarreraDeObstaculos {
 
     /** Crea una nueva carrera de obstáculos lista para ejecutarse turno a turno. */
     public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina) {
+        this(jugador, rival, semilla, contraMaquina, null);
+    }
+
+    /** Crea una nueva carrera evitando repetir {@code arenaAnterior}. */
+    public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina, String arenaAnterior) {
         this.semilla = semilla;
         this.contraMaquina = contraMaquina;
-        this.pelea = new Pelea(jugador, rival, semilla, ANCHO, ALTO, MAX_TURNOS);
+        this.escenario = PistaDeCarrera.siguienteArena(arenaAnterior, semilla);
+        this.defectuosos = PistaDeCarrera.crearRobotsDefectuosos(ANCHO, ALTO, semilla);
+        this.repentinos = PistaDeCarrera.planearRepentinos(ANCHO, ALTO, semilla);
+
+        int total = 2 + defectuosos.size();
+        Combatiente[] cs = new Combatiente[total];
+        int[] equipos = new int[total];
+        cs[0] = jugador;
+        equipos[0] = 0;
+        cs[1] = rival;
+        equipos[1] = 1;
+        for (int i = 0; i < defectuosos.size(); i++) {
+            cs[2 + i] = defectuosos.get(i).combatiente();
+            equipos[2 + i] = 2;
+        }
+        this.pelea = new Pelea(cs, equipos, semilla, ANCHO, ALTO, MAX_TURNOS);
         this.pelea.rondas = 1;
-        this.pelea.arena = Arena.carreraDeObstaculos(ANCHO, ALTO, semilla);
+        this.pelea.arena = PistaDeCarrera.generarArena(ANCHO, ALTO, semilla, escenario);
         this.pelea.empezarRonda();
         colocarEnSalida();
     }
@@ -75,12 +99,25 @@ public final class CarreraDeObstaculos {
             c1.velocidad = 0;
             c1.detener();
         }
+        for (int i = 0; i < defectuosos.size(); i++) {
+            Cuerpo d = pelea.cuerpo(2 + i);
+            PistaDeCarrera.DefectuosoEnPista info = defectuosos.get(i);
+            if (d != null) {
+                d.x = info.x();
+                d.y = info.y();
+                d.rumbo = 180;
+                d.mira = 180;
+                d.velocidad = 0;
+                d.detener();
+            }
+        }
     }
 
-    /** Avanza un turno de la carrera y evalúa las condiciones de victoria. */
+    /** Avanza un turno de la carrera, activa obstáculos repentinos y evalúa las condiciones de victoria. */
     public void avanzar() {
         if (terminada) return;
         pelea.avanzar();
+        PistaDeCarrera.actualizarRepentinos(repentinos, pelea);
         evaluarFin();
     }
 
@@ -131,6 +168,11 @@ public final class CarreraDeObstaculos {
         return motivoFin;
     }
 
+    /** Escenario/arena asignado a esta carrera. */
+    public String escenario() {
+        return escenario;
+    }
+
     /** Progreso normalizado [0, 1] del corredor indicado hacia la línea de meta. */
     public double progreso(int indice) {
         Cuerpo c = pelea.cuerpo(indice);
@@ -138,11 +180,11 @@ public final class CarreraDeObstaculos {
         return Math.max(0, Math.min(1, (c.x - SALIDA_X) / (META_X - SALIDA_X)));
     }
 
-    /** Obstáculos visibles en el mapa general previo (excluye los ocultos). */
+    /** Obstáculos visibles en el mapa general previo (excluye ocultos e impulsos). */
     public List<Arena.Trampa> obstaculosVisiblesEnMapa() {
         List<Arena.Trampa> visibles = new ArrayList<>();
         for (Arena.Trampa t : pelea.arena.trampas()) {
-            if (!t.ocultoEnMapa) visibles.add(t);
+            if (!t.ocultoEnMapa && !t.repentino && !t.tipo.equals("impulso")) visibles.add(t);
         }
         return visibles;
     }
@@ -156,10 +198,31 @@ public final class CarreraDeObstaculos {
         return ocultos;
     }
 
-    /**
-     * Aplica la recompensa de 1 moneda si el jugador ganó la carrera (idempotente).
-     * Si perdió o empató, no suma ninguna moneda. Devuelve si se otorgó la moneda.
-     */
+    /** Objetos recogibles de impulso de velocidad actualmente activos en la pista. */
+    public List<Arena.Trampa> impulsosActivos() {
+        List<Arena.Trampa> impulsos = new ArrayList<>();
+        for (Arena.Trampa t : pelea.arena.trampas()) {
+            if (!t.destruida() && t.tipo.equals("impulso")) impulsos.add(t);
+        }
+        return impulsos;
+    }
+
+    /** Lista completa de obstáculos repentinos planificados para esta carrera. */
+    public List<PistaDeCarrera.ObstaculoRepentino> obstaculosRepentinos() {
+        return Collections.unmodifiableList(repentinos);
+    }
+
+    /** Cuerpos de los robots defectuosos colocados en la pista. */
+    public List<Cuerpo> robotsDefectuosos() {
+        List<Cuerpo> lista = new ArrayList<>();
+        for (int i = 2; i < pelea.combatientes.length; i++) {
+            Cuerpo c = pelea.cuerpo(i);
+            if (c != null) lista.add(c);
+        }
+        return lista;
+    }
+
+    /** Aplica la recompensa de 1 moneda si el jugador ganó la carrera (idempotente). */
     public boolean aplicarRecompensa(Jugador jugador) {
         if (!terminada || ganador != 0 || recompensaAplicada || jugador == null) return false;
         jugador.sumarMonedas(RECOMPENSA_MONEDAS);
@@ -172,13 +235,30 @@ public final class CarreraDeObstaculos {
         return recompensaAplicada;
     }
 
+    /** Selecciona la arena siguiente distinta de {@code anterior}. */
+    public static String siguienteArena(String anterior, long semilla) {
+        return PistaDeCarrera.siguienteArena(anterior, semilla);
+    }
+
+    /** Construye el combatiente del jugador a partir del robot elegido de {@code Jugador.robots} con su montaje real. */
+    public static Combatiente combatienteDeJugador(Jugador jugador, int indiceRobot, Fabrica fabrica) {
+        if (jugador != null && !jugador.robots.isEmpty()) {
+            int idx = Math.max(0, Math.min(indiceRobot, jugador.robots.size() - 1));
+            Jugador.Robot r = jugador.robots.get(idx);
+            Montaje m = jugador.montajeDe(r);
+            return new Combatiente(r.nombre, m != null ? m : new Montaje(Modelo.de("cobalto")), fabrica);
+        }
+        String nombre = jugador != null && jugador.nombre != null && !jugador.nombre.isBlank() ? jugador.nombre : "Piloto";
+        return new Combatiente(nombre, new Montaje(Modelo.de("cobalto")), fabrica);
+    }
+
     /** Crea el combatiente rival controlado por la computadora para la carrera de obstáculos. */
     public static Combatiente rivalMaquina(String nombre) {
         Montaje montaje = new Montaje(Modelo.de("cobalto"));
         Fabrica fabrica = new Fabrica() {
             @Override
             public RobotBase crear() {
-                return new CorredorMaquina();
+                return new PistaDeCarrera.CorredorMaquina();
             }
 
             @Override
@@ -188,12 +268,12 @@ public final class CarreraDeObstaculos {
 
             @Override
             public String clase() {
-                return CorredorMaquina.class.getName();
+                return PistaDeCarrera.CorredorMaquina.class.getName();
             }
 
             @Override
             public boolean esSuya(String nombreDeClase) {
-                return CorredorMaquina.class.getName().equals(nombreDeClase);
+                return PistaDeCarrera.CorredorMaquina.class.getName().equals(nombreDeClase);
             }
         };
         Combatiente c = new Combatiente(nombre, montaje, fabrica);
@@ -201,116 +281,52 @@ public final class CarreraDeObstaculos {
         return c;
     }
 
-    /** Devuelve la plantilla inicial compilable de Carrera de obstáculos en el idioma indicado (sin fugas de API). */
+    /**
+     * Devuelve el código base deliberadamente torpe de Carrera de obstáculos en ES, DE o EN.
+     * Da giros sin rumbo y tropieza con todo; el jugador debe programar su estrategia y pulsar Compilar.
+     */
     public static String plantillaInicial(Idioma idioma) {
         Idioma id = idioma == null ? Idioma.ES : idioma;
         switch (id) {
             case DE:
                 return "import metajavbots.api.*;\n\n"
+                        + "// Werkscode (absichtlich ungeschickt): dreht sich nur planlos im Kreis.\n"
+                        + "// Schreib deine eigene Logik mit hindernisse(), geseheneGegner(),\n"
+                        + "// Tempo-Boosts (\"impulso\"), Schüssen und if-Bedingungen, und drück Kompilieren.\n"
                         + "public class HindernisLaeufer extends MetajavbotDe {\n"
                         + "    @Override\n"
                         + "    public void jedenZug() {\n"
-                        + "        double zielWinkel = 0;\n"
-                        + "        for (Hindernis h : hindernisse()) {\n"
-                        + "            double diff = Math.abs(normalisieren(h.winkel()));\n"
-                        + "            if (h.entfernung() < 230 && diff < 42) {\n"
-                        + "                if (h.typ().equals(\"barril\") || h.typ().equals(\"chimenea\")) {\n"
-                        + "                    zielenNach(h.winkel());\n"
-                        + "                    angreifen();\n"
-                        + "                } else {\n"
-                        + "                    zielWinkel = h.y() >= y() ? -52 : 52;\n"
-                        + "                }\n"
-                        + "            }\n"
-                        + "        }\n"
-                        + "        drehenNach(zielWinkel);\n"
-                        + "        vorwaerts(80);\n"
+                        + "        // TODO: hindernisse() prüfen, Fässer/defekte Roboter abschießen, Boosts einsammeln.\n"
+                        + "        drehen(28);\n"
+                        + "        vorwaerts(14);\n"
                         + "    }\n"
                         + "}\n";
             case EN:
                 return "import metajavbots.api.*;\n\n"
+                        + "// Factory code (deliberately clumsy): just spins around aimlessly.\n"
+                        + "// Write your own logic with obstacles(), seenEnemies(), speed boosts\n"
+                        + "// (\"impulso\"), shots, and if conditionals, then press Compile.\n"
                         + "public class ObstacleRacer extends MetajavbotEn {\n"
                         + "    @Override\n"
                         + "    public void onTick() {\n"
-                        + "        double targetAngle = 0;\n"
-                        + "        for (Obstacle o : obstacles()) {\n"
-                        + "            double diff = Math.abs(normalize(o.angle()));\n"
-                        + "            if (o.distance() < 230 && diff < 42) {\n"
-                        + "                if (o.type().equals(\"barril\") || o.type().equals(\"chimenea\")) {\n"
-                        + "                    aimTo(o.angle());\n"
-                        + "                    attack();\n"
-                        + "                } else {\n"
-                        + "                    targetAngle = o.y() >= y() ? -52 : 52;\n"
-                        + "                }\n"
-                        + "            }\n"
-                        + "        }\n"
-                        + "        turnTo(targetAngle);\n"
-                        + "        ahead(80);\n"
+                        + "        // TODO: check obstacles(), shoot barrels/broken robots, grab speed boosts.\n"
+                        + "        turn(28);\n"
+                        + "        ahead(14);\n"
                         + "    }\n"
                         + "}\n";
             default:
                 return "import metajavbots.api.*;\n\n"
+                        + "// Código de fábrica (torpe a propósito): solo da giros sin rumbo.\n"
+                        + "// Escribe tu propia lógica con obstaculos(), enemigosVistos(), impulsos\n"
+                        + "// (\"impulso\"), disparos y condicionales if, y pulsa Compilar.\n"
                         + "public class CorredorObstaculos extends Metajavbot {\n"
                         + "    @Override\n"
                         + "    public void cadaTurno() {\n"
-                        + "        double rumboObjetivo = 0;\n"
-                        + "        for (Obstaculo o : obstaculos()) {\n"
-                        + "            double diff = Math.abs(normalizar(o.angulo()));\n"
-                        + "            if (o.distancia() < 230 && diff < 42) {\n"
-                        + "                if (o.tipo().equals(\"barril\") || o.tipo().equals(\"chimenea\")) {\n"
-                        + "                    apuntarHacia(o.angulo());\n"
-                        + "                    atacar();\n"
-                        + "                } else {\n"
-                        + "                    rumboObjetivo = o.y() >= y() ? -52 : 52;\n"
-                        + "                }\n"
-                        + "            }\n"
-                        + "        }\n"
-                        + "        girarHacia(rumboObjetivo);\n"
-                        + "        avanzar(80);\n"
+                        + "        // TODO: leer obstaculos(), disparar a barriles/robots rotos y recoger impulsos.\n"
+                        + "        girar(28);\n"
+                        + "        avanzar(14);\n"
                         + "    }\n"
                         + "}\n";
-        }
-    }
-
-    /** Robot rival de la máquina: navega a la meta, esquiva obstáculos indestructibles y dispara a destructibles. */
-    public static final class CorredorMaquina extends Metajavbot {
-
-        @Override
-        public void cadaTurno() {
-            double rumboObjetivo = 0;
-            Obstaculo amenaza = null;
-            double mejorDist = Double.MAX_VALUE;
-            for (Obstaculo o : obstaculos()) {
-                double diff = Math.abs(normalizar(o.angulo()));
-                if (o.distancia() < 235 && diff < 46 && o.distancia() < mejorDist) {
-                    mejorDist = o.distancia();
-                    amenaza = o;
-                }
-            }
-            if (amenaza != null) {
-                boolean destructible = amenaza.tipo().equals("barril") || amenaza.tipo().equals("chimenea");
-                if (destructible) {
-                    apuntarHacia(amenaza.angulo());
-                    atacar();
-                    if (amenaza.distancia() < 95) {
-                        rumboObjetivo = elegirDesvio(amenaza.y());
-                    }
-                } else {
-                    rumboObjetivo = elegirDesvio(amenaza.y());
-                    apuntarHacia(0);
-                }
-            } else {
-                apuntarHacia(0);
-            }
-            if (y() < 75 && rumboObjetivo < 0) rumboObjetivo = 25;
-            if (y() > altoArena() - 75 && rumboObjetivo > 0) rumboObjetivo = -25;
-            girarHacia(rumboObjetivo);
-            avanzar(75);
-        }
-
-        private double elegirDesvio(double yObstaculo) {
-            if (y() < 120) return 52;
-            if (y() > altoArena() - 120) return -52;
-            return yObstaculo >= y() ? -52 : 52;
         }
     }
 }
