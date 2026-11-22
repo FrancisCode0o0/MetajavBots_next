@@ -32,20 +32,26 @@ public final class GeometriaEntrenador {
     private GeometriaEntrenador() {
     }
 
-    /** Calcula la pestaña discreta recogida en la esquina inferior derecha con su flechita clicable. */
+    /** Calcula la pestaña recogida en la esquina inferior derecha: flechita «◀» y cabecita medio asomada. */
     public static EntrenadorFlotante.CajaRecogida cajaRecogida(float pantallaAncho, float pantallaAlto, float tamanoLetra) {
-        float w = Math.round(Math.max(30f, Math.min(38f, tamanoLetra * 1.45f)));
-        float h = Math.round(Math.max(44f, Math.min(54f, tamanoLetra * 2.0f)));
-        float margenInf = margenInferior(pantallaAlto);
+        float r = radioCabeza(tamanoLetra);
+        float anchoFlecha = 18f;
+        float anchoCabeza = Math.round(r * 2.15f);
+        float w = anchoFlecha + anchoCabeza;
+        float h = Math.round(r * 1.65f);
         float x = Math.max(0f, pantallaAncho - w - MARGEN_ESQUINA_DER);
-        float y = Math.max(margenInf, pantallaAlto - h - margenInf);
-        return new EntrenadorFlotante.CajaRecogida(x, y, w, h, x + w * 0.50f, y + h * 0.50f);
+        float y = Math.max(0f, pantallaAlto - h);
+        float flechaX = x + anchoFlecha * 0.52f;
+        float flechaY = y + h * 0.52f;
+        float cabezaX = x + anchoFlecha + anchoCabeza * 0.48f;
+        float cabezaY = y + h - r * 0.05f;
+        return new EntrenadorFlotante.CajaRecogida(x, y, w, h, flechaX, flechaY, cabezaX, cabezaY, r);
     }
 
     /** Calcula la pestaña desplegada con la cabecita completa en la esquina inferior derecha y la flecha para recoger. */
     public static EntrenadorFlotante.CajaPestana cajaPestana(float pantallaAncho, float pantallaAlto, float asomada, float tamanoLetra) {
         float factor = Math.max(0f, Math.min(1f, asomada));
-        float r = Math.max(20f, Math.min(24f, tamanoLetra * 0.9f));
+        float r = radioCabeza(tamanoLetra);
         float anchoCabeza = Math.round(r * 3.1f);
         float w = anchoCabeza + ANCHO_BOTON_RECOGER;
         float h = Math.round(r * 3.4f);
@@ -60,6 +66,10 @@ public final class GeometriaEntrenador {
         float insigniaY = y + 6f;
         return new EntrenadorFlotante.CajaPestana(x, y, w, h, cabezaX, cabezaY, r, insigniaX, insigniaY,
                 recogerX, y, ANCHO_BOTON_RECOGER, h);
+    }
+
+    private static float radioCabeza(float tamanoLetra) {
+        return Math.max(20f, Math.min(24f, tamanoLetra * 0.9f));
     }
 
     /** Calcula la caja del cartelito pegado a la izquierda de la cabecita desplegada, siempre dentro de pantalla. */

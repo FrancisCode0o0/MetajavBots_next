@@ -10,6 +10,7 @@ import metajavbots.pantalla.VentanaDeCodigo;
 import metajavbots.progreso.Jugador;
 import metajavbots.textos.Idioma;
 import metajavbots.tutor.Concepto;
+import metajavbots.tutor.ConocimientoDelEntrenador;
 import metajavbots.tutor.ConsejosDelJuego;
 import metajavbots.tutor.Entrenador;
 
@@ -19,19 +20,6 @@ import metajavbots.tutor.Entrenador;
  * pantalla, modo y mecánica del juego adaptándose al progreso del jugador.
  */
 public final class ConsultaIaEntrenador {
-
-    private static final String GUIA_DEL_JUEGO = "Game screens and modes you can guide the player through: "
-            + "Tutorials (guided lessons from zero to senior), Demonstrations (watch example robots fight), "
-            + "Minigames (5 short drills: move, radar, aim, shoot smart, dodge obstacles), "
-            + "Exercises (CodingBat-style short Java problems with auto-checks), "
-            + "Today's hour (guided daily session: weak spots, new topic, fight), "
-            + "My syllabus (paste or load a class syllabus to practice exact topics), "
-            + "Workshop (program robot in Java, compile with Ctrl+S, live test bench, swap parts, API docs), "
-            + "Shop (buy parts/gear with coins according to rank and activate via short code challenge), "
-            + "Debugging & Testing (broken robots, live step debugger, testing lab with JUnit/mutants), "
-            + "Arena (Let's fight!, Fight, Special mode with bosses/campaigns/challenges, History & stats), "
-            + "AI Panel (adjust AI difficulty, aggressiveness, humor and politeness), "
-            + "Settings (local KoboldCpp & online AI brains, voice, language, font size, change coach).";
 
     private ConsultaIaEntrenador() {
     }
@@ -56,7 +44,7 @@ public final class ConsultaIaEntrenador {
                 + "Answer any question about Java, object orientation, compiler errors OR any screen, mode and mechanic of the game, "
                 + "to someone who may know nothing about programming: plain words, a fight metaphor with robots, pseudocode and small Java snippets "
                 + "(Java standard library and the robot API) when relevant. "
-                + GUIA_DEL_JUEGO + " "
+                + ConocimientoDelEntrenador.resumenParaIa() + " "
                 + "Adapt your guidance to the player's progress: if they are a beginner, suggest Tutorials and Demonstrations; "
                 + "if they are rusty or on a losing streak, suggest Minigames, Exercises or Today's hour. "
                 + "If the player's code or fight is given, look at it and talk about THEIR code and situation (line numbers, what happens, why they lose). "

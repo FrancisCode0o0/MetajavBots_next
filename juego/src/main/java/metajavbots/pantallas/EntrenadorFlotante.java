@@ -3,6 +3,7 @@ package metajavbots.pantallas;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import com.badlogic.gdx.Input;
 
@@ -19,6 +20,7 @@ import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 import metajavbots.tutor.CabezaDeEntrenador;
 import metajavbots.tutor.Concepto;
+import metajavbots.tutor.ConsejosDelJuego;
 import metajavbots.tutor.ConsejosDelTaller;
 import metajavbots.tutor.Entrenador;
 
@@ -37,13 +39,13 @@ import metajavbots.tutor.Entrenador;
 public final class EntrenadorFlotante {
 
     // ================================================================ frecuencia y enfriamiento del cartelito
-    /** Segundos antes de que salga el primer consejo automático. */
-    public static final float ESPERA_INICIAL_TIP = 75f;
-    /** Segundos de enfriamiento entre consejos automáticos tras caducar solos o abrir «Explícamelo». */
-    public static final float ESPERA_ENTRE_TIPS = 180f;
-    /** Segundos de enfriamiento cuando el jugador cierra el cartelito a mano con «×» o «Gracias». */
-    public static final float ESPERA_TRAS_CERRAR_MANUAL = 300f;
-    /** Segundos que permanece visible un consejo automático antes de ocultarse solo. */
+    /** Segundos antes de que salga el primer consejo automático al iniciar la sesión. */
+    public static final float ESPERA_INICIAL_TIP = 60f;
+    /** Segundos de enfriamiento normal entre consejos espontáneos (4 minutos). */
+    public static final float ESPERA_ENTRE_TIPS = 240f;
+    /** Segundos de enfriamiento ampliado cuando el jugador cierra el cartelito con «×» o «Gracias» (7 minutos). */
+    public static final float ESPERA_TRAS_CERRAR_MANUAL = 420f;
+    /** Segundos que permanece visible un consejo automático antes de recogerse solo. */
     public static final float DURACION_VISIBLE_TIP = 16f;
 
     /** Márgenes y tamaño del botón «×» en la esquina superior derecha del cartelito de consejos. */
@@ -52,11 +54,24 @@ public final class EntrenadorFlotante {
     /** Margen vertical mínimo entre el cartelito y los bordes superior e inferior de la pantalla. */
     public static final float MARGEN_VERTICAL_TIP = GeometriaEntrenador.MARGEN_VERTICAL_TIP;
 
-    /** Geometría de la pestaña discreta recogida en la esquina inferior derecha con su flecha «◀». */
-    public record CajaRecogida(float x, float y, float w, float h, float flechaX, float flechaY) {
-        /** Indica si un punto de pantalla cae dentro de la pestaña recogida. */
+    /** Geometría de la pestaña recogida en la esquina inferior derecha: flecha «◀» y cabecita medio asomada. */
+    public record CajaRecogida(float x, float y, float w, float h, float flechaX, float flechaY,
+            float cabezaX, float cabezaY, float radio) {
+        /** Indica si un punto de pantalla cae dentro de la pestaña recogida (flecha o cabecita medio asomada). */
         public boolean contiene(float px, float py) {
             return px >= x && px < x + w && py >= y && py < y + h;
+        }
+
+        /** Altura total vertical aproximada de la cabeza dibujada (de los rasgos superiores a la barbilla). */
+        public float altoTotalCabeza() {
+            return radio * 2.15f;
+        }
+
+        /** Altura vertical de la cabeza que sobresale visiblemente dentro de la pantalla en estado recogido. */
+        public float altoVisibleCabeza(float pantallaAlto) {
+            float arriba = Math.max(0f, cabezaY - radio * 1.25f);
+            float abajo = Math.min(pantallaAlto, cabezaY + radio * 0.90f);
+            return Math.max(0f, abajo - arriba);
         }
     }
 
@@ -109,7 +124,17 @@ public final class EntrenadorFlotante {
     private Cerebro cerebro;
     private VentanaDeCodigo.Senalado error;
     private final List<Integer> pasosDelError = new ArrayList<>();
-    private final PlanificadorDeConsejos planificador = new PlanificadorDeConsejos();
+    private final PlanificadorDeConsejos planificador;
+
+    /** Crea el entrenador flotante con selección aleatoria estándar para consejos de jugabilidad. */
+    public EntrenadorFlotante() {
+        this(new Random());
+    }
+
+    /** Crea el entrenador flotante con un generador aleatorio dado (útil para pruebas deterministas). */
+    public EntrenadorFlotante(Random azar) {
+        this.planificador = new PlanificadorDeConsejos(azar);
+    }
 
     /** Indica si la ventana completa de consulta está abierta. */
     public boolean abierto() {
@@ -316,7 +341,8 @@ public final class EntrenadorFlotante {
         if (actual.contiene(j.entrada.ratonX, j.entrada.ratonY)) return true;
         ConsejosDelTaller.Tip tip = planificador.tipActual();
         if (tip != null && !hospital(j)) {
-            CajaTip c = GeometriaEntrenador.cajaTip(p, j.ui, T.t("entrenador.tip." + tip.id()));
+            String texto = ConsejosDelJuego.textoDelTip(tip, j.jugador.idioma);
+            CajaTip c = GeometriaEntrenador.cajaTip(p, j.ui, texto);
             return j.entrada.dentro(c.x, c.y, c.w, c.h);
         }
         return false;
@@ -365,12 +391,18 @@ public final class EntrenadorFlotante {
         boolean enfermo = hospital(j);
         CajaRecogida r = cajaRecogida(p.ancho, p.alto, ui.letra);
         boolean encima = r.contiene(j.entrada.ratonX, j.entrada.ratonY);
-        p.caja(r.x + 2, r.y + 3, r.w, r.h, 10, 0x000000, 0.28f);
-        p.caja(r.x, r.y, r.w, r.h, 10, enfermo ? 0xE8ECEF : (encima ? ui.tema.panelAlto : ui.tema.panel), 0.94f);
-        p.bordeRedondeado(r.x, r.y, r.w, r.h, 10, enfermo ? 0xFF4D4D : ui.tema.acento, encima ? 1f : 0.85f, 1.8f);
+        p.caja(r.x + 2, r.y + 3, r.w, r.h, 12, 0x000000, 0.28f);
+        p.caja(r.x, r.y, r.w, r.h, 12, enfermo ? 0xE8ECEF : (encima ? ui.tema.panelAlto : ui.tema.panel), 0.94f);
+        p.recortar(r.x + 1f, r.y + 1f, r.w - 2f, r.h - 1f);
+        CabezaDeEntrenador.dibujar(p, en, r.cabezaX, r.cabezaY, r.radio, false, t);
+        if (enfermo) {
+            p.rect(r.cabezaX - r.radio, r.cabezaY - r.radio * 0.55f, r.radio * 2, r.radio * 0.3f, 0xFFFFFF, 0.95f);
+        }
+        p.sinRecorte();
+        p.bordeRedondeado(r.x, r.y, r.w, r.h, 12, enfermo ? 0xFF4D4D : ui.tema.acento, encima ? 1f : 0.85f, 1.8f);
         float fx = r.flechaX;
         float fy = r.flechaY;
-        float s = Math.min(7f, r.w * 0.22f);
+        float s = 5.5f;
         p.triangulo(fx - s, fy, fx + s * 0.7f, fy - s, fx + s * 0.7f, fy + s, enfermo ? 0xFF4D4D : ui.tema.acento, 1f);
         if (encima) {
             ui.avisar(en.nombre.en(j.jugador.idioma) + " — " + T.t("entrenador.desplegar"));
@@ -385,9 +417,11 @@ public final class EntrenadorFlotante {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         boolean enfermo = hospital(j);
-        CajaPestana actual = cajaPestana(p.ancho, p.alto, asomada, ui.letra);
+        boolean conConsejo = planificador.tipActual() != null;
+        CajaPestana actual = cajaPestana(p.ancho, p.alto, conConsejo ? 1f : asomada, ui.letra);
         boolean encima = actual.contiene(j.entrada.ratonX, j.entrada.ratonY);
-        asomada += (encima || planificador.tipActual() != null ? 1 - asomada : -asomada) * Math.min(1, dt * 12);
+        if (conConsejo) asomada = 1f;
+        else asomada += (encima ? 1 - asomada : -asomada) * Math.min(1, dt * 12);
         CajaPestana c = cajaPestana(p.ancho, p.alto, asomada, ui.letra);
         p.caja(c.x + 2, c.y + 3, c.w, c.h, 14, 0x000000, 0.28f);
         p.caja(c.x, c.y, c.w, c.h, 14, enfermo ? 0xE8ECEF : ui.tema.panelAlto, 0.94f);
@@ -425,10 +459,16 @@ public final class EntrenadorFlotante {
 
     private void actualizarConsejoEspontaneo(Juego j, float dt) {
         if (hospital(j)) return;
+        boolean habiaTip = planificador.tipActual() != null;
         String codigo = j.pantalla() == null ? null : j.pantalla().codigoParaConsejos();
         if (avanzarTemporizadorDeTip(j.jugador, codigo, dt)) {
             ConsejosDelTaller.Tip nuevo = planificador.tipActual();
-            if (nuevo != null) decir(j, T.t("entrenador.tip." + nuevo.id()));
+            if (nuevo != null) {
+                asomada = 1f;
+                decir(j, ConsejosDelJuego.textoDelTip(nuevo, j.jugador.idioma));
+            }
+        } else if (habiaTip && planificador.tipActual() == null && !desplegadoFijo) {
+            asomada = 0f;
         }
     }
 
@@ -437,7 +477,7 @@ public final class EntrenadorFlotante {
         if (tip == null || hospital(j)) return;
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        String texto = T.t("entrenador.tip." + tip.id());
+        String texto = ConsejosDelJuego.textoDelTip(tip, j.jugador.idioma);
         CajaTip c = GeometriaEntrenador.cajaTip(p, ui, texto);
         CajaPestana pestana = cajaPestana(p.ancho, p.alto, asomada, ui.letra);
         float tl = GeometriaEntrenador.tamanoLetraTip(p, ui, texto, c.anchoTexto);
@@ -479,7 +519,7 @@ public final class EntrenadorFlotante {
             String codigo = j.pantalla() == null ? null : j.pantalla().codigoParaConsejos();
             ConsejosDelTaller.Tip otro = planificador.siguiente(j.jugador, codigo);
             despTip.alPrincipio();
-            if (otro != null) decir(j, T.t("entrenador.tip." + otro.id()));
+            if (otro != null) decir(j, ConsejosDelJuego.textoDelTip(otro, j.jugador.idioma));
             return;
         }
         if (ui.boton(T.t("entrenador.tip.cerrar"), c.x + 24 + 2 * bw, by, bw, 40, Ui.Estilo.PLANO)) {

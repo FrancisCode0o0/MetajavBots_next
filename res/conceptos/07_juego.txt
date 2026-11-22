@@ -1,6 +1,8 @@
-# 07_juego.txt: preguntas sobre el propio juego (todas las pantallas, modos, mecánicas y cerebros de IA).
+# 07_juego.txt: base de conocimiento centralizada del entrenador sobre el juego
+# (todas las pantallas, modos, mecánicas, consejos espontáneos y guía para la IA).
 # Nivel 6 = pestaña «El juego» / «Das Spiel» / «The game».
-# «guia: N» abre la guía con dibujos (pantallas/GuiaDeCerebros) en su página N (desde 1).
+# Para registrar una funcionalidad nueva en futuros encargos, añade aquí un bloque
+# «=== id_nuevo» con titulo.*, claves.*, resumen.ia, es/de/en, pseudo.*, ejemplo y tip.*.
 
 === como_jugar
 nivel: 6
@@ -12,6 +14,7 @@ titulo.en: How to play
 claves.es: como se juega, como jugar, jugar, que hago, por donde empiezo, instrucciones
 claves.de: wie spielt man, spielen, was soll ich tun, wo fange ich an, anleitung
 claves.en: how to play, how do i play, what do i do, where do i start, instructions
+resumen.ia: Core loop (program your robot in Java in the Workshop, watch it fight autonomously in the Arena, improve tactics between rounds)
 ver: tutoriales_y_demos, taller_y_compilar, arena_y_modos
 es:
     En MetajavBots no mueves tu robot con el mando: le escribes en Java lo que tiene que hacer, y en la pelea lo hace él solo.
@@ -61,6 +64,15 @@ titulo.en: Tutorials and Demonstrations
 claves.es: como empiezo, empezar, principiante, tutorial, tutoriales, demostracion, demostraciones, demos, aprender desde cero, primeros pasos
 claves.de: wie fange ich an, anfangen, anfanger, tutorial, tutorials, demonstration, demonstrationen, demos, von null lernen, erste schritte
 claves.en: how do i start, get started, beginner, tutorial, tutorials, demonstration, demonstrations, demos, learn from scratch, first steps
+resumen.ia: Tutorials (guided lessons from zero to senior) and Demonstrations (watch example robots fight with coach commentary)
+tip.juego_empezar_tutoriales.condicion: principiante
+tip.juego_empezar_tutoriales.es: ¡Eh, si no sabes por dónde empezar, pásate por [[Tutoriales]] y mira alguna de las [[Demostraciones]]!
+tip.juego_empezar_tutoriales.de: Hey, wenn du nicht weißt, wo du anfangen sollst, schau in die [[Tutorials]] und sieh dir eine der [[Demonstrationen]] an!
+tip.juego_empezar_tutoriales.en: Hey, if you're not sure where to start, head to [[Tutorials]] and watch one of the [[Demonstrations]]!
+tip.juego_demostraciones.condicion: principiante
+tip.juego_demostraciones.es: ¿Quieres ver robots reales en acción antes de programar el tuyo? En [[Demostraciones]] te explico sus trucos paso a paso.
+tip.juego_demostraciones.de: Willst du echte Roboter in Aktion sehen, bevor du deinen programmierst? In den [[Demonstrationen]] erkläre ich dir ihre Tricks Schritt für Schritt.
+tip.juego_demostraciones.en: Want to see real robots in action before coding yours? In [[Demonstrations]] I break down their tricks step by step.
 ver: como_jugar, minijuegos_y_ejercicios, taller_y_compilar
 es:
     Si acabas de llegar o no sabes por dónde empezar, tu mejor puerta de entrada son los Tutoriales y las Demostraciones en el bloque Aprender del Menú.
@@ -102,6 +114,11 @@ titulo.en: Minigames and Exercises
 claves.es: minijuegos, minijuego, ejercicios, ejercicio, codingbat, practicar, entrenar, oxidado, muñeco, calentar, retos cortos
 claves.de: minispiele, minispiel, ubungen, ubung, codingbat, uben, trainieren, eingerostet, puppe, aufwarmen, kurze aufgaben
 claves.en: minigames, minigame, exercises, exercise, codingbat, practice, train, rusty, dummy, warm up, short drills
+resumen.ia: Minigames (5 short drills: move, radar, aim, shoot smart, dodge obstacles) and Exercises (CodingBat-style short Java problems with auto-checks)
+tip.juego_oxidado_minijuegos.condicion: oxidado
+tip.juego_oxidado_minijuegos.es: ¿Un poco oxidado tras las últimas peleas? Pásate por [[Minijuegos]] o resuelve un par de [[Ejercicios]] cortos para calentar.
+tip.juego_oxidado_minijuegos.de: Etwas eingerostet nach den letzten Kämpfen? Schau bei den [[Minispielen]] vorbei oder löse ein paar kurze [[Übungen]] zum Aufwärmen.
+tip.juego_oxidado_minijuegos.en: Feeling a bit rusty after recent fights? Drop into [[Minigames]] or solve a couple of short [[Exercises]] to warm up.
 ver: tutoriales_y_demos, hora_de_hoy_y_temario, por_que_pierdo
 es:
     Si llevas varias derrotas, te sientes oxidado o quieres practicar una habilidad concreta sin la presión del ring, entra en Minijuegos y en Ejercicios.
@@ -143,6 +160,15 @@ titulo.en: Today's hour and My syllabus
 claves.es: la hora de hoy, hora de hoy, sesion, rutina, que estudio hoy, mi temario, temario, pegar temario, clase, examen, asignatura
 claves.de: die stunde heute, stunde heute, sitzung, routine, was lerne ich heute, mein lehrplan, lehrplan, lehrplan einfugen, kurs, prufung
 claves.en: today's hour, todays hour, session, routine, what to study today, my syllabus, syllabus, paste syllabus, class, exam, course
+resumen.ia: Today's hour (guided daily session: weak spots, new topic, fight) and My syllabus (paste or load a class syllabus to practice exact topics)
+tip.juego_hora_de_hoy.condicion: oxidado
+tip.juego_hora_de_hoy.es: ¿No sabes qué practicar hoy? En [[La hora de hoy]] te preparo repaso de lo flojo, un tema nuevo y una pelea.
+tip.juego_hora_de_hoy.de: Weißt du nicht, was du heute üben sollst? In [[Die Stunde heute]] stelle ich dir Wiederholung, ein neues Thema und einen Kampf zusammen.
+tip.juego_hora_de_hoy.en: Not sure what to practice today? In [[Today's hour]] I line up weak-spot review, a new topic and a fight for you.
+tip.juego_temario.condicion: aleatorio
+tip.juego_temario.es: ¿Tienes examen o temario propio? Pégalo o cárgalo en [[Mi temario]] y practicamos exactamente los temas que necesitas.
+tip.juego_temario.de: Steht eine Prüfung an oder hast du einen eigenen Lehrplan? Füge ihn in [[Mein Lehrplan]] ein, dann üben wir genau diese Themen.
+tip.juego_temario.en: Have an exam or your own syllabus? Paste or load it in [[My syllabus]] and we'll practice those exact topics.
 ver: minijuegos_y_ejercicios, tutoriales_y_demos, ver_notas
 es:
     ¿No sabes qué entrenar hoy o tienes un examen de programación cerca? Para eso están La hora de hoy y Mi temario.
@@ -178,9 +204,18 @@ tema: --
 titulo.es: El Taller: programar, compilar y piezas
 titulo.de: Die Werkstatt: programmieren, kompilieren und Teile
 titulo.en: The Workshop: coding, compiling and parts
-claves.es: taller, el taller, compilar en el taller, compilar, ctrl+s, piezas, equipar, modelo, probar aqui, banco de pruebas, documentacion, api, editor, guardar codigo
-claves.de: werkstatt, die werkstatt, in der werkstatt kompilieren, kompilieren, strg+s, teile, ausrusten, modell, hier testen, prufstand, dokumentation, api, editor, code speichern
-claves.en: workshop, the workshop, compile in workshop, compile, ctrl+s, parts, equip, model, test here, test bench, documentation, api, editor, save code
+claves.es: taller, el taller, compilar en el taller, compilar, ctrl+s, piezas, equipar, modelo, probar aqui, banco de pruebas, documentacion, api, editor, guardar codigo, visor tactico, visor, radar visual
+claves.de: werkstatt, die werkstatt, in der werkstatt kompilieren, kompilieren, strg+s, teile, ausrusten, modell, hier testen, prufstand, dokumentation, api, editor, code speichern, taktikansicht, taktik-ansicht
+claves.en: workshop, the workshop, compile in workshop, compile, ctrl+s, parts, equip, model, test here, test bench, documentation, api, editor, save code, tactical view, tactical overlay
+resumen.ia: Workshop (program robot in Java, compile with Ctrl+S, live test bench, tactical view overlay, swap parts, API docs)
+tip.juego_taller.condicion: aleatorio
+tip.juego_taller.es: En el [[Taller]] programas y pruebas tu robot en vivo; recuerda siempre pulsar [[Compilar]] (Ctrl+S) antes de salir al ring.
+tip.juego_taller.de: In der [[Werkstatt]] programmierst und testest du deinen Roboter live; vergiss nicht, vor dem Kampf auf [[Kompilieren]] (Strg+S) zu drücken.
+tip.juego_taller.en: In the [[Workshop]] you code and live-test your robot; always remember to press [[Compile]] (Ctrl+S) before stepping into the ring.
+tip.juego_visor_tactico.condicion: aleatorio
+tip.juego_visor_tactico.es: Activa el [[visor táctico]] durante el combate o en el banco de pruebas para ver el cono del radar, el alcance y las trayectorias en tiempo real.
+tip.juego_visor_tactico.de: Schalte im Kampf oder auf dem Prüfstand die [[Taktikansicht]] ein, um Radarkegel, Reichweite und Flugbahnen live zu sehen.
+tip.juego_visor_tactico.en: Turn on the [[tactical view]] during a fight or on the test bench to see radar cones, weapon range and trajectories live.
 ver: como_jugar, tienda_y_monedas, depuracion_y_testing
 es:
     El Taller es el gimnasio y el banco de trabajo de tu robot: aquí escribes su código Java, lo compilas, cambias sus piezas y consultas la documentación de la API.
@@ -219,9 +254,18 @@ tema: --
 titulo.es: Tienda, monedas y rangos
 titulo.de: Laden, Münzen und Stufen
 titulo.en: Shop, coins and ranks
-claves.es: tienda, monedas, comprar, piezas, complementos, activar pieza, rango, etiqueta, subir de rango, inventario, saldo
-claves.de: laden, munzen, kaufen, teile, zubehor, teil aktivieren, stufe, abzeichen, aufsteigen, inventar, guthaben
-claves.en: shop, coins, buy, parts, gear, activate part, rank, badge, rank up, inventory, balance
+claves.es: tienda, monedas, comprar, piezas, complementos, naturaleza, naturalezas, activar pieza, rango, etiqueta, subir de rango, inventario, saldo
+claves.de: laden, munzen, kaufen, teile, zubehor, natur, naturen, teil aktivieren, stufe, abzeichen, aufsteigen, inventar, guthaben
+claves.en: shop, coins, buy, parts, gear, nature, natures, activate part, rank, badge, rank up, inventory, balance
+resumen.ia: Shop (buy parts, gear and natures with coins according to rank and activate via short code challenge)
+tip.juego_tienda.condicion: monedas
+tip.juego_tienda.es: ¿Tienes monedas ahorradas? En la [[Tienda]] puedes comprar piezas y complementos nuevos y activarlos con un breve reto de código.
+tip.juego_tienda.de: Hast du Münzen gespart? Im [[Laden]] kannst du neue Teile und Zubehör kaufen und sie mit einer kurzen Code-Aufgabe aktivieren.
+tip.juego_tienda.en: Got coins saved up? In the [[Shop]] you can buy new parts and gear and activate them with a short code challenge.
+tip.juego_piezas_naturalezas.condicion: aleatorio
+tip.juego_piezas_naturalezas.es: Combinar bien las [[piezas y naturalezas]] de tu robot en el Taller cambia por completo su velocidad, alcance y aguante.
+tip.juego_piezas_naturalezas.de: Eine kluge Kombination aus [[Teilen und Naturen]] in der Werkstatt verändert Tempo, Reichweite und Ausdauer deines Roboters spürbar.
+tip.juego_piezas_naturalezas.en: Mixing your robot's [[parts and natures]] thoughtfully in the Workshop completely changes its speed, range and durability.
 ver: taller_y_compilar, minijuegos_y_ejercicios, ver_notas
 es:
     Cada pelea ganada y cada ejercicio resuelto te da experiencia (para subir de rango, de Noob a Senior) y monedas gastables para la Tienda.
@@ -263,6 +307,23 @@ titulo.en: Debugging and Testing
 claves.es: depuracion, depurador, depurador en vivo, testing, robots rotos, reparar robot, paso a paso, breakpoint, laboratorio, laboratorio de pruebas, pruebas, junit, mutantes, caja negra, caja blanca
 claves.de: debugging, debugger, live-debugger, testing, kaputte roboter, roboter reparieren, schritt fur schritt, breakpoint, test-labor, tests, junit, mutanten, blackbox, whitebox
 claves.en: debugging, debugger, live debugger, testing, broken robots, repair robot, step by step, breakpoint, testing lab, tests, junit, mutants, blackbox, whitebox
+resumen.ia: Debugging & Testing (broken robots, live step debugger, testing lab with JUnit/mutants)
+tip.juego_depuracion.condicion: aleatorio
+tip.juego_depuracion.es: Si tu robot hace cosas raras, pásate por [[Depuración y Testing]]: robots rotos, depurador paso a paso y laboratorio de pruebas.
+tip.juego_depuracion.de: Wenn dein Roboter seltsame Dinge tut, schau in [[Debugging & Testing]] vorbei: kaputte Roboter, Live-Debugger und Test-Labor.
+tip.juego_depuracion.en: If your robot acts strangely, check out [[Debugging & Testing]]: broken robots, live step debugger and testing lab.
+tip.juego_depurador_paso.condicion: aleatorio
+tip.juego_depurador_paso.es: Con el [[depurador paso a paso]] puedes pausar la pelea, avanzar turno a turno y ver qué decide tu robot en cada línea.
+tip.juego_depurador_paso.de: Mit dem [[Live-Debugger]] pausierst du den Kampf, gehst Zug für Zug weiter und siehst in jeder Zeile, was dein Roboter entscheidet.
+tip.juego_depurador_paso.en: With the [[live step debugger]] you can pause a fight, step tick by tick, and inspect what your robot decides on every line.
+tip.juego_laboratorio_pruebas.condicion: aleatorio
+tip.juego_laboratorio_pruebas.es: En el [[Laboratorio de pruebas]] escribes tests con @Test y cazas mutantes para demostrar que tu código no tiene fallos ocultos.
+tip.juego_laboratorio_pruebas.de: Im [[Test-Labor]] schreibst du @Test-Fälle und fängst Mutanten, um zu beweisen, dass dein Code keine versteckten Bugs hat.
+tip.juego_laboratorio_pruebas.en: In the [[Testing lab]] you write @Test cases and catch mutants to prove your code has no hidden bugs.
+tip.juego_robots_rotos.condicion: aleatorio
+tip.juego_robots_rotos.es: ¿Te apetece jugar a detective? En [[Robots rotos]] diagnosticas y reparas bugs reales en robots averiados.
+tip.juego_robots_rotos.de: Lust auf Detektivarbeit? In [[Kaputte Roboter]] spürst du echte Bugs in defekten Robotern auf und reparierst sie.
+tip.juego_robots_rotos.en: Feel like playing detective? In [[Broken robots]] you diagnose and fix real bugs in malfunctioning robots.
 ver: taller_y_compilar, por_que_pierdo, depurar
 es:
     En Depuración y Testing entrenas el ojo de ingeniero: encontrar fallos rápido y demostrar con pruebas que tu código funciona de verdad.
@@ -304,6 +365,11 @@ titulo.en: Arena, Special mode and History
 claves.es: arena, a pelear, pelear, combate, modo especial, jefes, jefe, campanas, campana, desafios, historial, estadisticas, rivales
 claves.de: arena, auf in den kampf, kampfen, kampf, spezialmodus, bosse, boss, kampagnen, kampagne, herausforderungen, verlauf, statistik, gegner
 claves.en: arena, lets fight, fight, match, special mode, bosses, boss, campaigns, campaign, challenges, history, stats, rivals
+resumen.ia: Arena (Let's fight!, Fight, Special mode with bosses, campaigns, step limits and challenges, History & stats)
+tip.juego_arena.condicion: aleatorio
+tip.juego_arena.es: En la [[Arena]] tienes [[¡A pelear!]], [[Pelear]], [[Modo especial]] (jefes y campañas) y el [[Historial]] para analizar cada combate.
+tip.juego_arena.de: In der [[Arena]] findest du [[Auf in den Kampf!]], [[Kämpfen]], den [[Spezialmodus]] (Bosse und Kampagnen) und den [[Verlauf]] für deine Auswertung.
+tip.juego_arena.en: In the [[Arena]] you've got [[Let's fight!]], [[Fight]], [[Special mode]] (bosses and campaigns) and [[History]] to review every match.
 ver: por_que_pierdo, ver_notas, como_jugar
 es:
     El bloque Arena reúne todas las formas de poner a prueba tu robot en combate real y analizar tus resultados.
@@ -348,6 +414,19 @@ titulo.en: AI Panel, Settings and coaches
 claves.es: panel de la ia, panel ia, dificultad, agresividad, humor, cortesia, ajustes, configuracion, voz, idioma, letra, tamano de letra, cambiar entrenador, elegir entrenador
 claves.de: ki-steuerung, ki-panel, schwierigkeit, aggressivitat, humor, hoflichkeit, einstellungen, konfiguration, stimme, sprache, schrift, schriftgrosse, trainer wechseln, trainer wahlen
 claves.en: ai panel, difficulty, aggressiveness, humor, politeness, settings, configuration, voice, language, font, font size, change coach, choose coach
+resumen.ia: AI Panel (adjust AI difficulty, aggressiveness, humor and politeness) and Settings (local KoboldCpp & online AI brains, voice, language, font size, change coach)
+tip.juego_panel_ia.condicion: aleatorio
+tip.juego_panel_ia.es: ¿La computadora te parece demasiado dura o demasiado blanda? Ajusta su dificultad, agresividad, humor y cortesía en [[Panel de la IA]].
+tip.juego_panel_ia.de: Ist dir der Computer zu hart oder zu zahm? Stell Schwierigkeit, Aggressivität, Humor und Höflichkeit in der [[KI-Steuerung]] ein.
+tip.juego_panel_ia.en: Computer feeling too tough or too gentle? Tune its difficulty, aggressiveness, humor and politeness in [[AI panel]].
+tip.juego_ajustes.condicion: aleatorio
+tip.juego_ajustes.es: En [[Ajustes]] puedes configurar cerebros de IA (locales o en línea), voz, idioma, tamaño de letra o cambiar de entrenador cuando quieras.
+tip.juego_ajustes.de: In den [[Einstellungen]] richtest du KI-Gehirne (lokal oder online), Stimme, Sprache und Schriftgröße ein oder wechselst jederzeit deinen Trainer.
+tip.juego_ajustes.en: In [[Settings]] you can set up AI brains (local or online), voice, language, font size, or switch coaches whenever you like.
+tip.juego_cambio_entrenador.condicion: aleatorio
+tip.juego_cambio_entrenador.es: ¿Te apetece otro estilo de esquina? Puedes cambiar de [[entrenador]] en cualquier momento desde Ajustes o el Panel del Tutor.
+tip.juego_cambio_entrenador.de: Lust auf einen anderen Stil in deiner Ecke? Du kannst deinen [[Trainer]] jederzeit in den Einstellungen oder im Tutor-Panel wechseln.
+tip.juego_cambio_entrenador.en: Want a different corner style? You can switch your [[coach]] anytime from Settings or the Tutor Panel.
 ver: cerebro_ia, cerebro_local, cerebro_en_linea
 es:
     Desde el Panel de la IA y desde Ajustes personalizas tanto el comportamiento de tus rivales como toda tu experiencia en MetajavBots.
@@ -481,6 +560,11 @@ titulo.en: AI brain
 claves.es: cerebro, cerebros, ia, inteligencia artificial, cerebro de ia, que es un cerebro
 claves.de: gehirn, gehirne, ki, kunstliche intelligenz, ki-gehirn, was ist ein gehirn
 claves.en: brain, brains, ai, artificial intelligence, ai brain, what is a brain
+resumen.ia: AI brains (optional: three slots combining local KoboldCpp models and online Gemini/Claude/OpenAI keys)
+tip.juego_cerebros_ia.condicion: aleatorio
+tip.juego_cerebros_ia.es: El juego funciona al completo sin IA, pero si conectas un [[cerebro de IA]] local u online en Ajustes responderé cualquier duda sobre tu código.
+tip.juego_cerebros_ia.de: Das Spiel läuft komplett ohne KI, aber mit einem lokalen oder Online-[[KI-Gehirn]] in den Einstellungen beantworte ich jede Frage zu deinem Code.
+tip.juego_cerebros_ia.en: The whole game works without AI, and if you hook up a local or online [[AI brain]] in Settings I can answer any question about your code.
 ver: cerebro_local, cerebro_en_linea, tres_casillas
 es:
     Un cerebro de IA es un programa que entiende lo que escribes y contesta con sus palabras. El juego funciona entero sin él; con él, el entrenador responde a cualquier pregunta y la computadora inventa pullas nuevas.

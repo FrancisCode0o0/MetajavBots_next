@@ -7,31 +7,16 @@ import java.util.List;
 import java.util.Set;
 
 import metajavbots.progreso.Jugador;
+import metajavbots.textos.Idioma;
+import metajavbots.textos.T;
 
 /**
- * CONSEJOS DEL JUEGO — Selecciona consejos espontáneos del entrenador flotante
- * cubriendo tanto la programación (taller y buenas prácticas) como todas las
- * funcionalidades del juego (tutoriales, demostraciones, minijuegos, ejercicios,
- * la hora de hoy, mi temario, taller, tienda, depuración y testing, arena,
- * panel de la IA y ajustes), adaptando el orden al progreso del jugador.
+ * CONSEJOS DEL JUEGO — Combina consejos condicionales (según el progreso real
+ * del jugador: principiante, racha de derrotas u oxidado, monedas ahorradas, o
+ * código en el Taller) con consejos aleatorios de jugabilidad y funcionalidades
+ * del juego alimentados desde la base centralizada {@link ConocimientoDelEntrenador}.
  */
 public final class ConsejosDelJuego {
-
-    private static final ConsejosDelTaller.Tip TIP_EMPEZAR = new ConsejosDelTaller.Tip("juego_empezar_tutoriales", "tutoriales_y_demos");
-    private static final ConsejosDelTaller.Tip TIP_DEMOS = new ConsejosDelTaller.Tip("juego_demostraciones", "tutoriales_y_demos");
-    private static final ConsejosDelTaller.Tip TIP_OXIDADO = new ConsejosDelTaller.Tip("juego_oxidado_minijuegos", "minijuegos_y_ejercicios");
-    private static final ConsejosDelTaller.Tip TIP_HORA_DE_HOY = new ConsejosDelTaller.Tip("juego_hora_de_hoy", "hora_de_hoy_y_temario");
-    private static final ConsejosDelTaller.Tip TIP_TALLER = new ConsejosDelTaller.Tip("juego_taller", "taller_y_compilar");
-    private static final ConsejosDelTaller.Tip TIP_TIENDA = new ConsejosDelTaller.Tip("juego_tienda", "tienda_y_monedas");
-    private static final ConsejosDelTaller.Tip TIP_DEPURACION = new ConsejosDelTaller.Tip("juego_depuracion", "depuracion_y_testing");
-    private static final ConsejosDelTaller.Tip TIP_TEMARIO = new ConsejosDelTaller.Tip("juego_temario", "hora_de_hoy_y_temario");
-    private static final ConsejosDelTaller.Tip TIP_ARENA = new ConsejosDelTaller.Tip("juego_arena", "arena_y_modos");
-    private static final ConsejosDelTaller.Tip TIP_PANEL_IA = new ConsejosDelTaller.Tip("juego_panel_ia", "panel_ia_y_ajustes");
-    private static final ConsejosDelTaller.Tip TIP_AJUSTES = new ConsejosDelTaller.Tip("juego_ajustes", "panel_ia_y_ajustes");
-
-    private static final List<ConsejosDelTaller.Tip> TODOS_JUEGO = List.of(
-            TIP_EMPEZAR, TIP_DEMOS, TIP_OXIDADO, TIP_HORA_DE_HOY, TIP_TALLER,
-            TIP_TIENDA, TIP_DEPURACION, TIP_TEMARIO, TIP_ARENA, TIP_PANEL_IA, TIP_AJUSTES);
 
     private static final List<ConsejosDelTaller.Tip> PROGRAMACION_GENERAL = List.of(
             new ConsejosDelTaller.Tip("general_f2", "pseudocodigo"),
@@ -46,9 +31,46 @@ public final class ConsejosDelJuego {
     private ConsejosDelJuego() {
     }
 
-    /** Devuelve todos los consejos espontáneos sobre funcionalidades del juego. */
+    /** Devuelve todos los consejos espontáneos sobre funcionalidades del juego registrados. */
     public static List<ConsejosDelTaller.Tip> todosLosConsejosDeJuego() {
-        return TODOS_JUEGO;
+        List<ConsejosDelTaller.Tip> l = new ArrayList<>();
+        for (ConocimientoDelEntrenador.ConsejoJuego c : ConocimientoDelEntrenador.todosLosConsejos()) {
+            l.add(c.aTip());
+        }
+        return Collections.unmodifiableList(l);
+    }
+
+    /** Devuelve los consejos aleatorios de jugabilidad y funcionalidades del juego. */
+    public static List<ConsejosDelTaller.Tip> consejosAleatoriosDeJuego() {
+        List<ConsejosDelTaller.Tip> l = new ArrayList<>();
+        for (ConocimientoDelEntrenador.ConsejoJuego c : ConocimientoDelEntrenador.consejosPorCondicion(
+                ConocimientoDelEntrenador.CONDICION_ALEATORIO)) {
+            l.add(c.aTip());
+        }
+        return Collections.unmodifiableList(l);
+    }
+
+    /** Devuelve los consejos condicionales aplicables al estado actual del jugador. */
+    public static List<ConsejosDelTaller.Tip> consejosCondicionales(Jugador jugador) {
+        Set<ConsejosDelTaller.Tip> ordenados = new LinkedHashSet<>();
+        if (esPrincipiante(jugador)) {
+            agregarPorCondicion(ordenados, ConocimientoDelEntrenador.CONDICION_PRINCIPIANTE);
+        } else if (estaOxidado(jugador)) {
+            agregarPorCondicion(ordenados, ConocimientoDelEntrenador.CONDICION_OXIDADO);
+        }
+        if (jugador != null && jugador.monedas >= 2.0) {
+            agregarPorCondicion(ordenados, ConocimientoDelEntrenador.CONDICION_MONEDAS);
+        }
+        return Collections.unmodifiableList(new ArrayList<>(ordenados));
+    }
+
+    /** Devuelve el texto de cualquier consejo (de juego o de taller) en el idioma dado. */
+    public static String textoDelTip(ConsejosDelTaller.Tip tip, Idioma idioma) {
+        if (tip == null) return "";
+        Idioma id = idioma == null ? Idioma.ES : idioma;
+        String delConocimiento = ConocimientoDelEntrenador.textoDeConsejo(tip.id(), id);
+        if (delConocimiento != null && !delConocimiento.isBlank()) return delConocimiento;
+        return T.en("entrenador.tip." + tip.id(), id);
     }
 
     /** Indica si el jugador está empezando (sin victorias y con muy pocos tutoriales y ejercicios hechos). */
@@ -63,25 +85,16 @@ public final class ConsejosDelJuego {
         return jugador.derrotasSeguidas >= 2 || (jugador.derrotas() > jugador.victorias() && jugador.ejerciciosResueltos.size() < 5);
     }
 
-    /** Devuelve los consejos de funcionalidades del juego ordenados según el progreso del jugador. */
+    /** Devuelve los consejos de funcionalidades del juego ordenados priorizando condicionales del jugador. */
     public static List<ConsejosDelTaller.Tip> consejosDeJuego(Jugador jugador) {
-        Set<ConsejosDelTaller.Tip> ordenados = new LinkedHashSet<>();
-        if (esPrincipiante(jugador)) {
-            ordenados.add(TIP_EMPEZAR);
-            ordenados.add(TIP_DEMOS);
-            ordenados.add(TIP_OXIDADO);
-            ordenados.add(TIP_TALLER);
-        } else if (estaOxidado(jugador)) {
-            ordenados.add(TIP_OXIDADO);
-            ordenados.add(TIP_HORA_DE_HOY);
-            ordenados.add(TIP_DEPURACION);
-            ordenados.add(TIP_DEMOS);
-        }
-        if (jugador != null && jugador.monedas >= 2.0) {
-            ordenados.add(TIP_TIENDA);
-        }
-        ordenados.addAll(TODOS_JUEGO);
+        Set<ConsejosDelTaller.Tip> ordenados = new LinkedHashSet<>(consejosCondicionales(jugador));
+        ordenados.addAll(todosLosConsejosDeJuego());
         return Collections.unmodifiableList(new ArrayList<>(ordenados));
+    }
+
+    /** Devuelve los consejos generales de programación y buenas prácticas. */
+    public static List<ConsejosDelTaller.Tip> consejosGeneralesDeProgramacion() {
+        return PROGRAMACION_GENERAL;
     }
 
     /**
@@ -105,6 +118,12 @@ public final class ConsejosDelJuego {
         }
         intercalar(resultado, deJuego, PROGRAMACION_GENERAL);
         return resultado;
+    }
+
+    private static void agregarPorCondicion(Set<ConsejosDelTaller.Tip> destino, String condicion) {
+        for (ConocimientoDelEntrenador.ConsejoJuego c : ConocimientoDelEntrenador.consejosPorCondicion(condicion)) {
+            destino.add(c.aTip());
+        }
     }
 
     private static void intercalar(List<ConsejosDelTaller.Tip> destino, List<ConsejosDelTaller.Tip> primera,

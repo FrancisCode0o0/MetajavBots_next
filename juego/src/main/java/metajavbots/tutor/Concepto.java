@@ -29,9 +29,8 @@ public final class Concepto {
     /** Nivel máximo admitido en las pestañas de consulta del entrenador (1-5 programación, 6 el juego). */
     public static final int NIVEL_MAX = NIVEL_JUEGO;
 
-    /** Los archivos de conceptos, en orden (de lo básico a lo avanzado, y al final el propio juego). */
-    static final String[] ARCHIVOS = {"01_basico.txt", "02_control.txt", "03_objetos.txt", "04_intermedio.txt", "05_moderno.txt", "06_senior.txt",
-        "07_juego.txt"};
+    /** Los archivos de conceptos de programación, en orden (el juego se carga desde ConocimientoDelEntrenador). */
+    static final String[] ARCHIVOS = {"01_basico.txt", "02_control.txt", "03_objetos.txt", "04_intermedio.txt", "05_moderno.txt", "06_senior.txt"};
 
     public final String id, tema, ejemplo;
     public final int nivel;
@@ -65,6 +64,23 @@ public final class Concepto {
             claves.put(i, k);
         }
         ejemplo = String.join("\n", bloques.getOrDefault("ejemplo", List.of())).stripTrailing();
+    }
+
+    Concepto(String id, int nivel, int guia, String tema, Trilingue titulo, Map<Idioma, List<String>> parrafos,
+            Map<Idioma, List<String>> claves, Map<Idioma, String> pseudo, String ejemplo, List<String> ver) {
+        this.id = id;
+        this.nivel = nivel;
+        this.guia = guia;
+        this.tema = tema == null ? "--" : tema;
+        this.titulo = titulo;
+        this.ver = Collections.unmodifiableList(new ArrayList<>(ver));
+        for (Idioma i : Idioma.values()) {
+            this.parrafos.put(i, parrafos.getOrDefault(i, List.of()));
+            this.pseudo.put(i, pseudo.getOrDefault(i, ""));
+            this.titulosNormalizados.put(i, normalizar(titulo.en(i)));
+            this.claves.put(i, claves.getOrDefault(i, List.of()));
+        }
+        this.ejemplo = ejemplo == null ? "" : ejemplo;
     }
 
     private static int entero(String s) {
@@ -226,6 +242,7 @@ public final class Concepto {
         if (todos == null) {
             List<Concepto> l = new ArrayList<>();
             for (String a : ARCHIVOS) leer("/conceptos/" + a, l);
+            l.addAll(ConocimientoDelEntrenador.comoConceptos());
             todos = Collections.unmodifiableList(l);
         }
         return todos;
