@@ -22,6 +22,8 @@ import metajavbots.combate.DificultadCarrera;
 import metajavbots.combate.Fabrica;
 import metajavbots.combate.MinijuegoDestruccion;
 import metajavbots.combate.Pelea;
+import metajavbots.combate.RobotAveriadoDestruccion;
+import metajavbots.combate.Suceso;
 import metajavbots.pantallas.ConsultaIaEntrenador;
 import metajavbots.pantallas.MiniJuegos;
 import metajavbots.pantallas.ModoEspecial;
@@ -61,10 +63,38 @@ final class PruebasDeMinijuegoDestruccion {
         }
     }
 
+    /** Robot que avanza recto para probar sesgo espacial de obstáculos en su trayectoria. */
+    public static class CorredorRecto extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            avanzar(40);
+        }
+    }
+
+    /** Robot que cambia de rumbo continuamente en zigzag para probar movimiento imprevisible. */
+    public static class ZigzagEvasivo extends Metajavbot {
+        private int paso;
+
+        @Override
+        public void cadaTurno() {
+            paso++;
+            if (x() < 260 || x() > anchoArena() - 260 || y() < 160 || y() > altoArena() - 160) {
+                girarHacia(Math.toDegrees(Math.atan2(altoArena() / 2.0 - y(), anchoArena() / 2.0 - x())));
+            } else if ((paso / 5) % 2 == 0) {
+                girar(24);
+            } else {
+                girar(-24);
+            }
+            avanzar(45);
+        }
+    }
+
     static void apuntar() {
         apuntarArena3xYCuentaAtras();
         apuntarAparicionesCieloYSuelo();
+        apuntarPrevisibilidadCaidasCielo();
         apuntarDanoDobleQueCarrera();
+        apuntarLetalidadRealYRobotsAgresivos();
         apuntarRecompensasExactasEnCentesimas();
         apuntarDificultadModelosYPiezasEnMenu();
         apuntarPlantillasUiYEntrenador();
@@ -91,6 +121,7 @@ final class PruebasDeMinijuegoDestruccion {
 
             Combatiente jug = new Combatiente("Superviviente", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
             MinijuegoDestruccion reto = new MinijuegoDestruccion(jug, 123L, null, DificultadCarrera.NOOB, 1, 90);
+            reto.pelea.resistencia[0] = 0.0;
             igual(MinijuegoDestruccion.ANCHO, reto.pelea.ancho, "pelea usa ancho 3x");
             igual(MinijuegoDestruccion.ALTO, reto.pelea.alto, "pelea usa alto estándar");
             igual(90, reto.turnosRestantes(), "cuenta atrás empieza en 90 turnos");
@@ -109,28 +140,45 @@ final class PruebasDeMinijuegoDestruccion {
     }
 
     private static void apuntarAparicionesCieloYSuelo() {
-        caso("minijuego destrucción: apariciones de cielo y suelo seguras y detectables en obstaculos()/enemigosVistos()", () -> {
+        caso("minijuego destrucción: apariciones en trayectoria, caídas con sombra previa (~0,8 s) y detección", () -> {
+            // La sombra de caída desde el cielo dura ~0,6–0,9 s (18–27 turnos a 30 turnos/s).
+            cierto(MinijuegoDestruccion.TURNOS_AVISO_CIELO >= 18 && MinijuegoDestruccion.TURNOS_AVISO_CIELO <= 27,
+                    "aviso previo de caída en 0,6–0,9 s: " + MinijuegoDestruccion.TURNOS_AVISO_CIELO);
+
+            // Sesgo espacial del suelo delante de la trayectoria de un robot que avanza en rumbo 0.
+            Combatiente corredor = new Combatiente("Corredor", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(CorredorRecto::new));
+            MinijuegoDestruccion retoTray = new MinijuegoDestruccion(corredor, 456L, null, DificultadCarrera.NOOB, 1, 600);
+            Cuerpo cTray = retoTray.pelea.cuerpo(0);
+            cTray.x = 600;
+            int avisosSuelo = 0;
+            int delanteTrayectoria = 0;
+            for (int t = 0; t < 260 && !retoTray.terminada(); t++) {
+                for (int k = 0; k < 4; k++) cTray.parte[k] = cTray.parteMax[k];
+                int antes = retoTray.avisosActivos().size();
+                retoTray.avanzar();
+                if (retoTray.avisosActivos().size() > antes) {
+                    for (MinijuegoDestruccion.AvisoAparicion a : retoTray.avisosActivos()) {
+                        if (!a.desdeCielo && a.turnosRestantes() == a.turnosTotales - 1) {
+                            avisosSuelo++;
+                            if (a.x > cTray.x && Math.abs(a.y - cTray.y) <= 130) delanteTrayectoria++;
+                        }
+                    }
+                }
+            }
+            cierto(avisosSuelo >= 4, "brotaron suficientes avisos de suelo: " + avisosSuelo);
+            cierto(delanteTrayectoria >= avisosSuelo / 2,
+                    "sesgo espacial delante de la trayectoria (" + delanteTrayectoria + "/" + avisosSuelo + ")");
+
+            // Un jugador detecta obstáculos del suelo y robots averiados caídos del cielo.
             Combatiente jug = new Combatiente("Observador", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
-            MinijuegoDestruccion reto = new MinijuegoDestruccion(jug, 456L, null, DificultadCarrera.JUNIOR, 2, 420);
+            MinijuegoDestruccion reto = new MinijuegoDestruccion(jug, 456L, null, DificultadCarrera.JUNIOR, 2, 480);
             Cuerpo c0 = reto.pelea.cuerpo(0);
             igual(0, reto.totalAparicionesSuelo(), "sin apariciones de suelo en turno 0");
             igual(0, reto.totalAparicionesCielo(), "sin robots caídos en turno 0");
-
-            for (int t = 0; t < 160 && !reto.terminada(); t++) {
+            for (int t = 0; t < 260 && !reto.terminada(); t++) {
                 for (int k = 0; k < 4; k++) c0.parte[k] = c0.parteMax[k];
+                c0.aturdido = 0;
                 reto.avanzar();
-                for (Arena.Trampa tr : reto.pelea.arena.trampas()) {
-                    if (tr.aparicion() == 36) {
-                        double d = Math.hypot(tr.x - c0.x, tr.y - c0.y);
-                        cierto(d >= c0.radio + tr.radio + 40.0, "objeto del suelo no aparece encima del jugador (dist=" + d + ")");
-                    }
-                }
-                for (Cuerpo r : reto.robotsActivos()) {
-                    if (r.cayendo == 14) {
-                        double d = Math.hypot(r.x - c0.x, r.y - c0.y);
-                        cierto(d >= c0.radio + r.radio + 40.0, "robot del cielo no cae encima del jugador (dist=" + d + ")");
-                    }
-                }
             }
             cierto(reto.totalAparicionesSuelo() >= 1, "brotaron objetos/trampas del suelo: " + reto.totalAparicionesSuelo());
             cierto(reto.totalAparicionesCielo() >= 1, "cayeron robots averiados del cielo: " + reto.totalAparicionesCielo());
@@ -150,8 +198,91 @@ final class PruebasDeMinijuegoDestruccion {
         });
     }
 
+    private static void apuntarPrevisibilidadCaidasCielo() {
+        caso("minijuego destrucción: caídas cerca por defecto; directas muy raras solo si es previsible", () -> {
+            // Movimiento imprevisible (cambia de rumbo continuamente sin atascarse): 0 caídas directas, todas cerca.
+            Combatiente evasivo = new Combatiente("Evasivo", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(ZigzagEvasivo::new));
+            MinijuegoDestruccion retoImp = new MinijuegoDestruccion(evasivo, 707L, null, DificultadCarrera.JUNIOR, 2, 720);
+            retoImp.pelea.resistencia[0] = 0.0;
+            Cuerpo cImp = retoImp.pelea.cuerpo(0);
+            int avisosCieloImp = 0;
+            int avisosCercaImp = 0;
+            for (int t = 0; t < 650 && !retoImp.terminada(); t++) {
+                for (int k = 0; k < 4; k++) cImp.parte[k] = cImp.parteMax[k];
+                cImp.aturdido = 0;
+                double prevX = cImp.x;
+                double prevY = cImp.y;
+                retoImp.avanzar();
+                if (Math.hypot(cImp.x - prevX, cImp.y - prevY) < 2.0) {
+                    cImp.rumbo = Pelea.normal(cImp.rumbo + 75.0);
+                    cImp.x = Math.max(220, Math.min(MinijuegoDestruccion.ANCHO - 220, cImp.x + Math.cos(Math.toRadians(cImp.rumbo)) * 18.0));
+                    cImp.y = Math.max(150, Math.min(MinijuegoDestruccion.ALTO - 150, cImp.y + Math.sin(Math.toRadians(cImp.rumbo)) * 18.0));
+                }
+                for (MinijuegoDestruccion.AvisoAparicion a : retoImp.avisosActivos()) {
+                    if (a.desdeCielo && a.turnosRestantes() == a.turnosTotales - 1) {
+                        avisosCieloImp++;
+                        double dist = Math.hypot(a.x - cImp.x, a.y - cImp.y);
+                        double radioImpacto = cImp.radio + a.radio + MinijuegoDestruccion.MARGEN_IMPACTO_CAIDA;
+                        cierto(!a.directa, "sin caídas directas cuando el movimiento es imprevisible");
+                        if (dist >= radioImpacto && dist <= MinijuegoDestruccion.DISTANCIA_MAX_CAIDA_CERCA + 100.0) {
+                            avisosCercaImp++;
+                        }
+                    }
+                }
+            }
+            falso(retoImp.jugadorPrevisible(), "el jugador en zigzag no se clasifica como previsible");
+            cierto(retoImp.totalAparicionesCielo() >= 6, "cayeron suficientes robots en modo imprevisible: " + retoImp.totalAparicionesCielo());
+            igual(0, retoImp.totalCaidasDirectas(), "0 caídas directas si el jugador varía el rumbo");
+            igual(retoImp.totalAparicionesCielo(), retoImp.totalCaidasCerca(), "todas las caídas aterrizan cerca si es imprevisible");
+            igual(avisosCieloImp, avisosCercaImp, "todos los avisos de caída aterrizan cerca fuera del impacto directo instantáneo");
+
+            // Movimiento previsible (quieto): mayoría cerca, solo muy pocas caídas directas y con aviso previo de sombra.
+            Combatiente quieto = new Combatiente("QuietoPrev", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            MinijuegoDestruccion retoPrev = new MinijuegoDestruccion(quieto, 456L, null, DificultadCarrera.SENIOR, 2, 1400);
+            retoPrev.pelea.resistencia[0] = 0.0;
+            Cuerpo cPrev = retoPrev.pelea.cuerpo(0);
+            int impactosQuieto = 0;
+            for (int t = 0; t < 1300 && !retoPrev.terminada(); t++) {
+                for (int k = 0; k < 4; k++) cPrev.parte[k] = cPrev.parteMax[k];
+                cPrev.aturdido = 0;
+                retoPrev.avanzar();
+                for (Suceso s : retoPrev.pelea.sucesos()) {
+                    if (s.tipo == Suceso.Tipo.EXPLOSION && "caida_robot".equals(s.texto)) impactosQuieto++;
+                }
+            }
+            cierto(retoPrev.jugadorPrevisible(), "un jugador quieto se clasifica como previsible");
+            cierto(retoPrev.totalAparicionesCielo() >= 10, "cayeron suficientes robots en modo previsible: " + retoPrev.totalAparicionesCielo());
+            cierto(retoPrev.totalCaidasDirectas() >= 1, "ocurre al menos una caída directa si es previsible: " + retoPrev.totalCaidasDirectas());
+            cierto(retoPrev.totalCaidasCerca() > retoPrev.totalCaidasDirectas(),
+                    "la mayoría de caídas siguen cayendo cerca (" + retoPrev.totalCaidasCerca() + " vs " + retoPrev.totalCaidasDirectas() + ")");
+            cierto(retoPrev.totalCaidasDirectas() * 3 <= retoPrev.totalAparicionesCielo(),
+                    "las caídas directas son una minoría muy baja (" + retoPrev.totalCaidasDirectas() + "/" + retoPrev.totalAparicionesCielo() + ")");
+            cierto(impactosQuieto >= 1, "un jugador quieto recibe impacto si no se aparta de la caída directa");
+
+            // Apartarse durante la sombra evita el impacto incluso en una caída directa.
+            Combatiente esquiva = new Combatiente("EsquivaPrev", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            MinijuegoDestruccion retoEsq = new MinijuegoDestruccion(esquiva, 456L, null, DificultadCarrera.SENIOR, 2, 1400);
+            retoEsq.pelea.resistencia[0] = 0.0;
+            Cuerpo cEsq = retoEsq.pelea.cuerpo(0);
+            int impactosEsquivando = 0;
+            for (int t = 0; t < 1300 && !retoEsq.terminada(); t++) {
+                for (int k = 0; k < 4; k++) cEsq.parte[k] = cEsq.parteMax[k];
+                for (MinijuegoDestruccion.AvisoAparicion a : retoEsq.avisosActivos()) {
+                    if (a.desdeCielo && Math.hypot(a.x - cEsq.x, a.y - cEsq.y) < cEsq.radio + a.radio + 45) {
+                        cEsq.x = Math.min(MinijuegoDestruccion.ANCHO - 120, a.x + 170);
+                    }
+                }
+                retoEsq.avanzar();
+                for (Suceso s : retoEsq.pelea.sucesos()) {
+                    if (s.tipo == Suceso.Tipo.EXPLOSION && "caida_robot".equals(s.texto)) impactosEsquivando++;
+                }
+            }
+            igual(0, impactosEsquivando, "apartarse durante la sombra evita el impacto de caída directa");
+        });
+    }
+
     private static void apuntarDanoDobleQueCarrera() {
-        caso("destrucción y supervivencia: daño recibido >= 2.0x que en Carrera (+60 % sobre 1.25x) y ubicación en ModoEspecial", () -> {
+        caso("destrucción y supervivencia: reducción exacta −20 % (×0,80) en daño y progresión Noob→Especial", () -> {
             cierto(ModoEspecial.CLAVES_PESTANAS.contains("especial.destruccion"),
                     "ModoEspecial incluye la pestaña especial.destruccion");
             falso(ModoEspecial.CLAVES_PESTANAS.contains("especial.carrera"),
@@ -164,7 +295,11 @@ final class PruebasDeMinijuegoDestruccion {
             pStd.empezarRonda();
             igual(1.0, pStd.multiplicadorDano, "Pelea estándar conserva multiplicador 1.0");
 
+            double prevMultDif = 0.0;
             for (DificultadCarrera dif : DificultadCarrera.values()) {
+                double multSub1 = MinijuegoDestruccion.multiplicadorDanoPara(dif, 1);
+                cierto(multSub1 > prevMultDif, "multiplicador crece con dificultad en " + dif + ": " + multSub1 + " > " + prevMultDif);
+                prevMultDif = multSub1;
                 for (int sub = DificultadCarrera.SUBNIVEL_MIN; sub <= DificultadCarrera.SUBNIVEL_MAX; sub++) {
                     Combatiente jCar = new Combatiente("Car", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                     Combatiente rCar = new Combatiente("Riv", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
@@ -174,19 +309,20 @@ final class PruebasDeMinijuegoDestruccion {
                     Combatiente jMini = new Combatiente("Mini", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                     MinijuegoDestruccion mini = new MinijuegoDestruccion(jMini, 77L, null, dif, sub);
                     double multMini = mini.pelea.multiplicadorDano;
-                    double multAnterior = multCarrera * (1.25 + (sub - 1) * 0.05);
+                    double multPrevioEndurecimiento = multCarrera * (2.60 + (sub - 1) * 0.12);
+                    double esperadoTrasReduccion = multPrevioEndurecimiento * 0.80;
 
+                    cierto(Math.abs(multMini - esperadoTrasReduccion) < 1e-9,
+                            dif + " sub " + sub + ": mult destrucción (" + multMini + ") == 0.80× previo (" + esperadoTrasReduccion + ")");
                     cierto(multMini >= multCarrera * 2.0 - 1e-9,
                             dif + " sub " + sub + ": mult destrucción (" + multMini + ") >= 2.0x carrera (" + (multCarrera * 2.0) + ")");
-                    cierto(multMini >= multAnterior * 1.60 - 1e-9,
-                            dif + " sub " + sub + ": mult destrucción (" + multMini + ") >= 1.60x previo (" + (multAnterior * 1.60) + ")");
 
                     // Mismo golpe equivalente sin saturar el blindaje de una pieza (trampa y disparo de robot defectuoso).
                     carrera.pelea.golpeEspecial(0, 0, 3.0, "trampa");
                     mini.pelea.golpeEspecial(0, 0, 3.0, "trampa");
-                    cierto(jMini.danoTotalRecibido >= jCar.danoTotalRecibido * 2.0 - 1e-6,
-                            dif + " sub " + sub + ": daño trampa (" + jMini.danoTotalRecibido + ") >= 2.0x carrera ("
-                                    + (jCar.danoTotalRecibido * 2.0) + ")");
+                    double esperadoTrampa = jCar.danoTotalRecibido * (2.60 + (sub - 1) * 0.12) * 0.80;
+                    cierto(Math.abs(jMini.danoTotalRecibido - esperadoTrampa) < 1e-4,
+                            dif + " sub " + sub + ": daño trampa (" + jMini.danoTotalRecibido + ") == −20 % del previo (" + esperadoTrampa + ")");
 
                     double antesCar = jCar.danoTotalRecibido;
                     double antesMini = jMini.danoTotalRecibido;
@@ -198,6 +334,65 @@ final class PruebasDeMinijuegoDestruccion {
                             dif + " sub " + sub + ": daño defectuoso (" + dDefMini + ") >= 2.0x carrera (" + (dDefCar * 2.0) + ")");
                 }
             }
+        });
+    }
+
+    private static void apuntarLetalidadRealYRobotsAgresivos() {
+        caso("destrucción y supervivencia: daño ajustado −20 % (3-4 golpes >= 40-50 % en Noob) y robots agresivos", () -> {
+            // En Noob I sobre Cobalto (~391 blindaje), 4 golpes de bala defectuosa quitan ~47 % (tras −20 %).
+            Combatiente jNoob = new Combatiente("CobaltoNoob", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            MinijuegoDestruccion miniNoob = new MinijuegoDestruccion(jNoob, 88L, null, DificultadCarrera.NOOB, 1);
+            Cuerpo cNoob = miniNoob.pelea.cuerpo(0);
+            double blindMax = cNoob.blindajeMaximoTotal();
+            for (int k = 0; k < 4 && !cNoob.fuera; k++) {
+                miniNoob.pelea.golpeEspecial(1, 0, 5.0, "bala");
+            }
+            double perdidoBalas = (1.0 - cNoob.blindajeQueQueda() / blindMax) * 100.0;
+            cierto(cNoob.fuera || (perdidoBalas >= 40.0 && perdidoBalas < 55.0),
+                    "4 balas en Noob I quitan 40-55 % de blindaje tras −20 % (perdido=" + perdidoBalas + "%)");
+
+            // Impacto de caída de robot: 3 golpes de caída quitan ~45 % en Noob I (tras −20 %).
+            Combatiente jCaida = new Combatiente("CobaltoCaida", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            MinijuegoDestruccion miniCaida = new MinijuegoDestruccion(jCaida, 89L, null, DificultadCarrera.NOOB, 1);
+            Cuerpo cCaida = miniCaida.pelea.cuerpo(0);
+            for (int k = 0; k < 3 && !cCaida.fuera; k++) {
+                miniCaida.pelea.golpeEspecial(0, 0, MinijuegoDestruccion.DANO_BASE_CAIDA_NORMAL, "caida_robot");
+            }
+            double perdidoCaida = (1.0 - cCaida.blindajeQueQueda() / cCaida.blindajeMaximoTotal()) * 100.0;
+            cierto(cCaida.fuera || (perdidoCaida >= 40.0 && perdidoCaida < 55.0),
+                    "3 impactos de caída en Noob I quitan 40-55 % tras −20 % (perdido=" + perdidoCaida + "%)");
+
+            // Escalado creciente de daño efectivo en Noob < Junior < Senior < Especial.
+            double prevMult = 0;
+            for (DificultadCarrera dif : DificultadCarrera.values()) {
+                double m = MinijuegoDestruccion.multiplicadorDanoPara(dif, 1) * MinijuegoDestruccion.escalaDanoDefectuosoPara(dif, 1);
+                cierto(m > prevMult, "daño crece en " + dif + ": " + m + " > " + prevMult);
+                prevMult = m;
+            }
+
+            // Robot averiado agresivo: al detectar al jugador se acerca y le acierta disparos reales.
+            Combatiente blanco = new Combatiente("Blanco", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            Combatiente agresivo = combatienteConBala("AveriadoAgresivo",
+                    PruebasDeLaPelea.de(() -> new RobotAveriadoDestruccion(false, 12, 10.0)));
+            agresivo.defectuoso = true;
+            agresivo.escalaDano = MinijuegoDestruccion.escalaDanoDefectuosoPara(DificultadCarrera.NOOB, 1);
+            Pelea p = new Pelea(blanco, agresivo, 321L);
+            p.multiplicadorDano = MinijuegoDestruccion.multiplicadorDanoPara(DificultadCarrera.NOOB, 1);
+            p.empezarRonda();
+            Cuerpo cb = p.cuerpo(0);
+            Cuerpo ca = p.cuerpo(1);
+            cb.x = 300; cb.y = 350;
+            ca.x = 680; ca.y = 350; ca.rumbo = 180; ca.mira = 180;
+            double distInicial = Math.hypot(ca.x - cb.x, ca.y - cb.y);
+            double distMin = distInicial;
+            for (int t = 0; t < 180 && !cb.fuera; t++) {
+                p.avanzar();
+                distMin = Math.min(distMin, Math.hypot(ca.x - cb.x, ca.y - cb.y));
+            }
+            cierto(distMin < distInicial - 80.0,
+                    "robot averiado agresivo se acerca hacia el jugador (distInicial=" + distInicial + ", distMin=" + distMin + ")");
+            cierto(blanco.danoTotalRecibido > 80.0,
+                    "robot averiado agresivo dispara hacia el jugador y le inflige daño real: " + blanco.danoTotalRecibido);
         });
     }
 
@@ -388,7 +583,8 @@ final class PruebasDeMinijuegoDestruccion {
                 for (String k : claves) {
                     String val = T.en(k, id);
                     cierto(val != null && !val.isBlank() && !val.equals(k), "clave ui.txt presente en " + id + ": " + k);
-                    falso(val.contains("+25 %") || val.contains("+25%"), "sin cifras desfasadas +25% en " + k + " (" + id + ")");
+                    falso(val.contains("+25 %") || val.contains("+25%") || val.contains("2,6×") || val.contains("2.6×"),
+                            "sin cifras desfasadas en " + k + " (" + id + ")");
                 }
             }
 
@@ -396,9 +592,9 @@ final class PruebasDeMinijuegoDestruccion {
             cierto(entrada != null, "existe ficha minijuego_destruccion en ConocimientoDelEntrenador");
             cierto(!entrada.consejos().isEmpty(), "existe consejo espontáneo para minijuego_destruccion");
             String[][] consultas = {
-                    {"destrucción y supervivencia", "ES", "modo especial", "2,0×", "60 %", "0,5", "1/4"},
-                    {"Zerstörung und Überleben", "DE", "spezialmodus", "2,0×", "60 %", "0,5", "1/4"},
-                    {"destruction and survival", "EN", "special mode", "2.0×", "60%", "0.5", "1/4"}
+                    {"destrucción y supervivencia", "ES", "modo especial", "2,08×", "40 %", "0,5", "1/4"},
+                    {"Zerstörung und Überleben", "DE", "spezialmodus", "2,08×", "40", "0,5", "1/4"},
+                    {"destruction and survival", "EN", "special mode", "2.08×", "40", "0.5", "1/4"}
             };
             for (String[] q : consultas) {
                 Idioma id = Idioma.valueOf(q[1]);
@@ -408,14 +604,14 @@ final class PruebasDeMinijuegoDestruccion {
                 String texto = String.join(" ", res.get(0).parrafos(id)).toLowerCase(Locale.ROOT);
                 cierto(texto.contains(q[2]) && texto.contains(q[3]) && texto.contains(q[4])
                         && texto.contains(q[5]) && texto.contains(q[6]),
-                        "ficha del entrenador actualizada (Modo especial y daño >= 2.0x) en " + id);
+                        "ficha del entrenador actualizada (Modo especial y daño >= 2.08x) en " + id);
                 String tip = ConsejosDelJuego.textoDelTip(entrada.consejos().get(0).aTip(), id);
                 cierto(tip != null && !tip.isBlank() && tip.toLowerCase(Locale.ROOT).contains(q[2]),
                         "consejo espontáneo apunta a Modo especial en " + id);
                 String sistemaIa = ConsultaIaEntrenador.construirSistema(new Jugador("Test"), id, null).toLowerCase(Locale.ROOT);
                 cierto(sistemaIa.contains("destruction & survival") && sistemaIa.contains("special mode")
-                        && sistemaIa.contains("3x") && sistemaIa.contains("2.0x")
-                        && sistemaIa.contains("60%") && sistemaIa.contains("+0.5") && sistemaIa.contains("1/4"),
+                        && sistemaIa.contains("3x") && sistemaIa.contains("2.08x")
+                        && sistemaIa.contains("40") && sistemaIa.contains("+0.5") && sistemaIa.contains("1/4"),
                         "sistema IA actualizado con Destrucción y supervivencia en Modo especial en " + id);
             }
         });

@@ -69,10 +69,13 @@ final class DibujoMinijuegoDestruccion {
             float ry = (float) a.radio * vista.escalaY();
             float prog = a.progreso();
             if (a.desdeCielo) {
-                p.elipse(cx, cy, rx * (0.45f + 0.7f * prog), ry * (0.45f + 0.7f * prog), 0, 0x05070A, 0.25f + 0.45f * prog);
-                p.aro(cx, cy, rx * (1.5f - 0.5f * prog), 2.8f, 0xFF5A36, 0.45f + 0.5f * prog);
+                p.elipse(cx, cy, rx * (0.45f + 0.75f * prog), ry * (0.45f + 0.75f * prog), 0, 0x05070A, 0.32f + 0.48f * prog);
+                p.aro(cx, cy, rx * (1.55f - 0.55f * prog), 3.0f, 0xFF4536, 0.50f + 0.50f * prog);
+                float cruz = rx * 0.45f;
+                p.linea(cx - cruz, cy, cx + cruz, cy, 2.2f, 0xFF4536, 0.45f + 0.50f * prog);
+                p.linea(cx, cy - cruz * 0.65f, cx, cy + cruz * 0.65f, 2.2f, 0xFF4536, 0.45f + 0.50f * prog);
                 float altura = (1f - prog) * rx * 5.2f;
-                p.linea(cx, cy - altura - 28, cx, cy - altura, 3f, 0xFFC857, 0.75f);
+                p.linea(cx, cy - altura - 28, cx, cy - altura, 3f, 0xFFC857, 0.80f);
             } else {
                 p.elipse(cx, cy, rx * (0.6f + 0.4f * prog), ry * (0.6f + 0.4f * prog), 0, 0xD97236, 0.28f + 0.35f * prog);
                 p.aro(cx, cy, rx * (0.5f + 0.65f * prog), 2.4f, 0xFFC857, 0.5f + 0.45f * prog);

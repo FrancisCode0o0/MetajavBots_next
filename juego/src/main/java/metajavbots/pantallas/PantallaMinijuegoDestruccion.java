@@ -200,9 +200,12 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         return EntrenadorFlotante.contextoDeCodigo(
                 "The player is in Destruction & Survival (Special mode -> Destruction & Survival), "
                         + "difficulty " + dificultad.name() + " " + DificultadCarrera.etiquetaSubnivel(subnivel)
-                        + " in a 3x arena with a 60s countdown, falling broken robots from the sky, sprouting ground objects/traps, "
-                        + "very high incoming damage at least 2.0x Obstacle race (+60% more lethal than before), 0.1–0.6 coins per destroyed target, "
-                        + "+0.5 bonus for surviving, and 1/4 loot on early death (0 on surrender).",
+                        + " in a 3x arena with a 60s countdown, aggressive erratic broken robots falling from the sky "
+                        + "(able to target right on or near the player after a ~0.8s shadow warning, dealing heavy landing impact damage if not dodged, "
+                        + "and actively chasing and shooting toward the player with slight scatter), "
+                        + "ground objects/traps sprouting frequently ahead of the player's path, "
+                        + "very lethal incoming damage (>= 2.6x Obstacle race: 3-4 hits strip at least 50-60% armor even on Noob), "
+                        + "0.1–0.6 coins per destroyed target, +0.5 bonus for surviving, and 1/4 loot on early death (0 on surrender).",
                 editor);
     }
 

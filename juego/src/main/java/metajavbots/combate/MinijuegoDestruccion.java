@@ -37,25 +37,39 @@ public final class MinijuegoDestruccion {
     public static final int DURACION_SEGUNDOS = 60;
     /** Turnos totales de la cuenta atrás (60 s × 30 turnos/s = 1800 turnos). */
     public static final int TURNOS_CUENTA_ATRAS = DURACION_SEGUNDOS * Pelea.TURNOS_POR_SEGUNDO;
-    /** Multiplicador mínimo de daño recibido sobre la Carrera de obstáculos (≥ 2,0×, +60 % sobre el 1,25× previo). */
-    public static final double FACTOR_DANO_SOBRE_CARRERA = 2.00;
-    /** Incremento adicional del factor de daño por cada subnivel por encima de I (+60 % sobre el 0,05 previo). */
-    public static final double INCREMENTO_DANO_SUBNIVEL = 0.08;
+    /** Multiplicador mínimo de daño recibido sobre la Carrera de obstáculos (≥ 2,08× tras ajuste −20 %). */
+    public static final double FACTOR_DANO_SOBRE_CARRERA = 2.08;
+    /** Incremento adicional del factor de daño por cada subnivel por encima de I (0,12 × 0,80). */
+    public static final double INCREMENTO_DANO_SUBNIVEL = 0.096;
+    /** Probabilidad base de caída directa sobre el jugador cuando su movimiento es previsible. */
+    public static final double PROB_CAIDA_DIRECTA_BASE = 0.12;
+    /** Incremento de probabilidad de caída directa por nivel de dificultad cuando el jugador es previsible. */
+    public static final double INCREMENTO_PROB_CAIDA_DIRECTA = 0.02;
+    /** Distancia mínima al jugador para caídas cercanas por defecto (fuera del impacto directo instantáneo). */
+    public static final double DISTANCIA_MIN_CAIDA_CERCA = 135.0;
+    /** Distancia máxima al jugador para caídas cercanas por defecto (anillo de presión media-corta). */
+    public static final double DISTANCIA_MAX_CAIDA_CERCA = 295.0;
+    /** Daño base (antes del multiplicador del modo) al caer un robot normal del cielo encima del jugador. */
+    public static final double DANO_BASE_CAIDA_NORMAL = 10.5;
+    /** Daño base (antes del multiplicador del modo) al caer un robot pesado del cielo encima del jugador. */
+    public static final double DANO_BASE_CAIDA_PESADO = 13.0;
+    /** Margen adicional sobre la suma de radios dentro del cual un robot al caer golpea al jugador. */
+    public static final double MARGEN_IMPACTO_CAIDA = 26.0;
     /** Recompensa mínima en centésimas por objetivo destruido (0,10 monedas). */
     public static final int MIN_CENTIMOS_OBJETIVO = 10;
     /** Recompensa máxima en centésimas por objetivo destruido (0,60 monedas). */
     public static final int MAX_CENTIMOS_OBJETIVO = 60;
     /** Bono adicional en centésimas por sobrevivir hasta el final de la cuenta atrás (+0,50 monedas). */
     public static final int BONO_SUPERVIVENCIA_CENTIMOS = 50;
-    /** Margen mínimo de seguridad respecto al robot del jugador al aparecer un peligro o caída. */
-    public static final double MARGEN_SEGURIDAD_APARICION = 115.0;
-    /** Turnos de sombra/aviso visual en el suelo antes de que impacte un robot del cielo. */
+    /** Margen mínimo respecto al jugador al programar un obstáculo o trampa del suelo. */
+    public static final double MARGEN_SEGURIDAD_APARICION = 65.0;
+    /** Turnos de sombra/aviso visual en el suelo antes de que impacte un robot del cielo (24 turnos = 0,80 s). */
     public static final int TURNOS_AVISO_CIELO = 24;
-    /** Turnos de aviso visual en el suelo antes de que brote un objeto o trampa. */
+    /** Turnos de aviso visual en el suelo antes de que brote un objeto o trampa (18 turnos = 0,60 s). */
     public static final int TURNOS_AVISO_SUELO = 18;
 
     private static final int TAMANO_RESERVA_ROBOTS = 14;
-    private static final int MAX_OBJETOS_SUELO = 24;
+    private static final int MAX_OBJETOS_SUELO = 32;
     private static final int TURNOS_RECICLADO_ROBOT = 45;
 
     /** Aviso visual previo a la aparición de un robot que cae del cielo o un objeto/trampa que brota del suelo. */
@@ -70,17 +84,20 @@ public final class MinijuegoDestruccion {
         public final boolean desdeCielo;
         /** Tipo del elemento ("robot", "caja", "barril", "chimenea", "pinchos", "sierra", "bloque"). */
         public final String tipo;
+        /** True si es una caída directa dirigida a la posición actual/proyectada del jugador. */
+        public final boolean directa;
         /** Duración total del aviso en turnos. */
         public final int turnosTotales;
         /** Turnos restantes hasta la aparición efectiva. */
         private int turnosRestantes;
 
-        AvisoAparicion(double x, double y, double radio, boolean desdeCielo, String tipo, int turnosTotales) {
+        AvisoAparicion(double x, double y, double radio, boolean desdeCielo, String tipo, int turnosTotales, boolean directa) {
             this.x = x;
             this.y = y;
             this.radio = radio;
             this.desdeCielo = desdeCielo;
             this.tipo = tipo;
+            this.directa = directa;
             this.turnosTotales = Math.max(1, turnosTotales);
             this.turnosRestantes = this.turnosTotales;
         }
@@ -110,6 +127,7 @@ public final class MinijuegoDestruccion {
     public final int turnosTotales;
 
     private final Random azar;
+    private final PrevisibilidadJugador previsibilidad = new PrevisibilidadJugador();
     private final List<AvisoAparicion> avisos = new ArrayList<>();
     private final boolean[] robotPesado;
     private final int[] turnosCaido;
@@ -117,6 +135,8 @@ public final class MinijuegoDestruccion {
     private int proximoAvisoCielo;
     private int totalAparicionesSuelo;
     private int totalAparicionesCielo;
+    private int totalCaidasDirectas;
+    private int totalCaidasCerca;
     private int objetosDestruidos;
     private int robotsDestruidos;
     private int botinAcumuladoCentimos;
@@ -158,17 +178,18 @@ public final class MinijuegoDestruccion {
         this.pelea.rondas = 1;
         this.pelea.sinFinPorEquipos = true;
         this.pelea.multiplicadorDano = multiplicadorDanoPara(this.dificultad, this.subnivel);
-        this.pelea.arena = Arena.crearParaCarrera(PistaDeCarrera.agarreDe(this.escenario));
+        this.pelea.arena = Arena.crearParaDestruccion(PistaDeCarrera.agarreDe(this.escenario));
         this.pelea.empezarRonda();
         inicializarPosiciones();
-        this.proximoAvisoSuelo = 6;
-        this.proximoAvisoCielo = 16;
+        this.proximoAvisoSuelo = 4;
+        this.proximoAvisoCielo = 12;
     }
 
     private void poblarReservaRobots(Combatiente[] cs, int[] equipos) {
         List<Modelo> modelos = Modelo.todos();
-        int extra = subnivel - 1;
-        int cadencia = Math.max(5, dificultad.cadenciaDisparoDefectuosos - extra * 2);
+        int cadencia = cadenciaDisparoPara(dificultad, subnivel);
+        double dispersion = dispersionDisparoPara(dificultad, subnivel);
+        double escalaDano = escalaDanoDefectuosoPara(dificultad, subnivel);
         for (int i = 0; i < TAMANO_RESERVA_ROBOTS; i++) {
             Modelo modelo = modelos.isEmpty() ? Modelo.de("cobalto")
                     : modelos.get(Math.floorMod(i * 3 + dificultad.ordinal() + azar.nextInt(modelos.size()), modelos.size()));
@@ -181,13 +202,13 @@ public final class MinijuegoDestruccion {
                     break;
                 }
             }
-            boolean inmovil = i % 5 == 4;
-            Fabrica fab = crearFabricaDefectuoso(inmovil, cadencia);
+            boolean inmovil = i % 7 == 6;
+            Fabrica fab = crearFabricaDefectuoso(inmovil, cadencia, dispersion);
             Combatiente c = new Combatiente("Caido-" + (i + 1), m, fab);
             c.computadora = true;
             c.defectuoso = true;
             c.escalaBlindaje = dificultad.escalaBlindajeDefectuosos * (pesado ? 1.25 : 0.95);
-            c.escalaDano = dificultad.escalaDanoDefectuosos;
+            c.escalaDano = escalaDano;
             for (int k = 0; k < 6; k++) {
                 c.abollar(k % 4, azar, 14 + azar.nextDouble() * 14, k % 2 == 0);
             }
@@ -196,11 +217,32 @@ public final class MinijuegoDestruccion {
         }
     }
 
-    private static Fabrica crearFabricaDefectuoso(boolean inmovil, int cadencia) {
+    /** Escala de daño de disparos de los robots averiados en este reto (independiente de Carrera de obstáculos). */
+    public static double escalaDanoDefectuosoPara(DificultadCarrera dificultad, int subnivel) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        int extra = DificultadCarrera.normalizarSubnivel(subnivel) - 1;
+        return 1.65 + dif.ordinal() * 0.20 + extra * 0.08;
+    }
+
+    private static int cadenciaDisparoPara(DificultadCarrera dif, int subnivel) {
+        int extra = DificultadCarrera.normalizarSubnivel(subnivel) - 1;
+        int base = dif == DificultadCarrera.NOOB ? 22 : dif == DificultadCarrera.JUNIOR ? 15
+                : dif == DificultadCarrera.SENIOR ? 10 : 7;
+        return Math.max(5, base - extra * 2);
+    }
+
+    private static double dispersionDisparoPara(DificultadCarrera dif, int subnivel) {
+        int extra = DificultadCarrera.normalizarSubnivel(subnivel) - 1;
+        double base = dif == DificultadCarrera.NOOB ? 14.0 : dif == DificultadCarrera.JUNIOR ? 11.0
+                : dif == DificultadCarrera.SENIOR ? 8.0 : 6.0;
+        return Math.max(4.0, base - extra * 0.8);
+    }
+
+    private static Fabrica crearFabricaDefectuoso(boolean inmovil, int cadencia, double dispersion) {
         return new Fabrica() {
             @Override
             public RobotBase crear() {
-                return new PistaDeCarrera.RobotDefectuoso(inmovil, cadencia);
+                return new RobotAveriadoDestruccion(inmovil, cadencia, dispersion);
             }
 
             @Override
@@ -210,12 +252,12 @@ public final class MinijuegoDestruccion {
 
             @Override
             public String clase() {
-                return PistaDeCarrera.RobotDefectuoso.class.getName();
+                return RobotAveriadoDestruccion.class.getName();
             }
 
             @Override
             public boolean esSuya(String nombreDeClase) {
-                return PistaDeCarrera.RobotDefectuoso.class.getName().equals(nombreDeClase);
+                return RobotAveriadoDestruccion.class.getName().equals(nombreDeClase);
             }
         };
     }
@@ -269,12 +311,19 @@ public final class MinijuegoDestruccion {
         return Math.max(MIN_CENTIMOS_OBJETIVO, Math.min(MAX_CENTIMOS_OBJETIVO, valor));
     }
 
-    /** Avanza un turno del minijuego: actualiza apariciones, simula física, cuenta botín y evalúa el fin. */
+    /** Probabilidad de caída directa sobre el jugador (solo aplicable cuando su movimiento es previsible). */
+    public static double probabilidadCaidaDirectaPara(DificultadCarrera dificultad) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        return PROB_CAIDA_DIRECTA_BASE + dif.ordinal() * INCREMENTO_PROB_CAIDA_DIRECTA;
+    }
+
+    /** Avanza un turno del minijuego: simula física, actualiza apariciones, cuenta botín y evalúa el fin. */
     public void avanzar() {
         if (terminada) return;
         actualizarCaidasYReciclado();
-        actualizarApariciones();
         pelea.avanzar();
+        previsibilidad.registrar(pelea.cuerpo(0));
+        actualizarApariciones();
         procesarSucesosDelTurno();
         evaluarFin();
     }
@@ -318,18 +367,18 @@ public final class MinijuegoDestruccion {
     }
 
     private int intervaloSuelo() {
-        int base = Math.max(24, 62 - dificultad.ordinal() * 10 - (subnivel - 1) * 5);
-        return base + azar.nextInt(Math.max(10, base / 2));
+        int base = Math.max(16, 38 - dificultad.ordinal() * 6 - (subnivel - 1) * 3);
+        return base + azar.nextInt(Math.max(8, base / 2));
     }
 
     private int intervaloCielo() {
-        int base = Math.max(38, 92 - dificultad.ordinal() * 14 - (subnivel - 1) * 7);
-        return base + azar.nextInt(Math.max(14, base / 2));
+        int base = Math.max(28, 62 - dificultad.ordinal() * 10 - (subnivel - 1) * 5);
+        return base + azar.nextInt(Math.max(10, base / 2));
     }
 
     private void programarAvisoSuelo() {
         if (contarTrampasActivas() >= MAX_OBJETOS_SUELO) return;
-        double probTrampa = 0.24 + dificultad.ordinal() * 0.05 + (subnivel - 1) * 0.02;
+        double probTrampa = 0.28 + dificultad.ordinal() * 0.05 + (subnivel - 1) * 0.02;
         String tipo;
         double radio;
         if (azar.nextDouble() < probTrampa) {
@@ -341,31 +390,35 @@ public final class MinijuegoDestruccion {
             tipo = k == 0 ? "caja" : k == 1 ? "barril" : "chimenea";
             radio = k == 0 ? 25 : k == 1 ? 28 : 34;
         }
-        double[] pos = posicionSegura(radio);
-        avisos.add(new AvisoAparicion(pos[0], pos[1], radio, false, tipo, TURNOS_AVISO_SUELO));
+        double[] pos = posicionSueloEnTrayectoria(radio);
+        avisos.add(new AvisoAparicion(pos[0], pos[1], radio, false, tipo, TURNOS_AVISO_SUELO, false));
     }
 
     private void programarAvisoCielo() {
         if (buscarSlotLibre() < 0) return;
-        double[] pos = posicionSegura(34);
-        avisos.add(new AvisoAparicion(pos[0], pos[1], 34, true, "robot", TURNOS_AVISO_CIELO));
+        boolean directa = previsibilidad.esPrevisible()
+                && azar.nextDouble() < probabilidadCaidaDirectaPara(dificultad);
+        double[] pos = posicionCaidaCielo(34, directa);
+        avisos.add(new AvisoAparicion(pos[0], pos[1], 34, true, "robot", TURNOS_AVISO_CIELO, directa));
     }
 
     private void brotarDelSuelo(AvisoAparicion a) {
-        double[] pos = asegurarLejosDelJugador(a.x, a.y, a.radio);
+        double margenBorde = Math.max(85.0, a.radio + 45.0);
+        double px = Math.max(margenBorde, Math.min(ANCHO - margenBorde, a.x));
+        double py = Math.max(margenBorde, Math.min(ALTO - margenBorde, a.y));
         boolean destructible = "caja".equals(a.tipo) || "barril".equals(a.tipo) || "chimenea".equals(a.tipo);
         if (destructible) {
             double res = "caja".equals(a.tipo) ? Arena.RESISTENCIA_CAJA
                     : "barril".equals(a.tipo) ? Arena.RESISTENCIA_BARRIL : Arena.RESISTENCIA_CHIMENEA;
-            pelea.arena.agregarRepentina(a.tipo, pos[0], pos[1], a.radio, true, 0, 0, res);
+            pelea.arena.agregarRepentina(a.tipo, px, py, a.radio, true, 0, 0, res);
         } else {
             boolean solido = "bloque".equals(a.tipo);
-            int ciclo = "pinchos".equals(a.tipo) ? 115 : 0;
-            int activo = "pinchos".equals(a.tipo) ? 55 : 0;
-            pelea.arena.agregarRepentina(a.tipo, pos[0], pos[1], a.radio, solido, ciclo, activo, 0);
+            int ciclo = "pinchos".equals(a.tipo) ? 105 : 0;
+            int activo = "pinchos".equals(a.tipo) ? 60 : 0;
+            pelea.arena.agregarRepentina(a.tipo, px, py, a.radio, solido, ciclo, activo, 0);
         }
         totalAparicionesSuelo++;
-        pelea.suceso(Suceso.Tipo.TRAMPA, -1, pos[0], pos[1], 0, a.radio, "repentino_" + a.tipo);
+        pelea.suceso(Suceso.Tipo.TRAMPA, -1, px, py, 0, a.radio, "repentino_" + a.tipo);
     }
 
     private void aterrizarRobot(AvisoAparicion a) {
@@ -373,13 +426,21 @@ public final class MinijuegoDestruccion {
         if (slot < 0) return;
         Cuerpo c = pelea.cuerpo(1 + slot);
         if (c == null) return;
-        double[] pos = asegurarLejosDelJugador(a.x, a.y, c.radio);
+        double margenBorde = Math.max(85.0, c.radio + 45.0);
+        double px = Math.max(margenBorde, Math.min(ANCHO - margenBorde, a.x));
+        double py = Math.max(margenBorde, Math.min(ALTO - margenBorde, a.y));
         c.enReserva = false;
         c.fuera = false;
         c.cayendo = 14;
-        c.x = pos[0];
-        c.y = pos[1];
-        c.rumbo = azar.nextDouble() * 360 - 180;
+        c.x = px;
+        c.y = py;
+        Cuerpo c0 = pelea.cuerpo(0);
+        if (c0 != null && !c0.fuera) {
+            double angJug = Math.toDegrees(Math.atan2(c0.y - py, c0.x - px));
+            c.rumbo = Pelea.normal(angJug + (azar.nextDouble() * 2.0 - 1.0) * 35.0);
+        } else {
+            c.rumbo = azar.nextDouble() * 360 - 180;
+        }
         c.mira = c.rumbo;
         c.velocidad = 0;
         c.detener();
@@ -391,7 +452,33 @@ public final class MinijuegoDestruccion {
         c.ultimoAtacante = -1;
         turnosCaido[slot] = 0;
         totalAparicionesCielo++;
-        pelea.suceso(Suceso.Tipo.TRAMPA, -1, pos[0], pos[1], 0, c.radio, "repentino_robot");
+        if (a.directa) totalCaidasDirectas++;
+        else totalCaidasCerca++;
+        pelea.suceso(Suceso.Tipo.TRAMPA, -1, px, py, 0, c.radio, "repentino_robot");
+        aplicarImpactoCaidaSiAcierta(c, slot, c0);
+    }
+
+    private void aplicarImpactoCaidaSiAcierta(Cuerpo caido, int slot, Cuerpo c0) {
+        if (c0 == null || c0.fuera) return;
+        double dx = c0.x - caido.x;
+        double dy = c0.y - caido.y;
+        double dist = Math.hypot(dx, dy);
+        double radioImpacto = c0.radio + caido.radio + MARGEN_IMPACTO_CAIDA;
+        if (dist > radioImpacto) return;
+        boolean pesado = slot >= 0 && slot < robotPesado.length && robotPesado[slot];
+        double danoBase = pesado ? DANO_BASE_CAIDA_PESADO : DANO_BASE_CAIDA_NORMAL;
+        double ang = dist < 0.01 ? 0 : Math.toDegrees(Math.atan2(-dy, -dx));
+        pelea.danar(c0, null, danoBase, "caida_robot", ang, true, c0.x, c0.y);
+        pelea.suceso(Suceso.Tipo.EXPLOSION, 0, caido.x, caido.y, ang, danoBase * pelea.multiplicadorDano, "caida_robot");
+        double minSep = c0.radio + caido.radio + 8.0;
+        if (dist < minSep) {
+            double ux = dist < 0.01 ? 1.0 : dx / dist;
+            double uy = dist < 0.01 ? 0.0 : dy / dist;
+            c0.x = Math.max(c0.radio, Math.min(ANCHO - c0.radio, caido.x + ux * minSep));
+            c0.y = Math.max(c0.radio, Math.min(ALTO - c0.radio, caido.y + uy * minSep));
+        }
+        c0.velocidad *= 0.25;
+        c0.aturdido = Math.max(c0.aturdido, 8);
     }
 
     private int buscarSlotLibre() {
@@ -408,13 +495,56 @@ public final class MinijuegoDestruccion {
         return n;
     }
 
-    private double[] posicionSegura(double radio) {
+    private double[] posicionSueloEnTrayectoria(double radio) {
         Cuerpo c0 = pelea.cuerpo(0);
         double margenBorde = Math.max(85.0, radio + 45.0);
-        double baseX = c0 != null ? c0.x + (azar.nextDouble() * 2 - 1) * 950.0 : ANCHO / 2.0;
+        double probTrayectoria = 0.65 + dificultad.ordinal() * 0.05;
+        if (c0 != null && !c0.fuera && azar.nextDouble() < probTrayectoria) {
+            double rad = Math.toRadians(c0.rumbo);
+            double distAdelante = 135.0 + Math.abs(c0.velocidad) * 24.0 + azar.nextDouble() * 175.0;
+            double desvioLat = (azar.nextDouble() * 2.0 - 1.0) * 65.0;
+            double x = c0.x + Math.cos(rad) * distAdelante - Math.sin(rad) * desvioLat;
+            double y = c0.y + Math.sin(rad) * distAdelante + Math.cos(rad) * desvioLat;
+            return asegurarLejosDelJugador(x, y, radio);
+        }
+        double baseX = c0 != null ? c0.x + (azar.nextDouble() * 2 - 1) * 540.0 : ANCHO / 2.0;
         double x = Math.max(margenBorde, Math.min(ANCHO - margenBorde, baseX));
         double y = margenBorde + azar.nextDouble() * (ALTO - 2 * margenBorde);
         return asegurarLejosDelJugador(x, y, radio);
+    }
+
+    private double[] posicionCaidaCielo(double radio, boolean directa) {
+        Cuerpo c0 = pelea.cuerpo(0);
+        double margenBorde = Math.max(85.0, radio + 45.0);
+        if (c0 == null || c0.fuera) {
+            return new double[]{ANCHO / 2.0, ALTO / 2.0};
+        }
+        if (directa) {
+            double rad = Math.toRadians(c0.rumbo);
+            double pred = Math.abs(c0.velocidad) > 0.3 ? Math.min(90.0, Math.abs(c0.velocidad) * 14.0) : 0.0;
+            double x = c0.x + Math.cos(rad) * pred + (azar.nextDouble() * 2.0 - 1.0) * 12.0;
+            double y = c0.y + Math.sin(rad) * pred + (azar.nextDouble() * 2.0 - 1.0) * 12.0;
+            return new double[]{
+                    Math.max(margenBorde, Math.min(ANCHO - margenBorde, x)),
+                    Math.max(margenBorde, Math.min(ALTO - margenBorde, y))
+            };
+        }
+        double distMin = Math.max(DISTANCIA_MIN_CAIDA_CERCA, c0.radio + radio + MARGEN_IMPACTO_CAIDA + 35.0);
+        double distMax = Math.max(distMin + 80.0, DISTANCIA_MAX_CAIDA_CERCA);
+        for (int intento = 0; intento < 12; intento++) {
+            double ang = azar.nextDouble() * Math.PI * 2.0;
+            double dist = distMin + azar.nextDouble() * (distMax - distMin);
+            double rx = Math.max(margenBorde, Math.min(ANCHO - margenBorde, c0.x + Math.cos(ang) * dist));
+            double ry = Math.max(margenBorde, Math.min(ALTO - margenBorde, c0.y + Math.sin(ang) * dist));
+            if (Math.hypot(rx - c0.x, ry - c0.y) >= distMin) {
+                return new double[]{rx, ry};
+            }
+        }
+        double rx = c0.x > ANCHO / 2.0 ? Math.max(margenBorde, c0.x - distMin - 30.0)
+                : Math.min(ANCHO - margenBorde, c0.x + distMin + 30.0);
+        double ry = c0.y > ALTO / 2.0 ? Math.max(margenBorde, c0.y - 60.0)
+                : Math.min(ALTO - margenBorde, c0.y + 60.0);
+        return new double[]{rx, ry};
     }
 
     private double[] asegurarLejosDelJugador(double x, double y, double radio) {
@@ -571,6 +701,21 @@ public final class MinijuegoDestruccion {
         return totalAparicionesCielo;
     }
 
+    /** Cantidad de robots caídos directamente sobre la posición actual/proyectada del jugador. */
+    public int totalCaidasDirectas() {
+        return totalCaidasDirectas;
+    }
+
+    /** Cantidad de robots caídos cerca del jugador (anillo de presión sin impacto directo instantáneo). */
+    public int totalCaidasCerca() {
+        return totalCaidasCerca;
+    }
+
+    /** Indica si el seguimiento reciente clasifica el movimiento del jugador como previsible. */
+    public boolean jugadorPrevisible() {
+        return previsibilidad.esPrevisible();
+    }
+
     /** Objetos destructibles del suelo destruidos por el jugador. */
     public int objetosDestruidos() {
         return objetosDestruidos;
@@ -618,83 +763,6 @@ public final class MinijuegoDestruccion {
 
     /** Plantilla inicial compilable en ES, DE y EN sin fugas de API entre idiomas. */
     public static String plantillaInicial(Idioma idioma) {
-        Idioma id = idioma == null ? Idioma.ES : idioma;
-        switch (id) {
-            case DE:
-                return "import metajavbots.api.*;\n\n"
-                        + "// Spezial-Herausforderung: 3x-Arena mit Countdown.\n"
-                        + "// Nutze hindernisse() und gesehen(), um herabfallende defekte Roboter\n"
-                        + "// sowie Kisten, Fässer und Schornsteine zu zerstören und zu überleben.\n"
-                        + "public class UeberlebensBot extends MetajavbotDe {\n"
-                        + "    @Override\n"
-                        + "    public void jedenZug() {\n"
-                        + "        if (!gesehen().isEmpty()) {\n"
-                        + "            Gegner ziel = gesehen().get(0);\n"
-                        + "            zielenNach(ziel.winkel());\n"
-                        + "            angreifen();\n"
-                        + "        } else {\n"
-                        + "            for (Hindernis h : hindernisse()) {\n"
-                        + "                if (h.typ().equals(\"caja\") || h.typ().equals(\"barril\") || h.typ().equals(\"chimenea\")) {\n"
-                        + "                    zielenNach(h.winkel());\n"
-                        + "                    angreifen();\n"
-                        + "                    break;\n"
-                        + "                }\n"
-                        + "            }\n"
-                        + "        }\n"
-                        + "        drehen(8);\n"
-                        + "        vorwaerts(30);\n"
-                        + "    }\n"
-                        + "}\n";
-            case EN:
-                return "import metajavbots.api.*;\n\n"
-                        + "// Special challenge: 3x arena with countdown.\n"
-                        + "// Use obstacles() and seenEnemies() to destroy falling broken robots\n"
-                        + "// plus crates, barrels, and chimneys while surviving until zero.\n"
-                        + "public class SurvivalBot extends MetajavbotEn {\n"
-                        + "    @Override\n"
-                        + "    public void onTick() {\n"
-                        + "        if (!seenEnemies().isEmpty()) {\n"
-                        + "            Enemy target = seenEnemies().get(0);\n"
-                        + "            aimTo(target.angle());\n"
-                        + "            attack();\n"
-                        + "        } else {\n"
-                        + "            for (Obstacle o : obstacles()) {\n"
-                        + "                if (o.type().equals(\"caja\") || o.type().equals(\"barril\") || o.type().equals(\"chimenea\")) {\n"
-                        + "                    aimTo(o.angle());\n"
-                        + "                    attack();\n"
-                        + "                    break;\n"
-                        + "                }\n"
-                        + "            }\n"
-                        + "        }\n"
-                        + "        turn(8);\n"
-                        + "        ahead(30);\n"
-                        + "    }\n"
-                        + "}\n";
-            default:
-                return "import metajavbots.api.*;\n\n"
-                        + "// Reto especial: arena 3x con cuenta atrás.\n"
-                        + "// Usa obstaculos() y enemigosVistos() para destruir robots averiados\n"
-                        + "// caídos del cielo y cajas, barriles o chimeneas mientras sobrevives.\n"
-                        + "public class BotSupervivencia extends Metajavbot {\n"
-                        + "    @Override\n"
-                        + "    public void cadaTurno() {\n"
-                        + "        if (!enemigosVistos().isEmpty()) {\n"
-                        + "            Enemigo blanco = enemigosVistos().get(0);\n"
-                        + "            apuntarHacia(blanco.angulo());\n"
-                        + "            atacar();\n"
-                        + "        } else {\n"
-                        + "            for (Obstaculo o : obstaculos()) {\n"
-                        + "                if (o.tipo().equals(\"caja\") || o.tipo().equals(\"barril\") || o.tipo().equals(\"chimenea\")) {\n"
-                        + "                    apuntarHacia(o.angulo());\n"
-                        + "                    atacar();\n"
-                        + "                    break;\n"
-                        + "                }\n"
-                        + "            }\n"
-                        + "        }\n"
-                        + "        girar(8);\n"
-                        + "        avanzar(30);\n"
-                        + "    }\n"
-                        + "}\n";
-        }
+        return PlantillasDestruccion.plantillaInicial(idioma);
     }
 }

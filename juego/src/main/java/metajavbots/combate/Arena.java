@@ -263,6 +263,8 @@ public final class Arena {
     private int siguienteId;
     /** Lo que agarra el suelo: 1 normal; menos, se resbala (cuesta frenar y cambiar de dirección). */
     public final double agarre;
+    /** Si esta arena pertenece al reto «Destrucción y supervivencia» (daño recalibrado sin afectar a Carrera ni peleas estándar). */
+    private boolean modoDestruccion;
     /** Cuándo puede volver a hacer daño cada trampa a cada robot (para que no pegue en todos los turnos). */
     private final java.util.Map<Long, Integer> espera = new java.util.HashMap<>();
 
@@ -360,6 +362,12 @@ public final class Arena {
 
     static Arena crearParaCarrera(double agarre) {
         return new Arena(agarre);
+    }
+
+    static Arena crearParaDestruccion(double agarre) {
+        Arena a = new Arena(agarre);
+        a.modoDestruccion = true;
+        return a;
     }
 
     Trampa agregarTrampa(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, boolean ocultoEnMapa) {
@@ -616,8 +624,10 @@ public final class Arena {
             double vel = Math.abs(c.velocidad);
             boolean carrera = p.multiplicadorDano > 1.0 + 1e-6;
             boolean golpea = carrera ? (vel > 0.25 || Math.abs(c.avance) > 1.0) : vel > 1.5;
-            if (golpea && listo(t.id, c, p, carrera ? 16 : 20)) {
-                double danoChoqueRobot = carrera ? 5.0 + vel * 1.4 : 0.5 + vel * 0.3;
+            int enfriamientoChoque = modoDestruccion ? 14 : carrera ? 16 : 20;
+            if (golpea && listo(t.id, c, p, enfriamientoChoque)) {
+                double danoChoqueRobot = modoDestruccion ? 8.5 + vel * 1.1
+                        : carrera ? 5.0 + vel * 1.4 : 0.5 + vel * 0.3;
                 p.danar(c, null, danoChoqueRobot, t.tipo, Math.toDegrees(Math.atan2(-dy, -dx)), false);
                 p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, 0, 1, t.tipo);
                 if (t.destructible) {
@@ -650,8 +660,14 @@ public final class Arena {
                 break;
             default:
                 // Pinchos, sierras y rayo: daño a golpes, no en cada turno.
-                if (listo(t.id, c, p, t.tipo.equals("sierra") ? 12 : 30)) {
-                    double dano = t.tipo.equals("sierra") ? 2.5 : t.tipo.equals("rayo") ? 7 : 5;
+                int enfriamientoTrampa = t.tipo.equals("sierra") ? 12 : (modoDestruccion ? 22 : 30);
+                if (listo(t.id, c, p, enfriamientoTrampa)) {
+                    double dano;
+                    if (modoDestruccion) {
+                        dano = t.tipo.equals("sierra") ? 8.5 : t.tipo.equals("rayo") ? 10.5 : 9.5;
+                    } else {
+                        dano = t.tipo.equals("sierra") ? 2.5 : t.tipo.equals("rayo") ? 7 : 5;
+                    }
                     p.danar(c, null, dano, t.tipo, Math.toDegrees(Math.atan2(-dy, -dx)), false);
                     p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, 0, 2, t.tipo);
                 }
