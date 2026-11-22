@@ -192,7 +192,10 @@ public final class PantallaEjercicio implements Pantalla {
             case 2:
                 editor.doc.cambiarTodo(e.codigoInicial(jug.idioma));
                 editor.marcas.clear();
+                editor.lineasActivas.clear();
+                editor.lineaActiva = 0;
                 informe = null;
+                informeAnimado = null;
                 break;
             case 3:
                 conApi = !conApi;
@@ -210,10 +213,12 @@ public final class PantallaEjercicio implements Pantalla {
         }
         float ey = y + altoBarra + 12, eh = p.alto - ey - 70;
         boolean conRobot = inf != null && inf.compila() && !inf.casos.isEmpty();
-        float altoRobot = conRobot ? Math.min(260 + ALTO_PISTA, eh * 0.48f) : 0;
+        float altoRobot = conRobot ? Math.min(260 + ALTO_PISTA, eh * 0.48f) : Math.min(240, eh * 0.42f);
         eh -= altoRobot > 0 ? altoRobot + 10 : 0;
-        editor.dibujar(ui, ex, ey, ew - lado - (lado > 0 ? 12 : 0), eh);
-        if (conRobot) robotito(j, inf, ex, ey + eh + 10, ew - lado - (lado > 0 ? 12 : 0), altoRobot, dt);
+        float anchoEditor = ew - lado - (lado > 0 ? 12 : 0);
+        editor.dibujar(ui, ex, ey, anchoEditor, eh);
+        if (conRobot) robotito(j, inf, ex, ey + eh + 10, anchoEditor, altoRobot, dt);
+        else previsualizacion(ui, inf, ex, ey + eh + 10, anchoEditor, altoRobot);
         if (conTutor) tutor(j, ex + ew - lado, ey, lado, eh);
         else if (conApi) api.dibujar(ui, jug.idioma, editor, ex + ew - lado, ey, lado, eh);
         estado(j, inf, ex, ew);
@@ -338,6 +343,16 @@ public final class PantallaEjercicio implements Pantalla {
         for (metajavbots.piezas.Pieza pz : cambio == null ? List.<metajavbots.piezas.Pieza>of() : cambio.botin) {
             p.textoDerecha(T.f("final.botin", pz.nombre(T.idioma)), ex + ew, p.alto - 84, ui.letra * 0.9f, false, ui.tema.bien, 1);
         }
+    }
+
+    /** Antes de comprobar (o si no compila): escenario en espera listo para arrancar al pulsar «Comprobar». */
+    private void previsualizacion(Ui ui, Comprobador.Informe inf, float x, float y, float w, float h) {
+        PrevisualizacionDeEjercicio.Estado est = comprobando
+                ? PrevisualizacionDeEjercicio.Estado.COMPILANDO
+                : (inf != null && !inf.compila()
+                        ? PrevisualizacionDeEjercicio.Estado.ERROR_COMPILACION
+                        : PrevisualizacionDeEjercicio.Estado.ESPERA);
+        PrevisualizacionDeEjercicio.dibujar(ui, x, y, w, h, e, est, t);
     }
 
     /**
