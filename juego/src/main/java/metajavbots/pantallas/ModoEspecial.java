@@ -24,7 +24,7 @@ import metajavbots.textos.T;
 public final class ModoEspecial implements Pantalla {
 
     /** Claves de las pestañas de esta pantalla (en orden). */
-    public static final List<String> CLAVES_PESTANAS = List.of("especial.jefes", "especial.tope", "especial.retos", "especial.otros");
+    public static final List<String> CLAVES_PESTANAS = List.of("especial.jefes", "especial.tope", "especial.retos", "especial.otros", "especial.carrera");
 
     private int pestana;
     private boolean bajarAlFinal;
@@ -33,7 +33,7 @@ public final class ModoEspecial implements Pantalla {
         this(0);
     }
 
-    /** Abierto en esa pestaña (0 jefes, 1 tope de cálculo, 2 retos de programar, 3 robots de otros). */
+    /** Abierto en esa pestaña (0 jefes, 1 tope de cálculo, 2 retos de programar, 3 robots de otros, 4 carrera de obstáculos). */
     public ModoEspecial(int pestana) {
         this.pestana = pestana;
     }
@@ -53,7 +53,7 @@ public final class ModoEspecial implements Pantalla {
         Jugador jug = j.jugador;
         Comun.fondo(j, 0);
         float arriba = Comun.cabecera(j, T.t("menu.especial"), true);
-        String[] pest = {T.t("especial.jefes"), T.t("especial.tope"), T.t("especial.retos"), T.t("especial.otros")};
+        String[] pest = {T.t("especial.jefes"), T.t("especial.tope"), T.t("especial.retos"), T.t("especial.otros"), T.t("especial.carrera")};
         int anterior = pestana;
         pestana = ui.pestanas(pest, pestana, 20, arriba + 16, p.ancho - 40, 50);
         if (pestana != anterior) despl.alPrincipio();
@@ -95,12 +95,21 @@ public final class ModoEspecial implements Pantalla {
                     yy += 74;
                 }
                 break;
-            default:
+            case 3:
                 yy += p.parrafo(T.t("especial.otros_ayuda"), x + 24, yy, w - 48, ui.letra * 0.95f, ui.tema.texto, 1) + 24;
                 if (ui.boton(T.t("menu.taller"), x + 24, yy, 300, 56, Ui.Estilo.NORMAL)) j.ir(new Taller());
                 if (ui.boton(T.t("pelear.ajenos"), x + 340, yy, 360, 56, Ui.Estilo.NORMAL)) j.ir(new PrepararPelea());
                 if (ui.boton(T.t("mcm.titulo"), x + 720, yy, 360, 56, Ui.Estilo.NORMAL, true, T.t("mcm.ayuda"))) j.ir(new MaquinaContraMaquina());
                 yy += 80;
+                break;
+            default:
+                yy += p.parrafo(T.t("especial.carrera_ayuda"), x + 24, yy, w - 48, ui.letra * 0.95f, ui.tema.texto, 1) + 24;
+                String txtCarrera = T.t("especial.carrera_entrar");
+                float btCarrera = Math.min(w - 48, Math.max(360, p.ancho(txtCarrera, ui.letra, true) + 48));
+                if (ui.boton(txtCarrera, x + 24, yy, btCarrera, 58, Ui.Estilo.PRINCIPAL)) {
+                    j.ir(new PantallaCarreraDeObstaculos());
+                }
+                yy += 82;
                 break;
         }
         ui.finDesplazable(despl, yy + d - cy);

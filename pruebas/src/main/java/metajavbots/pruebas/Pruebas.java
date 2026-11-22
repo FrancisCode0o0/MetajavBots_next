@@ -53,6 +53,7 @@ public final class Pruebas {
         PruebasDeNormalizacion.apuntar();
         PruebasDelHudPelea.apuntar();
         PruebasDeObstaculosDestructibles.apuntar();
+        PruebasDeCarreraDeObstaculos.apuntar();
         PruebasDeVozPiper.apuntar();
         PruebasDeDocumentacionTaller.apuntar();
 

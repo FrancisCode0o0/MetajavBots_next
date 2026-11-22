@@ -26,6 +26,9 @@ public final class Arena {
         public final boolean destructible;
         /** Resistencia máxima del obstáculo destructible (0 si no se puede romper). */
         public final double resistenciaMax;
+        /** Si permanece oculto en el mapa general inicial hasta ser detectado por sensores en carrera. */
+        public final boolean ocultoEnMapa;
+        private boolean reveladoEnCarrera;
         private double resistencia;
         private boolean destruida;
         /** Turnos breves de restos visibles tras romperse (ya no colisiona ni aparece en obstaculos()). */
@@ -38,6 +41,10 @@ public final class Arena {
         int vida = -1;
 
         Trampa(int id, String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistenciaMax) {
+            this(id, tipo, x, y, radio, solido, ciclo, activo, resistenciaMax, false);
+        }
+
+        Trampa(int id, String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistenciaMax, boolean ocultoEnMapa) {
             this.id = id;
             this.tipo = tipo;
             this.x = x;
@@ -49,6 +56,8 @@ public final class Arena {
             this.destructible = resistenciaMax > 0;
             this.resistenciaMax = Math.max(0, resistenciaMax);
             this.resistencia = this.resistenciaMax;
+            this.ocultoEnMapa = ocultoEnMapa;
+            this.reveladoEnCarrera = !ocultoEnMapa;
         }
 
         /** ¿Hace daño ahora? Los pinchos y el rayo, solo en su rato; las sierras y el carrito, siempre. */
@@ -80,6 +89,16 @@ public final class Arena {
         /** Si este obstáculo sigue activo en la arena. */
         public boolean activa() {
             return !destruida;
+        }
+
+        /** Si este obstáculo ya es visible en la pista en directo (los no ocultos siempre lo son). */
+        public boolean revelado() {
+            return reveladoEnCarrera;
+        }
+
+        /** Marca este obstáculo oculto como detectado durante la carrera. */
+        void revelar() {
+            reveladoEnCarrera = true;
         }
 
         /** Turnos restantes de restos breves en el suelo tras destruirse. */
@@ -199,6 +218,8 @@ public final class Arena {
     private static final double RESISTENCIA_BARRIL = 30;
     private static final double RESISTENCIA_CHIMENEA = 50;
     private static final int TURNOS_RESTOS = 45;
+    /** Alcance mínimo de detección por radar/sensores para obstáculos ocultos de la carrera. */
+    public static final double ALCANCE_SENSOR_OCULTOS = 260;
 
     private final List<Trampa> trampas = new ArrayList<>();
     private int siguienteId;
@@ -215,11 +236,23 @@ public final class Arena {
         return Collections.unmodifiableList(trampas);
     }
 
-    /** Lo que ve ese robot: una vista de cada trampa activa (vacía en las arenas de siempre). */
+    /** Lo que ve ese robot: una vista de cada trampa activa (las ocultas solo al entrar en alcance de sensores/radar). */
     List<Cosa> vistas(Cuerpo c) {
         if (trampas.isEmpty()) return List.of();
+        metajavbots.piezas.Pieza cabeza = c.combatiente.montaje.pieza(metajavbots.piezas.Montaje.Hueco.CABEZA);
+        double radar = cabeza == null ? 0 : cabeza.valor("radar");
+        double alcanceSensor = Math.max(ALCANCE_SENSOR_OCULTOS, radar * 0.45);
+        if (c.pulsoTactico > 0) alcanceSensor *= 1.5;
         List<Cosa> l = new ArrayList<>(trampas.size());
-        for (Trampa t : trampas) if (!t.destruida) l.add(new Vista(c, t));
+        for (Trampa t : trampas) {
+            if (t.destruida) continue;
+            if (t.ocultoEnMapa) {
+                double d = Math.hypot(t.x - c.x, t.y - c.y);
+                if (d > alcanceSensor) continue;
+                t.revelar();
+            }
+            l.add(new Vista(c, t));
+        }
         return l;
     }
 
@@ -268,15 +301,58 @@ public final class Arena {
     }
 
     private Trampa poner(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo) {
-        Trampa t = new Trampa(siguienteId++, tipo, x, y, radio, solido, ciclo, activo, 0);
+        return poner(tipo, x, y, radio, solido, ciclo, activo, false);
+    }
+
+    private Trampa poner(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, boolean ocultoEnMapa) {
+        Trampa t = new Trampa(siguienteId++, tipo, x, y, radio, solido, ciclo, activo, 0, ocultoEnMapa);
         trampas.add(t);
         return t;
     }
 
     private Trampa ponerDestructible(String tipo, double x, double y, double radio, double resistencia) {
-        Trampa t = new Trampa(siguienteId++, tipo, x, y, radio, true, 0, 0, resistencia);
+        return ponerDestructible(tipo, x, y, radio, resistencia, false);
+    }
+
+    private Trampa ponerDestructible(String tipo, double x, double y, double radio, double resistencia, boolean ocultoEnMapa) {
+        Trampa t = new Trampa(siguienteId++, tipo, x, y, radio, true, 0, 0, resistencia, ocultoEnMapa);
         trampas.add(t);
         return t;
+    }
+
+    /** Crea una pista propia para la Carrera de obstáculos con obstáculos visibles, ocultos, destructibles e indestructibles. */
+    public static Arena carreraDeObstaculos(double ancho, double alto, long semilla) {
+        Arena a = new Arena(1);
+        java.util.Random r = new java.util.Random(semilla);
+        double[] cols = {ancho * 0.24, ancho * 0.43, ancho * 0.62, ancho * 0.79};
+        double[][] filasBase = {
+                {alto * 0.26, alto * 0.74},
+                {alto * 0.50, alto * 0.22, alto * 0.78},
+                {alto * 0.32, alto * 0.68},
+                {alto * 0.50, alto * 0.24, alto * 0.76}
+        };
+        // Columna 0 (visible en mapa): barril destructible + bloque indestructible.
+        a.ponerDestructible("barril", cols[0] + jitter(r, 20), filasBase[0][0] + jitter(r, 20), 28, RESISTENCIA_BARRIL, false);
+        a.poner("bloque", cols[0] + jitter(r, 20), filasBase[0][1] + jitter(r, 20), 34, true, 0, 0, false);
+        // Columna 1 (mixta): foso visible en el centro + dos barriles/chimeneas ocultos en los flancos.
+        a.poner("foso", cols[1] + jitter(r, 22), filasBase[1][0] + jitter(r, 20), 52, false, 0, 0, false);
+        a.ponerDestructible("barril", cols[1] + jitter(r, 22), filasBase[1][1] + jitter(r, 18), 28, RESISTENCIA_BARRIL, true);
+        a.ponerDestructible("chimenea", cols[1] + jitter(r, 22), filasBase[1][2] + jitter(r, 18), 34, RESISTENCIA_CHIMENEA, true);
+        // Columna 2 (oculta en mapa): chimenea destructible + pinchos indestructibles + bloque oculto.
+        boolean arribaDestructible = r.nextBoolean();
+        double yA = filasBase[2][0] + jitter(r, 18);
+        double yB = filasBase[2][1] + jitter(r, 18);
+        a.ponerDestructible("chimenea", cols[2] + jitter(r, 20), arribaDestructible ? yA : yB, 34, RESISTENCIA_CHIMENEA, false);
+        a.poner("pinchos", cols[2] + jitter(r, 20), arribaDestructible ? yB : yA, 48, false, 120, 55, true);
+        // Columna 3 (recta final, mixta): bloque oculto en el centro + barril visible + pinchos visibles.
+        a.poner("bloque", cols[3] + jitter(r, 18), filasBase[3][0] + jitter(r, 20), 34, true, 0, 0, true);
+        a.ponerDestructible("barril", cols[3] + jitter(r, 18), filasBase[3][1] + jitter(r, 18), 28, RESISTENCIA_BARRIL, false);
+        a.poner("pinchos", cols[3] + jitter(r, 18), filasBase[3][2] + jitter(r, 18), 46, false, 130, 55, false).fase = 65;
+        return a;
+    }
+
+    private static double jitter(java.util.Random r, double amplitud) {
+        return (r.nextDouble() * 2 - 1) * amplitud;
     }
 
     /** Aplica daño a un obstáculo destructible; al llegar a 0 lo destruye y avisa con OBSTACULO_ROTO. */
@@ -293,14 +369,19 @@ public final class Arena {
         return false;
     }
 
-    /** Comprueba si un proyectil impacta contra un obstáculo destructible; devuelve si el proyectil se detuvo. */
+    /** Comprueba si un proyectil impacta contra un obstáculo destructible o bloque sólido; devuelve si el proyectil se detuvo. */
     boolean impactoProyectil(Pelea p, Proyectil pr) {
         for (Trampa t : trampas) {
-            if (!t.destructible || t.destruida) continue;
+            if (t.destruida) continue;
+            if (!t.destructible && !t.tipo.equals("bloque")) continue;
             if (Math.hypot(t.x - pr.x, t.y - pr.y) <= t.radio) {
                 pr.vivo = false;
-                if (pr.misil) p.suceso(Suceso.Tipo.EXPLOSION, pr.dueno, pr.x, pr.y, 0, pr.dano, "misil");
-                danar(t, p, pr.dueno, pr.dano, pr.x, pr.y, pr.misil ? "misil" : "bala");
+                if (t.destructible) {
+                    if (pr.misil) p.suceso(Suceso.Tipo.EXPLOSION, pr.dueno, pr.x, pr.y, 0, pr.dano, "misil");
+                    danar(t, p, pr.dueno, pr.dano, pr.x, pr.y, pr.misil ? "misil" : "bala");
+                } else {
+                    p.suceso(Suceso.Tipo.TRAMPA, pr.dueno, pr.x, pr.y, 0, 0, t.tipo);
+                }
                 return true;
             }
         }

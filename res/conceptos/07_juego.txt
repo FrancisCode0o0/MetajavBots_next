@@ -760,3 +760,69 @@ pseudo.en:
     answer
     IF unused for 8 min: put it to sleep
 ejemplo:
+
+=== carrera_de_obstaculos
+nivel: 6
+tema: --
+titulo.es: Carrera de obstáculos
+titulo.de: Hindernislauf
+titulo.en: Obstacle race
+claves.es: carrera de obstaculos, carrera, obstaculos, hindernislauf, obstacle race, mapa parcial, obstaculos ocultos, destructibles, indestructibles, barril, chimenea, robots ajenos, meta, moneda
+claves.de: hindernislauf, hindernisrennen, rennen, hindernisse, teilkarte, versteckte hindernisse, zerstoerbare, unzerstoerbare, fass, schornstein, fremde roboter, ziel, munze
+claves.en: obstacle race, race, obstacles, partial map, hidden obstacles, destructible, indestructible, barrel, chimney, other players robots, finish line, coin
+resumen.ia: Obstacle race (in Special mode: race to the finish line against the computer or another player's robot from robots_ajenos/; overview map reveals only some obstacles while hidden ones are detected live via radar/obstacles() requiring if conditionals; destructible barrels and chimneys can be shot down while indestructible blocks, pits and spikes must be dodged; each win awards 1 coin)
+tip.juego_carrera_obstaculos.condicion: aleatorio
+tip.juego_carrera_obstaculos.es: Prueba la [[Carrera de obstáculos]] en Modo especial: combina radar y condicionales if para romper barriles, esquivar trampas ocultas y ganar 1 moneda por victoria.
+tip.juego_carrera_obstaculos.de: Probier den [[Hindernislauf]] im Spezialmodus aus: Kombiniere Radar und if-Bedingungen, um Fässer zu zerstören, versteckte Fallen zu umfahren und 1 Münze pro Sieg zu gewinnen.
+tip.juego_carrera_obstaculos.en: Try the [[Obstacle race]] in Special mode: combine radar and if conditionals to blast barrels, dodge hidden traps, and earn 1 coin per win.
+ver: arena_y_modos, if_else, tienda_y_monedas
+es:
+    La Carrera de obstáculos está dentro de Modo especial y reta a tu robot a cruzar la línea de meta antes que el rival.
+    Antes de arrancar verás un mapa general con visibilidad parcial: muestra la salida, la meta y parte de los obstáculos, pero otros permanecen ocultos y solo los detectas en carrera con el radar y obstaculos(), así que necesitas condicionales if para reaccionar en vivo.
+    En la pista hay dos tipos de obstáculos: destructibles (barriles y chimeneas, que puedes romper disparando o golpeando para abrirte paso) e indestructibles (bloques, fosos y pinchos, que no se rompen y debes rodear).
+    Puedes competir contra la computadora o contra el robot de otro usuario cargado desde robots_ajenos/. Cada carrera que ganas te otorga exactamente 1 moneda para la Tienda.
+de:
+    Der Hindernislauf befindet sich im Spezialmodus und fordert deinen Roboter heraus, vor dem Gegner die Ziellinie zu überqueren.
+    Vor dem Start siehst du eine Übersichtskarte mit teilweiser Sicht: Sie zeigt Start, Ziel und einen Teil der Hindernisse, doch andere bleiben verborgen und werden erst im Lauf über Radar und hindernisse() erkannt — deshalb brauchst du if-Bedingungen für Live-Reaktionen.
+    Auf der Strecke gibt es zwei Arten von Hindernissen: zerstörbare (Fässer und Schornsteine, die du freischießen oder rammen kannst) und unzerstörbare (Blöcke, Gruben und Stacheln, die du umfahren musst).
+    Du trittst gegen den Computer oder gegen fremde Roboter aus robots_ajenos/ an. Jeder gewonnene Lauf bringt dir genau 1 Münze für den Laden.
+en:
+    Obstacle race lives inside Special mode and challenges your robot to cross the finish line before its rival.
+    Before starting, you see an overview map with partial visibility: it shows the start, finish line, and part of the course, while hidden obstacles only appear live through radar and obstacles(), requiring reactive if conditionals.
+    Two obstacle types fill the track: destructible ones (barrels and chimneys you can blast or smash through) and indestructible ones (blocks, pits, and spikes you must steer around).
+    You can race against the computer or against another player's robot loaded from robots_ajenos/. Every race you win awards exactly 1 coin for the Shop.
+pseudo.es:
+    Modo especial → Carrera de obstáculos → elegir rival (máquina o robots_ajenos/)
+    SI obstáculo cerca:
+        SI es barril o chimenea → apuntar y atacar
+        SI NO → esquivar rodeándolo
+    avanzar hacia la meta → ganar = +1 moneda
+pseudo.de:
+    Spezialmodus → Hindernislauf → Gegner wählen (Computer oder robots_ajenos/)
+    WENN Hindernis nah:
+        WENN Fass oder Schornstein → zielen und angreifen
+        SONST → außen herum ausweichen
+    Richtung Ziel fahren → Sieg = +1 Münze
+pseudo.en:
+    Special mode → Obstacle race → pick rival (computer or robots_ajenos/)
+    IF obstacle ahead:
+        IF barrel or chimney → aim and attack
+        ELSE → steer around it
+    head for the finish line → win = +1 coin
+ejemplo:
+    public class Corredor extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            for (Obstaculo o : obstaculos()) {
+                if (o.distancia() < 200) { // reaccionar al radar || aufs Radar reagieren || react to radar
+                    if (o.tipo().equals("barril") || o.tipo().equals("chimenea")) {
+                        apuntarHacia(o.angulo());
+                        atacar(); // destruir obstáculo || Hindernis zerstören || destroy obstacle
+                    } else {
+                        girarHacia(o.y() >= y() ? -50 : 50); // esquivar fijo || festem ausweichen || dodge fixed
+                    }
+                }
+            }
+            avanzar(60);
+        }
+    }

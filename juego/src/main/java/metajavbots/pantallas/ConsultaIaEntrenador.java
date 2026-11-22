@@ -40,7 +40,8 @@ public final class ConsultaIaEntrenador {
         int ayuda = jugador == null ? 5 : Math.round(PanelDelTutor.ayuda(jugador, 0) * 10);
         return "You are " + activo.nombre.en + ", " + activo.estilo
                 + ", the coach in MetajavBots, a game where you program fighting robots in Java "
-                + "(class MiRobot extends Metajavbot; API: cadaTurno, alVerEnemigo, avanzar, girar, apuntarHacia, atacar, energia, enemigosVistos, memoria). "
+                + "(class MiRobot extends Metajavbot; API: cadaTurno, alVerEnemigo, avanzar, girar, apuntarHacia, atacar, energia, "
+                + "enemigosVistos, obstaculos, memoria). "
                 + "Answer any question about Java, object orientation, compiler errors OR any screen, mode and mechanic of the game, "
                 + "to someone who may know nothing about programming: plain words, a fight metaphor with robots, pseudocode and small Java snippets "
                 + "(Java standard library and the robot API) when relevant. "

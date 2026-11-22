@@ -129,6 +129,7 @@ final class DibujoDeArenas {
     /** Las trampas planas (en el suelo): pinchos, sierras, imán, foso, rayo y restos breves. Antes que los robots. */
     static void delSuelo(Pincel p, VistaDeArena v, Arena arena, float t) {
         for (Arena.Trampa tr : arena.trampas()) {
+            if (tr.ocultoEnMapa && !tr.revelado()) continue;
             float cx = v.sx(tr.x, tr.y), cy = v.sy(tr.y), rx = (float) tr.radio * v.escala(tr.y), ry = (float) tr.radio * v.escalaY();
             if (tr.destruida()) {
                 if (tr.restos() > 0) restos(p, cx, cy, rx, ry, tr);
@@ -259,12 +260,22 @@ final class DibujoDeArenas {
         }
     }
 
-    /** Un objeto sólido (barril, chimenea, carrito), con los pies en su sitio. Entre los robots, por profundidad. */
+    /** Un objeto sólido (barril, chimenea, carrito, bloque), con los pies en su sitio. Entre los robots, por profundidad. */
     static void solido(Pincel p, VistaDeArena v, Arena.Trampa tr, float t) {
-        if (tr.destruida()) return;
+        if (tr.destruida() || tr.ocultoEnMapa && !tr.revelado()) return;
         float cx = v.sx(tr.x, tr.y), cy = v.sy(tr.y), rx = (float) tr.radio * v.escala(tr.y), ry = (float) tr.radio * v.escalaY();
         p.elipse(cx, cy + ry * 0.2f, rx * 1.1f, ry * 0.9f, 0, 0x000000, 0.3f);
         switch (tr.tipo) {
+            case "bloque": {
+                float alto = rx * 1.6f;
+                p.caja(cx - rx, cy - alto, rx * 2, alto, 4, 0x3D4654, 1);
+                p.rect(cx - rx * 0.9f, cy - alto * 0.9f, rx * 1.8f, alto * 0.16f, 0xFFC857, 0.9f);
+                p.rect(cx - rx * 0.9f, cy - alto * 0.24f, rx * 1.8f, alto * 0.14f, 0x262C36, 1);
+                p.bordeRedondeado(cx - rx, cy - alto, rx * 2, alto, 4, 0x8A95A5, 0.9f, 2f);
+                p.linea(cx - rx * 0.45f, cy - alto * 0.65f, cx + rx * 0.45f, cy - alto * 0.32f, 2.5f, 0xE05A4F, 0.9f);
+                p.linea(cx + rx * 0.45f, cy - alto * 0.65f, cx - rx * 0.45f, cy - alto * 0.32f, 2.5f, 0xE05A4F, 0.9f);
+                break;
+            }
             case "barril": {
                 float alto = rx * 1.8f;
                 p.rect(cx - rx, cy - alto, rx * 2, alto, 0x9A4A22, 1);
