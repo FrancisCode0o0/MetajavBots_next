@@ -10,7 +10,7 @@ import metajavbots.api.Cacharro;
 /**
  * APARATOS — Los cacharros que aparecen en la arena de ronda en ronda (motor
  * a chorro, antigravedad, descarga, lanzallamas, aceite, pegamento, imán,
- * martillo). Se anuncia el de la ronda siguiente al acabar una (para
+ * martillo, sierra). Se anuncia el de la ronda siguiente al acabar una (para
  * programar entre rondas cómo ir a por él); sale a los 3 s de empezar. Se
  * coge al tocarlo, se conecta con conectar(hueco) en el hueco que dice su
  * código (si no es ese, no engancha), tarda un segundo en montarse y se usa
@@ -22,7 +22,7 @@ public final class Aparatos {
     public enum Tipo {
         CHORRO("Jetzazo", "espalda", 120), ANTIGRAVEDAD("Flotón", "piernas", 210), DESCARGA("Chispazo", "cabeza", 180),
         LANZALLAMAS("Chamuscator", "brazo", 150), ACEITE("Resbalín", "espalda", 240), PEGAMENTO("Pegotón", "brazo", 150),
-        IMAN("Imanator", "cabeza", 180), MARTILLO("Mazazo", "brazo", 150);
+        IMAN("Imanator", "cabeza", 180), MARTILLO("Mazazo", "brazo", 150), SIERRA("Sierrón", "brazo", 135);
 
         public final String nombre, hueco;
         public final int recarga;
@@ -245,6 +245,11 @@ public final class Aparatos {
                 martillo(p, c, angulo);
                 a.activo = 15;
                 break;
+            case SIERRA:
+                c.sierraAparato = 24;
+                c.miraDeLaSierra = angulo;
+                a.activo = 24;
+                break;
             default:
                 break;
         }
@@ -280,7 +285,10 @@ public final class Aparatos {
                 break;
             }
         }
-        for (int i = 0; i < p.combatientes.length; i++) llama(p, p.cuerpo(i));
+        for (int i = 0; i < p.combatientes.length; i++) {
+            llama(p, p.cuerpo(i));
+            sierra(p, p.cuerpo(i));
+        }
     }
 
     /** Sale en un sitio libre: lejos de las trampas y de los dos robots a la vez. */
@@ -365,6 +373,26 @@ public final class Aparatos {
                 e.y = Math.max(e.radio, Math.min(p.alto - e.radio, e.y + Math.sin(radEmpuje) * 65));
                 e.aturdido = Math.max(e.aturdido, 20);
                 e.avance = 0;
+            }
+        }
+    }
+
+    /** La sierra circular acoplable: corta a ráfagas rápidas a los rivales cercanos delante del ángulo elegido. */
+    private static void sierra(Pelea p, Cuerpo c) {
+        if (c == null || c.sierraAparato <= 0) return;
+        c.sierraAparato--;
+        if (c.sierraAparato % 4 != 0) return;
+        for (int i = 0; i < p.combatientes.length; i++) {
+            Cuerpo e = p.cuerpo(i);
+            if (e == null || e == c || e.fuera || p.equipo[i] == p.equipo[c.indice]) continue;
+            double dx = e.x - c.x, dy = e.y - c.y;
+            double d = Math.hypot(dx, dy);
+            double ang = Math.toDegrees(Math.atan2(dy, dx));
+            if (d <= c.radio + e.radio + 70 && Math.abs(Pelea.normal(ang - c.miraDeLaSierra)) <= 42) {
+                p.danar(e, c, 2.2, "sierra", Pelea.normal(ang + 180), true);
+                double radEmpuje = Math.toRadians(ang);
+                e.x = Math.max(e.radio, Math.min(p.ancho - e.radio, e.x + Math.cos(radEmpuje) * 8));
+                e.y = Math.max(e.radio, Math.min(p.alto - e.radio, e.y + Math.sin(radEmpuje) * 8));
             }
         }
     }

@@ -11,7 +11,7 @@ package metajavbots.api;
  */
 public interface Geraet {
 
-    /** Was es ist: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite", "pegamento", "iman" (Magnet), "martillo" (Hammer). */
+    /** Was es ist: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite", "pegamento", "iman" (Magnet), "martillo" (Hammer), "sierra" (Säge). */
     String typ();
 
     /** Sein Markenname (Jetzazo, Flotón, Chispazo …), zum Sagen. */

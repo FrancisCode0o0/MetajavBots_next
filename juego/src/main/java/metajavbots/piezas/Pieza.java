@@ -109,6 +109,18 @@ public final class Pieza {
         return precio > 0 && rangoTienda != null;
     }
 
+    /** ¿Es una pieza diseñada en Java por el jugador? */
+    public boolean esPropia() {
+        return "propia".equals(desbloqueo);
+    }
+
+    /** Crea una pieza diseñada por el jugador (ya validada en presupuesto y límites). */
+    public static Pieza personalizada(String id, Ranura ranura, String nombreVisible, Naturaleza naturaleza,
+                                      Map<String, Double> valores, Map<String, String> textos) {
+        Trilingue nom = new Trilingue(nombreVisible, nombreVisible, nombreVisible);
+        return new Pieza(id, ranura, nom, naturaleza, Rareza.RARA, "propia", 1, 0, null, valores, textos);
+    }
+
     /** Devuelve una copia de esta pieza con algunos valores numéricos sustituidos (los demás quedan igual). */
     public Pieza conValores(Map<String, Double> cambios) {
         if (cambios == null || cambios.isEmpty()) return this;

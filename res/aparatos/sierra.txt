@@ -1,0 +1,102 @@
+== es
+/**
+ * SIERRA «Sierrón» — Una sierra circular acoplable de alta velocidad
+ * hacia el ángulo que le digas: gira durante casi un segundo y corta
+ * a golpes seguidos a todo rival cercano delante de ti.
+ *
+ * Cómo conectarlo a tu robot:
+ *   1. Ve hasta él y tócalo: lo coges (aparatos() te dice dónde
+ *      está).
+ *   2. Conéctalo en su hueco (si no es ese, no engancha):
+ *      conectar("brazo");
+ *   3. Úsalo: usarAparato(angulo);
+ * Se recarga en 4,5 s.
+ *
+ * Cumple la interfaz Aparato: tipo(), nombre(), conectado(),
+ * listo()…
+ */
+public final class Sierra implements Aparato {
+
+    /** Los turnos que faltan para poder usarlo otra vez. */
+    private int espera;
+
+    @Override
+    public String tipo() {
+        return "sierra";
+    }
+
+    /** Lo que hace al usarlo. */
+    void usar(Metajavbot robot, double angulo) {
+        if (espera > 0) return;
+        robot.girarSierra(angulo, 70, 2.2, 24);   // 6 cortes seguidos de 2,2 de daño
+        espera = 135;
+    }
+}
+== de
+/**
+ * SÄGE «Sierrón» — Eine ansteckbare Hochgeschwindigkeits-Kreissäge in
+ * den Winkel, den du angibst: Läuft fast eine Sekunde lang und schneidet
+ * jeden nahen Gegner vor dir in schnellen Treffern.
+ *
+ * So schließt du es an deinen Roboter an:
+ *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
+ *      dir, wo es ist).
+ *   2. Schließ es an seinem Platz an (ein anderer hält nicht):
+ *      anschliessen("arm");
+ *   3. Benutze es: geraetBenutzen(winkel);
+ * Lädt in 4,5 s wieder auf.
+ *
+ * Erfüllt das Interface Geraet: typ(), name(), angeschlossen(),
+ * bereit() …
+ */
+public final class Saege implements Geraet {
+
+    /** Die Züge, bis man es wieder benutzen kann. */
+    private int warten;
+
+    @Override
+    public String typ() {
+        return "sierra";
+    }
+
+    /** Was es beim Benutzen tut. */
+    void benutzen(MetajavbotDe roboter, double winkel) {
+        if (warten > 0) return;
+        roboter.saegeDrehen(winkel, 70, 2.2, 24);   // 6 schnelle Schnitte mit je 2,2 Schaden
+        warten = 135;
+    }
+}
+== en
+/**
+ * SAW «Sierrón» — An attachable high-RPM circular saw aimed at the
+ * angle you give: spins for nearly a second and shreds any close enemy
+ * in front of you with rapid hits.
+ *
+ * How to plug it into your robot:
+ *   1. Drive to it and touch it: you pick it up (gadgets() tells
+ *      you where it is).
+ *   2. Plug it into its slot (any other won't hold):
+ *      plugIn("arm");
+ *   3. Use it: useGadget(angle);
+ * Recharges in 4.5 s.
+ *
+ * Implements the Gadget interface: type(), name(), pluggedIn(),
+ * ready()…
+ */
+public final class Saw implements Gadget {
+
+    /** The ticks left until it can be used again. */
+    private int wait;
+
+    @Override
+    public String type() {
+        return "sierra";
+    }
+
+    /** What it does when used. */
+    void use(MetajavbotEn robot, double angle) {
+        if (wait > 0) return;
+        robot.spinSaw(angle, 70, 2.2, 24);   // 6 rapid slashes for 2.2 damage each
+        wait = 135;
+    }
+}

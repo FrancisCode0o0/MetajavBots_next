@@ -479,6 +479,9 @@ public final class Taller implements Pantalla {
                     opciones.add(metajavbots.ejercicios.RetoDePieza.aplicarAjustes(pz, jug.ajustesDePiezas.get(pz.id)));
                 }
             }
+            for (Pieza propia : jug.piezasPropias()) {
+                if (propia.ranura == hueco.ranura) opciones.add(propia);
+            }
             Pieza actual = m.pieza(hueco);
             if (hueco == Montaje.Hueco.NATURALEZA) opciones.add(0, null);
             int i = indiceDePieza(opciones, actual);
@@ -537,6 +540,14 @@ public final class Taller implements Pantalla {
             if (s.isEmpty()) continue;
             p.texto(s, cx + 18, cy, ui.letra * 0.88f, false, ui.tema.texto, 1);
             cy += ui.letra * 1.6f;
+        }
+        if (permitirActivar && cy + 46 <= y + h - 12) {
+            cy += 6;
+            if (ui.boton("⚙ " + T.t("taller.disenar_pieza"), cx + 18, cy, cw - 36, 40, Ui.Estilo.DESTACADO, true,
+                    T.t("taller.disenar_pieza_ayuda"))) {
+                j.ir(new PantallaDisenarPieza());
+            }
+            cy += 48;
         }
         List<Pieza> pendientes = permitirActivar ? Progreso.piezasPendientes(j.jugador) : List.of();
         if (!pendientes.isEmpty()) {

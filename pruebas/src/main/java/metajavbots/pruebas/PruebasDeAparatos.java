@@ -40,6 +40,7 @@ final class PruebasDeAparatos {
     static void apuntar() {
         apuntarIman();
         apuntarMartillo();
+        apuntarSierra();
         apuntarFichasTrilingues();
     }
 
@@ -151,9 +152,57 @@ final class PruebasDeAparatos {
         });
     }
 
+    private static void apuntarSierra() {
+        caso("aparatos: sierra aparece, conecta solo en brazo, corta a ráfagas, empuja y recarga", () -> {
+            Modelo cobalto = Modelo.de("cobalto");
+            Pelea p = new Pelea(
+                    PruebasDeLaPelea.con("yo", cobalto, PruebasDeLaPelea.de(Quieto::new)),
+                    PruebasDeLaPelea.con("el", cobalto, PruebasDeLaPelea.de(Quieto::new)),
+                    73);
+            p.aparatos.activos = true;
+            p.aparatos.fijarSiguiente(Aparatos.Tipo.SIERRA);
+            igual(Aparatos.Tipo.SIERRA, p.aparatos.siguiente(), "el siguiente es la sierra");
+            p.empezarRonda();
+            while (p.turno() < Aparatos.SALE) p.avanzar();
+            igual(1, p.aparatos.todos().size(), "aparece la sierra en la arena");
+            Aparatos.Uno a = p.aparatos.todos().get(0);
+            igual(Aparatos.Tipo.SIERRA, a.tipo, "tipo sierra");
+
+            Cuerpo yo = p.cuerpo(0), el = p.cuerpo(1);
+            yo.x = a.x;
+            yo.y = a.y;
+            p.avanzar();
+            igual(0, a.dueno, "el robot recoge la sierra al tocarla");
+            igual("sierra", yo.miAparato().tipo(), "tipo visible en miAparato()");
+            falso(yo.conectar("cabeza"), "la sierra no engancha en cabeza");
+            falso(yo.conectar("espalda"), "la sierra no engancha en espalda");
+            cierto(yo.conectar("arm"), "la sierra engancha en brazo");
+            for (int k = 0; k < Aparatos.MONTAR; k++) p.avanzar();
+            cierto(yo.miAparato().conectado() && yo.miAparato().listo(), "sierra montada y lista");
+
+            yo.x = 300;
+            yo.y = 350;
+            el.x = 375;
+            el.y = 350;
+            double blindajeAntes = el.blindaje();
+            double distAntes = Math.hypot(el.x - yo.x, el.y - yo.y);
+
+            cierto(yo.usarAparato(true, 0), "la sierra se activa hacia 0°");
+            for (int k = 0; k < 26; k++) p.avanzar();
+            double distDespues = Math.hypot(el.x - yo.x, el.y - yo.y);
+            cierto(el.blindaje() < blindajeAntes - 2.0, "la sierra inflige daño acumulado en ráfagas");
+            cierto(distDespues > distAntes + 10, "la sierra empuja ligeramente al rival (" + distAntes + " -> " + distDespues + ")");
+            falso(yo.miAparato().listo(), "entra en recarga");
+
+            for (int k = 0; k < Aparatos.Tipo.SIERRA.recarga; k++) p.avanzar();
+            cierto(yo.miAparato().listo(), "tras la recarga vuelve a estar lista");
+            cierto(yo.usarAparato(true, 0), "se puede volver a activar");
+        });
+    }
+
     private static void apuntarFichasTrilingues() {
         caso("aparatos: todos los tipos tienen ficha trilingüe (es, de, en) con hueco y uso", () -> {
-            cierto(Aparatos.Tipo.values().length >= 8, "al menos 8 aparatos en el catálogo");
+            cierto(Aparatos.Tipo.values().length >= 9, "al menos 9 aparatos en el catálogo");
             for (Aparatos.Tipo t : Aparatos.Tipo.values()) {
                 String ruta = "/aparatos/" + t.id() + ".txt";
                 String contenido;

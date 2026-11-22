@@ -187,6 +187,33 @@ public final class Guardado {
         Path ultimoRival = dir.resolve("ultimo_rival.java");
         if (j.ultimoRivalCodigo != null && !j.ultimoRivalCodigo.isBlank()) escribir(ultimoRival, j.ultimoRivalCodigo);
         else Files.deleteIfExists(ultimoRival);
+        guardarPiezasPropias(dir, j);
+    }
+
+    private static void guardarPiezasPropias(Path dir, Jugador j) throws IOException {
+        Path carpetaPropias = dir.resolve("piezas_propias");
+        if (j.piezasPropiasCodigo.isEmpty()) {
+            if (Files.isDirectory(carpetaPropias)) {
+                try (Stream<Path> s = Files.list(carpetaPropias)) {
+                    for (Path p : (Iterable<Path>) s::iterator) {
+                        if (p.getFileName().toString().endsWith(".java")) Files.deleteIfExists(p);
+                    }
+                }
+            }
+            return;
+        }
+        Files.createDirectories(carpetaPropias);
+        for (Map.Entry<String, String> e : j.piezasPropiasCodigo.entrySet()) {
+            if (e.getKey().matches("[a-z0-9_]+")) escribir(carpetaPropias.resolve(e.getKey() + ".java"), e.getValue());
+        }
+        try (Stream<Path> s = Files.list(carpetaPropias)) {
+            for (Path p : (Iterable<Path>) s::iterator) {
+                String f = p.getFileName().toString();
+                if (f.endsWith(".java") && !j.piezasPropiasCodigo.containsKey(f.substring(0, f.length() - 5))) {
+                    Files.deleteIfExists(p);
+                }
+            }
+        }
     }
 
     /** Los tres cerebros y su reparto (las partidas de antes traen uno solo: se pasa a las ranuras al usarlo). */
@@ -284,8 +311,23 @@ public final class Guardado {
         j.ultimoRivalNombre = v.getOrDefault("ultimoRivalNombre", "");
         Path ultimoRival = dir.resolve("ultimo_rival.java");
         if (Files.exists(ultimoRival)) j.ultimoRivalCodigo = Files.readString(ultimoRival, StandardCharsets.UTF_8);
+        leerPiezasPropias(dir, j);
         leerEstadoCompilacionRobots(dir, v, j);
         return j;
+    }
+
+    private static void leerPiezasPropias(Path dir, Jugador j) throws IOException {
+        Path carpetaPropias = dir.resolve("piezas_propias");
+        if (!Files.isDirectory(carpetaPropias)) return;
+        try (Stream<Path> s = Files.list(carpetaPropias)) {
+            for (Path p : (Iterable<Path>) s::iterator) {
+                String f = p.getFileName().toString();
+                if (!f.endsWith(".java")) continue;
+                String id = f.substring(0, f.length() - 5);
+                String codigo = Files.readString(p, StandardCharsets.UTF_8);
+                j.piezasPropiasCodigo.put(id, codigo);
+            }
+        }
     }
 
     /** Restaura el estado de compilación verificada y el último código válido de cada robot (con migración compatible). */

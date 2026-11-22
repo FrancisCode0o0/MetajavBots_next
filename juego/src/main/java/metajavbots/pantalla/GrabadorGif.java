@@ -28,6 +28,9 @@ import com.badlogic.gdx.graphics.Pixmap;
  */
 public final class GrabadorGif {
 
+    /** Límite máximo de fotogramas en memoria para evitar consumos descontrolados. */
+    public static final int MAX_FOTOGRAMAS = 120;
+
     private final List<BufferedImage> fotos = new ArrayList<>();
     private final int ancho;
     private final int centesimas;
@@ -36,8 +39,29 @@ public final class GrabadorGif {
 
     /** Un GIF de esa anchura (el alto, en proporción) y esa pausa entre fotogramas (en centésimas de segundo). */
     public GrabadorGif(int ancho, int centesimas) {
-        this.ancho = ancho;
+        this.ancho = Math.max(64, ancho);
         this.centesimas = Math.max(2, centesimas);
+    }
+
+    /** Carpeta clara de salida dentro del directorio de usuario/exportaciones para repeticiones GIF. */
+    public static File carpetaDeExportacion() {
+        return new File(new File(new File(System.getProperty("user.home", "."), "MetajavBots"), "exportaciones"), "repeticiones");
+    }
+
+    /** Añade un fotograma ya renderizado (p. ej. sin pantalla), escalándolo si supera el ancho y respetando el tope. */
+    public void agregarFotograma(BufferedImage imagen) {
+        if (imagen == null || fotos.size() >= MAX_FOTOGRAMAS) return;
+        int w = imagen.getWidth(), h = imagen.getHeight();
+        if (w <= ancho && imagen.getType() == BufferedImage.TYPE_INT_RGB) {
+            fotos.add(imagen);
+            return;
+        }
+        int aw = Math.min(ancho, w), ah = Math.max(1, Math.round(h * aw / (float) w));
+        BufferedImage escala = new BufferedImage(aw, ah, BufferedImage.TYPE_INT_RGB);
+        java.awt.Graphics2D g = escala.createGraphics();
+        g.drawImage(imagen, 0, 0, aw, ah, null);
+        g.dispose();
+        fotos.add(escala);
     }
 
     /** Solo un trozo de la pantalla (en las coordenadas de dibujo, con el origen arriba a la izquierda). */
@@ -56,6 +80,7 @@ public final class GrabadorGif {
 
     /** Coge lo que hay ahora en la pantalla (llamar después de dibujar el fotograma). */
     public void coger() {
+        if (fotos.size() >= MAX_FOTOGRAMAS) return;
         int bw = Gdx.graphics.getBackBufferWidth(), bh = Gdx.graphics.getBackBufferHeight();
         float escala = bw / (float) Gdx.graphics.getWidth();
         int x = (int) (rx * escala), w = rw == 0 ? bw : (int) (rw * escala), h = rh == 0 ? bh : (int) (rh * escala);

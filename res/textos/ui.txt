@@ -1063,3 +1063,28 @@ revisor.senior_nulos = Se produjeron {0} NullPointerException: comprueba != null
 revisor.senior_concurrencia = Errores de concurrencia detectados ({0}): usa colecciones concurrentes (ConcurrentHashMap) o synchronized al compartir estado. | Nebenläufigkeitsfehler erkannt ({0}): Nutze sichere Collections (ConcurrentHashMap) oder synchronized bei geteiltem Zustand. | Concurrency errors detected ({0}): use thread-safe collections (ConcurrentHashMap) or synchronized for shared state.
 revisor.senior_paralelo_sin_sync = En modo paralelo tu código no usa primitivas de sincronización (Atomic*, ConcurrentHashMap, synchronized o volatile): vigila el estado compartido. | Im Parallelmodus nutzt dein Code keine Synchronisation (Atomic*, ConcurrentHashMap, synchronized oder volatile): Achte auf geteilten Zustand. | In parallel mode your code uses no synchronization primitives (Atomic*, ConcurrentHashMap, synchronized, or volatile): guard shared state.
 revisor.senior_angulos = Tu código no llama a normalizar(): al cruzar ±180° el giro puede dar la vuelta larga y perder el blanco. | Dein Code ruft normalisieren() nicht auf: Beim Überqueren von ±180° dreht der Roboter leicht den langen Weg und verliert das Ziel. | Your code does not call normalize(): crossing ±180° can make your turret spin the long way and lose lock.
+
+taller.disenar_pieza = Diseña tu pieza | Eigenes Teil bauen | Design your part
+taller.disenar_pieza_ayuda = Escribe en Java tu propia pieza (implementando PiezaPropia), valídala dentro del presupuesto de equilibrio y móntala en tu robot. | Schreibe dein eigenes Teil in Java (implementiert EigenesTeil), prüfe das Balance-Budget und baue es ein. | Write your own part in Java (implementing CustomPart), validate its balance budget, and mount it on your robot.
+
+pieza_propia.titulo = Diseña tu propia pieza | Eigenes Teil entwerfen | Design your own part
+pieza_propia.panel = Contrato y equilibrio | Vertrag & Balance | Contract & balance
+pieza_propia.ayuda = Implementa PiezaPropia (ES), EigenesTeil (DE) o CustomPart (EN). Compila bajo Vigilante/Cargador y respeta el presupuesto máximo de 100 puntos. | Implementiere EigenesTeil (DE), PiezaPropia (ES) oder CustomPart (EN). Läuft unter Vigilante/Cargador mit max. 100 Balance-Punkten. | Implement CustomPart (EN), PiezaPropia (ES), or EigenesTeil (DE). Compiled under Vigilante/Cargador with a 100-point balance cap.
+pieza_propia.plantilla_ranura = Plantilla por ranura: | Vorlage nach Platz: | Template by slot:
+pieza_propia.presupuesto = Presupuesto de equilibrio: {0} / {1} pts | Balance-Budget: {0} / {1} Pkt. | Balance budget: {0} / {1} pts
+pieza_propia.guardadas = Tus piezas guardadas | Deine gespeicherten Teile | Your saved parts
+pieza_propia.ninguna = Aún no has guardado ninguna pieza propia. | Du hast noch kein eigenes Teil gespeichert. | You have not saved any custom part yet.
+pieza_propia.borrada = Pieza «{0}» eliminada. | Teil „{0}“ gelöscht. | Part "{0}" deleted.
+pieza_propia.validar = Compilar y validar | Kompilieren & prüfen | Compile & validate
+pieza_propia.guardar_montar = Guardar y montar | Speichern & einbauen | Save & mount
+pieza_propia.estado_inicial = Edita tu clase y pulsa Compilar y validar (Ctrl+S). | Bearbeite deine Klasse und drücke Kompilieren & prüfen (Strg+S). | Edit your class and press Compile & validate (Ctrl+S).
+pieza_propia.lista_para_montar = «{0}» válida y equilibrada. Pulsa Guardar y montar. | „{0}“ gültig und ausgeglichen. Klick Speichern & einbauen. | "{0}" is valid and balanced. Press Save & mount.
+pieza_propia.guardada_ok = ¡«{0}» guardada y montada en tu robot! | „{0}“ gespeichert und an deinem Roboter montiert! | "{0}" saved and mounted on your robot!
+
+repeticion.codigo_titulo = Código del robot · Turno {0}/{1} | Roboter-Code · Zug {0}/{1} | Robot code · Tick {0}/{1}
+repeticion.sin_codigo = Sin código fuente disponible para esta repetición. | Kein Quellcode für diese Wiederholung verfügbar. | No source code available for this replay.
+repeticion.guardar_gif = Guardar GIF | Als GIF speichern | Save GIF
+repeticion.guardando_gif = Guardando GIF… | Speichere GIF … | Saving GIF…
+repeticion.gif_guardado = GIF guardado: {0} | GIF gespeichert: {0} | GIF saved: {0}
+repeticion.gif_error = No se pudo guardar el GIF: {0} | GIF konnte nicht gespeichert werden: {0} | Could not save GIF: {0}
+repeticion.cerrar = Cerrar | Schließen | Close

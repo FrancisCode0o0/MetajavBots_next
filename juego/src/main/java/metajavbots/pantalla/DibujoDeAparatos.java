@@ -81,6 +81,14 @@ final class DibujoDeAparatos {
             for (int k = -1; k <= 1; k++) {
                 p.linea(ix, iy, ix + lado * s * 0.9f, iy + k * s * 0.55f, 2.5f, 0xFFE38A, 0.85f);
             }
+        } else if (a.tipo == Aparatos.Tipo.SIERRA && a.activo > 0) {
+            // Chispas de corte de la sierra girando a gran velocidad.
+            float sx = hueco[0] + lado * s * 0.95f, sy = hueco[1];
+            p.aro(sx, sy, s * 0.95f, 2.5f, 0xDCE6F2, 0.75f);
+            for (int k = 0; k < 4; k++) {
+                double ang = t * 19 + k * 1.57;
+                p.linea(sx, sy, sx + (float) Math.cos(ang) * s * 1.15f, sy + (float) Math.sin(ang) * s * 1.15f, 2, 0xFFB703, 0.85f);
+            }
         }
     }
 
@@ -103,6 +111,7 @@ final class DibujoDeAparatos {
             case ACEITE: return 0x9B7BFF;
             case IMAN: return 0x38D9C0;
             case MARTILLO: return 0xF4A261;
+            case SIERRA: return 0xDCE6F2;
             default: return 0x7BE36B;
         }
     }
@@ -160,6 +169,19 @@ final class DibujoDeAparatos {
                 p.rect(cx - s * 0.14f, cy - s * 0.2f, s * 0.28f, s * 0.9f, 0x4A525D, 1);
                 p.caja(cx - s * 0.62f + giro, cy - s * 0.65f, s * 1.24f, s * 0.55f, s * 0.14f, 0xA8B2BD, 1);
                 p.rect(cx - s * 0.52f + giro, cy - s * 0.45f, s * 1.04f, s * 0.16f, 0xF4A261, 1);
+                break;
+            }
+            case SIERRA: {
+                // Una sierra circular dentada con eje central que gira más deprisa al activarse.
+                float vel = activo ? 18f : 3f;
+                p.circulo(cx, cy, s * 0.68f, 0xC4D0DC, 1);
+                for (int k = 0; k < 8; k++) {
+                    double ang = t * vel + k * (Math.PI / 4.0);
+                    float x1 = cx + (float) Math.cos(ang) * s * 0.58f, y1 = cy + (float) Math.sin(ang) * s * 0.58f;
+                    float x2 = cx + (float) Math.cos(ang + 0.18) * s * 0.95f, y2 = cy + (float) Math.sin(ang + 0.18) * s * 0.95f;
+                    p.linea(x1, y1, x2, y2, Math.max(2f, s * 0.16f), activo ? 0xFFB703 : 0xDCE6F2, 1);
+                }
+                p.circulo(cx, cy, s * 0.22f, 0x2A3644, 1);
                 break;
             }
             default:

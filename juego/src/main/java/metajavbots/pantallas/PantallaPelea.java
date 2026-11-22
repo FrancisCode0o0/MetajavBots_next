@@ -389,6 +389,7 @@ public final class PantallaPelea implements Pantalla {
         }
         float ancho = depurador && !entreRondas ? p.ancho - 460 : p.ancho;
         if (especial != null && especial.activa()) ancho = ArmaEspecial.anchoDeLaArena(p.ancho);
+        if (terminada && tiempoFinal >= 2.2f && repeticion.activa()) ancho = Repeticion.anchoArena(p.ancho);
         vista.sacudida = Math.max(vista.sacudida, j.sacudida);
         boolean conBanda = tiempoLocutor > 0 && !locutor.isEmpty() && !entreRondas && !panelDelAparato.estaAbierto()
                 && !(terminada && tiempoFinal >= 2.2f);
@@ -690,8 +691,7 @@ public final class PantallaPelea implements Pantalla {
         if (bajoNivel && tiempoFinal > 0.6f) j.alarmaBajada.dibujarBordeLuminoso(p, dt, true);
         if (tiempoFinal < 2.2f) return;
         if (repeticion.activa()) {
-            repeticion.avanzar(j, pelea, vista, dt);
-            repeticion.rotulo(j, 0, 88, p.ancho, p.alto - 88);
+            repeticion.dibujarEnPantalla(j, pelea, vista, dt);
             return;
         }
         float w = Math.min(p.ancho - 60, bajoNivel ? 820 : 720);
@@ -748,7 +748,7 @@ public final class PantallaPelea implements Pantalla {
             j.ir(new PremioDelDesafio(() -> premioElegido = true));
         }
         if (repeticion.hay() && ui.boton("▶ " + T.t("repeticion.ver"), x + w - 330, y + h - (premio ? 200 : 140), 300, 50, Ui.Estilo.PLANO)) {
-            repeticion.empezar(pelea);
+            repeticion.empezar(pelea, robot.listo() ? robot.fuente() : editor.doc.texto());
         }
         float bwFinal = (w - 72f) / 3f;
         if (ui.boton(T.t("final.revancha"), x + 24f, y + h - 74, bwFinal, 54, Ui.Estilo.NORMAL)) {

@@ -980,3 +980,57 @@ ejemplo:
             avanzar(12);
         }
     }
+
+
+=== pieza_propia_y_repeticion
+nivel: 6
+tema: --
+titulo.es: Diseña tu pieza, aparatos de la arena y repetición en GIF
+titulo.de: Eigenes Teil, Arena-Geräte und GIF-Wiederholung
+titulo.en: Custom parts, arena gadgets and GIF replay
+claves.es: pieza propia, disena tu pieza, piezapropia, presupuesto de equilibrio, aparato, aparatos, sierra, sierron, iman, martillo, repeticion, codigo al lado, exportar gif, guardar gif, gif89a
+claves.de: eigenes teil, teil entwerfen, eigenesteil, balance budget, geraet, geraete, saege, sierron, magnet, hammer, wiederholung, code daneben, gif exportieren, gif speichern, gif89a
+claves.en: custom part, design your part, custompart, balance budget, gadget, gadgets, saw, sierron, magnet, hammer, replay, code side by side, export gif, save gif, gif89a
+resumen.ia: Custom Java robot parts, Medabots-style arena gadgets, and split-screen GIF replay (from the Workshop › Parts tab you can open "Design your part" and write a Java class implementing PiezaPropia / EigenesTeil / CustomPart compiled under Vigilante and Cargador with a 100-point balance budget per slot — head, arm, legs, or core — then save and mount it alongside shop parts activated via PantallaActivarPieza; arena gadgets now include 9 Medabots-style pickups — jet, antigravity, shock, flamethrower, oil, glue, magnet, hammer, and the new high-RPM circular saw "Sierrón" for the arm slot — each with trilingual in-fight code docs; after a fight, Replay shows a split view with the slow-motion arena on the left, the robot's synchronized executed code on the right highlighting active lines, and a non-blocking "Save GIF" button exporting valid animated GIFs to user exports)
+tip.juego_pieza_propia_repeticion.condicion: aleatorio
+tip.juego_pieza_propia_repeticion.es: En Taller › Piezas puedes pulsar «Diseña tu pieza» para programar tu propia pieza Java (PiezaPropia, máx. 100 puntos), probar la nueva [[sierra]] «Sierrón» en la arena y ver la repetición con tu código al lado para guardarla como GIF.
+tip.juego_pieza_propia_repeticion.de: Unter Werkstatt › Teile kannst du „Eigenes Teil bauen“ öffnen, dein eigenes Java-Teil (EigenesTeil, max. 100 Punkte) schreiben, die neue [[Säge]] „Sierrón“ in der Arena testen und die Wiederholung samt Code als GIF speichern.
+tip.juego_pieza_propia_repeticion.en: In Workshop › Parts you can open "Design your part" to code your own Java part (CustomPart, max 100 points), try the new "Sierrón" [[saw]] gadget in the arena, and watch the split-screen replay with your code and export it as a GIF.
+ver: taller_y_compilar, modelos_y_armas, arena_y_modos
+es:
+    En el Taller › Piezas puedes abrir «Diseña tu pieza» para crear tu propia pieza en Java implementando la interfaz PiezaPropia (o EigenesTeil en alemán y CustomPart en inglés). Se compila bajo las mismas barandillas de seguridad (Vigilante y Cargador) que los robots, respeta un presupuesto máximo de 100 puntos de equilibrio por ranura (brazo, cabeza, piernas o núcleo) para evitar piezas rotas, se guarda en tu partida y se monta igual que las piezas del catálogo o las activadas en la Tienda.
+    Además, en la arena aparecen nueve aparatos estilo Medabots que se recogen y conectan por código: motor a chorro, antigravedad, descarga, lanzallamas, aceite, pegamento, imán, martillo y la sierra circular «Sierrón» (se conecta en "brazo" y corta a ráfagas rápidas al rival cercano).
+    Al terminar una pelea, la Repetición del mejor golpe muestra una vista dividida: la arena a cámara lenta a la izquierda y el código ejecutado de tu robot a la derecha (resaltando las líneas activas de cada turno), junto al botón «Guardar GIF» que exporta un archivo GIF animado sin bloquear la pantalla.
+de:
+    Unter Werkstatt › Teile kannst du „Eigenes Teil bauen“ öffnen und dein eigenes Roboterteil in Java schreiben, indem du EigenesTeil (oder PiezaPropia / CustomPart) implementierst. Es wird unter denselben Sicherheitsregeln (Vigilante und Cargador) kompiliert, bleibt im Balance-Budget von höchstens 100 Punkten pro Platz (Arm, Kopf, Beine oder Kern), wird im Spielstand gespeichert und wie gewohnt am Roboter montiert.
+    In der Arena erscheinen zudem neun Medabots-artige Geräte zum Einsammeln und Anschließen per Code: Düsentriebwerk, Antigravitation, Elektroschock, Flammenwerfer, Öl, Kleber, Magnet, Hammer und die neue Kreissäge „Sierrón“ (Platz "arm", schnelle Schnitte im Nahkampf).
+    Nach einem Kampf zeigt die Wiederholung des besten Treffers eine geteilte Ansicht: links die Arena in Zeitlupe, rechts der ausgeführte Roboter-Code mit hervorgehobenen Zeilen, plus „Als GIF speichern“ im Hintergrund ohne Ruckler.
+en:
+    In Workshop › Parts you can open "Design your part" to write your own robot part in Java by implementing CustomPart (or PiezaPropia / EigenesTeil). It compiles under the same Vigilante and Cargador security guardrails, enforces a 100-point balance budget per slot (arm, head, legs, or core) so no part is broken, saves to your profile, and mounts on your robot alongside catalog and activated shop parts.
+    The arena also spawns nine Medabots-style gadgets you pick up and plug in via code: jet engine, antigravity, shock, flamethrower, oil, glue, magnet, hammer, and the new "Sierrón" circular saw (plugs into "arm" for rapid close-range slashes).
+    After a fight, Replay opens a split-screen view with the slow-motion arena on the left, your robot's executed code on the right highlighting active lines per tick, and a non-blocking "Save GIF" button that exports a valid animated GIF.
+pseudo.es:
+    Taller → Piezas → Diseña tu pieza → implementar PiezaPropia (presupuesto ≤ 100) → Guardar y montar
+    En pelea: recoger aparato "sierra" → conectar("brazo") → usarAparato(angulo)
+    Al acabar: Repetición → ver código sincronizado → Guardar GIF
+pseudo.de:
+    Werkstatt → Teile → Eigenes Teil bauen → EigenesTeil implementieren (Budget ≤ 100) → Speichern & einbauen
+    Im Kampf: Gerät "sierra" aufheben → anschliessen("arm") → geraetBenutzen(winkel)
+    Am Ende: Wiederholung → Code verfolgen → Als GIF speichern
+pseudo.en:
+    Workshop → Parts → Design your part → implement CustomPart (budget ≤ 100) → Save & mount
+    In fight: pick up "sierra" gadget → plugIn("arm") → useGadget(angle)
+    After fight: Replay → watch synced code → Save GIF
+ejemplo:
+    public class SierraRapida extends Metajavbot {
+        @Override
+        public void cadaTurno() {
+            Aparato mio = miAparato();
+            if (mio != null && !mio.conectado()) {
+                conectar("brazo"); // acoplar la sierra || Säge anschließen || plug in the saw
+            } else if (mio != null && mio.listo()) {
+                usarAparato(mira()); // activar corte || Schnitt auslösen || trigger slash
+            }
+            avanzar(15);
+        }
+    }

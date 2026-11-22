@@ -64,10 +64,16 @@ public final class Jugador {
 
         /** El montaje aplicando, si existen, los ajustes personalizados (ya acotados) de las piezas activadas. */
         public Montaje montaje(Map<String, Map<String, Double>> ajustes) {
+            return montaje(ajustes, null);
+        }
+
+        /** El montaje aplicando ajustes acotados y resolviendo también piezas propias diseñadas por el jugador. */
+        public Montaje montaje(Map<String, Map<String, Double>> ajustes, Map<String, Pieza> piezasPropias) {
             Montaje m = new Montaje(Modelo.de(modelo));
             CatalogoDePiezas c = CatalogoDePiezas.delJuego();
             for (Map.Entry<Montaje.Hueco, String> e : piezas.entrySet()) {
                 Pieza p = c.pieza(e.getValue());
+                if (p == null && piezasPropias != null) p = piezasPropias.get(e.getValue());
                 if (p != null) {
                     Map<String, Double> aj = ajustes == null ? null : ajustes.get(p.id);
                     m.poner(e.getKey(), aj == null || aj.isEmpty() ? p : metajavbots.ejercicios.RetoDePieza.aplicarAjustes(p, aj));
@@ -107,6 +113,9 @@ public final class Jugador {
     public final Set<String> piezasPendientes = new LinkedHashSet<>();
     /** Ajustes básicos programados por el jugador para piezas activadas (clave de pieza → clave=valor acotados). */
     public final Map<String, Map<String, Double>> ajustesDePiezas = new LinkedHashMap<>();
+    /** Código fuente Java de las piezas diseñadas por el jugador (id de pieza propia → código Java). */
+    public final Map<String, String> piezasPropiasCodigo = new LinkedHashMap<>();
+    private final Map<String, Pieza> cachePiezasPropias = new LinkedHashMap<>();
     public final Set<String> modelosGanados = new LinkedHashSet<>();
     public final Set<String> ejerciciosResueltos = new LinkedHashSet<>();
     /** El último código de cada ejercicio (para seguir donde se dejó). */
@@ -235,9 +244,41 @@ public final class Jugador {
         return r != null && r.tieneCodigoCompilado();
     }
 
-    /** El montaje de un robot del jugador aplicando sus ajustes de piezas acotados. */
+    /** El montaje de un robot del jugador aplicando sus ajustes de piezas acotados y sus piezas propias. */
     public Montaje montajeDe(Robot r) {
-        return r == null ? null : r.montaje(ajustesDePiezas);
+        return r == null ? null : r.montaje(ajustesDePiezas, mapaPiezasPropias());
+    }
+
+    /** Guarda (o actualiza) una pieza diseñada en Java por el jugador y su código fuente. */
+    public void guardarPiezaPropia(Pieza pieza, String codigo) {
+        if (pieza == null || codigo == null) return;
+        piezasPropiasCodigo.put(pieza.id, codigo);
+        cachePiezasPropias.put(pieza.id, pieza);
+    }
+
+    /** Elimina una pieza propia del jugador y la desmonta si estaba puesta en algún robot. */
+    public void eliminarPiezaPropia(String id) {
+        if (id == null) return;
+        piezasPropiasCodigo.remove(id);
+        cachePiezasPropias.remove(id);
+        for (Robot r : robots) r.piezas.values().removeIf(id::equals);
+    }
+
+    /** Devuelve todas las piezas propias válidas compiladas del jugador (compilando bajo demanda si hace falta). */
+    public List<Pieza> piezasPropias() {
+        return new ArrayList<>(mapaPiezasPropias().values());
+    }
+
+    /** Mapa id → Pieza de las piezas propias válidas del jugador. */
+    public Map<String, Pieza> mapaPiezasPropias() {
+        for (Map.Entry<String, String> e : piezasPropiasCodigo.entrySet()) {
+            if (!cachePiezasPropias.containsKey(e.getKey())) {
+                metajavbots.piezas.DisenadorDePieza.Resultado res =
+                        metajavbots.piezas.DisenadorDePieza.compilarYValidar(e.getValue(), idioma);
+                if (res.valida && res.pieza != null) cachePiezasPropias.put(e.getKey(), res.pieza);
+            }
+        }
+        return cachePiezasPropias;
     }
 
     public int victorias() {
