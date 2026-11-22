@@ -23,6 +23,7 @@ import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.DificultadCarrera;
 import metajavbots.combate.Fabrica;
+import metajavbots.combate.Pelea;
 import metajavbots.combate.PistaDeCarrera;
 import metajavbots.pantallas.ConsultaIaEntrenador;
 import metajavbots.pantallas.ModoEspecial;
@@ -100,6 +101,9 @@ final class PruebasDeCarreraDeObstaculos {
         apuntarRecompensaMonedasYRivalAjeno();
         apuntarPlantillaTorpeTextosYEntrenador();
         apuntarNivelesDeDificultadYDesbloqueoEspecial();
+        apuntarDanoEscaladoYRobotIngenuoDestruido();
+        apuntarTrampaMortalYBonosDeReparacion();
+        apuntarMedallasCuartosDeMonedaYPersistencia();
     }
 
     private static Combatiente combatienteConArma(String nombre, Pieza.Arma arma, Fabrica fabrica) {
@@ -164,7 +168,7 @@ final class PruebasDeCarreraDeObstaculos {
 
             int destructibles = 0, indestructibles = 0;
             for (Arena.Trampa t : carrera.pelea.arena.trampas()) {
-                if (t.tipo.equals("impulso")) continue;
+                if (t.tipo.equals("impulso") || t.tipo.equals(Arena.TIPO_REPARACION)) continue;
                 if (t.destructible) destructibles++;
                 else indestructibles++;
             }
@@ -414,9 +418,14 @@ final class PruebasDeCarreraDeObstaculos {
                     "carrera_obs.rival", "carrera_obs.vs_maquina", "carrera_obs.vs_usuario",
                     "carrera_obs.nueva_pista", "carrera_obs.sin_ajenos", "carrera_obs.mapa_titulo",
                     "carrera_obs.leyenda_destructible", "carrera_obs.leyenda_indestructible",
-                    "carrera_obs.leyenda_impulso", "carrera_obs.leyenda_rotos", "carrera_obs.leyenda_ocultos",
+                    "carrera_obs.leyenda_mortal", "carrera_obs.leyenda_impulso",
+                    "carrera_obs.leyenda_reparacion", "carrera_obs.leyenda_rotos", "carrera_obs.leyenda_ocultos",
                     "carrera_obs.iniciar", "carrera_obs.ganas", "carrera_obs.pierdes", "carrera_obs.empate",
-                    "carrera_obs.premio_moneda", "carrera_obs.sin_moneda"
+                    "carrera_obs.premio_moneda", "carrera_obs.sin_moneda",
+                    "carrera_obs.medalla_oro", "carrera_obs.medalla_plata",
+                    "carrera_obs.medalla_bronce", "carrera_obs.medalla_ninguna",
+                    "carrera_obs.dano_recibido", "carrera_obs.reconocimiento_perfecta",
+                    "carrera_obs.cuarto_ganado", "carrera_obs.cuarto_completado"
             };
             for (Idioma id : Idioma.values()) {
                 for (String k : claves) {
@@ -429,9 +438,9 @@ final class PruebasDeCarreraDeObstaculos {
             cierto(entrada != null, "existe ficha carrera_de_obstaculos en ConocimientoDelEntrenador");
             cierto(!entrada.consejos().isEmpty(), "existe consejo espontáneo para carrera_de_obstaculos");
             String[][] consultas = {
-                    {"carrera de obstáculos", "ES", "6×", "defectuosos", "impulso", "especial"},
-                    {"Hindernislauf", "DE", "6×", "defekte", "impulso", "spezial"},
-                    {"obstacle race", "EN", "6×", "broken", "impulso", "special"}
+                    {"carrera de obstáculos", "ES", "6×", "defectuosos", "impulso", "especial", "trampa_mortal", "reparacion", "1/4"},
+                    {"Hindernislauf", "DE", "6×", "defekte", "impulso", "spezial", "trampa_mortal", "reparacion", "1/4"},
+                    {"obstacle race", "EN", "6×", "broken", "impulso", "special", "trampa_mortal", "reparacion", "1/4"}
             };
             for (String[] q : consultas) {
                 Idioma id = Idioma.valueOf(q[1]);
@@ -441,15 +450,19 @@ final class PruebasDeCarreraDeObstaculos {
                 String texto = String.join(" ", res.get(0).parrafos(id)).toLowerCase(Locale.ROOT);
                 cierto(texto.contains(q[2].toLowerCase(Locale.ROOT)) && texto.contains(q[3])
                         && texto.contains(q[4]) && texto.contains(q[5])
+                        && texto.contains(q[6]) && texto.contains(q[7]) && texto.contains(q[8])
                         && texto.contains("noob") && texto.contains("junior") && texto.contains("senior"),
-                        "ficha del entrenador actualizada con dificultades en " + id);
+                        "ficha del entrenador actualizada con daño, trampas mortales, reparación y 1/4 en " + id);
                 String tip = ConsejosDelJuego.textoDelTip(entrada.consejos().get(0).aTip(), id);
-                cierto(tip != null && !tip.isBlank(), "consejo espontáneo trilingüe no vacío en " + id);
+                cierto(tip != null && !tip.isBlank() && tip.contains("trampa_mortal") && tip.contains("reparacion"),
+                        "consejo espontáneo trilingüe actualizado en " + id);
                 String sistemaIa = ConsultaIaEntrenador.construirSistema(new Jugador("Test"), id, null).toLowerCase(Locale.ROOT);
                 cierto(sistemaIa.contains("obstacle race") && sistemaIa.contains("6x")
-                        && sistemaIa.contains("impulso") && sistemaIa.contains("noob")
-                        && sistemaIa.contains("junior") && sistemaIa.contains("senior") && sistemaIa.contains("special"),
-                        "sistema IA actualizado con mecánicas 6x, impulso y dificultades en " + id);
+                        && sistemaIa.contains("impulso") && sistemaIa.contains("trampa_mortal")
+                        && sistemaIa.contains("reparacion") && sistemaIa.contains("1/4")
+                        && sistemaIa.contains("noob") && sistemaIa.contains("junior")
+                        && sistemaIa.contains("senior") && sistemaIa.contains("special"),
+                        "sistema IA actualizado con daño, trampas mortales, reparación y 1/4 en " + id);
             }
         });
     }
@@ -457,7 +470,7 @@ final class PruebasDeCarreraDeObstaculos {
     private static int contarObstaculos(CarreraDeObstaculos carrera) {
         int n = 0;
         for (Arena.Trampa t : carrera.pelea.arena.trampas()) {
-            if (!t.tipo.equals("impulso")) n++;
+            if (!t.tipo.equals("impulso") && !t.tipo.equals(Arena.TIPO_REPARACION)) n++;
         }
         return n;
     }
@@ -530,6 +543,165 @@ final class PruebasDeCarreraDeObstaculos {
             master.etiqueta = Etiqueta.MASTER;
             cierto(Progreso.modoEspecialDesbloqueado(master), "rango Master desbloquea Modo especial");
             cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(master, DificultadCarrera.ESPECIAL), "ESPECIAL desbloqueado en Master");
+        });
+    }
+
+    private static void apuntarDanoEscaladoYRobotIngenuoDestruido() {
+        caso("carrera de obstáculos: daño multiplicado por dificultad y robot ingenuo en línea recta destruido", () -> {
+            DificultadCarrera[] niveles = DificultadCarrera.values();
+            cierto(DificultadCarrera.NOOB.multiplicadorDano > 1.0, "NOOB multiplica el daño sobre combate estándar");
+            for (int i = 0; i < niveles.length - 1; i++) {
+                cierto(niveles[i].multiplicadorDano < niveles[i + 1].multiplicadorDano,
+                        "multiplicador crece: " + niveles[i] + " < " + niveles[i + 1]);
+            }
+
+            // Mismo golpe en Pelea estándar vs Carrera en cada dificultad.
+            Combatiente aStd = new Combatiente("A", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            Combatiente bStd = new Combatiente("B", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            Pelea peleaStd = new Pelea(aStd, bStd, 900L);
+            peleaStd.empezarRonda();
+            igual(1.0, peleaStd.multiplicadorDano, "Pelea estándar conserva multiplicador 1.0");
+            peleaStd.golpeEspecial(1, 0, 10.0, "prueba");
+            double danoStd = aStd.danoTotalRecibido;
+
+            double danoAnterior = danoStd;
+            for (DificultadCarrera d : niveles) {
+                Combatiente cj = new Combatiente("Jug", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+                Combatiente cr = new Combatiente("Riv", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+                CarreraDeObstaculos c = new CarreraDeObstaculos(cj, cr, 900L, false, null, d);
+                igual(d.multiplicadorDano, c.pelea.multiplicadorDano, "carrera aplica multiplicador de " + d);
+                c.pelea.golpeEspecial(1, 0, 10.0, "prueba");
+                double danoActual = cj.danoTotalRecibido;
+                cierto(danoActual > danoAnterior + 1e-6,
+                        "daño en " + d + " (" + danoActual + ") supera al tramo anterior (" + danoAnterior + ")");
+                danoAnterior = danoActual;
+            }
+
+            // Robot ingenuo que solo avanza en línea recta queda destruido antes de la meta en todos los niveles.
+            for (DificultadCarrera d : niveles) {
+                Combatiente ingenuo = new Combatiente("Recto-" + d, new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Recto::new));
+                Combatiente quieto = new Combatiente("Quieto", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+                CarreraDeObstaculos c = new CarreraDeObstaculos(ingenuo, quieto, 1234L, false, null, d);
+                for (int t = 0; t < CarreraDeObstaculos.MAX_TURNOS && !c.terminada(); t++) {
+                    c.avanzar();
+                }
+                cierto(c.terminada(), "carrera con robot ingenuo termina en " + d);
+                cierto(c.pelea.cuerpo(0).fuera, "robot ingenuo queda destruido antes de cruzar la meta en " + d);
+                falso(c.ganador() == 0, "robot ingenuo NO gana la carrera en " + d);
+                cierto(c.pelea.cuerpo(0).x < CarreraDeObstaculos.META_X, "destruido antes de la línea de meta en " + d);
+            }
+        });
+    }
+
+    private static void apuntarTrampaMortalYBonosDeReparacion() {
+        caso("carrera de obstáculos: trampas mortales instantáneas y bonos de reparación detectables ES/DE/EN", () -> {
+            Combatiente jug = new Combatiente("Jug", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            Combatiente riv = new Combatiente("Riv", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+            CarreraDeObstaculos carrera = new CarreraDeObstaculos(jug, riv, 515L, false, null, DificultadCarrera.JUNIOR);
+
+            List<Arena.Trampa> mortales = carrera.trampasMortalesActivas();
+            List<Arena.Trampa> reparaciones = carrera.reparacionesActivas();
+            cierto(mortales.size() >= 2, "existen trampas mortales en pista: " + mortales.size());
+            cierto(reparaciones.size() >= 2, "existen bonos de reparación en pista: " + reparaciones.size());
+
+            Cuerpo c0 = carrera.pelea.cuerpo(0);
+            Arena.Trampa mortal = mortales.get(0);
+            Arena.Trampa rep = reparaciones.get(0);
+            cierto(contiene(c0.obstaculos(), mortal), "trampa_mortal visible en obstaculos()");
+            cierto(contiene(c0.obstaculos(), rep), "reparacion visible en obstaculos()");
+            boolean vioMortalDe = false, vioRepEn = false;
+            for (Cosa cosa : c0.obstaculos()) {
+                if (cosa.typ().equals(Arena.TIPO_TRAMPA_MORTAL) && cosa.gefaehrlich()) vioMortalDe = true;
+                if (cosa.type().equals(Arena.TIPO_REPARACION) && !cosa.dangerous()) vioRepEn = true;
+            }
+            cierto(vioMortalDe, "fachada DE (typ/gefaehrlich) detecta trampa_mortal");
+            cierto(vioRepEn, "fachada EN (type/dangerous) detecta reparacion");
+
+            // 1) Recoger bono de reparación desaparece el objeto y recupera blindaje sin pasar del máximo.
+            for (int k = 0; k < 4; k++) c0.parte[k] = c0.parteMax[k] * 0.5;
+            double blindajeAntes = c0.blindaje();
+            c0.x = rep.x;
+            c0.y = rep.y;
+            carrera.avanzar();
+            cierto(rep.destruida(), "el bono de reparación desaparece al recogerlo");
+            cierto(c0.blindaje() > blindajeAntes + 15.0, "recupera blindaje del robot dañado: " + blindajeAntes + " -> " + c0.blindaje());
+            cierto(c0.blindaje() <= 100.0 + 1e-6, "la reparación nunca supera el 100 % de blindaje");
+
+            // 2) Pisar trampa mortal destruye inmediatamente al robot incluso con 100 % de blindaje.
+            for (int k = 0; k < 4; k++) c0.parte[k] = c0.parteMax[k];
+            igual(100.0, Math.round(c0.blindaje()) * 1.0, "blindaje restaurado al 100 % antes de pisar trampa mortal");
+            c0.x = mortal.x;
+            c0.y = mortal.y;
+            carrera.avanzar();
+            cierto(c0.fuera, "pisar trampa_mortal destruye instantáneamente al robot al 100 %");
+            igual(0.0, c0.blindaje(), "blindaje a 0 tras trampa mortal");
+            cierto(carrera.terminada() && carrera.ganador() == 1, "la carrera termina por KO al pisar trampa mortal");
+        });
+    }
+
+    private static void apuntarMedallasCuartosDeMonedaYPersistencia() {
+        caso("carrera de obstáculos: medallas por daño, +1/4 de moneda por perfección y persistencia de 4/4", () -> {
+            Path carpetaAnterior = Guardado.carpeta;
+            Path temp = Files.createTempDirectory("mjb-carrera-cuartos");
+            try {
+                Guardado.carpeta = temp;
+                Jugador jug = new Jugador("PilotoPerfecto");
+                jug.monedas = 5.0;
+                jug.cuartosDeMoneda = 0;
+
+                // Tres carreras perfectas: cada una da +1 moneda y +1 cuarto (3/4).
+                for (int i = 1; i <= 3; i++) {
+                    Combatiente cJug = new Combatiente("Jug", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+                    CarreraDeObstaculos c = new CarreraDeObstaculos(cJug, CarreraDeObstaculos.rivalMaquina("IA"), 200L + i, true);
+                    c.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                    c.avanzar();
+                    igual(CarreraDeObstaculos.Medalla.ORO, c.medallaObtenida(), "victoria sin daño obtiene medalla de oro");
+                    cierto(c.aplicarRecompensa(jug), "aplica recompensa perfecta #" + i);
+                    igual(1, c.cuartosGanados(), "otorga +1 cuarto por carrera perfecta");
+                    igual(0, c.monedasExtraPorCuartos(), "aún no completa 4 cuartos en #" + i);
+                    igual(i, jug.cuartosDeMoneda, "cuartos acumulados = " + i);
+                }
+                igual(8.0, jug.monedas, "3 victorias perfectas suman 3 monedas base (5 -> 8)");
+
+                Guardado.guardar(jug);
+                Jugador recargado = Guardado.leer(Guardado.carpetaDe(jug.nombre));
+                igual(3, recargado.cuartosDeMoneda, "cuartosDeMoneda=3 persiste en Guardado");
+
+                // Cuarta carrera perfecta: 3/4 + 1/4 = 4/4 -> +1 moneda base + 1 moneda extra, cuartos reinicia a 0.
+                Combatiente cJug4 = new Combatiente("Jug4", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+                CarreraDeObstaculos c4 = new CarreraDeObstaculos(cJug4, CarreraDeObstaculos.rivalMaquina("IA"), 204L, true);
+                c4.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                c4.avanzar();
+                cierto(c4.aplicarRecompensa(recargado), "aplica cuarta recompensa perfecta");
+                igual(1, c4.monedasExtraPorCuartos(), "al llegar a 4/4 otorga +1 moneda extra");
+                igual(0, recargado.cuartosDeMoneda, "cuartosDeMoneda vuelve a 0 tras completar 4/4");
+                igual(10.0, recargado.monedas, "8 + 1 victoria + 1 extra por 4/4 = 10 monedas");
+
+                Guardado.guardar(recargado);
+                Jugador trasCuatro = Guardado.leer(Guardado.carpetaDe(recargado.nombre));
+                igual(10.0, trasCuatro.monedas, "moneda extra por 4/4 persiste tras guardar");
+                igual(0, trasCuatro.cuartosDeMoneda, "cuartos reiniciados persisten tras guardar");
+
+                // Tramos intermedios: plata y bronce no suman cuarto de moneda.
+                Combatiente cPlata = new Combatiente("Plata", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+                CarreraDeObstaculos cp = new CarreraDeObstaculos(cPlata, CarreraDeObstaculos.rivalMaquina("IA"), 205L, true);
+                cPlata.danoTotalRecibido = cp.pelea.cuerpo(0).blindajeMaximoTotal() * 0.12;
+                cp.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                cp.avanzar();
+                igual(CarreraDeObstaculos.Medalla.PLATA, cp.medallaObtenida(), "12 % daño -> medalla de plata");
+                cp.aplicarRecompensa(trasCuatro);
+                igual(0, cp.cuartosGanados(), "plata no suma cuarto de moneda");
+                igual(0, trasCuatro.cuartosDeMoneda, "cuartos sin cambios tras plata");
+
+                Combatiente cBronce = new Combatiente("Bronce", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
+                CarreraDeObstaculos cb = new CarreraDeObstaculos(cBronce, CarreraDeObstaculos.rivalMaquina("IA"), 206L, true);
+                cBronce.danoTotalRecibido = cb.pelea.cuerpo(0).blindajeMaximoTotal() * 0.35;
+                cb.pelea.cuerpo(0).x = CarreraDeObstaculos.META_X + 5;
+                cb.avanzar();
+                igual(CarreraDeObstaculos.Medalla.BRONCE, cb.medallaObtenida(), "35 % daño -> medalla de bronce");
+            } finally {
+                Guardado.carpeta = carpetaAnterior;
+            }
         });
     }
 }

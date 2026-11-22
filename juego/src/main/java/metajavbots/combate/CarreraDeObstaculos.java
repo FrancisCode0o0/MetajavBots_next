@@ -32,6 +32,33 @@ public final class CarreraDeObstaculos {
     public static final int MAX_TURNOS = 7200;
     /** Recompensa exacta en monedas por cada carrera ganada por el jugador. */
     public static final double RECOMPENSA_MONEDAS = 1.0;
+    /** Umbral máximo de daño recibido (%) para considerar la victoria como carrera perfecta (medalla de oro y +1/4 de moneda). */
+    public static final double UMBRAL_PERFECTO = 1.0;
+    /** Umbral máximo de daño recibido (%) para obtener medalla de plata. */
+    public static final double UMBRAL_PLATA = 20.0;
+    /** Umbral máximo de daño recibido (%) para obtener medalla de bronce. */
+    public static final double UMBRAL_BRONCE = 50.0;
+
+    /** Medalla otorgada al ganar la carrera según lo poco que haya sido dañado el robot. */
+    public enum Medalla {
+        NINGUNA("carrera_obs.medalla_ninguna", 0x9AA3AD, false),
+        BRONCE("carrera_obs.medalla_bronce", 0xCD7F32, false),
+        PLATA("carrera_obs.medalla_plata", 0xD0D8E2, false),
+        ORO("carrera_obs.medalla_oro", 0xFFD23F, true);
+
+        /** Clave de localización en ui.txt. */
+        public final String claveTexto;
+        /** Color RGB representativo de la medalla. */
+        public final int color;
+        /** Indica si otorga +1/4 de moneda adicional por carrera perfecta. */
+        public final boolean esPerfecta;
+
+        Medalla(String claveTexto, int color, boolean esPerfecta) {
+            this.claveTexto = claveTexto;
+            this.color = color;
+            this.esPerfecta = esPerfecta;
+        }
+    }
 
     /** La simulación física subyacente (reutiliza toda la física de combate y obstáculos). */
     public final Pelea pelea;
@@ -50,6 +77,8 @@ public final class CarreraDeObstaculos {
     private int ganador = -2;
     private String motivoFin = "";
     private boolean recompensaAplicada;
+    private int cuartosGanados;
+    private int monedasExtraPorCuartos;
 
     /** Crea una nueva carrera de obstáculos lista para ejecutarse turno a turno (dificultad por defecto). */
     public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina) {
@@ -84,6 +113,7 @@ public final class CarreraDeObstaculos {
         }
         this.pelea = new Pelea(cs, equipos, semilla, ANCHO, ALTO, MAX_TURNOS);
         this.pelea.rondas = 1;
+        this.pelea.multiplicadorDano = this.dificultad.multiplicadorDano;
         this.pelea.arena = PistaDeCarrera.generarArena(ANCHO, ALTO, semilla, escenario, this.dificultad);
         this.pelea.empezarRonda();
         colocarEnSalida();
@@ -199,11 +229,14 @@ public final class CarreraDeObstaculos {
         return Math.max(0, Math.min(1, (c.x - SALIDA_X) / (META_X - SALIDA_X)));
     }
 
-    /** Obstáculos visibles en el mapa general previo (excluye ocultos e impulsos). */
+    /** Obstáculos visibles en el mapa general previo (excluye ocultos, impulsos y bonos de reparación). */
     public List<Arena.Trampa> obstaculosVisiblesEnMapa() {
         List<Arena.Trampa> visibles = new ArrayList<>();
         for (Arena.Trampa t : pelea.arena.trampas()) {
-            if (!t.ocultoEnMapa && !t.repentino && !t.tipo.equals("impulso")) visibles.add(t);
+            if (!t.ocultoEnMapa && !t.repentino
+                    && !t.tipo.equals("impulso") && !t.tipo.equals(Arena.TIPO_REPARACION)) {
+                visibles.add(t);
+            }
         }
         return visibles;
     }
@@ -226,6 +259,53 @@ public final class CarreraDeObstaculos {
         return impulsos;
     }
 
+    /** Trampas mortales de destrucción instantánea actualmente activas en la pista. */
+    public List<Arena.Trampa> trampasMortalesActivas() {
+        List<Arena.Trampa> mortales = new ArrayList<>();
+        for (Arena.Trampa t : pelea.arena.trampas()) {
+            if (!t.destruida() && t.tipo.equals(Arena.TIPO_TRAMPA_MORTAL)) mortales.add(t);
+        }
+        return mortales;
+    }
+
+    /** Bonos de reparación actualmente activos en la pista. */
+    public List<Arena.Trampa> reparacionesActivas() {
+        List<Arena.Trampa> reparaciones = new ArrayList<>();
+        for (Arena.Trampa t : pelea.arena.trampas()) {
+            if (!t.destruida() && t.tipo.equals(Arena.TIPO_REPARACION)) reparaciones.add(t);
+        }
+        return reparaciones;
+    }
+
+    /** Porcentaje de daño recibido por el robot del jugador durante toda la carrera respecto a su blindaje máximo. */
+    public double porcentajeDanoJugador() {
+        Cuerpo c0 = pelea.cuerpo(0);
+        if (c0 == null) return 0;
+        double max = c0.blindajeMaximoTotal();
+        if (max <= 0) return 0;
+        return Math.max(0, 100.0 * pelea.combatientes[0].danoTotalRecibido / max);
+    }
+
+    /** Medalla de reconocimiento obtenida al ganar la carrera según el daño recibido (NINGUNA si no ganó). */
+    public Medalla medallaObtenida() {
+        if (!terminada || ganador != 0) return Medalla.NINGUNA;
+        double danoPct = porcentajeDanoJugador();
+        if (danoPct <= UMBRAL_PERFECTO) return Medalla.ORO;
+        if (danoPct <= UMBRAL_PLATA) return Medalla.PLATA;
+        if (danoPct <= UMBRAL_BRONCE) return Medalla.BRONCE;
+        return Medalla.NINGUNA;
+    }
+
+    /** Cuartos de moneda ganados por perfección al aplicar la recompensa (1 si carrera perfecta, 0 si no). */
+    public int cuartosGanados() {
+        return cuartosGanados;
+    }
+
+    /** Monedas enteras extra completadas al alcanzar 4/4 cuartos en esta carrera (0 o 1). */
+    public int monedasExtraPorCuartos() {
+        return monedasExtraPorCuartos;
+    }
+
     /** Lista completa de obstáculos repentinos planificados para esta carrera. */
     public List<PistaDeCarrera.ObstaculoRepentino> obstaculosRepentinos() {
         return Collections.unmodifiableList(repentinos);
@@ -241,10 +321,14 @@ public final class CarreraDeObstaculos {
         return lista;
     }
 
-    /** Aplica la recompensa de 1 moneda si el jugador ganó la carrera (idempotente). */
+    /** Aplica la recompensa de 1 moneda (+1/4 si carrera perfecta) al ganar la carrera (idempotente). */
     public boolean aplicarRecompensa(Jugador jugador) {
         if (!terminada || ganador != 0 || recompensaAplicada || jugador == null) return false;
         jugador.sumarMonedas(RECOMPENSA_MONEDAS);
+        if (medallaObtenida().esPerfecta) {
+            cuartosGanados = 1;
+            monedasExtraPorCuartos = jugador.sumarCuartosDeMoneda(1);
+        }
         recompensaAplicada = true;
         return true;
     }

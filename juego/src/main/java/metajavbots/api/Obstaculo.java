@@ -10,7 +10,10 @@ package metajavbots.api;
  */
 public interface Obstaculo {
 
-    /** Qué es: "pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "bloque" o "impulso". */
+    /**
+     * Qué es: "pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea",
+     * "rayo", "bloque", "trampa_mortal" (destrucción instantánea), "impulso" o "reparacion".
+     */
     String tipo();
 
     /** Dónde está su centro (en la arena). */

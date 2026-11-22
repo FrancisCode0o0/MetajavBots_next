@@ -96,6 +96,7 @@ public final class Guardado {
         v.put("pruebaHecha", Boolean.toString(j.pruebaHecha));
         v.put("experiencia", Long.toString(j.experiencia));
         v.put("monedas", String.format(Locale.ROOT, "%.2f", Jugador.redondearMonedas(j.monedas)));
+        v.put("cuartosDeMoneda", Integer.toString(Math.max(0, Math.min(3, j.cuartosDeMoneda))));
         v.put("victoriasEnLaEtiqueta", Integer.toString(j.victoriasEnLaEtiqueta));
         v.put("derrotasEnLaEtiqueta", Integer.toString(j.derrotasEnLaEtiqueta));
         v.put("derrotasSeguidas", Integer.toString(j.derrotasSeguidas));
@@ -215,13 +216,8 @@ public final class Guardado {
         j.pruebaHecha = Boolean.parseBoolean(v.get("pruebaHecha"));
         j.experiencia = largo(v.get("experiencia"));
         j.monedas = Math.max(0, Jugador.redondearMonedas(decimal(v.get("monedas"), 0)));
-        j.victoriasEnLaEtiqueta = (int) largo(v.get("victoriasEnLaEtiqueta"));
-        j.derrotasEnLaEtiqueta = (int) largo(v.get("derrotasEnLaEtiqueta"));
-        j.derrotasSeguidas = (int) largo(v.get("derrotasSeguidas"));
-        j.victoriasSeguidas = (int) largo(v.get("victoriasSeguidas"));
-        j.peleasDesdeElDesafio = (int) largo(v.getOrDefault("peleasDesdeElDesafio", "99"));
-        j.victoriasExtrema = (int) largo(v.get("victoriasExtrema"));
-        j.robotElegido = (int) largo(v.get("robotElegido"));
+        j.cuartosDeMoneda = Math.max(0, Math.min(3, (int) largo(v.get("cuartosDeMoneda"))));
+        leerEstadisticas(v, j);
         int n = (int) largo(v.get("robots"));
         for (int i = 0; i < n; i++) {
             Jugador.Robot r = new Jugador.Robot(v.getOrDefault("robot." + i + ".nombre", "Robot " + (i + 1)),
@@ -280,6 +276,17 @@ public final class Guardado {
         Path ultimoRival = dir.resolve("ultimo_rival.java");
         if (Files.exists(ultimoRival)) j.ultimoRivalCodigo = Files.readString(ultimoRival, StandardCharsets.UTF_8);
         return j;
+    }
+
+    /** Contadores de victorias, derrotas, rachas y robot seleccionado. */
+    private static void leerEstadisticas(Map<String, String> v, Jugador j) {
+        j.victoriasEnLaEtiqueta = (int) largo(v.get("victoriasEnLaEtiqueta"));
+        j.derrotasEnLaEtiqueta = (int) largo(v.get("derrotasEnLaEtiqueta"));
+        j.derrotasSeguidas = (int) largo(v.get("derrotasSeguidas"));
+        j.victoriasSeguidas = (int) largo(v.get("victoriasSeguidas"));
+        j.peleasDesdeElDesafio = (int) largo(v.getOrDefault("peleasDesdeElDesafio", "99"));
+        j.victoriasExtrema = (int) largo(v.get("victoriasExtrema"));
+        j.robotElegido = (int) largo(v.get("robotElegido"));
     }
 
     /** «día,ejercicio,racha,mejor» (sin él, como nuevo). */

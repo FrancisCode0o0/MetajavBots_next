@@ -68,6 +68,8 @@ public final class Jugador {
     public long experiencia;
     /** Monedas gastables (separadas de la experiencia), con precisión de centésimas (p. ej. 0.25, 3.5). */
     public double monedas;
+    /** Cuartos de moneda acumulados por carreras perfectas (0..3; cada 4 cuartos suman +1 moneda entera). */
+    public int cuartosDeMoneda;
     public int victoriasEnLaEtiqueta, derrotasEnLaEtiqueta, derrotasSeguidas, victoriasSeguidas;
     /** Las peleas desde el último desafío (hay que esperar para el siguiente). */
     public int peleasDesdeElDesafio = 99;
@@ -239,6 +241,19 @@ public final class Jugador {
     /** Suma monedas al saldo del jugador (solo cantidades positivas). */
     public void sumarMonedas(double cantidad) {
         if (cantidad > 0) monedas = redondearMonedas(monedas + cantidad);
+    }
+
+    /**
+     * Suma cuartos de moneda (p. ej. +1 por carrera perfecta) y convierte cada 4 cuartos en +1 moneda entera.
+     * Devuelve cuántas monedas enteras extra se han completado con esta suma.
+     */
+    public int sumarCuartosDeMoneda(int cuartos) {
+        if (cuartos <= 0) return 0;
+        int total = Math.max(0, cuartosDeMoneda) + cuartos;
+        int extra = total / 4;
+        cuartosDeMoneda = total % 4;
+        if (extra > 0) sumarMonedas(extra);
+        return extra;
     }
 
     /** Gasta monedas si hay saldo suficiente; devuelve si se pudo realizar el gasto. */

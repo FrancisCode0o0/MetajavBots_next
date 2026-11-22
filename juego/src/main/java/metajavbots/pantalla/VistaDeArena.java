@@ -187,6 +187,12 @@ public final class VistaDeArena {
             if (sonidos != null) sonidos.tocar("choque", 0.65f);
             return;
         }
+        if (s.texto.equals("trampa_mortal")) {
+            efectos.anadir(Efectos.Tipo.ONDA, px, sy(s.y), 0, 0, 0.65f, 150 * escalaX, 0xFF1E42);
+            efectos.chispas(px, sy(s.y) - 18, 16, 0xFFC857);
+            if (sonidos != null) sonidos.tocar("explosion", 0.9f);
+            return;
+        }
         efectos.chispas(px, sy(s.y) - 20, s.texto.equals("sierra") ? 10 : 6, s.texto.equals("rayo") ? 0xBFE6FF : 0xFFE38A);
         if (s.texto.equals("foso")) efectos.anadir(Efectos.Tipo.ONDA, sx(s.x, s.y), sy(s.y), 0, 0, 0.6f, 120 * escalaX, 0x101722);
         if (sonidos != null) sonidos.tocar(s.texto.equals("foso") ? "pared" : "choque", 0.7f);
@@ -261,7 +267,11 @@ public final class VistaDeArena {
                         efectos.chispas(px, sy(s.y) - 20 * escalaX, 14, 0x5BD685);
                     }
                     break;
-                case REPARACION: if (sonidos != null) sonidos.tocar("reparar", 0.6f); break;
+                case REPARACION:
+                    efectos.anadir(Efectos.Tipo.ONDA, px, sy(s.y) - 16 * escalaX, 0, 0, 0.55f, 130 * escalaX, 0x2EE58D);
+                    efectos.chispas(px, sy(s.y) - 22 * escalaX, 14, 0xE8FFF2);
+                    if (sonidos != null) sonidos.tocar("reparar", 0.6f);
+                    break;
                 case ATURDIDO: if (sonidos != null) sonidos.tocar("pulso", 0.4f, 1.5f); break;
                 case DECIR: decir(s.quien, s.texto); break;
                 case ERROR_CODIGO: if (sonidos != null) sonidos.tocar("error", 0.5f); break;

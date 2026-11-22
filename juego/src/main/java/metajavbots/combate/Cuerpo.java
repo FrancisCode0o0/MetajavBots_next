@@ -617,6 +617,27 @@ public final class Cuerpo implements Mando {
         return t;
     }
 
+    /** Blindaje máximo total del robot (suma de sus 4 partes). */
+    public double blindajeMaximoTotal() {
+        double m = 0;
+        for (double p : parteMax) m += Math.max(0, p);
+        return m;
+    }
+
+    /** Restaura una fracción del blindaje máximo en cada parte sin superar su tope; devuelve el total curado. */
+    public double repararFraccion(double fraccion) {
+        if (fuera || !Double.isFinite(fraccion) || fraccion <= 0) return 0;
+        double f = Math.min(1.0, fraccion);
+        double recuperado = 0;
+        for (int i = 0; i < 4; i++) {
+            double antes = Math.max(0, parte[i]);
+            double nuevo = Math.min(parteMax[i], antes + parteMax[i] * f);
+            parte[i] = nuevo;
+            recuperado += Math.max(0, nuevo - antes);
+        }
+        return recuperado;
+    }
+
     public boolean parteRota(int p) {
         return parte[p] <= 0;
     }

@@ -72,13 +72,13 @@ public final class Arena {
             this.aparicion = repentino ? 36 : 0;
         }
 
-        /** ¿Hace daño ahora? Los pinchos y el rayo, solo en su rato; las sierras y el carrito, siempre. */
+        /** ¿Hace daño ahora? Los pinchos y el rayo, solo en su rato; las sierras, el carrito, el foso y la trampa mortal, siempre. */
         public boolean peligroso() {
             if (destruida) return false;
             switch (tipo) {
                 case "pinchos": case "rayo": return fase % ciclo < activo;
                 case "pegamento": return true;
-                case "sierra": case "carrito": case "foso": return true;
+                case "sierra": case "carrito": case "foso": case TIPO_TRAMPA_MORTAL: return true;
                 default: return false;
             }
         }
@@ -235,6 +235,12 @@ public final class Arena {
     static final double RESISTENCIA_BARRIL = 30;
     static final double RESISTENCIA_CHIMENEA = 50;
     private static final int TURNOS_RESTOS = 45;
+    /** Tipo identificador de una trampa mortal de destrucción instantánea en Carrera de obstáculos. */
+    public static final String TIPO_TRAMPA_MORTAL = "trampa_mortal";
+    /** Tipo identificador de un bono recogible de reparación en Carrera de obstáculos. */
+    public static final String TIPO_REPARACION = "reparacion";
+    /** Fracción del blindaje máximo restaurada al recoger un bono de reparación. */
+    public static final double FRACCION_REPARACION = 0.28;
     /** Turnos que dura el impulso de velocidad recogido en pista. */
     public static final int TURNOS_IMPULSO = 90;
     /** Multiplicador de velocidad al recoger un impulso en pista. */
@@ -355,6 +361,14 @@ public final class Arena {
 
     Trampa agregarImpulso(double x, double y, double radio) {
         return poner("impulso", x, y, radio, false, 0, 0, false);
+    }
+
+    Trampa agregarTrampaMortal(double x, double y, double radio) {
+        return poner(TIPO_TRAMPA_MORTAL, x, y, radio, false, 0, 0, false);
+    }
+
+    Trampa agregarReparacion(double x, double y, double radio) {
+        return poner(TIPO_REPARACION, x, y, radio, false, 0, 0, false);
     }
 
     Trampa agregarRepentina(String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistencia) {
@@ -497,15 +511,7 @@ public final class Arena {
         t.y = Math.max(t.radio, Math.min(p.alto - t.radio, t.y));
     }
 
-    private void efecto(Pelea p, Cuerpo c, Trampa t) {
-        double dx = c.x - t.x, dy = c.y - t.y, d = Math.hypot(dx, dy);
-        boolean suelo = !c.vuela();
-        if (t.tipo.equals("pegamento")) {
-            // El pegamento casi no deja moverse a lo que pisa el suelo.
-            if (suelo && d < t.radio) c.velocidad *= 0.35;
-            return;
-        }
-        if (t.tipo.equals("aceite")) return;
+    private boolean aplicarEspecialesCarrera(Pelea p, Cuerpo c, Trampa t, double d) {
         if (t.tipo.equals("impulso")) {
             if (!c.combatiente.defectuoso && d < t.radio + c.radio) {
                 t.destruida = true;
@@ -514,10 +520,35 @@ public final class Arena {
                 c.factorTurbo = Math.max(c.factorTurbo, FACTOR_IMPULSO);
                 p.suceso(Suceso.Tipo.ESPECIAL, c.indice, t.x, t.y, c.rumbo, TURNOS_IMPULSO, "impulso");
             }
+            return true;
+        }
+        if (t.tipo.equals(TIPO_REPARACION)) {
+            if (!c.combatiente.defectuoso && d < t.radio + c.radio) {
+                t.destruida = true;
+                t.restos = 0;
+                double curado = c.repararFraccion(FRACCION_REPARACION);
+                p.suceso(Suceso.Tipo.REPARACION, c.indice, t.x, t.y, 0, curado, TIPO_REPARACION);
+            }
+            return true;
+        }
+        if (t.tipo.equals(TIPO_TRAMPA_MORTAL)) {
+            if (!c.combatiente.defectuoso && d < t.radio + c.radio * 0.55) {
+                p.destruirInstantaneamente(c, TIPO_TRAMPA_MORTAL);
+            }
+            return true;
+        }
+        return false;
+    }
+
+    private void efecto(Pelea p, Cuerpo c, Trampa t) {
+        double dx = c.x - t.x, dy = c.y - t.y, d = Math.hypot(dx, dy);
+        boolean suelo = !c.vuela();
+        if (t.tipo.equals("pegamento")) {
+            if (suelo && d < t.radio) c.velocidad *= 0.35;
             return;
         }
+        if (t.tipo.equals("aceite") || aplicarEspecialesCarrera(p, c, t, d)) return;
         if (t.tipo.equals("iman")) {
-            // El imán tira de todos los que pisan el suelo, más cuanto más cerca.
             if (suelo && d < t.radio && d > 1) {
                 double f = 0.9 * (1 - d / t.radio);
                 c.x -= dx / d * f;
@@ -526,13 +557,15 @@ public final class Arena {
             return;
         }
         if (t.solido && d < t.radio + c.radio && d > 0.01) {
-            // Lo sólido no se atraviesa: se aparta al robot (y, si iba rápido, se da un golpe y daña destructibles).
             double meter = t.radio + c.radio - d;
             c.x += dx / d * meter;
             c.y += dy / d * meter;
             double vel = Math.abs(c.velocidad);
-            if (vel > 1.5 && listo(t.id, c, p, 20)) {
-                p.danar(c, null, 0.5 + vel * 0.3, t.tipo, Math.toDegrees(Math.atan2(-dy, -dx)), false);
+            boolean carrera = p.multiplicadorDano > 1.0 + 1e-6;
+            boolean golpea = carrera ? (vel > 0.25 || Math.abs(c.avance) > 1.0) : vel > 1.5;
+            if (golpea && listo(t.id, c, p, carrera ? 16 : 20)) {
+                double danoChoqueRobot = carrera ? 5.0 + vel * 1.4 : 0.5 + vel * 0.3;
+                p.danar(c, null, danoChoqueRobot, t.tipo, Math.toDegrees(Math.atan2(-dy, -dx)), false);
                 p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, 0, 1, t.tipo);
                 if (t.destructible) {
                     double danoChoque = Armas.danoChoqueAObstaculo(c.combatiente.montaje, c.cifras, vel);

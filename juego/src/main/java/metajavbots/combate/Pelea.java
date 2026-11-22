@@ -49,6 +49,8 @@ public final class Pelea {
     public long topeDePasos;
     /** Cuánto daño le llega a cada uno (1 = todo). Los jefes del modo especial ponen 0.1 si el código no usa su tema. */
     public final double[] resistencia;
+    /** Multiplicador global de daño recibido (1.0 en combate estándar; escalado en Carrera de obstáculos). */
+    public double multiplicadorDano = 1.0;
     /** El ganador (0 o 1), -1 si empate, -2 si no ha acabado. */
     private int ganador = -2;
 
@@ -528,7 +530,7 @@ public final class Pelea {
             return false;
         }
         if (de != null) dano *= de.combatiente.escalaDano;
-        dano *= resistencia[e.indice] * e.efectosPoo().factorDanoRecibido;
+        dano *= multiplicadorDano * resistencia[e.indice] * e.efectosPoo().factorDanoRecibido;
         double bloqueo = 0;
         if (e.escudoBrazo > 0 && Math.abs(normal(desde - e.mira)) <= e.conoEscudo / 2) bloqueo = e.bloqueoBrazo;
         if (e.escudoCabeza > 0) bloqueo = Math.max(bloqueo, e.bloqueoCabeza);
@@ -583,6 +585,19 @@ public final class Pelea {
             suceso(Suceso.Tipo.FUERA_DE_COMBATE, e.indice, e.x, e.y, 0, 0, "");
         }
         return true;
+    }
+
+    /** Destruye instantáneamente a un robot (p. ej. al pisar una trampa mortal) aunque tenga el 100 % de blindaje. */
+    void destruirInstantaneamente(Cuerpo e, String causa) {
+        if (e == null || e.fuera) return;
+        double restante = e.blindajeQueQueda();
+        for (int k = 0; k < 4; k++) e.parte[k] = 0;
+        e.combatiente.danoTotalRecibido += restante;
+        informe(e.indice).danoRecibido += restante;
+        informe(e.indice).danoPorArmaRecibido.merge(causa, restante, Double::sum);
+        e.fuera = true; e.velocidad = 0; e.avance = 0;
+        suceso(Suceso.Tipo.TRAMPA, e.indice, e.x, e.y, 0, 5, causa);
+        suceso(Suceso.Tipo.FUERA_DE_COMBATE, e.indice, e.x, e.y, 0, 0, causa);
     }
 
     private int elegir(double[] pesos) {

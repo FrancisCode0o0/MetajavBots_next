@@ -179,6 +179,12 @@ final class DibujoDeArenas {
                 case "impulso":
                     impulso(p, cx, cy, rx, ry, t);
                     break;
+                case "reparacion":
+                    reparacion(p, cx, cy, rx, ry, t);
+                    break;
+                case "trampa_mortal":
+                    trampaMortal(p, cx, cy, rx, ry, t);
+                    break;
                 default:
                     break;
             }
@@ -200,6 +206,27 @@ final class DibujoDeArenas {
             p.linea(ox - rx * 0.14f, cy - ry * 0.42f, ox + rx * 0.22f, cy, 3.2f, 0x9CFF57, 0.95f);
             p.linea(ox + rx * 0.22f, cy, ox - rx * 0.14f, cy + ry * 0.42f, 3.2f, 0x9CFF57, 0.95f);
         }
+    }
+
+    /** Bono recogible de reparación: plataforma verde esmeralda con cruz blanca de blindaje. */
+    private static void reparacion(Pincel p, float cx, float cy, float rx, float ry, float t) {
+        float pulso = 0.9f + 0.12f * (float) Math.sin(t * 5.5);
+        p.brillo(cx, cy - ry * 0.3f, rx * 1.4f * pulso, 0x2EE58D, 0.5f);
+        p.elipse(cx, cy, rx * 1.05f, ry * 1.05f, 0, 0x103022, 0.94f);
+        p.elipse(cx, cy, rx * 0.84f * pulso, ry * 0.84f * pulso, 0, 0x2EE58D, 0.55f);
+        p.rect(cx - rx * 0.18f, cy - ry * 0.56f, rx * 0.36f, ry * 1.12f, 0xF2FFF8, 0.96f);
+        p.rect(cx - rx * 0.56f, cy - ry * 0.18f, rx * 1.12f, ry * 0.36f, 0xF2FFF8, 0.96f);
+    }
+
+    /** Trampa mortal de destrucción instantánea: anillo de peligro amarillo-negro y núcleo carmesí pulsante. */
+    private static void trampaMortal(Pincel p, float cx, float cy, float rx, float ry, float t) {
+        float pulso = 0.86f + 0.18f * (float) Math.sin(t * 9.5);
+        p.brillo(cx, cy, rx * 1.55f * pulso, 0xFF1E42, 0.62f);
+        p.elipse(cx, cy, rx * 1.12f, ry * 1.12f, 0, 0xFFC857, 0.95f);
+        p.elipse(cx, cy, rx * 0.92f, ry * 0.92f, 0, 0x140A10, 0.98f);
+        p.elipse(cx, cy, rx * 0.68f * pulso, ry * 0.68f * pulso, 0, 0xFF1E42, 0.85f);
+        p.linea(cx - rx * 0.48f, cy - ry * 0.48f, cx + rx * 0.48f, cy + ry * 0.48f, 3.6f, 0xFFF3B0, 0.96f);
+        p.linea(cx + rx * 0.48f, cy - ry * 0.48f, cx - rx * 0.48f, cy + ry * 0.48f, 3.6f, 0xFFF3B0, 0.96f);
     }
 
     private static void pinchos(Pincel p, float cx, float cy, float rx, float ry, float salida, boolean peligro) {

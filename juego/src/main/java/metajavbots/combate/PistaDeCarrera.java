@@ -115,6 +115,8 @@ public final class PistaDeCarrera {
             double sx = inicio + s * paso;
             poblarSector(a, r, s, sx, alto, tema, dif);
         }
+        colocarTrampasMortales(a, r, ancho, alto, dif);
+        colocarReparaciones(a, r, ancho, alto, dif);
         colocarImpulsos(a, r, ancho, alto, dif);
         return a;
     }
@@ -124,11 +126,12 @@ public final class PistaDeCarrera {
         int carrilLibre = Math.floorMod(s * 3 + r.nextInt(Math.max(2, cantidad + 1)), cantidad + 1);
         double margenY = 105.0;
         double tramoY = (alto - margenY * 2) / Math.max(1, cantidad);
+        double desfaseSector = ((s % 3) - 1) * 46.0;
         int indestructiblesEnSector = 0;
         int maxIndestructibles = Math.max(1, cantidad - 1);
         for (int k = 0; k < cantidad; k++) {
             int carril = k >= carrilLibre ? k + 1 : k;
-            double oy = margenY + tramoY * (carril + 0.5) / (cantidad + 1) * cantidad;
+            double oy = margenY + tramoY * (carril + 0.5) / (cantidad + 1) * cantidad + desfaseSector;
             oy = Math.max(92, Math.min(alto - 92, oy + jitter(r, 20)));
             double ox = sx + ((k % 2 == 0 ? -1 : 1) * (24 + k * 14)) + jitter(r, 24);
             boolean oculto = r.nextDouble() < dif.proporcionOcultos;
@@ -166,6 +169,33 @@ public final class PistaDeCarrera {
         } else if ("TEJADO".equals(tema) && s % pasoEspecial == 0) {
             Arena.Trampa rayo = a.agregarTrampa("rayo", sx + 100, alto * 0.5, 58, false, 180, 32, false);
             rayo.vy = r.nextBoolean() ? 1.5 : -1.5;
+        }
+    }
+
+    private static void colocarTrampasMortales(Arena a, Random r, double ancho, double alto, DificultadCarrera dif) {
+        int cantidad = dif.cantidadTrampasMortales;
+        double inicio = Math.max(950, ancho * 0.16);
+        double fin = ancho * 0.87;
+        for (int i = 0; i < cantidad; i++) {
+            double frac = cantidad <= 1 ? 0.5 : (double) i / (cantidad - 1);
+            double x = inicio + (fin - inicio) * frac + jitter(r, 55);
+            double y = i == 0 ? alto * 0.34 + jitter(r, 14)
+                    : alto * (0.24 + ((i * 29 + Math.abs(r.nextInt(24))) % 52) / 100.0);
+            y = Math.max(130, Math.min(alto - 130, y));
+            a.agregarTrampaMortal(x, y, 34);
+        }
+    }
+
+    private static void colocarReparaciones(Arena a, Random r, double ancho, double alto, DificultadCarrera dif) {
+        int cantidad = dif.cantidadReparaciones;
+        double inicio = Math.max(1150, ancho * 0.17);
+        double fin = ancho * 0.85;
+        for (int i = 0; i < cantidad; i++) {
+            double frac = cantidad <= 1 ? 0.5 : (double) i / (cantidad - 1);
+            double x = inicio + (fin - inicio) * frac + jitter(r, 50);
+            double y = alto * (0.20 + ((i * 41 + Math.abs(r.nextInt(26))) % 60) / 100.0);
+            y = Math.max(115, Math.min(alto - 115, y));
+            a.agregarReparacion(x, y, 28);
         }
     }
 
@@ -446,8 +476,10 @@ public final class PistaDeCarrera {
         private double buscarImpulso() {
             Obstaculo mejor = null;
             double dist = 240 + dificultad.nivelRival * 220;
+            boolean necesitaCurar = blindaje() < 75;
             for (Obstaculo o : obstaculos()) {
-                if (!o.tipo().equals("impulso") || o.x() < x() - 20) continue;
+                boolean esBono = o.tipo().equals("impulso") || (necesitaCurar && o.tipo().equals(Arena.TIPO_REPARACION));
+                if (!esBono || o.x() < x() - 20) continue;
                 if (o.distancia() < dist && Math.abs(normalizar(o.angulo())) < 58) {
                     dist = o.distancia();
                     mejor = o;
@@ -460,9 +492,11 @@ public final class PistaDeCarrera {
             Obstaculo amenaza = null;
             double mejorDist = dificultad.alcanceEvasionRival;
             for (Obstaculo o : obstaculos()) {
-                if (o.tipo().equals("impulso")) continue;
+                if (o.tipo().equals("impulso") || o.tipo().equals(Arena.TIPO_REPARACION)) continue;
+                boolean mortal = o.tipo().equals(Arena.TIPO_TRAMPA_MORTAL);
+                double alcance = mortal ? mejorDist + 70 : mejorDist;
                 double diff = Math.abs(normalizar(o.angulo()));
-                if (o.distancia() < mejorDist && diff < 50) {
+                if (o.distancia() < alcance && diff < (mortal ? 62 : 50)) {
                     mejorDist = o.distancia();
                     amenaza = o;
                 }

@@ -84,6 +84,13 @@ final class DibujoCarreraDeObstaculos {
         if (t.tipo.equals("impulso")) {
             p.circulo(ox, oy, r * 0.95f, 0x3FE0FF, 0.95f);
             p.circulo(ox, oy, r * 0.45f, 0x9CFF57, 1);
+        } else if (t.tipo.equals(Arena.TIPO_REPARACION)) {
+            p.circulo(ox, oy, r * 0.95f, 0x2EE58D, 0.95f);
+            p.rect(ox - r * 0.22f, oy - r * 0.65f, r * 0.44f, r * 1.3f, 0xFFFFFF, 1);
+            p.rect(ox - r * 0.65f, oy - r * 0.22f, r * 1.3f, r * 0.44f, 0xFFFFFF, 1);
+        } else if (t.tipo.equals(Arena.TIPO_TRAMPA_MORTAL)) {
+            p.circulo(ox, oy, r * 1.15f, 0xFFC857, 0.98f);
+            p.circulo(ox, oy, r * 0.85f, 0xFF1E42, 1);
         } else if (t.destructible) {
             p.circulo(ox, oy, r, 0xD97236, 0.92f);
         } else {
@@ -119,19 +126,31 @@ final class DibujoCarreraDeObstaculos {
     static int resultado(Juego j, CarreraDeObstaculos carrera, boolean monedaGanada, float x, float y, float w, float h) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        float cw = Math.min(560, w - 40), ch = 228;
+        CarreraDeObstaculos.Medalla medalla = carrera.medallaObtenida();
+        float cw = Math.min(600, w - 40), ch = 304;
         float cx = x + (w - cw) / 2, cy = y + (h - ch) / 2;
         p.caja(cx, cy, cw, ch, 14, ui.tema.panel, 0.96f);
         p.bordeRedondeado(cx, cy, cw, ch, 14, carrera.ganador() == 0 ? ui.tema.bien : ui.tema.aviso, 1, 2.5f);
         String titulo = carrera.ganador() == 0 ? T.t("carrera_obs.ganas")
                 : carrera.ganador() == 1 ? T.t("carrera_obs.pierdes") : T.t("carrera_obs.empate");
-        p.textoCentrado(titulo, cx + cw / 2, cy + 24, ui.letra * 1.4f, true,
+        p.textoCentrado(titulo, cx + cw / 2, cy + 20, ui.letra * 1.35f, true,
                 carrera.ganador() == 0 ? ui.tema.bien : ui.tema.texto, 1);
         String premio = monedaGanada
                 ? T.f("carrera_obs.premio_moneda", Jugador.formatearMonedas(j.jugador.monedas))
                 : T.t("carrera_obs.sin_moneda");
-        p.textoCentrado(premio, cx + cw / 2, cy + 80, ui.letra * 0.95f, true,
+        p.textoCentrado(premio, cx + cw / 2, cy + 68, ui.letra * 0.9f, true,
                 monedaGanada ? 0xFFC857 : ui.tema.textoSuave, 1);
+        long danoPct = Math.round(carrera.porcentajeDanoJugador());
+        String lineaMedalla = T.t(medalla.claveTexto) + " · " + T.f("carrera_obs.dano_recibido", danoPct);
+        p.textoCentrado(lineaMedalla, cx + cw / 2, cy + 108, ui.letra * 0.92f, true, medalla.color, 1);
+        if (carrera.ganador() == 0 && medalla.esPerfecta) {
+            p.textoCentrado(T.t("carrera_obs.reconocimiento_perfecta"), cx + cw / 2, cy + 144,
+                    ui.letra * 0.82f, true, 0xFFD23F, 1);
+            String cuartos = carrera.monedasExtraPorCuartos() > 0
+                    ? T.f("carrera_obs.cuarto_completado", j.jugador.cuartosDeMoneda)
+                    : T.f("carrera_obs.cuarto_ganado", j.jugador.cuartosDeMoneda);
+            p.textoCentrado(cuartos, cx + cw / 2, cy + 176, ui.letra * 0.8f, false, 0x9CFF57, 1);
+        }
         float bw = (cw - 60) / 3;
         if (ui.boton(T.t("carrera_obs.repetir"), cx + 20, cy + ch - 68, bw, 46, Ui.Estilo.PRINCIPAL)) return 1;
         if (ui.boton(T.t("carrera_obs.editar"), cx + 30 + bw, cy + ch - 68, bw, 46, Ui.Estilo.NORMAL)) return 2;

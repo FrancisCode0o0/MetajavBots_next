@@ -138,8 +138,11 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         return EntrenadorFlotante.contextoDeCodigo(
                 "The player is in Obstacle race (Special mode), difficulty " + dificultad.name()
                         + " (Noob/Junior/Senior/Special; Special unlocks with Special mode), on a 6x track with rotating arenas, "
+                        + "multiplied damage scaling with difficulty (driving straight into hazards destroys the robot), "
+                        + "instant-kill lethal traps (\"trampa_mortal\"), spaced repair pickups (\"reparacion\"), "
                         + "sudden obstacles (destructible barrels/chimneys and indestructible traps), broken malfunctioning robots "
-                        + "shooting randomly, speed boost pickups (\"impulso\"), and live combat against the rival while racing to the finish line.",
+                        + "shooting randomly, speed boost pickups (\"impulso\"), live combat against the rival, and perfection medals "
+                        + "(Gold/Silver/Bronze; perfect Gold wins award +1/4 extra coin, 4 quarters = +1 full coin).",
                 editor);
     }
 
@@ -284,26 +287,34 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         Ui ui = j.ui;
         float cy = ui.panel(x, y, w, h, T.t("carrera_obs.mapa_titulo"));
         float mx = x + 16, mw = w - 32;
-        float mh = Math.min(h * 0.42f, mw * 0.46f);
+        float mh = Math.min(h * 0.36f, mw * 0.42f);
         DibujoCarreraDeObstaculos.mapaGeneral(p, ui, vistaPrevia, mx, cy + 4, mw, mh);
-        float ly = cy + mh + 14;
-        float paso = ui.letra * 1.32f;
-        p.circulo(mx + 9, ly + 7, 6, 0xD97236, 1);
-        p.texto(T.t("carrera_obs.leyenda_destructible"), mx + 24, ly, ui.letra * 0.74f, false, ui.tema.texto, 1);
+        float ly = cy + mh + 10;
+        float paso = ui.letra * 1.18f;
+        float tl = ui.letra * 0.70f;
+        p.circulo(mx + 9, ly + 7, 5.5f, 0xD97236, 1);
+        p.texto(T.t("carrera_obs.leyenda_destructible"), mx + 24, ly, tl, false, ui.tema.texto, 1);
         ly += paso;
-        p.rect(mx + 3, ly + 1, 12, 12, 0xE05A4F, 1);
-        p.texto(T.t("carrera_obs.leyenda_indestructible"), mx + 24, ly, ui.letra * 0.74f, false, ui.tema.texto, 1);
+        p.rect(mx + 3, ly + 1, 11, 11, 0xE05A4F, 1);
+        p.texto(T.t("carrera_obs.leyenda_indestructible"), mx + 24, ly, tl, false, ui.tema.texto, 1);
         ly += paso;
-        p.circulo(mx + 9, ly + 7, 6, 0x3FE0FF, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_impulso"), mx + 24, ly, ui.letra * 0.74f, false, 0x9CFF57, 1);
+        p.circulo(mx + 9, ly + 7, 6.5f, 0xFFC857, 1);
+        p.circulo(mx + 9, ly + 7, 4.5f, 0xFF1E42, 1);
+        p.texto(T.t("carrera_obs.leyenda_mortal"), mx + 24, ly, tl, true, 0xFF6B7A, 1);
         ly += paso;
-        p.circulo(mx + 9, ly + 7, 6, 0xFF7A45, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_rotos"), mx + 24, ly, ui.letra * 0.74f, false, ui.tema.aviso, 1);
+        p.circulo(mx + 9, ly + 7, 5.5f, 0x3FE0FF, 0.95f);
+        p.texto(T.t("carrera_obs.leyenda_impulso"), mx + 24, ly, tl, false, 0x9CFF57, 1);
         ly += paso;
-        p.circulo(mx + 9, ly + 7, 6, 0x3FE0FF, 0.45f);
-        p.texto(T.t("carrera_obs.leyenda_ocultos"), mx + 24, ly, ui.letra * 0.74f, true, ui.tema.textoSuave, 1);
-        ly += paso + 6;
-        p.parrafo(T.t("carrera_obs.mapa_ayuda"), mx, ly, mw, ui.letra * 0.74f, ui.tema.textoSuave, 1);
+        p.circulo(mx + 9, ly + 7, 5.5f, 0x2EE58D, 0.95f);
+        p.texto(T.t("carrera_obs.leyenda_reparacion"), mx + 24, ly, tl, false, 0x2EE58D, 1);
+        ly += paso;
+        p.circulo(mx + 9, ly + 7, 5.5f, 0xFF7A45, 0.95f);
+        p.texto(T.t("carrera_obs.leyenda_rotos"), mx + 24, ly, tl, false, ui.tema.aviso, 1);
+        ly += paso;
+        p.circulo(mx + 9, ly + 7, 5.5f, 0x3FE0FF, 0.45f);
+        p.texto(T.t("carrera_obs.leyenda_ocultos"), mx + 24, ly, tl, true, ui.tema.textoSuave, 1);
+        ly += paso + 4;
+        p.parrafo(T.t("carrera_obs.mapa_ayuda"), mx, ly, mw, tl, ui.tema.textoSuave, 1);
     }
 
     private void dibujarPanelEditor(Juego j, float x, float y, float w, float h) {
