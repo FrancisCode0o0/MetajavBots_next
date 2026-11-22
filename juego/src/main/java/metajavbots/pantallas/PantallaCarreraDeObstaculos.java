@@ -14,6 +14,7 @@ import metajavbots.combate.Arena;
 import metajavbots.combate.CarreraDeObstaculos;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
+import metajavbots.combate.DificultadCarrera;
 import metajavbots.combate.Pelea;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
@@ -51,6 +52,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     private long semilla = (System.nanoTime() & 0xFFFFFL) + 17L;
     private String escenarioAnterior;
     private String escenarioActual;
+    private DificultadCarrera dificultad = DificultadCarrera.porDefecto();
     private int robotElegido;
     private boolean preparando = true;
     private boolean contraMaquina = true;
@@ -93,14 +95,35 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         }
     }
 
+    /** Comprueba si una dificultad de Carrera de obstáculos está desbloqueada para el jugador. */
+    public static boolean dificultadDesbloqueada(Jugador jugador, DificultadCarrera dificultad) {
+        return CarreraDeObstaculos.dificultadDesbloqueada(jugador, dificultad);
+    }
+
+    /** Intenta seleccionar una dificultad respetando el bloqueo de Especial; devuelve si se aplicó. */
+    public boolean seleccionarDificultad(Jugador jugador, DificultadCarrera nueva) {
+        if (!dificultadDesbloqueada(jugador, nueva)) return false;
+        dificultad = nueva;
+        if (escenarioActual != null) {
+            vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
+        }
+        return true;
+    }
+
+    /** Devuelve la dificultad actualmente seleccionada en el menú de la carrera. */
+    public DificultadCarrera dificultadSeleccionada() {
+        return dificultad;
+    }
+
     @Override
     public void alEntrar(Juego j) {
         vista = new VistaDeArena(j.pincel);
         ajenos = PrepararPelea.robotsAjenos();
         robotElegido = j.jugador != null ? j.jugador.robotElegido : 0;
+        dificultad = DificultadCarrera.seleccionarPara(j.jugador, dificultad);
         escenarioActual = CarreraDeObstaculos.siguienteArena(escenarioActual, semilla);
         vista.escenario = escenarioDe(escenarioActual);
-        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual);
+        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
         editor.palabras = Palabras.api(j.jugador.idioma);
         editor.documentacion = w -> Referencia.de(w, j.jugador.idioma);
         editor.tamano = j.jugador.tamanoDeLetra;
@@ -113,9 +136,10 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     @Override
     public String contextoParaElEntrenador() {
         return EntrenadorFlotante.contextoDeCodigo(
-                "The player is in Obstacle race (Special mode), on a 6x track with rotating arenas, sudden obstacles "
-                        + "(destructible barrels/chimneys and indestructible traps), broken malfunctioning robots shooting randomly, "
-                        + "speed boost pickups (\"impulso\"), and live combat against the rival while racing to the finish line.",
+                "The player is in Obstacle race (Special mode), difficulty " + dificultad.name()
+                        + " (Noob/Junior/Senior/Special; Special unlocks with Special mode), on a 6x track with rotating arenas, "
+                        + "sudden obstacles (destructible barrels/chimneys and indestructible traps), broken malfunctioning robots "
+                        + "shooting randomly, speed boost pickups (\"impulso\"), and live combat against the rival while racing to the finish line.",
                 editor);
     }
 
@@ -151,29 +175,61 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     private float barraSeleccion(Juego j, float x, float y, float w) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        float h = contraMaquina ? 114 : 162;
+        float h = contraMaquina ? 172 : 218;
         p.caja(x, y, w, h, 10, ui.tema.panel, 1);
-        dibujarSelectorRobot(j, x + 14, y + 10, w - 28);
-        float bx = x + 14, by = y + 60;
-        p.texto(T.t("carrera_obs.rival"), bx, by + 11, ui.letra * 0.88f, true, ui.tema.textoSuave, 1);
-        bx += Math.max(82, p.ancho(T.t("carrera_obs.rival"), ui.letra * 0.88f, true) + 14);
-        if (ui.boton(T.t("carrera_obs.vs_maquina"), bx, by, 210, 42, contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
+        dibujarSelectorRobot(j, x + 14, y + 8, w - 28);
+        float bx = x + 14, by = y + 54;
+        float tEt = Math.min(ui.letra * 0.86f, 20f);
+        p.texto(T.t("carrera_obs.rival"), bx, by + 10, tEt, true, ui.tema.textoSuave, 1);
+        bx += Math.max(82, p.ancho(T.t("carrera_obs.rival"), tEt, true) + 14);
+        float wMaq = Math.min(220, Math.max(170, w * 0.19f));
+        float wUsu = Math.min(250, Math.max(185, w * 0.22f));
+        if (ui.boton(T.t("carrera_obs.vs_maquina"), bx, by, wMaq, 40, contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
             contraMaquina = true;
             aviso = "";
         }
-        bx += 220;
-        if (ui.boton(T.t("carrera_obs.vs_usuario"), bx, by, 240, 42, !contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
+        bx += wMaq + 10;
+        if (ui.boton(T.t("carrera_obs.vs_usuario"), bx, by, wUsu, 40, !contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
             contraMaquina = false;
             ajenos = PrepararPelea.robotsAjenos();
             aviso = "";
         }
-        if (ui.boton(T.t("carrera_obs.nueva_pista"), x + w - 210, by, 196, 42, Ui.Estilo.NORMAL)) {
+        float wNueva = Math.min(204, Math.max(150, w * 0.17f));
+        if (ui.boton(T.t("carrera_obs.nueva_pista"), x + w - wNueva - 14, by, wNueva, 40, Ui.Estilo.NORMAL)) {
             regenerarPista();
         }
+        dibujarSelectorDificultad(j, x + 14, y + 102, w - 28);
         if (!contraMaquina) {
-            dibujarSelectorAjeno(j, x + 14, y + 112, w - 28);
+            dibujarSelectorAjeno(j, x + 14, y + 174, w - 28);
         }
-        return y + h + 12;
+        return y + h + 10;
+    }
+
+    private void dibujarSelectorDificultad(Juego j, float x, float y, float w) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        dificultad = DificultadCarrera.seleccionarPara(j.jugador, dificultad);
+        float tEt = Math.min(ui.letra * 0.86f, 20f);
+        String et = T.t("carrera_obs.dificultad");
+        p.texto(et, x, y + 9, tEt, true, ui.tema.textoSuave, 1);
+        float dx = x + Math.max(106, p.ancho(et, tEt, true) + 14);
+        DificultadCarrera[] niveles = DificultadCarrera.values();
+        float sep = 8;
+        float bw = Math.min(168, Math.max(96, (x + w - dx - sep * (niveles.length - 1)) / niveles.length));
+        for (DificultadCarrera d : niveles) {
+            boolean desbloqueada = dificultadDesbloqueada(j.jugador, d);
+            boolean elegida = d == dificultad;
+            String texto = desbloqueada ? d.nombre(T.idioma) : "🔒 " + d.nombre(T.idioma);
+            String ayuda = desbloqueada ? d.resumen(T.idioma) : T.t("carrera_obs.dif_especial_bloqueada");
+            Ui.Estilo estilo = elegida ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO;
+            if (ui.boton(texto, dx, y, bw, 36, estilo, desbloqueada, ayuda)) {
+                seleccionarDificultad(j.jugador, d);
+            }
+            dx += bw + sep;
+        }
+        float tRes = Math.min(ui.letra * 0.76f, 17f);
+        String resumen = dificultad.nombre(T.idioma) + ": " + dificultad.resumen(T.idioma);
+        p.texto(ui.recortarTexto(resumen, w, tRes, false), x, y + 42, tRes, false, ui.tema.textoSuave, 1);
     }
 
     private void dibujarSelectorRobot(Juego j, float x, float y, float w) {
@@ -324,9 +380,11 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     }
 
     private void iniciarCarrera(Juego j, boolean rotarArena) {
+        DificultadCarrera difEfectiva = DificultadCarrera.seleccionarPara(j.jugador, dificultad);
+        dificultad = difEfectiva;
         Combatiente rival;
         if (contraMaquina) {
-            rival = CarreraDeObstaculos.rivalMaquina(T.t("carrera_obs.maquina_nombre"));
+            rival = CarreraDeObstaculos.rivalMaquina(T.t("carrera_obs.maquina_nombre"), difEfectiva);
         } else {
             if (ajenos.isEmpty()) {
                 aviso = T.t("carrera_obs.sin_ajenos");
@@ -343,7 +401,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             regenerarPista();
         }
         Combatiente cJug = CarreraDeObstaculos.combatienteDeJugador(j.jugador, robotElegido, compilado);
-        carrera = new CarreraDeObstaculos(cJug, rival, semilla, contraMaquina, escenarioAnterior);
+        carrera = new CarreraDeObstaculos(cJug, rival, semilla, contraMaquina, escenarioAnterior, difEfectiva);
         escenarioActual = carrera.escenario();
         vista.escenario = escenarioDe(escenarioActual);
         vista.enfocarCamara(VENTANA_CAMARA / 2, VENTANA_CAMARA);
@@ -359,7 +417,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         semilla = semilla * 6364136223846793005L + 1442695040888963407L;
         escenarioActual = CarreraDeObstaculos.siguienteArena(escenarioAnterior, semilla);
         if (vista != null) vista.escenario = escenarioDe(escenarioActual);
-        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual);
+        vistaPrevia = Arena.carreraDeObstaculos(CarreraDeObstaculos.ANCHO, CarreraDeObstaculos.ALTO, semilla, escenarioActual, dificultad);
     }
 
     private void dibujarCarrera(Juego j, float arriba, float dt) {

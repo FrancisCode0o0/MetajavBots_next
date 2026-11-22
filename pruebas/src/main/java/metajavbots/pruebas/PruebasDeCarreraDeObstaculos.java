@@ -21,6 +21,7 @@ import metajavbots.combate.Arena;
 import metajavbots.combate.CarreraDeObstaculos;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
+import metajavbots.combate.DificultadCarrera;
 import metajavbots.combate.Fabrica;
 import metajavbots.combate.PistaDeCarrera;
 import metajavbots.pantallas.ConsultaIaEntrenador;
@@ -30,8 +31,10 @@ import metajavbots.piezas.CatalogoDePiezas;
 import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Pieza;
+import metajavbots.progreso.Etiqueta;
 import metajavbots.progreso.Guardado;
 import metajavbots.progreso.Jugador;
+import metajavbots.progreso.Progreso;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 import metajavbots.tutor.Concepto;
@@ -96,6 +99,7 @@ final class PruebasDeCarreraDeObstaculos {
         apuntarDestructiblesIndestructiblesYCombate();
         apuntarRecompensaMonedasYRivalAjeno();
         apuntarPlantillaTorpeTextosYEntrenador();
+        apuntarNivelesDeDificultadYDesbloqueoEspecial();
     }
 
     private static Combatiente combatienteConArma(String nombre, Pieza.Arma arma, Fabrica fabrica) {
@@ -405,6 +409,8 @@ final class PruebasDeCarreraDeObstaculos {
             String[] claves = {
                     "especial.carrera", "especial.carrera_ayuda", "especial.carrera_entrar",
                     "carrera_obs.tu_robot", "carrera_obs.arena_actual",
+                    "carrera_obs.dificultad", "carrera_obs.dif_noob_resumen", "carrera_obs.dif_junior_resumen",
+                    "carrera_obs.dif_senior_resumen", "carrera_obs.dif_especial_resumen", "carrera_obs.dif_especial_bloqueada",
                     "carrera_obs.rival", "carrera_obs.vs_maquina", "carrera_obs.vs_usuario",
                     "carrera_obs.nueva_pista", "carrera_obs.sin_ajenos", "carrera_obs.mapa_titulo",
                     "carrera_obs.leyenda_destructible", "carrera_obs.leyenda_indestructible",
@@ -423,9 +429,9 @@ final class PruebasDeCarreraDeObstaculos {
             cierto(entrada != null, "existe ficha carrera_de_obstaculos en ConocimientoDelEntrenador");
             cierto(!entrada.consejos().isEmpty(), "existe consejo espontáneo para carrera_de_obstaculos");
             String[][] consultas = {
-                    {"carrera de obstáculos", "ES", "6×", "defectuosos", "impulso"},
-                    {"Hindernislauf", "DE", "6×", "defekte", "impulso"},
-                    {"obstacle race", "EN", "6×", "broken", "impulso"}
+                    {"carrera de obstáculos", "ES", "6×", "defectuosos", "impulso", "especial"},
+                    {"Hindernislauf", "DE", "6×", "defekte", "impulso", "spezial"},
+                    {"obstacle race", "EN", "6×", "broken", "impulso", "special"}
             };
             for (String[] q : consultas) {
                 Idioma id = Idioma.valueOf(q[1]);
@@ -433,14 +439,97 @@ final class PruebasDeCarreraDeObstaculos {
                 cierto(!res.isEmpty() && res.get(0).id.equals("carrera_de_obstaculos"),
                         "búsqueda offline encuentra carrera_de_obstaculos para «" + q[0] + "» (" + id + ")");
                 String texto = String.join(" ", res.get(0).parrafos(id)).toLowerCase(Locale.ROOT);
-                cierto(texto.contains(q[2].toLowerCase(Locale.ROOT)) && texto.contains(q[3]) && texto.contains(q[4]),
-                        "ficha del entrenador actualizada en " + id);
+                cierto(texto.contains(q[2].toLowerCase(Locale.ROOT)) && texto.contains(q[3])
+                        && texto.contains(q[4]) && texto.contains(q[5])
+                        && texto.contains("noob") && texto.contains("junior") && texto.contains("senior"),
+                        "ficha del entrenador actualizada con dificultades en " + id);
                 String tip = ConsejosDelJuego.textoDelTip(entrada.consejos().get(0).aTip(), id);
                 cierto(tip != null && !tip.isBlank(), "consejo espontáneo trilingüe no vacío en " + id);
                 String sistemaIa = ConsultaIaEntrenador.construirSistema(new Jugador("Test"), id, null).toLowerCase(Locale.ROOT);
-                cierto(sistemaIa.contains("obstacle race") && sistemaIa.contains("6x") && sistemaIa.contains("impulso"),
-                        "sistema IA actualizado con mecánicas 6x e impulso en " + id);
+                cierto(sistemaIa.contains("obstacle race") && sistemaIa.contains("6x")
+                        && sistemaIa.contains("impulso") && sistemaIa.contains("noob")
+                        && sistemaIa.contains("junior") && sistemaIa.contains("senior") && sistemaIa.contains("special"),
+                        "sistema IA actualizado con mecánicas 6x, impulso y dificultades en " + id);
             }
+        });
+    }
+
+    private static int contarObstaculos(CarreraDeObstaculos carrera) {
+        int n = 0;
+        for (Arena.Trampa t : carrera.pelea.arena.trampas()) {
+            if (!t.tipo.equals("impulso")) n++;
+        }
+        return n;
+    }
+
+    private static void apuntarNivelesDeDificultadYDesbloqueoEspecial() {
+        caso("carrera de obstáculos: progresión estricta Noob < Junior < Senior < Especial y bloqueo/desbloqueo de Especial", () -> {
+            igual("Noob", DificultadCarrera.NOOB.nombre(Idioma.ES), "nombre ES Noob");
+            igual("Noob", DificultadCarrera.NOOB.nombre(Idioma.DE), "nombre DE Noob");
+            igual("Noob", DificultadCarrera.NOOB.nombre(Idioma.EN), "nombre EN Noob");
+            igual("Especial", DificultadCarrera.ESPECIAL.nombre(Idioma.ES), "nombre ES Especial");
+            igual("Spezial", DificultadCarrera.ESPECIAL.nombre(Idioma.DE), "nombre DE Spezial");
+            igual("Special", DificultadCarrera.ESPECIAL.nombre(Idioma.EN), "nombre EN Special");
+
+            Combatiente jug = new Combatiente("Corredor", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Recto::new));
+            DificultadCarrera[] niveles = DificultadCarrera.values();
+            int[] totalObstaculos = new int[niveles.length];
+            int[] totalRepentinos = new int[niveles.length];
+            int[] totalDefectuosos = new int[niveles.length];
+            int[] totalImpulsos = new int[niveles.length];
+
+            for (int i = 0; i < niveles.length; i++) {
+                DificultadCarrera d = niveles[i];
+                CarreraDeObstaculos c = new CarreraDeObstaculos(jug, CarreraDeObstaculos.rivalMaquina("IA", d), 700L, true, null, d);
+                totalObstaculos[i] = contarObstaculos(c);
+                totalRepentinos[i] = c.obstaculosRepentinos().size();
+                totalDefectuosos[i] = c.robotsDefectuosos().size();
+                totalImpulsos[i] = c.impulsosActivos().size();
+                for (int t = 0; t < 180 && !c.terminada(); t++) c.avanzar();
+                cierto(c.progreso(0) > 0 || c.terminada(), "la carrera ejecuta sin bloqueos en " + d);
+            }
+
+            for (int i = 0; i < niveles.length - 1; i++) {
+                DificultadCarrera a = niveles[i], b = niveles[i + 1];
+                cierto(totalObstaculos[i] < totalObstaculos[i + 1],
+                        "más obstáculos en " + b + " (" + totalObstaculos[i + 1] + ") que en " + a + " (" + totalObstaculos[i] + ")");
+                cierto(totalRepentinos[i] < totalRepentinos[i + 1],
+                        "más repentinos en " + b + " (" + totalRepentinos[i + 1] + ") que en " + a + " (" + totalRepentinos[i] + ")");
+                cierto(totalDefectuosos[i] < totalDefectuosos[i + 1],
+                        "más defectuosos en " + b + " (" + totalDefectuosos[i + 1] + ") que en " + a + " (" + totalDefectuosos[i] + ")");
+                cierto(totalImpulsos[i] > totalImpulsos[i + 1],
+                        "menos impulsos en " + b + " (" + totalImpulsos[i + 1] + ") que en " + a + " (" + totalImpulsos[i] + ")");
+                cierto(a.cadenciaDisparoDefectuosos > b.cadenciaDisparoDefectuosos, "mayor cadencia de defectuosos en " + b);
+                cierto(a.nivelRival < b.nivelRival && a.errorPunteriaRival > b.errorPunteriaRival,
+                        "rival más táctico y preciso en " + b);
+            }
+
+            // Bloqueo y desbloqueo de ESPECIAL vinculado a Progreso.modoEspecialDesbloqueado.
+            Jugador nuevo = new Jugador("Novato");
+            falso(Progreso.modoEspecialDesbloqueado(nuevo), "jugador nuevo no tiene Modo especial desbloqueado");
+            for (DificultadCarrera libre : List.of(DificultadCarrera.NOOB, DificultadCarrera.JUNIOR, DificultadCarrera.SENIOR)) {
+                cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(nuevo, libre), libre + " siempre disponible");
+            }
+            falso(PantallaCarreraDeObstaculos.dificultadDesbloqueada(nuevo, DificultadCarrera.ESPECIAL), "ESPECIAL bloqueado inicialmente");
+
+            PantallaCarreraDeObstaculos pantalla = new PantallaCarreraDeObstaculos();
+            falso(pantalla.seleccionarDificultad(nuevo, DificultadCarrera.ESPECIAL), "no permite forzar ESPECIAL si está bloqueado");
+            igual(DificultadCarrera.porDefecto(), pantalla.dificultadSeleccionada(), "mantiene dificultad por defecto tras intento bloqueado");
+            cierto(pantalla.seleccionarDificultad(nuevo, DificultadCarrera.SENIOR), "permite elegir SENIOR libremente");
+            igual(DificultadCarrera.SENIOR, pantalla.dificultadSeleccionada(), "SENIOR queda seleccionado");
+
+            // Al desbloquear Modo especial (por jefe vencido o rango Master), ESPECIAL queda seleccionable.
+            Jugador conJefe = new Jugador("Cazajefes");
+            conJefe.jefesVencidos.add("gim_condicionales");
+            cierto(Progreso.modoEspecialDesbloqueado(conJefe), "vencer jefe desbloquea Modo especial");
+            cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(conJefe, DificultadCarrera.ESPECIAL), "ESPECIAL desbloqueado por jefe");
+            cierto(pantalla.seleccionarDificultad(conJefe, DificultadCarrera.ESPECIAL), "permite seleccionar ESPECIAL al estar desbloqueado");
+            igual(DificultadCarrera.ESPECIAL, pantalla.dificultadSeleccionada(), "ESPECIAL seleccionado");
+
+            Jugador master = new Jugador("Maestro");
+            master.etiqueta = Etiqueta.MASTER;
+            cierto(Progreso.modoEspecialDesbloqueado(master), "rango Master desbloquea Modo especial");
+            cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(master, DificultadCarrera.ESPECIAL), "ESPECIAL desbloqueado en Master");
         });
     }
 }

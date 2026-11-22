@@ -767,46 +767,46 @@ tema: --
 titulo.es: Carrera de obstáculos
 titulo.de: Hindernislauf
 titulo.en: Obstacle race
-claves.es: carrera de obstaculos, carrera, obstaculos, hindernislauf, obstacle race, pista 6x, arena distinta, obstaculos ocultos, obstaculos repentinos, destructibles, indestructibles, robots defectuosos, impulso, combate en carrera, robots ajenos, meta, moneda
-claves.de: hindernislauf, hindernisrennen, rennen, hindernisse, 6x strecke, wechselnde arena, versteckte hindernisse, ploetzliche hindernisse, zerstoerbare, unzerstoerbare, defekte roboter, impulso, tempo boost, kampf im rennen, fremde roboter, ziel, munze
-claves.en: obstacle race, race, obstacles, 6x track, rotating arena, hidden obstacles, sudden obstacles, destructible, indestructible, broken robots, malfunctioning robots, speed boost, impulso, race combat, other players robots, finish line, coin
-resumen.ia: Obstacle race (in Special mode: 6x long track rotating to a different arena every race with smooth camera and minimap; choose any of your available robots with their real parts and race against the computer or another player's robot from robots_ajenos/; features hidden and sudden obstacles both destructible like barrels/chimneys and indestructible traps, malfunctioning broken robots firing randomly that can be destroyed, pickup speed boosts "impulso", and live combat against your rival while crossing the finish line first remains the main goal; factory code is deliberately clumsy so you must code and compile your own strategy; each win awards 1 coin)
+claves.es: carrera de obstaculos, carrera, obstaculos, hindernislauf, obstacle race, pista 6x, arena distinta, obstaculos ocultos, obstaculos repentinos, destructibles, indestructibles, robots defectuosos, impulso, combate en carrera, robots ajenos, meta, moneda, dificultad, noob, junior, senior, especial
+claves.de: hindernislauf, hindernisrennen, rennen, hindernisse, 6x strecke, wechselnde arena, versteckte hindernisse, ploetzliche hindernisse, zerstoerbare, unzerstoerbare, defekte roboter, impulso, tempo boost, kampf im rennen, fremde roboter, ziel, munze, schwierigkeit, noob, junior, senior, spezial
+claves.en: obstacle race, race, obstacles, 6x track, rotating arena, hidden obstacles, sudden obstacles, destructible, indestructible, broken robots, malfunctioning robots, speed boost, impulso, race combat, other players robots, finish line, coin, difficulty, noob, junior, senior, special
+resumen.ia: Obstacle race (in Special mode: 6x long track rotating to a different arena every race with smooth camera and minimap; choose any of your available robots with their real parts, pick one of 4 difficulty levels — Noob, Junior, Senior, and Special, where Special unlocks once Special mode is unlocked in the game by defeating a boss or reaching Master rank — and race against the computer or another player's robot from robots_ajenos/; each difficulty clearly scales visible/hidden/sudden obstacles, count and firing rate of broken robots, speed boost pickups "impulso", and AI rival speed/accuracy/tactics; live combat against your rival is allowed while crossing the finish line first remains the main goal; factory code is deliberately clumsy so you must code and compile your own strategy; each win awards 1 coin)
 tip.juego_carrera_obstaculos.condicion: aleatorio
-tip.juego_carrera_obstaculos.es: Prueba la [[Carrera de obstáculos]] (pista 6× con arena distinta cada vez): sustituye el código torpe de fábrica, recoge impulsos, destruye robots defectuosos, dispara al rival y cruza primero la meta para ganar 1 moneda.
-tip.juego_carrera_obstaculos.de: Probier den [[Hindernislauf]] (6×-Strecke mit neuer Arena pro Lauf): Ersetze den absichtlich ungeschickten Werkscode, sammle Tempo-Boosts, zerstöre defekte Roboter, beschieße den Gegner und hol dir 1 Münze pro Sieg.
-tip.juego_carrera_obstaculos.en: Try the [[Obstacle race]] (6× track with a new arena every run): replace the deliberately clumsy factory code, grab speed boosts, blast broken robots, shoot your rival, and cross the finish line first to earn 1 coin.
+tip.juego_carrera_obstaculos.es: Prueba la [[Carrera de obstáculos]] (pista 6× con niveles Noob, Junior, Senior y Especial): sustituye el código torpe de fábrica, recoge impulsos, destruye robots defectuosos y cruza primero la meta para ganar 1 moneda.
+tip.juego_carrera_obstaculos.de: Probier den [[Hindernislauf]] (6×-Strecke mit den Stufen Noob, Junior, Senior und Spezial): Ersetze den ungeschickten Werkscode, sammle Tempo-Boosts, zerstöre defekte Roboter und hol dir 1 Münze pro Sieg.
+tip.juego_carrera_obstaculos.en: Try the [[Obstacle race]] (6× track with Noob, Junior, Senior, and Special difficulties): replace the clumsy factory code, grab speed boosts, blast broken robots, and cross the finish line first to earn 1 coin.
 ver: arena_y_modos, if_else, tienda_y_monedas
 es:
     La Carrera de obstáculos está dentro de Modo especial y se disputa en una pista larga (6× más grande que la arena base) con cámara de seguimiento fluida, minimapa panorámico y una arena distinta en cada nueva carrera.
-    Antes de correr eliges con cuál de tus robots disponibles quieres participar (usando su montaje real y piezas compradas) y decides si compites contra la máquina o contra el robot de otro usuario cargado desde robots_ajenos/.
-    En el recorrido encontrarás obstáculos ocultos y obstáculos repentinos que aparecen en marcha (destructibles como barriles y chimeneas frente a indestructibles como bloques, fosos y pinchos), robots defectuosos averiados que se mueven y disparan al azar y pueden destruirse a tiros, y objetos recogibles de impulso de velocidad ("impulso") para acelerar temporalmente.
+    Antes de correr eliges con cuál de tus robots disponibles quieres participar (usando su montaje real y piezas compradas), decides si compites contra la máquina o contra el robot de otro usuario cargado desde robots_ajenos/ y seleccionas uno de los cuatro niveles de dificultad en su menú: Noob, Junior, Senior o Especial.
+    Noob, Junior y Senior están siempre disponibles; Especial permanece bloqueado hasta que desbloquees el Modo especial en el juego (venciendo a un jefe en Modo especial o alcanzando el rango Master). Cada nivel cambia de forma muy notable la cantidad de obstáculos (visibles, ocultos y repentinos), la proporción de trampas fijas frente a destructibles, la cantidad y actividad/cadencia de los robots defectuosos, los impulsos de velocidad ("impulso") y el nivel táctico y puntería del rival de la máquina.
     El combate contra tu adversario está permitido durante toda la carrera para frenarlo, entorpecerlo o destruirlo, aunque el objetivo principal sigue siendo cruzar primero la línea de meta. El código de fábrica es torpe a propósito y nunca gana solo: debes programar tu estrategia y pulsar Compilar. Todas las estadísticas reales de tu modelo, sus armas características y el daño a obstáculos (barriles y chimeneas) funcionan exactamente igual que en combate estándar. Cada victoria suma exactamente 1 moneda.
 de:
     Der Hindernislauf befindet sich im Spezialmodus und führt über eine lange 6×-Strecke mit weicher Verfolgungskamera, kompakter Übersichtskarte und einer neuen Arena in jedem Lauf.
-    Vor dem Start wählst du einen deiner verfügbaren Roboter (mit seiner echten Ausstattung und gekauften Teilen) und trittst gegen den Computer oder gegen fremde Roboter aus robots_ajenos/ an.
-    Auf der Strecke erwarten dich versteckte sowie plötzlich auftauchende Hindernisse (zerstörbare Fässer und Schornsteine sowie unzerstörbare Blöcke, Gruben und Stacheln), defekte Roboter, die planlos umherfahren, zufällig schießen und abgeschossen werden können, sowie einsammelbare Tempo-Boosts ("impulso") für vorübergehend höheres Tempo.
+    Vor dem Start wählst du einen deiner verfügbaren Roboter (mit seiner echten Ausstattung und gekauften Teilen), entscheidest zwischen dem Computer oder fremden Robotern aus robots_ajenos/ und wählst im Menü eine der vier Schwierigkeitsstufen: Noob, Junior, Senior oder Spezial.
+    Noob, Junior und Senior stehen immer offen; Spezial bleibt gesperrt, bis du den Spezialmodus im Spiel freischaltest (indem du einen Boss im Spezialmodus besiegst oder den Rang Master erreichst). Jede Stufe verändert spürbar die Anzahl sichtbarer, versteckter und plötzlicher Hindernisse, das Verhältnis fester Fallen zu zerstörbaren Objekten, Anzahl und Schussfrequenz der defekten Roboter, die Tempo-Boosts ("impulso") sowie Tempo, Zielgenauigkeit und Taktik des Computergegners.
     Kampf gegen den Gegner ist während des gesamten Laufs erlaubt, um ihn auszubremsen oder auszuschalten — das Hauptziel bleibt jedoch, als Erster die Ziellinie zu überqueren. Der Werkscode ist absichtlich ungeschickt und gewinnt nie allein: Programmiere deine eigene Strategie und drück Kompilieren. Alle echten Werte deines Modells, charakteristische Waffen und der Schaden an Hindernissen (Fässer und Schornsteine) gelten hier exakt wie im Standardkampf. Jeder Sieg bringt genau 1 Münze.
 en:
     Obstacle race lives inside Special mode and runs on a long 6× track with a smooth follow camera, compact panoramic minimap, and a different arena on every new race.
-    Before starting, you pick any of your available robots (using its real mounted parts and stats) and race against the computer or another player's robot loaded from robots_ajenos/.
-    Along the course you face hidden and sudden obstacles appearing mid-race (destructible barrels and chimneys versus indestructible blocks, pits, and spikes), malfunctioning broken robots that wander and fire randomly and can be destroyed with gunfire, and pickup speed boosts ("impulso") that temporarily increase your speed.
+    Before starting, you pick any of your available robots (using its real mounted parts and stats), choose between racing the computer or another player's robot loaded from robots_ajenos/, and pick one of four difficulty levels right in its menu: Noob, Junior, Senior, or Special.
+    Noob, Junior, and Senior are always selectable, while Special stays locked until you unlock Special mode in the game (by defeating a boss in Special mode or reaching Master rank). Each difficulty noticeably changes the number of visible, hidden, and sudden obstacles, the balance of fixed traps versus destructible objects, the count and firing activity of malfunctioning broken robots, the availability of speed boosts ("impulso"), and the AI rival's speed, aim, and tactics.
     Combat against your rival is allowed throughout the race to slow, disrupt, or knock them out, while crossing the finish line first remains the main goal. The factory code is deliberately clumsy and never wins on its own: write your own strategy and press Compile. Your model's real stats, signature weapons, and obstacle destruction power (barrels and chimneys) apply identically to standard combat. Each win awards exactly 1 coin.
 pseudo.es:
-    Modo especial → Carrera de obstáculos → elegir tu robot y rival (máquina o robots_ajenos/)
+    Modo especial → Carrera de obstáculos → elegir tu robot, dificultad (Noob/Junior/Senior/Especial) y rival
     SI hay impulso ("impulso") delante → ir a recogerlo
     SI hay obstáculo o robot defectuoso / rival cerca:
         SI es barril, chimenea o enemigo → apuntar y atacar
         SI NO → esquivar rodeándolo
     avanzar hacia la meta → ganar = +1 moneda
 pseudo.de:
-    Spezialmodus → Hindernislauf → eigenen Roboter und Gegner wählen (Computer oder robots_ajenos/)
+    Spezialmodus → Hindernislauf → Roboter, Schwierigkeit (Noob/Junior/Senior/Spezial) und Gegner wählen
     WENN Tempo-Boost ("impulso") voraus → einsammeln
     WENN Hindernis oder defekter Roboter / Gegner nah:
         WENN Fass, Schornstein oder Gegner → zielen und angreifen
         SONST → außen herum ausweichen
     Richtung Ziel fahren → Sieg = +1 Münze
 pseudo.en:
-    Special mode → Obstacle race → pick your robot and rival (computer or robots_ajenos/)
+    Special mode → Obstacle race → pick your robot, difficulty (Noob/Junior/Senior/Special), and rival
     IF speed boost ("impulso") ahead → steer to collect it
     IF obstacle or broken robot / rival nearby:
         IF barrel, chimney, or enemy → aim and attack

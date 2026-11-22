@@ -93,10 +93,16 @@ public final class PistaDeCarrera {
 
     /** Genera la arena 6× con obstáculos visibles, ocultos, destructibles, indestructibles e impulsos. */
     public static Arena generarArena(double ancho, double alto, long semilla, String escenario) {
+        return generarArena(ancho, alto, semilla, escenario, DificultadCarrera.porDefecto());
+    }
+
+    /** Genera la arena 6× parametrizada por el nivel de dificultad elegido. */
+    public static Arena generarArena(double ancho, double alto, long semilla, String escenario, DificultadCarrera dificultad) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
         String tema = escenario == null || escenario.isBlank() ? siguienteArena(null, semilla) : escenario;
         Arena a = Arena.crearParaCarrera(agarreDe(tema));
-        Random r = new Random(semilla ^ tema.hashCode());
-        int sectores = 14;
+        Random r = new Random(semilla ^ tema.hashCode() ^ (dif.ordinal() * 131L));
+        int sectores = dif.sectores;
         double inicio = Math.max(420, ancho * 0.08);
         double fin = Math.min(ancho - 360, ancho * 0.94);
         double paso = (fin - inicio) / Math.max(1, sectores - 1);
@@ -107,28 +113,36 @@ public final class PistaDeCarrera {
 
         for (int s = 1; s < sectores; s++) {
             double sx = inicio + s * paso;
-            poblarSector(a, r, s, sx, alto, tema);
+            poblarSector(a, r, s, sx, alto, tema, dif);
         }
-        colocarImpulsos(a, r, ancho, alto);
+        colocarImpulsos(a, r, ancho, alto, dif);
         return a;
     }
 
-    private static void poblarSector(Arena a, Random r, int s, double sx, double alto, String tema) {
-        boolean oculto = s % 3 == 1;
-        double y1 = alto * (0.20 + (s % 2) * 0.10) + jitter(r, 28);
-        double y2 = alto * 0.50 + jitter(r, 34);
-        double y3 = alto * (0.80 - (s % 2) * 0.10) + jitter(r, 28);
-        if (s % 2 == 1) {
-            a.agregarDestructible(s % 4 == 1 ? "barril" : "chimenea", sx + jitter(r, 40), y1,
-                    s % 4 == 1 ? 28 : 34, s % 4 == 1 ? Arena.RESISTENCIA_BARRIL : Arena.RESISTENCIA_CHIMENEA, oculto);
-            agregarIndestructible(a, r, sx + jitter(r, 40), y2, tema, !oculto);
-            a.agregarDestructible("barril", sx + jitter(r, 40), y3, 28, Arena.RESISTENCIA_BARRIL, s % 3 == 2);
-        } else {
-            agregarIndestructible(a, r, sx + jitter(r, 40), y1, tema, oculto);
-            a.agregarDestructible("chimenea", sx + jitter(r, 40), y2, 34, Arena.RESISTENCIA_CHIMENEA, false);
-            agregarIndestructible(a, r, sx + jitter(r, 40), y3, tema, !oculto);
+    private static void poblarSector(Arena a, Random r, int s, double sx, double alto, String tema, DificultadCarrera dif) {
+        int cantidad = dif.obstaculosPorSector + (dif == DificultadCarrera.SENIOR && s % 2 == 0 ? 1 : 0);
+        int carrilLibre = Math.floorMod(s * 3 + r.nextInt(Math.max(2, cantidad + 1)), cantidad + 1);
+        double margenY = 105.0;
+        double tramoY = (alto - margenY * 2) / Math.max(1, cantidad);
+        int indestructiblesEnSector = 0;
+        int maxIndestructibles = Math.max(1, cantidad - 1);
+        for (int k = 0; k < cantidad; k++) {
+            int carril = k >= carrilLibre ? k + 1 : k;
+            double oy = margenY + tramoY * (carril + 0.5) / (cantidad + 1) * cantidad;
+            oy = Math.max(92, Math.min(alto - 92, oy + jitter(r, 20)));
+            double ox = sx + ((k % 2 == 0 ? -1 : 1) * (24 + k * 14)) + jitter(r, 24);
+            boolean oculto = r.nextDouble() < dif.proporcionOcultos;
+            boolean indestructible = indestructiblesEnSector < maxIndestructibles && r.nextDouble() < dif.proporcionIndestructibles;
+            if (indestructible) {
+                indestructiblesEnSector++;
+                agregarIndestructible(a, r, ox, oy, tema, oculto);
+            } else {
+                boolean barril = (s + k) % 2 == 0;
+                a.agregarDestructible(barril ? "barril" : "chimenea", ox, oy,
+                        barril ? 28 : 34, barril ? Arena.RESISTENCIA_BARRIL : Arena.RESISTENCIA_CHIMENEA, oculto);
+            }
         }
-        agregarToqueDeArena(a, r, s, sx, alto, tema);
+        agregarToqueDeArena(a, r, s, sx, alto, tema, dif);
     }
 
     private static void agregarIndestructible(Arena a, Random r, double x, double y, String tema, boolean oculto) {
@@ -143,23 +157,25 @@ public final class PistaDeCarrera {
         }
     }
 
-    private static void agregarToqueDeArena(Arena a, Random r, int s, double sx, double alto, String tema) {
-        if ("CHATARRERIA".equals(tema) && s % 5 == 0) {
+    private static void agregarToqueDeArena(Arena a, Random r, int s, double sx, double alto, String tema, DificultadCarrera dif) {
+        int pasoEspecial = dif == DificultadCarrera.NOOB ? 6 : dif == DificultadCarrera.JUNIOR ? 5 : dif == DificultadCarrera.SENIOR ? 4 : 3;
+        if ("CHATARRERIA".equals(tema) && s % pasoEspecial == 0) {
             a.agregarTrampa("iman", sx + 120, alto * 0.5, 145, false, 0, 0, false);
-        } else if ("COCINA".equals(tema) && s % 4 == 0) {
-            a.agregarTrampa("sierra", sx + 80, s % 8 == 0 ? 78 : alto - 78, 56, false, 0, 0, false);
-        } else if ("TEJADO".equals(tema) && s % 5 == 0) {
+        } else if ("COCINA".equals(tema) && s % pasoEspecial == 0) {
+            a.agregarTrampa("sierra", sx + 80, s % (pasoEspecial * 2) == 0 ? 78 : alto - 78, 56, false, 0, 0, false);
+        } else if ("TEJADO".equals(tema) && s % pasoEspecial == 0) {
             Arena.Trampa rayo = a.agregarTrampa("rayo", sx + 100, alto * 0.5, 58, false, 180, 32, false);
             rayo.vy = r.nextBoolean() ? 1.5 : -1.5;
         }
     }
 
-    private static void colocarImpulsos(Arena a, Random r, double ancho, double alto) {
-        int cantidad = 8;
+    private static void colocarImpulsos(Arena a, Random r, double ancho, double alto, DificultadCarrera dif) {
+        int cantidad = dif.cantidadImpulsos;
         double inicio = Math.max(550, ancho * 0.09);
         double fin = ancho * 0.90;
         for (int i = 0; i < cantidad; i++) {
-            double x = inicio + (fin - inicio) * i / (cantidad - 1) + jitter(r, 65);
+            double frac = cantidad <= 1 ? 0.5 : (double) i / (cantidad - 1);
+            double x = inicio + (fin - inicio) * frac + jitter(r, 65);
             double y = alto * (0.22 + ((i * 37 + Math.abs(r.nextInt(30))) % 56) / 100.0);
             a.agregarImpulso(x, y, 30);
         }
@@ -167,21 +183,31 @@ public final class PistaDeCarrera {
 
     /** Planifica los obstáculos repentinos (destructibles e indestructibles) que salen en marcha. */
     public static List<ObstaculoRepentino> planearRepentinos(double ancho, double alto, long semilla) {
-        Random r = new Random(semilla * 73L + 19L);
+        return planearRepentinos(ancho, alto, semilla, DificultadCarrera.porDefecto());
+    }
+
+    /** Planifica los obstáculos repentinos según la dificultad elegida. */
+    public static List<ObstaculoRepentino> planearRepentinos(double ancho, double alto, long semilla, DificultadCarrera dificultad) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        Random r = new Random(semilla * 73L + 19L + dif.ordinal() * 997L);
         List<ObstaculoRepentino> lista = new ArrayList<>();
-        int total = 8;
+        int total = dif.cantidadRepentinos;
+        double inicioX = ancho * 0.10;
+        double finX = ancho * 0.91;
         for (int i = 0; i < total; i++) {
-            double xBase = ancho * (0.11 + i * 0.105) + jitter(r, 40);
-            double yBase = alto * (0.22 + (i % 3) * 0.28) + jitter(r, 28);
-            double actX = Math.max(CarreraDeObstaculos.SALIDA_X + 120, xBase - 260);
-            int actTurno = i == 0 ? 35 : i == 1 ? 110 : 240 + i * 280;
-            if (i % 2 == 0) {
-                boolean barril = i % 4 == 0;
+            double frac = total <= 1 ? 0.5 : (double) i / (total - 1);
+            double xBase = inicioX + (finX - inicioX) * frac + jitter(r, 36);
+            double yBase = alto * (0.20 + (i % 3) * 0.30) + jitter(r, 26);
+            double actX = Math.max(CarreraDeObstaculos.SALIDA_X + 120, xBase - (dif.margenRepentino + 70));
+            int actTurno = i == 0 ? 35 : i == 1 ? 105 : 220 + i * Math.max(120, 280 - dif.ordinal() * 45);
+            boolean indestructible = r.nextDouble() < dif.proporcionIndestructibles;
+            if (!indestructible) {
+                boolean barril = i % 2 == 0;
                 lista.add(new ObstaculoRepentino(barril ? "barril" : "chimenea", xBase, yBase,
                         barril ? 28 : 34, true, 0, 0,
                         barril ? Arena.RESISTENCIA_BARRIL : Arena.RESISTENCIA_CHIMENEA, actX, actTurno));
             } else {
-                boolean bloque = i % 4 == 1;
+                boolean bloque = i % 2 == 1;
                 lista.add(new ObstaculoRepentino(bloque ? "bloque" : "pinchos", xBase, yBase,
                         bloque ? 34 : 46, bloque, bloque ? 0 : 120, bloque ? 0 : 55, 0, actX, actTurno));
             }
@@ -191,6 +217,13 @@ public final class PistaDeCarrera {
 
     /** Activa los obstáculos repentinos cuyo tramo o turno se haya alcanzado, siempre con margen seguro. */
     public static void actualizarRepentinos(List<ObstaculoRepentino> lista, Pelea pelea) {
+        actualizarRepentinos(lista, pelea, DificultadCarrera.porDefecto());
+    }
+
+    /** Activa los obstáculos repentinos respetando el margen de seguridad de la dificultad elegida. */
+    public static void actualizarRepentinos(List<ObstaculoRepentino> lista, Pelea pelea, DificultadCarrera dificultad) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        double margen = Math.max(145.0, dif.margenRepentino);
         Cuerpo c0 = pelea.cuerpo(0);
         Cuerpo c1 = pelea.cuerpo(1);
         for (ObstaculoRepentino rep : lista) {
@@ -203,8 +236,8 @@ public final class PistaDeCarrera {
             double ox = rep.xBase;
             double oy = rep.yBase;
             Cuerpo ref = cerca0 ? c0 : cerca1 ? c1 : c0;
-            if (ref != null && ox < ref.x + MARGEN_REPENTINO) {
-                ox = ref.x + MARGEN_REPENTINO;
+            if (ref != null && ox < ref.x + margen) {
+                ox = ref.x + margen;
             }
             double[] pos = asegurarPosicionLibre(ox, oy, rep.radio, pelea, c0, c1);
             rep.trampa = pelea.arena.agregarRepentina(rep.tipo, pos[0], pos[1], rep.radio,
@@ -229,20 +262,30 @@ public final class PistaDeCarrera {
 
     /** Crea los robots defectuosos/averiados que entorpecen distintos tramos de la pista 6×. */
     public static List<DefectuosoEnPista> crearRobotsDefectuosos(double ancho, double alto, long semilla) {
-        Random r = new Random(semilla * 97L + 41L);
+        return crearRobotsDefectuosos(ancho, alto, semilla, DificultadCarrera.porDefecto());
+    }
+
+    /** Crea los robots defectuosos/averiados escalados según la dificultad de la carrera. */
+    public static List<DefectuosoEnPista> crearRobotsDefectuosos(double ancho, double alto, long semilla, DificultadCarrera dificultad) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        Random r = new Random(semilla * 97L + 41L + dif.ordinal() * 313L);
         List<DefectuosoEnPista> lista = new ArrayList<>();
-        int cantidad = 7;
+        int cantidad = dif.cantidadDefectuosos;
+        int movilesObjetivo = Math.max(1, (int) Math.round(cantidad * dif.proporcionDefectuososMoviles));
+        double inicioX = ancho * 0.13;
+        double finX = ancho * 0.89;
         for (int i = 0; i < cantidad; i++) {
-            boolean inmovil = i % 2 == 0;
-            double x = ancho * (0.14 + i * 0.115) + jitter(r, 45);
-            double y = alto * (0.24 + (i % 3) * 0.26) + jitter(r, 25);
-            Montaje m = montajeDefectuoso();
-            Fabrica fab = fabricaDefectuoso(inmovil);
+            boolean inmovil = i >= movilesObjetivo;
+            double frac = cantidad <= 1 ? 0.5 : (double) i / (cantidad - 1);
+            double x = inicioX + (finX - inicioX) * frac + jitter(r, 42);
+            double y = alto * (0.22 + (i % 3) * 0.28) + jitter(r, 25);
+            Montaje m = montajeDefectuoso(dif, i);
+            Fabrica fab = fabricaDefectuoso(inmovil, dif.cadenciaDisparoDefectuosos);
             Combatiente c = new Combatiente("Averiado-" + (i + 1), m, fab);
             c.computadora = true;
             c.defectuoso = true;
-            c.escalaBlindaje = 0.24;
-            c.escalaDano = 0.35;
+            c.escalaBlindaje = dif.escalaBlindajeDefectuosos;
+            c.escalaDano = dif.escalaDanoDefectuosos;
             for (int k = 0; k < 6; k++) {
                 c.abollar(k % 4, r, 14 + r.nextDouble() * 12, k % 2 == 0);
             }
@@ -251,8 +294,15 @@ public final class PistaDeCarrera {
         return lista;
     }
 
-    private static Montaje montajeDefectuoso() {
-        Montaje m = new Montaje(Modelo.de("cobalto"));
+    private static Montaje montajeDefectuoso(DificultadCarrera dif, int indice) {
+        List<Modelo> todos = Modelo.todos();
+        Modelo modelo = Modelo.de("cobalto");
+        if (dif.ordinal() >= DificultadCarrera.SENIOR.ordinal() && !todos.isEmpty()) {
+            modelo = todos.get(Math.floorMod(indice * 3 + dif.ordinal(), todos.size()));
+        } else if (dif == DificultadCarrera.JUNIOR && todos.size() > 1 && indice % 2 == 1) {
+            modelo = todos.get(1);
+        }
+        Montaje m = new Montaje(modelo);
         for (Pieza p : CatalogoDePiezas.delJuego().de(Pieza.Ranura.BRAZO)) {
             if (p.arma() == Pieza.Arma.BALA && p.valor("dano") > 0) {
                 m.poner(Montaje.Hueco.IZQUIERDA, p);
@@ -262,11 +312,11 @@ public final class PistaDeCarrera {
         return m;
     }
 
-    private static Fabrica fabricaDefectuoso(boolean inmovil) {
+    private static Fabrica fabricaDefectuoso(boolean inmovil, int cadenciaDisparo) {
         return new Fabrica() {
             @Override
             public RobotBase crear() {
-                return new RobotDefectuoso(inmovil);
+                return new RobotDefectuoso(inmovil, cadenciaDisparo);
             }
 
             @Override
@@ -290,16 +340,23 @@ public final class PistaDeCarrera {
         return (r.nextDouble() * 2 - 1) * amplitud;
     }
 
-    /** Robot averiado en pista: gira a trompicones o deambula sin rumbo y dispara al azar. */
+    /** Robot averiado en pista: gira a trompicones o deambula sin rumbo y dispara según la dificultad. */
     public static final class RobotDefectuoso extends Metajavbot {
 
         private final boolean inmovil;
+        private final int cadenciaDisparo;
         private double rumboErratico;
         private int paso;
 
-        /** Crea un robot defectuoso inmóvil a trompicones o errático sin rumbo fijo. */
+        /** Crea un robot defectuoso con cadencia intermedia por defecto. */
         public RobotDefectuoso(boolean inmovil) {
+            this(inmovil, DificultadCarrera.porDefecto().cadenciaDisparoDefectuosos);
+        }
+
+        /** Crea un robot defectuoso inmóvil a trompicones o errático con la cadencia de disparo indicada. */
+        public RobotDefectuoso(boolean inmovil, int cadenciaDisparo) {
             this.inmovil = inmovil;
+            this.cadenciaDisparo = Math.max(5, cadenciaDisparo);
         }
 
         @Override
@@ -313,35 +370,50 @@ public final class PistaDeCarrera {
                     avanzar(azar().nextBoolean() ? 14 : -14);
                 }
             } else {
-                if (t % 18 == 0) {
+                if (t % 16 == 0) {
                     rumboErratico = azar().nextDouble() * 360 - 180;
                 }
                 if (y() < 110) rumboErratico = 75;
                 else if (y() > altoArena() - 110) rumboErratico = -75;
                 girarHacia(rumboErratico);
-                avanzar(42);
+                avanzar(cadenciaDisparo <= 11 ? 56 : 42);
             }
-            if (t % 13 == 0) {
+            if (t % Math.max(6, cadenciaDisparo - 4) == 0) {
                 apuntarHacia(azar().nextDouble() * 360 - 180);
             }
-            if (t % 17 == 0) {
+            if (t % cadenciaDisparo == 0) {
                 atacar();
             }
         }
     }
 
-    /** Robot rival de la máquina para pista 6×: esquiva, rompe destructibles, recoge impulsos y combate. */
+    /** Robot rival de la máquina para pista 6×: escala velocidad, evasión, puntería e impulsos por dificultad. */
     public static final class CorredorMaquina extends Metajavbot {
+
+        private final DificultadCarrera dificultad;
+        private int paso;
+
+        /** Crea un corredor de la máquina con dificultad intermedia por defecto. */
+        public CorredorMaquina() {
+            this(DificultadCarrera.porDefecto());
+        }
+
+        /** Crea un corredor de la máquina adaptado al nivel de dificultad elegido. */
+        public CorredorMaquina(DificultadCarrera dificultad) {
+            this.dificultad = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        }
 
         @Override
         public void cadaTurno() {
+            int t = paso++;
             double rumboObjetivo = buscarImpulso();
             Obstaculo amenaza = buscarAmenaza();
             boolean disparo = false;
+            int cadencia = dificultad == DificultadCarrera.NOOB ? 4 : dificultad == DificultadCarrera.JUNIOR ? 2 : 1;
             if (amenaza != null) {
                 boolean destructible = amenaza.tipo().equals("barril") || amenaza.tipo().equals("chimenea");
-                if (destructible) {
-                    apuntarHacia(amenaza.angulo());
+                if (destructible && (t % cadencia == 0)) {
+                    apuntarConError(amenaza.angulo());
                     atacar();
                     disparo = true;
                     if (amenaza.distancia() < 105) rumboObjetivo = elegirDesvio(amenaza.y());
@@ -350,10 +422,10 @@ public final class PistaDeCarrera {
                 }
             }
             Enemigo blanco = buscarEnemigo();
-            if (!disparo && blanco != null) {
-                apuntarHacia(blanco.angulo());
+            if (!disparo && blanco != null && (t % cadencia == 0)) {
+                apuntarConError(blanco.angulo());
                 atacar();
-                if (blanco.distancia() < 115 && Math.abs(normalizar(blanco.angulo())) < 55) {
+                if (blanco.distancia() < 120 && Math.abs(normalizar(blanco.angulo())) < 55) {
                     rumboObjetivo = elegirDesvio(blanco.y());
                 }
             } else if (!disparo) {
@@ -362,15 +434,21 @@ public final class PistaDeCarrera {
             if (y() < 95 && rumboObjetivo < 0) rumboObjetivo = 28;
             if (y() > altoArena() - 95 && rumboObjetivo > 0) rumboObjetivo = -28;
             girarHacia(rumboObjetivo);
-            avanzar(85);
+            avanzar(dificultad.avanceRival);
+        }
+
+        private void apuntarConError(double angulo) {
+            double err = dificultad.errorPunteriaRival;
+            double desvio = err <= 0 ? 0 : (azar().nextDouble() * 2 - 1) * err;
+            apuntarHacia(angulo + desvio);
         }
 
         private double buscarImpulso() {
             Obstaculo mejor = null;
-            double dist = 340;
+            double dist = 240 + dificultad.nivelRival * 220;
             for (Obstaculo o : obstaculos()) {
                 if (!o.tipo().equals("impulso") || o.x() < x() - 20) continue;
-                if (o.distancia() < dist && Math.abs(normalizar(o.angulo())) < 52) {
+                if (o.distancia() < dist && Math.abs(normalizar(o.angulo())) < 58) {
                     dist = o.distancia();
                     mejor = o;
                 }
@@ -380,11 +458,11 @@ public final class PistaDeCarrera {
 
         private Obstaculo buscarAmenaza() {
             Obstaculo amenaza = null;
-            double mejorDist = 245;
+            double mejorDist = dificultad.alcanceEvasionRival;
             for (Obstaculo o : obstaculos()) {
                 if (o.tipo().equals("impulso")) continue;
                 double diff = Math.abs(normalizar(o.angulo()));
-                if (o.distancia() < mejorDist && diff < 48) {
+                if (o.distancia() < mejorDist && diff < 50) {
                     mejorDist = o.distancia();
                     amenaza = o;
                 }
@@ -394,7 +472,7 @@ public final class PistaDeCarrera {
 
         private Enemigo buscarEnemigo() {
             Enemigo mejor = null;
-            double dist = 420;
+            double dist = 300 + dificultad.nivelRival * 260;
             for (Enemigo e : enemigosVistos()) {
                 if (e.distancia() < dist) {
                     dist = e.distancia();

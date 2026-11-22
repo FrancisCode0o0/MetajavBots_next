@@ -370,7 +370,12 @@ public final class Arena {
 
     /** Crea la pista de Carrera de obstáculos con la estética y agarre del escenario indicado. */
     public static Arena carreraDeObstaculos(double ancho, double alto, long semilla, String escenario) {
-        return PistaDeCarrera.generarArena(ancho, alto, semilla, escenario);
+        return PistaDeCarrera.generarArena(ancho, alto, semilla, escenario, DificultadCarrera.porDefecto());
+    }
+
+    /** Crea la pista de Carrera de obstáculos con escenario y nivel de dificultad indicados. */
+    public static Arena carreraDeObstaculos(double ancho, double alto, long semilla, String escenario, DificultadCarrera dificultad) {
+        return PistaDeCarrera.generarArena(ancho, alto, semilla, escenario, dificultad);
     }
 
     /** Aplica daño a un obstáculo destructible; al llegar a 0 lo destruye y avisa con OBSTACULO_ROTO. */

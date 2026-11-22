@@ -261,6 +261,15 @@ public final class Progreso {
     }
 
     /**
+     * Comprueba si el jugador ha desbloqueado el Modo especial avanzado en el juego:
+     * haber alcanzado el rango secreto {@link Etiqueta#MASTER} o haber vencido al menos
+     * un jefe/gimnasio en Modo especial.
+     */
+    public static boolean modoEspecialDesbloqueado(Jugador j) {
+        return j != null && (j.etiqueta == Etiqueta.MASTER || !j.jefesVencidos.isEmpty());
+    }
+
+    /**
      * Intenta comprar una pieza del catálogo con las monedas del jugador.
      * Si la compra es válida, descuenta el precio y la marca en {@code j.piezasPendientes}
      * (no equipable aún hasta superar su reto de código).

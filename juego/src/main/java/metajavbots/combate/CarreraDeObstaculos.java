@@ -41,6 +41,8 @@ public final class CarreraDeObstaculos {
     public final String escenario;
     /** Si el rival es la computadora (true) o un robot ajeno (false). */
     public final boolean contraMaquina;
+    /** Nivel de dificultad aplicado a esta carrera. */
+    public final DificultadCarrera dificultad;
 
     private final List<PistaDeCarrera.ObstaculoRepentino> repentinos;
     private final List<PistaDeCarrera.DefectuosoEnPista> defectuosos;
@@ -49,18 +51,25 @@ public final class CarreraDeObstaculos {
     private String motivoFin = "";
     private boolean recompensaAplicada;
 
-    /** Crea una nueva carrera de obstáculos lista para ejecutarse turno a turno. */
+    /** Crea una nueva carrera de obstáculos lista para ejecutarse turno a turno (dificultad por defecto). */
     public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina) {
-        this(jugador, rival, semilla, contraMaquina, null);
+        this(jugador, rival, semilla, contraMaquina, null, DificultadCarrera.porDefecto());
     }
 
-    /** Crea una nueva carrera evitando repetir {@code arenaAnterior}. */
+    /** Crea una nueva carrera evitando repetir {@code arenaAnterior} (dificultad por defecto). */
     public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina, String arenaAnterior) {
+        this(jugador, rival, semilla, contraMaquina, arenaAnterior, DificultadCarrera.porDefecto());
+    }
+
+    /** Crea una nueva carrera evitando repetir {@code arenaAnterior} con el nivel de dificultad indicado. */
+    public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina,
+            String arenaAnterior, DificultadCarrera dificultad) {
         this.semilla = semilla;
         this.contraMaquina = contraMaquina;
+        this.dificultad = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
         this.escenario = PistaDeCarrera.siguienteArena(arenaAnterior, semilla);
-        this.defectuosos = PistaDeCarrera.crearRobotsDefectuosos(ANCHO, ALTO, semilla);
-        this.repentinos = PistaDeCarrera.planearRepentinos(ANCHO, ALTO, semilla);
+        this.defectuosos = PistaDeCarrera.crearRobotsDefectuosos(ANCHO, ALTO, semilla, this.dificultad);
+        this.repentinos = PistaDeCarrera.planearRepentinos(ANCHO, ALTO, semilla, this.dificultad);
 
         int total = 2 + defectuosos.size();
         Combatiente[] cs = new Combatiente[total];
@@ -75,7 +84,7 @@ public final class CarreraDeObstaculos {
         }
         this.pelea = new Pelea(cs, equipos, semilla, ANCHO, ALTO, MAX_TURNOS);
         this.pelea.rondas = 1;
-        this.pelea.arena = PistaDeCarrera.generarArena(ANCHO, ALTO, semilla, escenario);
+        this.pelea.arena = PistaDeCarrera.generarArena(ANCHO, ALTO, semilla, escenario, this.dificultad);
         this.pelea.empezarRonda();
         colocarEnSalida();
     }
@@ -117,7 +126,7 @@ public final class CarreraDeObstaculos {
     public void avanzar() {
         if (terminada) return;
         pelea.avanzar();
-        PistaDeCarrera.actualizarRepentinos(repentinos, pelea);
+        PistaDeCarrera.actualizarRepentinos(repentinos, pelea, dificultad);
         evaluarFin();
     }
 
@@ -171,6 +180,16 @@ public final class CarreraDeObstaculos {
     /** Escenario/arena asignado a esta carrera. */
     public String escenario() {
         return escenario;
+    }
+
+    /** Nivel de dificultad configurado para esta carrera. */
+    public DificultadCarrera dificultad() {
+        return dificultad;
+    }
+
+    /** Comprueba si una dificultad de carrera está desbloqueada para el jugador dado. */
+    public static boolean dificultadDesbloqueada(Jugador jugador, DificultadCarrera dificultad) {
+        return dificultad != null && dificultad.disponiblePara(jugador);
     }
 
     /** Progreso normalizado [0, 1] del corredor indicado hacia la línea de meta. */
@@ -252,13 +271,19 @@ public final class CarreraDeObstaculos {
         return new Combatiente(nombre, new Montaje(Modelo.de("cobalto")), fabrica);
     }
 
-    /** Crea el combatiente rival controlado por la computadora para la carrera de obstáculos. */
+    /** Crea el combatiente rival controlado por la computadora para la carrera de obstáculos (dificultad por defecto). */
     public static Combatiente rivalMaquina(String nombre) {
+        return rivalMaquina(nombre, DificultadCarrera.porDefecto());
+    }
+
+    /** Crea el combatiente rival controlado por la computadora adaptado a la dificultad indicada. */
+    public static Combatiente rivalMaquina(String nombre, DificultadCarrera dificultad) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
         Montaje montaje = new Montaje(Modelo.de("cobalto"));
         Fabrica fabrica = new Fabrica() {
             @Override
             public RobotBase crear() {
-                return new PistaDeCarrera.CorredorMaquina();
+                return new PistaDeCarrera.CorredorMaquina(dif);
             }
 
             @Override
@@ -278,6 +303,7 @@ public final class CarreraDeObstaculos {
         };
         Combatiente c = new Combatiente(nombre, montaje, fabrica);
         c.computadora = true;
+        c.escalaDano = dif.escalaDanoRival;
         return c;
     }
 
