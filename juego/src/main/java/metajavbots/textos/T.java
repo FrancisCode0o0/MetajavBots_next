@@ -29,8 +29,10 @@ public final class T {
                     int i = linea.indexOf('=');
                     if (i <= 0) continue;
                     String[] p = linea.substring(i + 1).split("\\|", -1);
-                    TEXTOS.put(linea.substring(0, i).strip(), new Trilingue(p[0].strip(), p.length > 1 ? p[1].strip() : "",
-                            p.length > 2 ? p[2].strip() : ""));
+                    TEXTOS.put(linea.substring(0, i).strip(), new Trilingue(
+                            p[0].strip().replace("\\n", "\n"),
+                            p.length > 1 ? p[1].strip().replace("\\n", "\n") : "",
+                            p.length > 2 ? p[2].strip().replace("\\n", "\n") : ""));
                 }
             }
         } catch (IOException e) {
@@ -48,7 +50,7 @@ public final class T {
     /** El texto de esa clave en un idioma concreto (sin depender de T.idioma). */
     public static String en(String clave, Idioma id) {
         Trilingue t = TEXTOS.get(clave);
-        return t == null ? clave : t.en(id == null ? Idioma.ES : id).replace("\\n", "\n");
+        return t == null ? clave : t.en(id == null ? Idioma.ES : id);
     }
 
     public static String f(String clave, Object... huecos) {

@@ -88,6 +88,9 @@ public final class VentanaDeCodigo {
     private float parpadeo;
     private long versionColoreada = -1;
     private List<Lexico.Trozo> trozos = new ArrayList<>();
+    private Tema temaColoreado;
+    private String[] lineasMarcadas = new String[0];
+    private final Runnable desenfocar = () -> enfocada = false;
     // Buscar y reemplazar.
     private boolean buscando, reemplazando, campoReemplazo;
     private final Documento busqueda = new Documento(), reemplazo = new Documento();
@@ -197,7 +200,7 @@ public final class VentanaDeCodigo {
             if (e.dentro(x, y, w, h)) enfocada = true;
             else if (enfocada) { enfocada = false; ui.desenfocar(this); }
         } else if (ui.tieneOtroFoco(this)) enfocada = false;
-        if (enfocada) ui.registrarFoco(this, () -> enfocada = false);
+        if (enfocada) ui.registrarFoco(this, desenfocar);
         if (revisarAlEscribir != null && !soloLectura) revisor.fotograma(doc, marcas, revisarAlEscribir);
         if (enfocada) teclas(ui, g.zh(), alto);
         raton(ui, g.zx(), g.zy(), g.zw(), g.zh(), alto, letra);
@@ -234,7 +237,7 @@ public final class VentanaDeCodigo {
             if (lineaActiva == l + 1) p.texto("▶", x + 2, ly + alto * 0.08f, tamano * 0.95f, true, col, 1);
             boolean conError = false, conAviso = false;
             for (Marca m : marcas) if (m.linea == l + 1) { if (m.grave) conError = true; else conAviso = true; }
-            p.textoDeCodigoDerecha(Integer.toString(l + 1), g.zx() - letra * 1.6f, ly + alto * 0.12f, tamano * 0.9f,
+            p.textoDeCodigoDerecha(VistaDeCodigo.numeroDeLinea(l), g.zx() - letra * 1.6f, ly + alto * 0.12f, tamano * 0.9f,
                     l == lineaCursor, l == lineaCursor ? t.texto : t.numeros, 1);
             if (conError || conAviso) p.circulo(x + letra * 0.7f, ly + alto / 2, alto * 0.22f, conError ? t.mal : t.aviso, 1);
         }
@@ -283,45 +286,47 @@ public final class VentanaDeCodigo {
         int ini = doc.inicioDeLinea(l), fin = doc.finDeLinea(l);
         String texto = doc.linea(l);
         float ty = y + alto * 0.12f;
-        // Las guías de sangría, finas.
         int sangria = Documento.sangriaDe(texto);
         for (int s = Documento.SANGRIA; s < sangria; s += Documento.SANGRIA) p.rect(x0 + s * letra, y, 1, alto, t.borde, 0.6f);
-        int col = 0;
-        int k = VistaDeCodigo.buscarTrozo(trozos, ini);
-        List<Object[]> colores = new ArrayList<>();
-        while (col < texto.length()) {
-            int pos = ini + col;
-            Lexico.Trozo tr = k < trozos.size() ? trozos.get(k) : null;
-            int hasta;
-            int color;
-            if (tr != null && tr.inicio <= pos && tr.fin > pos) {
-                hasta = Math.min(fin, tr.fin) - ini;
-                color = VistaDeCodigo.colorDe(t, trozos, tr, k);
-                if (tr.fin <= fin) k++;
-            } else {
-                int siguiente = tr != null && tr.inicio > pos ? Math.min(fin, tr.inicio) : fin;
-                hasta = siguiente - ini;
-                color = t.texto;
+        if (palabra != null && !palabra.isEmpty() && texto.contains(palabra)) {
+            int idx = 0;
+            while ((idx = texto.indexOf(palabra, idx)) >= 0) {
+                boolean iniOk = idx == 0 || !Character.isJavaIdentifierPart(texto.charAt(idx - 1));
+                int end = idx + palabra.length();
+                boolean finOk = end >= texto.length() || !Character.isJavaIdentifierPart(texto.charAt(end));
+                if (iniOk && finOk) p.rect(x0 + idx * letra, y + 2, palabra.length() * letra, alto - 4, t.seleccion, 0.45f);
+                idx = end;
             }
-            if (hasta <= col) hasta = col + 1;
-            String trozo = texto.substring(col, Math.min(hasta, texto.length()));
-            if (palabra != null && trozo.equals(palabra)) p.rect(x0 + col * letra, y + 2, trozo.length() * letra, alto - 4, t.seleccion, 0.45f);
-            colores.add(new Object[]{trozo, color});
-            col = hasta;
         }
-        p.textoDeColores(colores, x0, ty, tamano);
+        String marcada = lineaMarcadaDe(t, l);
+        if (!marcada.isEmpty()) p.textoDeCodigoMarcado(marcada, x0, ty, tamano);
         if (pareja >= 0) {
             int cursorPareja = doc.cursor() > 0 && "(){}[]".indexOf(doc.letra(doc.cursor() - 1)) >= 0 ? doc.cursor() - 1 : doc.cursor();
-            for (int pos : new int[]{pareja, cursorPareja}) {
-                if (pos >= ini && pos <= fin && pos < doc.largo()) p.marco(x0 + (pos - ini) * letra, y + 1, letra, alto - 2, t.acento, 0.9f, 1.5f);
+            if (pareja >= ini && pareja <= fin && pareja < doc.largo()) p.marco(x0 + (pareja - ini) * letra, y + 1, letra, alto - 2, t.acento, 0.9f, 1.5f);
+            if (cursorPareja != pareja && cursorPareja >= ini && cursorPareja <= fin && cursorPareja < doc.largo()) {
+                p.marco(x0 + (cursorPareja - ini) * letra, y + 1, letra, alto - 2, t.acento, 0.9f, 1.5f);
             }
         }
+    }
+
+    private String lineaMarcadaDe(Tema t, int l) {
+        if (temaColoreado != t || lineasMarcadas.length != doc.lineas()) {
+            temaColoreado = t;
+            lineasMarcadas = new String[doc.lineas()];
+        }
+        String m = lineasMarcadas[l];
+        if (m == null) {
+            m = VistaDeCodigo.lineaMarcada(doc, t, trozos, l);
+            lineasMarcadas[l] = m;
+        }
+        return m;
     }
 
     private void coloreado() {
         if (versionColoreada == doc.version()) return;
         versionColoreada = doc.version();
         trozos = Lexico.trozos(doc.texto());
+        temaColoreado = null;
     }
 
     private int parejaDelCursor() {

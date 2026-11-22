@@ -13,10 +13,12 @@ public final class Efectos {
     public enum Tipo { CHISPA, HUMO, FUEGO, TROZO, CONFETI, DESTELLO, ONDA, COHETE, BRASA }
 
     private static final int MAXIMO = 3000;
+    private static final int[] COLORES_CONFETI = {0xFF5E5B, 0xFFD23F, 0x3FE0D0, 0x7B61FF, 0x5BD685, 0xFF8FB1};
     private final Tipo[] tipo = new Tipo[MAXIMO];
     private final float[] x = new float[MAXIMO], y = new float[MAXIMO], vx = new float[MAXIMO], vy = new float[MAXIMO];
     private final float[] vida = new float[MAXIMO], duracion = new float[MAXIMO], tam = new float[MAXIMO], giro = new float[MAXIMO];
     private final int[] color = new int[MAXIMO];
+    private final float[] polyTrozo = new float[6];
     private int vivas;
     private final Random azar = new Random(3);
     /** Lo que estalla cuando un cohete llega arriba (lo oye el juego). */
@@ -88,10 +90,9 @@ public final class Efectos {
     }
 
     public void confeti(float px, float py, int n) {
-        int[] colores = {0xFF5E5B, 0xFFD23F, 0x3FE0D0, 0x7B61FF, 0x5BD685, 0xFF8FB1};
         for (int k = 0; k < n; k++) {
             anadir(Tipo.CONFETI, px + azar.nextFloat() * 40 - 20, py, azar.nextFloat() * 300 - 150, -200 - azar.nextFloat() * 300,
-                    2 + azar.nextFloat() * 2, 5 + azar.nextFloat() * 4, colores[azar.nextInt(colores.length)]);
+                    2 + azar.nextFloat() * 2, 5 + azar.nextFloat() * 4, COLORES_CONFETI[azar.nextInt(COLORES_CONFETI.length)]);
         }
     }
 
@@ -171,7 +172,10 @@ public final class Efectos {
                 case TROZO: {
                     float s = tam[i];
                     float c = (float) Math.cos(giro[i]) * s, d = (float) Math.sin(giro[i]) * s;
-                    p.poligono(new float[]{x[i] - c, y[i] - d, x[i] + d, y[i] - c, x[i] + c, y[i] + d}, color[i], Math.min(1, a * 2));
+                    polyTrozo[0] = x[i] - c; polyTrozo[1] = y[i] - d;
+                    polyTrozo[2] = x[i] + d; polyTrozo[3] = y[i] - c;
+                    polyTrozo[4] = x[i] + c; polyTrozo[5] = y[i] + d;
+                    p.poligono(polyTrozo, color[i], Math.min(1, a * 2));
                     break;
                 }
                 case CONFETI: {

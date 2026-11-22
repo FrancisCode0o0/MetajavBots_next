@@ -147,6 +147,9 @@ public final class PantallaPelea implements Pantalla {
         empezarRonda(j);
     }
 
+    @Override
+    public void alSalir(Juego j) { if (pelea != null) pelea.cerrar(); }
+
     /** Carga el código ejecutable del combate sin piloto automático ni compilación implícita de robots nunca compilados. */
     private void cargarCodigoInicial(Jugador jug, Jugador.Robot r, String codigo) {
         if (encuentro.codigo != null) {
@@ -182,20 +185,13 @@ public final class PantallaPelea implements Pantalla {
     }
 
     /** Marca ese enemigo para el entrenador, como si el jugador le hiciera clic (para las capturas). */
-    public void marcarEnemigo(int i) {
-        entrenador.marcarDesdeFuera(i);
-    }
+    public void marcarEnemigo(int i) { entrenador.marcarDesdeFuera(i); }
 
     /** Abre el depurador en la pestaña indicada (0: variables, 1: código/turno; para las capturas). */
-    public void abrirDepurador(int pestana) {
-        depurador = true;
-        panelDepurador.pestana(pestana);
-    }
+    public void abrirDepurador(int pestana) { depurador = true; panelDepurador.pestana(pestana); }
 
     /** Pausa o reanuda la pelea (para las capturas). */
-    public void pausar(boolean si) {
-        pausa = si;
-    }
+    public void pausar(boolean si) { pausa = si; }
 
     /** Si el robot del jugador tiene ahora mismo una orden pisada en el último turno. */
     public boolean tieneConflictoDeOrdenes() {

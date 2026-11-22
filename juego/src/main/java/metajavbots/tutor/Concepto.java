@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -132,9 +131,9 @@ public final class Concepto {
 
     /** En minúsculas, sin tildes ni diéresis (la ß, ss) y con un solo espacio entre palabras. */
     public static String normalizar(String s) {
-        String n = Normalizer.normalize(s.toLowerCase(java.util.Locale.ROOT).replace("ß", "ss"), Normalizer.Form.NFD);
+        String n = metajavbots.textos.LectorRes.sinTildes(s);
         // El «?» suelto (para «? extends»), y sin el punto del final de una frase: «¿qué es una variable?» encuentra «variable».
-        return n.replaceAll("\\p{M}", "").replaceAll("[^a-z0-9<>?@_.\\- ]", " ").replace("?", " ? ").replaceAll("\\.(?=\\s|$)", " ")
+        return n.replaceAll("[^a-z0-9<>?@_.\\- ]", " ").replace("?", " ? ").replaceAll("\\.(?=\\s|$)", " ")
                 .replaceAll("\\s+", " ").strip();
     }
 

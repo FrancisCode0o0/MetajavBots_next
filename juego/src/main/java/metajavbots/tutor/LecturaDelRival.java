@@ -63,10 +63,7 @@ public final class LecturaDelRival {
     }
 
     private static double normalizar(double g) {
-        g = g % 360;
-        if (g > 180) g -= 360;
-        if (g < -180) g += 360;
-        return g;
+        return metajavbots.combate.Pelea.normal(g);
     }
 
     /** Cuánto ha girado a mi alrededor en la ventana (grados; positivo = en contra de las agujas del reloj = por mi izquierda). */

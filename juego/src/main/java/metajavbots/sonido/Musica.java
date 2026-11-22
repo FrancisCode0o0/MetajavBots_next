@@ -99,6 +99,13 @@ public final class Musica {
                 archivo.setLooping(true);
                 archivo.play();
             } catch (RuntimeException e) {
+                if (archivo != null) {
+                    try {
+                        archivo.dispose();
+                    } catch (RuntimeException ignorado) {
+                        // ya falló al abrir o reproducir
+                    }
+                }
                 archivo = null;
             }
             return;

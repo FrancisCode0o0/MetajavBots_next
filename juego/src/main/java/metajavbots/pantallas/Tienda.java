@@ -40,6 +40,14 @@ public final class Tienda implements Pantalla {
     };
 
     private final Ui.Desplazable scroll = new Ui.Desplazable();
+    private final String[] pestanasRangos = new String[RANGOS.length];
+    private final String[] textosRanuras = new String[RANURAS.length];
+    private final Ui.Estilo[] estilosRanuras = new Ui.Estilo[RANURAS.length];
+    private final java.util.Map<String, String> cifrasCache = new java.util.HashMap<>();
+    private metajavbots.textos.Idioma idiomaCache;
+    private Etiqueta.Categoria rangoCache;
+    private Pieza.Ranura ranuraCache;
+    private List<Pieza> listaCache;
     private int rangoElegido;
     private int ranuraElegida;
     private String aviso = "";
@@ -84,31 +92,27 @@ public final class Tienda implements Pantalla {
 
     private float barraDeRangos(Juego j, Jugador jug, float x, float y, float w) {
         Ui ui = j.ui;
-        String[] pest = new String[RANGOS.length];
         for (int i = 0; i < RANGOS.length; i++) {
             boolean libre = Progreso.rangoDesbloqueadoEnTienda(jug, RANGOS[i]);
-            pest[i] = libre ? nombreRango(RANGOS[i]) : "[" + nombreRango(RANGOS[i]) + "]";
+            pestanasRangos[i] = libre ? nombreRango(RANGOS[i]) : "[" + nombreRango(RANGOS[i]) + "]";
         }
         int antes = rangoElegido;
-        rangoElegido = ui.pestanas(pest, rangoElegido, x, y, Math.min(w, 820), 48);
+        rangoElegido = ui.pestanas(pestanasRangos, rangoElegido, x, y, Math.min(w, 820), 48);
         if (rangoElegido != antes) scroll.alPrincipio();
         return y + 58;
     }
 
     private float barraDeRanuras(Ui ui, float x, float y, float w) {
-        String[] textos = {
-            T.t("tienda.todas"),
-            T.t("tienda.ranura.brazo"),
-            T.t("tienda.ranura.cabeza"),
-            T.t("tienda.ranura.piernas"),
-            T.t("tienda.ranura.nucleo"),
-            T.t("tienda.ranura.naturaleza")
-        };
-        Ui.Estilo[] estilos = new Ui.Estilo[textos.length];
-        for (int i = 0; i < textos.length; i++) {
-            estilos[i] = i == ranuraElegida ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO;
+        textosRanuras[0] = T.t("tienda.todas");
+        textosRanuras[1] = T.t("tienda.ranura.brazo");
+        textosRanuras[2] = T.t("tienda.ranura.cabeza");
+        textosRanuras[3] = T.t("tienda.ranura.piernas");
+        textosRanuras[4] = T.t("tienda.ranura.nucleo");
+        textosRanuras[5] = T.t("tienda.ranura.naturaleza");
+        for (int i = 0; i < textosRanuras.length; i++) {
+            estilosRanuras[i] = i == ranuraElegida ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO;
         }
-        int pulsado = ui.botonera(textos, estilos, null, null, x, y, w, 40);
+        int pulsado = ui.botonera(textosRanuras, estilosRanuras, null, null, x, y, w, 40);
         if (pulsado >= 0 && pulsado != ranuraElegida) {
             ranuraElegida = pulsado;
             scroll.alPrincipio();
@@ -133,7 +137,13 @@ public final class Tienda implements Pantalla {
                                  float x, float y, float w, float h) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        List<Pieza> lista = piezasFiltradas(rango, RANURAS[ranuraElegida]);
+        Pieza.Ranura ranura = RANURAS[ranuraElegida];
+        if (listaCache == null || rangoCache != rango || ranuraCache != ranura) {
+            rangoCache = rango;
+            ranuraCache = ranura;
+            listaCache = piezasFiltradas(rango, ranura);
+        }
+        List<Pieza> lista = listaCache;
         float desp = ui.desplazable(scroll, x, y, w, h);
         if (lista.isEmpty()) {
             p.textoCentrado(T.t("tienda.vacio"), x + w / 2, y + 40, ui.letra, false, ui.tema.textoApagado, 1);
@@ -182,7 +192,11 @@ public final class Tienda implements Pantalla {
                 pendiente ? ui.tema.aviso : ui.tema.textoSuave, 1);
 
         float yCifras = yMeta + p.altoDeLinea(tMeta) + 4;
-        String cifras = Taller.cifras(pz);
+        if (idiomaCache != T.idioma) {
+            idiomaCache = T.idioma;
+            cifrasCache.clear();
+        }
+        String cifras = cifrasCache.computeIfAbsent(pz.id, id -> Taller.cifras(pz));
         float tCif = ui.letra * 0.72f;
         float dispCif = y + h - yCifras - 10;
         while (tCif > 10 && p.altoDeParrafo(cifras, textoW, tCif) > dispCif) tCif -= 1;

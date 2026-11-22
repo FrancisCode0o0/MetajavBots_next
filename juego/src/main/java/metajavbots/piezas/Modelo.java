@@ -1,14 +1,10 @@
 package metajavbots.piezas;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -119,16 +115,11 @@ public final class Modelo {
     }
 
     private static Trilingue trilingue(String s) {
-        String[] p = s.split("\\|", -1);
-        return new Trilingue(p[0].strip(), p.length > 1 ? p[1].strip() : "", p.length > 2 ? p[2].strip() : "");
+        return metajavbots.textos.LectorRes.trilingue(s, false);
     }
 
     private static double numero(String s, double siNo) {
-        try {
-            return s == null ? siNo : Double.parseDouble(s.trim());
-        } catch (NumberFormatException e) {
-            return siNo;
-        }
+        return metajavbots.textos.LectorRes.decimal(s, siNo);
     }
 
     private static int color(String[] c, int i) {
@@ -162,23 +153,10 @@ public final class Modelo {
 
     static List<Modelo> leer(InputStream in) throws IOException {
         List<Modelo> lista = new ArrayList<>();
-        Map<String, String> actual = null;
-        try (BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))) {
-            String linea;
-            while ((linea = r.readLine()) != null) {
-                linea = linea.strip();
-                if (linea.isEmpty() || linea.startsWith("#")) continue;
-                if (linea.startsWith("[") && linea.endsWith("]")) {
-                    if (actual != null) lista.add(new Modelo(actual));
-                    actual = new LinkedHashMap<>();
-                    actual.put("id", linea.substring(1, linea.length() - 1).strip().toLowerCase(Locale.ROOT));
-                } else if (actual != null && linea.contains("=")) {
-                    int i = linea.indexOf('=');
-                    actual.put(linea.substring(0, i).strip(), linea.substring(i + 1).strip());
-                }
-            }
+        for (metajavbots.textos.LectorRes.Seccion s : metajavbots.textos.LectorRes.secciones(in, '=')) {
+            s.valores().put("id", s.id().toLowerCase(Locale.ROOT));
+            lista.add(new Modelo(s.valores()));
         }
-        if (actual != null) lista.add(new Modelo(actual));
         return lista;
     }
 

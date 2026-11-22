@@ -22,11 +22,8 @@ import metajavbots.textos.Idioma;
  */
 public final class Voz {
 
-    private final ExecutorService hilo = Executors.newSingleThreadExecutor(r -> {
-        Thread t = new Thread(r, "voz-del-locutor");
-        t.setDaemon(true);
-        return t;
-    });
+    private ExecutorService hilo;
+    private volatile boolean cerrada;
     private static final int MAX_CACHE = 24;
     private final Map<String, float[]> cache = Collections.synchronizedMap(
             new LinkedHashMap<String, float[]>(32, 0.75f, true) {
@@ -78,13 +75,27 @@ public final class Voz {
         return p != null && p.disponible(idioma);
     }
 
+    private synchronized ExecutorService hilo() {
+        if (cerrada) return null;
+        if (hilo == null) {
+            hilo = Executors.newSingleThreadExecutor(r -> {
+                Thread t = new Thread(r, "voz-del-locutor");
+                t.setDaemon(true);
+                return t;
+            });
+        }
+        return hilo.isShutdown() ? null : hilo;
+    }
+
     /** Precarga en segundo plano el proceso de Piper del idioma y timbre activos sin bloquear la UI. */
     public void precargar(Idioma idioma, Timbre timbre) {
-        if (!activa || !clara || idioma == null || hilo.isShutdown()) return;
+        if (!activa || !clara || idioma == null) return;
         VozPiper p = piper;
         if (p == null || !p.disponible(idioma)) return;
+        ExecutorService exec = hilo();
+        if (exec == null) return;
         Timbre t = timbre == null ? Timbre.LOCUTOR : timbre;
-        hilo.submit(() -> {
+        exec.submit(() -> {
             if (!activa || !clara || piper != p) return;
             p.precargar(idioma, t);
         });
@@ -119,8 +130,9 @@ public final class Voz {
             reproducirRespaldo(limpio, idioma, t, yo);
             return;
         }
-        if (hilo.isShutdown()) return;
-        hilo.submit(() -> {
+        ExecutorService exec = hilo();
+        if (exec == null) return;
+        exec.submit(() -> {
             if (yo != pedida || !activa || volumenEfectivo() <= 0f) return;
             SalidaDeAudio salida = obtenerSalidaStreaming();
             boolean ok = salida != null && p.hablar(limpio, idioma, t, salida,
@@ -156,6 +168,7 @@ public final class Voz {
 
     /** Cancela cualquier síntesis en marcha, cierra Piper y libera el hilo de voz al salir. */
     public void liberar() {
+        cerrada = true;
         activa = false;
         pedida++;
         lista = null;
@@ -163,11 +176,18 @@ public final class Voz {
         VozPiper p = piper;
         piper = null;
         if (p != null) p.cerrar();
-        hilo.shutdownNow();
-        try {
-            hilo.awaitTermination(500, TimeUnit.MILLISECONDS);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+        ExecutorService exec;
+        synchronized (this) {
+            exec = hilo;
+            hilo = null;
+        }
+        if (exec != null) {
+            exec.shutdownNow();
+            try {
+                exec.awaitTermination(500, TimeUnit.MILLISECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
         SalidaDeAudio s = salidaStreaming;
         salidaStreaming = null;
@@ -182,8 +202,9 @@ public final class Voz {
             lista = cacheada;
             return;
         }
-        if (hilo.isShutdown()) return;
-        hilo.submit(() -> sintetizarVozRobot(limpio, idioma, timbre, yo));
+        ExecutorService exec = hilo();
+        if (exec == null) return;
+        exec.submit(() -> sintetizarVozRobot(limpio, idioma, timbre, yo));
     }
 
     private void sintetizarVozRobot(String limpio, Idioma idioma, Timbre timbre, long yo) {

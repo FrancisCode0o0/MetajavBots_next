@@ -52,44 +52,34 @@ public final class DibujoRobot {
         public float salto;
     }
 
+    private static final float[] RUEDAS_X = {-12, 12};
     private final Pincel p;
-    // La transformación de este dibujo: el pie en (x0, y0), u píxeles por unidad, lado ±1.
-    private float x0, y0, u, lado;
-    private float alfa = 1;
+    private final float[][] bufForma = new float[21][], bufBorde = new float[23][];
+    private float x0, y0, u, lado, alfa = 1;
 
-    public DibujoRobot(Pincel p) {
-        this.p = p;
-    }
+    public DibujoRobot(Pincel p) { this.p = p; }
 
-    /** De la x local del robot (en unidades de su dibujo) a la de la pantalla. */
-    private float enX(float lx) {
-        return x0 + lx * u * lado;
-    }
+    private float enX(float lx) { return x0 + lx * u * lado; }
 
-    /** De la y local del robot (hacia arriba) a la de la pantalla (hacia abajo). */
-    private float enY(float ly) {
-        return y0 - ly * u;
-    }
+    private float enY(float ly) { return y0 - ly * u; }
 
     private float[] pts(float... local) {
-        float[] v = new float[local.length];
-        for (int i = 0; i < local.length; i += 2) {
-            v[i] = enX(local[i]);
-            v[i + 1] = enY(local[i + 1]);
-        }
+        int n = local.length;
+        float[] v = n < bufForma.length ? bufForma[n] : null;
+        if (v == null) { v = new float[n]; if (n < bufForma.length) bufForma[n] = v; }
+        for (int i = 0; i < n; i += 2) { v[i] = enX(local[i]); v[i + 1] = enY(local[i + 1]); }
         return v;
     }
 
-    private void forma(int rgb, float... local) {
-        p.poligono(pts(local), rgb, alfa);
-    }
+    private void forma(int rgb, float... local) { p.poligono(pts(local), rgb, alfa); }
 
     private void borde(float grosor, int rgb, float... local) {
         float[] v = pts(local);
-        float[] cerrado = new float[v.length + 2];
+        int n = v.length + 2;
+        float[] cerrado = n < bufBorde.length ? bufBorde[n] : null;
+        if (cerrado == null) { cerrado = new float[n]; if (n < bufBorde.length) bufBorde[n] = cerrado; }
         System.arraycopy(v, 0, cerrado, 0, v.length);
-        cerrado[v.length] = v[0];
-        cerrado[v.length + 1] = v[1];
+        cerrado[v.length] = v[0]; cerrado[v.length + 1] = v[1];
         p.contorno(cerrado, grosor, rgb, alfa * 0.85f);
     }
 
@@ -187,7 +177,7 @@ public final class DibujoRobot {
             }
             case RUEDAS: {
                 caja(-6, 8, 12, 12, 3, metal);
-                for (float wx : new float[]{-12, 12}) {
+                for (float wx : RUEDAS_X) {
                     bola(wx, 8, 9, oscuro);
                     bola(wx, 8, 6, metal);
                     for (int k = 0; k < 3; k++) {

@@ -1,10 +1,7 @@
 package metajavbots.pantallas;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -31,17 +28,9 @@ public final class Explicador {
         if (textos == null) {
             textos = new HashMap<>();
             try (InputStream in = Explicador.class.getResourceAsStream("/textos/errores.txt")) {
-                if (in != null) {
-                    BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                    String linea, codigo = null;
-                    while ((linea = r.readLine()) != null) {
-                        linea = linea.strip();
-                        if (linea.isEmpty() || linea.startsWith("#")) continue;
-                        if (linea.startsWith("[") && linea.endsWith("]")) codigo = linea.substring(1, linea.length() - 1).strip();
-                        else if (codigo != null && linea.contains("=")) {
-                            int i = linea.indexOf('=');
-                            textos.put(codigo + "|" + linea.substring(0, i).strip(), linea.substring(i + 1).strip());
-                        }
+                for (metajavbots.textos.LectorRes.Seccion s : metajavbots.textos.LectorRes.secciones(in, '=')) {
+                    for (Map.Entry<String, String> e : s.valores().entrySet()) {
+                        textos.put(s.id() + "|" + e.getKey(), e.getValue());
                     }
                 }
             } catch (IOException e) {

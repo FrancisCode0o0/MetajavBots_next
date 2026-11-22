@@ -24,6 +24,7 @@ public final class Sonidos {
     /** Las frases dichas (texto → sonido), las últimas 40. */
     private final LinkedHashMap<String, Sound> frases = new LinkedHashMap<>(16, 0.75f, true);
     private final Map<String, Path> archivosDeVoz = new HashMap<>();
+    private final java.util.List<Path> archivosDeSfx = new java.util.ArrayList<>();
     private Sound ultimaVoz;
     private Path carpeta;
     private boolean sinAudio;
@@ -67,6 +68,13 @@ public final class Sonidos {
         if (s == null && !cargados.containsKey(nombre)) {
             s = cargar(nombre, Sintetizador.hacer(nombre, semilla++));
             cargados.put(nombre, s);
+            if (s != null) {
+                try {
+                    archivosDeSfx.add(archivoTemporal(nombre));
+                } catch (IOException e) {
+                    // sin ruta temporal que apuntar
+                }
+            }
         }
         if (s != null) s.play(Math.max(0, Math.min(1, fuerza * volumen)), tono, 0);
     }
@@ -127,8 +135,12 @@ public final class Sonidos {
         for (Sound s : cargados.values()) if (s != null) s.dispose();
         for (Sound s : frases.values()) if (s != null) s.dispose();
         for (Path p : archivosDeVoz.values()) borrarTemporal(p);
+        for (Path p : archivosDeSfx) borrarTemporal(p);
         cargados.clear();
         frases.clear();
         archivosDeVoz.clear();
+        archivosDeSfx.clear();
+        borrarTemporal(carpeta);
+        carpeta = null;
     }
 }

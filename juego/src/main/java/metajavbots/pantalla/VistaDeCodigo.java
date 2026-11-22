@@ -129,6 +129,49 @@ public final class VistaDeCodigo {
         }
     }
 
+    private static final String[] NUMEROS_LINEA = crearNumerosLinea(256);
+
+    private static String[] crearNumerosLinea(int n) {
+        String[] res = new String[n];
+        for (int i = 0; i < n; i++) res[i] = Integer.toString(i + 1);
+        return res;
+    }
+
+    /** Texto del número de línea (1-based), reutilizando cadenas frecuentes sin asignar por fotograma. */
+    static String numeroDeLinea(int lineaCero) {
+        return lineaCero >= 0 && lineaCero < NUMEROS_LINEA.length ? NUMEROS_LINEA[lineaCero] : Integer.toString(lineaCero + 1);
+    }
+
+    /** Construye la cadena de color con marcas de BitmapFont para una línea de código (se cachea por versión y tema). */
+    static String lineaMarcada(Documento doc, Tema t, List<Lexico.Trozo> trozos, int l) {
+        int ini = doc.inicioDeLinea(l), fin = doc.finDeLinea(l);
+        String texto = doc.linea(l);
+        if (texto.isEmpty()) return "";
+        StringBuilder b = new StringBuilder(texto.length() * 2 + 16);
+        int col = 0;
+        int k = buscarTrozo(trozos, ini);
+        while (col < texto.length()) {
+            int pos = ini + col;
+            Lexico.Trozo tr = k < trozos.size() ? trozos.get(k) : null;
+            int hasta;
+            int color;
+            if (tr != null && tr.inicio <= pos && tr.fin > pos) {
+                hasta = Math.min(fin, tr.fin) - ini;
+                color = colorDe(t, trozos, tr, k);
+                if (tr.fin <= fin) k++;
+            } else {
+                int siguiente = tr != null && tr.inicio > pos ? Math.min(fin, tr.inicio) : fin;
+                hasta = siguiente - ini;
+                color = t.texto;
+            }
+            if (hasta <= col) hasta = col + 1;
+            int lim = Math.min(hasta, texto.length());
+            Pincel.anadirTrozoMarcado(b, texto.substring(col, lim), color & 0xFFFFFF);
+            col = hasta;
+        }
+        return b.toString();
+    }
+
     /** Carácter bajo la coordenada horizontal «rx» en un campo de búsqueda de una línea. */
     static int indiceEnLinea(Pincel p, float rx, float tam, String s) {
         if (rx <= 0 || s.isEmpty()) return 0;

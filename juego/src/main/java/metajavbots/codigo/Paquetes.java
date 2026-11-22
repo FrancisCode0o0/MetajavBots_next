@@ -5,13 +5,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 import metajavbots.textos.Idioma;
@@ -229,8 +227,7 @@ public final class Paquetes {
     /** Normaliza texto para búsquedas: minúsculas, sin tildes ni diéresis (ß -> ss). */
     public static String normalizar(String s) {
         if (s == null) return "";
-        String n = Normalizer.normalize(s.toLowerCase(Locale.ROOT).replace("ß", "ss"), Normalizer.Form.NFD);
-        return n.replaceAll("\\p{M}", "").replaceAll("[^a-z0-9._ ]", " ").replaceAll("\\s+", " ").strip();
+        return metajavbots.textos.LectorRes.sinTildes(s).replaceAll("[^a-z0-9._ ]", " ").replaceAll("\\s+", " ").strip();
     }
 
     /**

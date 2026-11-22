@@ -40,8 +40,10 @@ public final class Pelea {
     private final Armas armas = new Armas(this);
     public final List<Proyectil> proyectiles = new ArrayList<>();
     public final List<Rayo> rayos = new ArrayList<>();
-    private final List<Suceso> sucesos = new ArrayList<>();
-    private final List<Suceso> sucesosDelTurno = new ArrayList<>();
+    private static final double[] PESOS_CAC = {0.25, 0.3, 0.3, 0.15}, PESOS_DIST = {0.18, 0.24, 0.24, 0.34};
+    private final double[] pesosTmp = new double[4];
+    private final List<Suceso> sucesos = new ArrayList<>(), sucesosDelTurno = new ArrayList<>();
+    private final List<Suceso> sucesosVista = Collections.unmodifiableList(sucesos), sucesosDelTurnoVista = Collections.unmodifiableList(sucesosDelTurno);
     /** El tiempo que puede pensar un robot en un turno (aparte de los pasos): sin esto, un cálculo enorme congelaría la pantalla. */
     public long nanosPorTurno = 30_000_000L;
     /** Si no es 0, el tope de pasos de todos (el modo especial «tope de cálculo»); si es 0, el de cada núcleo. */
@@ -154,10 +156,10 @@ public final class Pelea {
     public Cuerpo cuerpo(int i) { return i >= 0 && i < cuerpos.length ? cuerpos[i] : null; }
 
     /** Los sucesos del último turno (se vacían al dar el siguiente). */
-    public List<Suceso> sucesos() { return Collections.unmodifiableList(sucesosDelTurno); }
+    public List<Suceso> sucesos() { return sucesosDelTurnoVista; }
 
     /** Todos los sucesos de la pelea (para el resumen y el locutor). */
-    public List<Suceso> historia() { return Collections.unmodifiableList(sucesos); }
+    public List<Suceso> historia() { return sucesosVista; }
 
     public int ganador() { return ganador; }
 
@@ -267,9 +269,12 @@ public final class Pelea {
     }
 
     private int equiposEnPie() {
-        java.util.Set<Integer> e = new java.util.HashSet<>();
-        for (Cuerpo c : cuerpos) if (!c.fuera) e.add(c.equipo);
-        return e.size();
+        int primero = -1;
+        for (Cuerpo c : cuerpos) {
+            if (c.fuera) continue;
+            if (primero < 0) primero = c.equipo; else if (c.equipo != primero) return 2;
+        }
+        return primero < 0 ? 0 : 1;
     }
 
     /** El golpe de un arma especial (la cuenta atrás de la pantalla de la pelea): daño de «de» a «a», acotado para evitar KO trivial en 1 turno. */
@@ -400,16 +405,16 @@ public final class Pelea {
         if (co.robot == null) { c.limpiarEventosPendientes(); c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.SIN_CODIGO); return; }
         c.limpiarTelemetriaDeTurno(Cuerpo.EstadoPensamiento.EJECUTADO);
         long tope = c.topeDePasos();
-        List<metajavbots.api.Impacto> golpes = new ArrayList<>(c.golpesRecibidos);
-        List<metajavbots.api.Impacto> aciertos = new ArrayList<>(c.aciertos);
-        c.golpesRecibidos.clear();
-        c.aciertos.clear();
+        List<metajavbots.api.Impacto> golpes = c.golpesRecibidos.isEmpty() ? Collections.emptyList() : new ArrayList<>(c.golpesRecibidos);
+        List<metajavbots.api.Impacto> aciertos = c.aciertos.isEmpty() ? Collections.emptyList() : new ArrayList<>(c.aciertos);
+        if (!c.golpesRecibidos.isEmpty()) c.golpesRecibidos.clear();
+        if (!c.aciertos.isEmpty()) c.aciertos.clear();
         boolean pared = c.chocoConPared;
         c.chocoConPared = false;
         metajavbots.api.Avistado choque = c.chocoCon;
         c.chocoCon = null;
-        List<String[]> avisos = new ArrayList<>(c.avisos);
-        c.avisos.clear();
+        List<String[]> avisos = c.avisos.isEmpty() ? Collections.emptyList() : new ArrayList<>(c.avisos);
+        if (!c.avisos.isEmpty()) c.avisos.clear();
         c.empezarRegistroDeTurno();
         long pasos = PresupuestoSenior.ejecutar(this, c, () -> {
             for (metajavbots.api.Impacto g : golpes) Puente.golpeado(co.robot, g);
@@ -442,20 +447,24 @@ public final class Pelea {
     // ================================================================ ver
 
     void actualizarVistos(Cuerpo c) {
-        List<Avistamiento> vistos = new ArrayList<>(1), companeros = new ArrayList<>(0);
+        List<Avistamiento> vistos = null, companeros = null;
         for (Cuerpo otro : cuerpos) {
-            if (otro == c) continue;
-            if (otro.equipo == c.equipo) { if (!otro.fuera) companeros.add(new Avistamiento(c, otro)); }
-            else vistos.addAll(vistosPor(c, otro));
+            if (otro == c || otro.fuera) continue;
+            if (otro.equipo == c.equipo) {
+                if (companeros == null) companeros = new ArrayList<>(2);
+                companeros.add(new Avistamiento(c, otro));
+            } else if (puedeVer(c, otro)) {
+                if (vistos == null) vistos = new ArrayList<>(2);
+                vistos.add(new Avistamiento(c, otro));
+            }
         }
-        if (vistos.size() > 1) vistos.sort((p, q) -> Double.compare(p.distancia(), q.distancia()));
-        c.vistos = vistos;
-        c.companeros = companeros;
+        if (vistos != null && vistos.size() > 1) vistos.sort((p, q) -> Double.compare(p.distancia(), q.distancia()));
+        c.vistos = vistos == null ? Collections.emptyList() : vistos;
+        c.companeros = companeros == null ? Collections.emptyList() : companeros;
     }
 
-    private List<Avistamiento> vistosPor(Cuerpo yo, Cuerpo el) {
-        List<Avistamiento> l = new ArrayList<>(1);
-        if (el.fuera || yo.fuera) return l;
+    private boolean puedeVer(Cuerpo yo, Cuerpo el) {
+        if (el.fuera || yo.fuera) return false;
         double d = Math.hypot(el.x - yo.x, el.y - yo.y);
         Pieza cabeza = yo.piezaDe(Cuerpo.CABEZA);
         double radar = (cabeza == null ? 400 : cabeza.valor("radar", 400)) * yo.efectosPoo().factorRadarPropio * el.efectosPoo().factorRadarRival;
@@ -466,9 +475,7 @@ public final class Pelea {
         boolean enCono = yo.pulsoTactico > 0 || Math.abs(normal(ang - yo.mira)) <= cono / 2;
         boolean cerca = d <= 110 + el.radio;
         boolean ve = cerca || d <= radar && enCono;
-        if (el.camuflaje > 0 && d > 150) ve = false;
-        if (ve) l.add(new Avistamiento(yo, el));
-        return l;
+        return !(el.camuflaje > 0 && d > 150) && ve;
     }
 
     // ================================================================ atacar
@@ -530,8 +537,13 @@ public final class Pelea {
             dano *= 1 - bloqueo;
         }
         // Qué parte recibe el golpe.
-        double[] pesos = cuerpoACuerpo ? new double[]{0.25, 0.3, 0.3, 0.15} : new double[]{0.18, 0.24, 0.24, 0.34};
-        if (e.vuela()) pesos[Montaje.PIERNAS] *= 0.5;
+        double[] basePesos = cuerpoACuerpo ? PESOS_CAC : PESOS_DIST;
+        double[] pesos = basePesos;
+        if (e.vuela()) {
+            System.arraycopy(basePesos, 0, pesosTmp, 0, 4);
+            pesosTmp[Montaje.PIERNAS] *= 0.5;
+            pesos = pesosTmp;
+        }
         int parte = elegir(pesos);
         if (e.parte[parte] <= 0) {
             // Si ya está rota, el golpe va a otra que no lo esté.

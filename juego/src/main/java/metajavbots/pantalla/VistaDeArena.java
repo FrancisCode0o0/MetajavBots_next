@@ -42,7 +42,10 @@ public final class VistaDeArena {
     private Sonidos ultimosSonidos;
     private final DibujoRobot dibujo;
     private DibujoRobot.Estado[] estados = {new DibujoRobot.Estado(), new DibujoRobot.Estado()};
-    private final Random azar = new Random(11);
+    private final Random azar = new Random(11), azarFondo = new Random(0);
+    private final java.util.List<Cuerpo> ordenTmp = new java.util.ArrayList<>(8);
+    private final java.util.List<metajavbots.combate.Arena.Trampa> solidosTmp = new java.util.ArrayList<>(16);
+    private final float[] poly4 = new float[8];
     private float tiempo;
     /** Lo que dice cada robot (el bocadillo) y cuánto le queda. */
     private String[] bocadillo = {"", ""};
@@ -86,9 +89,7 @@ public final class VistaDeArena {
 
     // ================================================================ coordenadas
 
-    private float f(double y) {
-        return (float) (0.8 + 0.2 * (1 - y / alto));
-    }
+    private float f(double y) { return (float) (0.8 + 0.2 * (1 - y / alto)); }
 
     public float sx(double x, double y) {
         double centro = anchoVentana > 0 ? camaraX : ancho / 2;
@@ -97,32 +98,19 @@ public final class VistaDeArena {
 
     /** Reinicia el seguimiento de la cámara sobre una posición concreta al comenzar una carrera larga. */
     public void enfocarCamara(double xObjetivo, double anchoVisible) {
-        this.anchoVentana = anchoVisible;
-        this.objetivoCamaraX = xObjetivo;
-        this.camaraX = xObjetivo;
-        this.camaraIniciada = true;
+        this.anchoVentana = anchoVisible; this.objetivoCamaraX = xObjetivo; this.camaraX = xObjetivo; this.camaraIniciada = true;
     }
 
     /** Píxeles por unidad de la arena, a lo ancho, a esa profundidad. */
-    public float escala(double y) {
-        return escalaX * f(y);
-    }
+    public float escala(double y) { return escalaX * f(y); }
 
     /** Píxeles por unidad de la arena, en profundidad (el suelo se ve aplastado). */
-    public float escalaY() {
-        return (float) (ah * 0.62f / alto);
-    }
+    public float escalaY() { return (float) (ah * 0.62f / alto); }
 
-    public float sy(double y) {
-        float suelo = ah * 0.62f;
-        return (float) (ay + ah * 0.3f + (1 - y / alto) * suelo);
-    }
+    public float sy(double y) { return (float) (ay + ah * 0.3f + (1 - y / alto) * ah * 0.62f); }
 
     /** Configura el visor táctico (F8) y el enemigo marcado para este fotograma. */
-    public void visor(boolean activo, int marcado) {
-        this.visorTactico = activo;
-        this.enemigoMarcado = marcado;
-    }
+    public void visor(boolean activo, int marcado) { this.visorTactico = activo; this.enemigoMarcado = marcado; }
 
     float ax() { return ax; }
 
@@ -332,21 +320,20 @@ public final class VistaDeArena {
         if (visorTactico) visor.dibujarSuelo(p, this, pelea, enemigoMarcado, dt);
         // Lo que está más lejos (y mayor), antes.
         cuantos(pelea.combatientes.length);
-        // Lo que está más lejos (y mayor), antes.
-        java.util.List<Cuerpo> orden = new java.util.ArrayList<>();
-        for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.cuerpo(i) != null && !pelea.cuerpo(i).enReserva) orden.add(pelea.cuerpo(i));
-        orden.sort((u, v) -> Double.compare(v.y, u.y));
+        ordenTmp.clear();
+        for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.cuerpo(i) != null && !pelea.cuerpo(i).enReserva) ordenTmp.add(pelea.cuerpo(i));
+        ordenTmp.sort((u, v) -> Double.compare(v.y, u.y));
         // Los objetos sólidos (barriles, chimeneas, el carrito) van entre los robots, por profundidad.
-        java.util.List<metajavbots.combate.Arena.Trampa> solidos = new java.util.ArrayList<>();
-        for (metajavbots.combate.Arena.Trampa t : pelea.arena.trampas()) if (t.solido && !t.destruida()) solidos.add(t);
-        solidos.sort((u, v) -> Double.compare(v.y, u.y));
+        solidosTmp.clear();
+        for (metajavbots.combate.Arena.Trampa t : pelea.arena.trampas()) if (t.solido && !t.destruida()) solidosTmp.add(t);
+        solidosTmp.sort((u, v) -> Double.compare(v.y, u.y));
         int s = 0;
-        for (Cuerpo c : orden) {
-            while (s < solidos.size() && solidos.get(s).y >= c.y) DibujoDeArenas.solido(p, this, solidos.get(s++), tiempo);
+        for (Cuerpo c : ordenTmp) {
+            while (s < solidosTmp.size() && solidosTmp.get(s).y >= c.y) DibujoDeArenas.solido(p, this, solidosTmp.get(s++), tiempo);
             sombraYRobot(p, c, pelea, dt);
         }
-        while (s < solidos.size()) DibujoDeArenas.solido(p, this, solidos.get(s++), tiempo);
-        if (!orden.isEmpty()) {
+        while (s < solidosTmp.size()) DibujoDeArenas.solido(p, this, solidosTmp.get(s++), tiempo);
+        if (!ordenTmp.isEmpty()) {
             proyectiles(p, pelea);
             rayos(p, pelea);
             llamas(p, pelea);
@@ -357,7 +344,7 @@ public final class VistaDeArena {
         trastos.dibujar(p);
         DibujoDeArenas.lluvia(p, escenario, ax, ay, aw, ah, tiempo);
         if (visorTactico) visor.dibujarEtiquetas(p, this, pelea, enemigoMarcado);
-        rotulos(p, orden, pelea, dt);
+        rotulos(p, ordenTmp, pelea, dt);
         p.sinRecorte();
     }
 
@@ -380,14 +367,14 @@ public final class VistaDeArena {
             }
             case NEON: {
                 p.degradado(ax - 20, ay - 20, aw + 40, cielo - ay + 30, 0x0B0624, 0x3A0F5C, 1);
-                Random r = new Random(5);
+                azarFondo.setSeed(5);
                 for (int i = 0; i < 26; i++) {
-                    float bw = 30 + r.nextFloat() * 70, bh = 50 + r.nextFloat() * ah * 0.22f;
-                    float bx = ax + r.nextFloat() * aw;
+                    float bw = 30 + azarFondo.nextFloat() * 70, bh = 50 + azarFondo.nextFloat() * ah * 0.22f;
+                    float bx = ax + azarFondo.nextFloat() * aw;
                     p.rect(bx, cielo - bh, bw, bh + 4, 0x150B2E, 1);
                     for (int k = 0; k < 6; k++) {
-                        if (r.nextFloat() < 0.5f) p.rect(bx + 6 + r.nextFloat() * (bw - 14), cielo - bh + 8 + r.nextFloat() * (bh - 16), 5, 3,
-                                r.nextBoolean() ? 0xFF3CAC : 0x2DE2E6, 0.6f + 0.4f * (float) Math.sin(tiempo * 2 + i + k));
+                        if (azarFondo.nextFloat() < 0.5f) p.rect(bx + 6 + azarFondo.nextFloat() * (bw - 14), cielo - bh + 8 + azarFondo.nextFloat() * (bh - 16),
+                                5, 3, azarFondo.nextBoolean() ? 0xFF3CAC : 0x2DE2E6, 0.6f + 0.4f * (float) Math.sin(tiempo * 2 + i + k));
                     }
                 }
                 p.rect(ax - 20, cielo - 3, aw + 40, 3, 0xFF3CAC, 0.8f);
@@ -408,10 +395,10 @@ public final class VistaDeArena {
             }
             case LUNA: {
                 p.degradado(ax - 20, ay - 20, aw + 40, cielo - ay + 30, 0x03040A, 0x0D1124, 1);
-                Random r = new Random(9);
+                azarFondo.setSeed(9);
                 for (int i = 0; i < 120; i++) {
-                    float sxx = ax + r.nextFloat() * aw, syy = ay + r.nextFloat() * (cielo - ay);
-                    p.circulo(sxx, syy, r.nextFloat() * 1.6f + 0.3f, 0xFFFFFF, 0.4f + 0.6f * (float) Math.abs(Math.sin(tiempo + i)));
+                    float sxx = ax + azarFondo.nextFloat() * aw, syy = ay + azarFondo.nextFloat() * (cielo - ay);
+                    p.circulo(sxx, syy, azarFondo.nextFloat() * 1.6f + 0.3f, 0xFFFFFF, 0.4f + 0.6f * (float) Math.abs(Math.sin(tiempo + i)));
                 }
                 p.circulo(ax + aw * 0.2f, ay + ah * 0.13f, ah * 0.09f, 0x3D7BD9, 1);
                 p.circulo(ax + aw * 0.2f - ah * 0.02f, ay + ah * 0.12f, ah * 0.05f, 0x4CAF50, 0.8f);
@@ -452,8 +439,8 @@ public final class VistaDeArena {
         // Fuera de la arena: el suelo de alrededor, más oscuro, hasta abajo del todo.
         float horizonte = ay + ah * 0.3f;
         p.degradado(ax - 20, horizonte, aw + 40, ah - (horizonte - ay) + 20, Pincel.oscurecer(suelo2, 0.35f), Pincel.oscurecer(suelo2, 0.6f), 1);
-        float[] v = {sx(0, alto), sy(alto), sx(ancho, alto), sy(alto), sx(ancho, 0), sy(0), sx(0, 0), sy(0)};
-        p.poligono(v, suelo2, 1);
+        cuad(poly4, sx(0, alto), sy(alto), sx(ancho, alto), sy(alto), sx(ancho, 0), sy(0), sx(0, 0), sy(0));
+        p.poligono(poly4, suelo2, 1);
         // Baldosas a cuadros, con la perspectiva (en pistas largas solo dibuja el tramo visible).
         int ny = 7;
         double pasoX = anchoVentana > 0 ? 140.0 : ancho / 10.0;
@@ -466,7 +453,8 @@ public final class VistaDeArena {
             for (int j = 0; j < ny; j++) {
                 if ((i + j) % 2 != 0) continue;
                 double x0 = ancho * i / nx, x1 = ancho * (i + 1) / nx, y0 = alto * j / ny, y1 = alto * (j + 1) / ny;
-                p.poligono(new float[]{sx(x0, y1), sy(y1), sx(x1, y1), sy(y1), sx(x1, y0), sy(y0), sx(x0, y0), sy(y0)}, suelo1, 1);
+                cuad(poly4, sx(x0, y1), sy(y1), sx(x1, y1), sy(y1), sx(x1, y0), sy(y0), sx(x0, y0), sy(y0));
+                p.poligono(poly4, suelo1, 1);
             }
         }
         float grosor = escenario == Escenario.NEON ? 2 : 1;
@@ -486,8 +474,8 @@ public final class VistaDeArena {
         p.linea(sx(ancho, 0), sy(0), sx(ancho, alto), sy(alto), 3, borde, 0.7f);
         // El muro de delante: una banda de metal bajo el borde.
         float muro = 22;
-        p.poligono(new float[]{sx(0, 0), sy(0), sx(ancho, 0), sy(0), sx(ancho, 0), sy(0) + muro, sx(0, 0), sy(0) + muro},
-                Pincel.oscurecer(suelo2, 0.5f), 1);
+        cuad(poly4, sx(0, 0), sy(0), sx(ancho, 0), sy(0), sx(ancho, 0), sy(0) + muro, sx(0, 0), sy(0) + muro);
+        p.poligono(poly4, Pincel.oscurecer(suelo2, 0.5f), 1);
         for (int i = 0; i < 20; i++) {
             float lx = sx(ancho * (i + 0.5) / 20, 0);
             p.linea(lx - 10, sy(0) + 4, lx + 10, sy(0) + muro - 4, 5, borde, 0.25f);
@@ -496,6 +484,10 @@ public final class VistaDeArena {
             float lx = sx(ancho * i / 10, 0);
             p.circulo(lx, sy(0) - 3, 3, borde, 0.5f + 0.5f * (float) Math.abs(Math.sin(tiempo * 3 + i)));
         }
+    }
+
+    private static void cuad(float[] v, float x0, float y0, float x1, float y1, float x2, float y2, float x3, float y3) {
+        v[0] = x0; v[1] = y0; v[2] = x1; v[3] = y1; v[4] = x2; v[5] = y2; v[6] = x3; v[7] = y3;
     }
 
     /** Solo ese robot, encima de todo (la presentación lo ilumina por encima de la penumbra). */

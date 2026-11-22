@@ -12,6 +12,14 @@ import metajavbots.combate.Arena;
  */
 final class DibujoDeArenas {
 
+    private static final int[] SUELO_CHATARRERIA = {0x7A6A58, 0x5E5040, 0x8C7A62};
+    private static final int[] SUELO_COCINA = {0xF1EDE4, 0xC9C2B4, 0xB3AA98};
+    private static final int[] SUELO_HIELO = {0xDDF1FB, 0xB7DDF0, 0xFFFFFF};
+    private static final int[] SUELO_TEJADO = {0x4A3B3B, 0x352A2A, 0x5E4A48};
+    private static final Random AZAR_FONDO = new Random(0);
+    private static final float[] POLY3 = new float[6];
+    private static final float[] POLY4 = new float[8];
+
     private DibujoDeArenas() {
     }
 
@@ -26,10 +34,10 @@ final class DibujoDeArenas {
     /** Los colores del suelo: las baldosas claras, las oscuras y las líneas. */
     static int[] suelo(VistaDeArena.Escenario e) {
         switch (e) {
-            case CHATARRERIA: return new int[]{0x7A6A58, 0x5E5040, 0x8C7A62};
-            case COCINA: return new int[]{0xF1EDE4, 0xC9C2B4, 0xB3AA98};
-            case HIELO: return new int[]{0xDDF1FB, 0xB7DDF0, 0xFFFFFF};
-            case TEJADO: return new int[]{0x4A3B3B, 0x352A2A, 0x5E4A48};
+            case CHATARRERIA: return SUELO_CHATARRERIA;
+            case COCINA: return SUELO_COCINA;
+            case HIELO: return SUELO_HIELO;
+            case TEJADO: return SUELO_TEJADO;
             default: return null;
         }
     }
@@ -37,7 +45,8 @@ final class DibujoDeArenas {
     /** El fondo (lo de detrás de la arena), de (x, y) a (x + w, cielo). */
     static void fondo(Pincel p, VistaDeArena.Escenario e, float x, float y, float w, float h, float t) {
         float cielo = y + h * 0.32f;
-        Random r = new Random(e.ordinal() * 31L);
+        AZAR_FONDO.setSeed(e.ordinal() * 31L);
+        Random r = AZAR_FONDO;
         switch (e) {
             case CHATARRERIA: {
                 p.degradado(x - 20, y - 20, w + 40, cielo - y + 30, 0x6B3A2A, 0xE38B4F, 1);
@@ -45,7 +54,8 @@ final class DibujoDeArenas {
                 // Montañas de chatarra, con piezas sueltas que asoman.
                 for (int i = 0; i < 7; i++) {
                     float mx = x + i * w / 6f - w * 0.05f, mw = w * (0.16f + r.nextFloat() * 0.1f), mh = h * (0.08f + r.nextFloat() * 0.1f);
-                    p.poligono(new float[]{mx - mw / 2, cielo, mx, cielo - mh, mx + mw / 2, cielo}, Pincel.mezcla(0x3A2A22, 0x5A4232, i / 7f), 1);
+                    tri(mx - mw / 2, cielo, mx, cielo - mh, mx + mw / 2, cielo);
+                    p.poligono(POLY3, Pincel.mezcla(0x3A2A22, 0x5A4232, i / 7f), 1);
                     for (int k = 0; k < 3; k++) {
                         float px = mx - mw * 0.3f + r.nextFloat() * mw * 0.6f, py = cielo - mh * (0.2f + r.nextFloat() * 0.5f);
                         p.circulo(px, py, 4 + r.nextFloat() * 6, 0x7C6A5A, 1);
@@ -86,8 +96,10 @@ final class DibujoDeArenas {
                 p.degradado(x - 20, y - 20, w + 40, cielo - y + 30, 0x8EC5E8, 0xE6F4FB, 1);
                 for (int i = 0; i < 5; i++) {
                     float mx = x + i * w / 4f, mh = h * (0.12f + r.nextFloat() * 0.08f), mw = w * 0.32f;
-                    p.poligono(new float[]{mx - mw / 2, cielo, mx, cielo - mh, mx + mw / 2, cielo}, 0xB9D6E8, 1);
-                    p.poligono(new float[]{mx - mw * 0.12f, cielo - mh * 0.76f, mx, cielo - mh, mx + mw * 0.12f, cielo - mh * 0.76f}, 0xFFFFFF, 1);
+                    tri(mx - mw / 2, cielo, mx, cielo - mh, mx + mw / 2, cielo);
+                    p.poligono(POLY3, 0xB9D6E8, 1);
+                    tri(mx - mw * 0.12f, cielo - mh * 0.76f, mx, cielo - mh, mx + mw * 0.12f, cielo - mh * 0.76f);
+                    p.poligono(POLY3, 0xFFFFFF, 1);
                 }
                 // Nieve que cae despacio.
                 for (int i = 0; i < 60; i++) {
@@ -116,10 +128,15 @@ final class DibujoDeArenas {
         }
     }
 
+    private static void tri(float x0, float y0, float x1, float y1, float x2, float y2) {
+        POLY3[0] = x0; POLY3[1] = y0; POLY3[2] = x1; POLY3[3] = y1; POLY3[4] = x2; POLY3[5] = y2;
+    }
+
     /** La lluvia del tejado, por encima de todo (se dibuja al final). */
     static void lluvia(Pincel p, VistaDeArena.Escenario e, float x, float y, float w, float h, float t) {
         if (e != VistaDeArena.Escenario.TEJADO) return;
-        Random r = new Random(77);
+        AZAR_FONDO.setSeed(77);
+        Random r = AZAR_FONDO;
         for (int i = 0; i < 110; i++) {
             float lx = x + (r.nextFloat() * w + t * 60) % w, ly = y + (r.nextFloat() * h + t * (500 + r.nextFloat() * 200)) % h;
             p.linea(lx, ly, lx - 4, ly + 16, 1.2f, 0xA9C4E8, 0.45f);
@@ -241,9 +258,11 @@ final class DibujoDeArenas {
 
     /** Rampa de salto en el suelo: cuña inclinada con flechas hacia la derecha. */
     private static void rampa(Pincel p, float cx, float cy, float rx, float ry, float t) {
-        float[] base = {cx - rx * 1.15f, cy + ry * 0.65f, cx + rx * 1.15f, cy + ry * 0.65f,
-                cx + rx * 1.05f, cy - ry * 0.75f, cx - rx * 1.15f, cy - ry * 0.25f};
-        p.poligono(base, 0x2F3947, 0.95f);
+        POLY4[0] = cx - rx * 1.15f; POLY4[1] = cy + ry * 0.65f;
+        POLY4[2] = cx + rx * 1.15f; POLY4[3] = cy + ry * 0.65f;
+        POLY4[4] = cx + rx * 1.05f; POLY4[5] = cy - ry * 0.75f;
+        POLY4[6] = cx - rx * 1.15f; POLY4[7] = cy - ry * 0.25f;
+        p.poligono(POLY4, 0x2F3947, 0.95f);
         p.linea(cx + rx * 1.05f, cy - ry * 0.75f, cx + rx * 1.15f, cy + ry * 0.65f, 3.2f, 0xFF9F1C, 0.95f);
         p.linea(cx - rx * 1.15f, cy - ry * 0.25f, cx + rx * 1.05f, cy - ry * 0.75f, 2.5f, 0xFFC857, 0.9f);
         float pulso = (float) Math.sin(t * 7) * rx * 0.08f;

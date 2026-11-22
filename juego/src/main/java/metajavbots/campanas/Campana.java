@@ -371,16 +371,10 @@ public final class Campana {
     }
 
     static Trilingue trilingue(String s) {
-        String[] p = s.split("\\|");
-        String es = p[0].strip();
-        return new Trilingue(es, p.length > 1 ? p[1].strip() : es, p.length > 2 ? p[2].strip() : es);
+        return metajavbots.textos.LectorRes.trilingue(s, true);
     }
 
     private static double decimal(String s, double siNo) {
-        try {
-            return s == null ? siNo : Double.parseDouble(s.strip());
-        } catch (NumberFormatException e) {
-            return siNo;
-        }
+        return metajavbots.textos.LectorRes.decimal(s, siNo);
     }
 }

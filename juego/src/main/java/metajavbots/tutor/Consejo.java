@@ -1,9 +1,6 @@
 package metajavbots.tutor;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -36,8 +33,7 @@ public final class Consejo {
     }
 
     private static Trilingue trilingue(String s) {
-        String[] p = s.split("\\|");
-        return new Trilingue(p[0].strip(), p.length > 1 ? p[1].strip() : "", p.length > 2 ? p[2].strip() : "");
+        return metajavbots.textos.LectorRes.trilingue(s, false);
     }
 
     /** El trozo de código, en la API de ese idioma. */
@@ -65,21 +61,9 @@ public final class Consejo {
         if (todos == null) {
             List<Consejo> l = new ArrayList<>();
             try (InputStream in = Consejo.class.getResourceAsStream("/datos/consejos.txt")) {
-                BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                String id = null, linea;
-                Map<String, String> v = new HashMap<>();
-                while ((linea = r.readLine()) != null) {
-                    if (linea.startsWith("#") || linea.isBlank()) continue;
-                    if (linea.startsWith("[")) {
-                        if (id != null) l.add(new Consejo(id, v));
-                        id = linea.substring(1, linea.indexOf(']')).strip();
-                        v = new HashMap<>();
-                    } else if (linea.contains(":")) {
-                        int i = linea.indexOf(':');
-                        v.put(linea.substring(0, i).strip(), linea.substring(i + 1).strip());
-                    }
+                for (metajavbots.textos.LectorRes.Seccion s : metajavbots.textos.LectorRes.secciones(in, ':')) {
+                    l.add(new Consejo(s.id(), s.valores()));
                 }
-                if (id != null) l.add(new Consejo(id, v));
             } catch (Exception e) {
                 throw new IllegalStateException("No se pudo leer res/datos/consejos.txt", e);
             }

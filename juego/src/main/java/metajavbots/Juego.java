@@ -222,6 +222,13 @@ public class Juego extends ApplicationAdapter {
     public void dispose() {
         if (cerrado) return;
         cerrado = true;
+        if (pantalla != null) {
+            try {
+                pantalla.alSalir(this);
+            } catch (Throwable t) {
+                Cierre.apuntar(t, null);
+            }
+        }
         try {
             guardar();
         } catch (Throwable t) {

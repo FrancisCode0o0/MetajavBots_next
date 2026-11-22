@@ -34,10 +34,15 @@ public final class Pincel {
     public final ShapeDrawer formas;
     private final Texture blanco;
     private final OrthographicCamera camara = new OrthographicCamera();
-    private final FreeTypeFontGenerator generadorUi, generadorTitulo, generadorCodigo, generadorCodigoNegrita, generadorSimbolos, generadorSimbolos2;
+    private final FreeTypeFontGenerator generadorUi, generadorTitulo, generadorSimbolos, generadorSimbolos2;
+    private FreeTypeFontGenerator generadorCodigo, generadorCodigoNegrita;
     private final Map<Integer, BitmapFont> letras = new HashMap<>();
     private final GlyphLayout medida = new GlyphLayout();
     private final Color color = new Color();
+    private final Color colorDegradadoA = new Color();
+    private final Color colorDegradadoB = new Color();
+    private final StringBuilder bufferColores = new StringBuilder(160);
+    private static final char[] HEX = "0123456789ABCDEF".toCharArray();
     /** El tamaño lógico de la pantalla. */
     public float ancho = 1600, alto = 900;
     /** Píxeles de verdad por unidad lógica. */
@@ -58,10 +63,22 @@ public final class Pincel {
         formas = new ShapeDrawer(lote, new TextureRegion(blanco, 0, 0, 1, 1));
         generadorUi = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.INTERFAZ));
         generadorTitulo = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.TITULO));
-        generadorCodigo = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.CODIGO));
-        generadorCodigoNegrita = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.CODIGO_NEGRITA));
         generadorSimbolos = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.SIMBOLOS));
         generadorSimbolos2 = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.SIMBOLOS_2));
+        for (int i = 0; i < pilaRecortes.length; i++) pilaRecortes[i] = new Rectangle();
+    }
+
+    private FreeTypeFontGenerator generadorCodigo(boolean negrita) {
+        if (negrita) {
+            if (generadorCodigoNegrita == null) {
+                generadorCodigoNegrita = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.CODIGO_NEGRITA));
+            }
+            return generadorCodigoNegrita;
+        }
+        if (generadorCodigo == null) {
+            generadorCodigo = new FreeTypeFontGenerator(Gdx.files.internal(Fuentes.CODIGO));
+        }
+        return generadorCodigo;
     }
 
     /** Cuando cambia el tamaño de la ventana: la pantalla lógica mide al menos 1600 × 900 de ancho y alto proporcionales. */
@@ -128,9 +145,10 @@ public final class Pincel {
     /** Un rectángulo con un degradado de arriba (a) a abajo (b). */
     public void degradado(float x, float y, float w, float h, int arriba, int abajo, float alfa) {
         if (w <= 0 || h <= 0) return;
-        Color a = new Color(color(arriba, alfa)), b = new Color(color(abajo, alfa));
+        colorDegradadoA.set(color(arriba, alfa));
+        colorDegradadoB.set(color(abajo, alfa));
         // La y va hacia abajo: abajo-izquierda en la pantalla es (x, y + h).
-        formas.filledRectangle(x, y, w, h, a, a, b, b);
+        formas.filledRectangle(x, y, w, h, colorDegradadoA, colorDegradadoA, colorDegradadoB, colorDegradadoB);
     }
 
     public void marco(float x, float y, float w, float h, int rgb, float alfa, float grosor) {
@@ -244,10 +262,8 @@ public final class Pincel {
     }
 
     private BitmapFont generarFuente(int px, boolean negrita, boolean codigo) {
-        FreeTypeFontGenerator primario = codigo
-                ? (negrita ? generadorCodigoNegrita : generadorCodigo)
-                : (negrita ? generadorTitulo : generadorUi);
-        FreeTypeFontGenerator respaldoCodigo = negrita ? generadorCodigoNegrita : generadorCodigo;
+        FreeTypeFontGenerator respaldoCodigo = generadorCodigo(negrita);
+        FreeTypeFontGenerator primario = codigo ? respaldoCodigo : (negrita ? generadorTitulo : generadorUi);
         StringBuilder enPrimario = new StringBuilder();
         StringBuilder enCodigo = new StringBuilder();
         StringBuilder enSimbolos = new StringBuilder();
@@ -329,9 +345,7 @@ public final class Pincel {
         }
         BitmapFont f = letra(tamano, negrita, codigo);
         f.setColor(color(rgb, alfa));
-        medida.setText(f, s);
-        f.draw(lote, s, x, y);
-        return medida.width;
+        return f.draw(lote, s, x, y).width;
     }
 
     private BitmapFont letraVersalita(float tamano) {
@@ -430,18 +444,38 @@ public final class Pincel {
      */
     public void textoDeColores(java.util.List<Object[]> trozos, float x, float y, float tamano) {
         if (trozos.isEmpty()) return;
-        BitmapFont f = letraDeCodigo(tamano, false);
-        StringBuilder b = new StringBuilder();
+        bufferColores.setLength(0);
         for (Object[] t : trozos) {
             String s = (String) t[0];
             if (s.isEmpty()) continue;
-            b.append("[#").append(String.format("%06X", ((Integer) t[1]) & 0xFFFFFF)).append(']').append(s.replace("[", "[[")).append("[]");
+            anadirTrozoMarcado(bufferColores, s, ((Integer) t[1]) & 0xFFFFFF);
         }
+        textoDeCodigoMarcado(bufferColores, x, y, tamano);
+    }
+
+    /** Escribe una línea de código ya formateada con marcas de color de BitmapFont, sin asignaciones por fotograma. */
+    public void textoDeCodigoMarcado(CharSequence marcado, float x, float y, float tamano) {
+        if (marcado == null || marcado.length() == 0) return;
+        BitmapFont f = letraDeCodigo(tamano, false);
         boolean antes = f.getData().markupEnabled;
         f.getData().markupEnabled = true;
         f.setColor(1, 1, 1, 1);
-        f.draw(lote, b, x, y);
+        f.draw(lote, marcado, x, y);
         f.getData().markupEnabled = antes;
+    }
+
+    /** Añade un trozo con color RGB en formato de marcas de BitmapFont escapando '[' sin crear cadenas temporales. */
+    public static void anadirTrozoMarcado(StringBuilder b, String s, int rgb) {
+        b.append("[#");
+        b.append(HEX[(rgb >> 20) & 0xF]).append(HEX[(rgb >> 16) & 0xF]);
+        b.append(HEX[(rgb >> 12) & 0xF]).append(HEX[(rgb >> 8) & 0xF]);
+        b.append(HEX[(rgb >> 4) & 0xF]).append(HEX[rgb & 0xF]).append(']');
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            b.append(c);
+            if (c == '[') b.append('[');
+        }
+        b.append("[]");
     }
 
     public float textoCentrado(String s, float cx, float y, float tamano, boolean negrita, int rgb, float alfa) {
@@ -504,8 +538,52 @@ public final class Pincel {
         return partir(s, anchoMax, tamano, negrita, true).size() * altoDeLinea(tamano);
     }
 
+    /** Clave sin asignaciones en consulta para el caché de párrafos partidos. */
+    private static final class ClavePartir {
+        String s;
+        int anchoQ, tamQ, escQ;
+        boolean negrita, codigo;
+        int hash;
+
+        ClavePartir() {
+        }
+
+        ClavePartir(String s, int anchoQ, int tamQ, int escQ, boolean negrita, boolean codigo) {
+            fijar(s, anchoQ, tamQ, escQ, negrita, codigo);
+        }
+
+        void fijar(String s, int anchoQ, int tamQ, int escQ, boolean negrita, boolean codigo) {
+            this.s = s;
+            this.anchoQ = anchoQ;
+            this.tamQ = tamQ;
+            this.escQ = escQ;
+            this.negrita = negrita;
+            this.codigo = codigo;
+            int h = s.hashCode();
+            h = 31 * h + anchoQ;
+            h = 31 * h + tamQ;
+            h = 31 * h + escQ;
+            h = 31 * h + (negrita ? 1 : 0) + (codigo ? 2 : 0);
+            this.hash = h;
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ClavePartir c)) return false;
+            return anchoQ == c.anchoQ && tamQ == c.tamQ && escQ == c.escQ
+                    && negrita == c.negrita && codigo == c.codigo && s.equals(c.s);
+        }
+    }
+
     /** Los textos ya partidos (se parten los mismos en cada fotograma: medir cada palabra cuesta). */
-    private final java.util.Map<String, java.util.List<String>> partidos = new java.util.HashMap<>();
+    private final java.util.Map<ClavePartir, java.util.List<String>> partidos = new java.util.HashMap<>();
+    private final ClavePartir sondaPartir = new ClavePartir();
 
     /** Parte un texto en líneas que caben en anchoMax (respeta los saltos de línea; una palabra que no cabe sola, se corta). */
     public java.util.List<String> partir(String s, float anchoMax, float tamano, boolean negrita) {
@@ -513,8 +591,11 @@ public final class Pincel {
     }
 
     private java.util.List<String> partir(String s, float anchoMax, float tamano, boolean negrita, boolean codigo) {
-        String clave = (codigo ? "C" : "U") + (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(tamano * 10) + "/" + escala + "|" + s;
-        java.util.List<String> hecho = partidos.get(clave);
+        int anchoQ = Math.round(anchoMax);
+        int tamQ = Math.round(tamano * 10);
+        int escQ = Math.round(escala * 100);
+        sondaPartir.fijar(s, anchoQ, tamQ, escQ, negrita, codigo);
+        java.util.List<String> hecho = partidos.get(sondaPartir);
         if (hecho != null) return hecho;
         boolean enriquecido = !codigo && TextoEnriquecido.tieneMarcas(s);
         java.util.List<String> l = new java.util.ArrayList<>();
@@ -552,7 +633,7 @@ public final class Pincel {
         }
         if (partidos.size() > 600) partidos.clear();
         java.util.List<String> fijo = java.util.Collections.unmodifiableList(l);
-        partidos.put(clave, fijo);
+        partidos.put(new ClavePartir(s, anchoQ, tamQ, escQ, negrita, codigo), fijo);
         return fijo;
     }
 
@@ -599,6 +680,7 @@ public final class Pincel {
     // ================================================================ recortes
 
     private final Rectangle recorte = new Rectangle(), escena = new Rectangle();
+    private final Rectangle[] pilaRecortes = new Rectangle[32];
     private final boolean[] apilados = new boolean[32];
     private int recortes;
 
@@ -609,7 +691,9 @@ public final class Pincel {
         escena.set(x * escala, (alto - y - h) * escala, Math.max(0, w) * escala, Math.max(0, h) * escala);
         recorte.set(escena);
         if (recortes < apilados.length) {
-            apilados[recortes] = ScissorStack.pushScissors(new Rectangle(recorte));
+            Rectangle slot = pilaRecortes[recortes];
+            slot.set(recorte);
+            apilados[recortes] = ScissorStack.pushScissors(slot);
             recortes++;
         }
     }
@@ -635,10 +719,17 @@ public final class Pincel {
     public void liberar() {
         for (BitmapFont f : letras.values()) f.dispose();
         letras.clear();
+        partidos.clear();
         generadorUi.dispose();
         generadorTitulo.dispose();
-        generadorCodigo.dispose();
-        generadorCodigoNegrita.dispose();
+        if (generadorCodigo != null) {
+            generadorCodigo.dispose();
+            generadorCodigo = null;
+        }
+        if (generadorCodigoNegrita != null) {
+            generadorCodigoNegrita.dispose();
+            generadorCodigoNegrita = null;
+        }
         generadorSimbolos.dispose();
         generadorSimbolos2.dispose();
         blanco.dispose();

@@ -264,8 +264,11 @@ public final class Ui {
     private String recortarConFuente(String s, float anchoMax, float t, boolean negrita, boolean codigo) {
         if (s == null) return "";
         if ((codigo ? p.anchoDeCodigo(s, t, negrita) : p.ancho(s, t, negrita)) <= anchoMax) return s;
-        String clave = (codigo ? "C" : "U") + (negrita ? "N" : "R") + Math.round(anchoMax) + "/" + Math.round(t * 10) + "/" + p.escala + "|" + s;
-        String hecho = recortados.get(clave);
+        int anchoQ = Math.round(anchoMax);
+        int tamQ = Math.round(t * 10);
+        int escQ = Math.round(p.escala * 100);
+        sondaRecorte.fijar(s, anchoQ, tamQ, escQ, negrita, codigo);
+        String hecho = recortados.get(sondaRecorte);
         if (hecho != null) return hecho;
         // Se busca el corte por mitades (medir letra a letra cada fotograma hacía lenta la lista de ejercicios).
         int bien = 1, mal = s.length();
@@ -277,12 +280,56 @@ public final class Ui {
         }
         if (recortados.size() > 600) recortados.clear();
         hecho = s.substring(0, bien) + "…";
-        recortados.put(clave, hecho);
+        recortados.put(new ClaveRecorte(s, anchoQ, tamQ, escQ, negrita, codigo), hecho);
         return hecho;
     }
 
+    /** Clave sin asignaciones en consulta para el caché de textos recortados. */
+    private static final class ClaveRecorte {
+        String s;
+        int anchoQ, tamQ, escQ;
+        boolean negrita, codigo;
+        int hash;
+
+        ClaveRecorte() {
+        }
+
+        ClaveRecorte(String s, int anchoQ, int tamQ, int escQ, boolean negrita, boolean codigo) {
+            fijar(s, anchoQ, tamQ, escQ, negrita, codigo);
+        }
+
+        void fijar(String s, int anchoQ, int tamQ, int escQ, boolean negrita, boolean codigo) {
+            this.s = s;
+            this.anchoQ = anchoQ;
+            this.tamQ = tamQ;
+            this.escQ = escQ;
+            this.negrita = negrita;
+            this.codigo = codigo;
+            int h = s.hashCode();
+            h = 31 * h + anchoQ;
+            h = 31 * h + tamQ;
+            h = 31 * h + escQ;
+            h = 31 * h + (negrita ? 1 : 0) + (codigo ? 2 : 0);
+            this.hash = h;
+        }
+
+        @Override
+        public int hashCode() {
+            return hash;
+        }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (!(o instanceof ClaveRecorte c)) return false;
+            return anchoQ == c.anchoQ && tamQ == c.tamQ && escQ == c.escQ
+                    && negrita == c.negrita && codigo == c.codigo && s.equals(c.s);
+        }
+    }
+
     /** Los textos ya recortados (los mismos en cada fotograma). */
-    private final java.util.Map<String, String> recortados = new java.util.HashMap<>();
+    private final java.util.Map<ClaveRecorte, String> recortados = new java.util.HashMap<>();
+    private final ClaveRecorte sondaRecorte = new ClaveRecorte();
 
     /** Pestañas en fila; devuelve la elegida. */
     public int pestanas(String[] nombres, int elegida, float x, float y, float w, float h) {

@@ -102,8 +102,18 @@ public final class TextoEnriquecido {
         return res;
     }
 
+    private static final int MAX_CACHE_TROZOS = 512;
+    private static final java.util.Map<String, List<Trozo>> CACHE_NORMAL = new java.util.HashMap<>();
+    private static final java.util.Map<String, List<Trozo>> CACHE_NEGRITA = new java.util.HashMap<>();
+
     /** Convierte un texto (con o sin marcas {@code [[...]]}) en trozos listos para renderizar. */
     public static List<Trozo> aTrozos(String s, boolean negritaBase) {
+        if (s == null || s.isEmpty()) return Collections.emptyList();
+        java.util.Map<String, List<Trozo>> cache = negritaBase ? CACHE_NEGRITA : CACHE_NORMAL;
+        synchronized (cache) {
+            List<Trozo> hecho = cache.get(s);
+            if (hecho != null) return hecho;
+        }
         List<Segmento> segs = parsear(s);
         if (segs.isEmpty()) return Collections.emptyList();
         List<Trozo> res = new ArrayList<>();
@@ -114,7 +124,12 @@ public final class TextoEnriquecido {
                 anadirVersalita(seg.texto, res);
             }
         }
-        return res;
+        List<Trozo> fijo = Collections.unmodifiableList(res);
+        synchronized (cache) {
+            if (cache.size() >= MAX_CACHE_TROZOS) cache.clear();
+            cache.put(s, fijo);
+        }
+        return fijo;
     }
 
     private static void anadirVersalita(String texto, List<Trozo> destino) {

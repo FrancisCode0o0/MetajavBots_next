@@ -65,28 +65,30 @@ public final class Banco {
         if (porId.containsKey(e.id)) avisos.add("id repetido: " + e.id + " (" + e.archivo + ")");
         porId.put(e.id, e);
         porTema.clear();
+        todosCache = null;
     }
 
     /** Los de cada tema, ya ordenados (las pantallas los piden en cada fotograma). */
     private final java.util.Map<String, List<Ejercicio>> porTema = new java.util.HashMap<>();
+    private List<Ejercicio> todosCache;
 
     public Ejercicio ejercicio(String id) {
         return porId.get(id);
     }
 
-    public List<Ejercicio> todos() {
-        return Collections.unmodifiableList(new ArrayList<>(porId.values()));
+    public synchronized List<Ejercicio> todos() {
+        if (todosCache == null) todosCache = Collections.unmodifiableList(new ArrayList<>(porId.values()));
+        return todosCache;
     }
 
     /** Los de un tema, de más fácil a más difícil. */
     public synchronized List<Ejercicio> deTema(String tema) {
-        List<Ejercicio> l = porTema.computeIfAbsent(tema, t -> {
+        return porTema.computeIfAbsent(tema, t -> {
             List<Ejercicio> n = new ArrayList<>();
             for (Ejercicio e : porId.values()) if (e.tema.equals(t)) n.add(e);
             n.sort((a, b) -> Integer.compare(a.dificultad, b.dificultad));
-            return n;
+            return Collections.unmodifiableList(n);
         });
-        return new ArrayList<>(l);
     }
 
     public List<String> avisos() {

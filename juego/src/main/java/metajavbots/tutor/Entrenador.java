@@ -1,9 +1,6 @@
 package metajavbots.tutor;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -51,8 +48,7 @@ public final class Entrenador {
     }
 
     private static Trilingue trilingue(String s) {
-        String[] p = s.split("\\|");
-        return new Trilingue(p[0].strip(), p.length > 1 ? p[1].strip() : p[0].strip(), p.length > 2 ? p[2].strip() : p[0].strip());
+        return metajavbots.textos.LectorRes.trilingue(s, true);
     }
 
     /** ¿Se le dibuja ese rasgo (gorra, barba…)? */
@@ -73,21 +69,9 @@ public final class Entrenador {
         if (todos == null) {
             List<Entrenador> l = new ArrayList<>();
             try (InputStream in = Entrenador.class.getResourceAsStream("/datos/entrenadores.txt")) {
-                BufferedReader r = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
-                String id = null, linea;
-                Map<String, String> v = new LinkedHashMap<>();
-                while ((linea = r.readLine()) != null) {
-                    if (linea.startsWith("#") || linea.isBlank()) continue;
-                    if (linea.startsWith("[")) {
-                        if (id != null) l.add(new Entrenador(id, v));
-                        id = linea.substring(1, linea.indexOf(']')).strip();
-                        v = new LinkedHashMap<>();
-                    } else if (linea.contains("=")) {
-                        int i = linea.indexOf('=');
-                        v.put(linea.substring(0, i).strip(), linea.substring(i + 1).strip());
-                    }
+                for (metajavbots.textos.LectorRes.Seccion s : metajavbots.textos.LectorRes.secciones(in, '=')) {
+                    l.add(new Entrenador(s.id(), s.valores()));
                 }
-                if (id != null) l.add(new Entrenador(id, v));
             } catch (Exception e) {
                 throw new IllegalStateException("No se pudo leer res/datos/entrenadores.txt", e);
             }

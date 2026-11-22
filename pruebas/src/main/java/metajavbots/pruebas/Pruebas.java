@@ -66,6 +66,7 @@ public final class Pruebas {
         PruebasDeDiversidadEjercicios.apuntar();
         PruebasDeBloque5B.apuntar();
         PruebasDeCampanas.apuntar();
+        PruebasDeOptimizacion.apuntar();
 
         List<String> fallos = new ArrayList<>();
         int pasados = 0;

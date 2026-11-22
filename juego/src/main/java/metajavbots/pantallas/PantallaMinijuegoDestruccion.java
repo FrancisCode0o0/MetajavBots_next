@@ -35,6 +35,7 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
 
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
     private final RobotDelJugador compilado = new RobotDelJugador();
+    private final SelectorDeMinijuego selector = new SelectorDeMinijuego();
     private VistaDeArena vista;
     private MinijuegoDestruccion reto;
     private long semilla = (System.nanoTime() & 0xFFFFFL) + 41L;
@@ -104,31 +105,16 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
 
     /** Cambia el modelo del robot seleccionado a un modelo desbloqueado concreto. */
     public boolean seleccionarModelo(Jugador jugador, String modeloId) {
-        Jugador.Robot r = robotActual(jugador);
-        if (r == null || modeloId == null || modeloId.isBlank()) return false;
-        for (Modelo m : modelosDesbloqueados(jugador)) {
-            if (m.id.equals(modeloId)) {
-                if (!m.id.equals(r.modelo)) {
-                    r.modelo = m.id;
-                    r.piezas.clear();
-                }
-                return true;
-            }
-        }
-        return false;
+        boolean ok = SelectorDeMinijuego.seleccionarModelo(jugador, robotActual(jugador), modeloId);
+        if (ok) selector.invalidar();
+        return ok;
     }
 
     /** Rota entre los modelos desbloqueados del jugador ({@code paso} = -1 o +1). */
     public boolean cambiarModelo(Jugador jugador, int paso) {
-        Jugador.Robot r = robotActual(jugador);
-        if (r == null) return false;
-        List<Modelo> opciones = modelosDesbloqueados(jugador);
-        if (opciones.size() <= 1) return false;
-        int idx = indiceDeModelo(opciones, r.modelo);
-        int siguiente = Math.floorMod((idx < 0 ? 0 : idx) + paso, opciones.size());
-        r.modelo = opciones.get(siguiente).id;
-        r.piezas.clear();
-        return true;
+        boolean ok = SelectorDeMinijuego.cambiarModelo(jugador, robotActual(jugador), paso);
+        if (ok) selector.invalidar();
+        return ok;
     }
 
     /** Identificador del modelo actualmente equipado en el robot seleccionado. */
@@ -139,44 +125,26 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
 
     /** Lista de piezas disponibles del inventario del jugador para un hueco concreto. */
     public static List<Pieza> piezasDisponiblesParaHueco(Jugador jugador, Jugador.Robot robot, Montaje.Hueco hueco) {
-        return PantallaCarreraDeObstaculos.piezasDisponiblesParaHueco(jugador, robot, hueco);
+        return SelectorDeMinijuego.piezasDisponiblesParaHueco(jugador, robot, hueco);
     }
 
     /** Rota la pieza montada en {@code hueco} ({@code paso} = -1 o +1). */
     public boolean cambiarPieza(Jugador jugador, Montaje.Hueco hueco, int paso) {
-        Jugador.Robot r = robotActual(jugador);
-        if (r == null || hueco == null) return false;
-        List<Pieza> opciones = piezasDisponiblesParaHueco(jugador, r, hueco);
-        if (opciones.size() <= 1) return false;
-        Montaje m = jugador.montajeDe(r);
-        Pieza actual = m.pieza(hueco);
-        int idx = indiceDePieza(opciones, actual);
-        int siguiente = Math.floorMod((idx < 0 ? 0 : idx) + paso, opciones.size());
-        m.poner(hueco, opciones.get(siguiente));
-        r.ponerPiezas(m);
-        return true;
+        boolean ok = SelectorDeMinijuego.cambiarPieza(jugador, robotActual(jugador), hueco, paso);
+        if (ok) selector.invalidar();
+        return ok;
     }
 
     /** Equipa una pieza específica por identificador si está disponible para el robot actual. */
     public boolean equiparPieza(Jugador jugador, Montaje.Hueco hueco, String piezaId) {
-        Jugador.Robot r = robotActual(jugador);
-        if (r == null || hueco == null || piezaId == null) return false;
-        for (Pieza opcion : piezasDisponiblesParaHueco(jugador, r, hueco)) {
-            if (opcion.id.equals(piezaId)) {
-                Montaje m = jugador.montajeDe(r);
-                m.poner(hueco, opcion);
-                r.ponerPiezas(m);
-                return true;
-            }
-        }
-        return false;
+        boolean ok = SelectorDeMinijuego.equiparPieza(jugador, robotActual(jugador), hueco, piezaId);
+        if (ok) selector.invalidar();
+        return ok;
     }
 
     /** Cifras reales ({@link Montaje.Cifras}) del robot actualmente seleccionado. */
     public Montaje.Cifras cifrasActuales(Jugador jugador) {
-        Jugador.Robot r = robotActual(jugador);
-        Montaje m = r != null ? jugador.montajeDe(r) : new Montaje(Modelo.de("cobalto"));
-        return m.cifras();
+        return selector.montaje(jugador, robotActual(jugador)).cifras();
     }
 
     @Override
@@ -245,12 +213,12 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         p.caja(x, y, w, h, 10, ui.tema.panel, 1);
         float pw = 132, ph = 136;
         Jugador.Robot rActual = robotActual(j.jugador);
-        Montaje mActual = rActual != null ? j.jugador.montajeDe(rActual) : new Montaje(Modelo.de("cobalto"));
+        Montaje mActual = selector.montaje(j.jugador, rActual);
         DibujoCarreraDeObstaculos.vistaPreviaRobot(j, vista, mActual, tiempo, x + 14, y + 8, pw, ph);
         float rx = x + 14 + pw + 12;
         float rw = w - 28 - pw - 12;
         dibujarSelectorRobotYModelo(j, rx, y + 8, rw);
-        dibujarSelectorPiezas(j, rx, y + 50, rw);
+        selector.dibujarSelectorPiezas(j, rActual, rx, y + 50, rw);
         float wNueva = Math.min(210, Math.max(150, p.ancho(T.t("destruccion.nueva_arena"), Math.min(ui.letra, 18.5f), true) + 30));
         String infoArena = T.f("destruccion.arena_info", escenarioActual, MinijuegoDestruccion.DURACION_SEGUNDOS);
         p.textoConBordeNegro(ui.recortarTexto(infoArena, Math.max(120, rw - wNueva - 14), Math.min(ui.letra * 0.80f, 18f), true),
@@ -270,7 +238,7 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         float tEt = Math.min(ui.letra * 0.80f, 18f);
         robotElegido = Math.max(0, Math.min(robotElegido, lista.size() - 1));
         Jugador.Robot r = lista.get(robotElegido);
-        List<Modelo> modelos = modelosDesbloqueados(j.jugador);
+        List<Modelo> modelos = selector.modelos(j.jugador);
         int idxMod = Math.max(0, indiceDeModelo(modelos, r.modelo));
         float cx = x;
         String etMod = T.t("carrera_obs.modelo");
@@ -312,46 +280,6 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         Montaje.Cifras c = cifrasActuales(j.jugador);
         String cifrasTxt = String.format(Locale.ROOT, "VEL %.1f · BLIND %.0f", c.velocidad, c.blindajeTotal());
         p.textoConBordeNegro(ui.recortarTexto(cifrasTxt, Math.max(60, x + w - cx), tEt, true), cx, y + 8, tEt, true, 0x3FE0FF, 1);
-    }
-
-    private void dibujarSelectorPiezas(Juego j, float x, float y, float w) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        Jugador.Robot r = robotActual(j.jugador);
-        if (r == null) return;
-        Montaje m = j.jugador.montajeDe(r);
-        Montaje.Hueco[] huecos = PantallaCarreraDeObstaculos.HUECOS_EDITABLES;
-        float sep = 8;
-        float cw = (w - sep * (huecos.length - 1)) / huecos.length;
-        float ch = 46;
-        float tHueco = Math.min(ui.letra * 0.62f, 13.5f);
-        float tPieza = Math.min(ui.letra * 0.76f, 16.5f);
-        for (int i = 0; i < huecos.length; i++) {
-            Montaje.Hueco hueco = huecos[i];
-            float cx = x + i * (cw + sep);
-            p.caja(cx, y, cw, ch, 8, ui.tema.panelAlto, 0.92f);
-            p.bordeRedondeado(cx, y, cw, ch, 8, ui.tema.borde, 0.7f, 1f);
-            List<Pieza> opciones = piezasDisponiblesParaHueco(j.jugador, r, hueco);
-            Pieza actual = m.pieza(hueco);
-            boolean puede = opciones.size() > 1;
-            if (ui.boton("◄", cx + 4, y + 6, 32, 34, Ui.Estilo.PLANO, puede, null)) {
-                if (cambiarPieza(j.jugador, hueco, -1)) {
-                    j.guardar();
-                    j.sonidos.tocar("servo", 0.4f);
-                }
-            }
-            if (ui.boton("►", cx + cw - 36, y + 6, 32, 34, Ui.Estilo.PLANO, puede, null)) {
-                if (cambiarPieza(j.jugador, hueco, 1)) {
-                    j.guardar();
-                    j.sonidos.tocar("servo", 0.4f);
-                }
-            }
-            float tx = cx + 40, tw = Math.max(40, cw - 80);
-            String etHueco = T.t("hueco." + hueco.name().toLowerCase(Locale.ROOT));
-            p.textoConBordeNegro(ui.recortarTexto(etHueco, tw, tHueco, false), tx, y + 4, tHueco, false, ui.tema.textoSuave, 1);
-            String nomPieza = actual == null ? T.t("taller.sin_pieza") : actual.nombre(T.idioma);
-            p.textoConBordeNegro(ui.recortarTexto(nomPieza, tw, tPieza, true), tx, y + 22, tPieza, true, ui.tema.texto, 1);
-        }
     }
 
     private void dibujarSelectorDificultad(Juego j, float x, float y, float w) {
@@ -551,14 +479,6 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         if (modeloId == null) return -1;
         for (int i = 0; i < opciones.size(); i++) {
             if (opciones.get(i).id.equals(modeloId)) return i;
-        }
-        return -1;
-    }
-
-    private static int indiceDePieza(List<Pieza> opciones, Pieza actual) {
-        if (actual == null) return -1;
-        for (int i = 0; i < opciones.size(); i++) {
-            if (opciones.get(i).id.equals(actual.id)) return i;
         }
         return -1;
     }

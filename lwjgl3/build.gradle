@@ -36,3 +36,12 @@ tasks.register('capturas', JavaExec) {
     if (project.hasProperty('gifrecorte')) systemProperty 'capturas.gifrecorte', project.property('gifrecorte')
     if (project.hasProperty('gifancho')) systemProperty 'capturas.gifancho', project.property('gifancho')
 }
+
+// "gradlew lwjgl3:medir": mide arranque, FPS, memoria y asignaciones por fotograma en las 11 pantallas clave.
+tasks.register('medir', JavaExec) {
+    group = 'verification'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'metajavbots.escritorio.MedidorRendimiento'
+    workingDir = rootProject.projectDir
+    jvmArgs '--enable-native-access=ALL-UNNAMED'
+}
