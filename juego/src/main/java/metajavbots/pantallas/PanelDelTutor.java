@@ -113,6 +113,7 @@ final class PanelDelTutor {
         List<Entrenador> l = Entrenador.todos();
         Entrenador nuevo = l.get(Math.floorMod(i, l.size()));
         j.jugador.entrenador = nuevo.id;
+        j.entrenadorFlotante.sincronizarEntrenador(j.jugador);
         nivel = -1;
         decir(j, nuevo.frase(j.jugador.idioma, frase++));
     }

@@ -1,6 +1,9 @@
 package metajavbots.pantallas;
 
+import metajavbots.Juego;
 import metajavbots.pantalla.Pincel;
+import metajavbots.pantalla.Ui;
+import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 import metajavbots.tutor.CabezaDeEntrenador;
 import metajavbots.tutor.Entrenador;
@@ -95,5 +98,19 @@ public final class Hospital {
         float bh = p.altoDeParrafo(frase, bw - 24, tt) + 18;
         p.caja(cx - bw / 2, cy + 92, bw, bh, 10, 0xF5F3EA, 0.97f);
         p.parrafo(frase, cx - bw / 2 + 12, cy + 100, bw - 24, tt, 0x1E1E1E, 1);
+    }
+
+    /** Vista del hospital dentro de la consulta del entrenador flotante contra un jefe. */
+    static void dibujarEnConsulta(Juego j, Entrenador en, float x, float y, float w, float h, float t) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Idioma idioma = j.jugador.idioma;
+        p.texto(T.f("entrenador.hospital.titulo", en.nombre.en(idioma)), x + 30, y + 26, ui.letra * 1.4f, true, ui.tema.mal, 1);
+        float ch = Math.min(h * 0.6f, 420);
+        camilla(p, en, x + 30, y + 80, w - 60, ch, t);
+        float ty = y + 90 + ch;
+        String causa = causa(j.pantalla().hashCode());
+        ty += p.parrafo(T.f("entrenador.hospital.parte", causa), x + 30, ty, w - 60, ui.letra * 1.1f, true, ui.tema.texto, 1) + 12;
+        p.parrafo(T.t("entrenador.hospital.pide"), x + 30, ty, w - 60, ui.letra, ui.tema.textoSuave, 1);
     }
 }

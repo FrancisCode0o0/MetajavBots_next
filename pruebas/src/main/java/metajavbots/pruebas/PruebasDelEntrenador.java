@@ -15,10 +15,15 @@ import java.util.Set;
 import metajavbots.codigo.Compilador;
 import metajavbots.codigo.Vigilante;
 import metajavbots.pantalla.Entrada;
+import metajavbots.pantallas.Ajustes;
 import metajavbots.pantallas.EntrenadorFlotante;
+import metajavbots.pantallas.Inicio;
+import metajavbots.pantallas.Menu;
+import metajavbots.progreso.Jugador;
 import metajavbots.sonido.Timbre;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
+import metajavbots.tutor.CabezaDeEntrenador;
 import metajavbots.tutor.Concepto;
 import metajavbots.tutor.ConsejosDelTaller;
 import metajavbots.tutor.Entrenador;
@@ -47,6 +52,7 @@ final class PruebasDelEntrenador {
         ayudas();
         bocadilloDeTips();
         limitesVerticalesDelBocadillo();
+        cabecitaFlotanteYCambioDeEntrenador();
     }
 
     private static void conceptos() {
@@ -336,6 +342,81 @@ final class PruebasDelEntrenador {
             } finally {
                 T.idioma = antes;
             }
+        });
+    }
+
+    private static void cabecitaFlotanteYCambioDeEntrenador() {
+        caso("entrenador: la cabecita flotante permanece visible y clicable dentro de pantalla con letra normal y grande", () -> {
+            float[][] pantallas = {{1600, 900}, {1280, 720}, {1024, 768}, {800, 600}, {640, 480}};
+            for (float[] tam : pantallas) {
+                for (float letra : new float[]{18f, 26f}) {
+                    EntrenadorFlotante.CajaPestana reposo = EntrenadorFlotante.cajaPestana(tam[0], tam[1], 0f, letra);
+                    EntrenadorFlotante.CajaPestana desplegada = EntrenadorFlotante.cajaPestana(tam[0], tam[1], 1f, letra);
+                    for (EntrenadorFlotante.CajaPestana c : new EntrenadorFlotante.CajaPestana[]{reposo, desplegada}) {
+                        cierto(c.w() > 0f && c.h() > 0f && c.radio() >= 20f, "dimensiones positivas");
+                        cierto(c.x() >= 0f && c.x() + c.w() <= tam[0], "horizontal dentro de " + tam[0] + "x" + tam[1]);
+                        cierto(c.y() >= 0f && c.y() + c.h() <= tam[1], "vertical dentro de " + tam[0] + "x" + tam[1]);
+                        cierto(c.cabezaX() - c.radio() * 1.15f >= 0f && c.cabezaX() + c.radio() * 1.15f <= tam[0],
+                                "cabeza completa visible en X en " + tam[0] + "x" + tam[1]);
+                        cierto(c.cabezaY() - c.radio() * 1.25f >= 0f && c.cabezaY() + c.radio() * 1.45f <= tam[1],
+                                "cabeza completa visible en Y en " + tam[0] + "x" + tam[1]);
+                        cierto(c.contiene(c.insigniaX(), c.insigniaY()), "insignia dentro de la pestaña");
+                        Entrada e = new Entrada(null);
+                        e.ratonX = c.cabezaX();
+                        e.ratonY = c.cabezaY();
+                        e.recienPulsado = true;
+                        cierto(c.contiene(e.ratonX, e.ratonY), "centro de cabeza clicable");
+                        cierto(e.clic(c.x(), c.y(), c.w(), c.h()), "clic en pestaña reconocido");
+                    }
+                    cierto(desplegada.x() < reposo.x(), "al desplegarse se adelanta hacia dentro");
+                }
+            }
+            Jugador jug = new Jugador("Prueba");
+            cierto(!EntrenadorFlotante.debeMostrarse(null, new Menu()), "sin partida no se muestra");
+            cierto(!EntrenadorFlotante.debeMostrarse(jug, new Inicio()), "en la portada Inicio no se muestra");
+            cierto(EntrenadorFlotante.debeMostrarse(jug, new Menu()), "en Menú sí se muestra");
+            cierto(EntrenadorFlotante.debeMostrarse(jug, new Ajustes()), "en Ajustes sí se muestra");
+        });
+
+        caso("entrenador: cambiar de entrenador actualiza la cabecita al instante, limpia caché y diferencia cada retrato", () -> {
+            List<Entrenador> todos = Entrenador.todos();
+            cierto(todos.size() >= 7, "al menos 7 entrenadores definidos");
+            Jugador jug = new Jugador("Prueba");
+            EntrenadorFlotante ef = new EntrenadorFlotante();
+            String codigo = "public class MiRobot extends Metajavbot { public void cadaTurno() { avanzar(10); } }";
+            Set<String> firmas = new HashSet<>();
+            String anteriorId = null;
+            for (Entrenador e : todos) {
+                if (anteriorId != null) {
+                    ef.tipAhora();
+                    cierto(ef.avanzarTemporizadorDeTip(codigo, 0.1f) && ef.tipActual() != null, "tip previo activo antes del cambio");
+                }
+                jug.entrenador = e.id;
+                Entrenador activo = ef.sincronizarEntrenador(jug);
+                igual(e.id, activo.id, "entrenador activo inmediato");
+                igual(e.id, ef.entrenadorSincronizadoId(), "id sincronizado actualizado");
+                if (anteriorId != null) {
+                    cierto(ef.tipActual() == null, "al cambiar de entrenador se limpia el tip en caché de " + anteriorId);
+                }
+                for (String rasgo : e.rasgos) {
+                    cierto(CabezaDeEntrenador.soportaRasgo(rasgo), "rasgo soportado en CabezaDeEntrenador: " + rasgo);
+                }
+                cierto(firmas.add(CabezaDeEntrenador.firmaVisual(e)), "aspecto visual único para " + e.id);
+                CabezaDeEntrenador.dibujar(null, e, 100f, 100f, 20f, false, 0f);
+                for (Idioma id : Idioma.values()) {
+                    cierto(!e.nombre.en(id).isBlank() && !e.papel.en(id).isBlank() && !e.frase(id, 0).isBlank(),
+                            "identidad completa de " + e.id + " en " + id);
+                }
+                anteriorId = e.id;
+            }
+            CabezaDeEntrenador.dibujar(null, null, 100f, 100f, 20f, true, 1f);
+            igual(todos.size(), firmas.size(), "todos los entrenadores tienen retrato diferenciado");
+            for (Idioma id : Idioma.values()) {
+                T.idioma = id;
+                cierto(T.existe("ajustes.entrenador_tipo") && !T.t("ajustes.entrenador_tipo").isBlank(),
+                        "etiqueta de selector en Ajustes en " + id);
+            }
+            T.idioma = Idioma.ES;
         });
     }
 

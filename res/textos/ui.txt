@@ -676,6 +676,7 @@ entrenador.desactivar = Desactivar al entrenador | Trainer ausschalten | Turn th
 entrenador.desactivado = Vale, me callo. Si me echas de menos: F2 o [[Ajustes]]. | Gut, ich bin still. Wenn du mich vermisst: F2 oder [[Einstellungen]]. | Fine, I'll be quiet. If you miss me: F2 or [[Settings]].
 ajustes.entrenador = Entrenador flotante (tips y consejos; F2) | Schwebender Trainer (Tipps; F2) | Floating coach (tips; F2)
 ajustes.entrenador_ayuda = Asoma en todas las pantallas: explica conceptos y errores, da tips en el taller y consejos en la pelea. Quítalo si prefieres jugar solo (F2 lo abre igual). | Schaut auf jedem Bildschirm vorbei: erklärt Begriffe und Fehler, gibt Tipps in der Werkstatt und Ratschläge im Kampf. Schalte ihn aus, wenn du lieber allein spielst (F2 öffnet ihn trotzdem). | Peeks in on every screen: explains concepts and errors, gives tips in the workshop and advice in fights. Turn it off if you'd rather play alone (F2 still opens it).
+ajustes.entrenador_tipo = Tipo de entrenador | Trainertyp | Coach type
 entrenador.pseudo = En pseudocódigo: | In Pseudocode: | In pseudocode:
 entrenador.ayuda = Ayuda {0}/10 | Hilfe {0}/10 | Help {0}/10
 entrenador.error.titulo = En la línea {0}, el editor marca esto: | In Zeile {0} markiert der Editor das: | On line {0}, the editor marks this:

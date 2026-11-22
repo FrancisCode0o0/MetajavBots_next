@@ -144,6 +144,7 @@ public class Juego extends ApplicationAdapter {
             musica.activa = j.musicaActiva;
             musica.volumen = j.volumenMusica;
             metajavbots.pantallas.PrepararPelea.conTrampas = j.arenasConTrampas;
+            entrenadorFlotante.sincronizarEntrenador(j);
         }
     }
 

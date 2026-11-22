@@ -1,5 +1,10 @@
 package metajavbots.tutor;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
+
 import metajavbots.pantalla.Pincel;
 
 /**
@@ -11,30 +16,52 @@ import metajavbots.pantalla.Pincel;
  */
 public final class CabezaDeEntrenador {
 
+    /** Rasgos visuales soportados al dibujar la cabecita de un entrenador. */
+    public static final Set<String> RASGOS_SOPORTADOS = Set.of(
+            "capucha", "cejas", "gafas", "bigote", "barba", "cinta", "gorra", "estrellas", "antena_rota");
+
     private CabezaDeEntrenador() {
+    }
+
+    /** Indica si un rasgo declarado en entrenadores.txt tiene representación visual en esta clase. */
+    public static boolean soportaRasgo(String rasgo) {
+        return rasgo != null && RASGOS_SOPORTADOS.contains(rasgo);
+    }
+
+    /** Devuelve una firma determinista del aspecto visual (colores y rasgos soportados) de un entrenador. */
+    public static String firmaVisual(Entrenador e) {
+        Entrenador en = e != null ? e : Entrenador.de(null);
+        List<String> activos = new ArrayList<>();
+        for (String rasgo : en.rasgos) {
+            if (soportaRasgo(rasgo)) activos.add(rasgo);
+        }
+        Collections.sort(activos);
+        return String.format("%06x:%06x:%06x:%s", en.cara, en.ojos, en.detalle, String.join(",", activos));
     }
 
     /** La dibuja con el centro en (cx, cy) y ese radio; «habla» mueve la boca; t, el tiempo (para flotar y parpadear). */
     public static void dibujar(Pincel p, Entrenador e, float cx, float cy, float r, boolean habla, float t) {
+        if (p == null || r <= 0f) return;
+        Entrenador en = e != null ? e : Entrenador.de(null);
         float y = cy + (float) Math.sin(t * 2) * r * 0.08f;
         p.elipse(cx, cy + r * 1.35f, r * 0.7f, r * 0.14f, 0, 0x000000, 0.25f);
-        if (e.tiene("capucha")) p.circulo(cx, y + r * 0.1f, r * 1.12f, 0x1A1D24, 1);
+        if (en.tiene("capucha")) p.circulo(cx, y + r * 0.1f, r * 1.12f, 0x1A1D24, 1);
         // La cabeza: una caja redondeada, con las orejas-tornillo.
-        p.circulo(cx - r * 0.98f, y, r * 0.18f, Pincel.oscurecer(e.cara, 0.3f), 1);
-        p.circulo(cx + r * 0.98f, y, r * 0.18f, Pincel.oscurecer(e.cara, 0.3f), 1);
-        p.caja(cx - r * 0.9f, y - r * 0.85f, r * 1.8f, r * 1.7f, r * 0.45f, e.cara, 1);
+        p.circulo(cx - r * 0.98f, y, r * 0.18f, Pincel.oscurecer(en.cara, 0.3f), 1);
+        p.circulo(cx + r * 0.98f, y, r * 0.18f, Pincel.oscurecer(en.cara, 0.3f), 1);
+        p.caja(cx - r * 0.9f, y - r * 0.85f, r * 1.8f, r * 1.7f, r * 0.45f, en.cara, 1);
         p.caja(cx - r * 0.75f, y - r * 0.55f, r * 1.5f, r * 0.55f, r * 0.2f, 0x14171C, 1);
         boolean parpadea = (t % 3.7f) < 0.13f;
         for (int lado = -1; lado <= 1; lado += 2) {
             float ox = cx + lado * r * 0.36f, oy = y - r * 0.28f;
-            if (parpadea) p.rect(ox - r * 0.14f, oy, r * 0.28f, r * 0.05f, e.ojos, 1);
-            else p.circulo(ox, oy, r * 0.13f, e.ojos, 1);
+            if (parpadea) p.rect(ox - r * 0.14f, oy, r * 0.28f, r * 0.05f, en.ojos, 1);
+            else p.circulo(ox, oy, r * 0.13f, en.ojos, 1);
         }
         // La boca: una rejilla que se abre al hablar.
         float abre = habla ? (0.08f + 0.12f * Math.abs((float) Math.sin(t * 18))) * r : 0.05f * r;
         p.caja(cx - r * 0.4f, y + r * 0.28f - abre / 2, r * 0.8f, abre + r * 0.06f, r * 0.05f, 0x14171C, 1);
-        for (int i = 1; i < 4; i++) p.rect(cx - r * 0.4f + i * r * 0.2f, y + r * 0.28f - abre / 2, r * 0.03f, abre + r * 0.06f, e.cara, 0.6f);
-        rasgos(p, e, cx, y, r, t);
+        for (int i = 1; i < 4; i++) p.rect(cx - r * 0.4f + i * r * 0.2f, y + r * 0.28f - abre / 2, r * 0.03f, abre + r * 0.06f, en.cara, 0.6f);
+        rasgos(p, en, cx, y, r, t);
     }
 
     private static void rasgos(Pincel p, Entrenador e, float cx, float y, float r, float t) {

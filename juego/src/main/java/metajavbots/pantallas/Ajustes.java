@@ -1,5 +1,7 @@
 package metajavbots.pantallas;
 
+import java.util.List;
+
 import metajavbots.Juego;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
@@ -8,6 +10,9 @@ import metajavbots.pantalla.Ui;
 import metajavbots.progreso.Jugador;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
+import metajavbots.tutor.Biografias;
+import metajavbots.tutor.CabezaDeEntrenador;
+import metajavbots.tutor.Entrenador;
 
 /**
  * AJUSTES — El idioma, el tamaño de la letra, el tema claro u oscuro, el
@@ -19,6 +24,7 @@ public final class Ajustes implements Pantalla {
 
     private final PanelDeCerebros cerebros = new PanelDeCerebros();
     private boolean cargado;
+    private float t;
 
     @Override
     public void alEntrar(Juego j) {
@@ -39,6 +45,7 @@ public final class Ajustes implements Pantalla {
 
     @Override
     public void fotograma(Juego j, float dt) {
+        t += dt;
         Pincel p = j.pincel;
         Ui ui = j.ui;
         Jugador jug = j.jugador;
@@ -100,11 +107,42 @@ public final class Ajustes implements Pantalla {
         y += 76;
         jug.entrenadorActivo = ui.casilla(T.t("ajustes.entrenador"), jug.entrenadorActivo, x, y, T.t("ajustes.entrenador_ayuda"));
         y += 50;
+        y = selectorDeEntrenador(j, jug, x, y, w);
         if (ui.boton(T.t("ajustes.probar_voz"), x, y, 260, 50, Ui.Estilo.NORMAL)) {
             j.voz.decir(metajavbots.dialogos.Dialogos.de("locutor").frase("inicio_pelea", jug.idioma, java.util.Map.of("jugador", jug.nombre)), jug.idioma);
         }
         ui.finDesplazable(izquierda, y + 70 + d - zona);
         // A la derecha: los cerebros de IA.
         cerebros.dibujar(j, x + w + 40, arriba + 16, w, p.alto - arriba - 40);
+    }
+
+    private float selectorDeEntrenador(Juego j, Jugador jug, float x, float y, float w) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        List<Entrenador> lista = Entrenador.todos();
+        Entrenador actual = Entrenador.de(jug.entrenador);
+        int indice = Math.max(0, lista.indexOf(actual));
+        p.texto(T.t("ajustes.entrenador_tipo"), x, y, ui.letra, true, ui.tema.texto, 1);
+        y += ui.letra * 1.45f;
+        float alto = 56f;
+        if (ui.boton("◄", x, y, 44, alto, Ui.Estilo.PLANO)) cambiarEntrenador(j, jug, lista, indice - 1);
+        if (ui.boton("►", x + w - 44, y, 44, alto, Ui.Estilo.PLANO)) cambiarEntrenador(j, jug, lista, indice + 1);
+        float centroX = x + 52, centroW = Math.max(120, w - 104);
+        p.caja(centroX, y, centroW, alto, 10, ui.tema.panel, 1);
+        CabezaDeEntrenador.dibujar(p, actual, centroX + 30, y + alto / 2f, 18f, false, t);
+        String nombre = actual.nombre.en(jug.idioma);
+        float tn = ui.cabe(nombre, centroW - 68, ui.letra * 0.95f, true);
+        p.texto(nombre, centroX + 58, y + (alto - tn * 1.2f) / 2f, tn, true, ui.tema.texto, 1);
+        if (ui.e.dentro(centroX, y, centroW, alto)) {
+            ui.avisar(actual.papel.en(jug.idioma) + "\n\n" + Biografias.deEntrenador(actual.id, jug.idioma));
+        }
+        return y + alto + 18f;
+    }
+
+    private void cambiarEntrenador(Juego j, Jugador jug, List<Entrenador> lista, int indice) {
+        Entrenador nuevo = lista.get(Math.floorMod(indice, lista.size()));
+        jug.entrenador = nuevo.id;
+        j.entrenadorFlotante.sincronizarEntrenador(jug);
+        j.voz.decir(nuevo.frase(jug.idioma, 0), jug.idioma, nuevo.timbre);
     }
 }
