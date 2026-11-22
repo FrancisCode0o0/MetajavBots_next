@@ -24,7 +24,7 @@ import metajavbots.textos.T;
 public final class ModoEspecial implements Pantalla {
 
     /** Claves de las pestañas de esta pantalla (en orden). */
-    public static final List<String> CLAVES_PESTANAS = List.of("especial.jefes", "especial.tope", "especial.retos", "especial.otros", "especial.carrera");
+    public static final List<String> CLAVES_PESTANAS = List.of("especial.jefes", "especial.tope", "especial.retos", "especial.otros", "especial.destruccion");
 
     private int pestana;
     private boolean bajarAlFinal;
@@ -33,7 +33,7 @@ public final class ModoEspecial implements Pantalla {
         this(0);
     }
 
-    /** Abierto en esa pestaña (0 jefes, 1 tope de cálculo, 2 retos de programar, 3 robots de otros, 4 carrera de obstáculos). */
+    /** Abierto en esa pestaña (0 jefes, 1 tope de cálculo, 2 retos de programar, 3 robots de otros, 4 destrucción y supervivencia). */
     public ModoEspecial(int pestana) {
         this.pestana = pestana;
     }
@@ -53,7 +53,7 @@ public final class ModoEspecial implements Pantalla {
         Jugador jug = j.jugador;
         Comun.fondo(j, 0);
         float arriba = Comun.cabecera(j, T.t("menu.especial"), true);
-        String[] pest = {T.t("especial.jefes"), T.t("especial.tope"), T.t("especial.retos"), T.t("especial.otros"), T.t("especial.carrera")};
+        String[] pest = {T.t("especial.jefes"), T.t("especial.tope"), T.t("especial.retos"), T.t("especial.otros"), T.t("especial.destruccion")};
         int anterior = pestana;
         pestana = ui.pestanas(pest, pestana, 20, arriba + 16, p.ancho - 40, 50);
         if (pestana != anterior) despl.alPrincipio();
@@ -104,11 +104,11 @@ public final class ModoEspecial implements Pantalla {
                 yy += 80;
                 break;
             default:
-                yy += p.parrafo(T.t("especial.carrera_ayuda"), x + 24, yy, w - 48, ui.letra * 0.95f, ui.tema.texto, 1) + 24;
-                String txtCarrera = T.t("especial.carrera_entrar");
-                float btCarrera = Math.min(w - 48, Math.max(360, p.ancho(txtCarrera, ui.letra, true) + 48));
-                if (ui.boton(txtCarrera, x + 24, yy, btCarrera, 58, Ui.Estilo.PRINCIPAL)) {
-                    j.ir(new PantallaCarreraDeObstaculos());
+                yy += p.parrafo(T.t("especial.destruccion_ayuda"), x + 24, yy, w - 48, ui.letra * 0.95f, ui.tema.texto, 1) + 24;
+                String txtDestruccion = T.t("especial.destruccion_entrar");
+                float btDestruccion = Math.min(w - 48, Math.max(360, p.ancho(txtDestruccion, ui.letra, true) + 48));
+                if (ui.boton(txtDestruccion, x + 24, yy, btDestruccion, 58, Ui.Estilo.PRINCIPAL)) {
+                    j.ir(new PantallaMinijuegoDestruccion());
                 }
                 yy += 82;
                 break;

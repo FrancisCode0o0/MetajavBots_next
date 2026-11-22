@@ -126,7 +126,7 @@ final class PruebasDeCarreraDeObstaculos {
 
     private static void apuntarPista6xRotacionYSeleccionRobot() {
         caso("carrera de obstáculos: pista >= 6x, rotación sin repetir arena y selección de robot del jugador", () -> {
-            cierto(ModoEspecial.CLAVES_PESTANAS.contains("especial.carrera"), "ModoEspecial incluye pestaña especial.carrera");
+            falso(ModoEspecial.CLAVES_PESTANAS.contains("especial.carrera"), "ModoEspecial ya no incluye especial.carrera");
             cierto(CarreraDeObstaculos.ANCHO >= CarreraDeObstaculos.ANCHO_BASE_REFERENCIA * 6.0,
                     "pista al menos 6x más grande que la base: " + CarreraDeObstaculos.ANCHO);
 

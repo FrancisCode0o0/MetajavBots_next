@@ -52,12 +52,10 @@ public final class MiniJuegos implements Pantalla {
         float x0 = 40, gap = 18;
         int hechos = contarHechos(j);
         float y0 = dibujarBarraProgreso(j, x0, arriba + 12, p.ancho - 2 * x0, hechos) + 14;
-        float altoEspecial = 104;
-        float yEspecial = p.alto - altoEspecial - 16;
         int cols = 3;
         int filas = (RETOS.length + cols - 1) / cols;
         float w = (p.ancho - 2 * x0 - (cols - 1) * gap) / cols;
-        float h = (yEspecial - y0 - 14 - (filas - 1) * gap) / filas;
+        float h = (p.alto - y0 - 20 - (filas - 1) * gap) / filas;
         for (int i = 0; i < RETOS.length; i++) {
             int fila = i / cols;
             int col = i % cols;
@@ -65,35 +63,6 @@ public final class MiniJuegos implements Pantalla {
             float inicioX = (p.ancho - (enFila * w + (enFila - 1) * gap)) / 2;
             float x = inicioX + col * (w + gap), y = y0 + fila * (h + gap);
             dibujarReto(j, i, x, y, w, h);
-        }
-        dibujarRetoEspecial(j, x0, yEspecial, p.ancho - 2 * x0, altoEspecial);
-    }
-
-    private void dibujarRetoEspecial(Juego j, float x, float y, float w, float h) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        int acento = 0xFF9F1C;
-        boolean claro = ui.tema == Tema.CLARO;
-        p.caja(x, y, w, h, 14, Pincel.mezcla(ui.tema.panel, acento, claro ? 0.08f : 0.12f), 1);
-        p.bordeRedondeado(x, y, w, h, 14, acento, 1, 2.2f);
-        p.caja(x + 4, y + 10, 5, h - 20, 2.5f, acento, 0.95f);
-        String insignia = "★ " + T.t("mini.especial_etiqueta");
-        float tIns = Math.min(ui.letra * 0.68f, 15f);
-        float insW = p.ancho(insignia, tIns, true) + 18;
-        float insH = p.altoDeLinea(tIns) + 6;
-        p.caja(x + 18, y + 10, insW, insH, insH / 2f, Pincel.mezcla(ui.tema.panelAlto, acento, 0.30f), 1);
-        p.bordeRedondeado(x + 18, y + 10, insW, insH, insH / 2f, acento, 1, 1.1f);
-        p.textoCentradoConBordeNegro(insignia, x + 18 + insW / 2f, y + 13, tIns, true, 0xFFD23F, 1);
-        String titulo = T.t("destruccion.titulo");
-        float btnW = Math.min(240, Math.max(170, p.ancho(T.t("mini.especial_entrar"), Math.min(ui.letra, 19f), true) + 34));
-        float maxTitW = Math.max(160, w - insW - btnW - 64);
-        float tTit = ajustarAncho(p, titulo, maxTitW, Math.min(ui.letra * 1.04f, 22f), 13f, true);
-        p.textoConBordeNegro(titulo, x + 28 + insW, y + 11, tTit, true, ui.tema.texto, 1);
-        String desc = T.t("mini.especial_resumen");
-        float tDesc = Math.min(ui.letra * 0.78f, 16.5f);
-        p.parrafo(desc, x + 18, y + 14 + insH + 4, Math.max(180, w - btnW - 52), tDesc, ui.tema.textoSuave, 1);
-        if (ui.boton(T.t("mini.especial_entrar"), x + w - btnW - 18, y + (h - 46) / 2f, btnW, 46, Ui.Estilo.DESTACADO)) {
-            j.ir(new PantallaMinijuegoDestruccion());
         }
     }
 

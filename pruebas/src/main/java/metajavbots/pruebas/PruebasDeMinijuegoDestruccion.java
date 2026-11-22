@@ -24,6 +24,7 @@ import metajavbots.combate.MinijuegoDestruccion;
 import metajavbots.combate.Pelea;
 import metajavbots.pantallas.ConsultaIaEntrenador;
 import metajavbots.pantallas.MiniJuegos;
+import metajavbots.pantallas.ModoEspecial;
 import metajavbots.pantallas.PantallaMinijuegoDestruccion;
 import metajavbots.piezas.CatalogoDePiezas;
 import metajavbots.piezas.Modelo;
@@ -63,7 +64,7 @@ final class PruebasDeMinijuegoDestruccion {
     static void apuntar() {
         apuntarArena3xYCuentaAtras();
         apuntarAparicionesCieloYSuelo();
-        apuntarDano25PorCientoMayorQueCarrera();
+        apuntarDanoDobleQueCarrera();
         apuntarRecompensasExactasEnCentesimas();
         apuntarDificultadModelosYPiezasEnMenu();
         apuntarPlantillasUiYEntrenador();
@@ -149,8 +150,13 @@ final class PruebasDeMinijuegoDestruccion {
         });
     }
 
-    private static void apuntarDano25PorCientoMayorQueCarrera() {
-        caso("minijuego destrucción: daño recibido >= 1.25x que en Carrera de obstáculos en todos los niveles", () -> {
+    private static void apuntarDanoDobleQueCarrera() {
+        caso("destrucción y supervivencia: daño recibido >= 2.0x que en Carrera (+60 % sobre 1.25x) y ubicación en ModoEspecial", () -> {
+            cierto(ModoEspecial.CLAVES_PESTANAS.contains("especial.destruccion"),
+                    "ModoEspecial incluye la pestaña especial.destruccion");
+            falso(ModoEspecial.CLAVES_PESTANAS.contains("especial.carrera"),
+                    "ModoEspecial ya NO incluye especial.carrera");
+
             // Pelea estándar sigue en 1.0.
             Combatiente aStd = new Combatiente("A", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
             Combatiente bStd = new Combatiente("B", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
@@ -168,25 +174,28 @@ final class PruebasDeMinijuegoDestruccion {
                     Combatiente jMini = new Combatiente("Mini", new Montaje(Modelo.de("cobalto")), PruebasDeLaPelea.de(Quieto::new));
                     MinijuegoDestruccion mini = new MinijuegoDestruccion(jMini, 77L, null, dif, sub);
                     double multMini = mini.pelea.multiplicadorDano;
+                    double multAnterior = multCarrera * (1.25 + (sub - 1) * 0.05);
 
-                    cierto(multMini >= multCarrera * 1.25 - 1e-9,
-                            dif + " sub " + sub + ": mult minijuego (" + multMini + ") >= 1.25x carrera (" + (multCarrera * 1.25) + ")");
+                    cierto(multMini >= multCarrera * 2.0 - 1e-9,
+                            dif + " sub " + sub + ": mult destrucción (" + multMini + ") >= 2.0x carrera (" + (multCarrera * 2.0) + ")");
+                    cierto(multMini >= multAnterior * 1.60 - 1e-9,
+                            dif + " sub " + sub + ": mult destrucción (" + multMini + ") >= 1.60x previo (" + (multAnterior * 1.60) + ")");
 
-                    // Mismo golpe equivalente (trampa/entorno con escala 1.0 y robot defectuoso con su escala real).
-                    carrera.pelea.golpeEspecial(0, 0, 10.0, "trampa");
-                    mini.pelea.golpeEspecial(0, 0, 10.0, "trampa");
-                    cierto(jMini.danoTotalRecibido >= jCar.danoTotalRecibido * 1.25 - 1e-6,
-                            dif + " sub " + sub + ": daño trampa (" + jMini.danoTotalRecibido + ") >= 1.25x carrera ("
-                                    + (jCar.danoTotalRecibido * 1.25) + ")");
+                    // Mismo golpe equivalente sin saturar el blindaje de una pieza (trampa y disparo de robot defectuoso).
+                    carrera.pelea.golpeEspecial(0, 0, 3.0, "trampa");
+                    mini.pelea.golpeEspecial(0, 0, 3.0, "trampa");
+                    cierto(jMini.danoTotalRecibido >= jCar.danoTotalRecibido * 2.0 - 1e-6,
+                            dif + " sub " + sub + ": daño trampa (" + jMini.danoTotalRecibido + ") >= 2.0x carrera ("
+                                    + (jCar.danoTotalRecibido * 2.0) + ")");
 
                     double antesCar = jCar.danoTotalRecibido;
                     double antesMini = jMini.danoTotalRecibido;
-                    carrera.pelea.golpeEspecial(2, 0, 10.0, "bala");
-                    mini.pelea.golpeEspecial(1, 0, 10.0, "bala");
+                    carrera.pelea.golpeEspecial(2, 0, 3.0, "bala");
+                    mini.pelea.golpeEspecial(1, 0, 3.0, "bala");
                     double dDefCar = jCar.danoTotalRecibido - antesCar;
                     double dDefMini = jMini.danoTotalRecibido - antesMini;
-                    cierto(dDefMini >= dDefCar * 1.25 - 1e-6,
-                            dif + " sub " + sub + ": daño defectuoso (" + dDefMini + ") >= 1.25x carrera (" + (dDefCar * 1.25) + ")");
+                    cierto(dDefMini >= dDefCar * 2.0 - 1e-6,
+                            dif + " sub " + sub + ": daño defectuoso (" + dDefMini + ") >= 2.0x carrera (" + (dDefCar * 2.0) + ")");
                 }
             }
         });
@@ -362,12 +371,16 @@ final class PruebasDeMinijuegoDestruccion {
                 }
             }
 
+            igual("Destrucción y supervivencia", T.en("especial.destruccion", Idioma.ES), "nombre ES pestaña ModoEspecial");
+            igual("Zerstörung & Überleben", T.en("especial.destruccion", Idioma.DE), "nombre DE pestaña ModoEspecial");
+            igual("Destruction & Survival", T.en("especial.destruccion", Idioma.EN), "nombre EN pestaña ModoEspecial");
+
             String[] claves = {
-                    "mini.especial_etiqueta", "mini.especial_resumen", "mini.especial_entrar",
+                    "especial.destruccion", "especial.destruccion_ayuda", "especial.destruccion_entrar",
                     "destruccion.titulo", "destruccion.panel_titulo", "destruccion.arena_info",
                     "destruccion.nueva_arena", "destruccion.regla_arena", "destruccion.regla_apariciones",
-                    "destruccion.regla_dano", "destruccion.regla_recompensas", "destruccion.regla_derrota",
-                    "destruccion.iniciar", "destruccion.hud_tiempo", "destruccion.hud_blindaje",
+                    "destruccion.regla_dano", "destruccion.regla_dano_corto", "destruccion.regla_recompensas",
+                    "destruccion.regla_derrota", "destruccion.iniciar", "destruccion.hud_tiempo", "destruccion.hud_blindaje",
                     "destruccion.hud_botin", "destruccion.victoria_titulo", "destruccion.derrota_titulo",
                     "destruccion.bono_supervivencia", "destruccion.derrota_cuarto", "destruccion.saldo_final"
             };
@@ -375,6 +388,7 @@ final class PruebasDeMinijuegoDestruccion {
                 for (String k : claves) {
                     String val = T.en(k, id);
                     cierto(val != null && !val.isBlank() && !val.equals(k), "clave ui.txt presente en " + id + ": " + k);
+                    falso(val.contains("+25 %") || val.contains("+25%"), "sin cifras desfasadas +25% en " + k + " (" + id + ")");
                 }
             }
 
@@ -382,9 +396,9 @@ final class PruebasDeMinijuegoDestruccion {
             cierto(entrada != null, "existe ficha minijuego_destruccion en ConocimientoDelEntrenador");
             cierto(!entrada.consejos().isEmpty(), "existe consejo espontáneo para minijuego_destruccion");
             String[][] consultas = {
-                    {"minijuego especial", "ES", "3×", "25 %", "0,5", "1/4"},
-                    {"Spezial-Minispiel", "DE", "3×", "25 %", "0,5", "1/4"},
-                    {"special minigame", "EN", "3×", "25%", "0.5", "1/4"}
+                    {"destrucción y supervivencia", "ES", "modo especial", "2,0×", "60 %", "0,5", "1/4"},
+                    {"Zerstörung und Überleben", "DE", "spezialmodus", "2,0×", "60 %", "0,5", "1/4"},
+                    {"destruction and survival", "EN", "special mode", "2.0×", "60%", "0.5", "1/4"}
             };
             for (String[] q : consultas) {
                 Idioma id = Idioma.valueOf(q[1]);
@@ -392,15 +406,17 @@ final class PruebasDeMinijuegoDestruccion {
                 cierto(!res.isEmpty() && res.get(0).id.equals("minijuego_destruccion"),
                         "búsqueda offline encuentra minijuego_destruccion en " + id);
                 String texto = String.join(" ", res.get(0).parrafos(id)).toLowerCase(Locale.ROOT);
-                cierto(texto.contains(q[2].toLowerCase(Locale.ROOT)) && texto.contains(q[3].toLowerCase(Locale.ROOT))
-                        && texto.contains(q[4]) && texto.contains(q[5]),
-                        "ficha del entrenador completa en " + id);
+                cierto(texto.contains(q[2]) && texto.contains(q[3]) && texto.contains(q[4])
+                        && texto.contains(q[5]) && texto.contains(q[6]),
+                        "ficha del entrenador actualizada (Modo especial y daño >= 2.0x) en " + id);
                 String tip = ConsejosDelJuego.textoDelTip(entrada.consejos().get(0).aTip(), id);
-                cierto(tip != null && !tip.isBlank(), "consejo espontáneo presente en " + id);
+                cierto(tip != null && !tip.isBlank() && tip.toLowerCase(Locale.ROOT).contains(q[2]),
+                        "consejo espontáneo apunta a Modo especial en " + id);
                 String sistemaIa = ConsultaIaEntrenador.construirSistema(new Jugador("Test"), id, null).toLowerCase(Locale.ROOT);
-                cierto(sistemaIa.contains("special destruction") && sistemaIa.contains("3x")
-                        && sistemaIa.contains("25%") && sistemaIa.contains("+0.5") && sistemaIa.contains("1/4"),
-                        "sistema IA actualizado con minijuego especial en " + id);
+                cierto(sistemaIa.contains("destruction & survival") && sistemaIa.contains("special mode")
+                        && sistemaIa.contains("3x") && sistemaIa.contains("2.0x")
+                        && sistemaIa.contains("60%") && sistemaIa.contains("+0.5") && sistemaIa.contains("1/4"),
+                        "sistema IA actualizado con Destrucción y supervivencia en Modo especial en " + id);
             }
         });
     }

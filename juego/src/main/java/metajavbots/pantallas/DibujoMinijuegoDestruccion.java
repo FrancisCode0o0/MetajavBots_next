@@ -23,7 +23,7 @@ final class DibujoMinijuegoDestruccion {
     private DibujoMinijuegoDestruccion() {
     }
 
-    /** Dibuja el panel izquierdo del menú previo con reglas, daño +25 %, recompensas y esquema 3×. */
+    /** Dibuja el panel izquierdo del menú previo con reglas, daño ≥ 2,0×, recompensas y esquema 3×. */
     static void panelReglas(Pincel p, Ui ui, DificultadCarrera dif, int subnivel, float x, float y, float w, float h) {
         float cy = ui.panel(x, y, w, h, T.t("destruccion.panel_titulo"));
         float mx = x + 16, mw = w - 32;

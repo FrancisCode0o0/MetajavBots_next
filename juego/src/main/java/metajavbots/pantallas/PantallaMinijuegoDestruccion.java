@@ -198,11 +198,11 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
     @Override
     public String contextoParaElEntrenador() {
         return EntrenadorFlotante.contextoDeCodigo(
-                "The player is in the Special Destruction & Survival Minigame (Minigames -> Special challenge), "
+                "The player is in Destruction & Survival (Special mode -> Destruction & Survival), "
                         + "difficulty " + dificultad.name() + " " + DificultadCarrera.etiquetaSubnivel(subnivel)
                         + " in a 3x arena with a 60s countdown, falling broken robots from the sky, sprouting ground objects/traps, "
-                        + "damage at least 25% higher than Obstacle race, 0.1–0.6 coins per destroyed target, +0.5 bonus for surviving, "
-                        + "and 1/4 loot on early death (0 on surrender).",
+                        + "very high incoming damage at least 2.0x Obstacle race (+60% more lethal than before), 0.1–0.6 coins per destroyed target, "
+                        + "+0.5 bonus for surviving, and 1/4 loot on early death (0 on surrender).",
                 editor);
     }
 

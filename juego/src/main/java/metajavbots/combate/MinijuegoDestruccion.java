@@ -14,12 +14,12 @@ import metajavbots.progreso.Jugador;
 import metajavbots.textos.Idioma;
 
 /**
- * MINIJUEGO DE DESTRUCCIÓN Y SUPERVIVENCIA — Reto especial en una arena 3× más
- * grande que la arena estándar, con cuenta atrás, apariciones imprevisibles de
- * robots averiados desde el cielo y objetos destructibles/trampas desde el suelo,
- * daño recibido al menos un 25 % mayor que en la Carrera de obstáculos y
- * recompensas exactas en centésimas (0,1 a 0,6 por objetivo, +0,5 por sobrevivir
- * y 1/4 al morir antes de acabar la cuenta atrás).
+ * MINIJUEGO DE DESTRUCCIÓN Y SUPERVIVENCIA — Reto de Modo especial en una arena
+ * 3× más grande que la arena estándar, con cuenta atrás, apariciones
+ * imprevisibles de robots averiados desde el cielo y objetos destructibles/trampas
+ * desde el suelo, daño recibido al menos el doble (≥ 2,0×) que en la Carrera de
+ * obstáculos y recompensas exactas en centésimas (0,1 a 0,6 por objetivo, +0,5
+ * por sobrevivir y 1/4 al morir antes de acabar la cuenta atrás).
  */
 public final class MinijuegoDestruccion {
 
@@ -37,10 +37,10 @@ public final class MinijuegoDestruccion {
     public static final int DURACION_SEGUNDOS = 60;
     /** Turnos totales de la cuenta atrás (60 s × 30 turnos/s = 1800 turnos). */
     public static final int TURNOS_CUENTA_ATRAS = DURACION_SEGUNDOS * Pelea.TURNOS_POR_SEGUNDO;
-    /** Multiplicador mínimo de daño recibido sobre la Carrera de obstáculos (+25 %). */
-    public static final double FACTOR_DANO_SOBRE_CARRERA = 1.25;
-    /** Incremento adicional del factor de daño por cada subnivel por encima de I. */
-    public static final double INCREMENTO_DANO_SUBNIVEL = 0.05;
+    /** Multiplicador mínimo de daño recibido sobre la Carrera de obstáculos (≥ 2,0×, +60 % sobre el 1,25× previo). */
+    public static final double FACTOR_DANO_SOBRE_CARRERA = 2.00;
+    /** Incremento adicional del factor de daño por cada subnivel por encima de I (+60 % sobre el 0,05 previo). */
+    public static final double INCREMENTO_DANO_SUBNIVEL = 0.08;
     /** Recompensa mínima en centésimas por objetivo destruido (0,10 monedas). */
     public static final int MIN_CENTIMOS_OBJETIVO = 10;
     /** Recompensa máxima en centésimas por objetivo destruido (0,60 monedas). */
@@ -243,8 +243,8 @@ public final class MinijuegoDestruccion {
     }
 
     /**
-     * Multiplicador de daño recibido en este minijuego para la dificultad y subnivel indicados.
-     * Siempre es estrictamente al menos un 25 % mayor ({@code >= 1.25×}) que en la Carrera de obstáculos.
+     * Multiplicador de daño recibido en este reto para la dificultad y subnivel indicados.
+     * Siempre es estrictamente al menos el doble ({@code >= 2.0×}) que en la Carrera de obstáculos.
      */
     public static double multiplicadorDanoPara(DificultadCarrera dificultad, int subnivel) {
         DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
