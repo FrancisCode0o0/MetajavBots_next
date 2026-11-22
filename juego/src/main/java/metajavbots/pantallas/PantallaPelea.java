@@ -5,7 +5,6 @@ import java.util.Random;
 import com.badlogic.gdx.Input.Keys;
 
 import metajavbots.Juego;
-import metajavbots.api.RobotBase;
 import metajavbots.codigo.Compilador;
 import metajavbots.codigo.DetectorDeTemas;
 import metajavbots.codigo.RobotDelJugador;
@@ -24,7 +23,6 @@ import metajavbots.piezas.Pieza;
 import metajavbots.progreso.Jugador;
 import metajavbots.progreso.Progreso;
 import metajavbots.progreso.Registro;
-import metajavbots.rivales.Rival;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
 
@@ -55,6 +53,7 @@ public final class PantallaPelea implements Pantalla {
     private String locutor = "";
     private float tiempoLocutor;
     private volatile Compilador.Resultado resultadoDeCompilar;
+    private volatile String codigoEnCompilacion = "";
     private String avisoDeCodigo = "";
     private boolean sinJdk;
     private float tiempoFinal;
@@ -72,6 +71,11 @@ public final class PantallaPelea implements Pantalla {
 
     public PantallaPelea(Encuentro e) {
         this.encuentro = e;
+    }
+
+    /** Indica si esta pelea utiliza el robot del taller del jugador (y no un robot roto con código propio). */
+    public boolean usaRobotDelJugador() {
+        return encuentro.codigo == null;
     }
 
     @Override
@@ -97,17 +101,9 @@ public final class PantallaPelea implements Pantalla {
         editor.palabras = Palabras.api(jug.idioma);
         editor.documentacion = w -> Referencia.de(w, jug.idioma);
         yo = new Combatiente(encuentro.codigo != null ? encuentro.titulo : r.nombre,
-                encuentro.montaje != null ? encuentro.montaje : j.jugador.montajeDe(r), robot);
+                encuentro.montaje != null ? encuentro.montaje : j.jugador.montajeDe(r), null);
         sinJdk = !Compilador.hayCompilador();
-        if (sinJdk) usarPilotoAutomatico();
-        else {
-            Compilador.Resultado res = robot.compilar(codigo, j.jugador.idioma.locale(), true);
-            if (!res.bien) {
-                marcarErrores(res, jug);
-                usarPilotoAutomatico();
-                avisoDeCodigo = T.t("pelea.codigo_no_compila");
-            }
-        }
+        cargarCodigoInicial(jug, r, codigo);
         if (encuentro.demas.isEmpty()) {
             pelea = new Pelea(yo, encuentro.rival, new Random().nextLong());
         } else {
@@ -146,14 +142,38 @@ public final class PantallaPelea implements Pantalla {
         empezarRonda(j);
     }
 
-    /** Sin JDK o con el código roto, el robot se mueve solo (como un rival fácil) para que se pueda pelear igual. */
-    private void usarPilotoAutomatico() {
-        yo.fabrica = new metajavbots.combate.Fabrica() {
-            @Override
-            public RobotBase crear() {
-                return new Rival(new metajavbots.rivales.Ajuste(0.2, 0.3, null), metajavbots.rivales.Estilo.ACOSADOR);
+    /** Carga el código ejecutable del combate sin piloto automático ni compilación implícita de robots nunca compilados. */
+    private void cargarCodigoInicial(Jugador jug, Jugador.Robot r, String codigo) {
+        if (encuentro.codigo != null) {
+            if (sinJdk) {
+                yo.fabrica = null;
+                avisoDeCodigo = T.t("taller.sin_jdk");
+                return;
             }
-        };
+            Compilador.Resultado res = robot.compilar(codigo, jug.idioma.locale(), true);
+            yo.fabrica = robot.fabricaSiListo();
+            if (!res.bien) {
+                marcarErrores(res, jug);
+                avisoDeCodigo = T.t("pelea.codigo_no_compila");
+            }
+            return;
+        }
+        RobotDelJugador.EstadoDeCarga estado = robot.cargarDesdeJugador(r, jug.idioma.locale(), true);
+        yo.fabrica = robot.fabricaSiListo();
+        switch (estado) {
+            case COMPILADO_ACTUAL:
+                avisoDeCodigo = "";
+                break;
+            case ULTIMA_VERSION_VALIDA:
+                avisoDeCodigo = T.t("pelea.usando_ultima_compilada");
+                break;
+            case SIN_JDK:
+                avisoDeCodigo = T.t("taller.sin_jdk");
+                break;
+            default:
+                avisoDeCodigo = T.t("pelea.sin_compilar");
+                break;
+        }
     }
 
     /** Marca ese enemigo para el entrenador, como si el jugador le hiciera clic (para las capturas). */
@@ -279,7 +299,8 @@ public final class PantallaPelea implements Pantalla {
         if (compilando || sinJdk) return;
         compilando = true;
         String codigo = editor.doc.texto();
-        if (encuentro.codigo == null) j.jugador.robot().codigo = codigo;
+        codigoEnCompilacion = codigo;
+        if (encuentro.codigo == null && j.jugador.robot() != null) j.jugador.robot().codigo = codigo;
         j.sonidos.tocar("compilar", 0.5f);
         Thread h = new Thread(() -> {
             resultadoDeCompilar = robot.compilar(codigo, j.jugador.idioma.locale(), true);
@@ -296,6 +317,28 @@ public final class PantallaPelea implements Pantalla {
         }
     }
 
+    private void atenderCompilacion(Juego j) {
+        if (resultadoDeCompilar == null) return;
+        Compilador.Resultado res = resultadoDeCompilar;
+        resultadoDeCompilar = null;
+        marcarErrores(res, j.jugador);
+        if (res.bien) {
+            yo.fabrica = robot.fabricaSiListo();
+            if (encuentro.codigo == null && j.jugador.robot() != null) {
+                j.jugador.robot().registrarCompilacionValida(codigoEnCompilacion);
+            }
+            avisoDeCodigo = T.t("pelea.compilado");
+            j.sonidos.tocar("bien", 0.6f);
+            narrador.robot(0, "elogio", true, null);
+        } else {
+            yo.fabrica = robot.fabricaSiListo();
+            avisoDeCodigo = robot.listo() ? T.f("pelea.errores_ultima_valida", res.graves().size())
+                    : T.f("pelea.errores", res.graves().size());
+            j.sonidos.tocar("mal", 0.6f);
+        }
+        j.guardar();
+    }
+
     // ================================================================ cada fotograma
 
     @Override
@@ -303,21 +346,7 @@ public final class PantallaPelea implements Pantalla {
         t += dt;
         Pincel p = j.pincel; Ui ui = j.ui;
         dialogo.antes(ui);
-        if (resultadoDeCompilar != null) {
-            Compilador.Resultado res = resultadoDeCompilar;
-            resultadoDeCompilar = null;
-            marcarErrores(res, j.jugador);
-            if (res.bien) {
-                yo.fabrica = robot;
-                avisoDeCodigo = T.t("pelea.compilado");
-                j.sonidos.tocar("bien", 0.6f);
-                narrador.robot(0, "elogio", true, null);
-            } else {
-                avisoDeCodigo = T.f("pelea.errores", res.graves().size());
-                j.sonidos.tocar("mal", 0.6f);
-            }
-            j.guardar();
-        }
+        atenderCompilacion(j);
         teclas(j);
         if (vista.parada > 0) {
             // Tras un golpe fuerte, la pelea se para un instante (como en los juegos de lucha).
@@ -523,7 +552,7 @@ public final class PantallaPelea implements Pantalla {
             case 1:
                 editor.dibujar(ui, x + 24, cy, w - 48, ch);
                 if (ui.boton(compilando ? T.t("taller.compilando") : T.t("taller.compilar") + "  (Ctrl+S)", x + 24, y + h - 66, 260, 50,
-                        Ui.Estilo.NORMAL, !compilando && !sinJdk, sinJdk ? T.t("taller.sin_jdk") : null)) compilar(j);
+                        Ui.Estilo.COMPILAR, !compilando && !sinJdk, sinJdk ? T.t("taller.sin_jdk") : null)) compilar(j);
                 if (!avisoDeCodigo.isEmpty()) {
                     float maxAvi = Math.max(120f, w - 660f);
                     float tamAvi = ui.cabe(avisoDeCodigo, maxAvi, ui.letra * 0.85f, false);

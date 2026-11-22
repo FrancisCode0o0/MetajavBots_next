@@ -46,6 +46,8 @@ public class Juego extends ApplicationAdapter {
     public final metajavbots.pantallas.EntrenadorFlotante entrenadorFlotante = new metajavbots.pantallas.EntrenadorFlotante();
     /** Alarma visual luminosa en rojo cuando el jugador baja de nivel tras varias derrotas seguidas. */
     public final metajavbots.pantallas.AlarmaBajada alarmaBajada = new metajavbots.pantallas.AlarmaBajada();
+    /** Aviso obligatorio del entrenador activo cuando el robot del jugador aún no se ha compilado nunca. */
+    public final metajavbots.pantallas.AvisoDeCompilacion avisoCompilar = new metajavbots.pantallas.AvisoDeCompilacion();
     /** Si el visor táctico de la arena (F8) está activo durante esta sesión (desactivado por defecto). */
     public boolean visorTactico;
     /** Los archivos que se acaban de soltar en la ventana (el escritorio los pone; los recoge quien los quiera, como el temario). */
@@ -81,6 +83,12 @@ public class Juego extends ApplicationAdapter {
 
     /** Va a otra pantalla (y recuerda esta para volver). */
     public void ir(Pantalla nueva) {
+        if (nueva instanceof metajavbots.pantallas.PantallaPelea pelea && pelea.usaRobotDelJugador()
+                && !avisoCompilar.consumirPasePelea()
+                && metajavbots.pantallas.AvisoDeCompilacion.debeAvisarAlPelear(jugador)) {
+            avisoCompilar.mostrarAntesDePelear(this, pelea);
+            return;
+        }
         if (voz != null) voz.detener();
         if (ui != null) ui.quitarFoco();
         if (entrada != null) entrada.limpiar();
@@ -129,6 +137,7 @@ public class Juego extends ApplicationAdapter {
     public void ponerJugador(Jugador j) {
         jugador = j;
         alarmaBajada.cancelar();
+        avisoCompilar.cerrar();
         if (j != null) {
             T.idioma = j.idioma;
             ui.tema = Tema.de(j.temaClaro);
@@ -171,8 +180,10 @@ public class Juego extends ApplicationAdapter {
         ui.empezarFotograma();
         try {
             entrenadorFlotante.antes(this);
+            avisoCompilar.antes(this);
             pantalla.fotograma(this, dt);
             entrenadorFlotante.dibujar(this, dt);
+            avisoCompilar.dibujar(this, dt);
             ui.acabarFotograma();
             fallosSeguidos = 0;
         } catch (Throwable e) {

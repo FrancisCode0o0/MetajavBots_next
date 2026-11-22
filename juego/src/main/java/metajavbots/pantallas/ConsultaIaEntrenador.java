@@ -46,6 +46,11 @@ public final class ConsultaIaEntrenador {
                 + "to someone who may know nothing about programming: plain words, a fight metaphor with robots, pseudocode and small Java snippets "
                 + "(Java standard library and the robot API) when relevant. "
                 + ConocimientoDelEntrenador.resumenParaIa() + " "
+                + "Important game rule about compiling: in the Workshop (Code tab, top bar), "
+                + "there is a high-contrast red Compile button with yellow text (Ctrl+S). "
+                + "If the player has NEVER compiled their robot, it enters the arena standing still and doing nothing (no autopilot). "
+                + "If the player compiled a valid version before and later edits the code without compiling again (or with compile errors), "
+                + "the robot executes the last valid compiled version. "
                 + "Adapt your guidance to the player's progress: if they are a beginner, suggest Tutorials and Demonstrations; "
                 + "if they are rusty or on a losing streak, suggest Minigames, Exercises or Today's hour. "
                 + "If the player's code or fight is given, look at it and talk about THEIR code and situation (line numbers, what happens, why they lose). "
@@ -68,7 +73,9 @@ public final class ConsultaIaEntrenador {
                     .append(", exercisesSolved=").append(jugador.ejerciciosResueltos.size())
                     .append(", tutorialsDone=").append(jugador.tutorialesHechos.size())
                     .append(", robotsRepaired=").append(jugador.robotsArreglados.size())
-                    .append(", coins=").append(Jugador.formatearMonedas(jugador.monedas));
+                    .append(", coins=").append(Jugador.formatearMonedas(jugador.monedas))
+                    .append(", robotCompiled=").append(jugador.robotActualCompilado())
+                    .append(", uncompiledEdits=").append(jugador.robot() != null && jugador.robot().tieneCambiosPendientes());
             if (ConsejosDelJuego.esPrincipiante(jugador)) contexto.append(" [BEGINNER]");
             else if (ConsejosDelJuego.estaOxidado(jugador)) contexto.append(" [RUSTY]");
             contexto.append(".\n");

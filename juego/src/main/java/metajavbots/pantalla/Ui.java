@@ -125,8 +125,14 @@ public final class Ui {
 
     // ================================================================ botones
 
-    /** El aspecto de un botón: normal, el principal de la pantalla, peligroso, plano, elegido o destacado (amarillo). */
-    public enum Estilo { NORMAL, PRINCIPAL, PELIGRO, PLANO, ELEGIDO, DESTACADO }
+    /** Colores de alto contraste (rojo con letras amarillas) para el botón de compilar. */
+    public static final int COMPILAR_FONDO = 0xB8141A;
+    public static final int COMPILAR_FONDO_ENCIMA = 0xD62229;
+    public static final int COMPILAR_FONDO_PULSADO = 0x8F1015;
+    public static final int COMPILAR_TEXTO = 0xFFE838;
+
+    /** El aspecto de un botón: normal, principal, peligroso, plano, elegido, destacado (amarillo) o compilar (rojo con letras amarillas). */
+    public enum Estilo { NORMAL, PRINCIPAL, PELIGRO, PLANO, ELEGIDO, DESTACADO, COMPILAR }
 
     public boolean boton(String texto, float x, float y, float w, float h) {
         return boton(texto, x, y, w, h, Estilo.NORMAL, true, null);
@@ -160,6 +166,10 @@ public final class Ui {
                 fondo = 0xFFD23F;
                 letraColor = 0x14161A;
                 break;
+            case COMPILAR:
+                fondo = COMPILAR_FONDO;
+                letraColor = COMPILAR_TEXTO;
+                break;
             default:
                 fondo = tema.panelAlto;
                 break;
@@ -168,14 +178,18 @@ public final class Ui {
             fondo = tema.panel;
             letraColor = tema.textoApagado;
         } else if (apretado) {
-            fondo = Pincel.oscurecer(fondo, 0.15f);
+            fondo = estilo == Estilo.COMPILAR ? COMPILAR_FONDO_PULSADO : Pincel.oscurecer(fondo, 0.15f);
         } else if (encima) {
-            fondo = Pincel.aclarar(fondo, estilo == Estilo.PRINCIPAL ? 0.12f : 0.08f);
+            fondo = estilo == Estilo.COMPILAR ? COMPILAR_FONDO_ENCIMA : Pincel.aclarar(fondo, estilo == Estilo.PRINCIPAL ? 0.12f : 0.08f);
         }
         float desplaza = apretado ? 1.5f : 0;
         if (estilo != Estilo.PLANO) p.caja(x, y + 2, w, h, 8, 0x000000, 0.25f);
         p.caja(x, y + desplaza, w, h, 8, fondo, 1);
-        if (encima || estilo == Estilo.ELEGIDO) p.bordeRedondeado(x, y + desplaza, w, h, 8, estilo == Estilo.ELEGIDO ? tema.acento : tema.borde, 1, 1.5f);
+        if (estilo == Estilo.COMPILAR && activo) {
+            p.bordeRedondeado(x, y + desplaza, w, h, 8, COMPILAR_TEXTO, encima ? 1f : 0.72f, encima ? 2f : 1.5f);
+        } else if (encima || estilo == Estilo.ELEGIDO) {
+            p.bordeRedondeado(x, y + desplaza, w, h, 8, estilo == Estilo.ELEGIDO ? tema.acento : tema.borde, 1, 1.5f);
+        }
         // Si no cabe: en un botón alto, en dos líneas con la letra entera; si no, con la letra algo menor; y si ni así, cortado.
         float t = Math.min(letra, h * 0.5f);
         java.util.List<String> lineas = p.ancho(texto, t, true) > w - 16 && h >= t * 2.9f ? p.partir(texto, w - 16, t, true) : null;

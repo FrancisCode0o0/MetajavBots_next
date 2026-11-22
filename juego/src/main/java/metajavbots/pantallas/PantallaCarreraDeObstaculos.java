@@ -601,7 +601,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
                 T.t("taller.plantilla"),
                 T.t("carrera_obs.iniciar")
         };
-        Ui.Estilo[] estilos = {Ui.Estilo.PRINCIPAL, Ui.Estilo.PLANO, Ui.Estilo.DESTACADO};
+        Ui.Estilo[] estilos = {Ui.Estilo.COMPILAR, Ui.Estilo.PLANO, Ui.Estilo.DESTACADO};
         boolean[] activos = {!compilando, !compilando, !compilando};
         String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("carrera_obs.iniciar_ayuda")};
         switch (ui.botonera(textos, estilos, activos, ayudas, x, y, w, 44)) {
@@ -613,16 +613,14 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
                 aviso = "";
                 break;
             case 2:
-                if (compilado.listo() && editor.doc.texto().equals(compilado.fuente())) {
-                    iniciarCarrera(j, false);
-                } else {
-                    lanzarCompilacion(j, true);
-                }
+                iniciarCarrera(j, false);
                 break;
             default:
                 break;
         }
-        String pie = aviso.isEmpty() ? T.t("carrera_obs.pista_editor") : aviso;
+        String pie = aviso.isEmpty() ? (!compilado.listo() ? T.t("taller.aviso_nunca_compilado")
+                : !editor.doc.texto().equals(compilado.fuente()) ? T.t("taller.aviso_cambios_sin_compilar")
+                : T.t("carrera_obs.pista_editor")) : aviso;
         float tPie = ui.letra * 0.78f;
         float altoPie = p.altoDeParrafo(pie, w, tPie) + 10;
         float ey = y + ui.altoDeBotonera + 10;
@@ -687,7 +685,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         if (rotarArena) {
             regenerarPista();
         }
-        Combatiente cJug = CarreraDeObstaculos.combatienteDeJugador(j.jugador, robotElegido, compilado);
+        Combatiente cJug = CarreraDeObstaculos.combatienteDeJugador(j.jugador, robotElegido, compilado.fabricaSiListo());
         carrera = new CarreraDeObstaculos(cJug, rival, semilla, contraMaquina, escenarioAnterior, difEfectiva, subnivel);
         escenarioActual = carrera.escenario();
         vista.escenario = escenarioDe(escenarioActual);

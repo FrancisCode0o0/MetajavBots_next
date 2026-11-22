@@ -94,6 +94,7 @@ public final class Guardado {
         v.put("idioma", j.idioma.codigo());
         v.put("etiqueta", j.etiqueta.name());
         v.put("pruebaHecha", Boolean.toString(j.pruebaHecha));
+        v.put("avisoCompilarVisto", Boolean.toString(j.avisoCompilarVisto));
         v.put("experiencia", Long.toString(j.experiencia));
         guardarMonedas(v, j);
         v.put("victoriasEnLaEtiqueta", Integer.toString(j.victoriasEnLaEtiqueta));
@@ -103,16 +104,7 @@ public final class Guardado {
         v.put("peleasDesdeElDesafio", Integer.toString(j.peleasDesdeElDesafio));
         v.put("victoriasExtrema", Integer.toString(j.victoriasExtrema));
         v.put("robotElegido", Integer.toString(j.robotElegido));
-        v.put("robots", Integer.toString(j.robots.size()));
-        for (int i = 0; i < j.robots.size(); i++) {
-            Jugador.Robot r = j.robots.get(i);
-            v.put("robot." + i + ".nombre", r.nombre);
-            v.put("robot." + i + ".modelo", r.modelo);
-            for (Map.Entry<Montaje.Hueco, String> e : r.piezas.entrySet()) {
-                v.put("robot." + i + ".pieza." + e.getKey().name(), e.getValue());
-            }
-            escribir(dir.resolve("robot_" + (i + 1) + ".java"), r.codigo);
-        }
+        guardarRobots(dir, v, j);
         v.put("piezasGanadas", lista(j.piezasGanadas));
         v.put("piezasPendientes", lista(j.piezasPendientes));
         guardarAjustesDePiezas(v, j);
@@ -166,6 +158,24 @@ public final class Guardado {
         guardarArchivosAparte(dir, j);
     }
 
+    /** Guarda los metadatos, el borrador y la última versión válida compilada de cada robot. */
+    private static void guardarRobots(Path dir, Map<String, String> v, Jugador j) throws IOException {
+        v.put("robots", Integer.toString(j.robots.size()));
+        for (int i = 0; i < j.robots.size(); i++) {
+            Jugador.Robot r = j.robots.get(i);
+            v.put("robot." + i + ".nombre", r.nombre);
+            v.put("robot." + i + ".modelo", r.modelo);
+            v.put("robot." + i + ".compilado", Boolean.toString(r.tieneCodigoCompilado()));
+            for (Map.Entry<Montaje.Hueco, String> e : r.piezas.entrySet()) {
+                v.put("robot." + i + ".pieza." + e.getKey().name(), e.getValue());
+            }
+            escribir(dir.resolve("robot_" + (i + 1) + ".java"), r.codigo);
+            Path compilado = dir.resolve("robot_" + (i + 1) + "_compilado.java");
+            if (r.tieneCodigoCompilado()) escribir(compilado, r.codigoCompilado);
+            else Files.deleteIfExists(compilado);
+        }
+    }
+
     /** Los ejercicios, el historial y el código del último rival (cada uno en su archivo). */
     private static void guardarArchivosAparte(Path dir, Jugador j) throws IOException {
         for (Map.Entry<String, String> e : j.codigoDeEjercicios.entrySet()) {
@@ -213,6 +223,7 @@ public final class Guardado {
         j.idioma = Idioma.de(v.get("idioma"));
         j.etiqueta = Etiqueta.de(v.getOrDefault("etiqueta", "NOOB_1"));
         j.pruebaHecha = Boolean.parseBoolean(v.get("pruebaHecha"));
+        j.avisoCompilarVisto = Boolean.parseBoolean(v.get("avisoCompilarVisto"));
         j.experiencia = largo(v.get("experiencia"));
         leerMonedas(v, j);
         leerEstadisticas(v, j);
@@ -273,7 +284,36 @@ public final class Guardado {
         j.ultimoRivalNombre = v.getOrDefault("ultimoRivalNombre", "");
         Path ultimoRival = dir.resolve("ultimo_rival.java");
         if (Files.exists(ultimoRival)) j.ultimoRivalCodigo = Files.readString(ultimoRival, StandardCharsets.UTF_8);
+        leerEstadoCompilacionRobots(dir, v, j);
         return j;
+    }
+
+    /** Restaura el estado de compilación verificada y el último código válido de cada robot (con migración compatible). */
+    private static void leerEstadoCompilacionRobots(Path dir, Map<String, String> v, Jugador j) throws IOException {
+        boolean partidaAntiguaConProgreso = !j.historial.isEmpty() || j.experiencia > 0;
+        for (int i = 0; i < j.robots.size(); i++) {
+            Jugador.Robot r = j.robots.get(i);
+            String clave = "robot." + i + ".compilado";
+            Path archivoCompilado = dir.resolve("robot_" + (i + 1) + "_compilado.java");
+            if (v.containsKey(clave)) {
+                boolean compilado = Boolean.parseBoolean(v.get(clave));
+                if (compilado && Files.exists(archivoCompilado)) {
+                    r.registrarCompilacionValida(Files.readString(archivoCompilado, StandardCharsets.UTF_8));
+                } else if (compilado && r.codigo != null && !r.codigo.isBlank()) {
+                    r.registrarCompilacionValida(r.codigo);
+                } else {
+                    r.compiladoAlgunaVez = false;
+                    r.codigoCompilado = "";
+                }
+            } else if (Files.exists(archivoCompilado)) {
+                r.registrarCompilacionValida(Files.readString(archivoCompilado, StandardCharsets.UTF_8));
+            } else if (partidaAntiguaConProgreso && r.codigo != null && !r.codigo.isBlank()) {
+                r.registrarCompilacionValida(r.codigo);
+            }
+        }
+        if (!v.containsKey("avisoCompilarVisto") && j.haCompiladoAlgunRobot()) {
+            j.avisoCompilarVisto = true;
+        }
     }
 
     /** Persiste monedas y centésimas exactas (manteniendo cuartosDeMoneda sincronizado). */

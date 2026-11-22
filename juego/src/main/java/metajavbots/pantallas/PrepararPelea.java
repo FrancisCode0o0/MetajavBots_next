@@ -408,7 +408,8 @@ public final class PrepararPelea implements Pantalla {
             metajavbots.progreso.Jugador.Robot r = otro.robot();
             if (r == null || !Compilador.hayCompilador()) return null;
             RobotDelJugador f = new RobotDelJugador();
-            if (!f.compilar(r.codigo, Locale.ROOT).bien) return null;
+            f.cargarDesdeJugador(r, Locale.ROOT, false);
+            if (!f.listo()) return null;
             return new Combatiente(r.nombre + " (" + otro.nombre + ")", r.montaje(), f);
         } catch (Exception ex) {
             return null;

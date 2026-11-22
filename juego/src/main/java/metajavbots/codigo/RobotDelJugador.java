@@ -5,6 +5,7 @@ import java.util.Locale;
 
 import metajavbots.api.RobotBase;
 import metajavbots.combate.Fabrica;
+import metajavbots.progreso.Jugador;
 
 /**
  * ROBOT DEL JUGADOR — La Fábrica del robot que programa el jugador: guarda
@@ -14,12 +15,51 @@ import metajavbots.combate.Fabrica;
  */
 public final class RobotDelJugador implements Fabrica {
 
+    /** Estado resultante al cargar el robot del jugador antes de un combate o reto. */
+    public enum EstadoDeCarga {
+        /** El código actual del taller coincide con la última compilación válida. */
+        COMPILADO_ACTUAL,
+        /** El código del taller tiene cambios sin compilar o con errores; se usa la última versión válida. */
+        ULTIMA_VERSION_VALIDA,
+        /** El robot nunca se ha compilado con éxito: entra en la arena sin comportamiento programado. */
+        SIN_COMPILAR,
+        /** No hay JDK disponible para compilar el código verificado. */
+        SIN_JDK
+    }
+
     private String fuente = "";
     private Cargador cargador;
     private String clase = "";
     private long version;
     private boolean conTraza;
     private Compilador.Resultado ultimo;
+
+    /** Limpia la versión compilada en memoria (deja el robot sin código compilado). */
+    public void limpiar() {
+        fuente = "";
+        cargador = null;
+        clase = "";
+        conTraza = false;
+        ultimo = null;
+    }
+
+    /**
+     * Carga en esta fábrica únicamente la última versión válida compilada del robot del jugador.
+     * Si el robot nunca ha sido compilado con éxito, queda sin código (no se compila implícitamente ni usa piloto automático).
+     */
+    public EstadoDeCarga cargarDesdeJugador(Jugador.Robot r, Locale idioma, boolean traza) {
+        limpiar();
+        if (r == null || !r.tieneCodigoCompilado()) return EstadoDeCarga.SIN_COMPILAR;
+        if (!Compilador.hayCompilador()) return EstadoDeCarga.SIN_JDK;
+        Compilador.Resultado res = compilar(r.codigoCompilado, idioma == null ? Locale.ROOT : idioma, traza);
+        if (!res.bien) return EstadoDeCarga.SIN_COMPILAR;
+        return r.tieneCambiosPendientes() ? EstadoDeCarga.ULTIMA_VERSION_VALIDA : EstadoDeCarga.COMPILADO_ACTUAL;
+    }
+
+    /** Devuelve esta fábrica si tiene código compilado listo, o {@code null} si el robot no tiene programa compilado. */
+    public Fabrica fabricaSiListo() {
+        return listo() ? this : null;
+    }
 
     /** Compila el código; si sale bien, la próxima ronda usa este robot. Devuelve el resultado (con sus errores). */
     public Compilador.Resultado compilar(String codigo, Locale idioma) {

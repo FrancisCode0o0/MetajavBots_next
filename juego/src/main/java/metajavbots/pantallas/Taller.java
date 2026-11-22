@@ -41,6 +41,7 @@ public final class Taller implements Pantalla {
     private int pestanaAnterior;
     private int robotCargado = -1;
     private volatile Compilador.Resultado resultado;
+    private volatile String codigoEnCompilacion = "";
     private volatile boolean compilando;
     private String aviso = "";
     private float t;
@@ -142,8 +143,8 @@ public final class Taller implements Pantalla {
             conApiAntes = conApi;
             conApi = false;
             enBanco = true;
-            if (Compilador.hayCompilador()) probador.compilar(editor.doc.texto(), j.jugador.idioma.locale(), true);
-            banco.reiniciar(j.jugador.robot(), probador, j.pincel);
+            probador.cargarDesdeJugador(j.jugador.robot(), j.jugador.idioma.locale(), true);
+            banco.reiniciar(j.jugador, j.jugador.robot(), probador, j.pincel);
             for (int i = 0; i < 15; i++) banco.avanzarTiempo(0.1f);
         }
     }
@@ -171,6 +172,7 @@ public final class Taller implements Pantalla {
         if (r == null) return;
         robotCargado = j.jugador.robotElegido;
         editor.ponerTexto(r.codigo);
+        probador.cargarDesdeJugador(r, j.jugador.idioma.locale(), enBanco);
     }
 
     private void guardarCodigo(Juego j) {
@@ -183,10 +185,6 @@ public final class Taller implements Pantalla {
         lanzarCompilacion(j, true);
     }
 
-    private void compilarParaBanco(Juego j) {
-        lanzarCompilacion(j, false);
-    }
-
     private void lanzarCompilacion(Juego j, boolean guardar) {
         if (compilando) return;
         if (!Compilador.hayCompilador()) {
@@ -197,6 +195,7 @@ public final class Taller implements Pantalla {
         compilando = true;
         j.sonidos.tocar("compilar", 0.5f);
         String codigo = editor.doc.texto();
+        codigoEnCompilacion = codigo;
         boolean conTraza = enBanco;
         Thread h = new Thread(() -> {
             resultado = probador.compilar(codigo, j.jugador.idioma.locale(), conTraza);
@@ -214,8 +213,8 @@ public final class Taller implements Pantalla {
         conApiAntes = conApi;
         conApi = false;
         enBanco = true;
-        if (!probador.listo() || !probador.conTraza() || !editor.doc.texto().equals(probador.fuente())) compilarParaBanco(j);
-        else banco.reiniciar(j.jugador.robot(), probador, j.pincel);
+        probador.cargarDesdeJugador(j.jugador.robot(), j.jugador.idioma.locale(), true);
+        banco.reiniciar(j.jugador, j.jugador.robot(), probador, j.pincel);
     }
 
     private void cerrarBanco(boolean restaurarApi) {
@@ -316,7 +315,7 @@ public final class Taller implements Pantalla {
         // La barra del código: cada botón del ancho de su texto; si no caben (alemán, letra grande), en dos filas.
         String[] textos = {compilando ? T.t("taller.compilando") : T.t("taller.compilar"), T.t("taller.probar_aqui"), T.t("taller.formatear"),
             T.t("taller.buscar"), T.t("taller.api"), T.t("taller.exportar"), T.t("taller.plantilla"), T.t("taller.rival"), "⌨ " + T.t("taller.atajos")};
-        Ui.Estilo[] estilos = {Ui.Estilo.PRINCIPAL, Ui.Estilo.DESTACADO, Ui.Estilo.PLANO, Ui.Estilo.PLANO,
+        Ui.Estilo[] estilos = {Ui.Estilo.COMPILAR, Ui.Estilo.DESTACADO, Ui.Estilo.PLANO, Ui.Estilo.PLANO,
             conApi && !enBanco ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO};
         boolean[] activos = {!compilando, true, true, true, true, true, true, true, true};
         String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.probar_aqui_ayuda"), T.t("taller.formatear_ayuda"), "Ctrl+F · Ctrl+H",
@@ -346,10 +345,22 @@ public final class Taller implements Pantalla {
             case 7: j.ir(new CodigoDelRival()); break;
             default: break;
         }
+        // Recordatorio visible si el robot nunca se compiló o tiene cambios pendientes sin compilar.
+        String recordatorio = AvisoDeCompilacion.recordatorioEnTaller(r, editor.doc.texto(), jug.idioma);
+        float ey = cy + ui.altoDeBotonera + 10;
+        if (!recordatorio.isEmpty()) {
+            float tRec = Math.min(18f, ui.letra * 0.82f);
+            float hRec = p.altoDeParrafo("⚠ " + recordatorio, w - 28f, tRec, true) + 12f;
+            p.caja(x, ey, w, hRec, 8f, ui.tema.panelAlto, 0.96f);
+            p.bordeRedondeado(x, ey, w, hRec, 8f, r.tieneCodigoCompilado() ? ui.tema.aviso : Ui.COMPILAR_FONDO, 1f, 1.5f);
+            p.parrafo("⚠ " + recordatorio, x + 14f, ey + 6f, w - 28f, tRec, true,
+                    r.tieneCodigoCompilado() ? ui.tema.aviso : Ui.COMPILAR_TEXTO, 1f);
+            ey += hRec + 8f;
+        }
         // Debajo del editor, la pista (o lo que pasó al compilar), con su sitio: no pisa la última línea del código.
         String pie = aviso.isEmpty() ? T.t("taller.pista") : aviso;
         float tPie = ui.letra * 0.8f, altoPie = p.altoDeParrafo(pie, w, tPie) + 10;
-        float ey = cy + ui.altoDeBotonera + 10, eh = p.alto - 34 - altoPie - ey;
+        float eh = Math.max(140f, p.alto - 34 - altoPie - ey);
         float anchoDerecho = enBanco ? Math.min(540, Math.max(400, w * 0.44f)) : conApi ? 440 : 0;
         float ew = anchoDerecho > 0 ? w - anchoDerecho : w;
         if (enBanco) banco.marcarLineas(editor);
@@ -570,9 +581,18 @@ public final class Taller implements Pantalla {
             for (Compilador.Fallo f : r.errores) {
                 editor.marcas.add(Explicador.marca(f, jug));
             }
+            if (r.bien) {
+                Jugador.Robot rob = jug.robot();
+                if (rob != null) {
+                    rob.codigo = codigoEnCompilacion;
+                    rob.registrarCompilacionValida(codigoEnCompilacion);
+                }
+                jug.avisoCompilarVisto = true;
+                j.guardar();
+            }
             aviso = r.bien ? T.f("taller.compilado_ok", r.milisegundos) : T.f("pelea.errores", r.graves().size());
             tutor.compilado(r.bien);
-            if (r.bien && enBanco) banco.reiniciar(jug.robot(), probador, j.pincel);
+            if (r.bien && enBanco) banco.reiniciar(jug, jug.robot(), probador, j.pincel);
             j.sonidos.tocar(r.bien ? "bien" : "mal", 0.6f);
         }
     }
@@ -594,7 +614,7 @@ public final class Taller implements Pantalla {
                 creando = false;
                 if (enBanco) {
                     banco.limpiar();
-                    compilarParaBanco(j);
+                    banco.reiniciar(jug, jug.robot(), probador, j.pincel);
                 }
             }
             ry += 54;

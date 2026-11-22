@@ -102,6 +102,9 @@ public final class Menu implements Pantalla {
     public void alEntrar(Juego j) {
         if (vista == null) vista = new VistaDeArena(j.pincel);
         j.alarmaBajada.alEntrarAlMenu();
+        if (AvisoDeCompilacion.debeAvisarEnMenu(j.jugador)) {
+            j.avisoCompilar.mostrarBienvenida(j);
+        }
         j.guardar();
     }
 

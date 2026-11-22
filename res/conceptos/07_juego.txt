@@ -207,11 +207,15 @@ titulo.en: The Workshop: coding, compiling and parts
 claves.es: taller, el taller, compilar en el taller, compilar, ctrl+s, piezas, equipar, modelo, probar aqui, banco de pruebas, documentacion, api, editor, guardar codigo, visor tactico, visor, radar visual
 claves.de: werkstatt, die werkstatt, in der werkstatt kompilieren, kompilieren, strg+s, teile, ausrusten, modell, hier testen, prufstand, dokumentation, api, editor, code speichern, taktikansicht, taktik-ansicht
 claves.en: workshop, the workshop, compile in workshop, compile, ctrl+s, parts, equip, model, test here, test bench, documentation, api, editor, save code, tactical view, tactical overlay
-resumen.ia: Workshop (program robot in Java, compile with Ctrl+S, live test bench, tactical view overlay, swap parts, API docs)
+resumen.ia: Workshop (program robot in Java, red Compile button with yellow text in top Code toolbar or Ctrl+S, live test bench, tactical view overlay, swap parts, API docs; if never compiled, robot stands still doing nothing in the arena; if compiled before and edited without recompiling or with errors, runs last valid compiled version)
+tip.juego_compilar_primera_vez.condicion: principiante
+tip.juego_compilar_primera_vez.es: ¡Ojo antes de pelear! Entra al [[Taller]] y pulsa el botón rojo de [[Compilar]] (Ctrl+S): si nunca lo compilas, tu robot se quedará quieto sin hacer nada en la arena.
+tip.juego_compilar_primera_vez.de: Achtung vor dem ersten Kampf! Geh in die [[Werkstatt]] und drück den roten Button [[Kompilieren]] (Strg+S): Ohne erste Kompilierung bleibt dein Roboter in der Arena stehen und tut nichts.
+tip.juego_compilar_primera_vez.en: Heads up before fighting! Open the [[Workshop]] and press the red [[Compile]] button (Ctrl+S): if you have never compiled it, your robot will stand still and do nothing in the arena.
 tip.juego_taller.condicion: aleatorio
-tip.juego_taller.es: En el [[Taller]] programas y pruebas tu robot en vivo; recuerda siempre pulsar [[Compilar]] (Ctrl+S) antes de salir al ring.
-tip.juego_taller.de: In der [[Werkstatt]] programmierst und testest du deinen Roboter live; vergiss nicht, vor dem Kampf auf [[Kompilieren]] (Strg+S) zu drücken.
-tip.juego_taller.en: In the [[Workshop]] you code and live-test your robot; always remember to press [[Compile]] (Ctrl+S) before stepping into the ring.
+tip.juego_taller.es: En el [[Taller]] tienes arriba a la izquierda el botón rojo de [[Compilar]] (Ctrl+S): si editas sin compilar o con errores, tu robot usará la última versión válida compilada.
+tip.juego_taller.de: In der [[Werkstatt]] findest du oben links den roten Button [[Kompilieren]] (Strg+S): Bearbeitest du Code ohne Kompilieren oder mit Fehlern, läuft die letzte gültig kompilierte Version weiter.
+tip.juego_taller.en: In the [[Workshop]], the red [[Compile]] button (Ctrl+S) is at the top left of the Code bar: if you edit without compiling or with errors, your robot keeps running the last valid compiled version.
 tip.juego_visor_tactico.condicion: aleatorio
 tip.juego_visor_tactico.es: Activa el [[visor táctico]] durante el combate o en el banco de pruebas para ver el cono del radar, el alcance y las trayectorias en tiempo real.
 tip.juego_visor_tactico.de: Schalte im Kampf oder auf dem Prüfstand die [[Taktikansicht]] ein, um Radarkegel, Reichweite und Flugbahnen live zu sehen.
@@ -219,17 +223,17 @@ tip.juego_visor_tactico.en: Turn on the [[tactical view]] during a fight or on t
 ver: como_jugar, tienda_y_monedas, depuracion_y_testing
 es:
     El Taller es el gimnasio y el banco de trabajo de tu robot: aquí escribes su código Java, lo compilas, cambias sus piezas y consultas la documentación de la API.
-    Muy importante: después de editar tu código, no olvides pulsar Compilar (o Ctrl+S). Si no compilas, tu robot peleará con la última versión válida; si hay algún fallo, el editor lo subraya en rojo y F2 te lo explica.
+    Muy importante: el botón rojo con letras amarillas de Compilar (o Ctrl+S) está el primero en la barra superior de la pestaña Código del Taller. Si nunca has compilado tu robot, entra en la arena quieto sin hacer nada. Si ya compilaste antes y luego editas sin volver a compilar (o con errores), tu robot ejecuta exactamente la última versión válida que compilaste; si hay fallos, el editor los subraya en rojo y F2 te los explica.
     Con «Probar aquí» abres un banco de pruebas en vivo junto al editor contra un muñeco, sin afectar a tu historial, y en la pestaña Documentación tienes todos los métodos de la API.
     Además puedes gestionar varios robots, cambiar su modelo y equipar las piezas que hayas ganado o activado en la Tienda.
 de:
     Die Werkstatt ist Gym und Werkbank deines Roboters: Hier schreibst du seinen Java-Code, kompilierst ihn, wechselst Teile und schlägst die API-Dokumentation nach.
-    Ganz wichtig: Nach jeder Änderung unbedingt Kompilieren (oder Strg+S) drücken. Sonst kämpft dein Roboter mit der alten Version; bei Fehlern markiert der Editor sie rot und F2 erklärt sie dir.
+    Ganz wichtig: Der rote Button Kompilieren mit gelber Schrift (oder Strg+S) steht ganz links in der oberen Leiste des Reiters Code in der Werkstatt. Hast du deinen Roboter noch nie kompiliert, betritt er die Arena reglos und tut nichts. Hast du schon einmal gültig kompiliert und bearbeitest den Code danach ohne erneutes Kompilieren (oder mit Fehlern), führt dein Roboter genau die zuletzt gültig kompilierte Version aus; Fehler markiert der Editor rot und F2 erklärt sie dir.
     Mit „Hier testen“ öffnest du direkt neben dem Editor einen Live-Prüfstand gegen eine Puppe, ohne deinen Verlauf zu beeinflussen, und unter Dokumentation findest du die ganze API.
     Außerdem verwaltest du hier mehrere Roboter, wechselst Modelle und rüstest gewonnene oder aktivierte Teile aus dem Laden aus.
 en:
     The Workshop is your robot's gym and workbench: you write its Java code, compile it, swap its parts, and browse the API documentation.
-    Very important: after editing your code, don't forget to hit Compile (or Ctrl+S). Otherwise your robot fights with the previous compiled version; if anything is wrong, the editor underlines it in red and F2 explains it.
+    Very important: the red Compile button with yellow text (or Ctrl+S) is the first button in the top bar of the Workshop's Code tab. If you have never compiled your robot, it enters the arena standing still and doing nothing. If you compiled before and later edit without recompiling (or with errors), your robot runs the exact last valid version you compiled; if anything is wrong, the editor underlines it in red and F2 explains it.
     "Test here" opens a live test bench next to the editor against a dummy without touching your match history, and the Documentation tab lists every API method.
     You can also manage multiple robots, switch models, and equip parts you've won or activated from the Shop.
 pseudo.es:

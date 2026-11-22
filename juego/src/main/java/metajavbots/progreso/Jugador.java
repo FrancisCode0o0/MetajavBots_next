@@ -29,10 +29,32 @@ public final class Jugador {
         public String modelo;
         public final EnumMap<Montaje.Hueco, String> piezas = new EnumMap<>(Montaje.Hueco.class);
         public String codigo = "";
+        /** Si este robot se ha compilado con éxito al menos una vez. */
+        public boolean compiladoAlgunaVez;
+        /** Último código fuente compilado con éxito para este robot (vacío si nunca se ha compilado). */
+        public String codigoCompilado = "";
 
         public Robot(String nombre, String modelo) {
             this.nombre = nombre;
             this.modelo = modelo;
+        }
+
+        /** Indica si el robot tiene una versión válida compilada lista para pelear. */
+        public boolean tieneCodigoCompilado() {
+            return compiladoAlgunaVez && codigoCompilado != null && !codigoCompilado.isBlank();
+        }
+
+        /** Indica si el código del taller difiere de la última versión válida compilada. */
+        public boolean tieneCambiosPendientes() {
+            if (!tieneCodigoCompilado()) return false;
+            String actual = codigo == null ? "" : codigo;
+            return !actual.equals(codigoCompilado);
+        }
+
+        /** Registra una compilación válida verificada y guarda esa versión como la ejecutable. */
+        public void registrarCompilacionValida(String fuenteCompilada) {
+            compiladoAlgunaVez = true;
+            codigoCompilado = fuenteCompilada == null ? "" : fuenteCompilada;
         }
 
         /** El montaje con las piezas que tiene puestas (las que falten, las de fábrica del modelo). */
@@ -65,6 +87,8 @@ public final class Jugador {
     public Etiqueta etiqueta = Etiqueta.NOOB_1;
     /** ¿Ya hizo la prueba de nivel del principio? */
     public boolean pruebaHecha;
+    /** ¿Ya vio el aviso inicial del entrenador sobre compilar antes de pelear? */
+    public boolean avisoCompilarVisto;
     public long experiencia;
     /** Monedas gastables (separadas de la experiencia), con precisión de centésimas (p. ej. 0.25, 3.5). */
     public double monedas;
@@ -197,6 +221,18 @@ public final class Jugador {
     public Robot robot() {
         if (robots.isEmpty()) return null;
         return robots.get(Math.max(0, Math.min(robotElegido, robots.size() - 1)));
+    }
+
+    /** Indica si alguno de los robots de la partida tiene una compilación válida verificada. */
+    public boolean haCompiladoAlgunRobot() {
+        for (Robot r : robots) if (r.tieneCodigoCompilado()) return true;
+        return false;
+    }
+
+    /** Indica si el robot actualmente seleccionado tiene una compilación válida verificada. */
+    public boolean robotActualCompilado() {
+        Robot r = robot();
+        return r != null && r.tieneCodigoCompilado();
     }
 
     /** El montaje de un robot del jugador aplicando sus ajustes de piezas acotados. */
