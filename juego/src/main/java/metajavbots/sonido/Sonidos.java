@@ -113,6 +113,11 @@ public final class Sonidos {
         }
     }
 
+    /** Detiene la última voz en reproducción, si sigue sonando. */
+    public void detenerVoz() {
+        if (ultimaVoz != null) ultimaVoz.stop();
+    }
+
     public void fotograma(float dt) {
         esteFotograma.clear();
     }

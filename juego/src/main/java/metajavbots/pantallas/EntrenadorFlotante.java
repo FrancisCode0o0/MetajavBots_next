@@ -259,8 +259,10 @@ public final class EntrenadorFlotante {
         VentanaDeCodigo.Senalado s = j.ui.errorSenaladoAntes;
         if (!abierto && s != null && s.pedido() && !hospital(j)) abrirConError(j, s);
         else if (j.entrada.tecla(Input.Keys.F2)) {
-            if (abierto) cerrar();
-            else if (s != null && !hospital(j)) abrirConError(j, s);
+            if (abierto) {
+                cerrar();
+                if (j.voz != null) j.voz.detener();
+            } else if (s != null && !hospital(j)) abrirConError(j, s);
             else abrir(j, null);
         }
         if (abierto || ratonEncima(j)) j.entrada.bloqueada = true;
@@ -298,6 +300,7 @@ public final class EntrenadorFlotante {
             if (pregunta.enfocado) pregunta.enfocado = false;
             else {
                 cerrar();
+                if (j.voz != null) j.voz.detener();
                 return;
             }
         }
@@ -358,6 +361,7 @@ public final class EntrenadorFlotante {
         }
         if (botonCerrarTip(j, c, aparece)) {
             cerrarTipManualmente();
+            if (j.voz != null) j.voz.detener();
             return;
         }
         float by = c.y + c.h - 50, bw = (c.w - 32) / 3;
@@ -376,6 +380,7 @@ public final class EntrenadorFlotante {
         }
         if (ui.boton(T.t("entrenador.tip.cerrar"), c.x + 24 + 2 * bw, by, bw, 40, Ui.Estilo.PLANO)) {
             cerrarTipManualmente();
+            if (j.voz != null) j.voz.detener();
         }
     }
 
@@ -425,6 +430,7 @@ public final class EntrenadorFlotante {
         p.bordeRedondeado(x, y, w, h, 16, ui.tema.acento, 1, 2);
         if (ui.boton("✕", x + w - 58, y + 12, 46, 42, Ui.Estilo.PLANO)) {
             cerrar();
+            if (j.voz != null) j.voz.detener();
             return;
         }
         if (hospital(j)) {

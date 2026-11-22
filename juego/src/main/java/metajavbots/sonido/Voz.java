@@ -1,17 +1,24 @@
 package metajavbots.sonido;
 
+import java.nio.file.Path;
+import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
+import com.badlogic.gdx.Gdx;
 
 import metajavbots.textos.Idioma;
 
 /**
  * VOZ — La voz del locutor robot loco (y la de cada entrenador, con su
- * Timbre): el texto lo lee Piper si está
- * (VozPiper: voz clara con un efecto robótico suave) y, si no, VozRobot (un
- * sintetizador de formantes hecho aquí, sin internet y sin bibliotecas de
- * fuera, con efecto metálico). Se sintetiza en un hilo aparte para
- * no parar el juego; cuando está lista, suena.
+ * {@link Timbre}): el texto lo lee Piper en streaming si está ({@link VozPiper}:
+ * voz clara con efecto robótico suave y proceso persistente) y, si no,
+ * {@link VozRobot} (un sintetizador de formantes hecho aquí, sin internet ni
+ * bibliotecas de fuera). Todo corre en un hilo aparte para no parar el juego.
  */
 public final class Voz {
 
@@ -21,31 +28,74 @@ public final class Voz {
         return t;
     });
     private static final int MAX_CACHE = 24;
-    private final java.util.Map<String, float[]> cache = java.util.Collections.synchronizedMap(
-            new java.util.LinkedHashMap<String, float[]>(32, 0.75f, true) {
+    private final Map<String, float[]> cache = Collections.synchronizedMap(
+            new LinkedHashMap<String, float[]>(32, 0.75f, true) {
                 @Override
-                protected boolean removeEldestEntry(java.util.Map.Entry<String, float[]> eldest) {
+                protected boolean removeEldestEntry(Map.Entry<String, float[]> eldest) {
                     return size() > MAX_CACHE;
                 }
             });
     private volatile float[] lista;
     private volatile String claveLista;
     private volatile long pedida;
+    private volatile boolean detenerSonidosPendiente;
+    private volatile float volumenMaestro = 1f;
     public boolean activa = true;
     public float volumen = 0.9f;
     /** Con Piper, si está (voz humana con efecto robótico suave); si no, la voz propia. */
     public boolean clara = true;
     private volatile VozPiper piper;
+    private volatile SalidaDeAudio salidaStreaming;
+    private volatile boolean salidaExterna;
 
     /** Dónde está Piper (000KI_Local/piper, junto a los modelos de IA). */
-    public void usarPiper(java.nio.file.Path carpeta) {
-        piper = carpeta == null ? null : new VozPiper(carpeta);
+    public void usarPiper(Path carpeta) {
+        VozPiper actual = piper;
+        if (actual != null && Objects.equals(actual.carpeta(), carpeta)) return;
+        usarPiper(carpeta == null ? null : new VozPiper(carpeta));
+    }
+
+    /** Asigna directamente una instancia de {@link VozPiper} (cerrando la anterior si cambia). */
+    public void usarPiper(VozPiper nuevo) {
+        VozPiper anterior = piper;
+        if (anterior == nuevo) return;
+        piper = nuevo;
+        if (anterior != null) anterior.cerrar();
+    }
+
+    /** Inyecta una salida de audio personalizada para streaming (pruebas sin hardware de audio). */
+    public void usarSalida(SalidaDeAudio salida) {
+        SalidaDeAudio anterior = salidaStreaming;
+        boolean eraExterna = salidaExterna;
+        salidaStreaming = salida;
+        salidaExterna = salida != null;
+        if (anterior != null && !eraExterna) anterior.cerrar();
     }
 
     /** ¿Hay voz clara para ese idioma? */
     public boolean hayVozClara(Idioma idioma) {
         VozPiper p = piper;
         return p != null && p.disponible(idioma);
+    }
+
+    /** Precarga en segundo plano el proceso de Piper del idioma y timbre activos sin bloquear la UI. */
+    public void precargar(Idioma idioma, Timbre timbre) {
+        if (!activa || !clara || idioma == null || hilo.isShutdown()) return;
+        VozPiper p = piper;
+        if (p == null || !p.disponible(idioma)) return;
+        Timbre t = timbre == null ? Timbre.LOCUTOR : timbre;
+        hilo.submit(() -> {
+            if (!activa || !clara || piper != p) return;
+            p.precargar(idioma, t);
+        });
+    }
+
+    /** Detiene inmediatamente cualquier voz en reproducción o síntesis pendiente. */
+    public void detener() {
+        pedida++;
+        lista = null;
+        detenerSonidosPendiente = true;
+        detenerStreamingActual();
     }
 
     /** Pide decir un texto (si ya está diciendo otro, este lo sustituye). */
@@ -55,48 +105,123 @@ public final class Voz {
 
     /** Lo mismo, con otra voz (la de cada entrenador: tutor/Entrenador.timbre). */
     public void decir(String texto, Idioma idioma, Timbre timbre) {
-        if (!activa || texto == null || texto.isBlank()) return;
+        if (!activa || volumen <= 0f || texto == null || texto.isBlank()) return;
         long yo = ++pedida;
+        lista = null;
+        detenerSonidosPendiente = true;
+        detenerStreamingActual();
         String limpio = texto.replace("[[", "").replace("]]", "").strip();
-        String clave = idioma.name() + "|" + (clara ? "C" : "R") + "|" + timbre + "|" + limpio;
+        if (limpio.isEmpty()) return;
+        Timbre t = timbre == null ? Timbre.LOCUTOR : timbre;
+        VozPiper p = clara ? piper : null;
+        boolean puedeStreaming = p != null && p.disponible(idioma) && (salidaExterna || Gdx.audio != null);
+        if (!puedeStreaming) {
+            reproducirRespaldo(limpio, idioma, t, yo);
+            return;
+        }
+        if (hilo.isShutdown()) return;
+        hilo.submit(() -> {
+            if (yo != pedida || !activa || volumenEfectivo() <= 0f) return;
+            SalidaDeAudio salida = obtenerSalidaStreaming();
+            boolean ok = salida != null && p.hablar(limpio, idioma, t, salida,
+                    () -> activa ? volumenEfectivo() : 0.0,
+                    () -> yo != pedida || !activa || volumenEfectivo() <= 0f);
+            if (!ok && yo == pedida && activa) {
+                sintetizarVozRobot(limpio, idioma, t, yo);
+            }
+        });
+    }
+
+    /** Cada fotograma: vigila el silencio y reproduce cualquier frase de respaldo lista. */
+    public void fotograma(Sonidos sonidos) {
+        volumenMaestro = sonidos != null ? sonidos.volumen : 1f;
+        if (detenerSonidosPendiente) {
+            detenerSonidosPendiente = false;
+            if (sonidos != null) sonidos.detenerVoz();
+        }
+        if (!activa || volumen <= 0f || volumenMaestro <= 0f) {
+            if (lista != null || salidaStreaming != null) {
+                lista = null;
+                detenerStreamingActual();
+                if (sonidos != null) sonidos.detenerVoz();
+            }
+            return;
+        }
+        float[] m = lista;
+        String clave = claveLista;
+        if (m == null) return;
+        lista = null;
+        if (sonidos != null) sonidos.tocarMuestras("voz:" + clave, m, volumen);
+    }
+
+    /** Cancela cualquier síntesis en marcha, cierra Piper y libera el hilo de voz al salir. */
+    public void liberar() {
+        activa = false;
+        pedida++;
+        lista = null;
+        detenerStreamingActual();
+        VozPiper p = piper;
+        piper = null;
+        if (p != null) p.cerrar();
+        hilo.shutdownNow();
+        try {
+            hilo.awaitTermination(500, TimeUnit.MILLISECONDS);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+        SalidaDeAudio s = salidaStreaming;
+        salidaStreaming = null;
+        if (s != null && !salidaExterna) s.cerrar();
+    }
+
+    private void reproducirRespaldo(String limpio, Idioma idioma, Timbre timbre, long yo) {
+        String clave = claveRobot(idioma, timbre, limpio);
         float[] cacheada = cache.get(clave);
         if (cacheada != null) {
             claveLista = clave;
             lista = cacheada;
             return;
         }
-        VozPiper p = clara ? piper : null;
-        VozPiper actual = piper;
-        if (actual != null) actual.cancelar();
         if (hilo.isShutdown()) return;
-        hilo.submit(() -> {
-            if (yo != pedida || !activa) return;
-            float[] m = p != null ? p.decir(limpio, idioma, timbre) : null;
-            if (m == null) m = Timbre.cambiarTono(VozRobot.decir(limpio, idioma, yo), timbre.tono());
+        hilo.submit(() -> sintetizarVozRobot(limpio, idioma, timbre, yo));
+    }
+
+    private void sintetizarVozRobot(String limpio, Idioma idioma, Timbre timbre, long yo) {
+        if (yo != pedida || !activa) return;
+        String clave = claveRobot(idioma, timbre, limpio);
+        float[] m = cache.get(clave);
+        if (m == null) {
+            m = Timbre.cambiarTono(VozRobot.decir(limpio, idioma, yo), timbre.tono());
             if (m != null) cache.put(clave, m);
-            if (yo == pedida && activa) {
-                claveLista = clave;
-                lista = m;
-            }
-        });
+        }
+        if (yo == pedida && activa) {
+            claveLista = clave;
+            lista = m;
+        }
     }
 
-    /** Cada fotograma: si hay una frase lista, suena. */
-    public void fotograma(Sonidos sonidos) {
-        float[] m = lista;
-        String clave = claveLista;
-        if (m == null) return;
-        lista = null;
-        sonidos.tocarMuestras("voz:" + clave, m, volumen);
+    private static String claveRobot(Idioma idioma, Timbre timbre, String limpio) {
+        return idioma.name() + "|R|" + timbre + "|" + limpio;
     }
 
-    /** Cancela cualquier síntesis en marcha y cierra el hilo de voz al salir. */
-    public void liberar() {
-        activa = false;
-        pedida++;
-        lista = null;
+    private float volumenEfectivo() {
+        return Math.max(0f, Math.min(1f, volumen * volumenMaestro));
+    }
+
+    private SalidaDeAudio obtenerSalidaStreaming() {
+        SalidaDeAudio s = salidaStreaming;
+        if (s != null) return s;
+        if (Gdx.audio == null) return null;
+        synchronized (this) {
+            if (salidaStreaming == null) salidaStreaming = SalidaDeAudio.crearPcm();
+            return salidaStreaming;
+        }
+    }
+
+    private void detenerStreamingActual() {
         VozPiper p = piper;
         if (p != null) p.cancelar();
-        hilo.shutdownNow();
+        SalidaDeAudio s = salidaStreaming;
+        if (s != null) s.detenerInmediato();
     }
 }

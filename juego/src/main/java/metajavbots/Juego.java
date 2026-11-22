@@ -81,6 +81,7 @@ public class Juego extends ApplicationAdapter {
 
     /** Va a otra pantalla (y recuerda esta para volver). */
     public void ir(Pantalla nueva) {
+        if (voz != null) voz.detener();
         if (ui != null) ui.quitarFoco();
         if (entrada != null) entrada.limpiar();
         if (pantalla != null) {
@@ -94,6 +95,7 @@ public class Juego extends ApplicationAdapter {
 
     /** Va a otra pantalla olvidando las anteriores (al menú, por ejemplo). */
     public void irSolo(Pantalla nueva) {
+        if (voz != null) voz.detener();
         if (ui != null) ui.quitarFoco();
         if (entrada != null) entrada.limpiar();
         if (entrenadorFlotante != null) entrenadorFlotante.cerrar();
@@ -106,6 +108,7 @@ public class Juego extends ApplicationAdapter {
     /** Vuelve a la pantalla de antes. */
     public void volver() {
         if (anteriores.isEmpty()) return;
+        if (voz != null) voz.detener();
         if (ui != null) ui.quitarFoco();
         if (entrada != null) entrada.limpiar();
         if (pantalla != null) pantalla.alSalir(this);
@@ -135,6 +138,9 @@ public class Juego extends ApplicationAdapter {
             voz.clara = j.vozClara;
             voz.usarPiper(metajavbots.cerebro.CerebroLocal.carpeta(j.carpetaModelos).resolve("piper"));
             voz.volumen = j.volumenVoz;
+            if (j.vozDelLocutor && j.vozClara && Gdx.audio != null) {
+                voz.precargar(j.idioma, metajavbots.tutor.Entrenador.de(j.entrenador).timbre);
+            }
             musica.activa = j.musicaActiva;
             musica.volumen = j.volumenMusica;
             metajavbots.pantallas.PrepararPelea.conTrampas = j.arenasConTrampas;
