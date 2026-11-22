@@ -13,6 +13,9 @@ import metajavbots.piezas.Pieza;
  */
 public final class Armas {
 
+    /** Tipo de protección de un escudo temporal: general, frente a proyectiles/láser, frente a impacto/cuerpo o integral. */
+    public enum TipoProteccion { GENERAL, PROYECTIL, IMPACTO, INTEGRAL }
+
     /** Límites de equilibrio anti-abuso para armas y habilidades especiales. */
     public static final double MAX_DANO = 45.0;
     public static final double MAX_DANO_EFECTIVO = 75.0;
@@ -152,12 +155,44 @@ public final class Armas {
         return danoEfectivoSeguro(base * sobre * multPerfil * sinergia);
     }
 
+    /** Tipo de protección declarado en la pieza (GENERAL si no se especifica). */
+    public static TipoProteccion tipoProteccion(Pieza pieza) {
+        if (pieza == null) return TipoProteccion.GENERAL;
+        String txt = pieza.texto("proteccion");
+        if (txt.isEmpty()) return TipoProteccion.GENERAL;
+        try {
+            return TipoProteccion.valueOf(txt.strip().toUpperCase(java.util.Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return TipoProteccion.GENERAL;
+        }
+    }
+
+    /**
+     * Bloqueo efectivo de un escudo según su tipo de protección y la fuente del daño.
+     * Los escudos especializados aplican su bloqueo completo frente a su tipo y un 35 % frente al resto.
+     */
+    public static double bloqueoEfectivo(double bloqueoBase, TipoProteccion tipo, String arma, boolean cuerpoACuerpo) {
+        double base = bloqueoBase <= 0 ? 0 : bloqueoSeguro(bloqueoBase);
+        if (base <= 0 || tipo == null || tipo == TipoProteccion.GENERAL || tipo == TipoProteccion.INTEGRAL) return base;
+        String a = arma == null ? "" : arma;
+        boolean esProyectil = a.equals("laser") || a.equals("bala") || a.equals("misil") || a.equals("llama")
+                || a.equals("descarga") || a.equals("pulso");
+        boolean esImpacto = cuerpoACuerpo || a.equals("cuerpo") || a.equals("choque") || a.equals("pared")
+                || a.equals("trampa") || a.equals("martillo") || a.equals("sierra") || a.equals("explosion") || a.equals("misil");
+        if (tipo == TipoProteccion.PROYECTIL) return esProyectil ? base : base * 0.35;
+        return esImpacto ? base : base * 0.35;
+    }
+
     /**
      * Cálculo unificado de daño real a obstáculos destructibles ({@code barril}, {@code chimenea})
      * derivado de la potencia real del arma y del perfil del montaje (usado en todos los modos).
      */
     public static double danoAObstaculo(Montaje montaje, Montaje.Cifras cifras, Pieza arma, double factorSobrecarga) {
-        return danoDeArma(montaje, cifras, arma, factorSobrecarga);
+        double base = danoDeArma(montaje, cifras, arma, factorSobrecarga);
+        if (arma == null || base <= 0) return base;
+        double multObs = arma.valor("danoObstaculo", 1.0);
+        if (!Double.isFinite(multObs) || multObs <= 1.0) return base;
+        return danoEfectivoSeguro(base * Math.min(1.8, multObs));
     }
 
     /**
@@ -224,6 +259,7 @@ public final class Armas {
                 c.escudoBrazo = duracionSegura(p.valor("duracion", 45));
                 c.bloqueoBrazo = bloqueoSeguro(p.valor("bloqueo", 0.6));
                 c.conoEscudo = conoSeguro(p.valor("cono", 120));
+                c.tipoEscudoBrazo = tipoProteccion(p);
                 c.brazoDelEscudo = brazo;
                 pelea.suceso(Suceso.Tipo.ESPECIAL, c.indice, c.x, c.y, c.mira, c.escudoBrazo, "escudo_brazo");
                 break;
@@ -268,6 +304,7 @@ public final class Armas {
             case ESCUDO:
                 c.escudoCabeza = duracionSegura(p.valor("duracion", 90));
                 c.bloqueoCabeza = bloqueoSeguro(p.valor("bloqueo", 0.6));
+                c.tipoEscudoCabeza = tipoProteccion(p);
                 break;
             case TURBO:
                 c.turbo = duracionSegura(p.valor("duracion", 60));

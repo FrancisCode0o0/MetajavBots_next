@@ -66,6 +66,7 @@ public final class Cuerpo implements Mando {
     public final double[] parte = new double[4];
     public final double[] parteMax = new double[4];
     final int[] enfriamiento = new int[3];
+    final int[] cargasRestantes = new int[3];
     final boolean[] pedido = new boolean[3];
     /** Lo que dura cada efecto (en turnos). */
     public int escudoBrazo, escudoCabeza, turbo, camuflaje, sobrecarga, aturdido, llama, deuda;
@@ -85,6 +86,8 @@ public final class Cuerpo implements Mando {
     int enfriamientoArquetipo, avisoArquetipo;
     int brazoDelEscudo = -1, brazoDeLaLlama = -1;
     double bloqueoBrazo, conoEscudo, bloqueoCabeza, factorTurbo = 1, factorSobrecarga = 1;
+    public Armas.TipoProteccion tipoEscudoBrazo = Armas.TipoProteccion.GENERAL;
+    public Armas.TipoProteccion tipoEscudoCabeza = Armas.TipoProteccion.GENERAL;
     public boolean fuera;
     /** Si este cuerpo espera en reserva fuera de la arena hasta caer del cielo en el minijuego especial. */
     public boolean enReserva;
@@ -141,6 +144,7 @@ public final class Cuerpo implements Mando {
             parte[i] = bl;
             parteMax[i] = bl;
         }
+        for (int i = 0; i < 3; i++) cargasRestantes[i] = cargasDePieza(piezaDe(i));
         limpiarTelemetriaDeTurno(EstadoPensamiento.EJECUTADO);
         this.azar = new Random(semilla);
     }
@@ -331,8 +335,19 @@ public final class Cuerpo implements Mando {
         if (brazo < 0 || brazo > 2 || !listo(brazo)) return false;
         pedido[brazo] = true;
         Pieza p = piezaDe(brazo);
-        // Se marca ya, para que dos llamadas en el mismo turno no ataquen dos veces (nunca cadencia infinita ni recarga <= 0).
-        enfriamiento[brazo] = enfriamientoSeguro(p.valor("enfriamiento", 30), pelea.refuerzoDeEnfriamiento(this));
+        double ref = pelea.refuerzoDeEnfriamiento(this);
+        int maxCargas = cargasDePieza(p);
+        if (maxCargas > 0) {
+            if (cargasRestantes[brazo] <= 0) cargasRestantes[brazo] = maxCargas;
+            cargasRestantes[brazo]--;
+            double baseEnf = cargasRestantes[brazo] <= 0
+                    ? p.valor("enfriamientoCiclo", p.valor("enfriamiento", 30) * 3.0)
+                    : p.valor("enfriamiento", 12);
+            enfriamiento[brazo] = enfriamientoSeguro(baseEnf, ref);
+        } else {
+            // Se marca ya, para que dos llamadas en el mismo turno no ataquen dos veces (nunca cadencia infinita ni recarga <= 0).
+            enfriamiento[brazo] = enfriamientoSeguro(p.valor("enfriamiento", 30), ref);
+        }
         energia = Math.max(0, energia - costeDe(brazo, p));
         return true;
     }
@@ -679,6 +694,33 @@ public final class Cuerpo implements Mando {
     /** Turnos que le quedan al arma de ese brazo para volver a estar lista (0 si ya puede disparar). */
     public int enfriamiento(int brazo) {
         return brazo >= 0 && brazo < enfriamiento.length ? enfriamiento[brazo] : 0;
+    }
+
+    /** Cargas de ataque restantes en el ciclo actual del brazo (0 si no usa ciclos o está en enfriamiento de ciclo). */
+    public int cargasRestantes(int brazo) {
+        return brazo >= 0 && brazo < cargasRestantes.length ? cargasRestantes[brazo] : 0;
+    }
+
+    /** Máximo de ataques por ciclo de la pieza montada en ese brazo (0 si no usa ciclos). */
+    public int cargasMaximas(int brazo) {
+        return cargasDePieza(piezaDe(brazo));
+    }
+
+    /** Número de ataques por ciclo de una pieza (0 si ataca con enfriamiento simple). */
+    public static int cargasDePieza(Pieza p) {
+        if (p == null) return 0;
+        double c = p.valor("cargas");
+        if (!Double.isFinite(c) || c <= 0) return 0;
+        return Math.max(1, Math.min(8, (int) Math.round(c)));
+    }
+
+    /** Recarga las cargas del ciclo cuando termina el enfriamiento largo de ese brazo. */
+    void recargarCicloSiListo(int brazo) {
+        if (brazo < 0 || brazo >= cargasRestantes.length) return;
+        int max = cargasMaximas(brazo);
+        if (max > 0 && enfriamiento[brazo] <= 0 && cargasRestantes[brazo] <= 0) {
+            cargasRestantes[brazo] = max;
+        }
     }
 
     /** Efectos POO activos de este robot (calculados por reflexión sobre su clase compilada). */

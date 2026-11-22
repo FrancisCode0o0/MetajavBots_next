@@ -28,8 +28,20 @@ public final class DibujoRobot {
         public final float[] partes = {1, 1, 1, 1};
         public List<Combatiente.Abolladura> abolladuras;
         public float retroceso, sacudida, alegria;
-        public boolean escudo, turbo, camuflaje, aturdido, sobrecarga, fuera, atacando, cortocircuito;
+        public boolean escudo, escudoDoble, turbo, camuflaje, aturdido, sobrecarga, fuera, atacando, cortocircuito;
+        public int colorEscudo = 0x59C3FF;
         public int brazoQueAtaca = -1;
+
+        /** Configura el color y grosor del aura de escudo según el tipo de protección activo. */
+        public void aplicarEscudo(boolean cabeza, metajavbots.combate.Armas.TipoProteccion tCab,
+                                  boolean brazo, metajavbots.combate.Armas.TipoProteccion tBr) {
+            escudo = cabeza || brazo;
+            metajavbots.combate.Armas.TipoProteccion t = brazo && tBr != null ? tBr : tCab;
+            escudoDoble = t == metajavbots.combate.Armas.TipoProteccion.IMPACTO || t == metajavbots.combate.Armas.TipoProteccion.INTEGRAL;
+            colorEscudo = t == metajavbots.combate.Armas.TipoProteccion.PROYECTIL ? 0x66F0FF
+                    : t == metajavbots.combate.Armas.TipoProteccion.IMPACTO ? 0xFFAA3B
+                    : t == metajavbots.combate.Armas.TipoProteccion.INTEGRAL ? 0x5BE8B5 : 0x59C3FF;
+        }
         /** La cara de la pantalla (PANTALLA): 0 normal, 1 contento, 2 enfadado, 3 dolorido. */
         public int cara;
         /** Cómo va el último golpe del brazo que ataca: 0 recién lanzado, 1 ya recogido (para la bola, la pinza, el volteador). */
@@ -648,12 +660,14 @@ public final class DibujoRobot {
     private void armaDeMano(String id, float manoX, float manoY, float ca, float sa, float grosor, int colArma, boolean rota, Estado e, float fase) {
         float px = -sa, py = ca;   // perpendicular
         if (armaDeLucha(id, manoX, manoY, ca, sa, grosor, colArma, e, fase)) return;
-        if (id.startsWith("espada") || id.startsWith("herencia")) {
+        if (id.startsWith("espada") || id.startsWith("herencia") || id.startsWith("sable")) {
+            int colHoja = id.startsWith("sable_fotonico") ? 0x4FE8FF : id.startsWith("sable_termico") ? 0xFF5A2C : 0xFF4FA3;
+            float largoHoja = id.startsWith("sable_termico") ? 34 : 30;
             raya(manoX, manoY, manoX + ca * 4, manoY + sa * 4, grosor, Pincel.oscurecer(colArma, 0.3f));
-            raya(manoX + ca * 4, manoY + sa * 4, manoX + ca * 30, manoY + sa * 30, grosor * 0.7f, 0xFF4FA3);
-            p.linea(enX(manoX + ca * 4), enY(manoY + sa * 4), enX(manoX + ca * 30), enY(manoY + sa * 30), grosor * 0.25f * u, 0xFFFFFF, alfa);
-            if (!rota) p.brillo(enX(manoX + ca * 18), enY(manoY + sa * 18), 6 * u, 0xFF4FA3, 0.35f * alfa);
-        } else if (id.startsWith("martillo")) {
+            raya(manoX + ca * 4, manoY + sa * 4, manoX + ca * largoHoja, manoY + sa * largoHoja, grosor * 0.72f, colHoja);
+            p.linea(enX(manoX + ca * 4), enY(manoY + sa * 4), enX(manoX + ca * largoHoja), enY(manoY + sa * largoHoja), grosor * 0.25f * u, 0xFFFFFF, alfa);
+            if (!rota) p.brillo(enX(manoX + ca * 18), enY(manoY + sa * 18), 6 * u, colHoja, 0.35f * alfa);
+        } else if (id.startsWith("martillo") || id.startsWith("maza") || id.startsWith("ariete")) {
             raya(manoX, manoY, manoX + ca * 10, manoY + sa * 10, grosor * 0.6f, 0x5A4632);
             float hx2 = manoX + ca * 12, hy2 = manoY + sa * 12;
             forma(Pincel.mezcla(colArma, 0x9AA0A6, 0.5f), hx2 + px * 8 - ca * 3, hy2 + py * 8 - sa * 3, hx2 + px * 8 + ca * 5, hy2 + py * 8 + sa * 5,
@@ -749,9 +763,11 @@ public final class DibujoRobot {
         float cy = (base + cima) / 2 + 4;
         if (e.escudo) {
             float pulso = 1 + 0.04f * (float) Math.sin(e.tiempo * 8);
-            p.elipse(enX(0), enY(cy), (ancho * 0.75f + 10) * u * pulso, (cima - base + 26) * 0.62f * u * pulso, 0, 0x59C3FF, 0.16f);
-            p.formas.setColor(p.color(0x9FE7FF, 0.7f));
-            p.formas.ellipse(enX(0), enY(cy), (ancho * 0.75f + 10) * u * pulso, (cima - base + 26) * 0.62f * u * pulso, 0, 1.6f * u);
+            float rx = (ancho * 0.75f + 10) * u * pulso, ry = (cima - base + 26) * 0.62f * u * pulso;
+            p.elipse(enX(0), enY(cy), rx, ry, 0, e.colorEscudo, 0.18f);
+            p.formas.setColor(p.color(Pincel.aclarar(e.colorEscudo, 0.25f), 0.75f));
+            p.formas.ellipse(enX(0), enY(cy), rx, ry, 0, (e.escudoDoble ? 2.4f : 1.6f) * u);
+            if (e.escudoDoble) p.formas.ellipse(enX(0), enY(cy), rx * 1.08f, ry * 1.08f, 0, 1.1f * u);
         }
         if (e.aturdido) {
             for (int i = 0; i < 3; i++) {

@@ -26,7 +26,8 @@ public final class Tienda implements Pantalla {
     private static final Etiqueta.Categoria[] RANGOS = {
         Etiqueta.Categoria.NOOB,
         Etiqueta.Categoria.JUNIOR,
-        Etiqueta.Categoria.SENIOR
+        Etiqueta.Categoria.SENIOR,
+        Etiqueta.Categoria.MASTER
     };
 
     private static final Pieza.Ranura[] RANURAS = {
@@ -89,7 +90,7 @@ public final class Tienda implements Pantalla {
             pest[i] = libre ? nombreRango(RANGOS[i]) : "[" + nombreRango(RANGOS[i]) + "]";
         }
         int antes = rangoElegido;
-        rangoElegido = ui.pestanas(pest, rangoElegido, x, y, Math.min(w, 660), 48);
+        rangoElegido = ui.pestanas(pest, rangoElegido, x, y, Math.min(w, 820), 48);
         if (rangoElegido != antes) scroll.alPrincipio();
         return y + 58;
     }
@@ -116,7 +117,9 @@ public final class Tienda implements Pantalla {
     }
 
     private float avisoRangoBloqueado(Pincel p, Ui ui, Etiqueta.Categoria rango, float x, float y, float w) {
-        String msg = T.f("tienda.rango_bloqueado", nombreRango(rango));
+        String msg = rango == Etiqueta.Categoria.MASTER
+                ? T.t("tienda.rango_especial_bloqueado")
+                : T.f("tienda.rango_bloqueado", nombreRango(rango));
         float tam = ui.cabe(msg, w - 56, ui.letra * 0.88f, true);
         float h = p.altoDeParrafo(msg, w - 56, tam) + 20;
         p.caja(x, y, w, h, 10, Pincel.oscurecer(ui.tema.aviso, 0.72f), 1);
@@ -172,7 +175,7 @@ public final class Tienda implements Pantalla {
 
         float yMeta = y + 14 + p.altoDeLinea(tNom) + 2;
         p.circulo(x + 22, yMeta + ui.letra * 0.42f, 6, pz.naturaleza.color(), 1);
-        String meta = pz.naturaleza.nombre(T.idioma) + " · " + nombreRanura(pz.ranura)
+        String meta = pz.naturaleza.nombre(T.idioma) + " · " + nombreRanura(pz.ranura) + " · " + nombreRango(pz.rangoTienda)
                 + (pendiente ? " · " + T.t("tienda.pendiente") : "");
         float tMeta = ui.cabe(meta, textoW - 20, ui.letra * 0.76f, false);
         p.texto(ui.recortarTexto(meta, textoW - 20, tMeta, false), x + 34, yMeta, tMeta, false,
@@ -239,10 +242,11 @@ public final class Tienda implements Pantalla {
     }
 
     private static String nombreRango(Etiqueta.Categoria c) {
+        if (c == null) return "Noob";
         switch (c) {
             case JUNIOR: return "Junior";
             case SENIOR: return "Senior";
-            case MASTER: return "Master";
+            case MASTER: return T.t("tienda.rango.especial");
             default: return "Noob";
         }
     }

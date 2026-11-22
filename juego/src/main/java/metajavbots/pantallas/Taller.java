@@ -452,6 +452,7 @@ public final class Taller implements Pantalla {
                 case "reto": b.append(T.f("desbloqueo.reto", v)); break;
                 case "pruebas": b.append(T.f("desbloqueo.pruebas", v)); break;
                 case "desafio": b.append(T.t("desbloqueo.desafio")); break;
+                case "tienda": b.append(T.t("desbloqueo.tienda")); break;
                 default: b.append(parte); break;
             }
         }
@@ -569,13 +570,25 @@ public final class Taller implements Pantalla {
 
     static String cifras(Pieza p) {
         StringBuilder b = new StringBuilder();
-        String[] claves = {"dano", "alcance", "enfriamiento", "energia", "radar", "cono", "velocidad", "giro", "pasos", "energiaMax", "blindaje", "peso",
-                "refuerzo"};
+        String prot = p.texto("proteccion");
+        if (!prot.isEmpty()) {
+            b.append(T.t("valor.proteccion." + prot.toLowerCase(java.util.Locale.ROOT)));
+        }
+        String[] claves = {"dano", "alcance", "bloqueo", "duracion", "cargas", "enfriamiento", "enfriamientoCiclo",
+                "danoObstaculo", "energia", "cura", "radar", "cono", "velocidad", "giro", "pasos", "energiaMax",
+                "blindaje", "peso", "refuerzo"};
         for (String k : claves) {
             double v = p.valor(k);
             if (v == 0) continue;
             if (b.length() > 0) b.append(" · ");
-            b.append(T.t("valor." + k)).append(' ').append(v == Math.rint(v) ? Long.toString(Math.round(v)) : String.format(java.util.Locale.ROOT, "%.2f", v));
+            if (k.equals("bloqueo")) {
+                b.append(T.t("valor.bloqueo")).append(' ').append(Math.round(v * 100)).append('%');
+            } else if (k.equals("danoObstaculo")) {
+                b.append(T.t("valor.danoObstaculo")).append(" ×").append(String.format(java.util.Locale.ROOT, "%.2f", v));
+            } else {
+                String num = v == Math.rint(v) ? Long.toString(Math.round(v)) : String.format(java.util.Locale.ROOT, "%.2f", v);
+                b.append(T.t("valor." + k)).append(' ').append(num);
+            }
         }
         String arma = p.ranura == Pieza.Ranura.BRAZO ? p.arma().name() : p.ranura == Pieza.Ranura.CABEZA ? p.especial().name()
                 : p.ranura == Pieza.Ranura.PIERNAS ? p.locomocion().name() : "";

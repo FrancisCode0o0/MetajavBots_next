@@ -40,6 +40,7 @@ public final class CatalogoDePiezas {
         MEJORA_POR_MARCA.put("blindaje", 0.10);
         MEJORA_POR_MARCA.put("alcance", 0.03);
         MEJORA_POR_MARCA.put("enfriamiento", -0.04);
+        MEJORA_POR_MARCA.put("enfriamientoCiclo", -0.04);
         MEJORA_POR_MARCA.put("energia", -0.03);
         MEJORA_POR_MARCA.put("velocidad", 0.04);
         MEJORA_POR_MARCA.put("giro", 0.03);
@@ -128,7 +129,7 @@ public final class CatalogoDePiezas {
         Double precioObj = valores.remove("precio");
         double precioBase = precioObj == null ? 0 : Math.max(0, precioObj);
         String rangoTxt = textos.remove("rango");
-        Etiqueta.Categoria rangoBase = rangoTxt == null ? null : Pieza.enumDe(Etiqueta.Categoria.class, rangoTxt, null);
+        Etiqueta.Categoria rangoBase = rangoTxt == null ? null : parsearRango(rangoTxt);
         if (rangoTxt != null && rangoBase == null) avisos.add("línea " + n + ": rango desconocido «" + rangoTxt + "»");
         String serie = textos.remove("serie");
         int desde = 1, hasta = 1;
@@ -160,15 +161,23 @@ public final class CatalogoDePiezas {
         }
     }
 
+    /** Convierte el texto de rango en piezas.txt (acepta ESPECIAL como sinónimo de MASTER). */
+    private static Etiqueta.Categoria parsearRango(String txt) {
+        if (txt == null) return null;
+        String limpio = txt.strip().toUpperCase(Locale.ROOT);
+        if ("ESPECIAL".equals(limpio)) return Etiqueta.Categoria.MASTER;
+        return Pieza.enumDe(Etiqueta.Categoria.class, limpio, null);
+    }
+
     /** El precio en monedas sube con la marca (las piezas de inicio Mk I no se venden en la tienda). */
     static double precioDeMarca(double base, String desbloqueoBase, int marca) {
         if (base <= 0 || (marca == 1 && "inicio".equals(desbloqueoBase))) return 0;
-        return Math.round(base * (1.0 + 0.5 * (marca - 1)) * 2.0) / 2.0;
+        return Math.round(base * (1.0 + 0.55 * (marca - 1)) * 2.0) / 2.0;
     }
 
     /** El rango mínimo en tienda escala con las marcas más altas (Mk III-IV y Mk V). */
     static Etiqueta.Categoria rangoDeMarca(Etiqueta.Categoria base, int marca) {
-        if (base == null) return null;
+        if (base == null || base == Etiqueta.Categoria.MASTER) return base;
         if (marca >= 5) return Etiqueta.Categoria.SENIOR;
         if (marca >= 4 && base == Etiqueta.Categoria.JUNIOR) return Etiqueta.Categoria.SENIOR;
         if (marca >= 3 && base == Etiqueta.Categoria.NOOB) return Etiqueta.Categoria.JUNIOR;

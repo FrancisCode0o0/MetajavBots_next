@@ -516,8 +516,12 @@ public final class Pelea {
         if (de != null) dano *= de.combatiente.escalaDano;
         dano *= multiplicadorDano * resistencia[e.indice] * e.efectosPoo().factorDanoRecibido;
         double bloqueo = 0;
-        if (e.escudoBrazo > 0 && Math.abs(normal(desde - e.mira)) <= e.conoEscudo / 2) bloqueo = e.bloqueoBrazo;
-        if (e.escudoCabeza > 0) bloqueo = Math.max(bloqueo, e.bloqueoCabeza);
+        if (e.escudoBrazo > 0 && Math.abs(normal(desde - e.mira)) <= e.conoEscudo / 2) {
+            bloqueo = Armas.bloqueoEfectivo(e.bloqueoBrazo, e.tipoEscudoBrazo, arma, cuerpoACuerpo);
+        }
+        if (e.escudoCabeza > 0) {
+            bloqueo = Math.max(bloqueo, Armas.bloqueoEfectivo(e.bloqueoCabeza, e.tipoEscudoCabeza, arma, cuerpoACuerpo));
+        }
         if (bloqueo > 0) {
             suceso(Suceso.Tipo.BLOQUEO, e.indice, ix, iy, desde, dano * bloqueo, arma);
             dano *= 1 - bloqueo;
@@ -604,7 +608,9 @@ public final class Pelea {
         }
         c.energia = Math.min(Cuerpo.energiaMaxSegura(c.cifras.energiaMax),
                 c.energia + Cuerpo.recargaSegura(c.cifras.recarga * c.efectosPoo().factorRecarga));
-        for (int i = 0; i < 3; i++) if (c.enfriamiento[i] > 0) c.enfriamiento[i]--;
+        for (int i = 0; i < 3; i++) {
+            if (c.enfriamiento[i] > 0 && --c.enfriamiento[i] == 0) c.recargarCicloSiListo(i);
+        }
         c.pasoEstados(turno);
         if (c.sacudida > 0) c.sacudida *= 0.8;
         c.retroceso *= 0.75;

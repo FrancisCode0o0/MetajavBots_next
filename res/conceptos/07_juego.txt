@@ -258,49 +258,49 @@ tema: --
 titulo.es: Tienda, monedas y rangos
 titulo.de: Laden, Münzen und Stufen
 titulo.en: Shop, coins and ranks
-claves.es: tienda, monedas, comprar, piezas, complementos, naturaleza, naturalezas, activar pieza, rango, etiqueta, subir de rango, inventario, saldo
-claves.de: laden, munzen, kaufen, teile, zubehor, natur, naturen, teil aktivieren, stufe, abzeichen, aufsteigen, inventar, guthaben
-claves.en: shop, coins, buy, parts, gear, nature, natures, activate part, rank, badge, rank up, inventory, balance
-resumen.ia: Shop (buy parts, gear and natures with coins according to rank and activate via short code challenge)
+claves.es: tienda, monedas, comprar, piezas, complementos, naturaleza, naturalezas, activar pieza, rango, etiqueta, subir de rango, inventario, saldo, escudo temporal, recarga lenta, espada laser, sable fotonico, maza de impacto, ariete cinetico, economia, precios, especial
+claves.de: laden, munzen, kaufen, teile, zubehor, natur, naturen, teil aktivieren, stufe, abzeichen, aufsteigen, inventar, guthaben, temporarer schild, langsame aufladung, laserschwert, photonklinge, aufprallkeule, rammbock, wirtschaft, preise, spezial
+claves.en: shop, coins, buy, parts, gear, nature, natures, activate part, rank, badge, rank up, inventory, balance, temporal shield, slow recharge, laser sword, photon saber, impact mace, kinetic ram, economy, prices, special
+resumen.ia: Shop and economy (buy parts, gear, natures, new ranged/energy weapons balanced by power vs. cooldown/energy, temporal shields with slow recharge and protection types — general, anti-projectile, anti-impact, full-spectrum — and cycle-based laser swords / heavy blunt weapons with burst charges followed by multi-turn cooldown; distributed across Noob, Junior, Senior, and Special ranks with strictly increasing prices calibrated against competition rewards; purchased parts activate via a short Java code challenge)
 tip.juego_tienda.condicion: monedas
-tip.juego_tienda.es: ¿Tienes monedas ahorradas? En la [[Tienda]] puedes comprar piezas y complementos nuevos y activarlos con un breve reto de código.
-tip.juego_tienda.de: Hast du Münzen gespart? Im [[Laden]] kannst du neue Teile und Zubehör kaufen und sie mit einer kurzen Code-Aufgabe aktivieren.
-tip.juego_tienda.en: Got coins saved up? In the [[Shop]] you can buy new parts and gear and activate them with a short code challenge.
+tip.juego_tienda.es: ¿Tienes monedas ahorradas? En la [[Tienda]] (Noob, Junior, Senior y Especial) hay armas de energía, escudos temporales con recarga lenta y espadas láser por ciclos; todas se activan con un breve reto de código.
+tip.juego_tienda.de: Hast du Münzen gespart? Im [[Laden]] (Noob, Junior, Senior und Spezial) warten Energiewaffen, temporäre Schilde mit langsamer Aufladung und Laserschwerter mit Angriffszyklen – alle mit kurzer Code-Aufgabe.
+tip.juego_tienda.en: Got coins saved up? The [[Shop]] (Noob, Junior, Senior, and Special) offers energy weapons, slow-recharging temporal shields, and cycle-based laser swords—each activated via a short code challenge.
 tip.juego_piezas_naturalezas.condicion: aleatorio
-tip.juego_piezas_naturalezas.es: Combinar bien las [[piezas y naturalezas]] de tu robot en el Taller cambia por completo su velocidad, alcance y aguante.
-tip.juego_piezas_naturalezas.de: Eine kluge Kombination aus [[Teilen und Naturen]] in der Werkstatt verändert Tempo, Reichweite und Ausdauer deines Roboters spürbar.
-tip.juego_piezas_naturalezas.en: Mixing your robot's [[parts and natures]] thoughtfully in the Workshop completely changes its speed, range and durability.
-ver: taller_y_compilar, minijuegos_y_ejercicios, ver_notas
+tip.juego_piezas_naturalezas.es: Combinar bien las [[piezas y naturalezas]] de tu robot en el Taller cambia por completo su velocidad, alcance, tipo de escudo y aguante.
+tip.juego_piezas_naturalezas.de: Eine kluge Kombination aus [[Teilen und Naturen]] in der Werkstatt verändert Tempo, Reichweite, Schildtyp und Ausdauer deines Roboters spürbar.
+tip.juego_piezas_naturalezas.en: Mixing your robot's [[parts and natures]] thoughtfully in the Workshop completely changes its speed, range, shield type, and durability.
+ver: taller_y_compilar, minijuegos_y_ejercicios, modelos_y_armas, ver_notas
 es:
-    Cada pelea ganada y cada ejercicio resuelto te da experiencia (para subir de rango, de Noob a Senior) y monedas gastables para la Tienda.
-    En la Tienda puedes comprar piezas y complementos (cabezas, brazos, piernas, núcleos y naturaleza) desbloqueados según tu rango actual.
-    Cuando compras una pieza, queda pendiente de activar hasta que superas un breve reto de código en Java (desde la propia Tienda o desde el Taller); así la haces tuya y puedes equiparla.
-    Si te falta rango para una pieza potente, sube de etiqueta ganando combates y completando los ejercicios de tu nivel.
+    Cada pelea ganada, cada carrera de obstáculos, cada reto de Destrucción y supervivencia y cada ejercicio resuelto te da monedas gastables para la Tienda además de experiencia para subir de rango.
+    La Tienda está organizada en cuatro rangos con precios crecientes acordes a los ingresos de cada nivel: Noob (piezas accesibles tras unas pocas partidas), Junior (mejoras intermedias), Senior (armamento avanzado) y Especial (desbloqueado al vencer a un jefe o llegar a Master, con equipamiento de élite).
+    El catálogo incluye armas a distancia y de energía equilibradas entre potencia y enfriamiento/consumo (desde el Microhaz rápido hasta el Cañón de pulso solar y el Cañón de riel cuántico), escudos temporales con recarga lenta y distintos tipos de protección (general, antiproyectil, antichoque e integral), y espadas láser o armas contundentes (Sable fotónico, Maza de impacto, Espada láser pesada y Ariete cinético) que permiten una ráfaga de golpes por ciclo antes de exigir varios turnos de enfriamiento.
+    Cuando compras una pieza, queda pendiente de activar hasta que superas un breve reto de código en Java (desde la Tienda o el Taller); así la haces tuya y puedes equiparla.
 de:
-    Jeder gewonnene Kampf und jede gelöste Übung bringt dir Erfahrung (für den Aufstieg von Noob bis Senior) sowie ausgbare Münzen für den Laden.
-    Im Laden kaufst du Teile und Zubehör (Köpfe, Arme, Beine, Kerne und Natur), die passend zu deiner aktuellen Stufe freigeschaltet werden.
-    Nach dem Kauf bleibt ein Teil ausstehend, bis du eine kurze Java-Code-Aufgabe löst (im Laden oder in der Werkstatt); danach kannst du es ausrüsten.
-    Fehlt dir die Stufe für ein starkes Teil, steige durch Siege und gelöste Übungen deines Levels auf.
+    Jeder gewonnene Kampf, jeder Hindernislauf, jede Runde Zerstörung & Überleben und jede gelöste Übung bringt dir neben Erfahrung für den Aufstieg auch ausgebbare Münzen für den Laden.
+    Der Laden ist in vier Stufen mit steigenden Preisen passend zu den jeweiligen Einnahmen gegliedert: Noob (nach wenigen Partien erreichbar), Junior (mittlere Upgrades), Senior (fortgeschrittene Ausrüstung) und Spezial (freigeschaltet nach einem Boss-Sieg oder Rang Master, mit Elite-Teilen).
+    Zum Angebot gehören Fernkampf- und Energiewaffen im Ausgleich zwischen Schlagkraft und Abkühlung/Energieverbrauch (vom Schnellen Mikrostrahl bis zur Solarpulskanone und Quanten-Railgun), temporäre Schilde mit langsamer Aufladung und verschiedenen Schutzarten (Allround, Projektilabwehr, Stoßabwehr und Vollschutz) sowie Laserschwerter und wuchtige Nahkampfwaffen (Photonklinge, Aufprallkeule, Schweres Laserschwert und Kinetischer Rammbock) mit begrenzter Salve pro Zyklus vor einer mehrzügigen Abkühlphase.
+    Nach dem Kauf bleibt jedes Teil ausstehend, bis du eine kurze Java-Code-Aufgabe löst (im Laden oder in der Werkstatt); danach kannst du es ausrüsten.
 en:
-    Every fight you win and exercise you solve earns experience (to climb from Noob to Senior) plus spendable coins for the Shop.
-    In the Shop you can buy parts and gear (heads, arms, legs, cores and nature) unlocked according to your current rank.
+    Every fight won, Obstacle race, Destruction & Survival run, and solved exercise earns spendable coins for the Shop alongside experience toward your next rank.
+    The Shop is organized into four ranks with strictly rising prices calibrated against each tier's income: Noob (reachable after a few matches), Junior (mid-tier upgrades), Senior (advanced gear), and Special (unlocked by defeating a boss or reaching Master, featuring elite equipment).
+    The catalog includes ranged and energy weapons trading power against charge/cooldown and energy draw (from the Rapid micro-beam to the Solar pulse cannon and Quantum railgun), temporal shields with slow recharge and distinct protection types (general, anti-projectile, anti-impact, and full-spectrum), and laser swords or heavy blunt weapons (Light photon saber, Impact mace, Heavy laser sword, and Kinetic ram) that deliver a burst of strikes per cycle before entering a multi-turn cooldown.
     After buying a part, it stays pending until you pass a short Java code challenge (from the Shop or the Workshop); once activated, you can equip it.
-    If a strong part requires a higher rank, level up by winning fights and solving exercises at your tier.
 pseudo.es:
-    ganar peleas y resolver ejercicios → ganar monedas y experiencia
-    Tienda → comprar pieza → superar reto breve de código → activar
-    Taller → Piezas → equipar en tu robot
+    ganar peleas, carreras, destrucción y ejercicios → acumular monedas
+    Tienda (Noob < Junior < Senior < Especial) → elegir compensación (potencia/carga, escudo/recarga o ráfaga/ciclo)
+    comprar pieza → superar reto breve de código → equipar en el Taller
 pseudo.de:
-    Kämpfe gewinnen und Übungen lösen → Münzen und Erfahrung verdienen
-    Laden → Teil kaufen → kurze Code-Aufgabe lösen → aktivieren
-    Werkstatt → Teile → am Roboter ausrüsten
+    Kämpfe, Läufe, Zerstörung und Übungen gewinnen → Münzen sammeln
+    Laden (Noob < Junior < Senior < Spezial) → Ausgleich wählen (Kraft/Ladung, Schild/Aufladung oder Salve/Zyklus)
+    Teil kaufen → kurze Code-Aufgabe lösen → in der Werkstatt ausrüsten
 pseudo.en:
-    win fights and solve exercises → earn coins and experience
-    Shop → buy part → pass short code challenge → activate
-    Workshop → Parts → equip on your robot
+    win fights, races, destruction runs, and exercises → earn coins
+    Shop (Noob < Junior < Senior < Special) → pick your trade-off (power/charge, shield/recharge, or burst/cycle)
+    buy part → pass short code challenge → equip in the Workshop
 ejemplo:
-    // Monedas: se ganan en peleas y ejercicios || Münzen: verdient in Kämpfen und Übungen || Coins: earned in fights and exercises
-    // Las piezas compradas se activan con un breve reto de código || Gekaufte Teile werden per kurzer Code-Aufgabe aktiviert || Purchased parts activate via a short code challenge
+    // Economía por rangos: Noob < Junior < Senior < Especial || Stufen-Wirtschaft: Noob < Junior < Senior < Spezial || Tiered economy: Noob < Junior < Senior < Special
+    // Escudos temporales y armas por ciclo se activan con su reto de código || Temporäre Schilde und Zykluswaffen per Code-Aufgabe aktivieren || Temporal shields and cycle weapons activate via code challenge
 
 === depuracion_y_testing
 nivel: 6
@@ -837,45 +837,45 @@ tema: --
 titulo.es: Modelos, armas características y equilibrio
 titulo.de: Modelle, charakteristische Waffen und Balance
 titulo.en: Models, signature weapons and balance
-claves.es: modelos, equilibrio, compensacion, armas caracteristicas, armas propias, sinergia, velocidad, blindaje, corto alcance, distancia, destruir obstaculos
-claves.de: modelle, balance, ausgleich, charakteristische waffen, eigene waffen, synergie, tempo, panzerung, nahkampf, fernkampf, hindernisse zerstoeren
-claves.en: models, balance, trade-offs, signature weapons, characteristic weapons, synergy, speed, armor, close range, long range, destroy obstacles
-resumen.ia: Robot models and signature weapons (each model has distinct strengths balanced by clear trade-offs: speed vs. lower armor, melee power vs. range/speed, ranged precision vs. armor/melee, heavy armor vs. agility, high computation steps vs. raw burst; each model has signature weapons granting a measured +8% synergy bonus while allowing any compatible catalog weapon to be equipped; these exact stats, damage formulas and obstacle-destruction power apply identically in all game modes including Obstacle race)
+claves.es: modelos, equilibrio, compensacion, armas caracteristicas, armas propias, sinergia, velocidad, blindaje, corto alcance, distancia, destruir obstaculos, escudos temporales, espada laser, ciclos de ataque, recarga lenta
+claves.de: modelle, balance, ausgleich, charakteristische waffen, eigene waffen, synergie, tempo, panzerung, nahkampf, fernkampf, hindernisse zerstoeren, temporare schilde, laserschwert, angriffszyklen, langsame aufladung
+claves.en: models, balance, trade-offs, signature weapons, characteristic weapons, synergy, speed, armor, close range, long range, destroy obstacles, temporal shields, laser sword, attack cycles, slow recharge
+resumen.ia: Robot models, signature weapons, and shop weapon/shield trade-offs (every model balances strengths against weaknesses and grants +8% synergy with signature weapons; ranged/energy shop weapons trade higher power for longer cooldown and energy cost; temporal shields trade stronger or broader protection — general, anti-projectile, anti-impact, full-spectrum — for slower recharge; laser swords and heavy blunt weapons trade high robot and obstacle destruction power for limited burst attacks per cycle followed by a multi-turn cooldown; all formulas apply identically across standard fights, Obstacle race, and Destruction & Survival)
 tip.juego_modelos_equilibrio.condicion: aleatorio
-tip.juego_modelos_equilibrio.es: Cada modelo compensa lo fuerte con otra cifra (más velocidad implica menos blindaje) y gana sinergia con sus [[armas características]], igual en combate y en Carrera de obstáculos.
-tip.juego_modelos_equilibrio.de: Jedes Modell gleicht seine Stärke mit einem anderen Wert aus (mehr Tempo bedeutet weniger Panzerung) und erhält Synergie mit [[charakteristischen Waffen]], im Kampf wie im Hindernislauf.
-tip.juego_modelos_equilibrio.en: Every model trades one strength for another (more speed means less armor) and gains synergy with its [[signature weapons]], identically in combat and Obstacle race.
+tip.juego_modelos_equilibrio.es: Cada modelo y cada arma nueva funciona por compensación: más potencia implica recarga larga, más escudo exige enfriamiento lento y las [[espadas láser y contundentes]] funcionan por ráfagas de ciclo.
+tip.juego_modelos_equilibrio.de: Jedes Modell und jede neue Waffe folgt dem Ausgleichsprinzip: Mehr Kraft heißt längere Abkühlung, stärkerer Schild lädt langsamer, und [[Laserschwerter & Schlagwaffen]] arbeiten in Zyklen.
+tip.juego_modelos_equilibrio.en: Every model and new weapon works by trade-offs: more power means longer cooldown, stronger shields recharge slower, and [[laser swords & blunt weapons]] run on burst cycles.
 ver: taller_y_compilar, tienda_y_monedas, carrera_de_obstaculos
 es:
-    En MetajavBots ningún modelo de robot es superior en todo: cada uno tiene fortalezas claras compensadas con otras estadísticas para mantener el equilibrio entre todos.
-    Quien destaca en velocidad y esquiva (como los modelos de Rayo o Éter) lleva menos blindaje y es más fácil de destruir; quien destaca en blindaje (Acero) gira y se mueve más despacio; quien pega más fuerte cuerpo a cuerpo (Furia) cede en daño a distancia, mientras que quien destaca a distancia y en precisión (Foco) cede en cuerpo a cuerpo y aguante; y los de Ingenio ganan pasos de cálculo y enfriamiento más rápido a cambio de menor pegada bruta.
-    Cada modelo cuenta además con sus armas características (marcadas con ★ en el Taller), que le dan una bonificación de sinergia medida (+8 %) en cualquiera de sus marcas Mk I–V. Aun así puedes montar libremente cualquier otra arma compatible del catálogo combinándola con las fortalezas y el límite de peso de tu chasis.
-    Todas estas cifras físicas, multiplicadores de daño y la capacidad para destruir barriles y chimeneas se aplican con exactamente las mismas fórmulas en todos los modos del juego: peleas estándar, campañas, jefes, minijuegos, banco de pruebas y Carrera de obstáculos.
+    En MetajavBots ningún modelo de robot ni arma es superior en todo: cada uno tiene fortalezas claras compensadas con otras estadísticas para mantener el equilibrio entre todos.
+    Quien destaca en velocidad y esquiva (como los modelos de Rayo o Éter) lleva menos blindaje; quien destaca en blindaje (Acero) gira y se mueve más despacio; Furia pega más fuerte cuerpo a cuerpo cediendo a distancia, Foco destaca a distancia cediendo en cuerpo a cuerpo y aguante, e Ingenio gana pasos de cálculo y enfriamiento más rápido.
+    Las piezas ampliadas de la Tienda siguen la misma regla: las armas rápidas de energía tienen poca potencia y recarga corta mientras los cañones pesados exigen carga larga y mucha energía; los escudos temporales protegen durante unos turnos según su tipo (general, antiproyectil, antichoque o integral) y cuanto mayor es su absorción más lenta es su recarga; y las espadas láser y armas contundentes (Sable fotónico, Maza de impacto, Espada láser pesada y Ariete cinético) ofrecen gran destrucción contra robots y obstáculos destructibles a cambio de un número limitado de golpes por ciclo antes de entrar en enfriamiento de varios turnos.
+    Cada modelo mantiene además la sinergia (+8 %, ★) con sus armas características, y todas estas cifras, escudos, ciclos y multiplicadores contra obstáculos se aplican exactamente igual en peleas estándar, campañas, Carrera de obstáculos y Destrucción y supervivencia.
 de:
-    In MetajavBots ist kein Robotermodell in allem überlegen: Jedes besitzt klare Stärken, die durch andere Werte ausgeglichen werden, damit alle Modelle fair bleiben.
-    Wer bei Tempo und Ausweichen glänzt (Blitz oder Äther), trägt weniger Panzerung und geht schneller kaputt; schwer gepanzerte Modelle (Stahl) fahren und drehen langsamer; Nahkampf-Spezialisten (Wut) verzichten auf Fernkampfschaden, während Fernkampf- und Präzisionsmodelle (Fokus) im Nahkampf und bei der Panzerung nachgeben; Geist-Modelle gewinnen mehr Rechenschritte und schnellere Abklingzeit gegen etwas weniger Grundschaden.
-    Jedes Modell besitzt zudem eigene charakteristische Waffen (in der Werkstatt mit ★ markiert), die eine dosierte Synergie (+8 %) über alle Stufen Mk I–V liefern. Trotzdem darfst du jede kompatible Waffe aus dem Katalog frei ausrüsten und mit den Grundwerten sowie der Traglast deines Chassis kombinieren.
-    Alle physischen Werte, Schadensmultiplikatoren und die Zerstörungskraft gegen Fässer und Schornsteine gelten nach exakt denselben Formeln in jedem Spielmodus: Standardkämpfe, Kampagnen, Bosse, Minispiele, Prüfstand und Hindernislauf.
+    In MetajavBots ist weder ein Robotermodell noch eine Waffe in allem überlegen: Jede Stärke wird durch klare Nachteile ausgeglichen, damit alle Spielstile fair bleiben.
+    Schnelle und wendige Modelle (Blitz oder Äther) tragen weniger Panzerung; schwer gepanzerte Modelle (Stahl) sind träger; Wut glänzt im Nahkampf statt im Fernkampf, Fokus im Fernkampf statt im Nahkampf, und Geist gewinnt Rechenschritte und schnellere Abkühlung.
+    Die erweiterten Laden-Teile folgen demselben Prinzip: Schnelle Energiewaffen haben wenig Schaden und kurze Abkühlung, schwere Kanonen verlangen lange Ladezeit und viel Energie; temporäre Schilde schützen für begrenzte Züge je nach Typ (Allround, Projektilabwehr, Stoßabwehr oder Vollschutz) und laden umso langsamer, je stärker sie blocken; und Laserschwerter sowie wuchtige Nahkampfwaffen (Photonklinge, Aufprallkeule, Schweres Laserschwert, Kinetischer Rammbock) bieten hohe Zerstörungskraft gegen Roboter und Hindernisse gegen begrenzte Schläge pro Zyklus mit anschließender mehrzügiger Abkühlung.
+    Jedes Modell behält zudem seine Synergie (+8 %, ★) mit charakteristischen Waffen, und alle Formeln für Schaden, Schilde, Zyklen und Hinderniszerstörung gelten identisch in Standardkämpfen, Kampagnen, Hindernislauf und Zerstörung & Überleben.
 en:
-    In MetajavBots no robot model is superior at everything: each one has distinct strengths balanced by clear trade-offs so every model stays competitive.
-    Fast and evasive models (Bolt or Aether) carry lighter armor and break faster; heavily armored models (Steel) move and turn slower; close-range brawlers (Fury) trade away ranged damage, while long-range precision models (Focus) trade away melee power and durability; and Wit models gain extra computation steps and faster cooldowns at the cost of raw per-hit burst.
-    Every model also comes with signature weapons (marked with ★ in the Workshop) that grant a measured +8% synergy bonus across all Mk I–V tiers. You remain completely free to equip any compatible weapon from the catalog, combining it with your chassis's base speed, armor, affinity and weight capacity.
-    These exact physical stats, damage multipliers, and obstacle-destruction power against barrels and chimneys apply uniformly across every game mode: standard fights, campaigns, bosses, minigames, test bench, and Obstacle race.
+    In MetajavBots no robot model or weapon is superior at everything: every strength is balanced by clear trade-offs so every build stays competitive.
+    Fast evasive models (Bolt or Aether) carry lighter armor; heavy Steel models turn and move slower; Fury excels in melee over range, Focus excels at range over melee, and Wit gains computation steps and faster cooldowns.
+    The expanded Shop catalog follows the same rule: rapid energy weapons deal light damage with short cooldowns while heavy cannons demand long charge times and high energy; temporal shields protect for a limited window according to their type (general, anti-projectile, anti-impact, or full-spectrum) with slower recharge the stronger they block; and laser swords and heavy blunt weapons (Light photon saber, Impact mace, Heavy laser sword, and Kinetic ram) deliver high destruction against robots and destructible obstacles in exchange for a fixed burst of strikes per cycle before entering a multi-turn cooldown.
+    Every model also keeps its +8% (★) synergy with signature weapons, and all damage, shield, cycle, and obstacle-destruction formulas apply identically in standard fights, campaigns, Obstacle race, and Destruction & Survival.
 pseudo.es:
-    elegir modelo según estilo (velocidad, blindaje, corto alcance, distancia o ingenio)
-    mantener armas características (★ +8 %) o combinar otras del catálogo
-    aprovechar las mismas cifras reales en Arena y Carrera de obstáculos
+    distancia/energía: potencia alta ↔ enfriamiento largo y mayor energía
+    escudos temporales: tipo y % de bloqueo ↔ recarga lenta
+    espadas láser y contundentes: destrucción ↔ golpes por ciclo + pausa de varios turnos
 pseudo.de:
-    Modell nach Spielstil wählen (Tempo, Panzerung, Nahkampf, Fernkampf oder Geist)
-    charakteristische Waffen (★ +8 %) nutzen oder andere aus dem Katalog kombinieren
-    dieselben echten Werte in Arena und Hindernislauf ausspielen
+    Fernkampf/Energie: hohe Kraft ↔ lange Abkühlung und höherer Energieverbrauch
+    temporäre Schilde: Schutztyp und Block-% ↔ langsame Aufladung
+    Laserschwerter & Schlagwaffen: Zerstörung ↔ Schläge pro Zyklus + mehrzügige Pause
 pseudo.en:
-    pick a model for your style (speed, armor, melee, ranged or wit)
-    keep signature weapons (★ +8%) or mix in other catalog weapons
-    use the exact same real stats in both Arena and Obstacle race
+    ranged/energy: high power ↔ long cooldown and higher energy draw
+    temporal shields: protection type & block % ↔ slow recharge
+    laser swords & blunt weapons: destruction ↔ burst strikes per cycle + multi-turn cooldown
 ejemplo:
-    // Equilibrio por compensación: velocidad ↔ blindaje, corto alcance ↔ distancia || Ausgleichsbalance: Tempo ↔ Panzerung, Nahkampf ↔ Fernkampf || Trade-off balance: speed ↔ armor, melee ↔ ranged
-    // Armas características: sinergia ★ (+8 %) en todos los modos del juego || Charakteristische Waffen: ★-Synergie (+8 %) in allen Spielmodi || Signature weapons: ★ synergy (+8%) in every game mode
+    // Equilibrio por compensación: potencia ↔ carga, protección ↔ recarga, destrucción ↔ ciclo || Ausgleich: Kraft ↔ Ladung, Schutz ↔ Aufladung, Zerstörung ↔ Zyklus || Trade-offs: power ↔ charge, shield ↔ recharge, destruction ↔ cycle
+    // Mismas fórmulas en Arena, Carrera de obstáculos y Destrucción y supervivencia || Gleiche Formeln in Arena, Hindernislauf und Zerstörung & Überleben || Same formulas in Arena, Obstacle race, and Destruction & Survival
 
 
 === minijuego_destruccion

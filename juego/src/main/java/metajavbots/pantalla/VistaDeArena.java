@@ -516,7 +516,7 @@ public final class VistaDeArena {
         e.abolladuras = co.abolladuras;
         e.retroceso = (float) c.retroceso;
         e.sacudida = co.defectuoso && !c.fuera ? Math.max((float) c.sacudida, 1.8f + (float) Math.abs(Math.sin(tiempo * 17 + c.indice))) : (float) c.sacudida;
-        e.escudo = c.escudoCabeza > 0 || c.escudoBrazo > 0;
+        e.aplicarEscudo(c.escudoCabeza > 0, c.tipoEscudoCabeza, c.escudoBrazo > 0, c.tipoEscudoBrazo);
         e.turbo = c.turbo > 0;
         e.camuflaje = c.camuflaje > 0;
         e.aturdido = c.aturdido > 0;

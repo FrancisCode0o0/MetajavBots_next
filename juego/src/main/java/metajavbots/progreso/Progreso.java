@@ -257,7 +257,9 @@ public final class Progreso {
 
     /** ¿Tiene el jugador rango suficiente para comprar piezas de esta categoría en la tienda? */
     public static boolean rangoDesbloqueadoEnTienda(Jugador j, Etiqueta.Categoria rango) {
-        return j != null && rango != null && j.etiqueta.categoria().ordinal() >= rango.ordinal();
+        if (j == null || rango == null) return false;
+        if (rango == Etiqueta.Categoria.MASTER) return modoEspecialDesbloqueado(j);
+        return j.etiqueta.categoria().ordinal() >= rango.ordinal();
     }
 
     /**
