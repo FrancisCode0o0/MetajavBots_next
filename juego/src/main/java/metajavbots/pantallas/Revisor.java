@@ -49,10 +49,31 @@ public final class Revisor {
             if (pelea.combatientes[0].efectosPoo != null && pelea.combatientes[0].efectosPoo.camposPublicosMutables > 0) {
                 r.consejos.add(T.f("poo.consejo_public", pelea.combatientes[0].efectosPoo.camposPublicosMutables));
             }
+            revisarSenior(codigo, pelea, inf, idioma, r);
         }
         estilo(codigo, r);
         if (r.consejos.isEmpty()) r.consejos.add(T.t("revisor.bien"));
         return r;
+    }
+
+    /** Consejos específicos para peleas Senior: presupuestos, concurrencia, nulos, ángulos y rival Senior. */
+    private static void revisarSenior(String codigo, Pelea pelea, Combatiente.Informe inf, Idioma idioma, Informe r) {
+        Idioma id = idioma == null ? Idioma.ES : idioma;
+        if (inf.excesosTiempo > 0) r.consejos.add(T.f("revisor.senior_tiempo", inf.excesosTiempo));
+        if (inf.excesosMemoria > 0) r.consejos.add(T.f("revisor.senior_memoria", inf.excesosMemoria));
+        if (inf.fallosNulos > 0) r.consejos.add(T.f("revisor.senior_nulos", inf.fallosNulos));
+        if (inf.erroresConcurrencia > 0) r.consejos.add(T.f("revisor.senior_concurrencia", inf.erroresConcurrencia));
+        if (pelea.pensarEnParalelo && !metajavbots.codigo.DetectorDeTemas.temas(codigo).contains(metajavbots.codigo.DetectorDeTemas.HILOS)) {
+            r.consejos.add(T.t("revisor.senior_paralelo_sin_sync"));
+        }
+        metajavbots.rivales.RivalSenior.Tipo rival = metajavbots.rivales.RivalSenior.Tipo.de(pelea.rivalSeniorId);
+        if (rival != null) {
+            if (rival == metajavbots.rivales.RivalSenior.Tipo.ANGULOS
+                    && !codigo.contains("normalizar") && !codigo.contains("normalisieren") && !codigo.contains("normalize")) {
+                r.consejos.add(T.t("revisor.senior_angulos"));
+            }
+            r.consejos.add(rival.consejoRevision.en(id));
+        }
     }
 
     static void estilo(String codigo, Informe r) {

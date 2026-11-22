@@ -13,11 +13,14 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public final class Tope {
 
-    /** La cuenta de un hilo: pasos dados, el máximo y la hora límite. */
+    /** La cuenta de un hilo: pasos dados, bytes asignados, el máximo y la hora límite. */
     static final class Cuenta {
         final AtomicLong pasos = new AtomicLong();
+        final AtomicLong bytesAsignados = new AtomicLong();
         long maximo = Long.MAX_VALUE;
         long limiteNanos = Long.MAX_VALUE;
+        long maxBytes = Long.MAX_VALUE;
+        long mascaraTiempo = 1023;
         volatile boolean cancelada;
         /** Las líneas que se han ejecutado (solo con la traza: el modo máquina contra máquina). */
         final java.util.BitSet lineas = new java.util.BitSet();
@@ -38,12 +41,27 @@ public final class Tope {
         if (c == null) return true;
         long p = c.pasos.incrementAndGet();
         if (p > c.maximo) throw new TopeDeCalculo("pasos: " + p);
-        if ((p & 1023) == 0 && (c.cancelada || System.nanoTime() > c.limiteNanos)) {
+        if ((p & c.mascaraTiempo) == 0 && (c.cancelada || System.nanoTime() > c.limiteNanos)) {
             c.cancelada = true;
             throw new TopeDeCalculo("tiempo");
         }
         if (c.cancelada) throw new TopeDeCalculo("cancelado");
         return true;
+    }
+
+    /** Registra asignaciones de memoria deterministas del turno (inyectado al compilar). */
+    public static void asignar(long bytes) {
+        if (bytes <= 0) return;
+        Cuenta c = CUENTA.get();
+        if (c == null) return;
+        long total = c.bytesAsignados.addAndGet(bytes);
+        if (total > c.maxBytes) throw new TopeDeCalculo("memoria: " + total);
+    }
+
+    /** Bytes asignados en este turno por las reservas instrumentadas. */
+    public static long bytesAsignados() {
+        Cuenta c = CUENTA.get();
+        return c == null ? 0 : c.bytesAsignados.get();
     }
 
     /** Una línea que se ejecuta (lo mete el Inyector con la traza puesta; no cuenta como paso). */

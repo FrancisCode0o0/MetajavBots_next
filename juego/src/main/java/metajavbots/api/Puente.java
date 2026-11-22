@@ -58,10 +58,23 @@ public final class Puente {
 
     /** Empieza a contar en este hilo: hasta «maximo» pasos y «nanos» de tiempo. */
     public static void contar(long maximo, long nanos) {
+        contar(maximo, nanos, Long.MAX_VALUE);
+    }
+
+    /** Empieza a contar en este hilo con límite de pasos, tiempo (ns) y bytes asignados. */
+    public static void contar(long maximo, long nanos, long maxBytes) {
         Tope.Cuenta c = new Tope.Cuenta();
         c.maximo = maximo;
         c.limiteNanos = nanos == Long.MAX_VALUE ? Long.MAX_VALUE : System.nanoTime() + nanos;
+        c.maxBytes = maxBytes <= 0 ? Long.MAX_VALUE : maxBytes;
+        c.mascaraTiempo = nanos < 10_000_000L ? 63 : 1023;
         Tope.CUENTA.set(c);
+    }
+
+    /** Bytes asignados en la cuenta actual antes de cerrarla. */
+    public static long bytesAsignados() {
+        Tope.Cuenta c = Tope.CUENTA.get();
+        return c == null ? 0 : c.bytesAsignados.get();
     }
 
     /** Deja de contar y devuelve los pasos dados. */

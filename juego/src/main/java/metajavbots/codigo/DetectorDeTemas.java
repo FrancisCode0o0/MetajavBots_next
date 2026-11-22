@@ -18,8 +18,9 @@ public final class DetectorDeTemas {
             GENERICOS = "genericos", EXCEPCIONES = "excepciones", LAMBDAS = "lambdas", STREAMS = "streams",
             RECURSION = "recursion", HILOS = "hilos", MODERNO = "moderno", POLIMORFISMO = "polimorfismo",
             ENCAPSULACION = "encapsulacion", BUCLES = "bucles", ARRAYS = "arrays", METODOS = "metodos", CONDICIONALES = "condicionales";
-    /** Los de senior (bloque 4): records, jerarquías selladas con pattern matching, inmutabilidad y el patrón estrategia. */
-    public static final String RECORDS = "records", SELLADAS = "selladas", INMUTABILIDAD = "inmutabilidad", ESTRATEGIA = "estrategia";
+    /** Los de senior (bloque 4): records, jerarquías selladas con pattern matching, inmutabilidad, estrategia y bytecode. */
+    public static final String RECORDS = "records", SELLADAS = "selladas", INMUTABILIDAD = "inmutabilidad", ESTRATEGIA = "estrategia",
+            BYTECODE = "bytecode";
 
     private static final Set<String> COLECCION = Set.of("List", "ArrayList", "LinkedList", "Map", "HashMap", "TreeMap", "LinkedHashMap",
             "Set", "HashSet", "TreeSet", "LinkedHashSet", "Deque", "ArrayDeque", "Queue", "PriorityQueue", "Collection", "Iterator");
@@ -95,6 +96,7 @@ public final class DetectorDeTemas {
         boolean sellada = false, patron = false;
         int finales = 0;
         boolean setter = false;
+        boolean bits = false, primitivoConst = false, boxing = false;
         java.util.Map<String, Integer> implementaciones = new java.util.HashMap<>();
         for (int i = 0; i < c.size(); i++) {
             Lexico.Trozo x = c.get(i);
@@ -106,6 +108,11 @@ public final class DetectorDeTemas {
                 Lexico.Trozo tras = i + 4 < c.size() ? c.get(i + 4) : null;
                 if (tras != null && (tras.es(";") || tras.es("="))) finales++;
             }
+            if (x.es("static") && i + 3 < c.size() && c.get(i + 1).es("final") && c.get(i + 2).clase == Lexico.Clase.TIPO_PRIMITIVO) {
+                primitivoConst = true;
+            }
+            if (x.es("&") || x.es("|") || x.es("^") || x.es("<<") || x.es(">>") || x.es(">>>")) bits = true;
+            if (x.clase == Lexico.Clase.NOMBRE && (x.texto.equals("Integer") || x.texto.equals("Double") || x.texto.equals("Long"))) boxing = true;
             if (x.clase == Lexico.Clase.NOMBRE && x.texto.length() > 3 && x.texto.startsWith("set") && Character.isUpperCase(x.texto.charAt(3))
                     && i + 1 < c.size() && c.get(i + 1).es("(")) setter = true;
             if (x.es("implements")) {
@@ -116,6 +123,7 @@ public final class DetectorDeTemas {
         }
         if (sellada && patron) t.add(SELLADAS);
         if (finales >= 2 && !setter) t.add(INMUTABILIDAD);
+        if ((bits || primitivoConst) && !boxing) t.add(BYTECODE);
         for (int n : implementaciones.values()) if (n >= 2) t.add(ESTRATEGIA);
     }
 

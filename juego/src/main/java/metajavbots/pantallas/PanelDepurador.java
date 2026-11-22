@@ -71,6 +71,7 @@ public final class PanelDepurador {
             float parte = Math.min(1, c.pasosDelTurno / (float) tope);
             ui.barra(x + 16, ty, w - 32, 18, parte, parte > 0.8f ? ui.tema.mal : ui.tema.acento, T.f("pelea.pasos", c.pasosDelTurno, tope));
             ty += 24;
+            ty = barrasSenior(j, pelea, c, x, ty, w);
             String pos = String.format(java.util.Locale.ROOT, "x=%.0f  y=%.0f  rumbo=%.0f°  mira=%.0f°", c.x, c.y, c.rumbo(), c.mira());
             float tamPos = ui.cabeDeCodigo(pos, w - 32, ui.letra * 0.78f, false);
             p.textoDeCodigo(pos, x + 16, ty, tamPos, false, ui.tema.textoSuave, 1);
@@ -88,6 +89,32 @@ public final class PanelDepurador {
         ty += 42;
         if (pestana == 1) codigoYTurno(j, c, fuente, conTraza, x, ty, w, y + h - 14);
         else variablesYConsola(j, yo, x, ty, w, y + h - 18);
+    }
+
+    private float barrasSenior(Juego j, Pelea pelea, Cuerpo c, float x, float ty, float w) {
+        Ui ui = j.ui;
+        Pincel p = j.pincel;
+        if (pelea.presupuestoNanosPorTurno > 0) {
+            float f = Math.min(1f, c.nanosDelTurno / (float) pelea.presupuestoNanosPorTurno);
+            String txt = T.f("pelea.tiempo_turno", String.format(java.util.Locale.ROOT, "%.2f", c.nanosDelTurno / 1_000_000.0),
+                    String.format(java.util.Locale.ROOT, "%.2f", pelea.presupuestoNanosPorTurno / 1_000_000.0));
+            ui.barra(x + 16, ty, w - 32, 18, f, f >= 1f ? ui.tema.mal : ui.tema.bien, txt);
+            ty += 22;
+        }
+        if (pelea.presupuestoBytesPorTurno > 0) {
+            float f = Math.min(1f, c.bytesDelTurno / (float) pelea.presupuestoBytesPorTurno);
+            String txt = T.f("pelea.memoria_turno", String.format(java.util.Locale.ROOT, "%.1f", c.bytesDelTurno / 1024.0),
+                    String.format(java.util.Locale.ROOT, "%.1f", pelea.presupuestoBytesPorTurno / 1024.0));
+            ui.barra(x + 16, ty, w - 32, 18, f, f >= 1f ? ui.tema.mal : 0x3FE0FF, txt);
+            ty += 22;
+        }
+        if (pelea.pensarEnParalelo) {
+            String par = "|| " + T.t("pelea.paralelo");
+            float tam = ui.cabeDeCodigo(par, w - 32, ui.letra * 0.75f, true);
+            p.textoDeCodigo(par, x + 16, ty, tam, true, 0x3FE0FF, 1);
+            ty += p.altoDeLinea(tam) + 4;
+        }
+        return ty;
     }
 
     private float indicadorSinEjecucion(Juego j, Cuerpo c, float x, float ty, float w) {

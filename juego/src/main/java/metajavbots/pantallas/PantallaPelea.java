@@ -128,6 +128,11 @@ public final class PantallaPelea implements Pantalla {
         if (jug.armasEspeciales && encuentro.demas.isEmpty() && encuentro.codigo == null && encuentro.objetivo == null && encuentro.rondas > 1
                 && !sinJdk) especial = ArmaEspecial.para(jug);
         pelea.topeDePasos = encuentro.topeDePasos;
+        pelea.presupuestoNanosPorTurno = encuentro.presupuestoNanosPorTurno;
+        pelea.presupuestoBytesPorTurno = encuentro.presupuestoBytesPorTurno;
+        pelea.pensarEnParalelo = encuentro.pensarEnParalelo;
+        pelea.rivalSeniorId = encuentro.rivalSeniorId == null ? "" : encuentro.rivalSeniorId;
+        PanelSenior.vincularAliadoParalelo(encuentro, yo);
         narrador = new Narrador(pelea.combatientes, pelea.equipo);
         narrador.idioma = jug.idioma;
         narrador.jugador = jug.nombre;
@@ -324,6 +329,7 @@ public final class PantallaPelea implements Pantalla {
         marcarErrores(res, j.jugador);
         if (res.bien) {
             yo.fabrica = robot.fabricaSiListo();
+            PanelSenior.vincularAliadoParalelo(encuentro, yo);
             if (encuentro.codigo == null && j.jugador.robot() != null) {
                 j.jugador.robot().registrarCompilacionValida(codigoEnCompilacion);
             }
@@ -634,6 +640,7 @@ public final class PantallaPelea implements Pantalla {
     private void acabar(Juego j) {
         if (terminada) return;
         terminada = true;
+        pelea.cerrar();
         tiempoFinal = 0;
         int g = pelea.ganador();
         ganoElJugador = g >= 0 && pelea.equipo[g] == pelea.equipo[0];

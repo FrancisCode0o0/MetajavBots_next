@@ -47,7 +47,10 @@ public final class Jefe {
             java.util.Map.entry("interfaces", new String[]{"imp", "7FB2FF"}), java.util.Map.entry("colecciones", new String[]{"{ }", "9BE15D"}),
             java.util.Map.entry("excepciones", new String[]{"!", "FF9F43"}), java.util.Map.entry("genericos", new String[]{"<T>", "C792EA"}),
             java.util.Map.entry("lambdas", new String[]{"->", "56CCF2"}), java.util.Map.entry("streams", new String[]{"≈", "2DD4BF"}),
-            java.util.Map.entry("recursion", new String[]{"f(f)", "F472B6"}), java.util.Map.entry("hilos", new String[]{"||", "FACC15"}));
+            java.util.Map.entry("recursion", new String[]{"f(f)", "F472B6"}), java.util.Map.entry("hilos", new String[]{"||", "FACC15"}),
+            java.util.Map.entry("records", new String[]{"rec", "E5C07B"}), java.util.Map.entry("selladas", new String[]{"sld", "FF8A65"}),
+            java.util.Map.entry("inmutabilidad", new String[]{"fin", "81C784"}), java.util.Map.entry("estrategia", new String[]{"str", "64B5F6"}),
+            java.util.Map.entry("bytecode", new String[]{"0xCA", "F06292"}));
 
     public String nombre(Idioma i) {
         return nombre.en(i);
@@ -156,7 +159,12 @@ public final class Jefe {
                     new Trilingue("Patrón estrategia: una interfaz propia (Tactica) y dos clases o más que la implementan; el robot cambia de táctica.",
                             "Strategie-Muster: ein eigenes Interface (Taktik) und mindestens zwei Klassen, die es implementieren; "
                                     + "der Roboter wechselt die Taktik.",
-                            "Strategy pattern: your own interface (Tactic) and two or more classes implementing it; the robot switches tactics.")));
+                            "Strategy pattern: your own interface (Tactic) and two or more classes implementing it; the robot switches tactics.")),
+            new Jefe("bytecode", "bytecode", "abaco", 0.88,
+                    new Trilingue("El Desensamblador 0xCAFEBABE", "Der Disassembler 0xCAFEBABE", "The 0xCAFEBABE Disassembler"),
+                    new Trilingue("Bytecode limpio: constantes primitivas (static final) o máscaras de bits (&, |, <<) sin autoboxing (Integer/Double).",
+                            "Sauberer Bytecode: primitive Konstanten (static final) oder Bitmasken (&, |, <<) ohne Autoboxing (Integer/Double).",
+                            "Clean bytecode: primitive constants (static final) or bitmasks (&, |, <<) with zero autoboxing (Integer/Double).")));
 
     public static Jefe de(String id) {
         for (Jefe j : TODOS) if (j.id.equals(id)) return j;

@@ -22,6 +22,12 @@ public final class Encuentro {
     public int rondas = 4;
     /** Si no es 0, el tope de pasos por turno para los dos (el modo «tope de cálculo»). */
     public long topeDePasos;
+    /** Presupuestos Senior por turno (0 = desactivado): tiempo en nanosegundos y memoria en bytes. */
+    public long presupuestoNanosPorTurno, presupuestoBytesPorTurno;
+    /** Si es true, los robots piensan en paralelo en un grupo acotado de hilos demonio. */
+    public boolean pensarEnParalelo;
+    /** Identificador del rival Senior (o vacío si es una pelea normal), para consejos de revisión. */
+    public String rivalSeniorId = "";
     /** El jefe de un tema (o null): solo se le hace daño si el código usa su tema. */
     public Jefe jefe;
     /** El objetivo de un tutorial («aciertos>=3»…), o null. */

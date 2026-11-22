@@ -18,6 +18,7 @@ import java.util.List;
 public final class Inyector {
 
     public static final String PASO = "metajavbots.api.Tope.paso()";
+    public static final String ASIGNAR = "metajavbots.api.Tope.asignar";
 
     /** El código ya inyectado y dónde se metió cada cosa (para devolver las columnas a su sitio). */
     public static final class Inyectado {
@@ -88,7 +89,7 @@ public final class Inyector {
         if (fin + 1 < t.size() && t.get(fin + 1).es("{")) {
             // Con llaves (lo normal): el paso, lo primero del cuerpo. Así «while (true)» sigue siendo un bucle sin fin
             // para javac (si no, pediría un return detrás).
-            meter(metidos, textos, t.get(fin + 1).fin, " " + PASO + ";");
+            meter(metidos, textos, t.get(fin + 1).fin, marcaDeBloque(t, fin + 1, pareja));
         } else if (x.es("while")) {
             meter(metidos, textos, t.get(i + 1).fin, PASO + " && (");
             meter(metidos, textos, t.get(fin).inicio, ")");
@@ -154,7 +155,7 @@ public final class Inyector {
                     boolean constructor = nombre != null && nombre.equals(clases.peek());
                     if (!constructor) {
                         metidos.add(new int[]{x.fin, 0});
-                        textos.add(" " + PASO + ";");
+                        textos.add(marcaDeBloque(t, i, pareja));
                     }
                 } else if (arriba == Llave.ENUM && enConstantesDeEnum) {
                     // El cuerpo de una constante de enum es como una clase.
@@ -171,7 +172,7 @@ public final class Inyector {
                 enConstantesDeEnum = false;
             } else if (x.es("do") && i + 1 < t.size() && t.get(i + 1).es("{") && pareja[i + 1] > 0) {
                 // do { paso(); … } while (…);
-                meter(metidos, textos, t.get(i + 1).fin, " " + PASO + ";");
+                meter(metidos, textos, t.get(i + 1).fin, marcaDeBloque(t, i + 1, pareja));
                 int cierre = pareja[i + 1];
                 if (cierre + 1 < t.size() && t.get(cierre + 1).es("while")) whileDeDo.add(cierre + 1);
             } else if ((x.es("while") || x.es("for")) && !whileDeDo.contains(i) && i + 1 < t.size() && t.get(i + 1).es("(")
@@ -385,6 +386,42 @@ public final class Inyector {
     private static void meter(List<int[]> metidos, List<String> textos, int pos, String texto) {
         metidos.add(new int[]{pos, 0});
         textos.add(texto);
+    }
+
+    /** Marca de inicio de bloque: cuenta un paso y, si el bloque reserva objetos con {@code new}, registra sus bytes. */
+    private static String marcaDeBloque(List<Lexico.Trozo> t, int llaveAbre, int[] pareja) {
+        long bytes = bytesDeBloque(t, llaveAbre, pareja);
+        return bytes > 0 ? " " + PASO + "; " + ASIGNAR + "(" + bytes + "L);" : " " + PASO + ";";
+    }
+
+    /** Estima de forma determinista los bytes reservados directamente en un bloque (sin contar bucles anidados). */
+    private static long bytesDeBloque(List<Lexico.Trozo> t, int llaveAbre, int[] pareja) {
+        int cierre = llaveAbre >= 0 && llaveAbre < pareja.length ? pareja[llaveAbre] : -1;
+        if (cierre <= llaveAbre) return 0;
+        long bytes = 0;
+        for (int k = llaveAbre + 1; k < cierre; k++) {
+            Lexico.Trozo x = t.get(k);
+            if ((x.es("for") || x.es("while")) && k + 1 < cierre && t.get(k + 1).es("(") && pareja[k + 1] > 0) {
+                int finCond = pareja[k + 1];
+                if (finCond + 1 < cierre && t.get(finCond + 1).es("{") && pareja[finCond + 1] > 0) {
+                    k = pareja[finCond + 1];
+                    continue;
+                }
+            } else if (x.es("do") && k + 1 < cierre && t.get(k + 1).es("{") && pareja[k + 1] > 0) {
+                k = pareja[k + 1];
+                continue;
+            }
+            if (x.es("new") && !(k > 0 && t.get(k - 1).es("."))) {
+                boolean array = false;
+                for (int m = k + 1; m < cierre && m <= k + 6; m++) {
+                    Lexico.Trozo sig = t.get(m);
+                    if (sig.es("[")) { array = true; break; }
+                    if (sig.es("(") || sig.es("{") || sig.es(";")) break;
+                }
+                bytes += array ? 256L : 64L;
+            }
+        }
+        return bytes;
     }
 
     /** «) {» o «) throws A, B {» justo antes de la llave: el cuerpo de un método o de un constructor. */

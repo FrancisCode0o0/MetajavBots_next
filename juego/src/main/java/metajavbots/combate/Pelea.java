@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.Random;
 
 import metajavbots.api.Puente;
-import metajavbots.api.TopeDeCalculo;
 import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Pieza;
 
@@ -47,6 +46,13 @@ public final class Pelea {
     public long nanosPorTurno = 30_000_000L;
     /** Si no es 0, el tope de pasos de todos (el modo especial «tope de cálculo»); si es 0, el de cada núcleo. */
     public long topeDePasos;
+    /** Presupuesto Senior por turno (0 = desactivado): tiempo máximo (ns) y memoria máxima (bytes). */
+    public long presupuestoNanosPorTurno, presupuestoBytesPorTurno;
+    /** Si es true, la fase de pensamiento de cada turno se ejecuta en paralelo bajo hilos demonio acotados. */
+    public boolean pensarEnParalelo;
+    /** Identificador del rival Senior (si aplica), para retroalimentación específica en el Revisor. */
+    public String rivalSeniorId = "";
+    private EjecutorParalelo ejecutorParalelo;
     /** Cuánto daño le llega a cada uno (1 = todo). Los jefes del modo especial ponen 0.1 si el código no usa su tema. */
     public final double[] resistencia;
     /** Multiplicador global de daño recibido (1.0 en combate estándar; escalado en Carrera de obstáculos y Reto especial). */
@@ -241,8 +247,9 @@ public final class Pelea {
         int n = cuerpos.length;
         // 1) Lo que ve cada uno (una foto del principio del turno): sus enemigos a la vista y sus compañeros.
         for (Cuerpo c : cuerpos) actualizarVistos(c);
-        // 2) El código de cada uno (empieza uno distinto cada turno, para que nadie vaya siempre primero).
-        for (int k = 0; k < n; k++) pensar(cuerpos[(turno + k) % n]);
+        // 2) El código de cada uno (en paralelo en modo Senior, o por orden rotativo en modo estándar).
+        if (pensarEnParalelo) ejecutorParalelo().ejecutarTurno(this, cuerpos, this::pensar, limiteTiempoEfectivo());
+        else for (int k = 0; k < n; k++) pensar(cuerpos[(turno + k) % n]);
         // 3) Los ataques, el movimiento, los choques, los proyectiles.
         for (Cuerpo c : cuerpos) atacar(c);
         for (Cuerpo c : cuerpos) mover(c);
@@ -324,6 +331,7 @@ public final class Pelea {
                 }
             }
             suceso(Suceso.Tipo.PELEA_ACABA, ganador, ancho / 2, alto / 2, 0, ganador, "");
+            cerrar();
         } else {
             estado = Estado.ENTRE_RONDAS;
         }
@@ -339,6 +347,26 @@ public final class Pelea {
             break;
         }
         suceso(Suceso.Tipo.PELEA_ACABA, ganador, ancho / 2, alto / 2, 0, ganador, "rendicion");
+        cerrar();
+    }
+
+    /** Cierra los recursos concurrentes (grupo de hilos en modo paralelo) para no dejar hilos colgados. */
+    public synchronized void cerrar() {
+        if (ejecutorParalelo != null) {
+            ejecutorParalelo.cerrar();
+            ejecutorParalelo = null;
+        }
+    }
+
+    private synchronized EjecutorParalelo ejecutorParalelo() {
+        if (ejecutorParalelo == null || ejecutorParalelo.estaCerrado()) {
+            ejecutorParalelo = new EjecutorParalelo(combatientes.length);
+        }
+        return ejecutorParalelo;
+    }
+
+    long limiteTiempoEfectivo() {
+        return presupuestoNanosPorTurno > 0 ? Math.min(nanosPorTurno, presupuestoNanosPorTurno) : nanosPorTurno;
     }
 
     public Combatiente.Informe informe(int i) {
@@ -380,7 +408,7 @@ public final class Pelea {
         List<String[]> avisos = new ArrayList<>(c.avisos);
         c.avisos.clear();
         c.empezarRegistroDeTurno();
-        long pasos = ejecutar(c, () -> {
+        long pasos = PresupuestoSenior.ejecutar(this, c, () -> {
             for (metajavbots.api.Impacto g : golpes) Puente.golpeado(co.robot, g);
             for (metajavbots.api.Impacto g : aciertos) Puente.acierto(co.robot, g);
             if (pared) Puente.pared(co.robot);
@@ -388,7 +416,7 @@ public final class Pelea {
             for (String[] a : avisos) Puente.equipo(co.robot, a[0], a[1]);
             for (Avistamiento v : c.vistos) Puente.ver(co.robot, v);
             Puente.turno(co.robot);
-        }, tope);
+        }, tope, true);
         c.cerrarRegistroDeTurno();
         c.pasosDelTurno = pasos;
         inf.pasosTotales += pasos;
@@ -399,59 +427,13 @@ public final class Pelea {
         inf.recorrido += Math.abs(c.velocidad);
     }
 
-    /** Ejecuta código del robot con su tope; devuelve los pasos dados. Nada de lo que haga el robot rompe la pelea. */
+    /** Ejecuta código del robot fuera de turno normal (inicio/fin de ronda). */
     private long ejecutar(Cuerpo c, Runnable r, long tope) {
-        Puente.contar(tope, nanosPorTurno);
-        metajavbots.codigo.Salida.capturar();
-        long pasos = 0;
-        try {
-            try {
-                r.run();
-            } catch (TopeDeCalculo t) {
-                Combatiente.Informe inf = informe(c.indice);
-                inf.topes++;
-                // Se pasa del tope: pierde los turnos siguientes, más cuanto más se pase (el código lento hace lento al robot).
-                c.deuda = Math.min(20, c.deuda + 2 + inf.topes / 3);
-                if (inf.topes <= 3 || inf.topes % 20 == 0) {
-                    c.combatiente.escribir(turno, "⏱ Tope de cálculo (" + tope + " pasos por turno): el robot se queda pensando " + c.deuda + " turnos.");
-                }
-                suceso(Suceso.Tipo.TOPE, c.indice, c.x, c.y, 0, c.deuda, "");
-            } catch (StackOverflowError e) { error(c, e, "recursión sin final (StackOverflowError)"); }
-            catch (OutOfMemoryError e) { error(c, e, "sin memoria"); }
-            catch (Throwable e) { error(c, e, null); }
-            // La traza (modo máquina contra máquina): qué líneas de su código se ejecutaron este turno.
-            java.util.BitSet lineas = Puente.lineas();
-            if (lineas != null && !lineas.isEmpty()) { c.lineasDelTurno = lineas; c.ultimaLinea = Puente.ultimaLinea(); }
-        } finally {
-            try {
-                String escrito = metajavbots.codigo.Salida.soltar();
-                if (!escrito.isEmpty()) c.combatiente.escribir(turno, escrito.stripTrailing());
-            } finally { pasos = Puente.dejarDeContar(); }
-        }
-        return pasos;
+        return PresupuestoSenior.ejecutar(this, c, r, tope, false);
     }
 
     private void error(Cuerpo c, Throwable e, String que) {
-        Combatiente co = c.combatiente;
-        Combatiente.Informe inf = informe(c.indice);
-        inf.errores++;
-        Throwable raiz = e;
-        if (e instanceof java.lang.reflect.InvocationTargetException && e.getCause() != null) raiz = e.getCause();
-        int linea = -1;
-        for (StackTraceElement s : raiz.getStackTrace()) {
-            if (co.fabrica != null && co.fabrica.esSuya(s.getClassName())) {
-                linea = s.getLineNumber();
-                break;
-            }
-        }
-        String texto = (que != null ? que + ": " : "") + raiz.getClass().getSimpleName()
-                + (raiz.getMessage() != null ? ": " + raiz.getMessage() : "") + (linea > 0 ? " (línea " + linea + ")" : "");
-        co.ultimoError = texto;
-        co.lineaDelUltimoError = linea;
-        if (inf.errores <= 5 || inf.errores % 50 == 0) co.escribir(turno, "⚠ " + texto);
-        // Un error deja al robot un momento aturdido («se le cruzan los cables»).
-        c.aturdido = Math.max(c.aturdido, 8);
-        suceso(Suceso.Tipo.ERROR_CODIGO, c.indice, c.x, c.y, 0, linea, texto);
+        PresupuestoSenior.error(this, c, e, que);
     }
 
     // ================================================================ ver
@@ -772,7 +754,7 @@ public final class Pelea {
 
     // ================================================================ ayudas
 
-    void suceso(Suceso.Tipo tipo, int quien, double x, double y, double angulo, double valor, String texto) {
+    synchronized void suceso(Suceso.Tipo tipo, int quien, double x, double y, double angulo, double valor, String texto) {
         Suceso s = new Suceso(tipo, quien, x, y, angulo, valor, texto, turno);
         sucesosDelTurno.add(s);
         if (tipo != Suceso.Tipo.DECIR || sucesos.size() < 20000) sucesos.add(s);

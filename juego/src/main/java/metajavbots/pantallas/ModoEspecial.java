@@ -24,7 +24,8 @@ import metajavbots.textos.T;
 public final class ModoEspecial implements Pantalla {
 
     /** Claves de las pestañas de esta pantalla (en orden). */
-    public static final List<String> CLAVES_PESTANAS = List.of("especial.jefes", "especial.tope", "especial.retos", "especial.otros", "especial.destruccion");
+    public static final List<String> CLAVES_PESTANAS = List.of("especial.jefes", "especial.tope", "especial.senior", "especial.retos",
+            "especial.otros", "especial.destruccion");
 
     private int pestana;
     private boolean bajarAlFinal;
@@ -53,7 +54,8 @@ public final class ModoEspecial implements Pantalla {
         Jugador jug = j.jugador;
         Comun.fondo(j, 0);
         float arriba = Comun.cabecera(j, T.t("menu.especial"), true);
-        String[] pest = {T.t("especial.jefes"), T.t("especial.tope"), T.t("especial.retos"), T.t("especial.otros"), T.t("especial.destruccion")};
+        String[] pest = {T.t("especial.jefes"), T.t("especial.tope"), T.t("especial.senior"), T.t("especial.retos"),
+                T.t("especial.otros"), T.t("especial.destruccion")};
         int anterior = pestana;
         pestana = ui.pestanas(pest, pestana, 20, arriba + 16, p.ancho - 40, 50);
         if (pestana != anterior) despl.alPrincipio();
@@ -85,6 +87,9 @@ public final class ModoEspecial implements Pantalla {
                 }
                 break;
             case 2:
+                yy = PanelSenior.dibujar(j, x, yy, w);
+                break;
+            case 3:
                 yy += p.parrafo(T.t("especial.retos_ayuda"), x + 24, yy, w - 48, ui.letra * 0.9f, ui.tema.textoSuave, 1) + 16;
                 for (Ejercicio e : Banco.delJuego().todos()) {
                     if (e.desbloquea.isEmpty()) continue;
@@ -96,7 +101,7 @@ public final class ModoEspecial implements Pantalla {
                     yy += 74;
                 }
                 break;
-            case 3:
+            case 4:
                 yy += p.parrafo(T.t("especial.otros_ayuda"), x + 24, yy, w - 48, ui.letra * 0.95f, ui.tema.texto, 1) + 24;
                 if (ui.boton(T.t("menu.taller"), x + 24, yy, 300, 56, Ui.Estilo.NORMAL)) j.ir(new Taller());
                 if (ui.boton(T.t("pelear.ajenos"), x + 340, yy, 360, 56, Ui.Estilo.NORMAL)) j.ir(new PrepararPelea());

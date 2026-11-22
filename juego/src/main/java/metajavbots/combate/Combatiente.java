@@ -35,6 +35,9 @@ public final class Combatiente {
         public double danoRecibido, danoHecho;
         public int ataques, aciertos, errores, topes, turnosVistos, turnosMultiplesVistos, maxEnemigosVistos, turnosCerca, turnosAturdido;
         public long pasosMaximos, pasosTotales;
+        /** Telemetría Senior de presupuesto de tiempo/memoria y fallos típicos. */
+        public long nanosTotales, nanosMaximos, bytesMaximos;
+        public int excesosTiempo, excesosMemoria, fallosNulos, erroresConcurrencia;
         public int turnos;
         /** Lo que ha recorrido en la ronda (unidades de la arena; para el minijuego de moverse). */
         public double recorrido;
@@ -58,6 +61,11 @@ public final class Combatiente {
 
         public double pasosMedios() {
             return turnos == 0 ? 0 : (double) pasosTotales / turnos;
+        }
+
+        /** Tiempo medio de pensamiento por turno en nanosegundos. */
+        public double nanosMedios() {
+            return turnos == 0 ? 0 : (double) nanosTotales / turnos;
         }
 
         /** Daño recibido por obstáculos o trampas de la arena en esta ronda. */
@@ -107,7 +115,7 @@ public final class Combatiente {
         return robot;
     }
 
-    void escribir(int turno, String linea) {
+    synchronized void escribir(int turno, String linea) {
         if (linea == null) return;
         for (String l : linea.split("\n")) {
             consola.add(String.format("%4d │ %s", turno, l.length() > 300 ? l.substring(0, 300) + "…" : l));

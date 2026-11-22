@@ -177,7 +177,8 @@ public final class Marcadores {
         p.textoCentrado(ui.recortarTexto(ronda, g.centroAncho(), tamRonda, true), cx, 6, tamRonda, true, ui.tema.texto, 1);
         int segundos = (int) Math.ceil((pelea.turnosPorRonda - pelea.turno()) / (double) Pelea.TURNOS_POR_SEGUNDO);
         String reloj = String.format("%d:%02d", Math.max(0, segundos) / 60, Math.max(0, segundos) % 60);
-        boolean tieneSub = encuentro.objetivo != null || encuentro.jefe != null;
+        boolean esSenior = pelea.presupuestoNanosPorTurno > 0 || pelea.presupuestoBytesPorTurno > 0 || pelea.pensarEnParalelo;
+        boolean tieneSub = encuentro.objetivo != null || encuentro.jefe != null || esSenior;
         float tamReloj = tieneSub ? Math.min(28f, ui.letra * 1.35f) : Math.min(34f, ui.letra * 1.55f);
         float yReloj = tieneSub ? 30f : 36f;
         p.textoCentrado(reloj, cx, yReloj, tamReloj, true, segundos <= 10 ? ui.tema.mal : ui.tema.texto, 1);
@@ -188,14 +189,41 @@ public final class Marcadores {
             boolean vulnerable = pelea.resistencia[1] >= 1;
             sub = vulnerable ? T.t("pelea.jefe_vulnerable") : T.t("pelea.jefe_inmune");
             colSub = vulnerable ? ui.tema.bien : ui.tema.mal;
-        } else {
+        } else if (encuentro.objetivo != null) {
             sub = Objetivo.texto(encuentro.objetivo);
             colSub = ui.tema.aviso;
+        } else {
+            Cuerpo c0 = pelea.cuerpo(0);
+            boolean mal = c0 != null && ((pelea.presupuestoNanosPorTurno > 0 && c0.nanosDelTurno > pelea.presupuestoNanosPorTurno)
+                    || (pelea.presupuestoBytesPorTurno > 0 && c0.bytesDelTurno > pelea.presupuestoBytesPorTurno));
+            sub = resumenSeniorHud(pelea, c0);
+            colSub = mal ? ui.tema.mal : 0x3FE0FF;
         }
         float tamSub = ui.cabe(sub, g.centroAncho(), Math.min(13.5f, ui.letra * 0.68f), false);
         String subVis = ui.recortarTexto(sub, g.centroAncho(), tamSub, false);
         p.textoCentrado(subVis, cx, 67, tamSub, false, colSub, 1);
         if (!subVis.equals(sub) && ui.e.dentro(g.centroX(), 64, g.centroAncho(), 22)) ui.avisar(sub);
+    }
+
+    /** Texto compacto para el HUD central en peleas Senior (tiempo, memoria o paralelo). */
+    public static String resumenSeniorHud(Pelea pelea, Cuerpo c) {
+        StringBuilder sb = new StringBuilder();
+        if (pelea.presupuestoNanosPorTurno > 0) {
+            double us = c == null ? 0 : c.nanosDelTurno / 1_000_000.0;
+            double max = pelea.presupuestoNanosPorTurno / 1_000_000.0;
+            sb.append(String.format(java.util.Locale.ROOT, "⏱ %.1f/%.1fms", us, max));
+        }
+        if (pelea.presupuestoBytesPorTurno > 0) {
+            if (sb.length() > 0) sb.append(" · ");
+            double kb = c == null ? 0 : c.bytesDelTurno / 1024.0;
+            double maxKb = pelea.presupuestoBytesPorTurno / 1024.0;
+            sb.append(String.format(java.util.Locale.ROOT, "MEM %.1f/%.0fKB", kb, maxKb));
+        }
+        if (pelea.pensarEnParalelo) {
+            if (sb.length() > 0) sb.append(" · ");
+            sb.append("|| ").append(T.t("pelea.paralelo"));
+        }
+        return sb.toString();
     }
 
     /** Dibuja el marcador superior cuando pelean más de dos robots. */

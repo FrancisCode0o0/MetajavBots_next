@@ -33,6 +33,7 @@ public final class RobotDelJugador implements Fabrica {
     private long version;
     private boolean conTraza;
     private Compilador.Resultado ultimo;
+    private AnalizadorDeBytecode.Informe bytecode;
 
     /** Limpia la versión compilada en memoria (deja el robot sin código compilado). */
     public void limpiar() {
@@ -41,6 +42,7 @@ public final class RobotDelJugador implements Fabrica {
         clase = "";
         conTraza = false;
         ultimo = null;
+        bytecode = null;
     }
 
     /**
@@ -95,8 +97,14 @@ public final class RobotDelJugador implements Fabrica {
         cargador = nuevo;
         clase = elegida;
         conTraza = traza;
+        bytecode = AnalizadorDeBytecode.analizarTodas(r.clases);
         version++;
         return r;
+    }
+
+    /** Métricas reales del bytecode compilado del robot, o {@code null} si aún no compiló. */
+    public AnalizadorDeBytecode.Informe bytecode() {
+        return bytecode;
     }
 
     public boolean conTraza() {

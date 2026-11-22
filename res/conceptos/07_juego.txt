@@ -928,3 +928,55 @@ pseudo.en:
     IF you survive → 100% loot + 0.5 coins; IF you die early → 1/4; surrender → 0
 ejemplo:
     // Destrucción 3×: muévete para esquivar caídas y disparos; cada baja da 0,1–0,6 monedas y sobrevivir +0,5 || 3×-Zerstörung: weiche Einschlägen und Schüssen aus; 0,1–0,6 Münzen je Ziel, +0,5 fürs Überleben || 3× Destruction: keep moving to dodge drops and shots; 0.1–0.6 coins per target, +0.5 for surviving
+
+
+=== peleas_senior
+nivel: 6
+tema: --
+titulo.es: Peleas Senior, robots en paralelo y bytecode
+titulo.de: Senior-Kämpfe, parallele Roboter und Bytecode
+titulo.en: Senior fights, parallel robots and bytecode
+claves.es: peleas senior, senior, presupuesto de tiempo, presupuesto de memoria, robots en paralelo, paralelo, rivales senior, don relojero, baron 361, condesa carrera de datos, senor nullpointer, baronesa basura gc, jefe bytecode, 0xcafebabe
+claves.de: senior kampfe, senior-kampfe, senior, zeitbudget, speicherbudget, parallele roboter, parallel, senior gegner, meister endlosschleife, baron 361, grafin datenrennen, herr nullzeiger, baronin mullsammler, bytecode boss, 0xcafebabe
+claves.en: senior fights, senior, time budget, memory budget, parallel robots, parallel, senior rivals, lord big-o, baron 361, countess data-race, sir nullpointer, baroness gc-storm, bytecode boss, 0xcafebabe
+resumen.ia: Senior fights (in Special mode › Senior Fights tab: per-tick deterministic time and memory/allocation budgets with live HUD/debugger bars and latency/energy penalties; parallel robots 2v2 mode executing concurrently in a bounded daemon pool without blocking rendering or leaking threads; five absurd Senior rivals punishing classic pitfalls — expensive O(n²) loops, unnormalized ±180° angles, unsynchronized shared mutable state, unchecked nulls, and memory/energy waste — with targeted Revisor feedback; plus the 0xCAFEBABE bytecode Senior boss and real .class bytecode analysis)
+tip.juego_peleas_senior.condicion: aleatorio
+tip.juego_peleas_senior.es: ¿Listo para el nivel experto? En [[Modo especial]] › «Peleas Senior» te esperan presupuestos reales de tiempo y memoria por turno, combates con robots en paralelo, el jefe de bytecode 0xCAFEBABE y cinco rivales absurdos que castigan fallos típicos.
+tip.juego_peleas_senior.de: Bereit für das Expertenniveau? Im [[Spezialmodus]] › „Senior-Kämpfe“ warten echte Zeit- und Speicherbudgets pro Zug, Kämpfe mit parallelen Robotern, der Bytecode-Boss 0xCAFEBABE und fünf absurde Gegner gegen typische Fehler.
+tip.juego_peleas_senior.en: Ready for expert level? In [[Special mode]] › "Senior Fights" you will find real per-tick time and memory budgets, parallel robot battles, the 0xCAFEBABE bytecode boss, and five absurd rivals that punish classic pitfalls.
+ver: arena_y_modos, bytecode, hilo
+es:
+    En Modo especial › Peleas Senior el combate exige ingeniería de nivel Senior real: presupuestos estrictos de tiempo (milisegundos por turno) y de memoria/asignaciones (kilobytes por turno) medidos de forma determinista, con barras en vivo en el HUD y en el depurador (F9). Si te pasas del presupuesto, tu robot sufre latencia (pierde turnos) y desgaste de energía.
+    También puedes lanzar combates con robots en paralelo (2 contra 2 ejecutándose a la vez en hilos demonio acotados, sin bloquear la pantalla ni dejar hilos colgados al terminar) y enfrentarte al jefe de bytecode «El Desensamblador 0xCAFEBABE» (constantes primitivas y operaciones limpias sin autoboxing).
+    Además hay cinco rivales Senior con biografías absurdas que castigan fallos típicos: Don Relojero O(n²) (bucles caros), Barón 361° (ángulos sin normalizar en ±180°), Condesa Carrera de Datos (estado mutable compartido sin sincronizar), Señor NullPointer (nulos sin comprobar) y Baronesa Basura GC (asignaciones por turno y mala gestión de energía). Al terminar cada ronda, el Revisor te da diagnóstico y consejos concretos.
+de:
+    Unter Spezialmodus › Senior-Kämpfe verlangt der Ring echtes Senior-Handwerk: strenge Zeitbudgets (Millisekunden pro Zug) und deterministische Speicher-/Allokationsbudgets (Kilobyte pro Zug) mit Live-Balken im HUD und im Debugger (F9). Überschreitest du das Budget, verliert dein Roboter Züge durch Latenz und büßt Energie ein.
+    Zudem kannst du Kämpfe mit parallelen Robotern starten (2 gegen 2 gleichzeitig in einem begrenzten Daemon-Threadpool, ohne das Rendering zu blockieren oder Threads zurückzulassen) sowie gegen den Bytecode-Boss „Der Disassembler 0xCAFEBABE“ antreten (primitive Konstanten und sauberer Code ohne Autoboxing).
+    Fünf absurde Senior-Gegner bestrafen gezielt typische Fehler: Meister Endlosschleife (teure Schleifen), Baron 361° (nicht normalisierte Winkel um ±180°), Gräfin Datenrennen (unsicherer geteilter Zustand), Herr Nullzeiger (ungeprüfte nulls) und Baronin Müllsammler (Allokationen pro Zug und Energieverschwendung). Nach jeder Runde liefert der Prüfer gezielte Hinweise.
+en:
+    In Special mode › Senior Fights, the arena demands real Senior engineering: strict per-tick time budgets (milliseconds) and deterministic memory/allocation budgets (kilobytes) with live bars in the HUD and the debugger (F9). Exceeding a budget penalizes your robot with latency debt (skipped ticks) and energy drain.
+    You can also launch parallel robot fights (2v2 running concurrently in a bounded daemon thread pool without blocking rendering or leaking threads) and challenge the bytecode boss "The 0xCAFEBABE Disassembler" (primitive constants and clean zero-autoboxing code).
+    Five absurd Senior rivals punish classic mistakes: Lord Big-O (expensive loops), Baron 361° (unnormalized angles around ±180°), Countess Data-Race (unsynchronized shared mutable state), Sir NullPointer (unchecked nulls), and Baroness GC-Storm (per-tick allocations and energy waste). After each round, the Reviewer gives targeted feedback.
+pseudo.es:
+    Modo especial → Peleas Senior → elegir presupuesto, paralelo o rival Senior
+    evitar new en cadaTurno() y reutilizar campos primitivos
+    normalizar(objetivo - mira()), comprobar != null y sincronizar estado compartido
+pseudo.de:
+    Spezialmodus → Senior-Kämpfe → Budget, Parallelkampf oder Senior-Gegner wählen
+    new in jederZug() vermeiden und primitive Felder wiederverwenden
+    normalisieren(ziel - blick()), != null prüfen und geteilten Zustand synchronisieren
+pseudo.en:
+    Special mode → Senior Fights → pick budget, parallel fight, or Senior rival
+    avoid new inside onTick() and reuse primitive fields
+    normalize(target - heading()), check != null, and synchronize shared state
+ejemplo:
+    public class RobotSenior extends Metajavbot {
+        private static final int MASCARA_FASE = 0x0F; // constante primitiva sin autoboxing || primitive Konstante ohne Autoboxing || primitive constant without autoboxing
+        private final AtomicInteger turnos = new AtomicInteger(); // seguro en paralelo || sicher im Parallelmodus || thread-safe in parallel mode
+        @Override
+        public void cadaTurno() {
+            int fase = turnos.incrementAndGet() & MASCARA_FASE;
+            if (fase == 0) apuntar(normalizar(15)); // sin asignaciones ni nulos || ohne Allokationen oder nulls || no allocations or nulls
+            avanzar(12);
+        }
+    }

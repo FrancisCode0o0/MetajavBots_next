@@ -115,6 +115,10 @@ public final class Cuerpo implements Mando {
     private boolean registrandoOrdenes;
     /** Pasos de cálculo del último turno (para el medidor y el depurador). */
     public long pasosDelTurno;
+    /** Tiempo (ns), presión de memoria del turno (B) y memoria retenida (B) en peleas Senior. */
+    public long nanosDelTurno, bytesDelTurno, memoriaRetenida;
+    /** Cuenta activa de Tope en este hilo (para cancelación segura en modo paralelo). */
+    volatile Object cuentaActiva;
     /** Para el dibujo: cuánto se ha movido (las piernas), el último golpe recibido y el retroceso del arma. */
     public double paso, sacudida, retroceso;
     public int ultimoAtaque = -100, ultimoGolpe = -100;
@@ -144,6 +148,8 @@ public final class Cuerpo implements Mando {
     /** Restablece la telemetría visible del turno y registra por qué no hubo ejecución normal. */
     public void limpiarTelemetriaDeTurno(EstadoPensamiento estado) {
         pasosDelTurno = 0;
+        nanosDelTurno = 0;
+        bytesDelTurno = 0;
         lineasDelTurno.clear();
         ultimaLinea = -1;
         ordenesDelTurno = new ArrayList<>();
