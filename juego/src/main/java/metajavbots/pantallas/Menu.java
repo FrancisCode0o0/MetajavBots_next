@@ -237,11 +237,10 @@ public final class Menu implements Pantalla {
         }
         String titulo = T.t(c.clave);
         float tx = x + 26 + radio * 2;
-        float maxTitW = Math.max(40, x + w - 10 - (pillW > 0 ? pillW + 6 : 0) - tx);
-        float tTit = ajustarAncho(p, titulo, maxTitW, Math.min(ui.letra * 1.05f, 22f), 12f, true);
-        p.textoConBordeNegro(titulo, tx, icy - p.altoDeLinea(tTit) / 2f, tTit, true, ui.tema.texto, 1);
+        float maxTitW = Math.max(40, x + w - 14 - (pillW > 0 ? pillW + 6 : 0) - tx);
+        float finTitY = dibujarTituloCasilla(p, ui, titulo, tx, icy, maxTitW);
         String ayuda = T.t(c.ayuda);
-        float dy = Math.max(y + 14 + radio * 2, icy + p.altoDeLinea(tTit) / 2f + 4);
+        float dy = Math.max(y + 14 + radio * 2, finTitY + 4);
         float dw = w - 28, altoDisp = Math.max(16, y + h - 8 - dy);
         float tAy = Math.min(ui.letra * 0.76f, 17f);
         while (tAy > 10.5f && p.altoDeParrafo(ayuda, dw, tAy) > altoDisp) tAy -= 0.5f;
@@ -251,6 +250,41 @@ public final class Menu implements Pantalla {
             j.sonidos.tocar("clic", 0.5f);
             j.ir(c.destino.apply(j));
         }
+    }
+
+    /** Dibuja el título de una casilla sin rozar ni rebasar el borde derecho (1 línea o envuelto en 2 líneas). */
+    private static float dibujarTituloCasilla(Pincel p, Ui ui, String titulo, float tx, float icy, float maxTitW) {
+        float tamMax = Math.min(ui.letra * 1.05f, 22f);
+        float tUna = ajustarAncho(p, titulo, maxTitW, tamMax, 13.5f, true);
+        if (p.ancho(titulo, tUna, true) <= maxTitW) {
+            float lh = p.altoDeLinea(tUna);
+            p.textoConBordeNegro(titulo, tx, icy - lh / 2f, tUna, true, ui.tema.texto, 1);
+            return icy + lh / 2f;
+        }
+        float tDos = Math.min(ui.letra * 0.86f, 17.5f);
+        List<String> lineas = p.partir(titulo, maxTitW, tDos, true);
+        while (tDos > 10.5f && (lineas.size() > 2 || algunaExcede(p, lineas, maxTitW, tDos))) {
+            tDos -= 0.5f;
+            lineas = p.partir(titulo, maxTitW, tDos, true);
+        }
+        if (lineas.size() == 2 && !algunaExcede(p, lineas, maxTitW, tDos)) {
+            float paso = p.altoDeLinea(tDos) * 0.94f;
+            float y0 = icy - paso;
+            p.textoConBordeNegro(lineas.get(0), tx, y0, tDos, true, ui.tema.texto, 1);
+            p.textoConBordeNegro(lineas.get(1), tx, y0 + paso, tDos, true, ui.tema.texto, 1);
+            return y0 + paso * 2f;
+        }
+        float tComp = ajustarAncho(p, titulo, maxTitW, tamMax, 9.5f, true);
+        float lh = p.altoDeLinea(tComp);
+        p.textoConBordeNegro(ui.recortarTexto(titulo, maxTitW, tComp, true), tx, icy - lh / 2f, tComp, true, ui.tema.texto, 1);
+        return icy + lh / 2f;
+    }
+
+    private static boolean algunaExcede(Pincel p, List<String> lineas, float maxAncho, float tam) {
+        for (String l : lineas) {
+            if (p.ancho(l, tam, true) > maxAncho) return true;
+        }
+        return false;
     }
 
     /** Ajusta el tamaño de letra para que un texto quepa sin recortarse ni desbordar. */

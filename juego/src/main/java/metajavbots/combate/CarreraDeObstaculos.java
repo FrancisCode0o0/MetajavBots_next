@@ -92,6 +92,7 @@ public final class CarreraDeObstaculos {
     private final List<PistaDeCarrera.ObstaculoRepentino> repentinos;
     private final List<PistaDeCarrera.DefectuosoEnPista> defectuosos;
     private boolean terminada;
+    private boolean rendido;
     private int ganador = -2;
     private String motivoFin = "";
     private boolean recompensaAplicada;
@@ -267,6 +268,20 @@ public final class CarreraDeObstaculos {
     /** Indica si la carrera ya ha concluido. */
     public boolean terminada() {
         return terminada;
+    }
+
+    /** Finaliza la carrera inmediatamente por rendición del jugador, sin otorgar ninguna recompensa. */
+    public void rendirse() {
+        if (terminada) return;
+        rendido = true;
+        terminada = true;
+        ganador = 1;
+        motivoFin = "rendicion";
+    }
+
+    /** Indica si la carrera terminó porque el jugador pulsó Rendirse. */
+    public boolean rendido() {
+        return rendido;
     }
 
     /** Ganador de la carrera: 0 jugador, 1 rival, -1 empate, -2 en curso. */
@@ -498,6 +513,16 @@ public final class CarreraDeObstaculos {
      */
     public boolean aplicarRecompensa(Jugador jugador) {
         if (!terminada || recompensaAplicada || jugador == null) return false;
+        if (rendido) {
+            recompensaAplicada = true;
+            bonosBrutosCentimos = 0;
+            bonosReducidosPorDerrota = false;
+            cuartosGanados = 0;
+            monedasExtraPorCuartos = 0;
+            centimosGanadosTotal = 0;
+            monedasEnterasGanadas = 0;
+            return false;
+        }
         double mult = multiplicadorRecompensa();
         int bonosBase = monedasExtraRecogidas * CENTIMOS_MONEDA_EXTRA
                 + objetosDestruidos * CENTIMOS_OBJETO_DESTRUIDO

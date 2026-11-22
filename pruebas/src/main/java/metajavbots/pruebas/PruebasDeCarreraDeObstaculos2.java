@@ -50,6 +50,8 @@ final class PruebasDeCarreraDeObstaculos2 {
         apuntarReglaDerrotaUnCuarto();
         apuntarEscaladoRecompensasYSubniveles();
         apuntarSelectorPiezasEnMenuYAccesoPrincipal();
+        apuntarModelosDesbloqueadosYRendirse();
+        apuntarDanoIncrementadoYParidadTrilingue();
     }
 
     private static Combatiente combatienteConBala(String nombre, Fabrica fabrica) {
@@ -217,8 +219,9 @@ final class PruebasDeCarreraDeObstaculos2 {
                 }
                 igual(5, c.objetosDestruidos(), "registra 5 obstáculos destructibles destruidos por el jugador");
 
-                // 2) Destruir 1 robot defectuoso (+0,4 = 40 centésimas).
-                Cuerpo roto = c.robotsDefectuosos().get(0);
+                // 2) Destruir 1 robot defectuoso activo (+0,4 = 40 centésimas).
+                Cuerpo roto = c.robotsDefectuosos().stream().filter(d -> !d.fuera).findFirst().orElse(null);
+                cierto(roto != null, "queda al menos un robot defectuoso activo en pista");
                 for (int k = 0; k < 400 && !roto.fuera && !c.terminada(); k++) {
                     c0.x = roto.x - 85;
                     c0.y = roto.y;
@@ -520,6 +523,107 @@ final class PruebasDeCarreraDeObstaculos2 {
                 String ia = ConsultaIaEntrenador.construirSistema(jug, id, null).toLowerCase(Locale.ROOT);
                 cierto(ia.contains("arena") && ia.contains("sublevel") && ia.contains("1/4"),
                         "sistema IA refleja acceso Arena, subniveles y regla 1/4 en " + id);
+            }
+        });
+    }
+
+    private static void apuntarModelosDesbloqueadosYRendirse() {
+        caso("carrera de obstáculos: selector de modelos desbloqueados en Noob I y Rendirse con 0 premios", () -> {
+            // 1) Jugador en Noob I con 3 modelos desbloqueados puede cambiar entre los 3 desde el menú y la carrera usa el elegido.
+            Jugador jug = new Jugador("NovatoModelos");
+            jug.etiqueta = Etiqueta.NOOB_1;
+            List<Modelo> todos = Modelo.todos();
+            cierto(todos.size() >= 3, "el catálogo tiene al menos 3 modelos");
+            String m0 = todos.get(0).id, m1 = todos.get(1).id, m2 = todos.get(2).id;
+            jug.modelosGanados.add(m0);
+            jug.modelosGanados.add(m1);
+            jug.modelosGanados.add(m2);
+            jug.robots.add(new Jugador.Robot("MiBot", m0));
+
+            List<Modelo> desbloqueados = PantallaCarreraDeObstaculos.modelosDesbloqueados(jug);
+            cierto(desbloqueados.size() >= 3, "Noob I con 3 modelos desbloqueados disponibles: " + desbloqueados.size());
+            PantallaCarreraDeObstaculos pantalla = new PantallaCarreraDeObstaculos();
+            pantalla.seleccionarRobot(jug, 0);
+            for (String objetivo : new String[]{m1, m2, m0}) {
+                cierto(pantalla.seleccionarModelo(jug, objetivo), "permite elegir modelo desbloqueado " + objetivo);
+                igual(objetivo, pantalla.modeloSeleccionado(jug), "modelo seleccionado actualizado a " + objetivo);
+                Combatiente corr = CarreraDeObstaculos.combatienteDeJugador(jug, pantalla.robotSeleccionado(),
+                        PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+                igual(objetivo, corr.montaje.modelo.id, "la carrera usa el modelo elegido: " + objetivo);
+                igual(pantalla.cifrasActuales(jug).velocidad, corr.montaje.cifras().velocidad,
+                        "cifras del menú coinciden con el modelo " + objetivo);
+            }
+            cierto(pantalla.cambiarModelo(jug, 1), "rotación +1 entre modelos desbloqueados funciona");
+
+            // 2) Al pulsar Rendirse tras destruir un objeto, termina al instante con 0 monedas y 0 centésimas.
+            Combatiente tir = combatienteConBala("Rendidor", PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Tirador::new));
+            Combatiente riv = new Combatiente("Riv", new Montaje(Modelo.de("cobalto")),
+                    PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+            CarreraDeObstaculos cRend = new CarreraDeObstaculos(tir, riv, 950L, false, null, DificultadCarrera.NOOB, 1);
+            Arena.Trampa barril = null;
+            for (Arena.Trampa t : cRend.pelea.arena.trampas()) {
+                if (t.destructible && !t.destruida()) {
+                    barril = t;
+                    break;
+                }
+            }
+            cierto(barril != null, "hay un objeto destructible en pista");
+            Cuerpo c0 = cRend.pelea.cuerpo(0);
+            for (int k = 0; k < 200 && !barril.destruida() && !cRend.terminada(); k++) {
+                c0.x = barril.x - 110;
+                c0.y = barril.y;
+                c0.mira = 0;
+                cRend.avanzar();
+            }
+            cierto(cRend.objetosDestruidos() >= 1, "destruyó al menos un objeto antes de rendirse");
+            cRend.rendirse();
+            cierto(cRend.terminada() && cRend.rendido(), "rendirse termina la carrera inmediatamente");
+            igual("rendicion", cRend.motivoFin(), "motivoFin registra rendición");
+            igual(1, cRend.ganador(), "al rendirse el jugador no gana");
+            Jugador jRend = new Jugador("SinPremio");
+            jRend.monedas = 7.0;
+            jRend.centimosDeMoneda = 15;
+            falso(cRend.aplicarRecompensa(jRend), "rendirse no otorga ninguna recompensa");
+            igual(0, cRend.centimosGanadosTotal(), "rendirse suma exactamente 0 centésimas");
+            igual(0, cRend.monedasEnterasGanadas(), "rendirse suma exactamente 0 monedas");
+            igual(7.0, jRend.monedas, "saldo de monedas intacto tras rendirse");
+            igual(15, jRend.centimosDeMoneda, "centésimas intactas tras rendirse");
+        });
+    }
+
+    private static void apuntarDanoIncrementadoYParidadTrilingue() {
+        caso("carrera de obstáculos: multiplicador de daño +20-25% y paridad trilingüe de ui.txt y entrenador", () -> {
+            cierto(DificultadCarrera.NOOB.multiplicadorDano >= 2.6, "NOOB multDano incrementado: " + DificultadCarrera.NOOB.multiplicadorDano);
+            cierto(DificultadCarrera.JUNIOR.multiplicadorDano >= 3.3, "JUNIOR multDano incrementado: " + DificultadCarrera.JUNIOR.multiplicadorDano);
+            cierto(DificultadCarrera.SENIOR.multiplicadorDano >= 4.2, "SENIOR multDano incrementado: " + DificultadCarrera.SENIOR.multiplicadorDano);
+            cierto(DificultadCarrera.ESPECIAL.multiplicadorDano >= 5.2, "ESPECIAL multDano incrementado: " + DificultadCarrera.ESPECIAL.multiplicadorDano);
+            DificultadCarrera[] niveles = DificultadCarrera.values();
+            for (int i = 0; i < niveles.length - 1; i++) {
+                cierto(niveles[i].multiplicadorDano < niveles[i + 1].multiplicadorDano,
+                        "multiplicador estrictamente creciente: " + niveles[i] + " < " + niveles[i + 1]);
+            }
+
+            String[] claves = {
+                    "carrera_obs.modelo", "carrera_obs.rendirse", "carrera_obs.rendido_titulo", "carrera_obs.rendido_sin_premio"
+            };
+            igual("Rendirse", T.en("carrera_obs.rendirse", Idioma.ES), "ES Rendirse");
+            igual("Aufgeben", T.en("carrera_obs.rendirse", Idioma.DE), "DE Aufgeben");
+            igual("Surrender", T.en("carrera_obs.rendirse", Idioma.EN), "EN Surrender");
+            Jugador jug = new Jugador("Trilingue");
+            for (Idioma id : Idioma.values()) {
+                for (String k : claves) {
+                    String val = T.en(k, id);
+                    cierto(val != null && !val.isBlank() && !val.equals(k), "clave ui.txt presente en " + id + ": " + k);
+                }
+                ConocimientoDelEntrenador.Entrada entrada = ConocimientoDelEntrenador.de("carrera_de_obstaculos");
+                String texto = String.join(" ", entrada.aConcepto().parrafos(id)).toLowerCase(Locale.ROOT);
+                String palRend = id == Idioma.DE ? "aufgeben" : id == Idioma.EN ? "surrender" : "rendirse";
+                String palMod = id == Idioma.DE ? "vorschau" : id == Idioma.EN ? "preview" : "previsualizar";
+                cierto(texto.contains(palRend) && texto.contains(palMod),
+                        "ficha entrenador menciona rendición y previsualización de modelos en " + id);
+                String ia = ConsultaIaEntrenador.construirSistema(jug, id, null).toLowerCase(Locale.ROOT);
+                cierto(ia.contains("surrender") && ia.contains("preview") && ia.contains("unlocked robot models"),
+                        "sistema IA actualizado con modelos desbloqueados, previsualización y Surrender en " + id);
             }
         });
     }

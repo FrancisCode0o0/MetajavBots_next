@@ -16,28 +16,28 @@ public enum DificultadCarrera {
 
     /** Nivel inicial: pista base (1,0×), pocos repentinos y defectuosos, más impulsos y rival accesible. */
     NOOB("Noob", "Noob", "Noob", "carrera_obs.dif_noob_resumen",
-            new Reglas(Etiqueta.Categoria.NOOB, false, 2.2, 1.0, 1.00),
+            new Reglas(Etiqueta.Categoria.NOOB, false, 2.7, 1.0, 1.00),
             new Pista(10, 2, 0.30, 0.35, 4, 250.0, 12, 2, 5, 3, 3),
             new Defectuosos(5, 30, 0.40, 0.18, 0.25),
             new Rival(0.28, 18.0, 56.0, 180.0, 0.75)),
 
     /** Nivel intermedio: pista ×4/3, equilibrio entre ocultos, repentinos, defectuosos, rampas, agua e impulsos. */
     JUNIOR("Junior", "Junior", "Junior", "carrera_obs.dif_junior_resumen",
-            new Reglas(Etiqueta.Categoria.JUNIOR, false, 2.8, 4.0 / 3.0, 1.25),
+            new Reglas(Etiqueta.Categoria.JUNIOR, false, 3.4, 4.0 / 3.0, 1.25),
             new Pista(14, 3, 0.40, 0.48, 8, 200.0, 8, 3, 5, 4, 5),
             new Defectuosos(8, 18, 0.50, 0.24, 0.35),
             new Rival(0.55, 9.0, 78.0, 240.0, 1.00)),
 
     /** Nivel exigente: pista ×(4/3)², alta densidad de trampas, varios modelos defectuosos activos y rival agresivo. */
     SENIOR("Senior", "Senior", "Senior", "carrera_obs.dif_senior_resumen",
-            new Reglas(Etiqueta.Categoria.SENIOR, false, 3.5, 16.0 / 9.0, 1.60),
+            new Reglas(Etiqueta.Categoria.SENIOR, false, 4.3, 16.0 / 9.0, 1.60),
             new Pista(18, 3, 0.55, 0.62, 13, 165.0, 5, 5, 4, 5, 7),
             new Defectuosos(11, 11, 0.70, 0.32, 0.50),
             new Rival(0.80, 3.5, 94.0, 290.0, 1.10)),
 
     /** Dificultad máxima: pista ×(4/3)³, requiere Modo especial; máxima densidad y rival de élite. */
     ESPECIAL("Especial", "Spezial", "Special", "carrera_obs.dif_especial_resumen",
-            new Reglas(Etiqueta.Categoria.MASTER, true, 4.3, 64.0 / 27.0, 2.00),
+            new Reglas(Etiqueta.Categoria.MASTER, true, 5.3, 64.0 / 27.0, 2.00),
             new Pista(22, 4, 0.72, 0.72, 18, 145.0, 3, 7, 3, 6, 9),
             new Defectuosos(15, 7, 0.86, 0.40, 0.65),
             new Rival(1.00, 0.5, 112.0, 340.0, 1.20));

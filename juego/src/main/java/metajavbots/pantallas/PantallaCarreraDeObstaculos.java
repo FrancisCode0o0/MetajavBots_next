@@ -148,6 +148,55 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         return robotElegido;
     }
 
+    /** Lista de todos los modelos de robot desbloqueados por el jugador (igual que la pestaña Modelo del Taller). */
+    public static List<Modelo> modelosDesbloqueados(Jugador jugador) {
+        if (jugador == null) return List.of();
+        return Progreso.modelosDisponibles(jugador);
+    }
+
+    /** Cambia el modelo del robot seleccionado a un modelo desbloqueado concreto, actualizando su montaje de fábrica. */
+    public boolean seleccionarModelo(Jugador jugador, String modeloId) {
+        Jugador.Robot r = robotActual(jugador);
+        if (r == null || modeloId == null || modeloId.isBlank()) return false;
+        for (Modelo m : modelosDesbloqueados(jugador)) {
+            if (m.id.equals(modeloId)) {
+                if (!m.id.equals(r.modelo)) {
+                    r.modelo = m.id;
+                    r.piezas.clear();
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /** Rota entre los modelos desbloqueados del jugador ({@code paso} = -1 o +1) y actualiza el montaje del robot. */
+    public boolean cambiarModelo(Jugador jugador, int paso) {
+        Jugador.Robot r = robotActual(jugador);
+        if (r == null) return false;
+        List<Modelo> opciones = modelosDesbloqueados(jugador);
+        if (opciones.size() <= 1) return false;
+        int idx = indiceDeModelo(opciones, r.modelo);
+        int siguiente = Math.floorMod((idx < 0 ? 0 : idx) + paso, opciones.size());
+        r.modelo = opciones.get(siguiente).id;
+        r.piezas.clear();
+        return true;
+    }
+
+    /** Identificador del modelo actualmente equipado en el robot seleccionado. */
+    public String modeloSeleccionado(Jugador jugador) {
+        Jugador.Robot r = robotActual(jugador);
+        return r != null ? r.modelo : "cobalto";
+    }
+
+    private static int indiceDeModelo(List<Modelo> opciones, String modeloId) {
+        if (modeloId == null) return -1;
+        for (int i = 0; i < opciones.size(); i++) {
+            if (opciones.get(i).id.equals(modeloId)) return i;
+        }
+        return -1;
+    }
+
     /** Lista de piezas disponibles/usables del inventario del jugador para un hueco concreto del robot. */
     public static List<Pieza> piezasDisponiblesParaHueco(Jugador jugador, Jugador.Robot robot, Montaje.Hueco hueco) {
         List<Pieza> opciones = new ArrayList<>();
@@ -244,8 +293,9 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
                         + dificultad.name() + " " + DificultadCarrera.etiquetaSubnivel(subnivel)
                         + " (Noob/Junior/Senior/Special unlock progressively by player rank + Special mode, each with sublevels I/II/III; "
                         + "rewards scale up with difficulty and sublevel; losing without breaking or collecting anything gives 0 coins, "
-                        + "losing with bonuses gives 1/4 of their value, winning gives 100%). "
-                        + "The player can switch both robots and available/purchased parts (head, arms, legs) directly in the race menu.",
+                        + "losing with bonuses gives 1/4 of their value, winning gives 100%, and pressing Surrender ends immediately with 0 rewards). "
+                        + "The player can choose and live-preview unlocked robot models, switch robots, and swap available/purchased parts "
+                        + "(head, arms, legs) directly in the race menu.",
                 editor);
     }
 
@@ -281,16 +331,22 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     private float barraSeleccion(Juego j, float x, float y, float w) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        float h = contraMaquina ? 228 : 272;
+        float h = contraMaquina ? 236 : 280;
         p.caja(x, y, w, h, 10, ui.tema.panel, 1);
-        dibujarSelectorRobot(j, x + 14, y + 8, w - 28);
-        dibujarSelectorPiezas(j, x + 14, y + 52, w - 28);
-        float bx = x + 14, by = y + 106;
+        float pw = 132, ph = 138;
+        Jugador.Robot rActual = robotActual(j.jugador);
+        Montaje mActual = rActual != null ? j.jugador.montajeDe(rActual) : new Montaje(Modelo.de("cobalto"));
+        DibujoCarreraDeObstaculos.vistaPreviaRobot(j, vista, mActual, tiempo, x + 14, y + 8, pw, ph);
+        float rx = x + 14 + pw + 12;
+        float rw = w - 28 - pw - 12;
+        dibujarSelectorRobotYModelo(j, rx, y + 8, rw);
+        dibujarSelectorPiezas(j, rx, y + 50, rw);
+        float bx = rx, by = y + 102;
         float tEt = Math.min(ui.letra * 0.84f, 19f);
         p.textoConBordeNegro(T.t("carrera_obs.rival"), bx, by + 9, tEt, true, ui.tema.textoSuave, 1);
-        bx += Math.max(80, p.ancho(T.t("carrera_obs.rival"), tEt, true) + 12);
-        float wMaq = Math.min(220, Math.max(165, w * 0.18f));
-        float wUsu = Math.min(250, Math.max(180, w * 0.21f));
+        bx += Math.max(74, p.ancho(T.t("carrera_obs.rival"), tEt, true) + 12);
+        float wMaq = Math.min(220, Math.max(155, rw * 0.22f));
+        float wUsu = Math.min(248, Math.max(170, rw * 0.25f));
         if (ui.boton(T.t("carrera_obs.vs_maquina"), bx, by, wMaq, 38, contraMaquina ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) {
             contraMaquina = true;
             aviso = "";
@@ -301,13 +357,13 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             ajenos = PrepararPelea.robotsAjenos();
             aviso = "";
         }
-        float wNueva = Math.min(204, Math.max(150, w * 0.17f));
-        if (ui.boton(T.t("carrera_obs.nueva_pista"), x + w - wNueva - 14, by, wNueva, 38, Ui.Estilo.NORMAL)) {
+        float wNueva = Math.min(204, Math.max(150, p.ancho(T.t("carrera_obs.nueva_pista"), Math.min(ui.letra, 19f), true) + 32));
+        if (ui.boton(T.t("carrera_obs.nueva_pista"), rx + rw - wNueva, by, wNueva, 38, Ui.Estilo.NORMAL)) {
             regenerarPista();
         }
-        dibujarSelectorDificultad(j, x + 14, y + 152, w - 28);
+        dibujarSelectorDificultad(j, x + 14, y + 154, w - 28);
         if (!contraMaquina) {
-            dibujarSelectorAjeno(j, x + 14, y + 224, w - 28);
+            dibujarSelectorAjeno(j, x + 14, y + 234, w - 28);
         }
         return y + h + 10;
     }
@@ -358,12 +414,11 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         dificultad = DificultadCarrera.seleccionarPara(j.jugador, dificultad);
         float tEt = Math.min(ui.letra * 0.84f, 19f);
         String et = T.t("carrera_obs.dificultad");
-        p.textoConBordeNegro(et, x, y + 8, tEt, true, ui.tema.textoSuave, 1);
+        p.textoConBordeNegro(et, x, y + 7, tEt, true, ui.tema.textoSuave, 1);
         float dx = x + Math.max(98, p.ancho(et, tEt, true) + 12);
         DificultadCarrera[] niveles = DificultadCarrera.values();
-        float sep = 6;
-        float zonaSub = 276;
-        float bw = Math.min(148, Math.max(92, (x + w - zonaSub - dx - sep * (niveles.length - 1)) / niveles.length));
+        float sep = 8;
+        float bw = Math.min(160, Math.max(96, (x + w - dx - sep * (niveles.length - 1)) / niveles.length));
         for (DificultadCarrera d : niveles) {
             boolean desbloqueada = dificultadDesbloqueada(j.jugador, d);
             boolean elegida = d == dificultad;
@@ -380,23 +435,26 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             }
             dx += bw + sep;
         }
-        dibujarSelectorSubnivel(j, dx + 8, y, x + w - (dx + 8));
+        float ySub = y + 40;
+        float finSubX = dibujarSelectorSubnivel(j, x, ySub);
+        float resX = finSubX + 14;
+        float resW = Math.max(80, x + w - resX);
         float tRes = Math.min(ui.letra * 0.74f, 16.5f);
         String multTxt = T.f("carrera_obs.multiplicador",
                 String.format(Locale.ROOT, "%.2f", dificultad.multiplicadorRecompensa(subnivel)));
         String resumen = dificultad.nombre(T.idioma) + " " + DificultadCarrera.etiquetaSubnivel(subnivel)
                 + " (" + multTxt + "): " + dificultad.resumen(T.idioma);
-        p.textoConBordeNegro(ui.recortarTexto(resumen, w, tRes, false), x, y + 40, tRes, false, ui.tema.textoSuave, 1);
+        p.textoConBordeNegro(ui.recortarTexto(resumen, resW, tRes, false), resX, ySub + 8, tRes, false, ui.tema.textoSuave, 1);
     }
 
-    private void dibujarSelectorSubnivel(Juego j, float x, float y, float w) {
+    private float dibujarSelectorSubnivel(Juego j, float x, float y) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        float tEt = Math.min(ui.letra * 0.8f, 17.5f);
+        float tEt = Math.min(ui.letra * 0.84f, 18.5f);
         String et = T.t("carrera_obs.subnivel");
-        p.textoConBordeNegro(et, x, y + 8, tEt, true, ui.tema.textoSuave, 1);
-        float sx = x + Math.max(76, p.ancho(et, tEt, true) + 8);
-        float bw = Math.min(46, Math.max(34, (x + w - sx - 12) / 3f));
+        p.textoConBordeNegro(et, x, y + 7, tEt, true, ui.tema.textoSuave, 1);
+        float sx = x + Math.max(98, p.ancho(et, tEt, true) + 12);
+        float bw = 46;
         for (int s = DificultadCarrera.SUBNIVEL_MIN; s <= DificultadCarrera.SUBNIVEL_MAX; s++) {
             String rom = DificultadCarrera.etiquetaSubnivel(s);
             Ui.Estilo estilo = s == subnivel ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO;
@@ -405,36 +463,67 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             }
             sx += bw + 6;
         }
+        return sx;
     }
 
-    private void dibujarSelectorRobot(Juego j, float x, float y, float w) {
+    private void dibujarSelectorRobotYModelo(Juego j, float x, float y, float w) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         List<Jugador.Robot> lista = j.jugador.robots;
-        float tEt = Math.min(ui.letra * 0.84f, 19f);
-        p.textoConBordeNegro(T.t("carrera_obs.tu_robot"), x, y + 9, tEt, true, ui.tema.textoSuave, 1);
-        float rx = x + Math.max(98, p.ancho(T.t("carrera_obs.tu_robot"), tEt, true) + 12);
+        float tEt = Math.min(ui.letra * 0.80f, 18f);
+        String arenaTxt = T.f("carrera_obs.arena_actual", escenarioActual);
+        float arenaW = Math.max(145, p.ancho(arenaTxt, tEt, true) + 8);
+        p.textoConBordeNegro(arenaTxt, x + w - arenaW, y + 8, tEt, true, 0xFFC857, 1);
+        float utilW = Math.max(320, w - arenaW - 12);
+        float cx = x;
         if (!lista.isEmpty()) {
             robotElegido = Math.max(0, Math.min(robotElegido, lista.size() - 1));
-            if (ui.boton("◄", rx, y, 38, 36, Ui.Estilo.PLANO, lista.size() > 1, null)) {
-                seleccionarRobot(j.jugador, (robotElegido - 1 + lista.size()) % lista.size());
-            }
             Jugador.Robot r = lista.get(robotElegido);
+            List<Modelo> modelos = modelosDesbloqueados(j.jugador);
+            int idxMod = Math.max(0, indiceDeModelo(modelos, r.modelo));
+            String etMod = T.t("carrera_obs.modelo");
+            p.textoConBordeNegro(etMod, cx, y + 8, tEt, true, ui.tema.textoSuave, 1);
+            cx += Math.max(66, p.ancho(etMod, tEt, true) + 8);
+            boolean variosMod = modelos.size() > 1;
+            if (ui.boton("◄", cx, y, 34, 36, Ui.Estilo.PLANO, variosMod, null)) {
+                if (cambiarModelo(j.jugador, -1)) {
+                    j.guardar();
+                    j.sonidos.tocar("servo", 0.5f);
+                }
+            }
+            cx += 38;
+            String modTxt = "[" + (idxMod + 1) + "/" + Math.max(1, modelos.size()) + "] "
+                    + Modelo.de(r.modelo).nombre(T.idioma);
+            float modW = Math.min(185, Math.max(115, utilW * 0.24f));
+            p.textoConBordeNegro(ui.recortarTexto(modTxt, modW, tEt, true), cx, y + 8, tEt, true, ui.tema.texto, 1);
+            cx += modW + 4;
+            if (ui.boton("►", cx, y, 34, 36, Ui.Estilo.PLANO, variosMod, null)) {
+                if (cambiarModelo(j.jugador, 1)) {
+                    j.guardar();
+                    j.sonidos.tocar("servo", 0.5f);
+                }
+            }
+            cx += 46;
+            if (lista.size() > 1) {
+                if (ui.boton("◄", cx, y, 32, 36, Ui.Estilo.PLANO, true, null)) {
+                    seleccionarRobot(j.jugador, (robotElegido - 1 + lista.size()) % lista.size());
+                }
+                cx += 36;
+                String robTxt = "[" + (robotElegido + 1) + "/" + lista.size() + "] " + r.nombre;
+                float robW = Math.min(140, Math.max(84, utilW * 0.16f));
+                p.textoConBordeNegro(ui.recortarTexto(robTxt, robW, tEt, true), cx, y + 8, tEt, true, ui.tema.textoSuave, 1);
+                cx += robW + 4;
+                if (ui.boton("►", cx, y, 32, 36, Ui.Estilo.PLANO, true, null)) {
+                    seleccionarRobot(j.jugador, (robotElegido + 1) % lista.size());
+                }
+                cx += 42;
+            }
             Montaje m = j.jugador.montajeDe(r);
             Montaje.Cifras c = m != null ? m.cifras() : new Montaje(Modelo.de("cobalto")).cifras();
-            String cont = lista.size() > 1 ? "[" + (robotElegido + 1) + "/" + lista.size() + "] "
-                    : "(" + T.t("carrera_obs.solo_un_robot") + ") ";
-            String desc = cont + r.nombre + " (" + Modelo.de(r.modelo).nombre(T.idioma) + ") · "
-                    + String.format(Locale.ROOT, "VEL %.1f · BLIND %.0f", c.velocidad, c.blindajeTotal());
-            float tDesc = Math.min(ui.letra * 0.84f, 19f);
-            p.textoConBordeNegro(ui.recortarTexto(desc, w - 410, tDesc, true), rx + 46, y + 8, tDesc, true, ui.tema.texto, 1);
-            if (ui.boton("►", x + w - 256, y, 38, 36, Ui.Estilo.PLANO, lista.size() > 1, null)) {
-                seleccionarRobot(j.jugador, (robotElegido + 1) % lista.size());
-            }
+            String cifrasTxt = String.format(Locale.ROOT, "VEL %.1f · BLIND %.0f", c.velocidad, c.blindajeTotal());
+            float restW = Math.max(60, x + utilW - cx);
+            p.textoConBordeNegro(ui.recortarTexto(cifrasTxt, restW, tEt, true), cx, y + 8, tEt, true, 0x3FE0FF, 1);
         }
-        String arenaTxt = T.f("carrera_obs.arena_actual", escenarioActual);
-        float tArena = Math.min(ui.letra * 0.8f, 18f);
-        p.textoConBordeNegro(arenaTxt, x + w - Math.max(196, p.ancho(arenaTxt, tArena, true)), y + 9, tArena, true, 0xFFC857, 1);
     }
 
     private void dibujarSelectorAjeno(Juego j, float x, float y, float w) {
@@ -667,32 +756,19 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     }
 
     private void dibujarHudCarrera(Juego j, float x, float y, float w, float h) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        p.caja(x, y, w, h, 10, ui.tema.panel, 0.96f);
-        float bw = Math.min(220, w * 0.18f);
-        double p0 = carrera.progreso(0), p1 = carrera.progreso(1);
-        p.textoConBordeNegro(carrera.pelea.combatientes[0].nombre + " " + Math.round(p0 * 100) + "%", x + 14, y + 8,
-                ui.letra * 0.74f, true, VistaDeArena.COLORES[0], 1);
-        ui.barra(x + 14, y + 34, bw, 18, (float) p0, VistaDeArena.COLORES[0], null);
-        float x1 = x + 28 + bw;
-        p.textoConBordeNegro(carrera.pelea.combatientes[1].nombre + " " + Math.round(p1 * 100) + "%", x1, y + 8,
-                ui.letra * 0.74f, true, VistaDeArena.COLORES[1], 1);
-        ui.barra(x1, y + 34, bw, 18, (float) p1, VistaDeArena.COLORES[1], null);
-        float cx = x + w - 460;
-        if (ui.boton(pausado ? T.t("carrera_obs.reanudar") : T.t("carrera_obs.pausar"), cx, y + 12, 120, 42, Ui.Estilo.NORMAL)) {
+        int accion = DibujoCarreraDeObstaculos.hudCarrera(j, carrera, pausado, velocidad, x, y, w, h);
+        if (accion == 1) {
             pausado = !pausado;
-        }
-        if (ui.boton(velocidad + "x", cx + 128, y + 12, 64, 42, Ui.Estilo.PLANO)) {
+        } else if (accion == 2) {
             velocidad = velocidad == 1 ? 2 : velocidad == 2 ? 4 : 1;
-        }
-        if (ui.boton(T.t("carrera_obs.editar"), cx + 200, y + 12, 124, 42, Ui.Estilo.PLANO)) {
+        } else if (accion == 3) {
             regenerarPista();
             preparando = true;
-        }
-        if (ui.boton(T.t("carrera_obs.nueva_pista"), cx + 332, y + 12, 118, 42, Ui.Estilo.PLANO)) {
+        } else if (accion == 4) {
             regenerarPista();
             iniciarCarrera(j, false);
+        } else if (accion == 5 && !carrera.terminada()) {
+            carrera.rendirse();
         }
     }
 

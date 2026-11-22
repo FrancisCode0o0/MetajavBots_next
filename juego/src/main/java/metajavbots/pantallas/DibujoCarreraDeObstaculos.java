@@ -10,6 +10,7 @@ import metajavbots.combate.DificultadCarrera;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VistaDeArena;
+import metajavbots.piezas.Montaje;
 import metajavbots.progreso.Jugador;
 import metajavbots.textos.T;
 
@@ -134,6 +135,84 @@ final class DibujoCarreraDeObstaculos {
                 yArriba - 24, ui.letra * 0.85f, true, 0xFFC857, 1);
     }
 
+    /** Dibuja el panel de previsualización visual del robot seleccionado usando DibujoRobot. */
+    static void vistaPreviaRobot(Juego j, VistaDeArena vista, Montaje montaje, float tiempo, float x, float y, float w, float h) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        p.caja(x, y, w, h, 10, ui.tema.panelAlto, 0.94f);
+        p.bordeRedondeado(x, y, w, h, 10, ui.tema.borde, 0.85f, 1.4f);
+        if (montaje == null) return;
+        if (vista != null) {
+            float talla = Math.max(0.85f, Math.min(1.22f, (h - 44f) / 92f));
+            vista.robotSuelto(p, montaje, x + w / 2f, y + h - 32f, talla, tiempo, 0, true);
+        }
+        String nombre = montaje.modelo.nombre(T.idioma);
+        float tNom = ui.cabe(nombre, w - 12f, Math.min(ui.letra * 0.74f, 15.5f), true);
+        p.textoCentradoConBordeNegro(ui.recortarTexto(nombre, w - 12f, tNom, true),
+                x + w / 2f, y + h - 24f, tNom, true, ui.tema.texto, 1);
+    }
+
+    /**
+     * Dibuja la barra superior en carrera calculando el ancho exacto de cada botón según su texto real
+     * para evitar cortes tanto en letra 18 como en 26. Devuelve 1 pausa, 2 velocidad, 3 editar, 4 nueva pista, 5 rendirse.
+     */
+    static int hudCarrera(Juego j, CarreraDeObstaculos carrera, boolean pausado, int velocidad, float x, float y, float w, float h) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        p.caja(x, y, w, h, 10, ui.tema.panel, 0.96f);
+        float bh = 42f;
+        float sep = 8f;
+        float tBtn = Math.min(ui.letra, bh * 0.5f);
+        String[] textos = {
+                pausado ? T.t("carrera_obs.reanudar") : T.t("carrera_obs.pausar"),
+                velocidad + "x",
+                T.t("carrera_obs.editar"),
+                T.t("carrera_obs.nueva_pista"),
+                T.t("carrera_obs.rendirse")
+        };
+        Ui.Estilo[] estilos = {
+                Ui.Estilo.NORMAL, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PELIGRO
+        };
+        boolean[] activos = {true, true, true, true, !carrera.terminada()};
+        float[] anchos = new float[textos.length];
+        float totalBtns = sep * (textos.length - 1);
+        for (int i = 0; i < textos.length; i++) {
+            float minW = i == 1 ? 58f : 96f;
+            anchos[i] = Math.max(minW, p.ancho(textos[i], tBtn, true) + 28f);
+            totalBtns += anchos[i];
+        }
+        float minBarras = 240f;
+        float maxBtns = Math.max(260f, w - minBarras - 36f);
+        if (totalBtns > maxBtns) {
+            float escala = (maxBtns - sep * (textos.length - 1)) / Math.max(1f, totalBtns - sep * (textos.length - 1));
+            totalBtns = sep * (textos.length - 1);
+            for (int i = 0; i < anchos.length; i++) {
+                anchos[i] = Math.max(48f, anchos[i] * escala);
+                totalBtns += anchos[i];
+            }
+        }
+        float zonaBarras = Math.max(180f, w - totalBtns - 42f);
+        float bw = Math.min(220f, Math.max(82f, (zonaBarras - 14f) / 2f));
+        float tProg = Math.min(ui.letra * 0.74f, 16.5f);
+        double p0 = carrera.progreso(0), p1 = carrera.progreso(1);
+        String l0 = carrera.pelea.combatientes[0].nombre + " " + Math.round(p0 * 100) + "%";
+        String l1 = carrera.pelea.combatientes[1].nombre + " " + Math.round(p1 * 100) + "%";
+        p.textoConBordeNegro(ui.recortarTexto(l0, bw, tProg, true), x + 14f, y + 8f, tProg, true, VistaDeArena.COLORES[0], 1);
+        ui.barra(x + 14f, y + 34f, bw, 18f, (float) p0, VistaDeArena.COLORES[0], null);
+        float x1 = x + 28f + bw;
+        p.textoConBordeNegro(ui.recortarTexto(l1, bw, tProg, true), x1, y + 8f, tProg, true, VistaDeArena.COLORES[1], 1);
+        ui.barra(x1, y + 34f, bw, 18f, (float) p1, VistaDeArena.COLORES[1], null);
+        float bx = x + w - 14f - totalBtns;
+        int accion = 0;
+        for (int i = 0; i < textos.length; i++) {
+            if (ui.boton(textos[i], bx, y + 12f, anchos[i], bh, estilos[i], activos[i], null)) {
+                accion = i + 1;
+            }
+            bx += anchos[i] + sep;
+        }
+        return accion;
+    }
+
     /** Dibuja el panel de resultado final con desglose completo de botín; devuelve 1 repetir, 2 editar, 3 nueva pista o 0 nada. */
     static int resultado(Juego j, CarreraDeObstaculos carrera, boolean monedaGanada, float x, float y, float w, float h) {
         Pincel p = j.pincel;
@@ -142,21 +221,23 @@ final class DibujoCarreraDeObstaculos {
         float cw = Math.min(680, w - 40), ch = 398;
         float cx = x + (w - cw) / 2, cy = y + (h - ch) / 2;
         p.caja(cx, cy, cw, ch, 14, ui.tema.panel, 0.96f);
-        p.bordeRedondeado(cx, cy, cw, ch, 14, carrera.ganador() == 0 ? ui.tema.bien : ui.tema.aviso, 1, 2.5f);
-        String titulo = carrera.ganador() == 0 ? T.t("carrera_obs.ganas")
+        int colorBorde = carrera.rendido() ? ui.tema.mal : carrera.ganador() == 0 ? ui.tema.bien : ui.tema.aviso;
+        p.bordeRedondeado(cx, cy, cw, ch, 14, colorBorde, 1, 2.5f);
+        String titulo = carrera.rendido() ? T.t("carrera_obs.rendido_titulo")
+                : carrera.ganador() == 0 ? T.t("carrera_obs.ganas")
                 : carrera.ganador() == 1 ? T.t("carrera_obs.pierdes") : T.t("carrera_obs.empate");
-        p.textoCentradoConBordeNegro(titulo, cx + cw / 2, cy + 16, ui.letra * 1.24f, true,
-                carrera.ganador() == 0 ? ui.tema.bien : ui.tema.texto, 1);
+        int colorTitulo = carrera.rendido() ? ui.tema.mal : carrera.ganador() == 0 ? ui.tema.bien : ui.tema.texto;
+        p.textoCentradoConBordeNegro(titulo, cx + cw / 2, cy + 16, ui.letra * 1.24f, true, colorTitulo, 1);
         String nivelInfo = carrera.dificultad().nombre(T.idioma) + " " + DificultadCarrera.etiquetaSubnivel(carrera.subnivel())
                 + " · " + T.f("carrera_obs.multiplicador", String.format(Locale.ROOT, "%.2f", carrera.multiplicadorRecompensa()));
         p.textoCentradoConBordeNegro(nivelInfo, cx + cw / 2, cy + 50, ui.letra * 0.76f, true, ui.tema.textoSuave, 1);
         double totalCarrera = carrera.centimosGanadosTotal() / 100.0;
-        String premio = monedaGanada
-                ? T.f("carrera_obs.botin_total", Jugador.formatearMonedas(totalCarrera),
+        String premio = carrera.rendido() ? T.t("carrera_obs.rendido_sin_premio")
+                : monedaGanada ? T.f("carrera_obs.botin_total", Jugador.formatearMonedas(totalCarrera),
                         Jugador.formatearMonedas(j.jugador.monedas), j.jugador.centimosDeMoneda)
                 : T.t("carrera_obs.sin_moneda");
         p.textoCentradoConBordeNegro(premio, cx + cw / 2, cy + 78, ui.letra * 0.84f, true,
-                monedaGanada ? 0xFFC857 : ui.tema.textoSuave, 1);
+                carrera.rendido() ? ui.tema.mal : monedaGanada ? 0xFFC857 : ui.tema.textoSuave, 1);
         long danoPct = Math.round(carrera.porcentajeDanoJugador());
         String lineaMedalla = T.t(medalla.claveTexto) + " · " + T.f("carrera_obs.dano_recibido", danoPct);
         p.textoCentradoConBordeNegro(lineaMedalla, cx + cw / 2, cy + 112, ui.letra * 0.86f, true, medalla.color, 1);

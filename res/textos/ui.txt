@@ -997,3 +997,7 @@ carrera_obs.multiplicador = Premio ×{0} | Beute ×{0} | Reward ×{0}
 carrera_obs.dif_bloqueada_rango = Nivel bloqueado: se desbloquea al alcanzar el rango {0}. | Gesperrte Stufe: Wird ab Rang {0} freigeschaltet. | Locked level: unlocks upon reaching {0} rank.
 carrera_obs.solo_un_robot = 1 robot | 1 Roboter | 1 robot
 carrera_obs.derrota_cuarto = Derrota: bonos reducidos a 1/4 (+{0} → +{1} monedas) | Niederlage: Boni auf 1/4 reduziert (+{0} → +{1} Münzen) | Defeat: bonuses reduced to 1/4 (+{0} → +{1} coins)
+carrera_obs.modelo = Modelo: | Modell: | Model:
+carrera_obs.rendirse = Rendirse | Aufgeben | Surrender
+carrera_obs.rendido_titulo = Te has rendido | Du hast aufgegeben | You surrendered
+carrera_obs.rendido_sin_premio = Rendición: 0 monedas y 0 centésimas ganadas. | Aufgabe: 0 Münzen und 0 Hundertstel erhalten. | Surrender: 0 coins and 0 hundredths earned.
