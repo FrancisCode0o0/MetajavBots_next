@@ -96,12 +96,19 @@ public final class PistaDeCarrera {
         return generarArena(ancho, alto, semilla, escenario, DificultadCarrera.porDefecto());
     }
 
-    /** Genera la arena 6× parametrizada por el nivel de dificultad elegido. */
+    /** Genera la arena 6× parametrizada por el nivel de dificultad elegido (subnivel I). */
     public static Arena generarArena(double ancho, double alto, long semilla, String escenario, DificultadCarrera dificultad) {
+        return generarArena(ancho, alto, semilla, escenario, dificultad, DificultadCarrera.SUBNIVEL_MIN);
+    }
+
+    /** Genera la arena 6× parametrizada por el nivel de dificultad y el subnivel (1..3) elegidos. */
+    public static Arena generarArena(double ancho, double alto, long semilla, String escenario,
+            DificultadCarrera dificultad, int subnivel) {
         DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        int sub = DificultadCarrera.normalizarSubnivel(subnivel);
         String tema = escenario == null || escenario.isBlank() ? siguienteArena(null, semilla) : escenario;
         Arena a = Arena.crearParaCarrera(agarreDe(tema));
-        Random r = new Random(semilla ^ tema.hashCode() ^ (dif.ordinal() * 131L));
+        Random r = new Random(semilla ^ tema.hashCode() ^ (dif.ordinal() * 131L) ^ (sub * 29L));
         int sectores = dif.sectores;
         double inicio = Math.max(420, ancho * 0.08);
         double fin = Math.min(ancho - 360, ancho * 0.94);
@@ -113,7 +120,7 @@ public final class PistaDeCarrera {
 
         for (int s = 1; s < sectores; s++) {
             double sx = inicio + s * paso;
-            poblarSector(a, r, s, sx, alto, tema, dif);
+            poblarSector(a, r, s, sx, alto, tema, dif, sub);
         }
         colocarTrampasMortales(a, r, ancho, alto, dif);
         colocarMonedasExtra(a, r, ancho, alto);
@@ -124,8 +131,11 @@ public final class PistaDeCarrera {
         return a;
     }
 
-    private static void poblarSector(Arena a, Random r, int s, double sx, double alto, String tema, DificultadCarrera dif) {
-        int cantidad = dif.obstaculosPorSector + (dif == DificultadCarrera.SENIOR && s % 2 == 0 ? 1 : 0);
+    private static void poblarSector(Arena a, Random r, int s, double sx, double alto, String tema,
+            DificultadCarrera dif, int subnivel) {
+        int extra = DificultadCarrera.normalizarSubnivel(subnivel) - 1;
+        int extraSub = extra == 2 ? 1 : (extra == 1 && s % 2 == 0 ? 1 : 0);
+        int cantidad = dif.obstaculosPorSector + (dif == DificultadCarrera.SENIOR && s % 2 == 0 ? 1 : 0) + extraSub;
         int carrilLibre = Math.floorMod(s * 3 + r.nextInt(Math.max(2, cantidad + 1)), cantidad + 1);
         double margenY = 105.0;
         double tramoY = (alto - margenY * 2) / Math.max(1, cantidad);
@@ -280,12 +290,19 @@ public final class PistaDeCarrera {
         return planearRepentinos(ancho, alto, semilla, DificultadCarrera.porDefecto());
     }
 
-    /** Planifica los obstáculos repentinos según la dificultad elegida. */
+    /** Planifica los obstáculos repentinos según la dificultad elegida (subnivel I). */
     public static List<ObstaculoRepentino> planearRepentinos(double ancho, double alto, long semilla, DificultadCarrera dificultad) {
+        return planearRepentinos(ancho, alto, semilla, dificultad, DificultadCarrera.SUBNIVEL_MIN);
+    }
+
+    /** Planifica los obstáculos repentinos según la dificultad y el subnivel (1..3) elegidos. */
+    public static List<ObstaculoRepentino> planearRepentinos(double ancho, double alto, long semilla,
+            DificultadCarrera dificultad, int subnivel) {
         DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
-        Random r = new Random(semilla * 73L + 19L + dif.ordinal() * 997L);
+        int extra = DificultadCarrera.normalizarSubnivel(subnivel) - 1;
+        Random r = new Random(semilla * 73L + 19L + dif.ordinal() * 997L + extra * 53L);
         List<ObstaculoRepentino> lista = new ArrayList<>();
-        int total = dif.cantidadRepentinos;
+        int total = dif.cantidadRepentinos + extra * 2;
         double inicioX = ancho * 0.10;
         double finX = ancho * 0.91;
         for (int i = 0; i < total; i++) {
@@ -360,12 +377,20 @@ public final class PistaDeCarrera {
         return crearRobotsDefectuosos(ancho, alto, semilla, DificultadCarrera.porDefecto());
     }
 
-    /** Crea los robots defectuosos/averiados escalados según la dificultad de la carrera. */
+    /** Crea los robots defectuosos/averiados escalados según la dificultad de la carrera (subnivel I). */
     public static List<DefectuosoEnPista> crearRobotsDefectuosos(double ancho, double alto, long semilla, DificultadCarrera dificultad) {
+        return crearRobotsDefectuosos(ancho, alto, semilla, dificultad, DificultadCarrera.SUBNIVEL_MIN);
+    }
+
+    /** Crea los robots defectuosos/averiados escalados según la dificultad y el subnivel (1..3) de la carrera. */
+    public static List<DefectuosoEnPista> crearRobotsDefectuosos(double ancho, double alto, long semilla,
+            DificultadCarrera dificultad, int subnivel) {
         DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
-        Random r = new Random(semilla * 97L + 41L + dif.ordinal() * 313L);
+        int extra = DificultadCarrera.normalizarSubnivel(subnivel) - 1;
+        Random r = new Random(semilla * 97L + 41L + dif.ordinal() * 313L + extra * 71L);
         List<DefectuosoEnPista> lista = new ArrayList<>();
-        int cantidad = dif.cantidadDefectuosos;
+        int cantidad = dif.cantidadDefectuosos + extra;
+        int cadencia = Math.max(5, dif.cadenciaDisparoDefectuosos - extra * 2);
         int movilesObjetivo = Math.max(1, (int) Math.round(cantidad * dif.proporcionDefectuososMoviles));
         double inicioX = ancho * 0.13;
         double finX = ancho * 0.89;
@@ -375,7 +400,7 @@ public final class PistaDeCarrera {
             double x = inicioX + (finX - inicioX) * frac + jitter(r, 42);
             double y = alto * (0.22 + (i % 3) * 0.28) + jitter(r, 25);
             Montaje m = montajeDefectuoso(dif, i);
-            Fabrica fab = fabricaDefectuoso(inmovil, dif.cadenciaDisparoDefectuosos);
+            Fabrica fab = fabricaDefectuoso(inmovil, cadencia);
             Combatiente c = new Combatiente("Averiado-" + (i + 1), m, fab);
             c.computadora = true;
             c.defectuoso = true;
@@ -482,20 +507,27 @@ public final class PistaDeCarrera {
         }
     }
 
-    /** Robot rival de la máquina para pista 6×: escala velocidad, evasión, puntería e impulsos por dificultad. */
+    /** Robot rival de la máquina para pista 6×: escala velocidad, evasión, puntería e impulsos por dificultad y subnivel. */
     public static final class CorredorMaquina extends Metajavbot {
 
         private final DificultadCarrera dificultad;
+        private final int subnivel;
         private int paso;
 
         /** Crea un corredor de la máquina con dificultad intermedia por defecto. */
         public CorredorMaquina() {
-            this(DificultadCarrera.porDefecto());
+            this(DificultadCarrera.porDefecto(), DificultadCarrera.SUBNIVEL_MIN);
         }
 
-        /** Crea un corredor de la máquina adaptado al nivel de dificultad elegido. */
+        /** Crea un corredor de la máquina adaptado al nivel de dificultad elegido (subnivel I). */
         public CorredorMaquina(DificultadCarrera dificultad) {
+            this(dificultad, DificultadCarrera.SUBNIVEL_MIN);
+        }
+
+        /** Crea un corredor de la máquina adaptado al nivel de dificultad y subnivel (1..3) elegidos. */
+        public CorredorMaquina(DificultadCarrera dificultad, int subnivel) {
             this.dificultad = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+            this.subnivel = DificultadCarrera.normalizarSubnivel(subnivel);
         }
 
         @Override
@@ -504,7 +536,8 @@ public final class PistaDeCarrera {
             double rumboObjetivo = buscarImpulso();
             Obstaculo amenaza = buscarAmenaza();
             boolean disparo = false;
-            int cadencia = dificultad == DificultadCarrera.NOOB ? 4 : dificultad == DificultadCarrera.JUNIOR ? 2 : 1;
+            int cadencia = dificultad == DificultadCarrera.NOOB ? (subnivel >= 3 ? 3 : 4)
+                    : dificultad == DificultadCarrera.JUNIOR ? 2 : 1;
             if (amenaza != null) {
                 boolean destructible = amenaza.tipo().equals("barril") || amenaza.tipo().equals("chimenea");
                 if (destructible && (t % cadencia == 0)) {
@@ -529,11 +562,11 @@ public final class PistaDeCarrera {
             if (y() < 95 && rumboObjetivo < 0) rumboObjetivo = 28;
             if (y() > altoArena() - 95 && rumboObjetivo > 0) rumboObjetivo = -28;
             girarHacia(rumboObjetivo);
-            avanzar(dificultad.avanceRival);
+            avanzar(dificultad.avanceRival * (1.0 + (subnivel - 1) * 0.05));
         }
 
         private void apuntarConError(double angulo) {
-            double err = dificultad.errorPunteriaRival;
+            double err = dificultad.errorPunteriaRival * Math.max(0.5, 1.0 - (subnivel - 1) * 0.15);
             double desvio = err <= 0 ? 0 : (azar().nextDouble() * 2 - 1) * err;
             apuntarHacia(angulo + desvio);
         }
@@ -555,7 +588,7 @@ public final class PistaDeCarrera {
 
         private Obstaculo buscarAmenaza() {
             Obstaculo amenaza = null;
-            double mejorDist = dificultad.alcanceEvasionRival;
+            double mejorDist = dificultad.alcanceEvasionRival + (subnivel - 1) * 18.0;
             for (Obstaculo o : obstaculos()) {
                 if (o.tipo().equals("impulso") || o.tipo().equals(Arena.TIPO_REPARACION)
                         || o.tipo().equals(Arena.TIPO_MONEDA_EXTRA) || o.tipo().equals(Arena.TIPO_RAMPA)) continue;

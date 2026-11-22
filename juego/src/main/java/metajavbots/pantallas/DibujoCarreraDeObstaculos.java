@@ -1,9 +1,12 @@
 package metajavbots.pantallas;
 
+import java.util.Locale;
+
 import metajavbots.Juego;
 import metajavbots.combate.Arena;
 import metajavbots.combate.CarreraDeObstaculos;
 import metajavbots.combate.Cuerpo;
+import metajavbots.combate.DificultadCarrera;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VistaDeArena;
@@ -136,37 +139,45 @@ final class DibujoCarreraDeObstaculos {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         CarreraDeObstaculos.Medalla medalla = carrera.medallaObtenida();
-        float cw = Math.min(640, w - 40), ch = 372;
+        float cw = Math.min(680, w - 40), ch = 398;
         float cx = x + (w - cw) / 2, cy = y + (h - ch) / 2;
         p.caja(cx, cy, cw, ch, 14, ui.tema.panel, 0.96f);
         p.bordeRedondeado(cx, cy, cw, ch, 14, carrera.ganador() == 0 ? ui.tema.bien : ui.tema.aviso, 1, 2.5f);
         String titulo = carrera.ganador() == 0 ? T.t("carrera_obs.ganas")
                 : carrera.ganador() == 1 ? T.t("carrera_obs.pierdes") : T.t("carrera_obs.empate");
-        p.textoCentrado(titulo, cx + cw / 2, cy + 16, ui.letra * 1.28f, true,
+        p.textoCentradoConBordeNegro(titulo, cx + cw / 2, cy + 16, ui.letra * 1.24f, true,
                 carrera.ganador() == 0 ? ui.tema.bien : ui.tema.texto, 1);
+        String nivelInfo = carrera.dificultad().nombre(T.idioma) + " " + DificultadCarrera.etiquetaSubnivel(carrera.subnivel())
+                + " · " + T.f("carrera_obs.multiplicador", String.format(Locale.ROOT, "%.2f", carrera.multiplicadorRecompensa()));
+        p.textoCentradoConBordeNegro(nivelInfo, cx + cw / 2, cy + 50, ui.letra * 0.76f, true, ui.tema.textoSuave, 1);
         double totalCarrera = carrera.centimosGanadosTotal() / 100.0;
         String premio = monedaGanada
                 ? T.f("carrera_obs.botin_total", Jugador.formatearMonedas(totalCarrera),
                         Jugador.formatearMonedas(j.jugador.monedas), j.jugador.centimosDeMoneda)
                 : T.t("carrera_obs.sin_moneda");
-        p.textoCentrado(premio, cx + cw / 2, cy + 56, ui.letra * 0.84f, true,
+        p.textoCentradoConBordeNegro(premio, cx + cw / 2, cy + 78, ui.letra * 0.84f, true,
                 monedaGanada ? 0xFFC857 : ui.tema.textoSuave, 1);
         long danoPct = Math.round(carrera.porcentajeDanoJugador());
         String lineaMedalla = T.t(medalla.claveTexto) + " · " + T.f("carrera_obs.dano_recibido", danoPct);
-        p.textoCentrado(lineaMedalla, cx + cw / 2, cy + 90, ui.letra * 0.88f, true, medalla.color, 1);
+        p.textoCentradoConBordeNegro(lineaMedalla, cx + cw / 2, cy + 112, ui.letra * 0.86f, true, medalla.color, 1);
         String desglose1 = T.f("carrera_obs.desglose_bajas", carrera.objetosDestruidos(),
                 carrera.defectuososDestruidos(), carrera.rivalDestruido() ? 1 : 0);
-        p.textoCentrado(desglose1, cx + cw / 2, cy + 126, ui.letra * 0.76f, false, ui.tema.texto, 1);
+        p.textoCentrado(desglose1, cx + cw / 2, cy + 148, ui.letra * 0.74f, false, ui.tema.texto, 1);
         String desglose2 = T.f("carrera_obs.desglose_extras", carrera.monedasExtraRecogidas(),
                 carrera.cuartosGanados() > 0 ? "+0.25" : "0");
-        p.textoCentrado(desglose2, cx + cw / 2, cy + 156, ui.letra * 0.76f, false, 0xFFD23F, 1);
-        if (carrera.ganador() == 0 && medalla.esPerfecta) {
-            p.textoCentrado(T.t("carrera_obs.reconocimiento_perfecta"), cx + cw / 2, cy + 190,
+        p.textoCentrado(desglose2, cx + cw / 2, cy + 178, ui.letra * 0.74f, false, 0xFFD23F, 1);
+        if (carrera.bonosReducidosPorDerrota()) {
+            String avisoCuarto = T.f("carrera_obs.derrota_cuarto",
+                    Jugador.formatearMonedas(carrera.bonosBrutosCentimos() / 100.0),
+                    Jugador.formatearMonedas(totalCarrera));
+            p.textoCentradoConBordeNegro(avisoCuarto, cx + cw / 2, cy + 212, ui.letra * 0.78f, true, ui.tema.aviso, 1);
+        } else if (carrera.ganador() == 0 && medalla.esPerfecta) {
+            p.textoCentradoConBordeNegro(T.t("carrera_obs.reconocimiento_perfecta"), cx + cw / 2, cy + 212,
                     ui.letra * 0.78f, true, 0xFFD23F, 1);
             String cuartos = carrera.monedasExtraPorCuartos() > 0
                     ? T.f("carrera_obs.cuarto_completado", j.jugador.cuartosDeMoneda)
                     : T.f("carrera_obs.cuarto_ganado", j.jugador.cuartosDeMoneda);
-            p.textoCentrado(cuartos, cx + cw / 2, cy + 220, ui.letra * 0.76f, false, 0x9CFF57, 1);
+            p.textoCentrado(cuartos, cx + cw / 2, cy + 242, ui.letra * 0.74f, false, 0x9CFF57, 1);
         }
         float bw = (cw - 60) / 3;
         if (ui.boton(T.t("carrera_obs.repetir"), cx + 20, cy + ch - 64, bw, 46, Ui.Estilo.PRINCIPAL)) return 1;

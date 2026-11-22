@@ -103,6 +103,26 @@ public final class Ui {
         avisoY = e.ratonY;
     }
 
+    /** Escribe un texto con contorno negro fino de 1 px detrás (helper reutilizable para menús). */
+    public float textoConBorde(String s, float x, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        return p.textoConBordeNegro(s, x, y, tamano, negrita, rgb, alfa);
+    }
+
+    /** Escribe un texto centrado con contorno negro fino de 1 px detrás. */
+    public float textoCentradoConBorde(String s, float cx, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        return p.textoCentradoConBordeNegro(s, cx, y, tamano, negrita, rgb, alfa);
+    }
+
+    /** Dibuja un pequeño icono vectorial de candado cerrado sin depender de glifos emoji. */
+    public void candado(float cx, float cy, float tam, int rgb, float alfa) {
+        float w = tam * 0.78f;
+        float h = tam * 0.56f;
+        float r = tam * 0.25f;
+        p.aro(cx, cy - h * 0.42f, r, Math.max(1.5f, tam * 0.12f), rgb, alfa);
+        p.caja(cx - w / 2f, cy - h * 0.15f, w, h, Math.max(2f, tam * 0.12f), rgb, alfa);
+        p.circulo(cx, cy + h * 0.30f, Math.max(1.2f, tam * 0.09f), tema.panel, alfa);
+    }
+
     // ================================================================ botones
 
     /** El aspecto de un botón: normal, el principal de la pantalla, peligroso, plano, elegido o destacado (amarillo). */
@@ -164,12 +184,12 @@ public final class Ui {
             // Un botón alto con un texto largo: en dos líneas, entero.
             float ly = y + desplaza + (h - 2 * p.altoDeLinea(t)) / 2;
             for (String l : lineas) {
-                p.textoCentrado(l, x + w / 2, ly, t, true, letraColor, 1);
+                p.textoCentradoConBordeNegro(l, x + w / 2, ly, t, true, letraColor, 1);
                 ly += p.altoDeLinea(t);
             }
         } else {
             String s = recortarTexto(texto, w - 16, t, true);
-            p.textoCentrado(s, x + w / 2, y + desplaza + (h - t * 1.15f) / 2, t, true, letraColor, 1);
+            p.textoCentradoConBordeNegro(s, x + w / 2, y + desplaza + (h - t * 1.15f) / 2, t, true, letraColor, 1);
         }
         if (encima && ayuda != null) avisar(ayuda);
         if (activo && e.clic(x, y, w, h)) {
@@ -261,7 +281,7 @@ public final class Ui {
             p.rect(bx, y, ancho - 2, h, es ? tema.panelAlto : encima ? Pincel.mezcla(tema.panel, tema.panelAlto, 0.5f) : tema.panel, 1);
             if (es) p.rect(bx, y + h - 3, ancho - 2, 3, tema.acento, 1);
             float t = cabe(nombres[i], ancho - 12, Math.min(letra, h * 0.48f), es);
-            p.textoCentrado(recortarTexto(nombres[i], ancho - 12, t, es), bx + ancho / 2, y + (h - t * 1.15f) / 2, t, es,
+            p.textoCentradoConBordeNegro(recortarTexto(nombres[i], ancho - 12, t, es), bx + ancho / 2, y + (h - t * 1.15f) / 2, t, es,
                     es ? tema.texto : tema.textoSuave, 1);
             if (e.clic(bx, y, ancho, h)) {
                 nueva = i;
@@ -274,7 +294,7 @@ public final class Ui {
     /** Un deslizador de 0 a 1. */
     public float deslizador(String etiqueta, float valor, float x, float y, float w, float h, String ayuda) {
         float t = letra;
-        p.texto(etiqueta, x, y, t, false, tema.texto, 1);
+        p.textoConBordeNegro(etiqueta, x, y, t, false, tema.texto, 1);
         float by = y + t * 1.5f, bh = Math.max(8, h - t * 1.5f);
         float cy = by + bh / 2;
         p.caja(x, cy - 4, w, 8, 4, tema.panelAlto, 1);
@@ -282,7 +302,7 @@ public final class Ui {
         boolean encima = e.dentro(x - 10, by - 6, w + 20, bh + 12);
         p.circulo(x + w * valor, cy, encima ? 11 : 9, tema.acento, 1);
         p.circulo(x + w * valor, cy, 4, 0xFFFFFF, 0.9f);
-        p.textoDerecha(Math.round(valor * 100) + " %", x + w, y, t * 0.85f, false, tema.textoSuave, 1);
+        p.textoDerechaConBordeNegro(Math.round(valor * 100) + " %", x + w, y, t * 0.85f, false, tema.textoSuave, 1);
         if (encima && ayuda != null) avisar(ayuda);
         if (encima && e.pulsado) {
             e.clicUsado = true;
@@ -305,7 +325,7 @@ public final class Ui {
             p.linea(x + lado * 0.22f, y + lado * 0.52f, x + lado * 0.42f, y + lado * 0.74f, 3, tema.acentoTexto, 1);
             p.linea(x + lado * 0.42f, y + lado * 0.74f, x + lado * 0.8f, y + lado * 0.28f, 3, tema.acentoTexto, 1);
         }
-        p.texto(texto, x + lado + 12, y + (lado - t * 1.15f) / 2, t, false, tema.texto, 1);
+        p.textoConBordeNegro(texto, x + lado + 12, y + (lado - t * 1.15f) / 2, t, false, tema.texto, 1);
         if (encima && ayuda != null) avisar(ayuda);
         if (e.clic(x, y, lado + 12 + p.ancho(texto, t, false), lado)) {
             if (sonidoDeClic != null) sonidoDeClic.run();
@@ -321,7 +341,7 @@ public final class Ui {
         if (parte > 0) p.caja(x, y, Math.max(h, w * parte), h, h / 2, color, 1);
         if (texto != null) {
             float t = Math.min(letra * 0.8f, h * 0.75f);
-            p.textoCentrado(texto, x + w / 2, y + (h - t * 1.2f) / 2, t, true, tema.texto, 1);
+            p.textoCentradoConBordeNegro(texto, x + w / 2, y + (h - t * 1.2f) / 2, t, true, tema.texto, 1);
         }
     }
 
@@ -330,13 +350,13 @@ public final class Ui {
         p.caja(x, y, w, h, 10, tema.panel, 1);
         p.bordeRedondeado(x, y, w, h, 10, tema.borde, 1, 1);
         if (titulo == null) return y + 12;
-        p.texto(titulo, x + 16, y + 12, letra * 1.05f, true, tema.texto, 1);
+        p.textoConBordeNegro(titulo, x + 16, y + 12, letra * 1.05f, true, tema.texto, 1);
         p.rect(x + 12, y + 16 + letra * 1.4f, w - 24, 1, tema.borde, 1);
         return y + 26 + letra * 1.4f;
     }
 
     public void titulo(String s, float x, float y) {
-        p.texto(s, x, y, letra * 1.9f, true, tema.texto, 1);
+        p.textoConBordeNegro(s, x, y, letra * 1.9f, true, tema.texto, 1);
     }
 
     /** Una tecla Esc pulsada (para volver). */

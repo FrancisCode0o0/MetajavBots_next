@@ -61,7 +61,7 @@ public final class Demostraciones implements Pantalla {
         p.caja(x, y, w, h, 12, ui.tema.panelAlto, 1);
         p.bordeRedondeado(x, y, w, h, 12, ui.tema.acento, 0.8f, 1.5f);
         float ty = y + 14;
-        p.texto(nivelTxt, x + 20, ty, tNivel, true, ui.tema.acento, 1);
+        p.textoConBordeNegro(nivelTxt, x + 20, ty, tNivel, true, ui.tema.acento, 1);
         ty += hNivel + 6;
         ty += p.parrafo(titTxt, x + 20, ty, textoW, tTit, true, ui.tema.texto, 1) + 8;
         p.parrafo(resTxt, x + 20, ty, textoW, tRes, ui.tema.textoSuave, 1);

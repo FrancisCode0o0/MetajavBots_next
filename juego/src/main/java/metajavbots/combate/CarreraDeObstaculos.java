@@ -80,6 +80,8 @@ public final class CarreraDeObstaculos {
     public final boolean contraMaquina;
     /** Nivel de dificultad aplicado a esta carrera. */
     public final DificultadCarrera dificultad;
+    /** Subnivel de dificultad (1 = I, 2 = II, 3 = III). */
+    public final int subnivel;
     /** Longitud total de esta pista en unidades de arena (escala ×4/3 por nivel desde Noob). */
     public final double anchoPista;
     /** Coordenada X de la línea de meta para esta dificultad. */
@@ -101,6 +103,8 @@ public final class CarreraDeObstaculos {
     private boolean rivalDestruido;
     private int centimosGanadosTotal;
     private int monedasEnterasGanadas;
+    private int bonosBrutosCentimos;
+    private boolean bonosReducidosPorDerrota;
 
     /** Longitud de la pista para la dificultad indicada (Noob = 8400, ×4/3 cada nivel). */
     public static double anchoPara(DificultadCarrera dificultad) {
@@ -129,18 +133,25 @@ public final class CarreraDeObstaculos {
         this(jugador, rival, semilla, contraMaquina, arenaAnterior, DificultadCarrera.porDefecto());
     }
 
-    /** Crea una nueva carrera evitando repetir {@code arenaAnterior} con el nivel de dificultad indicado. */
+    /** Crea una nueva carrera evitando repetir {@code arenaAnterior} con el nivel de dificultad indicado (subnivel I). */
     public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina,
             String arenaAnterior, DificultadCarrera dificultad) {
+        this(jugador, rival, semilla, contraMaquina, arenaAnterior, dificultad, DificultadCarrera.SUBNIVEL_MIN);
+    }
+
+    /** Crea una nueva carrera evitando repetir {@code arenaAnterior} con dificultad y subnivel (1..3) indicados. */
+    public CarreraDeObstaculos(Combatiente jugador, Combatiente rival, long semilla, boolean contraMaquina,
+            String arenaAnterior, DificultadCarrera dificultad, int subnivel) {
         this.semilla = semilla;
         this.contraMaquina = contraMaquina;
         this.dificultad = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        this.subnivel = DificultadCarrera.normalizarSubnivel(subnivel);
         this.anchoPista = anchoPara(this.dificultad);
         this.metaX = metaPara(this.dificultad);
         this.maxTurnos = maxTurnosPara(this.dificultad);
         this.escenario = PistaDeCarrera.siguienteArena(arenaAnterior, semilla);
-        this.defectuosos = PistaDeCarrera.crearRobotsDefectuosos(anchoPista, ALTO, semilla, this.dificultad);
-        this.repentinos = PistaDeCarrera.planearRepentinos(anchoPista, ALTO, semilla, this.dificultad);
+        this.defectuosos = PistaDeCarrera.crearRobotsDefectuosos(anchoPista, ALTO, semilla, this.dificultad, this.subnivel);
+        this.repentinos = PistaDeCarrera.planearRepentinos(anchoPista, ALTO, semilla, this.dificultad, this.subnivel);
 
         int total = 2 + defectuosos.size();
         Combatiente[] cs = new Combatiente[total];
@@ -156,7 +167,7 @@ public final class CarreraDeObstaculos {
         this.pelea = new Pelea(cs, equipos, semilla, anchoPista, ALTO, maxTurnos);
         this.pelea.rondas = 1;
         this.pelea.multiplicadorDano = this.dificultad.multiplicadorDano;
-        this.pelea.arena = PistaDeCarrera.generarArena(anchoPista, ALTO, semilla, escenario, this.dificultad);
+        this.pelea.arena = PistaDeCarrera.generarArena(anchoPista, ALTO, semilla, escenario, this.dificultad, this.subnivel);
         this.pelea.empezarRonda();
         colocarEnSalida();
     }
@@ -276,6 +287,31 @@ public final class CarreraDeObstaculos {
     /** Nivel de dificultad configurado para esta carrera. */
     public DificultadCarrera dificultad() {
         return dificultad;
+    }
+
+    /** Subnivel de dificultad configurado para esta carrera (1 = I, 2 = II, 3 = III). */
+    public int subnivel() {
+        return subnivel;
+    }
+
+    /** Multiplicador total de recompensas aplicado por la combinación de dificultad y subnivel. */
+    public double multiplicadorRecompensa() {
+        return dificultad.multiplicadorRecompensa(subnivel);
+    }
+
+    /** Escala una cantidad base en centésimas por el multiplicador de recompensa indicado. */
+    public static int escalarCentimos(int baseCentimos, double multiplicador) {
+        return (int) Math.round(baseCentimos * multiplicador);
+    }
+
+    /** Bonos brutos (ya escalados por dificultad/subnivel) antes de aplicar la reducción a 1/4 por derrota. */
+    public int bonosBrutosCentimos() {
+        return bonosBrutosCentimos;
+    }
+
+    /** Indica si los bonos conseguidos fueron reducidos a 1/4 por no ganar la carrera. */
+    public boolean bonosReducidosPorDerrota() {
+        return bonosReducidosPorDerrota;
     }
 
     /** Comprueba si una dificultad de carrera está desbloqueada para el jugador dado. */
@@ -456,25 +492,42 @@ public final class CarreraDeObstaculos {
     }
 
     /**
-     * Aplica todas las recompensas exactas en centésimas (victoria, perfección +0,25, monedas extra +1,0,
-     * objetos destruidos +0,2, robots defectuosos +0,4 y rival destruido +1,0). Idempotente.
+     * Aplica las recompensas exactas en centésimas escaladas por dificultad y subnivel:
+     * victoria = 100 % (recompensa de victoria + bonos + perfección);
+     * derrota/empate = 0 sin bonos, o exactamente 1/4 de los bonos conseguidos en pista. Idempotente.
      */
     public boolean aplicarRecompensa(Jugador jugador) {
         if (!terminada || recompensaAplicada || jugador == null) return false;
-        int centVictoria = ganador == 0 ? 100 : 0;
-        int centPerfeccion = ganador == 0 && medallaObtenida().esPerfecta ? CENTIMOS_PERFECCION : 0;
-        int centMonedasExtra = monedasExtraRecogidas * CENTIMOS_MONEDA_EXTRA;
-        int centObjetos = objetosDestruidos * CENTIMOS_OBJETO_DESTRUIDO;
-        int centDefectuosos = defectuososDestruidos * CENTIMOS_DEFECTUOSO_DESTRUIDO;
-        int centRival = rivalDestruido ? CENTIMOS_RIVAL_DESTRUIDO : 0;
-        int totalCentimos = centVictoria + centPerfeccion + centMonedasExtra + centObjetos + centDefectuosos + centRival;
-        if (totalCentimos <= 0) return false;
+        double mult = multiplicadorRecompensa();
+        int bonosBase = monedasExtraRecogidas * CENTIMOS_MONEDA_EXTRA
+                + objetosDestruidos * CENTIMOS_OBJETO_DESTRUIDO
+                + defectuososDestruidos * CENTIMOS_DEFECTUOSO_DESTRUIDO
+                + (rivalDestruido ? CENTIMOS_RIVAL_DESTRUIDO : 0);
+        int bonosEscalados = escalarCentimos(bonosBase, mult);
+        bonosBrutosCentimos = bonosEscalados;
+        int totalCentimos;
+        int centPerfeccion = 0;
+        if (ganador == 0) {
+            int centVictoria = escalarCentimos(100, mult);
+            centPerfeccion = medallaObtenida().esPerfecta ? CENTIMOS_PERFECCION : 0;
+            bonosReducidosPorDerrota = false;
+            totalCentimos = centVictoria + centPerfeccion + bonosEscalados;
+        } else {
+            int bonosReducidos = bonosEscalados / 4;
+            bonosReducidosPorDerrota = bonosEscalados > 0;
+            totalCentimos = bonosReducidos;
+        }
+        recompensaAplicada = true;
+        if (totalCentimos <= 0) {
+            centimosGanadosTotal = 0;
+            monedasEnterasGanadas = 0;
+            return false;
+        }
         if (centPerfeccion > 0) cuartosGanados = 1;
         int centAntes = jugador.centimosDeMoneda;
         monedasExtraPorCuartos = centPerfeccion > 0 && (centAntes + centPerfeccion) >= 100 ? 1 : 0;
         monedasEnterasGanadas = jugador.sumarCentimosDeMoneda(totalCentimos);
         centimosGanadosTotal = totalCentimos;
-        recompensaAplicada = true;
         return true;
     }
 
@@ -505,14 +558,20 @@ public final class CarreraDeObstaculos {
         return rivalMaquina(nombre, DificultadCarrera.porDefecto());
     }
 
-    /** Crea el combatiente rival controlado por la computadora adaptado a la dificultad indicada. */
+    /** Crea el combatiente rival controlado por la computadora adaptado a la dificultad indicada (subnivel I). */
     public static Combatiente rivalMaquina(String nombre, DificultadCarrera dificultad) {
+        return rivalMaquina(nombre, dificultad, DificultadCarrera.SUBNIVEL_MIN);
+    }
+
+    /** Crea el combatiente rival controlado por la computadora adaptado a la dificultad y subnivel indicados. */
+    public static Combatiente rivalMaquina(String nombre, DificultadCarrera dificultad, int subnivel) {
         DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        int sub = DificultadCarrera.normalizarSubnivel(subnivel);
         Montaje montaje = new Montaje(Modelo.de("cobalto"));
         Fabrica fabrica = new Fabrica() {
             @Override
             public RobotBase crear() {
-                return new PistaDeCarrera.CorredorMaquina(dif);
+                return new PistaDeCarrera.CorredorMaquina(dif, sub);
             }
 
             @Override

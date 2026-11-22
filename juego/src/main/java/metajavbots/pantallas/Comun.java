@@ -46,7 +46,7 @@ public final class Comun {
         }
         Jugador jug = j.jugador;
         // El título no se mete debajo de la insignia de la etiqueta (con letra grande, se encoge).
-        p.texto(titulo, x, 20, ui.cabe(titulo, (jug != null ? p.ancho - 460 : p.ancho) - x - 20, ui.letra * 1.6f, true), true, ui.tema.texto, 1);
+        p.textoConBordeNegro(titulo, x, 20, ui.cabe(titulo, (jug != null ? p.ancho - 460 : p.ancho) - x - 20, ui.letra * 1.6f, true), true, ui.tema.texto, 1);
         if (jug != null) {
             float ex = p.ancho - 460;
             insignia(p, ui, jug.etiqueta, ex, 14, 1f);
@@ -56,7 +56,7 @@ public final class Comun {
             String texto = jug.etiqueta == Etiqueta.MASTER ? "MASTER" : T.f("comun.progreso", r.victoriasQueTiene, r.victorias, r.ejerciciosQueTiene,
                     r.ejercicios);
             ui.barra(ex + 150, 22, 290, 20, parte, ui.tema.acento, null);
-            p.texto(texto, ex + 150, 46, ui.cabe(texto, 296, ui.letra * 0.72f, false), false, ui.tema.textoSuave, 1);
+            p.textoConBordeNegro(texto, ex + 150, 46, ui.cabe(texto, 296, ui.letra * 0.72f, false), false, ui.tema.textoSuave, 1);
             if (ui.e.dentro(ex, 10, 450, 60)) ui.avisar(T.f("comun.progreso_ayuda", jug.etiqueta.nombre, jug.etiqueta.siguiente().nombre));
         }
         return h;
@@ -88,7 +88,7 @@ public final class Comun {
         p.bordeRedondeado(x, y, w, h, 10 * escala, color, 1, 2 * escala);
         for (int i = 0; i < e.escalon() && e != Etiqueta.MASTER; i++) p.circulo(x + w - 14 * escala - i * 12 * escala, y + h - 11 * escala, 4 * escala, color,
                 1);
-        p.textoCentrado(e.nombre, x + w / 2, y + 8 * escala, 20 * escala, true, 0xFFFFFF, 1);
+        p.textoCentradoConBordeNegro(e.nombre, x + w / 2, y + 8 * escala, 20 * escala, true, 0xFFFFFF, 1);
     }
 
     /** El código con que empieza un robot nuevo, en el idioma del jugador. */

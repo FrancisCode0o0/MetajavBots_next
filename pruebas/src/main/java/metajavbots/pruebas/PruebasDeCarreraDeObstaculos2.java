@@ -19,10 +19,13 @@ import metajavbots.combate.Cuerpo;
 import metajavbots.combate.DificultadCarrera;
 import metajavbots.combate.Fabrica;
 import metajavbots.pantallas.ConsultaIaEntrenador;
+import metajavbots.pantallas.Menu;
+import metajavbots.pantallas.PantallaCarreraDeObstaculos;
 import metajavbots.piezas.CatalogoDePiezas;
 import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Pieza;
+import metajavbots.progreso.Etiqueta;
 import metajavbots.progreso.Guardado;
 import metajavbots.progreso.Jugador;
 import metajavbots.textos.Idioma;
@@ -44,6 +47,9 @@ final class PruebasDeCarreraDeObstaculos2 {
         apuntarBotinDestruccionYCentimosExactos();
         apuntarEscalaPistaPorDificultad();
         apuntarSensoresTrilinguesYEntrenador();
+        apuntarReglaDerrotaUnCuarto();
+        apuntarEscaladoRecompensasYSubniveles();
+        apuntarSelectorPiezasEnMenuYAccesoPrincipal();
     }
 
     private static Combatiente combatienteConBala(String nombre, Fabrica fabrica) {
@@ -98,7 +104,10 @@ final class PruebasDeCarreraDeObstaculos2 {
             Jugador j = new Jugador("CazaMonedas");
             j.monedas = 4.0;
             cierto(carrera.aplicarRecompensa(j), "aplica recompensa con monedas extra");
-            igual(4.0 + 1.0 + monedas.size(), j.monedas, "suma victoria (+1) + cada moneda extra (+1 c/u)");
+            int esperado = CarreraDeObstaculos.escalarCentimos(100 + monedas.size() * 100, carrera.multiplicadorRecompensa())
+                    + CarreraDeObstaculos.CENTIMOS_PERFECCION;
+            igual(esperado, carrera.centimosGanadosTotal(), "suma victoria + monedas extra escaladas por dificultad + perfección");
+            igual(4.0 + (esperado / 100), j.monedas, "actualiza monedas enteras con exactitud");
         });
     }
 
@@ -234,7 +243,10 @@ final class PruebasDeCarreraDeObstaculos2 {
                 jug.centimosDeMoneda = 0;
                 cierto(c.aplicarRecompensa(jug), "aplica recompensas de destrucción y victoria");
                 int perf = c.medallaObtenida().esPerfecta ? CarreraDeObstaculos.CENTIMOS_PERFECCION : 0;
-                int esperadoCentimos = 100 + perf + 5 * 20 + defDest * 40 + 100;
+                double mult = c.multiplicadorRecompensa();
+                int bonosBase = 5 * 20 + defDest * 40 + 100 + c.monedasExtraRecogidas() * 100;
+                int esperadoCentimos = CarreraDeObstaculos.escalarCentimos(100, mult) + perf
+                        + CarreraDeObstaculos.escalarCentimos(bonosBase, mult);
                 igual(esperadoCentimos, c.centimosGanadosTotal(), "cálculo exacto en centésimas sin coma flotante");
                 igual(1.0 + (esperadoCentimos / 100), jug.monedas, "monedas enteras acumuladas con exactitud");
                 igual(esperadoCentimos % 100, jug.centimosDeMoneda, "resto exacto en centimosDeMoneda");
@@ -346,6 +358,168 @@ final class PruebasDeCarreraDeObstaculos2 {
                 cierto(ia.contains("moneda") && ia.contains("rampa") && ia.contains("agua")
                         && ia.contains("+0.2") && ia.contains("+0.4") && ia.contains("4/3"),
                         "sistema IA actualizado con nuevas mecánicas en " + id);
+            }
+        });
+    }
+
+    private static void apuntarReglaDerrotaUnCuarto() {
+        caso("carrera de obstáculos: derrota sin bonos = 0 y derrota con bonos = exactamente 1/4", () -> {
+            // 1) Derrota sin destruir ni recoger nada -> exactamente 0 centésimas.
+            Combatiente jug0 = new Combatiente("Jug0", new Montaje(Modelo.de("cobalto")),
+                    PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+            CarreraDeObstaculos derrotaLimpia = new CarreraDeObstaculos(jug0, CarreraDeObstaculos.rivalMaquina("IA", DificultadCarrera.NOOB),
+                    901L, true, null, DificultadCarrera.NOOB, 1);
+            derrotaLimpia.pelea.cuerpo(1).x = derrotaLimpia.metaX() + 5;
+            derrotaLimpia.avanzar();
+            Jugador j0 = new Jugador("SinBonos");
+            j0.monedas = 3.0;
+            falso(derrotaLimpia.aplicarRecompensa(j0), "derrota sin bonos no suma nada");
+            igual(0, derrotaLimpia.centimosGanadosTotal(), "derrota sin bonos suma exactamente 0 centésimas");
+            igual(3.0, j0.monedas, "saldo intacto en derrota sin bonos");
+            igual(0, j0.centimosDeMoneda, "centimosDeMoneda intacto en derrota sin bonos");
+
+            // 2) Derrota tras destruir 1 objeto destructible (+20 base en NOOB I) -> 1/4 = exactamente 5 centésimas.
+            Combatiente tirObj = combatienteConBala("TirObj", PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Tirador::new));
+            Combatiente rivObj = new Combatiente("RivObj", new Montaje(Modelo.de("cobalto")),
+                    PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+            CarreraDeObstaculos derrotaObj = new CarreraDeObstaculos(tirObj, rivObj, 902L, false, null, DificultadCarrera.NOOB, 1);
+            Arena.Trampa barril = null;
+            for (Arena.Trampa t : derrotaObj.pelea.arena.trampas()) {
+                if (t.destructible && !t.destruida()) {
+                    barril = t;
+                    break;
+                }
+            }
+            cierto(barril != null, "existe un obstáculo destructible");
+            Cuerpo cObj = derrotaObj.pelea.cuerpo(0);
+            for (int k = 0; k < 200 && !barril.destruida() && !derrotaObj.terminada(); k++) {
+                cObj.x = barril.x - 110;
+                cObj.y = barril.y;
+                cObj.mira = 0;
+                derrotaObj.avanzar();
+            }
+            igual(1, derrotaObj.objetosDestruidos(), "destruyó 1 objeto");
+            derrotaObj.pelea.cuerpo(1).x = derrotaObj.metaX() + 5;
+            derrotaObj.avanzar();
+            igual(1, derrotaObj.ganador(), "pierde la carrera");
+            Jugador jObj = new Jugador("DerrotaObj");
+            cierto(derrotaObj.aplicarRecompensa(jObj), "aplica 1/4 de bono en derrota con objeto destruido");
+            cierto(derrotaObj.bonosReducidosPorDerrota(), "marca bonos reducidos a 1/4 por derrota");
+            igual(5, derrotaObj.centimosGanadosTotal(), "20 / 4 = exactamente 5 centésimas");
+            igual(5, jObj.centimosDeMoneda, "jugador recibe exactamente 5 centésimas");
+
+            // 3) Derrota tras destruir 1 robot defectuoso (+40 base en NOOB I) -> 1/4 = exactamente 10 centésimas.
+            Combatiente tirDef = combatienteConBala("TirDef", PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Tirador::new));
+            Combatiente rivDef = new Combatiente("RivDef", new Montaje(Modelo.de("cobalto")),
+                    PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+            CarreraDeObstaculos derrotaDef = new CarreraDeObstaculos(tirDef, rivDef, 903L, false, null, DificultadCarrera.NOOB, 1);
+            Cuerpo roto = derrotaDef.robotsDefectuosos().get(0);
+            Cuerpo cDef = derrotaDef.pelea.cuerpo(0);
+            for (int k = 0; k < 400 && !roto.fuera && !derrotaDef.terminada(); k++) {
+                cDef.x = roto.x - 85;
+                cDef.y = roto.y;
+                cDef.mira = 0;
+                derrotaDef.avanzar();
+            }
+            igual(1, derrotaDef.defectuososDestruidos(), "destruyó 1 robot defectuoso");
+            derrotaDef.pelea.cuerpo(1).x = derrotaDef.metaX() + 5;
+            derrotaDef.avanzar();
+            Jugador jDef = new Jugador("DerrotaDef");
+            cierto(derrotaDef.aplicarRecompensa(jDef), "aplica 1/4 de bono en derrota con defectuoso destruido");
+            igual(10, derrotaDef.centimosGanadosTotal(), "40 / 4 = exactamente 10 centésimas");
+            igual(10, jDef.centimosDeMoneda, "jugador recibe exactamente 10 centésimas");
+        });
+    }
+
+    private static void apuntarEscaladoRecompensasYSubniveles() {
+        caso("carrera de obstáculos: recompensas crecen Noob < Junior < Senior < Especial y subniveles I < II < III", () -> {
+            DificultadCarrera[] niveles = DificultadCarrera.values();
+            int prevWin = 0;
+            for (DificultadCarrera d : niveles) {
+                Combatiente cj = new Combatiente("Gan", new Montaje(Modelo.de("cobalto")),
+                        PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+                CarreraDeObstaculos c1 = new CarreraDeObstaculos(cj, CarreraDeObstaculos.rivalMaquina("IA", d, 1), 910L, true, null, d, 1);
+                c1.pelea.cuerpo(0).x = c1.metaX() + 5;
+                c1.avanzar();
+                Jugador jt = new Jugador("Esc-" + d);
+                c1.aplicarRecompensa(jt);
+                cierto(c1.centimosGanadosTotal() > prevWin, "recompensa crece en " + d + ": " + c1.centimosGanadosTotal() + " > " + prevWin);
+                prevWin = c1.centimosGanadosTotal();
+            }
+            int prevSubCent = 0, prevRep = 0, prevDef = 0;
+            for (int sub = 1; sub <= 3; sub++) {
+                Combatiente cj = new Combatiente("Sub", new Montaje(Modelo.de("cobalto")),
+                        PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+                CarreraDeObstaculos cs = new CarreraDeObstaculos(cj, CarreraDeObstaculos.rivalMaquina("IA", DificultadCarrera.NOOB, sub),
+                        920L, true, null, DificultadCarrera.NOOB, sub);
+                cierto(cs.obstaculosRepentinos().size() > prevRep, "repentinos crecen en subnivel " + sub);
+                cierto(cs.robotsDefectuosos().size() > prevDef, "defectuosos crecen en subnivel " + sub);
+                prevRep = cs.obstaculosRepentinos().size();
+                prevDef = cs.robotsDefectuosos().size();
+                cs.pelea.cuerpo(0).x = cs.metaX() + 5;
+                cs.avanzar();
+                Jugador js = new Jugador("Sub-" + sub);
+                cs.aplicarRecompensa(js);
+                cierto(cs.centimosGanadosTotal() > prevSubCent, "recompensa crece en subnivel " + sub + ": " + cs.centimosGanadosTotal());
+                prevSubCent = cs.centimosGanadosTotal();
+            }
+        });
+    }
+
+    private static void apuntarSelectorPiezasEnMenuYAccesoPrincipal() {
+        caso("carrera de obstáculos: cambio de robot y piezas en menú, acceso desde Menu.java y textos/entrenador trilingües", () -> {
+            // 1) Acceso directo desde el bloque Arena de Menu.java.
+            cierto(Menu.clavesDeCasillas().contains("menu.carrera"), "Menu principal incluye tarjeta directa menu.carrera");
+
+            // 2) Cambio de robot y de piezas disponibles directamente en PantallaCarreraDeObstaculos sin pasar por Taller.
+            Jugador jug = new Jugador("Mecanico");
+            jug.etiqueta = Etiqueta.SENIOR_1;
+            Jugador.Robot r0 = new Jugador.Robot("Primero", "cobalto");
+            Jugador.Robot r1 = new Jugador.Robot("Segundo", Modelo.todos().size() > 1 ? Modelo.todos().get(1).id : "cobalto");
+            jug.robots.add(r0);
+            jug.robots.add(r1);
+            List<Pieza> piernas = CatalogoDePiezas.delJuego().de(Pieza.Ranura.PIERNAS);
+            Pieza alternativa = null;
+            Pieza inicial = jug.montajeDe(r1).pieza(Montaje.Hueco.PIERNAS);
+            for (Pieza p : piernas) {
+                if (inicial == null || !p.id.equals(inicial.id)) {
+                    alternativa = p;
+                    jug.piezasGanadas.add(p.id);
+                    break;
+                }
+            }
+            cierto(alternativa != null, "existe una pieza de piernas alternativa en catálogo");
+
+            PantallaCarreraDeObstaculos pantalla = new PantallaCarreraDeObstaculos();
+            cierto(pantalla.seleccionarRobot(jug, 1), "permite seleccionar el segundo robot");
+            igual(1, pantalla.robotSeleccionado(), "robotSeleccionado actualizado a 1");
+            igual(1, jug.robotElegido, "jugador.robotElegido sincronizado");
+            cierto(pantalla.equiparPieza(jug, Montaje.Hueco.PIERNAS, alternativa.id), "permite equipar pieza disponible desde el menú de carrera");
+            igual(alternativa.id, r1.piezas.get(Montaje.Hueco.PIERNAS), "la pieza queda montada en el robot sin ir al Taller");
+
+            Montaje.Cifras cifrasMenu = pantalla.cifrasActuales(jug);
+            Combatiente corredor = CarreraDeObstaculos.combatienteDeJugador(jug, pantalla.robotSeleccionado(),
+                    PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+            igual(alternativa.id, corredor.montaje.pieza(Montaje.Hueco.PIERNAS).id, "el corredor sale con la pieza cambiada en el menú");
+            igual(cifrasMenu.velocidad, corredor.montaje.cifras().velocidad, "las cifras del menú coinciden con las del corredor");
+
+            // 3) Claves nuevas en ui.txt y conocimiento actualizado del entrenador (ES, DE, EN).
+            String[] claves = {
+                    "menu.carrera", "menu.carrera_ayuda", "carrera_obs.subnivel", "carrera_obs.multiplicador",
+                    "carrera_obs.dif_bloqueada_rango", "carrera_obs.solo_un_robot", "carrera_obs.derrota_cuarto"
+            };
+            for (Idioma id : Idioma.values()) {
+                for (String k : claves) {
+                    String val = T.en(k, id);
+                    cierto(val != null && !val.isBlank() && !val.equals(k), "clave ui.txt presente en " + id + ": " + k);
+                }
+                ConocimientoDelEntrenador.Entrada entrada = ConocimientoDelEntrenador.de("carrera_de_obstaculos");
+                String texto = String.join(" ", entrada.aConcepto().parrafos(id)).toLowerCase(Locale.ROOT);
+                cierto(texto.contains("arena") && texto.contains("1/4") && texto.contains("iii"),
+                        "ficha entrenador refleja acceso Arena, subniveles I/II/III y regla 1/4 en " + id);
+                String ia = ConsultaIaEntrenador.construirSistema(jug, id, null).toLowerCase(Locale.ROOT);
+                cierto(ia.contains("arena") && ia.contains("sublevel") && ia.contains("1/4"),
+                        "sistema IA refleja acceso Arena, subniveles y regla 1/4 en " + id);
             }
         });
     }

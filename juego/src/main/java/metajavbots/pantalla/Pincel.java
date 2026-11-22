@@ -390,6 +390,41 @@ public final class Pincel {
     }
 
     /**
+     * Escribe un texto con un contorno negro fino de 1 px detrás para que sobresalga sobre el fondo
+     * de los menús sin asignar objetos nuevos por fotograma.
+     */
+    public float textoConBordeNegro(String s, float x, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        if (s == null || s.isEmpty()) return 0;
+        float alfaBorde = esColorMuyOscuro(rgb) ? alfa * 0.22f : alfa * 0.85f;
+        texto(s, x - 1f, y, tamano, negrita, 0x000000, alfaBorde);
+        texto(s, x + 1f, y, tamano, negrita, 0x000000, alfaBorde);
+        texto(s, x, y - 1f, tamano, negrita, 0x000000, alfaBorde);
+        texto(s, x, y + 1f, tamano, negrita, 0x000000, alfaBorde);
+        return texto(s, x, y, tamano, negrita, rgb, alfa);
+    }
+
+    /** Escribe un texto centrado con contorno negro fino de 1 px detrás. */
+    public float textoCentradoConBordeNegro(String s, float cx, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        float w = ancho(s, tamano, negrita);
+        textoConBordeNegro(s, cx - w / 2, y, tamano, negrita, rgb, alfa);
+        return w;
+    }
+
+    /** Escribe un texto alineado a la derecha con contorno negro fino de 1 px detrás. */
+    public float textoDerechaConBordeNegro(String s, float xDerecha, float y, float tamano, boolean negrita, int rgb, float alfa) {
+        float w = ancho(s, tamano, negrita);
+        textoConBordeNegro(s, xDerecha - w, y, tamano, negrita, rgb, alfa);
+        return w;
+    }
+
+    private static boolean esColorMuyOscuro(int rgb) {
+        int r = (rgb >> 16) & 0xFF;
+        int g = (rgb >> 8) & 0xFF;
+        int b = rgb & 0xFF;
+        return r * 299 + g * 587 + b * 114 < 70000;
+    }
+
+    /**
      * Una línea con colores por trozos, de una vez (la fuente coloca cada letra: en el editor de código,
      * así ninguna letra se monta en otra). Cada trozo: {texto, color RGB}.
      */

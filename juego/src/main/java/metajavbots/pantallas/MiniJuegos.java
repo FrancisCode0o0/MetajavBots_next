@@ -83,7 +83,7 @@ public final class MiniJuegos implements Pantalla {
         float bw = 220;
         String resumen = T.f("mini.orden", hechos, RETOS.length);
         float tRes = ajustarAncho(p, resumen, w - bw - 48, Math.min(ui.letra * 0.9f, 20f), 12f, true);
-        p.texto(resumen, x + 16, y + (h - p.altoDeLinea(tRes)) / 2f, tRes, true, ui.tema.texto, 1);
+        p.textoConBordeNegro(resumen, x + 16, y + (h - p.altoDeLinea(tRes)) / 2f, tRes, true, ui.tema.texto, 1);
         int colorBarra = hechos == RETOS.length ? ui.tema.bien : ui.tema.acento;
         ui.barra(x + w - bw - 16, y + (h - 20) / 2f, bw, 20, hechos / (float) RETOS.length, colorBarra, hechos + " / " + RETOS.length);
         return y + h;
@@ -107,12 +107,12 @@ public final class MiniJuegos implements Pantalla {
         float px = x + w - 16 - pillW, py = y + 12;
         p.caja(px, py, pillW, pillH, pillH / 2f, Pincel.mezcla(ui.tema.panelAlto, acento, hecho ? 0.30f : 0.10f), 1);
         p.bordeRedondeado(px, py, pillW, pillH, pillH / 2f, hecho ? ui.tema.bien : ui.tema.borde, 1, 1.1f);
-        p.textoCentrado(estado, px + pillW / 2f, py + 4, tEst, true, hecho ? ui.tema.bien : ui.tema.textoSuave, 1);
+        p.textoCentradoConBordeNegro(estado, px + pillW / 2f, py + 4, tEst, true, hecho ? ui.tema.bien : ui.tema.textoSuave, 1);
         // Título numerado por dificultad.
         String titulo = (indice + 1) + ". " + T.t("mini." + id);
         float maxTitW = Math.max(80, px - (x + 18) - 10);
         float tTit = ajustarAncho(p, titulo, maxTitW, Math.min(ui.letra * 1.08f, 23f), 13f, true);
-        p.texto(titulo, x + 18, y + 12, tTit, true, hecho ? ui.tema.bien : ui.tema.texto, 1);
+        p.textoConBordeNegro(titulo, x + 18, y + 12, tTit, true, hecho ? ui.tema.bien : ui.tema.texto, 1);
         float yy = Math.max(y + 12 + p.altoDeLinea(tTit), py + pillH) + 3;
         // Indicador visual de nivel de dificultad (1 a 5 puntos).
         String nivel = "●".repeat(indice + 1) + "○".repeat(RETOS.length - 1 - indice);

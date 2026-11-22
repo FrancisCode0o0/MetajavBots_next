@@ -518,18 +518,33 @@ final class PruebasDeCarreraDeObstaculos {
                         "rival más táctico y preciso en " + b);
             }
 
-            // Bloqueo y desbloqueo de ESPECIAL vinculado a Progreso.modoEspecialDesbloqueado.
+            // Desbloqueo progresivo por rango (Noob -> Junior -> Senior -> Especial).
             Jugador nuevo = new Jugador("Novato");
             falso(Progreso.modoEspecialDesbloqueado(nuevo), "jugador nuevo no tiene Modo especial desbloqueado");
-            for (DificultadCarrera libre : List.of(DificultadCarrera.NOOB, DificultadCarrera.JUNIOR, DificultadCarrera.SENIOR)) {
-                cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(nuevo, libre), libre + " siempre disponible");
-            }
+            cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(nuevo, DificultadCarrera.NOOB), "NOOB disponible desde el inicio");
+            falso(PantallaCarreraDeObstaculos.dificultadDesbloqueada(nuevo, DificultadCarrera.JUNIOR), "JUNIOR bloqueado en rango Noob");
+            falso(PantallaCarreraDeObstaculos.dificultadDesbloqueada(nuevo, DificultadCarrera.SENIOR), "SENIOR bloqueado en rango Noob");
             falso(PantallaCarreraDeObstaculos.dificultadDesbloqueada(nuevo, DificultadCarrera.ESPECIAL), "ESPECIAL bloqueado inicialmente");
 
             PantallaCarreraDeObstaculos pantalla = new PantallaCarreraDeObstaculos();
+            falso(pantalla.seleccionarDificultad(nuevo, DificultadCarrera.JUNIOR), "no permite forzar JUNIOR en rango Noob");
             falso(pantalla.seleccionarDificultad(nuevo, DificultadCarrera.ESPECIAL), "no permite forzar ESPECIAL si está bloqueado");
-            igual(DificultadCarrera.porDefecto(), pantalla.dificultadSeleccionada(), "mantiene dificultad por defecto tras intento bloqueado");
-            cierto(pantalla.seleccionarDificultad(nuevo, DificultadCarrera.SENIOR), "permite elegir SENIOR libremente");
+            igual(DificultadCarrera.NOOB, pantalla.dificultadSeleccionada(), "mantiene NOOB tras intentos bloqueados");
+
+            Jugador junior = new Jugador("Intermedio");
+            junior.etiqueta = Etiqueta.JUNIOR_1;
+            cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(junior, DificultadCarrera.NOOB), "NOOB disponible en Junior");
+            cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(junior, DificultadCarrera.JUNIOR), "JUNIOR desbloqueado en rango Junior");
+            falso(PantallaCarreraDeObstaculos.dificultadDesbloqueada(junior, DificultadCarrera.SENIOR), "SENIOR bloqueado en rango Junior");
+            falso(PantallaCarreraDeObstaculos.dificultadDesbloqueada(junior, DificultadCarrera.ESPECIAL), "ESPECIAL bloqueado sin Modo especial");
+            cierto(pantalla.seleccionarDificultad(junior, DificultadCarrera.JUNIOR), "permite elegir JUNIOR en rango Junior");
+            igual(DificultadCarrera.JUNIOR, pantalla.dificultadSeleccionada(), "JUNIOR queda seleccionado");
+
+            Jugador senior = new Jugador("Veterano");
+            senior.etiqueta = Etiqueta.SENIOR_1;
+            cierto(PantallaCarreraDeObstaculos.dificultadDesbloqueada(senior, DificultadCarrera.SENIOR), "SENIOR desbloqueado en rango Senior");
+            falso(PantallaCarreraDeObstaculos.dificultadDesbloqueada(senior, DificultadCarrera.ESPECIAL), "ESPECIAL sigue bloqueado sin jefe/Master");
+            cierto(pantalla.seleccionarDificultad(senior, DificultadCarrera.SENIOR), "permite elegir SENIOR en rango Senior");
             igual(DificultadCarrera.SENIOR, pantalla.dificultadSeleccionada(), "SENIOR queda seleccionado");
 
             // Al desbloquear Modo especial (por jefe vencido o rango Master), ESPECIAL queda seleccionable.

@@ -79,9 +79,10 @@ public final class Menu implements Pantalla {
                     new Casilla("menu.taller", "menu.taller_ayuda", "⚙", null, false, j -> new Taller()),
                     new Casilla("menu.tienda", "menu.tienda_ayuda", "◆", null, false, j -> new Tienda()),
                     new Casilla("menu.depuracion", "menu.depuracion_ayuda", "!", null, false, j -> new DepuracionYTesting())),
-            new Bloque("menu.bloque_arena", COLOR_ARENA_OSCURO, COLOR_ARENA_CLARO, 4,
+            new Bloque("menu.bloque_arena", COLOR_ARENA_OSCURO, COLOR_ARENA_CLARO, 5,
                     new Casilla("menu.pelear_ya", "menu.pelear_ya_ayuda", "⚔", null, true, PrepararPelea::adaptada),
                     new Casilla("menu.pelear", "menu.pelear_ayuda", "►", null, false, j -> new PrepararPelea()),
+                    new Casilla("menu.carrera", "menu.carrera_ayuda", "»", null, false, j -> new PantallaCarreraDeObstaculos()),
                     new Casilla("menu.especial", "menu.especial_ayuda", "◆", null, false, j -> new ModoEspecial()),
                     new Casilla("menu.historial", "menu.historial_ayuda", "▲", null, false, j -> new Historial())),
     };
@@ -143,8 +144,10 @@ public final class Menu implements Pantalla {
         float yMarcador = yExp - alto * 1.15f;
         String exp = T.f("menu.experiencia", jug.experiencia);
         String marcador = T.f("menu.marcador", jug.victorias(), jug.derrotas());
-        p.textoCentrado(exp, x + w / 2, yExp, ajustarAncho(p, exp, w - 28, Math.min(ui.letra * 0.9f, 20f), 11f, false), false, ui.tema.textoSuave, 1);
-        p.textoCentrado(marcador, x + w / 2, yMarcador, ajustarAncho(p, marcador, w - 28, Math.min(ui.letra, 22f), 12f, false), false, ui.tema.texto, 1);
+        float tExp = ajustarAncho(p, exp, w - 28, Math.min(ui.letra * 0.9f, 20f), 11f, false);
+        float tMar = ajustarAncho(p, marcador, w - 28, Math.min(ui.letra, 22f), 12f, false);
+        p.textoCentradoConBordeNegro(exp, x + w / 2, yExp, tExp, false, ui.tema.textoSuave, 1);
+        p.textoCentradoConBordeNegro(marcador, x + w / 2, yMarcador, tMar, false, ui.tema.texto, 1);
         Jugador.Robot r = jug.robot();
         if (r != null) {
             String sub = r.montaje().modelo.nombre(T.idioma) + " · " + r.montaje().modelo.naturaleza.nombre(T.idioma);
@@ -152,8 +155,8 @@ public final class Menu implements Pantalla {
             float tNom = ajustarAncho(p, r.nombre, w - 28, Math.min(ui.letra * 1.35f, 30f), 14f, true);
             float yModelo = yMarcador - alto * 1.45f;
             float yNombre = yModelo - p.altoDeLinea(tNom) - 4;
-            p.textoCentrado(sub, x + w / 2, yModelo, tSub, false, ui.tema.textoSuave, 1);
-            p.textoCentrado(r.nombre, x + w / 2, yNombre, tNom, true, ui.tema.texto, 1);
+            p.textoCentradoConBordeNegro(sub, x + w / 2, yModelo, tSub, false, ui.tema.textoSuave, 1);
+            p.textoCentradoConBordeNegro(r.nombre, x + w / 2, yNombre, tNom, true, ui.tema.texto, 1);
             float pies = yNombre - 28;
             float talla = Math.max(1.2f, Math.min(3.4f, (pies - y - 40) / 85f));
             vista.robotSuelto(p, r.montaje(), x + w / 2, pies, talla, t, 0, true);
@@ -193,7 +196,7 @@ public final class Menu implements Pantalla {
         p.caja(x + 12, y + 8, 4, cabH - 14, 2, color, 1);
         String titulo = T.t(b.titulo).toUpperCase(java.util.Locale.ROOT);
         float tCab = ajustarAncho(p, titulo, w - 36, Math.min(ui.letra * 0.88f, 20f), 12f, true);
-        p.texto(titulo, x + 24, y + (cabH - p.altoDeLinea(tCab)) / 2f + 2f, tCab, true, color, 1);
+        p.textoConBordeNegro(titulo, x + 24, y + (cabH - p.altoDeLinea(tCab)) / 2f + 2f, tCab, true, color, 1);
         p.rect(x + 12, y + cabH - 1, w - 24, 1, Pincel.mezcla(ui.tema.borde, color, 0.35f), 0.7f);
         float padX = 12, sepX = 10;
         float cw = (w - padX * 2 - (b.columnas - 1) * sepX) / b.columnas;
@@ -220,7 +223,7 @@ public final class Menu implements Pantalla {
         float radio = Math.min(17f, h * 0.17f);
         float icx = x + 16 + radio, icy = y + 10 + radio;
         p.circulo(icx, icy, radio, Pincel.mezcla(ui.tema.panel, color, claro ? 0.18f : 0.28f), 1);
-        p.textoCentrado(c.icono, icx, icy - radio * 0.58f, radio * 1.05f, true, color, 1);
+        p.textoCentradoConBordeNegro(c.icono, icx, icy - radio * 0.58f, radio * 1.05f, true, color, 1);
         float pillW = 0;
         if (c.etiqueta != null) {
             String et = T.t(c.etiqueta);
@@ -230,13 +233,13 @@ public final class Menu implements Pantalla {
             float px = x + w - 10 - pillW, py = y + 9;
             p.caja(px, py, pillW, pillH, pillH / 2f, Pincel.mezcla(ui.tema.panel, color, claro ? 0.20f : 0.34f), 1);
             p.bordeRedondeado(px, py, pillW, pillH, pillH / 2f, color, 0.9f, 1f);
-            p.textoCentrado(et, px + pillW / 2f, py + 3, tEt, true, ui.tema.texto, 1);
+            p.textoCentradoConBordeNegro(et, px + pillW / 2f, py + 3, tEt, true, ui.tema.texto, 1);
         }
         String titulo = T.t(c.clave);
         float tx = x + 26 + radio * 2;
         float maxTitW = Math.max(40, x + w - 10 - (pillW > 0 ? pillW + 6 : 0) - tx);
         float tTit = ajustarAncho(p, titulo, maxTitW, Math.min(ui.letra * 1.05f, 22f), 12f, true);
-        p.texto(titulo, tx, icy - p.altoDeLinea(tTit) / 2f, tTit, true, ui.tema.texto, 1);
+        p.textoConBordeNegro(titulo, tx, icy - p.altoDeLinea(tTit) / 2f, tTit, true, ui.tema.texto, 1);
         String ayuda = T.t(c.ayuda);
         float dy = Math.max(y + 14 + radio * 2, icy + p.altoDeLinea(tTit) / 2f + 4);
         float dw = w - 28, altoDisp = Math.max(16, y + h - 8 - dy);
@@ -271,7 +274,7 @@ public final class Menu implements Pantalla {
         boolean encima = ui.e.dentro(mx, my, mw, mh);
         p.caja(mx, my, mw, mh, 10, Pincel.oscurecer(dorado, encima ? 0.55f : 0.65f), 1);
         p.bordeRedondeado(mx, my, mw, mh, 10, dorado, 1, encima ? 2.5f : 2);
-        p.textoCentrado(texto, mx + mw / 2, my + (mh - p.altoDeLinea(tam)) / 2, tam, true, 0xFFFFFF, 1);
+        p.textoCentradoConBordeNegro(texto, mx + mw / 2, my + (mh - p.altoDeLinea(tam)) / 2, tam, true, 0xFFFFFF, 1);
         if (encima) ui.avisar(T.t("menu.monedas_ayuda"));
         if (ui.e.clic(mx, my, mw, mh)) {
             j.sonidos.tocar("clic", 0.5f);

@@ -86,7 +86,7 @@ public final class Tienda implements Pantalla {
         String[] pest = new String[RANGOS.length];
         for (int i = 0; i < RANGOS.length; i++) {
             boolean libre = Progreso.rangoDesbloqueadoEnTienda(jug, RANGOS[i]);
-            pest[i] = (libre ? "" : "🔒 ") + nombreRango(RANGOS[i]);
+            pest[i] = libre ? nombreRango(RANGOS[i]) : "[" + nombreRango(RANGOS[i]) + "]";
         }
         int antes = rangoElegido;
         rangoElegido = ui.pestanas(pest, rangoElegido, x, y, Math.min(w, 660), 48);
@@ -116,12 +116,13 @@ public final class Tienda implements Pantalla {
     }
 
     private float avisoRangoBloqueado(Pincel p, Ui ui, Etiqueta.Categoria rango, float x, float y, float w) {
-        String msg = "🔒 " + T.f("tienda.rango_bloqueado", nombreRango(rango));
-        float tam = ui.cabe(msg, w - 32, ui.letra * 0.88f, true);
-        float h = p.altoDeParrafo(msg, w - 32, tam) + 20;
+        String msg = T.f("tienda.rango_bloqueado", nombreRango(rango));
+        float tam = ui.cabe(msg, w - 56, ui.letra * 0.88f, true);
+        float h = p.altoDeParrafo(msg, w - 56, tam) + 20;
         p.caja(x, y, w, h, 10, Pincel.oscurecer(ui.tema.aviso, 0.72f), 1);
         p.bordeRedondeado(x, y, w, h, 10, ui.tema.aviso, 1, 1.5f);
-        p.parrafo(msg, x + 16, y + 10, w - 32, tam, ui.tema.texto, 1);
+        ui.candado(x + 24, y + h / 2f, 18, ui.tema.aviso, 1);
+        p.parrafo(msg, x + 42, y + 10, w - 56, tam, ui.tema.texto, 1);
         return y + h + 12;
     }
 
@@ -166,7 +167,7 @@ public final class Tienda implements Pantalla {
         float textoW = w - bw - 36;
         String nombre = pz.nombre(T.idioma);
         float tNom = ui.cabe(nombre, textoW, ui.letra * 1.02f, true);
-        p.texto(ui.recortarTexto(nombre, textoW, tNom, true), x + 16, y + 12, tNom, true,
+        p.textoConBordeNegro(ui.recortarTexto(nombre, textoW, tNom, true), x + 16, y + 12, tNom, true,
                 desbloqueado || yaLaTiene || pendiente ? ui.tema.texto : ui.tema.textoSuave, 1);
 
         float yMeta = y + 14 + p.altoDeLinea(tNom) + 2;
@@ -187,7 +188,7 @@ public final class Tienda implements Pantalla {
         float bx = x + w - bw - 14;
         String precioTxt = "◆ " + Jugador.formatearMonedas(pz.precio);
         float tPrecio = ui.cabe(precioTxt, bw, ui.letra * 0.95f, true);
-        p.textoCentrado(precioTxt, bx + bw / 2, y + 16, tPrecio, true,
+        p.textoCentradoConBordeNegro(precioTxt, bx + bw / 2, y + 16, tPrecio, true,
                 desbloqueado && alcanzaSaldo ? 0xFFC857 : ui.tema.textoSuave, 1);
 
         float bh = Math.min(48, h * 0.36f);
@@ -199,8 +200,9 @@ public final class Tienda implements Pantalla {
                 j.ir(new PantallaActivarPieza(pz));
             }
         } else if (!desbloqueado) {
-            ui.boton("🔒 " + T.t("tienda.bloqueada"), bx, by, bw, bh, Ui.Estilo.PLANO, false,
+            ui.boton(T.t("tienda.bloqueada"), bx, by, bw, bh, Ui.Estilo.PLANO, false,
                     T.f("tienda.necesita_rango", nombreRango(pz.rangoTienda)));
+            ui.candado(bx + 18, by + bh / 2f, 14, ui.tema.textoApagado, 1);
         } else if (!alcanzaSaldo) {
             String falta = Jugador.formatearMonedas(pz.precio - jug.monedas);
             ui.boton(T.t("tienda.comprar"), bx, by, bw, bh, Ui.Estilo.NORMAL, false, T.f("tienda.sin_saldo", falta));
@@ -224,7 +226,7 @@ public final class Tienda implements Pantalla {
         int dorado = 0xFFC857;
         p.caja(mx, my, mw, mh, 10, Pincel.oscurecer(dorado, 0.65f), 1);
         p.bordeRedondeado(mx, my, mw, mh, 10, dorado, 1, 2);
-        p.textoCentrado(texto, mx + mw / 2, my + (mh - p.altoDeLinea(tam)) / 2, tam, true, 0xFFFFFF, 1);
+        p.textoCentradoConBordeNegro(texto, mx + mw / 2, my + (mh - p.altoDeLinea(tam)) / 2, tam, true, 0xFFFFFF, 1);
     }
 
     /** Piezas comprables de la tienda para un rango y ranura (null = todas las ranuras). */

@@ -55,7 +55,7 @@ public final class Ajustes implements Pantalla {
         // A la izquierda: idioma, letra, tema, sonido, voz… (se desplaza si con letra grande no cabe).
         float zona = arriba + 12, d = ui.desplazable(izquierda, 40, zona, w + 40, p.alto - zona - 12);
         float y = zona + 12 - d;
-        p.texto(T.t("ajustes.idioma"), x, y, ui.letra, true, ui.tema.texto, 1);
+        p.textoConBordeNegro(T.t("ajustes.idioma"), x, y, ui.letra, true, ui.tema.texto, 1);
         y += 34;
         for (int i = 0; i < Idioma.values().length; i++) {
             Idioma id = Idioma.values()[i];

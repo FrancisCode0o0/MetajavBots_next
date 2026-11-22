@@ -89,7 +89,8 @@ public final class ModoEspecial implements Pantalla {
                 for (Ejercicio e : Banco.delJuego().todos()) {
                     if (e.desbloquea.isEmpty()) continue;
                     boolean hecho = jug.ejerciciosResueltos.contains(e.id);
-                    p.texto((hecho ? "✔ " : "") + e.titulo(T.idioma), x + 24, yy + 10, ui.letra * 1.1f, true, hecho ? ui.tema.bien : ui.tema.texto, 1);
+                    p.textoConBordeNegro((hecho ? "✔ " : "") + e.titulo(T.idioma), x + 24, yy + 10, ui.letra * 1.1f, true,
+                            hecho ? ui.tema.bien : ui.tema.texto, 1);
                     if (ui.boton(T.t("especial.abrir"), x + w - 320, yy, 280, 54, hecho ? Ui.Estilo.PLANO
                             : Ui.Estilo.PRINCIPAL)) j.ir(new PantallaEjercicio(e));
                     yy += 74;
@@ -125,13 +126,14 @@ public final class ModoEspecial implements Pantalla {
         boolean gimnasios = false, jefes = false;
         for (Jefe jefe : Jefe.TODOS) {
             if (jefe.gimnasio ? !gimnasios : !jefes) {
-                p.texto(T.t(jefe.gimnasio ? "especial.gimnasios" : "especial.jefes_titulo"), x + 24, yy, ui.letra * 1.3f, true, 0xFFC857, 1);
+                p.textoConBordeNegro(T.t(jefe.gimnasio ? "especial.gimnasios" : "especial.jefes_titulo"), x + 24, yy, ui.letra * 1.3f, true, 0xFFC857, 1);
                 yy += ui.letra * 2;
                 if (jefe.gimnasio) gimnasios = true;
                 else jefes = true;
             }
             boolean vencido = jug.jefesVencidos.contains(jefe.id);
-            p.texto((vencido ? "✔ " : "") + jefe.nombre(T.idioma), x + 24, yy + 4, ui.letra * 1.1f, true, vencido ? ui.tema.bien : ui.tema.texto, 1);
+            p.textoConBordeNegro((vencido ? "✔ " : "") + jefe.nombre(T.idioma), x + 24, yy + 4, ui.letra * 1.1f, true,
+                    vencido ? ui.tema.bien : ui.tema.texto, 1);
             float pista = p.parrafo(jefe.pista.en(T.idioma), x + 24, yy + 36, w - 380, ui.letra * 0.8f, ui.tema.textoSuave, 1);
             if (ui.boton(T.t("especial.luchar"), x + w - 320, yy + 10, 280, 54, vencido ? Ui.Estilo.PLANO : Ui.Estilo.PRINCIPAL)) luchar(j, jefe);
             yy += Math.max(110, 36 + pista + 24);
@@ -146,7 +148,7 @@ public final class ModoEspecial implements Pantalla {
         Jugador jug = j.jugador;
         int n = Jefe.TODOS.size(), ganadas = 0;
         for (Jefe jefe : Jefe.TODOS) if (jug.jefesVencidos.contains(jefe.id)) ganadas++;
-        p.texto(T.f("especial.medallas", ganadas, n), x + 24, yy, ui.letra * 1.1f, true, ui.tema.texto, 1);
+        p.textoConBordeNegro(T.f("especial.medallas", ganadas, n), x + 24, yy, ui.letra * 1.1f, true, ui.tema.texto, 1);
         yy += ui.letra * 1.8f;
         float paso = Math.min(110, (w - 48) / n), r = Math.min(34, paso * 0.4f);
         for (int i = 0; i < n; i++) {
