@@ -1,14 +1,18 @@
 package metajavbots.ejercicios;
 
 import java.util.BitSet;
+import java.util.List;
 
 import metajavbots.api.Enemigo;
 import metajavbots.api.Metajavbot;
+import metajavbots.api.Obstaculo;
 import metajavbots.api.RobotBase;
+import metajavbots.combate.Arena;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.Fabrica;
 import metajavbots.combate.Pelea;
+import metajavbots.combate.Suceso;
 import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
 import metajavbots.textos.Idioma;
@@ -40,6 +44,7 @@ public final class MotorDemostracion {
     private int turnosTrasDisparo;
     private boolean impactoRealizado;
     private int turnosTrasImpacto;
+    private boolean obstaculoDestruido;
     private double inicioX;
     private double inicioY;
     private double inicioRumbo;
@@ -158,6 +163,7 @@ public final class MotorDemostracion {
         turnosTrasDisparo = 0;
         impactoRealizado = false;
         turnosTrasImpacto = 0;
+        obstaculoDestruido = false;
         distanciaRecorrida = 0;
         giroAcumulado = 0;
         giroMiraAcumulado = 0;
@@ -176,6 +182,7 @@ public final class MotorDemostracion {
         Combatiente yo = new Combatiente(nombreDemo, montajeDemo.copia(), fabricaDemo());
         Combatiente muneco = new Combatiente(nombreMuneco, new Montaje(modMuneco), fabricaMuneco());
         pelea = new Pelea(yo, muneco, 42L + indicePaso * 7L, 1000, 700, 1200);
+        pelea.arena = Arena.de(demo.escenario.name(), pelea.ancho, pelea.alto);
         pelea.rondas = 1;
         pelea.empezarRonda();
         posicionarParaPaso(p);
@@ -185,6 +192,10 @@ public final class MotorDemostracion {
         Cuerpo yo = pelea.cuerpo(0);
         Cuerpo rival = pelea.cuerpo(1);
         if (yo == null || rival == null) return;
+        if (Demostracion.ID_DEMO_3.equals(demo.id)) {
+            posicionarDemo3(p, yo, rival);
+            return;
+        }
         yo.x = p.accion == Demostracion.Accion.GIRAR ? 340 : 265;
         yo.y = 340;
         yo.rumbo = 0;
@@ -228,6 +239,24 @@ public final class MotorDemostracion {
         blindajeRivalInicial = rival.blindaje();
     }
 
+    private void posicionarDemo3(Demostracion.Paso p, Cuerpo yo, Cuerpo rival) {
+        yo.x = 110;
+        yo.y = 490;
+        yo.rumbo = 0;
+        boolean vivo = p.accion == Demostracion.Accion.ENTORNO_INGENUO
+                || p.accion == Demostracion.Accion.ENTORNO_AJUSTADO;
+        yo.mira = vivo ? -22 : 0;
+        rival.x = 350;
+        rival.y = 490;
+        rival.rumbo = 180;
+        rival.mira = 180;
+        inicioX = yo.x;
+        inicioY = yo.y;
+        inicioRumbo = yo.rumbo;
+        inicioMira = yo.mira;
+        blindajeRivalInicial = rival.blindaje();
+    }
+
     private Fabrica fabricaDemo() {
         return new Fabrica() {
             @Override
@@ -257,6 +286,9 @@ public final class MotorDemostracion {
         if (disparoRealizado) turnosTrasDisparo++;
         if (rival != null && rival.blindaje() < blindajeRivalInicial - 0.01) impactoRealizado = true;
         if (impactoRealizado) turnosTrasImpacto++;
+        for (Suceso s : pelea.sucesos()) {
+            if (s.tipo == Suceso.Tipo.OBSTACULO_ROTO) obstaculoDestruido = true;
+        }
     }
 
     private void comprobarErrorEnPelea() {
@@ -283,6 +315,11 @@ public final class MotorDemostracion {
                 return enemigoDetectado && disparoRealizado && ((impactoRealizado && turnosTrasImpacto >= 4) || turnosTrasDisparo >= 20);
             case FALLO_ORDEN:
                 return enemigoDetectado && disparoRealizado && turnosTrasDisparo >= 10;
+            case ENTORNO_INGENUO:
+                return enemigoDetectado && disparoRealizado && turnosTrasDisparo >= 14;
+            case ENTORNO_AJUSTADO:
+                return obstaculoDestruido && enemigoDetectado && disparoRealizado
+                        && ((impactoRealizado && turnosTrasImpacto >= 4) || turnosTrasDisparo >= 60);
             default:
                 return false;
         }
@@ -366,13 +403,69 @@ public final class MotorDemostracion {
                         detener();
                     }
                     break;
+                case ENTORNO_INGENUO:
+                    ejecutarEntornoIngenuo();
+                    break;
+                case ENTORNO_AJUSTADO:
+                    ejecutarEntornoAjustado();
+                    break;
                 case QUIETO:
                 case ORDEN_TURNO:
                 case CORREGIR_LINEA:
+                case AJUSTAR_ENTORNO:
                 case CIERRE:
                 default:
                     detener();
                     break;
+            }
+        }
+
+        private void ejecutarEntornoIngenuo() {
+            avanzar(60);
+            if (enemigosVistos().isEmpty()) {
+                apuntar(20);
+                marcarLineaViva(14, 12, 13);
+            } else {
+                marcarLineaViva(7, 6, 12);
+            }
+        }
+
+        private void ejecutarEntornoAjustado() {
+            for (Obstaculo o : obstaculos()) {
+                if (o.peligroso() && o.distancia() < 150) {
+                    girarHacia(o.angulo() + 90);
+                    avanzar(60);
+                    marcarLineaViva(9, 7, 8, 10);
+                    return;
+                }
+                if (o.solido() && o.distancia() < 180) {
+                    detener();
+                    apuntarHacia(o.angulo());
+                    if (Math.abs(normalizar(o.angulo() - mira())) < 8) {
+                        if (atacar()) disparoRealizado = true;
+                        marcarLineaViva(16, 13, 14, 15);
+                    } else {
+                        marcarLineaViva(14, 13, 15);
+                    }
+                    return;
+                }
+            }
+            List<Enemigo> vistos = enemigosVistos();
+            if (vistos.isEmpty()) {
+                apuntar(20);
+                marcarLineaViva(23, 21, 22);
+                return;
+            }
+            Enemigo e = vistos.get(0);
+            enemigoDetectado = true;
+            double alcance = Math.max(alcanceIzquierda(), alcanceDerecha());
+            apuntarHacia(e.angulo());
+            double error = Math.abs(normalizar(e.angulo() - mira()));
+            if (e.distancia() <= alcance && error < 8) {
+                if (atacar()) disparoRealizado = true;
+                marcarLineaViva(31, 21, 27, 29, 30);
+            } else {
+                marcarLineaViva(28, 21, 27, 29, 30);
             }
         }
 
@@ -391,6 +484,13 @@ public final class MotorDemostracion {
                     disparoRealizado = true;
                 }
                 marcarLineaViva(15, 6, 7);
+                return;
+            }
+            if (a == Demostracion.Accion.ENTORNO_INGENUO) {
+                enemigoDetectado = true;
+                apuntarHacia(e.angulo());
+                if (atacar()) disparoRealizado = true;
+                marcarLineaViva(7, 6, 12);
                 return;
             }
             if (a != Demostracion.Accion.APUNTAR_Y_DISPARAR && a != Demostracion.Accion.ACIERTO_ORDEN) return;
@@ -486,6 +586,11 @@ public final class MotorDemostracion {
         return impactoRealizado;
     }
 
+    /** Indica si en el paso actual se destruyó al menos un obstáculo destructible de la arena. */
+    public boolean obstaculoDestruido() {
+        return obstaculoDestruido;
+    }
+
     public double inicioX() {
         return inicioX;
     }
@@ -539,6 +644,8 @@ public final class MotorDemostracion {
     /** Indica si el paso actual llama explícitamente la atención sobre las barras de blindaje y energía. */
     public boolean resaltarHudBarras() {
         Demostracion.Accion a = pasoActual().accion;
-        return a == Demostracion.Accion.APUNTAR_Y_DISPARAR || a == Demostracion.Accion.ACIERTO_ORDEN;
+        return a == Demostracion.Accion.APUNTAR_Y_DISPARAR
+                || a == Demostracion.Accion.ACIERTO_ORDEN
+                || a == Demostracion.Accion.ENTORNO_AJUSTADO;
     }
 }

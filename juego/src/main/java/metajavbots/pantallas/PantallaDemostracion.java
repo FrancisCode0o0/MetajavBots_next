@@ -283,6 +283,15 @@ public final class PantallaDemostracion implements Pantalla {
             case CORREGIR_LINEA:
                 dibujarIndicadorCorregido(p, ax, ay, aw, tl);
                 break;
+            case ENTORNO_INGENUO:
+                dibujarIndicadorEntornoIngenuo(p, yo, pulso, tl);
+                break;
+            case AJUSTAR_ENTORNO:
+                dibujarIndicadorAjustarEntorno(p, ax, ay, aw, tl);
+                break;
+            case ENTORNO_AJUSTADO:
+                dibujarIndicadorDisparo(p, yo, rival, pulso, tl);
+                break;
             default:
                 break;
         }
@@ -383,6 +392,23 @@ public final class PantallaDemostracion implements Pantalla {
                 "✓ apuntar(25) dentro del if",
                 "✓ zielen(25) im if-Block",
                 "✓ aim(25) inside the if");
+        dibujarEtiquetaArena(p, txt, ax + aw / 2f, ay + 64f, tl, 0x5BD685);
+    }
+
+    private void dibujarIndicadorEntornoIngenuo(Pincel p, Cuerpo yo, float pulso, float tl) {
+        if (!motor.disparoRealizado()) return;
+        float ox = vista.sx(yo.x, yo.y);
+        float oy = vista.sy(yo.y);
+        p.aro(ox, oy, 26f + pulso * 8f, 2.8f, 0xFF6B6B, 0.95f);
+        String txt = idioma.elegir("¡Bloqueado por barril!", "Vom Fass blockiert!", "Blocked by barrel!");
+        dibujarEtiquetaArena(p, txt, ox, oy + 34f, tl, 0xFF6B6B);
+    }
+
+    private void dibujarIndicadorAjustarEntorno(Pincel p, float ax, float ay, float aw, float tl) {
+        String txt = idioma.elegir(
+                "✓ obstaculos() + enemigosVistos() + alcance",
+                "✓ hindernisse() + gesehen() + Reichweite",
+                "✓ obstacles() + seenEnemies() + range");
         dibujarEtiquetaArena(p, txt, ax + aw / 2f, ay + 64f, tl, 0x5BD685);
     }
 

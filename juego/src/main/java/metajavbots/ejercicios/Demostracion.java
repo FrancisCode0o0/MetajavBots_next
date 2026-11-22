@@ -27,6 +27,9 @@ public final class Demostracion {
         ORDEN_TURNO,
         CORREGIR_LINEA,
         ACIERTO_ORDEN,
+        ENTORNO_INGENUO,
+        AJUSTAR_ENTORNO,
+        ENTORNO_AJUSTADO,
         CIERRE
     }
 
@@ -89,8 +92,10 @@ public final class Demostracion {
 
     public static final String ID_DEMO_1 = "demo_01_basica";
     public static final String ID_DEMO_2 = "demo_02_orden";
+    public static final String ID_DEMO_3 = "demo_03_entorno";
 
-    private static final List<Demostracion> TODAS = Collections.unmodifiableList(List.of(crearDemo1(), Demo2Orden.crear()));
+    private static final List<Demostracion> TODAS = Collections.unmodifiableList(
+            List.of(crearDemo1(), Demo2Orden.crear(), Demo3Entorno.crear()));
 
     public final String id;
     public final int nivel;

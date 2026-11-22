@@ -910,6 +910,7 @@ demo.pasos = {0} pasos | {0} Schritte | {0} steps
 demo.paso_de = Paso {0} de {1} | Schritt {0} von {1} | Step {0} of {1}
 demo.nivel.1 = Nivel inicial | Einstieg | Starter
 demo.nivel.2 = Segundo paso | Zweiter Schritt | Step 2
+demo.nivel.3 = Tercer paso | Dritter Schritt | Step 3
 demo.continuar = Continuar | Weiter | Continue
 demo.repetir = Repetir paso | Schritt wiederholen | Repeat step
 demo.salir = Salir | Beenden | Exit
