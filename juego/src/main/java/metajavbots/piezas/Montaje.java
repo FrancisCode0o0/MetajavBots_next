@@ -26,6 +26,8 @@ public final class Montaje {
     /** Las partes que reciben golpes. */
     public static final int CABEZA = 0, IZQUIERDA = 1, DERECHA = 2, PIERNAS = 3;
     public static final String[] PARTES = {"cabeza", "izquierda", "derecha", "piernas"};
+    /** Bonificación medida (+8 %) al equipar un arma característica del propio modelo. */
+    public static final double BONO_ARMA_CARACTERISTICA = 0.08;
 
     public final Modelo modelo;
     private final EnumMap<Hueco, Pieza> piezas = new EnumMap<>(Hueco.class);
@@ -90,6 +92,24 @@ public final class Montaje {
         return r;
     }
 
+    /** Indica si la pieza es un arma característica del modelo de este montaje. */
+    public boolean esArmaCaracteristica(Pieza p) {
+        return modelo.esArmaCaracteristica(p);
+    }
+
+    /** Bonificación de sinergia controlada de un arma al usarla en este montaje (0 si no es característica). */
+    public double sinergiaArma(Pieza p) {
+        return esArmaCaracteristica(p) ? BONO_ARMA_CARACTERISTICA : 0.0;
+    }
+
+    /** Cuántos brazos actualmente montados llevan un arma característica de este modelo (0, 1 o 2). */
+    public int armasCaracteristicasMontadas() {
+        int n = 0;
+        if (esArmaCaracteristica(piezas.get(Hueco.IZQUIERDA))) n++;
+        if (esArmaCaracteristica(piezas.get(Hueco.DERECHA))) n++;
+        return n;
+    }
+
     /** Las cifras con que pelea. */
     public Cifras cifras() {
         return new Cifras(this);
@@ -98,7 +118,7 @@ public final class Montaje {
     /** Las cifras de pelea de un montaje (se calculan una vez al empezar cada ronda). */
     public static final class Cifras {
         public final double[] blindaje = new double[4];
-        public final double velocidad, giro, aceleracion, pasos, energiaMax, recarga, precision, cuerpo, esquiva;
+        public final double velocidad, giro, aceleracion, pasos, energiaMax, recarga, precision, distancia, cuerpo, esquiva;
         public final boolean vuela;
         public final Pieza.Locomocion locomocion;
 
@@ -118,14 +138,39 @@ public final class Montaje {
             locomocion = pie == null ? Pieza.Locomocion.BIPEDO : pie.locomocion();
             vuela = locomocion == Pieza.Locomocion.VUELO;
             velocidad = (pie == null ? 4 : pie.valor("velocidad", 4)) * m.modelo.velocidad * porPeso * (1 + m.refuerzo("velocidad"));
-            giro = (pie == null ? 6 : pie.valor("giro", 6)) * (0.8 + 0.2 * porPeso);
+            giro = (pie == null ? 6 : pie.valor("giro", 6)) * (0.8 + 0.2 * porPeso) * (0.85 + 0.15 * m.modelo.velocidad);
             aceleracion = (pie == null ? 0.5 : pie.valor("aceleracion", 0.5)) * porPeso;
             pasos = (nuc == null ? 3000 : nuc.valor("pasos", 3000)) * (1 + 2 * m.refuerzo("pasos"));
             energiaMax = nuc == null ? 100 : nuc.valor("energiaMax", 100);
             recarga = (nuc == null ? 0.4 : nuc.valor("recarga", 0.4)) * (1 + m.refuerzo("velocidad") / 2);
             precision = 1 + m.refuerzo("precision");
-            cuerpo = 1 + m.refuerzo("cuerpo");
+            distancia = Math.max(0.85, baseDistancia(m.modelo.naturaleza) + m.refuerzo("precision"));
+            cuerpo = Math.max(0.85, baseCuerpo(m.modelo.naturaleza) + m.refuerzo("cuerpo"));
             esquiva = Math.min(0.35, m.refuerzo("esquiva") * 1.2 + (vuela ? 0.06 : 0));
+        }
+
+        private static double baseDistancia(Naturaleza nat) {
+            switch (nat) {
+                case FOCO: return 1.02;
+                case FURIA: return 0.90;
+                case INGENIO: return 0.95;
+                case RAYO: return 0.96;
+                case ACERO:
+                case ETER: return 0.98;
+                default: return 1.0;
+            }
+        }
+
+        private static double baseCuerpo(Naturaleza nat) {
+            switch (nat) {
+                case FURIA: return 1.02;
+                case FOCO: return 0.90;
+                case ETER: return 0.94;
+                case INGENIO: return 0.95;
+                case RAYO: return 0.96;
+                case ACERO:
+                default: return 1.0;
+            }
         }
 
         public double blindajeTotal() {

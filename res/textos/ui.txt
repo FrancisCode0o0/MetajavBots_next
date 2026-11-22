@@ -335,7 +335,9 @@ cifras.pasos = Pasos de cálculo por turno: {0} | Rechenschritte pro Zug: {0} | 
 cifras.energia = Energía: {0} (+{1} por turno) | Energie: {0} (+{1} pro Zug) | Energy: {0} (+{1} per tick)
 cifras.peso = Peso: {0} | Gewicht: {0} | Weight: {0}
 cifras.naturaleza = Naturaleza {0}: +{1} % en lo suyo | Natur {0}: +{1} % in ihrer Stärke | Nature {0}: +{1}% in its strength
+cifras.sinergia = Armas propias: {0}/2 (+{1} % daño) | Eigene Waffen: {0}/2 (+{1} % Schaden) | Signature weapons: {0}/2 (+{1}% damage)
 cifras.vuela = Vuela: los golpes cuerpo a cuerpo no le llegan | Fliegt: Nahkampfschläge erreichen ihn nicht | Flies: melee hits cannot reach it
+taller.sinergia_arma = ★ Propia (+{0} %) | ★ Eigen (+{0} %) | ★ Signature (+{0}%)
 
 desbloqueo.victorias = {0} victorias | {0} Siege | {0} wins
 desbloqueo.jefe = jefe «{0}» | Boss «{0}» | boss "{0}"

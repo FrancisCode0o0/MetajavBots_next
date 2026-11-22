@@ -474,9 +474,11 @@ public final class Taller implements Pantalla {
             p.caja(x, yy, w * 0.62f, fila - 8, 10, ui.tema.panel, 1);
             p.texto(T.t("hueco." + hueco.name().toLowerCase()), x + 16, yy + 10, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
             String nombre = actual == null ? T.t("taller.sin_pieza") : actual.nombre(T.idioma);
-            p.texto(nombre, x + 16, yy + 34, ui.letra * 1.05f, true, actual == null ? ui.tema.textoApagado : ui.tema.texto, 1);
+            boolean propia = actual != null && m.esArmaCaracteristica(actual);
+            p.texto(propia ? "★ " + nombre : nombre, x + 16, yy + 34, ui.letra * 1.05f, true, actual == null ? ui.tema.textoApagado : ui.tema.texto, 1);
             if (actual != null) {
-                p.texto(cifras(actual), x + 16, yy + 62, ui.letra * 0.7f, false, ui.tema.textoSuave, 1);
+                String detalle = cifras(actual) + (propia ? "  ·  " + T.f("taller.sinergia_arma", Math.round(Montaje.BONO_ARMA_CARACTERISTICA * 100)) : "");
+                p.texto(ui.recortarTexto(detalle, w * 0.62f - 140, ui.letra * 0.7f, false), x + 16, yy + 62, ui.letra * 0.7f, false, ui.tema.textoSuave, 1);
                 p.circulo(x + w * 0.62f - 150, yy + 22, 7, actual.naturaleza.color(), 1);
                 p.texto(actual.naturaleza.nombre(T.idioma), x + w * 0.62f - 138, yy + 12, ui.letra * 0.7f, false, ui.tema.textoSuave, 1);
             }
@@ -517,6 +519,8 @@ public final class Taller implements Pantalla {
                 T.f("cifras.energia", Math.round(cf.energiaMax), String.format(java.util.Locale.ROOT, "%.2f", cf.recarga)),
                 T.f("cifras.peso", Math.round(m.peso())),
                 T.f("cifras.naturaleza", m.modelo.naturaleza.nombre(T.idioma), Math.round(m.refuerzo(m.modelo.naturaleza.refuerza) * 100)),
+                m.armasCaracteristicasMontadas() > 0 ? T.f("cifras.sinergia", m.armasCaracteristicasMontadas(),
+                        Math.round(Montaje.BONO_ARMA_CARACTERISTICA * 100)) : "",
                 cf.vuela ? T.t("cifras.vuela") : ""};
         for (String s : l) {
             if (s.isEmpty()) continue;

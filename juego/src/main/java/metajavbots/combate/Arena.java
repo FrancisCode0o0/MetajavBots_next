@@ -376,6 +376,10 @@ public final class Arena {
     /** Aplica daño a un obstáculo destructible; al llegar a 0 lo destruye y avisa con OBSTACULO_ROTO. */
     boolean danar(Trampa t, Pelea p, int quien, double dano, double ix, double iy, String arma) {
         if (t == null || !t.destructible || t.destruida || !Double.isFinite(dano) || dano <= 0) return false;
+        Cuerpo atacante = p.cuerpo(quien);
+        if (atacante != null) dano *= atacante.combatiente.escalaDano;
+        dano = Armas.danoEfectivoSeguro(dano);
+        if (dano <= 0) return false;
         t.resistencia = Math.max(0, t.resistencia - dano);
         if (t.resistencia <= 0) {
             t.destruida = true;
@@ -526,7 +530,7 @@ public final class Arena {
                 p.danar(c, null, 0.5 + vel * 0.3, t.tipo, Math.toDegrees(Math.atan2(-dy, -dx)), false);
                 p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, 0, 1, t.tipo);
                 if (t.destructible) {
-                    double danoChoque = 6 + vel * 2.5 * (c.combatiente.montaje.peso() / 100.0);
+                    double danoChoque = Armas.danoChoqueAObstaculo(c.combatiente.montaje, c.cifras, vel);
                     danar(t, p, c.indice, danoChoque, t.x + dx / d * t.radio, t.y + dy / d * t.radio, "choque");
                 }
             }

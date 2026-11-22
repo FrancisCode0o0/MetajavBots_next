@@ -121,6 +121,56 @@ public final class Armas {
         return Math.max(MIN_CONO, Math.min(MAX_CONO, cono));
     }
 
+    /**
+     * Cálculo unificado de daño efectivo de un arma según el montaje, sus cifras
+     * reales (corto alcance {@code cuerpo} frente a distancia {@code distancia}),
+     * la sinergia de arma característica del modelo y la sobrecarga activa.
+     */
+    public static double danoDeArma(Montaje montaje, Montaje.Cifras cifras, Pieza arma, double factorSobrecarga) {
+        if (arma == null) return 0;
+        double base = danoSeguro(arma.valor("dano"));
+        if (base <= 0) return 0;
+        double sobre = factorSeguro(factorSobrecarga);
+        double multPerfil = 1.0;
+        if (cifras != null) {
+            switch (arma.arma()) {
+                case CUERPO:
+                case LLAMA:
+                    multPerfil = cifras.cuerpo;
+                    break;
+                case LASER:
+                case BALA:
+                case MISIL:
+                    multPerfil = cifras.distancia;
+                    break;
+                default:
+                    multPerfil = 1.0;
+                    break;
+            }
+        }
+        double sinergia = 1.0 + (montaje == null ? 0.0 : montaje.sinergiaArma(arma));
+        return danoEfectivoSeguro(base * sobre * multPerfil * sinergia);
+    }
+
+    /**
+     * Cálculo unificado de daño real a obstáculos destructibles ({@code barril}, {@code chimenea})
+     * derivado de la potencia real del arma y del perfil del montaje (usado en todos los modos).
+     */
+    public static double danoAObstaculo(Montaje montaje, Montaje.Cifras cifras, Pieza arma, double factorSobrecarga) {
+        return danoDeArma(montaje, cifras, arma, factorSobrecarga);
+    }
+
+    /**
+     * Cálculo unificado de daño por choque de un robot contra un obstáculo destructible
+     * según su velocidad, peso total del montaje y potencia cuerpo a cuerpo.
+     */
+    public static double danoChoqueAObstaculo(Montaje montaje, Montaje.Cifras cifras, double velocidad) {
+        if (!Double.isFinite(velocidad) || velocidad == 0) return 0;
+        double peso = montaje == null ? 35.0 : montaje.peso();
+        double multCuerpo = cifras == null ? 1.0 : cifras.cuerpo;
+        return danoEfectivoSeguro((6.0 + Math.abs(velocidad) * 2.5 * (peso / 100.0)) * multCuerpo);
+    }
+
     /** Ataca con el arma de un brazo (láser, balas, misiles, golpe, llamas, escudo o reparar). */
     void usar(Cuerpo c, Pieza p, int brazo) {
         Combatiente.Informe inf = pelea.informe(c.indice);
@@ -134,7 +184,7 @@ public final class Armas {
                 int n = proyectilesSeguros(p.valor("perdigones", 1));
                 double disp = dispersionSegura(p.valor("dispersion", 3)) / Math.max(0.5, c.cifras.precision);
                 double vel = velocidadProyectilSegura(p.valor("velocidad", 14));
-                double dano = danoEfectivoSeguro(danoSeguro(p.valor("dano")) * sobre);
+                double dano = danoDeArma(c.combatiente.montaje, c.cifras, p, sobre);
                 double alcance = alcanceSeguro(p.valor("alcance", 600));
                 for (int i = 0; i < n; i++) {
                     inf.ataque("bala");
@@ -148,7 +198,7 @@ public final class Armas {
             case MISIL: {
                 int n = proyectilesSeguros(p.valor("misiles", 1));
                 double vel = velocidadProyectilSegura(p.valor("velocidad", 7));
-                double dano = danoEfectivoSeguro(danoSeguro(p.valor("dano")) * sobre);
+                double dano = danoDeArma(c.combatiente.montaje, c.cifras, p, sobre);
                 double alcance = alcanceSeguro(p.valor("alcance", 800));
                 double giro = Cuerpo.giroSeguro(p.valor("giro", 4));
                 for (int i = 0; i < n; i++) {
@@ -189,7 +239,6 @@ public final class Armas {
     private void dispararLaser(Cuerpo c, Pieza p, double sobre, double[] boca, Combatiente.Informe inf) {
         inf.ataque("laser");
         double alcance = alcanceSeguro(p.valor("alcance", 500));
-        double danoBase = danoSeguro(p.valor("dano"));
         double ang = c.mira;
         double dx = Math.cos(Math.toRadians(ang)), dy = Math.sin(Math.toRadians(ang));
         double[] fin = {alcance};
@@ -202,10 +251,14 @@ public final class Armas {
         }
         boolean da = (tocado != null && tocado.equipo != c.equipo) || obstaculo != null;
         double hx = boca[0] + dx * fin[0], hy = boca[1] + dy * fin[0];
+        double dano = danoDeArma(c.combatiente.montaje, c.cifras, p, sobre);
         pelea.rayos.add(new Pelea.Rayo(c.indice, boca[0], boca[1], hx, hy, da));
-        pelea.suceso(Suceso.Tipo.LASER, c.indice, boca[0], boca[1], ang, danoBase, "laser");
-        if (obstaculo != null) pelea.arena.danar(obstaculo, pelea, c.indice, danoEfectivoSeguro(danoBase * sobre), hx, hy, "laser");
-        else if (da) pelea.danar(tocado, c, danoEfectivoSeguro(danoBase * sobre), "laser", ang + 180, false, hx, hy);
+        pelea.suceso(Suceso.Tipo.LASER, c.indice, boca[0], boca[1], ang, dano, "laser");
+        if (obstaculo != null) {
+            pelea.arena.danar(obstaculo, pelea, c.indice, danoAObstaculo(c.combatiente.montaje, c.cifras, p, sobre), hx, hy, "laser");
+        } else if (da) {
+            pelea.danar(tocado, c, dano, "laser", ang + 180, false, hx, hy);
+        }
         c.retroceso = 4;
     }
 
@@ -290,9 +343,9 @@ public final class Armas {
                 double ang = Math.toDegrees(Math.atan2(obs.y - c.y, obs.x - c.x));
                 double hx = obs.x - Math.cos(Math.toRadians(ang)) * obs.radio * 0.85;
                 double hy = obs.y - Math.sin(Math.toRadians(ang)) * obs.radio * 0.85;
-                double danoBase = danoSeguro(p.valor("dano"));
-                pelea.suceso(Suceso.Tipo.GOLPE_CUERPO, c.indice, hx, hy, c.mira, danoBase, p.id);
-                pelea.arena.danar(obs, pelea, c.indice, danoEfectivoSeguro(danoBase * sobre * c.cifras.cuerpo), hx, hy, "cuerpo");
+                double danoObs = danoAObstaculo(c.combatiente.montaje, c.cifras, p, sobre);
+                pelea.suceso(Suceso.Tipo.GOLPE_CUERPO, c.indice, hx, hy, c.mira, danoObs, p.id);
+                pelea.arena.danar(obs, pelea, c.indice, danoObs, hx, hy, "cuerpo");
                 return;
             }
             pelea.suceso(Suceso.Tipo.FALLO_CUERPO, c.indice, c.x, c.y, c.mira, 0, p.id);
@@ -301,9 +354,9 @@ public final class Armas {
         double ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
         // Donde toca: en la chapa del otro, del lado del que pega.
         double hx = e.x - Math.cos(Math.toRadians(ang)) * e.radio * 0.85, hy = e.y - Math.sin(Math.toRadians(ang)) * e.radio * 0.85;
-        double danoBase = danoSeguro(p.valor("dano"));
-        pelea.suceso(Suceso.Tipo.GOLPE_CUERPO, c.indice, hx, hy, c.mira, danoBase, p.id);
-        if (pelea.danar(e, c, danoEfectivoSeguro(danoBase * sobre * c.cifras.cuerpo), "cuerpo", ang + 180, true, hx, hy)) {
+        double dano = danoDeArma(c.combatiente.montaje, c.cifras, p, sobre);
+        pelea.suceso(Suceso.Tipo.GOLPE_CUERPO, c.indice, hx, hy, c.mira, dano, p.id);
+        if (pelea.danar(e, c, dano, "cuerpo", ang + 180, true, hx, hy)) {
             int aturde = aturdeSeguro(p.valor("aturde"));
             if (aturde > 0) aturdir(e, aturde);
             // Y lo echa para atrás (las cuñas y los volteadores, mucho más).

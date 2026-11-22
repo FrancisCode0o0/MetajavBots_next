@@ -83,6 +83,41 @@ public final class Modelo {
         return detalles.contains(detalle);
     }
 
+    /** Devuelve el identificador base de una pieza sin sufijo de marca («martillo_3» → «martillo»). */
+    public static String idBaseDePieza(String idPieza) {
+        if (idPieza == null) return "";
+        String s = idPieza.strip().toLowerCase(Locale.ROOT);
+        int i = s.lastIndexOf('_');
+        if (i > 0 && s.substring(i + 1).matches("[2-9]|10")) return s.substring(0, i);
+        return s;
+    }
+
+    /** Identificadores base de las armas características (brazos de fábrica) de este modelo. */
+    public List<String> armasCaracteristicas() {
+        List<String> armas = new ArrayList<>(2);
+        for (int idx = 1; idx <= 2 && idx < piezas.size(); idx++) {
+            String base = idBaseDePieza(piezas.get(idx));
+            if (!base.isEmpty() && !armas.contains(base)) armas.add(base);
+        }
+        return Collections.unmodifiableList(armas);
+    }
+
+    /** Indica si la pieza corresponde a una de las piezas de fábrica de este modelo (en cualquier marca Mk I–V). */
+    public boolean esPiezaCaracteristica(Pieza pieza) {
+        if (pieza == null) return false;
+        String base = idBaseDePieza(pieza.id);
+        for (String p : piezas) {
+            if (idBaseDePieza(p).equals(base)) return true;
+        }
+        return false;
+    }
+
+    /** Indica si la pieza es un arma característica (brazo propio) de este modelo en cualquier marca Mk I–V. */
+    public boolean esArmaCaracteristica(Pieza pieza) {
+        if (pieza == null || pieza.ranura != Pieza.Ranura.BRAZO) return false;
+        return armasCaracteristicas().contains(idBaseDePieza(pieza.id));
+    }
+
     private static Trilingue trilingue(String s) {
         String[] p = s.split("\\|", -1);
         return new Trilingue(p[0].strip(), p.length > 1 ? p[1].strip() : "", p.length > 2 ? p[2].strip() : "");

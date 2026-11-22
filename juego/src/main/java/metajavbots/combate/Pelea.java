@@ -698,7 +698,7 @@ public final class Pelea {
         if (p == null) return;
         double sobre = c.sobrecarga > 0 ? Armas.factorSeguro(c.factorSobrecarga) : 1;
         double alc = Armas.alcanceSeguro(p.valor("alcance", 160)), con = Armas.conoSeguro(p.valor("cono", 30));
-        double dano = Armas.danoSeguro(p.valor("dano", 1)) * sobre * c.cifras.cuerpo;
+        double dano = Armas.danoDeArma(c.combatiente.montaje, c.cifras, p, sobre);
         for (Cuerpo e : cuerpos) {
             if (e == c || e.equipo == c.equipo || e.fuera) continue;
             double d = Math.hypot(e.x - c.x, e.y - c.y), ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
@@ -706,7 +706,7 @@ public final class Pelea {
                 danar(e, c, dano, "llama", ang + 180, false);
             }
         }
-        arena.quemar(this, c, alc, con, dano);
+        arena.quemar(this, c, alc, con, Armas.danoAObstaculo(c.combatiente.montaje, c.cifras, p, sobre));
     }
 
     /** El blanco al que persigue un misil: el enemigo más cercano a él. */

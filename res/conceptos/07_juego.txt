@@ -780,17 +780,17 @@ es:
     La Carrera de obstáculos está dentro de Modo especial y se disputa en una pista larga (6× más grande que la arena base) con cámara de seguimiento fluida, minimapa panorámico y una arena distinta en cada nueva carrera.
     Antes de correr eliges con cuál de tus robots disponibles quieres participar (usando su montaje real y piezas compradas) y decides si compites contra la máquina o contra el robot de otro usuario cargado desde robots_ajenos/.
     En el recorrido encontrarás obstáculos ocultos y obstáculos repentinos que aparecen en marcha (destructibles como barriles y chimeneas frente a indestructibles como bloques, fosos y pinchos), robots defectuosos averiados que se mueven y disparan al azar y pueden destruirse a tiros, y objetos recogibles de impulso de velocidad ("impulso") para acelerar temporalmente.
-    El combate contra tu adversario está permitido durante toda la carrera para frenarlo, entorpecerlo o destruirlo, aunque el objetivo principal sigue siendo cruzar primero la línea de meta. El código de fábrica es torpe a propósito y nunca gana solo: debes programar tu estrategia y pulsar Compilar. Cada victoria suma exactamente 1 moneda.
+    El combate contra tu adversario está permitido durante toda la carrera para frenarlo, entorpecerlo o destruirlo, aunque el objetivo principal sigue siendo cruzar primero la línea de meta. El código de fábrica es torpe a propósito y nunca gana solo: debes programar tu estrategia y pulsar Compilar. Todas las estadísticas reales de tu modelo, sus armas características y el daño a obstáculos (barriles y chimeneas) funcionan exactamente igual que en combate estándar. Cada victoria suma exactamente 1 moneda.
 de:
     Der Hindernislauf befindet sich im Spezialmodus und führt über eine lange 6×-Strecke mit weicher Verfolgungskamera, kompakter Übersichtskarte und einer neuen Arena in jedem Lauf.
     Vor dem Start wählst du einen deiner verfügbaren Roboter (mit seiner echten Ausstattung und gekauften Teilen) und trittst gegen den Computer oder gegen fremde Roboter aus robots_ajenos/ an.
     Auf der Strecke erwarten dich versteckte sowie plötzlich auftauchende Hindernisse (zerstörbare Fässer und Schornsteine sowie unzerstörbare Blöcke, Gruben und Stacheln), defekte Roboter, die planlos umherfahren, zufällig schießen und abgeschossen werden können, sowie einsammelbare Tempo-Boosts ("impulso") für vorübergehend höheres Tempo.
-    Kampf gegen den Gegner ist während des gesamten Laufs erlaubt, um ihn auszubremsen oder auszuschalten — das Hauptziel bleibt jedoch, als Erster die Ziellinie zu überqueren. Der Werkscode ist absichtlich ungeschickt und gewinnt nie allein: Programmiere deine eigene Strategie und drück Kompilieren. Jeder Sieg bringt genau 1 Münze.
+    Kampf gegen den Gegner ist während des gesamten Laufs erlaubt, um ihn auszubremsen oder auszuschalten — das Hauptziel bleibt jedoch, als Erster die Ziellinie zu überqueren. Der Werkscode ist absichtlich ungeschickt und gewinnt nie allein: Programmiere deine eigene Strategie und drück Kompilieren. Alle echten Werte deines Modells, charakteristische Waffen und der Schaden an Hindernissen (Fässer und Schornsteine) gelten hier exakt wie im Standardkampf. Jeder Sieg bringt genau 1 Münze.
 en:
     Obstacle race lives inside Special mode and runs on a long 6× track with a smooth follow camera, compact panoramic minimap, and a different arena on every new race.
     Before starting, you pick any of your available robots (using its real mounted parts and stats) and race against the computer or another player's robot loaded from robots_ajenos/.
     Along the course you face hidden and sudden obstacles appearing mid-race (destructible barrels and chimneys versus indestructible blocks, pits, and spikes), malfunctioning broken robots that wander and fire randomly and can be destroyed with gunfire, and pickup speed boosts ("impulso") that temporarily increase your speed.
-    Combat against your rival is allowed throughout the race to slow, disrupt, or knock them out, while crossing the finish line first remains the main goal. The factory code is deliberately clumsy and never wins on its own: write your own strategy and press Compile. Each win awards exactly 1 coin.
+    Combat against your rival is allowed throughout the race to slow, disrupt, or knock them out, while crossing the finish line first remains the main goal. The factory code is deliberately clumsy and never wins on its own: write your own strategy and press Compile. Your model's real stats, signature weapons, and obstacle destruction power (barrels and chimneys) apply identically to standard combat. Each win awards exactly 1 coin.
 pseudo.es:
     Modo especial → Carrera de obstáculos → elegir tu robot y rival (máquina o robots_ajenos/)
     SI hay impulso ("impulso") delante → ir a recogerlo
@@ -829,3 +829,49 @@ ejemplo:
             avanzar(60);
         }
     }
+
+=== modelos_y_armas
+nivel: 6
+tema: --
+titulo.es: Modelos, armas características y equilibrio
+titulo.de: Modelle, charakteristische Waffen und Balance
+titulo.en: Models, signature weapons and balance
+claves.es: modelos, equilibrio, compensacion, armas caracteristicas, armas propias, sinergia, velocidad, blindaje, corto alcance, distancia, destruir obstaculos
+claves.de: modelle, balance, ausgleich, charakteristische waffen, eigene waffen, synergie, tempo, panzerung, nahkampf, fernkampf, hindernisse zerstoeren
+claves.en: models, balance, trade-offs, signature weapons, characteristic weapons, synergy, speed, armor, close range, long range, destroy obstacles
+resumen.ia: Robot models and signature weapons (each model has distinct strengths balanced by clear trade-offs: speed vs. lower armor, melee power vs. range/speed, ranged precision vs. armor/melee, heavy armor vs. agility, high computation steps vs. raw burst; each model has signature weapons granting a measured +8% synergy bonus while allowing any compatible catalog weapon to be equipped; these exact stats, damage formulas and obstacle-destruction power apply identically in all game modes including Obstacle race)
+tip.juego_modelos_equilibrio.condicion: aleatorio
+tip.juego_modelos_equilibrio.es: Cada modelo compensa lo fuerte con otra cifra (más velocidad implica menos blindaje) y gana sinergia con sus [[armas características]], igual en combate y en Carrera de obstáculos.
+tip.juego_modelos_equilibrio.de: Jedes Modell gleicht seine Stärke mit einem anderen Wert aus (mehr Tempo bedeutet weniger Panzerung) und erhält Synergie mit [[charakteristischen Waffen]], im Kampf wie im Hindernislauf.
+tip.juego_modelos_equilibrio.en: Every model trades one strength for another (more speed means less armor) and gains synergy with its [[signature weapons]], identically in combat and Obstacle race.
+ver: taller_y_compilar, tienda_y_monedas, carrera_de_obstaculos
+es:
+    En MetajavBots ningún modelo de robot es superior en todo: cada uno tiene fortalezas claras compensadas con otras estadísticas para mantener el equilibrio entre todos.
+    Quien destaca en velocidad y esquiva (como los modelos de Rayo o Éter) lleva menos blindaje y es más fácil de destruir; quien destaca en blindaje (Acero) gira y se mueve más despacio; quien pega más fuerte cuerpo a cuerpo (Furia) cede en daño a distancia, mientras que quien destaca a distancia y en precisión (Foco) cede en cuerpo a cuerpo y aguante; y los de Ingenio ganan pasos de cálculo y enfriamiento más rápido a cambio de menor pegada bruta.
+    Cada modelo cuenta además con sus armas características (marcadas con ★ en el Taller), que le dan una bonificación de sinergia medida (+8 %) en cualquiera de sus marcas Mk I–V. Aun así puedes montar libremente cualquier otra arma compatible del catálogo combinándola con las fortalezas y el límite de peso de tu chasis.
+    Todas estas cifras físicas, multiplicadores de daño y la capacidad para destruir barriles y chimeneas se aplican con exactamente las mismas fórmulas en todos los modos del juego: peleas estándar, campañas, jefes, minijuegos, banco de pruebas y Carrera de obstáculos.
+de:
+    In MetajavBots ist kein Robotermodell in allem überlegen: Jedes besitzt klare Stärken, die durch andere Werte ausgeglichen werden, damit alle Modelle fair bleiben.
+    Wer bei Tempo und Ausweichen glänzt (Blitz oder Äther), trägt weniger Panzerung und geht schneller kaputt; schwer gepanzerte Modelle (Stahl) fahren und drehen langsamer; Nahkampf-Spezialisten (Wut) verzichten auf Fernkampfschaden, während Fernkampf- und Präzisionsmodelle (Fokus) im Nahkampf und bei der Panzerung nachgeben; Geist-Modelle gewinnen mehr Rechenschritte und schnellere Abklingzeit gegen etwas weniger Grundschaden.
+    Jedes Modell besitzt zudem eigene charakteristische Waffen (in der Werkstatt mit ★ markiert), die eine dosierte Synergie (+8 %) über alle Stufen Mk I–V liefern. Trotzdem darfst du jede kompatible Waffe aus dem Katalog frei ausrüsten und mit den Grundwerten sowie der Traglast deines Chassis kombinieren.
+    Alle physischen Werte, Schadensmultiplikatoren und die Zerstörungskraft gegen Fässer und Schornsteine gelten nach exakt denselben Formeln in jedem Spielmodus: Standardkämpfe, Kampagnen, Bosse, Minispiele, Prüfstand und Hindernislauf.
+en:
+    In MetajavBots no robot model is superior at everything: each one has distinct strengths balanced by clear trade-offs so every model stays competitive.
+    Fast and evasive models (Bolt or Aether) carry lighter armor and break faster; heavily armored models (Steel) move and turn slower; close-range brawlers (Fury) trade away ranged damage, while long-range precision models (Focus) trade away melee power and durability; and Wit models gain extra computation steps and faster cooldowns at the cost of raw per-hit burst.
+    Every model also comes with signature weapons (marked with ★ in the Workshop) that grant a measured +8% synergy bonus across all Mk I–V tiers. You remain completely free to equip any compatible weapon from the catalog, combining it with your chassis's base speed, armor, affinity and weight capacity.
+    These exact physical stats, damage multipliers, and obstacle-destruction power against barrels and chimneys apply uniformly across every game mode: standard fights, campaigns, bosses, minigames, test bench, and Obstacle race.
+pseudo.es:
+    elegir modelo según estilo (velocidad, blindaje, corto alcance, distancia o ingenio)
+    mantener armas características (★ +8 %) o combinar otras del catálogo
+    aprovechar las mismas cifras reales en Arena y Carrera de obstáculos
+pseudo.de:
+    Modell nach Spielstil wählen (Tempo, Panzerung, Nahkampf, Fernkampf oder Geist)
+    charakteristische Waffen (★ +8 %) nutzen oder andere aus dem Katalog kombinieren
+    dieselben echten Werte in Arena und Hindernislauf ausspielen
+pseudo.en:
+    pick a model for your style (speed, armor, melee, ranged or wit)
+    keep signature weapons (★ +8%) or mix in other catalog weapons
+    use the exact same real stats in both Arena and Obstacle race
+ejemplo:
+    // Equilibrio por compensación: velocidad ↔ blindaje, corto alcance ↔ distancia || Ausgleichsbalance: Tempo ↔ Panzerung, Nahkampf ↔ Fernkampf || Trade-off balance: speed ↔ armor, melee ↔ ranged
+    // Armas características: sinergia ★ (+8 %) en todos los modos del juego || Charakteristische Waffen: ★-Synergie (+8 %) in allen Spielmodi || Signature weapons: ★ synergy (+8%) in every game mode

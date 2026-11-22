@@ -132,11 +132,16 @@ public final class BancoDePruebas {
 
     /** Inicia o reinicia la simulación desde el turno 0 con el robot actual y el modo elegido. */
     public void reiniciar(Jugador.Robot r, RobotDelJugador probador, Pincel pincel) {
+        reiniciar(null, r, probador, pincel);
+    }
+
+    /** Inicia o reinicia la simulación aplicando los ajustes reales del jugador sobre el montaje del robot. */
+    public void reiniciar(Jugador jug, Jugador.Robot r, RobotDelJugador probador, Pincel pincel) {
         if (r == null) {
             limpiar();
             return;
         }
-        Montaje montajeJugador = r.montaje();
+        Montaje montajeJugador = jug != null ? jug.montajeDe(r) : r.montaje();
         Fabrica fabJugador = probador != null && probador.listo() ? probador : null;
         yo = new Combatiente(r.nombre, montajeJugador, fabJugador);
         Modelo modMuneco = Modelo.de("cobalto");
@@ -202,7 +207,7 @@ public final class BancoDePruebas {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         if (r != null && (pelea == null || !claveRobot.equals(firmaDeRobot(r)))) {
-            reiniciar(r, probador, p);
+            reiniciar(j.jugador, r, probador, p);
         }
         if (!compilando) avanzarTiempo(dt);
         p.caja(x, y, w, h, 10, ui.tema.panel, 1);
