@@ -30,6 +30,13 @@ public final class Demostracion {
         ENTORNO_INGENUO,
         AJUSTAR_ENTORNO,
         ENTORNO_AJUSTADO,
+        POO_EXPUESTO,
+        POO_ENCAPSULADO,
+        APARATO_ERROR,
+        APARATO_BIEN,
+        GESTION_ENERGIA,
+        TOPE_DEUDA,
+        TOPE_OPTIMO,
         CIERRE
     }
 
@@ -93,9 +100,10 @@ public final class Demostracion {
     public static final String ID_DEMO_1 = "demo_01_basica";
     public static final String ID_DEMO_2 = "demo_02_orden";
     public static final String ID_DEMO_3 = "demo_03_entorno";
+    public static final String ID_DEMO_4 = "demo_04_arquitectura";
 
     private static final List<Demostracion> TODAS = Collections.unmodifiableList(
-            List.of(crearDemo1(), Demo2Orden.crear(), Demo3Entorno.crear()));
+            List.of(crearDemo1(), Demo2Orden.crear(), Demo3Entorno.crear(), Demo4Arquitectura.crear()));
 
     public final String id;
     public final int nivel;

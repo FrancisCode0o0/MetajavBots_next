@@ -53,6 +53,7 @@ public final class Vigilante {
             "metajavbots/api/RobotBase", "metajavbots/api/Enemigo", "metajavbots/api/Gegner", "metajavbots/api/Enemy",
             "metajavbots/api/Golpe", "metajavbots/api/Treffer", "metajavbots/api/Hit", "metajavbots/api/Tope",
             "metajavbots/api/Obstaculo", "metajavbots/api/Hindernis", "metajavbots/api/Obstacle",
+            "metajavbots/api/Aparato", "metajavbots/api/Geraet", "metajavbots/api/Gadget",
             "metajavbots/api/TopeDeCalculo", "metajavbots/junit/",
             "java/lang/Thread", "java/lang/ThreadLocal", "java/lang/InheritableThreadLocal", "java/lang/Thread$Builder",
             "java/lang/Thread$State", "java/lang/Thread$Builder$OfVirtual", "java/lang/Thread$Builder$OfPlatform",

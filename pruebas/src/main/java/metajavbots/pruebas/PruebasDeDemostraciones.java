@@ -74,8 +74,8 @@ final class PruebasDeDemostraciones {
     private static void verificarClavesUi() {
         String[] claves = {
             "demo.boton", "demo.boton_ayuda", "demo.banner_texto", "demo.titulo", "demo.intro",
-            "demo.ver", "demo.pasos", "demo.paso_de", "demo.nivel.1", "demo.nivel.2", "demo.nivel.3", "demo.continuar",
-            "demo.repetir", "demo.salir", "demo.ejecutando", "demo.pausa_paso", "demo.fin"
+            "demo.ver", "demo.pasos", "demo.paso_de", "demo.nivel.1", "demo.nivel.2", "demo.nivel.3", "demo.nivel.4",
+            "demo.continuar", "demo.repetir", "demo.salir", "demo.ejecutando", "demo.pausa_paso", "demo.fin"
         };
         for (String k : claves) {
             for (Idioma id : Idioma.values()) {
@@ -450,9 +450,10 @@ final class PruebasDeDemostraciones {
 
     private static void apuntarPrecisionPedagogicaYAlcance() {
         caso("pedagogía: avanzar(80) orden vs distancia efectiva, orden real de callbacks, pseudocódigo de alcance y catálogo sin demos huérfanas", () -> {
-            igual(3, Demostracion.todas().size(), "Demo 1, Demo 2 y Demo 3 están implementadas");
+            igual(4, Demostracion.todas().size(), "Demo 1, Demo 2, Demo 3 y Demo 4 están implementadas");
             cierto(T.existe("demo.nivel.3"), "debe existir la clave demo.nivel.3 para Demo 3");
-            falso(T.existe("demo.nivel.4"), "no debe existir clave huérfana demo.nivel.4");
+            cierto(T.existe("demo.nivel.4"), "debe existir la clave demo.nivel.4 para Demo 4");
+            falso(T.existe("demo.nivel.5"), "no debe existir clave huérfana demo.nivel.5");
 
             Demostracion d1 = Demostracion.de(Demostracion.ID_DEMO_1);
             Demostracion d2 = Demostracion.de(Demostracion.ID_DEMO_2);

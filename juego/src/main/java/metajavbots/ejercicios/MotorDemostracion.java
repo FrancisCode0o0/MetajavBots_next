@@ -54,6 +54,7 @@ public final class MotorDemostracion {
     private double giroAcumulado;
     private double giroMiraAcumulado;
     private String ultimoError = "";
+    private final SoporteDemo4 demo4 = new SoporteDemo4();
 
     public MotorDemostracion(Demostracion demo, Idioma idioma) {
         this(demo, idioma, null);
@@ -167,6 +168,7 @@ public final class MotorDemostracion {
         distanciaRecorrida = 0;
         giroAcumulado = 0;
         giroMiraAcumulado = 0;
+        demo4.reiniciar();
         visorTactico = p.activarVisor;
         prepararPelea(p);
         aplicarLineasDePaso(p);
@@ -179,13 +181,35 @@ public final class MotorDemostracion {
         if (nombreMuneco.equals("pelea.muneco")) nombreMuneco = idioma.elegir("Muñeco", "Puppe", "Dummy");
         String idMuneco = "cobalto".equals(montajeDemo.modelo.id) ? "mazo" : "cobalto";
         Modelo modMuneco = Modelo.de(idMuneco) != null ? Modelo.de(idMuneco) : Modelo.todos().get(0);
-        Combatiente yo = new Combatiente(nombreDemo, montajeDemo.copia(), fabricaDemo());
-        Combatiente muneco = new Combatiente(nombreMuneco, new Montaje(modMuneco), fabricaMuneco());
+        boolean esDemo4 = Demostracion.ID_DEMO_4.equals(demo.id);
+        Fabrica fYo = esDemo4 ? demo4.fabricaJugador(p.accion, enlaceDemo4()) : fabricaDemo();
+        Fabrica fRival = esDemo4 ? demo4.fabricaRival(p.accion) : fabricaMuneco();
+        Combatiente yo = new Combatiente(nombreDemo, montajeDemo.copia(), fYo);
+        Combatiente muneco = new Combatiente(nombreMuneco, new Montaje(modMuneco), fRival);
         pelea = new Pelea(yo, muneco, 42L + indicePaso * 7L, 1000, 700, 1200);
         pelea.arena = Arena.de(demo.escenario.name(), pelea.ancho, pelea.alto);
         pelea.rondas = 1;
         pelea.empezarRonda();
         posicionarParaPaso(p);
+    }
+
+    private SoporteDemo4.Enlace enlaceDemo4() {
+        return new SoporteDemo4.Enlace() {
+            @Override
+            public void marcarLinea(int principal, int... secundarias) {
+                marcarLineaViva(principal, secundarias);
+            }
+
+            @Override
+            public void anotarDeteccion() {
+                enemigoDetectado = true;
+            }
+
+            @Override
+            public void anotarDisparo() {
+                disparoRealizado = true;
+            }
+        };
     }
 
     private void posicionarParaPaso(Demostracion.Paso p) {
@@ -194,6 +218,15 @@ public final class MotorDemostracion {
         if (yo == null || rival == null) return;
         if (Demostracion.ID_DEMO_3.equals(demo.id)) {
             posicionarDemo3(p, yo, rival);
+            return;
+        }
+        if (Demostracion.ID_DEMO_4.equals(demo.id)) {
+            demo4.preparar(pelea, p.accion);
+            inicioX = yo.x;
+            inicioY = yo.y;
+            inicioRumbo = yo.rumbo;
+            inicioMira = yo.mira;
+            blindajeRivalInicial = rival.blindaje();
             return;
         }
         yo.x = p.accion == Demostracion.Accion.GIRAR ? 340 : 265;
@@ -289,6 +322,9 @@ public final class MotorDemostracion {
         for (Suceso s : pelea.sucesos()) {
             if (s.tipo == Suceso.Tipo.OBSTACULO_ROTO) obstaculoDestruido = true;
         }
+        if (Demostracion.ID_DEMO_4.equals(demo.id)) {
+            demo4.actualizarMetricas(pelea, pasoActual().accion);
+        }
     }
 
     private void comprobarErrorEnPelea() {
@@ -320,6 +356,14 @@ public final class MotorDemostracion {
             case ENTORNO_AJUSTADO:
                 return obstaculoDestruido && enemigoDetectado && disparoRealizado
                         && ((impactoRealizado && turnosTrasImpacto >= 4) || turnosTrasDisparo >= 60);
+            case POO_EXPUESTO:
+            case POO_ENCAPSULADO:
+            case APARATO_ERROR:
+            case APARATO_BIEN:
+            case GESTION_ENERGIA:
+            case TOPE_DEUDA:
+            case TOPE_OPTIMO:
+                return demo4.debePausar(p.accion, impactoRealizado);
             default:
                 return false;
         }
@@ -646,6 +690,52 @@ public final class MotorDemostracion {
         Demostracion.Accion a = pasoActual().accion;
         return a == Demostracion.Accion.APUNTAR_Y_DISPARAR
                 || a == Demostracion.Accion.ACIERTO_ORDEN
-                || a == Demostracion.Accion.ENTORNO_AJUSTADO;
+                || a == Demostracion.Accion.ENTORNO_AJUSTADO
+                || a == Demostracion.Accion.GESTION_ENERGIA;
+    }
+
+    /** Indica si el robot recogió un aparato en el paso actual de Demo 4. */
+    public boolean aparatoRecogido() {
+        return demo4.aparatoRecogido;
+    }
+
+    /** Indica si se registró un intento fallido de conexión en un hueco erróneo. */
+    public boolean conexionFallida() {
+        return demo4.conexionFallida;
+    }
+
+    /** Indica si el aparato quedó conectado en su hueco válido. */
+    public boolean aparatoConectado() {
+        return demo4.aparatoConectado;
+    }
+
+    /** Indica si el aparato conectado llegó a activarse en combate. */
+    public boolean aparatoUsado() {
+        return demo4.aparatoUsado;
+    }
+
+    /** Energía mínima registrada durante el paso actual de Demo 4. */
+    public double energiaMinima() {
+        return demo4.energiaMinima;
+    }
+
+    /** Indica si la energía volvió a subir tras gastar energía en el paso actual. */
+    public boolean energiaRecargada() {
+        return demo4.energiaRecargada;
+    }
+
+    /** Indica si se disparó un corte real por {@code TopeDeCalculo} en el paso actual. */
+    public boolean topeAlcanzado() {
+        return demo4.topeAlcanzado;
+    }
+
+    /** Indica si el robot entró en deuda de turnos tras superar el tope de cálculo. */
+    public boolean deudaObservada() {
+        return demo4.deudaObservada;
+    }
+
+    /** Daño total recibido por el robot protagonista durante el paso actual. */
+    public double danoRecibidoDemo() {
+        return demo4.danoRecibidoDemo;
     }
 }

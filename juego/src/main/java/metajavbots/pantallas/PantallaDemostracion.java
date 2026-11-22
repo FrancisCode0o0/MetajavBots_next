@@ -293,9 +293,52 @@ public final class PantallaDemostracion implements Pantalla {
                 dibujarIndicadorDisparo(p, yo, rival, pulso, tl);
                 break;
             default:
+                dibujarIndicadoresDemo4(p, yo, rival, ax, ay, aw, pulso, tl);
                 break;
         }
         p.sinRecorte();
+    }
+
+    private void dibujarIndicadoresDemo4(Pincel p, Cuerpo yo, Cuerpo rival,
+            float ax, float ay, float aw, float pulso, float tl) {
+        switch (motor.pasoActual().accion) {
+            case POO_EXPUESTO:
+                dibujarIndicadorDemo4Texto(p, ax, ay, aw, tl, 0xFF6B6B,
+                        idioma.elegir("public mutable: +8 % daño · +16 % radar rival",
+                                "public veränderbar: +8 % Schaden · +16 % Gegner-Radar",
+                                "mutable public: +8% damage · +16% enemy radar"));
+                break;
+            case POO_ENCAPSULADO:
+                dibujarIndicadorDemo4Texto(p, ax, ay, aw, tl, 0x5BD685,
+                        idioma.elegir("private/final/static: -6 % daño · +10 % pasos",
+                                "private/final/static: -6 % Schaden · +10 % Schritte",
+                                "private/final/static: -6% damage · +10% steps"));
+                break;
+            case APARATO_ERROR:
+                dibujarIndicadorDemo4Texto(p, ax, ay, aw, tl, 0xFF6B6B,
+                        idioma.elegir("✗ conectar(\"cabeza\") rechazado (espalda)",
+                                "✗ anschliessen(\"kopf\") abgelehnt (ruecken)",
+                                "✗ plugIn(\"head\") rejected (back)"));
+                break;
+            case APARATO_BIEN:
+                dibujarIndicadorDemo4Texto(p, ax, ay, aw, tl, 0x5BD685,
+                        idioma.elegir("✓ conectar(\"espalda\") → usarAparato()",
+                                "✓ anschliessen(\"ruecken\") → geraetBenutzen()",
+                                "✓ plugIn(\"back\") → useGadget()"));
+                break;
+            case GESTION_ENERGIA:
+            case TOPE_OPTIMO:
+                dibujarIndicadorDisparo(p, yo, rival, pulso, tl);
+                break;
+            case TOPE_DEUDA:
+                dibujarIndicadorDemo4Texto(p, ax, ay, aw, tl, 0xFF6B6B,
+                        idioma.elegir("⏱ TopeDeCalculo · deuda de turnos",
+                                "⏱ TopeDeCalculo · Zugschuld",
+                                "⏱ TopeDeCalculo · turn debt"));
+                break;
+            default:
+                break;
+        }
     }
 
     private void dibujarIndicadorAvance(Pincel p, Cuerpo yo, float tl) {
@@ -410,6 +453,10 @@ public final class PantallaDemostracion implements Pantalla {
                 "✓ hindernisse() + gesehen() + Reichweite",
                 "✓ obstacles() + seenEnemies() + range");
         dibujarEtiquetaArena(p, txt, ax + aw / 2f, ay + 64f, tl, 0x5BD685);
+    }
+
+    private void dibujarIndicadorDemo4Texto(Pincel p, float ax, float ay, float aw, float tl, int color, String txt) {
+        dibujarEtiquetaArena(p, txt, ax + aw / 2f, ay + 64f, tl, color);
     }
 
     private static void dibujarPuntaFlecha(Pincel p, float x1, float y1, float x2, float y2, float largo, int color) {
