@@ -177,9 +177,9 @@ miembros.de:
 miembros.en:
     String getMessage() — explains that the tick's step limit was exceeded
 ejemplo:
-    // Evita bucles sin salida en cadaTurno(): el motor lanzará TopeDeCalculo.
+    // Evita bucles sin salida en cadaTurno(): el motor lanzará TopeDeCalculo. || Vermeide Endlosschleifen in jedenZug(): Die Engine wirft TopeDeCalculo. || Avoid infinite loops in onTick(): the engine will throw TopeDeCalculo.
     for (int i = 0; i < 10; i++) {
-        // trabajo acotado por turno
+        // trabajo acotado por turno || begrenzte Arbeit pro Zug || bounded work per tick
     }
 
 === paquete metajavbots.junit

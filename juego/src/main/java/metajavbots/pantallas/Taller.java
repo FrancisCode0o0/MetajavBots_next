@@ -38,6 +38,7 @@ public final class Taller implements Pantalla {
     private boolean enBanco;
     private boolean abrirBancoAlEntrar;
     private int pestana;
+    private int pestanaAnterior;
     private int robotCargado = -1;
     private volatile Compilador.Resultado resultado;
     private volatile boolean compilando;
@@ -65,11 +66,53 @@ public final class Taller implements Pantalla {
         return taller;
     }
 
-    /** Abre el taller directamente en la pestaña de paquetes Javadoc (para las capturas). */
+    /** Abre el taller directamente en la pestaña de documentación Javadoc (para las capturas). */
     public static Taller enPaquetes() {
         Taller taller = new Taller();
+        taller.pestanaAnterior = 0;
         taller.pestana = 4;
         return taller;
+    }
+
+    /** Índice de la pestaña activa (0 código, 1 piezas, 2 modelo, 3 charla, 4 documentación). */
+    public int pestanaActual() {
+        return pestana;
+    }
+
+    /** Pestaña del taller en la que estaba el jugador antes de abrir la documentación. */
+    public int pestanaAnterior() {
+        return pestanaAnterior;
+    }
+
+    /** Cambia a una pestaña del taller recordando la anterior si se entra en documentación. */
+    public void irAPestana(int nueva) {
+        if (nueva == 4) {
+            abrirDocumentacion();
+        } else if (nueva >= 0 && nueva < 4) {
+            pestana = nueva;
+            pestanaAnterior = nueva;
+        }
+    }
+
+    /** Abre la vista de documentación recordando en qué pestaña del taller estaba el jugador. */
+    public void abrirDocumentacion() {
+        if (pestana != 4) pestanaAnterior = pestana;
+        pestana = 4;
+    }
+
+    /**
+     * Retrocede un nivel dentro de la documentación; si ya estaba en el índice, vuelve a la pestaña anterior del taller
+     * sin sacar al jugador del Taller. Devuelve true si la acción se atendió dentro de la documentación.
+     */
+    public boolean retrocederEnDocumentacion() {
+        if (pestana != 4) return false;
+        if (!paquetes.retroceder()) pestana = pestanaAnterior;
+        return true;
+    }
+
+    /** Acceso al panel de documentación (útil para pruebas automatizadas). */
+    public PanelDePaquetes panelDePaquetes() {
+        return paquetes;
     }
 
     @Override
@@ -208,9 +251,17 @@ public final class Taller implements Pantalla {
             return;
         }
         String[] pest = {T.t("taller.codigo"), T.t("taller.piezas"), T.t("taller.modelo"), T.t("taller.charla")};
+        float anchoDoc = Math.min(250, Math.max(200, w * 0.26f));
+        float anchoPest = Math.max(480, Math.min(700, w - anchoDoc - 4));
         int antes = pestana;
-        pestana = ui.pestanas(pest, pestana, x, y, 720, 46);
-        if (pestanaPaquetes(ui, x + 722, y, Math.min(180, w - 722), 46, pestana == 4)) pestana = 4;
+        int elegida = ui.pestanas(pest, pestana, x, y, anchoPest, 46);
+        if (elegida != pestana) {
+            pestana = elegida;
+            if (pestana < 4) pestanaAnterior = pestana;
+        }
+        if (pestanaPaquetes(ui, x + anchoPest + 4, y, Math.min(anchoDoc, w - anchoPest - 4), 46, pestana == 4)) {
+            abrirDocumentacion();
+        }
         if (antes == 0 && pestana != 0) {
             guardarCodigo(j);
             if (enBanco) cerrarBanco(true);
@@ -233,7 +284,10 @@ public final class Taller implements Pantalla {
             return;
         }
         if (pestana == 4) {
-            paquetes.dibujar(ui, jug.idioma, x, cy, w, ch);
+            if (paquetes.dibujar(ui, jug.idioma, x, cy, w, ch)) {
+                paquetes.desenfocar(ui);
+                pestana = pestanaAnterior;
+            }
             return;
         }
         pestanaCodigo(j, r, x, cy, w, dt);

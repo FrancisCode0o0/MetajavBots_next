@@ -33,7 +33,8 @@ final class FichasDePaquetes {
         String desc = descripcionGeneral(c, firma, resumen, id);
         String donde = dondeGeneral(c, firma, id);
         String pseudo = pseudocodigoGeneral(c, firma, id);
-        return new PanelDePaquetes.FichaMiembro(firma, desc, donde, pseudo);
+        String java = ejemploJavaGeneral(c, firma, id);
+        return new PanelDePaquetes.FichaMiembro(firma, desc, donde, pseudo, java);
     }
 
     private static PanelDePaquetes.FichaMiembro resolverApi(Paquetes.Componente c, String firma, String resumen, Idioma id) {
@@ -47,7 +48,11 @@ final class FichasDePaquetes {
                     "CADA TURNO:\n    REPETIR como máximo 10 veces:\n        hacer cálculo corto\n    // sin bucles infinitos",
                     "JEDEN ZUG:\n    WIEDERHOLE höchstens 10-mal:\n        kurze Berechnung ausführen\n    // keine Endlosschleifen",
                     "EVERY TICK:\n    REPEAT at most 10 times:\n        run short calculation\n    // no infinite loops");
-            return new PanelDePaquetes.FichaMiembro(firma, desc, donde, pseudo);
+            String java = id.elegir(
+                    "@Override\npublic void cadaTurno() {\n    for (int i = 0; i < 10; i++) {\n        // cálculo acotado por turno\n    }\n}",
+                    "@Override\npublic void jedenZug() {\n    for (int i = 0; i < 10; i++) {\n        // begrenzte Berechnung pro Zug\n    }\n}",
+                    "@Override\npublic void onTick() {\n    for (int i = 0; i < 10; i++) {\n        // bounded work per tick\n    }\n}");
+            return new PanelDePaquetes.FichaMiembro(firma, desc, donde, pseudo, java);
         }
         String prefijo = prefijoApi(c.id);
         if (prefijo == null) return null;
@@ -65,7 +70,9 @@ final class FichasDePaquetes {
                 : combinarDescripciones(resumen, encontradas, id);
         String donde = principal.donde(id).strip();
         String pseudo = elegirEjemploApi(encontradas, id);
-        return new PanelDePaquetes.FichaMiembro(firma, capitalizarPunto(desc), donde, ajustarLineas(pseudo, id, c.nombre(id), firma));
+        String java = ejemploJavaApi(c, nombres, id);
+        return new PanelDePaquetes.FichaMiembro(firma, capitalizarPunto(desc), donde,
+                ajustarLineas(pseudo, id, c.nombre(id), firma), java);
     }
 
     private static String prefijoApi(String idComp) {
@@ -225,6 +232,195 @@ final class FichasDePaquetes {
                         + "\n    WENN wert für Entscheidung passt:\n        mit dem Ergebnis handeln",
                 "IN onTick() or onSeeEnemy():\n    value ← " + comp + ": " + primero
                         + "\n    IF value helps decide:\n        act on the result");
+    }
+
+    private static String ejemploJavaApi(Paquetes.Componente c, List<String> nombres, Idioma id) {
+        String primero = nombres.isEmpty() ? "" : nombres.get(0);
+        if ("Enemigo".equals(c.id)) return ejemploJavaEnemigo(primero, id);
+        if ("Golpe".equals(c.id)) return ejemploJavaGolpe(primero, id);
+        return ejemploJavaMetajavbot(primero, id);
+    }
+
+    private static String ejemploJavaMetajavbot(String metodo, Idioma id) {
+        if ("cadaTurno".equals(metodo) || "jedenZug".equals(metodo) || "onTick".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void cadaTurno() {\n    avanzar(80);\n    apuntar(12);\n}",
+                    "@Override\npublic void jedenZug() {\n    vorwaerts(80);\n    zielen(12);\n}",
+                    "@Override\npublic void onTick() {\n    ahead(80);\n    aim(12);\n}");
+        }
+        if ("alEmpezar".equals(metodo) || "beimStart".equals(metodo) || "onStart".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alEmpezar() {\n    apuntar(45);\n    avanzar(120);\n}",
+                    "@Override\npublic void beimStart() {\n    zielen(45);\n    vorwaerts(120);\n}",
+                    "@Override\npublic void onStart() {\n    aim(45);\n    ahead(120);\n}");
+        }
+        if ("alVerEnemigo".equals(metodo) || "beiSicht".equals(metodo) || "onSeeEnemy".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alVerEnemigo(Enemigo e) {\n    apuntarHacia(e.angulo());\n    atacar();\n}",
+                    "@Override\npublic void beiSicht(Gegner g) {\n    zielenNach(g.winkel());\n    angreifen();\n}",
+                    "@Override\npublic void onSeeEnemy(Enemy e) {\n    aimTo(e.angle());\n    attack();\n}");
+        }
+        if ("alRecibirGolpe".equals(metodo) || "beiTreffer".equals(metodo) || "onHit".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alRecibirGolpe(Golpe g) {\n    girarHacia(g.angulo() + 90);\n    avanzar(90);\n}",
+                    "@Override\npublic void beiTreffer(Treffer t) {\n    drehenNach(t.winkel() + 90);\n    vorwaerts(90);\n}",
+                    "@Override\npublic void onHit(Hit h) {\n    turnTo(h.angle() + 90);\n    ahead(90);\n}");
+        }
+        if ("avanzar".equals(metodo) || "vorwaerts".equals(metodo) || "ahead".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void cadaTurno() {\n    if (restanteAvance() == 0) avanzar(120);\n}",
+                    "@Override\npublic void jedenZug() {\n    if (restStrecke() == 0) vorwaerts(120);\n}",
+                    "@Override\npublic void onTick() {\n    if (remainingDistance() == 0) ahead(120);\n}");
+        }
+        if ("girar".equals(metodo) || "drehen".equals(metodo) || "turn".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void cadaTurno() {\n    girar(15);\n    avanzar(60);\n}",
+                    "@Override\npublic void jedenZug() {\n    drehen(15);\n    vorwaerts(60);\n}",
+                    "@Override\npublic void onTick() {\n    turn(15);\n    ahead(60);\n}");
+        }
+        if ("apuntar".equals(metodo) || "zielen".equals(metodo) || "aim".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alVerEnemigo(Enemigo e) {\n    apuntarHacia(e.angulo());\n}",
+                    "@Override\npublic void beiSicht(Gegner g) {\n    zielenNach(g.winkel());\n}",
+                    "@Override\npublic void onSeeEnemy(Enemy e) {\n    aimTo(e.angle());\n}");
+        }
+        if ("atacar".equals(metodo) || "angreifen".equals(metodo) || "attack".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alVerEnemigo(Enemigo e) {\n    apuntarHacia(e.angulo());\n    if (energia() > 30) atacar();\n}",
+                    "@Override\npublic void beiSicht(Gegner g) {\n    zielenNach(g.winkel());\n    if (energie() > 30) angreifen();\n}",
+                    "@Override\npublic void onSeeEnemy(Enemy e) {\n    aimTo(e.angle());\n    if (energy() > 30) attack();\n}");
+        }
+        if ("memoria".equals(metodo) || "gedaechtnis".equals(metodo) || "memory".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alEmpezar() {\n    memoria().put(\"ronda\", 1);\n}",
+                    "@Override\npublic void beimStart() {\n    gedaechtnis().put(\"runde\", 1);\n}",
+                    "@Override\npublic void onStart() {\n    memory().put(\"round\", 1);\n}");
+        }
+        return id.elegir(
+                "@Override\npublic void cadaTurno() {\n    if (blindaje() < 40 && energia() > 20) retroceder(80);\n}",
+                "@Override\npublic void jedenZug() {\n    if (panzerung() < 40 && energie() > 20) rueckwaerts(80);\n}",
+                "@Override\npublic void onTick() {\n    if (armor() < 40 && energy() > 20) back(80);\n}");
+    }
+
+    private static String ejemploJavaEnemigo(String metodo, Idioma id) {
+        if ("x".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alVerEnemigo(Enemigo e) {\n    double dx = e.x() - x();\n    double dy = e.y() - y();\n}",
+                    "@Override\npublic void beiSicht(Gegner g) {\n    double dx = g.x() - x();\n    double dy = g.y() - y();\n}",
+                    "@Override\npublic void onSeeEnemy(Enemy e) {\n    double dx = e.x() - x();\n    double dy = e.y() - y();\n}");
+        }
+        if ("vuela".equals(metodo) || "fliegt".equals(metodo) || "flies".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alVerEnemigo(Enemigo e) {\n    if (!e.vuela()) atacar();\n}",
+                    "@Override\npublic void beiSicht(Gegner g) {\n    if (!g.fliegt()) angreifen();\n}",
+                    "@Override\npublic void onSeeEnemy(Enemy e) {\n    if (!e.flies()) attack();\n}");
+        }
+        if ("nombre".equals(metodo) || "name".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alVerEnemigo(Enemigo e) {\n    memoria().put(\"rival\", e.nombre());\n}",
+                    "@Override\npublic void beiSicht(Gegner g) {\n    gedaechtnis().put(\"gegner\", g.name());\n}",
+                    "@Override\npublic void onSeeEnemy(Enemy e) {\n    memory().put(\"rival\", e.name());\n}");
+        }
+        if ("rumbo".equals(metodo) || "richtung".equals(metodo) || "heading".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alVerEnemigo(Enemigo e) {\n    if (e.velocidad() > 2) apuntarHacia(e.angulo());\n}",
+                    "@Override\npublic void beiSicht(Gegner g) {\n    if (g.geschwindigkeit() > 2) zielenNach(g.winkel());\n}",
+                    "@Override\npublic void onSeeEnemy(Enemy e) {\n    if (e.speed() > 2) aimTo(e.angle());\n}");
+        }
+        return id.elegir(
+                "@Override\npublic void alVerEnemigo(Enemigo e) {\n    if (e.distancia() < 300) {\n"
+                        + "        apuntarHacia(e.angulo());\n        atacar();\n    }\n}",
+                "@Override\npublic void beiSicht(Gegner g) {\n    if (g.entfernung() < 300) {\n"
+                        + "        zielenNach(g.winkel());\n        angreifen();\n    }\n}",
+                "@Override\npublic void onSeeEnemy(Enemy e) {\n    if (e.distance() < 300) {\n"
+                        + "        aimTo(e.angle());\n        attack();\n    }\n}");
+    }
+
+    private static String ejemploJavaGolpe(String metodo, Idioma id) {
+        if ("arma".equals(metodo) || "waffe".equals(metodo) || "weapon".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alRecibirGolpe(Golpe g) {\n    if (\"laser\".equals(g.arma())) girar(90);\n}",
+                    "@Override\npublic void beiTreffer(Treffer t) {\n    if (\"laser\".equals(t.waffe())) drehen(90);\n}",
+                    "@Override\npublic void onHit(Hit h) {\n    if (\"laser\".equals(h.weapon())) turn(90);\n}");
+        }
+        if ("pieza".equals(metodo) || "teil".equals(metodo) || "part".equals(metodo)) {
+            return id.elegir(
+                    "@Override\npublic void alRecibirGolpe(Golpe g) {\n    if (\"cabeza\".equals(g.pieza())) retroceder(80);\n}",
+                    "@Override\npublic void beiTreffer(Treffer t) {\n    if (\"kopf\".equals(t.teil())) rueckwaerts(80);\n}",
+                    "@Override\npublic void onHit(Hit h) {\n    if (\"head\".equals(h.part())) back(80);\n}");
+        }
+        return id.elegir(
+                "@Override\npublic void alRecibirGolpe(Golpe g) {\n    if (g.dano() > 10) {\n"
+                        + "        girarHacia(g.angulo() + 90);\n        avanzar(90);\n    }\n}",
+                "@Override\npublic void beiTreffer(Treffer t) {\n    if (t.schaden() > 10) {\n"
+                        + "        drehenNach(t.winkel() + 90);\n        vorwaerts(90);\n    }\n}",
+                "@Override\npublic void onHit(Hit h) {\n    if (h.damage() > 10) {\n"
+                        + "        turnTo(h.angle() + 90);\n        ahead(90);\n    }\n}");
+    }
+
+    private static String ejemploJavaGeneral(Paquetes.Componente c, String firma, Idioma id) {
+        String primero = primerElemento(firma);
+        String comp = c == null ? "Object" : c.nombre(id);
+        if (c != null && "metajavbots.junit".equals(c.paquete)) {
+            if (c.tipo == Paquetes.Tipo.ANOTACION) {
+                return id.elegir(
+                        primero + "\nvoid comprobarCaso() {\n    Assertions.assertEquals(4, 2 + 2);\n}",
+                        primero + "\nvoid pruefeFall() {\n    Assertions.assertEquals(4, 2 + 2);\n}",
+                        primero + "\nvoid checkCase() {\n    Assertions.assertEquals(4, 2 + 2);\n}");
+            }
+            return id.elegir(
+                    "@Test\nvoid comprobarResultado() {\n    int obtenido = 2 + 2;\n    Assertions.assertEquals(4, obtenido); // " + primero + "\n}",
+                    "@Test\nvoid pruefeErgebnis() {\n    int istWert = 2 + 2;\n    Assertions.assertEquals(4, istWert); // " + primero + "\n}",
+                    "@Test\nvoid checkResult() {\n    int actual = 2 + 2;\n    Assertions.assertEquals(4, actual); // " + primero + "\n}");
+        }
+        if (c != null && (c.tipo == Paquetes.Tipo.EXCEPCION || c.tipo == Paquetes.Tipo.ERROR)) {
+            return id.elegir(
+                    "try {\n    // operación que puede fallar\n} catch (" + comp + " e) {\n    System.out.println(e." + nombreSimple(primero) + ");\n}",
+                    "try {\n    // Operation, die fehlschlagen kann\n} catch (" + comp + " e) {\n    System.out.println(e." + nombreSimple(primero) + ");\n}",
+                    "try {\n    // operation that may fail\n} catch (" + comp + " e) {\n    System.out.println(e." + nombreSimple(primero) + ");\n}");
+        }
+        if (c != null && (c.tipo == Paquetes.Tipo.ANOTACION || firma.startsWith("@"))) {
+            return id.elegir(
+                    primero + "\npublic void cadaTurno() {\n    avanzar(40);\n}",
+                    primero + "\npublic void jedenZug() {\n    vorwaerts(40);\n}",
+                    primero + "\npublic void onTick() {\n    ahead(40);\n}");
+        }
+        if (c != null && c.tipo == Paquetes.Tipo.ENUM) {
+            String cte = primero.contains(".") ? primero : comp + "." + primero;
+            return id.elegir(
+                    comp + " valor = " + cte + ";\nif (valor != null) {\n    // usar " + comp + "\n}",
+                    comp + " wert = " + cte + ";\nif (wert != null) {\n    // " + comp + " verwenden\n}",
+                    comp + " value = " + cte + ";\nif (value != null) {\n    // use " + comp + "\n}");
+        }
+        if (esConstanteOCampo(firma)) {
+            String ref = primero.contains(".") ? primero : comp + "." + primero;
+            return id.elegir(
+                    "@Override\npublic void cadaTurno() {\n    var limite = " + ref + ";\n}",
+                    "@Override\npublic void jedenZug() {\n    var grenze = " + ref + ";\n}",
+                    "@Override\npublic void onTick() {\n    var limit = " + ref + ";\n}");
+        }
+        if (c != null && c.soloEjercicio) {
+            String ej = c.ejemplo(id);
+            if (!ej.isBlank()) return ej;
+            return id.elegir(
+                    "// En un ejercicio o en el Laboratorio:\n// Usar " + comp + " -> " + primero,
+                    "// In einer Übung oder im Labor:\n// " + comp + " -> " + primero + " verwenden",
+                    "// In an exercise or the Laboratory:\n// Use " + comp + " -> " + primero);
+        }
+        String ejComp = c == null ? "" : c.ejemplo(id);
+        if (!ejComp.isBlank() && !contieneApiOtroIdioma(ejComp, id)) {
+            return "// " + comp + ": " + primero + "\n" + ejComp;
+        }
+        return id.elegir(
+                "@Override\npublic void cadaTurno() {\n    // Ejemplo con " + comp + ": " + primero + "\n}",
+                "@Override\npublic void jedenZug() {\n    // Beispiel mit " + comp + ": " + primero + "\n}",
+                "@Override\npublic void onTick() {\n    // Example with " + comp + ": " + primero + "\n}");
+    }
+
+    private static boolean contieneApiOtroIdioma(String texto, Idioma id) {
+        if (id != Idioma.ES && (texto.contains("cadaTurno(") || texto.contains("alVerEnemigo(") || texto.contains("alRecibirGolpe("))) return true;
+        if (id != Idioma.DE && (texto.contains("jedenZug(") || texto.contains("beiSicht(") || texto.contains("beiTreffer("))) return true;
+        return id != Idioma.EN && (texto.contains("onTick(") || texto.contains("onSeeEnemy(") || texto.contains("onHit("));
     }
 
     private static String ajustarLineas(String texto, Idioma id, String comp, String firma) {

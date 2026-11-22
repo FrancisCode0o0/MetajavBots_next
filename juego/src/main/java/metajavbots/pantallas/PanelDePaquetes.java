@@ -27,12 +27,14 @@ public final class PanelDePaquetes {
         public final String descripcion;
         public final String donde;
         public final String pseudocodigo;
+        public final String ejemploJava;
 
-        public FichaMiembro(String firma, String descripcion, String donde, String pseudocodigo) {
+        public FichaMiembro(String firma, String descripcion, String donde, String pseudocodigo, String ejemploJava) {
             this.firma = firma;
             this.descripcion = descripcion;
             this.donde = donde;
             this.pseudocodigo = pseudocodigo;
+            this.ejemploJava = ejemploJava;
         }
     }
 
@@ -107,6 +109,70 @@ public final class PanelDePaquetes {
         return miembroActual;
     }
 
+    /** Paquete abierto actualmente (null si se está en el índice general). */
+    public Paquetes.Paquete paqueteActual() {
+        return paqueteActual;
+    }
+
+    /** Componente (clase/interfaz/enum...) abierto actualmente (null si no se ha entrado en uno). */
+    public Paquetes.Componente componenteActual() {
+        return componenteActual;
+    }
+
+    /** Nivel actual de navegación: 1 índice, 2 paquete, 3 clase/componente, 4 ficha de método. */
+    public int nivelActual() {
+        if (paqueteActual == null) return 1;
+        if (componenteActual == null) return 2;
+        return miembroActual < 0 ? 3 : 4;
+    }
+
+    /**
+     * Retrocede exactamente un nivel en la documentación (ficha -> clase -> paquete -> índice).
+     * Devuelve true si retrocedió dentro de la documentación, o false si ya estaba en el índice (nivel 1).
+     */
+    public boolean retroceder() {
+        desplegado = false;
+        if (miembroActual >= 0) {
+            miembroActual = -1;
+            desp.alPrincipio();
+            return true;
+        }
+        if (componenteActual != null) {
+            componenteActual = null;
+            miembroEnfocado = -1;
+            desp.alPrincipio();
+            return true;
+        }
+        if (paqueteActual != null) {
+            paqueteActual = null;
+            miembroEnfocado = -1;
+            desp.alPrincipio();
+            return true;
+        }
+        return false;
+    }
+
+    /** Miga de pan visible del nivel actual (p. ej. «Documentación > metajavbots.api > Metajavbot > void cadaTurno()»). */
+    public String rutaActual(Idioma idioma) {
+        Idioma id = idioma == null ? Idioma.ES : idioma;
+        String raiz = etiquetaRaiz(id);
+        if (paqueteActual == null) return raiz;
+        StringBuilder sb = new StringBuilder(raiz).append(" > ").append(paqueteActual.nombre);
+        if (componenteActual == null) return sb.toString();
+        sb.append(" > ").append(componenteActual.nombre(id));
+        if (miembroActual >= 0) {
+            FichaMiembro f = fichaDeMiembro(componenteActual, miembroActual, id);
+            sb.append(" > ").append(f.firma);
+        }
+        return sb.toString();
+    }
+
+    private static String etiquetaRaiz(Idioma id) {
+        metajavbots.textos.Trilingue tr = T.todos().get("paquetes.volver_indice");
+        if (tr != null) return tr.en(id);
+        return id.elegir("Documentación", "Dokumentation", "Documentation");
+    }
+
     /** Escribe una búsqueda y abre el autocompletado (útil para capturas y pruebas). */
     public void escribirBusqueda(String texto, Idioma idioma) {
         busqueda.ponerTexto(texto == null ? "" : texto);
@@ -132,7 +198,12 @@ public final class PanelDePaquetes {
         return "The player has the Workshop Packages (Javadoc) tab open on the package index.";
     }
 
-    public void dibujar(Ui ui, Idioma idioma, float x, float y, float w, float h) {
+    /**
+     * Dibuja la documentación estilo Javadoc. Devuelve true si el jugador pulsó «Atrás» (o Esc) desde el índice
+     * (nivel 1) para volver a la pestaña anterior del Taller sin salir del Taller.
+     */
+    public boolean dibujar(Ui ui, Idioma idioma, float x, float y, float w, float h) {
+        ui.reservarEscape();
         Pincel p = ui.p;
         p.caja(x, y, w, h, 10, ui.tema.panel, 1);
         p.bordeRedondeado(x, y, w, h, 10, ui.tema.borde, 1, 1);
@@ -169,8 +240,10 @@ public final class PanelDePaquetes {
         }
         if (!busqueda.enfocado && !enDesplegable) desplegado = false;
 
+        boolean volverAlTaller = !busqueda.enfocado && !desplegado && atenderAtrasGlobal(ui);
         float navY = sy + sh + 10;
-        float contenidoY = barraDeNavegacion(ui, idioma, x + 16, navY, w - 32);
+        boolean[] salir = {volverAlTaller};
+        float contenidoY = barraDeNavegacion(ui, idioma, x + 16, navY, w - 32, salir);
         p.rect(x + 16, contenidoY - 6, w - 32, 1, ui.tema.borde, 1);
 
         float contenidoH = Math.max(60, y + h - contenidoY - 10);
@@ -188,6 +261,19 @@ public final class PanelDePaquetes {
         if (desplegado && !busqueda.texto().isBlank()) {
             dibujarDesplegable(ui, idioma, dx, dy, dw, dh, filaH);
         }
+        return salir[0];
+    }
+
+    private boolean atenderAtrasGlobal(Ui ui) {
+        if (componenteActual != null) return false;
+        for (Entrada.Tecla k : ui.e.teclas) {
+            if (k.usada) continue;
+            if (k.codigo == Keys.ESCAPE || k.codigo == Keys.BACKSPACE) {
+                k.usada = true;
+                return !retroceder();
+            }
+        }
+        return false;
     }
 
     private void actualizarSugerencias(Idioma idioma) {
@@ -245,67 +331,91 @@ public final class PanelDePaquetes {
         desp.alPrincipio();
     }
 
-    private float barraDeNavegacion(Ui ui, Idioma idioma, float x, float y, float w) {
+    private float barraDeNavegacion(Ui ui, Idioma idioma, float x, float y, float w, boolean[] salir) {
         Pincel p = ui.p;
+        float bh = Math.max(38, ui.letra * 1.65f);
+        String txtAtras = "← " + T.t("paquetes.atras");
+        float tBtn = Math.min(ui.letra, bh * 0.5f);
+        float bw = Math.min(w * 0.42f, Math.max(116, p.ancho(txtAtras, tBtn, true) + 28));
+        if (ui.boton(txtAtras, x, y, bw, bh, Ui.Estilo.NORMAL)) {
+            if (!retroceder()) salir[0] = true;
+        }
+        float rutaX = x + bw + 12;
+        float rutaW = Math.max(80, w - bw - 12);
+        float tRuta = ui.letra * 0.82f;
+        float yy;
+        if (rutaW >= 180) {
+            float ry = dibujarMigaDePan(ui, idioma, rutaX, y + 4, rutaW, bh - 4, tRuta);
+            yy = Math.max(y + bh, ry) + 8;
+        } else {
+            yy = dibujarMigaDePan(ui, idioma, x, y + bh + 6, w, bh - 4, tRuta) + 8;
+        }
         if (paqueteActual == null) {
-            float tTit = ui.letra * 1.05f;
-            p.texto(ui.recortarTexto(T.t("paquetes.titulo"), w, tTit, true), x, y, tTit, true, ui.tema.texto, 1);
-            float yy = y + p.altoDeLinea(tTit) + 4;
-            yy += p.parrafo(T.t("paquetes.subtitulo"), x, yy, w, ui.letra * 0.8f, ui.tema.textoSuave, 1) + 10;
-            return yy;
+            yy += p.parrafo(T.t("paquetes.subtitulo"), x, yy, w, ui.letra * 0.8f, ui.tema.textoSuave, 1) + 8;
         }
-        float bh = Math.max(38, ui.letra * 1.7f);
-        if (componenteActual == null) {
-            String[] txt = {T.t("paquetes.volver_indice")};
-            Ui.Estilo[] est = {Ui.Estilo.PLANO};
-            if (ui.botonera(txt, est, null, null, x, y, w, bh) == 0) {
-                paqueteActual = null;
-                miembroActual = -1;
-                miembroEnfocado = -1;
-                desp.alPrincipio();
-                return y + ui.altoDeBotonera + 12;
+        return yy;
+    }
+
+    private float dibujarMigaDePan(Ui ui, Idioma idioma, float x, float y, float w, float h, float t) {
+        Pincel p = ui.p;
+        String raiz = etiquetaRaiz(idioma);
+        float lineaH = Math.max(p.altoDeLinea(t) + 6, h * 0.72f);
+        float cx = x, cy = y;
+        String[] partes = partesDeRuta(raiz, idioma);
+        for (int i = 0; i < partes.length; i++) {
+            boolean ultimo = i == partes.length - 1;
+            if (i > 0) {
+                float sw = p.ancho(" > ", t, false);
+                if (cx > x && cx + sw > x + w) {
+                    cx = x;
+                    cy += lineaH;
+                }
+                p.texto(" > ", cx, cy + (lineaH - t * 1.15f) / 2, t, false, ui.tema.textoApagado, 1);
+                cx += sw;
             }
-            float bw = Math.min(w, p.ancho(txt[0], Math.min(ui.letra, bh * 0.5f), true) + 34);
-            float bx = x + bw + 12;
-            float tCrumb = ui.letra * 0.85f;
-            if (x + w - bx > 120) {
-                p.texto(ui.recortarTexto(paqueteActual.nombre, x + w - bx, tCrumb, true), bx, y + (bh - tCrumb * 1.15f) / 2, tCrumb, true,
-                        ui.tema.acento, 1);
+            float disp = Math.max(60, x + w - cx);
+            String seg = ui.recortarTexto(partes[i], Math.min(w, disp), t, ultimo);
+            float pw = p.ancho(seg, t, ultimo);
+            if (cx > x && cx + pw > x + w) {
+                cx = x;
+                cy += lineaH;
+                seg = ui.recortarTexto(partes[i], w, t, ultimo);
+                pw = p.ancho(seg, t, ultimo);
             }
-            return y + ui.altoDeBotonera + 12;
+            boolean encima = !ultimo && ui.e.dentro(cx - 2, cy, pw + 4, lineaH);
+            int color = ultimo ? ui.tema.acento : encima ? ui.tema.texto : ui.tema.textoSuave;
+            p.texto(seg, cx, cy + (lineaH - t * 1.15f) / 2, t, ultimo || encima, color, 1);
+            if (encima && ui.e.clic(cx - 2, cy, pw + 4, lineaH)) {
+                saltarANivel(i + 1);
+                return cy + lineaH;
+            }
+            cx += pw;
         }
-        if (miembroActual >= 0) {
-            String[] txt = {"← " + T.t("comun.volver"), T.t("paquetes.volver_indice")};
-            Ui.Estilo[] est = {Ui.Estilo.NORMAL, Ui.Estilo.PLANO};
-            int pulsado = ui.botonera(txt, est, null, null, x, y, w, bh);
-            if (pulsado == 0) {
-                miembroActual = -1;
-                desp.alPrincipio();
-            } else if (pulsado == 1) {
-                paqueteActual = null;
-                componenteActual = null;
-                miembroActual = -1;
-                miembroEnfocado = -1;
-                desp.alPrincipio();
-            }
-            return y + ui.altoDeBotonera + 12;
-        }
-        String[] txt = {T.t("paquetes.volver_indice"), "← " + paqueteActual.nombre};
-        Ui.Estilo[] est = {Ui.Estilo.PLANO, Ui.Estilo.NORMAL};
-        int pulsado = ui.botonera(txt, est, null, null, x, y, w, bh);
-        if (pulsado == 0) {
+        return cy + lineaH;
+    }
+
+    private String[] partesDeRuta(String raiz, Idioma idioma) {
+        if (paqueteActual == null) return new String[]{raiz};
+        if (componenteActual == null) return new String[]{raiz, paqueteActual.nombre};
+        if (miembroActual < 0) return new String[]{raiz, paqueteActual.nombre, componenteActual.nombre(idioma)};
+        FichaMiembro f = fichaDeMiembro(componenteActual, miembroActual, idioma);
+        return new String[]{raiz, paqueteActual.nombre, componenteActual.nombre(idioma), f.firma};
+    }
+
+    private void saltarANivel(int nivel) {
+        if (nivel <= 1) {
             paqueteActual = null;
             componenteActual = null;
             miembroActual = -1;
             miembroEnfocado = -1;
-            desp.alPrincipio();
-        } else if (pulsado == 1) {
+        } else if (nivel == 2) {
             componenteActual = null;
             miembroActual = -1;
             miembroEnfocado = -1;
-            desp.alPrincipio();
+        } else if (nivel == 3) {
+            miembroActual = -1;
         }
-        return y + ui.altoDeBotonera + 12;
+        desp.alPrincipio();
     }
 
     // ================================================================ 1. Índice de paquetes
@@ -538,7 +648,8 @@ public final class PanelDePaquetes {
 
         yy += cajaBloque(p, ui, T.t("paquetes.miembro.descripcion"), ficha.descripcion, x + 4, yy, ancho, ui.tema.acento) + 12;
         yy += cajaBloque(p, ui, T.t("paquetes.miembro.donde"), ficha.donde, x + 4, yy, ancho, ui.tema.aviso) + 12;
-        yy += cajaCodigo(p, ui, T.t("paquetes.miembro.ejemplo"), ficha.pseudocodigo, x + 4, yy, ancho) + 14;
+        yy += cajaCodigo(p, ui, T.t("paquetes.miembro.ejemplo"), ficha.pseudocodigo, x + 4, yy, ancho) + 12;
+        yy += cajaCodigo(p, ui, T.t("paquetes.miembro.ejemplo_java"), ficha.ejemploJava, x + 4, yy, ancho) + 14;
         ui.finDesplazable(desp, yy + d - y + 10);
     }
 
