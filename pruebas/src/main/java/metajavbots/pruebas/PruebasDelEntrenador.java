@@ -391,6 +391,14 @@ final class PruebasDelEntrenador {
                     cierto(rec.cabezaY() - rec.radio() * 0.28f < tam[1] && rec.cabezaY() - rec.radio() * 0.28f >= rec.y(),
                             "ojos del entrenador visibles al asomar en " + tam[0] + "x" + tam[1]);
                     cierto(rec.contiene(rec.cabezaX(), rec.y() + rec.h() * 0.5f), "zona medio asomada de la cabeza clicable");
+                    cierto(rec.ayudaRadio() > 0f && rec.ayudaY() < rec.cabezaY(),
+                            "signo ? situado por encima de la cabecita en " + tam[0] + "x" + tam[1] + " letra=" + letra);
+                    cierto(rec.ayudaX() - rec.ayudaRadio() >= 0f && rec.ayudaX() + rec.ayudaRadio() <= tam[0],
+                            "signo ? dentro de [0, ancho] en " + tam[0] + "x" + tam[1] + " letra=" + letra);
+                    cierto(rec.ayudaY() - rec.ayudaRadio() >= 0f && rec.ayudaY() + rec.ayudaRadio() <= tam[1],
+                            "signo ? dentro de [0, alto] en " + tam[0] + "x" + tam[1] + " letra=" + letra);
+                    cierto(rec.enAyuda(rec.ayudaX(), rec.ayudaY()) && rec.contiene(rec.ayudaX(), rec.ayudaY()),
+                            "centro del signo ? dentro de la zona interactiva/clicable de la pestaña recogida");
                     for (EntrenadorFlotante.CajaPestana c : new EntrenadorFlotante.CajaPestana[]{reposo, desplegada}) {
                         cierto(c.w() > 0f && c.h() > 0f && c.radio() >= 20f, "dimensiones positivas");
                         cierto(c.x() >= 0f && c.x() + c.w() <= tam[0], "horizontal dentro de " + tam[0] + "x" + tam[1]);

@@ -54,12 +54,19 @@ public final class EntrenadorFlotante {
     /** Margen vertical mínimo entre el cartelito y los bordes superior e inferior de la pantalla. */
     public static final float MARGEN_VERTICAL_TIP = GeometriaEntrenador.MARGEN_VERTICAL_TIP;
 
-    /** Geometría de la pestaña recogida en la esquina inferior derecha: flecha «◀» y cabecita medio asomada. */
+    /** Geometría de la pestaña recogida en la esquina inferior derecha: flecha «◀», cabecita medio asomada e insignia «?». */
     public record CajaRecogida(float x, float y, float w, float h, float flechaX, float flechaY,
-            float cabezaX, float cabezaY, float radio) {
-        /** Indica si un punto de pantalla cae dentro de la pestaña recogida (flecha o cabecita medio asomada). */
+            float cabezaX, float cabezaY, float radio, float ayudaX, float ayudaY, float ayudaRadio) {
+        /** Indica si un punto cae sobre la insignia circular «?» situada encima de la cabecita. */
+        public boolean enAyuda(float px, float py) {
+            float dx = px - ayudaX;
+            float dy = py - ayudaY;
+            return dx * dx + dy * dy <= ayudaRadio * ayudaRadio;
+        }
+
+        /** Indica si un punto de pantalla cae dentro de la pestaña recogida (flecha, cabecita medio asomada o insignia «?»). */
         public boolean contiene(float px, float py) {
-            return px >= x && px < x + w && py >= y && py < y + h;
+            return (px >= x && px < x + w && py >= y && py < y + h) || enAyuda(px, py);
         }
 
         /** Altura total vertical aproximada de la cabeza dibujada (de los rasgos superiores a la barbilla). */
@@ -404,10 +411,18 @@ public final class EntrenadorFlotante {
         float fy = r.flechaY;
         float s = 5.5f;
         p.triangulo(fx - s, fy, fx + s * 0.7f, fy - s, fx + s * 0.7f, fy + s, enfermo ? 0xFF4D4D : ui.tema.acento, 1f);
+        p.circulo(r.ayudaX + 1.5f, r.ayudaY + 2f, r.ayudaRadio, 0x000000, 0.34f);
+        p.circulo(r.ayudaX, r.ayudaY, r.ayudaRadio, enfermo ? 0xFFFFFF : (encima ? 0xFFE066 : 0xFFD23F), 1f);
+        p.aro(r.ayudaX, r.ayudaY, r.ayudaRadio, 1.8f, enfermo ? 0xFF4D4D : 0x1A1F2B, 0.95f);
+        float tamAyuda = Math.max(12f, r.ayudaRadio * 1.35f);
+        p.textoCentrado("?", r.ayudaX, r.ayudaY - tamAyuda * 0.62f, tamAyuda, true, enfermo ? 0xCC1E1E : 0x141820, 1f);
         if (encima) {
             ui.avisar(en.nombre.en(j.jugador.idioma) + " — " + T.t("entrenador.desplegar"));
         }
-        if (j.entrada.clic(r.x, r.y, r.w, r.h)) {
+        boolean clicEnAyuda = !j.entrada.bloqueada && j.entrada.recienPulsado && !j.entrada.clicUsado
+                && r.enAyuda(j.entrada.ratonX, j.entrada.ratonY);
+        if (clicEnAyuda) j.entrada.clicUsado = true;
+        if (j.entrada.clic(r.x, r.y, r.w, r.h) || clicEnAyuda) {
             if (ui.sonidoDeClic != null) ui.sonidoDeClic.run();
             desplegar();
         }

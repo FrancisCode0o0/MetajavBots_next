@@ -32,7 +32,7 @@ public final class GeometriaEntrenador {
     private GeometriaEntrenador() {
     }
 
-    /** Calcula la pestaña recogida en la esquina inferior derecha: flechita «◀» y cabecita medio asomada. */
+    /** Calcula la pestaña recogida en la esquina inferior derecha: flechita «◀», cabecita medio asomada e insignia «?». */
     public static EntrenadorFlotante.CajaRecogida cajaRecogida(float pantallaAncho, float pantallaAlto, float tamanoLetra) {
         float r = radioCabeza(tamanoLetra);
         float anchoFlecha = 18f;
@@ -45,7 +45,10 @@ public final class GeometriaEntrenador {
         float flechaY = y + h * 0.52f;
         float cabezaX = x + anchoFlecha + anchoCabeza * 0.48f;
         float cabezaY = y + h - r * 0.05f;
-        return new EntrenadorFlotante.CajaRecogida(x, y, w, h, flechaX, flechaY, cabezaX, cabezaY, r);
+        float ayudaRadio = Math.max(9.5f, Math.min(12f, r * 0.48f));
+        float ayudaX = Math.max(ayudaRadio + 1f, Math.min(pantallaAncho - ayudaRadio - 1f, cabezaX));
+        float ayudaY = Math.max(ayudaRadio + 1f, Math.min(pantallaAlto - ayudaRadio - 1f, y - ayudaRadio * 0.55f));
+        return new EntrenadorFlotante.CajaRecogida(x, y, w, h, flechaX, flechaY, cabezaX, cabezaY, r, ayudaX, ayudaY, ayudaRadio);
     }
 
     /** Calcula la pestaña desplegada con la cabecita completa en la esquina inferior derecha y la flecha para recoger. */
