@@ -334,7 +334,7 @@ public final class VistaDeArena {
         cuantos(pelea.combatientes.length);
         // Lo que está más lejos (y mayor), antes.
         java.util.List<Cuerpo> orden = new java.util.ArrayList<>();
-        for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.cuerpo(i) != null) orden.add(pelea.cuerpo(i));
+        for (int i = 0; i < pelea.combatientes.length; i++) if (pelea.cuerpo(i) != null && !pelea.cuerpo(i).enReserva) orden.add(pelea.cuerpo(i));
         orden.sort((u, v) -> Double.compare(v.y, u.y));
         // Los objetos sólidos (barriles, chimeneas, el carrito) van entre los robots, por profundidad.
         java.util.List<metajavbots.combate.Arena.Trampa> solidos = new java.util.ArrayList<>();
@@ -532,6 +532,7 @@ public final class VistaDeArena {
         float px = sx(c.x, c.y), py = sy(c.y);
         float talla = escalaX * f(c.y) * 1.45f;
         if (c.flotando > 0) py -= Math.min(1f, Math.min(c.flotando / 8f, (50 - c.flotando) / 8f)) * 26 * talla;
+        if (c.cayendo > 0) py -= c.cayendo * 16f * talla;
         if (coloresRobotitos != null && c.indice < coloresRobotitos.length) {
             dibujarRobotito(p, px, py, talla, e, coloresRobotitos[c.indice]);
         } else {

@@ -119,7 +119,7 @@ tip.juego_oxidado_minijuegos.condicion: oxidado
 tip.juego_oxidado_minijuegos.es: ¿Un poco oxidado tras las últimas peleas? Pásate por [[Minijuegos]] o resuelve un par de [[Ejercicios]] cortos para calentar.
 tip.juego_oxidado_minijuegos.de: Etwas eingerostet nach den letzten Kämpfen? Schau bei den [[Minispielen]] vorbei oder löse ein paar kurze [[Übungen]] zum Aufwärmen.
 tip.juego_oxidado_minijuegos.en: Feeling a bit rusty after recent fights? Drop into [[Minigames]] or solve a couple of short [[Exercises]] to warm up.
-ver: tutoriales_y_demos, hora_de_hoy_y_temario, por_que_pierdo
+ver: tutoriales_y_demos, hora_de_hoy_y_temario, por_que_pierdo, minijuego_destruccion
 es:
     Si llevas varias derrotas, te sientes oxidado o quieres practicar una habilidad concreta sin la presión del ring, entra en Minijuegos y en Ejercicios.
     Los Minijuegos son cinco retos cortos contra el muñeco de entrenamiento: moverse sin chocar, girar el radar, apuntar, disparar con cabeza y esquivar obstáculos.
@@ -876,3 +876,55 @@ pseudo.en:
 ejemplo:
     // Equilibrio por compensación: velocidad ↔ blindaje, corto alcance ↔ distancia || Ausgleichsbalance: Tempo ↔ Panzerung, Nahkampf ↔ Fernkampf || Trade-off balance: speed ↔ armor, melee ↔ ranged
     // Armas características: sinergia ★ (+8 %) en todos los modos del juego || Charakteristische Waffen: ★-Synergie (+8 %) in allen Spielmodi || Signature weapons: ★ synergy (+8%) in every game mode
+
+
+=== minijuego_destruccion
+nivel: 6
+tema: --
+titulo.es: Minijuego especial: Destrucción y supervivencia 3×
+titulo.de: Spezial-Minispiel: Zerstörung und Überleben 3×
+titulo.en: Special Minigame: 3× Destruction & Survival
+claves.es: minijuego especial, reto especial, destruccion, supervivencia, arena 3x, 3x, cuenta atras, robots del cielo, caen del cielo, brotan del suelo, dano +25, 25%, 0.1, 0.6, +0.5, 1/4, minijuegos, dificultad, noob, junior, senior, especial
+claves.de: spezial-minispiel, spezial minispiel, spezial-herausforderung, spezial herausforderung, zerstoerung, ueberleben, 3x arena, 3x, countdown, roboter vom himmel, fallen vom himmel, boden, schaden +25, 25%, 0.1, 0.6, +0.5, 1/4, minispiele, schwierigkeit, noob, junior, senior, spezial
+claves.en: special minigame, special challenge, destruction, survival, 3x arena, 3x, countdown, falling robots, sky drops, ground hazards, damage +25, 25%, 0.1, 0.6, +0.5, 1/4, minigames, difficulty, noob, junior, senior, special
+resumen.ia: Special Destruction & Survival Minigame (found in Minigames under the dedicated Special challenge section: 3x arena with smooth follow camera, compact minimap, and a 60s countdown; during the countdown broken malfunctioning robots fall unpredictably from the sky while destructible objects — crates, barrels, chimneys — and ground traps sprout from the floor so you can trip and take damage; incoming damage is at least 25% higher than Obstacle race at every difficulty and sublevel; you can choose your unlocked robot model with live preview, swap available parts, and select difficulty Noob/Junior/Senior/Special with sublevels I/II/III just like in Obstacle race; each destroyed object or broken robot awards 0.1 to 0.6 coins in exact hundredths, surviving until the countdown reaches zero pays 100% of your accumulated loot plus a +0.5 coin survival bonus, dying early reduces your loot to 1/4, and surrendering awards 0)
+tip.juego_minijuego_destruccion.condicion: aleatorio
+tip.juego_minijuego_destruccion.es: En [[Minijuegos]] tienes el apartado «Reto especial» (arena 3× con cuenta atrás): esquiva y destruye robots caídos del cielo y objetos del suelo (daño al menos +25 % sobre la Carrera de obstáculos); cada baja da 0,1–0,6 monedas, sobrevivir suma +0,5 extra y morir reduce el botín a 1/4.
+tip.juego_minijuego_destruccion.de: In [[Minispiele]] wartet die „Spezial-Herausforderung“ (3×-Arena mit Countdown): Zerstöre vom Himmel fallende defekte Roboter und Bodenobjekte (mindestens +25 % mehr Schaden als im Hindernislauf); jede Zerstörung bringt 0,1–0,6 Münzen, Überleben +0,5 Bonus und vorzeitiges Aus kürzt auf 1/4.
+tip.juego_minijuego_destruccion.en: Inside [[Minigames]], try the "Special challenge" (3× arena with countdown): destroy broken robots falling from the sky and objects sprouting from the floor (at least +25% more damage than Obstacle race); each kill gives 0.1–0.6 coins, surviving adds +0.5 extra, and dying early cuts your loot to 1/4.
+ver: minijuegos_y_ejercicios, carrera_de_obstaculos, tienda_y_monedas
+es:
+    El Minijuego especial de destrucción y supervivencia se encuentra dentro de Minijuegos, en el apartado diferenciado «Reto especial» en la parte inferior de la pantalla.
+    Se juega en una arena 3× más grande que la arena estándar (3000 × 700), con cámara de seguimiento fluida centrada en tu robot, minimapa compacto y una cuenta atrás de 60 segundos. Durante la cuenta atrás caen robots dañados y erráticos del cielo (con una breve sombra de aviso) y brotan del suelo cajas, barriles, chimeneas destructibles y trampas con las que puedes tropezar. El daño recibido es al menos un 25 % mayor que en la Carrera de obstáculos en cada dificultad y subnivel.
+    Igual que en la Carrera de obstáculos, en su propio menú puedes elegir y previsualizar tus modelos de robot desbloqueados, cambiar tus piezas disponibles del inventario (cabeza, brazos y piernas) sin salir al Taller, y seleccionar dificultad (Noob, Junior, Senior y Especial según tu rango) con subniveles I, II y III.
+    Recompensas exactas en centésimas: cada objeto destructible o robot averiado que destruyes suma entre 0,1 y 0,6 monedas. Si sobrevives hasta que la cuenta atrás llegue a cero, cobras el 100 % de lo acumulado más +0,5 monedas extra de bono de supervivencia. Si mueres antes de terminar, cobras únicamente 1/4 (25 %) de lo acumulado (0 si no destruiste nada), y si te rindes recibes 0.
+de:
+    Das Spezial-Minispiel Zerstörung und Überleben findest du in Minispiele im eigenen Bereich „Spezial-Herausforderung“ am unteren Rand des Bildschirms.
+    Gespielt wird in einer 3× größeren Arena als üblich (3000 × 700) mit weicher Verfolgungskamera, kompakter Übersichtskarte und einem 60-Sekunden-Countdown. Während der Zeit fallen defekte, unberechenbare Roboter vom Himmel (mit kurzem Warnschatten), und aus dem Boden sprießen zerstörbare Kisten, Fässer, Schornsteine sowie Fallen, über die du stolpern kannst. Der erlittene Schaden ist in jeder Schwierigkeit und Unterstufe mindestens 25 % höher als im Hindernislauf.
+    Genau wie im Hindernislauf wählst und siehst du direkt im Menü deine freigeschalteten Robotermodelle in der Vorschau, wechselst verfügbare Teile aus dem Inventar (Kopf, Arme, Beine) ohne Rückkehr in die Werkstatt und stellst Schwierigkeit (Noob, Junior, Senior, Spezial nach Rang) sowie Unterstufen I, II und III ein.
+    Exakte Belohnungen in Hundertsteln: Jedes zerstörte Objekt oder jeder defekte Roboter bringt zwischen 0,1 und 0,6 Münzen. Überlebst du bis zum Ende des Countdowns, erhältst du 100 % deiner Beute plus +0,5 Münzen Überlebensbonus. Scheidest du vorher aus, bekommst du nur 1/4 (25 %) der gesammelten Beute (0 ohne Zerstörung); bei Aufgabe gibt es 0.
+en:
+    The Special Destruction & Survival Minigame is located inside Minigames, in the dedicated "Special challenge" section at the bottom of the screen.
+    It takes place in an arena 3× larger than the standard arena (3000 × 700) with a smooth follow camera centered on your robot, a compact minimap, and a 60-second countdown. During the countdown, broken erratic robots fall unpredictably from the sky (with a brief shadow warning) and destructible crates, barrels, chimneys, and traps sprout from the floor for you to dodge or smash. Incoming damage is at least 25% higher than in Obstacle race at every difficulty and sublevel.
+    Just like in Obstacle race, right inside its menu you can pick and live-preview your unlocked robot models, swap available inventory parts (head, arms, and legs) without leaving for the Workshop, and choose difficulty (Noob, Junior, Senior, and Special based on your rank) with sublevels I, II, and III.
+    Exact hundredths rewards: each destroyed object or broken robot awards between 0.1 and 0.6 coins. If you survive until the countdown hits zero, you collect 100% of your accumulated loot plus a +0.5 coin survival bonus. If you die early, you only collect 1/4 (25%) of your accumulated loot (0 if you destroyed nothing), and surrendering awards 0.
+pseudo.es:
+    Minijuegos → Reto especial → elegir modelo, piezas, dificultad (Noob–Especial) y subnivel (I–III)
+    MIENTRAS cuenta atrás > 0:
+        esquivar trampas y caídas (daño >= +25 % sobre Carrera de obstáculos)
+        destruir objetos y robots averiados (0,1–0,6 monedas c/u)
+    SI sobrevives → 100 % acumulado + 0,5 monedas; SI mueres antes → 1/4; SI te rindes → 0
+pseudo.de:
+    Minispiele → Spezial-Herausforderung → Modell, Teile, Schwierigkeit (Noob–Spezial) und Unterstufe (I–III) wählen
+    SOLANGE Countdown > 0:
+        Fallen und Einschlägen ausweichen (Schaden >= +25 % über Hindernislauf)
+        Objekte und defekte Roboter zerstören (je 0,1–0,6 Münzen)
+    WENN du überlebst → 100 % Beute + 0,5 Münzen; WENN du vorher stirbst → 1/4; Aufgabe → 0
+pseudo.en:
+    Minigames → Special challenge → pick model, parts, difficulty (Noob–Special), and sublevel (I–III)
+    WHILE countdown > 0:
+        dodge traps and sky drops (damage >= +25% above Obstacle race)
+        destroy objects and broken robots (0.1–0.6 coins each)
+    IF you survive → 100% loot + 0.5 coins; IF you die early → 1/4; surrender → 0
+ejemplo:
+    // Destrucción 3×: cada baja da 0,1–0,6 monedas y sobrevivir suma +0,5 || 3×-Zerstörung: 0,1–0,6 Münzen je Ziel, +0,5 fürs Überleben || 3× Destruction: 0.1–0.6 coins per target, +0.5 for surviving

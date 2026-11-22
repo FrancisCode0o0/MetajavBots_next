@@ -49,8 +49,10 @@ public final class Pelea {
     public long topeDePasos;
     /** Cuánto daño le llega a cada uno (1 = todo). Los jefes del modo especial ponen 0.1 si el código no usa su tema. */
     public final double[] resistencia;
-    /** Multiplicador global de daño recibido (1.0 en combate estándar; escalado en Carrera de obstáculos). */
+    /** Multiplicador global de daño recibido (1.0 en combate estándar; escalado en Carrera de obstáculos y Reto especial). */
     public double multiplicadorDano = 1.0;
+    /** Si es true, la ronda no termina al quedar solo el equipo 0 en pie (para modos con oleadas y cuenta atrás). */
+    boolean sinFinPorEquipos;
     /** El ganador (0 o 1), -1 si empate, -2 si no ha acabado. */
     private int ganador = -2;
 
@@ -253,7 +255,7 @@ public final class Pelea {
         rayos.removeIf(r -> r.vida <= 0);
         // 4) ¿Acaba la ronda? Al acabarse el tiempo, o cuando solo queda en pie un equipo.
         turno++;
-        if (turno >= turnosPorRonda || equiposEnPie() <= 1) acabarRonda();
+        if (turno >= turnosPorRonda || (sinFinPorEquipos ? cuerpos[0].fuera : equiposEnPie() <= 1)) acabarRonda();
     }
 
     private int equiposEnPie() {

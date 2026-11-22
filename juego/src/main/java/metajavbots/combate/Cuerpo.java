@@ -86,6 +86,10 @@ public final class Cuerpo implements Mando {
     int brazoDelEscudo = -1, brazoDeLaLlama = -1;
     double bloqueoBrazo, conoEscudo, bloqueoCabeza, factorTurbo = 1, factorSobrecarga = 1;
     public boolean fuera;
+    /** Si este cuerpo espera en reserva fuera de la arena hasta caer del cielo en el minijuego especial. */
+    public boolean enReserva;
+    /** Turnos restantes de animación de caída desde el cielo (0 cuando ya está en el suelo). */
+    public int cayendo;
     /** Lo que dice (el bocadillo) y cuánto le queda. */
     public String bocadillo = "";
     public int tiempoDeBocadillo;

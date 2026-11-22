@@ -389,6 +389,16 @@ final class DibujoDeArenas {
                 if (tr.proporcionResistencia() < 0.75) grietas(p, cx, cy - alto * 0.5f, rx * 0.65f, tr.proporcionResistencia());
                 break;
             }
+            case "caja": {
+                float alto = rx * 1.65f;
+                p.caja(cx - rx, cy - alto, rx * 2, alto, 4, 0xB37D3B, 1);
+                p.bordeRedondeado(cx - rx, cy - alto, rx * 2, alto, 4, 0x5E3E1B, 1, 2f);
+                p.linea(cx - rx * 0.85f, cy - alto * 0.85f, cx + rx * 0.85f, cy - alto * 0.15f, 2.4f, 0x6E4A20, 0.9f);
+                p.linea(cx + rx * 0.85f, cy - alto * 0.85f, cx - rx * 0.85f, cy - alto * 0.15f, 2.4f, 0x6E4A20, 0.9f);
+                p.rect(cx - rx * 0.85f, cy - alto * 0.54f, rx * 1.7f, alto * 0.12f, 0xFFC857, 0.75f);
+                if (tr.proporcionResistencia() < 0.75) grietas(p, cx, cy - alto * 0.5f, rx * 0.65f, tr.proporcionResistencia());
+                break;
+            }
             case "chimenea": {
                 float alto = rx * 2.6f;
                 p.rect(cx - rx, cy - alto, rx * 2, alto, 0x8A3B2E, 1);

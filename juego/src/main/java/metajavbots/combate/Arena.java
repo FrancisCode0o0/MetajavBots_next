@@ -232,6 +232,7 @@ public final class Arena {
         return a;
     }
 
+    static final double RESISTENCIA_CAJA = 20;
     static final double RESISTENCIA_BARRIL = 30;
     static final double RESISTENCIA_CHIMENEA = 50;
     private static final int TURNOS_RESTOS = 45;
