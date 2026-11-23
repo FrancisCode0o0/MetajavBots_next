@@ -67,6 +67,7 @@ public final class PrepararPelea implements Pantalla {
             e.modo = anterior.modo;
             e.nivelRival = anterior.nivelRival;
             e.jefe = anterior.jefe;
+            if (anterior.musica != null && !anterior.musica.isEmpty()) e.musica = anterior.musica;
             e.rondas = anterior.rondas;
             e.objetivo = anterior.objetivo;
             e.alAcabar = anterior.alAcabar;

@@ -5,7 +5,7 @@
 # p. ej. «combate: mi_cancion.mp3»; o llámalo como el tema (combate.mp3) y no hace falta apuntarlo.
 # Varias piezas separadas por comas: suena una al azar cada vez (para que no se repita).
 # Para un tema nuevo: añade una línea aquí y úsalo en una campaña (musica: nombre) en res/datos/campanas.txt.
-menu: menu.mid
+menu: menu.mid, menu_2.mid
 combate: combate.mid, campeon.mid, estadio.mid, subidon.mid
 rock: rock.mid
 artes_marciales: artes_marciales.mid
@@ -13,3 +13,20 @@ entrenamiento: entrenamiento.mid, subidon.mid
 oriental: oriental.mid
 final: final.mid, ultimo_asalto.mid
 drama: drama.mid
+carrera: carrera_turbo.mid, carrera_neon.mid
+carrera_recta: carrera_recta_1.mid, carrera_recta_2.mid
+destruccion: destruccion_pulso.mid, destruccion_asalto.mid
+destruccion_final: destruccion_cuenta_1.mid, destruccion_cuenta_2.mid
+minijuegos: minijuegos_agil.mid, minijuegos_pista.mid
+jefe: jefe_coloso.mid, jefe_amenaza.mid
+senior: senior_maquina.mid, senior_precision.mid
+campana_creed: campana_creed_1.mid, campana_creed_2.mid
+campana_isla: campana_isla_1.mid, campana_isla_2.mid
+escena_hospital: escena_hospital_1.mid, escena_hospital_2.mid
+escena_milagro: escena_milagro_1.mid, escena_milagro_2.mid
+escena_victoria: escena_victoria_1.mid, escena_victoria_2.mid
+escena_derrota: escena_derrota_1.mid, escena_derrota_2.mid
+tienda: tienda_bazar.mid, tienda_escaparate.mid
+taller: taller_codigo.mid, taller_chispa.mid
+victoria: victoria_gloria.mid, victoria_campeon.mid
+derrota: derrota_lona.mid, derrota_ceniza.mid

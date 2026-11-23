@@ -526,7 +526,7 @@ titulo: Credo: el hijo del cromo | Credo: Sohn des Chroms | Credo: Son of Chrome
 lema: El hijo de Apolo Cromo entra al ring con su propio nombre y con tu entrenador en la esquina: ocho capítulos de Noob a Especial. | Der Sohn von Apollo Chrom steigt unter eigenem Namen und mit deinem Trainer in den Ring: acht Kapitel von Noob bis Spezial. | Apollo Chrome's son steps into the ring under his own name with your coach in the corner: eight chapters from Noob to Special.
 homenaje: Creed (2015)
 entrenador: tuercas
-musica: entrenamiento
+musica: campana_creed
 estilo: creed
 destacada: true
 1.rival: Leo Tornillo | Leo Schraube | Leo Bolt
@@ -663,7 +663,7 @@ estilo: creed
 titulo: Isla Clandestina: Torneo de los 1000 Voltios | Geheime Insel: Das 1000-Volt-Turnier | Secret Island: The 1000-Volt Tournament
 lema: Un torneo clandestino por eliminatorias en Isla Cortocircuito: ocho combates de Noob a Especial por el mítico Enchufe Dorado. | Ein geheimes K.-o.-Turnier auf Insel Kurzschluss: acht Kämpfe von Noob bis Spezial um den legendären Goldenen Stecker. | An underground knockout tournament on Short-Circuit Island: eight bouts from Noob to Special for the mythical Golden Plug.
 entrenador: yanobit
-musica: artes_marciales
+musica: campana_isla
 estilo: historia
 destacada: true
 1.rival: Capitán Babor-Bot | Kapitän Backbord-Bot | Captain Portside-Bot

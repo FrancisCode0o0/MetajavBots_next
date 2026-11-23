@@ -269,7 +269,7 @@ public final class Campanas implements Pantalla {
         e.titulo = c.titulo.en(jug.idioma);
         e.alGanar = k.victoria.en(jug.idioma);
         e.entrenadorHospitalizado = k.esJefe;
-        e.musica = musicaDePelea(c.musica);
+        e.musica = k.esJefe ? "jefe" : musicaDePelea(c.musica);
         e.alAcabar = gano -> {
             if (gano) jug.capitulosGanados.add(c.clave(k.numero));
         };

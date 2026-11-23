@@ -55,6 +55,11 @@ public final class Taller implements Pantalla {
     /** Lo que ocupa la lista de robots (el tutor va debajo). */
     private float robotsAlto = 140;
 
+    @Override
+    public String musica() {
+        return "taller";
+    }
+
     /** Plantilla inicial del taller para el idioma y modelo elegidos (incluye su arquetipo y habilidad propia). */
     public static String plantillaInicial(metajavbots.textos.Idioma idioma, Modelo modelo) {
         return Comun.plantilla(idioma, modelo);

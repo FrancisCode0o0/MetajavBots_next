@@ -40,6 +40,11 @@ public final class PantallaEjercicio implements Pantalla {
     private boolean pista, solucion, conApi;
     private final Efectos fiesta = new Efectos();
     private float t, tiempoFiesta;
+
+    @Override
+    public String musica() {
+        return "minijuegos";
+    }
     private Progreso.Cambio cambio;
     private final Ui.Desplazable despl = new Ui.Desplazable(), desplChat = new Ui.Desplazable();
     // El tutor (con cerebro).

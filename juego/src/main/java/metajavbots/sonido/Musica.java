@@ -37,36 +37,118 @@ public final class Musica {
     /** La carpeta de la música personal (junto al juego; no se sube al repositorio). */
     public static Path carpetaPersonal = Paths.get("musica_personal");
     private static final String[] EXTENSIONES = {".mid", ".ogg", ".mp3", ".wav"};
+    private static final float DURACION_FUNDIDO = 0.25f;
+    private static final float FACTOR_VOZ = 0.38f;
+    private static final float VEL_BAJADA_VOZ = 6.0f;
+    private static final float VEL_SUBIDA_VOZ = 2.5f;
+    private static final java.util.Set<String> SIN_BUCLE = java.util.Set.of(
+            "victoria", "derrota", "escena_milagro", "escena_victoria", "escena_derrota");
 
     public boolean activa = true;
     public float volumen = 0.5f;
 
     private String pedido = "";
     private volatile String sonando = "";
-    private float volumenPuesto = -1;
+    private String pendiente = "";
+    private boolean fundiendoSalida;
+    private float factorFundido = 1f;
+    private float factorVoz = 1f;
+    private float volumenPuesto = -1f;
     private Map<String, String> deSerie;
     private Music archivo;
     private Sequencer secuenciador;
     private Synthesizer sintetizador;
     private ExecutorService hilo;
 
+    /** Indica si un tema se repite en bucle o es una fanfarria/escena breve de una sola pasada. */
+    public static boolean esBucle(String tema) {
+        return tema != null && !SIN_BUCLE.contains(tema);
+    }
+
     /** Pide un tema (se llama en cada fotograma; solo cambia algo si es otro). */
     public void tocar(String tema) {
         pedido = tema == null ? "" : tema;
     }
 
-    /** Una vez por fotograma: cambia de tema si hace falta y aplica el volumen. Barato si no cambia nada. */
+    /** Una vez por fotograma (compatibilidad): sin voz activa y paso estándar de 1/60 s. */
     public void fotograma() {
-        if (Gdx.audio == null) return;
+        fotograma(1f / 60f, false);
+    }
+
+    /**
+     * Una vez por fotograma: aplica fundido corto al cambiar de tema, atenúa la música
+     * suavemente mientras habla el locutor o el entrenador y actualiza el volumen.
+     */
+    public void fotograma(float dt, boolean vozActiva) {
+        float paso = Math.max(0.001f, Math.min(0.1f, dt));
+        float metaVoz = vozActiva ? FACTOR_VOZ : 1f;
+        float velVoz = vozActiva ? VEL_BAJADA_VOZ : VEL_SUBIDA_VOZ;
+        if (factorVoz < metaVoz) factorVoz = Math.min(metaVoz, factorVoz + paso * velVoz);
+        else if (factorVoz > metaVoz) factorVoz = Math.max(metaVoz, factorVoz - paso * velVoz);
+
         String quiere = activa && volumen > 0 ? pedido : "";
-        if (!quiere.equals(sonando)) cambiar(quiere);
-        if (volumen != volumenPuesto) ponerVolumen();
+        if (!quiere.equals(sonando)) {
+            if (sonando.isEmpty()) {
+                factorFundido = 0f;
+                fundiendoSalida = false;
+                pendiente = "";
+                cambiar(quiere);
+            } else {
+                pendiente = quiere;
+                fundiendoSalida = true;
+            }
+        } else if (fundiendoSalida) {
+            fundiendoSalida = false;
+            pendiente = "";
+        }
+
+        if (fundiendoSalida) {
+            factorFundido = Math.max(0f, factorFundido - paso / DURACION_FUNDIDO);
+            if (factorFundido <= 0f) {
+                fundiendoSalida = false;
+                String siguiente = pendiente;
+                pendiente = "";
+                cambiar(siguiente);
+            }
+        } else if (!sonando.isEmpty() && factorFundido < 1f) {
+            factorFundido = Math.min(1f, factorFundido + paso / DURACION_FUNDIDO);
+        }
+
+        float ef = volumenEfectivo();
+        if (Gdx.audio != null && (Math.abs(ef - volumenPuesto) > 0.005f || (ef == 0f && volumenPuesto != 0f))) {
+            ponerVolumen(ef);
+        }
+    }
+
+    /** Volumen efectivo actual tras aplicar fundido de transición y atenuación por voz. */
+    public float volumenEfectivo() {
+        if (!activa || sonando.isEmpty() || volumen <= 0f) return 0f;
+        return Math.max(0f, Math.min(1f, volumen * factorFundido * factorVoz));
+    }
+
+    /** Tema actualmente activo en el reproductor (vacío si está en silencio). */
+    public String temaActual() {
+        return sonando;
+    }
+
+    /** Indica si hay un fundido de salida en curso hacia otro tema. */
+    public boolean cambiandoTema() {
+        return fundiendoSalida;
+    }
+
+    /** Número de pistas activas en reproducción simultánea (nunca más de 1). */
+    public int pistasActivas() {
+        int n = archivo != null ? 1 : 0;
+        if (secuenciador != null && secuenciador.isRunning()) n++;
+        return n;
     }
 
     /** Lo apaga todo y cierra el sintetizador (al salir del juego). */
     public void liberar() {
         activa = false;
         pedido = "";
+        pendiente = "";
+        fundiendoSalida = false;
         sonando = "";
         parar();
         if (hilo != null) {
@@ -86,17 +168,19 @@ public final class Musica {
     private void cambiar(String tema) {
         parar();
         sonando = tema;
-        volumenPuesto = -1;
+        volumenPuesto = -1f;
         if (tema.isEmpty()) {
             // Sin música, ni el sintetizador queda abierto.
             if (hilo != null && !hilo.isShutdown()) hilo.submit(this::cerrarMidi);
             return;
         }
+        if (Gdx.audio == null) return;
         Path propio = personal(tema);
         if (propio != null && !propio.toString().toLowerCase(Locale.ROOT).endsWith(".mid")) {
             try {
                 archivo = Gdx.audio.newMusic(Gdx.files.absolute(propio.toAbsolutePath().toString()));
-                archivo.setLooping(true);
+                archivo.setLooping(esBucle(tema));
+                archivo.setVolume(volumenEfectivo());
                 archivo.play();
             } catch (RuntimeException e) {
                 if (archivo != null) {
@@ -122,7 +206,7 @@ public final class Musica {
         if (!hilo.isShutdown()) hilo.submit(() -> empezarMidi(tema, propio, serie));
     }
 
-    /** En el hilo de la música: abre el sintetizador (la primera vez) y pone el MIDI en bucle. */
+    /** En el hilo de la música: abre el sintetizador (la primera vez) y pone el MIDI en bucle o pasada única. */
     private void empezarMidi(String tema, Path propio, String serie) {
         if (!tema.equals(sonando)) return;   // ya se pidió otro mientras tanto
         try (InputStream in = propio != null ? Files.newInputStream(propio) : Musica.class.getResourceAsStream("/musica/" + serie)) {
@@ -150,9 +234,9 @@ public final class Musica {
             secuenciador.stop();
             silenciar();
             secuenciador.setSequence(s);
-            secuenciador.setLoopCount(Sequencer.LOOP_CONTINUOUSLY);
+            secuenciador.setLoopCount(esBucle(tema) ? Sequencer.LOOP_CONTINUOUSLY : 0);
             secuenciador.setTickPosition(0);
-            volumenMidi(volumen);
+            volumenMidi(volumenEfectivo());
             if (tema.equals(sonando)) secuenciador.start();
         } catch (Exception | LinkageError e) {
             // Sin sintetizador MIDI en este equipo: el juego sigue sin música.
@@ -174,9 +258,8 @@ public final class Musica {
         }
     }
 
-    private void ponerVolumen() {
-        volumenPuesto = volumen;
-        float v = volumen;
+    private void ponerVolumen(float v) {
+        volumenPuesto = v;
         if (archivo != null) archivo.setVolume(v);
         if (hilo != null && !hilo.isShutdown()) hilo.submit(() -> volumenMidi(v));
     }
@@ -251,7 +334,7 @@ public final class Musica {
     }
 
     /** El archivo personal de ese tema (apuntado en musica_personal/temas.txt o con el nombre del tema), o null. */
-    static Path personal(String tema) {
+    public static Path personal(String tema) {
         if (!Files.isDirectory(carpetaPersonal)) return null;
         Path lista = carpetaPersonal.resolve("temas.txt");
         if (Files.exists(lista)) {

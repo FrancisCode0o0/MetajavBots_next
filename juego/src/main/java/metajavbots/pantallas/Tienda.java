@@ -55,6 +55,11 @@ public final class Tienda implements Pantalla {
     private float t;
 
     @Override
+    public String musica() {
+        return "tienda";
+    }
+
+    @Override
     public void alEntrar(Juego j) {
         if (j.jugador != null) {
             int ord = j.jugador.etiqueta.categoria().ordinal();

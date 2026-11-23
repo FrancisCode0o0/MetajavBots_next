@@ -217,7 +217,7 @@ public class Juego extends ApplicationAdapter {
             voz.fotograma(sonidos);
             sonidos.fotograma(dt);
             musica.tocar(pantalla.musica());
-            musica.fotograma();
+            musica.fotograma(dt, voz.estaHablando());
         } catch (Throwable t) {
             Cierre.apuntar(t, null);
         }

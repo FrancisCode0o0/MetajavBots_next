@@ -80,7 +80,10 @@ public final class PantallaPelea implements Pantalla {
 
     @Override
     public String musica() {
-        // El último asalto, con fanfarria (si hay más de uno).
+        if (terminada) {
+            if ((encuentro.jefe != null || encuentro.entrenadorHospitalizado) && ganoElJugador) return "escena_milagro";
+            return ganoElJugador ? "victoria" : "derrota";
+        }
         boolean ultimo = pelea != null && pelea.rondas > 1 && pelea.ronda() >= pelea.rondas;
         return ultimo ? "final" : encuentro.musica;
     }

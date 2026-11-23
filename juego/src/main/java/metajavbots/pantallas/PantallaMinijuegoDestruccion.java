@@ -56,6 +56,17 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
     private volatile Compilador.Resultado resultadoCompilacion;
     private boolean arrancarTrasCompilar;
 
+    @Override
+    public String musica() {
+        if (reto != null && reto.terminada()) {
+            return reto.sobrevivio() ? "victoria" : "derrota";
+        }
+        if (!preparando && reto != null && (reto.segundosRestantes() <= 15.0 || reto.proporcionTiempoRestante() <= 0.25f)) {
+            return "destruccion_final";
+        }
+        return "destruccion";
+    }
+
     /** Comprueba si la dificultad está desbloqueada para el jugador (misma regla que Carrera de obstáculos). */
     public static boolean dificultadDesbloqueada(Jugador jugador, DificultadCarrera dificultad) {
         return PantallaCarreraDeObstaculos.dificultadDesbloqueada(jugador, dificultad);

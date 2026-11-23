@@ -222,7 +222,7 @@ final class PruebasDelContenido {
                     try (java.io.InputStream in = metajavbots.sonido.Musica.class.getResourceAsStream("/musica/" + pieza.strip())) {
                         cierto(in != null, "falta " + pieza);
                         javax.sound.midi.Sequence s = javax.sound.midi.MidiSystem.getSequence(new java.io.BufferedInputStream(in));
-                        cierto(s.getMicrosecondLength() > 10_000_000L, e.getKey() + ": " + pieza + " dura más de 10 s");
+                        cierto(s.getMicrosecondLength() > (metajavbots.sonido.Musica.esBucle(e.getKey()) ? 10_000_000L : 5_000_000L), pieza);
                     }
                 }
             }

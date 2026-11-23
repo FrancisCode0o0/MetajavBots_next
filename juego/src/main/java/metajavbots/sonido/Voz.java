@@ -44,6 +44,14 @@ public final class Voz {
     private volatile VozPiper piper;
     private volatile SalidaDeAudio salidaStreaming;
     private volatile boolean salidaExterna;
+    private volatile boolean hablandoStreaming;
+    private volatile long finVozRespaldoNanos;
+
+    /** Indica si la voz del locutor o del entrenador está hablando en este instante (para atenuar la música). */
+    public boolean estaHablando() {
+        if (!activa || volumen <= 0f || volumenMaestro <= 0f) return false;
+        return hablandoStreaming || System.nanoTime() < finVozRespaldoNanos;
+    }
 
     /** Dónde está Piper (000KI_Local/piper, junto a los modelos de IA). */
     public void usarPiper(Path carpeta) {
@@ -105,6 +113,8 @@ public final class Voz {
     public void detener() {
         pedida++;
         lista = null;
+        hablandoStreaming = false;
+        finVozRespaldoNanos = 0L;
         detenerSonidosPendiente = true;
         detenerStreamingActual();
     }
@@ -135,9 +145,15 @@ public final class Voz {
         exec.submit(() -> {
             if (yo != pedida || !activa || volumenEfectivo() <= 0f) return;
             SalidaDeAudio salida = obtenerSalidaStreaming();
-            boolean ok = salida != null && p.hablar(limpio, idioma, t, salida,
-                    () -> activa ? volumenEfectivo() : 0.0,
-                    () -> yo != pedida || !activa || volumenEfectivo() <= 0f);
+            boolean ok = false;
+            hablandoStreaming = true;
+            try {
+                ok = salida != null && p.hablar(limpio, idioma, t, salida,
+                        () -> activa ? volumenEfectivo() : 0.0,
+                        () -> yo != pedida || !activa || volumenEfectivo() <= 0f);
+            } finally {
+                hablandoStreaming = false;
+            }
             if (!ok && yo == pedida && activa) {
                 sintetizarVozRobot(limpio, idioma, t, yo);
             }
@@ -154,6 +170,8 @@ public final class Voz {
         if (!activa || volumen <= 0f || volumenMaestro <= 0f) {
             if (lista != null || salidaStreaming != null) {
                 lista = null;
+                hablandoStreaming = false;
+                finVozRespaldoNanos = 0L;
                 detenerStreamingActual();
                 if (sonidos != null) sonidos.detenerVoz();
             }
@@ -163,6 +181,8 @@ public final class Voz {
         String clave = claveLista;
         if (m == null) return;
         lista = null;
+        long durNanos = (long) (m.length * 1_000_000_000.0 / Sintetizador.FRECUENCIA);
+        finVozRespaldoNanos = System.nanoTime() + durNanos;
         if (sonidos != null) sonidos.tocarMuestras("voz:" + clave, m, volumen);
     }
 

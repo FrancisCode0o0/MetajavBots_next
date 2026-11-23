@@ -70,6 +70,7 @@ public final class PanelSenior {
     public static Encuentro encuentroPresupuesto(Juego j, long nanos, long bytes, long pasos) {
         Encuentro e = PrepararPelea.encuentro(j, "ADAPTADA");
         e.modo = "SENIOR";
+        e.musica = "senior";
         e.topeDePasos = pasos;
         e.presupuestoNanosPorTurno = nanos;
         e.presupuestoBytesPorTurno = bytes;
@@ -89,6 +90,7 @@ public final class PanelSenior {
         Jugador jug = j.jugador;
         Encuentro e = new Encuentro();
         e.modo = "SENIOR";
+        e.musica = "senior";
         e.rondas = jug.rondas;
         e.nivelRival = tipo.nivel;
         e.rival = RivalSenior.crear(tipo, T.idioma);

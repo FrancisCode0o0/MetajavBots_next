@@ -44,6 +44,15 @@ public final class PantallaEscenaCampana implements Pantalla {
 
     @Override
     public String musica() {
+        EscenaDeCampana.Vineta v = controlador.actual();
+        if (v != null) {
+            if (v.decorado == EscenaDeCampana.Decorado.HOSPITAL || v.entrenadorEnCamilla) return "escena_hospital";
+            if (v.decorado == EscenaDeCampana.Decorado.MILAGRO) return "escena_milagro";
+            if (escena != null && escena.momento == EscenaDeCampana.Momento.FINAL
+                    && v.animacion == EscenaDeCampana.Animacion.CONFETI) return "escena_victoria";
+            if ((v.decorado == EscenaDeCampana.Decorado.TORMENTA_AZOTEA && v.animacion == EscenaDeCampana.Animacion.LLUVIA)
+                    || (escena != null && escena.id.contains("derrota"))) return "escena_derrota";
+        }
         return campana == null ? "menu" : campana.musica;
     }
 

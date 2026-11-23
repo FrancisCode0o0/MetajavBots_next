@@ -2,6 +2,35 @@
 
 Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDrive\Hochschule\Desarrollo de juegos\MetajavBots_next`, rama `main`.
 
+## MUSICA_EPICA (23-nov-2026) — hecho
+
+**Qué**: música épica MIDI 100 % original para cada pantalla, modo y escena del juego, con estudio de estilo en [docs/MUSICA_EPICA.md](MUSICA_EPICA.md), transiciones con fundido corto (0,25 s) sin solapamientos, fanfarrias sin bucle y atenuación automática mientras habla el locutor o el entrenador (Piper o voz sintetizada).
+
+- **Estudio y composición**: [docs/MUSICA_EPICA.md](MUSICA_EPICA.md) y `herramientas/componer_musica.py` (47 piezas MIDI en `res/musica/`: las 12 previas repasadas —corregido plato fantasma en `final.mid` y enriquecido `menu.mid` con sección A–B y vibráfono— más 35 piezas nuevas originales, al menos 2 por cada momento nuevo).
+- **Transiciones y voz** (`sonido/Musica`, `sonido/Voz`, `Juego`): fundido corto de salida y entrada (~0,25 s) al cambiar de pantalla o fase (recta final de la Carrera ≥ 72 %, últimos 15 s / 25 % de Destrucción, último asalto, victoria/derrota); nunca suenan dos pistas a la vez; `Voz.estaHablando()` atenúa suavemente la música hasta el ~38 % mientras dura la locución; las fanfarrias (`victoria`, `derrota`, `escena_milagro`, `escena_victoria`, `escena_derrota`) suenan una sola vez sin bucle. La carpeta `musica_personal/` mantiene prioridad absoluta y todo funciona con `GeneralUser-GS.sf2` en `~/.metajavbots/` o con el sintetizador MIDI de Java.
+- **Pantallas y modos conectados**: `Menu` (`menu`), `Tienda` (`tienda`), `Taller` / `PantallaDisenarPieza` / `PantallaActivarPieza` / `PantallaLaboratorio` (`taller`), `MiniJuegos` / `Ejercicios` / `PantallaEjercicio` (`minijuegos`), `PantallaCarreraDeObstaculos` (`carrera` → `carrera_recta` → `victoria`/`derrota`), `PantallaMinijuegoDestruccion` (`destruccion` → `destruccion_final` → `victoria`/`derrota`), `ModoEspecial` jefes y jefes de campaña (`jefe`), `PanelSenior` (`senior`), `Campanas` (`campana_creed` en Credo I y `campana_isla` en Isla Clandestina), `PantallaEscenaCampana` (`escena_hospital`, `escena_milagro`, `escena_victoria`, `escena_derrota` según viñeta) y `PantallaPelea` (último asalto `final`, victoria de jefe `escena_milagro`, victoria `victoria`, derrota `derrota`).
+- **Pruebas y rendimiento**: `PruebasDeMusica` (4 casos deterministas: catálogo completo, tempo de tabla ±1 BPM + duración + 0 notas colgadas, asignación por pantalla/modo y fundido + sin solapamiento + bajada con voz) registrada en `Pruebas.java`, sin tocar `PruebasDeLaPelea.java`. Verificación: `.\gradlew.bat compileJava estilo pruebas:prueba` → **314 casos bien, 0 mal**, Checkstyle 0 avisos.
+- **Rendimiento (`lwjgl3:medir`, antes → después)**:
+  - Pelea + HUD + Depurador: `230,4 FPS` (4,34 ms) → `198,6 FPS` (5,03 ms); Arena destructible: `241,2 FPS` (4,15 ms) → `264,4 FPS` (3,78 ms); Pelea Senior paralelo: `281,2 FPS` → `249,2 FPS` (4,01 ms).
+  - Carrera de obstáculos: `162,3 FPS` (6,16 ms, min 104,4) → `149,1 FPS` (6,71 ms, min 114,6).
+  - Destrucción y supervivencia: `229,2 FPS` (4,36 ms, min 96,3) → `218,1 FPS` (4,59 ms, min 115,9).
+  - Menú `202,2 FPS`, Taller `213,2 FPS`, Tienda `234,4 FPS`, Escenas de campaña `381,9 FPS`: todas muy por debajo de 7 ms/fotograma y sin impacto en el hilo gráfico.
+
+**Lista de piezas nuevas para escuchar (`// TODO-FRAN: escuchar y decidir si alguna conviene retocar o cambiar`)**:
+- Menú: `menu.mid` (mejorada, 96 BPM), `menu_2.mid` (100 BPM)
+- Carrera de obstáculos: `carrera_turbo.mid` (148 BPM), `carrera_neon.mid` (154 BPM); recta final: `carrera_recta_1.mid` (162 BPM), `carrera_recta_2.mid` (166 BPM)
+- Destrucción y supervivencia: `destruccion_pulso.mid` (134 BPM), `destruccion_asalto.mid` (138 BPM); cuenta atrás: `destruccion_cuenta_1.mid` (152 BPM), `destruccion_cuenta_2.mid` (158 BPM)
+- Minijuegos y ejercicios: `minijuegos_agil.mid` (126 BPM), `minijuegos_pista.mid` (130 BPM)
+- Jefes: `jefe_coloso.mid` (118 BPM), `jefe_amenaza.mid` (124 BPM)
+- Peleas Senior: `senior_maquina.mid` (136 BPM), `senior_precision.mid` (140 BPM)
+- Campañas destacadas: `campana_creed_1.mid` (112 BPM), `campana_creed_2.mid` (120 BPM); `campana_isla_1.mid` (128 BPM), `campana_isla_2.mid` (134 BPM)
+- Escenas ilustradas: `escena_hospital_1.mid` / `escena_hospital_2.mid` (72/76 BPM, bucle suave), `escena_milagro_1.mid` / `escena_milagro_2.mid` (120/126 BPM, sin bucle), `escena_victoria_1.mid` / `escena_victoria_2.mid` (116/122 BPM, sin bucle), `escena_derrota_1.mid` / `escena_derrota_2.mid` (74/78 BPM, sin bucle)
+- Tienda: `tienda_bazar.mid` (102 BPM), `tienda_escaparate.mid` (106 BPM)
+- Taller: `taller_codigo.mid` (98 BPM), `taller_chispa.mid` (104 BPM)
+- Fanfarrias (sin bucle): `victoria_gloria.mid` (124 BPM), `victoria_campeon.mid` (128 BPM); `derrota_lona.mid` (72 BPM), `derrota_ceniza.mid` (76 BPM)
+
+**Decisiones tomadas (`// TODO-FRAN`)**: fundido de 0,25 s entre temas; bajada de música al 38 % mientras hay voz; `escena_hospital` en bucle suave para no quedar en silencio si se lee despacio, mientras que `escena_milagro`, `escena_victoria`, `escena_derrota`, `victoria` y `derrota` son de una sola pasada; al ganar contra un jefe en `PantallaPelea` suena `escena_milagro` acompañando la reaparición del entrenador; `PruebasDelContenido` exige > 10 s en temas en bucle y > 5 s en fanfarrias/escenas sin bucle.
+
 ## PESO_Y_ESTRATEGIA (23-nov-2026, Opus) — hecho
 
 **Qué**: el peso, la carga y la locomoción importan de verdad en la pelea y ninguna combinación domina. Todo explicado, con fuentes, valores, terrenos, tabla de contrarios y matriz del torneo, en [docs/EQUILIBRIO.md](EQUILIBRIO.md).

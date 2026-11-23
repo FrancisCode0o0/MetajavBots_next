@@ -30,6 +30,11 @@ public final class MiniJuegos implements Pantalla {
 
     private float t;
 
+    @Override
+    public String musica() {
+        return "minijuegos";
+    }
+
     /** Copia de los retos configurados ({id, objetivo}). */
     public static String[][] retos() {
         String[][] copia = new String[RETOS.length][];
@@ -199,6 +204,7 @@ public final class MiniJuegos implements Pantalla {
         en.cuenta = false;
         en.rondas = 1;
         en.objetivo = objetivo;
+        en.musica = "minijuegos";
         en.escenario = "esquivar".equals(id) ? escenarioDeEsquiva() : PrepararPelea.escenarioAlAzar();
         return en;
     }

@@ -48,4 +48,4 @@ CastillaFantasX (carpeta `motor/`), del mismo autor, copiado de la Reliquia del 
 
 ## Música
 
-Todos los temas de `res/musica/` son originales, compuestos para MetajavBots (`herramientas/componer_musica.py`); suenan con el sintetizador MIDI que trae Java. Rinden homenaje al género de las películas de las campañas sin copiar ninguna melodía.
+Todos los temas de `res/musica/` (47 piezas MIDI: menú, combates, último asalto, Carrera de obstáculos y recta final, Destrucción y cuenta atrás, minijuegos, jefes, peleas Senior, campañas Creed e Isla Clandestina, escenas ilustradas de hospital/milagro/victoria/derrota, Tienda, Taller y fanfarrias de victoria y derrota) son **100 % originales**, compuestos para MetajavBots en `herramientas/componer_musica.py` (código Apache-2.0, piezas bajo CC BY 4.0 como el resto del contenido del repositorio). Suenan con el SoundFont opcional `GeneralUser-GS.sf2` en `~/.metajavbots/` o, si no está presente, con el sintetizador MIDI que trae Java. Ninguna melodía ni riff proviene de bandas sonoras reales.

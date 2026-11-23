@@ -32,6 +32,11 @@ public final class PantallaLaboratorio implements Pantalla {
     private float tiempoDeInspeccion;
 
     @Override
+    public String musica() {
+        return "taller";
+    }
+
+    @Override
     public String contextoParaElEntrenador() {
         return EntrenadorFlotante.contextoDeCodigo("The player is in the testing lab, writing JUnit-style tests (@Test, assertEquals) that must pass "
                 + "with the good class and catch the mutants: «" + l.titulo.en + "». " + l.enunciado.en, pruebas);

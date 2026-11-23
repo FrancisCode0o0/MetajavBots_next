@@ -37,6 +37,11 @@ public final class PantallaDisenarPieza implements Pantalla {
     private float t;
 
     @Override
+    public String musica() {
+        return "taller";
+    }
+
+    @Override
     public void alEntrar(Juego j) {
         if (editor.doc.largo() > 0) return;
         Jugador jug = j.jugador;

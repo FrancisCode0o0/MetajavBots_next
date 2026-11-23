@@ -42,6 +42,11 @@ public final class PantallaActivarPieza implements Pantalla {
     private boolean pista, solucion, activada;
     private float t, tiempoFiesta;
 
+    @Override
+    public String musica() {
+        return "taller";
+    }
+
     public PantallaActivarPieza(Pieza pieza) {
         this.pieza = pieza;
         this.reto = RetoDePieza.para(pieza);

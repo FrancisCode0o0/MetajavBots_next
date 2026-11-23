@@ -77,6 +77,18 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     private volatile Compilador.Resultado resultadoCompilacion;
     private boolean arrancarTrasCompilar;
 
+    @Override
+    public String musica() {
+        if (carrera != null && carrera.terminada()) {
+            return carrera.ganador() == 0 ? "victoria" : "derrota";
+        }
+        if (!preparando && carrera != null) {
+            double avance = Math.max(carrera.progreso(0), carrera.progreso(1));
+            if (avance >= 0.72) return "carrera_recta";
+        }
+        return "carrera";
+    }
+
     /** Carga un archivo .java de robots_ajenos/ reutilizando Exportar, Compilador, Vigilante y Cargador. */
     public static CargaAjeno cargarRivalAjeno(Path archivo) {
         if (archivo == null || !Files.isRegularFile(archivo)) {
