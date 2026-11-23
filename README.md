@@ -1,5 +1,11 @@
 # MetajavBots
 
+<!-- trailer -->
+[![MetajavBots: tráiler · Trailer](docs/imagenes/trailer.gif)](https://github.com/FrancisCode0o0/MetajavBots_next/releases/download/trailer/MetajavBots-trailer.mp4)
+
+**▶ [Ver el tráiler completo](https://github.com/FrancisCode0o0/MetajavBots_next/releases/download/trailer/MetajavBots-trailer.mp4)** · **[Den ganzen Trailer ansehen](https://github.com/FrancisCode0o0/MetajavBots_next/releases/download/trailer/MetajavBots-trailer.mp4)** · **[Watch the full trailer](https://github.com/FrancisCode0o0/MetajavBots_next/releases/download/trailer/MetajavBots-trailer.mp4)**
+<!-- /trailer -->
+
 [![Pruebas](https://github.com/FrancisCode0o0/MetajavBots_next/actions/workflows/pruebas.yml/badge.svg)](https://github.com/FrancisCode0o0/MetajavBots_next/actions/workflows/pruebas.yml)
 
 **Español** · [Deutsch](#deutsch) · [English](#english)
