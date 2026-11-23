@@ -377,17 +377,17 @@ tip.juego_arena.en: In the [[Arena]] you've got [[Story]], [[Let's fight!]], [[C
 ver: por_que_pierdo, ver_notas, como_jugar, carrera_de_obstaculos, minijuego_destruccion
 es:
     El bloque Arena reúne todas las formas de poner a prueba tu robot en combate real y analizar tus resultados.
-    «Historia» abre las campañas principales con escenas ilustradas y dieciocho historias de combate; «¡A pelear!» lanza al instante un combate rápido de cuatro rondas contra la computadora a tu nivel; «Desafíos» te deja elegir rival, modo al azar, el desafío, battle royale, equipos o robots de otros jugadores; y «Carrera de obstáculos» tiene aquí su acceso directo.
+    «Historia» abre las campañas principales con escenas ilustradas y dieciocho historias de combate; «¡A pelear!» lanza al instante un combate contra la computadora a tu nivel, con las rondas que elegiste en Desafíos; «Desafíos» te deja elegir rival, modo al azar, el desafío, battle royale, equipos o robots de otros jugadores; y «Carrera de obstáculos» tiene aquí su acceso directo.
     En Modo especial te esperan los jefes de tema, el tope de cálculo, las peleas Senior, retos de programación y Destrucción y supervivencia.
     Y en Estadísticas puedes revisar cada combate, tus victorias, derrotas y evolución para ver en qué estás mejorando.
 de:
     Der Bereich Arena vereint alle Möglichkeiten, deinen Roboter im echten Kampf zu testen und Ergebnisse auszuwerten.
-    „Geschichte“ öffnet die Hauptkampagnen mit illustrierten Szenen und achtzehn Kampfgeschichten; „Auf in den Kampf!“ startet sofort ein schnelles Vier-Runden-Match gegen den Computer auf deiner Stufe; unter „Herausforderungen“ wählst du Gegner, Zufallskämpfe, Herausforderung, Battle Royale, Team oder fremde Roboter; und der „Hindernislauf“ hat hier seinen direkten Zugang.
+    „Geschichte“ öffnet die Hauptkampagnen mit illustrierten Szenen und achtzehn Kampfgeschichten; „Auf in den Kampf!“ startet sofort einen Kampf gegen den Computer auf deiner Stufe, mit den Runden, die du unter Herausforderungen gewählt hast; unter „Herausforderungen“ wählst du Gegner, Zufallskämpfe, Herausforderung, Battle Royale, Team oder fremde Roboter; und der „Hindernislauf“ hat hier seinen direkten Zugang.
     Im Spezialmodus warten Themen-Bosse, Rechenlimit, Senior-Kämpfe, Programmier-Herausforderungen und Zerstörung & Überleben.
     Unter Statistiken siehst du jeden Kampf mit Siegen, Niederlagen und Verlauf, um deinen Fortschritt zu verfolgen.
 en:
     The Arena section brings together every way to test your robot in live combat and review your results.
-    "Story" opens the featured campaigns with illustrated scenes and eighteen combat stories; "Let's fight!" launches an instant four-round match against the computer at your rank; "Challenges" lets you pick opponents, random matches, the challenge, battle royale, teams, or other players' robots; and "Obstacle race" has its direct entry right here.
+    "Story" opens the featured campaigns with illustrated scenes and eighteen combat stories; "Let's fight!" launches an instant match against the computer at your rank, with the rounds you chose under Challenges; "Challenges" lets you pick opponents, random matches, the challenge, battle royale, teams, or other players' robots; and "Obstacle race" has its direct entry right here.
     In Special mode you'll face topic bosses, step-limit matches, Senior fights, coding challenges, and Destruction & Survival.
     And Statistics records every fight, your wins, losses and progression so you can track how you improve.
 pseudo.es:

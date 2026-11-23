@@ -35,7 +35,7 @@ Tus partidas se guardan en la carpeta `MetajavBots` de tu carpeta personal: pued
 
 1. Crea tu partida. Si nunca has programado, empiezas en **Noob I**; si no, una prueba corta te pone tu etiqueta.
 2. Elige tu primer robot y ve al **Taller**: ahí está su código. Cámbialo, pulsa **Compilar** (Ctrl+S) y **¡a pelear!**
-3. Una pelea son **cuatro rondas** de unos 40 segundos. Entre ronda y ronda se para: lees el informe, cambias el código y las piezas. **Gana quien haya recibido menos daño**; al final, el que pierde explota.
+3. Una pelea tiene **varias rondas** de unos 40 segundos: 6 de entrada, y en Desafíos eliges 3, 4, 6, 10 o 12, como en el boxeo. Entre ronda y ronda se para: lees el informe, cambias el código y las piezas. **Gana quien haya recibido menos daño**; al final, el que pierde explota.
 
 Tu robot es una clase de Java que hereda de `Metajavbot` (o `MetajavbotDe` en alemán, `MetajavbotEn` en inglés):
 
@@ -113,7 +113,7 @@ Deine Spielstände liegen im Ordner `MetajavBots` in deinem persönlichen Ordner
 
 1. Lege dein Spiel an. Wer noch nie programmiert hat, beginnt bei **Noob I**; sonst stuft dich ein kurzer Test ein.
 2. Wähle deinen ersten Roboter und geh in die **Werkstatt**: Dort ist sein Code. Ändere ihn, drück **Kompilieren** (Strg+S) und **ab in den Kampf!**
-3. Ein Kampf hat **vier Runden** zu je etwa 40 Sekunden. Zwischen den Runden kannst du Code und Teile ändern. **Es gewinnt, wer weniger Schaden eingesteckt hat**; am Ende explodiert der Verlierer.
+3. Ein Kampf hat **mehrere Runden** zu je etwa 40 Sekunden: anfangs 6, und unter Herausforderungen wählst du 3, 4, 6, 10 oder 12 – wie beim Boxen. Zwischen den Runden kannst du Code und Teile ändern. **Es gewinnt, wer weniger Schaden eingesteckt hat**; am Ende explodiert der Verlierer.
 
 Dein Roboter ist eine Java-Klasse, die von `MetajavbotDe` erbt (Methoden auf Deutsch: `jedenZug()`, `beiSicht(Gegner g)`, `vorwaerts(…)`, `drehen(…)`, `zielenNach(…)`, `angreifen()`).
 
@@ -166,7 +166,7 @@ Your saved games live in the `MetajavBots` folder in your home folder: you can d
 
 1. Create your game. If you have never programmed, you start at **Noob I**; otherwise a short test places you.
 2. Choose your first robot and go to the **Workshop**: its code is there. Change it, press **Compile** (Ctrl+S) and **fight!**
-3. A fight has **four rounds** of about 40 seconds. Between rounds you can change the code and the parts. **Whoever took less damage wins**; at the end, the loser explodes.
+3. A fight has **several rounds** of about 40 seconds: 6 by default, and under Challenges you pick 3, 4, 6, 10 or 12, like in boxing. Between rounds you can change the code and the parts. **Whoever took less damage wins**; at the end, the loser explodes.
 
 Your robot is a Java class extending `MetajavbotEn` (English methods: `onTick()`, `onSeeEnemy(Enemy e)`, `ahead(…)`, `turn(…)`, `aimTo(…)`, `attack()`).
 

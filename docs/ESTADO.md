@@ -17,6 +17,7 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 - La carpeta del jugador es `MetajavBots` en su carpeta personal (la misma en la que ya se guardaban las repeticiones en GIF). Las partidas hechas con `jugar.bat` no se mueven solas: si se quieren en el paquete, se copia `partidas/` ahí.
 - Mac: solo para chip Apple (M1 o posterior); GitHub ya casi no tiene Mac Intel. Firma «ad hoc» (sin ella un Mac con chip Apple no lo abre); sin firma de pago, macOS pide «Abrir igualmente» la primera vez, y Windows avisa con SmartScreen. Sin icono propio (el de Java por defecto): falta un .ico/.icns.
 - La versión de jpackage solo admite números: de una etiqueta `v1.2.3-beta` se queda con 1.2.3.
+- **Arreglado después** (23-nov): los textos ya no dicen «cuatro rondas» (6 de entrada; 3, 4, 6, 10 o 12 en Desafíos) y un ataque cuenta como un solo acierto aunque haga daño varias veces (la llama, una salva de misiles), así que la puntería ya no pasa del 100 %.
 - Visto al probar, sin tocar: la pelea dice «Ronda 1 de 6» y el README «cuatro rondas»; en el informe de la ronda, «Aciertos: 76 de 14 (543 %)».
 
 **Resultado del flujo**: **no se ha visto**. Al subir la rama, Claude Code denegó el permiso de `git push`, así que la rama `instalador` (dos commits) solo está en este PC y el flujo no ha corrido. Por eso tampoco hay todavía tamaños de los paquetes de Linux y Mac. Para que GitHub Actions pruebe el flujo: `git push -u origin instalador` y mirar «Paquetes» en la pestaña Actions (en cada ejecución, los ZIP están abajo, en *Artifacts*).
