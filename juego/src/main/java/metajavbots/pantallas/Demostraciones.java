@@ -18,6 +18,8 @@ public final class Demostraciones implements Pantalla {
     private final Ui.Desplazable despl = new Ui.Desplazable();
     private float t;
 
+    @Override public String comoSeJuega() { return "demostraciones"; }
+
     @Override
     public void fotograma(Juego j, float dt) {
         t += dt;

@@ -49,6 +49,7 @@ public final class Comun {
             if (botonAtras(j)) alVolver.run();
             x = 40 + anchoDeAtras(j);
         }
+        x = botonComoSeJuega(j, x);
         Jugador jug = j.jugador;
         // El título no se mete debajo de la insignia de la etiqueta (con letra grande, se encoge).
         p.textoConBordeNegro(titulo, x, 20, ui.cabe(titulo, (jug != null ? p.ancho - 460 : p.ancho) - x - 20, ui.letra * 1.6f, true), true, ui.tema.texto, 1);
@@ -65,6 +66,18 @@ public final class Comun {
             if (ui.e.dentro(ex, 10, 450, 60)) ui.avisar(T.f("comun.progreso_ayuda", jug.etiqueta.nombre, jug.etiqueta.siguiente().nombre));
         }
         return h;
+    }
+
+    /** El botón «? ¿Cómo se juega?» de la cabecera, si la pantalla es un modo que lo tiene; devuelve dónde sigue el título. */
+    static float botonComoSeJuega(Juego j, float x) {
+        String id = ComoSeJuega.idDe(j.pantalla());
+        if (id == null) return x;
+        Ui ui = j.ui;
+        String t = "? " + T.t("como.boton");
+        float tam = Math.min(ui.letra, 23);
+        float w = Math.min(320, j.pincel.ancho(t, tam, true) + 32);
+        if (ui.boton(t, x, 16, w, 46, Ui.Estilo.NORMAL, true, T.t("como.boton_ayuda"))) j.comoSeJuega.abrir(j, id);
+        return x + w + 16;
     }
 
     /** El ancho del botón «← Volver» (el alemán es más largo). */

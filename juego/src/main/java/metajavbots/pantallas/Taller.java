@@ -60,6 +60,8 @@ public final class Taller implements Pantalla {
     /** Lo que ocupa la lista de robots (el tutor va debajo). */
     private float robotsAlto = 140;
 
+    @Override public String comoSeJuega() { return "taller"; }
+
     @Override
     public String musica() {
         return "taller";

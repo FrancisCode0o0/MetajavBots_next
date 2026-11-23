@@ -76,6 +76,9 @@ public final class GrabadorDelTrailer extends Juego {
         pincel.redimensionar(ANCHO, ALTO);
         metajavbots.progreso.Guardado.carpeta = java.nio.file.Paths.get("build", "partidas_del_trailer");
         Jugador j = new Jugador("Tráiler");
+        // CLARIDAD: menú entero y «¿Cómo se juega?» ya visto (si no, la tarjeta saldría encima de cada pantalla).
+        j.menuCompleto = true;
+        j.comoSeJuegaVisto.addAll(metajavbots.pantallas.ComoSeJuega.todos().keySet());
         j.etiqueta = Etiqueta.JUNIOR_2;
         j.idioma = metajavbots.textos.Idioma.de(System.getProperty("trailer.idioma", "es"));
         j.vozClara = false;

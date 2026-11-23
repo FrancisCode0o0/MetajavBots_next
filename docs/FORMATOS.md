@@ -99,6 +99,34 @@ casos:
   (Inden) y «Captain CiaoCiao» (Ullenboom), sin copiar ninguno. Mejor si tienen que ver con robots,
   combates, piezas y talleres.
 
+## ¿Cómo se juega? — `res/datos/como_se_juega.txt`
+
+La tarjeta que cada modo enseña antes de empezar (pantallas/ComoSeJuega). Cada pantalla que sea un modo devuelve su id
+en `Pantalla.comoSeJuega()`. Sale sola la primera vez y luego con el botón de la cabecera.
+
+```
+=== taller
+titulo.es: El Taller            (y .de, .en)
+objetivo.es: Qué hay que hacer, en una o dos frases cortas.
+gana.es: Cómo se gana, en una o dos frases cortas.
+nota.es: El tropiezo típico de quien empieza, en una frase.
+metodos: cadaTurno, alVerEnemigo, atacar      # API en español; el juego la enseña en la del idioma del jugador
+mecanicas: mec_turno, mec_peso                # fichas de res/conceptos/08_mecanicas.txt
+pseudo.es:
+    escribir lo que hará el robot
+    SI sale en rojo:
+        leer la línea que dice y arreglarla
+```
+
+Nada de Java para copiar: el pseudocódigo no lleva «;», llaves ni «()» (PruebasDeClaridad lo comprueba).
+
+## Fichas de mecánicas — `res/conceptos/08_mecanicas.txt`
+
+Conceptos del entrenador (formato de `res/conceptos/LEEME_FORMATO.txt`) con `nivel: 6`, id `mec_…`, cuatro párrafos
+que empiezan por «Qué es:», «Las cifras:», «En la pelea:» y «Desde tu código:» (en alemán «Was es ist:», «Die
+Zahlen:», «Im Kampf:», «In deinem Code:»; en inglés «What it is:», «The numbers:», «In the fight:», «From your
+code:») y `pseudo.*`. Sin `ejemplo` a propósito. Se ven en pantallas/Mecanicas.
+
 ## Tutoriales — `res/tutoriales/<nn>_<id>.txt`
 
 Lecciones cortas, por temas, de cero absoluto a avanzado. Cada lección mejora el robot y enseña Java.

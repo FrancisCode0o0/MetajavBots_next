@@ -85,7 +85,8 @@ final class PruebasDelEntrenador {
                         cierto(com < 0 || !l.substring(com).contains(" || "), c.id + ": comentario sin elegir en " + i + ": " + l);
                     }
                 }
-                cierto(c.guia > 0 || !c.ejemplo.isBlank(), c.id + ": ejemplo");
+                // Las fichas de las mecánicas no llevan Java a propósito: el código lo escribe el jugador (CLARIDAD, 4b).
+                cierto(c.guia > 0 || !c.ejemplo.isBlank() || c.id.startsWith("mec_"), c.id + ": ejemplo");
                 cierto(c.guia <= metajavbots.pantallas.GuiaDeCerebros.PAGINAS, c.id + ": página de la guía");
             }
             for (int n = 1; n <= Concepto.NIVEL_MAX; n++) cierto(porNivel[n] >= 10, "nivel " + n + " con conceptos: " + porNivel[n]);

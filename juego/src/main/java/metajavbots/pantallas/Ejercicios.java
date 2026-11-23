@@ -28,6 +28,8 @@ public final class Ejercicios implements Pantalla {
     private final Ui.Desplazable temas = new Ui.Desplazable(), lista = new Ui.Desplazable();
     private float t;
 
+    @Override public String comoSeJuega() { return "ejercicios"; }
+
     @Override
     public String musica() {
         return "minijuegos";

@@ -30,6 +30,8 @@ public final class MiniJuegos implements Pantalla {
 
     private float t;
 
+    @Override public String comoSeJuega() { return "minijuegos"; }
+
     @Override
     public String musica() {
         return "minijuegos";

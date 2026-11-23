@@ -1,6 +1,7 @@
 package metajavbots.pantallas;
 
 import java.util.List;
+import java.util.Random;
 
 import metajavbots.Juego;
 import metajavbots.combate.Cuerpo;
@@ -8,6 +9,7 @@ import metajavbots.combate.Pelea;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VistaDeArena;
+import metajavbots.progreso.Jugador;
 import metajavbots.textos.T;
 import metajavbots.tutor.CabezaDeEntrenador;
 import metajavbots.tutor.Entrenador;
@@ -30,8 +32,15 @@ final class EntrenadorEnLaPelea {
     private float tiempo, desdeElCambio, t;
     private int saltados;
 
-    /** Los avisos de órdenes (una vez por pelea cada uno: este objeto vive lo que la pelea). */
+    /** Los avisos de órdenes (como mucho una vez por pelea cada uno: este objeto vive lo que la pelea). */
     final AvisoDeOrdenes avisos = new AvisoDeOrdenes();
+    /** A quién se le cuentan los avisos (null: el entrenador no está en esta pelea, o el jugador los ha apagado). */
+    private Jugador paraAvisos;
+    private final Random azar = new Random();
+    /** Cuánto asoma el panel del aviso al borde (0: nada; 1: entero), para que entre y salga sin saltos. */
+    private float asomaAviso;
+    /** El ancho del panel del aviso, a la derecha de la arena (el mismo hueco que el depurador). */
+    static final float ANCHO_AVISO = 460;
 
     private float tiempoDelMilagro = -1;
     private String fraseDelMilagro;
@@ -73,9 +82,14 @@ final class EntrenadorEnLaPelea {
         else Hospital.milagro(p, en, fraseDelMilagro, 0, 150, p.ancho, tiempoDelMilagro);
     }
 
-    /** Cada turno de la pelea: si hay un enemigo marcado, el entrenador lo mira. */
+    /** Con el entrenador en esta pelea (ni jefe ni hospital, encendido y con los avisos puestos): a ese jugador. */
+    void avisarA(Jugador jug) {
+        paraAvisos = jug;
+    }
+
+    /** Cada turno de la pelea: los avisos de órdenes (al ritmo del jugador) y, si hay un enemigo marcado, el entrenador lo mira. */
     void observar(Pelea pelea) {
-        avisos.observar(pelea.cuerpo(0));
+        if (paraAvisos != null) avisos.observar(pelea.cuerpo(0), paraAvisos, azar);
         if (marcado < 0) return;
         Cuerpo yo = pelea.cuerpo(0), el = pelea.cuerpo(marcado);
         if (yo == null || el == null || el.fuera) return;
@@ -157,14 +171,8 @@ final class EntrenadorEnLaPelea {
                 if (PanelDelTutor.ayuda(j.jugador, 0) >= 0.45f) trozo = T.t("entrenador.rival." + consejo + ".trozo");
             }
         }
-        boolean conAviso = j.jugador.avisosDeOrdenes && avisos.activo();
-        if (conAviso) {
-            // Un aviso de órdenes manda sobre el consejo: es lo que hace fallar al robot ahora mismo.
-            texto = avisos.texto() + " " + T.t("aviso.ordenes.f9");
-            trozo = null;
-            if (avisos.recienSalido()) j.voz.decir(avisos.texto(), j.jugador.idioma, en.timbre);
-        }
-        if (enMarcha) avisos.pasar(dt);
+        // El aviso de órdenes no va aquí (esta caja está sobre la arena): sale en su panel, al borde (avisoAlBorde).
+        boolean conAviso = false;
         tiempo += dt;
         float w = Math.min(470, ancho * 0.4f), tl = ui.letra * 0.78f, x = ancho - w - 16;
         float th = p.altoDeParrafo(texto, w - 90, tl);
@@ -197,5 +205,52 @@ final class EntrenadorEnLaPelea {
             }
             if (ui.boton(T.t("entrenador.pelea.quitar"), x + 84 + bw, y + h - 48, bw, 38, Ui.Estilo.PLANO)) marcar(j, -1, pelea);
         }
+    }
+
+    /**
+     * Cuánto ancho le quita a la arena el panel del aviso ahora (0 si no hay aviso): entra y sale despacio, sin saltos.
+     * El aviso nunca tapa la arena: la arena se encoge y el panel va a su derecha.
+     */
+    float anchoDelAviso(float dt, boolean puede) {
+        boolean quiere = puede && paraAvisos != null && avisos.activo();
+        asomaAviso = Math.max(0, Math.min(1, asomaAviso + (quiere ? dt : -dt) * 4f));
+        return ANCHO_AVISO * asomaAviso * asomaAviso * (3 - 2 * asomaAviso);
+    }
+
+    /** Si hay un aviso que se está enseñando o recogiendo (para no dibujar el panel en balde). */
+    boolean conAviso() {
+        return asomaAviso > 0;
+    }
+
+    /**
+     * El panel del aviso al borde derecho de la arena: la cabeza del entrenador, el aviso en llano y dos botones
+     * («Paso a paso» y «Entendido»). Lo dice en voz alta una vez. Devuelve true si el jugador pidió el paso a paso.
+     */
+    boolean avisoAlBorde(Juego j, float x, float dt, boolean enMarcha) {
+        if (asomaAviso <= 0) return false;
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Entrenador en = Entrenador.de(j.jugador.entrenador);
+        if (avisos.recienSalido()) j.voz.decir(avisos.texto(), j.jugador.idioma, en.timbre);
+        if (enMarcha) avisos.pasar(dt);
+        float y = 88, w = p.ancho - x, h = p.alto - y;
+        p.rect(x, y, w, h, ui.tema.panel, 0.98f);
+        p.rect(x, y, 3, h, ui.tema.aviso, 1);
+        float tx = x + 24, tw = Math.max(120, w - 48), cy = y + 18;
+        CabezaDeEntrenador.dibujar(p, en, tx + 30, cy + 30, 30, avisos.tiempo() < 3, t);
+        String titulo = T.t("aviso.ordenes.titulo");
+        float tTit = ui.cabe(titulo, tw - 76, Math.min(24, ui.letra * 1.05f), true);
+        p.texto(titulo, tx + 76, cy + 6, tTit, true, ui.tema.aviso, 1);
+        p.texto(en.nombre.en(j.jugador.idioma), tx + 76, cy + 10 + p.altoDeLinea(tTit), Math.min(18, ui.letra * 0.8f), false,
+                ui.tema.textoSuave, 1);
+        cy += 84;
+        String texto = avisos.activo() ? avisos.texto() : "";
+        float tl = Math.min(22, ui.letra * 0.95f);
+        cy += p.parrafo(texto, tx, cy, tw, tl, ui.tema.texto, 1) + 14;
+        cy += p.parrafo(T.t("aviso.ordenes.f9"), tx, cy, tw, Math.min(19, ui.letra * 0.8f), ui.tema.textoSuave, 1) + 18;
+        float bw = (tw - 10) / 2;
+        boolean paso = ui.boton(T.t("pelea.paso_a_paso"), tx, cy, bw, 46, Ui.Estilo.NORMAL, avisos.activo(), T.t("pelea.paso_a_paso_ayuda"));
+        if (ui.boton(T.t("comun.entendido"), tx + bw + 10, cy, bw, 46, Ui.Estilo.PRINCIPAL, avisos.activo(), null) || paso) avisos.cerrar();
+        return paso;
     }
 }

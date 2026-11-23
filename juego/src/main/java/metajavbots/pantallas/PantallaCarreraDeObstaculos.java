@@ -87,6 +87,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     private volatile Compilador.Resultado resultadoCompilacion;
     private boolean arrancarTrasCompilar;
 
+    @Override public String comoSeJuega() { return "carrera"; }
     @Override
     public String musica() {
         if (carrera != null && carrera.terminada()) {

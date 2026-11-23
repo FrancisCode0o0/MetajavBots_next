@@ -200,6 +200,9 @@ public final class MedidorRendimiento extends Juego {
         super.create();
         Guardado.carpeta = java.nio.file.Paths.get("build", "partidas_de_medicion");
         Jugador j = new Jugador("Medidor");
+        // CLARIDAD: menú entero y «¿Cómo se juega?» ya visto (si no, la tarjeta saldría encima de cada pantalla).
+        j.menuCompleto = true;
+        j.comoSeJuegaVisto.addAll(metajavbots.pantallas.ComoSeJuega.todos().keySet());
         j.etiqueta = Etiqueta.SENIOR_2;
         j.idioma = Idioma.ES;
         j.tamanoDeLetra = 18;

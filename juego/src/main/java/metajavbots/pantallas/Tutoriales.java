@@ -21,6 +21,8 @@ public final class Tutoriales implements Pantalla {
     private final Ui.Desplazable despl = new Ui.Desplazable();
     private float t;
 
+    @Override public String comoSeJuega() { return "tutoriales"; }
+
     @Override
     public void fotograma(Juego j, float dt) {
         t += dt;

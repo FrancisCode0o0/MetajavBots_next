@@ -200,10 +200,10 @@ final class PruebasDelRecorridoMenu {
                 "menu.ejercicios", "sesion.boton", "menu.temario",
                 "menu.taller", "menu.tienda", "menu.depuracion",
                 "menu.historia", "menu.pelear_ya", "menu.pelear",
-                "menu.carrera", "menu.especial", "menu.historial")) {
+                "menu.carrera", "menu.especial", "menu.historial", "menu.mecanicas")) {
             cierto(casillas.contains(clave), "El menú principal contiene la casilla " + clave);
         }
-        igual(17, casillas.size(), "El menú principal tiene las 17 casillas (3+3+3+6+2)");
+        igual(18, casillas.size(), "El menú principal tiene las 18 casillas (3+3+3+6+3: Mecánicas, IA y Ajustes)");
         registrarPantalla(j, destinos, new Menu(), "Menu");
         registrarPantalla(j, destinos, new Tutoriales(), "Tutoriales");
         registrarPantalla(j, destinos, new PantallaLeccion(Leccion.todas().get(0)), "PantallaLeccion");

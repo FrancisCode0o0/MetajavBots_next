@@ -10,7 +10,6 @@ import metajavbots.codigo.DetectorDeTemas;
 import metajavbots.codigo.RobotDelJugador;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
-import metajavbots.combate.ModificadoresPoo;
 import metajavbots.combate.Pelea;
 import metajavbots.dialogos.Narrador;
 import metajavbots.pantalla.Dialogo;
@@ -59,7 +58,7 @@ public final class PantallaPelea implements Pantalla {
     private float tiempoFinal;
     private Progreso.Cambio cambio;
     private boolean explotado;
-    private final Ui.Desplazable desplInforme = new Ui.Desplazable();
+    private final InformeDeRonda informe = new InformeDeRonda();
     private final PanelDepurador panelDepurador = new PanelDepurador();
     private int pestanaEntreRondas;
     private boolean ganoElJugador, objetivoCumplido, premioElegido;
@@ -138,6 +137,8 @@ public final class PantallaPelea implements Pantalla {
         pelea.rivalSeniorId = encuentro.rivalSeniorId == null ? "" : encuentro.rivalSeniorId;
         PanelSenior.vincularAliadoParalelo(encuentro, yo);
         narrador = new Narrador(pelea.combatientes, pelea.equipo);
+        // Los avisos de órdenes, solo con el entrenador en la pelea (contra los jefes está en el hospital) y si no los ha apagado.
+        if (encuentro.jefe == null && !encuentro.entrenadorHospitalizado && jug.entrenadorActivo && jug.avisosDeOrdenes) entrenador.avisarA(jug);
         narrador.idioma = jug.idioma;
         narrador.jugador = jug.nombre;
         narrador.agresividad = jug.agresividad;
@@ -194,6 +195,9 @@ public final class PantallaPelea implements Pantalla {
     /** Abre el depurador en la pestaña indicada (0: variables, 1: código/turno; para las capturas). */
     public void abrirDepurador(int pestana) { depurador = true; panelDepurador.pestana(pestana); }
 
+    /** Si la pelea está en la pausa entre rondas (para las capturas). */
+    public boolean enLaPausaEntreRondas() { return entreRondas; }
+
     /** Pausa o reanuda la pelea (para las capturas). */
     public void pausar(boolean si) { pausa = si; }
 
@@ -201,6 +205,21 @@ public final class PantallaPelea implements Pantalla {
     public boolean tieneConflictoDeOrdenes() {
         Cuerpo c = pelea == null ? null : pelea.cuerpo(0);
         return c != null && c.tieneConflictoDeOrdenes;
+    }
+
+    /** El «¿Cómo se juega?» de esta pelea, según su modo (en los tutoriales, ninguno: la lección ya lo cuenta). */
+    @Override
+    public String comoSeJuega() {
+        switch (encuentro.modo) {
+            case "CAMPANA": return "historia";
+            case "ROYALE": case "EQUIPOS": return "equipos";
+            case "SENIOR": return "senior";
+            case "JEFE": case "TOPE": return "especial";
+            case "ROTO": return "depuracion";
+            case "TUTORIAL": return null;
+            case "AZAR": case "DESAFIO": case "PRACTICA": case "AJENO": return "desafios";
+            default: return "pelea";
+        }
     }
 
     @Override
@@ -357,7 +376,7 @@ public final class PantallaPelea implements Pantalla {
             entrada.avanzar(j, pelea, vista, narrador, dt);
         } else if (especial != null && especial.activa()) {
             especial.avanzar(j, pelea, vista, dt);
-        } else if (!pausa && !entreRondas && !terminada) {
+        } else if (!pausa && !entreRondas && !terminada && !j.comoSeJuega.abierto()) {
             acumulado += dt * Pelea.TURNOS_POR_SEGUNDO * velocidad;
             int n = 0;
             while (acumulado >= 1 && n < 40) {
@@ -383,7 +402,11 @@ public final class PantallaPelea implements Pantalla {
                 acabar(j);
             }
         }
-        float ancho = (depurador || panelDelAparato.estaAbierto()) && !entreRondas ? p.ancho - 460 : p.ancho;
+        // El aviso de órdenes del entrenador sale al borde: la arena se encoge (sin saltos) y el panel va a su derecha, nunca encima.
+        boolean avisoPuede = !depurador && !panelDelAparato.estaAbierto() && !entreRondas && !terminada && (especial == null || !especial.activa())
+                && (entrada == null || !entrada.activa());
+        float anchoAviso = entrenador.anchoDelAviso(dt, avisoPuede);
+        float ancho = (depurador || panelDelAparato.estaAbierto()) && !entreRondas ? p.ancho - 460 : p.ancho - anchoAviso;
         if (especial != null && especial.activa()) ancho = ArmaEspecial.anchoDeLaArena(p.ancho);
         if (terminada && tiempoFinal >= 2.2f && repeticion.activa()) ancho = Repeticion.anchoArena(p.ancho);
         vista.sacudida = Math.max(vista.sacudida, j.sacudida);
@@ -395,7 +418,6 @@ public final class PantallaPelea implements Pantalla {
         vista.techo = banda.visible() ? banda.techo() : 0;
         vista.visor(j.visorTactico && (entrada == null || !entrada.activa()) && (especial == null || !especial.activa()), entrenador.marcado());
         vista.dibujar(p, pelea, 0, 88, ancho, p.alto - 88, pausa || entreRondas ? 0 : dt);
-        if (!entreRondas) panelDepurador.mira(j, pelea, vista);
         if (entrada != null && entrada.activa()) entrada.dibujar(j, pelea, vista, 0, 88, ancho, p.alto - 88);
         if (especial != null) especial.dibujar(j, vista, pelea);
         if (encuentro.codigo != null) reparacion(j, dt);
@@ -408,7 +430,8 @@ public final class PantallaPelea implements Pantalla {
             entrenador.dibujar(j, pelea, vista, ancho, dt, !pausa);
             if (!panelDelAparato.estaAbierto()) entrenador.clic(j, pelea, vista);
         }
-        if (!terminada && !entreRondas) controles(j);
+        if (!depurador && !entreRondas && anchoAviso > 0 && entrenador.avisoAlBorde(j, p.ancho - anchoAviso, dt, !pausa)) empezarPasoAPaso();
+        if (!terminada && !entreRondas) controles(j, ancho);
         if (entreRondas) entreRondas(j);
         if (terminada) pantallaFinal(j, dt);
         dialogo.dibujar(ui);
@@ -439,6 +462,13 @@ public final class PantallaPelea implements Pantalla {
         if (j.entrada.tecla(Keys.NUM_2)) velocidad = 2;
         if (j.entrada.tecla(Keys.NUM_4)) velocidad = 4;
         if (pausa && j.entrada.tecla(Keys.RIGHT)) pasoAPaso(j);
+    }
+
+    /** El modo paso a paso: la pelea se para y el depurador se abre en «Código / Turno» (cada «Un turno» o → avanza uno). */
+    public void empezarPasoAPaso() {
+        pausa = true;
+        depurador = true;
+        panelDepurador.pestana(1);
     }
 
     private void pasoAPaso(Juego j) {
@@ -477,14 +507,17 @@ public final class PantallaPelea implements Pantalla {
         return Marcadores.geometriaBanda(anchoZona, true, conReparacion, altoParrafo);
     }
 
-    private void controles(Juego j) {
+    private void controles(Juego j, float anchoArena) {
         Pincel p = j.pincel; Ui ui = j.ui;
         // Sin depurador, la barra acaba antes de la pestaña del entrenador (esquina inferior derecha): «Rendirse» no queda tapado.
-        float der = depurador ? p.ancho - 460 : Math.min(p.ancho, EntrenadorFlotante.cajaRecogida(p.ancho, p.alto, ui.letra).x() + 12f);
+        float der = depurador ? p.ancho - 460 : Math.min(anchoArena, EntrenadorFlotante.cajaRecogida(p.ancho, p.alto, ui.letra).x() + 12f);
         float tBtn = Math.min(ui.letra, PanelDelAparato.ALTO_BOTON * 0.5f);
         String txtPaso = T.t("pelea.paso"), txtVisor = T.t("pelea.visor"), txtDep = T.t("pelea.depurador"), txtRend = T.t("pelea.rendirse");
+        String txtPasoAPaso = T.t("pelea.paso_a_paso");
         metajavbots.combate.Aparatos.Tipo sig = pelea.aparatos.siguiente();
-        Marcadores.BarraInferior b = Marcadores.calcularBarraInferior(p.alto, der, pausa, p.ancho(txtPaso, tBtn, true) + 28f,
+        // El hueco del paso siempre está: en pausa, «Un turno»; en marcha, «Paso a paso» (para y abre el depurador en el turno).
+        float wPaso = Math.max(p.ancho(txtPaso, tBtn, true), p.ancho(txtPasoAPaso, tBtn, true)) + 28f;
+        Marcadores.BarraInferior b = Marcadores.calcularBarraInferior(p.alto, der, true, wPaso,
                 Math.min(160f, p.ancho(txtVisor, tBtn, true) + 32f), Math.min(220f, p.ancho(txtDep, tBtn, true) + 32f),
                 Math.min(190f, p.ancho(txtRend, tBtn, true) + 32f), sig != null, PanelDelAparato.anchoBotonDeseado(p, ui, sig));
         float x = 20f, y = b.y();
@@ -494,7 +527,13 @@ public final class PantallaPelea implements Pantalla {
             if (ui.boton("×" + (int) v, x, y, 56, 46, velocidad == v ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO)) velocidad = v;
             x += 62;
         }
+        if (Marcadores.cabeAyuda(der)) {
+            String como = ComoSeJuega.idDe(this);
+            if (como != null && ui.boton("?", x, y, 56, 46, Ui.Estilo.PLANO, true, T.t("como.boton"))) j.comoSeJuega.abrir(j, como);
+            x += 62;
+        }
         if (pausa && ui.boton(txtPaso, x, y, b.wPaso(), 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_ayuda"))) pasoAPaso(j);
+        if (!pausa && ui.boton(txtPasoAPaso, x, y, b.wPaso(), 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_a_paso_ayuda"))) empezarPasoAPaso();
         if (ui.boton(txtVisor, b.xVisor(), y, b.wVisor(), 46, j.visorTactico ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
                 T.t("pelea.visor_ayuda"))) j.visorTactico = !j.visorTactico;
         if (ui.boton(txtDep, b.xDepurador(), y, b.wDepurador(), 46, depurador ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
@@ -570,7 +609,7 @@ public final class PantallaPelea implements Pantalla {
                 Taller.piezas(j, yo, x + 24, cy, w - 48, ch);
                 break;
             default:
-                informe(j, x + 24, cy, w - 48, ch);
+                informe.dibujar(j, pelea, revision, x + 24, cy, w - 48, ch);
                 break;
         }
         if (ui.boton(T.f("pelea.siguiente_ronda", pelea.ronda() + 1), x + w - 340, y + h - 66, 316, 52, Ui.Estilo.PRINCIPAL)) {
@@ -578,62 +617,6 @@ public final class PantallaPelea implements Pantalla {
             j.guardar();
             empezarRonda(j);
         }
-    }
-
-    private void informe(Juego j, float x, float y, float w, float h) {
-        Pincel p = j.pincel;
-        Ui ui = j.ui;
-        float col = (w - 40) / 3;
-        for (int i = 0; i < 2; i++) {
-            Combatiente.Informe inf = pelea.informe(i);
-            float cx = x + i * (col + 20);
-            int color = i == 0 ? 0x3FE0FF : 0xFF4FD8;
-            Combatiente co = pelea.combatientes[i];
-            String nombre = co.nombre + (co.montaje != null && co.montaje.modelo != null
-                    ? "  ·  " + T.f("pelea.modelo", co.montaje.modelo.nombre(T.idioma)) : "");
-            p.texto(nombre, cx, y, ui.cabe(nombre, col - 10, ui.letra * 1.1f, true), true, color, 1);
-            String[] lineas = {
-                    T.f("informe.dano_recibido", Math.round(inf.danoRecibido)),
-                    T.f("informe.dano_hecho", Math.round(inf.danoHecho)),
-                    T.f("informe.punteria", inf.aciertos, inf.ataques, Math.round(inf.punteria() * 100)),
-                    T.f("informe.visto", Math.round(100.0 * inf.turnosVistos / Math.max(1, inf.turnos))),
-                    T.f("informe.errores", inf.errores),
-                    T.f("informe.topes", inf.topes, Math.round(inf.pasosMedios())),
-                    T.f("informe.total", Math.round(pelea.combatientes[i].danoTotalRecibido))};
-            float yy = y + 40;
-            for (String l : lineas) {
-                yy += p.parrafo(l, cx, yy, col - 10, ui.letra * 0.9f, ui.tema.texto, 1) + 6;
-            }
-            yy += 10;
-            for (java.util.Map.Entry<String, int[]> e : inf.porArma.entrySet()) {
-                p.texto("· " + e.getKey() + ": " + e.getValue()[1] + "/" + e.getValue()[0], cx + 10, yy, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
-                yy += ui.letra * 1.3f;
-            }
-            if (i == 0 && pelea.combatientes[0].efectosPoo != null) {
-                java.util.List<ModificadoresPoo.Entrada> poo = pelea.combatientes[0].efectosPoo.resumen();
-                if (!poo.isEmpty()) {
-                    yy += 8;
-                    p.texto(T.t("poo.titulo"), cx, yy, ui.letra * 0.9f, true, ui.tema.texto, 1);
-                    yy += ui.letra * 1.3f;
-                    for (ModificadoresPoo.Entrada e : poo) {
-                        int colPoo = e.nivel == ModificadoresPoo.Nivel.PENALIZACION ? ui.tema.mal
-                                : e.nivel == ModificadoresPoo.Nivel.BONO ? ui.tema.bien : ui.tema.aviso;
-                        yy += p.parrafo("• " + e.texto, cx + 6, yy, col - 16, ui.letra * 0.78f, colPoo, 1) + 4;
-                    }
-                }
-            }
-        }
-        // Consejos del revisor (sin IA, o con ella si está puesta).
-        float rx = x + 2 * (col + 20);
-        p.texto(T.t("informe.consejos"), rx, y, ui.letra * 1.1f, true, ui.tema.texto, 1);
-        float d = ui.desplazable(desplInforme, rx, y + 40, col, h - 40);
-        float yy = y + 40 - d;
-        if (revision != null) {
-            for (String c : revision.consejos) {
-                yy += p.parrafo("• " + c, rx, yy, col - 20, ui.letra * 0.85f, ui.tema.texto, 1) + 10;
-            }
-        }
-        ui.finDesplazable(desplInforme, yy - (y + 40 - d));
     }
 
     // ================================================================ el final

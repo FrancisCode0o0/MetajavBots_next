@@ -28,8 +28,12 @@ public final class Concepto {
     /** Nivel máximo admitido en las pestañas de consulta del entrenador (1-5 programación, 6 el juego). */
     public static final int NIVEL_MAX = NIVEL_JUEGO;
 
-    /** Los archivos de conceptos de programación, en orden (el juego se carga desde ConocimientoDelEntrenador). */
-    static final String[] ARCHIVOS = {"01_basico.txt", "02_control.txt", "03_objetos.txt", "04_intermedio.txt", "05_moderno.txt", "06_senior.txt"};
+    /**
+     * Los archivos de conceptos de programación, en orden, y al final las fichas de las mecánicas (08, id «mec_…», sin
+     * ejemplo en Java a propósito). El conocimiento del juego (07) se carga desde ConocimientoDelEntrenador.
+     */
+    static final String[] ARCHIVOS = {"01_basico.txt", "02_control.txt", "03_objetos.txt", "04_intermedio.txt", "05_moderno.txt", "06_senior.txt",
+        "08_mecanicas.txt"};
 
     public final String id, tema, ejemplo;
     public final int nivel;

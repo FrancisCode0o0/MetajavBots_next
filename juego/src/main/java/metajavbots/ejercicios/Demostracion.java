@@ -101,9 +101,10 @@ public final class Demostracion {
     public static final String ID_DEMO_2 = "demo_02_orden";
     public static final String ID_DEMO_3 = "demo_03_entorno";
     public static final String ID_DEMO_4 = "demo_04_arquitectura";
+    public static final String ID_DEMO_5 = "demo_05_primera_pelea";
 
     private static final List<Demostracion> TODAS = Collections.unmodifiableList(
-            List.of(crearDemo1(), Demo2Orden.crear(), Demo3Entorno.crear(), Demo4Arquitectura.crear()));
+            List.of(crearDemo1(), Demo2Orden.crear(), Demo3Entorno.crear(), Demo4Arquitectura.crear(), Demo5PrimeraPelea.crear()));
 
     public final String id;
     public final int nivel;

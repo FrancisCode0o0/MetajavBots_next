@@ -62,6 +62,11 @@ public final class PanelDePeso {
             cy += p.parrafo(cambio, x, cy, w, tam, color(cp.tramo), 1) + 4;
         }
         cy += p.parrafo(terrenos(cf.rasgos), x, cy, w, tam * 0.95f, ui.tema.textoSuave, 1) + 4;
+        // La ficha de la mecánica, desde donde sale (Taller y pausa entre rondas).
+        String ficha = "▤ " + T.t("peso.ficha");
+        float wf = Math.min(w, p.ancho(ficha, Math.min(ui.letra * 0.85f, 19), true) + 28);
+        if (ui.boton(ficha, x, cy, wf, 36, Ui.Estilo.PLANO, true, T.t("informe.ficha"))) j.ir(new Mecanicas("mec_peso"));
+        cy += 42;
         if (cf.tramo == Equilibrio.Tramo.IMPOSIBLE) {
             cy += p.parrafo(T.f("peso.aviso_imposible", queQuitar(m)), x, cy, w, tam, true, ROJO, 1) + 4;
         } else if (cf.tramo == Equilibrio.Tramo.SOBRECARGA) {

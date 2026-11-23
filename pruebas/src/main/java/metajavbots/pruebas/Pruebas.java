@@ -44,6 +44,7 @@ public final class Pruebas {
         PruebasDelCodigoDelRival.apuntar();
         PruebasDelDepurador.apuntar();
         PruebasDeOrdenesClaras.apuntar();
+        PruebasDeClaridad.apuntar();
         PruebasDeModificadoresPoo.apuntar();
         PruebasDeArquetipos.apuntar();
         PruebasDeAlarmaYFuentes.apuntar();

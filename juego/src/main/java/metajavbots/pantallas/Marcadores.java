@@ -41,13 +41,19 @@ public final class Marcadores {
     private Marcadores() {
     }
 
+    /** Si en la barra inferior cabe el botón «?» (¿Cómo se juega?) sin apretar los demás. */
+    public static boolean cabeAyuda(float der) {
+        return der >= 760f;
+    }
+
     /** Calcula la geometría sin solapamientos de la barra inferior de controles y del botón del aparato. */
     public static BarraInferior calcularBarraInferior(float pantallaAlto, float der, boolean enPausa, float wPasoDeseado,
             float wVisorDeseado, float wDepDeseado, float wRendirseDeseado, boolean hayAparato, float wAparatoDeseado) {
         float y = pantallaAlto - 64f;
         float margen = 20f;
         float gap = 10f;
-        float baseIzq = margen + 64f + 3f * 62f;
+        // Pausa, ×1, ×2, ×4 y, si cabe, «?» (¿Cómo se juega?).
+        float baseIzq = margen + 64f + (cabeAyuda(der) ? 4f : 3f) * 62f;
         float wPaso = enPausa ? Math.max(84f, Math.min(wPasoDeseado, Math.max(84f, der - margen - baseIzq - 240f))) : 0f;
         float finIzq = enPausa ? baseIzq + wPaso : baseIzq - 6f;
         float wRend = Math.max(116f, wRendirseDeseado);

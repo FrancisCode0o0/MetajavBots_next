@@ -1,6 +1,6 @@
 # CONCEPTOS — Lo que explica el entrenador flotante (sin IA), de lo más básico a lo avanzado.
 # Un archivo por bloque; el juego los lee todos, en este orden:
-#   01_basico.txt · 02_control.txt · 03_objetos.txt · 04_intermedio.txt · 05_moderno.txt · 06_senior.txt · 07_juego.txt (el propio juego y los cerebros de IA)
+#   01_basico.txt · 02_control.txt · 03_objetos.txt · 04_intermedio.txt · 05_moderno.txt · 06_senior.txt · 07_juego.txt (el propio juego y los cerebros de IA) · 08_mecanicas.txt (las fichas de las mecánicas: id «mec_…», sin ejemplo en Java a propósito)
 # Formato de cada concepto:
 #
 # === id_sin_espacios

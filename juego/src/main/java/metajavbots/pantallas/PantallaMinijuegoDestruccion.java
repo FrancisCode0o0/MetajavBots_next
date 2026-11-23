@@ -66,6 +66,8 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
     private volatile Compilador.Resultado resultadoCompilacion;
     private boolean arrancarTrasCompilar;
 
+    @Override public String comoSeJuega() { return "destruccion"; }
+
     @Override
     public String musica() {
         if (reto != null && reto.terminada()) {

@@ -152,6 +152,10 @@ public final class Guardado {
         v.put("ayudaDelTutor", numero(j.ayudaDelTutor) + (j.entrenadorActivo ? "" : ";sin_entrenador"));
         v.put("temaClaro", Boolean.toString(j.temaClaro));
         v.put("avisosDeOrdenes", Boolean.toString(j.avisosDeOrdenes));
+        v.put("fallosDeOrdenes", j.fallosDeOrdenes[0] + "," + j.fallosDeOrdenes[1]);
+        v.put("avisoDeOrdenesSalio", j.avisoDeOrdenesSalio[0] + "," + j.avisoDeOrdenesSalio[1]);
+        v.put("comoSeJuegaVisto", lista(j.comoSeJuegaVisto));
+        v.put("menuCompleto", Boolean.toString(j.menuCompleto));
         v.put("ultimoRivalNombre", j.ultimoRivalNombre == null ? "" : j.ultimoRivalNombre);
         StringBuilder b = new StringBuilder("# Partida de MetajavBots (se puede leer; mejor no tocarla a mano)\n");
         for (Map.Entry<String, String> e : v.entrySet()) {
@@ -316,6 +320,10 @@ public final class Guardado {
         if (Files.exists(ultimoRival)) j.ultimoRivalCodigo = Files.readString(ultimoRival, StandardCharsets.UTF_8);
         leerPiezasPropias(dir, j);
         leerEstadoCompilacionRobots(dir, v, j);
+        // Las partidas de antes del camino «Empezar»: quien ya había jugado ve el menú entero, como siempre.
+        if (!v.containsKey("menuCompleto")) {
+            j.menuCompleto = !j.historial.isEmpty() || !j.tutorialesHechos.isEmpty() || !j.ejerciciosResueltos.isEmpty();
+        }
         return j;
     }
 
@@ -426,6 +434,14 @@ public final class Guardado {
         j.ayudaDelTutor = (float) decimal(ayuda.replace(";sin_entrenador", ""), 0.5);
         j.temaClaro = Boolean.parseBoolean(v.get("temaClaro"));
         j.avisosDeOrdenes = !"false".equals(v.get("avisosDeOrdenes"));
+        String[] fallos = v.getOrDefault("fallosDeOrdenes", "0,0").split(",");
+        String[] salio = v.getOrDefault("avisoDeOrdenesSalio", "false,false").split(",");
+        for (int k = 0; k < 2; k++) {
+            j.fallosDeOrdenes[k] = k < fallos.length ? (int) decimal(fallos[k], 0) : 0;
+            j.avisoDeOrdenesSalio[k] = k < salio.length && Boolean.parseBoolean(salio[k].strip());
+        }
+        leerLista(v.get("comoSeJuegaVisto"), j.comoSeJuegaVisto);
+        j.menuCompleto = Boolean.parseBoolean(v.get("menuCompleto"));
     }
 
     static void escribir(Path destino, String texto) throws IOException {

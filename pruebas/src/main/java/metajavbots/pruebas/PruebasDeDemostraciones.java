@@ -450,7 +450,7 @@ final class PruebasDeDemostraciones {
 
     private static void apuntarPrecisionPedagogicaYAlcance() {
         caso("pedagogía: avanzar(80) orden vs distancia efectiva, orden real de callbacks, pseudocódigo de alcance y catálogo sin demos huérfanas", () -> {
-            igual(4, Demostracion.todas().size(), "Demo 1, Demo 2, Demo 3 y Demo 4 están implementadas");
+            igual(5, Demostracion.todas().size(), "Demo 1 a Demo 4 y la 5 (Tu primera pelea, en palabras) están implementadas");
             cierto(T.existe("demo.nivel.3"), "debe existir la clave demo.nivel.3 para Demo 3");
             cierto(T.existe("demo.nivel.4"), "debe existir la clave demo.nivel.4 para Demo 4");
             falso(T.existe("demo.nivel.5"), "no debe existir clave huérfana demo.nivel.5");

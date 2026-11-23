@@ -1,11 +1,14 @@
 package metajavbots.pantallas;
 
 import java.util.Locale;
+import java.util.Random;
 
 import metajavbots.api.Mando;
 import metajavbots.combate.AtaqueLejos;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.OrdenDelTurno;
+import metajavbots.progreso.Jugador;
+import metajavbots.progreso.RitmoDeAvisos;
 import metajavbots.textos.T;
 
 /**
@@ -13,9 +16,11 @@ import metajavbots.textos.T;
  * empieza: una orden que borra a otra del mismo mando en el mismo turno («la
  * línea 27 borra la orden de la línea 41: la cabeza nunca llega al enemigo») y
  * un ataque con la mira aún lejos del enemigo. Mira el último turno del robot del
- * jugador (Cuerpo.ordenesDelTurno y Cuerpo.ataqueLejos); cada aviso sale una sola
- * vez por pelea (una instancia por pelea) y lo enseña el entrenador si el
- * jugador no lo ha apagado en Ajustes. El depurador usa los mismos textos.
+ * jugador (Cuerpo.ordenesDelTurno y Cuerpo.ataqueLejos); cada aviso sale como
+ * mucho una vez por pelea (una instancia por pelea) y, con el jugador, al ritmo
+ * de su etiqueta (progreso/RitmoDeAvisos). Lo enseña el entrenador al borde de
+ * la arena, nunca encima, si el jugador no lo ha apagado en Ajustes. El
+ * depurador usa los mismos textos.
  */
 public final class AvisoDeOrdenes {
 
@@ -26,21 +31,49 @@ public final class AvisoDeOrdenes {
     private String texto = "";
     private float tiempo = DURACION;
 
-    /** Mira el último turno de ese robot; true si acaba de salir un aviso nuevo. */
+    /** Mira el último turno de ese robot; true si acaba de salir un aviso nuevo (sin ritmo: la primera vez de cada uno). */
     public boolean observar(Cuerpo c) {
+        return observar(c, null, null);
+    }
+
+    /**
+     * Igual, al ritmo del jugador: la primera vez en la pelea que comete cada fallo se apunta (Jugador.fallosDeOrdenes) y
+     * RitmoDeAvisos decide si el entrenador lo dice esta vez. Sin jugador, sale siempre.
+     */
+    public boolean observar(Cuerpo c, Jugador jug, Random azar) {
         if (c == null) return false;
         if (!avisadaPisada && c.tieneConflictoDeOrdenes) {
             OrdenDelTurno o = primeraPisada(c);
             if (o != null) {
                 avisadaPisada = true;
-                return salir(textoPisada(o));
+                if (toca(jug, 0, azar)) return salir(textoPisada(o));
             }
         }
         if (!avisadoLejos && c.ataqueLejos != null) {
             avisadoLejos = true;
-            return salir(textoLejos(c.ataqueLejos));
+            if (toca(jug, 1, azar)) return salir(textoLejos(c.ataqueLejos));
         }
         return false;
+    }
+
+    /** Apunta una pelea más con ese fallo (0: orden borrada; 1: mira lejos) y dice si toca avisar esta vez. */
+    static boolean toca(Jugador jug, int fallo, Random azar) {
+        if (jug == null) return true;
+        jug.fallosDeOrdenes[fallo]++;
+        boolean sale = RitmoDeAvisos.toca(jug.etiqueta.categoria(), jug.fallosDeOrdenes[fallo], jug.avisoDeOrdenesSalio[fallo],
+                azar == null ? Math.random() : azar.nextDouble());
+        jug.avisoDeOrdenesSalio[fallo] = sale;
+        return sale;
+    }
+
+    /** El jugador lo ha leído («Entendido»): se recoge ya. */
+    public void cerrar() {
+        tiempo = DURACION;
+    }
+
+    /** Cuánto lleva enseñándose (segundos). */
+    public float tiempo() {
+        return tiempo;
     }
 
     private boolean salir(String t) {

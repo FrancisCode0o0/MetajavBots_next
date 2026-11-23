@@ -162,3 +162,47 @@ ejercicio: t15_primero_y_ultimo
 es: El primero y el último de la cola, con los métodos de Java 21.
 de: Der Erste und der Letzte in der Schlange, mit den Methoden aus Java 21.
 en: The first and the last in the queue, with the Java 21 methods.
+
+=== l15_equipo
+tema: 15
+orden: 90
+titulo.es: Pelear en equipo
+titulo.de: Im Team kämpfen
+titulo.en: Fighting as a team
+--- pagina
+es: En Equipos sois dos contra dos; en el todos contra todos, hasta seis robots. Gana el equipo que recibe menos daño, sumando los dos.
+de: Bei Teams kämpft ihr zwei gegen zwei; bei Alle gegen alle sind es bis zu sechs Roboter. Es gewinnt das Team, das zusammen weniger Schaden nimmt.
+en: In Teams it is two against two; in the free-for-all, up to six robots. The team that takes less damage, adding both, wins.
+--- pagina
+es: Tu robot ve una lista de enemigos: enemigosVistos(). Ya no basta con «el enemigo»: hay que elegir a cuál.
+de: Dein Roboter sieht eine Liste von Gegnern: gesehen(). „Der Gegner“ reicht nicht mehr: Du musst wählen, welcher.
+en: Your robot sees a list of enemies: seenEnemies(). "The enemy" is no longer enough: you have to choose which one.
+--- pagina
+es: Adivina: si cada robot de tu equipo ataca a un enemigo distinto, ¿acabáis antes o después que si atacáis los dos al mismo?
+es:
+es: Piénsalo antes de pasar la página.
+de: Rate mal: Wenn jeder Roboter deines Teams einen anderen Gegner angreift, seid ihr dann schneller oder langsamer, als wenn ihr beide denselben angreift?
+de:
+de: Überleg es dir, bevor du umblätterst.
+en: Guess: if each robot in your team attacks a different enemy, do you finish sooner or later than if you both attack the same one?
+en:
+en: Think about it before turning the page.
+--- pagina
+es: Casi siempre antes si atacáis al mismo: lo rompéis entre dos y luego sois dos contra uno. Para eso tenéis que hablar.
+de: Fast immer schneller, wenn ihr denselben angreift: Ihr macht ihn zu zweit kaputt und seid dann zwei gegen einen. Dafür müsst ihr miteinander reden.
+en: Almost always sooner if you attack the same one: you break it together and then it is two against one. For that you have to talk.
+--- pagina
+es: Hablar: avisarAlEquipo(mensaje) manda un mensaje corto a tu compañero; le llega en el turno siguiente, en alOirAlEquipo. companeros() te dice quiénes son.
+es:
+es: La idea, en palabras: AL VER a varios → elegir al más débil → avisar al compañero → AL OÍR al compañero → ir a por el mismo.
+de: Reden: teamMelden(nachricht) schickt deinem Kameraden eine kurze Nachricht; sie kommt im nächsten Zug in beiTeamNachricht an. kameraden() sagt dir, wer sie sind.
+de:
+de: Die Idee in Worten: BEIM SEHEN mehrerer → den schwächsten wählen → dem Kameraden Bescheid sagen → WENN der Kamerad etwas meldet → auf denselben gehen.
+en: Talking: tellTeam(message) sends a short message to your teammate; it arrives the next tick, in onTeamMessage. teammates() tells you who they are.
+en:
+en: The idea in words: WHEN I SEE several → pick the weakest → tell my teammate → WHEN my teammate calls → go for the same one.
+--- tarea
+ejercicio: t15_peso_total
+es: Una lista se recorre igual sean enemigos o piezas: resuelve este ejercicio de listas.
+de: Eine Liste geht man gleich durch, ob Gegner oder Teile: Löse diese Listen-Übung.
+en: You walk through a list the same way whether it holds enemies or parts: solve this list exercise.

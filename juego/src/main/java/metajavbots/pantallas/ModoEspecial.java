@@ -47,6 +47,12 @@ public final class ModoEspecial implements Pantalla {
     }
     private final Ui.Desplazable despl = new Ui.Desplazable();
 
+    /** En la pestaña de las peleas Senior, su propio «¿Cómo se juega?»; en las demás, el del modo especial. */
+    @Override
+    public String comoSeJuega() {
+        return pestana == 2 ? "senior" : "especial";
+    }
+
     @Override
     public void fotograma(Juego j, float dt) {
         Pincel p = j.pincel;

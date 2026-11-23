@@ -106,6 +106,8 @@ public final class AvisoDeCompilacion {
     /** Dibuja el cartel con la cabeza del entrenador activo y sus botones de acción. */
     public void dibujar(Juego j, float dt) {
         if (!abierto || j == null || j.jugador == null) return;
+        // Si a la vez sale «¿Cómo se juega?», primero ese: una sola cosa en pantalla cada vez.
+        if (j.comoSeJuega.abierto()) return;
         tiempo += dt;
         Entrada e = j.entrada;
         e.bloqueada = false;

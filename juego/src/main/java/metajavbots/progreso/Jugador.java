@@ -166,6 +166,16 @@ public final class Jugador {
     public boolean entrenadorActivo = true;
     /** Si el entrenador avisa en la pelea de las órdenes borradas y de los ataques con la mira lejos (Ajustes). */
     public boolean avisosDeOrdenes = true;
+    /**
+     * Los avisos de órdenes (0: una orden borra otra; 1: ataque con la mira lejos): en cuántas peleas ha tenido el
+     * jugador ese fallo y si el entrenador lo dijo la última vez (progreso/RitmoDeAvisos decide cuándo vuelve a salir).
+     */
+    public final int[] fallosDeOrdenes = new int[2];
+    public final boolean[] avisoDeOrdenesSalio = new boolean[2];
+    /** Los modos cuyo «¿Cómo se juega?» ya ha visto (pantallas/ComoSeJuega): solo sale solo la primera vez. */
+    public final Set<String> comoSeJuegaVisto = new LinkedHashSet<>();
+    /** Si el menú lo enseña todo (true) o el camino «Empezar», que va abriendo lo demás poco a poco (pantallas/Camino). */
+    public boolean menuCompleto;
     /** La música de fondo: si suena y a qué volumen. */
     public boolean musicaActiva = true;
     public float volumenMusica = 0.45f;

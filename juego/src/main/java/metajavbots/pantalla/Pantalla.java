@@ -39,6 +39,14 @@ public interface Pantalla {
         return false;
     }
 
+    /**
+     * El id de su «¿Cómo se juega?» (res/datos/como_se_juega.txt; pantallas/ComoSeJuega), si es un modo que se juega:
+     * sale solo la primera vez y con el botón de la cabecera. null si no tiene.
+     */
+    default String comoSeJuega() {
+        return null;
+    }
+
     /** El tema de música que suena en ella (res/musica/temas.txt). */
     default String musica() {
         return "menu";

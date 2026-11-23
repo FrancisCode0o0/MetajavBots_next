@@ -1,4 +1,77 @@
 # Tema 01: primeros pasos (programa, sentencias y comentarios). Cero absoluto: nadie ha programado nunca.
+=== l00_como_obedece
+tema: 01
+orden: 0
+titulo.es: Así obedece tu robot
+titulo.de: So gehorcht dein Roboter
+titulo.en: How your robot obeys
+--- pagina
+es: Tu robot no tiene mando a distancia. Pelea solo y hace lo que pone en su hoja de órdenes: tu código.
+es:
+es: Tú eres su entrenador: escribes las órdenes antes de la pelea; durante la pelea, solo miras.
+de: Dein Roboter hat keine Fernbedienung. Er kämpft allein und tut, was auf seinem Befehlszettel steht: deinem Code.
+de:
+de: Du bist sein Trainer: Du schreibst die Befehle vor dem Kampf; während des Kampfes schaust du nur zu.
+en: Your robot has no remote control. It fights on its own and does what its order sheet says: your code.
+en:
+en: You are its coach: you write the orders before the fight; during the fight, you just watch.
+--- pagina
+es: La pelea va a saltitos, llamados turnos: 30 cada segundo, como los dibujos de un cuaderno que pasas deprisa.
+es:
+es: En cada turno, tu robot lee sus órdenes. Míralo en el dibujo.
+de: Der Kampf läuft in kleinen Sprüngen, den Zügen: 30 pro Sekunde, wie die Bilder eines Daumenkinos.
+de:
+de: In jedem Zug liest dein Roboter seine Befehle. Sieh es dir in der Zeichnung an.
+en: The fight moves in little jumps called ticks: 30 every second, like the pictures of a flip book.
+en:
+en: Each tick, your robot reads its orders. Watch it in the drawing.
+dibujo: turno
+--- pagina
+es: Tiene tres mandos: las ruedas (para avanzar), el cuerpo (para girar) y la cabeza, que es su mira (para apuntar).
+es:
+es: Cada mando recuerda solo la ÚLTIMA orden del turno, como la tele: si pulsas dos canales seguidos, se queda con el segundo.
+de: Er hat drei Regler: die Räder (zum Fahren), den Körper (zum Drehen) und den Kopf, sein Visier (zum Zielen).
+de:
+de: Jeder Regler merkt sich nur den LETZTEN Befehl des Zugs, wie beim Fernseher: Drückst du zwei Sender hintereinander, bleibt der zweite.
+en: It has three controls: the wheels (to move), the body (to turn) and the head, which is its sight (to aim).
+en:
+en: Each control remembers only the LAST order of the tick, like a TV: if you press two channels in a row, it keeps the second one.
+--- pagina
+es: Adivina: en el mismo turno le dices a la cabeza «mira al enemigo» y, justo después, «mira a la derecha». ¿Adónde mira?
+es:
+es: Piénsalo antes de pasar la página.
+de: Rate mal: Im selben Zug sagst du dem Kopf „schau zum Gegner“ und gleich danach „schau nach rechts“. Wohin schaut er?
+de:
+de: Überleg es dir, bevor du umblätterst.
+en: Guess: in the same tick you tell the head "look at the enemy" and, right after, "look to the right". Where does it look?
+en:
+en: Think about it before turning the page.
+--- pagina
+es: A la derecha: la segunda orden borra la primera.
+es:
+es: Por eso, cuando quieras que mire al enemigo, que nada más le dé otra orden a la cabeza en ese mismo turno.
+de: Nach rechts: Der zweite Befehl löscht den ersten.
+de:
+de: Darum: Wenn er zum Gegner schauen soll, darf ihm in diesem Zug nichts anderes einen Kopf-Befehl geben.
+en: To the right: the second order erases the first.
+en:
+en: So, when you want it to look at the enemy, nothing else should give the head another order in that same tick.
+--- pagina
+es: Las órdenes tardan: la cabeza gira despacio, como un búho, unos 14° en cada turno. Y atacar dispara YA, hacia donde mira la cabeza en ese momento.
+es:
+es: La idea, en palabras: apuntar al enemigo → esperar a que la mira llegue → atacar.
+de: Befehle brauchen Zeit: Der Kopf dreht sich langsam, wie eine Eule, etwa 14° pro Zug. Und angreifen schießt SOFORT, dorthin, wohin der Kopf gerade schaut.
+de:
+de: Die Idee in Worten: auf den Gegner zielen → warten, bis das Visier ankommt → angreifen.
+en: Orders take time: the head turns slowly, like an owl, about 14° each tick. And attack fires NOW, where the head points at that moment.
+en:
+en: The idea in words: aim at the enemy → wait for the sight to get there → attack.
+--- tarea
+ejercicio: j_hasta_la_bandera
+es: Tu primer ejercicio: ¿cuánto tiene que avanzar el robot para llegar a la bandera?
+de: Deine erste Übung: Wie weit muss der Roboter fahren, um die Flagge zu erreichen?
+en: Your first exercise: how far does the robot have to move to reach the flag?
+
 === l01_hola_arena
 tema: 01
 orden: 1
@@ -116,6 +189,87 @@ ejercicio: t01_encender
 es: Tu primer programa de verdad: enciende el robot escribiendo el texto exacto en su pantalla.
 de: Dein erstes echtes Programm: Schalte den Roboter ein, indem du genau den Text auf seinen Bildschirm schreibst.
 en: Your first real program: switch the robot on by writing the exact text on its screen.
+
+=== l01_primera_pelea
+tema: 01
+orden: 1
+titulo.es: Tu primera pelea completa
+titulo.de: Dein erster ganzer Kampf
+titulo.en: Your first complete fight
+--- pagina
+es: Hoy, una pelea entera, de principio a fin, en seis pasos: crear, compilar, pelear, leer el informe, mejorar y volver a pelear.
+es:
+es: Uno cada vez. Nada de prisa.
+de: Heute ein ganzer Kampf, von Anfang bis Ende, in sechs Schritten: erstellen, kompilieren, kämpfen, den Bericht lesen, verbessern und noch einmal kämpfen.
+de:
+de: Einer nach dem anderen. Keine Eile.
+en: Today, a whole fight, from start to finish, in six steps: create, compile, fight, read the report, improve and fight again.
+en:
+en: One at a time. No hurry.
+--- pagina
+es: 1. Crear. Ya tienes un robot. En el Taller está su código, la plantilla: avanza, gira la cabeza para buscar y, al ver al enemigo, apunta y ataca.
+es:
+es: Léelo despacio. Antes de cambiar nada, piensa: ¿qué hará en la arena?
+de: 1. Erstellen. Du hast schon einen Roboter. In der Werkstatt steht sein Code, die Vorlage: Er fährt, dreht den Kopf zum Suchen und zielt und greift an, wenn er den Gegner sieht.
+de:
+de: Lies ihn langsam. Bevor du etwas änderst, überleg: Was wird er in der Arena tun?
+en: 1. Create. You already have a robot. In the Workshop there is its code, the template: it moves, turns its head to search and, when it sees the enemy, aims and attacks.
+en:
+en: Read it slowly. Before changing anything, think: what will it do in the arena?
+--- pagina
+es: 2. Compilar. En el Taller, pulsa Ctrl+S. Es como pasar el corrector: si sale en verde, tu robot ya pelea con ese código; si sale en rojo, te dice la línea que falla.
+de: 2. Kompilieren. Drück in der Werkstatt Strg+S. Das ist wie eine Rechtschreibprüfung: Ist es grün, kämpft dein Roboter schon mit diesem Code; ist es rot, nennt es dir die fehlerhafte Zeile.
+en: 2. Compile. In the Workshop, press Ctrl+S. It is like a spell checker: if it turns green, your robot already fights with that code; if it turns red, it tells you the line that fails.
+--- pagina
+es: 3. Pelear. Pulsa «¡A pelear!». Tu robot pelea solo; tú miras.
+es:
+es: Gana quien recibe MENOS daño sumando todas las rondas. Arriba ves el daño de cada uno.
+de: 3. Kämpfen. Drück „Auf in den Kampf!“. Dein Roboter kämpft allein; du schaust zu.
+de:
+de: Es gewinnt, wer über alle Runden WENIGER Schaden nimmt. Oben siehst du den Schaden von jedem.
+en: 3. Fight. Press "Let's fight!". Your robot fights on its own; you watch.
+en:
+en: Whoever takes LESS damage over all the rounds wins. At the top you see each one's damage.
+--- pagina
+es: 4. Leer el informe. Entre ronda y ronda sale un informe con tus cifras.
+es:
+es: Pasa el ratón por una cifra: te dice qué significa. Si va mal, debajo sale una pista en amarillo. Con un clic, la ficha de esa regla.
+de: 4. Den Bericht lesen. Zwischen den Runden kommt ein Bericht mit deinen Zahlen.
+de:
+de: Fahr mit der Maus über eine Zahl: Sie sagt dir, was sie bedeutet. Läuft es schlecht, steht darunter ein gelber Tipp. Mit einem Klick die Karte zu dieser Regel.
+en: 4. Read the report. Between rounds a report shows your numbers.
+en:
+en: Move the mouse over a number: it tells you what it means. If it is going badly, a yellow hint appears underneath. One click opens the card for that rule.
+--- pagina
+es: 5. Mejorar. Cambia UNA sola cosa: por ejemplo, que avance más, o que espere a que la mira llegue antes de atacar.
+es:
+es: Compila otra vez (Ctrl+S). Si cambias muchas cosas a la vez, no sabrás cuál ayudó.
+de: 5. Verbessern. Ändere nur EINE Sache: zum Beispiel, dass er weiter fährt oder wartet, bis das Visier angekommen ist, bevor er angreift.
+de:
+de: Kompiliere noch einmal (Strg+S). Änderst du viel auf einmal, weißt du nicht, was geholfen hat.
+en: 5. Improve. Change just ONE thing: for example, make it move further, or wait for the sight to arrive before attacking.
+en:
+en: Compile again (Ctrl+S). If you change many things at once, you will not know which one helped.
+--- pagina
+es: 6. Volver a pelear y comparar: ¿ha bajado el daño recibido? Si sí, ¡bien hecho! Si no, deshazlo y prueba otra cosa.
+es:
+es: Así, pelea a pelea, tu robot mejora y tú aprendes.
+de: 6. Noch einmal kämpfen und vergleichen: Ist der erlittene Schaden gesunken? Wenn ja, gut gemacht! Wenn nicht, mach es rückgängig und probier etwas anderes.
+de:
+de: So wird dein Roboter Kampf für Kampf besser, und du lernst dazu.
+en: 6. Fight again and compare: did the damage taken go down? If yes, well done! If not, undo it and try something else.
+en:
+en: That way, fight by fight, your robot gets better and you learn.
+--- tarea
+robot: ronda_sin_errores
+es: Compila tu robot y pruébalo en la arena: una ronda entera sin errores.
+de: Kompiliere deinen Roboter und teste ihn in der Arena: eine ganze Runde ohne Fehler.
+en: Compile your robot and try it in the arena: a whole round without errors.
+--- tarea
+robot: aciertos>=3
+es: Cambia una sola cosa para acertar al muñeco al menos 3 veces.
+de: Ändere nur eine Sache, damit du die Puppe mindestens 3-mal triffst.
+en: Change just one thing so you hit the dummy at least 3 times.
 
 === l01_ordenes_en_fila
 tema: 01

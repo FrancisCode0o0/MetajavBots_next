@@ -2,6 +2,32 @@
 
 Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDrive\Hochschule\Desarrollo de juegos\MetajavBots_next`, rama `main`.
 
+## CLARIDAD_METAJAVBOTS (23-nov-2026, Opus) — hecho
+
+Que se entienda cómo se juega cada parte, «para el más lego». El repaso modo a modo, las mecánicas y todo lo decidido, en **docs/CLARIDAD.md**.
+
+- **¿Cómo se juega?** en cada modo (`pantallas/ComoSeJuega`, `res/datos/como_se_juega.txt`, 18 modos): objetivo, cómo se gana, la nota del tropiezo típico, los métodos del robot que importan (en la API del idioma del jugador), la idea en pseudocódigo y sus fichas. Sale sola la primera vez (`Jugador.comoSeJuegaVisto`); luego, botón en la cabecera (`Comun.cabecera`) o «?» en la barra de la pelea. Cada pantalla dice el suyo con `Pantalla.comoSeJuega()`.
+- **Mecánicas**: 24 fichas (`res/conceptos/08_mecanicas.txt`, id `mec_…`, nivel «El juego» del entrenador) con qué es, cifras, cómo se ve, desde tu código y pseudocódigo, sin Java. Índice `pantallas/Mecanicas` (botón en el menú); se llega desde cada «¿Cómo se juega?», cada cifra del informe, el panel de peso y el entrenador (F2).
+- **Camino «Empezar»** (`pantallas/Camino`, `TarjetaDelCamino`): quien empieza ve un solo camino de 16 pasos (tutorial sin código, los ejercicios del juego de `24_juego`, «Hola, arena», la primera pelea completa, una pelea…) que va abriendo las casillas; «Ver todo el menú» lo abre todo; en Ajustes, «Menú para empezar». Las partidas de antes con progreso ven el menú entero.
+- **Informe de la ronda** (`pantallas/InformeDeRonda`, sacado de PantallaPelea): cada cifra dice qué significa al pasar el ratón, da una pista concreta en amarillo si va mal y con un clic abre su ficha.
+- **Paso a paso**: botón en la barra de la pelea (para y abre el depurador en el turno); en el depurador, «Así quedan los mandos» (lo que falta a ruedas, cuerpo y mira, y hacia dónde sale el disparo).
+- **Consejo de órdenes**: al ritmo de la etiqueta (`progreso/RitmoDeAvisos`, `// TODO-FRAN:`) y en un panel al borde de la arena, que se encoge para dejarle sitio; nunca encima ni contra jefes.
+- **Fuera las dos líneas de la mira** de la pelea y del depurador (lo que contaba ORDENES_CLARAS sobre «Ver la mira», abajo, ya no vale).
+- **Tutoriales nuevos**: «Así obedece tu robot» (antes de «Hola, arena»), «Tu primera pelea completa», «La carrera de obstáculos», «Destrucción y supervivencia» (tema 05) y «Pelear en equipo» (tema 15). **Demostración nueva**: «Tu primera pelea, en palabras» (`ejercicios/Demo5PrimeraPelea`), con el robot en la arena y la hoja en pseudocódigo.
+- **Pruebas**: `PruebasDeClaridad` (11 casos): cada modo y cada mecánica con su explicación y pseudocódigo en es, de y en, sin Java; el informe; el camino; el guardado; el ritmo; las líneas de la mira; tutoriales y demo. Ajustadas: 18 casillas en el menú, 5 demostraciones, las fichas sin ejemplo.
+
+**Decisiones mías (cámbialas si quieres; detalle en docs/CLARIDAD.md)**:
+- Ritmo del consejo: se cuentan solo las peleas con ese fallo y con el entrenador. Noob: una sí y otra no. **Junior: 40 % al azar, nunca dos seguidas. Senior: una de cada 4. Master: una de cada 6** (propuestas). La primera vez sale siempre.
+- El «?» de la barra de la pelea solo sale si cabe (760 de ancho o más).
+- «¿Cómo se juega?» sale solo la primera vez y va antes que el aviso de compilar del menú.
+- Las capturas, el tráiler y el medidor usan un jugador con el menú entero y las tarjetas ya vistas (si no, saldrían encima).
+
+**Lo que queda**: ejercicios de huecos o de ordenar líneas (Parsons) para las ayudas que se retiran; la unidad de «Recorre al menos 2500»; el «dieciocho historias» del menú frente a los 22 bloques de `campanas.txt`; los ids sin traducir en Estadísticas. Lista completa en docs/CLARIDAD.md.
+
+**Capturas** (letra 18 y 26, en es, de y en): `C:\Users\Francis\git\archivo_para_eliminar\CLARIDAD_METAJAVBOTS\capturas_finales\`. Se rehacen con `.\gradlew.bat lwjgl3:capturas -Psolo=38 -Pidioma=de -Pletra=26`. Nada cortado; con letra 26 en alemán, dos descripciones de casilla del menú quedan pegadas al borde (como en el menú de siempre).
+
+**Comprobado**: `.\gradlew.bat compileJava estilo pruebas:prueba`: 334 casos bien, 0 mal, Checkstyle sin avisos. Ojo: antes de empezar, dos pruebas de «optimización» fallaron alguna vez sin cambios míos (la huella de las peleas de referencia E4 y el umbral de 3800 B/turno, que dio 3823): son sensibles a la máquina; en las pasadas finales salieron bien. Commit en `main`. Sin push.
+
 ## ORDENES_CLARAS_METAJAVBOTS (23-nov-2026, Opus) — hecho
 
 Que se entienda cómo obedece el robot. Tres reglas, dichas igual en todas partes: cada mando (ruedas, cuerpo, cabeza/mira) recuerda solo la última orden del turno; las órdenes tardan (la cabeza gira unos 14° por turno, como un búho); atacar() dispara ya, hacia donde mira la cabeza ahora. Y el orden del turno: primero los avisos, después cadaTurno.
@@ -11,7 +37,7 @@ Que se entienda cómo obedece el robot. Tres reglas, dichas igual en todas parte
 - **Plantilla del primer robot** (es, de, en): igual que antes, con tres comentarios de una línea donde muerden.
 - **API**: Javadoc de `cadaTurno`, `alVerEnemigo`, `avanzar`, `retroceder`, `girar`, `girarHacia`, `apuntar`, `apuntarHacia`, `apuntarA` y `atacar` en las tres fachadas, y su texto en `res/datos/api.txt` (panel de la API del Taller). `herramientas/fachadas.py` ahora parte en varias líneas los Javadoc largos.
 - **Avisos en la pelea** (`pantallas/AvisoDeOrdenes`, `combate/AtaqueLejos`): «La línea 23 borra la orden de la línea 29: la cabeza nunca llega al enemigo…» y «La línea 29 pide girar la cabeza, pero la línea 31 dispara antes de que llegue…». Los dice el entrenador (bocadillo y voz) y el depurador (pestaña Código / Turno).
-- **Ver la mira**: botón en el depurador; dibuja en la arena una línea discontinua (adónde quiere ir la mira) y otra continua (adónde apunta ahora).
+- **Ver la mira**: botón en el depurador; dibuja en la arena una línea discontinua (adónde quiere ir la mira) y otra continua (adónde apunta ahora). *(Quitado en CLARIDAD: confundía y rompía la estética del combate.)*
 - **Ejercicio** `j_dos_ordenes_cabeza` («Dos órdenes para la cabeza», tema 04), con la escena de giro en la arena.
 - **Pruebas**: `PruebasDeOrdenesClaras` (7 casos).
 

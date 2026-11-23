@@ -67,6 +67,13 @@ public final class Menu implements Pantalla {
         int filas() {
             return (casillas.length + columnas - 1) / columnas;
         }
+
+        /** El bloque con solo las casillas que ya ha abierto el camino «Empezar». */
+        Bloque abiertas(Jugador jug) {
+            List<Casilla> l = new ArrayList<>();
+            for (Casilla c : casillas) if (Camino.abierta(jug, c.clave)) l.add(c);
+            return new Bloque(titulo, colorOscuro, colorClaro, columnas, l.toArray(new Casilla[0]));
+        }
     }
 
     private static final Bloque[] BLOQUES = {
@@ -96,10 +103,13 @@ public final class Menu implements Pantalla {
         for (Bloque b : BLOQUES) {
             for (Casilla c : b.casillas) claves.add(c.clave);
         }
+        claves.add("menu.mecanicas");
         claves.add("menu.panel_ia");
         claves.add("menu.ajustes");
         return claves;
     }
+
+    @Override public String comoSeJuega() { return "juego"; }
 
     @Override
     public void alEntrar(Juego j) {
@@ -145,8 +155,12 @@ public final class Menu implements Pantalla {
         if (ui.boton("● " + T.t("menu.panel_ia"), x + margen, yIa, bw, bh, Ui.Estilo.NORMAL, true, T.t("menu.panel_ia_ayuda"))) {
             j.ir(new PanelIA());
         }
+        float yMec = yIa - bh - 10;
+        if (ui.boton("▤ " + T.t("menu.mecanicas"), x + margen, yMec, bw, bh, Ui.Estilo.NORMAL, true, T.t("menu.mecanicas_ayuda"))) {
+            j.ir(new Mecanicas());
+        }
         float altoCifras = 64f;
-        float yCajaCifras = yIa - 14 - altoCifras;
+        float yCajaCifras = yMec - 14 - altoCifras;
         p.caja(x + margen, yCajaCifras, bw, altoCifras, 10, ui.tema.fondo, 0.65f);
         p.bordeRedondeado(x + margen, yCajaCifras, bw, altoCifras, 10, ui.tema.borde, 0.75f, 1f);
         String marcador = T.f("menu.marcador", jug.victorias(), jug.derrotas());
@@ -170,22 +184,48 @@ public final class Menu implements Pantalla {
         }
     }
 
-    /** Dibuja los tres bloques temáticos con su código de colores sobre la zona derecha. */
+    /** Si el menú enseña el camino «Empezar» (quien empieza) en vez de todo. */
+    static boolean enCamino(Jugador jug) {
+        return jug != null && !jug.menuCompleto && Camino.siguiente(jug) < Camino.PASOS.size();
+    }
+
+    /** Dibuja los tres bloques temáticos con su código de colores sobre la zona derecha (en el camino, solo lo ya abierto). */
     private void dibujarBloques(Juego j, float x, float y, float w, float hTotal) {
+        boolean camino = enCamino(j.jugador);
+        List<Bloque> bloques = new ArrayList<>();
+        if (camino) {
+            for (Bloque b : BLOQUES) {
+                Bloque v = b.abiertas(j.jugador);
+                if (v.casillas.length > 0) bloques.add(v);
+            }
+            // Con casillas debajo, la tarjeta va compacta (la frase de qué se hace queda en la ayuda del botón).
+            float hc = TarjetaDelCamino.dibujar(j, x, y, w, t, !bloques.isEmpty());
+            y += hc + 12;
+            hTotal -= hc + 12;
+        } else {
+            bloques.addAll(List.of(BLOQUES));
+        }
+        if (bloques.isEmpty()) {
+            // Al principio solo está el camino: una sola cosa en pantalla, y una frase de que lo demás llegará.
+            Pincel p = j.pincel;
+            p.parrafo(T.t("camino.se_abre"), x + 24, y + 10, w - 48, Math.min(20, j.ui.letra * 0.9f), j.ui.tema.textoSuave, 1);
+            return;
+        }
         float sepBloques = 12;
         float cabH = 34;
         float padInferior = 10;
         float sepFilas = 10;
         int totalFilas = 0;
-        float fijos = sepBloques * (BLOQUES.length - 1);
-        for (Bloque b : BLOQUES) {
+        float fijos = sepBloques * (bloques.size() - 1);
+        for (Bloque b : bloques) {
             int f = b.filas();
             totalFilas += f;
             fijos += cabH + padInferior + (f - 1) * sepFilas;
         }
         float altoFila = Math.max(92, (hTotal - fijos) / totalFilas);
+        if (camino) altoFila = Math.max(88, Math.min(150, (hTotal - fijos) / totalFilas));
         float yy = y;
-        for (Bloque b : BLOQUES) {
+        for (Bloque b : bloques) {
             int f = b.filas();
             float bh = cabH + padInferior + f * altoFila + (f - 1) * sepFilas;
             dibujarBloque(j, b, x, yy, w, bh, cabH, altoFila, sepFilas);

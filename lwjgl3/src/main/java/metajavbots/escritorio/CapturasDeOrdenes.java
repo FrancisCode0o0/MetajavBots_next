@@ -18,7 +18,7 @@ import metajavbots.pantallas.Taller;
  * CAPTURAS DE ÓRDENES — Lo nuevo de ORDENES_CLARAS («-Psolo=37»): las tres
  * reglas del tutorial 1, el dibujo del turno en sus tres pasos, el concepto
  * «Así obedece tu robot» del entrenador, la pelea con la plantilla cuando una
- * orden borra otra (aviso del entrenador, depurador y las dos líneas de la mira)
+ * orden borra otra (aviso del entrenador y depurador)
  * y el ejercicio de las dos órdenes para la cabeza. Aparte, porque Capturas está
  * en el límite de líneas.
  */
@@ -95,7 +95,7 @@ final class CapturasDeOrdenes {
             e.escenario = VistaDeArena.Escenario.LABORATORIO;
             pp = new PantallaPelea(e);
             pp.alEntrar(j);
-            pp.abrirDepurador(2);
+            pp.abrirDepurador(1);
         }
 
         @Override

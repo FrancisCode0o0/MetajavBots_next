@@ -171,3 +171,107 @@ ejercicio: t05_marco
 es: Dibuja el marco de la arena con dos bucles, uno dentro de otro.
 de: Zeichne den Rahmen der Arena mit zwei ineinander verschachtelten Schleifen.
 en: Draw the arena frame with two loops, one inside the other.
+
+=== l05_carrera
+tema: 05
+orden: 90
+titulo.es: La carrera de obstáculos
+titulo.de: Das Hindernisrennen
+titulo.en: The obstacle race
+--- pagina
+es: La carrera es otro juego: aquí no gana quien recibe menos daño, sino quien llega antes a la meta, a la derecha de la pista.
+de: Das Rennen ist ein anderes Spiel: Hier gewinnt nicht, wer weniger Schaden nimmt, sondern wer zuerst im Ziel ist, rechts auf der Strecke.
+en: The race is a different game: here the winner is not whoever takes less damage, but whoever reaches the finish first, on the right of the track.
+--- pagina
+es: Tiene su propio código: el de la pantalla de la carrera, no el del Taller.
+es:
+es: Compílalo allí antes de pulsar «¡Iniciar carrera!». Sin compilar, el robot se queda quieto en la salida.
+de: Es hat seinen eigenen Code: den auf dem Rennbildschirm, nicht den aus der Werkstatt.
+de:
+de: Kompiliere ihn dort, bevor du „Lauf starten!“ drückst. Ohne Kompilieren bleibt der Roboter am Start stehen.
+en: It has its own code: the one on the race screen, not the Workshop one.
+en:
+en: Compile it there before pressing "Start race!". Without compiling, the robot stays still at the start.
+--- pagina
+es: Por el camino hay trampas (pinchos, sierras, fosos), barriles y rivales.
+es:
+es: obstaculos() te da la lista de todo lo que hay. Con un bucle los miras uno a uno: cada uno dice si es peligroso() y dónde está.
+de: Unterwegs gibt es Fallen (Stacheln, Sägen, Gruben), Fässer und Gegner.
+de:
+de: hindernisse() gibt dir die Liste von allem, was da ist. Mit einer Schleife schaust du sie dir einzeln an: Jedes sagt, ob es gefaehrlich() ist und wo es liegt.
+en: Along the way there are traps (spikes, saws, pits), barrels and rivals.
+en:
+en: obstacles() gives you the list of everything there. With a loop you look at them one by one: each one says whether it is dangerous() and where it is.
+--- pagina
+es: Adivina: si tu robot solo avanza hacia la derecha, sin mirar nada, ¿qué le pasa en la primera trampa?
+es:
+es: Piénsalo antes de pasar la página.
+de: Rate mal: Wenn dein Roboter nur nach rechts fährt, ohne hinzusehen, was passiert bei der ersten Falle?
+de:
+de: Überleg es dir, bevor du umblätterst.
+en: Guess: if your robot just moves to the right without looking at anything, what happens at the first trap?
+en:
+en: Think about it before turning the page.
+--- pagina
+es: Se la come entera. La idea, en palabras:
+es:
+es: EN CADA TURNO → avanzar a la derecha → PARA cada obstáculo → SI es peligroso y está delante → apartarse por arriba o por abajo.
+de: Er fährt voll hinein. Die Idee in Worten:
+de:
+de: IN JEDEM ZUG → nach rechts fahren → FÜR jedes Hindernis → WENN es gefährlich ist und vorn liegt → oben oder unten ausweichen.
+en: It runs straight into it. The idea in words:
+en:
+en: EVERY TICK → move to the right → FOR each obstacle → IF it is dangerous and ahead → step aside above or below.
+--- pagina
+es: Romper barriles y robots rotos da monedas, y llegar casi sin daño da un poco más. Pero lo primero es llegar.
+de: Fässer und kaputte Roboter zu zerstören bringt Münzen, und fast ohne Schaden anzukommen etwas mehr. Aber zuerst musst du ankommen.
+en: Breaking barrels and broken robots gives coins, and arriving almost without damage gives a little more. But first you have to arrive.
+--- tarea
+ejercicio: j_mas_cercano
+es: Para esquivar, primero hay que saber qué está más cerca: resuelve este ejercicio.
+de: Zum Ausweichen musst du erst wissen, was am nächsten ist: Löse diese Übung.
+en: To dodge, you first need to know what is closest: solve this exercise.
+
+=== l05_destruccion
+tema: 05
+orden: 91
+titulo.es: Destrucción y supervivencia
+titulo.de: Zerstörung und Überleben
+titulo.en: Destruction and survival
+--- pagina
+es: Aquí la meta es aguantar: 60 segundos en una arena enorme. Si sigues en pie al final, has sobrevivido.
+de: Hier ist das Ziel durchzuhalten: 60 Sekunden in einer riesigen Arena. Stehst du am Ende noch, hast du überlebt.
+en: Here the goal is to hold on: 60 seconds in a huge arena. If you are still standing at the end, you survived.
+--- pagina
+es: Como en la carrera, tiene su propio código en su pantalla. Está en Modo especial, en su última pestaña.
+de: Wie beim Rennen hat es seinen eigenen Code auf seinem Bildschirm. Du findest es im Spezialmodus, im letzten Reiter.
+en: Like the race, it has its own code on its screen. You find it in Special mode, in its last tab.
+--- pagina
+es: Los golpes duelen mucho más que en la carrera. Lo que más ayuda: no quedarse quieto y no acercarse a los robots que pegan fuerte.
+de: Treffer tun viel mehr weh als im Rennen. Was am meisten hilft: nicht stehen bleiben und nicht zu nah an die Roboter, die hart zuschlagen.
+en: Hits hurt much more than in the race. What helps most: do not stand still and do not get close to the robots that hit hard.
+--- pagina
+es: Adivina: ¿qué da más monedas, romper todo lo que veas o sobrevivir?
+es:
+es: Piénsalo antes de pasar la página.
+de: Rate mal: Was bringt mehr Münzen, alles zu zerstören, was du siehst, oder zu überleben?
+de:
+de: Überleg es dir, bevor du umblätterst.
+en: Guess: what gives more coins, breaking everything you see or surviving?
+en:
+en: Think about it before turning the page.
+--- pagina
+es: Las dos cosas suman: cada cosa o robot roto da un poco, y sobrevivir da medio punto más. Si caes pronto, solo te quedas con la cuarta parte.
+es:
+es: La idea, en palabras: EN CADA TURNO → SI un robot se acerca → alejarme → SI NO, SI hay algo a tiro → atacarlo → seguir moviéndome.
+de: Beides zählt: Jedes zerstörte Ding und jeder Roboter bringt etwas, und Überleben einen halben Punkt mehr. Fällst du früh, behältst du nur ein Viertel.
+de:
+de: Die Idee in Worten: IN JEDEM ZUG → WENN ein Roboter näher kommt → weggehen → SONST, WENN etwas in Reichweite ist → angreifen → in Bewegung bleiben.
+en: Both count: each broken thing or robot gives a little, and surviving gives half a point more. If you fall early, you keep only a quarter.
+en:
+en: The idea in words: EVERY TICK → IF a robot comes closer → move away → OTHERWISE, IF something is in range → attack it → keep moving.
+--- tarea
+ejercicio: j_elegir_brazo
+es: Para atacar bien con lo que tienes a tiro, elige el brazo adecuado: resuelve este ejercicio.
+de: Um mit dem anzugreifen, was in Reichweite ist, wähl den richtigen Arm: Löse diese Übung.
+en: To attack well with whatever is in range, choose the right arm: solve this exercise.

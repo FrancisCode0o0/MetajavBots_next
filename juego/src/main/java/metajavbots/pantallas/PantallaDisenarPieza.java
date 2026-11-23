@@ -36,6 +36,8 @@ public final class PantallaDisenarPieza implements Pantalla {
     private String aviso = "";
     private float t;
 
+    @Override public String comoSeJuega() { return "pieza"; }
+
     @Override
     public String musica() {
         return "taller";

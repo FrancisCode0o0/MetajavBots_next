@@ -42,6 +42,8 @@ public final class Campanas implements Pantalla {
     private String aviso = "";
     private float t;
 
+    @Override public String comoSeJuega() { return "historia"; }
+
     @Override
     public void alEntrar(Juego j) {
         vista = new VistaDeArena(j.pincel);

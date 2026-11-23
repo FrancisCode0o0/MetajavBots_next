@@ -48,6 +48,8 @@ public class Juego extends ApplicationAdapter {
     public final metajavbots.pantallas.AlarmaBajada alarmaBajada = new metajavbots.pantallas.AlarmaBajada();
     /** Aviso obligatorio del entrenador activo cuando el robot del jugador aún no se ha compilado nunca. */
     public final metajavbots.pantallas.AvisoDeCompilacion avisoCompilar = new metajavbots.pantallas.AvisoDeCompilacion();
+    /** «¿Cómo se juega?»: la tarjeta de cada modo (sale sola la primera vez y con su botón). */
+    public final metajavbots.pantallas.ComoSeJuega comoSeJuega = new metajavbots.pantallas.ComoSeJuega();
     /** Si el visor táctico de la arena (F8) está activo durante esta sesión (desactivado por defecto). */
     public boolean visorTactico;
     /** Los archivos que se acaban de soltar en la ventana (el escritorio los pone; los recoge quien los quiera, como el temario). */
@@ -104,6 +106,7 @@ public class Juego extends ApplicationAdapter {
         }
         pantalla = nueva;
         nueva.alEntrar(this);
+        comoSeJuega.alEntrar(this, nueva);
     }
 
     /** Va a otra pantalla olvidando las anteriores (al menú, por ejemplo). */
@@ -114,8 +117,10 @@ public class Juego extends ApplicationAdapter {
         if (entrenadorFlotante != null) entrenadorFlotante.cerrar();
         if (pantalla != null) pantalla.alSalir(this);
         anteriores.clear();
+        comoSeJuega.cerrar();
         pantalla = nueva;
         nueva.alEntrar(this);
+        comoSeJuega.alEntrar(this, nueva);
     }
 
     /** Vuelve a la pantalla de antes. */
@@ -143,6 +148,7 @@ public class Juego extends ApplicationAdapter {
         jugador = j;
         alarmaBajada.cancelar();
         avisoCompilar.cerrar();
+        comoSeJuega.cerrar();
         if (j != null) {
             metajavbots.tutor.Biografias.usarPartida(j);
             T.idioma = j.idioma;
@@ -192,9 +198,11 @@ public class Juego extends ApplicationAdapter {
         try {
             entrenadorFlotante.antes(this);
             avisoCompilar.antes(this);
+            comoSeJuega.antes(this);
             pantalla.fotograma(this, dt);
             entrenadorFlotante.dibujar(this, dt);
             avisoCompilar.dibujar(this, dt);
+            comoSeJuega.dibujar(this, dt);
             ui.acabarFotograma();
             fallosSeguidos = 0;
         } catch (Throwable e) {

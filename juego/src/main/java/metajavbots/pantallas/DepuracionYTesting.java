@@ -56,6 +56,8 @@ public final class DepuracionYTesting implements Pantalla {
         return d;
     }
 
+    @Override public String comoSeJuega() { return "depuracion"; }
+
     @Override
     public void fotograma(Juego j, float dt) {
         Pincel p = j.pincel;

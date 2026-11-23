@@ -171,6 +171,8 @@ public final class PrepararPelea implements Pantalla {
     private final List<String[]> companeros = new ArrayList<>();
     private int companero = -1;
 
+    @Override public String comoSeJuega() { return "desafios"; }
+
     @Override
     public void alEntrar(Juego j) {
         ajenos = robotsAjenos();

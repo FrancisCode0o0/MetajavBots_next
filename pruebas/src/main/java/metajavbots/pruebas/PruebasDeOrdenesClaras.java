@@ -175,7 +175,7 @@ final class PruebasDeOrdenesClaras {
         caso("órdenes claras: textos nuevos en es, de y en", () -> {
             String[] claves = {"aviso.mando.1", "aviso.mando.2", "aviso.mando.4", "aviso.ordenes.pisada", "aviso.ordenes.pisada_mira",
                 "aviso.ordenes.por_que", "aviso.ordenes.por_que_mismo", "aviso.ordenes.lejos", "aviso.ordenes.lejos_mira", "aviso.ordenes.f9",
-                "ajustes.avisos_ordenes", "ajustes.avisos_ordenes_ayuda", "pelea.depurador_mira", "pelea.depurador_mira_ayuda", "pelea.mira_quiere",
+                "ajustes.avisos_ordenes", "ajustes.avisos_ordenes_ayuda", "pelea.mira_quiere",
                 "pelea.mira_ahora", "dibujo.turno.titulo", "dibujo.turno.paso1", "dibujo.turno.paso2", "dibujo.turno.paso3",
                 "dibujo.mando.ruedas", "dibujo.mando.cuerpo", "dibujo.mando.cabeza", "dibujo.orden.avanzar", "dibujo.orden.ninguna",
                 "dibujo.orden.mirar_enemigo", "dibujo.orden.girar12"};

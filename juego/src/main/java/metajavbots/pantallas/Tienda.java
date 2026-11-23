@@ -54,6 +54,8 @@ public final class Tienda implements Pantalla {
     private String aviso = "";
     private float t;
 
+    @Override public String comoSeJuega() { return "tienda"; }
+
     @Override
     public String musica() {
         return "tienda";

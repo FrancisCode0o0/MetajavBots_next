@@ -1,0 +1,1009 @@
+# 08_mecanicas.txt — Las fichas de las mecánicas del juego (CLARIDAD, 23-nov-2026).
+# Mismo formato que los demás conceptos (LEEME_FORMATO.txt), con nivel 6 (la pestaña «El juego» del entrenador)
+# y el id empezando por «mec_». Cada ficha tiene cuatro párrafos fijos (qué es, las cifras, cómo se ve en la
+# pelea y cómo se usa desde el código) y una idea en pseudocódigo. Sin ejemplo en Java a propósito: el código lo
+# escribe el jugador (ENCARGO_CLARIDAD, punto 4b). Se ven en pantallas/Mecanicas (el índice), en el entrenador
+# (F2) y desde donde sale cada mecánica (informe de la ronda, «¿Cómo se juega?» de cada modo).
+# Las cifras salen del código y de res/datos; si cambian allí, cámbialas aquí (PruebasDeClaridad lo vigila en parte).
+
+=== mec_turno
+nivel: 6
+tema: --
+titulo.es: El turno y los tres mandos
+titulo.de: Der Zug und die drei Regler
+titulo.en: The tick and the three controls
+claves.es: turno, mandos, orden, ordenes, ultima orden, cada turno, mira, cabeza, paso a paso
+claves.de: zug, regler, befehl, letzter befehl, jeden zug, visier, kopf, schritt fuer schritt
+claves.en: tick, controls, order, last order, every tick, sight, head, step by step
+ver: como_obedece, mec_radar, mec_tope
+es:
+    Qué es: La pelea va a saltitos llamados turnos, como los dibujos de un cuaderno que pasas deprisa. En cada turno tu robot lee su código: primero los avisos (alRecibirGolpe, alVerEnemigo…) y al final cadaTurno.
+    Las cifras: Hay 30 turnos por segundo y una ronda dura 1200 turnos (40 segundos). El robot tiene tres mandos: ruedas, cuerpo y cabeza (la mira). Cada mando se queda solo con la ÚLTIMA orden del turno. La cabeza gira unos 14° por turno (menos con armas pesadas).
+    En la pelea: Con «Paso a paso» la pelea se para y avanzas turno a turno: ves la línea de tu código que actúa, qué recibe cada mando y cuánto le falta a la mira.
+    Desde tu código: Ruedas: avanzar, retroceder, detener. Cuerpo: girar, girarHacia. Cabeza: apuntar, apuntarHacia, apuntarA. restanteAvance, restanteGiro y restanteMira dicen cuánto falta. atacar dispara ya, hacia donde mira la cabeza ahora.
+de:
+    Was es ist: Der Kampf läuft in kleinen Sprüngen, den Zügen, wie die Bilder eines Daumenkinos. In jedem Zug liest dein Roboter seinen Code: zuerst die Meldungen (beiTreffer, beiSicht …), zuletzt jedenZug.
+    Die Zahlen: 30 Züge pro Sekunde; eine Runde dauert 1200 Züge (40 Sekunden). Der Roboter hat drei Regler: Räder, Körper und Kopf (das Visier). Jeder Regler behält nur den LETZTEN Befehl des Zugs. Der Kopf dreht sich etwa 14° pro Zug (mit schweren Waffen weniger).
+    Im Kampf: Mit „Schritt für Schritt“ hält der Kampf an, und du gehst Zug für Zug weiter: Du siehst die Zeile deines Codes, die wirkt, was jeder Regler bekommt und wie viel dem Visier noch fehlt.
+    In deinem Code: Räder: vorwaerts, rueckwaerts, anhalten. Körper: drehen, drehenNach. Kopf: zielen, zielenNach, zielenAuf. restStrecke, restDrehung und restZielen sagen, wie viel noch fehlt. angreifen schießt sofort, dorthin, wohin der Kopf jetzt schaut.
+en:
+    What it is: The fight moves in little jumps called ticks, like the pictures of a flip book. Each tick your robot reads its code: first the events (onHit, onSeeEnemy…) and onTick last.
+    The numbers: There are 30 ticks per second and a round lasts 1200 ticks (40 seconds). The robot has three controls: wheels, body and head (the sight). Each control keeps only the LAST order of the tick. The head turns about 14° per tick (less with heavy weapons).
+    In the fight: With "Step by step" the fight pauses and you move one tick at a time: you see the line of your code that acts, what each control gets and how far the sight still has to go.
+    From your code: Wheels: ahead, back, stop. Body: turn, turnTo. Head: aim, aimTo, aimAt. remainingDistance, remainingTurn and remainingAim say how much is left. attack fires at once, where the head points now.
+pseudo.es:
+    EN CADA TURNO:
+        primero, los avisos (me han dado, veo a alguien...)
+        después, cadaTurno
+        cada mando hace caso a su ÚLTIMA orden
+    SI quiero acertar:
+        apuntar hacia el enemigo
+        esperar a que a la mira le falte poco
+        atacar
+pseudo.de:
+    IN JEDEM ZUG:
+        zuerst die Meldungen (getroffen, sehe jemanden ...)
+        danach jedenZug
+        jeder Regler folgt seinem LETZTEN Befehl
+    WENN ich treffen will:
+        zum Gegner zielen
+        warten, bis dem Visier nur noch wenig fehlt
+        angreifen
+pseudo.en:
+    EVERY TICK:
+        first, the events (I was hit, I see someone...)
+        then, onTick
+        each control obeys its LAST order
+    IF I want to hit:
+        aim at the enemy
+        wait until the sight has little left to turn
+        attack
+
+=== mec_como_se_gana
+nivel: 6
+tema: --
+titulo.es: Cómo se gana: rondas y daño
+titulo.de: So gewinnt man: Runden und Schaden
+titulo.en: How you win: rounds and damage
+claves.es: como se gana, ganar, ronda, rondas, puntuacion, empate, fuera de combate, ko, rendirse
+claves.de: gewinnen, runde, runden, punkte, unentschieden, k.o., aufgeben
+claves.en: how to win, win, round, rounds, score, draw, knockout, ko, give up
+ver: mec_partes, mec_desgaste
+es:
+    Qué es: Gana la pelea quien MENOS daño recibe sumando todas las rondas. No hace falta romper al rival: basta con que te den menos de lo que das.
+    Las cifras: Una pelea tiene varias rondas (en Desafíos eliges 3, 4, 6, 10 o 12). Cada ronda dura 40 segundos, o acaba antes si a un robot le rompen la cabeza (fuera de combate). Si la diferencia es de menos de medio punto, es empate. Rendirse es perder.
+    En la pelea: Arriba ves «Ronda X de Y», el reloj (se pone rojo en los últimos 10 segundos) y el daño recibido de cada uno. Entre ronda y ronda, el informe te dice cómo vas.
+    Desde tu código: blindaje() te dice cuánto te queda (de 0 a 100). ronda() y turnoActual() dicen en qué momento estás. alAcabarRonda se llama al final de cada ronda.
+de:
+    Was es ist: Den Kampf gewinnt, wer über alle Runden WENIGER Schaden nimmt. Du musst den Gegner nicht kaputt machen: Es reicht, weniger einzustecken, als du austeilst.
+    Die Zahlen: Ein Kampf hat mehrere Runden (bei Herausforderungen wählst du 3, 4, 6, 10 oder 12). Jede Runde dauert 40 Sekunden oder endet früher, wenn bei einem Roboter der Kopf kaputtgeht (k.o.). Ist der Unterschied kleiner als ein halber Punkt, ist es unentschieden. Aufgeben heißt verlieren.
+    Im Kampf: Oben siehst du „Runde X von Y“, die Uhr (in den letzten 10 Sekunden rot) und den erlittenen Schaden jedes Roboters. Zwischen den Runden sagt dir der Bericht, wie du stehst.
+    In deinem Code: panzerung() sagt, wie viel dir bleibt (0 bis 100). runde() und zug() sagen, wann du gerade bist. beiRundenende wird am Ende jeder Runde aufgerufen.
+en:
+    What it is: The fight is won by whoever takes LESS damage over all the rounds. You do not need to break the rival: it is enough to take less than you give.
+    The numbers: A fight has several rounds (in Challenges you choose 3, 4, 6, 10 or 12). Each round lasts 40 seconds, or ends sooner if a robot gets its head broken (knockout). If the difference is under half a point, it is a draw. Giving up means losing.
+    In the fight: At the top you see "Round X of Y", the clock (red in the last 10 seconds) and the damage each robot has taken. Between rounds, the report tells you how you are doing.
+    From your code: armor() tells you how much you have left (0 to 100). round() and tick() tell you when you are. onRoundEnd is called at the end of each round.
+pseudo.es:
+    AL ACABAR LA PELEA:
+        sumar el daño que ha recibido cada robot
+        gana el que tenga MENOS
+    SI me rompen la cabeza:
+        esa ronda se acaba
+        la pelea sigue en la siguiente
+pseudo.de:
+    AM ENDE DES KAMPFES:
+        den erlittenen Schaden jedes Roboters zusammenzählen
+        es gewinnt, wer WENIGER hat
+    WENN mein Kopf kaputtgeht:
+        endet diese Runde
+        der Kampf geht in der nächsten weiter
+pseudo.en:
+    WHEN THE FIGHT ENDS:
+        add up the damage each robot took
+        whoever has LESS wins
+    IF my head gets broken:
+        that round ends
+        the fight goes on in the next one
+
+=== mec_partes
+nivel: 6
+tema: --
+titulo.es: Daño por partes y abolladuras
+titulo.de: Schaden an den Teilen und Dellen
+titulo.en: Damage by part and dents
+claves.es: partes, parte rota, brazo roto, piernas rotas, cabeza rota, abolladuras, dano por partes, blindaje
+claves.de: teile, kaputtes teil, arm kaputt, beine kaputt, kopf kaputt, dellen, schaden an teilen, panzerung
+claves.en: parts, broken part, broken arm, broken legs, broken head, dents, damage by part, armor
+ver: mec_como_se_gana, mec_escudos, mec_desgaste
+es:
+    Qué es: Tu robot tiene cuatro partes: cabeza, brazo izquierdo, brazo derecho y piernas. Cada golpe cae en una de ellas, un poco al azar. Si una parte llega a cero, se rompe.
+    Las cifras: Brazo roto: ese brazo ya no ataca. Piernas rotas: va a menos de la mitad de velocidad (×0,4) y gira la mitad. Cabeza rota: fuera de combate en esa ronda. Los golpes de cerca caen más en los brazos; los de lejos, más en las piernas.
+    En la pelea: Arriba hay una barra por parte: verde, amarilla y roja. Cada golpe deja una abolladura (o una quemadura, con láser o fuego) que se queda toda la pelea. Con mucho daño, el robot echa humo.
+    Desde tu código: blindaje() te da lo que te queda en total (de 0 a 100). En alRecibirGolpe(g), g.pieza() dice qué parte te han dado y g.dano() cuánto.
+de:
+    Was es ist: Dein Roboter hat vier Teile: Kopf, linken Arm, rechten Arm und Beine. Jeder Treffer landet auf einem davon, ein bisschen zufällig. Fällt ein Teil auf null, geht es kaputt.
+    Die Zahlen: Arm kaputt: Dieser Arm greift nicht mehr an. Beine kaputt: weniger als halbe Geschwindigkeit (×0,4) und halbe Drehung. Kopf kaputt: k.o. für diese Runde. Nahkampftreffer landen öfter auf den Armen, Fernschüsse öfter auf den Beinen.
+    Im Kampf: Oben gibt es pro Teil einen Balken: grün, gelb und rot. Jeder Treffer hinterlässt eine Delle (oder eine Brandspur bei Laser und Feuer), die den ganzen Kampf bleibt. Bei viel Schaden raucht der Roboter.
+    In deinem Code: panzerung() gibt dir, was insgesamt bleibt (0 bis 100). In beiTreffer(g) sagt g.teil(), welches Teil getroffen wurde, und g.schaden(), wie viel.
+en:
+    What it is: Your robot has four parts: head, left arm, right arm and legs. Each hit lands on one of them, a little at random. If a part reaches zero, it breaks.
+    The numbers: Broken arm: that arm no longer attacks. Broken legs: less than half speed (×0.4) and half the turning. Broken head: knocked out for that round. Close-up hits land more on the arms; long-range ones, more on the legs.
+    In the fight: At the top there is a bar per part: green, yellow and red. Each hit leaves a dent (or a burn mark, with lasers or fire) that stays for the whole fight. With a lot of damage, the robot smokes.
+    From your code: armor() gives you what is left in total (0 to 100). In onHit(h), h.part() says which part was hit and h.damage() how much.
+pseudo.es:
+    AL RECIBIR UN GOLPE:
+        mirar qué parte me han dado
+        SI me queda poco blindaje:
+            alejarme y protegerme
+pseudo.de:
+    BEI EINEM TREFFER:
+        schauen, welches Teil getroffen wurde
+        WENN mir wenig Panzerung bleibt:
+            weggehen und mich schützen
+pseudo.en:
+    WHEN I GET HIT:
+        look at which part was hit
+        IF I have little armor left:
+            move away and protect myself
+
+=== mec_energia
+nivel: 6
+tema: --
+titulo.es: Energía
+titulo.de: Energie
+titulo.en: Energy
+claves.es: energia, bateria, recarga, sin energia, gastar energia
+claves.de: energie, batterie, aufladen, keine energie, energie verbrauchen
+claves.en: energy, battery, recharge, out of energy, spend energy
+ver: mec_armas, mec_escudos, mec_habilidades
+es:
+    Qué es: La energía es como la batería del robot. Los láseres, los especiales de la cabeza, las habilidades y hasta moverse la gastan. Se recarga sola un poco en cada turno.
+    Las cifras: El núcleo decide cuánta cabe (de 90 a 180) y cuánto se recarga en cada turno (de 0,4 a 0,8). Moverse gasta 0,012 por paso (más si vas sobrecargado). Un arma solo dispara si tienes toda la energía que cuesta.
+    En la pelea: Es la barra amarilla debajo de las partes de cada robot.
+    Desde tu código: energia() te dice cuánta tienes. listoIzquierda(), listoDerecha() y listoEspecial() te dicen si ya se puede usar (con la energía y el enfriamiento contados).
+de:
+    Was es ist: Energie ist wie die Batterie des Roboters. Laser, Kopf-Spezialfähigkeiten, Fähigkeiten und sogar Fahren verbrauchen sie. In jedem Zug lädt sie sich ein wenig von selbst auf.
+    Die Zahlen: Der Kern bestimmt, wie viel hineinpasst (90 bis 180) und wie viel pro Zug nachlädt (0,4 bis 0,8). Fahren kostet 0,012 pro Schritt (mehr bei Überladung). Eine Waffe schießt nur, wenn du die ganze Energie hast, die sie kostet.
+    Im Kampf: Es ist der gelbe Balken unter den Teilen jedes Roboters.
+    In deinem Code: energie() sagt dir, wie viel du hast. bereitLinks(), bereitRechts() und bereitSpezial() sagen, ob es schon geht (Energie und Abkühlen mitgezählt).
+en:
+    What it is: Energy is like the robot’s battery. Lasers, head specials, abilities and even moving spend it. It recharges a little by itself every tick.
+    The numbers: The core decides how much fits (90 to 180) and how much comes back each tick (0.4 to 0.8). Moving costs 0.012 per step (more if overloaded). A weapon only fires if you have all the energy it costs.
+    In the fight: It is the yellow bar under each robot’s parts.
+    From your code: energy() tells you how much you have. readyLeft(), readyRight() and readySpecial() tell you if it can be used yet (energy and cooldown included).
+pseudo.es:
+    SI el arma está lista:
+        atacar
+    SI NO:
+        moverme mientras se recarga
+pseudo.de:
+    WENN die Waffe bereit ist:
+        angreifen
+    SONST:
+        fahren, während sie auflädt
+pseudo.en:
+    IF the weapon is ready:
+        attack
+    OTHERWISE:
+        move while it recharges
+
+=== mec_armas
+nivel: 6
+tema: --
+titulo.es: Armas: enfriamiento y cargas
+titulo.de: Waffen: Abkühlen und Ladungen
+titulo.en: Weapons: cooldown and charges
+claves.es: armas, arma, enfriamiento, cargas, laser, balas, misiles, cuerpo a cuerpo, lanzallamas, alcance, atacar
+claves.de: waffen, waffe, abkuehlen, ladungen, laser, kugeln, raketen, nahkampf, flammenwerfer, reichweite, angreifen
+claves.en: weapons, weapon, cooldown, charges, laser, bullets, missiles, melee, flamethrower, range, attack
+ver: mec_energia, mec_potencia, mec_turno
+es:
+    Qué es: Cada brazo lleva un arma. Después de atacar, el brazo tiene que enfriarse unos turnos antes de volver a atacar, como quien recupera el aliento. Hay láseres (dan al instante), balas, misiles que persiguen, armas de cerca y el lanzallamas.
+    Las cifras: Cada arma tiene daño, alcance y enfriamiento. Por ejemplo: láser básico, 6 de daño a 520 de distancia y 22 turnos de espera; puños, 14 de daño a 55 y 26 turnos. Algunas tienen cargas: el sable fotónico da 4 golpes seguidos y luego descansa 55 turnos. Cada brazo ataca como mucho una vez por turno.
+    En la pelea: Ves el rayo, la bala o el golpe, con su chispa y su sonido. En la Tienda ves las cifras de cada arma.
+    Desde tu código: atacar() usa el brazo derecho y, si lo llamas otra vez en el mismo turno, el izquierdo. atacarIzquierda() y atacarDerecha() eligen brazo. armaIzquierda(), alcanceIzquierda() y listoIzquierda() (y las de la derecha) te cuentan cómo es el arma y si está lista.
+de:
+    Was es ist: Jeder Arm trägt eine Waffe. Nach einem Angriff muss der Arm ein paar Züge abkühlen, bevor er wieder angreift, wie jemand, der Luft holt. Es gibt Laser (treffen sofort), Kugeln, Raketen, die verfolgen, Nahkampfwaffen und den Flammenwerfer.
+    Die Zahlen: Jede Waffe hat Schaden, Reichweite und Abkühlzeit. Zum Beispiel: Basislaser, 6 Schaden auf 520 Entfernung und 22 Züge Pause; Fäuste, 14 Schaden auf 55 und 26 Züge. Manche haben Ladungen: Der Photonensäbel schlägt 4-mal hintereinander zu und ruht dann 55 Züge. Jeder Arm greift höchstens einmal pro Zug an.
+    Im Kampf: Du siehst den Strahl, die Kugel oder den Schlag, mit Funken und Geräusch. Im Laden siehst du die Zahlen jeder Waffe.
+    In deinem Code: angreifen() nimmt den rechten Arm und, wenn du es im selben Zug noch einmal aufrufst, den linken. angriffLinks() und angriffRechts() wählen den Arm. waffeLinks(), reichweiteLinks() und bereitLinks() (und die rechten) sagen dir, wie die Waffe ist und ob sie bereit ist.
+en:
+    What it is: Each arm carries a weapon. After attacking, the arm has to cool down for a few ticks before it attacks again, like someone catching their breath. There are lasers (they hit at once), bullets, missiles that chase, close-up weapons and the flamethrower.
+    The numbers: Each weapon has damage, range and cooldown. For example: basic laser, 6 damage at 520 distance and 22 ticks of waiting; fists, 14 damage at 55 and 26 ticks. Some have charges: the photon saber strikes 4 times in a row and then rests for 55 ticks. Each arm attacks at most once per tick.
+    In the fight: You see the beam, the bullet or the blow, with its sparks and sound. In the Shop you see each weapon’s numbers.
+    From your code: attack() uses the right arm and, if you call it again in the same tick, the left one. attackLeft() and attackRight() choose the arm. weaponLeft(), rangeLeft() and readyLeft() (and the right ones) tell you what the weapon is like and whether it is ready.
+pseudo.es:
+    AL VER al enemigo:
+        SI está más cerca que el alcance de mi arma
+           Y el brazo está listo:
+            atacar con ese brazo
+        SI NO:
+            acercarme
+pseudo.de:
+    BEIM SEHEN des Gegners:
+        WENN er näher ist als die Reichweite meiner Waffe
+           UND der Arm bereit ist:
+            mit diesem Arm angreifen
+        SONST:
+            näher heranfahren
+pseudo.en:
+    WHEN I SEE the enemy:
+        IF it is closer than my weapon’s range
+           AND the arm is ready:
+            attack with that arm
+        OTHERWISE:
+            get closer
+
+=== mec_potencia
+nivel: 6
+tema: --
+titulo.es: Potencia y calor
+titulo.de: Leistung und Hitze
+titulo.en: Power and heat
+claves.es: potencia, calor, regular potencia, fuerza del disparo
+claves.de: leistung, hitze, leistung regeln, schussstaerke
+claves.en: power, heat, set power, shot strength
+ver: mec_armas, mec_energia
+es:
+    Qué es: Algunas armas de balas (el cañón ligero, el bláster de iones) dejan elegir la potencia del disparo, como el volumen de una radio: más fuerte hace más daño, pero la bala va más lenta, el arma se calienta más y gasta energía.
+    Las cifras: La potencia va de 0,1 a 3 (1 es lo normal). A potencia 3, la bala hace 4 veces el daño, va a dos tercios de la velocidad, el brazo tarda un tercio más en enfriarse y gasta 28 de energía de más. Si aciertas, recuperas un poco de energía.
+    En la pelea: No se ve distinto: lo notas en el daño y en lo que tarda el siguiente disparo.
+    Desde tu código: regularPotencia(número) antes de atacar. Solo sirve con las armas que lo permiten (lo dice la Tienda).
+de:
+    Was es ist: Manche Kugelwaffen (die leichte Kanone, der Ionenblaster) lassen dich die Schussstärke wählen, wie die Lautstärke eines Radios: Stärker macht mehr Schaden, aber die Kugel ist langsamer, die Waffe wird heißer und es kostet Energie.
+    Die Zahlen: Die Leistung geht von 0,1 bis 3 (1 ist normal). Bei Leistung 3 macht die Kugel 4-mal so viel Schaden, fliegt mit zwei Dritteln der Geschwindigkeit, der Arm kühlt ein Drittel länger ab und es kostet 28 Energie extra. Triffst du, bekommst du etwas Energie zurück.
+    Im Kampf: Es sieht nicht anders aus: Du merkst es am Schaden und daran, wie lange der nächste Schuss dauert.
+    In deinem Code: leistungRegeln(Zahl) vor dem Angriff. Geht nur mit Waffen, die es erlauben (steht im Laden).
+en:
+    What it is: Some bullet weapons (the light cannon, the ion blaster) let you choose the power of the shot, like the volume of a radio: louder does more damage, but the bullet is slower, the weapon gets hotter and it costs energy.
+    The numbers: Power goes from 0.1 to 3 (1 is normal). At power 3, the bullet does 4 times the damage, flies at two thirds of the speed, the arm takes a third longer to cool down and it costs 28 extra energy. If you hit, you get a little energy back.
+    In the fight: It does not look different: you notice it in the damage and in how long the next shot takes.
+    From your code: setPower(number) before attacking. It only works with weapons that allow it (the Shop says so).
+pseudo.es:
+    SI el enemigo está cerca y quieto:
+        potencia alta (pega fuerte)
+    SI está lejos o va muy rápido:
+        potencia baja (bala rápida)
+    atacar
+pseudo.de:
+    WENN der Gegner nah ist und stillsteht:
+        hohe Leistung (trifft hart)
+    WENN er weit weg ist oder schnell:
+        niedrige Leistung (schnelle Kugel)
+    angreifen
+pseudo.en:
+    IF the enemy is close and still:
+        high power (hits hard)
+    IF it is far away or very fast:
+        low power (fast bullet)
+    attack
+
+=== mec_escudos
+nivel: 6
+tema: --
+titulo.es: Escudos y especiales de la cabeza
+titulo.de: Schilde und Kopf-Spezialfähigkeiten
+titulo.en: Shields and head specials
+claves.es: escudo, escudos, especial, turbo, reparar, camuflaje, pulso, sobrecarga, cabeza especial
+claves.de: schild, schilde, spezial, turbo, reparieren, tarnung, impuls, ueberlast, kopf spezial
+claves.en: shield, shields, special, turbo, repair, camouflage, pulse, overload, head special
+ver: mec_partes, mec_energia, mec_habilidades
+es:
+    Qué es: Un escudo se come una parte del daño, como un paraguas que para casi toda la lluvia. Si va en un brazo, solo protege por delante, hacia donde mira la cabeza; si va en la cabeza, por todos lados. Algunas cabezas traen otro especial: turbo, reparar, camuflaje, pulso o sobrecarga.
+    Las cifras: Un escudo para entre el 10 % y el 85 % del daño durante un rato (el escudo de brazo: el 70 % durante 45 turnos, y luego 90 turnos de espera). Turbo: ×1,8 de velocidad durante 60 turnos. Reparar: cura 16. Camuflaje: no te ven a más de 150. Pulso: aturde a los que tienes cerca. Sobrecarga: ×1,5 de daño durante 90 turnos. Todos gastan energía y luego esperan.
+    En la pelea: Un aura de color alrededor del robot; al parar un golpe salen chispas azules. Con camuflaje, el robot parpadea.
+    Desde tu código: El escudo de un brazo se levanta atacando con ese brazo (atacarIzquierda o atacarDerecha). El especial de la cabeza, con especial(). especialCabeza() dice cuál tienes y listoEspecial() si está listo.
+de:
+    Was es ist: Ein Schild schluckt einen Teil des Schadens, wie ein Regenschirm, der fast den ganzen Regen abhält. Am Arm schützt er nur nach vorn, dorthin, wohin der Kopf schaut; am Kopf von allen Seiten. Manche Köpfe haben eine andere Spezialfähigkeit: Turbo, Reparieren, Tarnung, Impuls oder Überlast.
+    Die Zahlen: Ein Schild hält 10 % bis 85 % des Schadens eine Weile ab (der Armschild: 70 % für 45 Züge, dann 90 Züge Pause). Turbo: ×1,8 Geschwindigkeit für 60 Züge. Reparieren: heilt 16. Tarnung: Man sieht dich nicht weiter als 150. Impuls: betäubt alle in der Nähe. Überlast: ×1,5 Schaden für 90 Züge. Alle kosten Energie und brauchen dann Pause.
+    Im Kampf: Eine farbige Aura um den Roboter; hält er einen Treffer ab, sprühen blaue Funken. Mit Tarnung flackert der Roboter.
+    In deinem Code: Den Armschild hebst du, indem du mit diesem Arm angreifst (angriffLinks oder angriffRechts). Die Kopf-Spezialfähigkeit mit spezial(). spezialKopf() sagt, welche du hast, und bereitSpezial(), ob sie bereit ist.
+en:
+    What it is: A shield swallows part of the damage, like an umbrella that stops almost all the rain. On an arm it only protects the front, where the head points; on the head, all around. Some heads bring another special: turbo, repair, camouflage, pulse or overload.
+    The numbers: A shield stops 10% to 85% of the damage for a while (the arm shield: 70% for 45 ticks, then 90 ticks of waiting). Turbo: ×1.8 speed for 60 ticks. Repair: heals 16. Camouflage: nobody sees you beyond 150. Pulse: stuns those close to you. Overload: ×1.5 damage for 90 ticks. They all cost energy and then wait.
+    In the fight: A colored aura around the robot; when it stops a hit, blue sparks fly. With camouflage, the robot flickers.
+    From your code: You raise an arm shield by attacking with that arm (attackLeft or attackRight). The head special, with special(). headSpecial() says which one you have and readySpecial() whether it is ready.
+pseudo.es:
+    AL RECIBIR UN GOLPE:
+        SI el escudo está listo:
+            mirar hacia el enemigo
+            levantar el escudo
+pseudo.de:
+    BEI EINEM TREFFER:
+        WENN der Schild bereit ist:
+            zum Gegner schauen
+            den Schild heben
+pseudo.en:
+    WHEN I GET HIT:
+        IF the shield is ready:
+            look at the enemy
+            raise the shield
+
+=== mec_habilidades
+nivel: 6
+tema: --
+titulo.es: La habilidad de tu modelo
+titulo.de: Die Fähigkeit deines Modells
+titulo.en: Your model’s ability
+claves.es: habilidad, arquetipo, embestir, pulso de radar, fortificar, asalto, tactico, defensor
+claves.de: faehigkeit, archetyp, ansturm, radarimpuls, befestigen, angriff, taktiker, verteidiger
+claves.en: ability, archetype, charge, radar pulse, fortify, assault, tactical, defender
+ver: mec_energia, mec_naturaleza
+es:
+    Qué es: Cada modelo de robot es de un tipo (su arquetipo) y sabe hacer una cosa especial: los de asalto embisten, los tácticos lanzan un pulso de radar y los defensores se fortifican.
+    Las cifras: embestir (asalto): 12 de energía; corre ×1,55 hacia delante durante 18 turnos. pulsoRadar (táctico): 10 de energía; durante 25 turnos ve todo a su alrededor y más lejos (×1,5). fortificar (defensor): 12 de energía; un escudo del 55 % durante 45 turnos, pero se queda quieto. Después, de 90 a 105 turnos de espera.
+    En la pelea: Un acelerón, una onda de radar o un escudo alrededor del robot.
+    Desde tu código: arquetipo() te dice el tuyo. Llama a embestir(), pulsoRadar() o fortificar(); si no es la de tu modelo, no hace nada y la consola te avisa.
+de:
+    Was es ist: Jedes Robotermodell hat einen Typ (seinen Archetyp) und kann etwas Besonderes: Angreifer stürmen los, Taktiker senden einen Radarimpuls, Verteidiger befestigen sich.
+    Die Zahlen: ansturm (Angriff): 12 Energie; rast 18 Züge lang ×1,55 nach vorn. radarImpuls (Taktik): 10 Energie; sieht 25 Züge lang rundherum und weiter (×1,5). befestigen (Verteidigung): 12 Energie; ein Schild von 55 % für 45 Züge, aber er bleibt stehen. Danach 90 bis 105 Züge Pause.
+    Im Kampf: Ein Spurt, eine Radarwelle oder ein Schild um den Roboter.
+    In deinem Code: archetyp() sagt dir deinen. Ruf ansturm(), radarImpuls() oder befestigen() auf; passt sie nicht zu deinem Modell, passiert nichts und die Konsole sagt es dir.
+en:
+    What it is: Each robot model is of a type (its archetype) and can do one special thing: assault robots charge, tactical ones send a radar pulse and defenders fortify.
+    The numbers: charge (assault): 12 energy; rushes forward ×1.55 for 18 ticks. radarPulse (tactical): 10 energy; for 25 ticks it sees all around and farther (×1.5). fortify (defender): 12 energy; a 55% shield for 45 ticks, but it stands still. Afterwards, 90 to 105 ticks of waiting.
+    In the fight: A burst of speed, a radar wave or a shield around the robot.
+    From your code: archetype() tells you yours. Call charge(), radarPulse() or fortify(); if it is not your model’s, nothing happens and the console tells you.
+pseudo.es:
+    SI mi tipo es asalto Y el enemigo está delante:
+        embestir
+    SI mi tipo es táctico Y no veo a nadie:
+        pulso de radar
+    SI mi tipo es defensor Y me queda poco blindaje:
+        fortificar
+pseudo.de:
+    WENN mein Typ Angriff ist UND der Gegner vor mir:
+        losstürmen
+    WENN mein Typ Taktik ist UND ich niemanden sehe:
+        Radarimpuls
+    WENN mein Typ Verteidigung ist UND mir wenig Panzerung bleibt:
+        befestigen
+pseudo.en:
+    IF my type is assault AND the enemy is in front:
+        charge
+    IF my type is tactical AND I see nobody:
+        radar pulse
+    IF my type is defender AND I have little armor left:
+        fortify
+
+=== mec_peso
+nivel: 6
+tema: --
+titulo.es: Peso, carga y piernas
+titulo.de: Gewicht, Last und Beine
+titulo.en: Weight, load and legs
+claves.es: peso, carga, sobrecarga, sobrecargado, locomocion, piernas, ruedas, orugas, alas, vuelo, esquivar
+claves.de: gewicht, last, ueberladen, ueberlast, fortbewegung, beine, raeder, ketten, fluegel, fliegen, ausweichen
+claves.en: weight, load, overload, overloaded, locomotion, legs, wheels, tracks, wings, flying, dodge
+ver: mec_terrenos, mec_tienda, peso_carga_locomocion
+es:
+    Qué es: Las piernas cargan con todo lo demás, como una mochila. Si llevas demasiado peso para tus piernas, el robot se arrastra.
+    Las cifras: Se mira la carga: el peso de todo menos las piernas, entre lo que aguantan las piernas. Hasta el 70 %: ligero (esquiva un poco más). Hasta el 100 %: normal, algo más lento. Hasta el 120 %: sobrecargado (un 40 % más lento, gira peor, gasta más al moverse y no esquiva). Más del 120 %: no puede pelear. Cada tipo de piernas es distinto: ruedas (rápidas, malas en aceite), orugas (lentas, no resbalan), patas de araña, flotador, alas (vuela) o dos piernas.
+    En la pelea: En el Taller y en la Tienda hay una barra de peso con zonas verde, amarilla y roja y una raya en el 120 %.
+    Desde tu código: pesoTotal(), cargaMaxima(), proporcionDeCarga(), sobrecargado(), locomocion() y velocidadMaxima() te dicen cómo vas.
+de:
+    Was es ist: Die Beine tragen alles andere, wie einen Rucksack. Trägst du zu viel für deine Beine, schleppt sich der Roboter dahin.
+    Die Zahlen: Gemessen wird die Last: das Gewicht von allem außer den Beinen, geteilt durch das, was die Beine tragen. Bis 70 %: leicht (weicht etwas besser aus). Bis 100 %: normal, etwas langsamer. Bis 120 %: überladen (40 % langsamer, dreht schlechter, verbraucht mehr beim Fahren und weicht nicht aus). Über 120 %: Er kann nicht kämpfen. Jede Beinart ist anders: Räder (schnell, schlecht auf Öl), Ketten (langsam, rutschen nicht), Spinnenbeine, Schwebeteil, Flügel (fliegt) oder zwei Beine.
+    Im Kampf: In der Werkstatt und im Laden gibt es einen Gewichtsbalken mit grüner, gelber und roter Zone und einem Strich bei 120 %.
+    In deinem Code: gesamtgewicht(), traglast(), lastanteil(), ueberladen(), fortbewegung() und hoechstgeschwindigkeit() sagen dir, wie es steht.
+en:
+    What it is: The legs carry everything else, like a backpack. If you carry too much for your legs, the robot drags itself along.
+    The numbers: What counts is the load: the weight of everything except the legs, divided by what the legs can carry. Up to 70%: light (dodges a bit more). Up to 100%: normal, a little slower. Up to 120%: overloaded (40% slower, turns worse, spends more to move and does not dodge). Over 120%: it cannot fight. Each kind of legs is different: wheels (fast, bad on oil), tracks (slow, they do not slip), spider legs, hover, wings (it flies) or two legs.
+    In the fight: In the Workshop and in the Shop there is a weight bar with green, yellow and red zones and a line at 120%.
+    From your code: totalWeight(), loadLimit(), loadRatio(), overloaded(), locomotion() and topSpeed() tell you how you are doing.
+pseudo.es:
+    SI voy sobrecargado:
+        no perseguir: esperar y disparar de lejos
+    SI voy ligero:
+        moverme mucho y esquivar
+pseudo.de:
+    WENN ich überladen bin:
+        nicht verfolgen: warten und aus der Ferne schießen
+    WENN ich leicht bin:
+        viel fahren und ausweichen
+pseudo.en:
+    IF I am overloaded:
+        do not chase: wait and shoot from afar
+    IF I am light:
+        move a lot and dodge
+
+=== mec_terrenos
+nivel: 6
+tema: --
+titulo.es: Terrenos
+titulo.de: Gelände
+titulo.en: Terrain
+claves.es: terreno, terrenos, suelo, aceite, agua, rampa, escombros, resbalar
+claves.de: gelaende, boden, oel, wasser, rampe, schutt, rutschen
+claves.en: terrain, floor, ground, oil, water, ramp, rubble, slip
+ver: mec_peso, mec_trampas
+es:
+    Qué es: El suelo de la arena no es todo igual: hay manchas de aceite, charcos, rampas, escombros y trampas. Cada tipo de piernas va mejor o peor en cada suelo, como unas botas o unas chanclas en la nieve.
+    Las cifras: En aceite, las ruedas van a poco más de la mitad (×0,55) y las orugas ni lo notan. El agua da un calambre: 22 turnos dando bandazos (al flotador no le afecta). En escombros, las ruedas van a la mitad y las patas de araña, algo mejor (×1,15).
+    En la pelea: Las zonas se ven en el suelo con su color: el aceite oscuro y brillante, el agua azul, las rampas y los escombros.
+    Desde tu código: terreno() te dice qué pisas ahora. velocidadMaxima() ya cuenta el suelo que pisas.
+de:
+    Was es ist: Der Boden der Arena ist nicht überall gleich: Es gibt Ölflecken, Pfützen, Rampen, Schutt und Fallen. Jede Beinart kommt auf jedem Boden besser oder schlechter voran, wie Stiefel oder Badelatschen im Schnee.
+    Die Zahlen: Auf Öl fahren Räder mit gut der Hälfte (×0,55), Ketten merken nichts. Wasser gibt einen Kurzschluss: 22 Züge Schlingern (dem Schwebeteil macht es nichts). Auf Schutt fahren Räder mit der Hälfte, Spinnenbeine etwas besser (×1,15).
+    Im Kampf: Die Zonen sieht man am Boden an ihrer Farbe: Öl dunkel und glänzend, Wasser blau, Rampen und Schutt.
+    In deinem Code: gelaende() sagt dir, worauf du gerade stehst. hoechstgeschwindigkeit() rechnet den Boden schon mit.
+en:
+    What it is: The arena floor is not the same everywhere: there are oil slicks, puddles, ramps, rubble and traps. Each kind of legs does better or worse on each floor, like boots or flip-flops in the snow.
+    The numbers: On oil, wheels go at just over half speed (×0.55) and tracks do not even notice. Water gives a short circuit: 22 ticks of swerving (hover legs are not affected). On rubble, wheels go at half speed and spider legs a bit better (×1.15).
+    In the fight: You see the zones on the floor by their color: oil dark and shiny, water blue, ramps and rubble.
+    From your code: terrain() tells you what you are standing on now. topSpeed() already counts the floor you are on.
+pseudo.es:
+    SI piso aceite Y llevo ruedas:
+        salir de ahí por el camino más corto
+    SI piso agua:
+        esperar a que pase el calambre
+pseudo.de:
+    WENN ich auf Öl stehe UND Räder habe:
+        auf dem kürzesten Weg raus
+    WENN ich auf Wasser stehe:
+        warten, bis der Kurzschluss vorbei ist
+pseudo.en:
+    IF I am on oil AND have wheels:
+        get out by the shortest way
+    IF I am on water:
+        wait for the short circuit to pass
+
+=== mec_choques
+nivel: 6
+tema: --
+titulo.es: Choques y embestidas
+titulo.de: Zusammenstöße und Rammen
+titulo.en: Crashes and rams
+claves.es: choque, chocar, embestida, embestir, pared, empujar, volcar, volteo
+claves.de: zusammenstoss, rammen, wand, schieben, umwerfen, umkippen
+claves.en: crash, bump, ram, wall, push, flip, knock over
+ver: mec_peso, mec_partes
+es:
+    Qué es: Si dos robots de equipos distintos chocan con fuerza, los dos se hacen daño. Chocar con la pared también duele. Algunas armas empujan o vuelcan al otro.
+    Las cifras: Cuanto más rápido y más pesado vas, más daño haces al chocar; las ruedas embisten fuerte (×1,6). Tras un choque, los dos frenan casi del todo. Contra la pared: un poco de daño si ibas deprisa, y te paras en seco. Un robot volcado se queda aturdido unos turnos; las orugas casi no vuelcan.
+    En la pelea: Chispas y un golpe sordo; en la pared, chispas blancas.
+    Desde tu código: alChocarConPared() y alChocarConEnemigo(e) se llaman cuando pasa. Ahí puedes girar o retroceder.
+de:
+    Was es ist: Stoßen zwei Roboter verschiedener Teams heftig zusammen, nehmen beide Schaden. Gegen die Wand fahren tut auch weh. Manche Waffen schieben oder werfen den anderen um.
+    Die Zahlen: Je schneller und schwerer du bist, desto mehr Schaden machst du beim Zusammenstoß; Räder rammen kräftig (×1,6). Nach dem Zusammenstoß bremsen beide fast ganz ab. An der Wand: etwas Schaden, wenn du schnell warst, und du stehst sofort. Ein umgeworfener Roboter ist ein paar Züge benommen; Ketten kippen kaum um.
+    Im Kampf: Funken und ein dumpfer Schlag; an der Wand weiße Funken.
+    In deinem Code: beiWand() und beiZusammenstoss(g) werden aufgerufen, wenn es passiert. Dort kannst du drehen oder zurückfahren.
+en:
+    What it is: If two robots from different teams crash hard, both take damage. Hitting the wall hurts too. Some weapons push or flip the other one.
+    The numbers: The faster and heavier you are, the more damage you do in a crash; wheels ram hard (×1.6). After a crash, both almost stop. Against the wall: a little damage if you were fast, and you stop dead. A flipped robot is stunned for a few ticks; tracks hardly ever flip.
+    In the fight: Sparks and a dull thud; at the wall, white sparks.
+    From your code: onHitWall() and onBump(e) are called when it happens. There you can turn or back up.
+pseudo.es:
+    AL CHOCAR CON LA PARED:
+        retroceder un poco
+        girar hacia el centro
+pseudo.de:
+    BEIM STOSS GEGEN DIE WAND:
+        ein Stück zurückfahren
+        zur Mitte drehen
+pseudo.en:
+    WHEN I HIT THE WALL:
+        back up a little
+        turn toward the center
+
+=== mec_trampas
+nivel: 6
+tema: --
+titulo.es: Trampas y cosas que se rompen
+titulo.de: Fallen und Dinge, die kaputtgehen
+titulo.en: Traps and things that break
+claves.es: trampas, trampa, pinchos, sierras, foso, rayo, barriles, chimeneas, obstaculos
+claves.de: fallen, falle, stacheln, saegen, grube, blitz, faesser, schornsteine, hindernisse
+claves.en: traps, trap, spikes, saws, pit, lightning, barrels, chimneys, obstacles
+ver: mec_terrenos, mec_aparatos
+es:
+    Qué es: Algunas arenas tienen trampas: pinchos que salen del suelo, sierras en las esquinas, un rayo que se mueve, un foso o un carrito. También hay barriles y chimeneas que se pueden romper.
+    Las cifras: Los pinchos quitan 5 y salen cada pocos segundos; el rayo, 7; el foso, 18 y te aturde 45 turnos. Un barril aguanta 30 de daño y una chimenea, 50.
+    En la pelea: Las trampas se ven en el suelo. Fíjate en el ritmo con el que salen: tienen su compás.
+    Desde tu código: obstaculos() te da la lista de lo que hay; cada uno dice su tipo(), si es peligroso() y si es solido().
+de:
+    Was es ist: Manche Arenen haben Fallen: Stacheln, die aus dem Boden kommen, Sägen in den Ecken, einen wandernden Blitz, eine Grube oder einen Wagen. Es gibt auch Fässer und Schornsteine, die man kaputt machen kann.
+    Die Zahlen: Stacheln nehmen 5 und kommen alle paar Sekunden; der Blitz 7; die Grube 18 und betäubt dich 45 Züge. Ein Fass hält 30 Schaden aus, ein Schornstein 50.
+    Im Kampf: Die Fallen sieht man am Boden. Achte auf ihren Takt: Sie haben ihren Rhythmus.
+    In deinem Code: hindernisse() gibt dir die Liste von allem, was da ist; jedes sagt seinen typ(), ob es gefaehrlich() und ob es fest() ist.
+en:
+    What it is: Some arenas have traps: spikes that come out of the floor, saws in the corners, a moving lightning bolt, a pit or a cart. There are also barrels and chimneys that can be broken.
+    The numbers: Spikes take 5 and come out every few seconds; the lightning, 7; the pit, 18 and it stuns you for 45 ticks. A barrel takes 30 damage and a chimney, 50.
+    In the fight: You see the traps on the floor. Watch their rhythm: they keep their own beat.
+    From your code: obstacles() gives you the list of what is there; each one tells its type(), whether it is dangerous() and whether it is solid().
+pseudo.es:
+    PARA CADA obstáculo:
+        SI es peligroso Y está cerca:
+            apartarme
+pseudo.de:
+    FÜR JEDES Hindernis:
+        WENN es gefährlich ist UND nah:
+            ausweichen
+pseudo.en:
+    FOR EACH obstacle:
+        IF it is dangerous AND close:
+            move out of the way
+
+=== mec_aparatos
+nivel: 6
+tema: --
+titulo.es: Aparatos de la arena
+titulo.de: Geräte in der Arena
+titulo.en: Arena gadgets
+claves.es: aparatos, aparato, enchufar, conectar, hueco, iman, chorro, martillo, usar aparato
+claves.de: geraete, geraet, anschliessen, steckplatz, magnet, duese, hammer, geraet benutzen
+claves.en: gadgets, gadget, plug in, slot, magnet, jet, hammer, use gadget
+ver: mec_trampas, pieza_propia_y_repeticion
+es:
+    Qué es: De ronda en ronda cae un aparato en la arena: un motor a chorro, un imán, un martillo… Si lo coges y lo enchufas en el hueco correcto, tu robot lo puede usar.
+    Las cifras: Aparece a los 3 segundos de empezar la ronda y se coge tocándolo. Enchufarlo tarda 30 turnos; luego, cada uso tiene su espera (de 120 a 240 turnos). Cada aparato va en un hueco: espalda, piernas, cabeza o brazo. En el hueco equivocado no se sujeta.
+    En la pelea: Entre ronda y ronda te dicen cuál viene, y con el botón del aparato puedes leer su código.
+    Desde tu código: aparatos() te dice dónde están; miAparato() el que llevas; conectar(hueco) lo enchufa y usarAparato() lo usa.
+de:
+    Was es ist: Von Runde zu Runde fällt ein Gerät in die Arena: eine Düse, ein Magnet, ein Hammer … Nimmst du es und steckst es in den richtigen Steckplatz, kann dein Roboter es benutzen.
+    Die Zahlen: Es erscheint 3 Sekunden nach Rundenbeginn; du nimmst es, indem du es berührst. Anschließen dauert 30 Züge; danach hat jede Benutzung ihre Pause (120 bis 240 Züge). Jedes Gerät gehört in einen Steckplatz: Rücken, Beine, Kopf oder Arm. Im falschen hält es nicht.
+    Im Kampf: Zwischen den Runden erfährst du, welches kommt, und mit dem Geräte-Knopf kannst du seinen Code lesen.
+    In deinem Code: geraete() sagt dir, wo sie sind; meinGeraet() das, das du trägst; anschliessen(platz) steckt es ein und geraetBenutzen() benutzt es.
+en:
+    What it is: From round to round a gadget drops into the arena: a jet engine, a magnet, a hammer… If you grab it and plug it into the right slot, your robot can use it.
+    The numbers: It appears 3 seconds after the round starts and you grab it by touching it. Plugging it in takes 30 ticks; then each use has its wait (120 to 240 ticks). Each gadget goes in a slot: back, legs, head or arm. In the wrong slot it does not hold.
+    In the fight: Between rounds you are told which one is coming, and with the gadget button you can read its code.
+    From your code: gadgets() tells you where they are; myGadget() the one you carry; plugIn(slot) plugs it in and useGadget() uses it.
+pseudo.es:
+    SI hay un aparato cerca Y no llevo ninguno:
+        ir a por él
+    SI lo llevo Y no está enchufado:
+        enchufarlo en su hueco
+    SI está listo Y el enemigo está cerca:
+        usarlo
+pseudo.de:
+    WENN ein Gerät in der Nähe ist UND ich keins habe:
+        hinfahren
+    WENN ich es habe UND es nicht steckt:
+        in seinen Steckplatz stecken
+    WENN es bereit ist UND der Gegner nah:
+        benutzen
+pseudo.en:
+    IF there is a gadget nearby AND I carry none:
+        go and get it
+    IF I carry it AND it is not plugged in:
+        plug it into its slot
+    IF it is ready AND the enemy is close:
+        use it
+
+=== mec_desgaste
+nivel: 6
+tema: --
+titulo.es: Desgaste entre rondas
+titulo.de: Verschleiß zwischen den Runden
+titulo.en: Wear between rounds
+claves.es: desgaste, cansancio, rondas largas, entre rondas
+claves.de: verschleiss, muedigkeit, lange runden, zwischen den runden
+claves.en: wear, fatigue, long fights, between rounds
+ver: mec_como_se_gana, mec_partes
+es:
+    Qué es: En las peleas largas, el robot no sale como nuevo en cada ronda: parte del daño se queda, como el cansancio de alguien que corre mucho.
+    Las cifras: Con 4 rondas o menos no hay desgaste. Con 6, un poco (0,24); con 12, mucho (0,96). Aun así, ninguna parte empieza la ronda por debajo de la mitad.
+    En la pelea: Más humo y más abolladuras; las barras empiezan la ronda sin llenarse del todo.
+    Desde tu código: blindaje() al empezar la ronda (en alEmpezar) te dice cómo llegas.
+de:
+    Was es ist: In langen Kämpfen startet der Roboter nicht jede Runde wie neu: Ein Teil des Schadens bleibt, wie die Müdigkeit nach einem langen Lauf.
+    Die Zahlen: Mit 4 Runden oder weniger gibt es keinen Verschleiß. Mit 6 ein wenig (0,24), mit 12 viel (0,96). Trotzdem beginnt kein Teil die Runde unter der Hälfte.
+    Im Kampf: Mehr Rauch und mehr Dellen; die Balken beginnen die Runde nicht ganz voll.
+    In deinem Code: panzerung() zu Rundenbeginn (in beimStart) sagt dir, wie du ankommst.
+en:
+    What it is: In long fights the robot does not start each round like new: part of the damage stays, like the tiredness of someone who has run a lot.
+    The numbers: With 4 rounds or fewer there is no wear. With 6, a little (0.24); with 12, a lot (0.96). Even so, no part starts the round below half.
+    In the fight: More smoke and more dents; the bars start the round not quite full.
+    From your code: armor() at the start of the round (in onStart) tells you how you arrive.
+pseudo.es:
+    AL EMPEZAR la ronda:
+        SI llego con poco blindaje:
+            jugar con cuidado: de lejos y con escudo
+pseudo.de:
+    BEIM START der Runde:
+        WENN ich mit wenig Panzerung ankomme:
+            vorsichtig spielen: aus der Ferne und mit Schild
+pseudo.en:
+    AT THE START of the round:
+        IF I arrive with little armor:
+            play carefully: from afar and with a shield
+
+=== mec_tope
+nivel: 6
+tema: --
+titulo.es: Tope de cálculo y errores
+titulo.de: Rechenlimit und Fehler
+titulo.en: Step limit and errors
+claves.es: tope de calculo, tope, pasos, pensar demasiado, error, excepcion, aturdido, se queda quieto
+claves.de: rechenlimit, limit, schritte, zu viel rechnen, fehler, ausnahme, benommen, bleibt stehen
+claves.en: step limit, limit, steps, thinking too much, error, exception, stunned, stands still
+ver: mec_senior, mec_turno
+es:
+    Qué es: En cada turno tu robot solo puede pensar un rato, como en un examen con tiempo. Si tu código hace demasiadas cuentas en un turno, se pasa del tope y el robot se queda quieto, pensando, unos turnos. Si tu código se rompe (una excepción), se queda aturdido.
+    Las cifras: El núcleo da entre 3000 y 40000 pasos por turno; cada vuelta de un bucle y cada método cuentan. Pasarse: unos turnos sin hacer nada (como mucho 20). Un error: 8 turnos aturdido.
+    En la pelea: El locutor lo dice y suena un aviso. En el depurador, la barra de pasos se pone roja y la consola dice qué línea falló.
+    Desde tu código: No hay nada que llamar: se trata de hacer menos trabajo en cada turno. Lo pesado, una sola vez en alEmpezar.
+de:
+    Was es ist: In jedem Zug darf dein Roboter nur eine Weile nachdenken, wie bei einer Prüfung mit Zeitlimit. Rechnet dein Code in einem Zug zu viel, überschreitet er das Limit, und der Roboter bleibt ein paar Züge stehen und denkt. Stürzt dein Code ab (eine Ausnahme), ist er benommen.
+    Die Zahlen: Der Kern gibt 3000 bis 40000 Schritte pro Zug; jeder Schleifendurchlauf und jede Methode zählen. Zu viel: ein paar Züge ohne Aktion (höchstens 20). Ein Fehler: 8 Züge benommen.
+    Im Kampf: Der Sprecher sagt es, und ein Warnton erklingt. Im Debugger wird der Schritte-Balken rot, und die Konsole sagt, welche Zeile fehlschlug.
+    In deinem Code: Es gibt nichts aufzurufen: Es geht darum, in jedem Zug weniger zu tun. Das Schwere einmal in beimStart.
+en:
+    What it is: Each tick your robot can only think for a while, like an exam with a time limit. If your code does too many calculations in one tick, it goes over the limit and the robot stands still, thinking, for a few ticks. If your code breaks (an exception), it is stunned.
+    The numbers: The core gives between 3000 and 40000 steps per tick; each loop pass and each method counts. Going over: a few ticks doing nothing (20 at most). An error: 8 ticks stunned.
+    In the fight: The announcer says so and a warning sounds. In the debugger, the steps bar turns red and the console says which line failed.
+    From your code: There is nothing to call: it is about doing less work each tick. The heavy work, once, in onStart.
+pseudo.es:
+    EN CADA TURNO:
+        hacer solo lo necesario
+    AL EMPEZAR:
+        preparar lo que cuesta (tablas, cuentas largas)
+pseudo.de:
+    IN JEDEM ZUG:
+        nur das Nötige tun
+    BEIM START:
+        vorbereiten, was teuer ist (Tabellen, lange Rechnungen)
+pseudo.en:
+    EVERY TICK:
+        do only what is needed
+    AT THE START:
+        prepare what is expensive (tables, long calculations)
+
+=== mec_senior
+nivel: 6
+tema: --
+titulo.es: Presupuestos Senior
+titulo.de: Senior-Budgets
+titulo.en: Senior budgets
+claves.es: presupuesto, presupuestos, senior, milisegundos, memoria, paralelo, hilos
+claves.de: budget, budgets, senior, millisekunden, speicher, parallel, threads
+claves.en: budget, budgets, senior, milliseconds, memory, parallel, threads
+ver: mec_tope, peleas_senior
+es:
+    Qué es: En las peleas Senior, además de los pasos, se mide el tiempo de verdad y la memoria que usa tu código en cada turno, como en un programa de verdad que tiene que ir fino.
+    Las cifras: Hay dos perfiles: 2,5 ms, 8 KB y 350 pasos por turno, o 1,5 ms, 4 KB y 220 pasos. Pasarse quita 6 de energía y 2 turnos sin pensar. Los primeros 512 bytes de memoria son gratis. Hay una pelea de 2 contra 2 en la que los robots piensan a la vez (en paralelo).
+    En la pelea: En el marcador y en el depurador hay barras de tiempo y de memoria.
+    Desde tu código: Que tu código no cree objetos nuevos en cada turno ni repita cuentas. En paralelo, cuidado con lo que compartes con tu compañero.
+de:
+    Was es ist: In Senior-Kämpfen werden außer den Schritten auch die echte Zeit und der Speicher gemessen, die dein Code pro Zug braucht, wie bei einem echten Programm, das schlank laufen muss.
+    Die Zahlen: Es gibt zwei Profile: 2,5 ms, 8 KB und 350 Schritte pro Zug oder 1,5 ms, 4 KB und 220 Schritte. Zu viel kostet 6 Energie und 2 Züge ohne Denken. Die ersten 512 Byte Speicher sind gratis. In einem 2-gegen-2-Kampf denken die Roboter gleichzeitig (parallel).
+    Im Kampf: Auf der Anzeigetafel und im Debugger gibt es Balken für Zeit und Speicher.
+    In deinem Code: Dein Code soll nicht in jedem Zug neue Objekte erzeugen oder Rechnungen wiederholen. Parallel: Vorsicht mit dem, was du mit deinem Teamkameraden teilst.
+en:
+    What it is: In Senior fights, besides the steps, the real time and the memory your code uses each tick are measured, like a real program that has to run lean.
+    The numbers: There are two profiles: 2.5 ms, 8 KB and 350 steps per tick, or 1.5 ms, 4 KB and 220 steps. Going over costs 6 energy and 2 ticks without thinking. The first 512 bytes of memory are free. There is a 2-vs-2 fight where the robots think at the same time (in parallel).
+    In the fight: On the scoreboard and in the debugger there are bars for time and memory.
+    From your code: Your code should not create new objects every tick or repeat calculations. In parallel, be careful with what you share with your teammate.
+pseudo.es:
+    AL EMPEZAR:
+        crear una sola vez lo que voy a usar
+    EN CADA TURNO:
+        reutilizarlo, sin crear cosas nuevas
+pseudo.de:
+    BEIM START:
+        einmal erzeugen, was ich brauche
+    IN JEDEM ZUG:
+        es wiederverwenden, nichts Neues erzeugen
+pseudo.en:
+    AT THE START:
+        create once what I will use
+    EVERY TICK:
+        reuse it, without creating new things
+
+=== mec_radar
+nivel: 6
+tema: --
+titulo.es: El radar: qué ve tu robot
+titulo.de: Das Radar: was dein Roboter sieht
+titulo.en: The radar: what your robot sees
+claves.es: radar, ver, vista, no ve, cono, cabeza, distancia, angulo, enemigos vistos
+claves.de: radar, sehen, sicht, sieht nicht, kegel, kopf, entfernung, winkel, gesehene gegner
+claves.en: radar, see, sight, cannot see, cone, head, distance, angle, seen enemies
+ver: mec_turno, mec_equipo
+es:
+    Qué es: Tu robot ve con la cabeza, como con una linterna: solo ve lo que tiene delante de la cabeza y no muy lejos. Lo que está pegado a él lo nota siempre.
+    Las cifras: Sin cabeza especial ve hasta 400 de distancia. Cada cabeza es distinta: el ojo ve muy lejos (900) pero estrecho (30°); la panorámica ve ancho (140°) pero más cerca (420). A menos de 110 te ve siempre.
+    En la pelea: Con el Visor (F8) ves el radar de cada robot dibujado en la arena.
+    Desde tu código: alVerEnemigo(e) se llama por cada enemigo que ve, del más cercano al más lejano. enemigosVistos() te da la lista. e.distancia() y e.angulo() te dicen dónde está.
+de:
+    Was es ist: Dein Roboter sieht mit dem Kopf, wie mit einer Taschenlampe: Er sieht nur, was vor dem Kopf ist, und nicht sehr weit. Was direkt neben ihm ist, merkt er immer.
+    Die Zahlen: Ohne besonderen Kopf sieht er bis 400 weit. Jeder Kopf ist anders: Das Auge sieht sehr weit (900), aber schmal (30°); der Panoramakopf sieht breit (140°), aber näher (420). Unter 110 sieht er dich immer.
+    Im Kampf: Mit dem Visier (F8) siehst du das Radar jedes Roboters in der Arena eingezeichnet.
+    In deinem Code: beiSicht(g) wird für jeden Gegner aufgerufen, den er sieht, vom nächsten zum fernsten. gesehen() gibt dir die Liste. g.entfernung() und g.winkel() sagen dir, wo er ist.
+en:
+    What it is: Your robot sees with its head, like with a flashlight: it only sees what is in front of the head and not very far. What is right next to it, it always notices.
+    The numbers: Without a special head it sees up to 400 away. Each head is different: the eye sees very far (900) but narrow (30°); the panoramic one sees wide (140°) but closer (420). Under 110 it always sees you.
+    In the fight: With the Visor (F8) you see each robot’s radar drawn in the arena.
+    From your code: onSeeEnemy(e) is called for each enemy it sees, from the nearest to the farthest. seenEnemies() gives you the list. e.distance() and e.angle() tell you where it is.
+pseudo.es:
+    SI no veo a nadie:
+        girar la cabeza poco a poco para buscar
+    AL VER al enemigo:
+        apuntar hacia él
+pseudo.de:
+    WENN ich niemanden sehe:
+        den Kopf langsam drehen und suchen
+    BEIM SEHEN des Gegners:
+        zu ihm zielen
+pseudo.en:
+    IF I see nobody:
+        turn the head little by little to search
+    WHEN I SEE the enemy:
+        aim at it
+
+=== mec_tienda
+nivel: 6
+tema: --
+titulo.es: La Tienda y las piezas
+titulo.de: Der Laden und die Teile
+titulo.en: The Shop and the parts
+claves.es: tienda, comprar, piezas, pieza, precio, mk, serie, reto de pieza, activar pieza
+claves.de: laden, kaufen, teile, teil, preis, mk, serie, teil-aufgabe, teil aktivieren
+claves.en: shop, buy, parts, part, price, mk, series, part challenge, activate part
+ver: mec_dinero_rangos, mec_peso, tienda_y_monedas
+es:
+    Qué es: En la Tienda cambias monedas por piezas: armas, cabezas, núcleos y piernas. Cada pieza pide un rango mínimo. Al comprarla, antes de usarla tienes que pasar un reto de código corto.
+    Las cifras: Cada pieza viene en series, de Mk I a Mk V. Cada Mk mejora un poco la pieza (por ejemplo, +10 % de daño) y cuesta un 55 % del precio base más. Las Mk altas piden más rango.
+    En la pelea: Lo que compras se monta en el Taller (pestaña Piezas) y cambia las cifras del robot y su peso.
+    Desde tu código: Las piezas no se programan, pero cambian lo que te dicen armaIzquierda(), alcanceDerecha(), pesoTotal() y los demás.
+de:
+    Was es ist: Im Laden tauschst du Münzen gegen Teile: Waffen, Köpfe, Kerne und Beine. Jedes Teil verlangt eine Mindeststufe. Nach dem Kauf musst du eine kurze Code-Aufgabe lösen, bevor du es benutzen kannst.
+    Die Zahlen: Jedes Teil gibt es in Serien, von Mk I bis Mk V. Jede Mk verbessert das Teil ein wenig (zum Beispiel +10 % Schaden) und kostet 55 % des Grundpreises mehr. Hohe Mk verlangen eine höhere Stufe.
+    Im Kampf: Was du kaufst, baust du in der Werkstatt ein (Reiter Teile); es ändert die Zahlen des Roboters und sein Gewicht.
+    In deinem Code: Teile werden nicht programmiert, aber sie ändern, was dir waffeLinks(), reichweiteRechts(), gesamtgewicht() und die anderen sagen.
+en:
+    What it is: In the Shop you trade coins for parts: weapons, heads, cores and legs. Each part asks for a minimum rank. After buying it, you have to pass a short code challenge before you can use it.
+    The numbers: Each part comes in series, from Mk I to Mk V. Each Mk improves the part a little (for example, +10% damage) and costs 55% of the base price more. High Mk parts ask for a higher rank.
+    In the fight: What you buy is fitted in the Workshop (Parts tab) and changes the robot’s numbers and its weight.
+    From your code: Parts are not programmed, but they change what weaponLeft(), rangeRight(), totalWeight() and the others tell you.
+pseudo.es:
+    ANTES DE COMPRAR:
+        mirar si el peso me cabe
+        mirar si el arma va con mi forma de pelear (cerca o lejos)
+pseudo.de:
+    VOR DEM KAUF:
+        schauen, ob das Gewicht passt
+        schauen, ob die Waffe zu meinem Kampfstil passt (nah oder fern)
+pseudo.en:
+    BEFORE BUYING:
+        check that the weight fits
+        check that the weapon suits my way of fighting (close or far)
+
+=== mec_dinero_rangos
+nivel: 6
+tema: --
+titulo.es: Monedas y rangos
+titulo.de: Münzen und Stufen
+titulo.en: Coins and ranks
+claves.es: monedas, dinero, rango, rangos, subir de nivel, bajar de nivel, noob, junior, senior, master, etiqueta
+claves.de: muenzen, geld, stufe, stufen, aufsteigen, absteigen, noob, junior, senior, master
+claves.en: coins, money, rank, ranks, level up, level down, noob, junior, senior, master
+ver: mec_tienda, tienda_y_monedas
+es:
+    Qué es: Ganas monedas ganando peleas, resolviendo ejercicios y en los minijuegos. Tu rango (Noob, Junior, Senior, Master) dice a qué nivel juegas: subes ganando peleas de tu nivel y resolviendo ejercicios de sus temas.
+    Las cifras: Ganar una pelea da 2 monedas en Noob, 3 en Junior y 3,5 en Senior y Master. Cada ejercicio nuevo resuelto da 0,25. Para subir de escalón hacen falta unas cuantas victorias en tu rango y el 70 % de sus ejercicios. Si pierdes muchas seguidas, puedes bajar (antes sale una alarma roja).
+    En la pelea: Las monedas se ven arriba en el menú; la barra de arriba a la derecha dice cuánto te falta para subir.
+    Desde tu código: No hay nada que llamar: es tu progreso como jugador.
+de:
+    Was es ist: Münzen bekommst du für gewonnene Kämpfe, gelöste Übungen und in den Minispielen. Deine Stufe (Noob, Junior, Senior, Master) sagt, auf welchem Niveau du spielst: Du steigst auf, wenn du Kämpfe auf deiner Stufe gewinnst und Übungen ihrer Themen löst.
+    Die Zahlen: Ein gewonnener Kampf bringt 2 Münzen bei Noob, 3 bei Junior und 3,5 bei Senior und Master. Jede neu gelöste Übung bringt 0,25. Für die nächste Stufe brauchst du ein paar Siege auf deiner Stufe und 70 % ihrer Übungen. Verlierst du viele hintereinander, kannst du absteigen (vorher kommt ein roter Alarm).
+    Im Kampf: Die Münzen siehst du oben im Menü; der Balken oben rechts sagt, wie viel dir zum Aufstieg fehlt.
+    In deinem Code: Es gibt nichts aufzurufen: Es ist dein Fortschritt als Spieler.
+en:
+    What it is: You earn coins by winning fights, solving exercises and in the minigames. Your rank (Noob, Junior, Senior, Master) says what level you play at: you go up by winning fights at your level and solving exercises from its topics.
+    The numbers: Winning a fight gives 2 coins at Noob, 3 at Junior and 3.5 at Senior and Master. Each newly solved exercise gives 0.25. To go up a step you need a few wins at your rank and 70% of its exercises. If you lose many in a row, you can go down (a red alarm shows first).
+    In the fight: You see the coins at the top of the menu; the bar at the top right says how much you still need to go up.
+    From your code: There is nothing to call: it is your progress as a player.
+pseudo.es:
+    PARA SUBIR:
+        ganar peleas de mi nivel
+        resolver los ejercicios de sus temas
+pseudo.de:
+    UM AUFZUSTEIGEN:
+        Kämpfe auf meiner Stufe gewinnen
+        die Übungen ihrer Themen lösen
+pseudo.en:
+    TO GO UP:
+        win fights at my level
+        solve the exercises of its topics
+
+=== mec_naturaleza
+nivel: 6
+tema: --
+titulo.es: La naturaleza de tu modelo
+titulo.de: Die Natur deines Modells
+titulo.en: Your model’s nature
+claves.es: naturaleza, acero, rayo, foco, furia, ingenio, eter, arma caracteristica, modelo
+claves.de: natur, stahl, blitz, fokus, wut, verstand, aether, typische waffe, modell
+claves.en: nature, steel, lightning, focus, fury, wit, ether, signature weapon, model
+ver: mec_habilidades, modelos_y_armas
+es:
+    Qué es: Cada modelo tiene una naturaleza que lo hace mejor en una cosa: Acero (blindaje), Rayo (velocidad), Foco (puntería), Furia (golpes de cerca), Ingenio (pensar y enfriar antes) o Éter (esquivar). Y cada uno trae su arma característica.
+    Las cifras: Un +8 % en lo suyo. Un núcleo de su misma naturaleza suma más que uno de otra. Su arma característica le da otro +8 %.
+    En la pelea: Se nota en las cifras, no en el dibujo. En el menú, debajo del robot, ves su modelo y su naturaleza.
+    Desde tu código: Elige una forma de pelear que aproveche lo suyo: un Furia, de cerca; un Foco, de lejos; un Éter, moviéndose mucho.
+de:
+    Was es ist: Jedes Modell hat eine Natur, die es in einer Sache besser macht: Stahl (Panzerung), Blitz (Tempo), Fokus (Zielen), Wut (Nahkampf), Verstand (schneller denken und abkühlen) oder Äther (Ausweichen). Und jedes bringt seine typische Waffe mit.
+    Die Zahlen: +8 % auf das Seine. Ein Kern derselben Natur bringt mehr als einer einer anderen. Seine typische Waffe gibt weitere +8 %.
+    Im Kampf: Man merkt es an den Zahlen, nicht an der Zeichnung. Im Menü siehst du unter dem Roboter sein Modell und seine Natur.
+    In deinem Code: Wähle einen Kampfstil, der das nutzt: ein Wut-Modell nah dran, ein Fokus-Modell aus der Ferne, ein Äther-Modell immer in Bewegung.
+en:
+    What it is: Each model has a nature that makes it better at one thing: Steel (armor), Lightning (speed), Focus (aim), Fury (close-up blows), Wit (thinking and cooling down sooner) or Ether (dodging). And each one comes with its signature weapon.
+    The numbers: A +8% in its own thing. A core of the same nature adds more than one of another. Its signature weapon gives another +8%.
+    In the fight: You notice it in the numbers, not in the drawing. In the menu, under the robot, you see its model and its nature.
+    From your code: Choose a way of fighting that uses it: a Fury model up close, a Focus model from afar, an Ether model always on the move.
+pseudo.es:
+    SI mi robot es de cerca (Furia):
+        acercarme y golpear
+    SI es de lejos (Foco):
+        mantener la distancia y disparar
+pseudo.de:
+    WENN mein Roboter für die Nähe ist (Wut):
+        herangehen und zuschlagen
+    WENN er für die Ferne ist (Fokus):
+        Abstand halten und schießen
+pseudo.en:
+    IF my robot is a close fighter (Fury):
+        get close and strike
+    IF it is a long-range one (Focus):
+        keep the distance and shoot
+
+=== mec_poo
+nivel: 6
+tema: --
+titulo.es: Cómo escribes tu clase también cuenta
+titulo.de: Wie du deine Klasse schreibst, zählt auch
+titulo.en: How you write your class counts too
+claves.es: efectos de tu clase, poo, private, public, final, static, campos, encapsulacion en la pelea
+claves.de: effekte deiner klasse, oop, private, public, final, static, felder, kapselung im kampf
+claves.en: class effects, oop, private, public, final, static, fields, encapsulation in the fight
+ver: encapsulacion, mec_tope
+es:
+    Qué es: Cómo escribes tu clase cambia un poco la pelea, como llevar la mochila bien cerrada. Los campos privados te protegen; los públicos que se pueden cambiar te hacen más fácil de ver y de dañar; los final dejan pensar un poco más.
+    Las cifras: Cada campo private: −2 % de daño recibido (hasta −8 %) y al enemigo le cuesta un 4 % más verte. Cada campo public que se puede cambiar: +4 % de daño recibido (hasta +12 %). Cada final: +5 % de pasos por turno (hasta +25 %). En equipo, static ayuda al radar y a la recarga.
+    En la pelea: En el informe de la ronda, «Efectos de tu clase» dice qué te ha sumado o restado.
+    Desde tu código: Es cómo declaras tus campos: private, final, static…
+de:
+    Was es ist: Wie du deine Klasse schreibst, ändert den Kampf ein wenig, wie ein gut geschlossener Rucksack. Private Felder schützen dich; öffentliche veränderbare machen dich leichter sichtbar und verwundbar; final-Felder lassen dich etwas mehr denken.
+    Die Zahlen: Jedes private Feld: −2 % erlittener Schaden (bis −8 %), und der Gegner sieht dich 4 % schlechter. Jedes veränderbare public-Feld: +4 % erlittener Schaden (bis +12 %). Jedes final: +5 % Schritte pro Zug (bis +25 %). Im Team hilft static dem Radar und dem Aufladen.
+    Im Kampf: Im Rundenbericht sagt „Effekte deiner Klasse“, was es dir gebracht oder gekostet hat.
+    In deinem Code: Es ist die Art, wie du deine Felder deklarierst: private, final, static …
+en:
+    What it is: How you write your class changes the fight a little, like keeping your backpack well closed. Private fields protect you; public fields that can change make you easier to see and to hurt; final ones let you think a bit more.
+    The numbers: Each private field: −2% damage taken (down to −8%) and the enemy sees you 4% worse. Each public field that can change: +4% damage taken (up to +12%). Each final: +5% steps per tick (up to +25%). In a team, static helps the radar and the recharge.
+    In the fight: In the round report, "Effects of your class" says what it added or took away.
+    From your code: It is how you declare your fields: private, final, static…
+pseudo.es:
+    MIS DATOS:
+        guardados dentro (privados)
+        los que no cambian, fijos (final)
+pseudo.de:
+    MEINE DATEN:
+        drinnen aufbewahrt (privat)
+        die, die sich nicht ändern, fest (final)
+pseudo.en:
+    MY DATA:
+        kept inside (private)
+        the ones that never change, fixed (final)
+
+=== mec_equipo
+nivel: 6
+tema: --
+titulo.es: Equipos, todos contra todos y varios enemigos
+titulo.de: Teams, alle gegen alle und mehrere Gegner
+titulo.en: Teams, free-for-all and several enemies
+claves.es: equipo, equipos, compañero, battle royale, todos contra todos, varios enemigos, drones, avisar al equipo
+claves.de: team, teams, kamerad, battle royale, alle gegen alle, mehrere gegner, drohnen, team melden
+claves.en: team, teams, teammate, battle royale, free for all, several enemies, drones, tell team
+ver: mec_radar, mec_como_se_gana
+es:
+    Qué es: A veces no peleas uno contra uno: en Equipos sois 2 contra 2; en el todos contra todos (battle royale) hay hasta 6 robots; y a veces el rival trae drones o amigos.
+    Las cifras: Gana el equipo que menos daño recibe sumando los dos. A tu compañero no le haces daño, pero sí te tapa el láser. Desde Junior hay más peleas contra varios (40 % en Junior, 55 % en Senior); los drones son más flojos.
+    En la pelea: Cada equipo tiene su color en el marcador.
+    Desde tu código: enemigosVistos() para elegir a quién atacar. avisarAlEquipo(mensaje) y alOirAlEquipo para hablar con tu compañero; companeros() te dice quiénes son.
+de:
+    Was es ist: Manchmal kämpfst du nicht eins gegen eins: Bei Teams seid ihr 2 gegen 2; bei Alle gegen alle (Battle Royale) sind es bis zu 6 Roboter; und manchmal bringt der Gegner Drohnen oder Freunde mit.
+    Die Zahlen: Es gewinnt das Team, das zusammen weniger Schaden nimmt. Deinem Kameraden schadest du nicht, aber er blockiert deinen Laser. Ab Junior gibt es mehr Kämpfe gegen mehrere (40 % bei Junior, 55 % bei Senior); Drohnen sind schwächer.
+    Im Kampf: Jedes Team hat seine Farbe auf der Anzeigetafel.
+    In deinem Code: gesehen(), um zu wählen, wen du angreifst. teamMelden(nachricht) und beiTeamNachricht, um mit deinem Kameraden zu reden; kameraden() sagt dir, wer sie sind.
+en:
+    What it is: Sometimes you do not fight one against one: in Teams it is 2 against 2; in the free-for-all (battle royale) there are up to 6 robots; and sometimes the rival brings drones or friends.
+    The numbers: The team that takes less damage, adding both robots, wins. You do not hurt your teammate, but it does block your laser. From Junior on there are more fights against several (40% at Junior, 55% at Senior); drones are weaker.
+    In the fight: Each team has its color on the scoreboard.
+    From your code: seenEnemies() to choose whom to attack. tellTeam(message) and onTeamMessage to talk to your teammate; teammates() tells you who they are.
+pseudo.es:
+    AL VER a varios enemigos:
+        elegir al más cercano (o al más débil)
+        avisar al compañero de dónde está
+    AL OÍR al compañero:
+        ir a ayudarle
+pseudo.de:
+    BEIM SEHEN mehrerer Gegner:
+        den nächsten (oder schwächsten) wählen
+        dem Kameraden sagen, wo er ist
+    WENN der Kamerad etwas meldet:
+        ihm helfen gehen
+pseudo.en:
+    WHEN I SEE several enemies:
+        pick the nearest (or the weakest)
+        tell my teammate where it is
+    WHEN my teammate calls:
+        go and help
+
+=== mec_jefes
+nivel: 6
+tema: --
+titulo.es: Jefes
+titulo.de: Bosse
+titulo.en: Bosses
+claves.es: jefe, jefes, inmune, vulnerable, gimnasio, tema del jefe, hospital
+claves.de: boss, bosse, immun, verwundbar, arena-boss, thema des bosses, krankenhaus
+claves.en: boss, bosses, immune, vulnerable, gym, boss topic, hospital
+ver: arena_y_modos, mec_como_se_gana
+es:
+    Qué es: Los jefes son rivales especiales de un tema de Java. Casi no les haces daño si tu código no usa de verdad ese tema (por ejemplo, un bucle o una clase).
+    Las cifras: Sin el tema, solo les llega el 10 % del daño. Si lo usas, el daño normal. Al ganar: una pieza épica y una medalla. Contra los jefes, tu entrenador está en el hospital: no hay consejos.
+    En la pelea: El marcador dice «inmune» o «vulnerable».
+    Desde tu código: Usa en tu robot el tema del jefe (lo dice su tarjeta en Modo especial).
+de:
+    Was es ist: Bosse sind besondere Gegner zu einem Java-Thema. Du machst ihnen kaum Schaden, wenn dein Code dieses Thema nicht wirklich benutzt (zum Beispiel eine Schleife oder eine Klasse).
+    Die Zahlen: Ohne das Thema kommen nur 10 % des Schadens an. Benutzt du es, normaler Schaden. Beim Sieg: ein episches Teil und eine Medaille. Gegen Bosse liegt dein Trainer im Krankenhaus: keine Tipps.
+    Im Kampf: Die Anzeigetafel sagt „immun“ oder „verwundbar“.
+    In deinem Code: Benutze in deinem Roboter das Thema des Bosses (steht auf seiner Karte im Spezialmodus).
+en:
+    What it is: Bosses are special rivals for a Java topic. You hardly hurt them if your code does not really use that topic (for example, a loop or a class).
+    The numbers: Without the topic, only 10% of the damage gets through. If you use it, normal damage. When you win: an epic part and a medal. Against bosses, your coach is in hospital: no tips.
+    In the fight: The scoreboard says "immune" or "vulnerable".
+    From your code: Use the boss’s topic in your robot (its card in Special mode says which).
+pseudo.es:
+    ANTES de un jefe:
+        mirar de qué tema es
+        usar ese tema en mi código
+pseudo.de:
+    VOR einem Boss:
+        schauen, welches Thema er hat
+        dieses Thema in meinem Code benutzen
+pseudo.en:
+    BEFORE a boss:
+        see which topic it is about
+        use that topic in my code
+
+=== mec_arma_especial
+nivel: 6
+tema: --
+titulo.es: El arma especial con cuenta atrás
+titulo.de: Die Spezialwaffe mit Countdown
+titulo.en: The special weapon with a countdown
+claves.es: arma especial, cuenta atras, reto, congelada
+claves.de: spezialwaffe, countdown, aufgabe, eingefroren
+claves.en: special weapon, countdown, challenge, frozen
+ver: mec_armas
+es:
+    Qué es: En la segunda ronda de una pelea uno contra uno, la pelea se congela y aparece un arma especial con un reto de código y una cuenta atrás.
+    Las cifras: Tienes 45 segundos en Noob, de 60 a 65 en Junior y de 85 a 90 en Senior. Si pasas todas las pruebas, tu robot corre a por el arma y golpea; con la mitad, falla; si no, a veces se la lleva el rival.
+    En la pelea: Números grandes que parpadean y la cuenta atrás.
+    Desde tu código: Es un ejercicio corto aparte; no cambia tu robot. Se puede apagar en Ajustes.
+de:
+    Was es ist: In der zweiten Runde eines Eins-gegen-eins-Kampfes friert der Kampf ein, und eine Spezialwaffe erscheint, mit einer Code-Aufgabe und einem Countdown.
+    Die Zahlen: Du hast 45 Sekunden bei Noob, 60 bis 65 bei Junior und 85 bis 90 bei Senior. Bestehst du alle Tests, rennt dein Roboter zur Waffe und trifft; mit der Hälfte verfehlt er; sonst schnappt sie sich manchmal der Gegner.
+    Im Kampf: Große blinkende Zahlen und der Countdown.
+    In deinem Code: Es ist eine kurze eigene Übung; sie ändert deinen Roboter nicht. In den Einstellungen kannst du sie ausschalten.
+en:
+    What it is: In the second round of a one-against-one fight, the fight freezes and a special weapon appears, with a code challenge and a countdown.
+    The numbers: You have 45 seconds at Noob, 60 to 65 at Junior and 85 to 90 at Senior. If you pass all the tests, your robot runs to the weapon and strikes; with half, it misses; otherwise the rival sometimes takes it.
+    In the fight: Big blinking numbers and the countdown.
+    From your code: It is a short exercise of its own; it does not change your robot. You can turn it off in Settings.
+pseudo.es:
+    CUANDO salga el arma especial:
+        leer el reto con calma
+        resolverlo antes de que acabe el tiempo
+pseudo.de:
+    WENN die Spezialwaffe erscheint:
+        die Aufgabe in Ruhe lesen
+        sie lösen, bevor die Zeit abläuft
+pseudo.en:
+    WHEN the special weapon appears:
+        read the challenge calmly
+        solve it before time runs out
