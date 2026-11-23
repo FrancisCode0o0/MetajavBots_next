@@ -19,9 +19,9 @@ Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDri
 - La versión de jpackage solo admite números: de una etiqueta `v1.2.3-beta` se queda con 1.2.3.
 - Visto al probar, sin tocar: la pelea dice «Ronda 1 de 6» y el README «cuatro rondas»; en el informe de la ronda, «Aciertos: 76 de 14 (543 %)».
 
-**Resultado del flujo**: se lanza al subir la rama `instalador`; lo apunto en el commit siguiente de esta rama.
+**Resultado del flujo**: **no se ha visto**. Al subir la rama, Claude Code denegó el permiso de `git push`, así que la rama `instalador` (dos commits) solo está en este PC y el flujo no ha corrido. Por eso tampoco hay todavía tamaños de los paquetes de Linux y Mac. Para que GitHub Actions pruebe el flujo: `git push -u origin instalador` y mirar «Paquetes» en la pestaña Actions (en cada ejecución, los ZIP están abajo, en *Artifacts*).
 
-**Para Fran — unir la rama y crear la versión** (en la carpeta del repositorio):
+**Para Fran — unir la rama y crear la versión** (en la carpeta del repositorio; mejor después de ver «Paquetes» en verde en la rama):
 ```
 git switch main
 git pull
