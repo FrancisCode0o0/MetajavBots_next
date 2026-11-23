@@ -55,7 +55,7 @@ MetajavBots lo he dirigido yo, Francis García Reyes, estudiante de Informática
 
 **Herramientas**: Claude Code (Claude Opus y Fable), Google Antigravity (Gemini), OpenCode y GitHub Copilot; Gradle, libGDX, Checkstyle y GitHub Actions.
 
-**Reglas de calidad**: un commit solo con `gradlew compileJava estilo pruebas:prueba` en verde (Checkstyle sin avisos y más de 300 pruebas sin ventana), que [GitHub Actions](.github/workflows/pruebas.yml) repite en cada push; capturas de cada pantalla con letra normal y grande en los tres idiomas, revisadas antes de cerrar cada encargo.
+**Reglas de calidad**: un commit solo con `gradlew compileJava estilo pruebas:prueba` en verde (Checkstyle sin avisos y más de 300 pruebas sin ventana), que [GitHub Actions](.github/workflows/pruebas.yml) repite en cada push; capturas de cada pantalla con letra normal y grande en los tres idiomas, revisadas antes de cerrar cada encargo. Los encargos y los informes de los modelos están en [docs/proceso/](docs/proceso/).
 
 ## Cómo citarlo
 
@@ -91,7 +91,7 @@ MetajavBots habe ich, Francis García Reyes, Informatikstudent im ersten Semeste
 
 **Werkzeuge**: Claude Code (Claude Opus und Fable), Google Antigravity (Gemini), OpenCode und GitHub Copilot; Gradle, libGDX, Checkstyle und GitHub Actions.
 
-**Qualitätsregeln**: Ein Commit nur mit `gradlew compileJava estilo pruebas:prueba` im grünen Bereich (Checkstyle ohne Warnungen und über 300 Tests ohne Fenster), was [GitHub Actions](.github/workflows/pruebas.yml) bei jedem Push wiederholt; Screenshots jedes Bildschirms in normaler und großer Schrift in allen drei Sprachen, geprüft vor dem Abschluss jedes Auftrags.
+**Qualitätsregeln**: Ein Commit nur mit `gradlew compileJava estilo pruebas:prueba` im grünen Bereich (Checkstyle ohne Warnungen und über 300 Tests ohne Fenster), was [GitHub Actions](.github/workflows/pruebas.yml) bei jedem Push wiederholt; Screenshots jedes Bildschirms in normaler und großer Schrift in allen drei Sprachen, geprüft vor dem Abschluss jedes Auftrags. Die Aufträge und die Berichte der Modelle liegen in [docs/proceso/](docs/proceso/).
 
 **Zitieren**: MetajavBots ist von **Francis García Reyes**. Code unter [Apache-2.0](LICENSE) (mit dem Hinweis aus [NOTICE](NOTICE)); Texte, Übungen, Tutorials, Dialoge und Grafik unter [CC BY 4.0](docs/LICENCIA_CONTENIDO.md).
 
@@ -125,7 +125,7 @@ MetajavBots was directed by me, Francis García Reyes, a first-semester computer
 
 **Tools**: Claude Code (Claude Opus and Fable), Google Antigravity (Gemini), OpenCode, and GitHub Copilot; Gradle, libGDX, Checkstyle, and GitHub Actions.
 
-**Quality rules**: a commit only with `gradlew compileJava estilo pruebas:prueba` green (Checkstyle with no warnings and 300+ headless tests), which [GitHub Actions](.github/workflows/pruebas.yml) repeats on every push; screenshots of every screen at normal and large font size in all three languages, reviewed before closing each work order.
+**Quality rules**: a commit only with `gradlew compileJava estilo pruebas:prueba` green (Checkstyle with no warnings and 300+ headless tests), which [GitHub Actions](.github/workflows/pruebas.yml) repeats on every push; screenshots of every screen at normal and large font size in all three languages, reviewed before closing each work order. The work orders and the models' reports are in [docs/proceso/](docs/proceso/).
 
 **How to cite**: MetajavBots is by **Francis García Reyes**. Code under [Apache-2.0](LICENSE) (keep the [NOTICE](NOTICE)); texts, exercises, tutorials, dialogues and art under [CC BY 4.0](docs/LICENCIA_CONTENIDO.md).
 
