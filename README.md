@@ -1,5 +1,7 @@
 # MetajavBots
 
+[![Pruebas](https://github.com/FrancisCode0o0/MetajavBots_next/actions/workflows/pruebas.yml/badge.svg)](https://github.com/FrancisCode0o0/MetajavBots_next/actions/workflows/pruebas.yml)
+
 **Español** · [Deutsch](#deutsch) · [English](#english)
 
 Robots que se programan en Java y combaten por rondas, para aprender Java jugando: de cero absoluto a nivel avanzado. Al estilo de Robocode, con robots de diseño propio, cada uno con su personalidad, y un locutor robot loco que narra las peleas.
@@ -41,6 +43,20 @@ public class MiRobot extends Metajavbot {
 
 **Cerebro de IA (opcional)**: el juego funciona entero sin IA. Si quieres, en *Ajustes › Cerebro de IA* puedes usar un modelo local con [KoboldCpp](https://github.com/LostRuins/koboldcpp) o uno en línea con tu propia clave (que se guarda fuera del juego). Con IA, los tutoriales son conversaciones, el código se revisa tras cada pelea y el temario se convierte en ejercicios. Más en [docs/CEREBRO.md](docs/CEREBRO.md).
 
+## Cómo se hizo
+
+MetajavBots lo he dirigido yo, Francis García Reyes, estudiante de Informática de primer semestre en la TH Mannheim; la mayor parte del código la han escrito modelos de IA bajo mi dirección. Mi trabajo:
+
+- **Diseño y decisiones**: la idea, los modos de juego, el equilibrio, los textos, la música que quería y cada cambio, con sus prioridades.
+- **Encargos**: cada función nueva empezó como un encargo escrito y corto (qué se necesita y cómo se comprueba que está bien), redactado conmigo por un chat de Claude que hacía de tutor.
+- **Cadena de trabajo**: los encargos se ejecutaban uno tras otro, cada uno en su propia sesión, con scripts propios que lanzaban el siguiente, pausaban la cadena y avisaban de los permisos delicados.
+- **Pruebas y depuración**: jugaba cada versión, buscaba los fallos y los convertía en nuevos encargos.
+- **Revisión cruzada**: el trabajo de un modelo lo revisaba otro antes de darlo por bueno.
+
+**Herramientas**: Claude Code (Claude Opus y Fable), Google Antigravity (Gemini), OpenCode y GitHub Copilot; Gradle, libGDX, Checkstyle y GitHub Actions.
+
+**Reglas de calidad**: un commit solo con `gradlew compileJava estilo pruebas:prueba` en verde (Checkstyle sin avisos y más de 300 pruebas sin ventana), que [GitHub Actions](.github/workflows/pruebas.yml) repite en cada push; capturas de cada pantalla con letra normal y grande en los tres idiomas, revisadas antes de cerrar cada encargo.
+
 ## Cómo citarlo
 
 MetajavBots es de **Francis García Reyes**. El código tiene licencia [Apache-2.0](LICENSE) (conserva el aviso de [NOTICE](NOTICE)); los textos, ejercicios, tutoriales, diálogos y el arte, [CC BY 4.0](docs/LICENCIA_CONTENIDO.md). Si lo usas, cítalo así:
@@ -63,6 +79,20 @@ Roboter, die in Java programmiert werden und in Runden kämpfen – um Java spie
 
 Dein Roboter ist eine Java-Klasse, die von `MetajavbotDe` erbt (Methoden auf Deutsch: `jedenZug()`, `beiSicht(Gegner g)`, `vorwaerts(…)`, `drehen(…)`, `zielenNach(…)`, `angreifen()`).
 
+**Wie es entstanden ist**
+
+MetajavBots habe ich, Francis García Reyes, Informatikstudent im ersten Semester an der TH Mannheim, geleitet; den größten Teil des Codes haben KI-Modelle unter meiner Anleitung geschrieben. Meine Arbeit:
+
+- **Design und Entscheidungen**: die Idee, die Spielmodi, das Balancing, die Texte, die gewünschte Musik und jede Änderung mit ihrer Priorität.
+- **Aufträge**: Jede neue Funktion begann als kurzer schriftlicher Auftrag (was gebraucht wird und wie man prüft, dass es stimmt), den ich mit einem Claude-Chat als Tutor formuliert habe.
+- **Arbeitskette**: Die Aufträge liefen nacheinander, jeder in einer eigenen Sitzung, mit eigenen Skripten, die den nächsten starteten, die Kette pausierten und bei heiklen Berechtigungen warnten.
+- **Testen und Debugging**: Ich habe jede Version gespielt, Fehler gesucht und daraus neue Aufträge gemacht.
+- **Gegenseitige Prüfung**: Die Arbeit eines Modells hat ein anderes geprüft, bevor sie übernommen wurde.
+
+**Werkzeuge**: Claude Code (Claude Opus und Fable), Google Antigravity (Gemini), OpenCode und GitHub Copilot; Gradle, libGDX, Checkstyle und GitHub Actions.
+
+**Qualitätsregeln**: Ein Commit nur mit `gradlew compileJava estilo pruebas:prueba` im grünen Bereich (Checkstyle ohne Warnungen und über 300 Tests ohne Fenster), was [GitHub Actions](.github/workflows/pruebas.yml) bei jedem Push wiederholt; Screenshots jedes Bildschirms in normaler und großer Schrift in allen drei Sprachen, geprüft vor dem Abschluss jedes Auftrags.
+
 **Zitieren**: MetajavBots ist von **Francis García Reyes**. Code unter [Apache-2.0](LICENSE) (mit dem Hinweis aus [NOTICE](NOTICE)); Texte, Übungen, Tutorials, Dialoge und Grafik unter [CC BY 4.0](docs/LICENCIA_CONTENIDO.md).
 
 > García Reyes, Francis (2026). *MetajavBots: Java lernen mit programmierten Kampfrobotern.*
@@ -82,6 +112,20 @@ Robots you program in Java that fight in rounds – to learn Java by playing: fr
 5. A fight has **four rounds** of about 40 seconds. Between rounds you can change the code and the parts. **Whoever took less damage wins**; at the end, the loser explodes.
 
 Your robot is a Java class extending `MetajavbotEn` (English methods: `onTick()`, `onSeeEnemy(Enemy e)`, `ahead(…)`, `turn(…)`, `aimTo(…)`, `attack()`).
+
+**How it was made**
+
+MetajavBots was directed by me, Francis García Reyes, a first-semester computer science student at TH Mannheim; most of the code was written by AI models under my direction. My part:
+
+- **Design and decisions**: the idea, the game modes, the balance, the texts, the music I wanted, and every change with its priority.
+- **Work orders**: every new feature started as a short written work order (what is needed and how to check it works), drafted with me by a Claude chat acting as a tutor.
+- **Work chain**: the orders ran one after another, each in its own session, with my own scripts that launched the next one, paused the chain, and flagged sensitive permissions.
+- **Testing and debugging**: I played every version, hunted bugs, and turned them into new work orders.
+- **Cross-review**: one model's work was reviewed by another before it was accepted.
+
+**Tools**: Claude Code (Claude Opus and Fable), Google Antigravity (Gemini), OpenCode, and GitHub Copilot; Gradle, libGDX, Checkstyle, and GitHub Actions.
+
+**Quality rules**: a commit only with `gradlew compileJava estilo pruebas:prueba` green (Checkstyle with no warnings and 300+ headless tests), which [GitHub Actions](.github/workflows/pruebas.yml) repeats on every push; screenshots of every screen at normal and large font size in all three languages, reviewed before closing each work order.
 
 **How to cite**: MetajavBots is by **Francis García Reyes**. Code under [Apache-2.0](LICENSE) (keep the [NOTICE](NOTICE)); texts, exercises, tutorials, dialogues and art under [CC BY 4.0](docs/LICENCIA_CONTENIDO.md).
 
