@@ -74,7 +74,7 @@ public interface EigenesTeil extends PiezaPropia {
         return 0.5;
     }
 
-    /** Maximale Traglast (nur für {@code BEINE}). */
+    /** Traglast der Beine: Chassis und übrige Teile; darüber wird es langsamer, über 120 % darf der Roboter nicht kämpfen (nur {@code BEINE}). */
     default double traglast() {
         return 32;
     }

@@ -819,6 +819,159 @@ ejemplo.en:
     ELSE:
         ahead(60)     // move closer into range
 
+=== api.pesoTotal
+tema: 02
+firma: double pesoTotal()
+firma.de: double gesamtgewicht()
+firma.en: double totalWeight()
+es: Lo que cargan tus piernas: el chasis de tu modelo y todas tus piezas menos las piernas.
+de: Was deine Beine tragen: das Chassis deines Modells und alle Teile außer den Beinen.
+en: What your legs carry: the chassis of your model and all your parts except the legs.
+donde.es: Consúltalo en alEmpezar() o cadaTurno() para saber lo que cargan tus piernas; compáralo con cargaMaxima().
+donde.de: In beimStart() oder jedenZug() abfragen, um zu wissen, was deine Beine tragen; vergleiche es mit traglast().
+donde.en: Check it in onStart() or onTick() to know what your legs carry; compare it with loadLimit().
+
+=== api.cargaMaxima
+tema: 02
+firma: double cargaMaxima()
+firma.de: double traglast()
+firma.en: double loadLimit()
+es: Lo que aguantan tus piernas (su carga).
+de: Was deine Beine aushalten (ihre Traglast).
+en: What your legs can carry (their load limit).
+donde.es: Consúltalo en alEmpezar(): depende de tus piernas (las orugas aguantan lo que más; las alas, lo que menos).
+donde.de: In beimStart() abfragen: Es hängt von deinen Beinen ab (Ketten tragen am meisten, Flügel am wenigsten).
+donde.en: Check it in onStart(): it depends on your legs (treads carry the most; wings, the least).
+
+=== api.proporcionDeCarga
+tema: 03
+firma: double proporcionDeCarga()
+firma.de: double lastanteil()
+firma.en: double loadRatio()
+es: pesoTotal() / cargaMaxima(): hasta 0,70 vas ligero; hasta 1, normal; hasta 1,20, sobrecargado.
+de: gesamtgewicht() / traglast(): bis 0,70 bist du leicht, bis 1 normal, bis 1,20 überladen.
+en: totalWeight() / loadLimit(): up to 0.70 you are light, up to 1 normal, up to 1.20 overloaded.
+donde.es: Úsalo en un if dentro de alEmpezar() o cadaTurno(): por encima de 1 vas sobrecargado y conviene no correr.
+donde.de: In einem if in beimStart() oder jedenZug() verwenden: Über 1 bist du überladen und solltest nicht rasen.
+donde.en: Use it in an if inside onStart() or onTick(): above 1 you are overloaded and should not rush around.
+
+=== api.sobrecargado
+tema: 04
+firma: boolean sobrecargado()
+firma.de: boolean ueberladen()
+firma.en: boolean overloaded()
+es: ¿Vas sobrecargado? Entonces corres y giras peor, gastas más al moverte y no saltas ni esquivas rápido.
+de: Bist du überladen? Dann fährst und drehst du schlechter, verbrauchst mehr beim Fahren und springst und weichst nicht schnell aus.
+en: Are you overloaded? Then you drive and turn worse, spend more energy moving, and cannot jump or dodge quickly.
+donde.es: Consúltalo en alEmpezar() o cadaTurno(): si vas sobrecargado, no esperes esquivar a la carrera; mejor pelear de cara.
+donde.de: In beimStart() oder jedenZug() abfragen: Bist du überladen, kannst du nicht schnell ausweichen; kämpfe lieber frontal.
+donde.en: Check it in onStart() or onTick(): if you are overloaded, do not count on quick dodges; fight head-on instead.
+ejemplo.es:
+    AL EMPEZAR:
+        SI sobrecargado():
+            decir("Despacio, pero seguro")
+ejemplo.de:
+    BEIM START:
+        WENN ueberladen():
+            sagen("Langsam, aber sicher")
+ejemplo.en:
+    ON START:
+        IF overloaded():
+            say("Slow but sure")
+
+=== api.velocidadMaxima
+tema: 02
+firma: double velocidadMaxima()
+firma.de: double hoechstgeschwindigkeit()
+firma.en: double topSpeed()
+es: Tu velocidad máxima ahora mismo, con tu peso y el terreno que pisas.
+de: Deine Höchstgeschwindigkeit gerade jetzt, mit deinem Gewicht und dem Gelände unter dir.
+en: Your top speed right now, with your weight and the terrain under you.
+donde.es: Consúltalo en cadaTurno(): cambia con el terreno que pisas (en escombros o aceite, a las ruedas les baja mucho).
+donde.de: In jedenZug() abfragen: Sie ändert sich mit dem Gelände (auf Trümmern oder Öl sinkt sie bei Rädern stark).
+donde.en: Check it in onTick(): it changes with the terrain under you (on rubble or oil it drops a lot for wheels).
+
+=== api.giroMaximo
+tema: 02
+firma: double giroMaximo()
+firma.de: double maxDrehung()
+firma.en: double maxTurnRate()
+es: Lo que puedes girar este turno: cuanto más deprisa vas, peor giras.
+de: Wie weit du in diesem Zug drehen kannst: Je schneller du fährst, desto schlechter drehst du.
+en: How far you can turn this tick: the faster you go, the worse you turn.
+donde.es: Consúltalo en cadaTurno() antes de girar: si vas muy deprisa, frena primero para poder girar más.
+donde.de: In jedenZug() vor dem Drehen abfragen: Fährst du sehr schnell, bremse zuerst, um stärker drehen zu können.
+donde.en: Check it in onTick() before turning: if you are going very fast, brake first so you can turn more.
+
+=== api.aceleracionMaxima
+tema: 02
+firma: double aceleracionMaxima()
+firma.de: double maxBeschleunigung()
+firma.en: double maxAcceleration()
+es: Tu aceleración ahora mismo (frenar es el doble de rápido).
+de: Deine Beschleunigung gerade jetzt (Bremsen geht doppelt so schnell).
+en: Your acceleration right now (braking is twice as fast).
+donde.es: Consúltalo en cadaTurno(): sirve para calcular cuántos turnos tardas en llegar a tu velocidad máxima.
+donde.de: In jedenZug() abfragen: Damit berechnest du, wie viele Züge du bis zur Höchstgeschwindigkeit brauchst.
+donde.en: Check it in onTick(): use it to work out how many ticks you need to reach your top speed.
+
+=== api.locomocion
+tema: 08
+firma: String locomocion()
+firma.de: String fortbewegung()
+firma.en: String locomotion()
+es: Tus piernas: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO" o "PATAS".
+de: Deine Beine: "BIPEDO", "ORUGAS" (Ketten), "RUEDAS" (Räder), "FLOTANTE" (Schweber), "VUELO" (Flug) oder "PATAS" (Spinnenbeine).
+en: Your legs: "BIPEDO" (biped), "ORUGAS" (treads), "RUEDAS" (wheels), "FLOTANTE" (hover), "VUELO" (flight), or "PATAS" (spider legs).
+donde.es: Consúltalo en alEmpezar() para adaptar tu táctica a tus piernas; compáralo con equals().
+donde.de: In beimStart() abfragen, um deine Taktik an deine Beine anzupassen; mit equals() vergleichen.
+donde.en: Check it in onStart() to fit your tactics to your legs; compare it with equals().
+
+=== api.terreno
+tema: 08
+firma: String terreno()
+firma.de: String gelaende()
+firma.en: String terrain()
+es: El terreno que pisas: "LLANO", "ACEITE", "AGUA", "RAMPA", "ESCOMBROS" o "TRAMPA".
+de: Das Gelände unter dir: "LLANO" (eben), "ACEITE" (Öl), "AGUA" (Wasser), "RAMPA", "ESCOMBROS" (Trümmer) oder "TRAMPA" (Bodenfalle).
+en: The terrain under you: "LLANO" (flat), "ACEITE" (oil), "AGUA" (water), "RAMPA" (ramp), "ESCOMBROS" (rubble), or "TRAMPA" (floor trap).
+donde.es: Consúltalo en cadaTurno(): si pisas "AGUA" o "TRAMPA", sal de ahí; compáralo con equals().
+donde.de: In jedenZug() abfragen: Stehst du auf "AGUA" (Wasser) oder "TRAMPA" (Falle), geh weg; mit equals() vergleichen.
+donde.en: Check it in onTick(): if you are on "AGUA" (water) or "TRAMPA" (trap), get off it; compare it with equals().
+
+=== api.regularPotencia
+tema: 06
+firma: void regularPotencia(double potencia)
+firma.de: void leistungRegeln(double leistung)
+firma.en: void setPower(double power)
+es: La potencia de las armas de potencia regulable (de 0,1 a 3): más potencia, más daño, pero bala más lenta, más calor y más energía.
+de: Die Leistung der regelbaren Waffen (0,1 bis 3): mehr Leistung, mehr Schaden, aber langsamere Kugel, mehr Hitze und mehr Energie.
+en: The power of adjustable-power weapons (0.1 to 3): more power, more damage, but a slower bullet, more heat, and more energy.
+donde.es: Llámalo antes de atacar (en cadaTurno() o alVerEnemigo(e)); solo cambia las armas de potencia regulable (cañón ligero, bláster de iones, cañón predictor).
+donde.de: Vor dem Angriff aufrufen (in jedenZug() oder beiSicht(g)); es ändert nur die Waffen mit regelbarer Leistung (leichte Kanone, Ionenblaster, Vorhersagekanone).
+donde.en: Call it before attacking (in onTick() or onSeeEnemy(e)); it only changes adjustable-power weapons (light cannon, ion blaster, predictor cannon).
+ejemplo.es:
+    AL VER enemigo e:
+        SI e.distancia() < 250:
+            regularPotencia(3)
+        SI NO:
+            regularPotencia(1)
+        atacar()
+ejemplo.de:
+    BEI SICHT Gegner g:
+        WENN g.entfernung() < 250:
+            leistungRegeln(3)
+        SONST:
+            leistungRegeln(1)
+        angreifen()
+ejemplo.en:
+    ON SEE ENEMY e:
+        IF e.distance() < 250:
+            setPower(3)
+        ELSE:
+            setPower(1)
+        attack()
+
 === api.x
 tema: 02
 firma: double x()
@@ -1671,9 +1824,9 @@ tema: 13
 firma: Enemigo: boolean vuela()
 firma.de: Gegner: boolean fliegt()
 firma.en: Enemy: boolean flies()
-es: Método de consulta sobre Enemigo. Devuelve true si ese robot está volando ahora (por piernas voladoras o propulsor antigravedad); los golpes cuerpo a cuerpo no pueden alcanzarlo, pero las armas a distancia sí.
-de: Abfragemethode am Gegner. Gibt true zurück, wenn er gerade fliegt (Flugbeine oder Antigravitation); Nahkampfwaffen treffen ihn nicht, Fernwaffen hingegen schon.
-en: Getter on Enemy. Returns true if the enemy is airborne right now (hover legs or anti-gravity); melee attacks miss flying targets, whereas ranged weapons hit them.
+es: Método de consulta sobre Enemigo. Devuelve true si ese robot está en el aire ahora (alas, propulsor antigravedad, un salto o un volteo). Si solo salta o lo han volteado, ningún golpe cuerpo a cuerpo lo alcanza; si vuela con alas, esquiva muchos golpes (no los de armas largas, como látigos y bolas) y sufre más con misiles, imanes y armas antiaéreas. Las armas a distancia sí le llegan.
+de: Abfragemethode am Gegner. Gibt true zurück, wenn er gerade in der Luft ist (Flügel, Antigravitation, ein Sprung oder umgeworfen). Springt er nur oder wurde er umgeworfen, trifft ihn kein Nahkampfschlag; fliegt er mit Flügeln, weicht er vielen Schlägen aus (nicht denen langer Waffen wie Peitschen und Kugeln) und leidet mehr unter Raketen, Magneten und Flugabwehrwaffen. Fernwaffen treffen ihn.
+en: Getter on Enemy. Returns true if the enemy is airborne right now (wings, anti-gravity, a jump, or a flip). If it is only jumping or was flipped, no melee hit reaches it; if it flies with wings, it dodges many hits (not those of long weapons such as whips and chain balls) and suffers more from missiles, magnets, and flak weapons. Ranged weapons hit it.
 donde.es: Úsalo en un if como e.vuela() dentro de alVerEnemigo() para no desperdiciar ataques cuerpo a cuerpo contra rivales aéreos; siempre sobre el parámetro e.
 donde.de: In einem if als g.fliegt() in beiSicht() prüfen, um keine Nahkampfangriffe an fliegende Gegner zu verschwenden; stets über g aufrufen.
 donde.en: Check e.flies() in an if inside onSeeEnemy() so you don't waste melee attacks on airborne foes; always call it on the Enemy reference.
@@ -1686,6 +1839,18 @@ ejemplo.de:
 ejemplo.en:
     IF e.flies() AND weaponRight().equals("CUERPO") AND readyLeft():
         attackLeft();
+
+=== Enemigo.locomocion
+tema: 13
+firma: Enemigo: String locomocion()
+firma.de: Gegner: String fortbewegung()
+firma.en: Enemy: String locomotion()
+es: Método de consulta sobre Enemigo. Devuelve sus piernas: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO" o "PATAS". Sirve para elegir arma y táctica: contra orugas no empujes (aguantan), contra ruedas usa la cuña o el volteador, contra un volador usa misiles o el cañón antiaéreo. Compáralo con equals().
+de: Abfragemethode am Gegner. Gibt seine Beine zurück: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO" oder "PATAS". Damit wählst du Waffe und Taktik: Ketten nicht schubsen (sie halten stand), gegen Räder Keil oder Flipper, gegen Flieger Raketen oder die Flugabwehrkanone. Mit equals() vergleichen.
+en: Getter on Enemy. Returns its legs: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO", or "PATAS". Use it to pick your weapon and tactics: do not try to shove treads (they hold firm), use the wedge or the flipper against wheels, and missiles or the flak cannon against a flier. Compare it with equals().
+donde.es: Llámalo sobre el parámetro e dentro de alVerEnemigo(e) para elegir arma: contra "VUELO", misiles; contra "RUEDAS", la cuña.
+donde.de: Auf dem Parameter g in beiSicht(g) aufrufen, um die Waffe zu wählen: gegen "VUELO" Raketen, gegen "RUEDAS" den Keil.
+donde.en: Call it on the parameter e inside onSeeEnemy(e) to pick a weapon: missiles against "VUELO", the wedge against "RUEDAS".
 
 === Golpe.dano
 tema: 13

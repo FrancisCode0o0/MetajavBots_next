@@ -1,0 +1,42 @@
+# TERRENOS de cada arena (docs/EQUILIBRIO.md, «Terrenos»): el suelo de base y las zonas que se le ponen encima.
+# zonas = tipo x y radio ; tipo x y radio ; …   (x e y en tanto por uno del ancho y el alto; radio en unidades de la arena,
+# que mide 1000 × 700). Tipos: aceite, agua, rampa (cuesta: sin salto), escombros. Las trampas y obstáculos que ya trae
+# cada arena (pinchos, foso, sierras, barriles, chimeneas) cuentan aparte, como trampas de suelo o escombros.
+# Reparto pensado para que cada locomoción tenga arenas donde brilla y arenas donde sufre (PruebasDeEquilibrio lo comprueba).
+# TODO-FRAN: el sitio y el tamaño de cada zona es tuyo; toca aquí y la prueba dirá si sigue equilibrado.
+
+[HANGAR]
+suelo = llano
+zonas =
+
+[DESIERTO]
+suelo = llano
+zonas = escombros 0.30 0.30 170 ; escombros 0.70 0.70 170 ; rampa 0.50 0.50 130 ; escombros 0.78 0.20 110 ; escombros 0.22 0.80 110
+
+[NEON]
+suelo = llano
+zonas = aceite 0.50 0.50 170 ; aceite 0.25 0.25 120 ; aceite 0.75 0.75 120 ; aceite 0.25 0.78 110 ; aceite 0.75 0.22 110
+
+[LABORATORIO]
+suelo = llano
+zonas = agua 0.50 0.50 160 ; agua 0.28 0.75 130 ; agua 0.72 0.25 130 ; agua 0.28 0.22 100 ; agua 0.72 0.78 100
+
+[LUNA]
+suelo = llano
+zonas = rampa 0.35 0.35 160 ; rampa 0.65 0.65 160 ; rampa 0.50 0.12 100 ; rampa 0.50 0.88 100 ; escombros 0.68 0.28 90 ; escombros 0.32 0.72 90
+
+[CHATARRERIA]
+suelo = llano
+zonas = escombros 0.50 0.17 130 ; escombros 0.50 0.83 130 ; escombros 0.33 0.72 90 ; escombros 0.67 0.28 90
+
+[COCINA]
+suelo = llano
+zonas = aceite 0.30 0.50 120 ; aceite 0.70 0.50 120 ; aceite 0.50 0.50 70
+
+[HIELO]
+suelo = aceite
+zonas =
+
+[TEJADO]
+suelo = llano
+zonas = agua 0.25 0.30 120 ; agua 0.75 0.70 120 ; agua 0.50 0.86 80 ; rampa 0.50 0.50 120 ; rampa 0.82 0.25 90 ; rampa 0.18 0.75 90

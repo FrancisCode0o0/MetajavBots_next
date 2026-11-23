@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.List;
 
 import metajavbots.api.Cosa;
+import metajavbots.piezas.Equilibrio;
 
 /**
  * ARENA — Las trampas y los objetos de una arena, como en las luchas de
@@ -43,6 +44,8 @@ public final class Arena {
         int fase;
         /** Los charcos (aceite, pegamento) se secan: los turnos que les quedan (-1, para siempre). */
         int vida = -1;
+        /** Si es una zona de terreno de la arena (docs/EQUILIBRIO.md): una rampa así es una cuesta, sin salto. */
+        public boolean terreno;
 
         Trampa(int id, String tipo, double x, double y, double radio, boolean solido, int ciclo, int activo, double resistenciaMax) {
             this(id, tipo, x, y, radio, solido, ciclo, activo, resistenciaMax, false, false);
@@ -223,6 +226,44 @@ public final class Arena {
     void charco(String tipo, double x, double y, double radio, int turnos) {
         Trampa t = poner(tipo, x, y, radio, false, 0, 0);
         t.vida = turnos;
+    }
+
+    /** El suelo de base de la arena (LLANO; el hielo cuenta como ACEITE): el terreno donde no hay ninguna zona. */
+    public Equilibrio.Terreno suelo = Equilibrio.Terreno.LLANO;
+
+    /** Pone una zona de terreno permanente (aceite, agua, rampa o escombros) que no cuenta como charco ni como trampa. */
+    Trampa zona(String tipo, double x, double y, double radio) {
+        Trampa t = poner(tipo, x, y, radio, false, 0, 0);
+        t.terreno = true;
+        return t;
+    }
+
+    /** El terreno en ese punto para ese robot: trampas de suelo, agua, aceite, rampa, escombros o el suelo de base. */
+    Equilibrio.Terreno terrenoEn(double x, double y, Cuerpo c) {
+        Equilibrio.Terreno mejor = suelo;
+        int prioridad = -1;
+        for (Trampa t : trampas) {
+            if (t.destruida || t.solido || Math.hypot(t.x - x, t.y - y) >= t.radio) continue;
+            Equilibrio.Terreno de = terrenoDe(t.tipo);
+            int pr = de == null ? -1 : de == Equilibrio.Terreno.TRAMPA ? 9 : de.ordinal();
+            if (pr > prioridad) {
+                prioridad = pr;
+                mejor = de;
+            }
+        }
+        return mejor;
+    }
+
+    /** Qué terreno es cada tipo de cosa del suelo (null si no es terreno). */
+    static Equilibrio.Terreno terrenoDe(String tipo) {
+        switch (tipo) {
+            case "aceite": return Equilibrio.Terreno.ACEITE;
+            case TIPO_AGUA: return Equilibrio.Terreno.AGUA;
+            case TIPO_RAMPA: return Equilibrio.Terreno.RAMPA;
+            case "escombros": return Equilibrio.Terreno.ESCOMBROS;
+            case "pinchos": case "foso": case "sierra": case "pegamento": case TIPO_TRAMPA_MORTAL: return Equilibrio.Terreno.TRAMPA;
+            default: return null;
+        }
     }
 
     /** Lo que agarra el suelo en ese sitio: el de la arena, y en el aceite casi nada. */
@@ -583,6 +624,9 @@ public final class Arena {
             return true;
         }
         if (t.tipo.equals(TIPO_RAMPA)) {
+            // Las rampas de las arenas son cuestas (solo frenan o ayudan según las piernas); sobrecargado no se salta
+            // (en la Carrera, con sus reglas propias, salta todo el que no vuela, como siempre).
+            if (t.terreno || c.cifras.sobrecargado() && !p.reglasPropias) return true;
             if (!c.vuela() && d < t.radio + c.radio * 0.7 && listo(t.id, c, p, TURNOS_SALTO + 12)) {
                 c.saltando = TURNOS_SALTO;
                 c.velocidad = Math.max(c.velocidad, Cuerpo.velocidadSegura(c.cifras.velocidad) * 0.95);
@@ -592,7 +636,9 @@ public final class Arena {
             return true;
         }
         if (t.tipo.equals(TIPO_AGUA)) {
-            if (!c.vuela() && d < t.radio + c.radio * 0.65 && listo(t.id, c, p, TURNOS_CORTOCIRCUITO + 24)) {
+            // El agua desorienta a quien la pisa o la sobrevuela con alas; los flotadores, que van por encima, no.
+            boolean moja = c.cifras.rasgos.cortocircuito && !c.vueloPasajero() && (c.cifras.vuela || !c.vuela());
+            if (moja && d < t.radio + c.radio * 0.65 && listo(t.id, c, p, TURNOS_CORTOCIRCUITO + 24)) {
                 c.cortocircuito = Math.max(c.cortocircuito, TURNOS_CORTOCIRCUITO);
                 p.suceso(Suceso.Tipo.TRAMPA, c.indice, c.x, c.y, c.rumbo, TURNOS_CORTOCIRCUITO, TIPO_AGUA);
             }
@@ -603,15 +649,19 @@ public final class Arena {
 
     private void efecto(Pelea p, Cuerpo c, Trampa t) {
         double dx = c.x - t.x, dy = c.y - t.y, d = Math.hypot(dx, dy);
-        boolean suelo = !c.vuela();
+        // Lo que vuela no pisa el suelo; los flotadores ignoran el aceite y las trampas de suelo.
+        boolean suelo = !c.vuela() && c.cifras.rasgos.pisaSuelo;
+        if (t.tipo.equals("escombros")) return;
         if (t.tipo.equals("pegamento")) {
             if (suelo && d < t.radio) c.velocidad *= 0.35;
             return;
         }
         if (t.tipo.equals("aceite") || aplicarEspecialesCarrera(p, c, t, d)) return;
         if (t.tipo.equals("iman")) {
-            if (suelo && d < t.radio && d > 1) {
-                double f = 0.9 * (1 - d / t.radio);
+            // El imán tira de todo lo que no esté en el aire un rato (de los voladores y flotadores, más).
+            boolean tira = p.reglasPropias ? !c.vuela() : !c.vueloPasajero();
+            if (tira && d < t.radio && d > 1) {
+                double f = ReglasDePeso.tiron(p, c, 0.9 * (1 - d / t.radio));
                 c.x -= dx / d * f;
                 c.y -= dy / d * f;
             }
@@ -639,7 +689,8 @@ public final class Arena {
         }
         if (!t.peligroso() || t.solido && !t.tipo.equals("carrito")) return;
         boolean toca = t.tipo.equals("foso") ? d < t.radio - c.radio * 0.3 : d < t.radio + c.radio * 0.6;
-        if (!toca || !suelo && !t.tipo.equals("rayo")) return;
+        boolean alcanza = t.tipo.equals("rayo") || (t.tipo.equals("carrito") ? !c.vuela() : suelo);
+        if (!toca || !alcanza) return;
         switch (t.tipo) {
             case "foso":
                 // Se cae: mucho daño, aturdido un rato y vuelve a salir por el borde más cercano.

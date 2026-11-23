@@ -5,6 +5,7 @@
 # colores: principal secundario acento (hexadecimal) · piezas: cabeza izquierda derecha piernas núcleo (las de fábrica)
 # personalidad: el archivo de res/dialogos/ con sus diálogos.
 # arquetipo: ASALTO TACTICO DEFENSOR (cada arquetipo habilita su habilidad programable propia en la API).
+# chasis: lo que pesa el cuerpo del modelo (lo cargan las piernas junto con las piezas; docs/EQUILIBRIO.md).
 # TODO-FRAN: la lista de modelos, sus nombres y sus números finos son tuyos.
 
 [cobalto]
@@ -21,6 +22,7 @@ detalles = hombreras remaches
 colores = 2F5D8C 9FB6CC FFB238
 blindaje = 1.25
 velocidad = 0.88
+chasis = 18
 piezas = cabeza_escudo canon_ligero punos orugas nucleo_basico
 desbloqueo = inicio
 
@@ -38,6 +40,7 @@ detalles = aleron rayas
 colores = F2C230 2B2B33 4FD1FF
 blindaje = 0.78
 velocidad = 1.25
+chasis = 8
 piezas = cabeza_turbo laser_pulso ametralladora ruedas nucleo_bateria
 desbloqueo = inicio
 
@@ -55,6 +58,7 @@ detalles = mochila panel
 colores = 3E7D4E C9D6B8 FF5A5A
 blindaje = 0.92
 velocidad = 1.0
+chasis = 10
 piezas = cabeza_radar laser_basico laser_francotirador piernas_bipedo nucleo_basico
 desbloqueo = inicio
 
@@ -72,6 +76,7 @@ detalles = pinchos remaches
 colores = B3261E 3A2A2A FFD166
 blindaje = 1.10
 velocidad = 0.92
+chasis = 16
 piezas = cabeza_furia martillo punos piernas_bipedo nucleo_blindado
 desbloqueo = victorias:3
 
@@ -89,6 +94,7 @@ detalles = cola aleron
 colores = EDF2F4 2EC4B6 FF6B9A
 blindaje = 0.84
 velocidad = 1.08
+chasis = 8
 piezas = cabeza_sombra laser_basico lanzamisiles alas nucleo_basico
 desbloqueo = nivel:NOOB_2
 
@@ -106,6 +112,7 @@ detalles = tubos panel
 colores = 6A4C93 D7C9F2 7CFF6B
 blindaje = 0.96
 velocidad = 0.94
+chasis = 11
 piezas = cabeza_pulso lanzamisiles laser_basico patas_arana nucleo_cuantico
 desbloqueo = nivel:NOOB_3
 
@@ -123,6 +130,7 @@ detalles = remaches parches
 colores = 6B7F3A D9CBA0 59C3FF
 blindaje = 1.38
 velocidad = 0.74
+chasis = 22
 piezas = cabeza_escudo escudo_brazo canon_ligero orugas nucleo_blindado
 desbloqueo = victorias:6
 
@@ -140,6 +148,7 @@ detalles = rayas cola
 colores = 1C1C1C FFC300 FF3D3D
 blindaje = 0.78
 velocidad = 1.26
+chasis = 7
 piezas = cabeza_turbo taladro ametralladora flotador nucleo_bateria
 desbloqueo = victorias:4
 
@@ -157,6 +166,7 @@ detalles = pinchos
 colores = 8E2C7F 2A1B3D 9CFF57
 blindaje = 0.92
 velocidad = 1.04
+chasis = 10
 piezas = cabeza_sombra latigo enjambre patas_arana nucleo_cuantico
 desbloqueo = nivel:NOOB_4
 
@@ -174,6 +184,7 @@ detalles = hombreras capa
 colores = 9B1D20 C0C5CE F5F3BB
 blindaje = 0.94
 velocidad = 1.08
+chasis = 10
 piezas = cabeza_furia espada espada piernas_salto nucleo_basico
 desbloqueo = victorias:8
 
@@ -191,6 +202,7 @@ detalles = aro rayas
 colores = F28C28 F7F1E3 FFF36B
 blindaje = 0.86
 velocidad = 0.98
+chasis = 10
 piezas = cabeza_ojo laser_pesado laser_basico flotador nucleo_bateria
 desbloqueo = nivel:JUNIOR_1
 
@@ -208,6 +220,7 @@ detalles = panel
 colores = 27AE60 111A14 B6FF00
 blindaje = 0.88
 velocidad = 1.02
+chasis = 9
 piezas = cabeza_panoramica canon_ligero laser_pulso ruedas nucleo_cuantico
 desbloqueo = victorias:10
 
@@ -225,6 +238,7 @@ detalles = aro
 colores = A8DADC F1FAEE 457B9D
 blindaje = 0.96
 velocidad = 0.90
+chasis = 11
 piezas = cabeza_medica brazo_reparador laser_basico flotador nucleo_bateria
 desbloqueo = nivel:JUNIOR_2
 
@@ -242,6 +256,7 @@ detalles = parches tubos
 colores = 8C5A3C 5E5045 E9C46A
 blindaje = 1.18
 velocidad = 0.84
+chasis = 16
 piezas = cabeza_radar escopeta punos orugas nucleo_blindado
 desbloqueo = victorias:14
 
@@ -259,6 +274,7 @@ detalles = rayas hombreras
 colores = 00B4D8 0B132B F9F871
 blindaje = 0.88
 velocidad = 1.08
+chasis = 9
 piezas = cabeza_pulso latigo laser_pulso piernas_salto nucleo_bateria
 desbloqueo = nivel:JUNIOR_3
 
@@ -276,6 +292,7 @@ detalles = capa aleron
 colores = 3C1E5A 11111A C77DFF
 blindaje = 0.86
 velocidad = 1.12
+chasis = 8
 piezas = cabeza_sombra espada canon_riel alas nucleo_cuantico
 desbloqueo = nivel:SENIOR_1
 
@@ -296,6 +313,7 @@ detalles = pinchos rayas
 colores = E8742A 3A3F46 FFE14D
 blindaje = 1.00
 velocidad = 0.96
+chasis = 12
 piezas = cabeza_furia sierra cuna ruedas nucleo_blindado
 desbloqueo = victorias:5
 
@@ -313,6 +331,7 @@ detalles = remaches parches
 colores = 2E6B8A C9C29A 8FE3FF
 blindaje = 1.30
 velocidad = 0.78
+chasis = 20
 piezas = cabeza_escudo pinza escudo_brazo orugas nucleo_blindado
 desbloqueo = victorias:7
 
@@ -330,6 +349,7 @@ detalles = aleron tubos
 colores = F2C230 2B2F3A FF4F6B
 blindaje = 0.96
 velocidad = 1.06
+chasis = 11
 piezas = cabeza_turbo volteador canon_ligero ruedas nucleo_bateria
 desbloqueo = nivel:JUNIOR_1
 
@@ -347,6 +367,7 @@ detalles = hombreras remaches
 colores = 7A2A28 4A4F57 FFB000
 blindaje = 1.18
 velocidad = 0.80
+chasis = 16
 piezas = cabeza_radar bola_cadena martillo piernas_bipedo nucleo_blindado
 desbloqueo = victorias:12
 
@@ -364,6 +385,7 @@ detalles = tubos cola
 colores = 4A3F6B 9A90B8 7CFFB2
 blindaje = 0.90
 velocidad = 1.06
+chasis = 9
 piezas = cabeza_ojo pinza_taladro taladro patas_arana nucleo_cuantico
 desbloqueo = nivel:JUNIOR_2
 
@@ -381,5 +403,6 @@ detalles = capa rayas
 colores = 1F8A8A 0F2B33 FFEE88
 blindaje = 0.88
 velocidad = 1.25
+chasis = 7
 piezas = cabeza_pulso sierra_volteadora latigo flotador nucleo_bateria
 desbloqueo = nivel:JUNIOR_3

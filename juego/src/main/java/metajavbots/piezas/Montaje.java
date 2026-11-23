@@ -68,11 +68,62 @@ public final class Montaje {
         return new LinkedHashMap<>(piezas);
     }
 
-    /** Lo que pesa todo. */
+    /** Lo que pesan todas las piezas juntas, piernas incluidas (sin el chasis; lo usan los choques de los minijuegos). */
     public double peso() {
         double p = 0;
         for (Pieza x : piezas.values()) p += x.valor("peso");
         return p;
+    }
+
+    /**
+     * El peso que cargan las piernas: el chasis del modelo y todas las piezas menos las piernas (cabeza, brazos con su arma,
+     * escudos, espadas, núcleo, naturaleza y la pieza propia), como en Armored Core.
+     */
+    public double pesoTotal() {
+        double p = modelo.chasis;
+        for (Map.Entry<Hueco, Pieza> e : piezas.entrySet()) if (e.getKey() != Hueco.PIERNAS) p += e.getValue().valor("peso");
+        return p;
+    }
+
+    /** La masa del robot entero (lo que carga más las piernas): la que cuenta en choques, empujones y retroceso. */
+    public double masa() {
+        Pieza pie = piezas.get(Hueco.PIERNAS);
+        return pesoTotal() + (pie == null ? 0 : pie.valor("peso"));
+    }
+
+    /** Lo que aguantan las piernas (30 si no hay). */
+    public double carga() {
+        Pieza pie = piezas.get(Hueco.PIERNAS);
+        return Math.max(1, pie == null ? 30 : pie.valor("carga", 30));
+    }
+
+    /** r = peso que cargan las piernas / su carga. */
+    public double proporcionDeCarga() {
+        return pesoTotal() / carga();
+    }
+
+    /** El tramo de peso del montaje (ligero, normal, sobrecarga o imposible). */
+    public Equilibrio.Tramo tramo() {
+        return Equilibrio.delJuego().tramo(proporcionDeCarga());
+    }
+
+    /** ¿Puede salir a pelear? (No, si pasa del 120 % de la carga de sus piernas.) */
+    public boolean puedePelear() {
+        return tramo() != Equilibrio.Tramo.IMPOSIBLE;
+    }
+
+    /** Lo que pesa el arma más pesada de los dos brazos (la que frena la mira). */
+    public double pesoArmaMaximo() {
+        Pieza i = piezas.get(Hueco.IZQUIERDA), d = piezas.get(Hueco.DERECHA);
+        return Math.max(i == null ? 0 : i.valor("peso"), d == null ? 0 : d.valor("peso"));
+    }
+
+    /** Los huecos que más pesan, de más a menos (sin las piernas): lo que conviene aligerar si no puede salir. */
+    public java.util.List<Hueco> huecosQueMasPesan() {
+        java.util.List<Hueco> l = new java.util.ArrayList<>();
+        for (Hueco h : Hueco.values()) if (h != Hueco.PIERNAS && piezas.get(h) != null) l.add(h);
+        l.sort((a, b) -> Double.compare(piezas.get(b).valor("peso"), piezas.get(a).valor("peso")));
+        return l;
     }
 
     /** Cuánto refuerza la naturaleza este aspecto ("blindaje", "velocidad", "precision", "cuerpo", "pasos", "esquiva"). */
@@ -121,6 +172,12 @@ public final class Montaje {
         public final double velocidad, giro, aceleracion, pasos, energiaMax, recarga, precision, distancia, cuerpo, esquiva;
         public final boolean vuela;
         public final Pieza.Locomocion locomocion;
+        /** Peso que cargan las piernas, su carga, la proporción r, la masa total y el giro de la mira (docs/EQUILIBRIO.md). */
+        public final double pesoTotal, carga, proporcion, masa, giroMira;
+        /** El tramo de peso (ligero, normal, sobrecarga o imposible). */
+        public final Equilibrio.Tramo tramo;
+        /** Los rasgos de su locomoción (estabilidad, terrenos…). */
+        public final Equilibrio.Rasgos rasgos;
 
         Cifras(Montaje m) {
             double refBlindaje = 1 + m.refuerzo("blindaje");
@@ -132,21 +189,29 @@ public final class Montaje {
             blindaje[IZQUIERDA] = (35 * base + v(izq, "blindaje") + extra) * refBlindaje;
             blindaje[DERECHA] = (35 * base + v(der, "blindaje") + extra) * refBlindaje;
             blindaje[PIERNAS] = (45 * base + v(pie, "blindaje") + extra) * refBlindaje;
-            double carga = pie == null ? 30 : pie.valor("carga", 30);
-            double peso = m.peso();
-            double porPeso = peso <= carga ? 1 : Math.max(0.5, 1 - (peso - carga) / carga * 0.6);
+            Equilibrio eq = Equilibrio.delJuego();
+            pesoTotal = m.pesoTotal();
+            carga = m.carga();
+            proporcion = pesoTotal / carga;
+            masa = m.masa();
+            tramo = eq.tramo(proporcion);
             locomocion = pie == null ? Pieza.Locomocion.BIPEDO : pie.locomocion();
+            rasgos = eq.rasgos(locomocion);
             vuela = locomocion == Pieza.Locomocion.VUELO;
-            velocidad = (pie == null ? 4 : pie.valor("velocidad", 4)) * m.modelo.velocidad * porPeso * (1 + m.refuerzo("velocidad"));
-            giro = (pie == null ? 6 : pie.valor("giro", 6)) * (0.8 + 0.2 * porPeso) * (0.85 + 0.15 * m.modelo.velocidad);
-            aceleracion = (pie == null ? 0.5 : pie.valor("aceleracion", 0.5)) * porPeso;
+            giroMira = eq.giroMira(m.pesoArmaMaximo());
+            velocidad = (pie == null ? 4 : pie.valor("velocidad", 4)) * m.modelo.velocidad * eq.factorVelocidad(proporcion)
+                    * (1 + m.refuerzo("velocidad"));
+            giro = (pie == null ? 6 : pie.valor("giro", 6)) * eq.factorGiro(proporcion) * (0.85 + 0.15 * m.modelo.velocidad);
+            aceleracion = (pie == null ? 0.5 : pie.valor("aceleracion", 0.5)) * eq.factorAceleracion(proporcion);
             pasos = (nuc == null ? 3000 : nuc.valor("pasos", 3000)) * (1 + 2 * m.refuerzo("pasos"));
             energiaMax = nuc == null ? 100 : nuc.valor("energiaMax", 100);
             recarga = (nuc == null ? 0.4 : nuc.valor("recarga", 0.4)) * (1 + m.refuerzo("velocidad") / 2);
             precision = 1 + m.refuerzo("precision");
             distancia = Math.max(0.85, baseDistancia(m.modelo.naturaleza) + m.refuerzo("precision"));
             cuerpo = Math.max(0.85, baseCuerpo(m.modelo.naturaleza) + m.refuerzo("cuerpo"));
-            esquiva = Math.min(0.35, m.refuerzo("esquiva") * 1.2 + (vuela ? 0.06 : 0));
+            boolean pesado = tramo == Equilibrio.Tramo.SOBRECARGA || tramo == Equilibrio.Tramo.IMPOSIBLE;
+            double ligera = tramo == Equilibrio.Tramo.LIGERO ? eq.esquivaLigero : 0;
+            esquiva = pesado ? 0 : Math.min(0.35, m.refuerzo("esquiva") * 1.2 + rasgos.esquiva + v(pie, "esquiva") + ligera);
         }
 
         private static double baseDistancia(Naturaleza nat) {
@@ -171,6 +236,11 @@ public final class Montaje {
                 case ACERO:
                 default: return 1.0;
             }
+        }
+
+        /** ¿Va sobrecargado (o peor)? Entonces ni salta ni esquiva rápido. */
+        public boolean sobrecargado() {
+            return tramo == Equilibrio.Tramo.SOBRECARGA || tramo == Equilibrio.Tramo.IMPOSIBLE;
         }
 
         public double blindajeTotal() {

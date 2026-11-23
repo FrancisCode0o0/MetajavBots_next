@@ -126,6 +126,8 @@ public final class Cuerpo implements Mando {
     public double paso, sacudida, retroceso;
     public int ultimoAtaque = -100, ultimoGolpe = -100;
     public int brazoDelUltimoAtaque;
+    /** La potencia pedida con regularPotencia (NaN: la de cada arma) para las armas de potencia regulable. */
+    public double potenciaPedida = Double.NaN;
 
     Cuerpo(Pelea pelea, int indice, Combatiente c, double x, double y, double rumbo, long semilla) {
         this.pelea = pelea;
@@ -346,9 +348,10 @@ public final class Cuerpo implements Mando {
             enfriamiento[brazo] = enfriamientoSeguro(baseEnf, ref);
         } else {
             // Se marca ya, para que dos llamadas en el mismo turno no ataquen dos veces (nunca cadencia infinita ni recarga <= 0).
-            enfriamiento[brazo] = enfriamientoSeguro(p.valor("enfriamiento", 30), ref);
+            double calor = brazo == CABEZA ? 1 : ReglasDePeso.factorEnfriamiento(ReglasDePeso.potencia(this, p));
+            enfriamiento[brazo] = enfriamientoSeguro(p.valor("enfriamiento", 30) * calor, ref);
         }
-        energia = Math.max(0, energia - costeDe(brazo, p));
+        energia = Math.max(0, energia - coste(brazo, p));
         return true;
     }
 
@@ -359,7 +362,38 @@ public final class Cuerpo implements Mando {
         if (p == null) return false;
         if (brazo == CABEZA ? p.especial() == Pieza.Especial.NINGUNO : p.arma() == Pieza.Arma.NINGUNA) return false;
         if (brazo != CABEZA && parte[brazo == IZQUIERDA ? Montaje.IZQUIERDA : Montaje.DERECHA] <= 0) return false;
-        return enfriamiento[brazo] <= 0 && !pedido[brazo] && energia >= costeDe(brazo, p);
+        return enfriamiento[brazo] <= 0 && !pedido[brazo] && energia >= coste(brazo, p);
+    }
+
+    /** Lo que cuesta atacar con ese brazo, con la energía extra de la potencia regulable. */
+    private double coste(int brazo, Pieza p) {
+        return brazo == CABEZA ? costeDe(brazo, p) : costeSeguro(p.valor("energia") + ReglasDePeso.costeExtra(ReglasDePeso.potencia(this, p)));
+    }
+
+    // ================================================================ peso, carga y movilidad (docs/EQUILIBRIO.md)
+
+    @Override public double pesoTotal() { return cifras.pesoTotal; }
+    @Override public double cargaMaxima() { return cifras.carga; }
+    @Override public double proporcionDeCarga() { return cifras.proporcion; }
+    @Override public boolean sobrecargado() { return cifras.sobrecargado(); }
+    @Override public String locomocion() { return cifras.locomocion.name(); }
+    @Override public String terreno() { return pelea.arena.terrenoEn(x, y, this).name(); }
+    @Override public double velocidadMaxima() { return velocidadSegura(cifras.velocidad) * rindeAqui(); }
+    @Override public double aceleracionMaxima() { return cifras.aceleracion * rindeAqui(); }
+
+    @Override
+    public void regularPotencia(double potencia) {
+        potenciaPedida = Double.isFinite(potencia) ? ReglasDePeso.acotarPotencia(potencia) : Double.NaN;
+    }
+
+    private double rindeAqui() {
+        return cifras.rasgos.rendimiento(pelea.arena.terrenoEn(x, y, this));
+    }
+
+    @Override
+    public double giroMaximo() {
+        double v = Math.min(1, Math.abs(velocidad) / velocidadSegura(cifras.velocidad));
+        return giroSeguro(cifras.giro) * (pelea.reglasPropias ? 1 : 1 - metajavbots.piezas.Equilibrio.delJuego().giroPorVelocidad * v);
     }
 
     @Override
@@ -657,6 +691,11 @@ public final class Cuerpo implements Mando {
 
     public boolean vuela() {
         return cifras.vuela || flotando > 0 || volteado > 0 || saltando > 0;
+    }
+
+    /** ¿Está en el aire solo un rato (flotando, volteado o saltando), aunque sus piernas no vuelen? */
+    public boolean vueloPasajero() {
+        return flotando > 0 || volteado > 0 || saltando > 0;
     }
 
     /** Cuánto le queda de blindaje en total (sin porcentaje). */

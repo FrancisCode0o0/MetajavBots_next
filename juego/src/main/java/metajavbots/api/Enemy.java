@@ -35,6 +35,11 @@ public interface Enemy {
     /** Its model (for example "cobalto"). */
     String model();
 
-    /** Is it flying? (melee hits can't reach it). */
+    /** Is it flying? (fliers dodge many melee hits; if it is only jumping or was flipped, none reach it). */
     boolean flies();
+
+    /** Its legs: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO", or "PATAS" (to pick your weapon and tactics). */
+    default String locomotion() {
+        return "";
+    }
 }

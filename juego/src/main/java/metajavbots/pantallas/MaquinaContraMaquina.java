@@ -75,7 +75,7 @@ public final class MaquinaContraMaquina implements Pantalla {
         Combatiente b = Rivales.crear(ms.get(modelo[1]), nivel[1], j.jugador.agresividad, r, true, usados);
         pelea = new Pelea(a, b, r.nextLong());
         vista.escenario = PrepararPelea.escenarioAlAzar();
-        pelea.arena = metajavbots.combate.Arena.de(vista.escenario.name(), pelea.ancho, pelea.alto);
+        pelea.arena = metajavbots.combate.Terrenos.arenaDePelea(vista.escenario.name(), pelea.ancho, pelea.alto);
         narrador = new Narrador(a, b);
         narrador.idioma = j.jugador.idioma;
         narrador.jugador = j.jugador.nombre;

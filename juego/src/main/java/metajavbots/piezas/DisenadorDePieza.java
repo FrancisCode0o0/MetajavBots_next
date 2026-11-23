@@ -219,7 +219,7 @@ public final class DisenadorDePieza {
         double vel = comprobar(pp.velocidad(), 2.2, 5.6, "velocidad", idm, err);
         double giro = comprobar(pp.giro(), 3.0, 8.5, "giro", idm, err);
         double acel = comprobar(pp.aceleracion(), 0.25, 0.75, "aceleracion", idm, err);
-        double carga = comprobar(pp.carga(), 20, 46, "carga", idm, err);
+        double carga = comprobar(pp.carga(), 20, 80, "carga", idm, err);
         double blin = comprobar(pp.blindaje(), 0, 34, "blindaje", idm, err);
         double peso = comprobar(pp.peso(), 5, 16, "peso", idm, err);
         txt.put("locomocion", loc.name());
@@ -231,7 +231,7 @@ public final class DisenadorDePieza {
         val.put("peso", redondear(peso));
         double costeVuelo = loc == Pieza.Locomocion.VUELO ? 14.0 : 0.0;
         double pts = (vel - 2.2) * 14.0 + (giro - 3.0) * 4.5 + (acel - 0.25) * 28.0
-                + (carga - 20.0) * 1.1 + blin * 1.0 + costeVuelo - (peso - 5.0) * 1.6;
+                + (carga - 20.0) * 0.5 + blin * 1.0 + costeVuelo - (peso - 5.0) * 1.6;
         return Math.max(0, pts);
     }
 
@@ -314,7 +314,7 @@ public final class DisenadorDePieza {
                         + "    @Override public double velocidad() { return 4.4; }    // 2.2..5.6\n"
                         + "    @Override public double giro() { return 6.5; }         // 3.0..8.5\n"
                         + "    @Override public double aceleracion() { return 0.55; } // 0.25..0.75\n"
-                        + "    @Override public double carga() { return 34; }         // 20..46\n"
+                        + "    @Override public double carga() { return 50; }         // 20..80\n"
                         + "    @Override public double blindaje() { return 14; }      // 0..34\n"
                         + "    @Override public double peso() { return 8; }           // 5..16\n";
                 break;

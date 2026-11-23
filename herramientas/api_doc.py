@@ -19,10 +19,73 @@ TEMAS = {
     'x': '02', 'y': '02', 'rumbo': '02', 'mira': '02', 'velocidad': '02', 'energia': '02', 'blindaje': '02', 'turnoActual': '02',
     'ronda': '02', 'anchoArena': '02', 'altoArena': '02', 'restanteAvance': '04', 'restanteGiro': '04', 'restanteMira': '04',
     'enemigosVistos': '15', 'anguloHacia': '06', 'distanciaA': '06', 'normalizar': '06', 'azar': '09', 'decir': '01', 'escribir': '01',
+    'pesoTotal': '02', 'cargaMaxima': '02', 'proporcionDeCarga': '03', 'sobrecargado': '04', 'velocidadMaxima': '02',
+    'giroMaximo': '02', 'aceleracionMaxima': '02', 'locomocion': '08', 'terreno': '08', 'regularPotencia': '06',
     'memoria': '15', 'obstaculos': '15', 'aparatos': '15', 'miAparato': '13', 'conectar': '13', 'usarAparato': '13', 'alOirAlEquipo': '13', 'companeros': '15', 'avisarAlEquipo': '08',
 }
 
 EXTRAS = {
+    'api.pesoTotal': {
+        'donde.es': "Consúltalo en alEmpezar() o cadaTurno() para saber lo que cargan tus piernas; compáralo con cargaMaxima().",
+        'donde.de': "In beimStart() oder jedenZug() abfragen, um zu wissen, was deine Beine tragen; vergleiche es mit traglast().",
+        'donde.en': "Check it in onStart() or onTick() to know what your legs carry; compare it with loadLimit().",
+    },
+    'api.cargaMaxima': {
+        'donde.es': "Consúltalo en alEmpezar(): depende de tus piernas (las orugas aguantan lo que más; las alas, lo que menos).",
+        'donde.de': "In beimStart() abfragen: Es hängt von deinen Beinen ab (Ketten tragen am meisten, Flügel am wenigsten).",
+        'donde.en': "Check it in onStart(): it depends on your legs (treads carry the most; wings, the least).",
+    },
+    'api.proporcionDeCarga': {
+        'donde.es': "Úsalo en un if dentro de alEmpezar() o cadaTurno(): por encima de 1 vas sobrecargado y conviene no correr.",
+        'donde.de': "In einem if in beimStart() oder jedenZug() verwenden: Über 1 bist du überladen und solltest nicht rasen.",
+        'donde.en': "Use it in an if inside onStart() or onTick(): above 1 you are overloaded and should not rush around.",
+    },
+    'api.velocidadMaxima': {
+        'donde.es': "Consúltalo en cadaTurno(): cambia con el terreno que pisas (en escombros o aceite, a las ruedas les baja mucho).",
+        'donde.de': "In jedenZug() abfragen: Sie ändert sich mit dem Gelände (auf Trümmern oder Öl sinkt sie bei Rädern stark).",
+        'donde.en': "Check it in onTick(): it changes with the terrain under you (on rubble or oil it drops a lot for wheels).",
+    },
+    'api.giroMaximo': {
+        'donde.es': "Consúltalo en cadaTurno() antes de girar: si vas muy deprisa, frena primero para poder girar más.",
+        'donde.de': "In jedenZug() vor dem Drehen abfragen: Fährst du sehr schnell, bremse zuerst, um stärker drehen zu können.",
+        'donde.en': "Check it in onTick() before turning: if you are going very fast, brake first so you can turn more.",
+    },
+    'api.aceleracionMaxima': {
+        'donde.es': "Consúltalo en cadaTurno(): sirve para calcular cuántos turnos tardas en llegar a tu velocidad máxima.",
+        'donde.de': "In jedenZug() abfragen: Damit berechnest du, wie viele Züge du bis zur Höchstgeschwindigkeit brauchst.",
+        'donde.en': "Check it in onTick(): use it to work out how many ticks you need to reach your top speed.",
+    },
+    'api.locomocion': {
+        'donde.es': "Consúltalo en alEmpezar() para adaptar tu táctica a tus piernas; compáralo con equals().",
+        'donde.de': "In beimStart() abfragen, um deine Taktik an deine Beine anzupassen; mit equals() vergleichen.",
+        'donde.en': "Check it in onStart() to fit your tactics to your legs; compare it with equals().",
+    },
+    'api.terreno': {
+        'donde.es': "Consúltalo en cadaTurno(): si pisas \"AGUA\" o \"TRAMPA\", sal de ahí; compáralo con equals().",
+        'donde.de': "In jedenZug() abfragen: Stehst du auf \"AGUA\" (Wasser) oder \"TRAMPA\" (Falle), geh weg; mit equals() vergleichen.",
+        'donde.en': "Check it in onTick(): if you are on \"AGUA\" (water) or \"TRAMPA\" (trap), get off it; compare it with equals().",
+    },
+    'Enemigo.locomocion': {
+        'donde.es': "Llámalo sobre el parámetro e dentro de alVerEnemigo(e) para elegir arma: contra \"VUELO\", misiles; contra \"RUEDAS\", la cuña.",
+        'donde.de': "Auf dem Parameter g in beiSicht(g) aufrufen, um die Waffe zu wählen: gegen \"VUELO\" Raketen, gegen \"RUEDAS\" den Keil.",
+        'donde.en': "Call it on the parameter e inside onSeeEnemy(e) to pick a weapon: missiles against \"VUELO\", the wedge against \"RUEDAS\".",
+    },
+    'api.regularPotencia': {
+        'donde.es': 'Llámalo antes de atacar (en cadaTurno() o alVerEnemigo(e)); solo cambia las armas de potencia regulable (cañón ligero, bláster de iones, cañón predictor).',
+        'donde.de': 'Vor dem Angriff aufrufen (in jedenZug() oder beiSicht(g)); es ändert nur die Waffen mit regelbarer Leistung (leichte Kanone, Ionenblaster, Vorhersagekanone).',
+        'donde.en': 'Call it before attacking (in onTick() or onSeeEnemy(e)); it only changes adjustable-power weapons (light cannon, ion blaster, predictor cannon).',
+        'ejemplo.es': '    AL VER enemigo e:\n        SI e.distancia() < 250:\n            regularPotencia(3)\n        SI NO:\n            regularPotencia(1)\n        atacar()',
+        'ejemplo.de': '    BEI SICHT Gegner g:\n        WENN g.entfernung() < 250:\n            leistungRegeln(3)\n        SONST:\n            leistungRegeln(1)\n        angreifen()',
+        'ejemplo.en': '    ON SEE ENEMY e:\n        IF e.distance() < 250:\n            setPower(3)\n        ELSE:\n            setPower(1)\n        attack()',
+    },
+    'api.sobrecargado': {
+        'donde.es': 'Consúltalo en alEmpezar() o cadaTurno(): si vas sobrecargado, no esperes esquivar a la carrera; mejor pelear de cara.',
+        'donde.de': 'In beimStart() oder jedenZug() abfragen: Bist du überladen, kannst du nicht schnell ausweichen; kämpfe lieber frontal.',
+        'donde.en': 'Check it in onStart() or onTick(): if you are overloaded, do not count on quick dodges; fight head-on instead.',
+        'ejemplo.es': '    AL EMPEZAR:\n        SI sobrecargado():\n            decir("Despacio, pero seguro")',
+        'ejemplo.de': '    BEIM START:\n        WENN ueberladen():\n            sagen("Langsam, aber sicher")',
+        'ejemplo.en': '    ON START:\n        IF overloaded():\n            say("Slow but sure")',
+    },
     'api.embestir': {
         'donde.es': 'Llámalo dentro de cadaTurno() o alVerEnemigo(e) solo en robots de arquetipo Asalto (en otros arquetipos devuelve false y avisa en consola).',
         'donde.de': 'In jedenZug() oder beiSicht(g) nur bei Sturm-Robotern aufrufen (bei anderen Archetypen liefert es false und warnt in der Konsole).',
@@ -120,7 +183,7 @@ def metodos(archivo):
 def interfaz(archivo):
     s = open(API + archivo, encoding='utf-8').read()
     out = []
-    for m in re.finditer(r'(?m)(^    /\*\*((?:(?!\*/).)*)\*/\n(?:\n)?)?^    ([\w<>]+) (\w+)\(\);', s, re.S):
+    for m in re.finditer(r'(?m)(^    /\*\*((?:(?!\*/).)*)\*/\n(?:\n)?)?^    (?:default )?([\w<>]+) (\w+)\(\)(?:;| \{)', s, re.S):
         doc = re.sub(r'\s*\n\s*\*\s*', ' ', (m.group(2) or '')).strip()
         out.append((m.group(4), m.group(3) + ' ' + m.group(4) + '()', doc))
     return out

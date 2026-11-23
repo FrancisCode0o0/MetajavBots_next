@@ -86,7 +86,7 @@ public interface PiezaPropia {
         return 0.5;
     }
 
-    /** Carga máxima que aguantan las piernas sin perder velocidad (solo para {@code PIERNAS}). */
+    /** Carga que aguantan las piernas: el chasis y las demás piezas; pasarse frena y, por encima del 120 %, no deja pelear (solo {@code PIERNAS}). */
     default double carga() {
         return 32;
     }

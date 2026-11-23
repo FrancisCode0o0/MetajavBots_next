@@ -88,6 +88,55 @@ public interface Mando {
     /** Avisa a tus compañeros (les llega el turno siguiente, en alOirAlEquipo). */
     void avisarAlEquipo(String mensaje);
 
+    /** Lo que pesa lo que cargan tus piernas (el chasis y las piezas menos las piernas). */
+    default double pesoTotal() {
+        return 0;
+    }
+
+    /** Lo que aguantan tus piernas. */
+    default double cargaMaxima() {
+        return 1;
+    }
+
+    /** pesoTotal / cargaMaxima: hasta 0,70 ligero, hasta 1 normal, hasta 1,20 sobrecargado. */
+    default double proporcionDeCarga() {
+        return 0;
+    }
+
+    /** ¿Vas sobrecargado (más del 100 % de la carga)? */
+    default boolean sobrecargado() {
+        return false;
+    }
+
+    /** Tu velocidad máxima ahora mismo (con el peso y el terreno que pisas). */
+    default double velocidadMaxima() {
+        return 0;
+    }
+
+    /** Lo que puedes girar este turno (con el peso y la velocidad que llevas). */
+    default double giroMaximo() {
+        return 0;
+    }
+
+    /** Tu aceleración ahora mismo (con el peso y el terreno). */
+    default double aceleracionMaxima() {
+        return 0;
+    }
+
+    /** Tu locomoción: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO" o "PATAS". */
+    default String locomocion() {
+        return "";
+    }
+
+    /** El terreno que pisas: "LLANO", "ACEITE", "AGUA", "RAMPA", "ESCOMBROS" o "TRAMPA". */
+    default String terreno() {
+        return "";
+    }
+
+    /** La potencia de las armas de potencia regulable (0,1 a 3; Robocode). */
+    default void regularPotencia(double potencia) {
+    }
+
     /** El arquetipo del modelo de robot: "ASALTO", "TACTICO" o "DEFENSOR". */
     default String arquetipo() {
         return "";

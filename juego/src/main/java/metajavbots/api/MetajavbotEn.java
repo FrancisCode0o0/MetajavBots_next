@@ -269,6 +269,59 @@ public abstract class MetajavbotEn extends RobotBase {
         return m().alcance(Mando.DERECHA);
     }
 
+    // ================================================================ weight, load, and mobility
+
+    /** What your legs carry: the chassis of your model and all your parts except the legs. */
+    public final double totalWeight() {
+        return m().pesoTotal();
+    }
+
+    /** What your legs can carry (their load limit). */
+    public final double loadLimit() {
+        return m().cargaMaxima();
+    }
+
+    /** totalWeight() / loadLimit(): up to 0.70 you are light, up to 1 normal, up to 1.20 overloaded. */
+    public final double loadRatio() {
+        return m().proporcionDeCarga();
+    }
+
+    /** Are you overloaded? Then you drive and turn worse, spend more energy moving, and cannot jump or dodge quickly. */
+    public final boolean overloaded() {
+        return m().sobrecargado();
+    }
+
+    /** Your top speed right now, with your weight and the terrain under you. */
+    public final double topSpeed() {
+        return m().velocidadMaxima();
+    }
+
+    /** How far you can turn this tick: the faster you go, the worse you turn. */
+    public final double maxTurnRate() {
+        return m().giroMaximo();
+    }
+
+    /** Your acceleration right now (braking is twice as fast). */
+    public final double maxAcceleration() {
+        return m().aceleracionMaxima();
+    }
+
+    /** Your legs: "BIPEDO" (biped), "ORUGAS" (treads), "RUEDAS" (wheels), "FLOTANTE" (hover), "VUELO" (flight), or "PATAS" (spider legs). */
+    public final String locomotion() {
+        return m().locomocion();
+    }
+
+    /** The terrain under you: "LLANO" (flat), "ACEITE" (oil), "AGUA" (water), "RAMPA" (ramp), "ESCOMBROS" (rubble), or "TRAMPA" (floor trap). */
+    public final String terrain() {
+        return m().terreno();
+    }
+
+    /** The power of adjustable-power weapons (0.1 to 3): more power, more damage, but a slower bullet, more heat, and more energy. */
+    public final void setPower(double power) {
+        m().regularPotencia(power);
+        anotarOrden("setPower(" + redondear(power) + ")", 0);
+    }
+
     // ================================================================ knowing
 
     public final double x() {

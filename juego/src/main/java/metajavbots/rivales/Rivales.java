@@ -139,8 +139,35 @@ public final class Rivales {
             if (h == Montaje.Hueco.NATURALEZA && azar.nextBoolean()) continue;
             m.poner(h, opciones.get(azar.nextInt(opciones.size())));
         }
+        aligerar(m, c, marcaMax);
         Estilo[] estilos = Estilo.values();
         return combatiente(elegirNombre(azar, nombresUsados), m, nivel, agresividad, estilos[azar.nextInt(estilos.length)], azar, false);
+    }
+
+    /**
+     * Si el montaje pasa del 120 % de la carga de sus piernas (no podría salir a pelear), cambia la pieza que más pesa por
+     * la más ligera de su ranura hasta que pueda (o quita el núcleo de naturaleza). Así los rivales al azar siempre pelean.
+     */
+    static void aligerar(Montaje m, CatalogoDePiezas c, int marcaMax) {
+        for (int intento = 0; intento < 8 && !m.puedePelear(); intento++) {
+            Montaje.Hueco h = m.huecosQueMasPesan().get(0);
+            if (h == Montaje.Hueco.NATURALEZA) {
+                m.poner(h, null);
+                continue;
+            }
+            Pieza ligera = null;
+            for (Pieza p : c.de(h.ranura)) {
+                if (p.marca <= marcaMax && p.rareza != Pieza.Rareza.LEGENDARIA && (ligera == null || p.valor("peso") < ligera.valor("peso"))) ligera = p;
+            }
+            if (ligera == null || ligera == m.pieza(h)) break;
+            m.poner(h, ligera);
+        }
+        if (!m.puedePelear()) {
+            // Último recurso: las piernas que más cargan.
+            Pieza fuerte = null;
+            for (Pieza p : c.de(Pieza.Ranura.PIERNAS)) if (p.marca <= marcaMax && (fuerte == null || p.valor("carga") > fuerte.valor("carga"))) fuerte = p;
+            if (fuerte != null) m.poner(Montaje.Hueco.PIERNAS, fuerte);
+        }
     }
 
     /** Un dron ligero de escolta para encuentros con múltiples objetivos (menos blindaje y daño). */

@@ -45,6 +45,8 @@ public final class Modelo {
     public final double blindaje;
     /** Cuánto corre respecto a lo normal. */
     public final double velocidad;
+    /** Lo que pesa su chasis (cuenta en el peso que cargan las piernas; docs/EQUILIBRIO.md). */
+    public final double chasis;
     /** Sus piezas de fábrica: cabeza, brazo izquierdo, brazo derecho, piernas, núcleo. */
     public final List<String> piezas;
     public final String desbloqueo;
@@ -67,6 +69,7 @@ public final class Modelo {
         color3 = color(c, 2);
         blindaje = numero(v.get("blindaje"), 1);
         velocidad = numero(v.get("velocidad"), 1);
+        chasis = Math.max(0, numero(v.get("chasis"), 10));
         piezas = Collections.unmodifiableList(Arrays.asList(v.getOrDefault("piezas", "").trim().split("\\s+")));
         desbloqueo = v.getOrDefault("desbloqueo", "inicio");
     }

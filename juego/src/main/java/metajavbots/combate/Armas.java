@@ -214,20 +214,26 @@ public final class Armas {
         switch (p.arma()) {
             case LASER:
                 dispararLaser(c, p, sobre, boca, inf);
+                ReglasDePeso.retroceso(pelea, c, p, brazo);
                 break;
             case BALA: {
                 int n = proyectilesSeguros(p.valor("perdigones", 1));
                 double disp = dispersionSegura(p.valor("dispersion", 3)) / Math.max(0.5, c.cifras.precision);
-                double vel = velocidadProyectilSegura(p.valor("velocidad", 14));
-                double dano = danoDeArma(c.combatiente.montaje, c.cifras, p, sobre);
+                double pw = ReglasDePeso.potencia(c, p);
+                double vel = velocidadProyectilSegura(p.valor("velocidad", 14) * ReglasDePeso.factorVelocidad(pw));
+                double dano = danoEfectivoSeguro(danoDeArma(c.combatiente.montaje, c.cifras, p, sobre) * ReglasDePeso.factorDano(pw));
                 double alcance = alcanceSeguro(p.valor("alcance", 600));
                 for (int i = 0; i < n; i++) {
                     inf.ataque("bala");
                     double ang = c.mira + (pelea.azar.nextDouble() * 2 - 1) * disp;
-                    pelea.proyectiles.add(new Proyectil(c.indice, false, boca[0], boca[1], ang, vel, dano, alcance, 0));
+                    Proyectil pr = new Proyectil(c.indice, false, boca[0], boca[1], ang, vel, dano, alcance, 0);
+                    pr.antiaereo = p.valor("antiaereo", 1);
+                    pr.potencia = i == 0 ? pw : 0;
+                    pelea.proyectiles.add(pr);
                 }
                 pelea.suceso(Suceso.Tipo.DISPARO, c.indice, boca[0], boca[1], c.mira, n, "bala");
                 c.retroceso = 6;
+                ReglasDePeso.retroceso(pelea, c, p, brazo);
                 break;
             }
             case MISIL: {
@@ -239,10 +245,13 @@ public final class Armas {
                 for (int i = 0; i < n; i++) {
                     inf.ataque("misil");
                     double ang = c.mira + (n == 1 ? 0 : (i - (n - 1) / 2.0) * 14);
-                    pelea.proyectiles.add(new Proyectil(c.indice, true, boca[0], boca[1], ang, vel, dano, alcance, giro));
+                    Proyectil pr = new Proyectil(c.indice, true, boca[0], boca[1], ang, vel, dano, alcance, giro);
+                    pr.antiaereo = p.valor("antiaereo", 1);
+                    pelea.proyectiles.add(pr);
                 }
                 pelea.suceso(Suceso.Tipo.MISIL, c.indice, boca[0], boca[1], c.mira, n, "misil");
                 c.retroceso = 5;
+                ReglasDePeso.retroceso(pelea, c, p, brazo);
                 break;
             }
             case CUERPO:
@@ -293,7 +302,7 @@ public final class Armas {
         if (obstaculo != null) {
             pelea.arena.danar(obstaculo, pelea, c.indice, danoAObstaculo(c.combatiente.montaje, c.cifras, p, sobre), hx, hy, "laser");
         } else if (da) {
-            pelea.danar(tocado, c, dano, "laser", ang + 180, false, hx, hy);
+            pelea.danar(tocado, c, dano * ReglasDePeso.antiaereo(pelea, p, tocado), "laser", ang + 180, false, hx, hy);
         }
         c.retroceso = 4;
     }
@@ -391,16 +400,21 @@ public final class Armas {
         double ang = Math.toDegrees(Math.atan2(e.y - c.y, e.x - c.x));
         // Donde toca: en la chapa del otro, del lado del que pega.
         double hx = e.x - Math.cos(Math.toRadians(ang)) * e.radio * 0.85, hy = e.y - Math.sin(Math.toRadians(ang)) * e.radio * 0.85;
-        double dano = danoDeArma(c.combatiente.montaje, c.cifras, p, sobre);
+        double dano = ReglasDePeso.golpe(pelea, p, danoDeArma(c.combatiente.montaje, c.cifras, p, sobre));
+        if (ReglasDePeso.esquivaGolpe(pelea, c, e, p)) {
+            // El volador se aparta del golpe (las armas largas sí le llegan).
+            pelea.suceso(Suceso.Tipo.ESQUIVA, e.indice, e.x, e.y, ang + 180, dano, "cuerpo");
+            return;
+        }
         pelea.suceso(Suceso.Tipo.GOLPE_CUERPO, c.indice, hx, hy, c.mira, dano, p.id);
         if (pelea.danar(e, c, dano, "cuerpo", ang + 180, true, hx, hy)) {
             int aturde = aturdeSeguro(p.valor("aturde"));
             if (aturde > 0) aturdir(e, aturde);
-            // Y lo echa para atrás (las cuñas y los volteadores, mucho más).
-            double empuje = empujeSeguro(p.valor("empuje", 10));
+            // Y lo echa para atrás (las cuñas y los volteadores, mucho más; los pesados y las orugas aguantan).
+            double empuje = ReglasDePeso.empuje(pelea, c, e, empujeSeguro(p.valor("empuje", 10)));
             e.x = Math.max(e.radio, Math.min(pelea.ancho - e.radio, e.x + Math.cos(Math.toRadians(ang)) * empuje));
             e.y = Math.max(e.radio, Math.min(pelea.alto - e.radio, e.y + Math.sin(Math.toRadians(ang)) * empuje));
-            int vuelo = aturdeSeguro(p.valor("volteo"));
+            int vuelo = ReglasDePeso.volteo(pelea, c, e, aturdeSeguro(p.valor("volteo")));
             if (vuelo > 0 && !e.vuela()) {
                 // El volteador lo levanta por los aires: se ve volar y, mientras, no hace nada.
                 e.volteado = Math.max(e.volteado, vuelo);
@@ -436,7 +450,8 @@ public final class Armas {
         Cuerpo mejor = null;
         double mejorD = Double.MAX_VALUE;
         for (Cuerpo o : pelea.cuerpos) {
-            if (o == c || o.fuera || o.equipo == c.equipo || o.vuela() && !c.vuela()) continue;
+            boolean arriba = pelea.reglasPropias ? o.vuela() : o.vueloPasajero();
+            if (o == c || o.fuera || o.equipo == c.equipo || arriba && !c.vuela()) continue;
             double d = Math.hypot(o.x - c.x, o.y - c.y);
             double ang = Math.toDegrees(Math.atan2(o.y - c.y, o.x - c.x));
             if (d <= c.radio + o.radio + alcance && Math.abs(Pelea.normal(ang - c.mira)) <= cono / 2 && d < mejorD) {

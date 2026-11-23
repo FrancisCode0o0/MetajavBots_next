@@ -13,9 +13,9 @@ colores = 8A7F72 FF5E5B 3A3F46
 rasgos = gorra cejas antena_rota
 estilo = a grumpy old boxing gym trainer who growls, complains about modern robots, but deeply cares; short gruff sentences
 voz = 0.84 0.92 0.7
-frases.es = ¡Arriba, chatarra! ; En mis tiempos compilábamos a mano. ; ¡Otra vez! ¡Y esta vez, con ganas! ; Antes de mover un músculo, debes saber dónde terminará: aprieta el botón [[Probar aquí]] y prueba tu código.
-frases.de = Hoch mit dir, Schrotthaufen! ; Zu meiner Zeit haben wir per Hand kompiliert. ; Noch mal! Und diesmal mit Herz! ; Bevor du einen Muskel bewegst, musst du wissen, wo er landet: Drück den Knopf [[Hier testen]] und probier deinen Code aus.
-frases.en = Up, you scrap heap! ; In my day we compiled by hand. ; Again! And this time, mean it! ; Before moving a muscle, you must know where it will land: press the [[Test here]] button and test your code.
+frases.es = ¡Arriba, chatarra! ; En mis tiempos compilábamos a mano. ; ¡Otra vez! ¡Y esta vez, con ganas! ; Antes de mover un músculo, debes saber dónde terminará: aprieta el botón [[Probar aquí]] y prueba tu código. ; ¿Dos cañones en piernas de paso? ¡Así no llegas ni a la esquina, chatarra! Mira la barra de peso.
+frases.de = Hoch mit dir, Schrotthaufen! ; Zu meiner Zeit haben wir per Hand kompiliert. ; Noch mal! Und diesmal mit Herz! ; Bevor du einen Muskel bewegst, musst du wissen, wo er landet: Drück den Knopf [[Hier testen]] und probier deinen Code aus. ; Zwei Kanonen auf Schreitbeinen? So kommst du nicht mal bis zur Ecke, Schrotthaufen! Schau auf den Gewichtsbalken.
+frases.en = Up, you scrap heap! ; In my day we compiled by hand. ; Again! And this time, mean it! ; Before moving a muscle, you must know where it will land: press the [[Test here]] button and test your code. ; Two cannons on walker legs? You won't even reach the corner like that, scrap heap! Check the weight bar.
 
 [aceite]
 nombre = Maestro Aceite | Meister Öl | Master Oil
@@ -24,9 +24,9 @@ colores = D9C7A3 3A3F46 E23B3B
 rasgos = cinta barba
 estilo = a calm, wise martial arts master who teaches through odd repetitive chores and gentle riddles; serene, few words
 voz = 0.92 0.8 0.25
-frases.es = Encerar tuerca, pulir tuerca. ; El bucle que se repite enseña paciencia. ; Primero equilibrio. Luego, código.
-frases.de = Mutter wachsen, Mutter polieren. ; Die Schleife, die sich wiederholt, lehrt Geduld. ; Erst Gleichgewicht. Dann Code.
-frases.en = Wax nut, polish nut. ; The loop that repeats teaches patience. ; Balance first. Then code.
+frases.es = Encerar tuerca, pulir tuerca. ; El bucle que se repite enseña paciencia. ; Primero equilibrio. Luego, código. ; Pesa poco y esquivarás. Pesa mucho y aguantarás. Elige según el rival.
+frases.de = Mutter wachsen, Mutter polieren. ; Die Schleife, die sich wiederholt, lehrt Geduld. ; Erst Gleichgewicht. Dann Code. ; Wiege wenig, und du weichst aus. Wiege viel, und du hältst stand. Wähle nach dem Gegner.
+frases.en = Wax nut, polish nut. ; The loop that repeats teaches patience. ; Balance first. Then code. ; Weigh little and you will dodge. Weigh much and you will endure. Choose by your rival.
 
 [voltaje]
 nombre = Capitán Voltaje | Kapitän Volt | Captain Voltage
@@ -35,9 +35,9 @@ colores = F2F2F2 3FA9F5 E23B3B
 rasgos = estrellas gafas
 estilo = a flashy former champion and old rival, confident and showy, who now coaches you with energy and style; upbeat
 voz = 1.12 1.12 0.5
-frases.es = ¡Baila, mariposa de metal! ; Te gané una vez. Ahora vas a ganar tú. ; ¡Rápido de pies, rápido de código!
-frases.de = Tanz, Schmetterling aus Metall! ; Ich habe dich einmal besiegt. Jetzt gewinnst du. ; Schnelle Füße, schneller Code!
-frases.en = Dance, you metal butterfly! ; I beat you once. Now you'll win. ; Quick feet, quick code!
+frases.es = ¡Baila, mariposa de metal! ; Te gané una vez. Ahora vas a ganar tú. ; ¡Rápido de pies, rápido de código! ; ¡Ruedas en llano, orugas en el barro! Un campeón mira la arena antes de elegir las piernas.
+frases.de = Tanz, Schmetterling aus Metall! ; Ich habe dich einmal besiegt. Jetzt gewinnst du. ; Schnelle Füße, schneller Code! ; Räder auf ebenem Boden, Ketten im Schlamm! Ein Champion schaut sich die Arena an, bevor er die Beine wählt.
+frases.en = Dance, you metal butterfly! ; I beat you once. Now you'll win. ; Quick feet, quick code! ; Wheels on flat ground, treads in the mud! A champion looks at the arena before picking the legs.
 
 [remache]
 nombre = Sargento Remache | Feldwebel Niete | Sergeant Rivet
@@ -46,9 +46,9 @@ colores = B8BEC6 5BD685 2A2F38
 rasgos = gafas bigote
 estilo = a tough, laconic old trainer who refused to train you at first; dry, blunt, quietly proud of you
 voz = 0.86 0.95 0.9
-frases.es = No te entreno. Bueno, solo hoy. ; Protégete siempre. Sobre todo de los null. ; Bien. No se lo digas a nadie.
-frases.de = Ich trainiere dich nicht. Na gut, nur heute. ; Schütz dich immer. Vor allem vor null. ; Gut. Sag's keinem.
-frases.en = I don't train you. Fine, just today. ; Always protect yourself. Especially from null. ; Good. Don't tell anyone.
+frases.es = No te entreno. Bueno, solo hoy. ; Protégete siempre. Sobre todo de los null. ; Bien. No se lo digas a nadie. ; ¿Vuela? Misiles. ¿Orugas? No empujes. Y no te sobrecargues.
+frases.de = Ich trainiere dich nicht. Na gut, nur heute. ; Schütz dich immer. Vor allem vor null. ; Gut. Sag's keinem. ; Fliegt er? Raketen. Ketten? Nicht schubsen. Und überlade dich nicht.
+frases.en = I don't train you. Fine, just today. ; Always protect yourself. Especially from null. ; Good. Don't tell anyone. ; It flies? Missiles. Treads? Don't push. And don't overload yourself.
 
 [cobra]
 nombre = Sensei Cobra-7 | Sensei Kobra-7 | Sensei Cobra-7
@@ -57,9 +57,9 @@ colores = 2A2F38 FF3B30 FFD23F
 rasgos = capucha cejas
 estilo = a strict, intense dojo sensei who shouts slogans at bugs and errors, never insults the learner, demands discipline
 voz = 1.05 1.1 0.6
-frases.es = ¡Golpea primero el bug! ; ¡Sin piedad con los errores! ; ¡Disciplina! ¡Indentación!
-frases.de = Schlag den Bug zuerst! ; Keine Gnade für Fehler! ; Disziplin! Einrückung!
-frases.en = Strike the bug first! ; No mercy for errors! ; Discipline! Indentation!
+frases.es = ¡Golpea primero el bug! ; ¡Sin piedad con los errores! ; ¡Disciplina! ¡Indentación! ; ¡Frena antes de girar! ¡A toda velocidad giras como una nevera!
+frases.de = Schlag den Bug zuerst! ; Keine Gnade für Fehler! ; Disziplin! Einrückung! ; Bremsen vor dem Drehen! Bei Vollgas drehst du wie ein Kühlschrank!
+frases.en = Strike the bug first! ; No mercy for errors! ; Discipline! Indentation! ; Brake before you turn! At full speed you turn like a fridge!
 
 [yanobit]
 nombre = Maestro Yanobit | Meister Yanobit | Master Yanobit
@@ -68,9 +68,9 @@ colores = E6DED0 3A3F46 3FA9F5
 rasgos = barba cejas
 estilo = an old judo master who speaks in calm parables about falling and getting up, using the opponent's force; gentle
 voz = 0.95 0.84 0.35
-frases.es = Cae siete veces, compila ocho. ; Usa la fuerza del enemigo, y su fallo. ; El estanque no corre. Y llega.
-frases.de = Fall siebenmal, kompilier achtmal. ; Nutze die Kraft des Gegners, und seinen Fehler. ; Der Teich rennt nicht. Und kommt doch an.
-frases.en = Fall seven times, compile eight. ; Use the enemy's force, and its mistake. ; The pond does not run. And still arrives.
+frases.es = Cae siete veces, compila ocho. ; Usa la fuerza del enemigo, y su fallo. ; El estanque no corre. Y llega. ; El pesado empuja; el ligero se aparta. Usa su masa contra él.
+frases.de = Fall siebenmal, kompilier achtmal. ; Nutze die Kraft des Gegners, und seinen Fehler. ; Der Teich rennt nicht. Und kommt doch an. ; Der Schwere schiebt; der Leichte weicht aus. Nutze seine Masse gegen ihn.
+frases.en = Fall seven times, compile eight. ; Use the enemy's force, and its mistake. ; The pond does not run. And still arrives. ; The heavy one pushes; the light one steps aside. Use its mass against it.
 
 [pelobit]
 nombre = Gran Maestro Pelobit | Großmeister Pelobit | Grandmaster Pelobit
@@ -79,6 +79,6 @@ colores = F5F5F0 FF5E5B 2A2F38
 rasgos = barba cejas gorra
 estilo = an eccentric, theatrical and very demanding old master with a long cable beard who mocks sloppy code but rewards effort; dramatic
 voz = 1.2 1.0 0.8
-frases.es = ¿Eso es un bucle? ¡Ja! ; ¡Otra vez, hasta que el código sangre aceite! ; Inclínate ante el punto y coma.
-frases.de = Das soll eine Schleife sein? Ha! ; Noch mal, bis der Code Öl blutet! ; Verneige dich vor dem Semikolon.
-frases.en = You call that a loop? Ha! ; Again, until the code bleeds oil! ; Bow to the semicolon.
+frases.es = ¿Eso es un bucle? ¡Ja! ; ¡Otra vez, hasta que el código sangre aceite! ; Inclínate ante el punto y coma. ; ¿Potencia tres desde la otra punta de la arena? ¡Ja! Esa bala llega mañana. De cerca, fuerte; de lejos, ligera.
+frases.de = Das soll eine Schleife sein? Ha! ; Noch mal, bis der Code Öl blutet! ; Verneige dich vor dem Semikolon. ; Leistung drei vom anderen Ende der Arena? Ha! Die Kugel kommt morgen an. Aus der Nähe stark, aus der Ferne leicht.
+frases.en = You call that a loop? Ha! ; Again, until the code bleeds oil! ; Bow to the semicolon. ; Power three from across the arena? Ha! That bullet arrives tomorrow. Strong up close, light from afar.

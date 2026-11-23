@@ -269,6 +269,59 @@ public abstract class MetajavbotDe extends RobotBase {
         return m().alcance(Mando.DERECHA);
     }
 
+    // ================================================================ Gewicht, Traglast und Beweglichkeit
+
+    /** Was deine Beine tragen: das Chassis deines Modells und alle Teile außer den Beinen. */
+    public final double gesamtgewicht() {
+        return m().pesoTotal();
+    }
+
+    /** Was deine Beine aushalten (ihre Traglast). */
+    public final double traglast() {
+        return m().cargaMaxima();
+    }
+
+    /** gesamtgewicht() / traglast(): bis 0,70 bist du leicht, bis 1 normal, bis 1,20 überladen. */
+    public final double lastanteil() {
+        return m().proporcionDeCarga();
+    }
+
+    /** Bist du überladen? Dann fährst und drehst du schlechter, verbrauchst mehr beim Fahren und springst und weichst nicht schnell aus. */
+    public final boolean ueberladen() {
+        return m().sobrecargado();
+    }
+
+    /** Deine Höchstgeschwindigkeit gerade jetzt, mit deinem Gewicht und dem Gelände unter dir. */
+    public final double hoechstgeschwindigkeit() {
+        return m().velocidadMaxima();
+    }
+
+    /** Wie weit du in diesem Zug drehen kannst: Je schneller du fährst, desto schlechter drehst du. */
+    public final double maxDrehung() {
+        return m().giroMaximo();
+    }
+
+    /** Deine Beschleunigung gerade jetzt (Bremsen geht doppelt so schnell). */
+    public final double maxBeschleunigung() {
+        return m().aceleracionMaxima();
+    }
+
+    /** Deine Beine: "BIPEDO", "ORUGAS" (Ketten), "RUEDAS" (Räder), "FLOTANTE" (Schweber), "VUELO" (Flug) oder "PATAS" (Spinnenbeine). */
+    public final String fortbewegung() {
+        return m().locomocion();
+    }
+
+    /** Das Gelände unter dir: "LLANO" (eben), "ACEITE" (Öl), "AGUA" (Wasser), "RAMPA", "ESCOMBROS" (Trümmer) oder "TRAMPA" (Bodenfalle). */
+    public final String gelaende() {
+        return m().terreno();
+    }
+
+    /** Die Leistung der regelbaren Waffen (0,1 bis 3): mehr Leistung, mehr Schaden, aber langsamere Kugel, mehr Hitze und mehr Energie. */
+    public final void leistungRegeln(double leistung) {
+        m().regularPotencia(leistung);
+        anotarOrden("leistungRegeln(" + redondear(leistung) + ")", 0);
+    }
+
     // ================================================================ wissen
 
     public final double x() {

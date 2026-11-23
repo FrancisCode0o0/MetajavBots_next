@@ -26,14 +26,23 @@ public class Rival extends Metajavbot {
     private double enemigoX, enemigoY, enemigoRumbo, enemigoVelocidad, enemigoDistancia = 9999;
     private int turnoDelUltimoAvistamiento = -1000;
     private boolean enemigoVuela;
+    private String enemigoLocomocion = "";
+    /** Si va a por los aparatos de la arena estén donde estén (el especialista en aparatos). */
+    private final boolean cazaAparatos;
 
     // Para moverse en zigzag y en círculos.
     private int sentido = 1;
     private int turnosHastaCambiar;
 
     public Rival(Ajuste ajuste, Estilo estilo) {
+        this(ajuste, estilo, false);
+    }
+
+    /** Un rival que, si cazaAparatos, va a por los aparatos de la arena estén donde estén. */
+    public Rival(Ajuste ajuste, Estilo estilo, boolean cazaAparatos) {
         this.ajuste = ajuste;
         this.estilo = estilo;
+        this.cazaAparatos = cazaAparatos;
     }
 
     public Estilo estilo() {
@@ -60,6 +69,7 @@ public class Rival extends Metajavbot {
         enemigoVelocidad = e.velocidad();
         enemigoDistancia = e.distancia();
         enemigoVuela = e.vuela();
+        enemigoLocomocion = e.locomocion();
         turnoDelUltimoAvistamiento = turnoActual();
         // En equipo: de vez en cuando, avisa a los compañeros de dónde está el enemigo.
         if (!companeros().isEmpty() && turnoActual() % 45 == 0) {
@@ -96,6 +106,7 @@ public class Rival extends Metajavbot {
         boolean loVeo = turnoActual() - turnoDelUltimoAvistamiento < 25;
         if (!loVeo) {
             buscar();
+            if (cazaAparatos) usarElAparato();
             return;
         }
         apuntarAlEnemigo();
@@ -104,6 +115,26 @@ public class Rival extends Metajavbot {
         apartarseDeLasTrampas();
         usarArmas();
         usarEspecial();
+        usarHabilidad();
+    }
+
+    /**
+     * La habilidad de su arquetipo: embestir si es de Asalto y va de cara al enemigo a media distancia; fortificar si es
+     * Defensor y lo tiene encima; el pulso de radar del Táctico se usa al buscar.
+     */
+    private void usarHabilidad() {
+        if (azar().nextDouble() > ajuste.usoEspecial) return;
+        double delante = Math.abs(normalizar(anguloHacia(enemigoX, enemigoY) - rumbo()));
+        switch (arquetipo()) {
+            case "ASALTO":
+                if (enemigoDistancia > 90 && enemigoDistancia < 280 && delante < 20) embestir();
+                break;
+            case "DEFENSOR":
+                if (enemigoDistancia < 160 && blindaje() < 75) fortificar();
+                break;
+            default:
+                break;
+        }
     }
 
     /**
@@ -114,7 +145,7 @@ public class Rival extends Metajavbot {
         Aparato mio = miAparato();
         if (mio == null) {
             for (Aparato a : aparatos()) {
-                if (a.distancia() < 320) {
+                if (a.distancia() < (cazaAparatos ? 2000 : 320)) {
                     girarHacia(a.angulo());
                     avanzar(a.distancia());
                     return;
@@ -162,6 +193,7 @@ public class Rival extends Metajavbot {
 
     /** Sin el enemigo a la vista: gira la mira y el cuerpo hasta encontrarlo. */
     private void buscar() {
+        if ("TACTICO".equals(arquetipo()) && azar().nextDouble() < ajuste.usoEspecial * 0.05) pulsoRadar();
         apuntar(25 * sentido);
         if (restanteAvance() == 0) {
             girar(30 * sentido);
@@ -222,14 +254,18 @@ public class Rival extends Metajavbot {
                 avanzar(enemigoDistancia > 450 ? 140 : 70);
                 break;
         }
-        if (cercaDeLaPared(50)) {
+        // Cuanto más deprisa va, peor gira: si se acerca a la pared, frena (frenar es el doble de rápido) y gira hacia el centro.
+        double margen = 50 + Math.abs(velocidad()) * 10;
+        if (cercaDeLaPared(margen)) {
             girarHacia(anguloHacia(anchoArena() / 2, altoArena() / 2));
-            avanzar(100);
+            avanzar(Math.abs(velocidad()) > 3 && cercaDeLaPared(margen * 0.6) ? 15 : 100);
         }
     }
 
     private void usarArmas() {
         if (!apuntaBien()) return;
+        // Las armas de potencia regulable: fuerte de cerca (la bala lenta no se esquiva a tiempo), suave de lejos.
+        regularPotencia(enemigoDistancia < 260 && energia() > 60 ? 2.5 : 1);
         // Cada brazo, si el enemigo está a su alcance.
         if (listoDerecha() && sirve(armaDerecha(), alcanceDerecha())) atacarDerecha();
         if (listoIzquierda() && sirve(armaIzquierda(), alcanceIzquierda())) atacarIzquierda();
@@ -245,7 +281,8 @@ public class Rival extends Metajavbot {
             case "REPARAR":
                 return blindaje() < 70;
             case "CUERPO":
-                return enemigoDistancia <= alcance && !enemigoVuela;
+                // Al que solo salta no le llega; al que vuela con alas, a veces sí.
+                return enemigoDistancia <= alcance && (!enemigoVuela || "VUELO".equals(enemigoLocomocion));
             default:
                 return enemigoDistancia <= alcance * 0.95;
         }

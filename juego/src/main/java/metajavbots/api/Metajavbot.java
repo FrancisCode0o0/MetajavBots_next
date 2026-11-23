@@ -270,6 +270,59 @@ public abstract class Metajavbot extends RobotBase {
         return m().alcance(Mando.DERECHA);
     }
 
+    // ================================================================ peso, carga y movilidad
+
+    /** Lo que cargan tus piernas: el chasis de tu modelo y todas tus piezas menos las piernas. */
+    public final double pesoTotal() {
+        return m().pesoTotal();
+    }
+
+    /** Lo que aguantan tus piernas (su carga). */
+    public final double cargaMaxima() {
+        return m().cargaMaxima();
+    }
+
+    /** pesoTotal() / cargaMaxima(): hasta 0,70 vas ligero; hasta 1, normal; hasta 1,20, sobrecargado. */
+    public final double proporcionDeCarga() {
+        return m().proporcionDeCarga();
+    }
+
+    /** ¿Vas sobrecargado? Entonces corres y giras peor, gastas más al moverte y no saltas ni esquivas rápido. */
+    public final boolean sobrecargado() {
+        return m().sobrecargado();
+    }
+
+    /** Tu velocidad máxima ahora mismo, con tu peso y el terreno que pisas. */
+    public final double velocidadMaxima() {
+        return m().velocidadMaxima();
+    }
+
+    /** Lo que puedes girar este turno: cuanto más deprisa vas, peor giras. */
+    public final double giroMaximo() {
+        return m().giroMaximo();
+    }
+
+    /** Tu aceleración ahora mismo (frenar es el doble de rápido). */
+    public final double aceleracionMaxima() {
+        return m().aceleracionMaxima();
+    }
+
+    /** Tus piernas: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO" o "PATAS". */
+    public final String locomocion() {
+        return m().locomocion();
+    }
+
+    /** El terreno que pisas: "LLANO", "ACEITE", "AGUA", "RAMPA", "ESCOMBROS" o "TRAMPA". */
+    public final String terreno() {
+        return m().terreno();
+    }
+
+    /** La potencia de las armas de potencia regulable (de 0,1 a 3): más potencia, más daño, pero bala más lenta, más calor y más energía. */
+    public final void regularPotencia(double potencia) {
+        m().regularPotencia(potencia);
+        anotarOrden("regularPotencia(" + redondear(potencia) + ")", 0);
+    }
+
     // ================================================================ saber
 
     public final double x() {

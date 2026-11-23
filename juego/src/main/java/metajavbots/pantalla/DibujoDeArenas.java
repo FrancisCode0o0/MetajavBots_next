@@ -206,10 +206,15 @@ final class DibujoDeArenas {
                     monedaExtra(p, cx, cy, rx, ry, t);
                     break;
                 case "rampa":
-                    rampa(p, cx, cy, rx, ry, t);
+                    // En las arenas de pelea, las rampas son cuestas (sin salto); en la carrera, plataformas de salto.
+                    if (tr.terreno) cuesta(p, cx, cy, rx, ry);
+                    else rampa(p, cx, cy, rx, ry, t);
                     break;
                 case "agua":
                     agua(p, cx, cy, rx, ry, t);
+                    break;
+                case "escombros":
+                    escombros(p, cx, cy, rx, ry);
                     break;
                 default:
                     break;
@@ -218,6 +223,31 @@ final class DibujoDeArenas {
                 float f = tr.aparicion() / 36f;
                 p.aro(cx, cy, rx * (1.1f + (1 - f) * 0.9f), 3.5f * f + 1, 0xFF7A45, 0.85f * f);
             }
+        }
+    }
+
+    /** Posiciones fijas (en tanto por uno del radio) y tamaños de las piedras de una zona de escombros. */
+    private static final float[] PIEDRAS = {-0.55f, -0.2f, 0.22f, 0.1f, -0.35f, 0.16f, 0.4f, 0.35f, 0.18f, -0.15f, 0.55f, 0.15f,
+        0.05f, -0.5f, 0.2f, -0.6f, 0.35f, 0.14f, 0.62f, -0.3f, 0.12f, -0.1f, 0.05f, 0.2f};
+
+    /** Una cuesta de la arena: un montículo con curvas de nivel (frena a las ruedas; a las patas y a las piernas les va bien). */
+    private static void cuesta(Pincel p, float cx, float cy, float rx, float ry) {
+        p.elipse(cx, cy + ry * 0.08f, rx, ry, 0, 0x000000, 0.18f);
+        for (int k = 0; k < 4; k++) {
+            float f = 1 - k * 0.22f;
+            p.elipse(cx, cy - ry * 0.12f * k, rx * f, ry * f, 0, Pincel.aclarar(0x8C7A5E, 0.12f * k), 0.55f + 0.1f * k);
+        }
+        p.elipse(cx - rx * 0.18f, cy - ry * 0.45f, rx * 0.22f, ry * 0.12f, 0, 0xFFFFFF, 0.18f);
+    }
+
+    /** Una zona de escombros: tierra removida y piedras grises (frena a las ruedas; las patas de araña, a gusto). */
+    private static void escombros(Pincel p, float cx, float cy, float rx, float ry) {
+        p.elipse(cx, cy, rx, ry, 0, 0x5A4E44, 0.55f);
+        for (int k = 0; k + 2 < PIEDRAS.length; k += 3) {
+            float px = cx + PIEDRAS[k] * rx, py = cy + PIEDRAS[k + 1] * ry, r = PIEDRAS[k + 2] * Math.min(rx, ry * 1.6f);
+            p.elipse(px, py + r * 0.25f, r, r * 0.55f, 0, 0x2A2420, 0.45f);
+            p.elipse(px, py, r, r * 0.7f, 0, 0x8A8178, 1);
+            p.elipse(px - r * 0.25f, py - r * 0.2f, r * 0.45f, r * 0.3f, 0, 0xB8AFA4, 0.8f);
         }
     }
 

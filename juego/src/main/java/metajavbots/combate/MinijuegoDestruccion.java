@@ -177,6 +177,8 @@ public final class MinijuegoDestruccion {
         this.pelea = new Pelea(cs, equipos, semilla, ANCHO, ALTO, this.turnosTotales);
         this.pelea.rondas = 1;
         this.pelea.sinFinPorEquipos = true;
+        // Sus reglas y su daño ya ajustados: del equilibrio de peso solo cuenta el terreno sobre la locomoción.
+        this.pelea.reglasPropias = true;
         this.pelea.multiplicadorDano = multiplicadorDanoPara(this.dificultad, this.subnivel);
         this.pelea.arena = Arena.crearParaDestruccion(PistaDeCarrera.agarreDe(this.escenario));
         this.pelea.empezarRonda();

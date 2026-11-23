@@ -1,0 +1,207 @@
+# EQUILIBRIO de MetajavBots (docs/EQUILIBRIO.md): peso frente a carga, locomociones, terrenos y armas pesadas.
+# Todo lo que se puede retocar sin tocar el código. Unidades: turnos (1/30 s), unidades de arena (la arena mide 1000 × 700) y grados.
+# r = peso que cargan las piernas (chasis del modelo + todas las piezas menos las piernas) / carga de las piernas.
+# TODO-FRAN: los números finos son tuyos; salen de las simulaciones de PruebasDeEquilibrio (docs/EQUILIBRIO.md).
+
+[peso]
+# Tramos de r: hasta «ligero», ligero (sin castigo y algo más de esquiva); hasta «limite», normal (baja suave);
+# hasta «maximo», sobrecarga (castigo fuerte); por encima, no se puede salir a pelear.
+ligero = 0.70
+limite = 1.00
+maximo = 1.20
+# En el tramo normal, velocidad, aceleración y giro bajan en línea recta hasta este tanto por uno en r = 1.
+penalizacion_normal = 0.15
+# En sobrecarga: lo que se pierde de velocidad, aceleración y giro, y cuánto más cuesta moverse.
+sobrecarga_velocidad = 0.40
+sobrecarga_aceleracion = 0.40
+sobrecarga_giro = 0.30
+sobrecarga_energia = 1.40
+# Esquiva extra de un robot ligero (balas y misiles).
+esquiva_ligero = 0.04
+# Masa de referencia para los choques, empujones y el retroceso (un robot mediano).
+masa_referencia = 45
+
+[movimiento]
+# Giro según la velocidad (Robocode): giro · (1 − giro_por_velocidad · |v| / vMax).
+giro_por_velocidad = 0.4
+# Energía por unidad recorrida (Robocode: moverse también gasta).
+coste_movimiento = 0.012
+# Frenar es este tanto más rápido que acelerar.
+frenada = 2.0
+
+[mira]
+# Giro de la mira (brazos y radar) en grados por turno con un arma del peso de referencia.
+giro = 14
+peso_referencia = 8
+# Cuánto cambia por cada unidad de peso del arma más pesada (más peso, más lenta), y sus topes.
+por_peso = 0.035
+minimo = 0.55
+maximo = 1.20
+
+[retroceso]
+# Las armas de distancia que pesan más que «umbral» empujan hacia atrás al disparar y retrasan el siguiente disparo
+# (salvo en las locomociones que lo absorben: orugas y patas de araña).
+umbral = 10
+desplazamiento = 1.1
+espera = 1.5
+
+[potencia]
+# Armas con potencia regulable (potencia=… en piezas.txt; regularPotencia(p) en la API): reparto de Robocode.
+# daño ∝ 4p + 2·max(p − 1, 0); velocidad ∝ 20 − 3p; enfriamiento ∝ 10 + 2p; energía extra = (p − 1) · energia por encima de 1
+# (a potencia 1, la de siempre, no cuesta nada más: así las balas siguen sin gastar energía si no se sube la potencia).
+minima = 0.1
+maxima = 3
+energia = 14
+# Energía que devuelve acertar, por unidad de potencia.
+reembolso = 1.0
+
+[choques]
+# El empuje de un golpe se multiplica por masa del que pega / masa del que lo recibe, con estos topes.
+empuje_minimo = 0.5
+empuje_maximo = 1.8
+# Un volteo más corto que esto no levanta al robot.
+volteo_minimo = 4
+# Daño de una embestida: dano_embestida · velocidad · masa / masa_referencia.
+dano_embestida = 0.9
+
+[armas]
+# Daño de las armas cuerpo a cuerpo en las peleas normales (no en los minijuegos): hay que llegar hasta el rival
+# recibiendo disparos, y las armas de distancia también sirven de cerca; por eso el golpe vale más.
+cuerpo_a_cuerpo = 1.6
+
+[aereo]
+# Las armas cuerpo a cuerpo con al menos este alcance llegan a los voladores sin que esquiven (látigos, bola con cadena).
+alcance_cuerpo = 120
+
+# ------------------------------------------------------------------ LOCOMOCIONES
+# estabilidad: divide los empujones · antivuelco: parte del volteo que se anula · traccion: agarre mínimo en suelo que resbala
+# absorbe_retroceso: 1 si no le afecta el retroceso · esquiva: contra balas y misiles · esquiva_cuerpo: contra golpes (solo voladores)
+# iman: cuánto le afecta un imán · aereo: 1 si es blanco antiaéreo · pisa_suelo: 0 si ignora aceite y trampas de suelo
+# embestida: daño de sus embestidas · cuna: lo que le afectan cuñas y volteadores · cortocircuito: 1 si el agua lo desorienta
+# llano, aceite, agua, rampa, escombros, trampa: rendimiento (velocidad y aceleración) en cada terreno (1 = normal).
+
+[BIPEDO]
+nombre = Piernas | Beine | Legs
+estabilidad = 1.0
+antivuelco = 0.2
+traccion = 0
+absorbe_retroceso = 0
+esquiva = 0.02
+esquiva_cuerpo = 0
+iman = 1.0
+aereo = 0
+pisa_suelo = 1
+embestida = 1.0
+cuna = 1.0
+cortocircuito = 1
+llano = 1.0
+aceite = 0.75
+agua = 0.8
+rampa = 1.05
+escombros = 0.92
+trampa = 0.85
+
+[ORUGAS]
+nombre = Orugas | Ketten | Treads
+estabilidad = 2.2
+antivuelco = 0.85
+traccion = 0.8
+absorbe_retroceso = 1
+esquiva = 0
+esquiva_cuerpo = 0
+iman = 0.45
+aereo = 0
+pisa_suelo = 1
+embestida = 1.15
+cuna = 0.5
+cortocircuito = 1
+llano = 1.0
+aceite = 1.0
+agua = 1.0
+rampa = 1.0
+escombros = 1.0
+trampa = 1.0
+
+[RUEDAS]
+nombre = Ruedas | Räder | Wheels
+estabilidad = 0.85
+antivuelco = 0
+traccion = 0
+absorbe_retroceso = 0
+esquiva = 0.02
+esquiva_cuerpo = 0
+iman = 1.1
+aereo = 0
+pisa_suelo = 1
+embestida = 1.6
+cuna = 1.5
+cortocircuito = 1
+llano = 1.12
+aceite = 0.55
+agua = 0.6
+rampa = 0.6
+escombros = 0.5
+trampa = 0.8
+
+[FLOTANTE]
+nombre = Flotador | Schwebeplatte | Hover
+estabilidad = 0.7
+antivuelco = 0.3
+traccion = 0
+absorbe_retroceso = 0
+esquiva = 0.01
+esquiva_cuerpo = 0
+iman = 1.6
+aereo = 0
+pisa_suelo = 0
+embestida = 0.9
+cuna = 1.0
+cortocircuito = 0
+llano = 1.0
+aceite = 1.0
+agua = 1.0
+rampa = 0.95
+escombros = 0.95
+trampa = 1.0
+
+[VUELO]
+nombre = Vuelo | Flug | Flight
+estabilidad = 0.6
+antivuelco = 0
+traccion = 0
+absorbe_retroceso = 0
+esquiva = 0.04
+esquiva_cuerpo = 0.45
+iman = 1.7
+aereo = 1
+pisa_suelo = 0
+embestida = 0.8
+cuna = 1.0
+cortocircuito = 1
+llano = 1.0
+aceite = 1.0
+agua = 0.5
+rampa = 1.0
+escombros = 1.0
+trampa = 1.0
+
+[PATAS]
+nombre = Patas de araña | Spinnenbeine | Spider legs
+estabilidad = 1.4
+antivuelco = 0.45
+traccion = 0.5
+absorbe_retroceso = 1
+esquiva = 0.03
+esquiva_cuerpo = 0
+iman = 0.9
+aereo = 0
+pisa_suelo = 1
+embestida = 0.9
+cuna = 0.8
+cortocircuito = 1
+llano = 0.95
+aceite = 0.8
+agua = 0.85
+rampa = 1.1
+escombros = 1.15
+trampa = 0.9

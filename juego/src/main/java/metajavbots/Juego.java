@@ -83,6 +83,11 @@ public class Juego extends ApplicationAdapter {
 
     /** Va a otra pantalla (y recuerda esta para volver). */
     public void ir(Pantalla nueva) {
+        // Un robot que pasa del 120 % de la carga de sus piernas no sale a pelear: al Taller, que explica qué quitar.
+        if (nueva instanceof metajavbots.pantallas.PantallaPelea pelea && pelea.usaRobotDelJugador() && jugador != null
+                && jugador.robot() != null && !jugador.montajeDe(jugador.robot()).puedePelear()) {
+            nueva = metajavbots.pantallas.Taller.porSobrepeso();
+        }
         if (nueva instanceof metajavbots.pantallas.PantallaPelea pelea && pelea.usaRobotDelJugador()
                 && !avisoCompilar.consumirPasePelea()
                 && metajavbots.pantallas.AvisoDeCompilacion.debeAvisarAlPelear(jugador)) {

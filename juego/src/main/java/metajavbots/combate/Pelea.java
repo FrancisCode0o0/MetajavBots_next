@@ -61,6 +61,11 @@ public final class Pelea {
     public double multiplicadorDano = 1.0;
     /** Si es true, la ronda no termina al quedar solo el equipo 0 en pie (para modos con oleadas y cuenta atrás). */
     boolean sinFinPorEquipos;
+    /**
+     * Si es true (Carrera de obstáculos, Destrucción y supervivencia), se respetan sus reglas y su daño: de las reglas de
+     * peso y locomoción (docs/EQUILIBRIO.md) solo se aplica el efecto del terreno sobre la locomoción.
+     */
+    public boolean reglasPropias;
     /** El ganador (0 o 1), -1 si empate, -2 si no ha acabado. */
     private int ganador = -2;
 
@@ -255,8 +260,8 @@ public final class Pelea {
         else for (int k = 0; k < n; k++) pensar(cuerpos[(turno + k) % n]);
         // 3) Los ataques, el movimiento, los choques, los proyectiles.
         for (Cuerpo c : cuerpos) atacar(c);
-        for (Cuerpo c : cuerpos) mover(c);
-        for (int i = 0; i < n; i++) for (int k = i + 1; k < n; k++) chocar(cuerpos[i], cuerpos[k]);
+        for (Cuerpo c : cuerpos) Movimiento.mover(this, c);
+        for (int i = 0; i < n; i++) for (int k = i + 1; k < n; k++) Movimiento.chocar(this, cuerpos[i], cuerpos[k]);
         arena.turno(this);
         aparatos.turno(this);
         for (Cuerpo c : cuerpos) efectosContinuos(c);
@@ -518,8 +523,9 @@ public final class Pelea {
     /** Lo mismo, con el punto donde pega (para que las chispas salgan ahí y no en el centro del robot). */
     boolean danar(Cuerpo e, Cuerpo de, double dano, String arma, double desde, boolean cuerpoACuerpo, double ix, double iy) {
         if (e.fuera || (dano = Armas.danoEfectivoSeguro(dano)) <= 0) return false;
-        // El éter esquiva las balas y los misiles.
-        if ((arma.equals("bala") || arma.equals("misil")) && azar.nextDouble() < e.cifras.esquiva) {
+        // El éter (y lo ligero) esquiva las balas y los misiles; a un volador, el misil que persigue no se le escapa.
+        boolean persigue = arma.equals("misil") && e.cifras.rasgos.aereo && !reglasPropias;
+        if ((arma.equals("bala") || arma.equals("misil")) && !persigue && azar.nextDouble() < e.cifras.esquiva) {
             suceso(Suceso.Tipo.ESQUIVA, e.indice, e.x, e.y, desde, dano, arma);
             return false;
         }
@@ -615,95 +621,6 @@ public final class Pelea {
         return pesos.length - 1;
     }
 
-    // ================================================================ moverse
-    private void mover(Cuerpo c) {
-        if (c.fuera) {
-            c.velocidad *= 0.8;
-            return;
-        }
-        c.energia = Math.min(Cuerpo.energiaMaxSegura(c.cifras.energiaMax),
-                c.energia + Cuerpo.recargaSegura(c.cifras.recarga * c.efectosPoo().factorRecarga));
-        for (int i = 0; i < 3; i++) {
-            if (c.enfriamiento[i] > 0 && --c.enfriamiento[i] == 0) c.recargarCicloSiListo(i);
-        }
-        c.pasoEstados(turno);
-        if (c.sacudida > 0) c.sacudida *= 0.8;
-        c.retroceso *= 0.75;
-        boolean piernasRotas = c.parteRota(Montaje.PIERNAS);
-        double vmax = Cuerpo.velocidadSegura(c.cifras.velocidad) * (c.turbo > 0 ? Armas.factorSeguro(c.factorTurbo) : 1) * (piernasRotas ? 0.4 : 1);
-        double gmax = Cuerpo.giroSeguro(c.cifras.giro) * (piernasRotas ? 0.5 : 1);
-        if (c.aturdido > 0) {
-            vmax = 0;
-            gmax = 0;
-        }
-        // Girar el cuerpo y la mira.
-        double g = Math.max(-gmax, Math.min(gmax, c.giro));
-        c.rumbo = normal(c.rumbo + g);
-        c.giro -= g;
-        double gm = Math.max(-14, Math.min(14, c.giroMira));
-        if (c.aturdido > 0) gm = 0;
-        c.mira = normal(c.mira + gm);
-        c.giroMira -= gm;
-        // Avanzar: acelera hacia lo que falta, y frena para llegar justo.
-        double deseada = Math.max(-vmax, Math.min(vmax, c.avance));
-        double acel = c.cifras.aceleracion * (Math.signum(deseada) != Math.signum(c.velocidad) || Math.abs(deseada) < Math.abs(c.velocidad) ? 2 : 1)
-                * (c.vuela() ? 1 : arena.agarreEn(c.x, c.y));
-        if (c.velocidad < deseada) c.velocidad = Math.min(deseada, c.velocidad + acel);
-        else if (c.velocidad > deseada) c.velocidad = Math.max(deseada, c.velocidad - acel);
-        double rad = Math.toRadians(c.rumbo);
-        c.x += Math.cos(rad) * c.velocidad;
-        c.y += Math.sin(rad) * c.velocidad;
-        double avanceAntes = c.avance;
-        c.avance -= c.velocidad;
-        if ((avanceAntes > 0 && c.avance < 0) || (avanceAntes < 0 && c.avance > 0)) c.avance = 0;
-        if (Math.abs(c.avance) < 0.01) c.avance = 0;
-        c.paso += Math.abs(c.velocidad);
-        // Las paredes.
-        boolean choca = false;
-        if (c.x < c.radio) { c.x = c.radio; choca = true; }
-        if (c.x > ancho - c.radio) { c.x = ancho - c.radio; choca = true; }
-        if (c.y < c.radio) { c.y = c.radio; choca = true; }
-        if (c.y > alto - c.radio) { c.y = alto - c.radio; choca = true; }
-        if (choca && Math.abs(c.velocidad) > 0.5) {
-            double dano = 0.3 + Math.abs(c.velocidad) * 0.25;
-            c.chocoConPared = true;
-            suceso(Suceso.Tipo.PARED, c.indice, c.x, c.y, c.rumbo, dano, "");
-            danar(c, null, dano, "pared", c.rumbo, false);
-            c.velocidad = 0;
-            c.avance = 0;
-        }
-    }
-
-    private void chocar(Cuerpo a, Cuerpo b) {
-        if (a.fuera || b.fuera) return;
-        if (a.vuela() != b.vuela()) return;   // uno vuela por encima del otro
-        double dx = b.x - a.x, dy = b.y - a.y;
-        double d = Math.hypot(dx, dy), min = a.radio + b.radio;
-        if (d >= min) return;
-        if (d < 0.001) { dx = 1; dy = 0; d = 1; }
-        double empuje = (min - d) / 2 + 0.5;
-        double ux = dx / d, uy = dy / d;
-        a.x -= ux * empuje;
-        a.y -= uy * empuje;
-        b.x += ux * empuje;
-        b.y += uy * empuje;
-        // El que va más deprisa y pesa más hace más daño.
-        double va = Math.abs(a.velocidad), vb = Math.abs(b.velocidad);
-        double pa = a.combatiente.montaje.peso(), pb = b.combatiente.montaje.peso();
-        double angA = Math.toDegrees(Math.atan2(dy, dx));
-        if (va + vb > 1 && a.equipo != b.equipo) {
-            suceso(Suceso.Tipo.CHOQUE, a.indice, (a.x + b.x) / 2, (a.y + b.y) / 2, angA, va + vb, "");
-            danar(b, a, 0.3 + va * 0.5 * (pa / Math.max(10, pb)), "choque", angA + 180, true);
-            danar(a, b, 0.3 + vb * 0.5 * (pb / Math.max(10, pa)), "choque", angA, true);
-        }
-        if (a.equipo != b.equipo) {
-            a.chocoCon = new Avistamiento(a, b);
-            b.chocoCon = new Avistamiento(b, a);
-        }
-        a.velocidad *= 0.3;
-        b.velocidad *= 0.3;
-    }
-
     private void efectosContinuos(Cuerpo c) {
         if (c.llama <= 0 || c.fuera) return;
         c.llama--;
@@ -764,8 +681,11 @@ public final class Pelea {
                 if (e.equipo == dueno.equipo || e.fuera) continue;
                 if (Math.hypot(e.x - p.x, e.y - p.y) <= e.radio) {
                     p.vivo = false;
-                    if (p.misil) suceso(Suceso.Tipo.EXPLOSION, p.dueno, p.x, p.y, 0, p.dano, "misil");
-                    danar(e, dueno, p.dano, p.misil ? "misil" : "bala", p.angulo() + 180, false, p.x, p.y);
+                    double dano = p.dano * (e.cifras.rasgos.aereo && !reglasPropias ? p.antiaereo : 1);
+                    if (p.misil) suceso(Suceso.Tipo.EXPLOSION, p.dueno, p.x, p.y, 0, dano, "misil");
+                    boolean dio = danar(e, dueno, dano, p.misil ? "misil" : "bala", p.angulo() + 180, false, p.x, p.y);
+                    if (dio && p.potencia > 0) dueno.energia = Math.min(Cuerpo.energiaMaxSegura(dueno.cifras.energiaMax),
+                            dueno.energia + ReglasDePeso.reembolso(p.potencia));
                     break;
                 }
             }

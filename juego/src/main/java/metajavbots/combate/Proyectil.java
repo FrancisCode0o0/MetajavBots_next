@@ -12,6 +12,8 @@ public final class Proyectil {
     public boolean vivo = true;
     /** Para el dibujo: de dónde salió (la estela). */
     public final double x0, y0;
+    /** Daño ×antiaereo contra voladores (1 si no es antiaéreo) y potencia con que salió (0 si no es regulable). */
+    double antiaereo = 1, potencia;
 
     Proyectil(int dueno, boolean misil, double x, double y, double angulo, double velocidad, double dano, double alcance, double giro) {
         this.dueno = dueno;

@@ -168,6 +168,8 @@ public final class CarreraDeObstaculos {
         this.pelea = new Pelea(cs, equipos, semilla, anchoPista, ALTO, maxTurnos);
         this.pelea.rondas = 1;
         this.pelea.multiplicadorDano = this.dificultad.multiplicadorDano;
+        // Sus reglas y su daño ya ajustados: del equilibrio de peso solo cuenta el terreno sobre la locomoción.
+        this.pelea.reglasPropias = true;
         this.pelea.arena = PistaDeCarrera.generarArena(anchoPista, ALTO, semilla, escenario, this.dificultad, this.subnivel);
         this.pelea.empezarRonda();
         colocarEnSalida();

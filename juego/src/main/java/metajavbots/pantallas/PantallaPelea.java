@@ -120,7 +120,8 @@ public final class PantallaPelea implements Pantalla {
             pelea = new Pelea(cs, eq, new Random().nextLong());
         }
         pelea.rondas = encuentro.rondas;
-        pelea.arena = metajavbots.combate.Arena.de(encuentro.escenario.name(), pelea.ancho, pelea.alto);
+        // La arena con su mezcla de terrenos (res/datos/terrenos.txt): llano, aceite, agua, rampas, escombros y trampas.
+        pelea.arena = metajavbots.combate.Terrenos.arenaDePelea(encuentro.escenario.name(), pelea.ancho, pelea.alto);
         // Los aparatos que salen de ronda en ronda (no en los robots rotos ni en los tutoriales).
         pelea.aparatos.activos = jug.aparatosEnLaArena && encuentro.codigo == null && encuentro.objetivo == null;
         if (encuentro.codigo == null && encuentro.objetivo == null) entrada = new EntradaEpica(pelea);

@@ -223,6 +223,7 @@ public final class PrepararPelea implements Pantalla {
             rx += 72;
         }
         y += 70;
+        y = vistaPreviaDeArena(j, y);
         String[][] modos = {
                 {"ADAPTADA", "pelear.adaptada"}, {"AZAR", "pelear.azar"}, {"DESAFIO", "pelear.desafio"}, {"PRACTICA", "pelear.practica"},
                 {"ROYALE", "pelear.royale"}, {"EQUIPOS", "pelear.equipos"}, {"MCM", "pelear.mcm"}, {"CAMPANAS", "pelear.campanas"}};
@@ -259,6 +260,39 @@ public final class PrepararPelea implements Pantalla {
         y += alto + 20;
         if (!aviso.isEmpty()) y += p.parrafo(aviso, 60, y, pw - 40, ui.letra * 0.85f, ui.tema.mal, 1) + 20;
         ui.finDesplazable(pagina, y + desp - zonaY);
+    }
+
+    /** La arena que se ve en la vista previa (la siguiente pelea sale en ella). */
+    private VistaDeArena.Escenario proxima;
+
+    /** Pone el encuentro en la arena de la vista previa y elige otra para la próxima vez. */
+    private Encuentro enLaProxima(Encuentro e) {
+        if (proxima != null) e.escenario = proxima;
+        proxima = null;
+        return e;
+    }
+
+    /** La próxima arena y sus terrenos (para pensar qué piernas y armas montar) y el tramo de peso del robot que pelea. */
+    private float vistaPreviaDeArena(Juego j, float y) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        if (proxima == null) proxima = escenarioAlAzar();
+        float x = 40, w = p.ancho - 80, bw = Math.min(260, Math.max(170, p.ancho(T.t("pelear.otra_arena"), ui.letra * 0.85f, false) + 30));
+        float tw = w - bw - 48, tam = ui.letra * 0.82f;
+        String arena = T.f("pelear.proxima_arena", T.t("arena." + proxima.name().toLowerCase(java.util.Locale.ROOT)), PanelDePeso.arena(proxima.name()));
+        Montaje m = j.jugador.robot() == null ? null : j.jugador.montajeDe(j.jugador.robot());
+        String peso = m == null ? "" : T.f("pelear.tu_peso", PanelDePeso.tramo(m.tramo()), Math.round(m.proporcionDeCarga() * 100),
+                PanelDePeso.terrenos(m.cifras().rasgos)) + (m.puedePelear() ? "" : " " + T.t("peso.no_puede_pelear"));
+        float h = Math.max(56, p.altoDeParrafo(arena, tw, tam) + (peso.isEmpty() ? 0 : p.altoDeParrafo(peso, tw, tam) + 4) + 20);
+        p.caja(x, y, w, h, 12, ui.tema.panel, 1);
+        float cy = y + 10;
+        cy += p.parrafo(arena, x + 16, cy, tw, tam, ui.tema.texto, 1) + 4;
+        if (!peso.isEmpty()) p.parrafo(peso, x + 16, cy, tw, tam, PanelDePeso.color(m.tramo()), 1);
+        if (ui.boton(T.t("pelear.otra_arena"), x + w - bw - 14, y + (h - 44) / 2, bw, 44, Ui.Estilo.PLANO, true, T.t("pelear.otra_arena_ayuda"))) {
+            VistaDeArena.Escenario antes = proxima;
+            for (int k = 0; k < 8 && proxima == antes; k++) proxima = escenarioAlAzar();
+        }
+        return y + h + 14;
     }
 
     /** Lo que mide de alto la tarjeta de un modo, con la letra de ahora. */
@@ -314,10 +348,10 @@ public final class PrepararPelea implements Pantalla {
             else if (m.equals("ROYALE")) {
                 Encuentro e = royale(j, ajenos);
                 e.cerebros = cerebrosRoyale;
-                j.ir(new PantallaPelea(e));
+                j.ir(new PantallaPelea(enLaProxima(e)));
             }
-            else if (m.equals("EQUIPOS")) j.ir(new PantallaPelea(equipos(j, companero < 0 ? null : companeros.get(companero))));
-            else j.ir(new PantallaPelea(encuentro(j, m)));
+            else if (m.equals("EQUIPOS")) j.ir(new PantallaPelea(enLaProxima(equipos(j, companero < 0 ? null : companeros.get(companero)))));
+            else j.ir(new PantallaPelea(enLaProxima(encuentro(j, m))));
         }
     }
 

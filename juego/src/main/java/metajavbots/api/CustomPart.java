@@ -74,7 +74,7 @@ public interface CustomPart extends PiezaPropia {
         return 0.5;
     }
 
-    /** Maximum carry capacity (for {@code LEGS} only). */
+    /** Load the legs can carry: the chassis and the other parts; going over slows you down and above 120% you cannot fight ({@code LEGS} only). */
     default double capacity() {
         return 32;
     }

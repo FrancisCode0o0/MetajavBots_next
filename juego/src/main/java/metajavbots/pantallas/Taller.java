@@ -67,6 +67,23 @@ public final class Taller implements Pantalla {
         return taller;
     }
 
+    /** Abre el taller directamente en la pestaña de piezas (para las capturas del peso frente a la carga). */
+    public static Taller enPiezas() {
+        Taller taller = new Taller();
+        taller.pestana = 1;
+        taller.pestanaAnterior = 1;
+        return taller;
+    }
+
+    /** Abre el taller en la pestaña de piezas avisando de que el robot pesa demasiado para pelear (Juego.ir lo usa). */
+    public static Taller porSobrepeso() {
+        Taller taller = new Taller();
+        taller.pestana = 1;
+        taller.pestanaAnterior = 1;
+        taller.aviso = T.t("peso.no_puede_pelear");
+        return taller;
+    }
+
     /** Abre el taller directamente en la pestaña de documentación Javadoc (para las capturas). */
     public static Taller enPaquetes() {
         Taller taller = new Taller();
@@ -477,6 +494,8 @@ public final class Taller implements Pantalla {
         CatalogoDePiezas cat = CatalogoDePiezas.delJuego();
         float fila = Math.min(96, (h - 120) / Montaje.Hueco.values().length);
         float yy = y;
+        Montaje previa = null;
+        String quePrevia = "";
         for (Montaje.Hueco hueco : Montaje.Hueco.values()) {
             List<Pieza> opciones = new ArrayList<>();
             for (Pieza pz : cat.de(hueco.ranura)) {
@@ -489,7 +508,18 @@ public final class Taller implements Pantalla {
             }
             Pieza actual = m.pieza(hueco);
             if (hueco == Montaje.Hueco.NATURALEZA) opciones.add(0, null);
+            // Entre rondas no se puede montar lo que deja al robot sin poder pelear (en el Taller sí, y se explica).
+            if (!permitirActivar) opciones.removeIf(o -> o != actual && !conPieza(m, hueco, o).puedePelear());
             int i = indiceDePieza(opciones, actual);
+            // Al pasar el ratón por ◄ ►: cómo quedaría el robot con la pieza de al lado.
+            if (previa == null && opciones.size() > 1) {
+                int k = ui.e.dentro(x + w * 0.62f - 110, yy + 30, 46, 40) ? (i - 1 + opciones.size()) % opciones.size()
+                        : ui.e.dentro(x + w * 0.62f - 58, yy + 30, 46, 40) ? (i + 1) % opciones.size() : -1;
+                if (k >= 0) {
+                    previa = conPieza(m, hueco, opciones.get(k));
+                    quePrevia = opciones.get(k) == null ? T.t("taller.sin_pieza") : opciones.get(k).nombre(T.idioma);
+                }
+            }
             p.caja(x, yy, w * 0.62f, fila - 8, 10, ui.tema.panel, 1);
             p.texto(T.t("hueco." + hueco.name().toLowerCase()), x + 16, yy + 10, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
             String nombre = actual == null ? T.t("taller.sin_pieza") : actual.nombre(T.idioma);
@@ -513,7 +543,14 @@ public final class Taller implements Pantalla {
             }
             yy += fila;
         }
-        dibujarPanelCifras(j, m, x + w * 0.62f + 20, y, w * 0.38f - 20, h, permitirActivar);
+        dibujarPanelCifras(j, m, previa, quePrevia, x + w * 0.62f + 20, y, w * 0.38f - 20, h, permitirActivar);
+    }
+
+    /** Una copia del montaje con esa pieza en ese hueco (para ver cómo quedaría antes de montarla). */
+    static Montaje conPieza(Montaje m, Montaje.Hueco hueco, Pieza p) {
+        Montaje c = m.copia();
+        c.poner(hueco, p);
+        return c;
     }
 
     private static int indiceDePieza(List<Pieza> opciones, Pieza actual) {
@@ -525,26 +562,25 @@ public final class Taller implements Pantalla {
         return -1;
     }
 
-    private static void dibujarPanelCifras(Juego j, Montaje m, float cx, float y, float cw, float h, boolean permitirActivar) {
+    private static void dibujarPanelCifras(Juego j, Montaje m, Montaje previa, String quePrevia, float cx, float y, float cw, float h,
+                                           boolean permitirActivar) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         Montaje.Cifras cf = m.cifras();
         float cy = ui.panel(cx, y, cw, h, T.t("taller.cifras"));
+        // Peso frente a carga, movilidad y terrenos (docs/EQUILIBRIO.md); y, al pasar por ◄ ►, cómo quedaría.
+        cy += PanelDePeso.dibujar(j, m, previa, quePrevia, cx + 18, cy, cw - 36) + 6;
         String[] l = {
                 T.f("cifras.blindaje", Math.round(cf.blindajeTotal())),
-                T.f("cifras.velocidad", String.format(java.util.Locale.ROOT, "%.1f", cf.velocidad)),
-                T.f("cifras.giro", String.format(java.util.Locale.ROOT, "%.1f", cf.giro)),
                 T.f("cifras.pasos", Math.round(cf.pasos)),
                 T.f("cifras.energia", Math.round(cf.energiaMax), String.format(java.util.Locale.ROOT, "%.2f", cf.recarga)),
-                T.f("cifras.peso", Math.round(m.peso())),
                 T.f("cifras.naturaleza", m.modelo.naturaleza.nombre(T.idioma), Math.round(m.refuerzo(m.modelo.naturaleza.refuerza) * 100)),
                 m.armasCaracteristicasMontadas() > 0 ? T.f("cifras.sinergia", m.armasCaracteristicasMontadas(),
                         Math.round(Montaje.BONO_ARMA_CARACTERISTICA * 100)) : "",
                 cf.vuela ? T.t("cifras.vuela") : ""};
         for (String s : l) {
-            if (s.isEmpty()) continue;
-            p.texto(s, cx + 18, cy, ui.letra * 0.88f, false, ui.tema.texto, 1);
-            cy += ui.letra * 1.6f;
+            if (s.isEmpty() || cy + ui.letra * 1.2f > y + h - 8) continue;
+            cy += p.parrafo(s, cx + 18, cy, cw - 36, ui.letra * 0.82f, ui.tema.texto, 1) + ui.letra * 0.35f;
         }
         if (permitirActivar && cy + 46 <= y + h - 12) {
             cy += 6;
@@ -569,7 +605,7 @@ public final class Taller implements Pantalla {
             return;
         }
         cy += 10;
-        p.parrafo(T.t("taller.piezas_ayuda"), cx + 18, cy, cw - 36, ui.letra * 0.75f, ui.tema.textoApagado, 1);
+        if (cy + ui.letra * 2 < y + h) p.parrafo(T.t("taller.piezas_ayuda"), cx + 18, cy, cw - 36, ui.letra * 0.75f, ui.tema.textoApagado, 1);
     }
 
     static String cifras(Pieza p) {
@@ -579,16 +615,18 @@ public final class Taller implements Pantalla {
             b.append(T.t("valor.proteccion." + prot.toLowerCase(java.util.Locale.ROOT)));
         }
         String[] claves = {"dano", "alcance", "bloqueo", "duracion", "cargas", "enfriamiento", "enfriamientoCiclo",
-                "danoObstaculo", "energia", "cura", "radar", "cono", "velocidad", "giro", "pasos", "energiaMax",
-                "blindaje", "peso", "refuerzo"};
+                "danoObstaculo", "antiaereo", "potencia", "energia", "cura", "radar", "cono", "velocidad", "giro", "carga", "pasos",
+                "energiaMax", "blindaje", "peso", "refuerzo"};
         for (String k : claves) {
             double v = p.valor(k);
             if (v == 0) continue;
             if (b.length() > 0) b.append(" · ");
             if (k.equals("bloqueo")) {
                 b.append(T.t("valor.bloqueo")).append(' ').append(Math.round(v * 100)).append('%');
-            } else if (k.equals("danoObstaculo")) {
-                b.append(T.t("valor.danoObstaculo")).append(" ×").append(String.format(java.util.Locale.ROOT, "%.2f", v));
+            } else if (k.equals("danoObstaculo") || k.equals("antiaereo")) {
+                b.append(T.t("valor." + k)).append(" ×").append(String.format(java.util.Locale.ROOT, "%.2f", v));
+            } else if (k.equals("potencia")) {
+                b.append(T.t("valor.potencia"));
             } else {
                 String num = v == Math.rint(v) ? Long.toString(Math.round(v)) : String.format(java.util.Locale.ROOT, "%.2f", v);
                 b.append(T.t("valor." + k)).append(' ').append(num);

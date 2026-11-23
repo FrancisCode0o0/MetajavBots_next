@@ -43,6 +43,11 @@ metodos = {
     'normalizar': ('normalisieren', 'normalize'),
     'azar': ('zufall', 'random'), 'decir': ('sagen', 'say'), 'escribir': ('ausgeben', 'print'),
     'memoria': ('gedaechtnis', 'memory'),
+    'pesoTotal': ('gesamtgewicht', 'totalWeight'), 'cargaMaxima': ('traglast', 'loadLimit'),
+    'proporcionDeCarga': ('lastanteil', 'loadRatio'), 'sobrecargado': ('ueberladen', 'overloaded'),
+    'velocidadMaxima': ('hoechstgeschwindigkeit', 'topSpeed'), 'giroMaximo': ('maxDrehung', 'maxTurnRate'),
+    'aceleracionMaxima': ('maxBeschleunigung', 'maxAcceleration'), 'locomocion': ('fortbewegung', 'locomotion'),
+    'terreno': ('gelaende', 'terrain'), 'regularPotencia': ('leistungRegeln', 'setPower'),
 }
 doc = {
     'de': {
@@ -125,6 +130,16 @@ doc = {
         'sagen': 'Sagt etwas in einer Sprechblase über dem Roboter.',
         'ausgeben': 'Schreibt in die Konsole deines Roboters (unter dem Code).',
         'gedaechtnis': 'Was du dir von Runde zu Runde merken willst (Thema 15: Map). Bleibt, auch wenn du den Code änderst.',
+        'gesamtgewicht': 'Was deine Beine tragen: das Chassis deines Modells und alle Teile außer den Beinen.',
+        'traglast': 'Was deine Beine aushalten (ihre Traglast).',
+        'lastanteil': 'gesamtgewicht() / traglast(): bis 0,70 bist du leicht, bis 1 normal, bis 1,20 überladen.',
+        'ueberladen': 'Bist du überladen? Dann fährst und drehst du schlechter, verbrauchst mehr beim Fahren und springst und weichst nicht schnell aus.',
+        'hoechstgeschwindigkeit': 'Deine Höchstgeschwindigkeit gerade jetzt, mit deinem Gewicht und dem Gelände unter dir.',
+        'maxDrehung': 'Wie weit du in diesem Zug drehen kannst: Je schneller du fährst, desto schlechter drehst du.',
+        'maxBeschleunigung': 'Deine Beschleunigung gerade jetzt (Bremsen geht doppelt so schnell).',
+        'fortbewegung': 'Deine Beine: "BIPEDO", "ORUGAS" (Ketten), "RUEDAS" (Räder), "FLOTANTE" (Schweber), "VUELO" (Flug) oder "PATAS" (Spinnenbeine).',
+        'gelaende': 'Das Gelände unter dir: "LLANO" (eben), "ACEITE" (Öl), "AGUA" (Wasser), "RAMPA", "ESCOMBROS" (Trümmer) oder "TRAMPA" (Bodenfalle).',
+        'leistungRegeln': 'Die Leistung der regelbaren Waffen (0,1 bis 3): mehr Leistung, mehr Schaden, aber langsamere Kugel, mehr Hitze und mehr Energie.',
     },
     'en': {
         'class': """/**
@@ -167,14 +182,14 @@ doc = {
         'onTeamMessage': 'When a teammate tells you something (in team fights).',
         'teammates': 'Your teammates (in team fights; empty when you fight alone).',
         'tellTeam': 'Tells your teammates something (it arrives next tick in onTeamMessage).',
-        'ahead': 'Moves forward this distance (negative: backwards). Replaces the previous move order.',
-        'back': 'Moves backwards this distance.',
+        'ahead': 'Moves forward this distance (negative: backward). Replaces the previous move order.',
+        'back': 'Moves backward this distance.',
         'turn': 'Turns the body this many degrees (positive: left).',
         'turnTo': 'Turns the body to face this absolute angle, the short way.',
         'stop': 'Stops: no moving, no turning.',
         'aim': 'Turns the sight (arms and radar) this many degrees without turning the body.',
         'aimTo': 'Turns the sight to this absolute angle.',
-        'aimAt': 'Turns the sight towards this point of the arena.',
+        'aimAt': 'Turns the sight toward this point of the arena.',
         'attackLeft': 'Attacks with the left arm where the sight points. Returns false if it was not ready yet.',
         'special': "Uses the head's special (a shield, a turbo, repair…, depending on the part).",
         'charge': 'Signature ability of the Assault archetype: forward speed burst (warns in the console on other archetypes).',
@@ -205,12 +220,23 @@ doc = {
         'random': "Random numbers (your robot's own: the same fight replayed gives the same).",
         'say': 'Says something in a speech bubble above the robot.',
         'print': "Writes to your robot's console (below the code).",
-        'memory': 'Whatever you want to remember from round to round (topic 15: Map). It survives code changes.',
+        'memory': 'What you want to remember from round to round (topic 15: Map). Survives even if you change the code.',
+        'totalWeight': 'What your legs carry: the chassis of your model and all your parts except the legs.',
+        'loadLimit': 'What your legs can carry (their load limit).',
+        'loadRatio': 'totalWeight() / loadLimit(): up to 0.70 you are light, up to 1 normal, up to 1.20 overloaded.',
+        'overloaded': 'Are you overloaded? Then you drive and turn worse, spend more energy moving, and cannot jump or dodge quickly.',
+        'topSpeed': 'Your top speed right now, with your weight and the terrain under you.',
+        'maxTurnRate': 'How far you can turn this tick: the faster you go, the worse you turn.',
+        'maxAcceleration': 'Your acceleration right now (braking is twice as fast).',
+        'locomotion': 'Your legs: "BIPEDO" (biped), "ORUGAS" (treads), "RUEDAS" (wheels), "FLOTANTE" (hover), "VUELO" (flight), or "PATAS" (spider legs).',
+        'terrain': 'The terrain under you: "LLANO" (flat), "ACEITE" (oil), "AGUA" (water), "RAMPA" (ramp), "ESCOMBROS" (rubble), or "TRAMPA" (floor trap).',
+        'setPower': 'The power of adjustable-power weapons (0.1 to 3): more power, more damage, but a slower bullet, more heat, and more energy.',
     }}
 tipos = {'de': {'Enemigo': 'Gegner', 'Golpe': 'Treffer', 'Obstaculo': 'Hindernis', 'Aparato': 'Geraet'}, 'en': {'Enemigo': 'Enemy', 'Golpe': 'Hit', 'Obstaculo': 'Obstacle', 'Aparato': 'Gadget'}}
-params = {'de': {'distancia': 'strecke', 'grados': 'grad', 'angulo': 'winkel', 'texto': 'text', 'mensaje': 'nachricht', 'de': 'von', 'g': 't', 'e': 'g', 'hueco': 'platz'},
-          'en': {'distancia': 'distance', 'grados': 'degrees', 'angulo': 'angle', 'texto': 'text', 'mensaje': 'message', 'de': 'from', 'e': 'e', 'g': 'h', 'hueco': 'slot'}}
+params = {'de': {'distancia': 'strecke', 'grados': 'grad', 'angulo': 'winkel', 'texto': 'text', 'mensaje': 'nachricht', 'de': 'von', 'g': 't', 'e': 'g', 'hueco': 'platz', 'potencia': 'leistung'},
+          'en': {'distancia': 'distance', 'grados': 'degrees', 'angulo': 'angle', 'texto': 'text', 'mensaje': 'message', 'de': 'from', 'e': 'e', 'g': 'h', 'hueco': 'slot', 'potencia': 'power'}}
 secciones = [('lo que sobrescribes', ('was du überschreibst', 'what you override')), ('moverse', ('fahren', 'moving')),
+             ('peso, carga y movilidad', ('Gewicht, Traglast und Beweglichkeit', 'weight, load, and mobility')),
              ('apuntar y atacar', ('zielen und angreifen', 'aiming and attacking')), ('saber', ('wissen', 'knowing')),
              ('ayudas', ('Hilfen', 'helpers'))]
 
@@ -232,7 +258,7 @@ for lang, idx, cls in (('de', 0, 'MetajavbotDe'), ('en', 1, 'MetajavbotEn')):
         decl, name = mo.group(2), mo.group(3)
         t = doc[lang].get(name)
         return ('    /** %s */\n' % t if t else '') + decl
-    s = re.sub(r'(^    /\*\*(?:(?!\*/).)*\*/\n)?(^    public (?:final )?[\w<>]+ (\w+)\([^)]*\) \{)', redoc, s, flags=re.S | re.M)
+    s = re.sub(r'(^    /\*\*(?:(?!\*/).)*\*/\n)?(^    public (?:final )?[\w<>]+(?:, [\w<>]+)* (\w+)\([^)]*\) \{)', redoc, s, flags=re.S | re.M)
     for a, b in tipos[lang].items():
         s = re.sub(r'\b%s\b' % a, b, s)
     # parameter names inside each method
@@ -241,6 +267,6 @@ for lang, idx, cls in (('de', 0, 'MetajavbotDe'), ('en', 1, 'MetajavbotEn')):
         for a, b in params[lang].items():
             bloque = re.sub(r'\b%s\b' % a, b, bloque)
         return bloque
-    s = re.sub(r'^    public (?:final )?[\w<>]+ \w+\([^)]*\) \{\n(?:        .*\n)*?    \}', fix, s, flags=re.M)
+    s = re.sub(r'^    public (?:final )?[\w<>]+(?:, [\w<>]+)* \w+\([^)]*\) \{\n(?:        .*\n)*?    \}', fix, s, flags=re.M)
     open(cls + '.java', 'w', encoding='utf-8', newline='\n').write(s)
 print('ok')

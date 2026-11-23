@@ -6,7 +6,7 @@ import metajavbots.api.Avistado;
 final class Avistamiento implements Avistado {
 
     private final double x, y, distancia, angulo, rumbo, velocidad, blindaje;
-    private final String nombre, modelo;
+    private final String nombre, modelo, locomocion;
     private final boolean vuela;
 
     Avistamiento(Cuerpo yo, Cuerpo el) {
@@ -20,6 +20,7 @@ final class Avistamiento implements Avistado {
         nombre = el.combatiente.nombre;
         modelo = el.combatiente.montaje.modelo.id;
         vuela = el.vuela();
+        locomocion = el.cifras.locomocion.name();
     }
 
     @Override public double x() { return x; }
@@ -32,6 +33,7 @@ final class Avistamiento implements Avistado {
     @Override public String nombre() { return nombre; }
     @Override public String modelo() { return modelo; }
     @Override public boolean vuela() { return vuela; }
+    @Override public String locomocion() { return locomocion; }
     // Gegner
     @Override public double entfernung() { return distancia; }
     @Override public double winkel() { return angulo; }
@@ -41,6 +43,7 @@ final class Avistamiento implements Avistado {
     @Override public String name() { return nombre; }
     @Override public String modell() { return modelo; }
     @Override public boolean fliegt() { return vuela; }
+    @Override public String fortbewegung() { return locomocion; }
     // Enemy
     @Override public double distance() { return distancia; }
     @Override public double angle() { return angulo; }
@@ -49,6 +52,7 @@ final class Avistamiento implements Avistado {
     @Override public double armor() { return blindaje; }
     @Override public String model() { return modelo; }
     @Override public boolean flies() { return vuela; }
+    @Override public String locomotion() { return locomocion; }
 
     @Override
     public String toString() {

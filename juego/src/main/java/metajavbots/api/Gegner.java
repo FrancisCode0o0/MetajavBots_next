@@ -35,6 +35,11 @@ public interface Gegner {
     /** Sein Modell (zum Beispiel "cobalto"). */
     String modell();
 
-    /** Fliegt er? (Nahkampfschläge erreichen ihn nicht). */
+    /** Fliegt er? (Flieger weichen vielen Nahkampfschlägen aus; springt er nur oder wurde er umgeworfen, trifft ihn keiner.) */
     boolean fliegt();
+
+    /** Seine Beine: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO" oder "PATAS" (um Waffe und Taktik zu wählen). */
+    default String fortbewegung() {
+        return "";
+    }
 }

@@ -8,6 +8,7 @@ import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.piezas.CatalogoDePiezas;
+import metajavbots.piezas.Montaje;
 import metajavbots.piezas.Pieza;
 import metajavbots.progreso.Etiqueta;
 import metajavbots.progreso.Jugador;
@@ -62,6 +63,10 @@ public final class Tienda implements Pantalla {
         scroll.alPrincipio();
     }
 
+    /** Lo que se ve en el pie al pasar el ratón por una pieza: cómo quedaría el robot con ella (docs/EQUILIBRIO.md). */
+    private String previa = "", textoPrevia = "", clavePrevia = "";
+    private int colorPrevia;
+
     @Override
     public void fotograma(Juego j, float dt) {
         t += dt;
@@ -81,13 +86,15 @@ public final class Tienda implements Pantalla {
         boolean desbloqueado = Progreso.rangoDesbloqueadoEnTienda(jug, rango);
         if (!desbloqueado) y = avisoRangoBloqueado(p, ui, rango, x, y, w);
 
-        String pie = aviso.isEmpty() ? T.t("tienda.ayuda") : aviso;
+        String pie = !previa.isEmpty() ? previa : aviso.isEmpty() ? T.t("tienda.ayuda") : aviso;
+        int colorPie = !previa.isEmpty() ? colorPrevia : aviso.isEmpty() ? ui.tema.textoApagado : ui.tema.bien;
+        previa = "";
         float tamPie = ui.cabe(pie, w, ui.letra * 0.8f, false);
         float altoPie = p.altoDeParrafo(pie, w, tamPie) + 12;
         float altoLista = Math.max(120, p.alto - altoPie - 12 - y);
 
         dibujarCatalogo(j, jug, rango, desbloqueado, x, y, w, altoLista);
-        p.parrafo(pie, x, p.alto - altoPie - 6, w, tamPie, aviso.isEmpty() ? ui.tema.textoApagado : ui.tema.bien, 1);
+        p.parrafo(pie, x, p.alto - altoPie - 6, w, tamPie, colorPie, 1);
     }
 
     private float barraDeRangos(Juego j, Jugador jug, float x, float y, float w) {
@@ -172,6 +179,7 @@ public final class Tienda implements Pantalla {
         boolean yaLaTiene = Progreso.piezaDisponible(jug, pz);
         boolean pendiente = Progreso.piezaPendiente(jug, pz);
         boolean alcanzaSaldo = jug.monedas + 1e-9 >= pz.precio;
+        if (ui.e.dentro(x, y, w, h)) previaDe(jug, pz);
         int borde = yaLaTiene ? ui.tema.bien : pendiente ? ui.tema.aviso : desbloqueado ? ui.tema.borde : ui.tema.textoApagado;
         p.caja(x, y, w, h, 12, ui.tema.panel, desbloqueado || yaLaTiene || pendiente ? 1f : 0.65f);
         p.bordeRedondeado(x, y, w, h, 12, borde, 1, yaLaTiene || pendiente ? 2f : 1f);
@@ -230,6 +238,27 @@ public final class Tienda implements Pantalla {
                 aviso = T.f("tienda.ok", pz.nombre(T.idioma), Jugador.formatearMonedas(pz.precio));
             }
         }
+    }
+
+    /** Cómo quedaría el robot elegido con esta pieza puesta (en el pie): peso, tramo, velocidad y giro, antes de comprarla. */
+    private void previaDe(Jugador jug, Pieza pz) {
+        Jugador.Robot r = jug.robot();
+        if (r == null) return;
+        String clave = pz.id + "/" + jug.robotElegido + "/" + T.idioma;
+        if (!clave.equals(clavePrevia)) {
+            clavePrevia = clave;
+            Montaje antes = jug.montajeDe(r);
+            Montaje.Hueco hueco = pz.ranura == Pieza.Ranura.BRAZO ? Montaje.Hueco.DERECHA : Montaje.Hueco.valueOf(pz.ranura.name());
+            Montaje despues = Taller.conPieza(antes, hueco, pz);
+            Montaje.Cifras a = antes.cifras(), d = despues.cifras();
+            textoPrevia = T.f("peso.tienda", T.t("hueco." + hueco.name().toLowerCase(java.util.Locale.ROOT)), Math.round(a.pesoTotal),
+                    Math.round(d.pesoTotal), Math.round(d.carga), Math.round(a.proporcion * 100), Math.round(d.proporcion * 100),
+                    PanelDePeso.tramo(d.tramo), String.format(java.util.Locale.ROOT, "%.1f", a.velocidad),
+                    String.format(java.util.Locale.ROOT, "%.1f", d.velocidad), String.format(java.util.Locale.ROOT, "%.1f", d.giro))
+                    + (pz.ranura == Pieza.Ranura.PIERNAS ? "  ·  " + PanelDePeso.terrenos(d.rasgos) : "");
+            colorPrevia = PanelDePeso.color(d.tramo);
+        }
+        previa = textoPrevia;
     }
 
     private void dibujarMonedas(Juego j, Jugador jug) {

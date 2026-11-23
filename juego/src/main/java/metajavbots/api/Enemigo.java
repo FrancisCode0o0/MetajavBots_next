@@ -35,6 +35,11 @@ public interface Enemigo {
     /** Su modelo (por ejemplo, "cobalto"). */
     String modelo();
 
-    /** ¿Va volando? (los golpes cuerpo a cuerpo no le llegan). */
+    /** ¿Va volando? (los voladores esquivan muchos golpes; si solo salta o lo han volteado, no le llega ninguno). */
     boolean vuela();
+
+    /** Sus piernas: "BIPEDO", "ORUGAS", "RUEDAS", "FLOTANTE", "VUELO" o "PATAS" (para elegir arma y táctica). */
+    default String locomocion() {
+        return "";
+    }
 }
