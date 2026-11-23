@@ -55,6 +55,63 @@ ejemplo:
         }
     }
 
+=== como_obedece
+nivel: 6
+tema: --
+titulo.es: Así obedece tu robot
+titulo.de: So gehorcht dein Roboter
+titulo.en: How your robot obeys
+claves.es: como obedece, no apunta, no da, falla, no acierta, la mira no llega, orden borrada, orden pisada, ultima orden, mandos, apuntar no funciona, dispara mal, por que falla
+claves.de: wie gehorcht, zielt nicht, trifft nicht, verfehlt, visier kommt nicht an, befehl gelöscht, befehl überschrieben, letzter befehl, regler, zielen geht nicht, schießt falsch, warum verfehlt
+claves.en: how it obeys, does not aim, misses, keeps missing, sight never arrives, order erased, order overwritten, last order, controls, aim does not work, shoots wrong, why does it miss
+resumen.ia: How the robot executes orders: each tick the events run first (onHit, onSeeEnemy…) and onTick last; each control (wheels = ahead, body = turn, head/sight = aim) keeps only the last order of the tick, so an aim() in onTick erases the aimTo() from onSeeEnemy; orders are carried out gradually (the sight turns about 14° per tick); attack() fires at once where the sight points now; a second attack() uses the other arm, more do nothing. The debugger (F9) and the coach point at the two lines; "Show the sight" in the debugger draws where the sight wants to go and where it points.
+ver: turno, depuracion_y_testing, por_que_pierdo
+es:
+    Tu robot tiene tres mandos: las ruedas (avanzar, retroceder), el cuerpo (girar, girarHacia) y la cabeza, que es su mira (apuntar, apuntarHacia, apuntarA). Y obedece con tres reglas.
+    Una: cada mando recuerda solo la última orden del turno. Es como un mando a distancia con un solo botón de memoria: si pulsas dos canales, se queda con el segundo. En cada turno se llama primero a los avisos (alRecibirGolpe, alVerEnemigo…) y después a cadaTurno, así que si cadaTurno le da otra orden a la cabeza, borra la que le diste en alVerEnemigo.
+    Dos: las órdenes tardan. La cabeza gira despacio, como un búho, unos 14° en cada turno (menos con armas pesadas). Pedir «mira allí» no la pone allí de golpe: llega varios turnos después.
+    Tres: atacar() dispara al momento, hacia donde mira la cabeza en ese instante, no hacia donde le acabas de pedir que mire. Si lo llamas otra vez en el mismo turno usa el otro brazo; más veces no hace nada, porque los brazos tienen que enfriarse.
+    Para verlo: en la pelea, pulsa F9 y activa «Ver la mira» (una línea discontinua es adónde quiere ir; la continua, adónde mira ahora). Si una orden borra a otra o atacas con la mira lejos, el depurador y yo te diremos las dos líneas de tu código.
+de:
+    Dein Roboter hat drei Regler: die Räder (vorwaerts, rueckwaerts), den Körper (drehen, drehenNach) und den Kopf, also sein Visier (zielen, zielenNach, zielenAuf). Und er gehorcht nach drei Regeln.
+    Erstens: Jeder Regler merkt sich nur den letzten Befehl des Zugs. Wie eine Fernbedienung mit nur einer Speichertaste: Drückst du zwei Sender, bleibt der zweite. In jedem Zug laufen zuerst die Meldungen (beiTreffer, beiSicht …) und dann jedenZug. Gibt jedenZug dem Kopf also einen anderen Befehl, löscht er den aus beiSicht.
+    Zweitens: Befehle brauchen Zeit. Der Kopf dreht langsam, wie eine Eule, etwa 14° pro Zug (mit schweren Waffen weniger). „Schau dorthin“ bringt ihn nicht auf einen Schlag dorthin: Er kommt erst ein paar Züge später an.
+    Drittens: angreifen() schießt sofort, dorthin, wohin der Kopf in diesem Moment schaut, nicht dorthin, wohin er gerade schauen soll. Rufst du es im selben Zug noch einmal auf, nimmt es den anderen Arm; öfter bringt nichts, weil die Arme abkühlen müssen.
+    Zum Ansehen: Drück im Kampf F9 und schalte „Visier zeigen“ ein (die gestrichelte Linie zeigt, wohin es will; die durchgezogene, wohin es jetzt zeigt). Löscht ein Befehl einen anderen oder greifst du mit dem Visier weit daneben an, nennen der Debugger und ich dir die zwei Zeilen deines Codes.
+en:
+    Your robot has three controls: the wheels (ahead, back), the body (turn, turnTo) and the head, which is its sight (aim, aimTo, aimAt). And it obeys by three rules.
+    One: each control remembers only the last order of the tick. It's like a remote with a single memory button: press two channels and it keeps the second. Every tick the events run first (onHit, onSeeEnemy…) and onTick last, so if onTick gives the head another order, it erases the one you gave in onSeeEnemy.
+    Two: orders take time. The head turns slowly, like an owl, about 14° each tick (less with heavy weapons). Saying "look over there" doesn't put it there at once: it arrives a few ticks later.
+    Three: attack() fires at once, where the head is looking at that moment, not where you just asked it to look. Call it again in the same tick and it uses the other arm; more calls do nothing, because the arms need to cool down.
+    To see it: in a fight, press F9 and turn on "Show the sight" (the dashed line is where it wants to go; the solid one, where it points now). If an order erases another or you attack with the sight far off, the debugger and I will tell you the two lines of your code.
+pseudo.es:
+    CADA TURNO, en este orden:
+        1. los avisos (al recibir golpe, al ver enemigo…)
+        2. cada turno
+        3. cada mando hace SOLO su última orden, poco a poco
+    atacar: sale YA, hacia donde mira la cabeza AHORA
+pseudo.de:
+    IN JEDEM ZUG, in dieser Reihenfolge:
+        1. die Meldungen (bei Treffer, bei Sicht …)
+        2. jeden Zug
+        3. jeder Regler macht NUR seinen letzten Befehl, nach und nach
+    angreifen: geht SOFORT los, dorthin, wohin der Kopf JETZT schaut
+pseudo.en:
+    EVERY TICK, in this order:
+        1. the events (on hit, on see enemy…)
+        2. on tick
+        3. each control does ONLY its last order, little by little
+    attack: goes off NOW, where the head is looking NOW
+ejemplo:
+    // Lo que hace la plantilla del primer robot, turno a turno: || Was die Vorlage des ersten Roboters Zug für Zug tut: || What the first robot's template does, tick by tick:
+    public void alVerEnemigo(Enemigo e) {
+        apuntarHacia(e.angulo());   // 1.º pide «mira al enemigo» || 1. verlangt „schau zum Gegner“ || 1st asks "look at the enemy"
+        atacar();                   // 2.º dispara YA, hacia donde mira AHORA || 2. schießt SOFORT, wohin es JETZT schaut || 2nd fires NOW, where it looks NOW
+    }
+    public void cadaTurno() {
+        apuntar(12);                // 3.º borra la orden del 1.º || 3. löscht den Befehl aus 1. || 3rd erases the order from the 1st
+    }
+
 === tutoriales_y_demos
 nivel: 6
 tema: --

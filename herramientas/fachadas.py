@@ -77,12 +77,18 @@ doc = {
  * (vorwaerts, drehen, zielen) warten nicht: Sie sagen, was du willst, und der
  * Roboter erledigt es Zug um Zug in seinem Tempo.
  *
+ * Der Roboter hat drei Regler: die Räder (vorwaerts, rueckwaerts), den Körper
+ * (drehen, drehenNach) und das Visier (zielen, zielenNach, zielenAuf). Jeder
+ * Regler merkt sich nur den letzten Befehl des Zugs: Der spätere löscht den
+ * früheren. Das Visier dreht langsam, und angreifen() schießt dorthin, wohin es
+ * JETZT zeigt.
+ *
  * Winkel in Grad: 0 ist rechts (Osten), 90 oben; positive Drehungen gehen nach
  * links. Die Arena reicht von (0, 0) unten links bis (arenaBreite(), arenaHoehe()).
  */""",
         'beimStart': 'Zu Beginn jeder Runde (vor dem ersten Zug). Thema 06: Methoden.',
-        'jedenZug': 'In jedem Zug (etwa 30 pro Sekunde). Hier steht das Wichtigste.',
-        'beiSicht': 'In jedem Zug, in dem dein Radar einen Gegner sieht.',
+        'jedenZug': 'In jedem Zug (etwa 30 pro Sekunde). Hier steht das Wichtigste. Kommt als Letztes: vorher laufen die Meldungen (beiTreffer, beiWand …) und beiSicht. Jeder Regler (Fahren, Drehen, Visier) merkt sich nur den letzten Befehl des Zugs, also löscht ein Befehl von hier den für denselben Regler aus einer Meldung.',
+        'beiSicht': 'In jedem Zug, in dem dein Radar einen Gegner sieht, vor jedenZug. Achtung: Gibt jedenZug danach einen anderen Visierbefehl (zum Beispiel zielen), löscht er den von hier, und das Visier kommt nie beim Gegner an.',
         'beiTreffer': 'Wenn du getroffen wirst.',
         'beiEigenemTreffer': 'Wenn dein Angriff trifft.',
         'beiWand': 'Wenn du gegen eine Wand fährst (kostet etwas Panzerung).',
@@ -91,21 +97,21 @@ doc = {
         'beiTeamNachricht': 'Wenn dir ein Teamkamerad etwas meldet (in Teamkämpfen).',
         'kameraden': 'Deine Teamkameraden (in Teamkämpfen; leer, wenn du allein kämpfst).',
         'teamMelden': 'Meldet deinen Kameraden etwas (es kommt im nächsten Zug in beiTeamNachricht an).',
-        'vorwaerts': 'Fährt diese Strecke vorwärts (negativ: rückwärts). Ersetzt den vorigen Fahrbefehl.',
-        'rueckwaerts': 'Fährt diese Strecke rückwärts.',
-        'drehen': 'Dreht den Körper um diese Grad (positiv: nach links).',
-        'drehenNach': 'Dreht den Körper auf diesen absoluten Winkel, auf dem kürzesten Weg.',
+        'vorwaerts': 'Fährt diese Strecke vorwärts (negativ: rückwärts). Ersetzt den vorigen Fahrbefehl: Nur der letzte des Zugs zählt. Er wartet nicht: Der Roboter erledigt ihn nach und nach, über mehrere Züge.',
+        'rueckwaerts': 'Fährt diese Strecke rückwärts. Ist ein Fahrbefehl: Nur der letzte des Zugs zählt, und er wird nach und nach erledigt.',
+        'drehen': 'Dreht den Körper um diese Grad (positiv: nach links), nach und nach über mehrere Züge. Nur der letzte Drehbefehl des Zugs zählt (drehen, drehenNach, anhalten …): Der später aufgerufene löscht den vorigen.',
+        'drehenNach': 'Dreht den Körper auf diesen absoluten Winkel, auf dem kürzesten Weg. Nicht auf einen Schlag: Er kommt nach mehreren Zügen an. Nur der letzte Drehbefehl des Zugs zählt.',
         'anhalten': 'Hält an: weder fahren noch drehen.',
-        'zielen': 'Dreht das Visier (Arme und Radar) um diese Grad, ohne den Körper zu drehen.',
-        'zielenNach': 'Dreht das Visier auf diesen absoluten Winkel.',
-        'zielenAuf': 'Dreht das Visier auf diesen Punkt der Arena.',
+        'zielen': 'Dreht das Visier (Arme und Radar) um diese Grad, ohne den Körper zu drehen. Das Visier dreht langsam, etwa 14° pro Zug je nach Waffe. Nur der letzte Visierbefehl des Zugs zählt: Ein zielen in jedenZug löscht das zielenNach aus beiSicht.',
+        'zielenNach': 'Will das Visier auf diesen absoluten Winkel drehen. Nicht sofort: Das Visier dreht langsam, etwa 14° pro Zug je nach Waffe, und restZielen() sagt, wie viel noch fehlt. Nur der letzte Visierbefehl des Zugs zählt: Ruft jedenZug danach zielen auf, ist dieser gelöscht.',
+        'zielenAuf': 'Will das Visier auf diesen Punkt der Arena drehen. Wie zielenNach: Es braucht mehrere Züge, und nur der letzte Visierbefehl zählt.',
         'angriffLinks': 'Greift mit dem linken Arm in Blickrichtung an. Gibt false zurück, wenn er noch nicht bereit war.',
         'spezial': 'Benutzt das Spezielle des Kopfes (Schild, Turbo, Reparatur…, je nach Teil).',
         'ansturm': 'Eigene Fähigkeit des Archetyps Sturm: Vorwärts-Temposchub (warnt in der Konsole bei anderen Archetypen).',
         'radarImpuls': 'Eigene Fähigkeit des Archetyps Taktiker: 360°-Radarimpuls mit größerer Reichweite (warnt bei anderen Archetypen).',
         'befestigen': 'Eigene Fähigkeit des Archetyps Verteidiger: Abwehrhaltung, verringert Schaden (warnt bei anderen Archetypen).',
         'archetyp': 'Der Archetyp deines Robotermodells: "ASALTO", "TACTICO" oder "DEFENSOR".',
-        'angreifen': 'Greift mit dem Arm an, der bereit ist (zuerst der rechte).',
+        'angreifen': 'Greift mit dem Arm an, der bereit ist (zuerst der rechte). Schießt sofort, dorthin, wohin das Visier JETZT zeigt, nicht dorthin, wohin es sich gerade drehen soll. Zweimal im selben Zug benutzt beide Arme; öfter bringt nichts, weil die Arme abkühlen müssen.',
         'waffeLinks': 'Die Waffe des linken Arms: "LASER", "BALA" (Kugel), "MISIL" (Rakete), "CUERPO" (Nahkampf), "ESCUDO" (Schild), "REPARAR"… ("" wenn keine).',
         'spezialKopf': 'Das Spezielle des Kopfes: "ESCUDO" (Schild), "TURBO", "REPARAR" (Reparatur), "CAMUFLAJE" (Tarnung), "PULSO", "SOBRECARGA" ("" wenn keins).',
         'reichweiteLinks': 'Wie weit die Waffe des linken Arms reicht.',
@@ -168,12 +174,17 @@ doc = {
  * aim) don't wait: they say what you want and the robot does it tick by tick,
  * at its own speed.
  *
+ * The robot has three controls: the wheels (ahead, back), the body (turn,
+ * turnTo) and the sight (aim, aimTo, aimAt). Each control remembers only the
+ * last order of the tick: the later one erases the earlier one. The sight
+ * turns slowly, and attack() fires where it points NOW.
+ *
  * Angles in degrees: 0 is right (east), 90 is up; positive turns go left.
  * The arena goes from (0, 0), bottom left, to (arenaWidth(), arenaHeight()).
  */""",
         'onStart': 'At the start of every round (before the first tick). Topic 06: methods.',
-        'onTick': 'Every tick (about 30 per second). The main logic goes here.',
-        'onSeeEnemy': 'Every tick in which your radar sees an enemy.',
+        'onTick': 'Every tick (about 30 per second). The main logic goes here. It is called last: the events (onHit, onHitWall…) and onSeeEnemy come first. Each control (move, turn and sight) remembers only the last order of the tick, so an order here erases the one for the same control you gave in an event.',
+        'onSeeEnemy': 'Every tick in which your radar sees an enemy, before onTick. Careful: if onTick then gives another sight order (for example aim), it erases the one you give here, and the sight never reaches the enemy.',
         'onHit': 'When you get hit.',
         'onHitEnemy': 'When your attack lands.',
         'onHitWall': 'When you crash into a wall (it costs a little armor).',
@@ -182,21 +193,21 @@ doc = {
         'onTeamMessage': 'When a teammate tells you something (in team fights).',
         'teammates': 'Your teammates (in team fights; empty when you fight alone).',
         'tellTeam': 'Tells your teammates something (it arrives next tick in onTeamMessage).',
-        'ahead': 'Moves forward this distance (negative: backward). Replaces the previous move order.',
-        'back': 'Moves backward this distance.',
-        'turn': 'Turns the body this many degrees (positive: left).',
-        'turnTo': 'Turns the body to face this absolute angle, the short way.',
+        'ahead': 'Moves forward this distance (negative: backward). Replaces the previous move order: only the last one of the tick counts. It does not wait: the robot carries it out little by little, over several ticks.',
+        'back': 'Moves backward this distance. It is a move order: only the last one of the tick counts, and it is carried out little by little.',
+        'turn': 'Turns the body this many degrees (positive: left), little by little over several ticks. Only the last turn order of the tick counts (turn, turnTo, stop…): the one called later erases the earlier one.',
+        'turnTo': 'Turns the body to face this absolute angle, the short way. Not all at once: it gets there over several ticks. Only the last turn order of the tick counts.',
         'stop': 'Stops: no moving, no turning.',
-        'aim': 'Turns the sight (arms and radar) this many degrees without turning the body.',
-        'aimTo': 'Turns the sight to this absolute angle.',
-        'aimAt': 'Turns the sight toward this point of the arena.',
+        'aim': 'Turns the sight (arms and radar) this many degrees without turning the body. The sight turns slowly, about 14° per tick depending on the weapon. Only the last sight order of the tick counts: an aim in onTick erases the aimTo you gave in onSeeEnemy.',
+        'aimTo': 'Asks the sight to turn to this absolute angle. Not instant: the sight turns slowly, about 14° per tick depending on the weapon, and remainingAim() tells you how much is left. Only the last sight order of the tick counts: if onTick calls aim afterwards, this one is erased.',
+        'aimAt': 'Asks the sight to turn toward this point of the arena. Like aimTo: it takes several ticks and only the last sight order counts.',
         'attackLeft': 'Attacks with the left arm where the sight points. Returns false if it was not ready yet.',
         'special': "Uses the head's special (a shield, a turbo, repair…, depending on the part).",
         'charge': 'Signature ability of the Assault archetype: forward speed burst (warns in the console on other archetypes).',
         'radarPulse': 'Signature ability of the Tactical archetype: 360° extended-range radar sweep (warns on other archetypes).',
         'fortify': 'Signature ability of the Defender archetype: fortified stance that reduces incoming damage (warns on other archetypes).',
         'archetype': 'The archetype of your robot model: "ASALTO", "TACTICO" or "DEFENSOR".',
-        'attack': 'Attacks with whichever arm is ready (right first).',
+        'attack': 'Attacks with whichever arm is ready (right first). Fires at once, where the sight points NOW, not where you just asked it to turn. Twice in the same tick uses both arms; more calls do nothing, because the arms need to cool down.',
         'weaponLeft': 'The left arm weapon: "LASER", "BALA" (bullet), "MISIL" (missile), "CUERPO" (melee), "ESCUDO" (shield), "REPARAR" (repair)… ("" if none).',
         'headSpecial': 'The head special: "ESCUDO" (shield), "TURBO", "REPARAR" (repair), "CAMUFLAJE" (cloak), "PULSO" (pulse), "SOBRECARGA" (overload) ("" if none).',
         'rangeLeft': "How far the left arm's weapon reaches.",
@@ -257,7 +268,12 @@ for lang, idx, cls in (('de', 0, 'MetajavbotDe'), ('en', 1, 'MetajavbotEn')):
     def redoc(mo):
         decl, name = mo.group(2), mo.group(3)
         t = doc[lang].get(name)
-        return ('    /** %s */\n' % t if t else '') + decl
+        if not t:
+            return decl
+        if len(t) <= 150:
+            return '    /** %s */\n' % t + decl
+        import textwrap
+        return '    /**\n' + ''.join('     * %s\n' % l for l in textwrap.wrap(t, 110)) + '     */\n' + decl
     s = re.sub(r'(^    /\*\*(?:(?!\*/).)*\*/\n)?(^    public (?:final )?[\w<>]+(?:, [\w<>]+)* (\w+)\([^)]*\) \{)', redoc, s, flags=re.S | re.M)
     for a, b in tipos[lang].items():
         s = re.sub(r'\b%s\b' % a, b, s)

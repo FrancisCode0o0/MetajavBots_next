@@ -31,6 +31,11 @@ import java.util.Random;
  * a cadaTurno. Las órdenes (avanzar, girar, apuntar) no esperan: dicen lo que
  * quieres y el robot lo va haciendo turno a turno, a su velocidad.
  *
+ * El robot tiene tres mandos: las ruedas (avanzar, retroceder), el cuerpo
+ * (girar, girarHacia) y la mira (apuntar, apuntarHacia, apuntarA). Cada mando
+ * recuerda solo la última orden del turno: la que se da después borra a la de
+ * antes. La mira gira despacio, y atacar() dispara hacia donde mira AHORA.
+ *
  * Ángulos en grados: 0 es la derecha (el este), 90 arriba; los giros
  * positivos van a la izquierda. La arena va de (0, 0), abajo a la izquierda,
  * a (anchoArena(), altoArena()).
@@ -43,11 +48,18 @@ public abstract class Metajavbot extends RobotBase {
     public void alEmpezar() {
     }
 
-    /** Cada turno (unos 30 por segundo). Aquí va lo principal. */
+    /**
+     * Cada turno (unos 30 por segundo). Aquí va lo principal. Se llama el último: antes van los avisos
+     * (alRecibirGolpe, alChocarConPared…) y alVerEnemigo. Cada mando (avance, giro y mira) recuerda solo la
+     * última orden del turno, así que una orden de aquí borra la del mismo mando que diste en un aviso.
+     */
     public void cadaTurno() {
     }
 
-    /** Cada turno en que tu radar ve a un enemigo. */
+    /**
+     * Cada turno en que tu radar ve a un enemigo, antes de cadaTurno. Ojo: si cadaTurno da después otra
+     * orden de mira (por ejemplo apuntar), borra la que des aquí, y la mira nunca llega al enemigo.
+     */
     public void alVerEnemigo(Enemigo e) {
     }
 
@@ -122,19 +134,25 @@ public abstract class Metajavbot extends RobotBase {
 
     // ================================================================ moverse
 
-    /** Avanza esa distancia (negativa: marcha atrás). Sustituye a la orden de avance anterior. */
+    /**
+     * Avanza esa distancia (negativa: marcha atrás). Sustituye a la orden de avance anterior: solo vale la
+     * última del turno. No espera: el robot la cumple poco a poco, en varios turnos.
+     */
     public final void avanzar(double distancia) {
         m().avanzar(distancia);
         anotarOrden("avanzar(" + redondear(distancia) + ")", Mando.CANAL_AVANCE);
     }
 
-    /** Marcha atrás esa distancia. */
+    /** Marcha atrás esa distancia. Es una orden de avance: solo vale la última del turno y se cumple poco a poco. */
     public final void retroceder(double distancia) {
         m().avanzar(-distancia);
         anotarOrden("retroceder(" + redondear(distancia) + ")", Mando.CANAL_AVANCE);
     }
 
-    /** Gira el cuerpo esos grados (positivos: a la izquierda). */
+    /**
+     * Gira el cuerpo esos grados (positivos: a la izquierda), poco a poco, en varios turnos. Solo vale la última
+     * orden de giro del turno (girar, girarHacia, detener…): la que se llama después borra a la anterior.
+     */
     public final void girar(double grados) {
         m().girar(grados);
         anotarOrden("girar(" + redondear(grados) + "°)", Mando.CANAL_GIRO);
@@ -150,7 +168,10 @@ public abstract class Metajavbot extends RobotBase {
         anotarOrden("girarDerecha(" + redondear(grados) + "°)", Mando.CANAL_GIRO);
     }
 
-    /** Gira el cuerpo hasta mirar hacia ese ángulo absoluto, por el camino más corto. */
+    /**
+     * Gira el cuerpo hasta mirar hacia ese ángulo absoluto, por el camino más corto. No gira de golpe: llega en
+     * varios turnos. Solo vale la última orden de giro del turno.
+     */
     public final void girarHacia(double angulo) {
         m().girar(normalizar(angulo - m().rumbo()));
         anotarOrden("girarHacia(" + redondear(angulo) + "°)", Mando.CANAL_GIRO);
@@ -164,19 +185,27 @@ public abstract class Metajavbot extends RobotBase {
 
     // ================================================================ apuntar y atacar
 
-    /** Gira la mira (los brazos y el radar) esos grados, sin girar el cuerpo. */
+    /**
+     * Gira la mira (los brazos y el radar) esos grados, sin girar el cuerpo. La mira gira despacio, unos 14° por
+     * turno según el arma. Solo vale la última orden de mira del turno: un apuntar en cadaTurno borra el
+     * apuntarHacia que diste en alVerEnemigo.
+     */
     public final void apuntar(double grados) {
         m().apuntar(grados);
         anotarOrden("apuntar(" + redondear(grados) + "°)", Mando.CANAL_MIRA);
     }
 
-    /** Gira la mira hasta ese ángulo absoluto. */
+    /**
+     * Pide girar la mira hasta ese ángulo absoluto. No es instantáneo: la mira gira despacio, unos 14° por turno
+     * según el arma, y restanteMira() dice cuánto le falta. Solo vale la última orden de mira del turno: si
+     * cadaTurno llama después a apuntar, esta se borra.
+     */
     public final void apuntarHacia(double angulo) {
         m().apuntar(normalizar(angulo - m().mira()));
         anotarOrden("apuntarHacia(" + redondear(angulo) + "°)", Mando.CANAL_MIRA);
     }
 
-    /** Gira la mira hacia ese punto de la arena. */
+    /** Pide girar la mira hacia ese punto de la arena. Como apuntarHacia: tarda varios turnos y solo vale la última orden de mira. */
     public final void apuntarA(double x, double y) {
         m().apuntar(normalizar(anguloHasta(x, y) - m().mira()));
         anotarOrden("apuntarA(" + redondear(x) + ", " + redondear(y) + ")", Mando.CANAL_MIRA);
@@ -223,7 +252,11 @@ public abstract class Metajavbot extends RobotBase {
         return ok;
     }
 
-    /** Ataca con el brazo que esté listo (primero el derecho). */
+    /**
+     * Ataca con el brazo que esté listo (primero el derecho). Dispara al momento, hacia donde apunta la mira
+     * AHORA, no hacia donde le acabas de pedir que gire. Dos veces en el mismo turno usa los dos brazos; más veces
+     * no hace nada, porque los brazos tienen que enfriarse.
+     */
     public final boolean atacar() {
         boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
         if (ok) anotarOrden("atacar()", 0);

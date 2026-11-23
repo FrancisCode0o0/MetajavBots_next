@@ -35,10 +35,19 @@ public final class PantallaLeccion implements Pantalla {
     /** El cerebro del tutor (se mira al entrar: preguntarlo en cada fotograma leería las claves del disco). */
     private Cerebro cerebro;
     private final Ui.Desplazable despl = new Ui.Desplazable();
+    /** El reloj de los dibujos animados de las páginas (vuelve a 0 al cambiar de página). */
+    private float reloj;
+    private int paginaDelReloj = -1;
 
     public PantallaLeccion(Leccion l) {
         this.l = l;
         this.hechas = new boolean[l.tareas.size()];
+    }
+
+    /** Abre la lección en esa página (para las capturas). */
+    public PantallaLeccion(Leccion l, int pagina) {
+        this(l);
+        this.pagina = Math.max(0, Math.min(pagina, l.paginas.size()));
     }
 
     @Override
@@ -74,6 +83,7 @@ public final class PantallaLeccion implements Pantalla {
         if (pagina < l.paginas.size()) {
             Leccion.Pagina pg = l.paginas.get(pagina);
             cy += p.parrafo(pg.texto.en(T.idioma), x, cy, w, ui.letra * 1.15f, ui.tema.texto, 1) + 24;
+            cy = dibujoDeLaPagina(ui, pg, x, cy, w, dt);
             if (!pg.codigo.isBlank()) {
                 String[] ls = pg.codigo.split("\n");
                 float ch = ls.length * ui.letra * 1.3f + 30;
@@ -131,6 +141,18 @@ public final class PantallaLeccion implements Pantalla {
             if (pagina < l.paginas.size() && j.entrada.tecla(com.badlogic.gdx.Input.Keys.RIGHT)) pagina++;
             if (pagina > 0 && j.entrada.tecla(com.badlogic.gdx.Input.Keys.LEFT)) pagina--;
         }
+    }
+
+    /** El dibujo animado de la página, si lleva («dibujo: turno»), bajo el texto; devuelve dónde sigue. */
+    private float dibujoDeLaPagina(Ui ui, Leccion.Pagina pg, float x, float cy, float w, float dt) {
+        if (!pg.dibujo.equals("turno")) return cy;
+        if (paginaDelReloj != pagina) {
+            paginaDelReloj = pagina;
+            reloj = 0;
+        }
+        reloj += dt;
+        float alto = Math.min(Math.max(240, w * 0.36f), ui.p.alto - 110 - cy);
+        return cy + DibujoDelTurno.dibujar(ui, x, cy, w, alto, reloj) + 20;
     }
 
     private void tutor(Juego j, Cerebro c, float x, float y, float w, float h) {

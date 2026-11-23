@@ -164,6 +164,8 @@ public final class Jugador {
     public float ayudaDelTutor = 0.5f;
     /** El entrenador flotante (pantallas/EntrenadorFlotante): si asoma, da tips y aconseja en la pelea; F2 lo abre igual. */
     public boolean entrenadorActivo = true;
+    /** Si el entrenador avisa en la pelea de las órdenes borradas y de los ataques con la mira lejos (Ajustes). */
+    public boolean avisosDeOrdenes = true;
     /** La música de fondo: si suena y a qué volumen. */
     public boolean musicaActiva = true;
     public float volumenMusica = 0.45f;

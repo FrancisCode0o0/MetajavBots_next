@@ -15,6 +15,7 @@ import metajavbots.combate.Pelea;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
 import metajavbots.pantalla.VentanaDeCodigo;
+import metajavbots.pantalla.VistaDeArena;
 import metajavbots.textos.T;
 
 /**
@@ -44,15 +45,18 @@ public final class PanelDepurador {
     private int cantidadConsola;
     private String ultimaLineaConsola;
     private int pestana;
+    /** Si se ven en la arena las dos líneas de la mira (adónde quiere ir y adónde apunta ahora). */
+    private boolean verMira;
 
     PanelDepurador() {
         visorCodigo.soloLectura = true;
         visorCodigo.seguirActiva = true;
     }
 
-    /** Selecciona la pestaña activa (0: variables y consola; 1: código y órdenes del turno). */
+    /** Selecciona la pestaña activa (0: variables y consola; 1: código y órdenes del turno; 2: la 1 con «Ver la mira»). */
     void pestana(int p) {
-        this.pestana = p == 1 ? 1 : 0;
+        this.pestana = p >= 1 ? 1 : 0;
+        if (p == 2) verMira = true;
     }
 
     void dibujar(Juego j, Pelea pelea, Combatiente yo, String fuente, boolean conTraza, float x) {
@@ -86,6 +90,9 @@ public final class PanelDepurador {
         String tabCodigo = T.t("pelea.depurador_codigo") + (c != null && c.tieneConflictoDeOrdenes ? " ⚠" : "");
         String[] pestanas = {T.t("pelea.depurador_vars"), tabCodigo};
         pestana = ui.pestanas(pestanas, pestana, x + 16, ty, w - 32, 34);
+        ty += 42;
+        if (ui.boton((verMira ? "✔ " : "○ ") + T.t("pelea.depurador_mira"), x + 16, ty, w - 32, 34, verMira ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
+                T.t("pelea.depurador_mira_ayuda"))) verMira = !verMira;
         ty += 42;
         if (pestana == 1) codigoYTurno(j, c, fuente, conTraza, x, ty, w, y + h - 14);
         else variablesYConsola(j, yo, x, ty, w, y + h - 18);
@@ -337,7 +344,7 @@ public final class PanelDepurador {
                 String texto = (o.metodo.isEmpty() ? "" : o.metodo + " -> ") + o.accion + (o.linea > 0 ? "  (L" + o.linea + ")" : "");
                 if (o.pisada()) {
                     String aviso = "⚠ " + (o.lineaPisada > 0 ? T.f("pelea.depurador_pisado_linea", o.pisadaPor, o.lineaPisada)
-                            : T.f("pelea.depurador_pisado", o.pisadaPor));
+                            : T.f("pelea.depurador_pisado", o.pisadaPor)) + "\n" + AvisoDeOrdenes.textoPisada(o);
                     float hOrd = p.altoDeParrafoDeCodigo(texto, tw - 6, tamOrden, true);
                     float hAvi = p.altoDeParrafo(aviso, tw - 6, tamAviso, true);
                     float hCaja = hOrd + hAvi + 8;
@@ -350,8 +357,47 @@ public final class PanelDepurador {
                     yy += p.parrafoDeCodigo(texto, x + 18, yy, tw, tamOrden, false, ui.tema.texto, 1) + 4;
                 }
             }
+            if (c.ataqueLejos != null) {
+                // El disparo de este turno salió con la mira lejos del enemigo: se cuenta en llano, como las órdenes pisadas.
+                String lejos = "⚠ " + AvisoDeOrdenes.textoLejos(c.ataqueLejos);
+                float hL = p.altoDeParrafo(lejos, tw - 6, tamAviso, true) + 8;
+                p.rect(x + 12, yy - 2, w - 24, hL, ui.tema.aviso, 0.16f);
+                p.rect(x + 12, yy - 2, 3, hL, ui.tema.aviso, 1f);
+                p.parrafo(lejos, x + 20, yy + 2, tw - 6, tamAviso, true, ui.tema.aviso, 1);
+                yy += hL + 4;
+            }
         }
         ui.finDesplazable(desplOrdenes, Math.max(1, yy - inicioY) + 8);
+    }
+
+    /**
+     * Si está activado «Ver la mira», dos líneas finas desde el robot del jugador: la discontinua, adónde quiere ir
+     * la mira (lo que pidió y aún no ha girado); la continua, adónde apunta de verdad ahora. Se dibuja sobre la arena.
+     */
+    void mira(Juego j, Pelea pelea, VistaDeArena vista) {
+        Cuerpo c = pelea == null ? null : pelea.cuerpo(0);
+        if (!verMira || c == null || c.fuera) return;
+        Pincel p = j.pincel;
+        float tam = Math.min(18, j.ui.letra * 0.7f);
+        double largo = Math.min(pelea.ancho, pelea.alto) * 0.4;
+        double quiere = c.mira() + c.restanteMira();
+        // Las etiquetas, una encima y otra debajo de la punta: cuando las dos líneas van casi juntas no se pisan.
+        lineaDeMira(p, vista, c, quiere, largo, 0x3FE0FF, true, T.t("pelea.mira_quiere"), tam, -tam * 1.5f);
+        lineaDeMira(p, vista, c, c.mira(), largo, 0xFF7A3D, false, T.t("pelea.mira_ahora"), tam, tam * 0.3f);
+    }
+
+    private static void lineaDeMira(Pincel p, VistaDeArena v, Cuerpo c, double angulo, double largo, int color, boolean discontinua,
+            String etiqueta, float tam, float dy) {
+        double a = Math.toRadians(angulo);
+        double fx = c.x + Math.cos(a) * largo, fy = c.y + Math.sin(a) * largo;
+        float x1 = v.sx(c.x, c.y), y1 = v.sy(c.y), x2 = v.sx(fx, fy), y2 = v.sy(fy);
+        int trozos = discontinua ? 14 : 1;
+        for (int i = 0; i < trozos; i++) {
+            float t0 = i / (float) trozos, t1 = discontinua ? (i + 0.55f) / trozos : 1;
+            p.linea(x1 + (x2 - x1) * t0, y1 + (y2 - y1) * t0, x1 + (x2 - x1) * t1, y1 + (y2 - y1) * t1, 2.5f, color, 0.95f);
+        }
+        p.circulo(x2, y2, 4, color, 1);
+        p.textoConBordeNegro(etiqueta, x2 + 8, y2 + dy, tam, true, color, 1);
     }
 
     /** Ancho útil para el texto de la consola descontando márgenes y la barra de desplazamiento. */

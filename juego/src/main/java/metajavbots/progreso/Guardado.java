@@ -151,6 +151,7 @@ public final class Guardado {
         v.put("entrenador", j.entrenador);
         v.put("ayudaDelTutor", numero(j.ayudaDelTutor) + (j.entrenadorActivo ? "" : ";sin_entrenador"));
         v.put("temaClaro", Boolean.toString(j.temaClaro));
+        v.put("avisosDeOrdenes", Boolean.toString(j.avisosDeOrdenes));
         v.put("ultimoRivalNombre", j.ultimoRivalNombre == null ? "" : j.ultimoRivalNombre);
         StringBuilder b = new StringBuilder("# Partida de MetajavBots (se puede leer; mejor no tocarla a mano)\n");
         for (Map.Entry<String, String> e : v.entrySet()) {
@@ -424,6 +425,7 @@ public final class Guardado {
         j.entrenadorActivo = !ayuda.endsWith(";sin_entrenador");
         j.ayudaDelTutor = (float) decimal(ayuda.replace(";sin_entrenador", ""), 0.5);
         j.temaClaro = Boolean.parseBoolean(v.get("temaClaro"));
+        j.avisosDeOrdenes = !"false".equals(v.get("avisosDeOrdenes"));
     }
 
     static void escribir(Path destino, String texto) throws IOException {

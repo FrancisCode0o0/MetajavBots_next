@@ -31,6 +31,11 @@ import java.util.Random;
  * aim) don't wait: they say what you want and the robot does it tick by tick,
  * at its own speed.
  *
+ * The robot has three controls: the wheels (ahead, back), the body (turn,
+ * turnTo) and the sight (aim, aimTo, aimAt). Each control remembers only the
+ * last order of the tick: the later one erases the earlier one. The sight
+ * turns slowly, and attack() fires where it points NOW.
+ *
  * Angles in degrees: 0 is right (east), 90 is up; positive turns go left.
  * The arena goes from (0, 0), bottom left, to (arenaWidth(), arenaHeight()).
  */
@@ -42,11 +47,18 @@ public abstract class MetajavbotEn extends RobotBase {
     public void onStart() {
     }
 
-    /** Every tick (about 30 per second). The main logic goes here. */
+    /**
+     * Every tick (about 30 per second). The main logic goes here. It is called last: the events (onHit, onHitWall…)
+     * and onSeeEnemy come first. Each control (move, turn and sight) remembers only the last order of the tick, so
+     * an order here erases the one for the same control you gave in an event.
+     */
     public void onTick() {
     }
 
-    /** Every tick in which your radar sees an enemy. */
+    /**
+     * Every tick in which your radar sees an enemy, before onTick. Careful: if onTick then gives another sight order
+     * (for example aim), it erases the one you give here, and the sight never reaches the enemy.
+     */
     public void onSeeEnemy(Enemy e) {
     }
 
@@ -121,19 +133,25 @@ public abstract class MetajavbotEn extends RobotBase {
 
     // ================================================================ moving
 
-    /** Moves forward this distance (negative: backward). Replaces the previous move order. */
+    /**
+     * Moves forward this distance (negative: backward). Replaces the previous move order: only the last one of the
+     * tick counts. It does not wait: the robot carries it out little by little, over several ticks.
+     */
     public final void ahead(double distance) {
         m().avanzar(distance);
         anotarOrden("ahead(" + redondear(distance) + ")", Mando.CANAL_AVANCE);
     }
 
-    /** Moves backward this distance. */
+    /** Moves backward this distance. It is a move order: only the last one of the tick counts, and it is carried out little by little. */
     public final void back(double distance) {
         m().avanzar(-distance);
         anotarOrden("back(" + redondear(distance) + ")", Mando.CANAL_AVANCE);
     }
 
-    /** Turns the body this many degrees (positive: left). */
+    /**
+     * Turns the body this many degrees (positive: left), little by little over several ticks. Only the last turn
+     * order of the tick counts (turn, turnTo, stop…): the one called later erases the earlier one.
+     */
     public final void turn(double degrees) {
         m().girar(degrees);
         anotarOrden("turn(" + redondear(degrees) + "°)", Mando.CANAL_GIRO);
@@ -149,7 +167,10 @@ public abstract class MetajavbotEn extends RobotBase {
         anotarOrden("turnRight(" + redondear(degrees) + "°)", Mando.CANAL_GIRO);
     }
 
-    /** Turns the body to face this absolute angle, the short way. */
+    /**
+     * Turns the body to face this absolute angle, the short way. Not all at once: it gets there over several ticks.
+     * Only the last turn order of the tick counts.
+     */
     public final void turnTo(double angle) {
         m().girar(normalize(angle - m().rumbo()));
         anotarOrden("turnTo(" + redondear(angle) + "°)", Mando.CANAL_GIRO);
@@ -163,19 +184,27 @@ public abstract class MetajavbotEn extends RobotBase {
 
     // ================================================================ aiming and attacking
 
-    /** Turns the sight (arms and radar) this many degrees without turning the body. */
+    /**
+     * Turns the sight (arms and radar) this many degrees without turning the body. The sight turns slowly, about 14°
+     * per tick depending on the weapon. Only the last sight order of the tick counts: an aim in onTick erases the
+     * aimTo you gave in onSeeEnemy.
+     */
     public final void aim(double degrees) {
         m().apuntar(degrees);
         anotarOrden("aim(" + redondear(degrees) + "°)", Mando.CANAL_MIRA);
     }
 
-    /** Turns the sight to this absolute angle. */
+    /**
+     * Asks the sight to turn to this absolute angle. Not instant: the sight turns slowly, about 14° per tick
+     * depending on the weapon, and remainingAim() tells you how much is left. Only the last sight order of the tick
+     * counts: if onTick calls aim afterwards, this one is erased.
+     */
     public final void aimTo(double angle) {
         m().apuntar(normalize(angle - m().mira()));
         anotarOrden("aimTo(" + redondear(angle) + "°)", Mando.CANAL_MIRA);
     }
 
-    /** Turns the sight toward this point of the arena. */
+    /** Asks the sight to turn toward this point of the arena. Like aimTo: it takes several ticks and only the last sight order counts. */
     public final void aimAt(double x, double y) {
         m().apuntar(normalize(anguloHasta(x, y) - m().mira()));
         anotarOrden("aimAt(" + redondear(x) + ", " + redondear(y) + ")", Mando.CANAL_MIRA);
@@ -222,7 +251,11 @@ public abstract class MetajavbotEn extends RobotBase {
         return ok;
     }
 
-    /** Attacks with whichever arm is ready (right first). */
+    /**
+     * Attacks with whichever arm is ready (right first). Fires at once, where the sight points NOW, not where you
+     * just asked it to turn. Twice in the same tick uses both arms; more calls do nothing, because the arms need to
+     * cool down.
+     */
     public final boolean attack() {
         boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
         if (ok) anotarOrden("attack()", 0);

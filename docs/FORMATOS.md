@@ -119,6 +119,9 @@ codigo:
     for (int i = 0; i < 3; i++) {
         avanzar(50);
     }
+--- pagina
+es: ...
+dibujo: turno                          # opcional: un dibujo animado bajo el texto («turno»: un turno del robot, paso a paso)
 --- tarea
 ejercicio: id_de_un_ejercicio          # un ejercicio del banco, o bien:
 robot: aciertos>=3                     # una prueba en la arena con el muñeco: aciertos>=N, dano<=N, ronda_sin_errores, usa:<palabra>

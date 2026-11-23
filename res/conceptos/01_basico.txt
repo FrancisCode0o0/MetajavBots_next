@@ -1255,7 +1255,7 @@ titulo.en: The tick
 claves.es: turno, turnos, cadaturno, cada turno, eventos, alverenemigo, alrecibirgolpe, alempezar, 30 veces por segundo, como funciona la pelea
 claves.de: zug, züge, jedenzug, jeden zug, ereignisse, beisicht, beitreffer, beimstart, 30 mal pro sekunde, wie läuft der kampf ab
 claves.en: tick, ticks, ontick, every tick, events, onseeenemy, onhit, onstart, 30 times per second, how does the fight work
-ver: programa, imprimir, variable, patron_observador
+ver: programa, imprimir, variable, patron_observador, como_obedece
 es:
     Un turno es un instante de la pelea. La arena avanza a golpe de turnos, unos 30 por segundo, y en cada uno le pregunta a tu robot qué quiere hacer.
     Es como un árbitro con muchísima prisa que da 30 palmadas por segundo: en cada palmada todos los robots dicen qué hacen y la arena mueve, gira y reparte tortas. Tu robot no tiene un plan para toda la pelea: solo contesta, una y otra vez, «¿y ahora qué?».

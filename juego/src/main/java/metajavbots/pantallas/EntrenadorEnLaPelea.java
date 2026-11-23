@@ -30,6 +30,9 @@ final class EntrenadorEnLaPelea {
     private float tiempo, desdeElCambio, t;
     private int saltados;
 
+    /** Los avisos de órdenes (una vez por pelea cada uno: este objeto vive lo que la pelea). */
+    final AvisoDeOrdenes avisos = new AvisoDeOrdenes();
+
     private float tiempoDelMilagro = -1;
     private String fraseDelMilagro;
 
@@ -72,6 +75,7 @@ final class EntrenadorEnLaPelea {
 
     /** Cada turno de la pelea: si hay un enemigo marcado, el entrenador lo mira. */
     void observar(Pelea pelea) {
+        avisos.observar(pelea.cuerpo(0));
         if (marcado < 0) return;
         Cuerpo yo = pelea.cuerpo(0), el = pelea.cuerpo(marcado);
         if (yo == null || el == null || el.fuera) return;
@@ -153,6 +157,14 @@ final class EntrenadorEnLaPelea {
                 if (PanelDelTutor.ayuda(j.jugador, 0) >= 0.45f) trozo = T.t("entrenador.rival." + consejo + ".trozo");
             }
         }
+        boolean conAviso = j.jugador.avisosDeOrdenes && avisos.activo();
+        if (conAviso) {
+            // Un aviso de órdenes manda sobre el consejo: es lo que hace fallar al robot ahora mismo.
+            texto = avisos.texto() + " " + T.t("aviso.ordenes.f9");
+            trozo = null;
+            if (avisos.recienSalido()) j.voz.decir(avisos.texto(), j.jugador.idioma, en.timbre);
+        }
+        if (enMarcha) avisos.pasar(dt);
         tiempo += dt;
         float w = Math.min(470, ancho * 0.4f), tl = ui.letra * 0.78f, x = ancho - w - 16;
         float th = p.altoDeParrafo(texto, w - 90, tl);
@@ -161,7 +173,7 @@ final class EntrenadorEnLaPelea {
         float trozoAlto = trozo == null ? 0 : trozoCuerpo + tl * 1.6f + 10;
         float h = Math.max(78, th + trozoAlto + (marcado >= 0 ? 58 : 20)), y = p.alto - 80 - h;
         p.caja(x, y, w, h, 12, ui.tema.panelAlto, 0.9f);
-        p.bordeRedondeado(x, y, w, h, 12, marcado >= 0 ? 0xFFD23F : ui.tema.borde, 0.8f, 1.5f);
+        p.bordeRedondeado(x, y, w, h, 12, conAviso ? ui.tema.aviso : marcado >= 0 ? 0xFFD23F : ui.tema.borde, conAviso ? 1f : 0.8f, conAviso ? 2.5f : 1.5f);
         CabezaDeEntrenador.dibujar(p, en, x + 38, y + 38, 24, tiempo < 3, t);
         p.parrafo(texto, x + 76, y + 10, w - 90, tl, ui.tema.texto, 1);
         float yy = y + 14 + th;

@@ -19,12 +19,15 @@ public class MeinRoboter extends MetajavbotDe {
             drehen(35);
         }
         // Das Visier (Arme und Radar) bewegen, um den Gegner zu suchen.
+        // Achtung: jedenZug kommt nach beiSicht, und das Visier merkt sich nur den letzten Befehl: Dieser löscht den dortigen.
         zielen(12);
     }
 
     @Override
     public void beiSicht(Gegner g) {
+        // Das Visier dreht langsam (etwa 14° pro Zug): Es kommt nicht im selben Zug beim Gegner an.
         zielenNach(g.winkel());
+        // angreifen() schießt sofort, dorthin, wohin das Visier JETZT zeigt, nicht dorthin, wohin es soll.
         angreifen();
     }
 

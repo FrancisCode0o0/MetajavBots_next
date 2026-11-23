@@ -2,6 +2,30 @@
 
 Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDrive\Hochschule\Desarrollo de juegos\MetajavBots_next`, rama `main`.
 
+## ORDENES_CLARAS_METAJAVBOTS (23-nov-2026, Opus) — hecho
+
+Que se entienda cómo obedece el robot. Tres reglas, dichas igual en todas partes: cada mando (ruedas, cuerpo, cabeza/mira) recuerda solo la última orden del turno; las órdenes tardan (la cabeza gira unos 14° por turno, como un búho); atacar() dispara ya, hacia donde mira la cabeza ahora. Y el orden del turno: primero los avisos, después cadaTurno.
+
+- **Tutorial 1** (`l01_hola_arena`): dos páginas nuevas antes del primer código. Una con los tres mandos y las tres reglas; otra con el orden del turno y un dibujo animado en tres pasos (`pantallas/DibujoDelTurno`, campo nuevo `dibujo: turno` en los tutoriales, documentado en FORMATOS.md). Una línea `es:` vacía ahora es un salto de línea.
+- **Concepto** `como_obedece` («Así obedece tu robot») en `res/conceptos/07_juego.txt`, con el mismo dibujo en el panel del entrenador. El concepto `turno` lleva a él.
+- **Plantilla del primer robot** (es, de, en): igual que antes, con tres comentarios de una línea donde muerden.
+- **API**: Javadoc de `cadaTurno`, `alVerEnemigo`, `avanzar`, `retroceder`, `girar`, `girarHacia`, `apuntar`, `apuntarHacia`, `apuntarA` y `atacar` en las tres fachadas, y su texto en `res/datos/api.txt` (panel de la API del Taller). `herramientas/fachadas.py` ahora parte en varias líneas los Javadoc largos.
+- **Avisos en la pelea** (`pantallas/AvisoDeOrdenes`, `combate/AtaqueLejos`): «La línea 23 borra la orden de la línea 29: la cabeza nunca llega al enemigo…» y «La línea 29 pide girar la cabeza, pero la línea 31 dispara antes de que llegue…». Los dice el entrenador (bocadillo y voz) y el depurador (pestaña Código / Turno).
+- **Ver la mira**: botón en el depurador; dibuja en la arena una línea discontinua (adónde quiere ir la mira) y otra continua (adónde apunta ahora).
+- **Ejercicio** `j_dos_ordenes_cabeza` («Dos órdenes para la cabeza», tema 04), con la escena de giro en la arena.
+- **Pruebas**: `PruebasDeOrdenesClaras` (7 casos).
+
+**Decisiones mías (cámbialas si quieres)**:
+- Cada aviso del entrenador sale una vez por pelea. Se apaga en Ajustes con «Avisos de órdenes en la pelea» (encendido por defecto). El depurador lo explica siempre: es la herramienta para mirar, y solo se ve si lo abres.
+- Si el entrenador no está (desactivado, o en el hospital contra un jefe), no hay aviso flotante; queda el depurador.
+- «Mira lejos» quiere decir: más de 8° del enemigo (más de cerca, porque ocupa más ángulo). Solo cuenta el primer ataque del turno y no cuenta el escudo ni reparar.
+- «Ver la mira» sigue puesta en esa pelea aunque cierres el depurador.
+- El ejemplo del concepto es la plantilla comentada (lo que hace), no un arreglo para copiar.
+
+**Capturas** (letra 18 y 26, en es, de y en): `C:\Users\Francis\git\archivo_para_eliminar\ORDENES_CLARAS_METAJAVBOTS\capturas\`. Se rehacen con `.\gradlew.bat lwjgl3:capturas -Psolo=37,17_ajustes -Pidioma=de -Pletra=26`. No hay nada cortado. En `37g` con letra 26 la foto sale antes de que acabe «Comprobando…»: es cosa del momento de la foto, no del diseño.
+
+**Comprobado**: `.\gradlew.bat compileJava estilo pruebas:prueba`: 323 casos bien, 0 mal, Checkstyle sin avisos. Commit en `main` (la rama `instalador` ya estaba unida). Sin push.
+
 ## VIDEO_METAJAVBOTS (23-nov-2026, Opus) — hecho, falta que Fran elija
 
 Tráiler de una partida real, renderizado por el propio juego. **Las tres versiones (MP4 y GIF) están en `C:\Users\Francis\git\archivo_para_eliminar\VIDEO_METAJAVBOTS\`** (y en `build\trailer\`). Todas duran 74 s, a 1920×1080 y 60 fps, en H.264 y AAC; los GIF duran 12 s.

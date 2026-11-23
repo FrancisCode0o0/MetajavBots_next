@@ -19,6 +19,42 @@ en: Your robot does not think for itself: it does EXACTLY what you write, no mor
 en: Think of a recipe for a lightning-fast, very literal cook. Write "salt" instead of "sugar" and it won't argue,
 en: it will just bake you a salty cake. In this arena, the recipes are written in Java.
 --- pagina
+es: Antes de escribir nada, mira cómo obedece tu robot. Tiene tres mandos: las ruedas (avanzar), el cuerpo (girar)
+es: y la cabeza, que es su mira (apuntar). Hay tres reglas, y conviene saberlas desde ya:
+es:
+es: 1. Cada mando recuerda solo la ÚLTIMA orden que le das en cada turno. Si le pides dos cosas a la cabeza, hace la segunda y olvida la primera.
+es:
+es: 2. Las órdenes tardan. La cabeza gira despacio, como un búho: un poco en cada turno. Pedir «mira allí» no la pone allí de golpe.
+es:
+es: 3. Disparar es inmediato: el disparo sale hacia donde mira la cabeza EN ESE MOMENTO, no hacia donde le acabas de pedir que mire.
+de: Bevor du etwas schreibst, schau dir an, wie dein Roboter gehorcht. Er hat drei Regler: die Räder (vorwaerts), den Körper (drehen)
+de: und den Kopf, das ist sein Visier (zielen). Es gibt drei Regeln, und du solltest sie gleich kennen:
+de:
+de: 1. Jeder Regler merkt sich nur den LETZTEN Befehl, den du ihm in einem Zug gibst. Verlangst du vom Kopf zwei Dinge, tut er das zweite und vergisst das erste.
+de:
+de: 2. Befehle brauchen Zeit. Der Kopf dreht sich langsam, wie eine Eule: in jedem Zug ein Stück. „Schau dorthin“ bringt ihn nicht auf einen Schlag dorthin.
+de:
+de: 3. Schießen geht sofort: Der Schuss fliegt dorthin, wohin der Kopf IN DIESEM MOMENT schaut, nicht dorthin, wohin er gerade schauen soll.
+en: Before you write anything, see how your robot obeys. It has three controls: the wheels (ahead), the body (turn)
+en: and the head, which is its sight (aim). There are three rules, and it pays to know them right away:
+en:
+en: 1. Each control remembers only the LAST order you give it in each tick. Ask the head for two things and it does the second and forgets the first.
+en:
+en: 2. Orders take time. The head turns slowly, like an owl: a little each tick. Saying "look over there" does not put it there at once.
+en:
+en: 3. Firing is instant: the shot goes where the head is looking AT THAT MOMENT, not where you just asked it to look.
+--- pagina
+es: Y en cada turno (unos 30 por segundo) pasa siempre lo mismo, en este orden: primero los avisos (te han dado,
+es: ves a un enemigo…) y después cadaTurno. Así que si cadaTurno le da otra orden a la cabeza, borra la del aviso.
+es: Mira el dibujo: así falla el robot de ejemplo del taller. Cuando lo veas pelear, ya sabrás por qué.
+de: Und in jedem Zug (etwa 30 pro Sekunde) passiert immer dasselbe, in dieser Reihenfolge: zuerst die Meldungen (du wurdest
+de: getroffen, du siehst einen Gegner …) und danach jedenZug. Gibt jedenZug dem Kopf also einen anderen Befehl, löscht er den aus der Meldung.
+de: Schau dir die Zeichnung an: So scheitert der Beispielroboter der Werkstatt. Wenn du ihn kämpfen siehst, weißt du schon, warum.
+en: And in every tick (about 30 per second) the same thing always happens, in this order: first the events (you got hit,
+en: you see an enemy…) and then onTick. So if onTick gives the head another order, it erases the one from the event.
+en: Look at the drawing: this is how the workshop's example robot fails. When you see it fight, you'll already know why.
+dibujo: turno
+--- pagina
 es: En el taller verás un código ya escrito. De momento no te asustes por las palabras raras (class, extends,
 es: @Override, public void): las entenderás en los temas 9 a 11. Por ahora solo importa una cosa:
 es: lo que escribas entre las llaves ({}) de cadaTurno, el robot lo hace en cada turno de la pelea,

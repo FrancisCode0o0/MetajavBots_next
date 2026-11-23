@@ -351,8 +351,7 @@ public final class PantallaPelea implements Pantalla {
         dialogo.antes(ui);
         atenderCompilacion(j);
         teclas(j);
-        if (vista.parada > 0) {
-            // Tras un golpe fuerte, la pelea se para un instante (como en los juegos de lucha).
+        if (vista.parada > 0) { // Tras un golpe fuerte, la pelea se para un instante (como en los juegos de lucha).
             vista.parada -= dt;
         } else if (entrada != null && entrada.activa()) {
             entrada.avanzar(j, pelea, vista, narrador, dt);
@@ -396,6 +395,7 @@ public final class PantallaPelea implements Pantalla {
         vista.techo = banda.visible() ? banda.techo() : 0;
         vista.visor(j.visorTactico && (entrada == null || !entrada.activa()) && (especial == null || !especial.activa()), entrenador.marcado());
         vista.dibujar(p, pelea, 0, 88, ancho, p.alto - 88, pausa || entreRondas ? 0 : dt);
+        if (!entreRondas) panelDepurador.mira(j, pelea, vista);
         if (entrada != null && entrada.activa()) entrada.dibujar(j, pelea, vista, 0, 88, ancho, p.alto - 88);
         if (especial != null) especial.dibujar(j, vista, pelea);
         if (encuentro.codigo != null) reparacion(j, dt);

@@ -31,6 +31,12 @@ import java.util.Random;
  * (vorwaerts, drehen, zielen) warten nicht: Sie sagen, was du willst, und der
  * Roboter erledigt es Zug um Zug in seinem Tempo.
  *
+ * Der Roboter hat drei Regler: die Räder (vorwaerts, rueckwaerts), den Körper
+ * (drehen, drehenNach) und das Visier (zielen, zielenNach, zielenAuf). Jeder
+ * Regler merkt sich nur den letzten Befehl des Zugs: Der spätere löscht den
+ * früheren. Das Visier dreht langsam, und angreifen() schießt dorthin, wohin es
+ * JETZT zeigt.
+ *
  * Winkel in Grad: 0 ist rechts (Osten), 90 oben; positive Drehungen gehen nach
  * links. Die Arena reicht von (0, 0) unten links bis (arenaBreite(), arenaHoehe()).
  */
@@ -42,11 +48,18 @@ public abstract class MetajavbotDe extends RobotBase {
     public void beimStart() {
     }
 
-    /** In jedem Zug (etwa 30 pro Sekunde). Hier steht das Wichtigste. */
+    /**
+     * In jedem Zug (etwa 30 pro Sekunde). Hier steht das Wichtigste. Kommt als Letztes: vorher laufen die Meldungen
+     * (beiTreffer, beiWand …) und beiSicht. Jeder Regler (Fahren, Drehen, Visier) merkt sich nur den letzten Befehl
+     * des Zugs, also löscht ein Befehl von hier den für denselben Regler aus einer Meldung.
+     */
     public void jedenZug() {
     }
 
-    /** In jedem Zug, in dem dein Radar einen Gegner sieht. */
+    /**
+     * In jedem Zug, in dem dein Radar einen Gegner sieht, vor jedenZug. Achtung: Gibt jedenZug danach einen anderen
+     * Visierbefehl (zum Beispiel zielen), löscht er den von hier, und das Visier kommt nie beim Gegner an.
+     */
     public void beiSicht(Gegner g) {
     }
 
@@ -121,19 +134,25 @@ public abstract class MetajavbotDe extends RobotBase {
 
     // ================================================================ fahren
 
-    /** Fährt diese Strecke vorwärts (negativ: rückwärts). Ersetzt den vorigen Fahrbefehl. */
+    /**
+     * Fährt diese Strecke vorwärts (negativ: rückwärts). Ersetzt den vorigen Fahrbefehl: Nur der letzte des Zugs
+     * zählt. Er wartet nicht: Der Roboter erledigt ihn nach und nach, über mehrere Züge.
+     */
     public final void vorwaerts(double strecke) {
         m().avanzar(strecke);
         anotarOrden("vorwaerts(" + redondear(strecke) + ")", Mando.CANAL_AVANCE);
     }
 
-    /** Fährt diese Strecke rückwärts. */
+    /** Fährt diese Strecke rückwärts. Ist ein Fahrbefehl: Nur der letzte des Zugs zählt, und er wird nach und nach erledigt. */
     public final void rueckwaerts(double strecke) {
         m().avanzar(-strecke);
         anotarOrden("rueckwaerts(" + redondear(strecke) + ")", Mando.CANAL_AVANCE);
     }
 
-    /** Dreht den Körper um diese Grad (positiv: nach links). */
+    /**
+     * Dreht den Körper um diese Grad (positiv: nach links), nach und nach über mehrere Züge. Nur der letzte
+     * Drehbefehl des Zugs zählt (drehen, drehenNach, anhalten …): Der später aufgerufene löscht den vorigen.
+     */
     public final void drehen(double grad) {
         m().girar(grad);
         anotarOrden("drehen(" + redondear(grad) + "°)", Mando.CANAL_GIRO);
@@ -149,7 +168,10 @@ public abstract class MetajavbotDe extends RobotBase {
         anotarOrden("rechtsDrehen(" + redondear(grad) + "°)", Mando.CANAL_GIRO);
     }
 
-    /** Dreht den Körper auf diesen absoluten Winkel, auf dem kürzesten Weg. */
+    /**
+     * Dreht den Körper auf diesen absoluten Winkel, auf dem kürzesten Weg. Nicht auf einen Schlag: Er kommt nach
+     * mehreren Zügen an. Nur der letzte Drehbefehl des Zugs zählt.
+     */
     public final void drehenNach(double winkel) {
         m().girar(normalisieren(winkel - m().rumbo()));
         anotarOrden("drehenNach(" + redondear(winkel) + "°)", Mando.CANAL_GIRO);
@@ -163,19 +185,27 @@ public abstract class MetajavbotDe extends RobotBase {
 
     // ================================================================ zielen und angreifen
 
-    /** Dreht das Visier (Arme und Radar) um diese Grad, ohne den Körper zu drehen. */
+    /**
+     * Dreht das Visier (Arme und Radar) um diese Grad, ohne den Körper zu drehen. Das Visier dreht langsam, etwa 14°
+     * pro Zug je nach Waffe. Nur der letzte Visierbefehl des Zugs zählt: Ein zielen in jedenZug löscht das
+     * zielenNach aus beiSicht.
+     */
     public final void zielen(double grad) {
         m().apuntar(grad);
         anotarOrden("zielen(" + redondear(grad) + "°)", Mando.CANAL_MIRA);
     }
 
-    /** Dreht das Visier auf diesen absoluten Winkel. */
+    /**
+     * Will das Visier auf diesen absoluten Winkel drehen. Nicht sofort: Das Visier dreht langsam, etwa 14° pro Zug
+     * je nach Waffe, und restZielen() sagt, wie viel noch fehlt. Nur der letzte Visierbefehl des Zugs zählt: Ruft
+     * jedenZug danach zielen auf, ist dieser gelöscht.
+     */
     public final void zielenNach(double winkel) {
         m().apuntar(normalisieren(winkel - m().mira()));
         anotarOrden("zielenNach(" + redondear(winkel) + "°)", Mando.CANAL_MIRA);
     }
 
-    /** Dreht das Visier auf diesen Punkt der Arena. */
+    /** Will das Visier auf diesen Punkt der Arena drehen. Wie zielenNach: Es braucht mehrere Züge, und nur der letzte Visierbefehl zählt. */
     public final void zielenAuf(double x, double y) {
         m().apuntar(normalisieren(anguloHasta(x, y) - m().mira()));
         anotarOrden("zielenAuf(" + redondear(x) + ", " + redondear(y) + ")", Mando.CANAL_MIRA);
@@ -222,7 +252,11 @@ public abstract class MetajavbotDe extends RobotBase {
         return ok;
     }
 
-    /** Greift mit dem Arm an, der bereit ist (zuerst der rechte). */
+    /**
+     * Greift mit dem Arm an, der bereit ist (zuerst der rechte). Schießt sofort, dorthin, wohin das Visier JETZT
+     * zeigt, nicht dorthin, wohin es sich gerade drehen soll. Zweimal im selben Zug benutzt beide Arme; öfter bringt
+     * nichts, weil die Arme abkühlen müssen.
+     */
     public final boolean angreifen() {
         boolean ok = m().atacar(Mando.DERECHA) || m().atacar(Mando.IZQUIERDA);
         if (ok) anotarOrden("angreifen()", 0);

@@ -293,3 +293,31 @@ casos:
     usarAparato(30, true, 2) => false
     usarAparato(90, false, 3) => false
     usarAparato(30, false, 1) => false
+
+=== j_dos_ordenes_cabeza
+tema: 04
+dificultad: 2
+java: 8
+tipo: metodo
+escena: giro
+titulo.es: Dos órdenes para la cabeza
+titulo.de: Zwei Befehle für den Kopf
+titulo.en: Two orders for the head
+enunciado.es: En el mismo turno, alVerEnemigo pide apuntar(primera) y después cadaTurno pide apuntar(segunda). La cabeza (la mira) solo recuerda la última orden y gira como mucho 14° por turno. Empieza mirando hacia «mira»: devuelve hacia dónde mira al acabar el turno.
+enunciado.de: Im selben Zug verlangt beiSicht zielen(primera) und danach jedenZug zielen(segunda). Der Kopf (das Visier) merkt sich nur den letzten Befehl und dreht sich höchstens 14° pro Zug. Er schaut am Anfang nach «mira»: Gib zurück, wohin er am Ende des Zugs schaut.
+enunciado.en: In the same tick, onSeeEnemy asks for aim(primera) and then onTick asks for aim(segunda). The head (the sight) remembers only the last order and turns at most 14° per tick. It starts looking toward "mira": return where it looks at the end of the tick.
+pista.es: Primero piensa cuál de las dos órdenes manda. Después: si pide girar más de 14° (o menos de -14°), ¿cuánto gira de verdad en un turno?
+pista.de: Überleg zuerst, welcher der beiden Befehle zählt. Dann: Wenn er mehr als 14° (oder weniger als -14°) drehen soll, wie weit dreht er sich in einem Zug wirklich?
+pista.en: First think about which of the two orders wins. Then: if it asks to turn more than 14° (or less than -14°), how far does it really turn in one tick?
+firma: static int miraFinal(int mira, int primera, int segunda)
+plantilla:
+    return mira + primera;
+solucion:
+    int giro = Math.max(-14, Math.min(14, segunda));
+    return mira + giro;
+casos:
+    miraFinal(0, 90, 12) => 12
+    miraFinal(0, 12, 90) => 14
+    miraFinal(30, -5, -40) => 16
+    miraFinal(45, 60, 0) => 45
+    miraFinal(-20, 0, -8) => -28

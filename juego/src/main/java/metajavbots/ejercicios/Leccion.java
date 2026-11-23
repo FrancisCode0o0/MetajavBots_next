@@ -19,14 +19,21 @@ import metajavbots.textos.Trilingue;
  */
 public final class Leccion {
 
-    /** Una página de la lección: su texto y, si hay, un trozo de código. */
+    /** Una página de la lección: su texto y, si hay, un trozo de código y un dibujo animado («dibujo: turno»). */
     public static final class Pagina {
         public final Trilingue texto;
         public final String codigo;
+        /** El dibujo animado de la página («turno»: un turno del robot, paso a paso), o «» si no lleva. */
+        public final String dibujo;
 
         Pagina(Trilingue texto, String codigo) {
+            this(texto, codigo, "");
+        }
+
+        Pagina(Trilingue texto, String codigo, String dibujo) {
             this.texto = texto;
             this.codigo = codigo;
+            this.dibujo = dibujo == null ? "" : dibujo;
         }
     }
 
@@ -113,7 +120,7 @@ public final class Leccion {
         String bloque = null;
         StringBuilder[] texto = {new StringBuilder(), new StringBuilder(), new StringBuilder()};
         StringBuilder codigo = new StringBuilder();
-        String ejercicio = null, robot = null;
+        String ejercicio = null, robot = null, dibujo = "";
         boolean enCodigo = false;
         String linea;
         List<String> lineas = new ArrayList<>();
@@ -125,7 +132,7 @@ public final class Leccion {
             boolean nuevoBloque = ln.startsWith("---");
             if ((nuevaLeccion || nuevoBloque) && bloque != null) {
                 Trilingue t = new Trilingue(texto[0].toString().strip(), texto[1].toString().strip(), texto[2].toString().strip());
-                if (bloque.equals("pagina")) paginas.add(new Pagina(t, codigo.toString().stripTrailing()));
+                if (bloque.equals("pagina")) paginas.add(new Pagina(t, codigo.toString().stripTrailing(), dibujo));
                 else if (bloque.equals("tarea")) tareas.add(new Tarea(ejercicio, robot, t));
                 bloque = null;
             }
@@ -144,6 +151,7 @@ public final class Leccion {
                 for (StringBuilder b : texto) b.setLength(0);
                 codigo.setLength(0);
                 ejercicio = robot = null;
+                dibujo = "";
                 enCodigo = false;
                 continue;
             }
@@ -168,13 +176,15 @@ public final class Leccion {
             else if (s.startsWith("codigo:")) enCodigo = true;
             else if (s.startsWith("ejercicio:")) ejercicio = s.substring(10).strip();
             else if (s.startsWith("robot:")) robot = s.substring(6).strip();
+            else if (s.startsWith("dibujo:")) dibujo = s.substring(7).strip();
         }
         return l;
     }
 
     private static void unir(StringBuilder b, String s) {
         s = s.strip();
-        if (b.length() > 0) b.append(s.isEmpty() ? "\n" : " ");
+        // Una línea «es:» vacía es un salto de línea (y tras él no hace falta espacio).
+        if (b.length() > 0) b.append(s.isEmpty() ? "\n" : b.charAt(b.length() - 1) == '\n' ? "" : " ");
         b.append(s);
     }
 

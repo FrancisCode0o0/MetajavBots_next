@@ -19,12 +19,15 @@ public class MyRobot extends MetajavbotEn {
             turn(35);
         }
         // Move the sight (arms and radar) to look for the enemy.
+        // Careful: onTick runs after onSeeEnemy and the sight only remembers the last order: this one erases that one.
         aim(12);
     }
 
     @Override
     public void onSeeEnemy(Enemy e) {
+        // The sight turns slowly (about 14° per tick): it does not reach the enemy in this same tick.
         aimTo(e.angle());
+        // attack() fires right away, where the sight points NOW, not where you just asked it to go.
         attack();
     }
 

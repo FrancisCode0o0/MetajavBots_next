@@ -29,9 +29,9 @@ tema: 11
 firma: void cadaTurno()
 firma.de: void jedenZug()
 firma.en: void onTick()
-es: Evento principal del robot, sin parámetros ni retorno. El motor lo ejecuta automáticamente unos 30 veces por segundo, al final de cada turno (después de los avisos y de alVerEnemigo). Aquí va tu lógica continua: patrullar, barrer con el radar o decidir el siguiente movimiento.
-de: Hauptmethode des Roboters ohne Parameter und Rückgabewert. Läuft automatisch ca. 30-mal pro Sekunde am Ende jedes Zugs (nach Ereignissen und beiSicht). Hierhin gehört deine laufende Steuerung: patrouillieren und Radar schwenken.
-en: Main robot hook with no parameters or return value. Runs automatically about 30 times per second at the end of every tick (after event handlers and onSeeEnemy). Put continuous logic here: patrolling and sweeping the radar.
+es: Evento principal del robot, sin parámetros ni retorno. El motor lo ejecuta automáticamente unos 30 veces por segundo, al final de cada turno (después de los avisos y de alVerEnemigo). Aquí va tu lógica continua: patrullar, barrer con el radar o decidir el siguiente movimiento. Orden de cada turno: primero los avisos (alRecibirGolpe, alChocarConPared…), luego alVerEnemigo y por último cadaTurno. Cada mando (avance, giro y mira) recuerda solo la última orden del turno: si aquí das una orden del mismo mando que en un aviso, la de aquí borra la del aviso.
+de: Hauptmethode des Roboters ohne Parameter und Rückgabewert. Läuft automatisch ca. 30-mal pro Sekunde am Ende jedes Zugs (nach Ereignissen und beiSicht). Hierhin gehört deine laufende Steuerung: patrouillieren und Radar schwenken. Reihenfolge in jedem Zug: zuerst die Meldungen (beiTreffer, beiWand …), dann beiSicht und zuletzt jedenZug. Jeder Regler (Fahren, Drehen, Visier) merkt sich nur den letzten Befehl des Zugs: Gibst du hier einen Befehl für denselben Regler wie in einer Meldung, löscht der von hier den aus der Meldung.
+en: Main robot hook with no parameters or return value. Runs automatically about 30 times per second at the end of every tick (after event handlers and onSeeEnemy). Put continuous logic here: patrolling and sweeping the radar. Order of every tick: first the events (onHit, onHitWall…), then onSeeEnemy and finally onTick. Each control (move, turn and sight) remembers only the last order of the tick: if you give an order here for the same control as in an event, the one here erases the one from the event.
 donde.es: Decláralo con @Override directamente en tu clase Metajavbot (no dentro de otro método ni con bucles infinitos dentro, porque el motor lo llama cada turno).
 donde.de: Mit @Override direkt in deiner MetajavbotDe-Klasse deklarieren (nie verschachtelt und ohne Endlosschleife darin, da die Engine sie jeden Zug selbst aufruft).
 donde.en: Declare with @Override directly in your MetajavbotEn class (never inside another method and without infinite loops inside, as the engine calls it every tick).
@@ -56,9 +56,9 @@ tema: 11
 firma: void alVerEnemigo(Enemigo e)
 firma.de: void beiSicht(Gegner g)
 firma.en: void onSeeEnemy(Enemy e)
-es: Evento sin valor de retorno. Se ejecuta automáticamente antes de cadaTurno en todo turno en que un rival entra en el cono del radar. Recibe el parámetro e (tipo Enemigo) con una foto instantánea de su posición, distancia, ángulo, rumbo, velocidad y blindaje.
-de: Ereignis ohne Rückgabewert. Läuft automatisch vor jedenZug in jedem Zug, in dem ein Gegner im Radarkegel liegt. Bekommt g (Gegner) mit Position, Entfernung, Winkel, Richtung, Geschwindigkeit und Panzerung.
-en: Event with no return value. Runs automatically before onTick on every tick an opponent is inside your radar cone. Receives e (Enemy) with a snapshot of its position, distance, angle, heading, speed, and armor.
+es: Evento sin valor de retorno. Se ejecuta automáticamente antes de cadaTurno en todo turno en que un rival entra en el cono del radar. Recibe el parámetro e (tipo Enemigo) con una foto instantánea de su posición, distancia, ángulo, rumbo, velocidad y blindaje. Ojo: cadaTurno se llama después. Si cadaTurno da otra orden de mira (por ejemplo apuntar), borra la que des aquí, y la mira nunca llega al enemigo.
+de: Ereignis ohne Rückgabewert. Läuft automatisch vor jedenZug in jedem Zug, in dem ein Gegner im Radarkegel liegt. Bekommt g (Gegner) mit Position, Entfernung, Winkel, Richtung, Geschwindigkeit und Panzerung. Achtung: jedenZug kommt danach. Gibt jedenZug einen anderen Visierbefehl (zum Beispiel zielen), löscht er den von hier, und das Visier kommt nie beim Gegner an.
+en: Event with no return value. Runs automatically before onTick on every tick an opponent is inside your radar cone. Receives e (Enemy) with a snapshot of its position, distance, angle, heading, speed, and armor. Careful: onTick is called afterwards. If onTick gives another sight order (for example aim), it erases the one you give here, and the sight never reaches the enemy.
 donde.es: Sobrescríbelo en el cuerpo de tu clase Metajavbot, nunca dentro de cadaTurno(); no lo invoques a mano porque solo el motor te pasa el parámetro Enemigo e.
 donde.de: Direkt im Rumpf deiner MetajavbotDe-Klasse überschreiben, nie in jedenZug(); nicht selbst aufrufen, denn nur die Engine liefert das Gegner-Objekt g.
 donde.en: Override directly in your MetajavbotEn class body, never inside onTick(); do not invoke it yourself since only the engine supplies the Enemy parameter e.
@@ -224,9 +224,9 @@ tema: 01
 firma: void avanzar(double distancia)
 firma.de: void vorwaerts(double strecke)
 firma.en: void ahead(double distance)
-es: Orden de movimiento no bloqueante, sin retorno. Parámetro: distancia en píxeles (positiva hacia delante, negativa hacia atrás). Guarda la orden para ejecutarse turno a turno y sustituye a la orden de avance pendiente anterior.
-de: Nicht-blockierender Fahrbefehl ohne Rückgabewert. Parameter: strecke in Pixeln (positiv vorwärts, negativ rückwärts). Merkt sich die Strecke für die folgenden Züge und ersetzt einen noch laufenden Fahrbefehl.
-en: Non-blocking movement order with no return value. Parameter: distance in pixels (positive forward, negative backward). Queues movement over upcoming ticks and replaces any previous pending move order.
+es: Orden de movimiento no bloqueante, sin retorno. Parámetro: distancia en píxeles (positiva hacia delante, negativa hacia atrás). Guarda la orden para ejecutarse turno a turno y sustituye a la orden de avance pendiente anterior. Solo vale la última orden de avance del turno: si das dos (aquí y en otro método), gana la que se llama después. No espera: el robot la cumple poco a poco, en varios turnos.
+de: Nicht-blockierender Fahrbefehl ohne Rückgabewert. Parameter: strecke in Pixeln (positiv vorwärts, negativ rückwärts). Merkt sich die Strecke für die folgenden Züge und ersetzt einen noch laufenden Fahrbefehl. Nur der letzte Fahrbefehl des Zugs zählt: Gibst du zwei (hier und in einer anderen Methode), gewinnt der, der später aufgerufen wird. Er wartet nicht: Der Roboter erledigt ihn nach und nach, über mehrere Züge.
+en: Non-blocking movement order with no return value. Parameter: distance in pixels (positive forward, negative backward). Queues movement over upcoming ticks and replaces any previous pending move order. Only the last move order of the tick counts: if you give two (here and in another method), the one called later wins. It does not wait: the robot carries it out little by little, over several ticks.
 donde.es: Llámalo dentro de alEmpezar(), cadaTurno() o un evento, mejor tras comprobar restanteAvance() == 0; nunca en el constructor ni en el cuerpo de la clase.
 donde.de: In beimStart(), jedenZug() oder einem Ereignis aufrufen, idealerweise wenn restStrecke() == 0 gilt; nie im Konstruktor oder direkt im Klassenrumpf.
 donde.en: Call inside onStart(), onTick(), or an event handler, ideally when remainingDistance() == 0; never in the constructor or directly in the class body.
@@ -248,9 +248,9 @@ tema: 01
 firma: void retroceder(double distancia)
 firma.de: void rueckwaerts(double strecke)
 firma.en: void back(double distance)
-es: Orden de movimiento no bloqueante, sin retorno. Parámetro: distancia en píxeles que quieres retroceder (equivale a avanzar(-distancia)). Sustituye a la orden de avance anterior.
-de: Nicht-blockierender Fahrbefehl ohne Rückgabewert. Parameter: strecke in Pixeln rückwärts (entspricht vorwaerts(-strecke)). Ersetzt den vorigen Fahrbefehl.
-en: Non-blocking movement order with no return value. Parameter: distance in pixels to move backward (same as ahead(-distance)). Replaces the previous move order.
+es: Orden de movimiento no bloqueante, sin retorno. Parámetro: distancia en píxeles que quieres retroceder (equivale a avanzar(-distancia)). Sustituye a la orden de avance anterior. Es una orden de avance: solo vale la última del turno y se cumple poco a poco, en varios turnos.
+de: Nicht-blockierender Fahrbefehl ohne Rückgabewert. Parameter: strecke in Pixeln rückwärts (entspricht vorwaerts(-strecke)). Ersetzt den vorigen Fahrbefehl. Es ist ein Fahrbefehl: Nur der letzte des Zugs zählt, und er wird nach und nach erledigt, über mehrere Züge.
+en: Non-blocking movement order with no return value. Parameter: distance in pixels to move backward (same as ahead(-distance)). Replaces the previous move order. It is a move order: only the last one of the tick counts, and it is carried out little by little, over several ticks.
 donde.es: Úsalo dentro de alChocarConPared(), alRecibirGolpe() o cadaTurno() para recular; no lo pongas en el constructor ni en inicializadores de campos.
 donde.de: In beiWand(), beiTreffer() oder jedenZug() zum Zurücksetzen aufrufen; nicht im Konstruktor oder in Feld-Initialisierern verwenden.
 donde.en: Call inside onHitWall(), onHit(), or onTick() to back off; never place it in the constructor or field initializers.
@@ -272,9 +272,9 @@ tema: 01
 firma: void girar(double grados)
 firma.de: void drehen(double grad)
 firma.en: void turn(double degrees)
-es: Orden de giro del cuerpo no bloqueante, sin retorno. Parámetro: grados relativos a tu rumbo actual (positivo gira a la izquierda/antihorario; negativo a la derecha). Se ejecuta poco a poco en los turnos siguientes según la velocidad de giro.
-de: Nicht-blockierender Drehbefehl ohne Rückgabewert. Parameter: grad relativ zur aktuellen Richtung (positiv links/gegen Uhrzeigersinn; negativ rechts). Wird Zug um Zug mit deinem Drehtempo ausgeführt.
-en: Non-blocking body rotation order with no return value. Parameter: degrees relative to current heading (positive turns left/CCW; negative turns right). Executed over subsequent ticks at your turn speed.
+es: Orden de giro del cuerpo no bloqueante, sin retorno. Parámetro: grados relativos a tu rumbo actual (positivo gira a la izquierda/antihorario; negativo a la derecha). Se ejecuta poco a poco en los turnos siguientes según la velocidad de giro. Solo vale la última orden de giro del turno (girar, girarHacia, detener…): la que se llama después borra a la anterior.
+de: Nicht-blockierender Drehbefehl ohne Rückgabewert. Parameter: grad relativ zur aktuellen Richtung (positiv links/gegen Uhrzeigersinn; negativ rechts). Wird Zug um Zug mit deinem Drehtempo ausgeführt. Nur der letzte Drehbefehl des Zugs zählt (drehen, drehenNach, anhalten …): Der später aufgerufene löscht den vorigen.
+en: Non-blocking body rotation order with no return value. Parameter: degrees relative to current heading (positive turns left/CCW; negative turns right). Executed over subsequent ticks at your turn speed. Only the last turn order of the tick counts (turn, turnTo, stop…): the one called later erases the earlier one.
 donde.es: Llámalo dentro de cadaTurno() o eventos de choque para rotar el cuerpo; no lo pongas en el constructor ni lo confundas con apuntar() si solo quieres mover la mira.
 donde.de: In jedenZug() oder Kollisionsereignissen aufrufen, um den Rumpf zu drehen; nie im Konstruktor nutzen und nicht mit zielen() verwechseln.
 donde.en: Call inside onTick() or collision events to rotate the chassis; never in the constructor, and don't confuse it with aim() when you only want to turn the turret.
@@ -341,9 +341,9 @@ tema: 03
 firma: void girarHacia(double angulo)
 firma.de: void drehenNach(double winkel)
 firma.en: void turnTo(double angle)
-es: Orden de giro absoluto sin retorno. Parámetro: angulo destino en grados (0 derecha/este, 90 arriba/norte). Calcula automáticamente la diferencia normalizada desde tu rumbo() para girar por el camino más corto en los siguientes turnos.
-de: Absoluter Drehbefehl ohne Rückgabewert. Parameter: Zielwinkel in Grad (0 rechts/Osten, 90 oben/Norden). Berechnet automatisch den kürzesten Weg ab richtung() für die nächsten Züge.
-en: Absolute body turn order with no return value. Parameter: target angle in degrees (0 right/east, 90 up/north). Computes the shortest normalized delta from heading() over upcoming ticks.
+es: Orden de giro absoluto sin retorno. Parámetro: angulo destino en grados (0 derecha/este, 90 arriba/norte). Calcula automáticamente la diferencia normalizada desde tu rumbo() para girar por el camino más corto en los siguientes turnos. No gira de golpe: el cuerpo llega en varios turnos. Solo vale la última orden de giro del turno.
+de: Absoluter Drehbefehl ohne Rückgabewert. Parameter: Zielwinkel in Grad (0 rechts/Osten, 90 oben/Norden). Berechnet automatisch den kürzesten Weg ab richtung() für die nächsten Züge. Er dreht nicht auf einen Schlag: Der Körper kommt erst nach mehreren Zügen an. Nur der letzte Drehbefehl des Zugs zählt.
+en: Absolute body turn order with no return value. Parameter: target angle in degrees (0 right/east, 90 up/north). Computes the shortest normalized delta from heading() over upcoming ticks. It does not turn all at once: the body gets there over several ticks. Only the last turn order of the tick counts.
 donde.es: Llámalo dentro de alVerEnemigo(), alRecibirGolpe() o cadaTurno() pasando un ángulo absoluto (como e.angulo() o g.angulo() + 90); nunca en el constructor.
 donde.de: In beiSicht(), beiTreffer() oder jedenZug() mit einem absoluten Winkel (z. B. g.winkel() oder t.winkel() + 90) aufrufen; nie im Konstruktor.
 donde.en: Call inside onSeeEnemy(), onHit(), or onTick() with an absolute angle (like e.angle() or h.angle() + 90); never in the constructor.
@@ -386,9 +386,9 @@ tema: 01
 firma: void apuntar(double grados)
 firma.de: void zielen(double grad)
 firma.en: void aim(double degrees)
-es: Orden no bloqueante sin retorno para girar los brazos y el radar, independientemente del cuerpo. Parámetro: grados relativos a mira() (positivos hacia la izquierda). Se ejecuta turno a turno; si no ves enemigos, úsalo para barrer la arena.
-de: Nicht-blockierender Befehl ohne Rückgabewert zum Drehen von Armen und Radar unabhängig vom Körper. Parameter: grad relativ zu blick() (positiv links). Läuft Zug um Zug; ideal zum Radarsuchen.
-en: Non-blocking order with no return value to rotate arms and radar independently of the body. Parameter: degrees relative to aimDirection() (positive left). Runs tick by tick; great for radar sweeping.
+es: Orden no bloqueante sin retorno para girar los brazos y el radar, independientemente del cuerpo. Parámetro: grados relativos a mira() (positivos hacia la izquierda). Se ejecuta turno a turno; si no ves enemigos, úsalo para barrer la arena. Solo vale la última orden de mira del turno (apuntar, apuntarHacia, apuntarA): un apuntar en cadaTurno borra el apuntarHacia que diste en alVerEnemigo. La mira gira despacio, unos 14° por turno según el arma.
+de: Nicht-blockierender Befehl ohne Rückgabewert zum Drehen von Armen und Radar unabhängig vom Körper. Parameter: grad relativ zu blick() (positiv links). Läuft Zug um Zug; ideal zum Radarsuchen. Nur der letzte Visierbefehl des Zugs zählt (zielen, zielenNach, zielenAuf): Ein zielen in jedenZug löscht das zielenNach aus beiSicht. Das Visier dreht langsam, etwa 14° pro Zug je nach Waffe.
+en: Non-blocking order with no return value to rotate arms and radar independently of the body. Parameter: degrees relative to aimDirection() (positive left). Runs tick by tick; great for radar sweeping. Only the last sight order of the tick counts (aim, aimTo, aimAt): an aim in onTick erases the aimTo you gave in onSeeEnemy. The sight turns slowly, about 14° per tick depending on the weapon.
 donde.es: Llámalo en cadaTurno() para barrer con el radar o en alEmpezar() para orientar la mira; nunca en el constructor ni dentro de alAcabarRonda().
 donde.de: In jedenZug() zum Radarschwenk oder in beimStart() zum Ausrichten aufrufen; nie im Konstruktor und nicht in beiRundenende().
 donde.en: Call in onTick() to sweep the radar or in onStart() to orient the sight; never in the constructor or inside onRoundEnd().
@@ -410,9 +410,9 @@ tema: 03
 firma: void apuntarHacia(double angulo)
 firma.de: void zielenNach(double winkel)
 firma.en: void aimTo(double angle)
-es: Orden absoluta de puntería sin retorno. Parámetro: angulo absoluto en grados (0 derecha, 90 arriba). Calcula el camino más corto desde mira() y va girando la mira en los turnos siguientes hasta alinearla.
-de: Absoluter Zielbefehl ohne Rückgabewert. Parameter: absoluter Zielwinkel in Grad (0 rechts, 90 oben). Berechnet den kürzesten Drehweg von blick() und richtet das Visier Zug um Zug aus.
-en: Absolute aiming order with no return value. Parameter: absolute angle in degrees (0 right, 90 up). Computes shortest delta from aimDirection() and turns the sight over upcoming ticks.
+es: Orden absoluta de puntería sin retorno. Parámetro: angulo absoluto en grados (0 derecha, 90 arriba). Calcula el camino más corto desde mira() y va girando la mira en los turnos siguientes hasta alinearla. No es instantáneo: la mira gira despacio, unos 14° por turno según el arma, y restanteMira() dice cuánto le falta. Solo vale la última orden de mira del turno: si cadaTurno llama después a apuntar, esta se borra.
+de: Absoluter Zielbefehl ohne Rückgabewert. Parameter: absoluter Zielwinkel in Grad (0 rechts, 90 oben). Berechnet den kürzesten Drehweg von blick() und richtet das Visier Zug um Zug aus. Nicht sofort: Das Visier dreht langsam, etwa 14° pro Zug je nach Waffe, und restZielen() sagt, wie viel noch fehlt. Nur der letzte Visierbefehl des Zugs zählt: Ruft jedenZug danach zielen auf, ist dieser gelöscht.
+en: Absolute aiming order with no return value. Parameter: absolute angle in degrees (0 right, 90 up). Computes shortest delta from aimDirection() and turns the sight over upcoming ticks. Not instant: the sight turns slowly, about 14° per tick depending on the weapon, and remainingAim() tells you how much is left. Only the last sight order of the tick counts: if onTick calls aim afterwards, this one is erased.
 donde.es: Úsalo dentro de alVerEnemigo(Enemigo e) o cadaTurno() pasándole un ángulo absoluto como e.angulo(); nunca en el constructor ni en el cuerpo de la clase.
 donde.de: In beiSicht(Gegner g) oder jedenZug() mit absolutem Winkel wie g.winkel() aufrufen; nie im Konstruktor oder direkt im Klassenrumpf.
 donde.en: Call inside onSeeEnemy(Enemy e) or onTick() with an absolute angle such as e.angle(); never in the constructor or class body.
@@ -437,9 +437,9 @@ tema: 03
 firma: void apuntarA(double x, double y)
 firma.de: void zielenAuf(double x, double y)
 firma.en: void aimAt(double x, double y)
-es: Orden de puntería hacia una coordenada exacta sin retorno. Parámetros: x e y de la arena. Calcula el ángulo desde tu posición hasta (x, y) y llama a apuntarHacia hacia ese punto. Muy útil para disparar por adelantado donde estará el rival.
-de: Zielbefehl auf eine exakte Position ohne Rückgabewert. Parameter: Arena-Koordinaten x und y. Berechnet den Winkel zu (x, y) und richtet das Visier dorthin aus. Ideal für Vorhalt-Schüsse.
-en: Aim order toward an exact coordinate with no return value. Parameters: arena coordinates x and y. Computes the angle from you to (x, y) and calls aimTo. Great for predictive lead shots.
+es: Orden de puntería hacia una coordenada exacta sin retorno. Parámetros: x e y de la arena. Calcula el ángulo desde tu posición hasta (x, y) y llama a apuntarHacia hacia ese punto. Muy útil para disparar por adelantado donde estará el rival. Como apuntarHacia: la mira tarda varios turnos en llegar y solo vale la última orden de mira del turno.
+de: Zielbefehl auf eine exakte Position ohne Rückgabewert. Parameter: Arena-Koordinaten x und y. Berechnet den Winkel zu (x, y) und richtet das Visier dorthin aus. Ideal für Vorhalt-Schüsse. Wie zielenNach: Das Visier braucht mehrere Züge, und nur der letzte Visierbefehl des Zugs zählt.
+en: Aim order toward an exact coordinate with no return value. Parameters: arena coordinates x and y. Computes the angle from you to (x, y) and calls aimTo. Great for predictive lead shots. Like aimTo: the sight needs several ticks to get there, and only the last sight order of the tick counts.
 donde.es: Llámalo en cadaTurno() o eventos cuando tengas coordenadas (x, y) concretas, como el centro o e.x(), e.y(); no lo uses en el constructor.
 donde.de: In jedenZug() oder Ereignissen nutzen, wenn du konkrete (x, y)-Koordinaten wie die Mitte oder g.x(), g.y() hast; nicht im Konstruktor.
 donde.en: Call in onTick() or events when you have target (x, y) coordinates such as the arena center or e.x(), e.y(); never in the constructor.
@@ -602,9 +602,9 @@ tema: 01
 firma: boolean atacar()
 firma.de: boolean angreifen()
 firma.en: boolean attack()
-es: Atajo sin parámetros que intenta atacar en este turno primero con el brazo derecho y, si no está listo, con el izquierdo hacia donde apunta mira(). Devuelve true si alguno de los dos brazos logró atacar; false si ambos estaban ocupados o sin energía.
-de: Kurzbefehl ohne Parameter: greift in diesem Zug zuerst mit dem rechten Arm an und falls der nicht bereit ist, mit dem linken Richtung blick(). Gibt true zurück, sobald ein Arm angreift, sonst false.
-en: Shortcut with no parameters: tries attacking this tick with the right arm first, and if not ready, the left arm along aimDirection(). Returns true if either arm attacked, false otherwise.
+es: Atajo sin parámetros que intenta atacar en este turno primero con el brazo derecho y, si no está listo, con el izquierdo hacia donde apunta mira(). Devuelve true si alguno de los dos brazos logró atacar; false si ambos estaban ocupados o sin energía. Dispara al momento, hacia donde apunta la mira AHORA, no hacia donde le acabas de pedir que gire. Llamarlo dos veces en el mismo turno usa los dos brazos; más veces no hace nada, porque los brazos tienen que enfriarse.
+de: Kurzbefehl ohne Parameter: greift in diesem Zug zuerst mit dem rechten Arm an und falls der nicht bereit ist, mit dem linken Richtung blick(). Gibt true zurück, sobald ein Arm angreift, sonst false. Schießt sofort, dorthin, wohin das Visier JETZT zeigt, nicht dorthin, wohin es sich gerade drehen soll. Zweimal im selben Zug benutzt beide Arme; öfter bringt nichts, weil die Arme abkühlen müssen.
+en: Shortcut with no parameters: tries attacking this tick with the right arm first, and if not ready, the left arm along aimDirection(). Returns true if either arm attacked, false otherwise. Fires at once, where the sight points NOW, not where you just asked it to turn. Calling it twice in the same tick uses both arms; more calls do nothing, because the arms need to cool down.
 donde.es: Llámalo dentro de alVerEnemigo() o cadaTurno() tras comprobar que apuntas al rival; no lo pongas en el constructor ni en un bucle para disparar varias veces en un turno.
 donde.de: In beiSicht() oder jedenZug() aufrufen, sobald das Visier passt; nicht im Konstruktor und nicht in einer Schleife (pro Zug feuert ohnehin nur ein Befehl).
 donde.en: Call inside onSeeEnemy() or onTick() once aimed at the foe; never in the constructor or in a loop expecting multiple shots in one tick.

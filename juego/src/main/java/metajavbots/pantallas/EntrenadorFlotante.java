@@ -704,6 +704,7 @@ public final class EntrenadorFlotante {
         p.texto(c.titulo.en(idioma), x, yy, ui.letra * 1.5f, true, ui.tema.acento, 1);
         yy += ui.letra * 2.2f;
         for (String par : c.parrafos(idioma)) yy += p.parrafo(par, x, yy, w - 20, ui.letra, ui.tema.texto, 1) + ui.letra * 0.6f;
+        if (c.id.equals("como_obedece")) yy += DibujoDelTurno.dibujar(ui, x, yy, w - 20, Math.max(260, Math.min(360, w * 0.55f)), t) + ui.letra;
         yy = PanelErrorConsulta.bloqueDeCodigo(j, T.t("entrenador.pseudo"), c.pseudo(idioma), false, x, yy, w);
         yy = PanelErrorConsulta.bloqueDeCodigo(j, T.t("entrenador.ejemplo"), c.ejemplo(idioma), true, x, yy, w);
         yy = respuestaDeLaIa(j, x, yy, w);

@@ -43,6 +43,7 @@ public final class Pruebas {
         PruebasDelBanco.apuntar();
         PruebasDelCodigoDelRival.apuntar();
         PruebasDelDepurador.apuntar();
+        PruebasDeOrdenesClaras.apuntar();
         PruebasDeModificadoresPoo.apuntar();
         PruebasDeArquetipos.apuntar();
         PruebasDeAlarmaYFuentes.apuntar();

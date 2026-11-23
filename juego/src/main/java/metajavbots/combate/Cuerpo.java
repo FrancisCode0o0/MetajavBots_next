@@ -109,6 +109,9 @@ public final class Cuerpo implements Mando {
     /** Las órdenes pedidas en el último turno que pensó y si alguna fue pisada (para el depurador F9). */
     public List<OrdenDelTurno> ordenesDelTurno = List.of();
     public boolean tieneConflictoDeOrdenes;
+    /** El primer ataque del último turno que salió con la mira lejos del enemigo (null: ninguno). */
+    public AtaqueLejos ataqueLejos;
+    private AtaqueLejos ataqueLejosEnCurso;
     public EstadoPensamiento estadoPensamiento = EstadoPensamiento.EJECUTADO;
     /** El turno que acaba de recibir el código del robot (desde 0). */
     public int turnoPensado;
@@ -160,6 +163,7 @@ public final class Cuerpo implements Mando {
         ultimaLinea = -1;
         ordenesDelTurno = new ArrayList<>();
         tieneConflictoDeOrdenes = false;
+        ataqueLejos = null;
         estadoPensamiento = estado == null ? EstadoPensamiento.EJECUTADO : estado;
     }
 
@@ -352,6 +356,7 @@ public final class Cuerpo implements Mando {
             enfriamiento[brazo] = enfriamientoSeguro(p.valor("enfriamiento", 30) * calor, ref);
         }
         energia = Math.max(0, energia - coste(brazo, p));
+        if (registrandoOrdenes && ataqueLejosEnCurso == null) ataqueLejosEnCurso = AtaqueLejos.mirar(this, brazo, metodoActual, ordenesEnCurso);
         return true;
     }
 
@@ -590,12 +595,14 @@ public final class Cuerpo implements Mando {
         ordenesEnCurso.clear();
         metodoActual = "";
         invocacionActual = 0;
+        ataqueLejosEnCurso = null;
         registrandoOrdenes = true;
     }
 
     void cerrarRegistroDeTurno() {
         registrandoOrdenes = false;
         metodoActual = "";
+        ataqueLejos = ataqueLejosEnCurso;
         int n = ordenesEnCurso.size();
         if (n == 0) {
             ordenesDelTurno = List.of();
