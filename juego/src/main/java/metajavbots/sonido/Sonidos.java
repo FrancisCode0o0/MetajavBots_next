@@ -19,6 +19,13 @@ import com.badlogic.gdx.audio.Sound;
 public final class Sonidos {
 
     public float volumen = 0.8f;
+    /** Quien quiera enterarse de cada sonido que toca el juego (el grabador del tráiler los mezcla luego); null si nadie. */
+    public Oyente oyente;
+
+    /** Se entera de cada sonido del sintetizador: su nombre, su fuerza (0-1) y su tono (1 = normal). */
+    public interface Oyente {
+        void sonido(String nombre, float fuerza, float tono);
+    }
     private final Map<String, Sound> cargados = new HashMap<>();
     private final Map<String, Integer> esteFotograma = new HashMap<>();
     /** Las frases dichas (texto → sonido), las últimas 40. */
@@ -60,10 +67,12 @@ public final class Sonidos {
 
     /** Toca un sonido del sintetizador; «tono» cambia el tono (1 = normal). */
     public void tocar(String nombre, float fuerza, float tono) {
-        if (sinAudio || volumen <= 0) return;
+        if (volumen <= 0) return;
         int ya = esteFotograma.getOrDefault(nombre, 0);
         if (ya >= 2) return;   // dos iguales a la vez como mucho: si no, satura
         esteFotograma.put(nombre, ya + 1);
+        if (oyente != null) oyente.sonido(nombre, Math.max(0, Math.min(1, fuerza)), tono);
+        if (sinAudio) return;
         Sound s = cargados.get(nombre);
         if (s == null && !cargados.containsKey(nombre)) {
             s = cargar(nombre, Sintetizador.hacer(nombre, semilla++));

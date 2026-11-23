@@ -185,7 +185,7 @@ public final class PrepararPelea implements Pantalla {
 
     static List<Path> robotsAjenos() {
         List<Path> l = new ArrayList<>();
-        Path d = Paths.get("robots_ajenos");
+        Path d = metajavbots.progreso.Carpetas.ajenos;
         if (!Files.isDirectory(d)) return l;
         try (Stream<Path> s = Files.list(d)) {
             s.filter(p -> p.toString().endsWith(".java")).sorted().forEach(l::add);

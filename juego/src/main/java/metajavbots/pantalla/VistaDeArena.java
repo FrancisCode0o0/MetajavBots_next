@@ -29,6 +29,7 @@ public final class VistaDeArena {
     /** A qué altura (en unidades de la arena) salen los disparos. */
     private static final float TIRO = 58;
     public final Efectos efectos = new Efectos();
+    private final ChoqueDeRobots choques = new ChoqueDeRobots();
     private final Trastos trastos = new Trastos();
     public final Publico publico = new Publico();
     /** Si se dibuja el público (no en las capturas de las arenas ni en las vistas pequeñas). */
@@ -254,10 +255,11 @@ public final class VistaDeArena {
                 case OBSTACULO_ROTO: obstaculoRoto(s, px, sonidos); break;
                 case TRAMPA: trampaSuceso(s, px, sonidos); break;
                 case ESPECIAL: especialSuceso(s, px, py, sonidos); break;
-                case PARED: case CHOQUE:
+                case PARED:
                     efectos.chispas(px, sy(s.y) - 10, 6, 0xFFFFFF);
-                    if (sonidos != null) sonidos.tocar(s.tipo == Suceso.Tipo.PARED ? "pared" : "choque", 0.6f);
+                    if (sonidos != null) sonidos.tocar("pared", 0.6f);
                     break;
+                case CHOQUE: choques.chocar(efectos, sonidos, px, sy(s.y) - 14 * escala(s.y), s.valor, tiempo, escalaX); break;
                 case PARTE_ROTA:
                     efectos.explosion(px, py, 0.5f);
                     if (sonidos != null) sonidos.tocar("parte_rota", 0.8f);

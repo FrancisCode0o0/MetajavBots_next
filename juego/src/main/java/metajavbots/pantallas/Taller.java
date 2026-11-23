@@ -30,6 +30,11 @@ import metajavbots.textos.T;
 public final class Taller implements Pantalla {
 
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
+
+    /** El editor de código del taller (el tráiler escribe en él un robot, letra a letra). */
+    public VentanaDeCodigo editor() {
+        return editor;
+    }
     private final PanelDeApi api = new PanelDeApi();
     private final PanelDePaquetes paquetes = new PanelDePaquetes();
     private final BancoDePruebas banco = new BancoDePruebas();

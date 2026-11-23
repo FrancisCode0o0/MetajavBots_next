@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,7 +39,7 @@ public final class Exportar {
     }
 
     public static Path exportar(Jugador.Robot r, String autor) throws IOException {
-        Path d = Paths.get("robots_exportados");
+        Path d = metajavbots.progreso.Carpetas.exportados;
         Files.createDirectories(d);
         String nombre = r.nombre.replaceAll("[^\\p{L}\\p{N}_-]", "_");
         Path f = d.resolve(nombre.isEmpty() ? "robot.java" : nombre + ".java");

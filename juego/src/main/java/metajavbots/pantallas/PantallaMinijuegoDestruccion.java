@@ -191,6 +191,11 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         }
     }
 
+    /** Compila el código del editor y, si compila, empieza el reto (el tráiler lo juega sin ratón). */
+    public void empezarParaElTrailer(Juego j) {
+        lanzarCompilacion(j, true);
+    }
+
     /** La preparación con la biblioteca de la API ya abierta junto al editor (capturas). */
     public static PantallaMinijuegoDestruccion conLaApiAbierta() {
         PantallaMinijuegoDestruccion pantalla = new PantallaMinijuegoDestruccion();

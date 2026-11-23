@@ -2,6 +2,72 @@
 
 Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDrive\Hochschule\Desarrollo de juegos\MetajavBots_next`, rama `main`.
 
+## VIDEO_METAJAVBOTS (23-nov-2026, Opus) — hecho, falta que Fran elija
+
+Tráiler de una partida real, renderizado por el propio juego. **Las tres versiones (MP4 y GIF) están en `C:\Users\Francis\git\archivo_para_eliminar\VIDEO_METAJAVBOTS\`** (y en `build\trailer\`). Todas duran 74 s, a 1920×1080 y 60 fps, en H.264 y AAC; los GIF duran 12 s.
+
+- `trailer_1_programar.mp4` (20,4 MB; GIF 3,2 MB): programar y ver el resultado. El Cangrejo se escribe y se compila en el Taller (11 s) y después pelea: duelo, royale, por equipos, carrera y destrucción. Corta cada 2 compases.
+- `trailer_2_modos.mp4` (20,5 MB; GIF 3,5 MB): los modos de juego uno tras otro, cada uno con su rótulo en tres idiomas y su presentación. El código sale al principio, más deprisa.
+- `trailer_3_epico.mp4` (22,1 MB; GIF 5,3 MB): rápido y épico. El código va a toda velocidad, corta cada compás (cada dos pulsos en lo más fuerte) y mete destellos en los golpes de la música.
+
+**Publicar el elegido** (un solo comando, desde la carpeta del repositorio; `2` es la versión elegida):
+
+```
+powershell -ExecutionPolicy Bypass -File herramientas\publicar_trailer.ps1 2
+```
+
+El comando copia su GIF a `docs/imagenes/trailer.gif` y lo pone arriba del README, debajo del título, con el enlace «Ver el tráiler completo» en los tres idiomas. Después hace commit y push de la rama actual. Por último sube el MP4 como `MetajavBots-trailer.mp4` a la Release `trailer` de GitHub (la crea como versión previa) y, si ya hay una versión `v*` publicada, también a esa. Para subir usa la sesión de GitHub que ya tiene git en el PC. Las versiones que se publiquen después lo copian solas: el paso «Tráiler» de `.github/workflows/paquetes.yml` lo baja de la Release `trailer` y lo pone junto a los paquetes. El vídeo no entra en el historial de git. No he publicado ninguno.
+
+**Volver a hacerlo desde cero**: `.\gradlew.bat lwjgl3:trailer -Pffmpeg=<ruta de ffmpeg.exe>`. Sin `-Pffmpeg` usa el `ffmpeg` del PATH. Tarda unos 17 min en grabar y 13 en montar. Por partes: `lwjgl3:grabarTrailer` (`-Psolo=duelo,royale`) y `lwjgl3:montarTrailer` (`-Pversiones=trailer_2_modos`, `-Psoundfont=<.sf2>`). En este PC no había ffmpeg: usé el de gyan.dev (9.1), descomprimido en `archivo_para_eliminar\VIDEO_METAJAVBOTS\ffmpeg_descarga`. Para tenerlo siempre: `winget install Gyan.FFmpeg`.
+
+**Cómo está hecho**:
+- **Robots**: hay seis robots propios en `lwjgl3/trailer/robots/`, y el compilador del juego los compila como compila el código de cualquier jugador. El Cangrejo rodea al rival de lado. El Profeta dispara adonde va a estar el rival. El Toro embiste solo de lejos, pega con el martillo y se aparta tras el choque. El Fortín se atrinchera en una esquina. El Halcón lanza misiles de lejos. El Faro avisa al equipo de dónde está el rival.
+- **Peleas**: hay un duelo (Profeta contra Cangrejo), un battle royale con cinco robots y un dos contra dos (Faro y Faro II contra Cangrejo y Halcón). Las semillas son fijas y las elegí simulando 25 peleas sin pantalla por modo: que duren toda la ronda o acaben en K.O., con muchos golpes fuertes y pocos choques. A eso se suman la Carrera de obstáculos en el subnivel más alto (caen robots del cielo), Destrucción y supervivencia, y el cierre con el título, los tres lemas y el enlace.
+- **Grabación** (`GrabadorDelTrailer`): dibuja en un lienzo de 1920×1080 con una ventana invisible y un paso de tiempo fijo de 1/60 s. Cada fotograma pasa por una tubería a ffmpeg. También anota cada sonido que toca el juego.
+- **Montaje** (`MontajeDelTrailer`, `VersionesDelTrailer`): «Último asalto» se pasa a sonido con GeneralUser GS (`MusicaDelTrailer`). Los cortes caen en los pulsos y el título entra con el acorde final en mayor. En las tomas de «lo mejor», el golpe más fuerte cae justo en un pulso. Los choques entre robots puntúan en contra, con un tope de 3 s por versión; al final quedaron 1,5 s, 2 s y 1 s. Los sonidos del juego van mezclados debajo de la música (`MezclaDelTrailer`). Termina con un fundido. Sonoridad: unos −14 LUFS, pico −0,7 dB.
+- **En el juego** (`pantalla/ChoqueDeRobots`): cada choque entre robots suena con un golpe metálico proporcional a su fuerza (más fuerte y más grave cuanto más deprisa iban) y saca una chispa breve en el punto de contacto. Mientras se empujan no se repite más de una vez por cuarto de segundo, salvo que el choque nuevo sea más fuerte. Cambios pequeños para el grabador: `Juego.pasoDelFotograma()`, `Sonidos.oyente`, `Encuentro.semilla`, `Taller.editor()` y `PantallaMinijuegoDestruccion.empezarParaElTrailer`. `PantallaCarreraDeObstaculos` está en el límite de 800 líneas: el tráiler elige su subnivel y la arranca por reflexión.
+
+**Decisiones mías (cámbialas si quieres)**:
+- El enlace del README va a la Release `trailer`, que es fija y vale aunque todavía no haya `v1.0`.
+- Los rótulos llevan los tres idiomas en la misma línea.
+- Destrucción se juega con el código de partida del editor: el robot cae a los ~11 s, y solo se usa eso.
+- Las tres versiones duran 74 s, porque es lo que dura la pieza con su final.
+
+**Push: no hecho.** Claude Code denegó el permiso de `git push`, como en el encargo anterior. La rama `instalador` (sin unir a `main`) solo está en este PC, ahora con el commit del tráiler. Para subirla: `git push -u origin instalador`. Eso también lanza «Paquetes» en Actions. Hay que hacerlo antes de publicar el tráiler, porque el script hace push de la rama actual.
+
+**Comprobado**: `.\gradlew.bat compileJava estilo pruebas:prueba`: 316 casos bien, 0 mal, Checkstyle sin avisos. He mirado los vídeos con hojas de fotogramas, pero no los he oído: falta que Fran escuche la mezcla. El paso «Tráiler» del flujo y el script de publicar no se han ejecutado; del script solo he comprobado la sintaxis y el cambio del README sobre una copia.
+
+## INSTALADOR_METAJAVBOTS (23-nov-2026, Opus) — hecho
+
+**Descargar y jugar sin saber de programación**: paquetes con su propio Java dentro (Java 21 recortado con jlink, con el compilador `jdk.compiler`) y lanzador de jpackage. `gradlew lwjgl3:paquete` deja la carpeta lista en `build/paquete/imagen/` (`MetajavBots.app` en Mac) y `gradlew lwjgl3:paqueteZip` el ZIP en `build/paquete/` (con OneDrive, en `%LOCALAPPDATA%\MetajavBots\build\lwjgl3\paquete`). `-Pjdk=<carpeta del JDK 21>` elige el JDK (si no, el que corre Gradle) y `-PversionDelPaquete=1.0` la versión. Cada sistema hace su paquete; las nativas de LWJGL de los otros sistemas no entran.
+- **GitHub Actions** (`.github/workflows/paquetes.yml`): construye los tres en Windows, Linux y Mac (Apple, arm64). Con una etiqueta `v*` los cuelga en una Release; en la rama `instalador`, en un pull request que toque el empaquetado o a mano (Actions › Paquetes › Run workflow) solo los deja como artefactos. `pruebas.yml` sigue igual.
+- **Las partidas van a la carpeta del usuario** desde el paquete: `C:\Users\<usuario>\MetajavBots\` (`~/MetajavBots` en Linux y Mac), con `partidas/`, `registro/`, `musica_personal/`, `robots_exportados/` y `robots_ajenos/` (`progreso/Carpetas`; lo activa `Main` si el lanzador de jpackage pone `jpackage.app-path`). Con `jugar.bat` todo sigue como antes, en la carpeta del código. Las claves siguen en `~/.metajavbots`.
+- **README**: «Descargar y jugar» en los tres idiomas, antes de las imágenes; debajo, para quien quiera tocar el código, JDK 21, «Code › Download ZIP» o `git clone` y `jugar.bat`/`jugar.sh`. Los paquetes, en `.gitignore`.
+
+**Tamaño**: Windows, `MetajavBots-1.0-windows.zip` **70,9 MB** (91,3 MB descomprimido; 73,0 MB es el Java). Linux y Mac: los construye GitHub Actions (abajo, «Resultado del flujo»).
+
+**Cómo lo probé** (Windows 11, JDK 21 de `C:\Program Files\Eclipse Adoptium\jdk-21.0.13.10002-hotspot`; el Java del sistema es otro): construí el ZIP, lo descomprimí en `C:\Users\Francis\git\archivo_para_eliminar\INSTALADOR_METAJAVBOTS\prueba_windows` y abrí `MetajavBots.exe`. Arranca en la portada; creé la partida «Prueba Paquete» (Nunca: empiezo de cero › Cobalto › ¡Empezar!), fui al Taller, pulsé **Compilar**: «Compila bien (110 ms). Tu robot pelea con este código.»; luego **¡A pelear!** contra Zumbamatic: terminó la ronda 1 (Cobalto recibió 391 de daño e hizo 83) con su informe. La partida quedó en `C:\Users\Francis\MetajavBots\partidas\Prueba_Paquete` (partida.txt, robot_1.java, robot_1_compilado.java…) y en la carpeta del paquete no se escribió nada. Los clics y las teclas se mandaron como mensajes a la ventana del juego (sin mover el ratón de verdad) y se vio cada paso en capturas de la ventana. Además, las pruebas sin ventana con el Java del paquete: 314 bien y 2 mal que no son del juego (una lee `juego/src` y no se lanzó desde el repositorio; la otra monta servidores falsos con `jdk.httpserver`, que solo usan las pruebas).
+
+**Lo que decidí yo** (para que Fran lo revise):
+- La carpeta del jugador es `MetajavBots` en su carpeta personal (la misma en la que ya se guardaban las repeticiones en GIF). Las partidas hechas con `jugar.bat` no se mueven solas: si se quieren en el paquete, se copia `partidas/` ahí.
+- Mac: solo para chip Apple (M1 o posterior); GitHub ya casi no tiene Mac Intel. Firma «ad hoc» (sin ella un Mac con chip Apple no lo abre); sin firma de pago, macOS pide «Abrir igualmente» la primera vez, y Windows avisa con SmartScreen. Sin icono propio (el de Java por defecto): falta un .ico/.icns.
+- La versión de jpackage solo admite números: de una etiqueta `v1.2.3-beta` se queda con 1.2.3.
+- **Arreglado después** (23-nov): los textos ya no dicen «cuatro rondas» (6 de entrada; 3, 4, 6, 10 o 12 en Desafíos) y un ataque cuenta como un solo acierto aunque haga daño varias veces (la llama, una salva de misiles), así que la puntería ya no pasa del 100 %.
+- Visto al probar, sin tocar: la pelea dice «Ronda 1 de 6» y el README «cuatro rondas»; en el informe de la ronda, «Aciertos: 76 de 14 (543 %)».
+
+**Resultado del flujo**: **no se ha visto**. Al subir la rama, Claude Code denegó el permiso de `git push`, así que la rama `instalador` (dos commits) solo está en este PC y el flujo no ha corrido. Por eso tampoco hay todavía tamaños de los paquetes de Linux y Mac. Para que GitHub Actions pruebe el flujo: `git push -u origin instalador` y mirar «Paquetes» en la pestaña Actions (en cada ejecución, los ZIP están abajo, en *Artifacts*).
+
+**Para Fran — unir la rama y crear la versión** (en la carpeta del repositorio; mejor después de ver «Paquetes» en verde en la rama):
+```
+git switch main
+git pull
+git merge --no-ff instalador
+git push origin main
+git tag -a v1.0 -m "MetajavBots 1.0"
+git push origin v1.0
+```
+La etiqueta lanza «Paquetes» en GitHub Actions; a los ~10 minutos la Release `v1.0` tiene los tres archivos y el enlace del README (`releases/latest`) ya lleva a ella. Luego se puede borrar la rama: `git branch -d instalador` y `git push origin --delete instalador`.
+
 ## VERIFICACION_FINAL de METAJAVBOTS_3 (23-nov-2026, Opus) — hecho
 
 **Resumen verificado de los bloques** (ENCARGO_METAJAVBOTS_3.md): voces sin retraso, bloques 1 (entrenador), 2 (tres cerebros a la vez), 3 (editor), 4 (todo es juego, hasta senior), 5 (5A y 5B: pieza propia, aparatos, repetición con código y GIF, personalidades, biografías, declinación DE, Creed y equilibrio), 6 (música épica MIDI + SoundFont) y 7 (instalado para Fran): **cerrados**. También lo que vino después: tienda ampliada, banco de ejercicios, campañas con escenas, pasada trilingüe, optimización, peso/locomoción/terrenos con su vista previa, música por modo con transiciones (`res/musica/temas.txt`), menú nuevo, botón API y robots que caen en la carrera. `.\gradlew.bat compileJava estilo pruebas:prueba` → **316 casos bien, 0 mal**, Checkstyle 0 avisos (incluidas `PruebasDeEquilibrio` y `PruebasDeMusica`).
