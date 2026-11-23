@@ -33,6 +33,8 @@ El comando copia su GIF a `docs/imagenes/trailer.gif` y lo pone arriba del READM
 - Destrucción se juega con el código de partida del editor: el robot cae a los ~11 s, y solo se usa eso.
 - Las tres versiones duran 74 s, porque es lo que dura la pieza con su final.
 
+**Push: no hecho.** Claude Code denegó el permiso de `git push`, como en el encargo anterior. La rama `instalador` (sin unir a `main`) solo está en este PC, ahora con el commit del tráiler. Para subirla: `git push -u origin instalador`. Eso también lanza «Paquetes» en Actions. Hay que hacerlo antes de publicar el tráiler, porque el script hace push de la rama actual.
+
 **Comprobado**: `.\gradlew.bat compileJava estilo pruebas:prueba`: 316 casos bien, 0 mal, Checkstyle sin avisos. He mirado los vídeos con hojas de fotogramas, pero no los he oído: falta que Fran escuche la mezcla. El paso «Tráiler» del flujo y el script de publicar no se han ejecutado; del script solo he comprobado la sintaxis y el cambio del README sobre una copia.
 
 ## INSTALADOR_METAJAVBOTS (23-nov-2026, Opus) — hecho
