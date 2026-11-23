@@ -80,7 +80,10 @@ public final class Puente {
     /** Deja de contar y devuelve los pasos dados. */
     public static long dejarDeContar() {
         Tope.Cuenta c = Tope.CUENTA.get();
-        if (c != null) c.cancelada = true;
+        if (c != null) {
+            c.cancelada = true;
+            c.cerrada = true;
+        }
         Tope.CUENTA.remove();
         return c == null ? 0 : c.pasos.get();
     }

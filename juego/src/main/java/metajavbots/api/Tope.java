@@ -22,6 +22,8 @@ public final class Tope {
         long maxBytes = Long.MAX_VALUE;
         long mascaraTiempo = 1023;
         volatile boolean cancelada;
+        /** La comprobación que la abrió ya terminó (dejarDeContar). */
+        volatile boolean cerrada;
         /** Las líneas que se han ejecutado (solo con la traza: el modo máquina contra máquina). */
         final java.util.BitSet lineas = new java.util.BitSet();
         int ultima;
@@ -39,6 +41,12 @@ public final class Tope {
     public static boolean paso() {
         Cuenta c = CUENTA.get();
         if (c == null) return true;
+        if (c.cerrada && Thread.currentThread() instanceof java.util.concurrent.ForkJoinWorkerThread) {
+            // Un hilo del pool común heredó la cuenta de una comprobación ya terminada (pasa en Java 21):
+            // se suelta para que no cancele el código de las comprobaciones siguientes.
+            CUENTA.remove();
+            return true;
+        }
         long p = c.pasos.incrementAndGet();
         if (p > c.maximo) throw new TopeDeCalculo("pasos: " + p);
         if ((p & c.mascaraTiempo) == 0 && (c.cancelada || System.nanoTime() > c.limiteNanos)) {

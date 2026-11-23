@@ -67,7 +67,9 @@ public final class Guardado {
         String nueva = carpetaDe(nombreNuevo);
         Jugador j = leer(carpetaDelJugador);
         boolean mismaCarpeta = nueva.equalsIgnoreCase(carpetaDelJugador);
-        if (!mismaCarpeta && Files.exists(carpeta.resolve(nueva))) throw new IOException("ya existe");
+        // En Windows «ana» y «Ana» son la misma carpeta; en Linux y Mac no: se compara sin mayúsculas en todos.
+        boolean ocupada = Files.exists(carpeta.resolve(nueva)) || partidas().stream().anyMatch(nueva::equalsIgnoreCase);
+        if (!mismaCarpeta && ocupada) throw new IOException("ya existe");
         if (!mismaCarpeta) Files.move(carpeta.resolve(carpetaDelJugador), carpeta.resolve(nueva));
         else if (!nueva.equals(carpetaDelJugador)) {
             // Solo cambian mayúsculas: en Windows hay que pasar por un nombre intermedio.
