@@ -3,6 +3,7 @@ package metajavbots.combate;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 import metajavbots.api.RobotBase;
 import metajavbots.piezas.Modelo;
@@ -14,7 +15,8 @@ import metajavbots.textos.Idioma;
  * CARRERA DE OBSTÁCULOS — Lógica headless de una carrera en pista larga (6×)
  * desde la salida (izquierda) hasta la meta (derecha), con rotación de arenas,
  * obstáculos visibles/ocultos/repentinos, robots defectuosos destructibles,
- * objetos recogibles de impulso de velocidad y combate permitido contra el rival.
+ * objetos recogibles de impulso de velocidad, algún robot averiado que cae del
+ * cielo (CaidasDelCieloEnCarrera) y combate permitido contra el rival.
  */
 public final class CarreraDeObstaculos {
 
@@ -91,6 +93,13 @@ public final class CarreraDeObstaculos {
 
     private final List<PistaDeCarrera.ObstaculoRepentino> repentinos;
     private final List<PistaDeCarrera.DefectuosoEnPista> defectuosos;
+    /** Robots del cielo: avisos en curso, tramos de la pista en que caen y cuántos han caído. */
+    private final List<MinijuegoDestruccion.AvisoAparicion> avisosCielo = new ArrayList<>();
+    private final double[] tramosDeCaida;
+    private final int primerCuerpoDelCielo;
+    private final Random azarCielo;
+    private int siguienteCaida;
+    private int caidasDelCielo;
     private boolean terminada;
     private boolean rendido;
     private int ganador = -2;
@@ -153,8 +162,11 @@ public final class CarreraDeObstaculos {
         this.escenario = PistaDeCarrera.siguienteArena(arenaAnterior, semilla);
         this.defectuosos = PistaDeCarrera.crearRobotsDefectuosos(anchoPista, ALTO, semilla, this.dificultad, this.subnivel);
         this.repentinos = PistaDeCarrera.planearRepentinos(anchoPista, ALTO, semilla, this.dificultad, this.subnivel);
+        // Azar propio para las caídas del cielo: no cambia ni la pista ni lo demás que sale de la semilla.
+        this.azarCielo = new Random(semilla * 31L + 0xC1E10L + this.dificultad.ordinal() * 17L + this.subnivel);
+        this.tramosDeCaida = planearTramosDeCaida(CaidasDelCieloEnCarrera.cuantas(this.dificultad, this.subnivel), azarCielo);
 
-        int total = 2 + defectuosos.size();
+        int total = 2 + defectuosos.size() + tramosDeCaida.length;
         Combatiente[] cs = new Combatiente[total];
         int[] equipos = new int[total];
         cs[0] = jugador;
@@ -165,6 +177,11 @@ public final class CarreraDeObstaculos {
             cs[2 + i] = defectuosos.get(i).combatiente();
             equipos[2 + i] = 2;
         }
+        this.primerCuerpoDelCielo = 2 + defectuosos.size();
+        for (int i = 0; i < tramosDeCaida.length; i++) {
+            cs[primerCuerpoDelCielo + i] = PistaDeCarrera.crearAveriadoDelCielo(this.dificultad, this.subnivel, azarCielo, i);
+            equipos[primerCuerpoDelCielo + i] = 2;
+        }
         this.pelea = new Pelea(cs, equipos, semilla, anchoPista, ALTO, maxTurnos);
         this.pelea.rondas = 1;
         this.pelea.multiplicadorDano = this.dificultad.multiplicadorDano;
@@ -173,6 +190,95 @@ public final class CarreraDeObstaculos {
         this.pelea.arena = PistaDeCarrera.generarArena(anchoPista, ALTO, semilla, escenario, this.dificultad, this.subnivel);
         this.pelea.empezarRonda();
         colocarEnSalida();
+        guardarRobotsDelCielo();
+    }
+
+    /** Reparte las caídas entre los tramos de la pista: una por tramo, en un punto al azar dentro de él. */
+    private static double[] planearTramosDeCaida(int cuantas, Random azar) {
+        double[] tramos = new double[Math.max(0, cuantas)];
+        double largo = CaidasDelCieloEnCarrera.ULTIMO_TRAMO - CaidasDelCieloEnCarrera.PRIMER_TRAMO;
+        for (int i = 0; i < tramos.length; i++) {
+            tramos[i] = CaidasDelCieloEnCarrera.PRIMER_TRAMO + largo * (i + 0.15 + 0.7 * azar.nextDouble()) / tramos.length;
+        }
+        return tramos;
+    }
+
+    /** Los robots del cielo esperan fuera de la pista hasta que les toca caer. */
+    private void guardarRobotsDelCielo() {
+        for (int i = 0; i < tramosDeCaida.length; i++) {
+            Cuerpo c = pelea.cuerpo(primerCuerpoDelCielo + i);
+            if (c == null) continue;
+            c.enReserva = true;
+            c.fuera = true;
+            c.cayendo = 0;
+            c.x = -500;
+            c.y = -500;
+        }
+    }
+
+    /** Si quien va en cabeza llega al tramo de la siguiente caída, se avisa con la sombra; al acabar el aviso, cae. */
+    private void actualizarCaidasDelCielo() {
+        for (int i = 0; i < tramosDeCaida.length; i++) {
+            Cuerpo c = pelea.cuerpo(primerCuerpoDelCielo + i);
+            if (c != null && c.cayendo > 0) c.cayendo--;
+        }
+        if (siguienteCaida < tramosDeCaida.length && Math.max(progreso(0), progreso(1)) >= tramosDeCaida[siguienteCaida]) {
+            double[] pos = posicionDeCaida();
+            avisosCielo.add(new MinijuegoDestruccion.AvisoAparicion(pos[0], pos[1], 34, true, "robot",
+                    MinijuegoDestruccion.TURNOS_AVISO_CIELO, false));
+            siguienteCaida++;
+        }
+        for (int i = avisosCielo.size() - 1; i >= 0; i--) {
+            MinijuegoDestruccion.AvisoAparicion a = avisosCielo.get(i);
+            if (a.pasarTurno()) {
+                avisosCielo.remove(i);
+                aterrizarRobotDelCielo(a);
+            }
+        }
+    }
+
+    /** Un sitio al azar de la pista, por delante de quien va en cabeza (nunca encima de nadie) y antes de la meta. */
+    private double[] posicionDeCaida() {
+        Cuerpo c0 = pelea.cuerpo(0);
+        Cuerpo c1 = pelea.cuerpo(1);
+        double cabeza = SALIDA_X;
+        if (c0 != null && !c0.fuera) cabeza = Math.max(cabeza, c0.x);
+        if (c1 != null && !c1.fuera) cabeza = Math.max(cabeza, c1.x);
+        double delante = CaidasDelCieloEnCarrera.DELANTE_MIN
+                + azarCielo.nextDouble() * (CaidasDelCieloEnCarrera.DELANTE_MAX - CaidasDelCieloEnCarrera.DELANTE_MIN);
+        double x = Math.min(metaX - 160, cabeza + delante);
+        double margen = 95;
+        double y = margen + azarCielo.nextDouble() * (ALTO - 2 * margen);
+        return new double[]{x, y};
+    }
+
+    private void aterrizarRobotDelCielo(MinijuegoDestruccion.AvisoAparicion a) {
+        int indice = primerCuerpoDelCielo + caidasDelCielo;
+        Cuerpo c = indice < pelea.combatientes.length ? pelea.cuerpo(indice) : null;
+        if (c == null || !c.enReserva) return;
+        c.enReserva = false;
+        c.fuera = false;
+        c.cayendo = 14;
+        c.x = a.x;
+        c.y = a.y;
+        c.rumbo = Pelea.normal(180 + (azarCielo.nextDouble() * 2.0 - 1.0) * 30.0);
+        c.mira = c.rumbo;
+        c.velocidad = 0;
+        c.detener();
+        caidasDelCielo++;
+        pelea.suceso(Suceso.Tipo.TRAMPA, -1, c.x, c.y, 0, c.radio, "repentino_robot");
+        // Como en Destrucción y supervivencia: quien no se aparta de la sombra se lleva el golpe.
+        for (int k = 0; k < 2; k++) {
+            Cuerpo corredor = pelea.cuerpo(k);
+            if (corredor == null || corredor.fuera) continue;
+            double dist = Math.hypot(corredor.x - c.x, corredor.y - c.y);
+            if (dist > corredor.radio + c.radio + MinijuegoDestruccion.MARGEN_IMPACTO_CAIDA) continue;
+            double ang = dist < 0.01 ? 0 : Math.toDegrees(Math.atan2(c.y - corredor.y, c.x - corredor.x));
+            pelea.danar(corredor, null, MinijuegoDestruccion.DANO_BASE_CAIDA_NORMAL, "caida_robot", ang, true, corredor.x, corredor.y);
+            pelea.suceso(Suceso.Tipo.EXPLOSION, k, c.x, c.y, ang,
+                    MinijuegoDestruccion.DANO_BASE_CAIDA_NORMAL * pelea.multiplicadorDano, "caida_robot");
+            corredor.velocidad *= 0.25;
+        }
     }
 
     private void colocarEnSalida() {
@@ -214,6 +320,7 @@ public final class CarreraDeObstaculos {
         pelea.avanzar();
         procesarSucesosDelTurno();
         PistaDeCarrera.actualizarRepentinos(repentinos, pelea, dificultad);
+        actualizarCaidasDelCielo();
         evaluarFin();
     }
 
@@ -498,14 +605,29 @@ public final class CarreraDeObstaculos {
         return Collections.unmodifiableList(repentinos);
     }
 
-    /** Cuerpos de los robots defectuosos colocados en la pista. */
+    /** Cuerpos de los robots defectuosos en la pista: los colocados al empezar y los que ya cayeron del cielo. */
     public List<Cuerpo> robotsDefectuosos() {
         List<Cuerpo> lista = new ArrayList<>();
         for (int i = 2; i < pelea.combatientes.length; i++) {
             Cuerpo c = pelea.cuerpo(i);
-            if (c != null) lista.add(c);
+            if (c != null && !c.enReserva) lista.add(c);
         }
         return lista;
+    }
+
+    /** Sombras de aviso de los robots que están a punto de caer del cielo. */
+    public List<MinijuegoDestruccion.AvisoAparicion> avisosDelCielo() {
+        return Collections.unmodifiableList(avisosCielo);
+    }
+
+    /** Robots que caerán del cielo en esta carrera (CaidasDelCieloEnCarrera). */
+    public int caidasPrevistas() {
+        return tramosDeCaida.length;
+    }
+
+    /** Robots que ya han caído del cielo en esta carrera. */
+    public int caidasDelCielo() {
+        return caidasDelCielo;
     }
 
     /**

@@ -52,6 +52,9 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     };
 
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
+    /** La biblioteca de la API del Taller, junto al editor mientras se prepara el código (botón «API» o F1). */
+    private final PanelDeApi api = new PanelDeApi();
+    private boolean conApi;
     private final VentanaDeCodigo visorEnVivo = new VentanaDeCodigo();
     private final RobotDelJugador compilado = new RobotDelJugador();
     private final SelectorDeMinijuego selector = new SelectorDeMinijuego();
@@ -238,6 +241,39 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         }
     }
 
+    /** La preparación con la biblioteca de la API ya abierta junto al editor (capturas). */
+    public static PantallaCarreraDeObstaculos conLaApiAbierta() {
+        PantallaCarreraDeObstaculos pantalla = new PantallaCarreraDeObstaculos();
+        pantalla.conApi = true;
+        return pantalla;
+    }
+
+    /**
+     * Para las capturas: una carrera ya en marcha (corre el corredor de la máquina por el jugador), parada justo cuando la
+     * sombra de un robot del cielo avisa en la pista.
+     */
+    public void empezarConCaidaParaCapturas(Juego j) {
+        dificultad = DificultadCarrera.seleccionarPara(j.jugador, DificultadCarrera.JUNIOR);
+        subnivel = DificultadCarrera.SUBNIVEL_MAX;
+        // El corredor más rápido para que vaya en cabeza y la sombra quede a la vista.
+        Combatiente yo = CarreraDeObstaculos.rivalMaquina(j.jugador.robot() != null ? j.jugador.robot().nombre : "Robot",
+                DificultadCarrera.ESPECIAL, DificultadCarrera.SUBNIVEL_MAX);
+        yo.computadora = false;
+        carrera = new CarreraDeObstaculos(yo, CarreraDeObstaculos.rivalMaquina(T.t("carrera_obs.maquina_nombre"), dificultad, subnivel),
+                semilla, true, escenarioAnterior, dificultad, subnivel);
+        Cuerpo c0 = carrera.pelea.cuerpo(0);
+        for (int t = 0; t < carrera.maxTurnos() && !carrera.terminada(); t++) {
+            carrera.avanzar();
+            List<metajavbots.combate.MinijuegoDestruccion.AvisoAparicion> avisos = carrera.avisosDelCielo();
+            if (!avisos.isEmpty() && avisos.get(0).progreso() > 0.45f && Math.abs(avisos.get(0).x - c0.x - 240) < 620) break;
+        }
+        escenarioActual = carrera.escenario();
+        vista.escenario = escenarioDe(escenarioActual);
+        vista.enfocarCamara(c0.x + 240, VENTANA_CAMARA);
+        preparando = false;
+        pausado = true;
+    }
+
     @Override
     public void alEntrar(Juego j) {
         vista = new VistaDeArena(j.pincel);
@@ -251,6 +287,10 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         editor.documentacion = w -> Referencia.de(w, j.jugador.idioma);
         editor.tamano = j.jugador.tamanoDeLetra;
         editor.alCompilar = () -> lanzarCompilacion(j, reintentarAlGuardar);
+        editor.alPedirAyuda = palabra -> {
+            conApi = true;
+            api.buscar(palabra);
+        };
         visorEnVivo.soloLectura = true;
         visorEnVivo.seguirActiva = true;
         visorEnVivo.palabras = Palabras.api(j.jugador.idioma);
@@ -268,7 +308,9 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
                         + "rewards scale up with difficulty and sublevel; losing without breaking or collecting anything gives 0 coins, "
                         + "losing with bonuses gives 1/4 of their value, winning gives 100%, and pressing Surrender ends immediately with 0 rewards). "
                         + "The player can choose and live-preview unlocked robot models, switch robots, and swap available/purchased parts "
-                        + "(head, arms, legs) directly in the race menu.",
+                        + "(head, arms, legs) directly in the race menu. A few broken robots fall from the sky onto the track ahead of the leader "
+                        + "(more with difficulty and sublevel), announced by the same red shadow as in Destruction & Survival. "
+                        + "While editing, the API button (or F1 on a word) opens the API library beside the editor.",
                 editor);
     }
 
@@ -330,7 +372,9 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         float altoCuerpo = p.alto - yTrasBarra - 16;
         float anchoMapa = Math.max(360, w * 0.42f);
         float anchoEditor = w - anchoMapa - 16;
-        dibujarPanelMapa(j, x, yTrasBarra, anchoMapa, altoCuerpo);
+        // Con la API abierta, ocupa el sitio del mapa: el editor no se estrecha ni queda tapado.
+        if (conApi) api.dibujar(j.ui, j.jugador.idioma, editor, x, yTrasBarra, anchoMapa, altoCuerpo);
+        else dibujarPanelMapa(j, x, yTrasBarra, anchoMapa, altoCuerpo);
         dibujarPanelEditor(j, x + anchoMapa + 16, yTrasBarra, anchoEditor, altoCuerpo);
     }
 
@@ -523,40 +567,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         DibujoCarreraDeObstaculos.mapaGeneral(p, ui, vistaPrevia, CarreraDeObstaculos.anchoPara(dificultad),
                 CarreraDeObstaculos.metaPara(dificultad), mx, cy + 4, mw, mh);
         float ly = cy + mh + 10;
-        float paso = ui.letra * 1.06f;
-        float tl = ui.letra * 0.66f;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0xD97236, 1);
-        p.texto(T.t("carrera_obs.leyenda_destructible"), mx + 24, ly, tl, false, ui.tema.texto, 1);
-        ly += paso;
-        p.rect(mx + 3, ly + 1, 11, 11, 0xE05A4F, 1);
-        p.texto(T.t("carrera_obs.leyenda_indestructible"), mx + 24, ly, tl, false, ui.tema.texto, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 6.5f, 0xFFC857, 1);
-        p.circulo(mx + 9, ly + 7, 4.5f, 0xFF1E42, 1);
-        p.texto(T.t("carrera_obs.leyenda_mortal"), mx + 24, ly, tl, true, 0xFF6B7A, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0xFFD23F, 1);
-        p.texto(T.t("carrera_obs.leyenda_moneda"), mx + 24, ly, tl, true, 0xFFD23F, 1);
-        ly += paso;
-        p.triangulo(mx + 3, ly + 12, mx + 15, ly + 12, mx + 15, ly + 2, 0xFF9F1C, 1);
-        p.texto(T.t("carrera_obs.leyenda_rampa"), mx + 24, ly, tl, false, 0xFFC857, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0x33A8E8, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_agua"), mx + 24, ly, tl, false, 0x6FD3FF, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0x3FE0FF, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_impulso"), mx + 24, ly, tl, false, 0x9CFF57, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0x2EE58D, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_reparacion"), mx + 24, ly, tl, false, 0x2EE58D, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0xFF7A45, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_rotos"), mx + 24, ly, tl, false, ui.tema.aviso, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0x3FE0FF, 0.45f);
-        p.texto(T.t("carrera_obs.leyenda_ocultos"), mx + 24, ly, tl, true, ui.tema.textoSuave, 1);
-        ly += paso + 4;
-        p.parrafo(T.t("carrera_obs.mapa_ayuda"), mx, ly, mw, tl, ui.tema.textoSuave, 1);
+        DibujoCarreraDeObstaculos.leyendaMapa(p, ui, mx, ly, mw);
     }
 
     private void dibujarPanelEditor(Juego j, float x, float y, float w, float h) {
@@ -565,11 +576,13 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         String[] textos = {
                 compilando ? T.t("taller.compilando") : T.t("taller.compilar"),
                 T.t("taller.plantilla"),
-                T.t("carrera_obs.iniciar")
+                T.t("carrera_obs.iniciar"),
+                T.t("taller.api")
         };
-        Ui.Estilo[] estilos = {Ui.Estilo.COMPILAR, Ui.Estilo.PLANO, Ui.Estilo.DESTACADO};
-        boolean[] activos = {!compilando, !compilando, !compilando};
-        String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("carrera_obs.iniciar_ayuda")};
+        Ui.Estilo[] estilos = {Ui.Estilo.COMPILAR, Ui.Estilo.PLANO, Ui.Estilo.DESTACADO, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO};
+        boolean[] activos = {!compilando, !compilando, !compilando, true};
+        String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("carrera_obs.iniciar_ayuda"),
+            T.t("taller.api_ayuda")};
         switch (ui.botonera(textos, estilos, activos, ayudas, x, y, w, 44)) {
             case 0:
                 lanzarCompilacion(j, reintentarAlGuardar);
@@ -581,6 +594,9 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             case 2:
                 reintentarAlGuardar = false;
                 iniciarCarrera(j, rotarEnSiguienteCarrera);
+                break;
+            case 3:
+                conApi = !conApi;
                 break;
             default:
                 break;
@@ -706,6 +722,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         float aw = verCodigoEnVivo ? w - anchoCodigo - 12f : w;
         vista.dibujar(p, carrera.pelea, x, ay, aw, ah, dt);
         DibujoCarreraDeObstaculos.lineasPista(p, ui, vista, carrera.metaX());
+        DibujoMinijuegoDestruccion.avisosEnArena(p, vista, carrera.avisosDelCielo());
         float mmW = Math.min(aw - 40, 680);
         float mmH = 44;
         DibujoCarreraDeObstaculos.minimapa(p, ui, carrera, vista, x + (aw - mmW) / 2, ay + ah - mmH - 12, mmW, mmH);

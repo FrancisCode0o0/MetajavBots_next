@@ -414,6 +414,22 @@ public final class PistaDeCarrera {
         return lista;
     }
 
+    /** Un robot averiado de reserva que caerá del cielo en la carrera: móvil y como los de la pista de esa dificultad. */
+    static Combatiente crearAveriadoDelCielo(DificultadCarrera dificultad, int subnivel, Random r, int indice) {
+        DificultadCarrera dif = dificultad == null ? DificultadCarrera.porDefecto() : dificultad;
+        int extra = DificultadCarrera.normalizarSubnivel(subnivel) - 1;
+        int cadencia = Math.max(5, dif.cadenciaDisparoDefectuosos - extra * 2);
+        Combatiente c = new Combatiente("Caido-" + (indice + 1), montajeDefectuoso(dif, indice + 5), fabricaDefectuoso(false, cadencia));
+        c.computadora = true;
+        c.defectuoso = true;
+        c.escalaBlindaje = dif.escalaBlindajeDefectuosos;
+        c.escalaDano = dif.escalaDanoDefectuosos;
+        for (int k = 0; k < 6; k++) {
+            c.abollar(k % 4, r, 14 + r.nextDouble() * 12, k % 2 == 0);
+        }
+        return c;
+    }
+
     private static Montaje montajeDefectuoso(DificultadCarrera dif, int indice) {
         List<Modelo> todos = Modelo.todos();
         Modelo modelo = Modelo.de("cobalto");

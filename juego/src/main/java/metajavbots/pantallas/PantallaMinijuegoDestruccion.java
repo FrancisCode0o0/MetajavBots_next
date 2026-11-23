@@ -35,6 +35,9 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
     private static final double VENTANA_CAMARA = 1150.0;
 
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
+    /** La biblioteca de la API del Taller, junto al editor mientras se prepara el código (botón «API» o F1). */
+    private final PanelDeApi api = new PanelDeApi();
+    private boolean conApi;
     private final VentanaDeCodigo visorEnVivo = new VentanaDeCodigo();
     private final RobotDelJugador compilado = new RobotDelJugador();
     private final SelectorDeMinijuego selector = new SelectorDeMinijuego();
@@ -176,12 +179,23 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         editor.documentacion = w -> Referencia.de(w, j.jugador.idioma);
         editor.tamano = j.jugador.tamanoDeLetra;
         editor.alCompilar = () -> lanzarCompilacion(j, reintentarAlGuardar);
+        editor.alPedirAyuda = palabra -> {
+            conApi = true;
+            api.buscar(palabra);
+        };
         visorEnVivo.soloLectura = true;
         visorEnVivo.seguirActiva = true;
         visorEnVivo.palabras = Palabras.api(j.jugador.idioma);
         if (editor.doc.texto().isBlank()) {
             editor.ponerTexto(MinijuegoDestruccion.plantillaInicial(j.jugador.idioma));
         }
+    }
+
+    /** La preparación con la biblioteca de la API ya abierta junto al editor (capturas). */
+    public static PantallaMinijuegoDestruccion conLaApiAbierta() {
+        PantallaMinijuegoDestruccion pantalla = new PantallaMinijuegoDestruccion();
+        pantalla.conApi = true;
+        return pantalla;
     }
 
     @Override
@@ -255,7 +269,9 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         float altoCuerpo = p.alto - yTrasBarra - 16;
         float anchoReglas = Math.max(350, w * 0.40f);
         float anchoEditor = w - anchoReglas - 16;
-        DibujoMinijuegoDestruccion.panelReglas(p, j.ui, dificultad, subnivel, x, yTrasBarra, anchoReglas, altoCuerpo);
+        // Con la API abierta, ocupa el sitio de las reglas: el editor no se estrecha ni queda tapado.
+        if (conApi) api.dibujar(j.ui, j.jugador.idioma, editor, x, yTrasBarra, anchoReglas, altoCuerpo);
+        else DibujoMinijuegoDestruccion.panelReglas(p, j.ui, dificultad, subnivel, x, yTrasBarra, anchoReglas, altoCuerpo);
         dibujarPanelEditor(j, x + anchoReglas + 16, yTrasBarra, anchoEditor, altoCuerpo);
     }
 
@@ -380,11 +396,13 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         String[] textos = {
                 compilando ? T.t("taller.compilando") : T.t("taller.compilar"),
                 T.t("taller.plantilla"),
-                T.t("destruccion.iniciar")
+                T.t("destruccion.iniciar"),
+                T.t("taller.api")
         };
-        Ui.Estilo[] estilos = {Ui.Estilo.COMPILAR, Ui.Estilo.PLANO, Ui.Estilo.DESTACADO};
-        boolean[] activos = {!compilando, !compilando, !compilando};
-        String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("destruccion.iniciar_ayuda")};
+        Ui.Estilo[] estilos = {Ui.Estilo.COMPILAR, Ui.Estilo.PLANO, Ui.Estilo.DESTACADO, conApi ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO};
+        boolean[] activos = {!compilando, !compilando, !compilando, true};
+        String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("destruccion.iniciar_ayuda"),
+            T.t("taller.api_ayuda")};
         switch (ui.botonera(textos, estilos, activos, ayudas, x, y, w, 44)) {
             case 0:
                 lanzarCompilacion(j, reintentarAlGuardar);
@@ -400,6 +418,9 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
                     rotarEnSiguienteReto = false;
                 }
                 iniciarReto(j);
+                break;
+            case 3:
+                conApi = !conApi;
                 break;
             default:
                 break;
@@ -500,7 +521,7 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         float anchoCodigo = verCodigoEnVivo ? Math.min(500f, Math.max(360f, w * 0.36f)) : 0f;
         float aw = verCodigoEnVivo ? w - anchoCodigo - 12f : w;
         vista.dibujar(p, reto.pelea, x, ay, aw, ah, dt);
-        DibujoMinijuegoDestruccion.avisosEnArena(p, vista, reto);
+        DibujoMinijuegoDestruccion.avisosEnArena(p, vista, reto.avisosActivos());
         float mmW = Math.min(aw - 40, 520), mmH = 44;
         DibujoMinijuegoDestruccion.minimapa(p, j.ui, reto, vista, x + (aw - mmW) / 2, ay + ah - mmH - 12, mmW, mmH);
         if (verCodigoEnVivo) {

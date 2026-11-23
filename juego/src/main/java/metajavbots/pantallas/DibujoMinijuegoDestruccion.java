@@ -1,5 +1,6 @@
 package metajavbots.pantallas;
 
+import java.util.List;
 import java.util.Locale;
 
 import metajavbots.Juego;
@@ -60,9 +61,9 @@ final class DibujoMinijuegoDestruccion {
         p.textoCentrado("3× ARENA (3000 × 700)", x + w / 2f, y + h - 22, Math.min(ui.letra * 0.64f, 14f), true, 0xFFC857, 0.95f);
     }
 
-    /** Dibuja en la arena las sombras de caída desde el cielo y señales de aparición desde el suelo. */
-    static void avisosEnArena(Pincel p, VistaDeArena vista, MinijuegoDestruccion juego) {
-        for (MinijuegoDestruccion.AvisoAparicion a : juego.avisosActivos()) {
+    /** Dibuja en la arena las sombras de caída desde el cielo y señales de aparición desde el suelo (también en la carrera). */
+    static void avisosEnArena(Pincel p, VistaDeArena vista, List<MinijuegoDestruccion.AvisoAparicion> avisos) {
+        for (MinijuegoDestruccion.AvisoAparicion a : avisos) {
             float cx = vista.sx(a.x, a.y);
             float cy = vista.sy(a.y);
             float rx = (float) a.radio * vista.escala(a.y);

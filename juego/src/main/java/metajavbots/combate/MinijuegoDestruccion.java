@@ -102,6 +102,12 @@ public final class MinijuegoDestruccion {
             this.turnosRestantes = this.turnosTotales;
         }
 
+        /** Gasta un turno del aviso; devuelve true cuando el elemento ya aterriza o brota. */
+        boolean pasarTurno() {
+            turnosRestantes--;
+            return turnosRestantes <= 0;
+        }
+
         /** Turnos restantes antes de que el elemento aterrice o brote. */
         public int turnosRestantes() {
             return turnosRestantes;

@@ -13,11 +13,13 @@ import java.util.Locale;
 
 import metajavbots.api.Cosa;
 import metajavbots.combate.Arena;
+import metajavbots.combate.CaidasDelCieloEnCarrera;
 import metajavbots.combate.CarreraDeObstaculos;
 import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.DificultadCarrera;
 import metajavbots.combate.Fabrica;
+import metajavbots.combate.MinijuegoDestruccion;
 import metajavbots.pantallas.ConsultaIaEntrenador;
 import metajavbots.pantallas.Menu;
 import metajavbots.pantallas.PantallaCarreraDeObstaculos;
@@ -52,6 +54,88 @@ final class PruebasDeCarreraDeObstaculos2 {
         apuntarSelectorPiezasEnMenuYAccesoPrincipal();
         apuntarModelosDesbloqueadosYRendirse();
         apuntarDanoIncrementadoYParidadTrilingue();
+        apuntarRobotsDelCieloEnLaCarrera();
+    }
+
+    private static void apuntarRobotsDelCieloEnLaCarrera() {
+        caso("carrera de obstáculos: robots del cielo, pocos y crecientes por dificultad y subnivel, avisados y ganables", () -> {
+            int[] maximos = {2, 4, 5, 7};
+            DificultadCarrera[] niveles = DificultadCarrera.values();
+            for (int i = 0; i < niveles.length; i++) {
+                DificultadCarrera d = niveles[i];
+                int anterior = 0;
+                for (int s = DificultadCarrera.SUBNIVEL_MIN; s <= DificultadCarrera.SUBNIVEL_MAX; s++) {
+                    int n = CaidasDelCieloEnCarrera.cuantas(d, s);
+                    cierto(n >= 1 && n <= maximos[i], "caídas de " + d + " " + s + " entre 1 y " + maximos[i] + ": " + n);
+                    cierto(n >= anterior, "las caídas no bajan al subir de subnivel en " + d);
+                    anterior = n;
+                }
+                igual(maximos[i], CaidasDelCieloEnCarrera.cuantas(d, DificultadCarrera.SUBNIVEL_MAX), "el subnivel III de " + d + " llega al máximo");
+            }
+            // Un corredor que recorre la pista entera (lo llevamos a mano, sin que nada lo pare) cuenta las caídas de cada nivel.
+            for (DificultadCarrera d : niveles) {
+                for (int s = DificultadCarrera.SUBNIVEL_MIN; s <= DificultadCarrera.SUBNIVEL_MAX; s++) {
+                    Combatiente jug = new Combatiente("Jug", new Montaje(Modelo.de("cobalto")),
+                            PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+                    Combatiente riv = new Combatiente("Riv", new Montaje(Modelo.de("cobalto")),
+                            PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+                    CarreraDeObstaculos c = new CarreraDeObstaculos(jug, riv, 4242L + s, false, null, d, s);
+                    int previstas = CaidasDelCieloEnCarrera.cuantas(d, s);
+                    igual(previstas, c.caidasPrevistas(), "la carrera prevé las caídas de la tabla en " + d + " " + s);
+                    int alEmpezar = c.robotsDefectuosos().size();
+                    int avisos = 0;
+                    Cuerpo c0 = c.pelea.cuerpo(0);
+                    for (int t = 0; t < c.maxTurnos() && !c.terminada(); t++) {
+                        c0.x = CarreraDeObstaculos.SALIDA_X + 10.0 * t;
+                        c0.y = carrilLibre(c, c0.x);
+                        for (int k = 0; k < 4; k++) c0.parte[k] = c0.parteMax[k];
+                        int antes = c.avisosDelCielo().size();
+                        c.avanzar();
+                        if (c.avisosDelCielo().size() > antes) {
+                            avisos++;
+                            MinijuegoDestruccion.AvisoAparicion a = c.avisosDelCielo().get(c.avisosDelCielo().size() - 1);
+                            cierto(a.desdeCielo && a.turnosTotales == MinijuegoDestruccion.TURNOS_AVISO_CIELO,
+                                    "se avisa con la misma sombra que en Destrucción y supervivencia");
+                            cierto(a.x - c0.x >= CaidasDelCieloEnCarrera.DELANTE_MIN - 1, "cae por delante y nunca encima en " + d + " " + s);
+                            cierto(a.x < c.metaX(), "cae antes de la meta");
+                        }
+                    }
+                    igual(previstas, avisos, "una sombra por caída en " + d + " " + s);
+                    igual(previstas, c.caidasDelCielo(), "caen todos los de la tabla en " + d + " " + s);
+                    cierto(c.robotsDefectuosos().size() >= alEmpezar, "los caídos se suman a los robots averiados de la pista");
+                    igual(0, c.ganador(), "los robots del cielo no cierran el paso a la meta en " + d + " " + s);
+                }
+            }
+            // Con corredores de verdad: en Noob el corredor de la máquina sigue ganando casi siempre.
+            int ganadas = 0;
+            for (long semilla = 1; semilla <= 12; semilla++) {
+                Combatiente jug = CarreraDeObstaculos.rivalMaquina("Jug", DificultadCarrera.NOOB, 1);
+                jug.computadora = false;
+                Combatiente riv = new Combatiente("Riv", new Montaje(Modelo.de("cobalto")),
+                        PruebasDeLaPelea.de(PruebasDeCarreraDeObstaculos.Quieto::new));
+                CarreraDeObstaculos c = new CarreraDeObstaculos(jug, riv, 4240L + semilla * 7, false, null, DificultadCarrera.NOOB, 1);
+                for (int t = 0; t < c.maxTurnos() && !c.terminada(); t++) c.avanzar();
+                if (c.ganador() == 0) ganadas++;
+            }
+            cierto(ganadas >= 8, "en Noob se sigue ganando con robots del cielo: " + ganadas + "/12");
+        });
+    }
+
+    /** El carril (alto en la pista) más lejos de los obstáculos y trampas cercanos a x. */
+    private static double carrilLibre(CarreraDeObstaculos c, double x) {
+        double mejor = CarreraDeObstaculos.ALTO / 2, holgura = -1;
+        for (double y = 120; y <= CarreraDeObstaculos.ALTO - 120; y += 40) {
+            double cerca = Double.MAX_VALUE;
+            for (Arena.Trampa t : c.pelea.arena.trampas()) {
+                if (t.destruida() || Math.abs(t.x - x) > 220) continue;
+                cerca = Math.min(cerca, Math.hypot(t.x - x, t.y - y) - t.radio);
+            }
+            if (cerca > holgura) {
+                holgura = cerca;
+                mejor = y;
+            }
+        }
+        return mejor;
     }
 
     private static Combatiente combatienteConBala(String nombre, Fabrica fabrica) {
