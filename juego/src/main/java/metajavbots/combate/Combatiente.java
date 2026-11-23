@@ -51,8 +51,12 @@ public final class Combatiente {
         }
 
         void acierto(String arma) {
+            // Un ataque cuenta como acierto una sola vez, aunque haga daño varias veces
+            // (la llama que quema varios turnos, los misiles de una misma salva, varias piezas tocadas).
+            int[] cuenta = porArma.computeIfAbsent(arma, k -> new int[2]);
+            if (cuenta[1] >= cuenta[0]) return;
+            cuenta[1]++;
             aciertos++;
-            porArma.computeIfAbsent(arma, k -> new int[2])[1]++;
         }
 
         public double punteria() {
