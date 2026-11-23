@@ -172,9 +172,14 @@ public class Juego extends ApplicationAdapter {
         }
     }
 
+    /** Lo que avanza el juego en este fotograma: el tiempo real (el grabador del tráiler usa un paso fijo). */
+    protected float pasoDelFotograma() {
+        return Math.min(0.1f, Gdx.graphics.getDeltaTime());
+    }
+
     @Override
     public void render() {
-        float dt = Math.min(0.1f, Gdx.graphics.getDeltaTime());
+        float dt = pasoDelFotograma();
         entrada.nuevoFotograma(dt);
         Gdx.gl.glClearColor(0.05f, 0.06f, 0.08f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

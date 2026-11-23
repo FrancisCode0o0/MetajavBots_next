@@ -2,6 +2,39 @@
 
 Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDrive\Hochschule\Desarrollo de juegos\MetajavBots_next`, rama `main`.
 
+## VIDEO_METAJAVBOTS (23-nov-2026, Opus) — hecho, falta que Fran elija
+
+Tráiler de una partida real, renderizado por el propio juego. **Las tres versiones (MP4 y GIF) están en `C:\Users\Francis\git\archivo_para_eliminar\VIDEO_METAJAVBOTS\`** (y en `build\trailer\`). Todas duran 74 s, a 1920×1080 y 60 fps, en H.264 y AAC; los GIF duran 12 s.
+
+- `trailer_1_programar.mp4` (20,4 MB; GIF 3,2 MB): programar y ver el resultado. El Cangrejo se escribe y se compila en el Taller (11 s) y después pelea: duelo, royale, por equipos, carrera y destrucción. Corta cada 2 compases.
+- `trailer_2_modos.mp4` (20,5 MB; GIF 3,5 MB): los modos de juego uno tras otro, cada uno con su rótulo en tres idiomas y su presentación. El código sale al principio, más deprisa.
+- `trailer_3_epico.mp4` (22,1 MB; GIF 5,3 MB): rápido y épico. El código va a toda velocidad, corta cada compás (cada dos pulsos en lo más fuerte) y mete destellos en los golpes de la música.
+
+**Publicar el elegido** (un solo comando, desde la carpeta del repositorio; `2` es la versión elegida):
+
+```
+powershell -ExecutionPolicy Bypass -File herramientas\publicar_trailer.ps1 2
+```
+
+El comando copia su GIF a `docs/imagenes/trailer.gif` y lo pone arriba del README, debajo del título, con el enlace «Ver el tráiler completo» en los tres idiomas. Después hace commit y push de la rama actual. Por último sube el MP4 como `MetajavBots-trailer.mp4` a la Release `trailer` de GitHub (la crea como versión previa) y, si ya hay una versión `v*` publicada, también a esa. Para subir usa la sesión de GitHub que ya tiene git en el PC. Las versiones que se publiquen después lo copian solas: el paso «Tráiler» de `.github/workflows/paquetes.yml` lo baja de la Release `trailer` y lo pone junto a los paquetes. El vídeo no entra en el historial de git. No he publicado ninguno.
+
+**Volver a hacerlo desde cero**: `.\gradlew.bat lwjgl3:trailer -Pffmpeg=<ruta de ffmpeg.exe>`. Sin `-Pffmpeg` usa el `ffmpeg` del PATH. Tarda unos 17 min en grabar y 13 en montar. Por partes: `lwjgl3:grabarTrailer` (`-Psolo=duelo,royale`) y `lwjgl3:montarTrailer` (`-Pversiones=trailer_2_modos`, `-Psoundfont=<.sf2>`). En este PC no había ffmpeg: usé el de gyan.dev (9.1), descomprimido en `archivo_para_eliminar\VIDEO_METAJAVBOTS\ffmpeg_descarga`. Para tenerlo siempre: `winget install Gyan.FFmpeg`.
+
+**Cómo está hecho**:
+- **Robots**: hay seis robots propios en `lwjgl3/trailer/robots/`, y el compilador del juego los compila como compila el código de cualquier jugador. El Cangrejo rodea al rival de lado. El Profeta dispara adonde va a estar el rival. El Toro embiste solo de lejos, pega con el martillo y se aparta tras el choque. El Fortín se atrinchera en una esquina. El Halcón lanza misiles de lejos. El Faro avisa al equipo de dónde está el rival.
+- **Peleas**: hay un duelo (Profeta contra Cangrejo), un battle royale con cinco robots y un dos contra dos (Faro y Faro II contra Cangrejo y Halcón). Las semillas son fijas y las elegí simulando 25 peleas sin pantalla por modo: que duren toda la ronda o acaben en K.O., con muchos golpes fuertes y pocos choques. A eso se suman la Carrera de obstáculos en el subnivel más alto (caen robots del cielo), Destrucción y supervivencia, y el cierre con el título, los tres lemas y el enlace.
+- **Grabación** (`GrabadorDelTrailer`): dibuja en un lienzo de 1920×1080 con una ventana invisible y un paso de tiempo fijo de 1/60 s. Cada fotograma pasa por una tubería a ffmpeg. También anota cada sonido que toca el juego.
+- **Montaje** (`MontajeDelTrailer`, `VersionesDelTrailer`): «Último asalto» se pasa a sonido con GeneralUser GS (`MusicaDelTrailer`). Los cortes caen en los pulsos y el título entra con el acorde final en mayor. En las tomas de «lo mejor», el golpe más fuerte cae justo en un pulso. Los choques entre robots puntúan en contra, con un tope de 3 s por versión; al final quedaron 1,5 s, 2 s y 1 s. Los sonidos del juego van mezclados debajo de la música (`MezclaDelTrailer`). Termina con un fundido. Sonoridad: unos −14 LUFS, pico −0,7 dB.
+- **En el juego** (`pantalla/ChoqueDeRobots`): cada choque entre robots suena con un golpe metálico proporcional a su fuerza (más fuerte y más grave cuanto más deprisa iban) y saca una chispa breve en el punto de contacto. Mientras se empujan no se repite más de una vez por cuarto de segundo, salvo que el choque nuevo sea más fuerte. Cambios pequeños para el grabador: `Juego.pasoDelFotograma()`, `Sonidos.oyente`, `Encuentro.semilla`, `Taller.editor()` y `PantallaMinijuegoDestruccion.empezarParaElTrailer`. `PantallaCarreraDeObstaculos` está en el límite de 800 líneas: el tráiler elige su subnivel y la arranca por reflexión.
+
+**Decisiones mías (cámbialas si quieres)**:
+- El enlace del README va a la Release `trailer`, que es fija y vale aunque todavía no haya `v1.0`.
+- Los rótulos llevan los tres idiomas en la misma línea.
+- Destrucción se juega con el código de partida del editor: el robot cae a los ~11 s, y solo se usa eso.
+- Las tres versiones duran 74 s, porque es lo que dura la pieza con su final.
+
+**Comprobado**: `.\gradlew.bat compileJava estilo pruebas:prueba`: 316 casos bien, 0 mal, Checkstyle sin avisos. He mirado los vídeos con hojas de fotogramas, pero no los he oído: falta que Fran escuche la mezcla. El paso «Tráiler» del flujo y el script de publicar no se han ejecutado; del script solo he comprobado la sintaxis y el cambio del README sobre una copia.
+
 ## INSTALADOR_METAJAVBOTS (23-nov-2026, Opus) — hecho
 
 **Descargar y jugar sin saber de programación**: paquetes con su propio Java dentro (Java 21 recortado con jlink, con el compilador `jdk.compiler`) y lanzador de jpackage. `gradlew lwjgl3:paquete` deja la carpeta lista en `build/paquete/imagen/` (`MetajavBots.app` en Mac) y `gradlew lwjgl3:paqueteZip` el ZIP en `build/paquete/` (con OneDrive, en `%LOCALAPPDATA%\MetajavBots\build\lwjgl3\paquete`). `-Pjdk=<carpeta del JDK 21>` elige el JDK (si no, el que corre Gradle) y `-PversionDelPaquete=1.0` la versión. Cada sistema hace su paquete; las nativas de LWJGL de los otros sistemas no entran.

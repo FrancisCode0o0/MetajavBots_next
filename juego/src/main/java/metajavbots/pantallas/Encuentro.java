@@ -39,6 +39,8 @@ public final class Encuentro {
     /** Si cuenta para el progreso (el historial y la etiqueta). */
     public boolean cuenta = true;
     public String titulo = "";
+    /** La semilla de la pelea (0: al azar). El tráiler la fija para que la pelea salga siempre igual. */
+    public long semilla;
     /**
      * Los demás de una pelea de varios (battle royale o por equipos), además del jugador (equipo 0) y del rival
      * (equipo 1): cada uno con su equipo en «equiposDeLosDemas». Vacío en una pelea normal.

@@ -37,6 +37,41 @@ tasks.register('capturas', JavaExec) {
     if (project.hasProperty('gifancho')) systemProperty 'capturas.gifancho', project.property('gifancho')
 }
 
+// "gradlew lwjgl3:grabarTrailer": graba las escenas del tráiler (GrabadorDelTrailer) en build/trailer/clips/, a 1920×1080 y 60 fps,
+// con ventana invisible. "-Psolo=duelo,royale" graba solo esas; "-Pffmpeg=<ruta de ffmpeg.exe>" si ffmpeg no está en el PATH.
+def ffmpegDelTrailer = (project.findProperty('ffmpeg') ?: 'ffmpeg').toString()
+tasks.register('grabarTrailer', JavaExec) {
+    group = 'trailer'
+    description = 'Graba las escenas del tráiler, jugadas de verdad, en build/trailer/clips/.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'metajavbots.escritorio.GrabadorDelTrailer'
+    workingDir = rootProject.projectDir
+    jvmArgs '--enable-native-access=ALL-UNNAMED', '-Xmx3g'
+    args 'build/trailer/clips', (project.findProperty('solo') ?: ''), ffmpegDelTrailer
+}
+
+// "gradlew lwjgl3:montarTrailer": con esos clips, las versiones del tráiler (MP4 y GIF) en build/trailer/, con «Último asalto»
+// pasada a sonido con el SoundFont de ~/.metajavbots/ ("-Psoundfont=<.sf2>" para otro) y los cortes a tiempo con la música.
+// "-Pversiones=trailer_2_modos" hace solo esa. "gradlew lwjgl3:trailer" graba y monta, todo desde cero.
+tasks.register('montarTrailer', JavaExec) {
+    group = 'trailer'
+    description = 'Monta las versiones del tráiler (MP4 y GIF) en build/trailer/ con los clips grabados.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'metajavbots.escritorio.MontajeDelTrailer'
+    workingDir = rootProject.projectDir
+    // Gervill (el sintetizador MIDI de Java) solo da su salida sin tiempo real por un método de un paquete interno.
+    jvmArgs '--add-exports', 'java.desktop/com.sun.media.sound=ALL-UNNAMED', '-Xmx2g'
+    args 'build/trailer/clips', 'build/trailer', ffmpegDelTrailer, (project.findProperty('soundfont') ?: ''),
+            (project.findProperty('versiones') ?: '')
+    mustRunAfter 'grabarTrailer'
+}
+
+tasks.register('trailer') {
+    group = 'trailer'
+    description = 'Graba las escenas y monta las versiones del tráiler, desde cero (build/trailer/).'
+    dependsOn 'grabarTrailer', 'montarTrailer'
+}
+
 // "gradlew lwjgl3:medir": mide arranque, FPS, memoria y asignaciones por fotograma en las 14 pantallas clave.
 tasks.register('medir', JavaExec) {
     group = 'verification'

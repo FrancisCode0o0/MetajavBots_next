@@ -89,6 +89,15 @@ jobs:
           path: paquetes
           merge-multiple: true
 
+      # El tráiler (MetajavBots-trailer.mp4) no va en el historial de git: lo sube herramientas/publicar_trailer.ps1 a la
+      # Release «trailer» (versión previa) y aquí se copia a la de la versión, junto a los paquetes.
+      - name: Tráiler
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release download trailer --repo "$GITHUB_REPOSITORY" --pattern 'MetajavBots-trailer.mp4' --dir paquetes \
+            || echo "Aún no hay tráiler publicado (herramientas/publicar_trailer.ps1)"
+
       - uses: softprops/action-gh-release@v2
         with:
           files: paquetes/*

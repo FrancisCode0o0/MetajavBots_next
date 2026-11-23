@@ -108,7 +108,7 @@ public final class PantallaPelea implements Pantalla {
         sinJdk = !Compilador.hayCompilador();
         cargarCodigoInicial(jug, r, codigo);
         if (encuentro.demas.isEmpty()) {
-            pelea = new Pelea(yo, encuentro.rival, new Random().nextLong());
+            pelea = new Pelea(yo, encuentro.rival, encuentro.semilla != 0 ? encuentro.semilla : new Random().nextLong());
         } else {
             int n = 2 + encuentro.demas.size();
             Combatiente[] cs = new Combatiente[n];
@@ -120,7 +120,7 @@ public final class PantallaPelea implements Pantalla {
                 cs[2 + i] = encuentro.demas.get(i);
                 eq[2 + i] = encuentro.equiposDeLosDemas.get(i);
             }
-            pelea = new Pelea(cs, eq, new Random().nextLong());
+            pelea = new Pelea(cs, eq, encuentro.semilla != 0 ? encuentro.semilla : new Random().nextLong());
         }
         pelea.rondas = encuentro.rondas;
         // La arena con su mezcla de terrenos (res/datos/terrenos.txt): llano, aceite, agua, rampas, escombros y trampas.
