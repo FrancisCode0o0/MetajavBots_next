@@ -1,0 +1,95 @@
+name: Paquetes
+
+# MetajavBots listo para jugar, con su propio Java dentro (lwjgl3/build.gradle: tareas paquete y paqueteZip).
+# Cada sistema hace el suyo. Al publicar una etiqueta de versión (v1.0, v1.2.3…) los cuelga en una Release de GitHub;
+# en la rama instalador, en un pull request que toque el empaquetado o a mano (pestaña Actions › Paquetes › Run workflow)
+# solo los construye y los deja como artefactos del flujo.
+
+on:
+  push:
+    branches: ['instalador']
+    tags: ['v*']
+  pull_request:
+    paths:
+      - '.github/workflows/paquetes.yml'
+      - 'lwjgl3/build.gradle'
+      - 'lwjgl3/src/main/java/metajavbots/escritorio/Main.java'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  paquete:
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - so: windows-latest
+            nombre: windows
+          - so: ubuntu-latest
+            nombre: linux
+          - so: macos-latest
+            nombre: mac-arm64
+    runs-on: ${{ matrix.so }}
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      # jpackage solo admite versiones con números (1.0, 1.2.3): de «v1.2.3-beta» se queda con 1.2.3.
+      - name: Versión
+        shell: bash
+        run: |
+          v=$(echo "${GITHUB_REF_NAME#v}" | grep -oE '^[0-9]+(\.[0-9]+){0,2}' || true)
+          if [[ "$GITHUB_REF_TYPE" != tag || -z "$v" ]]; then v=1.0; fi
+          echo "VERSION=$v" >> "$GITHUB_ENV"
+          echo "ARCHIVO=MetajavBots-$v-${{ matrix.nombre }}" >> "$GITHUB_ENV"
+
+      - name: Paquete de Windows (ZIP con MetajavBots.exe)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          ./gradlew.bat --no-daemon lwjgl3:paqueteZip "-PversionDelPaquete=$env:VERSION"
+          Move-Item "lwjgl3/build/paquete/$env:ARCHIVO.zip" .
+
+      - name: Paquete de Linux (tar.gz, conserva los permisos de ejecución)
+        if: runner.os == 'Linux'
+        run: |
+          bash ./gradlew --no-daemon lwjgl3:paquete -PversionDelPaquete=$VERSION
+          tar -czf "$ARCHIVO.tar.gz" -C lwjgl3/build/paquete/imagen MetajavBots
+
+      - name: Paquete de Mac (ZIP con MetajavBots.app)
+        if: runner.os == 'macOS'
+        run: |
+          bash ./gradlew --no-daemon lwjgl3:paquete -PversionDelPaquete=$VERSION
+          # Sin firma de Apple (es de pago): firma «ad hoc», sin la cual un Mac con chip Apple no lo abre.
+          codesign --force --deep --sign - lwjgl3/build/paquete/imagen/MetajavBots.app
+          ditto -c -k --sequesterRsrc --keepParent lwjgl3/build/paquete/imagen/MetajavBots.app "$ARCHIVO.zip"
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.ARCHIVO }}
+          path: ${{ env.ARCHIVO }}.*
+          if-no-files-found: error
+
+  release:
+    if: github.ref_type == 'tag'
+    needs: paquete
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: paquetes
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v2
+        with:
+          files: paquetes/*
+          generate_release_notes: true

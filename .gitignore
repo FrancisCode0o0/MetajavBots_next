@@ -1,5 +1,9 @@
 # Lo que se genera al compilar
 build/
+# Los paquetes listos para jugar (gradlew lwjgl3:paqueteZip; los publica GitHub Actions en las Releases)
+MetajavBots-*.zip
+MetajavBots-*.tar.gz
+MetajavBots.app/
 bin/
 .gradle/
 *.class

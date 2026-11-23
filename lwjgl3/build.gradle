@@ -45,3 +45,77 @@ tasks.register('medir', JavaExec) {
     workingDir = rootProject.projectDir
     jvmArgs '--enable-native-access=ALL-UNNAMED'
 }
+
+// PAQUETE: "gradlew lwjgl3:paquete" deja MetajavBots listo para jugar, con su propio Java dentro, en build/paquete/MetajavBots
+// (MetajavBots.app en Mac); "gradlew lwjgl3:paqueteZip" lo mete además en un ZIP. Lo hacen jlink (un Java recortado, con el
+// compilador, porque el juego compila el código del jugador) y jpackage (el lanzador: MetajavBots.exe en Windows). Usan el JDK
+// que se pase con -Pjdk=<carpeta> o, si no, el que corre Gradle; ha de ser un JDK 21. Cada sistema hace su paquete (no se cruzan).
+// -PversionDelPaquete=1.0 pone la versión (por defecto 1.0). Lo publica en GitHub .github/workflows/paquetes.yml.
+def jdkDelPaquete = new File((project.findProperty('jdk') ?: System.getProperty('java.home')).toString())
+def sistema = System.getProperty('os.name').toLowerCase(Locale.ROOT)
+def esWindows = sistema.contains('win'), esMac = sistema.contains('mac')
+def esArm = System.getProperty('os.arch').toLowerCase(Locale.ROOT).contains('aarch64')
+def herramienta = { String n -> new File(jdkDelPaquete, 'bin/' + n + (esWindows ? '.exe' : '')).absolutePath }
+// Las bibliotecas nativas de LWJGL que sirven en este sistema (las de los demás no van en el paquete).
+def nativasDeAqui = esWindows ? '-natives-windows.jar' : esMac ? (esArm ? '-natives-macos-arm64.jar' : '-natives-macos.jar')
+        : (esArm ? '-natives-linux-arm64.jar' : '-natives-linux.jar')
+def nombreDelSistema = esWindows ? 'windows' : esMac ? (esArm ? 'mac-arm64' : 'mac-intel') : (esArm ? 'linux-arm64' : 'linux')
+def versionDelPaquete = (project.findProperty('versionDelPaquete') ?: '1.0').toString().replaceFirst('^v', '')
+def carpetaDelPaquete = layout.buildDirectory.dir('paquete')
+// Los módulos de Java que usa el juego (jdeps --print-module-deps) y los que no se ven en el código: el compilador
+// (jdk.compiler), HTTPS (jdk.crypto.ec), las fechas y números en alemán y español (jdk.localedata), más juegos de caracteres.
+def modulos = 'java.base,java.compiler,java.desktop,java.logging,java.net.http,jdk.management,jdk.unsupported,' +
+        'jdk.compiler,jdk.crypto.ec,jdk.localedata,jdk.charsets,jdk.zipfs'
+
+tasks.register('bibliotecasDelPaquete', Sync) {
+    group = 'distribution'
+    description = 'Los jar del juego para el paquete (sin las nativas de otros sistemas).'
+    from(tasks.named('jar'))
+    from(configurations.runtimeClasspath) {
+        exclude { d -> d.name.contains('-natives-') && d.name.startsWith('lwjgl') && !d.name.endsWith(nativasDeAqui) }
+    }
+    into carpetaDelPaquete.map { it.dir('bibliotecas') }
+}
+
+tasks.register('javaDelPaquete', Exec) {
+    group = 'distribution'
+    description = 'El Java recortado (jlink) que va dentro del paquete, con el compilador.'
+    def destino = carpetaDelPaquete.get().dir('java').asFile
+    inputs.property('modulos', modulos)
+    inputs.property('jdk', jdkDelPaquete.absolutePath)
+    outputs.dir(destino)
+    doFirst { destino.deleteDir() }
+    commandLine herramienta('jlink'), '--add-modules', modulos, '--strip-debug', '--no-header-files', '--no-man-pages',
+            '--compress=zip-6', '--output', destino.absolutePath
+}
+
+tasks.register('paquete', Exec) {
+    group = 'distribution'
+    description = 'MetajavBots listo para jugar, con su propio Java dentro (jpackage), en build/paquete/.'
+    dependsOn 'bibliotecasDelPaquete', 'javaDelPaquete'
+    def entrada = carpetaDelPaquete.get().dir('bibliotecas').asFile
+    def java = carpetaDelPaquete.get().dir('java').asFile
+    def imagen = carpetaDelPaquete.get().dir('imagen').asFile
+    inputs.dir(entrada)
+    inputs.dir(java)
+    inputs.property('version', versionDelPaquete)
+    outputs.dir(imagen)
+    doFirst { imagen.deleteDir() }
+    def opciones = [herramienta('jpackage'), '--type', 'app-image', '--name', 'MetajavBots', '--app-version', versionDelPaquete,
+            '--vendor', 'Francis Garcia Reyes', '--description', 'MetajavBots: aprender Java programando robots que combaten',
+            '--input', entrada.absolutePath, '--main-jar', 'lwjgl3.jar', '--main-class', 'metajavbots.escritorio.Main',
+            '--runtime-image', java.absolutePath, '--dest', imagen.absolutePath,
+            '--java-options', '--enable-native-access=ALL-UNNAMED', '--java-options', '-Dfile.encoding=UTF-8']
+    // En Mac, GLFW (la ventana) ha de ir en el primer hilo.
+    if (esMac) opciones += ['--java-options', '-XstartOnFirstThread']
+    commandLine opciones
+}
+
+tasks.register('paqueteZip', Zip) {
+    group = 'distribution'
+    description = 'El paquete listo para jugar, en build/paquete/MetajavBots-<version>-<sistema>.zip.'
+    dependsOn 'paquete'
+    from(carpetaDelPaquete.map { it.dir('imagen') })
+    archiveFileName = "MetajavBots-${versionDelPaquete}-${nombreDelSistema}.zip"
+    destinationDirectory = carpetaDelPaquete
+}

@@ -6,17 +6,36 @@
 
 Robots que se programan en Java y combaten por rondas, para aprender Java jugando: de cero absoluto a nivel avanzado. Al estilo de Robocode, con robots de diseño propio, cada uno con su personalidad, y un locutor robot loco que narra las peleas.
 
+## Descargar y jugar
+
+Sin instalar Java ni nada más: el juego lleva su propio Java dentro.
+
+1. Entra en la **[última versión](https://github.com/FrancisCode0o0/MetajavBots_next/releases/latest)** y, en *Assets*, baja el archivo de tu sistema:
+   - **Windows**: `MetajavBots-…-windows.zip`
+   - **Linux**: `MetajavBots-…-linux.tar.gz`
+   - **Mac** con chip Apple (M1 o posterior): `MetajavBots-…-mac-arm64.zip`
+2. **Descomprímelo** (en Windows: clic derecho › *Extraer todo…*).
+3. Abre la carpeta y haz **doble clic en MetajavBots** (`MetajavBots.exe` en Windows; en Linux, `MetajavBots/bin/MetajavBots`).
+
+**Si Windows avisa** de que la aplicación es desconocida («Windows protegió su PC»), pulsa **Más información › Ejecutar de todos modos**. Sale porque el juego no lleva una firma de pago, no porque tenga nada malo. En Mac, si dice que no se puede comprobar, ve a *Ajustes del Sistema › Privacidad y seguridad* y pulsa **Abrir igualmente**.
+
+Tus partidas se guardan en la carpeta `MetajavBots` de tu carpeta personal: puedes borrar el juego o bajar una versión nueva sin perderlas.
+
+**Para quien quiera tocar el código**:
+
+1. **Instala un JDK 21 o más nuevo** (por ejemplo, [Eclipse Temurin](https://adoptium.net)). Hace falta un JDK, no solo un JRE: el juego compila tu código Java.
+2. **Baja el código**: botón verde **Code › Download ZIP** (y descomprímelo) o `git clone https://github.com/FrancisCode0o0/MetajavBots_next.git`.
+3. **Abre el juego**: `jugar.bat` en Windows, `./jugar.sh` en Linux y Mac. **La primera vez tarda unos minutos y necesita internet**: Gradle baja las bibliotecas. Así, las partidas se guardan en la carpeta del código (`partidas/`). El paquete listo para jugar se hace con `gradlew lwjgl3:paqueteZip`.
+
 ![Los dieciséis modelos](docs/imagenes/robots.png)
 
 ![Battle royale](docs/imagenes/royale.png)
 
 ## Cómo se juega
 
-1. **Instala un JDK 21 o más nuevo** (por ejemplo, [Eclipse Temurin](https://adoptium.net)). Hace falta un JDK, no solo un JRE: el juego compila tu código Java.
-2. **Abre el juego**: `jugar.bat` en Windows, `./jugar.sh` en Linux y Mac. La primera vez, Gradle baja las bibliotecas.
-3. Crea tu partida. Si nunca has programado, empiezas en **Noob I**; si no, una prueba corta te pone tu etiqueta.
-4. Elige tu primer robot y ve al **Taller**: ahí está su código. Cámbialo, pulsa **Compilar** (Ctrl+S) y **¡a pelear!**
-5. Una pelea son **cuatro rondas** de unos 40 segundos. Entre ronda y ronda se para: lees el informe, cambias el código y las piezas. **Gana quien haya recibido menos daño**; al final, el que pierde explota.
+1. Crea tu partida. Si nunca has programado, empiezas en **Noob I**; si no, una prueba corta te pone tu etiqueta.
+2. Elige tu primer robot y ve al **Taller**: ahí está su código. Cámbialo, pulsa **Compilar** (Ctrl+S) y **¡a pelear!**
+3. Una pelea son **cuatro rondas** de unos 40 segundos. Entre ronda y ronda se para: lees el informe, cambias el código y las piezas. **Gana quien haya recibido menos daño**; al final, el que pierde explota.
 
 Tu robot es una clase de Java que hereda de `Metajavbot` (o `MetajavbotDe` en alemán, `MetajavbotEn` en inglés):
 
@@ -69,13 +88,32 @@ MetajavBots es de **Francis García Reyes**. El código tiene licencia [Apache-2
 
 Roboter, die in Java programmiert werden und in Runden kämpfen – um Java spielend zu lernen: von null bis Fortgeschritten. Im Stil von Robocode, mit eigenen Roboter-Designs, jeder mit seiner Persönlichkeit, und einem verrückten Roboter-Ansager.
 
-**So wird gespielt**
+**Herunterladen und spielen**
+
+Ohne Java oder sonst etwas zu installieren: Das Spiel bringt sein eigenes Java mit.
+
+1. Öffne die **[neueste Version](https://github.com/FrancisCode0o0/MetajavBots_next/releases/latest)** und lade unter *Assets* die Datei für dein System herunter:
+   - **Windows**: `MetajavBots-…-windows.zip`
+   - **Linux**: `MetajavBots-…-linux.tar.gz`
+   - **Mac** mit Apple-Chip (M1 oder neuer): `MetajavBots-…-mac-arm64.zip`
+2. **Entpacke sie** (unter Windows: Rechtsklick › *Alle extrahieren…*).
+3. Öffne den Ordner und **doppelklicke auf MetajavBots** (`MetajavBots.exe` unter Windows; unter Linux `MetajavBots/bin/MetajavBots`).
+
+**Wenn Windows warnt**, die App sei unbekannt („Der Computer wurde durch Windows geschützt“), klicke auf **Weitere Informationen › Trotzdem ausführen**. Die Warnung kommt, weil das Spiel keine kostenpflichtige Signatur hat, nicht weil etwas damit nicht stimmt. Auf dem Mac: Wenn er meldet, dass die App nicht überprüft werden kann, geh zu *Systemeinstellungen › Datenschutz & Sicherheit* und klicke auf **Dennoch öffnen**.
+
+Deine Spielstände liegen im Ordner `MetajavBots` in deinem persönlichen Ordner: Du kannst das Spiel löschen oder eine neue Version herunterladen, ohne sie zu verlieren.
+
+**Für alle, die am Code arbeiten wollen**:
 
 1. **Installiere ein JDK 21 oder neuer** (z. B. [Eclipse Temurin](https://adoptium.net)). Ein JRE reicht nicht: Das Spiel kompiliert deinen Java-Code.
-2. **Starte das Spiel**: `jugar.bat` unter Windows, `./jugar.sh` unter Linux und Mac.
-3. Lege dein Spiel an. Wer noch nie programmiert hat, beginnt bei **Noob I**; sonst stuft dich ein kurzer Test ein.
-4. Wähle deinen ersten Roboter und geh in die **Werkstatt**: Dort ist sein Code. Ändere ihn, drück **Kompilieren** (Strg+S) und **ab in den Kampf!**
-5. Ein Kampf hat **vier Runden** zu je etwa 40 Sekunden. Zwischen den Runden kannst du Code und Teile ändern. **Es gewinnt, wer weniger Schaden eingesteckt hat**; am Ende explodiert der Verlierer.
+2. **Hol dir den Code**: grüner Knopf **Code › Download ZIP** (und entpacken) oder `git clone https://github.com/FrancisCode0o0/MetajavBots_next.git`.
+3. **Starte das Spiel**: `jugar.bat` unter Windows, `./jugar.sh` unter Linux und Mac. **Beim ersten Mal dauert es ein paar Minuten und braucht Internet**: Gradle lädt die Bibliotheken herunter.
+
+**So wird gespielt**
+
+1. Lege dein Spiel an. Wer noch nie programmiert hat, beginnt bei **Noob I**; sonst stuft dich ein kurzer Test ein.
+2. Wähle deinen ersten Roboter und geh in die **Werkstatt**: Dort ist sein Code. Ändere ihn, drück **Kompilieren** (Strg+S) und **ab in den Kampf!**
+3. Ein Kampf hat **vier Runden** zu je etwa 40 Sekunden. Zwischen den Runden kannst du Code und Teile ändern. **Es gewinnt, wer weniger Schaden eingesteckt hat**; am Ende explodiert der Verlierer.
 
 Dein Roboter ist eine Java-Klasse, die von `MetajavbotDe` erbt (Methoden auf Deutsch: `jedenZug()`, `beiSicht(Gegner g)`, `vorwaerts(…)`, `drehen(…)`, `zielenNach(…)`, `angreifen()`).
 
@@ -103,13 +141,32 @@ MetajavBots habe ich, Francis García Reyes, Informatikstudent im ersten Semeste
 
 Robots you program in Java that fight in rounds – to learn Java by playing: from absolute zero to advanced. In the spirit of Robocode, with original robot designs, each with its own personality, and a crazy robot announcer.
 
-**How to play**
+**Download and play**
+
+No need to install Java or anything else: the game comes with its own Java.
+
+1. Go to the **[latest release](https://github.com/FrancisCode0o0/MetajavBots_next/releases/latest)** and, under *Assets*, download the file for your system:
+   - **Windows**: `MetajavBots-…-windows.zip`
+   - **Linux**: `MetajavBots-…-linux.tar.gz`
+   - **Mac** with Apple chip (M1 or later): `MetajavBots-…-mac-arm64.zip`
+2. **Unzip it** (on Windows: right-click › *Extract All…*).
+3. Open the folder and **double-click MetajavBots** (`MetajavBots.exe` on Windows; on Linux, `MetajavBots/bin/MetajavBots`).
+
+**If Windows warns** that the app is unrecognized ("Windows protected your PC"), click **More info › Run anyway**. The warning appears because the game has no paid signature, not because anything is wrong with it. On a Mac, if it says the app cannot be verified, go to *System Settings › Privacy & Security* and click **Open Anyway**.
+
+Your saved games live in the `MetajavBots` folder in your home folder: you can delete the game or download a new version without losing them.
+
+**For those who want to work on the code**:
 
 1. **Install a JDK 21 or newer** (e.g. [Eclipse Temurin](https://adoptium.net)). A JRE is not enough: the game compiles your Java code.
-2. **Start the game**: `jugar.bat` on Windows, `./jugar.sh` on Linux and Mac.
-3. Create your game. If you have never programmed, you start at **Noob I**; otherwise a short test places you.
-4. Choose your first robot and go to the **Workshop**: its code is there. Change it, press **Compile** (Ctrl+S) and **fight!**
-5. A fight has **four rounds** of about 40 seconds. Between rounds you can change the code and the parts. **Whoever took less damage wins**; at the end, the loser explodes.
+2. **Get the code**: green button **Code › Download ZIP** (and unzip it) or `git clone https://github.com/FrancisCode0o0/MetajavBots_next.git`.
+3. **Start the game**: `jugar.bat` on Windows, `./jugar.sh` on Linux and Mac. **The first time takes a few minutes and needs internet**: Gradle downloads the libraries.
+
+**How to play**
+
+1. Create your game. If you have never programmed, you start at **Noob I**; otherwise a short test places you.
+2. Choose your first robot and go to the **Workshop**: its code is there. Change it, press **Compile** (Ctrl+S) and **fight!**
+3. A fight has **four rounds** of about 40 seconds. Between rounds you can change the code and the parts. **Whoever took less damage wins**; at the end, the loser explodes.
 
 Your robot is a Java class extending `MetajavbotEn` (English methods: `onTick()`, `onSeeEnemy(Enemy e)`, `ahead(…)`, `turn(…)`, `aimTo(…)`, `attack()`).
 

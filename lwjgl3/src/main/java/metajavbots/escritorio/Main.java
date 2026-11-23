@@ -12,6 +12,8 @@ public final class Main {
     }
 
     public static void main(String[] args) {
+        // Desde el paquete listo para jugar, las partidas y los ajustes van a la carpeta del usuario, no dentro del paquete.
+        if (metajavbots.progreso.Carpetas.desdeElPaquete()) metajavbots.progreso.Carpetas.usar(metajavbots.progreso.Carpetas.delUsuario());
         Lwjgl3ApplicationConfiguration c = new Lwjgl3ApplicationConfiguration();
         c.setTitle("MetajavBots");
         c.setWindowedMode(1600, 900);

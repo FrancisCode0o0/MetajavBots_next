@@ -2,6 +2,36 @@
 
 Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDrive\Hochschule\Desarrollo de juegos\MetajavBots_next`, rama `main`.
 
+## INSTALADOR_METAJAVBOTS (23-nov-2026, Opus) — hecho
+
+**Descargar y jugar sin saber de programación**: paquetes con su propio Java dentro (Java 21 recortado con jlink, con el compilador `jdk.compiler`) y lanzador de jpackage. `gradlew lwjgl3:paquete` deja la carpeta lista en `build/paquete/imagen/` (`MetajavBots.app` en Mac) y `gradlew lwjgl3:paqueteZip` el ZIP en `build/paquete/` (con OneDrive, en `%LOCALAPPDATA%\MetajavBots\build\lwjgl3\paquete`). `-Pjdk=<carpeta del JDK 21>` elige el JDK (si no, el que corre Gradle) y `-PversionDelPaquete=1.0` la versión. Cada sistema hace su paquete; las nativas de LWJGL de los otros sistemas no entran.
+- **GitHub Actions** (`.github/workflows/paquetes.yml`): construye los tres en Windows, Linux y Mac (Apple, arm64). Con una etiqueta `v*` los cuelga en una Release; en la rama `instalador`, en un pull request que toque el empaquetado o a mano (Actions › Paquetes › Run workflow) solo los deja como artefactos. `pruebas.yml` sigue igual.
+- **Las partidas van a la carpeta del usuario** desde el paquete: `C:\Users\<usuario>\MetajavBots\` (`~/MetajavBots` en Linux y Mac), con `partidas/`, `registro/`, `musica_personal/`, `robots_exportados/` y `robots_ajenos/` (`progreso/Carpetas`; lo activa `Main` si el lanzador de jpackage pone `jpackage.app-path`). Con `jugar.bat` todo sigue como antes, en la carpeta del código. Las claves siguen en `~/.metajavbots`.
+- **README**: «Descargar y jugar» en los tres idiomas, antes de las imágenes; debajo, para quien quiera tocar el código, JDK 21, «Code › Download ZIP» o `git clone` y `jugar.bat`/`jugar.sh`. Los paquetes, en `.gitignore`.
+
+**Tamaño**: Windows, `MetajavBots-1.0-windows.zip` **70,9 MB** (91,3 MB descomprimido; 73,0 MB es el Java). Linux y Mac: los construye GitHub Actions (abajo, «Resultado del flujo»).
+
+**Cómo lo probé** (Windows 11, JDK 21 de `C:\Program Files\Eclipse Adoptium\jdk-21.0.13.10002-hotspot`; el Java del sistema es otro): construí el ZIP, lo descomprimí en `C:\Users\Francis\git\archivo_para_eliminar\INSTALADOR_METAJAVBOTS\prueba_windows` y abrí `MetajavBots.exe`. Arranca en la portada; creé la partida «Prueba Paquete» (Nunca: empiezo de cero › Cobalto › ¡Empezar!), fui al Taller, pulsé **Compilar**: «Compila bien (110 ms). Tu robot pelea con este código.»; luego **¡A pelear!** contra Zumbamatic: terminó la ronda 1 (Cobalto recibió 391 de daño e hizo 83) con su informe. La partida quedó en `C:\Users\Francis\MetajavBots\partidas\Prueba_Paquete` (partida.txt, robot_1.java, robot_1_compilado.java…) y en la carpeta del paquete no se escribió nada. Los clics y las teclas se mandaron como mensajes a la ventana del juego (sin mover el ratón de verdad) y se vio cada paso en capturas de la ventana. Además, las pruebas sin ventana con el Java del paquete: 314 bien y 2 mal que no son del juego (una lee `juego/src` y no se lanzó desde el repositorio; la otra monta servidores falsos con `jdk.httpserver`, que solo usan las pruebas).
+
+**Lo que decidí yo** (para que Fran lo revise):
+- La carpeta del jugador es `MetajavBots` en su carpeta personal (la misma en la que ya se guardaban las repeticiones en GIF). Las partidas hechas con `jugar.bat` no se mueven solas: si se quieren en el paquete, se copia `partidas/` ahí.
+- Mac: solo para chip Apple (M1 o posterior); GitHub ya casi no tiene Mac Intel. Firma «ad hoc» (sin ella un Mac con chip Apple no lo abre); sin firma de pago, macOS pide «Abrir igualmente» la primera vez, y Windows avisa con SmartScreen. Sin icono propio (el de Java por defecto): falta un .ico/.icns.
+- La versión de jpackage solo admite números: de una etiqueta `v1.2.3-beta` se queda con 1.2.3.
+- Visto al probar, sin tocar: la pelea dice «Ronda 1 de 6» y el README «cuatro rondas»; en el informe de la ronda, «Aciertos: 76 de 14 (543 %)».
+
+**Resultado del flujo**: se lanza al subir la rama `instalador`; lo apunto en el commit siguiente de esta rama.
+
+**Para Fran — unir la rama y crear la versión** (en la carpeta del repositorio):
+```
+git switch main
+git pull
+git merge --no-ff instalador
+git push origin main
+git tag -a v1.0 -m "MetajavBots 1.0"
+git push origin v1.0
+```
+La etiqueta lanza «Paquetes» en GitHub Actions; a los ~10 minutos la Release `v1.0` tiene los tres archivos y el enlace del README (`releases/latest`) ya lleva a ella. Luego se puede borrar la rama: `git branch -d instalador` y `git push origin --delete instalador`.
+
 ## VERIFICACION_FINAL de METAJAVBOTS_3 (23-nov-2026, Opus) — hecho
 
 **Resumen verificado de los bloques** (ENCARGO_METAJAVBOTS_3.md): voces sin retraso, bloques 1 (entrenador), 2 (tres cerebros a la vez), 3 (editor), 4 (todo es juego, hasta senior), 5 (5A y 5B: pieza propia, aparatos, repetición con código y GIF, personalidades, biografías, declinación DE, Creed y equilibrio), 6 (música épica MIDI + SoundFont) y 7 (instalado para Fran): **cerrados**. También lo que vino después: tienda ampliada, banco de ejercicios, campañas con escenas, pasada trilingüe, optimización, peso/locomoción/terrenos con su vista previa, música por modo con transiciones (`res/musica/temas.txt`), menú nuevo, botón API y robots que caen en la carrera. `.\gradlew.bat compileJava estilo pruebas:prueba` → **316 casos bien, 0 mal**, Checkstyle 0 avisos (incluidas `PruebasDeEquilibrio` y `PruebasDeMusica`).
