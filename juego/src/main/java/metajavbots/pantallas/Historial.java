@@ -53,37 +53,54 @@ public final class Historial implements Pantalla {
             a[1]++;
             b[1]++;
         }
-        float my = ui.panel(x, y + 246, gw / 2 - 8, h2 - 246, T.t("historial.por_modelo"));
+        float cwMitad = gw / 2 - 8;
+        float my = ui.panel(x, y + 246, cwMitad, h2 - 246, T.t("historial.por_modelo"));
+        float tFila = Math.min(17f, ui.letra * 0.82f);
         for (Map.Entry<String, int[]> en : porModelo.entrySet()) {
-            if (my > p.alto - 50) break;
-            p.texto(Modelo.de(en.getKey()).nombre(T.idioma), x + 18, my, ui.letra * 0.85f, false, ui.tema.texto, 1);
-            p.textoDerecha(en.getValue()[0] + " / " + en.getValue()[1], x + gw / 2 - 26, my, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
-            my += ui.letra * 1.4f;
+            if (my + tFila > p.alto - 32) break;
+            String nom = Modelo.de(en.getKey()).nombre(T.idioma);
+            String cta = en.getValue()[0] + " / " + en.getValue()[1];
+            float wCta = p.ancho(cta, tFila, false) + 16;
+            float tNom = ui.cabeEntero(nom, cwMitad - 36 - wCta, tFila, false);
+            p.texto(nom, x + 18, my, tNom, false, ui.tema.texto, 1);
+            p.textoDerecha(cta, x + cwMitad - 18, my, tFila, false, ui.tema.textoSuave, 1);
+            my += tFila * 1.42f;
         }
         float mx = x + gw / 2 + 8;
-        float my2 = ui.panel(mx, y + 246, gw / 2 - 8, h2 - 246, T.t("historial.por_modo"));
+        float my2 = ui.panel(mx, y + 246, cwMitad, h2 - 246, T.t("historial.por_modo"));
         for (Map.Entry<String, int[]> en : porModo.entrySet()) {
-            if (my2 > p.alto - 50) break;
-            p.texto(en.getKey(), mx + 18, my2, ui.letra * 0.85f, false, ui.tema.texto, 1);
-            p.textoDerecha(en.getValue()[0] + " / " + en.getValue()[1], mx + gw / 2 - 34, my2, ui.letra * 0.85f, false, ui.tema.textoSuave, 1);
-            my2 += ui.letra * 1.4f;
+            if (my2 + tFila > p.alto - 32) break;
+            String cta = en.getValue()[0] + " / " + en.getValue()[1];
+            float wCta = p.ancho(cta, tFila, false) + 16;
+            float tNom = ui.cabeEntero(en.getKey(), cwMitad - 36 - wCta, tFila, false);
+            p.texto(en.getKey(), mx + 18, my2, tNom, false, ui.tema.texto, 1);
+            p.textoDerecha(cta, mx + cwMitad - 18, my2, tFila, false, ui.tema.textoSuave, 1);
+            my2 += tFila * 1.42f;
         }
         // A la derecha: los ejercicios por tema y la lista de peleas.
-        float rx = x + gw + 20, rw = p.ancho - rx - 20;
+        columnaDerecha(j, h, x + gw + 20, y, p.ancho - (x + gw + 20) - 20, h2);
+    }
+
+    private void columnaDerecha(Juego j, List<Registro> h, float rx, float y, float rw, float h2) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        Jugador jug = j.jugador;
         float ey = ui.panel(rx, y, rw, 330, T.t("historial.ejercicios"));
-        int cols = 2;
-        int i = 0;
-        for (Tema tm : Tema.todos()) {
+        int cols = 2, i = 0;
+        List<Tema> temas = Tema.todos();
+        int filasTemas = (temas.size() + cols - 1) / cols;
+        float pasoY = Math.min(24f, (y + 320 - ey) / Math.max(1, filasTemas));
+        float tEj = Math.min(14.5f, ui.letra * 0.68f);
+        for (Tema tm : temas) {
             List<Ejercicio> es = Banco.delJuego().deTema(tm.id);
             int hechos = 0;
             for (Ejercicio ej : es) if (jug.ejerciciosResueltos.contains(ej.id)) hechos++;
-            // Cada columna con su hueco a la derecha: la cifra de una no se pega al número de la siguiente.
-            float col = (rw - 32) / cols, tx = rx + 16 + (i % cols) * col, ty = ey + (i / cols) * 24;
-            float t = ui.letra * 0.7f, cifra = p.ancho("00/00", t, false);
-            p.texto(tm.id, tx, ty, t, false, ui.tema.textoSuave, 1);
-            float bx = tx + p.ancho("00", t, false) + 10;
+            float col = (rw - 32) / cols, tx = rx + 16 + (i % cols) * col, ty = ey + (i / cols) * pasoY;
+            float cifra = p.ancho("00/00", tEj, false);
+            p.texto(tm.id, tx, ty, tEj, false, ui.tema.textoSuave, 1);
+            float bx = tx + p.ancho("00", tEj, false) + 10;
             ui.barra(bx, ty + 4, col - (bx - tx) - cifra - 40, 10, es.isEmpty() ? 0 : (float) hechos / es.size(), ui.tema.bien, null);
-            p.textoDerecha(hechos + "/" + es.size(), tx + col - 30, ty, t, false, ui.tema.textoSuave, 1);
+            p.textoDerecha(hechos + "/" + es.size(), tx + col - 30, ty, tEj, false, ui.tema.textoSuave, 1);
             i++;
         }
         float ly = ui.panel(rx, y + 346, rw, h2 - 346, T.t("historial.ultimas"));
@@ -93,16 +110,18 @@ public final class Historial implements Pantalla {
         for (int k = h.size() - 1; k >= 0; k--) {
             Registro r = h.get(k);
             int color = r.resultado == Registro.Resultado.VICTORIA ? ui.tema.bien : r.resultado == Registro.Resultado.DERROTA ? ui.tema.mal : ui.tema.aviso;
-            // Las columnas, del ancho de lo que llevan (con letra grande no se pisan).
-            float tl = ui.letra * 0.75f;
+            float tl = Math.min(16.5f, ui.letra * 0.75f);
             String fecha = f.format(new Date(r.fecha)), resultado = T.t("resultado." + r.resultado.name().toLowerCase());
             float c2 = rx + 16 + p.ancho("00/00 00:00", tl, false) + 14, c3 = c2 + p.ancho("Unentschieden", tl, true) + 14;
             p.texto(fecha, rx + 16, yy, tl, false, ui.tema.textoSuave, 1);
             p.texto(resultado, c2, yy, tl, true, color, 1);
-            float cifras = p.ancho("000 / 000", tl, false) + 40;
-            p.texto(ui.recortarTexto(r.rival + " (" + r.modo + ")", rx + rw - cifras - c3, tl, false), c3, yy, tl, false, ui.tema.texto, 1);
-            p.textoDerecha(Math.round(r.danoHecho) + " / " + Math.round(r.danoRecibido), rx + rw - 30, yy, ui.letra * 0.75f, false, ui.tema.textoSuave, 1);
-            yy += ui.letra * 1.3f;
+            String danoTxt = Math.round(r.danoHecho) + " / " + Math.round(r.danoRecibido);
+            float cifras = Math.max(p.ancho("000 / 000", tl, false), p.ancho(danoTxt, tl, false)) + 36;
+            String rivalModo = r.rival + " (" + r.modo + ")";
+            float tRiv = ui.cabeEntero(rivalModo, Math.max(60, rx + rw - cifras - c3), tl, false);
+            p.texto(rivalModo, c3, yy, tRiv, false, ui.tema.texto, 1);
+            p.textoDerecha(danoTxt, rx + rw - 28, yy, tl, false, ui.tema.textoSuave, 1);
+            yy += tl * 1.5f;
         }
         ui.finDesplazable(lista, yy + dd - ly);
     }
@@ -133,13 +152,18 @@ public final class Historial implements Pantalla {
                 {T.t("historial.mejor_racha"), Integer.toString(mejorRacha(h))},
                 {T.t("historial.dano_medio"), h.isEmpty() ? "—" : Long.toString(Math.round(h.stream().mapToDouble(r -> r.danoRecibido).average().orElse(0)))},
                 {T.t("historial.experiencia"), Long.toString(jug.experiencia)}};
+        int[] acentos = {ui.tema.acento, ui.tema.bien, ui.tema.mal, ui.tema.aviso, 0xFFC857, 0x3FE0FF, 0xFF8FB1, 0x9B7EDE};
         float cw = (p.ancho - 40) / cifras.length;
         for (int i = 0; i < cifras.length; i++) {
             float cx = x + i * cw;
-            p.caja(cx + 4, y, cw - 8, 90, 10, ui.tema.panel, 1);
-            float tv = ui.cabe(cifras[i][1], cw - 16, ui.letra * 1.8f, true);
+            int acento = acentos[i % acentos.length];
+            p.caja(cx + 4, y + 3, cw - 8, 92, 10, 0x000000, 0.28f);
+            p.caja(cx + 4, y, cw - 8, 92, 10, ui.tema.panel, 1);
+            p.bordeRedondeado(cx + 4, y, cw - 8, 92, 10, acento, 0.55f, 1.3f);
+            p.caja(cx + 12, y, cw - 24, 3, 1.5f, acento, 0.9f);
+            float tv = ui.cabeEntero(cifras[i][1], cw - 20, Math.min(34f, ui.letra * 1.75f), true);
             p.textoCentrado(cifras[i][1], cx + cw / 2, y + 12, tv, true, ui.tema.texto, 1);
-            float tl = ui.cabe(cifras[i][0], cw - 16, ui.letra * 0.75f, false);
+            float tl = ui.cabeEntero(cifras[i][0], cw - 20, Math.min(16f, ui.letra * 0.72f), false);
             p.textoCentrado(cifras[i][0], cx + cw / 2, y + 60, tl, false, ui.tema.textoSuave, 1);
         }
     }

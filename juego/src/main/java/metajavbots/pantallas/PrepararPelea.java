@@ -215,49 +215,59 @@ public final class PrepararPelea implements Pantalla {
             y += 70;
         }
         // Cuántas rondas, como en el boxeo: a más rondas, más desgaste.
-        p.texto(T.t("pelear.rondas"), 40, y + 12, ui.letra, false, ui.tema.textoSuave, 1);
-        float rx = 40 + p.ancho(T.t("pelear.rondas"), ui.letra, false) + 20;
+        float rBarH = 56;
+        p.caja(40, y + 2, p.ancho - 80, rBarH, 12, 0x000000, 0.20f);
+        p.caja(40, y, p.ancho - 80, rBarH, 12, ui.tema.panel, 1);
+        p.bordeRedondeado(40, y, p.ancho - 80, rBarH, 12, ui.tema.borde, 1, 1.2f);
+        p.textoConBordeNegro(T.t("pelear.rondas"), 58, y + (rBarH - p.altoDeLinea(ui.letra)) / 2f, ui.letra, true, ui.tema.textoSuave, 1);
+        float rx = 58 + p.ancho(T.t("pelear.rondas"), ui.letra, true) + 18;
         for (int r : RONDAS_A_ELEGIR) {
-            if (ui.boton(Integer.toString(r), rx, y, 64, 48, jug.rondas == r ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true, T.t("pelear.rondas_ayuda"))) {
+            if (ui.boton(Integer.toString(r), rx, y + 6, 62, 44, jug.rondas == r ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true, T.t("pelear.rondas_ayuda"))) {
                 jug.rondas = r;
             }
-            rx += 72;
+            rx += 70;
         }
-        y += 70;
+        y += rBarH + 10;
         y = vistaPreviaDeArena(j, y);
         String[][] modos = {
                 {"ADAPTADA", "pelear.adaptada"}, {"AZAR", "pelear.azar"}, {"DESAFIO", "pelear.desafio"}, {"PRACTICA", "pelear.practica"},
-                {"ROYALE", "pelear.royale"}, {"EQUIPOS", "pelear.equipos"}, {"MCM", "pelear.mcm"}, {"CAMPANAS", "pelear.campanas"}};
+                {"ROYALE", "pelear.royale"}, {"EQUIPOS", "pelear.equipos"}, {"MCM", "pelear.mcm"}};
         int columnas = 4;
-        float w = (p.ancho - 80 - (columnas - 1) * 20) / columnas;
+        float sepX = 18;
+        float w = (p.ancho - 80 - (columnas - 1) * sepX) / columnas;
         // Todo se desplaza si no cabe (letra grande): nada se sale de su tarjeta ni se monta.
         float zonaY = y, zonaH = p.alto - zonaY - 10;
         float desp = ui.desplazable(pagina, 0, zonaY, p.ancho, zonaH);
         y -= desp;
-        float y0 = y;
         for (int fila = 0; fila * columnas < modos.length; fila++) {
+            int desde = fila * columnas;
+            int hasta = Math.min(modos.length, (fila + 1) * columnas);
+            int enFila = hasta - desde;
             float h = 0;
-            for (int i = fila * columnas; i < Math.min(modos.length, (fila + 1) * columnas); i++) h = Math.max(h, altoDeTarjeta(j, modos[i], w));
-            for (int i = fila * columnas; i < Math.min(modos.length, (fila + 1) * columnas); i++) {
-                tarjeta(j, modos[i], i == 0, 40 + (i % columnas) * (w + 20), y, w, h);
+            for (int i = desde; i < hasta; i++) h = Math.max(h, altoDeTarjeta(j, modos[i], w));
+            float anchoFila = enFila * w + (enFila - 1) * sepX;
+            float inicioX = (p.ancho - anchoFila) / 2f;
+            for (int i = desde; i < hasta; i++) {
+                tarjeta(j, modos[i], i == 0, inicioX + (i - desde) * (w + sepX), y, w, h);
             }
             y += h + 16;
         }
-        y += 10;
+        y += 8;
         // Los robots de otros jugadores.
         float pw = p.ancho - 80;
         float ayuda = p.altoDeParrafo(T.t("pelear.ajenos_ayuda"), pw - 40, ui.letra * 0.85f);
         float lista = Math.max(1, ajenos.size()) * 56;
-        float alto = 26 + ui.letra * 1.4f + ayuda + 20 + lista + 20;
+        float alto = 30 + ui.letra * 1.4f + ayuda + 18 + lista + 18;
         float cy = ui.panel(40, y, pw, alto, T.t("pelear.ajenos"));
-        cy += p.parrafo(T.t("pelear.ajenos_ayuda"), 60, cy, pw - 40, ui.letra * 0.85f, ui.tema.textoSuave, 1) + 20;
+        cy += p.parrafo(T.t("pelear.ajenos_ayuda"), 60, cy, pw - 40, ui.letra * 0.85f, ui.tema.textoSuave, 1) + 16;
         for (Path a : ajenos) {
             String nombre = a.getFileName().toString();
-            p.texto(ui.recortarTexto(nombre, pw - 360, ui.letra, false), 70, cy + 12, ui.letra, false, ui.tema.texto, 1);
+            float tNom = ui.cabe(nombre, pw - 360, ui.letra, false);
+            p.texto(nombre, 70, cy + 12, tNom, false, ui.tema.texto, 1);
             if (ui.boton(T.t("pelear.contra_este"), 50 + pw - 300, cy, 250, 46, Ui.Estilo.NORMAL)) pelearContraAjeno(j, a);
             cy += 56;
         }
-        if (ajenos.isEmpty()) p.texto(T.t("pelear.sin_ajenos"), 70, cy + 10, ui.letra * 0.9f, false, ui.tema.textoApagado, 1);
+        if (ajenos.isEmpty()) p.texto(T.t("pelear.sin_ajenos"), 70, cy + 8, ui.letra * 0.9f, false, ui.tema.textoApagado, 1);
         y += alto + 20;
         if (!aviso.isEmpty()) y += p.parrafo(aviso, 60, y, pw - 40, ui.letra * 0.85f, ui.tema.mal, 1) + 20;
         ui.finDesplazable(pagina, y + desp - zonaY);
@@ -285,7 +295,9 @@ public final class PrepararPelea implements Pantalla {
         String peso = m == null ? "" : T.f("pelear.tu_peso", PanelDePeso.tramo(m.tramo()), Math.round(m.proporcionDeCarga() * 100),
                 PanelDePeso.terrenos(m.cifras().rasgos)) + (m.puedePelear() ? "" : " " + T.t("peso.no_puede_pelear"));
         float h = Math.max(56, p.altoDeParrafo(arena, tw, tam) + (peso.isEmpty() ? 0 : p.altoDeParrafo(peso, tw, tam) + 4) + 20);
+        p.caja(x + 2, y + 3, w, h, 12, 0x000000, 0.22f);
         p.caja(x, y, w, h, 12, ui.tema.panel, 1);
+        p.bordeRedondeado(x, y, w, h, 12, ui.tema.borde, 1, 1.2f);
         float cy = y + 10;
         cy += p.parrafo(arena, x + 16, cy, tw, tam, ui.tema.texto, 1) + 4;
         if (!peso.isEmpty()) p.parrafo(peso, x + 16, cy, tw, tam, PanelDePeso.color(m.tramo()), 1);
@@ -300,15 +312,17 @@ public final class PrepararPelea implements Pantalla {
     private float altoDeTarjeta(Juego j, String[] modo, float w) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
-        float h = 18 + p.altoDeParrafo(T.t(modo[1]), w - 40, ui.letra * 1.3f, true) + 6
-                + p.altoDeParrafo(T.t(modo[1] + "_ayuda"), w - 40, ui.letra * 0.85f) + 14;
-        if (modo[0].equals("EQUIPOS") || modo[0].equals("ROYALE")) h += 80;
+        float tTit = Math.min(ui.letra * 1.18f, 25f);
+        float tAyu = Math.min(ui.letra * 0.82f, 18.5f);
+        float h = 18 + p.altoDeParrafo(T.t(modo[1]), w - 40, tTit, true) + 8
+                + p.altoDeParrafo(T.t(modo[1] + "_ayuda"), w - 40, tAyu) + 16;
+        if (modo[0].equals("EQUIPOS") || modo[0].equals("ROYALE")) h += 68;
         if (modo[0].equals("ADAPTADA") && !j.jugador.modoIA.equals("ADAPTADA")) h += ui.letra * 1.4f;
         if (modo[0].equals("DESAFIO") && !Progreso.puedeDesafiar(j.jugador)) {
             h += p.altoDeParrafo(T.f("pelear.desafio_espera", Progreso.PELEAS_ENTRE_DESAFIOS - j.jugador.peleasDesdeElDesafio), w - 40,
-                    ui.letra * 0.8f) + 6;
+                    ui.letra * 0.78f) + 8;
         }
-        return Math.max(200, h + 50 + 16);
+        return Math.max(196, h + 52 + 16);
     }
 
     /** La tarjeta de un modo: su nombre, qué es, lo suyo (el compañero, la espera del desafío) y «¡Vamos!». */
@@ -317,35 +331,41 @@ public final class PrepararPelea implements Pantalla {
         Ui ui = j.ui;
         Jugador jug = j.jugador;
         boolean puede = !modo[0].equals("DESAFIO") || Progreso.puedeDesafiar(jug);
-        p.caja(x, y, w, h, 14, ui.tema.panel, 1);
-        float cy = y + 18;
-        cy += p.parrafo(T.t(modo[1]), x + 20, cy, w - 40, ui.letra * 1.3f, true, puede ? ui.tema.texto : ui.tema.textoApagado, 1) + 6;
-        cy += p.parrafo(T.t(modo[1] + "_ayuda"), x + 20, cy, w - 40, ui.letra * 0.85f, ui.tema.textoSuave, 1) + 14;
+        boolean encima = ui.e.dentro(x, y, w, h);
+        int acento = principal ? 0xFF7070 : ui.tema.acento;
+        p.caja(x + 2, y + 3, w, h, 14, 0x000000, 0.25f);
+        p.caja(x, y, w, h, 14, Pincel.mezcla(ui.tema.panel, acento, principal ? 0.08f : encima ? 0.06f : 0.02f), 1);
+        p.bordeRedondeado(x, y, w, h, 14, encima || principal ? acento : ui.tema.borde, 1, encima ? 2.2f : principal ? 1.8f : 1.2f);
+        p.caja(x + 4, y + 12, 4, h - 24, 2, acento, principal || encima ? 1f : 0.7f);
+        float cy = y + 16;
+        float tTit = Math.min(ui.letra * 1.18f, 25f);
+        float tAyu = Math.min(ui.letra * 0.82f, 18.5f);
+        cy += p.parrafo(T.t(modo[1]), x + 20, cy, w - 36, tTit, true, puede ? ui.tema.texto : ui.tema.textoApagado, 1) + 8;
+        cy += p.parrafo(T.t(modo[1] + "_ayuda"), x + 20, cy, w - 36, tAyu, ui.tema.textoSuave, 1) + 12;
         if (modo[0].equals("EQUIPOS")) {
             String nombre = companero < 0 ? T.t("pelear.companero_ia") : companeros.get(companero)[0];
-            if (ui.boton(T.f("pelear.companero", nombre), x + 20, cy, w - 40, 70, Ui.Estilo.PLANO, true, T.t("pelear.companero_ayuda"))) {
+            if (ui.boton(T.f("pelear.companero", nombre), x + 20, cy, w - 40, 56, Ui.Estilo.PLANO, true, T.t("pelear.companero_ayuda"))) {
                 companero = companero + 1 >= companeros.size() ? -1 : companero + 1;
             }
-            cy += 80;
+            cy += 64;
         }
         if (modo[0].equals("ROYALE")) {
-            if (ui.boton(T.f("pelear.cerebros", EstiloPorIA.nombre(cerebrosRoyale)), x + 20, cy, w - 40, 70, Ui.Estilo.PLANO, true,
+            if (ui.boton(T.f("pelear.cerebros", EstiloPorIA.nombre(cerebrosRoyale)), x + 20, cy, w - 40, 56, Ui.Estilo.PLANO, true,
                     T.t("pelear.cerebros_ayuda"))) {
                 cerebrosRoyale = EstiloPorIA.siguiente(cerebrosRoyale);
             }
-            cy += 80;
+            cy += 64;
         }
         if (modo[0].equals("ADAPTADA") && !jug.modoIA.equals("ADAPTADA")) {
-            p.texto(T.f("pelear.dificultad_fija", jug.modoIA), x + 20, cy, ui.letra * 0.8f, false, ui.tema.aviso, 1);
+            p.texto(T.f("pelear.dificultad_fija", jug.modoIA), x + 20, cy, ui.letra * 0.78f, false, ui.tema.aviso, 1);
         }
         if (!puede) {
             p.parrafo(T.f("pelear.desafio_espera", Progreso.PELEAS_ENTRE_DESAFIOS - jug.peleasDesdeElDesafio), x + 20, cy, w - 40,
-                    ui.letra * 0.8f, ui.tema.aviso, 1);
+                    ui.letra * 0.78f, ui.tema.aviso, 1);
         }
-        if (ui.boton(T.t("pelear.vamos"), x + 20, y + h - 66, w - 40, 50, principal ? Ui.Estilo.PRINCIPAL : Ui.Estilo.NORMAL, puede, null)) {
+        if (ui.boton(T.t("pelear.vamos"), x + 20, y + h - 64, w - 40, 48, principal ? Ui.Estilo.PRINCIPAL : Ui.Estilo.NORMAL, puede, null)) {
             String m = modo[0].equals("ADAPTADA") ? jug.modoIA : modo[0];
             if (m.equals("MCM")) j.ir(new MaquinaContraMaquina());
-            else if (m.equals("CAMPANAS")) j.ir(new Campanas());
             else if (m.equals("ROYALE")) {
                 Encuentro e = royale(j, ajenos);
                 e.cerebros = cerebrosRoyale;

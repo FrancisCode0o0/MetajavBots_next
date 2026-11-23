@@ -12,6 +12,7 @@ import metajavbots.combate.DificultadCarrera;
 import metajavbots.combate.MinijuegoDestruccion;
 import metajavbots.combate.Pelea;
 import metajavbots.combate.PistaDeCarrera;
+import metajavbots.pantalla.Dialogo;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
@@ -34,8 +35,10 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
     private static final double VENTANA_CAMARA = 1150.0;
 
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
+    private final VentanaDeCodigo visorEnVivo = new VentanaDeCodigo();
     private final RobotDelJugador compilado = new RobotDelJugador();
     private final SelectorDeMinijuego selector = new SelectorDeMinijuego();
+    private final Dialogo dialogo = new Dialogo();
     private VistaDeArena vista;
     private MinijuegoDestruccion reto;
     private long semilla = (System.nanoTime() & 0xFFFFFL) + 41L;
@@ -46,6 +49,10 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
     private int robotElegido;
     private boolean preparando = true;
     private boolean pausado;
+    private boolean verCodigoEnVivo;
+    private boolean reintentarAlGuardar;
+    private boolean rotarEnSiguienteReto;
+    private String fuenteVisorEnVivo = "";
     private int velocidad = 1;
     private float acumulador;
     private float tiempo;
@@ -168,7 +175,10 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         editor.palabras = Palabras.api(j.jugador.idioma);
         editor.documentacion = w -> Referencia.de(w, j.jugador.idioma);
         editor.tamano = j.jugador.tamanoDeLetra;
-        editor.alCompilar = () -> lanzarCompilacion(j, false);
+        editor.alCompilar = () -> lanzarCompilacion(j, reintentarAlGuardar);
+        visorEnVivo.soloLectura = true;
+        visorEnVivo.seguirActiva = true;
+        visorEnVivo.palabras = Palabras.api(j.jugador.idioma);
         if (editor.doc.texto().isBlank()) {
             editor.ponerTexto(MinijuegoDestruccion.plantillaInicial(j.jugador.idioma));
         }
@@ -196,14 +206,46 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
     @Override
     public void fotograma(Juego j, float dt) {
         tiempo += dt;
+        dialogo.antes(j.ui);
         atenderCompilacion(j);
         Comun.fondo(j, tiempo);
-        float arriba = Comun.cabecera(j, T.t("destruccion.titulo"), true);
+        float arriba = Comun.cabecera(j, T.t("destruccion.titulo"), () -> alPulsarVolverOEscape(j));
         if (preparando || reto == null) {
             dibujarPreparacion(j, arriba);
         } else {
             dibujarReto(j, arriba, dt);
         }
+        dialogo.dibujar(j.ui);
+    }
+
+    private void alPulsarVolverOEscape(Juego j) {
+        if (!preparando && reto != null && !reto.terminada()) {
+            preguntarSalidaEnReto();
+        } else {
+            j.volver();
+        }
+    }
+
+    private void preguntarSalidaEnReto() {
+        boolean estabaPausado = pausado;
+        pausado = true;
+        dialogo.elegirTres(
+                T.t("destruccion.salir_titulo"),
+                T.t("destruccion.salir_texto"),
+                T.t("comun.seguir"),
+                T.t("carrera_obs.editar_reintentar"),
+                T.t("carrera_obs.rendirme"),
+                () -> pausado = estabaPausado,
+                () -> {
+                    reintentarAlGuardar = true;
+                    rotarEnSiguienteReto = false;
+                    preparando = true;
+                },
+                () -> {
+                    pausado = false;
+                    rotarEnSiguienteReto = true;
+                    if (reto != null && !reto.terminada()) reto.rendirse();
+                });
     }
 
     private void dibujarPreparacion(Juego j, float arriba) {
@@ -345,13 +387,18 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("destruccion.iniciar_ayuda")};
         switch (ui.botonera(textos, estilos, activos, ayudas, x, y, w, 44)) {
             case 0:
-                lanzarCompilacion(j, false);
+                lanzarCompilacion(j, reintentarAlGuardar);
                 break;
             case 1:
                 editor.doc.cambiarTodo(MinijuegoDestruccion.plantillaInicial(j.jugador.idioma));
                 aviso = "";
                 break;
             case 2:
+                reintentarAlGuardar = false;
+                if (rotarEnSiguienteReto) {
+                    rotarArena();
+                    rotarEnSiguienteReto = false;
+                }
                 iniciarReto(j);
                 break;
             default:
@@ -379,7 +426,7 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         j.sonidos.tocar("compilar", 0.5f);
         String codigo = editor.doc.texto();
         Thread hilo = new Thread(() -> {
-            resultadoCompilacion = compilado.compilar(codigo, j.jugador.idioma.locale(), false);
+            resultadoCompilacion = compilado.compilar(codigo, j.jugador.idioma.locale(), true);
             compilando = false;
         }, "compilar-destruccion");
         hilo.setDaemon(true);
@@ -398,7 +445,10 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         j.sonidos.tocar(r.bien ? "bien" : "mal", 0.6f);
         boolean arrancar = arrancarTrasCompilar;
         arrancarTrasCompilar = false;
-        if (r.bien && arrancar) iniciarReto(j);
+        if (r.bien && arrancar) {
+            reintentarAlGuardar = false;
+            iniciarReto(j);
+        }
     }
 
     private void iniciarReto(Juego j) {
@@ -425,7 +475,7 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
     private void dibujarReto(Juego j, float arriba, float dt) {
         Pincel p = j.pincel;
         float x = 20, y = arriba + 10, w = p.ancho - 40, hudH = 66;
-        int accionHud = DibujoMinijuegoDestruccion.hud(j, reto, pausado, velocidad, x, y, w, hudH);
+        int accionHud = DibujoMinijuegoDestruccion.hud(j, reto, pausado, velocidad, verCodigoEnVivo, x, y, w, hudH);
         procesarAccionHud(j, accionHud);
         if (preparando) return;
         if (!pausado && !reto.terminada()) {
@@ -447,17 +497,23 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         Cuerpo c0 = reto.pelea.cuerpo(0);
         if (c0 != null) vista.objetivoCamaraX = c0.x;
         float ay = y + hudH + 10, ah = p.alto - ay - 16;
-        vista.dibujar(p, reto.pelea, x, ay, w, ah, dt);
+        float anchoCodigo = verCodigoEnVivo ? Math.min(500f, Math.max(360f, w * 0.36f)) : 0f;
+        float aw = verCodigoEnVivo ? w - anchoCodigo - 12f : w;
+        vista.dibujar(p, reto.pelea, x, ay, aw, ah, dt);
         DibujoMinijuegoDestruccion.avisosEnArena(p, vista, reto);
-        float mmW = Math.min(w - 40, 520), mmH = 44;
-        DibujoMinijuegoDestruccion.minimapa(p, j.ui, reto, vista, x + (w - mmW) / 2, ay + ah - mmH - 12, mmW, mmH);
+        float mmW = Math.min(aw - 40, 520), mmH = 44;
+        DibujoMinijuegoDestruccion.minimapa(p, j.ui, reto, vista, x + (aw - mmW) / 2, ay + ah - mmH - 12, mmW, mmH);
+        if (verCodigoEnVivo) {
+            dibujarPanelCodigoEnVivo(j, c0, x + aw + 12f, ay, anchoCodigo, ah);
+        }
         if (reto.terminada()) {
-            int accionFin = DibujoMinijuegoDestruccion.resultado(j, reto, cobroMonedas, x, ay, w, ah);
+            int accionFin = DibujoMinijuegoDestruccion.resultado(j, reto, cobroMonedas, x, ay, aw, ah);
             if (accionFin == 1) {
                 rotarArena();
                 iniciarReto(j);
             } else if (accionFin == 2) {
                 rotarArena();
+                reintentarAlGuardar = false;
                 preparando = true;
             } else if (accionFin == 3) {
                 rotarArena();
@@ -466,17 +522,42 @@ public final class PantallaMinijuegoDestruccion implements Pantalla {
         }
     }
 
+    private void dibujarPanelCodigoEnVivo(Juego j, Cuerpo c0, float x, float y, float w, float h) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        String sufijo = c0 != null && c0.ultimaLinea > 0 ? " · " + T.t("mcm.linea") + " " + c0.ultimaLinea : "";
+        float cy = ui.panel(x, y, w, h, T.t("carrera_obs.codigo_vivo") + sufijo);
+        String fuente = compilado.listo() ? compilado.fuente() : editor.doc.texto();
+        if (!fuente.equals(fuenteVisorEnVivo)) {
+            visorEnVivo.ponerTexto(fuente);
+            fuenteVisorEnVivo = fuente;
+        }
+        visorEnVivo.tamano = Math.max(12f, Math.min(20f, ui.letra * 0.78f));
+        if (c0 != null && compilado.listo()) {
+            visorEnVivo.lineasActivas = c0.lineasDelTurno;
+            visorEnVivo.lineaActiva = c0.ultimaLinea;
+        } else {
+            visorEnVivo.lineasActivas = new java.util.BitSet();
+            visorEnVivo.lineaActiva = 0;
+        }
+        String estado = !compilado.listo() ? T.t("taller.aviso_nunca_compilado")
+                : PanelDepurador.sinEjecucion(c0) ? PanelDepurador.motivoSinEjecucion(c0) : T.t("editor.solo_lectura");
+        float tEst = Math.min(16f, ui.letra * 0.72f);
+        float hEst = p.altoDeParrafo(estado, w - 24f, tEst) + 8f;
+        visorEnVivo.dibujar(ui, x + 8f, cy, w - 16f, Math.max(80f, y + h - cy - hEst - 6f));
+        p.parrafo(estado, x + 12f, y + h - hEst, w - 24f, tEst, !compilado.listo() ? ui.tema.aviso : ui.tema.textoApagado, 1);
+    }
+
     private void procesarAccionHud(Juego j, int accion) {
         if (accion == 1) pausado = !pausado;
         else if (accion == 2) velocidad = velocidad == 1 ? 2 : velocidad == 2 ? 4 : 1;
         else if (accion == 3) {
-            rotarArena();
-            preparando = true;
+            verCodigoEnVivo = !verCodigoEnVivo;
         } else if (accion == 4) {
             rotarArena();
             iniciarReto(j);
         } else if (accion == 5 && !reto.terminada()) {
-            reto.rendirse();
+            preguntarSalidaEnReto();
         }
     }
 

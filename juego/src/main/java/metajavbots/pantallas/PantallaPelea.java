@@ -262,10 +262,7 @@ public final class PantallaPelea implements Pantalla {
                 if (encuentro.cerebros == EstiloPorIA.EL_RAPIDO) {
                     String r = c.preguntar(metajavbots.cerebro.CerebroDelJuego.sistemaEstilo(), informe, 6).toUpperCase(java.util.Locale.ROOT);
                     for (metajavbots.rivales.Estilo e : metajavbots.rivales.Estilo.values()) {
-                        if (r.contains(e.name())) {
-                            encuentro.rival.memoria.put("estilo", e);
-                            break;
-                        }
+                        if (r.contains(e.name())) { encuentro.rival.memoria.put("estilo", e); break; }
                     }
                 }
                 String f = c.preguntar(metajavbots.cerebro.CerebroDelJuego.sistemaLocutor(j.jugador.idioma), informe, 25);
@@ -387,7 +384,7 @@ public final class PantallaPelea implements Pantalla {
                 acabar(j);
             }
         }
-        float ancho = depurador && !entreRondas ? p.ancho - 460 : p.ancho;
+        float ancho = (depurador || panelDelAparato.estaAbierto()) && !entreRondas ? p.ancho - 460 : p.ancho;
         if (especial != null && especial.activa()) ancho = ArmaEspecial.anchoDeLaArena(p.ancho);
         if (terminada && tiempoFinal >= 2.2f && repeticion.activa()) ancho = Repeticion.anchoArena(p.ancho);
         vista.sacudida = Math.max(vista.sacudida, j.sacudida);
@@ -421,7 +418,9 @@ public final class PantallaPelea implements Pantalla {
     private void preguntarSiSalir(Juego j) {
         boolean estabaEnPausa = pausa;
         pausa = true;
-        dialogo.confirmar(T.t("pelea.salir_titulo"), T.t("pelea.salir_texto"), T.t("pelea.rendirse"), T.t("pelea.seguir"), true, () -> {
+        String tit = T.t(encuentro.cuenta ? "pelea.salir_titulo" : "pelea.salir_reto_titulo");
+        String txt = T.t(encuentro.cuenta ? "pelea.salir_texto" : "pelea.salir_reto_texto");
+        dialogo.confirmar(tit, txt, T.t("pelea.rendirse"), T.t("pelea.seguir"), true, () -> {
             pausa = estabaEnPausa;
             entreRondas = false;
             pelea.rendirse(0);

@@ -520,7 +520,7 @@ public final class Capturas extends Juego {
         j.cerebros[0].direccionLocal = "http://localhost:5999";
         j.cerebros[1].tipo = metajavbots.cerebro.Ranura.Tipo.EN_LINEA;
         Jugador.Robot r = new Jugador.Robot("Cobaltito", "cobalto");
-        r.codigo = Comun.plantilla(j.idioma);
+        r.registrarCompilacionValida(r.codigo = Comun.plantilla(j.idioma));
         j.robots.add(r);
         Random azar = new Random(4);
         for (int i = 0; i < 24; i++) {

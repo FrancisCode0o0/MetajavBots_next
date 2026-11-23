@@ -154,9 +154,10 @@ final class DibujoCarreraDeObstaculos {
 
     /**
      * Dibuja la barra superior en carrera calculando el ancho exacto de cada botón según su texto real
-     * para evitar cortes tanto en letra 18 como en 26. Devuelve 1 pausa, 2 velocidad, 3 editar, 4 nueva pista, 5 rendirse.
+     * para evitar cortes tanto en letra 18 como en 26. Devuelve 1 pausa, 2 velocidad, 3 código en ejecución, 4 nueva pista, 5 rendirse.
      */
-    static int hudCarrera(Juego j, CarreraDeObstaculos carrera, boolean pausado, int velocidad, float x, float y, float w, float h) {
+    static int hudCarrera(Juego j, CarreraDeObstaculos carrera, boolean pausado, int velocidad, boolean viendoCodigo,
+            float x, float y, float w, float h) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         p.caja(x, y, w, h, 10, ui.tema.panel, 0.96f);
@@ -166,12 +167,12 @@ final class DibujoCarreraDeObstaculos {
         String[] textos = {
                 pausado ? T.t("carrera_obs.reanudar") : T.t("carrera_obs.pausar"),
                 velocidad + "x",
-                T.t("carrera_obs.editar"),
+                T.t("carrera_obs.codigo_vivo"),
                 T.t("carrera_obs.nueva_pista"),
                 T.t("carrera_obs.rendirse")
         };
         Ui.Estilo[] estilos = {
-                Ui.Estilo.NORMAL, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PELIGRO
+                Ui.Estilo.NORMAL, Ui.Estilo.PLANO, viendoCodigo ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PELIGRO
         };
         boolean[] activos = {true, true, true, true, !carrera.terminada()};
         float[] anchos = new float[textos.length];

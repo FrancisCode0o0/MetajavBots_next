@@ -84,17 +84,22 @@ public final class Campanas implements Pantalla {
         for (int i = 0; i < cs.size(); i++) {
             Campana c = cs.get(i);
             boolean abierta = c.abierta(jug.capitulosGanados);
+            boolean sel = i == elegida;
             String marca = c.terminada(jug.capitulosGanados) ? "★ " : c.destacada ? "◆ " : abierta ? "" : "□ ";
             String cuenta = c.ganados(jug.capitulosGanados) + "/" + c.capitulos.size();
-            float tl = ui.letra * 0.88f, cw = p.ancho(cuenta, tl, false) + 18;
-            float alto = p.altoDeParrafo(marca + c.titulo.en(jug.idioma), lw - 64 - cw, tl, true) + (c.destacada ? 34 : 20);
+            float tl = ui.letra * 0.88f, cw = p.ancho(cuenta, tl, false) + 22;
+            float tamDest = Math.max(12, ui.letra * 0.62f);
+            float hParrafo = p.altoDeParrafo(marca + c.titulo.en(jug.idioma), lw - 70 - cw, tl, true);
+            float alto = hParrafo + (c.destacada ? tamDest + 24 : 20);
             boolean encima = ui.e.dentro(28, yy, lw - 32, alto);
-            int fondo = i == elegida ? Pincel.oscurecer(ui.tema.acento, 0.55f) : encima ? ui.tema.panelAlto : ui.tema.fondo;
+            int fondo = sel ? Pincel.oscurecer(ui.tema.acento, 0.58f) : encima ? ui.tema.panelAlto : ui.tema.fondo;
             p.caja(28, yy, lw - 44, alto - 6, 10, fondo, 1);
-            if (c.destacada) p.bordeRedondeado(28, yy, lw - 44, alto - 6, 10, 0xFFC857, 0.75f, 1.5f);
-            p.parrafo(marca + c.titulo.en(jug.idioma), 40, yy + 8, lw - 64 - cw, tl, true, abierta ? ui.tema.texto : ui.tema.textoApagado, 1);
+            int colorBorde = c.destacada ? 0xFFC857 : sel ? ui.tema.acento : ui.tema.borde;
+            p.bordeRedondeado(28, yy, lw - 44, alto - 6, 10, colorBorde, sel || c.destacada ? 0.85f : 0.4f, sel ? 1.8f : 1.2f);
+            p.caja(28, yy + 6, 4, alto - 18, 2, colorBorde, sel || c.destacada ? 0.95f : 0.45f);
+            p.parrafo(marca + c.titulo.en(jug.idioma), 42, yy + 8, lw - 70 - cw, tl, true, abierta ? ui.tema.texto : ui.tema.textoApagado, 1);
             if (c.destacada) {
-                p.texto(T.t("campanas.destacada"), 40, yy + alto - 24, Math.max(12, ui.letra * 0.62f), true, 0xFFC857, 0.9f);
+                p.texto(T.t("campanas.destacada"), 42, yy + 10 + hParrafo, tamDest, true, 0xFFC857, 0.9f);
             }
             p.textoDerecha(cuenta, 28 + lw - 56, yy + 8, tl, false, ui.tema.textoSuave, 1);
             if (ui.e.clic(28, yy, lw - 44, alto - 6)) {
@@ -145,14 +150,11 @@ public final class Campanas implements Pantalla {
                 : capGanado ? cap.texto.en(jug.idioma) + "\n\n" + cap.victoria.en(jug.idioma)
                 : cap.texto.en(jug.idioma);
         String cuenta = c.usaEntrenadorJugador && abierta
-                ? Campana.vozDeEsquina(c, e, jug.idioma, cap.esJefe, capGanado) + "\n\n" + baseCuenta
+                ? Campana.vozDeEsquina(c, e, jug.idioma, cap.esJefe && capGanado, capGanado) + "\n\n" + baseCuenta
                 : baseCuenta;
         float r = 46;
         CabezaDeEntrenador.dibujar(p, e, x + 20 + r, cy + r + 10, r, true, t);
-        if (c.usaEntrenadorJugador && cap.esJefe && !capGanado) {
-            p.rect(x + 20, cy + r * 0.55f, r * 2, r * 0.28f, 0xFFFFFF, 0.94f);
-        }
-        float tn = ui.cabe(e.nombre.en(jug.idioma), 2 * r + 30, ui.letra * 0.75f, true);
+        float tn = ui.cabeEntero(e.nombre.en(jug.idioma), 2 * r + 14, ui.letra * 0.75f, true);
         p.textoCentrado(e.nombre.en(jug.idioma), x + 20 + r, cy + 2 * r + 24, tn, true, ui.tema.textoSuave, 1);
         if (c.usaEntrenadorJugador) {
             dibujarSelectorEntrenadorCreed(j, jug, e, x + 16, cy + 2 * r + 48, 2 * r + 8);
@@ -163,6 +165,7 @@ public final class Campanas implements Pantalla {
         float vh = Math.max(minAlto, p.altoDeParrafo(cuenta, vw - 28, tamCuenta) + 24);
         vh = Math.min(vh, h * 0.42f);
         p.caja(vx, cy, vw, vh, 12, 0xF4F1E8, 1);
+        p.bordeRedondeado(vx, cy, vw, vh, 12, 0xD6CFC0, 0.9f, 1.5f);
         p.recortar(vx + 6, cy + 6, vw - 12, vh - 12);
         p.parrafo(cuenta, vx + 14, cy + 12, vw - 28, tamCuenta, 0x1C1F26, 1);
         p.sinRecorte();
@@ -176,33 +179,39 @@ public final class Campanas implements Pantalla {
         Jugador jug = j.jugador;
         float zona = y + h - cy - 12;
         float d = ui.desplazable(capitulos, x + 8, cy, w - 16, zona);
-        float yy = cy - d, fila = Math.max(102, ui.letra * 4.8f);
-        float bwPelear = Math.min(200, Math.max(150, w * 0.21f));
-        float bwEscena = Math.min(130, Math.max(100, w * 0.14f));
-        float bh = Math.min(50, fila - 26);
+        float yy = cy - d, fila = Math.max(104, ui.letra * 4.8f);
+        float tBtn = Math.min(ui.letra * 0.88f, 22f);
+        float bwEscena = Math.min(w * 0.17f, Math.max(106, p.ancho(T.t("campanas.ver_escena"), tBtn, true) + 32));
+        float bwPelear = Math.min(w * 0.27f, Math.max(168,
+                Math.max(p.ancho(T.t("campanas.pelear"), tBtn, true), p.ancho(T.t("campanas.otra_vez"), tBtn, true)) + 36));
+        float bh = Math.min(52, fila - 26);
         for (int i = 0; i < c.capitulos.size(); i++) {
             Campana.Capitulo k = c.capitulos.get(i);
             boolean ganado = jug.capitulosGanados.contains(c.clave(k.numero));
             boolean puede = abierta && i <= ganados;
+            boolean sel = i == capitulo;
             if (yy + fila > cy && yy < cy + zona) {
-                p.caja(x + 16, yy, w - 32, fila - 10, 12, i == capitulo ? ui.tema.panelAlto : ui.tema.fondo, 0.9f);
+                int colorBorde = ganado ? ui.tema.bien : k.esJefe ? 0xFFC857 : sel ? ui.tema.acento : ui.tema.borde;
+                p.caja(x + 16, yy, w - 32, fila - 10, 12, sel ? ui.tema.panelAlto : ui.tema.fondo, 0.94f);
+                p.bordeRedondeado(x + 16, yy, w - 32, fila - 10, 12, colorBorde, sel || ganado ? 0.75f : 0.4f, sel ? 1.8f : 1.2f);
+                p.caja(x + 16, yy + 10, 5, fila - 30, 2, colorBorde, puede ? 0.92f : 0.35f);
                 Modelo m = Modelo.de(k.modelo);
-                if (puede) vista.robotSuelto(p, new Montaje(m), x + 62, yy + fila - 20, 0.82f, t + i, 0, true);
-                float tx = x + 122;
-                float anchoTexto = Math.max(120, w - 32 - bwPelear - bwEscena - 140);
+                if (puede) vista.robotSuelto(p, new Montaje(m), x + 64, yy + fila - 20, 0.82f, t + i, 0, true);
+                float tx = x + 124;
+                float anchoTexto = Math.max(120, w - 32 - bwPelear - bwEscena - 144);
                 String nombre = puede ? k.rival.en(jug.idioma) : "???";
                 String tituloCap = T.f("campanas.capitulo", k.numero) + " [" + k.rango + "]  " + nombre;
-                float tamTit = ui.cabe(tituloCap, anchoTexto, ui.letra * 0.98f, true);
-                p.texto(tituloCap, tx, yy + 10, tamTit, true,
+                float tamTit = ui.cabeEntero(tituloCap, anchoTexto, ui.letra * 0.96f, true);
+                p.texto(tituloCap, tx, yy + 12, tamTit, true,
                         ganado ? ui.tema.bien : puede ? ui.tema.texto : ui.tema.textoApagado, 1);
                 String detalle = puede ? T.f("campanas.detalle", m.nombre(jug.idioma), k.rondas)
                         + (k.esJefe ? "  ·  " + T.t("campanas.creed_jefe") : "") : T.t("campanas.bloqueado");
-                float tamDet = ui.cabe(detalle, anchoTexto, ui.letra * 0.78f, false);
-                p.texto(detalle, tx, yy + 16 + tamTit * 1.25f, tamDet, false, ui.tema.textoSuave, 1);
+                float tamDet = ui.cabeEntero(detalle, anchoTexto, ui.letra * 0.78f, false);
+                p.texto(detalle, tx, yy + 18 + tamTit * 1.25f, tamDet, false, ui.tema.textoSuave, 1);
                 if (ui.e.clic(x + 16, yy, w - 32 - bwPelear - bwEscena - 30, fila - 10) && puede) capitulo = i;
                 float by = yy + (fila - 10 - bh) / 2;
                 float xPelear = x + w - 32 - bwPelear;
-                float xEscena = xPelear - bwEscena - 8;
+                float xEscena = xPelear - bwEscena - 10;
                 if (ui.boton(T.t("campanas.ver_escena"), xEscena, by, bwEscena, bh, Ui.Estilo.NORMAL, puede, null)) {
                     capitulo = i;
                     verEscena(j, c, k);

@@ -16,6 +16,7 @@ import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.DificultadCarrera;
 import metajavbots.combate.Pelea;
+import metajavbots.pantalla.Dialogo;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
@@ -51,8 +52,10 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     };
 
     private final VentanaDeCodigo editor = new VentanaDeCodigo();
+    private final VentanaDeCodigo visorEnVivo = new VentanaDeCodigo();
     private final RobotDelJugador compilado = new RobotDelJugador();
     private final SelectorDeMinijuego selector = new SelectorDeMinijuego();
+    private final Dialogo dialogo = new Dialogo();
     private VistaDeArena vista;
     private CarreraDeObstaculos carrera;
     private Arena vistaPrevia;
@@ -67,6 +70,10 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     private List<Path> ajenos = new ArrayList<>();
     private int ajenoElegido;
     private boolean pausado;
+    private boolean verCodigoEnVivo;
+    private boolean reintentarAlGuardar;
+    private boolean rotarEnSiguienteCarrera;
+    private String fuenteVisorEnVivo = "";
     private int velocidad = 1;
     private float acumulador;
     private float tiempo;
@@ -243,7 +250,10 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         editor.palabras = Palabras.api(j.jugador.idioma);
         editor.documentacion = w -> Referencia.de(w, j.jugador.idioma);
         editor.tamano = j.jugador.tamanoDeLetra;
-        editor.alCompilar = () -> lanzarCompilacion(j, false);
+        editor.alCompilar = () -> lanzarCompilacion(j, reintentarAlGuardar);
+        visorEnVivo.soloLectura = true;
+        visorEnVivo.seguirActiva = true;
+        visorEnVivo.palabras = Palabras.api(j.jugador.idioma);
         if (editor.doc.texto().isBlank()) {
             editor.ponerTexto(CarreraDeObstaculos.plantillaInicial(j.jugador.idioma));
         }
@@ -270,14 +280,47 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
     @Override
     public void fotograma(Juego j, float dt) {
         tiempo += dt;
+        dialogo.antes(j.ui);
         atenderCompilacion(j);
         Comun.fondo(j, tiempo);
-        float arriba = Comun.cabecera(j, T.t("especial.carrera"), true);
+        float arriba = Comun.cabecera(j, T.t("especial.carrera"), () -> alPulsarVolverOEscape(j));
         if (preparando || carrera == null) {
             dibujarPreparacion(j, arriba);
         } else {
             dibujarCarrera(j, arriba, dt);
         }
+        dialogo.dibujar(j.ui);
+    }
+
+    private void alPulsarVolverOEscape(Juego j) {
+        if (!preparando && carrera != null && !carrera.terminada()) {
+            preguntarSalidaEnCarrera();
+        } else {
+            j.volver();
+        }
+    }
+
+    /** Abre el cuadro de confirmación de Escape durante la carrera («Seguir», «Editar el código y reintentar», «Rendirme»). */
+    private void preguntarSalidaEnCarrera() {
+        boolean estabaPausado = pausado;
+        pausado = true;
+        dialogo.elegirTres(
+                T.t("carrera_obs.salir_titulo"),
+                T.t("carrera_obs.salir_texto"),
+                T.t("comun.seguir"),
+                T.t("carrera_obs.editar_reintentar"),
+                T.t("carrera_obs.rendirme"),
+                () -> pausado = estabaPausado,
+                () -> {
+                    reintentarAlGuardar = true;
+                    rotarEnSiguienteCarrera = false;
+                    preparando = true;
+                },
+                () -> {
+                    pausado = false;
+                    rotarEnSiguienteCarrera = true;
+                    if (carrera != null && !carrera.terminada()) carrera.rendirse();
+                });
     }
 
     private void dibujarPreparacion(Juego j, float arriba) {
@@ -529,14 +572,15 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         String[] ayudas = {T.t("taller.compilar_ayuda"), T.t("taller.plantilla_ayuda"), T.t("carrera_obs.iniciar_ayuda")};
         switch (ui.botonera(textos, estilos, activos, ayudas, x, y, w, 44)) {
             case 0:
-                lanzarCompilacion(j, false);
+                lanzarCompilacion(j, reintentarAlGuardar);
                 break;
             case 1:
                 editor.doc.cambiarTodo(CarreraDeObstaculos.plantillaInicial(j.jugador.idioma));
                 aviso = "";
                 break;
             case 2:
-                iniciarCarrera(j, false);
+                reintentarAlGuardar = false;
+                iniciarCarrera(j, rotarEnSiguienteCarrera);
                 break;
             default:
                 break;
@@ -563,7 +607,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         j.sonidos.tocar("compilar", 0.5f);
         String codigo = editor.doc.texto();
         Thread hilo = new Thread(() -> {
-            resultadoCompilacion = compilado.compilar(codigo, j.jugador.idioma.locale(), false);
+            resultadoCompilacion = compilado.compilar(codigo, j.jugador.idioma.locale(), true);
             compilando = false;
         }, "compilar-carrera");
         hilo.setDaemon(true);
@@ -583,6 +627,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         boolean arrancar = arrancarTrasCompilar;
         arrancarTrasCompilar = false;
         if (r.bien && arrancar) {
+            reintentarAlGuardar = false;
             iniciarCarrera(j, false);
         }
     }
@@ -605,8 +650,9 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
             }
             rival = carga.combatiente();
         }
-        if (rotarArena) {
+        if (rotarArena || rotarEnSiguienteCarrera) {
             regenerarPista();
+            rotarEnSiguienteCarrera = false;
         }
         Combatiente cJug = CarreraDeObstaculos.combatienteDeJugador(j.jugador, robotElegido, compilado.fabricaSiListo());
         carrera = new CarreraDeObstaculos(cJug, rival, semilla, contraMaquina, escenarioAnterior, difEfectiva, subnivel);
@@ -656,18 +702,24 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         }
         float ay = y + hudH + 10;
         float ah = p.alto - ay - 16;
-        vista.dibujar(p, carrera.pelea, x, ay, w, ah, dt);
+        float anchoCodigo = verCodigoEnVivo ? Math.min(500f, Math.max(360f, w * 0.36f)) : 0f;
+        float aw = verCodigoEnVivo ? w - anchoCodigo - 12f : w;
+        vista.dibujar(p, carrera.pelea, x, ay, aw, ah, dt);
         DibujoCarreraDeObstaculos.lineasPista(p, ui, vista, carrera.metaX());
-        float mmW = Math.min(w - 40, 680);
+        float mmW = Math.min(aw - 40, 680);
         float mmH = 44;
-        DibujoCarreraDeObstaculos.minimapa(p, ui, carrera, vista, x + (w - mmW) / 2, ay + ah - mmH - 12, mmW, mmH);
+        DibujoCarreraDeObstaculos.minimapa(p, ui, carrera, vista, x + (aw - mmW) / 2, ay + ah - mmH - 12, mmW, mmH);
+        if (verCodigoEnVivo) {
+            dibujarPanelCodigoEnVivo(j, c0, x + aw + 12f, ay, anchoCodigo, ah);
+        }
         if (carrera.terminada()) {
-            int accion = DibujoCarreraDeObstaculos.resultado(j, carrera, monedaGanada, x, ay, w, ah);
+            int accion = DibujoCarreraDeObstaculos.resultado(j, carrera, monedaGanada, x, ay, aw, ah);
             if (accion == 1) {
                 regenerarPista();
                 iniciarCarrera(j, false);
             } else if (accion == 2) {
                 regenerarPista();
+                reintentarAlGuardar = false;
                 preparando = true;
             } else if (accion == 3) {
                 regenerarPista();
@@ -676,20 +728,46 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         }
     }
 
+    private void dibujarPanelCodigoEnVivo(Juego j, Cuerpo c0, float x, float y, float w, float h) {
+        Pincel p = j.pincel;
+        Ui ui = j.ui;
+        String sufijo = c0 != null && c0.ultimaLinea > 0 ? " · " + T.t("mcm.linea") + " " + c0.ultimaLinea : "";
+        String titulo = T.t("carrera_obs.codigo_vivo") + sufijo;
+        float cy = ui.panel(x, y, w, h, titulo);
+        String fuente = compilado.listo() ? compilado.fuente() : editor.doc.texto();
+        if (!fuente.equals(fuenteVisorEnVivo)) {
+            visorEnVivo.ponerTexto(fuente);
+            fuenteVisorEnVivo = fuente;
+        }
+        visorEnVivo.tamano = Math.max(12f, Math.min(20f, ui.letra * 0.78f));
+        if (c0 != null && compilado.listo()) {
+            visorEnVivo.lineasActivas = c0.lineasDelTurno;
+            visorEnVivo.lineaActiva = c0.ultimaLinea;
+        } else {
+            visorEnVivo.lineasActivas = new java.util.BitSet();
+            visorEnVivo.lineaActiva = 0;
+        }
+        String estado = !compilado.listo() ? T.t("taller.aviso_nunca_compilado")
+                : PanelDepurador.sinEjecucion(c0) ? PanelDepurador.motivoSinEjecucion(c0) : T.t("editor.solo_lectura");
+        float tEst = Math.min(16f, ui.letra * 0.72f);
+        float hEst = p.altoDeParrafo(estado, w - 24f, tEst) + 8f;
+        visorEnVivo.dibujar(ui, x + 8f, cy, w - 16f, Math.max(80f, y + h - cy - hEst - 6f));
+        p.parrafo(estado, x + 12f, y + h - hEst, w - 24f, tEst, !compilado.listo() ? ui.tema.aviso : ui.tema.textoApagado, 1);
+    }
+
     private void dibujarHudCarrera(Juego j, float x, float y, float w, float h) {
-        int accion = DibujoCarreraDeObstaculos.hudCarrera(j, carrera, pausado, velocidad, x, y, w, h);
+        int accion = DibujoCarreraDeObstaculos.hudCarrera(j, carrera, pausado, velocidad, verCodigoEnVivo, x, y, w, h);
         if (accion == 1) {
             pausado = !pausado;
         } else if (accion == 2) {
             velocidad = velocidad == 1 ? 2 : velocidad == 2 ? 4 : 1;
         } else if (accion == 3) {
-            regenerarPista();
-            preparando = true;
+            verCodigoEnVivo = !verCodigoEnVivo;
         } else if (accion == 4) {
             regenerarPista();
             iniciarCarrera(j, false);
         } else if (accion == 5 && !carrera.terminada()) {
-            carrera.rendirse();
+            preguntarSalidaEnCarrera();
         }
     }
 

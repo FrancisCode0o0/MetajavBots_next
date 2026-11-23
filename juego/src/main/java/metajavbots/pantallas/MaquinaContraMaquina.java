@@ -13,6 +13,7 @@ import metajavbots.combate.Combatiente;
 import metajavbots.combate.Cuerpo;
 import metajavbots.combate.Pelea;
 import metajavbots.dialogos.Narrador;
+import metajavbots.pantalla.Dialogo;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.Pincel;
 import metajavbots.pantalla.Ui;
@@ -46,6 +47,7 @@ public final class MaquinaContraMaquina implements Pantalla {
     private float altoDeLaBanda = 44;
     private float tiempoLocutor;
     private boolean seguir = true;
+    private final Dialogo dialogo = new Dialogo();
 
     @Override
     public void alEntrar(Juego j) {
@@ -92,10 +94,12 @@ public final class MaquinaContraMaquina implements Pantalla {
     public void fotograma(Juego j, float dt) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
+        dialogo.antes(ui);
         Comun.fondo(j, 0);
-        float arriba = Comun.cabecera(j, T.t("mcm.titulo"), true);
+        float arriba = Comun.cabecera(j, T.t("mcm.titulo"), () -> alPulsarVolverOEscape(j));
         if (pelea == null) {
             configurar(j, arriba);
+            dialogo.dibujar(ui);
             return;
         }
         avanzar(j, dt);
@@ -155,6 +159,18 @@ public final class MaquinaContraMaquina implements Pantalla {
                 yy += p.altoDeLinea(ui.letra);
             }
             altoDeLaBanda = alto;
+        }
+        dialogo.dibujar(ui);
+    }
+
+    private void alPulsarVolverOEscape(Juego j) {
+        if (pelea != null && pelea.estado() != Pelea.Estado.TERMINADA) {
+            boolean estabaEnPausa = pausa;
+            pausa = true;
+            dialogo.confirmar(T.t("mcm.salir_titulo"), T.t("mcm.salir_texto"), T.t("demo.salir"), T.t("comun.seguir"), true,
+                    j::volver, () -> pausa = estabaEnPausa);
+        } else {
+            j.volver();
         }
     }
 

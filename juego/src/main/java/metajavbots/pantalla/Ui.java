@@ -190,19 +190,22 @@ public final class Ui {
         } else if (encima || estilo == Estilo.ELEGIDO) {
             p.bordeRedondeado(x, y + desplaza, w, h, 8, estilo == Estilo.ELEGIDO ? tema.acento : tema.borde, 1, 1.5f);
         }
-        // Si no cabe: en un botón alto, en dos líneas con la letra entera; si no, con la letra algo menor; y si ni así, cortado.
+        // Si no cabe: en un botón con espacio vertical, en dos líneas con la letra entera; si no, con la letra menor para que nunca se corte.
         float t = Math.min(letra, h * 0.5f);
-        java.util.List<String> lineas = p.ancho(texto, t, true) > w - 16 && h >= t * 2.9f ? p.partir(texto, w - 16, t, true) : null;
-        if (lineas == null || lineas.size() != 2) t = cabe(texto, w - 16, t, true);
+        float maxW = Math.max(12, w - 16);
+        java.util.List<String> lineas = p.ancho(texto, t, true) > maxW && h >= 42 ? p.partir(texto, maxW, Math.min(t, h * 0.36f), true) : null;
         if (lineas != null && lineas.size() == 2) {
-            // Un botón alto con un texto largo: en dos líneas, entero.
-            float ly = y + desplaza + (h - 2 * p.altoDeLinea(t)) / 2;
+            float tDos = Math.min(t, h * 0.36f);
+            for (String l : lineas) tDos = Math.min(tDos, cabeEntero(l, maxW, tDos, 9.5f, true));
+            float paso = p.altoDeLinea(tDos) * 0.94f;
+            float ly = y + desplaza + (h - 2 * paso) / 2;
             for (String l : lineas) {
-                p.textoCentradoConBordeNegro(l, x + w / 2, ly, t, true, letraColor, 1);
-                ly += p.altoDeLinea(t);
+                p.textoCentradoConBordeNegro(l, x + w / 2, ly, tDos, true, letraColor, 1);
+                ly += paso;
             }
         } else {
-            String s = recortarTexto(texto, w - 16, t, true);
+            t = cabeEntero(texto, maxW, t, 9.5f, true);
+            String s = recortarTexto(texto, maxW, t, true);
             p.textoCentradoConBordeNegro(s, x + w / 2, y + desplaza + (h - t * 1.15f) / 2, t, true, letraColor, 1);
         }
         if (encima && ayuda != null) avisar(ayuda);
@@ -237,11 +240,26 @@ public final class Ui {
         return pulsado;
     }
 
-    /** El tamaño de letra con que cabe un texto en ese ancho: el de siempre o algo menor (hasta tres cuartos); si ni así, se cortará. */
+    /** El tamaño de letra con que cabe un texto en ese ancho (baja hasta 9.5 px antes de permitir recorte). */
     public float cabe(String s, float anchoMax, float t, boolean negrita) {
-        if (s == null) return t;
+        return cabeEntero(s, anchoMax, t, Math.min(t * 0.75f, 10f), negrita);
+    }
+
+    /** El tamaño de letra con que cabe un texto entero en {@code anchoMax} (baja hasta 8.5 px para no truncar). */
+    public float cabeEntero(String s, float anchoMax, float t, boolean negrita) {
+        return cabeEntero(s, anchoMax, t, 8.5f, negrita);
+    }
+
+    /** El tamaño de letra con que cabe un texto entero en {@code anchoMax}, respetando un mínimo {@code minTam}. */
+    public float cabeEntero(String s, float anchoMax, float t, float minTam, boolean negrita) {
+        if (s == null || s.isEmpty() || anchoMax <= 0) return t;
         float w = p.ancho(s, t, negrita);
-        return w <= anchoMax ? t : Math.max(t * 0.75f, t * anchoMax / w);
+        if (w <= anchoMax) return t;
+        float res = Math.max(minTam, t * (anchoMax - 2f) / w);
+        while (res > minTam && p.ancho(s, res, negrita) > anchoMax) {
+            res = Math.max(minTam, res - 0.5f);
+        }
+        return res;
     }
 
     /** El tamaño de letra de código con que cabe un texto monoespaciado en ese ancho. */
@@ -331,23 +349,38 @@ public final class Ui {
     private final java.util.Map<ClaveRecorte, String> recortados = new java.util.HashMap<>();
     private final ClaveRecorte sondaRecorte = new ClaveRecorte();
 
-    /** Pestañas en fila; devuelve la elegida. */
+    /** Pestañas en fila con anchos proporcionales a su texto para que ninguna se corte nunca; devuelve la elegida. */
     public int pestanas(String[] nombres, int elegida, float x, float y, float w, float h) {
-        float ancho = w / nombres.length;
+        int n = nombres.length;
+        if (n == 0) return elegida;
+        float tBase = Math.min(letra * 0.92f, h * 0.46f);
+        float[] pesos = new float[n];
+        float sumaPesos = 0f;
+        float minPeso = w / (n * 1.45f);
+        for (int i = 0; i < n; i++) {
+            pesos[i] = Math.max(minPeso, p.ancho(nombres[i], tBase, true) + 32f);
+            sumaPesos += pesos[i];
+        }
         int nueva = elegida;
-        for (int i = 0; i < nombres.length; i++) {
-            float bx = x + i * ancho;
+        float bx = x;
+        for (int i = 0; i < n; i++) {
+            float ancho = (i == n - 1) ? (x + w - bx) : Math.round(w * pesos[i] / sumaPesos);
             boolean es = i == elegida;
             boolean encima = e.dentro(bx, y, ancho, h);
-            p.rect(bx, y, ancho - 2, h, es ? tema.panelAlto : encima ? Pincel.mezcla(tema.panel, tema.panelAlto, 0.5f) : tema.panel, 1);
-            if (es) p.rect(bx, y + h - 3, ancho - 2, 3, tema.acento, 1);
-            float t = cabe(nombres[i], ancho - 12, Math.min(letra, h * 0.48f), es);
-            p.textoCentradoConBordeNegro(recortarTexto(nombres[i], ancho - 12, t, es), bx + ancho / 2, y + (h - t * 1.15f) / 2, t, es,
+            int fondo = es ? Pincel.mezcla(tema.panelAlto, tema.acento, 0.22f)
+                    : encima ? Pincel.mezcla(tema.panel, tema.panelAlto, 0.65f) : tema.panel;
+            p.caja(bx, y, ancho - 3, h, 8, fondo, 1);
+            p.bordeRedondeado(bx, y, ancho - 3, h, 8, es ? tema.acento : tema.borde, es ? 1f : 0.7f, es ? 1.8f : 1f);
+            if (es) p.caja(bx + 10, y + h - 4, Math.max(16, ancho - 23), 3, 1.5f, tema.acento, 1);
+            float maxTxt = Math.max(24f, ancho - 18f);
+            float t = cabeEntero(nombres[i], maxTxt, tBase, 9.5f, es);
+            p.textoCentradoConBordeNegro(nombres[i], bx + (ancho - 3) / 2f, y + (h - p.altoDeLinea(t)) / 2f, t, es,
                     es ? tema.texto : tema.textoSuave, 1);
             if (e.clic(bx, y, ancho, h)) {
                 nueva = i;
                 if (sonidoDeClic != null) sonidoDeClic.run();
             }
+            bx += ancho;
         }
         return nueva;
     }
@@ -406,14 +439,17 @@ public final class Ui {
         }
     }
 
-    /** Un panel: un fondo con borde y, si hay, un título. Devuelve dónde empieza el contenido (y). */
+    /** Un panel: un fondo con sombra sutil, borde redondeado y, si hay, un título que nunca se corta. Devuelve dónde empieza el contenido (y). */
     public float panel(float x, float y, float w, float h, String titulo) {
-        p.caja(x, y, w, h, 10, tema.panel, 1);
-        p.bordeRedondeado(x, y, w, h, 10, tema.borde, 1, 1);
+        p.caja(x + 2, y + 3, w, h, 12, 0x000000, tema == Tema.CLARO ? 0.08f : 0.24f);
+        p.caja(x, y, w, h, 12, tema.panel, 1);
+        p.bordeRedondeado(x, y, w, h, 12, tema.borde, 1, 1.2f);
         if (titulo == null) return y + 12;
-        p.textoConBordeNegro(titulo, x + 16, y + 12, letra * 1.05f, true, tema.texto, 1);
-        p.rect(x + 12, y + 16 + letra * 1.4f, w - 24, 1, tema.borde, 1);
-        return y + 26 + letra * 1.4f;
+        float tTit = cabeEntero(titulo, Math.max(40f, w - 32f), letra * 1.05f, 11f, true);
+        p.textoConBordeNegro(titulo, x + 16, y + 12, tTit, true, tema.texto, 1);
+        float sepY = y + 16 + Math.max(p.altoDeLinea(tTit), letra * 1.3f);
+        p.rect(x + 12, sepY, w - 24, 1, tema.borde, 0.85f);
+        return sepY + 10;
     }
 
     public void titulo(String s, float x, float y) {

@@ -34,14 +34,19 @@ public final class Comun {
 
     /** La cabecera: el título de la pantalla, la etiqueta del jugador y su barra hacia la siguiente. Devuelve el alto. */
     public static float cabecera(Juego j, String titulo, boolean conVolver) {
+        return cabecera(j, titulo, conVolver ? j::volver : null);
+    }
+
+    /** Igual que {@link #cabecera(Juego, String, boolean)}, ejecutando {@code alVolver} al pulsar «← Volver» o Esc. */
+    public static float cabecera(Juego j, String titulo, Runnable alVolver) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         float h = 78;
         p.rect(0, 0, p.ancho, h, ui.tema.panel, 0.96f);
         p.rect(0, h - 1, p.ancho, 1, ui.tema.borde, 1);
         float x = 24;
-        if (conVolver) {
-            if (botonAtras(j)) j.volver();
+        if (alVolver != null) {
+            if (botonAtras(j)) alVolver.run();
             x = 40 + anchoDeAtras(j);
         }
         Jugador jug = j.jugador;

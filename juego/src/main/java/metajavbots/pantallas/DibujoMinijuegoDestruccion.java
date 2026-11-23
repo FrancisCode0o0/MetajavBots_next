@@ -121,9 +121,10 @@ final class DibujoMinijuegoDestruccion {
 
     /**
      * Dibuja el HUD en vivo con cuenta atrás, blindaje del jugador, botín acumulado y botones.
-     * Devuelve 1 pausa, 2 velocidad, 3 editar, 4 nueva arena, 5 rendirse o 0 nada.
+     * Devuelve 1 pausa, 2 velocidad, 3 código en ejecución, 4 nueva arena, 5 rendirse o 0 nada.
      */
-    static int hud(Juego j, MinijuegoDestruccion juego, boolean pausado, int velocidad, float x, float y, float w, float h) {
+    static int hud(Juego j, MinijuegoDestruccion juego, boolean pausado, int velocidad, boolean viendoCodigo,
+            float x, float y, float w, float h) {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         p.caja(x, y, w, h, 10, ui.tema.panel, 0.96f);
@@ -131,11 +132,13 @@ final class DibujoMinijuegoDestruccion {
         String[] textos = {
                 pausado ? T.t("carrera_obs.reanudar") : T.t("carrera_obs.pausar"),
                 velocidad + "x",
-                T.t("carrera_obs.editar"),
+                T.t("carrera_obs.codigo_vivo"),
                 T.t("destruccion.nueva_arena"),
                 T.t("carrera_obs.rendirse")
         };
-        Ui.Estilo[] estilos = {Ui.Estilo.NORMAL, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PELIGRO};
+        Ui.Estilo[] estilos = {
+                Ui.Estilo.NORMAL, Ui.Estilo.PLANO, viendoCodigo ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, Ui.Estilo.PLANO, Ui.Estilo.PELIGRO
+        };
         boolean[] activos = {true, true, true, true, !juego.terminada()};
         float[] anchos = new float[textos.length];
         float totalBtns = sep * (textos.length - 1);

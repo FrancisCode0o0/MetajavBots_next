@@ -41,11 +41,10 @@ public final class PanelDelAparato {
         return p;
     }
 
-    /** Calcula la caja del modal del aparato respetando el marcador superior (88 px) y la barra inferior. */
+    /** Calcula la caja del panel del aparato acoplada a la derecha, respetando el marcador superior (88 px) y la barra inferior. */
     public static CajaModal cajaModal(float pantallaAncho, float pantallaAlto) {
-        float margenX = Math.min(60f, Math.max(16f, pantallaAncho * 0.04f));
-        float w = Math.min(1100f, Math.max(320f, pantallaAncho - 2f * margenX));
-        float x = Math.max(12f, (pantallaAncho - w) / 2f);
+        float w = Math.min(460f, Math.max(320f, pantallaAncho * 0.36f));
+        float x = Math.max(12f, pantallaAncho - w - 16f);
         float y = Marcadores.ALTO + 12f;
         float abajoLibre = Math.max(y + 180f, pantallaAlto - 78f);
         float h = Math.max(180f, Math.min(pantallaAlto - 178f, abajoLibre - y));
@@ -96,7 +95,6 @@ public final class PanelDelAparato {
             ventanaDelAparato.ponerTexto(CodigoDeAparato.texto(tipo.id(), j.jugador.idioma));
             ventanaDelAparato.soloLectura = true;
         }
-        p.rect(0, Marcadores.ALTO, p.ancho, Math.max(0f, p.alto - Marcadores.ALTO), 0x000000, 0.45f);
         CajaModal c = cajaModal(p.ancho, p.alto);
         String titulo = T.f("aparato.titulo", tipo.nombre);
         float tamTit = ui.cabe(titulo, c.w() - 32f, ui.letra * 1.05f, true);

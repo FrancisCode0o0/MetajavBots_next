@@ -55,13 +55,20 @@ public final class PanelSenior {
         p.textoConBordeNegro(T.t("senior.rivales_titulo"), x + 24, yy, ui.letra * 1.15f, true, 0xFF8FB1, 1);
         yy += ui.letra * 1.9f;
         for (RivalSenior.Tipo tipo : RivalSenior.todos()) {
-            p.textoConBordeNegro(tipo.nombre.en(T.idioma), x + 24, yy + 2, ui.letra * 1.05f, true, ui.tema.texto, 1);
-            float hBio = p.parrafo(tipo.biografiaAbsurda.en(T.idioma), x + 24, yy + 32, w - 380, ui.letra * 0.78f, ui.tema.textoApagado, 1);
-            float hDesc = p.parrafo(tipo.descripcion.en(T.idioma), x + 24, yy + 36 + hBio, w - 380, ui.letra * 0.82f, ui.tema.textoSuave, 1);
-            if (ui.boton(T.t("especial.luchar"), x + w - 320, yy + 14, 280, 54, Ui.Estilo.NORMAL)) {
+            float hBio = p.altoDeParrafo(tipo.biografiaAbsurda.en(T.idioma), w - 400, ui.letra * 0.78f);
+            float hDesc = p.altoDeParrafo(tipo.descripcion.en(T.idioma), w - 400, ui.letra * 0.82f);
+            float altoTarjeta = Math.max(114, 46 + hBio + hDesc + 18);
+            p.caja(x + 20, yy, w - 40, altoTarjeta, 12, ui.tema.fondo, 0.92f);
+            p.bordeRedondeado(x + 20, yy, w - 40, altoTarjeta, 12, 0xFF8FB1, 0.45f, 1.3f);
+            p.caja(x + 20, yy + 10, 5, altoTarjeta - 20, 2, 0xFF8FB1, 0.9f);
+            float tNom = ui.cabeEntero(tipo.nombre.en(T.idioma), w - 400, ui.letra * 1.05f, true);
+            p.textoConBordeNegro(tipo.nombre.en(T.idioma), x + 38, yy + 12, tNom, true, ui.tema.texto, 1);
+            p.parrafo(tipo.biografiaAbsurda.en(T.idioma), x + 38, yy + 18 + tNom * 1.25f, w - 400, ui.letra * 0.78f, ui.tema.textoApagado, 1);
+            p.parrafo(tipo.descripcion.en(T.idioma), x + 38, yy + 22 + tNom * 1.25f + hBio, w - 400, ui.letra * 0.82f, ui.tema.textoSuave, 1);
+            if (ui.boton(T.t("especial.luchar"), x + w - 320, yy + (altoTarjeta - 54) / 2, 280, 54, Ui.Estilo.NORMAL)) {
                 j.ir(new PantallaPelea(encuentroRivalSenior(j, tipo)));
             }
-            yy += Math.max(118, 46 + hBio + hDesc + 20);
+            yy += altoTarjeta + 12;
         }
         return yy;
     }

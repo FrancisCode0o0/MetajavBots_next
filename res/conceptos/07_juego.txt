@@ -18,17 +18,17 @@ resumen.ia: Core loop (program your robot in Java in the Workshop, watch it figh
 ver: tutoriales_y_demos, taller_y_compilar, arena_y_modos
 es:
     En MetajavBots no mueves tu robot con el mando: le escribes en Java lo que tiene que hacer, y en la pelea lo hace él solo.
-    Es como ser el entrenador de un boxeador muy obediente: en el gimnasio (el Taller) le enseñas los golpes; en el ring (Pelear) solo puedes mirar y gritar desde la esquina; entre asalto y asalto (la pausa entre rondas) le cambias la táctica.
+    Es como ser el entrenador de un boxeador muy obediente: en el gimnasio (el Taller) le enseñas los golpes; en el ring (¡A pelear! o Desafíos) solo puedes mirar y gritar desde la esquina; entre asalto y asalto (la pausa entre rondas) le cambias la táctica.
     Empieza por los Tutoriales y las Demostraciones: van de cero a senior y cada lección mejora tu robot. Los Ejercicios son cortos y se comprueban solos. Gana la pelea quien menos daño recibe.
     Y si algo no lo entiendes, pulsa F2 y pregúntamelo: variable, clase, tienda, depurador, por qué pierdo… lo que sea.
 de:
     In MetajavBots steuerst du deinen Roboter nicht mit dem Controller: Du schreibst ihm in Java, was er tun soll, und im Kampf macht er es allein.
-    Das ist, als wärst du Trainer eines sehr gehorsamen Boxers: Im Gym (der Werkstatt) bringst du ihm die Schläge bei; im Ring (Kämpfen) kannst du nur zuschauen und aus der Ecke rufen; zwischen den Runden (der Pause) änderst du die Taktik.
+    Das ist, als wärst du Trainer eines sehr gehorsamen Boxers: Im Gym (der Werkstatt) bringst du ihm die Schläge bei; im Ring (Auf in den Kampf! oder Herausforderungen) kannst du nur zuschauen und aus der Ecke rufen; zwischen den Runden (der Pause) änderst du die Taktik.
     Fang mit den Tutorials und Demonstrationen an: Sie gehen von null bis Senior, und jede Lektion verbessert deinen Roboter. Die Übungen sind kurz und prüfen sich selbst. Den Kampf gewinnt, wer weniger Schaden nimmt.
     Und wenn du etwas nicht verstehst, drück F2 und frag mich: Variable, Klasse, Laden, Debugger, warum ich verliere … egal was.
 en:
     In MetajavBots you don't steer your robot with a controller: you write in Java what it should do, and in the fight it does it on its own.
-    It's like coaching a very obedient boxer: in the gym (the Workshop) you teach it the punches; in the ring (Fight) you can only watch and shout from the corner; between rounds (the break) you change its tactics.
+    It's like coaching a very obedient boxer: in the gym (the Workshop) you teach it the punches; in the ring (Let's fight! or Challenges) you can only watch and shout from the corner; between rounds (the break) you change its tactics.
     Start with Tutorials and Demonstrations: they go from zero to senior and each lesson improves your robot. The Exercises are short and check themselves. Whoever takes less damage wins the fight.
     And if you don't understand something, press F2 and ask me: variable, class, shop, debugger, why am I losing… anything.
 pseudo.es:
@@ -363,48 +363,51 @@ ejemplo:
 === arena_y_modos
 nivel: 6
 tema: --
-titulo.es: Arena, Modo especial e Historial
-titulo.de: Arena, Spezialmodus und Verlauf
-titulo.en: Arena, Special mode and History
-claves.es: arena, a pelear, pelear, combate, modo especial, jefes, jefe, campanas, campana, desafios, historial, estadisticas, rivales
-claves.de: arena, auf in den kampf, kampfen, kampf, spezialmodus, bosse, boss, kampagnen, kampagne, herausforderungen, verlauf, statistik, gegner
-claves.en: arena, lets fight, fight, match, special mode, bosses, boss, campaigns, campaign, challenges, history, stats, rivals
-resumen.ia: Arena (Let's fight!, Fight, Obstacle race direct access, Special mode with bosses, campaigns, step limits, coding challenges and Destruction & Survival, History & stats)
+titulo.es: Arena, Historia, Desafíos, Modo especial y Estadísticas
+titulo.de: Arena, Geschichte, Herausforderungen, Spezialmodus und Statistiken
+titulo.en: Arena, Story, Challenges, Special mode and Statistics
+claves.es: arena, historia, a pelear, desafios, pelear, combate, modo especial, jefes, jefe, campanas, campana, estadisticas, historial, rivales
+claves.de: arena, geschichte, auf in den kampf, herausforderungen, kampfen, kampf, spezialmodus, bosse, boss, kampagnen, kampagne, statistiken, statistik, verlauf, gegner
+claves.en: arena, story, lets fight, challenges, fight, match, special mode, bosses, boss, campaigns, campaign, statistics, stats, history, rivals
+resumen.ia: Arena (Story with illustrated campaigns, Let's fight!, Challenges, Obstacle race direct access, Special mode with bosses, step limits, Senior fights, coding challenges and Destruction & Survival, Statistics)
 tip.juego_arena.condicion: aleatorio
-tip.juego_arena.es: En la [[Arena]] tienes [[¡A pelear!]], [[Pelear]], la [[Carrera de obstáculos]], [[Modo especial]] (jefes, retos y Destrucción y supervivencia) y el [[Historial]].
-tip.juego_arena.de: In der [[Arena]] findest du [[Auf in den Kampf!]], [[Kämpfen]], den [[Hindernislauf]], den [[Spezialmodus]] (Bosse, Herausforderungen und Zerstörung & Überleben) und den [[Verlauf]].
-tip.juego_arena.en: In the [[Arena]] you've got [[Let's fight!]], [[Fight]], [[Obstacle race]], [[Special mode]] (bosses, challenges and Destruction & Survival) and [[History]].
+tip.juego_arena.es: En la [[Arena]] tienes [[Historia]], [[¡A pelear!]], [[Desafíos]], la [[Carrera de obstáculos]], [[Modo especial]] (jefes, retos y Destrucción y supervivencia) y [[Estadísticas]].
+tip.juego_arena.de: In der [[Arena]] findest du [[Geschichte]], [[Auf in den Kampf!]], [[Herausforderungen]], den [[Hindernislauf]], den [[Spezialmodus]] (Bosse, Herausforderungen und Zerstörung & Überleben) und [[Statistiken]].
+tip.juego_arena.en: In the [[Arena]] you've got [[Story]], [[Let's fight!]], [[Challenges]], [[Obstacle race]], [[Special mode]] (bosses, challenges and Destruction & Survival) and [[Statistics]].
 ver: por_que_pierdo, ver_notas, como_jugar, carrera_de_obstaculos, minijuego_destruccion
 es:
     El bloque Arena reúne todas las formas de poner a prueba tu robot en combate real y analizar tus resultados.
-    «¡A pelear!» lanza al instante un combate rápido de cuatro rondas contra la computadora a tu nivel; «Pelear» te deja elegir rival, modo al azar, desafíos o robots de otros jugadores; y «Carrera de obstáculos» tiene aquí su acceso directo.
-    En Modo especial te esperan los jefes de tema (¡ojo: contra los jefes estoy en el hospital y peleas solo!), las campañas con historia, el tope de cálculo, retos de programación y Destrucción y supervivencia.
-    Y en Historial puedes revisar cada combate, tus victorias, derrotas y estadísticas para ver en qué estás mejorando.
+    «Historia» abre las campañas principales con escenas ilustradas y dieciocho historias de combate; «¡A pelear!» lanza al instante un combate rápido de cuatro rondas contra la computadora a tu nivel; «Desafíos» te deja elegir rival, modo al azar, el desafío, battle royale, equipos o robots de otros jugadores; y «Carrera de obstáculos» tiene aquí su acceso directo.
+    En Modo especial te esperan los jefes de tema, el tope de cálculo, las peleas Senior, retos de programación y Destrucción y supervivencia.
+    Y en Estadísticas puedes revisar cada combate, tus victorias, derrotas y evolución para ver en qué estás mejorando.
 de:
     Der Bereich Arena vereint alle Möglichkeiten, deinen Roboter im echten Kampf zu testen und Ergebnisse auszuwerten.
-    „Auf in den Kampf!“ startet sofort ein schnelles Vier-Runden-Match gegen den Computer auf deiner Stufe; unter „Kämpfen“ wählst du Gegner, Zufallskämpfe, Herausforderungen oder fremde Roboter; und der „Hindernislauf“ hat hier seinen direkten Zugang.
-    Im Spezialmodus warten Themen-Bosse (Achtung: Gegen Bosse liege ich im Krankenhaus, da kämpfst du allein!), Kampagnen mit Story, Rechenlimit, Programmier-Herausforderungen und Zerstörung & Überleben.
-    Im Verlauf siehst du jeden Kampf mit Siegen, Niederlagen und Statistiken, um deinen Fortschritt zu verfolgen.
+    „Geschichte“ öffnet die Hauptkampagnen mit illustrierten Szenen und achtzehn Kampfgeschichten; „Auf in den Kampf!“ startet sofort ein schnelles Vier-Runden-Match gegen den Computer auf deiner Stufe; unter „Herausforderungen“ wählst du Gegner, Zufallskämpfe, Herausforderung, Battle Royale, Team oder fremde Roboter; und der „Hindernislauf“ hat hier seinen direkten Zugang.
+    Im Spezialmodus warten Themen-Bosse, Rechenlimit, Senior-Kämpfe, Programmier-Herausforderungen und Zerstörung & Überleben.
+    Unter Statistiken siehst du jeden Kampf mit Siegen, Niederlagen und Verlauf, um deinen Fortschritt zu verfolgen.
 en:
     The Arena section brings together every way to test your robot in live combat and review your results.
-    "Let's fight!" launches an instant four-round match against the computer at your rank; "Fight" lets you pick opponents, random matches, challenges, or other players' robots; and "Obstacle race" has its direct entry right here.
-    In Special mode you'll face topic bosses (heads up: against bosses I'm in the hospital, so you're on your own!), story campaigns, step-limit matches, coding challenges, and Destruction & Survival.
-    And History records every fight, your wins, losses and stats so you can track how you improve.
+    "Story" opens the featured campaigns with illustrated scenes and eighteen combat stories; "Let's fight!" launches an instant four-round match against the computer at your rank; "Challenges" lets you pick opponents, random matches, the challenge, battle royale, teams, or other players' robots; and "Obstacle race" has its direct entry right here.
+    In Special mode you'll face topic bosses, step-limit matches, Senior fights, coding challenges, and Destruction & Survival.
+    And Statistics records every fight, your wins, losses and progression so you can track how you improve.
 pseudo.es:
+    Historia → campañas con escenas ilustradas
     ¡A pelear! → combate rápido a tu nivel
-    Pelear → elegir rival, al azar o robots de otros
-    Modo especial → jefes, campañas y retos
-    Historial → revisar estadísticas y resultados
+    Desafíos → elegir rival, al azar o robots de otros
+    Modo especial → jefes, peleas Senior y retos
+    Estadísticas → revisar estadísticas y resultados
 pseudo.de:
+    Geschichte → Kampagnen mit illustrierten Szenen
     Auf in den Kampf! → schneller Kampf auf deiner Stufe
-    Kämpfen → Gegner, Zufall oder fremde Roboter wählen
-    Spezialmodus → Bosse, Kampagnen und Herausforderungen
-    Verlauf → Statistiken und Ergebnisse prüfen
+    Herausforderungen → Gegner, Zufall oder fremde Roboter wählen
+    Spezialmodus → Bosse, Senior-Kämpfe und Herausforderungen
+    Statistiken → Statistiken und Ergebnisse prüfen
 pseudo.en:
+    Story → campaigns with illustrated scenes
     Let's fight! → quick match at your rank
-    Fight → pick rival, random or other players' robots
-    Special mode → bosses, campaigns and challenges
-    History → check stats and results
+    Challenges → pick rival, random or other players' robots
+    Special mode → bosses, Senior fights and challenges
+    Statistics → check stats and results
 ejemplo:
     // En combate, haz clic en un enemigo para que lo analice || Klick im Kampf einen Gegner an, damit ich ihn analysiere || During a fight, click an enemy so I can analyze it
     // En la pausa entre rondas puedes ajustar tu código || In der Rundenpause kannst du deinen Code anpassen || Between rounds you can tweak your code
@@ -524,31 +527,31 @@ claves.de: ergebnisse, noten, meine noten, fortschritt, statistik, verlauf, stuf
 claves.en: results, grades, my grades, progress, stats, statistics, history, rank, experience
 ver: como_jugar, por_que_pierdo, arena_y_modos
 es:
-    Tus notas están en tres sitios: arriba del Menú (tu etiqueta, de Noob a Senior, y lo que te falta para subir), en Historial (cada pelea con sus números) y en Ejercicios (los que llevas resueltos de cada tema).
+    Tus notas están en tres sitios: arriba del Menú (tu etiqueta, de Noob a Senior, y lo que te falta para subir), en Estadísticas (cada pelea con sus números) y en Ejercicios (los que llevas resueltos de cada tema).
     Es como el cartel del gimnasio donde se apuntan los combates: quién ganó, por cuánto y con qué golpes.
     Tras cada pelea, «Revisar el código» le pone nota a tu robot: qué hace bien, qué se puede mejorar y por qué.
     No te obsesiones con perder: cada derrota dice qué practicar, y el juego te propone repasar lo flojo.
 de:
-    Deine Ergebnisse stehen an drei Stellen: oben im Menü (dein Abzeichen von Noob bis Senior und was dir zum Aufstieg fehlt), im Verlauf (jeder Kampf mit seinen Zahlen) und bei den Übungen (wie viele du pro Thema gelöst hast).
+    Deine Ergebnisse stehen an drei Stellen: oben im Menü (dein Abzeichen von Noob bis Senior und was dir zum Aufstieg fehlt), unter Statistiken (jeder Kampf mit seinen Zahlen) und bei den Übungen (wie viele du pro Thema gelöst hast).
     Wie die Tafel im Gym, auf der die Kämpfe stehen: wer gewonnen hat, wie deutlich und mit welchen Schlägen.
     Nach jedem Kampf benotet „Code prüfen“ deinen Roboter: was er gut macht, was besser geht und warum.
     Lass dich vom Verlieren nicht entmutigen: Jede Niederlage zeigt, was du üben solltest.
 en:
-    Your results are in three places: at the top of the Menu (your rank, from Noob to Senior, and what you need to level up), in History (every fight with its numbers) and in Exercises (how many you've solved per topic).
+    Your results are in three places: at the top of the Menu (your rank, from Noob to Senior, and what you need to level up), in Statistics (every fight with its numbers) and in Exercises (how many you've solved per topic).
     Like the board at the gym where fights are written up: who won, by how much and with which punches.
     After each fight, "Review code" grades your robot: what it does well, what could be better and why.
     Don't be put off by losing: every defeat tells you what to practice.
 pseudo.es:
     Menú → mi etiqueta y lo que falta
-    Historial → cada pelea
+    Estadísticas → cada pelea
     Ejercicios → los ✓ de cada tema
 pseudo.de:
     Menü → mein Abzeichen und was fehlt
-    Verlauf → jeder Kampf
+    Statistiken → jeder Kampf
     Übungen → die ✓ pro Thema
 pseudo.en:
     Menu → my rank and what's missing
-    History → every fight
+    Statistics → every fight
     Exercises → the ✓ per topic
 ejemplo:
     // Tras la pelea: «Revisar el código» || Nach dem Kampf: „Code prüfen“ || After the fight: «Review code»
@@ -1107,44 +1110,44 @@ ejemplo:
 === campanas_creed_y_biografias
 nivel: 6
 tema: --
-titulo.es: Campañas ampliadas con escenas y biografías editables
-titulo.de: Erweiterte Kampagnen mit Szenen und bearbeitbaren Biografien
-titulo.en: Expanded story campaigns with scenes and editable biographies
-claves.es: creed, credo, adonis, campanas creed, isla clandestina, torneo 1000 voltios, enchufe dorado, escenas, vinetas, historia, hospital, milagro, entrenador, biografias, editar biografias, restaurar biografia, personalidades
-claves.de: creed, credo, adonis, creed kampagnen, geheime insel, 1000 volt turnier, goldener stecker, szenen, bilder, geschichte, krankenhaus, wunder, trainer, biografien, biografien bearbeiten, biografie wiederherstellen, personlichkeiten
-claves.en: creed, credo, adonis, creed campaigns, secret island, 1000-volt tournament, golden plug, scenes, panels, story, hospital, miracle, coach, biographies, edit biographies, restore biography, personalities
-resumen.ia: Expanded Story Campaigns with Illustrated Scenes (two featured 8-chapter campaigns in Fight › Campaigns, with independent saved progress across Noob, Junior, Senior, and Special ranks: expanded Creed campaign "Credo: Son of Chrome" with 8 chapters and 3 hospital-and-miracle bosses, plus the brand-new second campaign "Secret Island: The 1000-Volt Tournament" set on Short-Circuit Island for the Golden Plug; both integrate all 7 selectable coaches with their own voice and corner talk, and every chapter includes code-drawn illustrated comic-panel scenes with speech bubbles, narration, animations, and instant skip) and Editable Biographies (accessible from Workshop › Model and Settings › Coach: browse, edit, save to the player profile without modifying base res/biografias files, and restore original text for all 22 robots and 7 coaches in ES, DE, and EN)
+titulo.es: Historia: campañas ampliadas con escenas y biografías editables
+titulo.de: Geschichte: Erweiterte Kampagnen mit Szenen und bearbeitbaren Biografien
+titulo.en: Story: Expanded story campaigns with scenes and editable biographies
+claves.es: creed, credo, adonis, campanas creed, isla clandestina, torneo 1000 voltios, enchufe dorado, escenas, vinetas, historia, entrenador, biografias, editar biografias, restaurar biografia, personalidades
+claves.de: creed, credo, adonis, creed kampagnen, geheime insel, 1000 volt turnier, goldener stecker, szenen, bilder, geschichte, trainer, biografien, biografien bearbeiten, biografie wiederherstellen, personlichkeiten
+claves.en: creed, credo, adonis, creed campaigns, secret island, 1000-volt tournament, golden plug, scenes, panels, story, coach, biographies, edit biographies, restore biography, personalities
+resumen.ia: Expanded Story Campaigns with Illustrated Scenes (two featured 8-chapter campaigns in Story from the Arena block of the Main Menu, with independent saved progress across Noob, Junior, Senior, and Special ranks: expanded Creed campaign "Credo: Son of Chrome" with 8 chapters and 3 final bosses, plus the brand-new second campaign "Secret Island: The 1000-Volt Tournament" set on Short-Circuit Island for the Golden Plug; both integrate all 7 selectable coaches with their own voice and corner talk, and every chapter includes code-drawn illustrated comic-panel scenes with speech bubbles, narration, animations, and instant skip) and Editable Biographies (accessible from Workshop › Model and Settings › Coach: browse, edit, save to the player profile without modifying base res/biografias files, and restore original text for all 22 robots and 7 coaches in ES, DE, and EN)
 tip.juego_creed_y_biografias.condicion: aleatorio
-tip.juego_creed_y_biografias.es: En Pelear › [[Campañas]] te esperan dos campañas largas de 8 capítulos ([[Creed]] ampliada e Isla Clandestina: Torneo de los 1000 Voltios) con escenas ilustradas por capítulo, los 7 entrenadores con voz propia y progreso guardado por separado.
-tip.juego_creed_y_biografias.de: Unter Kämpfen › [[Kampagnen]] warten zwei große 8-Kapitel-Kampagnen (erweitertes [[Creed]] und Geheime Insel: Das 1000-Volt-Turnier) mit illustrierten Szenen pro Kapitel, allen 7 Trainern mit eigener Stimme und getrennt gespeichertem Fortschritt.
-tip.juego_creed_y_biografias.en: Under Fight › [[Campaigns]], play two full 8-chapter campaigns (expanded [[Creed]] and Secret Island: The 1000-Volt Tournament) with code-drawn illustrated scenes in every chapter, all 7 coaches keeping their own voice, and separately saved progress.
+tip.juego_creed_y_biografias.es: En [[Historia]] (bloque Arena del menú principal) te esperan dos campañas largas de 8 capítulos ([[Creed]] ampliada e Isla Clandestina: Torneo de los 1000 Voltios) con escenas ilustradas por capítulo, los 7 entrenadores con voz propia y progreso guardado por separado.
+tip.juego_creed_y_biografias.de: Unter [[Geschichte]] (im Arena-Bereich des Hauptmenüs) warten zwei große 8-Kapitel-Kampagnen (erweitertes [[Creed]] und Geheime Insel: Das 1000-Volt-Turnier) mit illustrierten Szenen pro Kapitel, allen 7 Trainern mit eigener Stimme und getrennt gespeichertem Fortschritt.
+tip.juego_creed_y_biografias.en: In [[Story]] (inside the Arena block of the Main Menu), play two full 8-chapter campaigns (expanded [[Creed]] and Secret Island: The 1000-Volt Tournament) with code-drawn illustrated scenes in every chapter, all 7 coaches keeping their own voice, and separately saved progress.
 ver: arena_y_modos, modelos_y_armas, como_jugar
 es:
-    En Pelear › Campañas destacan dos campañas principales de ocho capítulos cada una, con progresión de dificultad por rangos (Noob, Junior, Senior y Especial) y avance guardado por separado en tu partida: la campaña estilo Creed ampliada («Credo: el hijo del cromo») y una segunda historia original («Isla Clandestina: Torneo de los 1000 Voltios» en Isla Cortocircuito por el Enchufe Dorado).
-    Ambas integran a cualquiera de los siete entrenadores seleccionables (Don Tuercas, Maestro Aceite, Capitán Voltaje, Sargento Remache, Sensei Cobra-7, Maestro Yanobit y Gran Maestro Pelobit), respetando su voz, su personalidad y sus propios comentarios de esquina. En los combates contra jefes, tu entrenador ingresa en el hospital por causas absurdas y reaparece milagrosamente al ganar.
+    En el botón Historia del bloque Arena destacan dos campañas principales de ocho capítulos cada una, con progresión de dificultad por rangos (Noob, Junior, Senior y Especial) y avance guardado por separado en tu partida: la campaña estilo Creed ampliada («Credo: el hijo del cromo») y una segunda historia original («Isla Clandestina: Torneo de los 1000 Voltios» en Isla Cortocircuito por el Enchufe Dorado), además de las demás parodias de combate.
+    Ambas integran a cualquiera de los siete entrenadores seleccionables (Don Tuercas, Maestro Aceite, Capitán Voltaje, Sargento Remache, Sensei Cobra-7, Maestro Yanobit y Gran Maestro Pelobit), respetando su voz, su personalidad y sus propios comentarios de esquina.
     Cada capítulo incluye escenas ilustradas dibujadas por código con viñetas, robots, entrenadores, público, bocadillos y animaciones (entrada, zoom, sacudida, destello, lluvia o confeti), que puedes ver desde el botón «Escena», avanzar con clic/tecla o saltar al instante con Esc.
     Además, desde Taller › Modelo y desde Ajustes puedes abrir el Editor de biografías para consultar, editar y guardar tus propias biografías de los 22 robots y los 7 entrenadores en español, alemán e inglés, sin alterar los archivos originales.
 de:
-    Unter Kämpfen › Kampagnen stehen zwei große Hauptkampagnen mit je acht Kapiteln, Schwierigkeitsprogression über alle Stufen (Noob, Junior, Senior und Spezial) und getrennt gespeichertem Fortschritt bereit: die erweiterte Creed-Kampagne („Credo: Sohn des Chroms“) sowie die neue zweite Geschichte („Geheime Insel: Das 1000-Volt-Turnier“ auf Insel Kurzschluss um den Goldenen Stecker).
-    Beide funktionieren mit allen sieben wählbaren Trainern (Meister Mutter, Meister Öl, Kapitän Volt, Feldwebel Niete, Sensei Kobra-7, Meister Yanobit und Großmeister Pelobit) samt eigener Stimme, Persönlichkeit und Ecken-Kommentar. Gegen Bosse landet dein Trainer aus absurden Gründen im Krankenhaus und kehrt beim Sieg wie durch ein Wunder zurück.
+    Über die Schaltfläche Geschichte im Arena-Bereich stehen zwei große Hauptkampagnen mit je acht Kapiteln, Schwierigkeitsprogression über alle Stufen (Noob, Junior, Senior und Spezial) und getrennt gespeichertem Fortschritt bereit: die erweiterte Creed-Kampagne („Credo: Sohn des Chroms“) sowie die neue zweite Geschichte („Geheime Insel: Das 1000-Volt-Turnier“ auf Insel Kurzschluss um den Goldenen Stecker), zusammen mit den weiteren Kampfparodien.
+    Beide funktionieren mit allen sieben wählbaren Trainern (Meister Mutter, Meister Öl, Kapitän Volt, Feldwebel Niete, Sensei Kobra-7, Meister Yanobit und Großmeister Pelobit) samt eigener Stimme, Persönlichkeit und Ecken-Kommentar.
     Jedes Kapitel bietet per Code gezeichnete illustrierte Szenen mit Bildern, Robotern, Trainern, Publikum, Sprechblasen und Animationen (Einblendung, Zoom, Beben, Blitz, Regen oder Konfetti), die du jederzeit per „Szene“ ansehen, per Klick/Taste weiterschalten oder mit Esc sofort überspringen kannst.
     Außerdem findest du unter Werkstatt › Modell und in den Einstellungen den Biografie-Editor für alle 22 Roboter und 7 Trainer auf Spanisch, Deutsch und Englisch.
 en:
-    Under Fight › Campaigns, two featured 8-chapter story campaigns lead the list with difficulty scaling across Noob, Junior, Senior, and Special ranks and independently saved progress: the expanded Creed campaign ("Credo: Son of Chrome") and a brand-new original tournament story ("Secret Island: The 1000-Volt Tournament" on Short-Circuit Island for the Golden Plug).
-    Both support all seven selectable coaches (Old Man Nuts, Master Oil, Captain Voltage, Sergeant Rivet, Sensei Cobra-7, Master Yanobit, and Grandmaster Pelobit), preserving each coach's own voice, personality, and corner talk. Against campaign bosses, your coach lands in the hospital for absurd reasons and makes a miraculous comeback when you win.
+    Under the Story button in the Arena section, two featured 8-chapter story campaigns lead the list with difficulty scaling across Noob, Junior, Senior, and Special ranks and independently saved progress: the expanded Creed campaign ("Credo: Son of Chrome") and a brand-new original tournament story ("Secret Island: The 1000-Volt Tournament" on Short-Circuit Island for the Golden Plug), alongside the rest of the combat parodies.
+    Both support all seven selectable coaches (Old Man Nuts, Master Oil, Captain Voltage, Sergeant Rivet, Sensei Cobra-7, Master Yanobit, and Grandmaster Pelobit), preserving each coach's own voice, personality, and corner talk.
     Every chapter features code-drawn illustrated scenes with comic panels, robots, coaches, crowds, speech bubbles, and animations (entrance, zoom, shake, flash, rain, or confetti), which you can preview anytime via "Scene", advance with click/key, or skip instantly with Esc.
     You can also open the Biography Editor from Workshop › Model or Settings to read, edit, save, and restore biographies for all 22 robots and 7 coaches in Spanish, German, and English.
 pseudo.es:
-    Pelear → Campañas → elegir Credo (8 caps.) o Isla Clandestina (8 caps.) → elegir entrenador (◄ ►)
-    Ver escena ilustrada (clic/Espacio avanza, Esc salta) → vencer jefes para el milagro del hospital
+    Menú principal → Arena → Historia → elegir Credo (8 caps.) o Isla Clandestina (8 caps.) → elegir entrenador (◄ ►)
+    Ver escena ilustrada (clic/Espacio avanza, Esc salta) → superar cada capítulo y los jefes finales
     Taller → Modelo (o Ajustes) → Editar biografías → Guardar o Restaurar original
 pseudo.de:
-    Kämpfen → Kampagnen → Credo (8 Kap.) oder Geheime Insel (8 Kap.) wählen → Trainer wählen (◄ ►)
-    Illustrierte Szene ansehen (Klick/Leertaste weiter, Esc überspringen) → Bosse besiegen für das Wunder
+    Hauptmenü → Arena → Geschichte → Credo (8 Kap.) oder Geheime Insel (8 Kap.) wählen → Trainer wählen (◄ ►)
+    Illustrierte Szene ansehen (Klick/Leertaste weiter, Esc überspringen) → Kapitel und Endbosse meistern
     Werkstatt → Modell (oder Einstellungen) → Biografien bearbeiten → Speichern oder Original wiederherstellen
 pseudo.en:
-    Fight → Campaigns → pick Credo (8 ch.) or Secret Island (8 ch.) → pick any coach (◄ ►)
-    Watch illustrated scene (click/Space advances, Esc skips) → beat bosses for the hospital miracle
+    Main Menu → Arena → Story → pick Credo (8 ch.) or Secret Island (8 ch.) → pick any coach (◄ ►)
+    Watch illustrated scene (click/Space advances, Esc skips) → clear each chapter and the final bosses
     Workshop → Model (or Settings) → Edit biographies → Save or Restore original
 ejemplo:
     public class CampeonCreed extends Metajavbot {
