@@ -377,10 +377,8 @@ public final class Pincel {
 
     private float anchoExacto(BitmapFont f, String texto) {
         if (texto.isEmpty()) return 0;
-        if (texto.charAt(texto.length() - 1) != ' ') {
-            medida.setText(f, texto);
-            return medida.width;
-        }
+        // Con el avance entero de la última letra (no solo hasta su tinta): si no, el trozo siguiente se monta
+        // encima («¡A PELEAR!»: el «!» pegado a la R de la versalita).
         medida.setText(f, texto + "|");
         float con = medida.width;
         medida.setText(f, "|");

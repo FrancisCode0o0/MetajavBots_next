@@ -117,43 +117,60 @@ final class DibujoCarreraDeObstaculos {
         }
     }
 
-    /** La leyenda del mapa general de la preparación (qué es cada marca) y la ayuda de debajo. */
-    static void leyendaMapa(Pincel p, Ui ui, float mx, float y, float mw) {
+    private static final String[] LEYENDA = {"carrera_obs.leyenda_destructible", "carrera_obs.leyenda_indestructible",
+        "carrera_obs.leyenda_mortal", "carrera_obs.leyenda_moneda", "carrera_obs.leyenda_rampa", "carrera_obs.leyenda_agua",
+        "carrera_obs.leyenda_impulso", "carrera_obs.leyenda_reparacion", "carrera_obs.leyenda_rotos", "carrera_obs.leyenda_ocultos"};
+    private static final boolean[] LEYENDA_NEGRITA = {false, false, true, true, false, false, false, false, false, true};
+    private static String claveLeyenda = "";
+    private static float letraLeyenda;
+
+    /**
+     * La leyenda del mapa general de la preparación (qué es cada marca) y la ayuda de debajo. La letra se encoge
+     * (hasta la mínima) si con la letra grande no cabe a lo ancho del panel o por debajo de su borde (alto disponible).
+     */
+    static void leyendaMapa(Pincel p, Ui ui, float mx, float y, float mw, float alto) {
+        // La letra que cabe se guarda: solo se vuelve a medir si cambian la letra, el idioma o el hueco.
+        String clave = ui.letra + "|" + T.t("carrera_obs.leyenda_mortal") + "|" + Math.round(mw) + "|" + Math.round(alto);
+        if (!clave.equals(claveLeyenda)) {
+            float tl = ui.letra * 0.66f;
+            while (tl > Pincel.LETRA_MINIMA && !cabeLeyenda(p, tl, mw, alto)) tl = Math.max(Pincel.LETRA_MINIMA, tl - 0.5f);
+            letraLeyenda = tl;
+            claveLeyenda = clave;
+        }
+        float tl = letraLeyenda;
+        float paso = Math.max(tl * 1.6f, 15f);
+        int[] colores = {ui.tema.texto, ui.tema.texto, 0xFF6B7A, 0xFFD23F, 0xFFC857, 0x6FD3FF, 0x9CFF57, 0x2EE58D, ui.tema.aviso,
+            ui.tema.textoSuave};
         float ly = y;
-        float paso = ui.letra * 1.06f;
-        float tl = ui.letra * 0.66f;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0xD97236, 1);
-        p.texto(T.t("carrera_obs.leyenda_destructible"), mx + 24, ly, tl, false, ui.tema.texto, 1);
-        ly += paso;
-        p.rect(mx + 3, ly + 1, 11, 11, 0xE05A4F, 1);
-        p.texto(T.t("carrera_obs.leyenda_indestructible"), mx + 24, ly, tl, false, ui.tema.texto, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 6.5f, 0xFFC857, 1);
-        p.circulo(mx + 9, ly + 7, 4.5f, 0xFF1E42, 1);
-        p.texto(T.t("carrera_obs.leyenda_mortal"), mx + 24, ly, tl, true, 0xFF6B7A, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0xFFD23F, 1);
-        p.texto(T.t("carrera_obs.leyenda_moneda"), mx + 24, ly, tl, true, 0xFFD23F, 1);
-        ly += paso;
-        p.triangulo(mx + 3, ly + 12, mx + 15, ly + 12, mx + 15, ly + 2, 0xFF9F1C, 1);
-        p.texto(T.t("carrera_obs.leyenda_rampa"), mx + 24, ly, tl, false, 0xFFC857, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0x33A8E8, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_agua"), mx + 24, ly, tl, false, 0x6FD3FF, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0x3FE0FF, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_impulso"), mx + 24, ly, tl, false, 0x9CFF57, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0x2EE58D, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_reparacion"), mx + 24, ly, tl, false, 0x2EE58D, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0xFF7A45, 0.95f);
-        p.texto(T.t("carrera_obs.leyenda_rotos"), mx + 24, ly, tl, false, ui.tema.aviso, 1);
-        ly += paso;
-        p.circulo(mx + 9, ly + 7, 5.5f, 0x3FE0FF, 0.45f);
-        p.texto(T.t("carrera_obs.leyenda_ocultos"), mx + 24, ly, tl, true, ui.tema.textoSuave, 1);
-        ly += paso + 4;
-        p.parrafo(T.t("carrera_obs.mapa_ayuda"), mx, ly, mw, tl, ui.tema.textoSuave, 1);
+        for (int i = 0; i < LEYENDA.length; i++) {
+            marcaDeLeyenda(p, i, mx, ly);
+            p.texto(T.t(LEYENDA[i]), mx + 24, ly, tl, LEYENDA_NEGRITA[i], colores[i], 1);
+            ly += paso;
+        }
+        p.parrafo(T.t("carrera_obs.mapa_ayuda"), mx, ly + 4, mw, tl, ui.tema.textoSuave, 1);
+    }
+
+    private static boolean cabeLeyenda(Pincel p, float tl, float mw, float alto) {
+        for (int i = 0; i < LEYENDA.length; i++) {
+            if (p.ancho(T.t(LEYENDA[i]), tl, LEYENDA_NEGRITA[i]) > mw - 24) return false;
+        }
+        return LEYENDA.length * Math.max(tl * 1.6f, 15f) + 4 + p.altoDeParrafo(T.t("carrera_obs.mapa_ayuda"), mw, tl) <= alto;
+    }
+
+    private static void marcaDeLeyenda(Pincel p, int i, float mx, float ly) {
+        switch (i) {
+            case 1 -> p.rect(mx + 3, ly + 1, 11, 11, 0xE05A4F, 1);
+            case 2 -> {
+                p.circulo(mx + 9, ly + 7, 6.5f, 0xFFC857, 1);
+                p.circulo(mx + 9, ly + 7, 4.5f, 0xFF1E42, 1);
+            }
+            case 4 -> p.triangulo(mx + 3, ly + 12, mx + 15, ly + 12, mx + 15, ly + 2, 0xFF9F1C, 1);
+            default -> {
+                int[] color = {0xD97236, 0, 0, 0xFFD23F, 0, 0x33A8E8, 0x3FE0FF, 0x2EE58D, 0xFF7A45, 0x3FE0FF};
+                float[] alfa = {1, 0, 0, 1, 0, 0.95f, 0.95f, 0.95f, 0.95f, 0.45f};
+                p.circulo(mx + 9, ly + 7, 5.5f, color[i], alfa[i]);
+            }
+        }
     }
 
     /** Dibuja las líneas de salida y meta sobre el suelo 3D de la pista escalada. */

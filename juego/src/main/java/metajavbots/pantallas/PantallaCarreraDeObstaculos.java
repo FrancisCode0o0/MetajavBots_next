@@ -567,7 +567,7 @@ public final class PantallaCarreraDeObstaculos implements Pantalla {
         DibujoCarreraDeObstaculos.mapaGeneral(p, ui, vistaPrevia, CarreraDeObstaculos.anchoPara(dificultad),
                 CarreraDeObstaculos.metaPara(dificultad), mx, cy + 4, mw, mh);
         float ly = cy + mh + 10;
-        DibujoCarreraDeObstaculos.leyendaMapa(p, ui, mx, ly, mw);
+        DibujoCarreraDeObstaculos.leyendaMapa(p, ui, mx, ly, mw, y + h - 12 - ly);
     }
 
     private void dibujarPanelEditor(Juego j, float x, float y, float w, float h) {

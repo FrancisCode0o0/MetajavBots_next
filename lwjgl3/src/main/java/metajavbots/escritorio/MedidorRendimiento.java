@@ -19,13 +19,17 @@ import metajavbots.campanas.Campana;
 import metajavbots.campanas.CatalogoDeEscenas;
 import metajavbots.combate.Pelea;
 import metajavbots.ejercicios.Banco;
+import metajavbots.ejercicios.Demostracion;
 import metajavbots.pantalla.Pantalla;
 import metajavbots.pantalla.VistaDeArena;
 import metajavbots.pantallas.Comun;
+import metajavbots.pantallas.Ejercicios;
 import metajavbots.pantallas.Encuentro;
 import metajavbots.pantallas.Menu;
+import metajavbots.pantallas.MiniJuegos;
 import metajavbots.pantallas.PanelSenior;
 import metajavbots.pantallas.PantallaCarreraDeObstaculos;
+import metajavbots.pantallas.PantallaDemostracion;
 import metajavbots.pantallas.PantallaEjercicio;
 import metajavbots.pantallas.PantallaEscenaCampana;
 import metajavbots.pantallas.PantallaMinijuegoDestruccion;
@@ -44,7 +48,7 @@ import metajavbots.textos.Idioma;
 /**
  * MEDIDOR DE RENDIMIENTO — Perfilador headless (ventana invisible 1600×900) que
  * mide tiempo de arranque hasta el menú, tiempo medio y peor fotograma (FPS),
- * memoria usada y bytes asignados por fotograma en las 11 pantallas clave.
+ * memoria usada y bytes asignados por fotograma en las 14 pantallas clave.
  */
 public final class MedidorRendimiento extends Juego {
 
@@ -84,6 +88,9 @@ public final class MedidorRendimiento extends Juego {
         pantallas.put("09_Ejercicios_Escena", this::pantallaEjercicioEscena);
         pantallas.put("10_Campanas_Escena", this::pantallaCampanaEscena);
         pantallas.put("11_Repeticion_Codigo", this::pantallaRepeticion);
+        pantallas.put("12_Demostracion", () -> new PantallaDemostracion(Demostracion.de(Demostracion.ID_DEMO_3)));
+        pantallas.put("13_Minijuegos", MiniJuegos::new);
+        pantallas.put("14_Ejercicios_Lista", Ejercicios::new);
     }
 
     private Pantalla pantallaPeleaDepurador() {
@@ -256,7 +263,7 @@ public final class MedidorRendimiento extends Juego {
         }
     }
 
-    /** Ejecuta la medición headless de arranque y de las 11 pantallas clave. */
+    /** Ejecuta la medición headless de arranque y de las 14 pantallas clave. */
     public static void main(String[] args) {
         inicioMainNanos = System.nanoTime();
         Lwjgl3ApplicationConfiguration c = new Lwjgl3ApplicationConfiguration();

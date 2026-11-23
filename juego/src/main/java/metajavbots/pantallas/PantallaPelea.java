@@ -479,7 +479,8 @@ public final class PantallaPelea implements Pantalla {
 
     private void controles(Juego j) {
         Pincel p = j.pincel; Ui ui = j.ui;
-        float der = p.ancho - (depurador ? 460 : 0);
+        // Sin depurador, la barra acaba antes de la pestaña del entrenador (esquina inferior derecha): «Rendirse» no queda tapado.
+        float der = depurador ? p.ancho - 460 : Math.min(p.ancho, EntrenadorFlotante.cajaRecogida(p.ancho, p.alto, ui.letra).x() + 12f);
         float tBtn = Math.min(ui.letra, PanelDelAparato.ALTO_BOTON * 0.5f);
         String txtPaso = T.t("pelea.paso"), txtVisor = T.t("pelea.visor"), txtDep = T.t("pelea.depurador"), txtRend = T.t("pelea.rendirse");
         metajavbots.combate.Aparatos.Tipo sig = pelea.aparatos.siguiente();

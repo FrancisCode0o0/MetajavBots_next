@@ -124,7 +124,9 @@ public final class PantallaEscenaCampana implements Pantalla {
             cerrar(j);
             return;
         }
-        if (ui.boton(txtSig, p.ancho - 36 - bwSig, y, bwSig, h, Ui.Estilo.PRINCIPAL, true, null)) {
+        // El botón acaba antes de la pestaña del entrenador (esquina inferior derecha) para que no lo tape.
+        float derSig = Math.min(p.ancho - 36, EntrenadorFlotante.cajaRecogida(p.ancho, p.alto, ui.letra).x() - 10);
+        if (ui.boton(txtSig, derSig - bwSig, y, bwSig, h, Ui.Estilo.PRINCIPAL, true, null)) {
             controlador.siguiente();
             if (controlador.terminada()) cerrar(j);
         }

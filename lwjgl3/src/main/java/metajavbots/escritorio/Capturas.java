@@ -260,7 +260,7 @@ public final class Capturas extends Juego {
         pantallas.put("23_campanas", metajavbots.pantallas.Campanas::new);
         pantallas.put("25_sesion_de_hoy", metajavbots.pantallas.SesionDeHoy::new);
         pantallas.put("26_minijuegos", metajavbots.pantallas.MiniJuegos::new);
-        pantallasDelEntrenador(); CapturasDePeso.registrar(pantallas); CapturasDeCarrera.registrar(pantallas);
+        pantallasDelEntrenador(); CapturasDePeso.registrar(pantallas); CapturasDeCarrera.registrar(pantallas); CapturasFinales.registrar(pantallas, this);
         // "-Psolo=09b,09g": las pantallas que llevan alguno de esos textos, en ese orden.
         if (solo.isEmpty()) nombres.addAll(pantallas.keySet());
         for (String trozo : solo.isEmpty() ? new String[0] : solo.split(",")) {
