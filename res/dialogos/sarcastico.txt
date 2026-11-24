@@ -116,9 +116,9 @@ es: Bonito golpe. Lo odio.
 de: Schöner Schlag. Ich hasse ihn.
 en: Nice hit. I hate it.
 
-es: Bzzz... brrr... vale, ahora estoy enfadada.
-de: Bzzz... brrr... okay, jetzt bin ich sauer.
-en: Bzzz... brrr... okay, now I'm annoyed.
+es: Bzzz… brrr… vale, ahora estoy enfadada.
+de: Bzzz … brrr … okay, jetzt bin ich sauer.
+en: Bzzz… brrr… okay, now I'm annoyed.
 
 [poco_blindaje]
 es: Blindaje bajo. Mi cosa favorita. Después de todas las demás.
@@ -167,9 +167,9 @@ es: Casi. Bueno, no. Ni casi.
 de: Fast. Na ja, nein. Nicht mal fast.
 en: Almost. Well, no. Not even almost.
 
-es: Zumbo por aquí, zumbo por allá...
-de: Hier ein Summen, da ein Summen...
-en: Buzzing here, buzzing there...
+es: Zumbo por aquí, zumbo por allá…
+de: Hier ein Summen, da ein Summen …
+en: Buzzing here, buzzing there…
 
 [victoria_ronda]
 es: Ronda mía. Qué inesperado. Para nadie.
@@ -235,9 +235,9 @@ es: {jugador}, la próxima vez, compila antes. Por favor.
 de: {jugador}, nächstes Mal vorher kompilieren. Bitte.
 en: {jugador}, next time, compile first. Please.
 
-es: Bueno, {rival}. Disfruta mientras dure. Bzz... zz... z.
-de: Na gut, {rival}. Genieß es, solange es dauert. Bzz... zz... z.
-en: Fine, {rival}. Enjoy it while it lasts. Bzz... zz... z.
+es: Bueno, {rival}. Disfruta mientras dure. Bzz… zz… z.
+de: Na gut, {rival}. Genieß es, solange es dauert. Bzz … zz … z.
+en: Fine, {rival}. Enjoy it while it lasts. Bzz… zz… z.
 
 [burla]
 es: Uy, qué miedo. Mira, estoy temblando. No.
@@ -252,9 +252,9 @@ es: Qué bonito cañón. ¿Lo usas o es decorativo?
 de: Schöne Kanone. Benutzt du die, oder ist die Deko?
 en: Nice cannon. Do you use it, or is it decorative?
 
-es: Sigue así, {rival}. Lo estás haciendo... bueno, lo estás haciendo.
-de: Mach weiter so, {rival}. Du machst das... na ja, du machst es.
-en: Keep it up, {rival}. You're doing... well, you're doing something.
+es: Sigue así, {rival}. Lo estás haciendo… bueno, lo estás haciendo.
+de: Mach weiter so, {rival}. Du machst das … na ja, du machst es.
+en: Keep it up, {rival}. You're doing… well, you're doing something.
 
 [pulla]
 es: Tienes la puntería de un bucle sin condición: das vueltas y ya.
@@ -324,18 +324,18 @@ es: Me estoy limando el aguijón. Por hacer algo.
 de: Ich feile meinen Stachel. Irgendwas muss man ja tun.
 en: Filing my stinger. Gotta do something.
 
-es: Zzz... ah, ¿ya? No. Vale. Zzz...
-de: Zzz... oh, fertig? Nein. Okay. Zzz...
-en: Zzz... oh, done? No. Okay. Zzz...
+es: Zzz… ah, ¿ya? No. Vale. Zzz…
+de: Zzz … oh, fertig? Nein. Okay. Zzz …
+en: Zzz… oh, done? No. Okay. Zzz…
 
 [elogio]
 es: Vaya. Esto no está mal. Que conste que lo digo poco.
 de: Oha. Das ist nicht schlecht. Und das sage ich selten.
 en: Huh. This isn't bad. For the record, I rarely say that.
 
-es: Esto... está bien. Me molesta no encontrarle fallos.
-de: Das... ist gut. Es nervt mich, dass ich keinen Fehler finde.
-en: This... is good. It bugs me that I can't find a bug.
+es: Esto… está bien. Me molesta no encontrarle fallos.
+de: Das … ist gut. Es nervt mich, dass ich keinen Fehler finde.
+en: This… is good. It bugs me that I can't find a bug.
 
 es: ¿Lo has escrito tú? ¿Solo? Impresionante. En serio.
 de: Hast du das geschrieben? Allein? Beeindruckend. Ernsthaft.

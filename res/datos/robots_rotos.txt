@@ -35,8 +35,8 @@ codigo:
 
 [bizco]
 modelo: vigia
-titulo: El Bizco | Der Schielende | The Cross-Eyed
-sintoma: Ve al enemigo, dispara... y siempre falla, hacia el lado contrario. | Sieht den Gegner, schießt ... und trifft immer daneben, in die Gegenrichtung. | It sees the enemy, fires... and always misses, the opposite way.
+titulo: El Bizco | Der Schielende | The Cross-Eyed One
+sintoma: Ve al enemigo, dispara… y siempre falla, hacia el lado contrario. | Sieht den Gegner, schießt … und trifft immer daneben, in die Gegenrichtung. | It sees the enemy, fires… and always misses, the opposite way.
 pista: Los ángulos van en grados: ¿cuánto es media vuelta? ¿Hace falta sumarle algo al ángulo del enemigo? | Winkel sind in Grad: Wie viel ist eine halbe Drehung? Muss man zum Winkel des Gegners etwas addieren? | Angles are in degrees: how much is half a turn? Does the enemy's angle need anything added?
 objetivo: aciertos>=3
 rival: mazo
@@ -65,8 +65,8 @@ codigo:
 [timido]
 modelo: pixel
 titulo: El Tímido | Der Schüchterne | The Shy One
-sintoma: Se acerca al enemigo, lo mira fijamente... y nunca ataca. | Fährt an den Gegner heran, starrt ihn an ... und greift nie an. | It drives up to the enemy, stares at it... and never attacks.
-pista: Lee la condición del «if» en voz alta. ¿Puede una distancia ser menor que cero? | Lies die Bedingung des «if» laut vor. Kann ein Abstand kleiner als null sein? | Read the "if" condition out loud. Can a distance be less than zero?
+sintoma: Se acerca al enemigo, lo mira fijamente… y nunca ataca. | Fährt an den Gegner heran, starrt ihn an … und greift nie an. | It drives up to the enemy, stares at it… and never attacks.
+pista: Lee la condición del «if» en voz alta. ¿Puede una distancia ser menor que cero? | Lies die Bedingung des „if“ laut vor. Kann ein Abstand kleiner als null sein? | Read the “if” condition out loud. Can a distance be less than zero?
 objetivo: aciertos>=3
 rival: grulla
 nivel: 0.15
@@ -133,7 +133,7 @@ codigo:
 modelo: faro
 titulo: El Sordo | Der Taube | The Deaf One
 sintoma: No compila. Y cuando compile, no se entera de que ve al enemigo. | Kompiliert nicht. Und wenn er kompiliert, merkt er nicht, dass er den Gegner sieht. | It doesn't compile. And once it does, it doesn't notice it sees the enemy.
-pista: Lee el error del compilador despacio: ¿qué método dice que no sobrescribe a ninguno? Compara su nombre letra a letra con el de la referencia de la API. | Lies die Fehlermeldung langsam: Welche Methode überschreibt angeblich keine andere? Vergleiche ihren Namen Buchstabe für Buchstabe mit der API-Referenz. | Read the compiler error slowly: which method does it say overrides nothing? Compare its name letter by letter with the API reference.
+pista: Lee el error del compilador despacio: ¿qué método dice que no sobrescribe a ninguno? Compara su nombre letra a letra con el de la referencia de la API. | Lies die Fehlermeldung des Compilers langsam: Welche Methode überschreibt angeblich keine andere? Vergleiche ihren Namen Buchstabe für Buchstabe mit der API-Referenz. | Read the compiler error slowly: which method does it say overrides nothing? Compare its name letter by letter with the API reference.
 objetivo: aciertos>=3
 rival: avispa
 nivel: 0.15
@@ -162,7 +162,7 @@ codigo:
 modelo: volteo
 titulo: El Atascado | Der Feststeckende | The Stuck One
 sintoma: Choca con la pared y se queda ahí empujando para siempre. | Fährt gegen die Wand und drückt dort für immer weiter. | It hits the wall and stays there pushing forever.
-pista: Cuando choca, ¿qué método se llama solo? ¿Hace algo dentro? ¿Qué le dirías que haga? | Welche Methode wird beim Aufprall von selbst aufgerufen? Tut sie etwas? Was würdest du ihm sagen? | When it bumps into the wall, which method gets called by itself? Does it do anything? What would you tell it to do?
+pista: Cuando choca, ¿qué método se llama solo? ¿Hace algo dentro? ¿Qué le dirías que haga? | Welche Methode wird beim Aufprall von selbst aufgerufen? Tut sie etwas? Was würdest du ihm sagen, was er tun soll? | When it bumps into the wall, which method gets called by itself? Does it do anything? What would you tell it to do?
 objetivo: aciertos>=3
 rival: galapago
 nivel: 0.12

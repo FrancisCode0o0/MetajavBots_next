@@ -29,8 +29,8 @@ de: sie an fünf Stellen vorkommt, nur an einer änderst. Achtung: In Java heiß
 de: „leg das in die Schachtel“. Darum ist paso = paso + 10; völlig logisch: „neuer Schritt = alter Schritt
 de: plus 10“.
 en: Why not just write 60? Because the name explains what the number means, and if you use it in five places
-en: you change it in one. Careful: in Java, = does not mean "equals". It means "store this in the box".
-en: That's why step = step + 10; makes perfect sense: "the new step is the old one plus 10".
+en: you change it in one. Careful: in Java, = does not mean “equals”. It means “store this in the box”.
+en: That's why step = step + 10; makes perfect sense: “the new step is the old one plus 10”.
 --- pagina
 es: Las reglas de los nombres: empiezan por letra, sin espacios, y se escriben en camelCase:
 es: velocidadMaxima, turnosSinVer. No puedes usar palabras reservadas como int o class.
@@ -43,7 +43,7 @@ de: Der Compiler meldet dann „cannot find symbol“ oder „already defined“
 en: Naming rules: names start with a letter, have no spaces and are written in camelCase:
 en: maxSpeed, turnsWithoutSight. You can't use reserved words such as int or class.
 en: And you can't use a box before creating it, or create two with the same name in the same place:
-en: the compiler will tell you with "cannot find symbol" or "already defined".
+en: the compiler will tell you with “cannot find symbol” or “already defined”.
 --- tarea
 robot: usa:double
 es: Guarda el paso y la curva de tu robot en variables double y úsalas para moverte durante una ronda.
@@ -88,9 +88,9 @@ de: Die Falle: Teilst du zwei ints, ist das Ergebnis ein int, und die Nachkommas
 de: ergibt 3, nicht 3.5. Ist einer der beiden ein double, wird es auch das Ergebnis: 7 / 2.0 ergibt 3.5.
 de: Umgekehrt entfernst du Nachkommastellen absichtlich mit einem Cast: (int) 3.9 ergibt 3 (abschneiden,
 de: nicht runden).
-en: The trap: if you divide two ints, the result is an int and the decimals go in the bin. 7 / 2 is 3, not 3.5.
+en: The trap: if you divide two ints, the result is an int and the decimals go in the trash. 7 / 2 is 3, not 3.5.
 en: If just one of them is a double, so is the result: 7 / 2.0 is 3.5.
-en: The other way round, you drop decimals on purpose with a cast: (int) 3.9 is 3 (it cuts, it doesn't round).
+en: The other way around, you drop decimals on purpose with a cast: (int) 3.9 is 3 (it cuts, it doesn't round).
 codigo:
     int golpes = 7;
     double media = golpes / 2;      // ¡3.0! la división ya se hizo entera
@@ -122,7 +122,7 @@ tema: 02
 orden: 3
 titulo.es: Recordar entre turnos
 titulo.de: Sich zwischen Zügen erinnern
-titulo.en: Remembering between turns
+titulo.en: Remembering between ticks
 --- pagina
 es: Una variable creada dentro de cadaTurno nace al empezar el turno y muere al acabarlo.
 es: Al turno siguiente es otra caja nueva, vacía. Si quieres que el robot recuerde algo
@@ -132,9 +132,9 @@ de: Eine Variable, die in jedenZug entsteht, wird zu Beginn des Zuges geboren un
 de: Im nächsten Zug ist es eine neue, leere Schachtel. Soll sich der Roboter etwas merken
 de: (wie viele Züge er den Gegner nicht gesehen hat, wie oft er getroffen hat), leg die Variable AUSSERHALB
 de: der Methode an, direkt in der Klasse. Das heißt Feld, und es lebt, solange der Roboter lebt.
-en: A variable created inside onTick is born when the turn starts and dies when it ends.
-en: Next turn it's a brand-new, empty box. If you want the robot to remember something
-en: (how many turns since it last saw the enemy, how many hits it landed), create the variable OUTSIDE the method,
+en: A variable created inside onTick is born when the tick starts and dies when it ends.
+en: Next tick it's a brand-new, empty box. If you want the robot to remember something
+en: (how many ticks since it last saw the enemy, how many hits it landed), create the variable OUTSIDE the method,
 en: inside the class. That's called a field, and it lives as long as the robot does.
 codigo:
     public class MiRobot extends Metajavbot {
@@ -159,7 +159,7 @@ es: las constantes de la clase se escriben en MAYÚSCULAS con guiones bajos: sta
 de: Manche Werte dürfen sich nie ändern: was für dich „nah“ ist, wie weit das Radar dreht. Schreib final
 de: davor, und Java lässt niemanden (auch dich nicht aus Versehen) daran herumspielen. Konstanten der Klasse
 de: schreibt man üblicherweise in GROSSBUCHSTABEN mit Unterstrich: static final double NAH = 150;
-en: Some values must never change: the distance you consider "close", how far the radar turns.
+en: Some values must never change: the distance you consider “close”, how far the radar turns.
 en: Mark them final and Java won't let anyone (not even you, by accident) touch them. By convention,
 en: class constants are written in UPPER_CASE with underscores: static final double CLOSE = 150;
 codigo:
@@ -175,7 +175,7 @@ de: Java erkennt selbst, dass es ein double ist. Das ist kein „Joker-Typ“: D
 de: du sparst dir nur das Hinschreiben. Nimm var, wenn der Typ offensichtlich ist; sonst schreib ihn lieber aus.
 de: Vorsicht: var schritt = 60; wäre ein int, kein double. Der Unterschied steckt im .0.
 en: Since Java 10 you can write var instead of the type for local variables: var step = 60.0;
-en: Java works out that it's a double. It's not a "wildcard" type: the box stays a double forever,
+en: Java works out that it's a double. It's not a “wildcard” type: the box stays a double forever,
 en: you just skip writing it. Use var when the type is obvious at a glance; otherwise, spell it out.
 en: And watch out: var step = 60; would be an int, not a double. The difference is that .0.
 --- tarea

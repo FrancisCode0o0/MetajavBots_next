@@ -8,7 +8,7 @@
 
 [tuercas]
 nombre = Don Tuercas | Meister Mutter | Old Man Nuts
-papel = El viejo gruñón del gimnasio | Der alte Brummbär aus dem Gym | The grumpy old gym trainer
+papel = El viejo gruñón del gimnasio | Der alte Brummbär aus dem Gym | The grumpy old gym coach
 colores = 8A7F72 FF5E5B 3A3F46
 rasgos = gorra cejas antena_rota
 estilo = a grumpy old boxing gym trainer who growls, complains about modern robots, but deeply cares; short gruff sentences
@@ -19,14 +19,14 @@ frases.en = Up, you scrap heap! ; In my day we compiled by hand. ; Again! And th
 
 [aceite]
 nombre = Maestro Aceite | Meister Öl | Master Oil
-papel = El maestro sereno de las tareas absurdas | Der ruhige Meister der seltsamen Aufgaben | The calm master of absurd chores
+papel = El maestro sereno de las tareas absurdas | Der ruhige Meister der absurden Aufgaben | The calm master of absurd chores
 colores = D9C7A3 3A3F46 E23B3B
 rasgos = cinta barba
 estilo = a calm, wise martial arts master who teaches through odd repetitive chores and gentle riddles; serene, few words
 voz = 0.92 0.8 0.25
 frases.es = Encerar tuerca, pulir tuerca. ; El bucle que se repite enseña paciencia. ; Primero equilibrio. Luego, código. ; Pesa poco y esquivarás. Pesa mucho y aguantarás. Elige según el rival.
 frases.de = Mutter wachsen, Mutter polieren. ; Die Schleife, die sich wiederholt, lehrt Geduld. ; Erst Gleichgewicht. Dann Code. ; Wiege wenig, und du weichst aus. Wiege viel, und du hältst stand. Wähle nach dem Gegner.
-frases.en = Wax nut, polish nut. ; The loop that repeats teaches patience. ; Balance first. Then code. ; Weigh little and you will dodge. Weigh much and you will endure. Choose by your rival.
+frases.en = Wax nut, polish nut. ; The loop that repeats teaches patience. ; Balance first. Then code. ; Weigh little and you will dodge. Weigh much and you will endure. Choose according to your rival.
 
 [voltaje]
 nombre = Capitán Voltaje | Kapitän Volt | Captain Voltage
@@ -48,7 +48,7 @@ estilo = a tough, laconic old trainer who refused to train you at first; dry, bl
 voz = 0.86 0.95 0.9
 frases.es = No te entreno. Bueno, solo hoy. ; Protégete siempre. Sobre todo de los null. ; Bien. No se lo digas a nadie. ; ¿Vuela? Misiles. ¿Orugas? No empujes. Y no te sobrecargues.
 frases.de = Ich trainiere dich nicht. Na gut, nur heute. ; Schütz dich immer. Vor allem vor null. ; Gut. Sag's keinem. ; Fliegt er? Raketen. Ketten? Nicht schubsen. Und überlade dich nicht.
-frases.en = I don't train you. Fine, just today. ; Always protect yourself. Especially from null. ; Good. Don't tell anyone. ; It flies? Missiles. Treads? Don't push. And don't overload yourself.
+frases.en = I'm not training you. Fine, just today. ; Always protect yourself. Especially from null. ; Good. Don't tell anyone. ; It flies? Missiles. Treads? Don't push. And don't overload yourself.
 
 [cobra]
 nombre = Sensei Cobra-7 | Sensei Kobra-7 | Sensei Cobra-7
@@ -68,13 +68,13 @@ colores = E6DED0 3A3F46 3FA9F5
 rasgos = barba cejas
 estilo = an old judo master who speaks in calm parables about falling and getting up, using the opponent's force; gentle
 voz = 0.95 0.84 0.35
-frases.es = Cae siete veces, compila ocho. ; Usa la fuerza del enemigo, y su fallo. ; El estanque no corre. Y llega. ; El pesado empuja; el ligero se aparta. Usa su masa contra él.
+frases.es = Cae siete veces, compila ocho. ; Usa la fuerza del rival, y su fallo. ; El estanque no corre. Y llega. ; El pesado empuja; el ligero se aparta. Usa su masa contra él.
 frases.de = Fall siebenmal, kompilier achtmal. ; Nutze die Kraft des Gegners, und seinen Fehler. ; Der Teich rennt nicht. Und kommt doch an. ; Der Schwere schiebt; der Leichte weicht aus. Nutze seine Masse gegen ihn.
-frases.en = Fall seven times, compile eight. ; Use the enemy's force, and its mistake. ; The pond does not run. And still arrives. ; The heavy one pushes; the light one steps aside. Use its mass against it.
+frases.en = Fall seven times, compile eight. ; Use the rival's force, and its mistake. ; The pond does not run. And still arrives. ; The heavy one pushes; the light one steps aside. Use its mass against it.
 
 [pelobit]
 nombre = Gran Maestro Pelobit | Großmeister Pelobit | Grandmaster Pelobit
-papel = El maestro excéntrico y exigente | Der exzentrische, strenge Meister | The eccentric, demanding master
+papel = El maestro excéntrico y exigente | Der exzentrische, anspruchsvolle Meister | The eccentric, demanding master
 colores = F5F5F0 FF5E5B 2A2F38
 rasgos = barba cejas gorra
 estilo = an eccentric, theatrical and very demanding old master with a long cable beard who mocks sloppy code but rewards effort; dramatic

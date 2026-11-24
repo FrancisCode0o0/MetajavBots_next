@@ -54,7 +54,7 @@ dificultad: 1
 java: 8
 tipo: clase
 titulo.es: La ficha de una pieza (toString)
-titulo.de: Das Datenblatt eines Bauteils (toString)
+titulo.de: Das Datenblatt eines Teils (toString)
 titulo.en: A part's label (toString)
 enunciado.es: Escribe la clase Pieza con el constructor Pieza(String nombre, int peso) y sobrescribe String toString() para que devuelva "<nombre> (<peso> kg)". Java usa toString al juntar el objeto con + o al imprimirlo.
 enunciado.de: Schreibe die Klasse Pieza mit dem Konstruktor Pieza(String nombre, int peso) und überschreibe String toString() so, dass es "<nombre> (<peso> kg)" liefert. Java benutzt toString, wenn man das Objekt mit + verbindet oder ausgibt.
@@ -231,7 +231,7 @@ tipo: clase
 titulo.es: Chasis con número de serie (static)
 titulo.de: Fahrgestelle mit Seriennummer (static)
 titulo.en: Chassis with serial numbers (static)
-enunciado.es: La fábrica numera sus chasis: el primero que se crea es el 1, el siguiente el 2… Escribe la clase Chasis con el constructor Chasis(), el método int numero() y el método static int fabricados(), que dice cuántos se han creado. Los casos se prueban en orden.
+enunciado.es: La fábrica numera sus chasis: el primero que se crea es el 1, el siguiente, el 2… Escribe la clase Chasis con el constructor Chasis(), el método int numero() y el método static int fabricados(), que dice cuántos se han creado. Los casos se prueban en orden.
 enunciado.de: Die Fabrik nummeriert ihre Fahrgestelle: Das erste ist die 1, das nächste die 2 … Schreibe die Klasse Chasis mit dem Konstruktor Chasis(), der Methode int numero() und der Methode static int fabricados(), die sagt, wie viele schon gebaut wurden. Die Fälle laufen der Reihe nach.
 enunciado.en: The factory numbers its chassis: the first one created is 1, the next one 2… Write the class Chasis with the constructor Chasis(), the method int numero() and the method static int fabricados(), which tells how many have been made. The cases run in order.
 pista.es: Un campo static lo comparten todos los objetos de la clase: private static int creados; en el constructor, creados++ y numero = creados.
@@ -288,8 +288,8 @@ titulo.es: El taller encadenado
 titulo.de: Die verkettete Werkstatt
 titulo.en: The chained workshop
 enunciado.es: Escribe la clase Pieza con Pieza(String nombre, int peso), String getNombre() e int getPeso(), y la clase pública Taller con Taller(), Taller anadir(Pieza pieza) (devuelve this para poder encadenar), int total() (peso total), int cuantas() y String masPesada() (nombre de la más pesada; la primera si empatan; "" si no hay).
-enunciado.de: Schreibe die Klasse Pieza mit Pieza(String nombre, int peso), String getNombre() und int getPeso() und die öffentliche Klasse Taller mit Taller(), Taller anadir(Pieza pieza) (gibt this zurück, damit man verketten kann), int total() (Gesamtgewicht), int cuantas() und String masPesada() (Name des schwersten Teils; bei Gleichstand das erste; "" wenn keins da ist).
-enunciado.en: Write the class Pieza with Pieza(String nombre, int peso), String getNombre() and int getPeso(), and the public class Taller with Taller(), Taller anadir(Pieza pieza) (returns this so calls can be chained), int total() (total weight), int cuantas() and String masPesada() (name of the heaviest; the first one on a tie; "" if there are none).
+enunciado.de: Schreibe die Klasse Pieza mit Pieza(String nombre, int peso), String getNombre() und int getPeso() und die öffentliche Klasse Taller mit Taller(), Taller anadir(Pieza pieza) (gibt this zurück, damit man verketten kann), int total() (Gesamtgewicht), int cuantas() und String masPesada() (Name des schwersten Teils; bei Gleichstand das erste; "", wenn keins da ist).
+enunciado.en: Write the class Pieza with Pieza(String nombre, int peso), String getNombre() and int getPeso(), and the public class Taller with Taller(), Taller anadir(Pieza pieza) (returns this so calls can be chained), int total() (total weight), int cuantas() and String masPesada() (name of the heaviest; the first one in a tie; "" if there are none).
 pista.es: No hace falta guardar todas las piezas: basta con el peso total, la cuenta y una referencia a la más pesada hasta ahora (null al principio).
 pista.de: Du musst nicht alle Teile speichern: Gesamtgewicht, Anzahl und ein Verweis auf das bisher schwerste (am Anfang null) genügen.
 pista.en: You don't need to keep every part: the total weight, the count and a reference to the heaviest so far (null at first) are enough.
@@ -371,8 +371,8 @@ titulo.es: Un escuadrón de robots (array de objetos)
 titulo.de: Eine Roboterstaffel (Array von Objekten)
 titulo.en: A robot squad (array of objects)
 enunciado.es: Escribe la clase Robot con Robot(String nombre, int potencia), String getNombre() e int getPotencia(), y la clase pública Escuadron con Escuadron(Robot[] miembros), int potenciaTotal(), String masFuerte() (el nombre del más potente; el primero si empatan; "" si no hay nadie) e int cuantosSuperan(int umbral) (cuántos tienen más potencia que umbral).
-enunciado.de: Schreibe die Klasse Robot mit Robot(String nombre, int potencia), String getNombre() und int getPotencia() und die öffentliche Klasse Escuadron mit Escuadron(Robot[] miembros), int potenciaTotal(), String masFuerte() (Name des stärksten; bei Gleichstand der erste; "" wenn niemand da ist) und int cuantosSuperan(int umbral) (wie viele mehr Leistung als umbral haben).
-enunciado.en: Write the class Robot with Robot(String nombre, int potencia), String getNombre() and int getPotencia(), and the public class Escuadron with Escuadron(Robot[] miembros), int potenciaTotal(), String masFuerte() (the name of the strongest; the first on a tie; "" if nobody is there) and int cuantosSuperan(int umbral) (how many have more power than umbral).
+enunciado.de: Schreibe die Klasse Robot mit Robot(String nombre, int potencia), String getNombre() und int getPotencia() und die öffentliche Klasse Escuadron mit Escuadron(Robot[] miembros), int potenciaTotal(), String masFuerte() (Name des stärksten; bei Gleichstand der erste; "", wenn niemand da ist) und int cuantosSuperan(int umbral) (wie viele mehr Leistung als umbral haben).
+enunciado.en: Write the class Robot with Robot(String nombre, int potencia), String getNombre() and int getPotencia(), and the public class Escuadron with Escuadron(Robot[] miembros), int potenciaTotal(), String masFuerte() (the name of the strongest; the first in a tie; "" if nobody is there) and int cuantosSuperan(int umbral) (how many have more power than umbral).
 pista.es: Recorre el array con for (Robot r : miembros) y llama a los getters de cada robot.
 pista.de: Geh das Array mit for (Robot r : miembros) durch und ruf die Getter jedes Roboters auf.
 pista.en: Loop over the array with for (Robot r : miembros) and call each robot's getters.
@@ -459,7 +459,7 @@ tipo: clase
 titulo.es: Vectores de movimiento que no cambian
 titulo.de: Bewegungsvektoren, die sich nicht ändern
 titulo.en: Movement vectors that never change
-enunciado.es: Escribe la clase Vector2 con Vector2(double x, double y), Vector2 mas(Vector2 otro), Vector2 por(double factor), double longitud() y String toString() que da "(<x>, <y>)". mas y por no cambian el vector: devuelven uno nuevo.
+enunciado.es: Escribe la clase Vector2 con Vector2(double x, double y), Vector2 mas(Vector2 otro), Vector2 por(double factor), double longitud() y String toString(), que da "(<x>, <y>)". mas y por no cambian el vector: devuelven uno nuevo.
 enunciado.de: Schreibe die Klasse Vector2 mit Vector2(double x, double y), Vector2 mas(Vector2 otro), Vector2 por(double factor), double longitud() und String toString(), das "(<x>, <y>)" liefert. mas und por ändern den Vektor nicht: Sie geben einen neuen zurück.
 enunciado.en: Write the class Vector2 with Vector2(double x, double y), Vector2 mas(Vector2 otro), Vector2 por(double factor), double longitud() and String toString(), which gives "(<x>, <y>)". mas and por do not change the vector: they return a new one.
 pista.es: return new Vector2(x + otro.x, y + otro.y); — dentro de la clase puedes leer los campos privados de otro objeto Vector2. La longitud es Math.hypot(x, y).
@@ -518,7 +518,7 @@ tipo: clase
 titulo.es: Duelo entre dos objetos
 titulo.de: Duell zwischen zwei Objekten
 titulo.en: Duel between two objects
-enunciado.es: Escribe la clase Robot con Robot(String nombre, int vida, int ataque), String getNombre(), int getVida(), boolean sigueVivo() (vida mayor que 0), void recibir(int dano) (la vida nunca baja de 0) y static Robot duelo(Robot a, Robot b): golpea a, luego b, luego a… cada uno quita su ataque al otro, hasta que uno cae; devuelve el ganador. Si uno ya empieza sin vida, gana el otro sin luchar. El ataque siempre es al menos 1.
+enunciado.es: Escribe la clase Robot con Robot(String nombre, int vida, int ataque), String getNombre(), int getVida(), boolean sigueVivo() (vida mayor que 0), void recibir(int dano) (la vida nunca baja de 0) y static Robot duelo(Robot a, Robot b): golpea a, luego b, luego a… cada uno quita su ataque al otro, hasta que uno cae; devuelve el ganador. Si uno ya empieza sin vida, gana el otro sin pelear. El ataque siempre es al menos 1.
 enunciado.de: Schreibe die Klasse Robot mit Robot(String nombre, int vida, int ataque), String getNombre(), int getVida(), boolean sigueVivo() (Leben größer als 0), void recibir(int dano) (das Leben fällt nie unter 0) und static Robot duelo(Robot a, Robot b): Erst schlägt a zu, dann b, dann a … jeder zieht dem anderen seinen Angriff ab, bis einer fällt; gib den Sieger zurück. Hat einer schon am Anfang kein Leben, gewinnt der andere kampflos. Der Angriff ist immer mindestens 1.
 enunciado.en: Write the class Robot with Robot(String nombre, int vida, int ataque), String getNombre(), int getVida(), boolean sigueVivo() (health above 0), void recibir(int dano) (health never drops below 0) and static Robot duelo(Robot a, Robot b): a strikes, then b, then a… each takes its attack off the other, until one falls; return the winner. If one starts with no health, the other wins without fighting. The attack is always at least 1.
 pista.es: while (a.sigueVivo() && b.sigueVivo()) { b.recibir(a.ataque); if (b.sigueVivo()) a.recibir(b.ataque); } y al final devuelve el que sigue vivo.

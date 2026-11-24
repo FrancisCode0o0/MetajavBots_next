@@ -34,7 +34,7 @@ public final class LataDeAceite implements Aparato {
 }
 == de
 /**
- * OELKANNE «Resbalín» — Hinterlässt eine Ölpfütze, die 10 Sekunden
+ * OELKANNE „Resbalín“ — Hinterlässt eine Ölpfütze, die 10 Sekunden
  * bleibt: Wer hineinfährt, rutscht (schwer zu bremsen und zu
  * lenken). Du auch!
  *
@@ -68,7 +68,7 @@ public final class Oelkanne implements Geraet {
 }
 == en
 /**
- * OILCAN «Resbalín» — Leaves a puddle of oil behind you that lasts
+ * OILCAN “Resbalín” — Leaves a puddle of oil behind you that lasts
  * 10 seconds: whoever drives on it slips (hard to brake and turn).
  * You too!
  *

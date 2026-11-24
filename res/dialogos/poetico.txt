@@ -20,7 +20,7 @@ en: I greet my rival as the cloud greets the lightning.
 
 [inicio_ronda]
 es: Ronda {ronda}: primer verso.
-de: Runde {ronda}: erste Strophe.
+de: Runde {ronda}: erster Vers.
 en: Round {ronda}: first verse.
 
 es: Ronda {ronda}. El aire huele a tormenta.
@@ -32,7 +32,7 @@ de: Neue Strophe, derselbe Himmel.
 en: New stanza, same sky.
 
 es: Que suene la campana como un trueno lejano.
-de: Lass die Glocke klingen wie fernen Donner.
+de: Lass die Glocke klingen wie ferner Donner.
 en: Let the bell ring like distant thunder.
 
 [ataque]
@@ -41,16 +41,16 @@ de: Flieg, {arma}, wie ein Feuervogel!
 en: Fly, {arma}, like a bird of fire!
 
 es: Desde las nubes, con cariño.
-de: Aus den Wolken, mit Gruß.
+de: Aus den Wolken, mit Liebe.
 en: From the clouds, with love.
 
 es: Lluvia de estrellas para ti, {rival}.
 de: Sternschnuppenregen für dich, {rival}.
 en: A meteor shower for you, {rival}.
 
-es: Un susurro de alas... y luego el trueno.
-de: Ein Flügelflüstern... und dann der Donner.
-en: A whisper of wings... and then the thunder.
+es: Un susurro de alas… y luego el trueno.
+de: Ein Flügelflüstern … und dann der Donner.
+en: A whisper of wings… and then the thunder.
 
 [acierto]
 es: Una rima perfecta.
@@ -58,7 +58,7 @@ de: Ein perfekter Reim.
 en: A perfect rhyme.
 
 es: Cayó como cae la lluvia: sin pedir permiso.
-de: Es fiel wie Regen fällt: ohne um Erlaubnis zu fragen.
+de: Es fiel, wie Regen fällt: ohne um Erlaubnis zu fragen.
 en: It fell like rain falls: without asking permission.
 
 es: El cielo ha firmado ese golpe.
@@ -113,12 +113,12 @@ de: Ein Hagelschlag. Mein Kamm zittert.
 en: A hailstorm blow. My crest is trembling.
 
 es: Qué verso tan violento, {rival}.
-de: Was für ein gewaltiger Vers, {rival}.
+de: Was für ein brutaler Vers, {rival}.
 en: What a violent verse, {rival}.
 
-es: He visto mil estrellas... y no eran del cielo.
-de: Ich sah tausend Sterne... und keiner stand am Himmel.
-en: I saw a thousand stars... and none were in the sky.
+es: He visto mil estrellas… y no eran del cielo.
+de: Ich sah tausend Sterne … und keiner stand am Himmel.
+en: I saw a thousand stars… and none were in the sky.
 
 [poco_blindaje]
 es: Mis alas pesan. Mi canto, no.
@@ -133,9 +133,9 @@ es: Queda poco cielo para mí. Lo usaré bien.
 de: Mir bleibt nur wenig Himmel. Ich nutze ihn gut.
 en: Little sky remains for me. I'll use it well.
 
-es: El ocaso se acerca... aún no es de noche.
-de: Die Dämmerung naht... noch ist es nicht Nacht.
-en: Dusk draws near... but it is not night yet.
+es: El ocaso se acerca… aún no es de noche.
+de: Die Dämmerung naht … noch ist es nicht Nacht.
+en: Dusk draws near… but it is not night yet.
 
 [parte_rota]
 es: Adiós, {pieza}. Te escribiré una elegía.
@@ -223,16 +223,16 @@ de: {jugador}, lass uns bald den zweiten Teil schreiben.
 en: {jugador}, let's write the sequel soon.
 
 [derrota]
-es: Me apago como una estrella... con mucho estilo.
-de: Ich verglühe wie ein Stern... mit viel Stil.
-en: I fade like a star... with great style.
+es: Me apago como una estrella… con mucho estilo.
+de: Ich verglühe wie ein Stern … mit viel Stil.
+en: I fade like a star… with great style.
 
 es: Mis últimas palabras: que rimen bien.
 de: Meine letzten Worte: Hoffentlich reimen sie sich.
 en: My last words: I hope they rhyme.
 
 es: Adiós, cielo. Vuelvo en la próxima tormenta.
-de: Leb wohl, Himmel. Ich komme mit dem nächsten Sturm.
+de: Leb wohl, Himmel. Ich komme mit dem nächsten Sturm zurück.
 en: Farewell, sky. I'll return with the next storm.
 
 es: Un final trágico. Muy de poeta. ¡Bum!
@@ -267,7 +267,7 @@ en: Your code has no rhythm, {rival}. No rhyme. No future.
 
 es: Te escribiría una oda, pero no rima con «chatarra».
 de: Ich würde dir eine Ode schreiben, aber Schrott verdient keinen Reim.
-en: I'd write you an ode, but nothing rhymes with "scrap heap".
+en: I'd write you an ode, but nothing rhymes with “scrap heap”.
 
 es: Desde aquí arriba pareces una tuerca perdida.
 de: Von hier oben siehst du aus wie eine verlorene Schraubenmutter.
@@ -299,9 +299,9 @@ es: Mi código ha tropezado con una coma. Qué prosaico.
 de: Mein Code ist über ein Komma gestolpert. Wie prosaisch.
 en: My code tripped on a comma. How prosaic.
 
-es: Una excepción... la poesía del fallo.
-de: Eine Exception... die Poesie des Scheiterns.
-en: An exception... the poetry of failure.
+es: Una excepción… la poesía del fallo.
+de: Eine Exception … die Poesie des Scheiterns.
+en: An exception… the poetry of failure.
 
 es: Bucle infinito: un verso que nunca termina.
 de: Endlosschleife: ein Vers, der niemals endet.
@@ -324,9 +324,9 @@ es: Estoy componiendo un haiku sobre tornillos.
 de: Ich dichte gerade ein Haiku über Schrauben.
 en: I'm composing a haiku about bolts.
 
-es: Puntos y comas, llaves y paréntesis... qué música.
-de: Semikolons, Klammern, geschweifte Klammern... welche Musik.
-en: Semicolons, braces, parentheses... what music.
+es: Puntos y comas, llaves y paréntesis… qué música.
+de: Semikolons, Klammern, geschweifte Klammern … welche Musik.
+en: Semicolons, braces, parentheses… what music.
 
 [elogio]
 es: Qué código tan elegante. Casi vuela solo.

@@ -24,7 +24,7 @@ de: Runde {ronda}. Wurde auch Zeit.
 en: Round {ronda}. About time.
 
 es: Ronda {ronda}… ¿cuántas quedan? Siempre son demasiadas.
-de: Runde {ronda}… wie viele noch? Es sind immer zu viele.
+de: Runde {ronda} … wie viele noch? Es sind immer zu viele.
 en: Round {ronda}… how many left? There's always too many.
 
 es: Venga, venga, que se me enfría el aceite.
@@ -32,7 +32,7 @@ de: Los, los, mein Öl wird kalt.
 en: Come on, come on, my oil's getting cold.
 
 es: Ronda {ronda}. Que nadie me hable de actualizaciones.
-de: Runde {ronda}. Keiner redet mir von Updates.
+de: Runde {ronda}. Keiner soll mir von Updates reden.
 en: Round {ronda}. Nobody mention updates to me.
 
 [ataque]
@@ -49,7 +49,7 @@ de: Das hat früher beim ersten Mal geklappt!
 en: This used to work on the first try!
 
 es: Grrr… ¡ahí va!
-de: Grrr… da hast du!
+de: Grrr … da hast du's!
 en: Grrr… there you go!
 
 [acierto]
@@ -134,7 +134,7 @@ de: {jugador}, falls ich zerfalle, heb die Schrauben auf. Die sind gut.
 en: {jugador}, if I fall apart, keep the bolts. They're good ones.
 
 es: Aguanto. Llevo aguantando desde antes de que existieras.
-de: Ich halte durch. Mach ich schon, seit es dich gibt.
+de: Ich halte durch. Mach ich schon länger, als es dich gibt.
 en: I'll hold. I've been holding since before you existed.
 
 [parte_rota]
@@ -220,7 +220,7 @@ en: Good, {jugador}. Don't tell anyone, but I'm happy.
 
 es: Lo viejo gana. Como debe ser.
 de: Das Alte gewinnt. Wie es sich gehört.
-en: Old beats new. As it should.
+en: Old beats new. As it should be.
 
 [derrota]
 es: Lo sabía. Hoy no me tenía que haber levantado.
@@ -228,11 +228,11 @@ de: Ich wusste es. Ich hätte heute im Bett bleiben sollen.
 en: I knew it. I should've stayed in bed today.
 
 es: Al desguace otra vez… al menos allí hay tranquilidad.
-de: Zurück auf den Schrottplatz… da ist wenigstens Ruhe.
+de: Zurück auf den Schrottplatz … da ist wenigstens Ruhe.
 en: Back to the junkyard… at least it's quiet there.
 
-es: Esto en mis tiempos no pasaba… ¡boom!
-de: Das gab's zu meiner Zeit nicht… bumm!
+es: Esto en mis tiempos no pasaba… ¡bum!
+de: Das gab's zu meiner Zeit nicht … bumm!
 en: This never happened in my day… boom!
 
 es: {jugador}, recoge mis tornillos. Todos. Y cuéntalos.
@@ -342,7 +342,7 @@ de: {jugador}, endlich mal was, das nicht knarzt.
 en: {jugador}, finally something that doesn't creak.
 
 es: Bueno… vale. Es bueno. Ya lo he dicho, ¿contento?
-de: Na gut… okay. Es ist gut. Hab's gesagt, zufrieden?
+de: Na gut … okay. Es ist gut. Hab's gesagt, zufrieden?
 en: Fine… okay. It's good. There, I said it. Happy?
 
 [reparar]
@@ -355,7 +355,7 @@ de: Noch ein Flicken. Ich bin fast nur noch Flicken.
 en: One more patch. I'm nearly all patches by now.
 
 es: Martillazo, martillazo… listo. Como nuevo. Como viejo.
-de: Hammerschlag, Hammerschlag… fertig. Wie neu. Wie alt.
+de: Hammerschlag, Hammerschlag … fertig. Wie neu. Wie alt.
 en: Whack, whack… done. Good as new. Good as old.
 
 es: No miréis, que me estoy apretando los tornillos.

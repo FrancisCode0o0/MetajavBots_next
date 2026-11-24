@@ -166,11 +166,11 @@ titulo.es: Disparos por arma
 titulo.de: Schüsse pro Waffe
 titulo.en: Shots per weapon
 enunciado.es: Cada elemento es el arma de un disparo. Devuelve un mapa con cuántas veces se usó cada arma.
-enunciado.de: Jedes Element ist die Waffe eines Schusses. Gib eine Map zurück, wie oft jede Waffe benutzt wurde.
+enunciado.de: Jedes Element ist die Waffe eines Schusses. Gib eine Map zurück, die angibt, wie oft jede Waffe benutzt wurde.
 enunciado.en: Each element is the weapon of one shot. Return a map with how many times each weapon was used.
 pista.es: collect(Collectors.groupingBy(arma -> arma, Collectors.counting())). Function.identity() también sirve como «arma -> arma». Los recuentos son Long.
-pista.de: collect(Collectors.groupingBy(waffe -> waffe, Collectors.counting())). Function.identity() geht auch statt «waffe -> waffe». Die Zählungen sind Long.
-pista.en: collect(Collectors.groupingBy(weapon -> weapon, Collectors.counting())). Function.identity() also works instead of "weapon -> weapon". The counts are Long.
+pista.de: collect(Collectors.groupingBy(waffe -> waffe, Collectors.counting())). Function.identity() geht auch statt „waffe -> waffe“. Die Zählungen sind Long.
+pista.en: collect(Collectors.groupingBy(weapon -> weapon, Collectors.counting())). Function.identity() also works instead of “weapon -> weapon”. The counts are Long.
 firma: static Map<String, Long> contarPorArma(List<String> disparos)
 plantilla:
     Map<String, Long> cuenta = new HashMap<>();

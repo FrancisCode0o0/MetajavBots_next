@@ -36,7 +36,7 @@ public final class Sierra implements Aparato {
 /**
  * SÄGE „Sierrón“ — Eine ansteckbare Hochgeschwindigkeits-Kreissäge in
  * den Winkel, den du angibst: Sie läuft fast eine Sekunde lang und schneidet
- * jeden nahen Gegner vor dir in schnellen Treffern.
+ * jeden nahen Gegner vor dir mit schnellen Treffern.
  *
  * So schließt du es an deinen Roboter an:
  *   1. Fahr hin und berühre es: Du hebst es auf (geraete() sagt
@@ -68,7 +68,7 @@ public final class Saege implements Geraet {
 }
 == en
 /**
- * SAW "Sierrón" — An attachable high-RPM circular saw aimed at the
+ * SAW “Sierrón” — An attachable high-RPM circular saw aimed at the
  * angle you give: spins for nearly a second and shreds any close enemy
  * in front of you with rapid hits.
  *

@@ -7,7 +7,7 @@ titulo.de: Eine Methode, die sich selbst aufruft
 titulo.en: A method that calls itself
 --- pagina
 es: Recursión es resolver un problema usando una versión más pequeña del mismo problema. ¿Cuánto es 5!?
-es: 5 por 4!. ¿Y 4!? 4 por 3!... hasta llegar a 1!, que vale 1 sin más preguntas. Ese final es el caso base,
+es: 5 por 4!. ¿Y 4!? 4 por 3!… hasta llegar a 1!, que vale 1 sin más preguntas. Ese final es el caso base,
 es: y es [[obligatorio]]: sin él, el método se llama a sí mismo sin parar hasta que la pila se desborda
 es: con un StackOverflowError (sí, como la web).
 de: Rekursion heißt, ein Problem mit einer kleineren Version desselben Problems zu lösen. Was ist 5!?
@@ -15,7 +15,7 @@ de: 5 mal 4!. Und 4!? 4 mal 3! … bis 1!, das ohne weitere Fragen 1 ist. Dieses
 de: und er ist [[Pflicht]]: Ohne ihn ruft sich die Methode endlos selbst auf, bis der Stapel mit einem
 de: StackOverflowError überläuft (ja, wie die Website).
 en: Recursion means solving a problem using a smaller version of the same problem. What's 5!?
-en: 5 times 4!. And 4!? 4 times 3!... until you reach 1!, which is simply 1. That ending is the base case,
+en: 5 times 4!. And 4!? 4 times 3!… until you reach 1!, which is simply 1. That ending is the base case,
 en: and it's MANDATORY: without it, the method keeps calling itself until the stack overflows
 en: with a StackOverflowError (yes, like the website).
 codigo:
@@ -33,7 +33,7 @@ de: Beim Schreiben einer Rekursion musst du vertrauen: Nimm an, der kleinere Auf
 de: nur an den aktuellen Schritt. „Die Quersumme von 4721 ist 1 plus die Quersumme von 472.“ Zwei Fragen
 de: immer: Was ist der kleinste Fall? Und kommt jeder Aufruf ihm wirklich näher?
 en: To write a recursion, trust it: assume the smaller call already works and think only about the current
-en: step. "The digit sum of 4721 is 1 plus the digit sum of 472". Two questions every time:
+en: step. “The digit sum of 4721 is 1 plus the digit sum of 472”. Two questions every time:
 en: what's the smallest case? And does each call really get closer to it?
 --- tarea
 ejercicio: t21_factorial
@@ -85,7 +85,7 @@ de: Manche Rekursionen erledigen dieselbe Arbeit tausendfach: Fibonacci von 40 b
 de: Memoisation hilft: Speichere jedes Ergebnis beim ersten Mal in einer Map und gib es beim nächsten Mal
 de: ohne Rechnen zurück. Aus Minuten wird ein Augenblick. Das ist die Grundidee der dynamischen Programmierung.
 en: Some recursions repeat the same work a thousand times: Fibonacci of 40 computes fib(2) millions of times.
-en: Memoisation fixes it: store each result in a Map the first time and, when asked again,
+en: Memoization fixes it: store each result in a Map the first time and, when asked again,
 en: return it without computing. It goes from minutes to nothing. That's the core idea of dynamic programming.
 --- tarea
 ejercicio: t21_busqueda_binaria
@@ -107,7 +107,7 @@ titulo.en: Combat geometry: radar and dodging
 --- pagina
 es: Los ángulos son traicioneros: 170 y -170 están a solo 20 grados, pero restarlos da 340. Por eso existe
 es: normalizar(), que lleva cualquier ángulo a (-180, 180]: la diferencia normalizada es el giro más corto.
-es: Con eso, un radar que no pierde al enemigo es un algoritmo pequeño: ve hacia el último ángulo visto
+es: Con eso, un radar que no pierde al rival es un algoritmo pequeño: ve hacia el último ángulo visto
 es: por el camino corto, sin pasarte del giro máximo por turno, y si no recuerdas a nadie, barre.
 de: Winkel sind tückisch: 170 und -170 liegen nur 20 Grad auseinander, ihre Differenz ist aber 340. Darum
 de: gibt es normalisieren(), das jeden Winkel nach (-180, 180] bringt: Die normalisierte Differenz ist die
@@ -116,7 +116,7 @@ de: kürzestem Weg zum zuletzt gesehenen Winkel, nie mehr als die maximale Drehu
 de: dich an niemanden, such.
 en: Angles are treacherous: 170 and -170 are only 20 degrees apart, but subtracting them gives 340. That's why
 en: normalize() exists: it brings any angle into (-180, 180], and the normalized difference is the shortest turn.
-en: With that, a radar that never loses the enemy is a small algorithm: head for the last angle seen
+en: With that, a radar that never loses the rival is a small algorithm: head for the last angle seen
 en: the short way round, never beyond the maximum turn per tick, and if you remember nobody, sweep.
 codigo:
     double giro = normalizar(anguloVisto - mira());
@@ -136,14 +136,14 @@ en: Working out the distance to the wall in a given direction is pure trigonomet
 en: and in y before leaving the arena, and keep the smaller.
 --- tarea
 ejercicio: reto_radar
-es: Reto: escribe el barrido de un radar que no pierde al enemigo. Superarlo desbloquea una pieza.
-de: Herausforderung: Schreib die Radarsuche, die den Gegner nie verliert. Wer sie schafft, schaltet ein Teil frei.
-en: Challenge: write the sweep of a radar that never loses the enemy. Beating it unlocks a part.
+es: Reto: escribe el barrido de un radar que no pierde al rival. Superarlo desbloquea una pieza.
+de: Aufgabe: Schreib die Radarsuche, die den Gegner nie verliert. Wer sie schafft, schaltet ein Teil frei.
+en: Task: write the sweep of a radar that never loses the rival. Beating it unlocks a part.
 --- tarea
 ejercicio: reto_esquiva
 es: Reto: esquiva siempre hacia el lado con más sitio. Superarlo desbloquea una pieza.
-de: Herausforderung: Weich immer zur Seite mit mehr Platz aus. Wer sie schafft, schaltet ein Teil frei.
-en: Challenge: always dodge toward the side with more room. Beating it unlocks a part.
+de: Aufgabe: Weich immer zur Seite mit mehr Platz aus. Wer sie schafft, schaltet ein Teil frei.
+en: Task: always dodge toward the side with more room. Beating it unlocks a part.
 
 === l21_disparar_adonde_estara
 tema: 21
@@ -159,11 +159,11 @@ es: y repite. En pocas vueltas, la estimación deja de moverse.
 de: Braucht dein Angriff Zeit, triffst du am aktuellen Ort des Gegners nur sein Gespenst. Du musst dorthin zielen,
 de: wo er SEIN WIRD. Aber wie lange der Schuss braucht, hängt von der Entfernung ab, und die Entfernung davon,
 de: wohin du zielst: Das Problem beißt sich in den Schwanz. Der Ausweg ist Iteration: schätzen, mit der neuen
-de: Entfernung korrigieren, wiederholen. Nach wenigen Runden bewegt sich die Schätzung nicht mehr.
+de: Entfernung korrigieren, wiederholen. Nach wenigen Durchläufen bewegt sich die Schätzung nicht mehr.
 en: If your attack takes time to arrive, shooting where the rival is means shooting its ghost. You have to aim
 en: where it WILL BE. But how long the shot takes depends on the distance, and the distance depends on where
 en: you aim: the problem chases its own tail. The way out is to iterate: estimate, correct with the new distance
-en: and repeat. After a few laps the estimate stops moving.
+en: and repeat. After a few iterations the estimate stops moving.
 codigo:
     double apuntarAdelantado(Enemigo e, double velocidadAtaque) {
         double r = Math.toRadians(e.rumbo());
@@ -188,8 +188,8 @@ en: Measure, don't guess: count your hits with each version and keep the winner.
 --- tarea
 ejercicio: reto_prediccion
 es: Reto: calcula el ángulo de intercepción exacto. Superarlo desbloquea una pieza.
-de: Herausforderung: Berechne den exakten Abfangwinkel. Wer sie schafft, schaltet ein Teil frei.
-en: Challenge: work out the exact interception angle. Beating it unlocks a part.
+de: Aufgabe: Berechne den exakten Abfangwinkel. Wer sie schafft, schaltet ein Teil frei.
+en: Task: work out the exact interception angle. Beating it unlocks a part.
 --- tarea
 robot: aciertos>=10
 es: Apunta con predicción adelantada y acierta al muñeco 10 veces en una sola ronda.

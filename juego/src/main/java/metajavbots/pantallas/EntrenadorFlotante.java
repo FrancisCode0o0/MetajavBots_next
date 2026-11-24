@@ -297,6 +297,15 @@ public final class EntrenadorFlotante {
         return GeometriaEntrenador.cajaTip(pantallaAncho, pantallaAlto, altoTexto, tamanoLetra);
     }
 
+    /** La caja del cartel en esta pantalla: si tiene barra de botones abajo, el cartel sube para no taparla. */
+    private static CajaTip cajaTipEn(Juego j, String texto) {
+        CajaTip c = GeometriaEntrenador.cajaTip(j.pincel, j.ui, texto);
+        float reserva = j.pantalla() == null ? 0 : j.pantalla().reservaAbajo(), limite = j.pincel.alto - reserva - 8;
+        if (reserva <= 0 || c.y() + c.h() <= limite) return c;
+        float dy = Math.min(c.y() - 8, c.y() + c.h() - limite);
+        return new CajaTip(c.x(), c.y() - dy, c.w(), c.h(), c.anchoTexto(), c.cerrarX(), c.cerrarY() - dy, c.cerrarTam());
+    }
+
     /** Cierra la ventana completa de consulta. */
     public void cerrar() {
         abierto = false;
@@ -349,7 +358,7 @@ public final class EntrenadorFlotante {
         ConsejosDelTaller.Tip tip = planificador.tipActual();
         if (tip != null && !hospital(j)) {
             String texto = ConsejosDelJuego.textoDelTip(tip, j.jugador.idioma);
-            CajaTip c = GeometriaEntrenador.cajaTip(p, j.ui, texto);
+            CajaTip c = cajaTipEn(j, texto);
             return j.entrada.dentro(c.x, c.y, c.w, c.h);
         }
         return false;
@@ -493,7 +502,7 @@ public final class EntrenadorFlotante {
         Pincel p = j.pincel;
         Ui ui = j.ui;
         String texto = ConsejosDelJuego.textoDelTip(tip, j.jugador.idioma);
-        CajaTip c = GeometriaEntrenador.cajaTip(p, ui, texto);
+        CajaTip c = cajaTipEn(j, texto);
         CajaPestana pestana = cajaPestana(p.ancho, p.alto, asomada, ui.letra);
         float tl = GeometriaEntrenador.tamanoLetraTip(p, ui, texto, c.anchoTexto);
         float aparece = Math.min(1, planificador.tiempoDelTip() * 4);

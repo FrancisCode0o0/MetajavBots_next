@@ -34,7 +34,7 @@ public final class PropulsorAntigravedad implements Aparato {
 }
 == de
 /**
- * ANTIGRAVITATIONSANTRIEB «Flotón» — Hebt dich 5/3 Sekunden lang
+ * ANTIGRAVITATIONSANTRIEB „Flotón“ — Hebt dich 5/3 Sekunden lang
  * eine Handbreit vom Boden: Du gleitest über Stacheln, Gruben, Öl
  * und Kleber und landest dann.
  *
@@ -68,7 +68,7 @@ public final class Antigravitationsantrieb implements Geraet {
 }
 == en
 /**
- * ANTIGRAVITYTHRUSTER «Flotón» — Lifts you a hand above the floor
+ * ANTIGRAVITYTHRUSTER “Flotón” — Lifts you a hand's breadth off the floor
  * for 5/3 of a second: you glide over spikes, pits, oil and glue,
  * then land.
  *

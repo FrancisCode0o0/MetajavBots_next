@@ -90,8 +90,8 @@ enunciado.es: Devuelve true si la distancia está entre 0 y el alcance del arma,
 enunciado.de: Gib true zurück, wenn die Entfernung zwischen 0 und der Reichweite der Waffe liegt, beide eingeschlossen. Eine negative Entfernung ist ein Radarfehler: false. Beispiel: enAlcance(5, 10) gibt true zurück.
 enunciado.en: Return true if the distance is between 0 and the weapon's range, both included. A negative distance is a radar error: false. Example: enAlcance(5, 10) returns true.
 pista.es: && es «y»: las dos condiciones tienen que cumplirse. distancia >= 0 && distancia <= alcance.
-pista.de: && heißt «und»: beide Bedingungen müssen stimmen. distancia >= 0 && distancia <= alcance.
-pista.en: && means "and": both conditions must hold. distancia >= 0 && distancia <= alcance.
+pista.de: && heißt „und“: Beide Bedingungen müssen stimmen. distancia >= 0 && distancia <= alcance.
+pista.en: && means “and”: both conditions must hold. distancia >= 0 && distancia <= alcance.
 firma: static boolean enAlcance(int distancia, int alcance)
 plantilla:
     return distancia < alcance;
@@ -137,13 +137,13 @@ java: 8
 tipo: metodo
 titulo.es: Paréntesis para la media
 titulo.de: Klammern für den Durchschnitt
-titulo.en: Brackets for the average
+titulo.en: Parentheses for the average
 enunciado.es: Devuelve la media de los tres sensores con decimales. Ahora sale mal porque / va antes que +. Ejemplo: mediaDeTres(1, 2, 3) devuelve 2.0.
 enunciado.de: Gib den Durchschnitt der drei Sensoren mit Nachkommastellen zurück. Gerade kommt Unsinn heraus, weil / vor + gerechnet wird. Beispiel: mediaDeTres(1, 2, 3) gibt 2.0 zurück.
 enunciado.en: Return the average of the three sensors with decimals. Right now it comes out wrong because / goes before +. Example: mediaDeTres(1, 2, 3) returns 2.0.
 pista.es: Como en matemáticas, * y / se hacen antes que + y -. Usa paréntesis y divide entre 3.0: (a + b + c) / 3.0.
 pista.de: Wie in Mathe kommen * und / vor + und -. Setz Klammern und teile durch 3.0: (a + b + c) / 3.0.
-pista.en: As in maths, * and / come before + and -. Use brackets and divide by 3.0: (a + b + c) / 3.0.
+pista.en: As in math, * and / come before + and -. Use parentheses and divide by 3.0: (a + b + c) / 3.0.
 firma: static double mediaDeTres(int a, int b, int c)
 plantilla:
     return a + b + c / 3;
@@ -194,8 +194,8 @@ enunciado.es: El generador se quema si se encienden los dos escudos, y no proteg
 enunciado.de: Der Generator brennt durch, wenn beide Schilde an sind, und schützt nicht, wenn keiner an ist. Gib nur dann true zurück, wenn genau einer an ist. Beispiel: unSoloEscudo(true, false) gibt true zurück, unSoloEscudo(true, true) false.
 enunciado.en: The generator burns out if both shields are on, and gives no protection if neither is. Return true only if exactly one is on. Example: unSoloEscudo(true, false) returns true and unSoloEscudo(true, true) false.
 pista.es: || es «o» (vale también si están los dos). El «o exclusivo» es ^, o, lo que es lo mismo con booleanos, !=.
-pista.de: || heißt «oder» (gilt auch, wenn beide an sind). Das «exklusive Oder» ist ^, bei booleans dasselbe wie !=.
-pista.en: || means "or" (also true when both are on). "Exclusive or" is ^, which for booleans is the same as !=.
+pista.de: || heißt „oder“ (gilt auch, wenn beide an sind). Das „exklusive Oder“ ist ^, bei booleans dasselbe wie !=.
+pista.en: || means “or” (also true when both are on). “Exclusive or” is ^, which for booleans is the same as !=.
 firma: static boolean unSoloEscudo(boolean delante, boolean detras)
 plantilla:
     return delante || detras;

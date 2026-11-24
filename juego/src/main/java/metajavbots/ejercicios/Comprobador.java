@@ -194,7 +194,7 @@ public final class Comprobador {
         }
         if (!impreso.isEmpty()) toda.append(impreso);
         if (lanzado instanceof TopeDeCalculo) {
-            return new Resultado(c, false, "⏱ demasiados pasos (¿un bucle que no acaba?)");
+            return new Resultado(c, false, "⏱ demasiados pasos de cálculo (¿un bucle que no acaba?)");
         }
         if (lanzado instanceof StackOverflowError) {
             return new Resultado(c, false, "⚠ StackOverflowError (¿una recursión sin caso base?)");
@@ -224,7 +224,7 @@ public final class Comprobador {
             esperado = m.invoke(null);
         } catch (InvocationTargetException ex) {
             if (ex.getCause() instanceof TopeDeCalculo) {
-                return new Resultado(c, false, "⏱ demasiados pasos (¿un bucle que no acaba?)");
+                return new Resultado(c, false, "⏱ demasiados pasos de cálculo (¿un bucle que no acaba?)");
             }
             return new Resultado(c, false, "⚠ el caso no se pudo evaluar: " + ex.getCause());
         } catch (Throwable ex) {

@@ -27,7 +27,7 @@ de: ist eins, und Java bringt viele in java.util.function mit. Predicate<T> antw
 de: damit legst du an einer Stelle fest, was „ein leichtes Ziel“ ist, und benutzt es überall.
 en: A lambda needs a functional interface: an interface with ONE single abstract method. Your Punteria is one,
 en: and Java ships plenty in java.util.function. Predicate<T> answers yes or no; with it you define what
-en: "an easy target" means in one place and use it everywhere else.
+en: “an easy target” means in one place and use it everywhere else.
 codigo:
     Predicate<Enemigo> facil = e -> e.blindaje() < 30 || Math.abs(e.velocidad()) < 1;
     Punteria directa = (yo, e) -> e.angulo();
@@ -137,7 +137,7 @@ de: Versuchst du zaehler++ mit einer lokalen Variablen im Lambda, sagt Java „m
 de: Der Grund: Das Lambda läuft vielleicht viel später, wenn es die Variable gar nicht mehr gibt.
 de: Nimm ein Feld oder einen Behälter wie int[] oder AtomicInteger.
 en: A lambda can use variables from outside, but only if they don't change (effectively final). Try
-en: counter++ inside a lambda on a local variable and Java says "must be final or effectively final".
+en: counter++ inside a lambda on a local variable and Java says “must be final or effectively final”.
 en: The reason: the lambda may run much later, when that variable no longer exists. Use a field
 en: or a holder like int[] or AtomicInteger.
 --- tarea

@@ -34,7 +34,7 @@ public final class PistolaDePegamento implements Aparato {
 }
 == de
 /**
- * KLEBEPISTOLE «Pegotón» — Schießt einen Klecks, der 220 weit fliegt
+ * KLEBEPISTOLE „Pegotón“ — Schießt einen Klecks, der 220 weit fliegt
  * (oder beim ersten Gegner auf der Linie landet): Wer hineinfährt,
  * kommt 8 Sekunden lang kaum vom Fleck.
  *
@@ -68,7 +68,7 @@ public final class Klebepistole implements Geraet {
 }
 == en
 /**
- * GLUEGUN «Pegotón» — Shoots a blob that lands 220 away (or on the
+ * GLUEGUN “Pegotón” — Shoots a blob that lands 220 away (or on the
  * first enemy in line): whoever steps in it can hardly move, for 8
  * seconds.
  *

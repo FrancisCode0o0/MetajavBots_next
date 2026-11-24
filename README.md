@@ -64,7 +64,7 @@ public class MiRobot extends Metajavbot {
 }
 ```
 
-**Qué hay**: 16 modelos de robot con su silueta y su personalidad; 236 piezas (armas láser, balas, misiles, cuerpo a cuerpo, lanzallamas, escudos, cabezas con radar y especiales, piernas, ruedas, orugas, alas, núcleos); 262 ejercicios que se comprueban solos (al estilo CodingBat y CodeStepByStep) y 70 lecciones en 22 temas de Java, de los primeros pasos a hilos, streams y diseño; 12 etiquetas (Noob, Junior y Senior I-IV) y una secreta; modo Historia con dos campañas largas con escenas ilustradas y dieciocho historias de combate; la computadora en cinco dificultades, adaptada a tu nivel; desafíos con modo azar, el desafío, battle royale, combate por equipos (con la computadora u otro jugador de compañero), máquina contra máquina (con la línea que se ejecuta a la vista), jefes por tema, tope de cálculo, depurador en vivo, laboratorio de pruebas, robots de otros jugadores y tu propio temario; estadísticas completas; todo en español, alemán e inglés.
+**Qué hay**: 16 modelos de robot con su silueta y su personalidad; 236 piezas (armas láser, balas, misiles, cuerpo a cuerpo, lanzallamas, escudos, cabezas con radar y especiales, piernas, ruedas, orugas, alas, núcleos); 262 ejercicios que se comprueban solos (al estilo CodingBat y CodeStepByStep) y 70 lecciones en 22 temas de Java, de los primeros pasos a hilos, streams y diseño; 12 etiquetas (Noob, Junior y Senior I–IV) y una secreta; modo Historia con dos campañas largas con escenas ilustradas y dieciocho historias de peleas; la computadora en cinco dificultades, adaptada a tu nivel; desafíos con modo azar, el desafío, battle royale, pelea por equipos (con la computadora u otro jugador de compañero), máquina contra máquina (con la línea que se ejecuta a la vista), jefes por tema, tope de cálculo, depurador en vivo, laboratorio de pruebas, robots de otros jugadores y tu propio temario; estadísticas completas; todo en español, alemán e inglés.
 
 **Cerebro de IA (opcional)**: el juego funciona entero sin IA. Si quieres, en *Ajustes › Cerebro de IA* puedes usar un modelo local con [KoboldCpp](https://github.com/LostRuins/koboldcpp) o uno en línea con tu propia clave (que se guarda fuera del juego). Con IA, los tutoriales son conversaciones, el código se revisa tras cada pelea y el temario se convierte en ejercicios. Más en [docs/CEREBRO.md](docs/CEREBRO.md).
 
@@ -92,7 +92,7 @@ MetajavBots es de **Francis García Reyes**. El código tiene licencia [Apache-2
 
 ## Deutsch
 
-Roboter, die in Java programmiert werden und in Runden kämpfen – um Java spielend zu lernen: von null bis Fortgeschritten. Im Stil von Robocode, mit eigenen Roboter-Designs, jeder mit seiner Persönlichkeit, und einem verrückten Roboter-Ansager.
+Roboter, die in Java programmiert werden und in Runden kämpfen – um Java spielend zu lernen: von absoluten Anfängern bis zu Fortgeschrittenen. Im Stil von Robocode, mit eigenen Roboter-Designs, jeder mit seiner Persönlichkeit, und einem verrückten Roboter-Ansager, der die Kämpfe kommentiert.
 
 **Herunterladen und spielen**
 
@@ -113,13 +113,13 @@ Deine Spielstände liegen im Ordner `MetajavBots` in deinem persönlichen Ordner
 
 1. **Installiere ein JDK 21 oder neuer** (z. B. [Eclipse Temurin](https://adoptium.net)). Ein JRE reicht nicht: Das Spiel kompiliert deinen Java-Code.
 2. **Hol dir den Code**: grüner Knopf **Code › Download ZIP** (und entpacken) oder `git clone https://github.com/FrancisCode0o0/MetajavBots_next.git`.
-3. **Starte das Spiel**: `jugar.bat` unter Windows, `./jugar.sh` unter Linux und Mac. **Beim ersten Mal dauert es ein paar Minuten und braucht Internet**: Gradle lädt die Bibliotheken herunter.
+3. **Starte das Spiel**: `jugar.bat` unter Windows, `./jugar.sh` unter Linux und Mac. **Beim ersten Mal dauert es ein paar Minuten und braucht Internet**: Gradle lädt die Bibliotheken herunter. So gestartet, liegen die Spielstände im Ordner des Codes (`partidas/`). Das spielfertige Paket erstellt man mit `gradlew lwjgl3:paqueteZip`.
 
 **So wird gespielt**
 
-1. Lege dein Spiel an. Wer noch nie programmiert hat, beginnt bei **Noob I**; sonst stuft dich ein kurzer Test ein.
-2. Wähle deinen ersten Roboter und geh in die **Werkstatt**: Dort ist sein Code. Ändere ihn, drück **Kompilieren** (Strg+S) und **ab in den Kampf!**
-3. Ein Kampf hat **mehrere Runden** zu je etwa 40 Sekunden: anfangs 6, und unter Herausforderungen wählst du 3, 4, 6, 10 oder 12 – wie beim Boxen. Zwischen den Runden kannst du Code und Teile ändern. **Es gewinnt, wer weniger Schaden eingesteckt hat**; am Ende explodiert der Verlierer.
+1. Lege deinen Spielstand an. Wer noch nie programmiert hat, beginnt bei **Noob I**; sonst stuft dich ein kurzer Test ein.
+2. Wähle deinen ersten Roboter und geh in die **Werkstatt**: Dort ist sein Code. Ändere ihn, drück **Kompilieren** (Strg+S) und **auf in den Kampf!**
+3. Ein Kampf hat **mehrere Runden** zu je etwa 40 Sekunden: anfangs 6, und unter Herausforderungen wählst du 3, 4, 6, 10 oder 12 – wie beim Boxen. Zwischen den Runden hält es an: Du liest den Bericht und änderst Code und Teile. **Es gewinnt, wer weniger Schaden eingesteckt hat**; am Ende explodiert der Verlierer.
 
 Dein Roboter ist eine Java-Klasse, die von `MetajavbotDe` erbt (Methoden auf Deutsch: `jedenZug()`, `beiSicht(Gegner g)`, `vorwaerts(…)`, `drehen(…)`, `zielenNach(…)`, `angreifen()`).
 
@@ -135,17 +135,17 @@ MetajavBots habe ich, Francis García Reyes, Informatikstudent im ersten Semeste
 
 **Werkzeuge**: Claude Code (Claude Opus und Fable), Google Antigravity (Gemini), OpenCode und GitHub Copilot; Gradle, libGDX, Checkstyle und GitHub Actions.
 
-**Qualitätsregeln**: Ein Commit nur mit `gradlew compileJava estilo pruebas:prueba` im grünen Bereich (Checkstyle ohne Warnungen und über 300 Tests ohne Fenster), was [GitHub Actions](.github/workflows/pruebas.yml) bei jedem Push wiederholt; Screenshots jedes Bildschirms in normaler und großer Schrift in allen drei Sprachen, geprüft vor dem Abschluss jedes Auftrags. Die Aufträge und die Berichte der Modelle liegen in [docs/proceso/](docs/proceso/).
+**Qualitätsregeln**: ein Commit nur mit `gradlew compileJava estilo pruebas:prueba` im grünen Bereich (Checkstyle ohne Warnungen und über 300 Tests ohne Fenster), was [GitHub Actions](.github/workflows/pruebas.yml) bei jedem Push wiederholt; Screenshots jedes Bildschirms in normaler und großer Schrift in allen drei Sprachen, geprüft vor dem Abschluss jedes Auftrags. Die Aufträge und die Berichte der Modelle liegen in [docs/proceso/](docs/proceso/).
 
-**Zitieren**: MetajavBots ist von **Francis García Reyes**. Code unter [Apache-2.0](LICENSE) (mit dem Hinweis aus [NOTICE](NOTICE)); Texte, Übungen, Tutorials, Dialoge und Grafik unter [CC BY 4.0](docs/LICENCIA_CONTENIDO.md).
+**Zitieren**: MetajavBots ist von **Francis García Reyes**. Code unter [Apache-2.0](LICENSE) (mit dem Hinweis aus [NOTICE](NOTICE)); Texte, Übungen, Tutorials, Dialoge und Grafik unter [CC BY 4.0](docs/LICENCIA_CONTENIDO.md). Wenn du es nutzt, zitiere es so:
 
-> García Reyes, Francis (2026). *MetajavBots: Java lernen mit programmierten Kampfrobotern.*
+> García Reyes, Francis (2026). *MetajavBots: Java lernen durch das Programmieren von Kampfrobotern.*
 
 ---
 
 ## English
 
-Robots you program in Java that fight in rounds – to learn Java by playing: from absolute zero to advanced. In the spirit of Robocode, with original robot designs, each with its own personality, and a crazy robot announcer.
+Robots you program in Java that fight in rounds—to learn Java by playing: from absolute zero to advanced. In the spirit of Robocode, with original robot designs, each with its own personality, and a crazy robot announcer who calls the fights.
 
 **Download and play**
 
@@ -158,21 +158,21 @@ No need to install Java or anything else: the game comes with its own Java.
 2. **Unzip it** (on Windows: right-click › *Extract All…*).
 3. Open the folder and **double-click MetajavBots** (`MetajavBots.exe` on Windows; on Linux, `MetajavBots/bin/MetajavBots`).
 
-**If Windows warns** that the app is unrecognized ("Windows protected your PC"), click **More info › Run anyway**. The warning appears because the game has no paid signature, not because anything is wrong with it. On a Mac, if it says the app cannot be verified, go to *System Settings › Privacy & Security* and click **Open Anyway**.
+**If Windows warns** that the app is unrecognized (“Windows protected your PC”), click **More info › Run anyway**. The warning appears because the game has no paid signature, not because anything is wrong with it. On a Mac, if it says the app cannot be verified, go to *System Settings › Privacy & Security* and click **Open Anyway**.
 
-Your saved games live in the `MetajavBots` folder in your home folder: you can delete the game or download a new version without losing them.
+Your saves live in the `MetajavBots` folder in your home folder: you can delete the game or download a new version without losing them.
 
 **For those who want to work on the code**:
 
-1. **Install a JDK 21 or newer** (e.g. [Eclipse Temurin](https://adoptium.net)). A JRE is not enough: the game compiles your Java code.
+1. **Install a JDK 21 or newer** (e.g., [Eclipse Temurin](https://adoptium.net)). A JRE is not enough: the game compiles your Java code.
 2. **Get the code**: green button **Code › Download ZIP** (and unzip it) or `git clone https://github.com/FrancisCode0o0/MetajavBots_next.git`.
-3. **Start the game**: `jugar.bat` on Windows, `./jugar.sh` on Linux and Mac. **The first time takes a few minutes and needs internet**: Gradle downloads the libraries.
+3. **Start the game**: `jugar.bat` on Windows, `./jugar.sh` on Linux and Mac. **The first time takes a few minutes and needs internet**: Gradle downloads the libraries. Started this way, your saves are stored in the code folder (`partidas/`). The ready-to-play package is built with `gradlew lwjgl3:paqueteZip`.
 
 **How to play**
 
-1. Create your game. If you have never programmed, you start at **Noob I**; otherwise a short test places you.
-2. Choose your first robot and go to the **Workshop**: its code is there. Change it, press **Compile** (Ctrl+S) and **fight!**
-3. A fight has **several rounds** of about 40 seconds: 6 by default, and under Challenges you pick 3, 4, 6, 10 or 12, like in boxing. Between rounds you can change the code and the parts. **Whoever took less damage wins**; at the end, the loser explodes.
+1. Create your save. If you have never programmed, you start at **Noob I**; otherwise a short test places you.
+2. Choose your first robot and go to the **Workshop**: its code is there. Change it, press **Compile** (Ctrl+S) and **let's fight!**
+3. A fight has **several rounds** of about 40 seconds: 6 by default, and under Challenges you pick 3, 4, 6, 10 or 12, like in boxing. Between rounds it pauses: you read the report and change the code and the parts. **Whoever took less damage wins**; at the end, the loser explodes.
 
 Your robot is a Java class extending `MetajavbotEn` (English methods: `onTick()`, `onSeeEnemy(Enemy e)`, `ahead(…)`, `turn(…)`, `aimTo(…)`, `attack()`).
 
@@ -188,8 +188,8 @@ MetajavBots was directed by me, Francis García Reyes, a first-semester computer
 
 **Tools**: Claude Code (Claude Opus and Fable), Google Antigravity (Gemini), OpenCode, and GitHub Copilot; Gradle, libGDX, Checkstyle, and GitHub Actions.
 
-**Quality rules**: a commit only with `gradlew compileJava estilo pruebas:prueba` green (Checkstyle with no warnings and 300+ headless tests), which [GitHub Actions](.github/workflows/pruebas.yml) repeats on every push; screenshots of every screen at normal and large font size in all three languages, reviewed before closing each work order. The work orders and the models' reports are in [docs/proceso/](docs/proceso/).
+**Quality rules**: commits only when `gradlew compileJava estilo pruebas:prueba` is green (Checkstyle with no warnings and 300+ headless tests), which [GitHub Actions](.github/workflows/pruebas.yml) repeats on every push; screenshots of every screen at normal and large font size in all three languages, reviewed before closing each work order. The work orders and the models' reports are in [docs/proceso/](docs/proceso/).
 
-**How to cite**: MetajavBots is by **Francis García Reyes**. Code under [Apache-2.0](LICENSE) (keep the [NOTICE](NOTICE)); texts, exercises, tutorials, dialogues and art under [CC BY 4.0](docs/LICENCIA_CONTENIDO.md).
+**How to cite**: MetajavBots is by **Francis García Reyes**. Code under [Apache-2.0](LICENSE) (keep the [NOTICE](NOTICE)); texts, exercises, tutorials, dialogues and art under [CC BY 4.0](docs/LICENCIA_CONTENIDO.md). If you use it, cite it like this:
 
 > García Reyes, Francis (2026). *MetajavBots: learning Java by programming fighting robots.*

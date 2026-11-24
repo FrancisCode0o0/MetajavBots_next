@@ -12,8 +12,8 @@ titulo.es: Hasta la bandera
 titulo.de: Bis zur Flagge
 titulo.en: Up to the flag
 enunciado.es: Tu robot está en x y la bandera en «bandera» (en la misma fila). avanzar() necesita saber cuánto: devuelve cuánto tiene que avanzar (en negativo, hacia atrás).
-enunciado.de: Dein Roboter steht bei x, die Flagge bei «bandera» (in derselben Reihe). vorwaerts() muss wissen, wie weit: Gib zurück, wie weit er fahren muss (negativ heißt rückwärts).
-enunciado.en: Your robot is at x and the flag at "bandera" (in the same row). ahead() needs to know how far: return how far it has to move (negative means backward).
+enunciado.de: Dein Roboter steht bei x, die Flagge bei „bandera“ (in derselben Reihe). vorwaerts() muss wissen, wie weit: Gib zurück, wie weit er fahren muss (negativ heißt rückwärts).
+enunciado.en: Your robot is at x and the flag at “bandera” (in the same row). ahead() needs to know how far: return how far it has to move (negative means backward).
 pista.es: Si la bandera está en 400 y tú en 100, ¿cuánto te falta? ¿Y si estás en 500?
 pista.de: Steht die Flagge bei 400 und du bei 100, wie viel fehlt dir? Und wenn du bei 500 stehst?
 pista.en: If the flag is at 400 and you're at 100, how far is left? And if you're at 500?
@@ -41,7 +41,7 @@ enunciado.es: El muñeco de prácticas está dx a la derecha y dy hacia arriba d
 enunciado.de: Die Übungspuppe steht dx rechts und dy oberhalb deines Roboters. Gib den Winkel zu ihr in ganzen Grad zurück (0 = rechts, 90 = oben, 180 = links, -90 = unten).
 enunciado.en: The training dummy is dx to the right and dy above your robot. Return the angle toward it in whole degrees (0 = right, 90 = up, 180 = left, -90 = down).
 pista.es: Math.atan2(dy, dx) da el ángulo en radianes (¡ojo al orden: primero dy!). ¿Qué método de Math pasa radianes a grados? Luego, redondea.
-pista.de: Math.atan2(dy, dx) liefert den Winkel im Bogenmaß (Achtung Reihenfolge: zuerst dy!). Welche Math-Methode macht daraus Grad? Dann runden.
+pista.de: Math.atan2(dy, dx) liefert den Winkel im Bogenmaß (Achtung, Reihenfolge: zuerst dy!). Welche Math-Methode macht daraus Grad? Dann runden.
 pista.en: Math.atan2(dy, dx) gives the angle in radians (mind the order: dy first!). Which Math method turns radians into degrees? Then round.
 firma: static int anguloHacia(int dx, int dy)
 plantilla:
@@ -62,13 +62,13 @@ java: 8
 tipo: metodo
 escena: giro
 titulo.es: Ángulos sin vueltas de más
-titulo.de: Winkel ohne Extrarunden
+titulo.de: Winkel ohne Extradrehungen
 titulo.en: Angles without extra spins
 enunciado.es: Un robot que gira 370° da una vuelta entera para nada. Devuelve el mismo ángulo entre -179 y 180 (370 → 10, 190 → -170, -190 → 170).
-enunciado.de: Ein Roboter, der sich um 370° dreht, macht eine ganze Runde umsonst. Gib denselben Winkel zwischen -179 und 180 zurück (370 → 10, 190 → -170, -190 → 170).
+enunciado.de: Ein Roboter, der sich um 370° dreht, macht eine ganze Umdrehung umsonst. Gib denselben Winkel zwischen -179 und 180 zurück (370 → 10, 190 → -170, -190 → 170).
 enunciado.en: A robot that turns 370° spins a whole circle for nothing. Return the same angle between -179 and 180 (370 → 10, 190 → -170, -190 → 170).
 pista.es: El resto (%) de dividir entre 360 quita las vueltas enteras. ¿Y qué haces si aún queda más de 180, o 180 o menos en negativo?
-pista.de: Der Rest (%) beim Teilen durch 360 entfernt die ganzen Runden. Und was tust du, wenn danach noch mehr als 180 übrig ist, oder -180 und weniger?
+pista.de: Der Rest (%) beim Teilen durch 360 entfernt die ganzen Umdrehungen. Und was tust du, wenn danach noch mehr als 180 übrig ist, oder -180 und weniger?
 pista.en: The remainder (%) of dividing by 360 removes whole turns. And what do you do if more than 180 is still left, or -180 and below?
 firma: static int normalizar(int grados)
 plantilla:
@@ -97,8 +97,8 @@ titulo.es: El giro más corto
 titulo.de: Die kürzeste Drehung
 titulo.en: The shortest turn
 enunciado.es: Tu robot mira hacia «rumbo» y el enemigo está hacia «haciaEnemigo» (los dos en grados, de 0 a 359). Devuelve cuánto girar por el camino más corto: positivo a la izquierda, negativo a la derecha, entre -179 y 180.
-enunciado.de: Dein Roboter schaut nach «rumbo», der Gegner steht in Richtung «haciaEnemigo» (beides in Grad, 0 bis 359). Gib zurück, wie weit du dich auf dem kürzesten Weg drehen musst: positiv nach links, negativ nach rechts, zwischen -179 und 180.
-enunciado.en: Your robot faces "rumbo" and the enemy is toward "haciaEnemigo" (both in degrees, 0 to 359). Return how far to turn the shortest way: positive to the left, negative to the right, between -179 and 180.
+enunciado.de: Dein Roboter schaut nach „rumbo“, der Gegner steht in Richtung „haciaEnemigo“ (beides in Grad, 0 bis 359). Gib zurück, wie weit du dich auf dem kürzesten Weg drehen musst: positiv nach links, negativ nach rechts, zwischen -179 und 180.
+enunciado.en: Your robot faces “rumbo” and the enemy is toward “haciaEnemigo” (both in degrees, 0 to 359). Return how far to turn the shortest way: positive to the left, negative to the right, between -179 and 180.
 pista.es: La diferencia es haciaEnemigo - rumbo. Pero de 350 a 10 no hay que girar -340… ¿qué ejercicio anterior te arregla eso?
 pista.de: Die Differenz ist haciaEnemigo - rumbo. Aber von 350 nach 10 dreht man nicht -340 … welche frühere Übung repariert das?
 pista.en: The difference is haciaEnemigo - rumbo. But from 350 to 10 you don't turn -340… which earlier exercise fixes that?
@@ -127,11 +127,11 @@ titulo.es: Dónde estará el rival
 titulo.de: Wo der Gegner sein wird
 titulo.en: Where the rival will be
 enunciado.es: Para acertar a un robot que se mueve hay que apuntar a donde estará. Está en x, avanza «velocidad» por turno y tu disparo tarda «turnos» en llegar: devuelve su x cuando llegue el disparo.
-enunciado.de: Um einen fahrenden Roboter zu treffen, zielst du dorthin, wo er sein wird. Er steht bei x, fährt «velocidad» pro Zug, und dein Schuss braucht «turnos» Züge: Gib sein x zurück, wenn der Schuss ankommt.
-enunciado.en: To hit a moving robot you aim where it will be. It's at x, moves "velocidad" per tick and your shot takes "turnos" ticks to arrive: return its x when the shot arrives.
+enunciado.de: Um einen fahrenden Roboter zu treffen, zielst du dorthin, wo er sein wird. Er steht bei x, fährt „velocidad“ pro Zug, und dein Schuss braucht „turnos“ Züge: Gib sein x zurück, wenn der Schuss ankommt.
+enunciado.en: To hit a moving robot you aim where it will be. It's at x, moves “velocidad” per tick and your shot takes “turnos” ticks to arrive: return its x when the shot arrives.
 pista.es: Cada turno se mueve «velocidad». En «turnos» turnos, ¿cuánto se ha movido en total? Súmalo a donde estaba.
-pista.de: Pro Zug bewegt er sich um «velocidad». Wie weit insgesamt in «turnos» Zügen? Addiere es zu seinem Startpunkt.
-pista.en: Each tick it moves "velocidad". How far in total after "turnos" ticks? Add it to where it was.
+pista.de: Pro Zug bewegt er sich um „velocidad“. Wie weit insgesamt in „turnos“ Zügen? Addiere es zu seinem Startpunkt.
+pista.en: Each tick it moves “velocidad”. How far in total after “turnos” ticks? Add it to where it was.
 firma: static int dondeEstara(int x, int velocidad, int turnos)
 plantilla:
     return x;
@@ -153,10 +153,10 @@ titulo.de: Greife ich jetzt an?
 titulo.en: Do I attack now?
 enunciado.es: Un brazo solo pega si está listo, si queda energía para su coste y si el enemigo está a su alcance. Devuelve si puede atacar.
 enunciado.de: Ein Arm schlägt nur zu, wenn er bereit ist, genug Energie für seine Kosten da ist und der Gegner in Reichweite ist. Gib zurück, ob er angreifen kann.
-enunciado.en: An arm only hits if it's ready, there's energy left for its cost and the enemy is within reach. Return whether it can attack.
-pista.es: Son tres condiciones que se tienen que cumplir a la vez. ¿Qué operador une «y»? ¿«energía justa» cuenta como suficiente?
+enunciado.en: An arm only hits if it's ready, there's energy left for its cost and the enemy is within range. Return whether it can attack.
+pista.es: Son tres condiciones que se tienen que cumplir a la vez. ¿Qué operador une «y»? ¿«Energía justa» cuenta como suficiente?
 pista.de: Drei Bedingungen müssen gleichzeitig stimmen. Welcher Operator heißt „und“? Zählt „genau genug Energie“ als genug?
-pista.en: Three conditions must all hold at once. Which operator means "and"? Does "exactly enough energy" count as enough?
+pista.en: Three conditions must all hold at once. Which operator means “and”? Does “exactly enough energy” count as enough?
 firma: static boolean puedeAtacar(boolean listo, double energia, double coste, double distancia, double alcance)
 plantilla:
     return listo;
@@ -179,7 +179,7 @@ titulo.de: Mit welchem Arm?
 titulo.en: Which arm?
 enunciado.es: Devuelve el brazo con el que pegar: el que llegue al enemigo; si llegan los dos, el de menos alcance (pega más fuerte de cerca); si ninguno, "ninguno". Los nombres: "izquierda", "derecha", "ninguno".
 enunciado.de: Gib den Arm zurück, mit dem du zuschlägst: den, der den Gegner erreicht; erreichen ihn beide, den mit weniger Reichweite (der schlägt aus der Nähe härter); keiner, dann "keiner". Die Namen: "links", "rechts", "keiner".
-enunciado.en: Return the arm to hit with: the one that reaches the enemy; if both do, the one with less reach (it hits harder up close); if neither, "none". The names: "left", "right", "none".
+enunciado.en: Return the arm to hit with: the one that reaches the enemy; if both do, the one with the shorter range (it hits harder up close); if neither, "none". The names: "left", "right", "none".
 pista.es: Primero guarda en dos boolean si llega cada brazo. Luego piensa los cuatro casos: los dos, solo uno, solo el otro, ninguno.
 pista.de: Speichere zuerst in zwei boolean, ob jeder Arm hinkommt. Dann denk an die vier Fälle: beide, nur einer, nur der andere, keiner.
 pista.en: First store in two booleans whether each arm reaches. Then think through the four cases: both, only one, only the other, neither.
@@ -244,7 +244,7 @@ titulo.es: Memoria entre rondas
 titulo.de: Gedächtnis zwischen den Runden
 titulo.en: Memory between rounds
 enunciado.es: memoria() es un Map que dura toda la pelea. Cada vez que el rival huye por la izquierda, súmale uno a la clave "izq" (empieza en 0 si no está) y devuelve cuántas veces lleva.
-enunciado.de: gedaechtnis() ist eine Map, die den ganzen Kampf hält. Jedes Mal, wenn der Gegner nach links flieht, erhöhe den Schlüssel "links" um eins (bei 0 anfangen, wenn er fehlt) und gib zurück, wie oft schon.
+enunciado.de: gedaechtnis() ist eine Map, die den ganzen Kampf über hält. Jedes Mal, wenn der Gegner nach links flieht, erhöhe den Schlüssel "links" um eins (bei 0 anfangen, wenn er fehlt) und gib zurück, wie oft schon.
 enunciado.en: memory() is a Map that lasts the whole fight. Each time the rival flees to the left, add one to the key "left" (start at 0 if missing) and return how many times so far.
 pista.es: getOrDefault te da el valor o uno por defecto. Y no olvides volver a guardarlo con put: si no, la memoria no se entera.
 pista.de: getOrDefault liefert den Wert oder einen Standardwert. Und vergiss nicht, ihn mit put wieder zu speichern, sonst merkt sich das Gedächtnis nichts.
@@ -282,7 +282,7 @@ enunciado.de: In der Arena tauchen Geräte auf. Heb eins nur auf, wenn du noch k
 enunciado.en: Gadgets appear in the arena. Pick one up only if you don't have one already, it's closer than 60 and it's round 2 or later (round 1 has none yet). Return whether you pick it up.
 pista.es: «No llevas ya uno» es lo contrario de yaTengoUno: ¿qué operador le da la vuelta a un boolean?
 pista.de: „Du hast noch keins“ ist das Gegenteil von yaTengoUno: Welcher Operator dreht ein boolean um?
-pista.en: "You don't have one already" is the opposite of yaTengoUno: which operator flips a boolean?
+pista.en: “You don't have one already” is the opposite of yaTengoUno: which operator flips a boolean?
 firma: static boolean usarAparato(double distancia, boolean yaTengoUno, int ronda)
 plantilla:
     return true;
@@ -304,8 +304,8 @@ titulo.es: Dos órdenes para la cabeza
 titulo.de: Zwei Befehle für den Kopf
 titulo.en: Two orders for the head
 enunciado.es: En el mismo turno, alVerEnemigo pide apuntar(primera) y después cadaTurno pide apuntar(segunda). La cabeza (la mira) solo recuerda la última orden y gira como mucho 14° por turno. Empieza mirando hacia «mira»: devuelve hacia dónde mira al acabar el turno.
-enunciado.de: Im selben Zug verlangt beiSicht zielen(primera) und danach jedenZug zielen(segunda). Der Kopf (das Visier) merkt sich nur den letzten Befehl und dreht sich höchstens 14° pro Zug. Er schaut am Anfang nach «mira»: Gib zurück, wohin er am Ende des Zugs schaut.
-enunciado.en: In the same tick, onSeeEnemy asks for aim(primera) and then onTick asks for aim(segunda). The head (the sight) remembers only the last order and turns at most 14° per tick. It starts looking toward "mira": return where it looks at the end of the tick.
+enunciado.de: Im selben Zug verlangt beiSicht zielen(primera) und danach jedenZug zielen(segunda). Der Kopf (das Visier) merkt sich nur den letzten Befehl und dreht sich höchstens 14° pro Zug. Er schaut am Anfang nach „mira“: Gib zurück, wohin er am Ende des Zugs schaut.
+enunciado.en: In the same tick, onSeeEnemy asks for aim(primera) and then onTick asks for aim(segunda). The head (the sight) remembers only the last order and turns at most 14° per tick. It starts looking toward “mira”: return where it looks at the end of the tick.
 pista.es: Primero piensa cuál de las dos órdenes manda. Después: si pide girar más de 14° (o menos de -14°), ¿cuánto gira de verdad en un turno?
 pista.de: Überleg zuerst, welcher der beiden Befehle zählt. Dann: Wenn er mehr als 14° (oder weniger als -14°) drehen soll, wie weit dreht er sich in einem Zug wirklich?
 pista.en: First think about which of the two orders wins. Then: if it asks to turn more than 14° (or less than -14°), how far does it really turn in one tick?

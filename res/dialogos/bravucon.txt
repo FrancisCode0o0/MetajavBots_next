@@ -49,7 +49,7 @@ de: Ein Hammerschlag aufs Haus!
 en: Complimentary hammer blow!
 
 es: ¡Ven aquí, que te doy un abrazo de hierro!
-de: Komm her, ich drück dich mit Eisen!
+de: Komm her, ich geb dir eine eiserne Umarmung!
 en: Come here, I'll give you an iron hug!
 
 es: ¡{arma}! ¡Al careto!
@@ -62,7 +62,7 @@ de: HA! Das hinterlässt Spuren!
 en: HA! That's gonna leave a mark!
 
 es: ¡Toc-toc! ¿Quién es? ¡{yo}, en tu cara!
-de: Klopf-klopf! Wer ist da? {yo}, in deinem Gesicht!
+de: Klopf-klopf! Wer ist da? {yo}, mitten ins Gesicht!
 en: Knock-knock! Who's there? {yo}, in your face!
 
 es: ¡Eso ha sonado a chatarra! ¡Me encanta ese sonido!
@@ -116,7 +116,7 @@ es: ¡Grrr! ¡Ahora es personal!
 de: Grrr! Jetzt ist es persönlich!
 en: Grrr! Now it's personal!
 
-es: ¡Buen golpe! ¡No se lo digas a nadie que lo he dicho!
+es: ¡Buen golpe! ¡No le digas a nadie que lo he dicho!
 de: Guter Schlag! Sag keinem, dass ich das gesagt hab!
 en: Good hit! Don't tell anyone I said that!
 
@@ -227,15 +227,15 @@ de: {jugador}, dein Code und meine Fäuste! Unschlagbar!
 en: {jugador}, your code and my fists! Unbeatable!
 
 [derrota]
-es: ¡Imposible! ¡{yo} nunca pierde! ¡{yo} solo... explota!
+es: ¡Imposible! ¡{yo} nunca pierde! ¡{yo} solo… explota!
 de: Unmöglich! {yo} verliert nie! {yo} … explodiert nur!
-en: Impossible! {yo} never loses! {yo} just... explodes!
+en: Impossible! {yo} never loses! {yo} just… explodes!
 
 es: ¡Esto no ha terminado! ¡Bueno, sí! ¡Pero volveré!
 de: Das ist noch nicht vorbei! Okay, doch! Aber ich komme wieder!
 en: This isn't over! Okay, it is! But I'll be back!
 
-es: ¡{jugador}! ¡Dile a todos que caí luchando!
+es: ¡{jugador}! ¡Diles a todos que caí luchando!
 de: {jugador}! Sag allen, ich bin kämpfend gefallen!
 en: {jugador}! Tell everyone I went down swinging!
 
@@ -367,9 +367,9 @@ de: Ahh! Jetzt seh ich wieder gut aus!
 en: Ahh! Looking handsome again!
 
 [especial]
-es: ¡¡MARTILLAZO DEFINITIVO!!
-de: ULTIMATIVER HAMMERSCHLAG!!
-en: ULTIMATE HAMMER SMASH!!
+es: ¡MARTILLAZO DEFINITIVO!
+de: ULTIMATIVER HAMMERSCHLAG!
+en: ULTIMATE HAMMER SMASH!
 
 es: ¡Agárrate, {rival}! ¡Esto va a doler en tres idiomas!
 de: Halt dich fest, {rival}! Das tut in drei Sprachen weh!

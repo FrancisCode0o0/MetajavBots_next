@@ -14,7 +14,7 @@ de: was in den Klammern steht; sonst überspringt er es. Mit else sagst du ihm, 
 de: Zum ersten Mal „denkt“ dein Roboter wirklich, wenn auch nur ein bisschen.
 en: Until now the robot always did the same thing. With if it decides: if the condition is true, it does what's
 en: inside the braces; if not, it skips it. And with else you tell it what to do otherwise.
-en: It's the first time your robot really "thinks", even if only a little.
+en: It's the first time your robot really “thinks”, even if only a little.
 codigo:
     @Override
     public void alVerEnemigo(Enemigo e) {
@@ -40,15 +40,15 @@ en: ends the if right there and the braces run ALWAYS. Number two: if (x = 5) in
 en: And a tip: always use braces, even for a single line. One day you'll add a second line
 en: and wonder why it runs when it shouldn't.
 --- pagina
-es: Ahora puedes arreglar el radar. Antes, cadaTurno giraba la mira siempre, incluso con el enemigo delante.
+es: Ahora puedes arreglar el radar. Antes, cadaTurno giraba la mira siempre, incluso con el rival delante.
 es: Guarda en un campo el turno en que lo viste por última vez, y solo barre la arena si hace rato que no lo ves.
 es: Así la mira se queda clavada en el rival en lugar de pasarle de largo.
 de: Jetzt kannst du das Radar reparieren. Bisher drehte jedenZug das Visier immer, selbst mit dem Gegner vor
 de: dir. Merk dir in einem Feld den Zug, in dem du ihn zuletzt gesehen hast, und such nur, wenn das schon
 de: eine Weile her ist. So bleibt das Visier am Gegner kleben, statt an ihm vorbeizuschwenken.
-en: Now you can fix the radar. Before, onTick always turned the aim, even with the enemy right in front.
-en: Store in a field the turn you last saw it, and only sweep the arena if it's been a while.
-en: That way the aim stays locked on the rival instead of sliding past it.
+en: Now you can fix the radar. Before, onTick always turned the sight, even with the rival right in front.
+en: Store in a field the tick you last saw it in, and only sweep the arena if it's been a while.
+en: That way the sight stays locked on the rival instead of sliding past it.
 codigo:
     int ultimaVez = -100;
     @Override
@@ -75,7 +75,7 @@ en: With a radar that stays locked and an if that only attacks in range, hit the
 --- tarea
 ejercicio: t04_puede_disparar
 es: ¿Puede disparar el láser? Depende de varias cosas a la vez: decídelo con if.
-de: Kann der Laser feuern? Das hängt von mehreren Dingen ab: Entscheide es mit if.
+de: Kann der Laser feuern? Das hängt von mehreren Dingen gleichzeitig ab: Entscheide es mit if.
 en: Can the laser fire? It depends on several things at once: decide it with if.
 
 === l04_cadena_de_decisiones
@@ -94,7 +94,7 @@ de: aus, die zutrifft. Darum zählt die Reihenfolge. Fragst du zuerst „Panzeru
 de: kommt die zweite nie dran: Ein Roboter mit 10 ist längst durch die erste Tür gegangen.
 de: Faustregel: Das Speziellste (oder Dringendste) kommt zuerst.
 en: With else if you chain several questions: Java checks them top to bottom and runs ONLY the first one
-en: that holds. That's why order matters. If you ask "armor < 70?" first and "armor < 25?" second, the
+en: that holds. That's why order matters. If you ask “armor < 70?” first and “armor < 25?” second, the
 en: second one never gets a turn: any robot on 10 already went through the first door. Rule of thumb: the
 en: most specific (or most urgent) case goes first.
 codigo:
@@ -126,7 +126,7 @@ codigo:
 robot: dano<=40
 es: Decide con else if según tu blindaje y esquiva de lado al recibir golpes: termina la ronda con 40 de
 es: daño o menos.
-de: Entscheide mit else if nach deiner Panzerung und weich seitlich aus: höchstens 40 Schaden in der Runde.
+de: Entscheide mit else if nach deiner Panzerung und weich bei Treffern seitlich aus: höchstens 40 Schaden in der Runde.
 en: Decide with else if based on your armor and dodge sideways when hit: end the round with 40 damage or less.
 --- tarea
 ejercicio: t04_nivel_de_alarma
@@ -148,7 +148,7 @@ de: Vergleichst du eine Sache mit vielen festen Werten, liest sich switch besser
 de: Der klassische switch hat eine berühmte Falle: Vergisst du break, „fällt“ Java in den nächsten Fall
 de: und führt dessen Code auch aus. Manchmal gewollt, fast immer ein Versehen.
 en: When you compare one thing against many specific values, a switch reads better than ten else ifs.
-en: The classic switch has a famous trap: forget break and Java "falls through" to the next case
+en: The classic switch has a famous trap: forget break and Java “falls through” to the next case
 en: and runs its code too. Sometimes that's what you want; almost always it's a slip.
 codigo:
     @Override
@@ -170,7 +170,7 @@ es: Y además puede DEVOLVER un valor (expresión switch), así que eliges un n�
 es: Puedes juntar varios casos con comas. Si te falta algún caso, el default lo cubre.
 de: Seit Java 14 gibt es switch mit Pfeilen: case "laser" -> ...; ohne break und ohne Durchfallen. Außerdem
 de: kann er einen Wert ZURÜCKGEBEN (switch-Ausdruck), du wählst also eine Zahl in einer einzigen Anweisung.
-de: Mehrere Fälle trennst du mit Kommas. Fehlt einer, fängt default ihn auf.
+de: Mehrere Fälle fasst du mit Kommas zusammen. Fehlt einer, fängt default ihn auf.
 en: Since Java 14 there's a switch with arrows: case "laser" -> ...; no break and no falling through.
 en: It can also RETURN a value (a switch expression), so you choose a number in a single statement.
 en: You can group several cases with commas. If a case is missing, default covers it.

@@ -10,10 +10,10 @@
 
 [compiler.err.expected]
 noob.es = Falta algo que Java esperaba aquí, casi siempre un «;» al final de la línea o un paréntesis. Mira justo antes de la marca roja: «avanzar(50)» debe ser «avanzar(50);».
-noob.de = Hier fehlt etwas, das Java erwartet hat, meistens ein „;“ am Zeilenende oder eine Klammer. Schau direkt vor die rote Markierung: aus „vorwaerts(50)“ wird „vorwaerts(50);“.
-noob.en = Java expected something here, usually a ";" at the end of the line or a bracket. Look just before the red mark: "ahead(50)" must be "ahead(50);".
+noob.de = Hier fehlt etwas, das Java erwartet hat, meistens ein „;“ am Zeilenende oder eine Klammer. Schau direkt vor die rote Markierung: Aus „vorwaerts(50)“ wird „vorwaerts(50);“.
+noob.en = Java expected something here, usually a “;” at the end of the line or a parenthesis. Look just before the red mark: “ahead(50)” must be “ahead(50);”.
 junior.es = Error de sintaxis: falta un símbolo ({msg}). Revisa el final de la línea {linea} y el de la anterior.
-junior.de = Syntaxfehler: ein Zeichen fehlt ({msg}). Prüfe das Ende von Zeile {linea} und der Zeile davor.
+junior.de = Syntaxfehler: Ein Zeichen fehlt ({msg}). Prüfe das Ende von Zeile {linea} und der Zeile davor.
 junior.en = Syntax error: a symbol is missing ({msg}). Check the end of line {linea} and of the line before.
 senior.es = Sintaxis: {msg}
 senior.de = Syntax: {msg}
@@ -21,11 +21,11 @@ senior.en = Syntax: {msg}
 
 [compiler.err.expected2]
 noob.es = Java esperaba una de dos cosas ({msg}). Suele faltar una coma entre argumentos o cerrar un paréntesis: «girar(10 20)» debe ser «girar(10, 20)» o «girar(10)».
-noob.de = Java hat eins von zwei Zeichen erwartet ({msg}). Meist fehlt ein Komma zwischen Argumenten oder eine schließende Klammer: aus „f(10 20)“ wird „f(10, 20)“.
-noob.en = Java expected one of two things ({msg}). Usually a comma between arguments or a closing bracket is missing: "f(10 20)" must be "f(10, 20)".
+noob.de = Java hat eins von zwei Zeichen erwartet ({msg}). Meist fehlt ein Komma zwischen Argumenten oder eine schließende Klammer: Aus „drehen(10 20)“ wird „drehen(10, 20)“ oder „drehen(10)“.
+noob.en = Java expected one of two things ({msg}). Usually a comma between arguments or a closing parenthesis is missing: “turn(10 20)” must be “turn(10, 20)” or “turn(10)”.
 junior.es = Sintaxis incompleta: {msg}. Revisa comas y paréntesis en la línea {linea}.
 junior.de = Unvollständige Syntax: {msg}. Prüfe Kommas und Klammern in Zeile {linea}.
-junior.en = Incomplete syntax: {msg}. Check commas and brackets on line {linea}.
+junior.en = Incomplete syntax: {msg}. Check commas and parentheses on line {linea}.
 senior.es = Sintaxis: {msg}
 senior.de = Syntax: {msg}
 senior.en = Syntax: {msg}
@@ -33,7 +33,7 @@ senior.en = Syntax: {msg}
 [compiler.err.expected3]
 noob.es = Java esperaba uno de varios símbolos ({msg}) y encontró otra cosa. Mira la palabra marcada: quizá sobra, o falta un «;», una «,» o un paréntesis justo antes.
 noob.de = Java hat eins von mehreren Zeichen erwartet ({msg}) und etwas anderes gefunden. Schau dir das markierte Wort an: Vielleicht ist es zu viel, oder davor fehlt „;“, „,“ oder eine Klammer.
-noob.en = Java expected one of several symbols ({msg}) and found something else. Look at the marked word: maybe it doesn't belong there, or a ";", "," or bracket is missing just before.
+noob.en = Java expected one of several symbols ({msg}) and found something else. Look at the marked word: maybe it doesn't belong there, or a “;”, “,” or parenthesis is missing just before.
 junior.es = Sintaxis: {msg}. El fallo suele estar justo antes de la marca, en la línea {linea}.
 junior.de = Syntax: {msg}. Der Fehler steht meist direkt vor der Markierung, in Zeile {linea}.
 junior.en = Syntax: {msg}. The mistake is usually right before the mark, on line {linea}.
@@ -44,7 +44,7 @@ senior.en = Syntax: {msg}
 [compiler.err.expected4]
 noob.es = Java esperaba otra cosa en este punto ({msg}). Fíjate en lo que hay justo antes de la marca: suele faltar un «;», una llave o un nombre.
 noob.de = Java hat hier etwas anderes erwartet ({msg}). Schau direkt vor die Markierung: Meist fehlt ein „;“, eine geschweifte Klammer oder ein Name.
-noob.en = Java expected something else at this point ({msg}). Look right before the mark: usually a ";", a curly brace or a name is missing.
+noob.en = Java expected something else at this point ({msg}). Look right before the mark: usually a “;”, a curly brace or a name is missing.
 junior.es = Sintaxis: {msg} (línea {linea}).
 junior.de = Syntax: {msg} (Zeile {linea}).
 junior.en = Syntax: {msg} (line {linea}).
@@ -55,7 +55,7 @@ senior.en = Syntax: {msg}
 [compiler.err.not.stmt]
 noob.es = Esta línea calcula algo pero no hace nada con ello. «x + 1;» no guarda el resultado: escribe «x = x + 1;» o «x++;». Si comparabas con «==», quizá querías «=».
 noob.de = Diese Zeile rechnet etwas aus, macht aber nichts damit. „x + 1;“ speichert nichts: Schreib „x = x + 1;“ oder „x++;“. Bei „==“ meintest du vielleicht „=“.
-noob.en = This line computes something but does nothing with it. "x + 1;" doesn't store the result: write "x = x + 1;" or "x++;". If you used "==", maybe you meant "=".
+noob.en = This line computes something but does nothing with it. “x + 1;” doesn't store the result: write “x = x + 1;” or “x++;”. If you used “==”, maybe you meant “=”.
 junior.es = No es una sentencia: una expresión suelta no vale; asígnala, llámala como método o bórrala.
 junior.de = Keine Anweisung: Ein loser Ausdruck reicht nicht; weise ihn zu, ruf eine Methode auf oder lösch ihn.
 junior.en = Not a statement: a bare expression isn't allowed; assign it, call a method, or remove it.
@@ -66,7 +66,7 @@ senior.en = Expression with no effect used as a statement.
 [compiler.err.illegal.start.of.expr]
 noob.es = Aquí debería empezar un valor y hay otra cosa. Causas típicas: «int x = ;» (falta el valor), «public» dentro de un método, «=>» en vez de «>=», o una llave «}» que falta más arriba.
 noob.de = Hier sollte ein Wert beginnen, aber da steht etwas anderes. Typisch: „int x = ;“ (Wert fehlt), „public“ in einer Methode, „=>“ statt „>=“ oder eine fehlende „}“ weiter oben.
-noob.en = A value should start here, but there's something else. Typical causes: "int x = ;" (missing value), "public" inside a method, "=>" instead of ">=", or a missing "}" further up.
+noob.en = A value should start here, but there's something else. Typical causes: “int x = ;” (missing value), “public” inside a method, “=>” instead of “>=”, or a missing “}” further up.
 junior.es = Inicio de expresión no válido. Revisa operadores, modificadores dentro de métodos y llaves sin cerrar antes de la línea {linea}.
 junior.de = Ungültiger Ausdrucksbeginn. Prüfe Operatoren, Modifizierer in Methoden und offene Klammern vor Zeile {linea}.
 junior.en = Illegal start of expression. Check operators, modifiers inside methods and unclosed braces before line {linea}.
@@ -77,9 +77,9 @@ senior.en = Illegal start of expression; likely an unbalanced brace earlier.
 [compiler.err.illegal.start.of.type]
 noob.es = Java esperaba un tipo (como int, String o el nombre de una clase) y encontró otra cosa. Suele pasar si hay código suelto fuera de un método: las órdenes van dentro de «public void cadaTurno() { … }».
 noob.de = Java hat einen Typ erwartet (wie int, String oder einen Klassennamen) und etwas anderes gefunden. Das passiert oft, wenn Code außerhalb einer Methode steht: Befehle gehören in „public void jedenZug() { … }“.
-noob.en = Java expected a type (like int, String or a class name) and found something else. This often happens when code sits outside a method: commands go inside "public void onTick() { … }".
+noob.en = Java expected a type (like int, String or a class name) and found something else. This often happens when code sits outside a method: orders go inside “public void onTick() { … }”.
 junior.es = Inicio de tipo ilegal: hay una sentencia donde solo caben declaraciones (cuerpo de la clase) o un tipo mal escrito.
-junior.de = Ungültiger Typbeginn: eine Anweisung steht, wo nur Deklarationen erlaubt sind (Klassenrumpf), oder ein Typ ist falsch geschrieben.
+junior.de = Ungültiger Typbeginn: Eine Anweisung steht, wo nur Deklarationen erlaubt sind (Klassenrumpf), oder ein Typ ist falsch geschrieben.
 junior.en = Illegal start of type: a statement where only declarations fit (class body), or a misspelled type.
 senior.es = Se esperaba un tipo: {msg}
 senior.de = Typ erwartet: {msg}
@@ -88,7 +88,7 @@ senior.en = Type expected: {msg}
 [compiler.err.class.method.or.field.expected]
 noob.es = Hay algo fuera de la clase. Casi siempre sobra una «}» que cerró la clase antes de tiempo, o hay código después de la última «}». Cuenta las llaves: cada «{» necesita su «}».
 noob.de = Etwas steht außerhalb der Klasse. Meist schließt eine „}“ zu viel die Klasse zu früh, oder nach der letzten „}“ kommt noch Code. Zähl die Klammern: Jede „{“ braucht ihre „}“.
-noob.en = Something is outside the class. Usually an extra "}" closed the class too early, or there's code after the last "}". Count your braces: every "{" needs its "}".
+noob.en = Something is outside the class. Usually an extra “}” closed the class too early, or there's code after the last “}”. Count your braces: every “{” needs its “}”.
 junior.es = Se esperaba una clase, un método o un campo: sobra una llave o hay código fuera de la clase (línea {linea}).
 junior.de = Klasse, Methode oder Feld erwartet: eine Klammer zu viel oder Code außerhalb der Klasse (Zeile {linea}).
 junior.en = Class, method or field expected: an extra brace or code outside the class (line {linea}).
@@ -99,9 +99,9 @@ senior.en = Declaration outside the class; unbalanced braces.
 [compiler.err.statement.not.expected]
 noob.es = Esta orden está suelta dentro de la clase, fuera de cualquier método. Las órdenes (como «return» o «avanzar(50);») tienen que ir dentro de las llaves de un método.
 noob.de = Dieser Befehl steht lose in der Klasse, außerhalb jeder Methode. Befehle (wie „return“ oder „vorwaerts(50);“) müssen in die geschweiften Klammern einer Methode.
-noob.en = This command is loose inside the class, outside any method. Commands (like "return" or "ahead(50);") must go inside the braces of a method.
+noob.en = This order is loose inside the class, outside any method. Orders (like “return” or “ahead(50);”) must go inside the braces of a method.
 junior.es = Sentencia en el cuerpo de la clase: muévela a un método o a un constructor.
-junior.de = Anweisung im Klassenrumpf: verschieb sie in eine Methode oder einen Konstruktor.
+junior.de = Anweisung im Klassenrumpf: Verschieb sie in eine Methode oder einen Konstruktor.
 junior.en = Statement in the class body: move it into a method or a constructor.
 senior.es = Sentencia fuera de un método.
 senior.de = Anweisung außerhalb einer Methode.
@@ -109,10 +109,10 @@ senior.en = Statement outside a method.
 
 [compiler.err.premature.eof]
 noob.es = El archivo se acaba y aún quedan llaves abiertas. Falta al menos una «}» al final. Cuenta: cada «{» de clase, método, if o bucle necesita su «}». Pulsa en una llave para ver su pareja.
-noob.de = Die Datei endet, aber es sind noch Klammern offen. Am Ende fehlt mindestens eine „}“. Zähl nach: Jede „{“ von Klasse, Methode, if oder Schleife braucht ihre „}“.
-noob.en = The file ends while braces are still open. At least one "}" is missing at the end. Count: every "{" of a class, method, if or loop needs its "}".
+noob.de = Die Datei endet, aber es sind noch Klammern offen. Am Ende fehlt mindestens eine „}“. Zähl nach: Jede „{“ von Klasse, Methode, if oder Schleife braucht ihre „}“. Klick auf eine Klammer, um ihr Gegenstück zu sehen.
+noob.en = The file ends while braces are still open. At least one “}” is missing at the end. Count: every “{” of a class, method, if or loop needs its “}”. Click a brace to see its match.
 junior.es = Fin de archivo inesperado: falta cerrar un bloque, un texto o un comentario.
-junior.de = Unerwartetes Dateiende: ein Block, ein Text oder ein Kommentar ist nicht geschlossen.
+junior.de = Unerwartetes Dateiende: Ein Block, ein Text oder ein Kommentar ist nicht geschlossen.
 junior.en = Unexpected end of file: a block, string or comment is not closed.
 senior.es = EOF prematuro: bloque sin cerrar.
 senior.de = Vorzeitiges Dateiende: Block nicht geschlossen.
@@ -121,10 +121,10 @@ senior.en = Premature EOF: unclosed block.
 [compiler.err.unclosed.str.lit]
 noob.es = Un texto empieza con comillas «"» y no se cierra en la misma línea. Pon la comilla de cierre: «decir("¡Hola!");». Un texto normal no puede seguir en la línea siguiente.
 noob.de = Ein Text beginnt mit Anführungszeichen „"“ und wird in derselben Zeile nicht geschlossen. Setz das schließende Zeichen: „sagen("Hallo!");“. Ein normaler Text darf nicht in die nächste Zeile gehen.
-noob.en = A string starts with a quote (") and isn't closed on the same line. Add the closing quote: "say("Hi!");". A normal string can't continue on the next line.
+noob.en = A string starts with a quote (") and isn't closed on the same line. Add the closing quote: “say("Hi!");”. A normal string can't continue on the next line.
 junior.es = Literal de texto sin cerrar en la línea {linea}. Para varias líneas usa «+» o un bloque de texto («"""», Java 15).
-junior.de = Nicht geschlossenes Stringliteral in Zeile {linea}. Für mehrere Zeilen nimm „+“ oder einen Textblock („"""“, Java 15).
-junior.en = Unclosed string literal on line {linea}. For several lines use "+" or a text block ("""", Java 15).
+junior.de = Nicht geschlossenes String-Literal in Zeile {linea}. Für mehrere Zeilen nimm „+“ oder einen Textblock („"""“, Java 15).
+junior.en = Unclosed string literal on line {linea}. For several lines use “+” or a text block (“"""”, Java 15).
 senior.es = Literal String sin cerrar.
 senior.de = String-Literal nicht geschlossen.
 senior.en = Unclosed string literal.
@@ -134,7 +134,7 @@ noob.es = Las comillas simples «'» son para UNA sola letra: 'a'. Para palabras
 noob.de = Einfache Anführungszeichen „'“ sind für EIN Zeichen: 'a'. Für Wörter nimm doppelte: „"hallo"“ statt „'hallo'“. Prüf auch, dass das Zeichen geschlossen ist: 'x'.
 noob.en = Single quotes (') are for ONE character: 'a'. For words use double quotes: "hello" instead of 'hello'. Also check the character is closed: 'x'.
 junior.es = Literal char sin cerrar: un char lleva un solo carácter entre comillas simples; los textos van entre dobles.
-junior.de = Char-Literal nicht geschlossen: ein char ist genau ein Zeichen in einfachen Anführungszeichen; Texte in doppelten.
+junior.de = Char-Literal nicht geschlossen: Ein char ist genau ein Zeichen in einfachen Anführungszeichen; Texte in doppelten.
 junior.en = Unclosed char literal: a char is exactly one character in single quotes; strings use double quotes.
 senior.es = Literal char sin cerrar (¿querías un String?).
 senior.de = Char-Literal nicht geschlossen (String gemeint?).
@@ -145,7 +145,7 @@ noob.es = Has escrito dos comillas simples sin nada dentro: ''. Un char necesita
 noob.de = Du hast zwei einfache Anführungszeichen ohne Inhalt geschrieben: ''. Ein char braucht genau ein Zeichen, zum Beispiel ' ' (Leerzeichen). Für einen leeren Text nimm "".
 noob.en = You wrote two single quotes with nothing inside: ''. A char needs exactly one character, for example ' ' (a space). For an empty string, use "".
 junior.es = Literal char vacío: no existe el char vacío; usa ' ' o el String "".
-junior.de = Leeres Char-Literal: es gibt kein leeres char; nimm ' ' oder den String "".
+junior.de = Leeres Char-Literal: Es gibt kein leeres char; nimm ' ' oder den String "".
 junior.en = Empty char literal: there's no empty char; use ' ' or the String "".
 senior.es = Literal char vacío.
 senior.de = Leeres Char-Literal.
@@ -154,9 +154,9 @@ senior.en = Empty char literal.
 [compiler.err.illegal.line.end.in.char.lit]
 noob.es = Un carácter empieza con «'» y la línea termina sin cerrarlo. Escribe el carácter completo, como 'a', o usa comillas dobles si es un texto.
 noob.de = Ein Zeichen beginnt mit „'“ und die Zeile endet, ohne es zu schließen. Schreib das Zeichen vollständig, etwa 'a', oder nimm doppelte Anführungszeichen für Text.
-noob.en = A character starts with "'" and the line ends without closing it. Write the whole character, like 'a', or use double quotes for text.
+noob.en = A character starts with “'” and the line ends without closing it. Write the whole character, like 'a', or use double quotes for text.
 junior.es = Fin de línea dentro de un literal char: cierra la comilla simple.
-junior.de = Zeilenende in einem Char-Literal: schließ das einfache Anführungszeichen.
+junior.de = Zeilenende in einem Char-Literal: Schließ das einfache Anführungszeichen.
 junior.en = Line end inside a char literal: close the single quote.
 senior.es = Fin de línea en literal char.
 senior.de = Zeilenende im Char-Literal.
@@ -165,10 +165,10 @@ senior.en = Line end in char literal.
 [compiler.err.unclosed.comment]
 noob.es = Un comentario empieza con «/*» y nunca se cierra con «*/». Todo lo que va detrás se ha vuelto comentario. Añade «*/» donde acaba tu nota.
 noob.de = Ein Kommentar beginnt mit „/*“ und wird nie mit „*/“ geschlossen. Alles danach ist jetzt Kommentar. Setz „*/“ dort, wo deine Notiz endet.
-noob.en = A comment starts with "/*" and is never closed with "*/". Everything after it has become a comment. Add "*/" where your note ends.
+noob.en = A comment starts with “/*” and is never closed with “*/”. Everything after it has become a comment. Add “*/” where your note ends.
 junior.es = Comentario de bloque sin cerrar: falta «*/». Para una sola línea usa «//».
 junior.de = Blockkommentar nicht geschlossen: „*/“ fehlt. Für eine Zeile nimm „//“.
-junior.en = Unclosed block comment: "*/" is missing. For a single line use "//".
+junior.en = Unclosed block comment: “*/” is missing. For a single line use “//”.
 senior.es = Comentario sin cerrar.
 senior.de = Kommentar nicht geschlossen.
 senior.en = Unclosed comment.
@@ -176,7 +176,7 @@ senior.en = Unclosed comment.
 [compiler.err.illegal.char]
 noob.es = Hay un carácter que Java no entiende ({msg}). Suelen ser comillas tipográficas “ ” copiadas de una web, un «#» o un espacio raro. Bórralo y escríbelo a mano: usa " para los textos.
 noob.de = Hier steht ein Zeichen, das Java nicht kennt ({msg}). Oft sind es typografische Anführungszeichen “ ” aus dem Web, ein „#“ oder ein seltsames Leerzeichen. Lösch es und tipp es neu: " für Texte.
-noob.en = There's a character Java doesn't understand ({msg}). Often it's curly quotes “ ” copied from a website, a "#" or an odd space. Delete it and type it again: use " for strings.
+noob.en = There's a character Java doesn't understand ({msg}). Often it's curly quotes “ ” copied from a website, a “#” or an odd space. Delete it and type it again: use " for strings.
 junior.es = Carácter ilegal en el código fuente: {msg}. Revisa comillas tipográficas y espacios no separables.
 junior.de = Ungültiges Zeichen im Quelltext: {msg}. Prüf typografische Anführungszeichen und geschützte Leerzeichen.
 junior.en = Illegal character in source: {msg}. Check for curly quotes and non-breaking spaces.
@@ -187,7 +187,7 @@ senior.en = Illegal character: {msg}
 [compiler.err.illegal.esc.char]
 noob.es = Dentro de un texto, la barra «\» empieza un código especial: \n es salto de línea, \t tabulador. «\d» o «\s» no existen. Si quieres una barra de verdad, escribe dos: "\\d".
 noob.de = In einem Text beginnt „\“ einen Sondercode: \n ist ein Zeilenumbruch, \t ein Tabulator. „\d“ oder „\s“ gibt es nicht. Für einen echten Backslash schreib zwei: "\\d".
-noob.en = Inside a string, the backslash "\" starts a special code: \n is a new line, \t a tab. "\d" or "\s" don't exist. For a real backslash write two: "\\d".
+noob.en = Inside a string, the backslash “\” starts a special code: \n is a new line, \t a tab. “\d” or “\s” don't exist. For a real backslash write two: "\\d".
 junior.es = Secuencia de escape ilegal. En expresiones regulares duplica la barra: "\\s+".
 junior.de = Ungültige Escape-Sequenz. In regulären Ausdrücken den Backslash verdoppeln: "\\s+".
 junior.en = Illegal escape sequence. In regular expressions double the backslash: "\\s+".
@@ -201,8 +201,8 @@ noob.de = Ein Textblock beginnt mit drei Anführungszeichen """ und danach MUSS 
 noob.en = A text block starts with three quotes """ and then MUST break the line. Put the text on the lines below and close with """.
 junior.es = Tras la apertura «"""» de un bloque de texto solo puede venir un salto de línea (Java 15).
 junior.de = Nach dem öffnenden „"""“ eines Textblocks darf nur ein Zeilenumbruch kommen (Java 15).
-junior.en = After the opening """ of a text block only a line break may follow (Java 15).
-senior.es = Apertura de text block sin salto de línea.
+junior.en = After the opening “"""” of a text block only a line break may follow (Java 15).
+senior.es = Apertura de bloque de texto sin salto de línea.
 senior.de = Textblock-Öffnung ohne Zeilenumbruch.
 senior.en = Text block opening without line break.
 
@@ -211,16 +211,16 @@ noob.es = Un bloque de texto que empieza con tres comillas (""") no se cierra nu
 noob.de = Ein Textblock mit """ wird nie geschlossen. Setz drei weitere Anführungszeichen """ dorthin, wo der Text endet.
 noob.en = A text block started with """ is never closed. Add three more quotes """ where the text ends.
 junior.es = Bloque de texto sin cerrar: falta el «"""» final.
-junior.de = Textblock nicht geschlossen: das abschließende „"""“ fehlt.
-junior.en = Unclosed text block: the closing """ is missing.
-senior.es = Text block sin cerrar.
+junior.de = Textblock nicht geschlossen: Das abschließende „"""“ fehlt.
+junior.en = Unclosed text block: the closing “"""” is missing.
+senior.es = Bloque de texto sin cerrar.
 senior.de = Textblock nicht geschlossen.
 senior.en = Unclosed text block.
 
 [compiler.err.int.number.too.large]
 noob.es = Este número es demasiado grande para un int (el máximo es 2147483647). Si de verdad lo necesitas, ponle una L al final y usa long: «long grande = 3000000000L;».
 noob.de = Diese Zahl ist zu groß für einen int (höchstens 2147483647). Wenn du sie wirklich brauchst, häng ein L an und nimm long: „long gross = 3000000000L;“.
-noob.en = This number is too big for an int (the maximum is 2147483647). If you really need it, add an L at the end and use long: "long big = 3000000000L;".
+noob.en = This number is too big for an int (the maximum is 2147483647). If you really need it, add an L at the end and use long: “long big = 3000000000L;”.
 junior.es = Literal entero fuera del rango de int: añade el sufijo L para un long.
 junior.de = Ganzzahl-Literal außerhalb des int-Bereichs: Suffix L für long anhängen.
 junior.en = Integer literal out of int range: add the L suffix for a long.
@@ -233,18 +233,18 @@ senior.en = int literal too large; use L.
 [compiler.err.else.without.if]
 noob.es = Este «else» no tiene un «if» justo delante. Lo más común: un «;» tras el if, «if (x > 0);», o dos órdenes sin llaves. Pon llaves: «if (x > 0) { a(); b(); } else { c(); }».
 noob.de = Dieses „else“ hat kein „if“ direkt davor. Häufig: ein „;“ nach dem if, „if (x > 0);“, oder zwei Befehle ohne geschweifte Klammern. Nimm Klammern: „if (x > 0) { a(); b(); } else { c(); }“.
-noob.en = This "else" has no "if" right before it. Most common: a ";" after the if, "if (x > 0);", or two commands without braces. Use braces: "if (x > 0) { a(); b(); } else { c(); }".
+noob.en = This “else” has no “if” right before it. Most common: a “;” after the if, “if (x > 0);”, or two orders without braces. Use braces: “if (x > 0) { a(); b(); } else { c(); }”.
 junior.es = else sin if: revisa el «;» tras la condición y las llaves del bloque del if.
-junior.de = else ohne if: prüf das „;“ nach der Bedingung und die Klammern des if-Blocks.
-junior.en = else without if: check for a ";" after the condition and the braces of the if block.
+junior.de = else ohne if: Prüf das „;“ nach der Bedingung und die Klammern des if-Blocks.
+junior.en = else without if: check for a “;” after the condition and the braces of the if block.
 senior.es = else sin if (¿«;» tras la condición o faltan llaves?).
-senior.de = else ohne if (";" nach der Bedingung oder fehlende Klammern?).
-senior.en = else without if (";" after the condition or missing braces?).
+senior.de = else ohne if („;“ nach der Bedingung oder fehlende Klammern?).
+senior.en = else without if (“;” after the condition or missing braces?).
 
 [compiler.err.orphaned]
 noob.es = Hay un «case» o un «default» fuera de un switch. Seguramente una «}» cerró el switch antes de tiempo. Todos los case van dentro de las llaves: «switch (n) { case 1: …; break; }».
 noob.de = Ein „case“ oder „default“ steht außerhalb eines switch. Wahrscheinlich hat eine „}“ das switch zu früh geschlossen. Alle case gehören in die Klammern: „switch (n) { case 1: …; break; }“.
-noob.en = There's a "case" or "default" outside a switch. Probably a "}" closed the switch too early. All cases go inside the braces: "switch (n) { case 1: …; break; }".
+noob.en = There's a “case” or “default” outside a switch. Probably a “}” closed the switch too early. All cases go inside the braces: “switch (n) { case 1: …; break; }”.
 junior.es = {msg}: etiqueta case/default huérfana; revisa las llaves del switch.
 junior.de = {msg}: verwaistes case/default; prüf die Klammern des switch.
 junior.en = {msg}: orphaned case/default; check the switch braces.
@@ -255,7 +255,7 @@ senior.en = case/default outside a switch.
 [compiler.err.duplicate.case.label]
 noob.es = Dos «case» del mismo switch tienen el mismo valor. Java no sabría cuál elegir. Borra uno o cámbiale el valor; si deben hacer lo mismo, júntalos: «case 1, 2 ->».
 noob.de = Zwei „case“ im selben switch haben denselben Wert. Java wüsste nicht, welches gilt. Lösch eins oder änder den Wert; sollen sie dasselbe tun, fass sie zusammen: „case 1, 2 ->“.
-noob.en = Two "case" labels in the same switch have the same value. Java couldn't tell which one to pick. Remove one or change its value; if they do the same, merge them: "case 1, 2 ->".
+noob.en = Two “case” labels in the same switch have the same value. Java couldn't tell which one to pick. Remove one or change its value; if they should do the same thing, merge them: “case 1, 2 ->”.
 junior.es = Etiqueta case duplicada en el switch.
 junior.de = Doppeltes case-Label im switch.
 junior.en = Duplicate case label in the switch.
@@ -266,7 +266,7 @@ senior.en = Duplicate case.
 [compiler.err.duplicate.default.label]
 noob.es = Este switch tiene dos «default». Solo puede haber uno, el que se usa cuando ningún case coincide. Borra uno de los dos.
 noob.de = Dieses switch hat zwei „default“. Es darf nur eins geben: das, das gilt, wenn kein case passt. Lösch eins davon.
-noob.en = This switch has two "default" labels. There can be only one, used when no case matches. Remove one of them.
+noob.en = This switch has two “default” labels. There can be only one, used when no case matches. Remove one of them.
 junior.es = default duplicado en el switch.
 junior.de = Doppeltes default im switch.
 junior.en = Duplicate default in the switch.
@@ -277,8 +277,8 @@ senior.en = Duplicate default.
 [compiler.err.not.exhaustive]
 noob.es = Este switch tiene que dar siempre un valor, pero no cubre todos los casos. Añade al final «default -> …;» para lo que falte.
 noob.de = Dieses switch muss immer einen Wert liefern, deckt aber nicht alle Fälle ab. Füg am Ende „default -> …;“ für den Rest hinzu.
-noob.en = This switch must always produce a value, but it doesn't cover every case. Add "default -> …;" at the end for the rest.
-junior.es = switch-expresión no exhaustiva: añade default o los valores (o subtipos sellados) que faltan.
+noob.en = This switch must always produce a value, but it doesn't cover every case. Add “default -> …;” at the end for the rest.
+junior.es = Expresión switch no exhaustiva: añade default o los valores (o subtipos sellados) que faltan.
 junior.de = switch-Ausdruck nicht erschöpfend: default oder die fehlenden Werte (bzw. versiegelten Untertypen) ergänzen.
 junior.en = switch expression not exhaustive: add default or the missing values (or sealed subtypes).
 senior.es = switch no exhaustivo.
@@ -288,7 +288,7 @@ senior.en = Non-exhaustive switch.
 [compiler.err.not.exhaustive.statement]
 noob.es = Este switch usa patrones (como «case String s») y no cubre todos los tipos posibles. Añade «default -> {}» al final o un case para cada tipo que falte.
 noob.de = Dieses switch nutzt Muster (wie „case String s“) und deckt nicht alle möglichen Typen ab. Füg am Ende „default -> {}“ hinzu oder ein case für jeden fehlenden Typ.
-noob.en = This switch uses patterns (like "case String s") and doesn't cover every possible type. Add "default -> {}" at the end or a case for each missing type.
+noob.en = This switch uses patterns (like “case String s”) and doesn't cover every possible type. Add “default -> {}” at the end or a case for each missing type.
 junior.es = Un switch con patrones debe ser exhaustivo aunque no devuelva valor (Java 21).
 junior.de = Ein switch mit Mustern muss erschöpfend sein, auch ohne Rückgabewert (Java 21).
 junior.en = A switch with patterns must be exhaustive even as a statement (Java 21).
@@ -299,19 +299,19 @@ senior.en = Non-exhaustive pattern switch.
 [compiler.err.switch.mixing.case.types]
 noob.es = En un mismo switch has mezclado las dos formas: «case 1:» (con dos puntos) y «case 2 ->» (con flecha). Elige una y úsala en todos los case; la flecha es más cómoda.
 noob.de = Im selben switch hast du beide Formen gemischt: „case 1:“ (Doppelpunkt) und „case 2 ->“ (Pfeil). Nimm eine für alle case; der Pfeil ist bequemer.
-noob.en = In the same switch you mixed both styles: "case 1:" (colon) and "case 2 ->" (arrow). Pick one and use it for every case; the arrow is easier.
+noob.en = In the same switch you mixed both styles: “case 1:” (colon) and “case 2 ->” (arrow). Pick one and use it for every case; the arrow is easier.
 junior.es = No se pueden mezclar etiquetas «:» y «->» en el mismo switch.
 junior.de = „:“- und „->“-Labels dürfen im selben switch nicht gemischt werden.
-junior.en = You can't mix ":" and "->" labels in the same switch.
+junior.en = You can't mix “:” and “->” labels in the same switch.
 senior.es = Mezcla de case «:» y «->».
 senior.de = Gemischte case-Formen „:“ und „->“.
-senior.en = Mixed ":" and "->" case labels.
+senior.en = Mixed “:” and “->” case labels.
 
 [compiler.err.rule.completes.normally]
 noob.es = En un switch que da un valor, un «case … -> { … }» con llaves debe terminar con «yield valor;» para decir qué valor da: «case 1 -> { decir("uno"); yield 10; }».
-noob.de = In einem switch, das einen Wert liefert, muss ein „case … -> { … }“ mit Klammern mit „yield wert;“ enden: „case 1 -> { sagen("eins"); yield 10; }“.
-noob.en = In a switch that produces a value, a "case … -> { … }" with braces must end with "yield value;": "case 1 -> { say("one"); yield 10; }".
-junior.es = El bloque de una regla de switch-expresión debe acabar en yield o lanzar una excepción.
+noob.de = In einem switch, das einen Wert liefert, muss ein „case … -> { … }“ mit Klammern mit „yield wert;“ enden, um zu sagen, welchen Wert es liefert: „case 1 -> { sagen("eins"); yield 10; }“.
+noob.en = In a switch that produces a value, a “case … -> { … }” with braces must end with “yield value;” to say which value it produces: “case 1 -> { say("one"); yield 10; }”.
+junior.es = El bloque de una regla de una expresión switch debe acabar en yield o lanzar una excepción.
 junior.de = Der Block einer switch-Ausdrucksregel muss mit yield enden oder eine Ausnahme werfen.
 junior.en = A switch expression rule block must end with yield or throw.
 senior.es = Regla de switch sin yield.
@@ -321,9 +321,9 @@ senior.en = Switch rule block lacks yield.
 [compiler.err.variable.not.allowed]
 noob.es = No puedes crear una variable como única orden de un if o un bucle sin llaves: no serviría para nada. Pon llaves «if (c) { int x = 1; … }» o crea la variable antes del if.
 noob.de = Du kannst keine Variable als einzigen Befehl eines if oder einer Schleife ohne Klammern anlegen: Sie wäre nutzlos. Nimm Klammern „if (c) { int x = 1; … }“ oder leg sie vor dem if an.
-noob.en = You can't declare a variable as the only command of an if or loop without braces: it would be useless. Use braces "if (c) { int x = 1; … }" or declare it before the if.
+noob.en = You can't declare a variable as the only order of an if or loop without braces: it would be useless. Use braces “if (c) { int x = 1; … }” or declare it before the if.
 junior.es = Declaración no permitida aquí: el cuerpo de un if/bucle sin llaves no puede ser una declaración.
-junior.de = Deklaration hier nicht erlaubt: der Rumpf eines if/einer Schleife ohne Klammern darf keine sein.
+junior.de = Deklaration hier nicht erlaubt: Der Rumpf eines if/einer Schleife ohne Klammern darf keine sein.
 junior.en = Declaration not allowed here: a brace-less if/loop body can't be a declaration.
 senior.es = Declaración como cuerpo sin bloque.
 senior.de = Deklaration als Rumpf ohne Block.
@@ -332,7 +332,7 @@ senior.en = Declaration as an unbraced body.
 [compiler.err.break.outside.switch.loop]
 noob.es = «break» solo sirve para salir de un bucle o de un switch, y aquí no hay ninguno. Si querías terminar el método antes de tiempo, usa «return;».
 noob.de = „break“ verlässt nur eine Schleife oder ein switch, und hier gibt es keins. Wolltest du die Methode früher beenden, nimm „return;“.
-noob.en = "break" only leaves a loop or a switch, and there isn't one here. If you wanted to end the method early, use "return;".
+noob.en = “break” only leaves a loop or a switch, and there isn't one here. If you wanted to end the method early, use “return;”.
 junior.es = break fuera de bucle o switch; para salir del método usa return.
 junior.de = break außerhalb von Schleife oder switch; zum Verlassen der Methode return.
 junior.en = break outside a loop or switch; use return to leave the method.
@@ -342,8 +342,8 @@ senior.en = break outside loop/switch.
 
 [compiler.err.cont.outside.loop]
 noob.es = «continue» salta a la siguiente vuelta de un bucle, pero aquí no hay bucle. Si querías salir del método, usa «return;»; si no, bórralo.
-noob.de = „continue“ springt zur nächsten Runde einer Schleife, aber hier ist keine. Wolltest du die Methode verlassen, nimm „return;“; sonst lösch es.
-noob.en = "continue" jumps to the next round of a loop, but there's no loop here. If you wanted to leave the method, use "return;"; otherwise delete it.
+noob.de = „continue“ springt zum nächsten Durchlauf einer Schleife, aber hier ist keine. Wolltest du die Methode verlassen, nimm „return;“; sonst lösch es.
+noob.en = “continue” jumps to the next iteration of a loop, but there's no loop here. If you wanted to leave the method, use “return;”; otherwise delete it.
 junior.es = continue fuera de un bucle.
 junior.de = continue außerhalb einer Schleife.
 junior.en = continue outside a loop.
@@ -354,9 +354,9 @@ senior.en = continue outside loop.
 [compiler.err.not.loop.label]
 noob.es = Usas «continue» con una etiqueta que no está puesta en un bucle. «continue nombre;» solo vale si «nombre:» va justo delante de un for o un while.
 noob.de = Du nutzt „continue“ mit einem Label, das an keiner Schleife steht. „continue name;“ geht nur, wenn „name:“ direkt vor einem for oder while steht.
-noob.en = You use "continue" with a label that isn't on a loop. "continue name;" only works if "name:" is right before a for or while.
+noob.en = You use “continue” with a label that isn't on a loop. “continue name;” only works if “name:” is right before a for or while.
 junior.es = {msg}: la etiqueta de continue debe marcar un bucle.
-junior.de = {msg}: das Label von continue muss eine Schleife markieren.
+junior.de = {msg}: Das Label von continue muss eine Schleife markieren.
 junior.en = {msg}: a continue label must mark a loop.
 senior.es = Etiqueta que no es de bucle: {msg}
 senior.de = Kein Schleifenlabel: {msg}
@@ -365,7 +365,7 @@ senior.en = Not a loop label: {msg}
 [compiler.err.undef.label]
 noob.es = La etiqueta de este «break» o «continue» no existe ({msg}). Revisa que esté escrita igual y que «nombre:» vaya delante del bucle que lo rodea.
 noob.de = Das Label dieses „break“ oder „continue“ gibt es nicht ({msg}). Prüf die Schreibweise und dass „name:“ vor der umgebenden Schleife steht.
-noob.en = The label of this "break" or "continue" doesn't exist ({msg}). Check the spelling and that "name:" is placed before the surrounding loop.
+noob.en = The label of this “break” or “continue” doesn't exist ({msg}). Check the spelling and that “name:” is placed before the surrounding loop.
 junior.es = Etiqueta no definida: {msg}
 junior.de = Label nicht definiert: {msg}
 junior.en = Undefined label: {msg}
@@ -376,9 +376,9 @@ senior.en = {msg}
 [compiler.err.unreachable.stmt]
 noob.es = Esta línea nunca se ejecutará: va detrás de un «return», un «break», un «continue» o de un bucle que no termina. Bórrala o muévela antes de esa orden.
 noob.de = Diese Zeile wird nie ausgeführt: Sie steht nach einem „return“, „break“, „continue“ oder einer Endlosschleife. Lösch sie oder setz sie davor.
-noob.en = This line will never run: it comes after a "return", "break", "continue" or a loop that never ends. Delete it or move it before that command.
+noob.en = This line will never run: it comes after a “return”, “break”, “continue” or a loop that never ends. Delete it or move it before that order.
 junior.es = Sentencia inalcanzable: el flujo nunca llega aquí (línea {linea}).
-junior.de = Unerreichbare Anweisung: der Ablauf kommt nie hierher (Zeile {linea}).
+junior.de = Unerreichbare Anweisung: Der Ablauf kommt nie hierher (Zeile {linea}).
 junior.en = Unreachable statement: control never gets here (line {linea}).
 senior.es = Código inalcanzable.
 senior.de = Unerreichbarer Code.
@@ -387,7 +387,7 @@ senior.en = Unreachable code.
 [compiler.err.foreach.not.applicable.to.type]
 noob.es = El for de dos puntos («for (int x : algo)») solo recorre arrays y listas. Si quieres contar hasta un número, usa el for clásico: «for (int i = 0; i < n; i++)».
 noob.de = Das for mit Doppelpunkt („for (int x : etwas)“) läuft nur über Arrays und Listen. Zum Zählen bis zu einer Zahl nimm das klassische for: „for (int i = 0; i < n; i++)“.
-noob.en = The colon for loop ("for (int x : something)") only walks through arrays and lists. To count up to a number, use the classic for: "for (int i = 0; i < n; i++)".
+noob.en = The colon for loop (“for (int x : something)”) only walks through arrays and lists. To count up to a number, use the classic for: “for (int i = 0; i < n; i++)”.
 junior.es = for-each solo sobre arrays o Iterable: {msg}
 junior.de = for-each nur über Arrays oder Iterable: {msg}
 junior.en = for-each only over arrays or Iterable: {msg}
@@ -400,7 +400,7 @@ senior.en = for-each over a non-iterable type.
 [compiler.err.cant.resolve]
 noob.es = Java no encuentra este nombre ({msg}). Revisa cómo lo has escrito, mayúsculas incluidas: «Avanzar» no es «avanzar». Si es una variable, créala antes de usarla.
 noob.de = Java findet diesen Namen nicht ({msg}). Prüf die Schreibweise, auch Groß- und Kleinschreibung: „Vorwaerts“ ist nicht „vorwaerts“. Ist es eine Variable, leg sie vorher an.
-noob.en = Java can't find this name ({msg}). Check how you wrote it, including capitals: "Ahead" is not "ahead". If it's a variable, declare it before using it.
+noob.en = Java can't find this name ({msg}). Check how you wrote it, including capitals: “Ahead” is not “ahead”. If it's a variable, declare it before using it.
 junior.es = Símbolo no encontrado: {msg}. ¿Errata, falta declararlo o un import?
 junior.de = Symbol nicht gefunden: {msg}. Tippfehler, fehlende Deklaration oder Import?
 junior.en = Cannot find symbol: {msg}. Typo, missing declaration or import?
@@ -411,9 +411,9 @@ senior.en = {msg}
 [compiler.err.cant.resolve.location]
 noob.es = Java no conoce este nombre ({msg}). Mira tres cosas: 1) que esté bien escrito, con sus mayúsculas (String, no string); 2) que hayas creado la variable antes, por ejemplo «int vueltas = 0;»; 3) que no la creases dentro de otras llaves, porque fuera de ellas no existe.
 noob.de = Java kennt diesen Namen nicht ({msg}). Prüf drei Dinge: 1) richtig geschrieben, mit Großbuchstaben (String, nicht string); 2) die Variable vorher angelegt, etwa „int runden = 0;“; 3) nicht in anderen Klammern angelegt, denn außerhalb gibt es sie nicht.
-noob.en = Java doesn't know this name ({msg}). Check three things: 1) it's spelled right, with its capitals (String, not string); 2) you declared the variable first, e.g. "int laps = 0;"; 3) you didn't declare it inside other braces, because outside them it doesn't exist.
+noob.en = Java doesn't know this name ({msg}). Check three things: 1) it's spelled right, with its capitals (String, not string); 2) you declared the variable first, e.g. “int laps = 0;”; 3) you didn't declare it inside other braces, because outside them it doesn't exist.
 junior.es = Símbolo no encontrado ({msg}). Causas: errata, variable fuera de ámbito (declarada en otro bloque) o falta un import.
-junior.de = Symbol nicht gefunden ({msg}). Ursachen: Tippfehler, Variable außerhalb ihres Gültigkeitsbereichs oder fehlender Import.
+junior.de = Symbol nicht gefunden ({msg}). Ursachen: Tippfehler, Variable außerhalb ihres Gültigkeitsbereichs (in einem anderen Block deklariert) oder fehlender Import.
 junior.en = Cannot find symbol ({msg}). Causes: typo, variable out of scope (declared in another block) or a missing import.
 senior.es = {msg}
 senior.de = {msg}
@@ -422,7 +422,7 @@ senior.en = {msg}
 [compiler.err.cant.resolve.location.args]
 noob.es = Ese método no existe con ese nombre ({msg}). Revisa la ortografía y las mayúsculas: «lenght()» debe ser «length()», «Avanzar(50)» debe ser «avanzar(50)». En el buscador de la API tienes la lista de métodos.
 noob.de = Diese Methode gibt es unter dem Namen nicht ({msg}). Prüf Schreibweise und Großbuchstaben: „lenght()“ muss „length()“ heißen, „Vorwaerts(50)“ muss „vorwaerts(50)“ heißen. In der API-Suche findest du alle Methoden.
-noob.en = That method doesn't exist with that name ({msg}). Check the spelling and capitals: "lenght()" must be "length()", "Ahead(50)" must be "ahead(50)". The API search lists every method.
+noob.en = That method doesn't exist with that name ({msg}). Check the spelling and capitals: “lenght()” must be “length()”, “Ahead(50)” must be “ahead(50)”. The API search lists every method.
 junior.es = Método no encontrado ({msg}): errata, o el método pertenece a otra clase u objeto.
 junior.de = Methode nicht gefunden ({msg}): Tippfehler, oder die Methode gehört zu einer anderen Klasse oder einem anderen Objekt.
 junior.en = Method not found ({msg}): typo, or the method belongs to another class or object.
@@ -433,7 +433,7 @@ senior.en = {msg}
 [compiler.err.doesnt.exist]
 noob.es = Java no encuentra ese paquete ({msg}). Revisa el import letra a letra: «java.util», no «java.utill». Y ojo: es «System.out», con S mayúscula.
 noob.de = Java findet dieses Paket nicht ({msg}). Prüf den Import Buchstabe für Buchstabe: „java.util“, nicht „java.utill“. Und Achtung: Es heißt „System.out“, mit großem S.
-noob.en = Java can't find that package ({msg}). Check the import letter by letter: "java.util", not "java.utill". And watch out: it's "System.out", with a capital S.
+noob.en = Java can't find that package ({msg}). Check the import letter by letter: “java.util”, not “java.utill”. And watch out: it's “System.out”, with a capital S.
 junior.es = Paquete inexistente: {msg}. Revisa el import o las mayúsculas del nombre cualificado.
 junior.de = Paket existiert nicht: {msg}. Prüf den Import oder die Großschreibung des qualifizierten Namens.
 junior.en = Package does not exist: {msg}. Check the import or the capitalization of the qualified name.
@@ -444,7 +444,7 @@ senior.en = {msg}
 [compiler.err.already.defined]
 noob.es = Ya existe algo con ese nombre aquí ({msg}). No puedes crear dos variables iguales: la segunda vez quita el tipo y solo cambia el valor, «x = 2;» en vez de «int x = 2;». O ponle otro nombre.
 noob.de = Hier gibt es schon etwas mit diesem Namen ({msg}). Du kannst nicht zwei gleiche Variablen anlegen: Beim zweiten Mal lass den Typ weg und änder nur den Wert, „x = 2;“ statt „int x = 2;“. Oder nimm einen anderen Namen.
-noob.en = Something with that name already exists here ({msg}). You can't create two equal variables: the second time drop the type and just change the value, "x = 2;" instead of "int x = 2;". Or pick another name.
+noob.en = Something with that name already exists here ({msg}). You can't create two variables with the same name: the second time drop the type and just change the value, “x = 2;” instead of “int x = 2;”. Or pick another name.
 junior.es = Ya definido en este ámbito: {msg}. Reasigna sin el tipo o renombra.
 junior.de = In diesem Bereich schon definiert: {msg}. Ohne Typ neu zuweisen oder umbenennen.
 junior.en = Already defined in this scope: {msg}. Reassign without the type or rename.
@@ -455,7 +455,7 @@ senior.en = {msg}
 [compiler.err.var.might.not.have.been.initialized]
 noob.es = Usas una variable que quizá no tiene valor todavía ({msg}). Dale uno al crearla: «int contador = 0;». Si se lo das dentro de un if, Java teme que el if no se cumpla.
 noob.de = Du nutzt eine Variable, die vielleicht noch keinen Wert hat ({msg}). Gib ihr beim Anlegen einen: „int zaehler = 0;“. Bekommt sie ihn nur in einem if, fürchtet Java, dass das if nicht zutrifft.
-noob.en = You use a variable that may not have a value yet ({msg}). Give it one when you create it: "int counter = 0;". If it only gets one inside an if, Java worries the if might not run.
+noob.en = You use a variable that may not have a value yet ({msg}). Give it one when you create it: “int counter = 0;”. If it only gets one inside an if, Java worries the if might not run.
 junior.es = Variable local sin asignación definitiva: {msg}. Inicialízala o asígnala en todas las ramas.
 junior.de = Lokale Variable nicht sicher zugewiesen: {msg}. Initialisiere sie oder weise sie in allen Zweigen zu.
 junior.en = Local variable not definitely assigned: {msg}. Initialize it or assign it in every branch.
@@ -466,7 +466,7 @@ senior.en = {msg}
 [compiler.err.var.might.already.be.assigned]
 noob.es = Esta variable es «final» (solo admite un valor) y aquí le darías un segundo valor ({msg}). Dale el valor una sola vez o quita «final».
 noob.de = Diese Variable ist „final“ (nur ein Wert erlaubt), und hier bekäme sie einen zweiten ({msg}). Weise sie nur einmal zu oder entferne „final“.
-noob.en = This variable is "final" (it allows only one value) and here it would get a second one ({msg}). Assign it only once or remove "final".
+noob.en = This variable is “final” (it allows only one value) and here it would get a second one ({msg}). Assign it only once or remove “final”.
 junior.es = Variable final posiblemente asignada dos veces (¿dentro de un bucle?): {msg}
 junior.de = final-Variable möglicherweise doppelt zugewiesen (in einer Schleife?): {msg}
 junior.en = final variable possibly assigned twice (inside a loop?): {msg}
@@ -477,7 +477,7 @@ senior.en = {msg}
 [compiler.err.cant.assign.val.to.var]
 noob.es = No puedes cambiar esta variable porque es «final» o es el campo de un record ({msg}). Si necesitas cambiarla, quita «final» o usa otra variable.
 noob.de = Du kannst diese Variable nicht ändern, weil sie „final“ ist oder ein Feld eines record ({msg}). Musst du sie ändern, entferne „final“ oder nimm eine andere Variable.
-noob.en = You can't change this variable because it's "final" or a record field ({msg}). If you need to change it, remove "final" or use another variable.
+noob.en = You can't change this variable because it's “final” or a record field ({msg}). If you need to change it, remove “final” or use another variable.
 junior.es = Asignación a una variable final: {msg}
 junior.de = Zuweisung an eine final-Variable: {msg}
 junior.en = Assignment to a final variable: {msg}
@@ -488,7 +488,7 @@ senior.en = {msg}
 [compiler.err.final.parameter.may.not.be.assigned]
 noob.es = Este parámetro está marcado «final», así que no puedes darle otro valor dentro del método. Copia su valor en una variable nueva y cambia esa: «int y = x; y++;».
 noob.de = Dieser Parameter ist „final“, also kannst du ihm in der Methode keinen neuen Wert geben. Kopier ihn in eine neue Variable und änder die: „int y = x; y++;“.
-noob.en = This parameter is marked "final", so you can't give it a new value inside the method. Copy it into a new variable and change that one: "int y = x; y++;".
+noob.en = This parameter is marked “final”, so you can't give it a new value inside the method. Copy it into a new variable and change that one: “int y = x; y++;”.
 junior.es = Parámetro final reasignado: {msg}
 junior.de = final-Parameter neu zugewiesen: {msg}
 junior.en = final parameter reassigned: {msg}
@@ -510,7 +510,7 @@ senior.en = Forward reference: {msg}
 [compiler.err.prob.found.req]
 noob.es = Los tipos no encajan ({msg}). Un texto no cabe en un número («int x = "5";»), ni un decimal en un int («int x = 3.5;»). Usa el tipo correcto (double para decimales) o convierte: «Integer.parseInt("5")», «(int) 3.5». En un if, compara con «==», no con «=».
 noob.de = Die Typen passen nicht ({msg}). Ein Text passt nicht in eine Zahl („int x = "5";“), eine Kommazahl nicht in einen int („int x = 3.5;“). Nimm den richtigen Typ (double für Kommazahlen) oder wandle um: „Integer.parseInt("5")“, „(int) 3.5“. Im if vergleichst du mit „==“, nicht „=“.
-noob.en = The types don't match ({msg}). Text doesn't fit in a number ("int x = "5";"), nor a decimal in an int ("int x = 3.5;"). Use the right type (double for decimals) or convert: "Integer.parseInt("5")", "(int) 3.5". In an if, compare with "==", not "=".
+noob.en = The types don't match ({msg}). Text doesn't fit in a number (“int x = "5";”), nor a decimal in an int (“int x = 3.5;”). Use the right type (double for decimals) or convert: “Integer.parseInt("5")”, “(int) 3.5”. In an if, compare with “==”, not “=”.
 junior.es = Tipos incompatibles: {msg}. Si pierde precisión, usa un cast explícito; si es un String, conviértelo con parseInt/valueOf.
 junior.de = Inkompatible Typen: {msg}. Bei Genauigkeitsverlust expliziter Cast; bei einem String parseInt/valueOf.
 junior.en = Incompatible types: {msg}. If precision is lost, use an explicit cast; for a String, convert with parseInt/valueOf.
@@ -521,7 +521,7 @@ senior.en = {msg}
 [compiler.err.type.found.req]
 noob.es = En los «<>» de una lista o un mapa no caben tipos básicos como int o double. Usa su versión con mayúscula: «List<Integer>», «Map<String, Double>».
 noob.de = In die „<>“ einer Liste oder Map passen keine Grundtypen wie int oder double. Nimm die Version mit Großbuchstaben: „List<Integer>“, „Map<String, Double>“.
-noob.en = Basic types like int or double don't fit inside the "<>" of a list or map. Use their capitalized version: "List<Integer>", "Map<String, Double>".
+noob.en = Basic types like int or double don't fit inside the “<>” of a list or map. Use their capitalized version: “List<Integer>”, “Map<String, Double>”.
 junior.es = Argumento de tipo primitivo: los genéricos necesitan clases envoltorio (Integer, Double, Boolean…).
 junior.de = Primitiver Typparameter: Generics brauchen Wrapper-Klassen (Integer, Double, Boolean …).
 junior.en = Primitive type argument: generics need wrapper classes (Integer, Double, Boolean…).
@@ -532,7 +532,7 @@ senior.en = {msg}
 [compiler.err.cant.infer.local.var.type]
 noob.es = Con «var», Java adivina el tipo mirando el valor, así que necesita uno ya: «var vueltas = 0;». Sin valor, o con null, no puede adivinar: escribe el tipo, «int vueltas;».
 noob.de = Mit „var“ errät Java den Typ aus dem Wert, also braucht es sofort einen: „var runden = 0;“. Ohne Wert oder mit null geht das nicht: Schreib den Typ, „int runden;“.
-noob.en = With "var", Java guesses the type from the value, so it needs one right away: "var laps = 0;". With no value, or with null, it can't guess: write the type, "int laps;".
+noob.en = With “var”, Java guesses the type from the value, so it needs one right away: “var laps = 0;”. With no value, or with null, it can't guess: write the type, “int laps;”.
 junior.es = No se puede inferir el tipo de var: {msg}
 junior.de = Typ von var nicht ableitbar: {msg}
 junior.en = Cannot infer the type of var: {msg}
@@ -543,7 +543,7 @@ senior.en = {msg}
 [compiler.err.restricted.type.not.allowed.here]
 noob.es = «var» solo vale para variables dentro de un método. Para campos de la clase, parámetros o lo que devuelve un método, escribe el tipo: «int vida = 100;».
 noob.de = „var“ gibt es nur für Variablen in einer Methode. Für Felder, Parameter oder Rückgabetypen schreib den Typ: „int leben = 100;“.
-noob.en = "var" only works for variables inside a method. For class fields, parameters or return types, write the type: "int life = 100;".
+noob.en = “var” only works for variables inside a method. For class fields, parameters or return types, write the type: “int life = 100;”.
 junior.es = var no está permitido aquí (campos, parámetros, retornos): {msg}
 junior.de = var ist hier nicht erlaubt (Felder, Parameter, Rückgaben): {msg}
 junior.en = var is not allowed here (fields, parameters, return types): {msg}
@@ -554,7 +554,7 @@ senior.en = {msg}
 [compiler.err.operator.cant.be.applied]
 noob.es = Este operador no funciona con ese tipo ({msg}). Por ejemplo, «!» solo niega un boolean (true/false) y «-» o «++» solo van con números.
 noob.de = Dieser Operator passt nicht zu dem Typ ({msg}). Zum Beispiel verneint „!“ nur einen boolean (true/false), und „-“ oder „++“ gehen nur mit Zahlen.
-noob.en = This operator doesn't work with that type ({msg}). For example, "!" only negates a boolean (true/false), and "-" or "++" only work with numbers.
+noob.en = This operator doesn't work with that type ({msg}). For example, “!” only negates a boolean (true/false), and “-” or “++” only work with numbers.
 junior.es = Operador unario no aplicable al tipo: {msg}
 junior.de = Unärer Operator nicht auf den Typ anwendbar: {msg}
 junior.en = Unary operator not applicable to the type: {msg}
@@ -565,7 +565,7 @@ senior.en = {msg}
 [compiler.err.operator.cant.be.applied.1]
 noob.es = No puedes usar ese operador entre esos dos valores ({msg}). Los textos no se restan ni se comparan con «<»: usa «a.compareTo(b) < 0». «&&» y «||» unen condiciones, no números: «x > 0 && y > 0».
 noob.de = Diesen Operator kannst du zwischen diesen zwei Werten nicht benutzen ({msg}). Texte kann man nicht subtrahieren oder mit „<“ vergleichen: Nimm „a.compareTo(b) < 0“. „&&“ und „||“ verbinden Bedingungen, keine Zahlen: „x > 0 && y > 0“.
-noob.en = You can't use that operator between those two values ({msg}). Strings can't be subtracted or compared with "<": use "a.compareTo(b) < 0". "&&" and "||" join conditions, not numbers: "x > 0 && y > 0".
+noob.en = You can't use that operator between those two values ({msg}). Strings can't be subtracted or compared with “<”: use “a.compareTo(b) < 0”. “&&” and “||” join conditions, not numbers: “x > 0 && y > 0”.
 junior.es = Operador binario con tipos no válidos: {msg}
 junior.de = Binärer Operator mit ungültigen Typen: {msg}
 junior.en = Binary operator with invalid operand types: {msg}
@@ -576,7 +576,7 @@ senior.en = {msg}
 [compiler.err.incomparable.types]
 noob.es = Comparas con «==» dos cosas que nunca pueden ser iguales, como un número y un texto ({msg}). Convierte una de ellas antes: «String.valueOf(n).equals(texto)» o «n == Integer.parseInt(texto)».
 noob.de = Du vergleichst mit „==“ zwei Dinge, die nie gleich sein können, etwa eine Zahl und einen Text ({msg}). Wandle eins vorher um: „String.valueOf(n).equals(text)“ oder „n == Integer.parseInt(text)“.
-noob.en = You compare with "==" two things that can never be equal, like a number and a string ({msg}). Convert one first: "String.valueOf(n).equals(text)" or "n == Integer.parseInt(text)".
+noob.en = You're using “==” to compare two things that can never be equal, like a number and a string ({msg}). Convert one first: “String.valueOf(n).equals(text)” or “n == Integer.parseInt(text)”.
 junior.es = Tipos incomparables con ==: {msg}
 junior.de = Mit == nicht vergleichbare Typen: {msg}
 junior.en = Incomparable types for ==: {msg}
@@ -587,7 +587,7 @@ senior.en = {msg}
 [compiler.err.unexpected.type]
 noob.es = A la izquierda de «=» o junto a «++» tiene que haber una variable. «f() = 2;» o «5++;» no tienen dónde guardar el valor. ¿Querías comparar con «==»?
 noob.de = Links von „=“ oder neben „++“ muss eine Variable stehen. „f() = 2;“ oder „5++;“ haben keinen Speicherplatz für den Wert. Wolltest du mit „==“ vergleichen?
-noob.en = The left side of "=" (or the target of "++") must be a variable. "f() = 2;" or "5++;" have nowhere to store the value. Did you mean to compare with "=="?
+noob.en = The left side of “=” (or the target of “++”) must be a variable. “f() = 2;” or “5++;” have nowhere to store the value. Did you mean to compare with “==”?
 junior.es = Se esperaba una variable y se encontró un valor: {msg}
 junior.de = Variable erwartet, Wert gefunden: {msg}
 junior.en = Variable expected, value found: {msg}
@@ -598,9 +598,9 @@ senior.en = {msg}
 [compiler.err.cant.deref]
 noob.es = Los tipos básicos (int, double, boolean, char) no tienen métodos ni punto. «x.toString()» o «x.equals(2)» no valen: compara con «x == 2» y convierte a texto con «String.valueOf(x)».
 noob.de = Grundtypen (int, double, boolean, char) haben keine Methoden und keinen Punkt. „x.toString()“ oder „x.equals(2)“ gehen nicht: Vergleich mit „x == 2“ und wandle mit „String.valueOf(x)“ in Text um.
-noob.en = Basic types (int, double, boolean, char) have no methods and no dot. "x.toString()" or "x.equals(2)" don't work: compare with "x == 2" and turn it into text with "String.valueOf(x)".
+noob.en = Basic types (int, double, boolean, char) have no methods and no dot. “x.toString()” or “x.equals(2)” don't work: compare with “x == 2” and turn it into text with “String.valueOf(x)”.
 junior.es = No se puede desreferenciar un primitivo ({msg}): usa operadores o los métodos estáticos de Integer, Double, Character…
-junior.de = Primitiver Typ kann nicht dereferenziert werden ({msg}): nimm Operatoren oder statische Methoden von Integer, Double, Character …
+junior.de = Primitiver Typ kann nicht dereferenziert werden ({msg}): Nimm Operatoren oder statische Methoden von Integer, Double, Character …
 junior.en = A primitive can't be dereferenced ({msg}): use operators or the static methods of Integer, Double, Character…
 senior.es = {msg}
 senior.de = {msg}
@@ -609,7 +609,7 @@ senior.en = {msg}
 [compiler.err.array.req.but.found]
 noob.es = Los corchetes «[i]» solo valen con arrays. Para la letra de un texto usa «texto.charAt(i)»; para un elemento de una lista, «lista.get(i)».
 noob.de = Eckige Klammern „[i]“ gehen nur bei Arrays. Für ein Zeichen eines Textes nimm „text.charAt(i)“, für ein Element einer Liste „liste.get(i)“.
-noob.en = Square brackets "[i]" only work with arrays. For a character of a string use "text.charAt(i)"; for an element of a list, "list.get(i)".
+noob.en = Square brackets “[i]” only work with arrays. For a character of a string use “text.charAt(i)”; for an element of a list, “list.get(i)”.
 junior.es = Se requiere un array: {msg}. String usa charAt, List usa get.
 junior.de = Array erforderlich: {msg}. String nutzt charAt, List nutzt get.
 junior.en = Array required: {msg}. String uses charAt, List uses get.
@@ -620,7 +620,7 @@ senior.en = {msg}
 [compiler.err.array.dimension.missing]
 noob.es = Al crear un array hay que decir su tamaño o sus valores: «new int[5]» o «new int[] {1, 2, 3}». «new int[]» a secas no vale.
 noob.de = Beim Anlegen eines Arrays musst du die Größe oder die Werte angeben: „new int[5]“ oder „new int[] {1, 2, 3}“. Nur „new int[]“ geht nicht.
-noob.en = When you create an array, give its size or its values: "new int[5]" or "new int[] {1, 2, 3}". Just "new int[]" doesn't work.
+noob.en = When you create an array, give its size or its values: “new int[5]” or “new int[] {1, 2, 3}”. Just “new int[]” doesn't work.
 junior.es = Falta la dimensión del array (o su inicializador).
 junior.de = Arraydimension (oder Initialisierer) fehlt.
 junior.en = Array dimension (or initializer) missing.
@@ -631,7 +631,7 @@ senior.en = Array dimension missing.
 [compiler.err.illegal.array.creation.both.dimension.and.initialization]
 noob.es = Has puesto el tamaño y también los valores: «new int[3] {1, 2, 3}». Elige uno: «new int[] {1, 2, 3}» ya sabe que son tres.
 noob.de = Du hast Größe und Werte angegeben: „new int[3] {1, 2, 3}“. Nimm nur eins: „new int[] {1, 2, 3}“ weiß schon, dass es drei sind.
-noob.en = You gave both the size and the values: "new int[3] {1, 2, 3}". Pick one: "new int[] {1, 2, 3}" already knows there are three.
+noob.en = You gave both the size and the values: “new int[3] {1, 2, 3}”. Pick one: “new int[] {1, 2, 3}” already knows there are three.
 junior.es = No se puede dar dimensión e inicializador a la vez.
 junior.de = Dimension und Initialisierer gleichzeitig sind nicht erlaubt.
 junior.en = Can't give both a dimension and an initializer.
@@ -641,8 +641,8 @@ senior.en = Both dimension and initializer.
 
 [compiler.err.dot.class.expected]
 noob.es = Al llamar a un método se pasan valores, no tipos. Quita el tipo: «mitad(int d)» al llamar debe ser «mitad(d)». El tipo solo se escribe cuando creas la variable o defines el método.
-noob.de = Beim Aufruf einer Methode übergibst du Werte, keine Typen. Lass den Typ weg: aus „haelfte(int d)“ beim Aufruf wird „haelfte(d)“. Den Typ schreibst du nur beim Anlegen oder Definieren.
-noob.en = When you call a method you pass values, not types. Remove the type: "half(int d)" in a call must be "half(d)". You only write the type when you declare the variable or define the method.
+noob.de = Beim Aufruf einer Methode übergibst du Werte, keine Typen. Lass den Typ weg: Aus „haelfte(int d)“ beim Aufruf wird „haelfte(d)“. Den Typ schreibst du nur beim Anlegen oder Definieren.
+noob.en = When you call a method you pass values, not types. Remove the type: “half(int d)” in a call must be “half(d)”. You only write the type when you declare the variable or define the method.
 junior.es = Hay un tipo donde se esperaba una expresión (¿un tipo dentro de una llamada?).
 junior.de = Ein Typ steht, wo ein Ausdruck erwartet wird (Typ in einem Aufruf?).
 junior.en = A type appears where an expression is expected (a type inside a call?).
@@ -653,9 +653,9 @@ senior.en = Type in expression position.
 [compiler.err.void.not.allowed.here]
 noob.es = Este método no devuelve nada (es void), así que no puedes usar su resultado ni imprimirlo. Llámalo solo, en su propia línea: «avanzar(50);».
 noob.de = Diese Methode gibt nichts zurück (void), also kannst du ihr Ergebnis weder benutzen noch ausgeben. Ruf sie allein in einer eigenen Zeile auf: „vorwaerts(50);“.
-noob.en = This method returns nothing (it's void), so you can't use or print its result. Call it on its own line: "ahead(50);".
+noob.en = This method returns nothing (it's void), so you can't use or print its result. Call it on its own line: “ahead(50);”.
 junior.es = Tipo void no permitido aquí: el método no devuelve valor.
-junior.de = Typ void hier nicht erlaubt: die Methode liefert keinen Wert.
+junior.de = Typ void hier nicht erlaubt: Die Methode liefert keinen Wert.
 junior.en = void type not allowed here: the method returns no value.
 senior.es = Uso del resultado de un método void.
 senior.de = Ergebnis einer void-Methode benutzt.
@@ -666,7 +666,7 @@ senior.en = Using the result of a void method.
 [compiler.err.cant.apply.symbol]
 noob.es = El método existe, pero no con esos datos ({msg}). Mira cuántos valores pide y de qué tipo: «avanzar(50)» quiere un número, no «avanzar("50")» ni «avanzar()». El buscador de la API muestra cada firma.
 noob.de = Die Methode gibt es, aber nicht mit diesen Daten ({msg}). Schau, wie viele Werte sie will und welchen Typ: „vorwaerts(50)“ will eine Zahl, nicht „vorwaerts("50")“ oder „vorwaerts()“. Die API-Suche zeigt jede Signatur.
-noob.en = The method exists, but not with that data ({msg}). Check how many values it wants and of what type: "ahead(50)" wants a number, not "ahead("50")" or "ahead()". The API search shows every signature.
+noob.en = The method exists, but not with that data ({msg}). Check how many values it wants and of what type: “ahead(50)” wants a number, not “ahead("50")” or “ahead()”. The API search shows every signature.
 junior.es = Argumentos no aplicables (número o tipos): {msg}
 junior.de = Argumente passen nicht (Anzahl oder Typen): {msg}
 junior.en = Arguments don't apply (count or types): {msg}
@@ -688,7 +688,7 @@ senior.en = {msg}
 [compiler.err.ref.ambiguous]
 noob.es = Hay dos métodos que encajan igual de bien con lo que pasas y Java no sabe cuál elegir ({msg}). Pasa un valor más concreto; con null, haz un cast: «f((String) null)».
 noob.de = Zwei Methoden passen gleich gut zu deinen Werten, und Java weiß nicht, welche ({msg}). Übergib einen eindeutigeren Wert; bei null hilft ein Cast: „f((String) null)“.
-noob.en = Two methods match what you pass equally well and Java can't choose ({msg}). Pass a more specific value; with null, add a cast: "f((String) null)".
+noob.en = Two methods match what you pass equally well and Java can't choose ({msg}). Pass a more specific value; with null, add a cast: “f((String) null)”.
 junior.es = Llamada ambigua entre sobrecargas: {msg}
 junior.de = Mehrdeutiger Aufruf zwischen Überladungen: {msg}
 junior.en = Ambiguous call between overloads: {msg}
@@ -699,9 +699,9 @@ senior.en = {msg}
 [compiler.err.missing.ret.stmt]
 noob.es = Este método promete devolver un valor (no es void) y hay un camino por el que acaba sin «return». Añade un return al final: «return 0;», o en cada rama del if.
 noob.de = Diese Methode verspricht einen Rückgabewert (sie ist nicht void), aber auf einem Weg endet sie ohne „return“. Füg am Ende ein return hinzu: „return 0;“, oder in jedem Zweig des if.
-noob.en = This method promises to return a value (it's not void) and there's a path where it ends without "return". Add a return at the end: "return 0;", or in every branch of the if.
+noob.en = This method promises to return a value (it's not void) and there's a path where it ends without “return”. Add a return at the end: “return 0;”, or in every branch of the if.
 junior.es = Falta return: no todos los caminos devuelven valor. Revisa el else y el final del método.
-junior.de = return fehlt: nicht alle Pfade liefern einen Wert. Prüf das else und das Methodenende.
+junior.de = return fehlt: Nicht alle Pfade liefern einen Wert. Prüf das else und das Methodenende.
 junior.en = Missing return: not every path returns a value. Check the else and the end of the method.
 senior.es = Falta return en algún camino.
 senior.de = return fehlt auf einem Pfad.
@@ -710,10 +710,10 @@ senior.en = Missing return on some path.
 [compiler.err.missing.meth.body.or.decl.abstract]
 noob.es = Este método no tiene cuerpo: tras los paréntesis hay un «;» en vez de llaves. Quita el «;» y pon «{ … }»: «public void cadaTurno() { avanzar(50); }».
 noob.de = Diese Methode hat keinen Rumpf: Nach den Klammern steht „;“ statt geschweifter Klammern. Entfern das „;“ und schreib „{ … }“: „public void jedenZug() { vorwaerts(50); }“.
-noob.en = This method has no body: after the brackets there's a ";" instead of braces. Remove the ";" and write "{ … }": "public void onTick() { ahead(50); }".
+noob.en = This method has no body: after the parentheses there's a “;” instead of braces. Remove the “;” and write “{ … }”: “public void onTick() { ahead(50); }”.
 junior.es = Método sin cuerpo: añade «{ }» o decláralo abstract (en una clase abstracta).
 junior.de = Methode ohne Rumpf: „{ }“ ergänzen oder abstract deklarieren (in einer abstrakten Klasse).
-junior.en = Method without a body: add "{ }" or declare it abstract (in an abstract class).
+junior.en = Method without a body: add “{ }” or declare it abstract (in an abstract class).
 senior.es = Falta cuerpo o abstract.
 senior.de = Rumpf oder abstract fehlt.
 senior.en = Missing body or abstract.
@@ -721,7 +721,7 @@ senior.en = Missing body or abstract.
 [compiler.err.invalid.meth.decl.ret.type.req]
 noob.es = A este método le falta decir qué devuelve. Escribe el tipo delante del nombre, o «void» si no devuelve nada: «public void cadaTurno()». Si querías un constructor, debe llamarse exactamente como la clase.
 noob.de = Bei dieser Methode fehlt, was sie zurückgibt. Schreib den Typ vor den Namen, oder „void“, wenn sie nichts zurückgibt: „public void jedenZug()“. Ein Konstruktor muss genau wie die Klasse heißen.
-noob.en = This method doesn't say what it returns. Write the type before the name, or "void" if it returns nothing: "public void onTick()". If you meant a constructor, it must be named exactly like the class.
+noob.en = This method doesn't say what it returns. Write the type before the name, or “void” if it returns nothing: “public void onTick()”. If you meant a constructor, it must be named exactly like the class.
 junior.es = Falta el tipo de retorno; o el nombre del constructor no coincide con el de la clase.
 junior.de = Rückgabetyp fehlt; oder der Konstruktorname passt nicht zum Klassennamen.
 junior.en = Return type missing; or the constructor name doesn't match the class name.
@@ -732,7 +732,7 @@ senior.en = Return type required (constructor name?).
 [compiler.err.ret.outside.meth]
 noob.es = Hay un «return» fuera de un método (por ejemplo, en un bloque «static { }»). «return» solo sirve dentro de un método para terminarlo. Bórralo o mételo en el método.
 noob.de = Ein „return“ steht außerhalb einer Methode (etwa in einem „static { }“-Block). „return“ beendet nur eine Methode. Lösch es oder setz es in die Methode.
-noob.en = There's a "return" outside a method (for example, in a "static { }" block). "return" only ends a method. Delete it or move it into the method.
+noob.en = There's a “return” outside a method (for example, in a “static { }” block). “return” only ends a method. Delete it or move it into the method.
 junior.es = return fuera de un método.
 junior.de = return außerhalb einer Methode.
 junior.en = return outside a method.
@@ -743,7 +743,7 @@ senior.en = return outside method.
 [compiler.err.non-static.cant.be.ref]
 noob.es = Desde un método «static» (como main) no puedes usar directamente campos ni métodos normales del objeto ({msg}). Crea el objeto y úsalo, «Robot r = new Robot(); r.f();», o haz que lo que usas también sea static.
 noob.de = Aus einer „static“-Methode (wie main) kannst du normale Felder und Methoden des Objekts nicht direkt nutzen ({msg}). Leg ein Objekt an und nutz es, „Robot r = new Robot(); r.f();“, oder mach das Benutzte auch static.
-noob.en = From a "static" method (like main) you can't directly use the object's normal fields or methods ({msg}). Create the object and use it, "Robot r = new Robot(); r.f();", or make what you use static too.
+noob.en = From a “static” method (like main) you can't directly use the object's normal fields or methods ({msg}). Create the object and use it, “Robot r = new Robot(); r.f();”, or make what you use static too.
 junior.es = Contexto estático: {msg}. Necesitas una instancia o marcar el miembro como static.
 junior.de = Statischer Kontext: {msg}. Du brauchst eine Instanz oder musst das Element static machen.
 junior.en = Static context: {msg}. You need an instance or must make the member static.
@@ -756,7 +756,7 @@ senior.en = {msg}
 [compiler.err.unreported.exception.need.to.catch.or.throw]
 noob.es = Esta línea puede lanzar un error que Java obliga a atender ({msg}). Rodéala con try/catch: «try { … } catch (Exception e) { escribir(e.getMessage()); }». En los métodos del robot no puedes añadir «throws».
 noob.de = Diese Zeile kann einen Fehler werfen, um den du dich kümmern musst ({msg}). Umgib sie mit try/catch: „try { … } catch (Exception e) { ausgeben(e.getMessage()); }“. In den Robotermethoden darfst du kein „throws“ ergänzen.
-noob.en = This line can throw an error Java makes you handle ({msg}). Wrap it in try/catch: "try { … } catch (Exception e) { print(e.getMessage()); }". In the robot's methods you can't add "throws".
+noob.en = This line can throw an error Java makes you handle ({msg}). Wrap it in try/catch: “try { … } catch (Exception e) { print(e.getMessage()); }”. In the robot's methods you can't add “throws”.
 junior.es = Excepción comprobada sin tratar: {msg}. Captúrala con try/catch o declárala con throws.
 junior.de = Geprüfte Ausnahme nicht behandelt: {msg}. Mit try/catch fangen oder mit throws deklarieren.
 junior.en = Unhandled checked exception: {msg}. Catch it with try/catch or declare it with throws.
@@ -766,8 +766,8 @@ senior.en = {msg}
 
 [compiler.err.except.never.thrown.in.try]
 noob.es = Este catch espera un error que el código del try nunca puede lanzar ({msg}). Bórralo, o captura «Exception» si no sabes cuál esperar.
-noob.de = Dieses catch wartet auf einen Fehler, den der try-Code nie werfen kann ({msg}). Lösch es, oder fang „Exception“, wenn du es nicht weißt.
-noob.en = This catch waits for an error the try code can never throw ({msg}). Remove it, or catch "Exception" if you're not sure which one to expect.
+noob.de = Dieses catch wartet auf einen Fehler, den der try-Code nie werfen kann ({msg}). Lösch es, oder fang „Exception“, wenn du nicht weißt, welchen du erwarten sollst.
+noob.en = This catch waits for an error the try code can never throw ({msg}). Remove it, or catch “Exception” if you're not sure which one to expect.
 junior.es = La excepción comprobada del catch nunca se lanza en el try: {msg}
 junior.de = Die geprüfte Ausnahme im catch wird im try nie geworfen: {msg}
 junior.en = The checked exception in the catch is never thrown in the try: {msg}
@@ -778,7 +778,7 @@ senior.en = {msg}
 [compiler.err.except.already.caught]
 noob.es = Un catch anterior, más general, ya atrapa este error ({msg}). Pon primero los catch concretos y al final el general: «catch (NumberFormatException e)» antes que «catch (Exception e)».
 noob.de = Ein früheres, allgemeineres catch fängt diesen Fehler schon ({msg}). Setz die genauen catch zuerst und das allgemeine ans Ende: „catch (NumberFormatException e)“ vor „catch (Exception e)“.
-noob.en = An earlier, more general catch already traps this error ({msg}). Put the specific catches first and the general one last: "catch (NumberFormatException e)" before "catch (Exception e)".
+noob.en = An earlier, more general catch already traps this error ({msg}). Put the specific catches first and the general one last: “catch (NumberFormatException e)” before “catch (Exception e)”.
 junior.es = Excepción ya capturada por un catch anterior: ordena de lo concreto a lo general.
 junior.de = Ausnahme schon von einem früheren catch gefangen: vom Speziellen zum Allgemeinen ordnen.
 junior.en = Exception already caught by an earlier catch: order from specific to general.
@@ -789,7 +789,7 @@ senior.en = {msg}
 [compiler.err.try.without.catch.finally.or.resource.decls]
 noob.es = Un «try» necesita compañía: al menos un «catch (…) { }» o un «finally { }» justo después de su bloque.
 noob.de = Ein „try“ braucht Begleitung: mindestens ein „catch (…) { }“ oder ein „finally { }“ direkt nach seinem Block.
-noob.en = A "try" needs company: at least one "catch (…) { }" or a "finally { }" right after its block.
+noob.en = A “try” needs company: at least one “catch (…) { }” or a “finally { }” right after its block.
 junior.es = try sin catch, finally ni recursos.
 junior.de = try ohne catch, finally oder Ressourcen.
 junior.en = try without catch, finally or resources.
@@ -800,7 +800,7 @@ senior.en = try without catch/finally.
 [compiler.err.catch.without.try]
 noob.es = Este «catch» no va justo detrás de un bloque «try { … }». Comprueba las llaves: el catch se escribe pegado a la «}» que cierra el try.
 noob.de = Dieses „catch“ steht nicht direkt nach einem „try { … }“-Block. Prüf die Klammern: catch kommt direkt nach der „}“, die das try schließt.
-noob.en = This "catch" doesn't come right after a "try { … }" block. Check your braces: catch goes right after the "}" that closes the try.
+noob.en = This “catch” doesn't come right after a “try { … }” block. Check your braces: catch goes right after the “}” that closes the try.
 junior.es = catch sin try (revisa las llaves).
 junior.de = catch ohne try (Klammern prüfen).
 junior.en = catch without try (check braces).
@@ -813,7 +813,7 @@ senior.en = catch without try.
 [compiler.err.class.public.should.be.in.file]
 noob.es = Una clase «public» debe llamarse exactamente como su archivo, mayúsculas incluidas ({msg}). Cambia el nombre que va detrás de «public class» para que coincida con el de la pestaña, o quita «public».
 noob.de = Eine „public“-Klasse muss genau wie ihre Datei heißen, auch in der Groß- und Kleinschreibung ({msg}). Änder den Namen hinter „public class“, damit er zum Tab passt, oder entferne „public“.
-noob.en = A "public" class must be named exactly like its file, capitals included ({msg}). Change the name after "public class" to match the tab, or remove "public".
+noob.en = A “public” class must be named exactly like its file, capitals included ({msg}). Change the name after “public class” to match the tab, or remove “public”.
 junior.es = Clase pública en un archivo con otro nombre: {msg}
 junior.de = Öffentliche Klasse in einer Datei mit anderem Namen: {msg}
 junior.en = Public class in a file with a different name: {msg}
@@ -835,7 +835,7 @@ senior.en = {msg}
 [compiler.err.method.does.not.override.superclass]
 noob.es = Pusiste @Override, pero la clase madre no tiene un método igual. Revisa el nombre letra a letra y sus parámetros: es «cadaTurno()», no «cadaturno()», y «alVerEnemigo(Enemigo e)», no «alVerEnemigo(Enemy e)».
 noob.de = Du hast @Override geschrieben, aber die Elternklasse hat keine gleiche Methode. Prüf den Namen Buchstabe für Buchstabe und die Parameter: Es heißt „jedenZug()“, nicht „jedenzug()“, und „beiSicht(Gegner g)“, nicht „beiSicht(Enemy g)“.
-noob.en = You wrote @Override, but the parent class has no matching method. Check the name letter by letter and its parameters: it's "onTick()", not "ontick()", and "onSeeEnemy(Enemy e)", not "onSeeEnemy(Gegner e)".
+noob.en = You wrote @Override, but the parent class has no matching method. Check the name letter by letter and its parameters: it's “onTick()”, not “ontick()”, and “onSeeEnemy(Enemy e)”, not “onSeeEnemy(Gegner e)”.
 junior.es = @Override sin método que sobrescribir: el nombre o los tipos de parámetro no coinciden con la superclase o interfaz.
 junior.de = @Override ohne zu überschreibende Methode: Name oder Parametertypen passen nicht zur Oberklasse oder zum Interface.
 junior.en = @Override with nothing to override: the name or parameter types don't match the superclass or interface.
@@ -846,7 +846,7 @@ senior.en = {msg}
 [compiler.err.does.not.override.abstract]
 noob.es = Tu clase promete tener un método (por una interfaz o una clase abstracta) y no lo tiene ({msg}). Escríbelo con el mismo nombre y parámetros, por ejemplo «public double danio() { return 10; }», o marca la clase como «abstract».
 noob.de = Deine Klasse verspricht eine Methode (durch ein Interface oder eine abstrakte Klasse) und hat sie nicht ({msg}). Schreib sie mit gleichem Namen und gleichen Parametern, etwa „public double schaden() { return 10; }“, oder mach die Klasse „abstract“.
-noob.en = Your class promises a method (through an interface or an abstract class) and doesn't have it ({msg}). Write it with the same name and parameters, e.g. "public double damage() { return 10; }", or mark the class "abstract".
+noob.en = Your class promises a method (through an interface or an abstract class) and doesn't have it ({msg}). Write it with the same name and parameters, e.g. “public double damage() { return 10; }”, or mark the class “abstract”.
 junior.es = Falta implementar un método abstracto: {msg}
 junior.de = Abstrakte Methode nicht implementiert: {msg}
 junior.en = Abstract method not implemented: {msg}
@@ -857,7 +857,7 @@ senior.en = {msg}
 [compiler.err.override.weaker.access]
 noob.es = Al sobrescribir un método no puedes hacerlo menos visible. Si en la madre es «public», el tuyo también: escribe «public void cadaTurno()», no «void cadaTurno()».
 noob.de = Beim Überschreiben darf eine Methode nicht weniger sichtbar werden. Ist sie in der Elternklasse „public“, dann auch deine: „public void jedenZug()“, nicht „void jedenZug()“.
-noob.en = When you override a method you can't make it less visible. If it's "public" in the parent, yours must be too: write "public void onTick()", not "void onTick()".
+noob.en = When you override a method you can't make it less visible. If it's “public” in the parent, yours must be too: write “public void onTick()”, not “void onTick()”.
 junior.es = Visibilidad más restrictiva al sobrescribir: {msg}. Los métodos de interfaz son public.
 junior.de = Strengere Sichtbarkeit beim Überschreiben: {msg}. Interface-Methoden sind public.
 junior.en = Weaker access when overriding: {msg}. Interface methods are public.
@@ -868,7 +868,7 @@ senior.en = {msg}
 [compiler.err.override.static]
 noob.es = Este método es «static», pero el de la madre no lo es: no se pueden mezclar. Quita «static»: «public void cadaTurno()».
 noob.de = Diese Methode ist „static“, die der Elternklasse aber nicht: Das passt nicht zusammen. Entferne „static“: „public void jedenZug()“.
-noob.en = This method is "static", but the parent's isn't: they can't be mixed. Remove "static": "public void onTick()".
+noob.en = This method is “static”, but the parent's isn't: they can't be mixed. Remove “static”: “public void onTick()”.
 junior.es = Un método static no puede sobrescribir uno de instancia: {msg}
 junior.de = Eine static-Methode kann keine Instanzmethode überschreiben: {msg}
 junior.en = A static method can't override an instance method: {msg}
@@ -878,8 +878,8 @@ senior.en = {msg}
 
 [compiler.err.override.meth]
 noob.es = Intentas cambiar un método que la madre no deja cambiar porque es «final» o «static» ({msg}). Órdenes como avanzar o atacar son final: úsalas, pero no las redefinas. Si querías un método tuyo, ponle otro nombre.
-noob.de = Du versuchst, eine Methode zu ändern, die die Elternklasse sperrt, weil sie „final“ oder „static“ ist ({msg}). Befehle wie vorwaerts oder angreifen sind final: benutz sie, aber definier sie nicht neu. Für eine eigene Methode nimm einen anderen Namen.
-noob.en = You're trying to change a method the parent doesn't allow to change because it's "final" or "static" ({msg}). Commands like ahead or attack are final: use them, but don't redefine them. For your own method, pick another name.
+noob.de = Du versuchst, eine Methode zu ändern, die die Elternklasse sperrt, weil sie „final“ oder „static“ ist ({msg}). Befehle wie vorwaerts oder angreifen sind final: Benutz sie, aber definier sie nicht neu. Für eine eigene Methode nimm einen anderen Namen.
+noob.en = You're trying to change a method the parent doesn't let you change because it's “final” or “static” ({msg}). Orders like ahead or attack are final: use them, but don't redefine them. For your own method, pick another name.
 junior.es = No se puede sobrescribir un método final o estático: {msg}
 junior.de = final- oder static-Methode kann nicht überschrieben werden: {msg}
 junior.en = A final or static method can't be overridden: {msg}
@@ -890,7 +890,7 @@ senior.en = {msg}
 [compiler.err.override.incompatible.ret]
 noob.es = Al sobrescribir un método debes devolver el mismo tipo que la madre. «cadaTurno» es void: escribe «public void cadaTurno()», no «public int cadaTurno()».
 noob.de = Beim Überschreiben musst du denselben Typ zurückgeben wie die Elternklasse. „jedenZug“ ist void: „public void jedenZug()“, nicht „public int jedenZug()“.
-noob.en = When you override a method you must return the same type as the parent. "onTick" is void: write "public void onTick()", not "public int onTick()".
+noob.en = When you override a method you must return the same type as the parent. “onTick” is void: write “public void onTick()”, not “public int onTick()”.
 junior.es = Tipo de retorno incompatible con el método sobrescrito: {msg}
 junior.de = Rückgabetyp passt nicht zur überschriebenen Methode: {msg}
 junior.en = Return type incompatible with the overridden method: {msg}
@@ -901,7 +901,7 @@ senior.en = {msg}
 [compiler.err.override.meth.doesnt.throw]
 noob.es = El método de la madre no lanza ese error, así que el tuyo tampoco puede declararlo con «throws». Quita el «throws» y atiende el error dentro con try/catch.
 noob.de = Die Methode der Elternklasse wirft diesen Fehler nicht, also darf deine ihn auch nicht mit „throws“ angeben. Entferne „throws“ und fang den Fehler innen mit try/catch ab.
-noob.en = The parent's method doesn't throw that error, so yours can't declare it with "throws" either. Remove "throws" and handle the error inside with try/catch.
+noob.en = The parent's method doesn't throw that error, so yours can't declare it with “throws” either. Remove “throws” and handle the error inside with try/catch.
 junior.es = El método sobrescrito no puede declarar más excepciones comprobadas: {msg}
 junior.de = Die überschreibende Methode darf keine zusätzlichen geprüften Ausnahmen deklarieren: {msg}
 junior.en = The overriding method can't declare extra checked exceptions: {msg}
@@ -912,7 +912,7 @@ senior.en = {msg}
 [compiler.err.abstract.cant.be.instantiated]
 noob.es = No puedes crear con «new» una clase abstracta ni una interfaz: están incompletas ({msg}). Crea una de sus clases hijas. Para listas: «new ArrayList<>()», no «new List<>()».
 noob.de = Mit „new“ kannst du keine abstrakte Klasse und kein Interface erzeugen: Sie sind unvollständig ({msg}). Erzeug eine Unterklasse. Für Listen: „new ArrayList<>()“, nicht „new List<>()“.
-noob.en = You can't create an abstract class or an interface with "new": they're incomplete ({msg}). Create one of its subclasses. For lists: "new ArrayList<>()", not "new List<>()".
+noob.en = You can't create an abstract class or an interface with “new”: they're incomplete ({msg}). Create one of its subclasses. For lists: “new ArrayList<>()”, not “new List<>()”.
 junior.es = Tipo abstracto no instanciable: {msg}. Usa una implementación concreta o una clase anónima.
 junior.de = Abstrakter Typ nicht instanziierbar: {msg}. Nimm eine konkrete Implementierung oder eine anonyme Klasse.
 junior.en = Abstract type can't be instantiated: {msg}. Use a concrete implementation or an anonymous class.
@@ -923,9 +923,9 @@ senior.en = {msg}
 [compiler.err.enum.cant.be.instantiated]
 noob.es = Los valores de un enum ya existen y no se crean con «new». Usa uno directamente: «Modo m = Modo.ATAQUE;».
 noob.de = Die Werte eines enum gibt es schon, sie werden nicht mit „new“ erzeugt. Nimm einfach einen: „Modus m = Modus.ANGRIFF;“.
-noob.en = An enum's values already exist and aren't created with "new". Just use one: "Mode m = Mode.ATTACK;".
+noob.en = An enum's values already exist and aren't created with “new”. Just use one: “Mode m = Mode.ATTACK;”.
 junior.es = Los enum no se instancian: usa sus constantes.
-junior.de = enums werden nicht instanziiert: nimm ihre Konstanten.
+junior.de = Enums werden nicht instanziiert: Nimm ihre Konstanten.
 junior.en = Enums can't be instantiated: use their constants.
 senior.es = {msg}
 senior.de = {msg}
@@ -934,7 +934,7 @@ senior.en = {msg}
 [compiler.err.abstract.meth.cant.have.body]
 noob.es = Un método «abstract» no lleva código: solo dice que existirá. Quita las llaves y pon «;» («abstract double danio();»), o quita «abstract» si quieres darle código.
 noob.de = Eine „abstract“-Methode hat keinen Code: Sie sagt nur, dass es sie geben wird. Entferne die Klammern und setz „;“ („abstract double schaden();“), oder lass „abstract“ weg, wenn sie Code haben soll.
-noob.en = An "abstract" method has no code: it only says it will exist. Remove the braces and put ";" ("abstract double damage();"), or remove "abstract" if you want to give it code.
+noob.en = An “abstract” method has no code: it only says it will exist. Remove the braces and put “;” (“abstract double damage();”), or remove “abstract” if you want to give it code.
 junior.es = Un método abstracto no puede tener cuerpo.
 junior.de = Eine abstrakte Methode darf keinen Rumpf haben.
 junior.en = An abstract method can't have a body.
@@ -945,7 +945,7 @@ senior.en = Abstract method with a body.
 [compiler.err.intf.meth.cant.have.body]
 noob.es = En una interfaz, un método con código tiene que llevar «default» delante (o «static»): «default void saludar() { … }». Si no, quita las llaves y termina con «;».
 noob.de = In einem Interface braucht eine Methode mit Code „default“ davor (oder „static“): „default void gruessen() { … }“. Sonst entferne die Klammern und ende mit „;“.
-noob.en = In an interface, a method with code needs "default" in front (or "static"): "default void greet() { … }". Otherwise remove the braces and end with ";".
+noob.en = In an interface, a method with code needs “default” in front (or “static”): “default void greet() { … }”. Otherwise remove the braces and end with “;”.
 junior.es = Método de interfaz con cuerpo sin default/static/private (Java 8 y 9).
 junior.de = Interface-Methode mit Rumpf ohne default/static/private (Java 8 und 9).
 junior.en = Interface method with a body but no default/static/private (Java 8 and 9).
@@ -955,8 +955,8 @@ senior.en = Interface method body needs default.
 
 [compiler.err.illegal.combination.of.modifiers]
 noob.es = Estas dos palabras se contradicen ({msg}). Por ejemplo, «abstract» dice «una hija lo completará» y «final» o «private» dicen «nadie lo cambiará». Quita una de las dos.
-noob.de = Diese zwei Wörter widersprechen sich ({msg}). Zum Beispiel sagt „abstract“: „eine Unterklasse ergänzt es“, und „final“ oder „private“ sagen: „niemand ändert es“. Entferne eins davon.
-noob.en = These two words contradict each other ({msg}). For example, "abstract" says "a subclass will complete it" while "final" or "private" say "nobody will change it". Remove one.
+noob.de = Diese zwei Wörter widersprechen sich ({msg}). Zum Beispiel sagt „abstract“: „Eine Unterklasse ergänzt es“, und „final“ oder „private“ sagen: „Niemand ändert es“. Entferne eins davon.
+noob.en = These two words contradict each other ({msg}). For example, “abstract” says “a subclass will complete it” while “final” or “private” say “nobody will change it”. Remove one.
 junior.es = Combinación ilegal de modificadores: {msg}
 junior.de = Unzulässige Kombination von Modifizierern: {msg}
 junior.en = Illegal combination of modifiers: {msg}
@@ -978,7 +978,7 @@ senior.en = {msg}
 [compiler.err.report.access]
 noob.es = Eso es «private» (o protected) y no se puede usar desde aquí ({msg}). Las clases esconden sus datos: usa un método público que te lo dé, como «getVida()», o el getter que tenga.
 noob.de = Das ist „private“ (oder protected) und von hier aus nicht nutzbar ({msg}). Klassen verstecken ihre Daten: Nimm eine öffentliche Methode, die es dir gibt, etwa „getLeben()“, oder den vorhandenen Getter.
-noob.en = That's "private" (or protected) and can't be used from here ({msg}). Classes hide their data: use a public method that gives it to you, like "getLife()", or whatever getter it has.
+noob.en = That's “private” (or protected) and can't be used from here ({msg}). Classes hide their data: use a public method that gives it to you, like “getLife()”, or whatever getter it has.
 junior.es = Acceso denegado: {msg}. Usa la interfaz pública (getters y métodos).
 junior.de = Zugriff verweigert: {msg}. Nutze die öffentliche Schnittstelle (Getter und Methoden).
 junior.en = Access denied: {msg}. Use the public interface (getters and methods).
@@ -989,7 +989,7 @@ senior.en = {msg}
 [compiler.err.not.def.public.cant.access]
 noob.es = Esa clase o ese método no es público y está en otro paquete, así que no lo puedes usar ({msg}). Usa otra clase pública que haga lo mismo; con las tuyas, pon «public» delante.
 noob.de = Diese Klasse oder Methode ist nicht öffentlich und liegt in einem anderen Paket, deshalb kannst du sie nicht nutzen ({msg}). Nimm eine öffentliche Alternative; bei deinen eigenen setz „public“ davor.
-noob.en = That class or method isn't public and lives in another package, so you can't use it ({msg}). Use another public class that does the same; for your own, put "public" in front.
+noob.en = That class or method isn't public and lives in another package, so you can't use it ({msg}). Use another public class that does the same; for your own, put “public” in front.
 junior.es = No es público en su paquete: {msg}
 junior.de = Im Paket nicht öffentlich: {msg}
 junior.en = Not public in its package: {msg}
@@ -1000,9 +1000,9 @@ senior.en = {msg}
 [compiler.err.cant.inherit.from.final]
 noob.es = No puedes heredar de esta clase porque es «final» ({msg}); por ejemplo String o Integer. En lugar de «extends», guarda un objeto de esa clase como campo y úsalo.
 noob.de = Du kannst von dieser Klasse nicht erben, weil sie „final“ ist ({msg}), etwa String oder Integer. Statt „extends“ speicher ein Objekt dieser Klasse als Feld und benutz es.
-noob.en = You can't inherit from this class because it's "final" ({msg}), like String or Integer. Instead of "extends", keep an object of that class as a field and use it.
+noob.en = You can't inherit from this class because it's “final” ({msg}), like String or Integer. Instead of “extends”, keep an object of that class as a field and use it.
 junior.es = Herencia de clase final: usa composición en vez de herencia.
-junior.de = Vererbung von final-Klasse: nimm Komposition statt Vererbung.
+junior.de = Vererbung von final-Klasse: Nimm Komposition statt Vererbung.
 junior.en = Inheriting from a final class: use composition instead of inheritance.
 senior.es = {msg}
 senior.de = {msg}
@@ -1011,7 +1011,7 @@ senior.en = {msg}
 [compiler.err.cant.inherit.from.sealed]
 noob.es = Esta clase o interfaz es «sealed»: solo pueden heredar de ella las clases de su lista «permits» ({msg}). Añade tu clase a esa lista o hereda de otra.
 noob.de = Diese Klasse oder dieses Interface ist „sealed“: Nur die Klassen in seiner „permits“-Liste dürfen erben ({msg}). Füg deine Klasse der Liste hinzu oder erbe von etwas anderem.
-noob.en = This class or interface is "sealed": only the classes in its "permits" list may inherit from it ({msg}). Add your class to that list or inherit from something else.
+noob.en = This class or interface is “sealed”: only the classes in its “permits” list may inherit from it ({msg}). Add your class to that list or inherit from something else.
 junior.es = Subtipo no permitido por la jerarquía sellada (Java 17): {msg}
 junior.de = Untertyp in der versiegelten Hierarchie nicht erlaubt (Java 17): {msg}
 junior.en = Subtype not permitted by the sealed hierarchy (Java 17): {msg}
@@ -1022,7 +1022,7 @@ senior.en = {msg}
 [compiler.err.cyclic.inheritance]
 noob.es = Una clase no puede heredar de sí misma, ni en círculo (A hereda de B y B de A). Revisa los «extends» y deja una cadena que empiece en algún sitio.
 noob.de = Eine Klasse kann nicht von sich selbst erben, auch nicht im Kreis (A erbt von B und B von A). Prüf die „extends“ und lass die Kette irgendwo anfangen.
-noob.en = A class can't inherit from itself, not even in a circle (A extends B and B extends A). Check your "extends" and make the chain start somewhere.
+noob.en = A class can't inherit from itself, not even in a circle (A extends B and B extends A). Check your “extends” and make the chain start somewhere.
 junior.es = Herencia cíclica: {msg}
 junior.de = Zyklische Vererbung: {msg}
 junior.en = Cyclic inheritance: {msg}
@@ -1033,7 +1033,7 @@ senior.en = {msg}
 [compiler.err.intf.expected.here]
 noob.es = Detrás de «implements» solo van interfaces, y esto es una clase. Para heredar de una clase usa «extends»: «class MiRobot extends Metajavbot».
 noob.de = Nach „implements“ kommen nur Interfaces, und das hier ist eine Klasse. Um von einer Klasse zu erben, nimm „extends“: „class MeinRoboter extends MetajavbotDe“.
-noob.en = Only interfaces go after "implements", and this is a class. To inherit from a class use "extends": "class MyRobot extends MetajavbotEn".
+noob.en = Only interfaces go after “implements”, and this is a class. To inherit from a class use “extends”: “class MyRobot extends MetajavbotEn”.
 junior.es = Se esperaba una interfaz: las clases se heredan con extends.
 junior.de = Interface erwartet: Klassen erbt man mit extends.
 junior.en = Interface expected: classes are inherited with extends.
@@ -1044,7 +1044,7 @@ senior.en = Class after implements.
 [compiler.err.no.intf.expected.here]
 noob.es = Una clase no hereda de una interfaz con «extends»: la implementa con «implements». Escribe «class Laser implements Arma».
 noob.de = Eine Klasse erbt nicht mit „extends“ von einem Interface: Sie implementiert es mit „implements“. Schreib „class Laser implements Waffe“.
-noob.en = A class doesn't "extends" an interface: it implements it with "implements". Write "class Laser implements Weapon".
+noob.en = A class doesn't inherit from an interface with “extends”: it implements it with “implements”. Write “class Laser implements Weapon”.
 junior.es = No se esperaba una interfaz: usa implements con interfaces.
 junior.de = Kein Interface erwartet: Interfaces mit implements.
 junior.en = No interface expected here: use implements for interfaces.
@@ -1056,7 +1056,7 @@ senior.en = Interface after extends.
 [compiler.err.call.must.be.first.stmt.in.ctor]
 noob.es = «super(…)» o «this(…)» tienen que ser la primera línea del constructor. Muévelos arriba del todo, antes de cualquier otra orden.
 noob.de = „super(…)“ oder „this(…)“ muss die erste Zeile des Konstruktors sein. Schieb es ganz nach oben, vor jeden anderen Befehl.
-noob.en = "super(…)" or "this(…)" must be the first line of the constructor. Move it to the very top, before any other command.
+noob.en = “super(…)” or “this(…)” must be the first line of the constructor. Move it to the very top, before any other order.
 junior.es = La llamada a super/this debe ser la primera sentencia del constructor: {msg}
 junior.de = Der Aufruf von super/this muss die erste Anweisung des Konstruktors sein: {msg}
 junior.en = The call to super/this must be the first statement in the constructor: {msg}
@@ -1067,7 +1067,7 @@ senior.en = {msg}
 [compiler.err.call.must.only.appear.in.ctor]
 noob.es = «super(…)» y «this(…)» solo se usan dentro de un constructor. En un método normal, para llamar a la versión de la madre escribe «super.nombreDelMetodo()».
 noob.de = „super(…)“ und „this(…)“ gibt es nur in einem Konstruktor. In einer normalen Methode rufst du die Version der Elternklasse mit „super.methodenName()“ auf.
-noob.en = "super(…)" and "this(…)" can only be used inside a constructor. In a normal method, call the parent's version with "super.methodName()".
+noob.en = “super(…)” and “this(…)” can only be used inside a constructor. In a normal method, call the parent's version with “super.methodName()”.
 junior.es = Llamada a constructor fuera de un constructor: {msg}
 junior.de = Konstruktoraufruf außerhalb eines Konstruktors: {msg}
 junior.en = Constructor call outside a constructor: {msg}
@@ -1078,7 +1078,7 @@ senior.en = {msg}
 [compiler.err.ctor.calls.not.allowed.here]
 noob.es = Aquí no se puede llamar a «super(…)» ni a «this(…)», por ejemplo dentro de un if, un bucle o un try. Ponlo directamente en el cuerpo del constructor, una sola vez.
 noob.de = Hier darf „super(…)“ oder „this(…)“ nicht stehen, etwa in einem if, einer Schleife oder einem try. Setz es direkt in den Konstruktorrumpf, nur einmal.
-noob.en = "super(…)" or "this(…)" can't be called here, for example inside an if, a loop or a try. Put it directly in the constructor body, just once.
+noob.en = “super(…)” or “this(…)” can't be called here, for example inside an if, a loop or a try. Put it directly in the constructor body, just once.
 junior.es = Llamada a constructor no permitida en este punto: {msg}
 junior.de = Konstruktoraufruf an dieser Stelle nicht erlaubt: {msg}
 junior.en = Constructor call not allowed here: {msg}
@@ -1089,7 +1089,7 @@ senior.en = {msg}
 [compiler.err.cant.ref.before.ctor.called]
 noob.es = Usas el objeto (sus campos, sus métodos o «this») antes de llamar a «super(…)» o «this(…)», y el objeto aún no está listo. Mueve esa línea detrás de la llamada.
 noob.de = Du benutzt das Objekt (Felder, Methoden oder „this“), bevor „super(…)“ oder „this(…)“ aufgerufen ist, und es ist noch nicht fertig. Schieb die Zeile hinter den Aufruf.
-noob.en = You use the object (its fields, methods or "this") before calling "super(…)" or "this(…)", and the object isn't ready yet. Move that line after the call.
+noob.en = You use the object (its fields, methods or “this”) before calling “super(…)” or “this(…)”, and the object isn't ready yet. Move that line after the call.
 junior.es = Referencia a la instancia antes de llamar al constructor de la superclase: {msg}
 junior.de = Zugriff auf die Instanz vor dem Aufruf des Oberklassenkonstruktors: {msg}
 junior.en = Reference to the instance before the superclass constructor is called: {msg}
@@ -1100,7 +1100,7 @@ senior.en = {msg}
 [compiler.err.recursive.ctor.invocation]
 noob.es = Tus constructores se llaman unos a otros con «this(…)» en círculo y nunca terminarían. Haz que uno de ellos haga el trabajo sin llamar a otro.
 noob.de = Deine Konstruktoren rufen sich mit „this(…)“ im Kreis auf und würden nie fertig. Lass einen davon die Arbeit machen, ohne einen anderen aufzurufen.
-noob.en = Your constructors call each other with "this(…)" in a circle and would never finish. Make one of them do the work without calling another.
+noob.en = Your constructors call each other with “this(…)” in a circle and would never finish. Make one of them do the work without calling another.
 junior.es = Invocación recursiva de constructores: {msg}
 junior.de = Rekursiver Konstruktoraufruf: {msg}
 junior.en = Recursive constructor invocation: {msg}
@@ -1111,7 +1111,7 @@ senior.en = {msg}
 [compiler.err.var.not.initialized.in.default.constructor]
 noob.es = Este campo es «final» y nadie le da valor. Dáselo al declararlo, «final int vida = 100;», o en un constructor.
 noob.de = Dieses Feld ist „final“ und bekommt nie einen Wert. Gib ihm einen bei der Deklaration, „final int leben = 100;“, oder in einem Konstruktor.
-noob.en = This field is "final" and nobody gives it a value. Give it one where you declare it, "final int life = 100;", or in a constructor.
+noob.en = This field is “final” and nobody gives it a value. Give it one where you declare it, “final int life = 100;”, or in a constructor.
 junior.es = Campo final sin inicializar: {msg}
 junior.de = final-Feld nicht initialisiert: {msg}
 junior.en = final field not initialized: {msg}
@@ -1122,9 +1122,9 @@ senior.en = {msg}
 [compiler.err.record.cannot.declare.instance.fields]
 noob.es = Un record guarda sus datos solo en los paréntesis de su cabecera: «record Punto(double x, double y) { }». No puedes añadir más campos dentro; sí métodos o campos «static».
 noob.de = Ein record speichert seine Daten nur in den Klammern seines Kopfes: „record Punkt(double x, double y) { }“. Weitere Felder darin gehen nicht; Methoden oder „static“-Felder schon.
-noob.en = A record keeps its data only in the brackets of its header: "record Point(double x, double y) { }". You can't add more fields inside; methods or "static" fields are fine.
+noob.en = A record keeps its data only in the parentheses of its header: “record Point(double x, double y) { }”. You can't add more fields inside; methods or “static” fields are fine.
 junior.es = Un record no puede declarar campos de instancia: van como componentes (Java 16).
-junior.de = Ein record darf keine Instanzfelder deklarieren: sie gehören in die Komponenten (Java 16).
+junior.de = Ein record darf keine Instanzfelder deklarieren: Sie gehören in die Komponenten (Java 16).
 junior.en = A record can't declare instance fields: they go in the components (Java 16).
 senior.es = {msg}
 senior.de = {msg}
@@ -1135,7 +1135,7 @@ senior.en = {msg}
 [compiler.err.not.within.bounds]
 noob.es = Ese tipo no cumple lo que pide la clase genérica ({msg}). Si dice «<T extends Number>», solo valen números como Integer o Double, no String.
 noob.de = Dieser Typ erfüllt nicht, was die generische Klasse verlangt ({msg}). Steht da „<T extends Number>“, gehen nur Zahlen wie Integer oder Double, nicht String.
-noob.en = That type doesn't meet what the generic class requires ({msg}). If it says "<T extends Number>", only numbers like Integer or Double work, not String.
+noob.en = That type doesn't meet what the generic class requires ({msg}). If it says “<T extends Number>”, only numbers like Integer or Double work, not String.
 junior.es = Argumento de tipo fuera de los límites: {msg}
 junior.de = Typargument außerhalb der Schranken: {msg}
 junior.en = Type argument not within bounds: {msg}
@@ -1146,7 +1146,7 @@ senior.en = {msg}
 [compiler.err.wrong.number.type.args]
 noob.es = Has puesto un número equivocado de tipos dentro de «<>». Un mapa necesita dos, clave y valor: «Map<String, Integer>»; una lista, uno: «List<String>».
 noob.de = In „<>“ steht die falsche Anzahl Typen. Eine Map braucht zwei, Schlüssel und Wert: „Map<String, Integer>“; eine Liste einen: „List<String>“.
-noob.en = You put the wrong number of types inside "<>". A map needs two, key and value: "Map<String, Integer>"; a list needs one: "List<String>".
+noob.en = You put the wrong number of types inside “<>”. A map needs two, key and value: “Map<String, Integer>”; a list needs one: “List<String>”.
 junior.es = Número incorrecto de argumentos de tipo: {msg}
 junior.de = Falsche Anzahl Typargumente: {msg}
 junior.en = Wrong number of type arguments: {msg}
@@ -1157,9 +1157,9 @@ senior.en = {msg}
 [compiler.err.generic.array.creation]
 noob.es = Java no deja crear arrays de tipos genéricos, como «new T[10]» o «new List<String>[3]». Usa una lista en su lugar: «List<T> cosas = new ArrayList<>();».
 noob.de = Java erlaubt keine Arrays generischer Typen wie „new T[10]“ oder „new List<String>[3]“. Nimm stattdessen eine Liste: „List<T> dinge = new ArrayList<>();“.
-noob.en = Java doesn't let you create arrays of generic types, like "new T[10]" or "new List<String>[3]". Use a list instead: "List<T> things = new ArrayList<>();".
+noob.en = Java doesn't let you create arrays of generic types, like “new T[10]” or “new List<String>[3]”. Use a list instead: “List<T> things = new ArrayList<>();”.
 junior.es = Creación de array genérico no permitida (borrado de tipos): usa List<T>.
-junior.de = Erzeugung generischer Arrays nicht erlaubt (Type Erasure): nimm List<T>.
+junior.de = Erzeugung generischer Arrays nicht erlaubt (Type Erasure): Nimm List<T>.
 junior.en = Generic array creation not allowed (type erasure): use List<T>.
 senior.es = Array genérico; usa una colección.
 senior.de = Generisches Array; nimm eine Collection.
@@ -1168,7 +1168,7 @@ senior.en = Generic array; use a collection.
 [compiler.err.cant.apply.diamond.1]
 noob.es = El rombo «<>» solo sirve con clases genéricas, como ArrayList o HashMap ({msg}). Esta clase no lo es: quita el «<>», por ejemplo «new String()».
 noob.de = Die Raute „<>“ geht nur bei generischen Klassen wie ArrayList oder HashMap ({msg}). Diese Klasse ist keine: Lass „<>“ weg, etwa „new String()“.
-noob.en = The diamond "<>" only works with generic classes, like ArrayList or HashMap ({msg}). This class isn't one: remove the "<>", e.g. "new String()".
+noob.en = The diamond “<>” only works with generic classes, like ArrayList or HashMap ({msg}). This class isn't one: remove the “<>”, e.g. “new String()”.
 junior.es = No se puede inferir el tipo con <>: {msg}
 junior.de = Typ mit <> nicht ableitbar: {msg}
 junior.en = Cannot infer type arguments with <>: {msg}
@@ -1179,7 +1179,7 @@ senior.en = {msg}
 [compiler.err.cant.ref.non.effectively.final.var]
 noob.es = Dentro de una lambda («->») o de una clase anónima solo puedes usar variables que no cambian ({msg}). Copia el valor en una variable nueva que no toques más, «int fijo = x;», o guárdalo en un campo de la clase.
 noob.de = In einer Lambda („->“) oder anonymen Klasse kannst du nur Variablen nutzen, die sich nicht ändern ({msg}). Kopier den Wert in eine neue Variable, die du nicht mehr änderst, „int fest = x;“, oder nimm ein Feld der Klasse.
-noob.en = Inside a lambda ("->") or an anonymous class you can only use variables that don't change ({msg}). Copy the value into a new variable you never touch again, "int fixed = x;", or keep it in a class field.
+noob.en = Inside a lambda (“->”) or an anonymous class you can only use variables that don't change ({msg}). Copy the value into a new variable you never touch again, “int fixed = x;”, or keep it in a class field.
 junior.es = La variable local debe ser final o efectivamente final: {msg}. Para un contador usa un campo o AtomicInteger.
 junior.de = Die lokale Variable muss final oder effektiv final sein: {msg}. Für einen Zähler ein Feld oder AtomicInteger.
 junior.en = The local variable must be final or effectively final: {msg}. For a counter use a field or AtomicInteger.
@@ -1191,7 +1191,7 @@ senior.en = {msg}
 [compiler.err.local.var.accessed.from.icls.needs.final]
 noob.es = Dentro de una clase anónima solo puedes usar variables locales marcadas «final». Pon «final» delante de la variable y no la cambies después.
 noob.de = In einer anonymen Klasse kannst du nur lokale Variablen nutzen, die „final“ sind. Setz „final“ davor und änder sie danach nicht mehr.
-noob.en = Inside an anonymous class you can only use local variables marked "final". Put "final" in front of the variable and don't change it afterwards.
+noob.en = Inside an anonymous class you can only use local variables marked “final”. Put “final” in front of the variable and don't change it afterward.
 junior.es = Variable local usada desde una clase interna: debe ser final: {msg}
 junior.de = Lokale Variable in innerer Klasse benutzt: muss final sein: {msg}
 junior.en = Local variable accessed from an inner class must be final: {msg}
@@ -1202,7 +1202,7 @@ senior.en = {msg}
 [compiler.err.invalid.mref]
 noob.es = Esta referencia a método («Clase::metodo») apunta a un método que no existe o que no encaja ({msg}). Revisa el nombre, o escríbelo como lambda: «x -> x.length()».
 noob.de = Diese Methodenreferenz („Klasse::methode“) zeigt auf eine Methode, die es nicht gibt oder die nicht passt ({msg}). Prüf den Namen oder schreib sie als Lambda: „x -> x.length()“.
-noob.en = This method reference ("Class::method") points to a method that doesn't exist or doesn't fit ({msg}). Check the name, or write it as a lambda: "x -> x.length()".
+noob.en = This method reference (“Class::method”) points to a method that doesn't exist or doesn't fit ({msg}). Check the name, or write it as a lambda: “x -> x.length()”.
 junior.es = Referencia a método no válida: {msg}
 junior.de = Ungültige Methodenreferenz: {msg}
 junior.en = Invalid method reference: {msg}
@@ -1213,7 +1213,7 @@ senior.en = {msg}
 [compiler.err.pattern.dominated]
 noob.es = Este case nunca se usará porque uno anterior ya atrapa todo lo que él atraparía (por ejemplo, «case Object o» antes de «case String s»). Pon primero los casos más concretos.
 noob.de = Dieses case wird nie benutzt, weil ein früheres schon alles fängt (etwa „case Object o“ vor „case String s“). Setz die genaueren Fälle nach vorn.
-noob.en = This case will never be used because an earlier one already catches everything it would (e.g. "case Object o" before "case String s"). Put the more specific cases first.
+noob.en = This case will never be used because an earlier one already catches everything it would (e.g. “case Object o” before “case String s”). Put the more specific cases first.
 junior.es = Patrón dominado por uno anterior: ordénalos de concreto a general (Java 21).
 junior.de = Muster von einem früheren dominiert: vom Speziellen zum Allgemeinen ordnen (Java 21).
 junior.en = Pattern dominated by an earlier one: order from specific to general (Java 21).
@@ -1225,8 +1225,8 @@ senior.en = Dominated pattern.
 
 [metajavbots.prohibido]
 noob.es = Tu código usa algo que el juego no permite por seguridad: {msg}. En la arena no se puede tocar archivos, la red, otros programas, la reflexión ni System.exit, y los robots no pueden crear hilos. Bórralo y busca otra forma con la API del robot.
-noob.de = Dein Code benutzt etwas, das das Spiel aus Sicherheitsgründen verbietet: {msg}. In der Arena sind Dateien, Netzwerk, andere Programme, Reflection und System.exit tabu, und Roboter dürfen keine Threads starten. Lösch es und such einen Weg mit der Roboter-API.
-noob.en = Your code uses something the game doesn't allow for safety: {msg}. In the arena you can't touch files, the network, other programs, reflection or System.exit, and robots can't create threads. Remove it and find another way with the robot API.
+noob.de = Dein Code benutzt etwas, das das Spiel aus Sicherheitsgründen verbietet: {msg}. In der Arena sind Dateien, Netzwerk, andere Programme, Reflection und System.exit tabu, und Roboter dürfen keine Threads starten. Lösch es und such einen anderen Weg mit der Roboter-API.
+noob.en = Your code uses something the game doesn't allow for security reasons: {msg}. In the arena you can't touch files, the network, other programs, reflection or System.exit, and robots can't create threads. Remove it and find another way with the robot API.
 junior.es = Uso prohibido en el juego: {msg}. Sin archivos, red, procesos, reflexión ni System.exit; sin hilos en los robots.
 junior.de = Im Spiel verboten: {msg}. Keine Dateien, kein Netzwerk, keine Prozesse, keine Reflection, kein System.exit; keine Threads in Robotern.
 junior.en = Forbidden in the game: {msg}. No files, network, processes, reflection or System.exit; no threads in robots.
@@ -1237,7 +1237,7 @@ senior.en = Blocked by the sandbox: {msg}
 [metajavbots.sin.robot]
 noob.es = El juego no encuentra tu robot. Necesitas una clase pública que herede de Metajavbot: «public class MiRobot extends Metajavbot { … }». Revisa que pone «public» y «extends Metajavbot».
 noob.de = Das Spiel findet deinen Roboter nicht. Du brauchst eine öffentliche Klasse, die von MetajavbotDe erbt: „public class MeinRoboter extends MetajavbotDe { … }“. Prüf, dass „public“ und „extends MetajavbotDe“ dastehen.
-noob.en = The game can't find your robot. You need a public class that extends MetajavbotEn: "public class MyRobot extends MetajavbotEn { … }". Check that it says "public" and "extends MetajavbotEn".
+noob.en = The game can't find your robot. You need a public class that extends MetajavbotEn: “public class MyRobot extends MetajavbotEn { … }”. Check that it says “public” and “extends MetajavbotEn”.
 junior.es = No hay ninguna clase pública que extienda Metajavbot (o MetajavbotDe / MetajavbotEn).
 junior.de = Keine öffentliche Klasse erweitert MetajavbotDe (oder Metajavbot / MetajavbotEn).
 junior.en = No public class extends MetajavbotEn (or Metajavbot / MetajavbotDe).
@@ -1247,8 +1247,8 @@ senior.en = Missing public class … extends MetajavbotEn.
 
 [metajavbots.casos]
 noob.es = Tu código compila, pero no tiene lo que el ejercicio busca: {msg}. Revisa en el enunciado el nombre exacto del método, sus parámetros y lo que devuelve, y escríbelo igual, mayúsculas incluidas.
-noob.de = Dein Code kompiliert, hat aber nicht, was die Aufgabe sucht: {msg}. Schau in der Aufgabe nach dem genauen Methodennamen, den Parametern und dem Rückgabetyp, und schreib ihn genauso, auch die Großbuchstaben.
-noob.en = Your code compiles, but it doesn't have what the exercise looks for: {msg}. Check the exact method name, its parameters and return type in the task, and write it the same way, capitals included.
+noob.de = Dein Code kompiliert, hat aber nicht, was die Übung sucht: {msg}. Schau in der Aufgabenstellung nach dem genauen Methodennamen, den Parametern und dem Rückgabetyp, und schreib ihn genauso, auch die Großbuchstaben.
+noob.en = Your code compiles, but it doesn't have what the exercise looks for: {msg}. Check the exact method name, its parameters and return type in the instructions, and write it the same way, capitals included.
 junior.es = La firma no coincide con la que esperan los casos: {msg}. Nombre, parámetros, retorno y static deben ser idénticos.
 junior.de = Die Signatur passt nicht zu den Testfällen: {msg}. Name, Parameter, Rückgabe und static müssen gleich sein.
 junior.en = The signature doesn't match what the cases expect: {msg}. Name, parameters, return type and static must be identical.
@@ -1258,10 +1258,10 @@ senior.en = Signature mismatch: {msg}
 
 [metajavbots.sin.jdk]
 noob.es = El juego no puede compilar tu código porque tu Java no trae el compilador (es un JRE, no un JDK). Instala un JDK gratis: entra en adoptium.net, descarga Eclipse Temurin 21 o más nuevo para tu sistema, instálalo (marca «JAVA_HOME» si te lo pregunta) y vuelve a abrir el juego.
-noob.de = Das Spiel kann deinen Code nicht kompilieren, weil deinem Java der Compiler fehlt (ein JRE, kein JDK). Installier ein kostenloses JDK: Geh auf adoptium.net, lade Eclipse Temurin 21 oder neuer für dein System, installier es (setz „JAVA_HOME“, falls gefragt) und starte das Spiel neu.
-noob.en = The game can't compile your code because your Java has no compiler (it's a JRE, not a JDK). Install a free JDK: go to adoptium.net, download Eclipse Temurin 21 or newer for your system, install it (tick "JAVA_HOME" if asked) and restart the game.
+noob.de = Das Spiel kann deinen Code nicht kompilieren, weil deinem Java der Compiler fehlt (ein JRE, kein JDK). Installier ein kostenloses JDK: Geh auf adoptium.net, lade Eclipse Temurin 21 oder neuer für dein System herunter, installier es (setz „JAVA_HOME“, falls gefragt) und starte das Spiel neu.
+noob.en = The game can't compile your code because your Java has no compiler (it's a JRE, not a JDK). Install a free JDK: go to adoptium.net, download Eclipse Temurin 21 or newer for your system, install it (check “JAVA_HOME” if asked) and restart the game.
 junior.es = Falta javac: el juego corre sobre un JRE. Instala un JDK 21+ (p. ej. Eclipse Temurin, adoptium.net), apunta JAVA_HOME a él y reinicia.
-junior.de = javac fehlt: das Spiel läuft auf einem JRE. Installier ein JDK 21+ (z. B. Eclipse Temurin, adoptium.net), setz JAVA_HOME darauf und starte neu.
+junior.de = javac fehlt: Das Spiel läuft auf einem JRE. Installier ein JDK 21+ (z. B. Eclipse Temurin, adoptium.net), setz JAVA_HOME darauf und starte neu.
 junior.en = javac is missing: the game runs on a JRE. Install a JDK 21+ (e.g. Eclipse Temurin, adoptium.net), point JAVA_HOME at it and restart.
 senior.es = Sin javac (JRE): instala un JDK 21+ y reinicia.
 senior.de = Kein javac (JRE): JDK 21+ installieren und neu starten.

@@ -51,7 +51,7 @@ final class Demo3Entorno {
                 "radar_evento_lista",
                 new Trilingue(
                         "Radar: evento frente a lista completa",
-                        "Radar: Ereignis statt ganzer Liste",
+                        "Radar: Ereignis oder ganze Liste",
                         "Radar: event vs. full list"),
                 new Trilingue(
                         "Tu robot tiene dos formas complementarias de leer el radar en cada turno.\n"
@@ -61,7 +61,7 @@ final class Demo3Entorno {
                                 + "más cercano al más lejano: así sabes si está vacía para girar el radar o elegir al primero.",
                         "Dein Roboter hat zwei sich ergänzende Wege, das Radar in jedem Zug auszulesen.\n"
                                 + "beiSicht(Gegner e) ist ein automatisches Ereignis, das einmal pro sichtbarem Gegner "
-                                + "auslöst: ideal für schnelle Reaktionen.\n"
+                                + "ausgelöst wird: ideal für schnelle Reaktionen.\n"
                                 + "gesehen() liefert in jedenZug() die vollständige Liste, sortiert vom nächsten zum "
                                 + "fernsten Gegner: So prüfst du mit isEmpty(), ob du suchen musst, oder wählst den nächsten.",
                         "Your robot has two complementary ways to read the radar on every tick.\n"
@@ -115,7 +115,7 @@ final class Demo3Entorno {
                                 + "Feste Fallen (Stacheln, Sägen, Grube oder Kleber) lassen sich nicht zerstören: "
                                 + "Prüfe o.gefaehrlich() und weiche ihnen rechtzeitig aus.\n"
                                 + "Feste zerstörbare Objekte wie Fässer und Schornsteine (o.fest()) blockieren dagegen "
-                                + "Kugeln, Laser und deine Fahrt, lassen sich aber durch Schüsse oder Treffer aufbrechen.",
+                                + "Kugeln, Laser und deine Fahrt, lassen sich aber durch Schüsse oder Treffer aufbrechen, um den Weg freizumachen.",
                         "In arenas with hazards, obstacles() reports everything around you.\n"
                                 + "Fixed traps (spikes, saws, pit, or glue) cannot be destroyed: "
                                 + "check o.dangerous() and dodge them before stepping in.\n"
@@ -162,7 +162,7 @@ final class Demo3Entorno {
                                 + "Primero recorre obstaculos(): si detecta una trampa peligrosa cerca (o.peligroso()), la esquiva; "
                                 + "si encuentra un obstáculo sólido delante (o.solido()), apunta con precisión y lo rompe.\n"
                                 + "Después consulta enemigosVistos(), calcula su alcance real y el error relativo de mira, "
-                                + "y solo dispara cuando el objetivo está en rango y alineado.",
+                                + "y solo dispara cuando el objetivo está a su alcance y alineado.",
                         "Jetzt wertet der Roboter die Umgebung aus, bevor er schießt oder fährt.\n"
                                 + "Zuerst geht er hindernisse() durch: Bei einer nahen gefährlichen Falle (o.gefaehrlich()) weicht er aus; "
                                 + "bei einem festen Hindernis davor (o.fest()) zielt er genau und zerstört es.\n"
@@ -207,7 +207,7 @@ final class Demo3Entorno {
                         "Die Arena lesen, bevor du handelst",
                         "Reading the arena before acting"),
                 new Trilingue(
-                        "Ya dominas las tres claves para combatir con cabeza en cualquier escenario:\n"
+                        "Ya dominas las tres claves para pelear con cabeza en cualquier escenario:\n"
                                 + "1. Combina alVerEnemigo() y enemigosVistos() para no perder nunca de vista al rival.\n"
                                 + "2. Verifica error relativo de mira y alcance antes de disparar tus proyectiles.\n"
                                 + "3. Usa obstaculos() para esquivar trampas fijas y romper barriles o chimeneas; "

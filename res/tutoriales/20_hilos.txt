@@ -23,7 +23,7 @@ es: se practica con ejercicios, que sí pueden usarlos. Lo que aprendas aquí es
 es: juegos y apps de verdad.
 de: Und warum darf dein Roboter KEINE Threads starten? Weil der Kampf fair und wiederholbar sein muss: Mit Threads
 de: hängt die Reihenfolge der Ereignisse vom Prozessor ab, und jeder Kampf liefe anders. Darum übst du dieses Thema
-de: mit Aufgaben, die Threads benutzen dürfen. Was du hier lernst, steckt in echten Servern, Spielen und Apps.
+de: mit Übungen, die Threads benutzen dürfen. Was du hier lernst, steckt in echten Servern, Spielen und Apps.
 en: So why can't your robot create threads? Because the fight must be fair and repeatable: with threads,
 en: the order in which things happen depends on the processor and every fight would be different. That's why
 en: this topic is practiced with exercises, which may use them. What you learn here is what real servers,
@@ -66,7 +66,7 @@ titulo.en: Races and locks
 es: contador++ parece una sola orden, pero son tres: leer, sumar uno, escribir. Si dos hilos lo hacen a la vez,
 es: los dos pueden leer 5 y escribir 6: se ha perdido un golpe. Es una condición de carrera, y lo peor es que
 es: solo falla a veces, así que puede pasar todas tus pruebas y explotar en producción.
-de: zaehler++ wirkt wie ein Befehl, sind aber drei: lesen, eins addieren, schreiben. Tun zwei Threads das
+de: zaehler++ wirkt wie ein Befehl, es sind aber drei: lesen, eins addieren, schreiben. Tun zwei Threads das
 de: gleichzeitig, lesen beide 5 und schreiben 6: Ein Treffer ist verloren. Das ist eine Race Condition, und
 de: das Gemeine: Sie tritt nur manchmal auf, besteht also womöglich alle Tests und knallt erst im
 de: Echtbetrieb.
@@ -118,14 +118,14 @@ es: con mecánicos fijos: le das tareas con submit y te devuelve un Future, un r
 es: con get() cuando esté. CompletableFuture (Java 8) encadena pasos: «cuando acabes esto, haz aquello».
 de: Threads von Hand zu erzeugen ist, als stellte man für jede Schraube einen Mechaniker ein. Ein
 de: ExecutorService ist eine Werkstatt mit festen Mechanikern: Mit submit gibst du Aufgaben ab und bekommst
-de: ein Future, einen Abholschein für das Ergebnis per get(). CompletableFuture (Java 8) verkettet Schritte:
+de: ein Future, einen Abholschein für das Ergebnis, das du per get() abholst, sobald es fertig ist. CompletableFuture (Java 8) verkettet Schritte:
 de: „Wenn das fertig ist, mach jenes.“
 en: Creating threads by hand is like hiring a mechanic for every bolt. An ExecutorService is a workshop
 en: with permanent mechanics: you hand it tasks with submit and get back a Future, a ticket to collect the result
-en: with get() when it's ready. CompletableFuture (Java 8) chains steps: "when you finish this, do that".
+en: with get() when it's ready. CompletableFuture (Java 8) chains steps: “when you finish this, do that”.
 --- pagina
 es: Los hilos normales son caros: cada uno se lleva su trozo de memoria y del sistema. Java 21 trajo los hilos
-es: virtuales: ligerísimos, gestionados por la propia Java, puedes lanzar diez mil sin despeinarte.
+es: virtuales: ligerísimos, gestionados por el propio Java: puedes lanzar diez mil sin despeinarte.
 es: Son ideales para tareas que pasan mucho tiempo esperando (red, discos). Para cálculo puro, siguen mandando
 es: los núcleos que tenga tu procesador.
 de: Normale Threads sind teuer: Jeder belegt eigenen Speicher und Systemressourcen. Java 21 brachte
@@ -133,7 +133,7 @@ de: virtuelle Threads: federleicht, von Java selbst verwaltet, zehntausend davon
 de: für Aufgaben, die viel warten (Netz, Festplatte). Bei reiner Rechenarbeit bestimmen weiterhin die Kerne
 de: deines Prozessors das Tempo.
 en: Regular threads are expensive: each takes its own chunk of memory and system resources. Java 21 brought virtual
-en: threads: featherweight, managed by Java itself, you can launch ten thousand without breaking a sweat.
+en: threads: featherweight, managed by Java itself: you can launch ten thousand without breaking a sweat.
 en: They're ideal for tasks that spend a lot of time waiting (network, disks). For pure number crunching,
 en: your processor's cores still call the shots.
 codigo:

@@ -187,7 +187,7 @@ tipo: metodo
 titulo.es: ¿Qué armas se usaron? (Map)
 titulo.de: Welche Waffen wurden benutzt? (Map)
 titulo.en: Which weapons were used? (Map)
-enunciado.es: El registro del combate apunta cada disparo con el nombre del arma. Devuelve un Map que diga, para cada arma, cuántas veces aparece.
+enunciado.es: El registro de la pelea apunta cada disparo con el nombre del arma. Devuelve un Map que diga, para cada arma, cuántas veces aparece.
 enunciado.de: Das Kampfprotokoll notiert jeden Schuss mit dem Namen der Waffe. Gib eine Map zurück, die für jede Waffe sagt, wie oft sie vorkommt.
 enunciado.en: The fight log notes every shot with the weapon's name. Return a Map that says, for each weapon, how many times it appears.
 pista.es: cuenta.put(arma, cuenta.getOrDefault(arma, 0) + 1); — o, más corto, cuenta.merge(arma, 1, Integer::sum).
@@ -218,8 +218,8 @@ titulo.es: La clasificación en orden (TreeMap)
 titulo.de: Die Tabelle in Ordnung (TreeMap)
 titulo.en: The standings in order (TreeMap)
 enunciado.es: puntos dice cuántos puntos tiene cada robot, sin orden. Devuelve la clasificación como texto, con los nombres en su orden natural ("Ada 3, Rex 5"): las mayúsculas van antes que las minúsculas. Sin robots, "". Los casos crean los mapas con Map.of, de Java 9.
-enunciado.de: puntos sagt, wie viele Punkte jeder Roboter hat, ohne Ordnung. Gib die Tabelle als Text zurück, mit den Namen in ihrer natürlichen Ordnung ("Ada 3, Rex 5"): Großbuchstaben kommen vor Kleinbuchstaben. Ohne Roboter "". Die Fälle erzeugen die Maps mit Map.of aus Java 9.
-enunciado.en: puntos says how many points each robot has, in no order. Return the standings as text, with the names in their natural order ("Ada 3, Rex 5"): capitals come before lower case. With no robots, "". The cases create the maps with Map.of, from Java 9.
+enunciado.de: puntos sagt, wie viele Punkte jeder Roboter hat, ungeordnet. Gib die Tabelle als Text zurück, mit den Namen in ihrer natürlichen Ordnung ("Ada 3, Rex 5"): Großbuchstaben kommen vor Kleinbuchstaben. Ohne Roboter "". Die Testfälle erzeugen die Maps mit Map.of aus Java 9.
+enunciado.en: puntos says how many points each robot has, in no particular order. Return the standings as text, with the names in their natural order ("Ada 3, Rex 5"): uppercase letters come before lowercase ones. With no robots, "". The cases create the maps with Map.of, from Java 9.
 pista.es: new TreeMap<>(puntos) ordena por la clave. Recorre su entrySet() y junta "nombre puntos" con un StringJoiner(", ").
 pista.de: new TreeMap<>(puntos) sortiert nach dem Schlüssel. Geh durch sein entrySet() und verbinde "Name Punkte" mit einem StringJoiner(", ").
 pista.en: new TreeMap<>(puntos) sorts by key. Walk through its entrySet() and join "name points" with a StringJoiner(", ").
@@ -357,7 +357,7 @@ titulo.de: Das Inventar der Werkstatt (Map in einer Klasse)
 titulo.en: The workshop inventory (a Map inside a class)
 enunciado.es: Escribe la clase Inventario con Inventario(), Inventario meter(String pieza, int cantidad) (devuelve this; IllegalArgumentException si cantidad no es positiva), boolean sacar(String pieza, int cantidad) (false sin cambiar nada si no hay bastantes; la pieza desaparece al llegar a 0), int cantidad(String pieza) (0 si no hay), int total() y Set<String> piezas(): las que hay, en orden alfabético y sin que se puedan cambiar desde fuera.
 enunciado.de: Schreibe die Klasse Inventario mit Inventario(), Inventario meter(String pieza, int cantidad) (gibt this zurück; IllegalArgumentException, wenn cantidad nicht positiv ist), boolean sacar(String pieza, int cantidad) (false ohne Änderung, wenn nicht genug da sind; bei 0 verschwindet das Teil), int cantidad(String pieza) (0, wenn keins da ist), int total() und Set<String> piezas(): die vorhandenen, alphabetisch sortiert und von außen nicht änderbar.
-enunciado.en: Write the class Inventario with Inventario(), Inventario meter(String pieza, int cantidad) (returns this; IllegalArgumentException if cantidad isn't positive), boolean sacar(String pieza, int cantidad) (false without changing anything if there aren't enough; the part disappears when it reaches 0), int cantidad(String pieza) (0 if there are none), int total() and Set<String> piezas(): the ones there are, in alphabetical order and impossible to change from outside.
+enunciado.en: Write the class Inventario with Inventario(), Inventario meter(String pieza, int cantidad) (returns this; IllegalArgumentException if cantidad isn't positive), boolean sacar(String pieza, int cantidad) (false without changing anything if there aren't enough; the part disappears when it reaches 0), int cantidad(String pieza) (0 if there are none), int total() and Set<String> piezas(): the ones in stock, in alphabetical order and impossible to change from outside.
 pista.es: Un TreeMap<String, Integer> ya guarda las claves ordenadas. Para piezas(): Collections.unmodifiableSet(new TreeSet<>(mapa.keySet())).
 pista.de: Eine TreeMap<String, Integer> hält die Schlüssel schon sortiert. Für piezas(): Collections.unmodifiableSet(new TreeSet<>(mapa.keySet())).
 pista.en: A TreeMap<String, Integer> already keeps its keys sorted. For piezas(): Collections.unmodifiableSet(new TreeSet<>(mapa.keySet())).
@@ -440,9 +440,9 @@ tipo: metodo
 titulo.es: Los mejores del torneo (ordenar con un Comparator)
 titulo.de: Die Besten des Turniers (Sortieren mit einem Comparator)
 titulo.en: The tournament's best (sorting with a Comparator)
-enunciado.es: victorias dice cuántos combates ha ganado cada robot. Devuelve una lista con los nombres de los n que más han ganado, de más a menos; si empatan, por orden alfabético. Si hay menos de n robots, todos.
+enunciado.es: victorias dice cuántas peleas ha ganado cada robot. Devuelve una lista con los nombres de los n que más han ganado, de más a menos; si empatan, por orden alfabético. Si hay menos de n robots, todos.
 enunciado.de: victorias sagt, wie viele Kämpfe jeder Roboter gewonnen hat. Gib eine Liste mit den Namen der n Roboter mit den meisten Siegen zurück, absteigend; bei Gleichstand alphabetisch. Gibt es weniger als n Roboter, alle.
-enunciado.en: victorias says how many fights each robot has won. Return a list with the names of the n robots with the most wins, from most to fewest; on a tie, alphabetically. If there are fewer than n robots, all of them.
+enunciado.en: victorias says how many fights each robot has won. Return a list with the names of the n robots with the most wins, from most to fewest; if they tie, alphabetically. If there are fewer than n robots, all of them.
 pista.es: Copia las claves en un ArrayList y ordénalo con nombres.sort((a, b) -> ...): primero Integer.compare(victorias.get(b), victorias.get(a)) y, si da 0, a.compareTo(b). Después, subList(0, Math.min(n, nombres.size())).
 pista.de: Kopiere die Schlüssel in eine ArrayList und sortiere sie mit nombres.sort((a, b) -> ...): zuerst Integer.compare(victorias.get(b), victorias.get(a)) und, wenn das 0 ist, a.compareTo(b). Danach subList(0, Math.min(n, nombres.size())).
 pista.en: Copy the keys into an ArrayList and sort it with nombres.sort((a, b) -> ...): first Integer.compare(victorias.get(b), victorias.get(a)) and, if that's 0, a.compareTo(b). Then subList(0, Math.min(n, nombres.size())).
@@ -470,9 +470,9 @@ dificultad: 2
 java: 11
 tipo: metodo
 titulo.es: Piezas sin repetir en orden
-titulo.de: Teile ohne Duplikate in Reihenfolge
+titulo.de: Teile ohne Duplikate in ursprünglicher Reihenfolge
 titulo.en: Unique parts in original order
-enunciado.es: El pedido del taller trae piezas repetidas. Devuelve una nueva List<String> sin duplicados, conservando exactamente el orden en que apareció cada pieza por primera vez. Ejemplos: sinRepetidos(List.of("tuerca", "laser", "tuerca", "motor")) devuelve ["tuerca", "laser", "motor"].
+enunciado.es: El pedido del taller trae piezas repetidas. Devuelve una nueva List<String> sin duplicados, conservando exactamente el orden en que apareció cada pieza por primera vez. Ejemplo: sinRepetidos(List.of("tuerca", "laser", "tuerca", "motor")) devuelve ["tuerca", "laser", "motor"].
 enunciado.de: Die Werkstattbestellung enthält doppelte Teile. Gib eine neue List<String> ohne Duplikate zurück, in genau der Reihenfolge, in der jedes Teil zum ersten Mal vorkam. Beispiel: sinRepetidos(List.of("mutter", "laser", "mutter", "motor")) gibt ["mutter", "laser", "motor"] zurück.
 enunciado.en: The workshop order lists duplicate parts. Return a new List<String> without duplicates, preserving the exact order in which each part first appeared. Example: sinRepetidos(List.of("nut", "laser", "nut", "motor")) returns ["nut", "laser", "motor"].
 pista.es: LinkedHashSet elimina duplicados manteniendo el orden de inserción: new ArrayList<>(new LinkedHashSet<>(piezas)).
@@ -497,7 +497,7 @@ tipo: metodo
 titulo.es: Longitud de cada modelo (Map)
 titulo.de: Länge jedes Modellnamens (Map)
 titulo.en: Length of each model name (Map)
-enunciado.es: Recibes un array de nombres de modelos. Devuelve un Map<String, Integer> donde cada nombre distinto del array sea clave y su valor sea la longitud de ese nombre. Ejemplos: longitudes(new String[]{"Rex", "Tita", "Rex"}) devuelve {Rex=3, Tita=4}.
+enunciado.es: Recibes un array de nombres de modelos. Devuelve un Map<String, Integer> donde cada nombre distinto del array sea clave y su valor sea la longitud de ese nombre. Ejemplo: longitudes(new String[]{"Rex", "Tita", "Rex"}) devuelve {Rex=3, Tita=4}.
 enunciado.de: Du bekommst ein Array von Modellnamen. Gib eine Map<String, Integer> zurück, in der jeder eindeutige Name aus dem Array der Schlüssel und seine Länge der Wert ist. Beispiel: longitudes(new String[]{"Rex", "Tita", "Rex"}) gibt {Rex=3, Tita=4} zurück.
 enunciado.en: You receive an array of model names. Return a Map<String, Integer> where each distinct name in the array is a key mapped to its string length. Example: longitudes(new String[]{"Rex", "Tita", "Rex"}) returns {Rex=3, Tita=4}.
 pista.es: Crea un HashMap<String, Integer>() y en un for-each haz mapa.put(nombre, nombre.length()).
@@ -526,7 +526,7 @@ tipo: metodo
 titulo.es: Catálogo por letra inicial (Map)
 titulo.de: Katalog nach Anfangsbuchstaben (Map)
 titulo.en: Catalog by starting letter (Map)
-enunciado.es: Recibes un array de palabras no vacías. Devuelve un Map<String, String> con una clave por cada letra inicial distinta (como texto de 1 carácter), cuyo valor sea la concatenación de todas las palabras que empiezan por esa letra en el orden en que aparecen. Ejemplos: porInicial(new String[]{"salto", "sierra", "torre", "turbo"}) devuelve {s="saltosierra", t="torreturbo"}.
+enunciado.es: Recibes un array de palabras no vacías. Devuelve un Map<String, String> con una clave por cada letra inicial distinta (como texto de 1 carácter), cuyo valor sea la concatenación de todas las palabras que empiezan por esa letra en el orden en que aparecen. Ejemplo: porInicial(new String[]{"salto", "sierra", "torre", "turbo"}) devuelve {s="saltosierra", t="torreturbo"}.
 enunciado.de: Du bekommst ein Array nicht leerer Wörter. Gib eine Map<String, String> mit einem Schlüssel für jeden Anfangsbuchstaben (als Text der Länge 1) zurück, dessen Wert die Verkettung aller Wörter mit diesem Anfangsbuchstaben in ihrer Reihenfolge ist. Beispiel: porInicial(new String[]{"salto", "sierra", "torre", "turbo"}) gibt {s="saltosierra", t="torreturbo"} zurück.
 enunciado.en: You receive an array of non-empty words. Return a Map<String, String> with a key for each distinct first letter (as a 1-character String), mapped to the concatenation of all words starting with that letter in the order they appear. Example: porInicial(new String[]{"salto", "sierra", "torre", "turbo"}) returns {s="saltosierra", t="torreturbo"}.
 pista.es: Saca la inicial con palabra.substring(0, 1) y concatena usando mapa.getOrDefault(inicial, "") + palabra.
@@ -557,8 +557,8 @@ titulo.es: Intercambiar parejas por inicial (Map)
 titulo.de: Paare nach Anfangsbuchstaben tauschen (Map)
 titulo.en: Swap pairs by starting letter (Map)
 enunciado.es: Dos robots del array palabras (cadenas no vacías) forman pareja si comparten la primera letra. Recorre el array de izquierda a derecha y, cuando aparezca una segunda palabra con la misma inicial que una que estaba esperando, intercámbialas en el resultado; tras el intercambio la inicial vuelve a quedar libre para futuras parejas. No modifiques el array original. Ejemplos: intercambiarParejas(new String[]{"ab", "ac"}) devuelve {"ac", "ab"} y intercambiarParejas(new String[]{"ax", "bx", "cx", "cy", "by", "ay", "aaa", "azz"}) devuelve {"ay", "by", "cy", "cx", "bx", "ax", "azz", "aaa"}.
-enunciado.de: Zwei Roboter im Array palabras (nicht leere Texte) bilden ein Paar, wenn sie denselben Anfangsbuchstaben haben. Geh das Array von links nach rechts durch: Trifft ein zweites Wort auf denselben Anfangsbuchstaben eines wartenden Wortes, tausche beide im Ergebnis; danach ist der Buchstabe wieder frei für das nächste Paar. Ändere das Original nicht. Beispiele: intercambiarParejas(new String[]{"ab", "ac"}) gibt {"ac", "ab"} zurück.
-enunciado.en: Two robots in the array palabras (non-empty strings) match if they share the same first letter. Scan left to right: when a second string matches a waiting one with the same first letter, swap them in the result; after swapping, that letter becomes free again for future pairs. Do not modify the original array. Examples: intercambiarParejas(new String[]{"ab", "ac"}) returns {"ac", "ab"}.
+enunciado.de: Zwei Roboter im Array palabras (nicht leere Texte) bilden ein Paar, wenn sie denselben Anfangsbuchstaben haben. Geh das Array von links nach rechts durch: Taucht ein zweites Wort mit demselben Anfangsbuchstaben wie ein wartendes Wort auf, tausche beide im Ergebnis; danach ist der Buchstabe wieder frei für das nächste Paar. Ändere das Original nicht. Beispiele: intercambiarParejas(new String[]{"ab", "ac"}) gibt {"ac", "ab"} zurück und intercambiarParejas(new String[]{"ax", "bx", "cx", "cy", "by", "ay", "aaa", "azz"}) gibt {"ay", "by", "cy", "cx", "bx", "ax", "azz", "aaa"} zurück.
+enunciado.en: Two robots in the array palabras (non-empty strings) match if they share the same first letter. Scan left to right: when a second string matches a waiting one with the same first letter, swap them in the result; after swapping, that letter becomes free again for future pairs. Do not modify the original array. Examples: intercambiarParejas(new String[]{"ab", "ac"}) returns {"ac", "ab"} and intercambiarParejas(new String[]{"ax", "bx", "cx", "cy", "by", "ay", "aaa", "azz"}) returns {"ay", "by", "cy", "cx", "bx", "ax", "azz", "aaa"}.
 pista.es: Usa un Map<String, Integer> que guarde el índice en espera para cada inicial: si ya está en el mapa, intercambia y borra la clave con remove; si no, guárdala con put.
 pista.de: Nutze eine Map<String, Integer>, die den wartenden Index pro Anfangsbuchstaben speichert: Ist der Schlüssel schon drin, tausche und lösche ihn mit remove; sonst speichere ihn mit put.
 pista.en: Use a Map<String, Integer> holding the waiting index for each first letter: if the key is already present, swap and remove it; otherwise store the index with put.
@@ -595,11 +595,11 @@ tipo: metodo
 titulo.es: Piezas exclusivas de cada taller (Set)
 titulo.de: Exklusive Teile jeder Werkstatt (Set)
 titulo.en: Exclusive parts of each workshop (Set)
-enunciado.es: Dos talleres tienen los conjuntos de piezas a y b. Devuelve un TreeSet<String> (orden alfabético) con las piezas que están en a o en b, pero NO en ambos a la vez (diferencia simétrica). No modifiques ni a ni b. Ejemplos: piezasExclusivas(Set.of("laser", "rueda"), Set.of("rueda", "misil")) devuelve [laser, misil].
+enunciado.es: Dos talleres tienen los conjuntos de piezas a y b. Devuelve un TreeSet<String> (orden alfabético) con las piezas que están en a o en b, pero NO en ambos a la vez (diferencia simétrica). No modifiques ni a ni b. Ejemplo: piezasExclusivas(Set.of("laser", "rueda"), Set.of("rueda", "misil")) devuelve [laser, misil].
 enunciado.de: Zwei Werkstätten haben die Teilemengen a und b. Gib ein TreeSet<String> (alphabetisch sortiert) mit den Teilen zurück, die in a oder b vorkommen, aber NICHT in beiden zugleich (symmetrische Differenz). Ändere weder a noch b. Beispiel: piezasExclusivas(Set.of("laser", "rad"), Set.of("rad", "rakete")) gibt [laser, rakete] zurück.
 enunciado.en: Two workshops have part sets a and b. Return a TreeSet<String> (alphabetical order) containing the parts that are in a or b, but NOT in both (symmetric difference). Do not modify a or b. Example: piezasExclusivas(Set.of("laser", "wheel"), Set.of("wheel", "missile")) returns [laser, missile].
 pista.es: Calcula la unión (new TreeSet<>(a) más addAll(b)) y la intersección (new HashSet<>(a) con retainAll(b)), y quita la intersección de la unión con removeAll.
-pista.de: Bilde die Vereinigung (new TreeSet<>(a) plus addAll(b)) und den Schnitt (new HashSet<>(a) mit retainAll(b)), und entferne dann den Schnitt mit removeAll.
+pista.de: Bilde die Vereinigung (new TreeSet<>(a) plus addAll(b)) und den Schnitt (new HashSet<>(a) mit retainAll(b)), und entferne dann den Schnitt mit removeAll aus der Vereinigung.
 pista.en: Build the union (new TreeSet<>(a) plus addAll(b)) and the intersection (new HashSet<>(a) with retainAll(b)), then remove the intersection from the union with removeAll.
 firma: static Set<String> piezasExclusivas(Set<String> a, Set<String> b)
 plantilla:

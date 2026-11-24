@@ -24,7 +24,7 @@ de: Public static void KAMPF! Wird ausgeführt!
 en: Public static void FIGHT! Executing!
 
 es: ¡Atención, atención! ¡Dos montones de tornillos con mucho que demostrar!
-de: Achtung, Achtung! Zwei Haufen Schrauben mit viel zu beweisen!
+de: Achtung, Achtung! Zwei Haufen Schrauben, die viel zu beweisen haben!
 en: Attention, attention! Two piles of bolts with everything to prove!
 
 [inicio_ronda]
@@ -151,7 +151,7 @@ en: Up close! No global variables, everything's very local!
 
 es: ¡Toma castañazo metálico!
 de: Da gibt's eine metallische Ohrfeige!
-en: Take that, metal smackdown!
+en: Here's a metal smackdown!
 
 es: ¡Abrazo de oso de acero! ¡Y no es un abrazo cariñoso!
 de: Stählerne Bärenumarmung! Und keine liebevolle!
@@ -192,8 +192,8 @@ de: Try, catch und weiter! Was für ein Block!
 en: Try, catch, move on! What a block!
 
 es: ¡Rebota! ¡Ese escudo tiene más capas que una cebolla con firewall!
-de: Abgeprallt! Der Schild hat mehr Schichten als eine Firewall!
-en: Bounced off! That shield has more layers than a firewall!
+de: Abgeprallt! Der Schild hat mehr Schichten als eine Zwiebel mit Firewall!
+en: Bounced off! That shield has more layers than an onion with a firewall!
 
 es: ¡Bloqueo perfecto! ¡Acceso denegado!
 de: Perfekter Block! Zugriff verweigert!
@@ -284,7 +284,7 @@ de: Der Roboter denkt langsamer als ein altes Modem!
 en: That robot thinks slower than an old dial-up modem!
 
 es: ¿Hola? ¿Hola? ¡Robot, que te estoy viendo la ruedecita de carga!
-de: Hallo? Hallo? Roboter, ich sehe dein Ladekringel!
+de: Hallo? Hallo? Roboter, ich sehe deinen Ladekringel!
 en: Hello? Hello? Robot, I can see your loading spinner!
 
 es: ¡Tiempo agotado! ¡Ha calculado tanto que se le ha fundido el reloj!
@@ -384,7 +384,7 @@ es: ¡Remontada! ¡Remontada! ¡Mis altavoces van a explotar!
 de: Comeback! Comeback! Meine Lautsprecher explodieren gleich!
 en: Comeback! Comeback! My speakers are about to blow!
 
-es: ¡Increí, crei, creíble! ¡Ha dado la vuelta al marcador!
+es: ¡Increí, creí, creíble! ¡Ha dado la vuelta al marcador!
 de: Unglaub, laub, laublich! Das Blatt hat sich gewendet!
 en: Unbeliev, liev, lievable! It's turned the whole thing around!
 
@@ -431,7 +431,7 @@ de: Große Explosion! Der Garbage Collector hat eine Woche zu tun!
 en: Final explosion! The garbage collector has a week of work!
 
 es: ¡Kaboom! ¡Eso ha sido un system punto exit en toda regla!
-de: Kawumm! Das war ein waschechtes System punkt exit!
+de: Kawumm! Das war ein waschechtes System Punkt exit!
 en: Kaboom! That was a full-blown system dot exit!
 
 es: ¡Se ha desintegrado! ¡Lo siento, taller, hoy vais a hacer horas extra!
@@ -440,7 +440,7 @@ en: Disintegrated! Sorry, workshop, overtime for you tonight!
 
 es: ¡Explota! ¡Explota! ¡Mi sensor de ruido ha pedido vacaciones!
 de: Explodiert! Explodiert! Mein Lärmsensor nimmt Urlaub!
-en: It blows! It blows! My noise sensor just asked for a vacation!
+en: It's blowing up! It's blowing up! My noise sensor just asked for a vacation!
 
 [victoria_jugador]
 es: ¡Victoria para {jugador}! ¡Compilado, ejecutado y campeón!
@@ -486,7 +486,7 @@ en: Game over! But good programmers never give up, {jugador}!
 
 [subida_nivel]
 es: ¡Subida de nivel! ¡{jugador} se actualiza a la versión dos punto cero!
-de: Levelaufstieg! {jugador} ist jetzt Version zwei punkt null!
+de: Levelaufstieg! {jugador} ist jetzt Version zwei Punkt null!
 en: Level up! {jugador} has upgraded to version two point oh!
 
 es: ¡Nuevo nivel para {jugador}! ¡Mis luces bailan solas!
@@ -507,7 +507,7 @@ en: Level unlocked! Sound the factory sirens!
 
 [bajada_nivel]
 es: ¡Bajada de nivel! ¡Uy, eso ha sido un menos menos!
-de: Levelabstieg! Huch, das war ein minus minus!
+de: Levelabstieg! Huch, das war ein Minus-Minus!
 en: Level down! Whoops, that was a minus minus!
 
 es: ¡{jugador} baja un nivel! ¡Nada que no arregle un buen refactor!

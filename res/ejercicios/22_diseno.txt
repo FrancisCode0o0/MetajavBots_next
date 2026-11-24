@@ -12,8 +12,8 @@ enunciado.es: La plantilla es una pirámide de ifs difícil de leer, y tiene un 
 enunciado.de: Die Vorlage ist eine schwer lesbare if-Pyramide und hat einen Fehler: Bei maxima <= 0 sollte sie eine IllegalArgumentException werfen. Schreib sie mit Guard Clauses neu (ein if, das bei jedem Sonderfall früh aussteigt): maxima <= 0 Ausnahme; vida <= 0 "ausser gefecht"; weniger als ein Viertel von maxima "kritisch"; weniger als maxima "getroffen"; sonst "intakt".
 enunciado.en: The template is a hard-to-read pyramid of ifs, and it has a bug: if maxima <= 0 it should throw an IllegalArgumentException. Rewrite it with guard clauses (an if that returns early for each special case): maxima <= 0, exception; vida <= 0, "out of action"; less than a quarter of maxima, "critical"; less than maxima, "damaged"; otherwise "intact".
 pista.es: Cada caso especial, arriba y con su return (o throw): if (vida <= 0) return "fuera de combate"; Sin else: si el if ha salido, no hace falta. «Menos de un cuarto» sin decimales: vida * 4 < maxima.
-pista.de: Jeder Sonderfall nach oben, mit eigenem return (oder throw): if (vida <= 0) return "ausser gefecht"; Ohne else: Wenn das if schon ausgestiegen ist, braucht man keins. «Weniger als ein Viertel» ohne Dezimalzahlen: vida * 4 < maxima.
-pista.en: Each special case at the top, with its own return (or throw): if (vida <= 0) return "out of action"; No else: if the if has already returned, you don't need one. "Less than a quarter" without decimals: vida * 4 < maxima.
+pista.de: Jeder Sonderfall nach oben, mit eigenem return (oder throw): if (vida <= 0) return "ausser gefecht"; Ohne else: Wenn das if schon ausgestiegen ist, braucht man keins. „Weniger als ein Viertel“ ohne Dezimalzahlen: vida * 4 < maxima.
+pista.en: Each special case at the top, with its own return (or throw): if (vida <= 0) return "out of action"; No else: if the if has already returned, you don't need one. “Less than a quarter” without decimals: vida * 4 < maxima.
 firma: static String estado(int vida, int maxima)
 plantilla:
     if (maxima > 0) {

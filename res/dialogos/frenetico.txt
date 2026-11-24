@@ -31,7 +31,7 @@ es: ¿Otra ronda? ¡Mi sierra ni siquiera ha entrado en calor!
 de: Noch eine Runde? Meine Säge ist noch nicht mal warm!
 en: Another round? My saw hasn't even warmed up yet!
 
-es: Ronda {ronda}, {rival}. Quédate quieto que te corto en juliana.
+es: Ronda {ronda}, {rival}. Quédate quieto, que te corto en juliana.
 de: Runde {ronda}, {rival}. Halt still, ich schneide dich in Streifen.
 en: Round {ronda}, {rival}. Hold still while I julienne you.
 
@@ -63,7 +63,7 @@ en: Sparks! That's music to my gears!
 
 es: ¡Zas! ¡Un trocito menos de {rival}!
 de: Zisch! Ein Stückchen weniger von {rival}!
-en: Zzzap! One little piece less of {rival}!
+en: Zzzap! One less little piece of {rival}!
 
 es: ¡Borde biselado y listo para servir!
 de: Kante abgeschrägt und servierfertig!
@@ -99,7 +99,7 @@ es: ¡Rasguño aceptado! Ahora me toca a mí.
 de: Kratzer akzeptiert! Jetzt bin ich dran.
 en: Scratch accepted! Now it's my turn.
 
-es: ¡Cuidado, {rival}, que si me golpeas salto chispas!
+es: ¡Cuidado, {rival}, que si me golpeas echo chispas!
 de: Vorsicht, {rival}, wenn du mich triffst, sprühe ich Funken!
 en: Careful, {rival}, hit me and I throw sparks!
 
@@ -231,7 +231,7 @@ es: ¡Apagando el disco… pero volveré con dientes de diamante!
 de: Schalte das Blatt ab … aber ich komme mit Diamantzähnen zurück!
 en: Powering down the blade… but I'll be back with diamond teeth!
 
-es: ¡{jugador}, ponme aceite nuevo que me he quedado seco!
+es: ¡{jugador}, ponme aceite nuevo, que me he quedado seco!
 de: {jugador}, gib mir frisches Öl, ich bin trocken gelaufen!
 en: {jugador}, top off my oil, I ran dry!
 
@@ -303,7 +303,7 @@ es: ¡Oye, {jugador}, un null se me ha metido entre los dientes!
 de: Hey, {jugador}, ein null steckt zwischen meinen Zähnen!
 en: Hey, {jugador}, a null got jammed in my teeth!
 
-es: ¡Atasco de código! ¡Despeja la línea que quiero cortar!
+es: ¡Atasco de código! ¡Despeja la línea, que quiero cortar!
 de: Code-Stau! Mach die Leitung frei, ich will sägen!
 en: Code jam! Clear the line, I want to saw!
 

@@ -139,8 +139,6 @@ public final class PistaDeCarrera {
         Pincel p = ui.p;
         p.rect(x + 4, cy, x1 - x + 40, alto - 2, TIERRA, esFantasma ? 0.55f : 1);
         p.rect(x + 4, cy + alto - 4, x1 - x + 40, 2, BLANCO, 0.6f);
-        String nombre = (esFantasma ? T.t("carrera.fantasma") : T.t("carrera.tu")) + " · " + T.f("carrera.cuenta", r.pasos(), r.vallas);
-        p.texto(nombre, x + 8, cy + 2, ui.letra * 0.62f, true, esFantasma ? FANTASMA : BLANCO, 1);
         float suelo = cy + alto - 6;
         float paso = (x1 - x0) / largo;
         int hecho = Math.min(r.pasos(), (int) pasoActual);
@@ -160,6 +158,11 @@ public final class PistaDeCarrera {
         boolean llego = pasoActual >= r.pasos();
         if (llego) rx = x0 + r.pasos() * paso + Math.min(1, (pasoActual - r.pasos()) / 3) * (x1 + 50 - x0 - r.pasos() * paso);
         corredor(p, rx, suelo - salto, Math.min(1.2f, alto / 44), pasoActual, esFantasma, llego && !esFantasma && !bien);
+        // El cartel de la calle, al final y con su fondo: el corredor y las vallas no lo tapan.
+        String nombre = (esFantasma ? T.t("carrera.fantasma") : T.t("carrera.tu")) + " · " + T.f("carrera.cuenta", r.pasos(), r.vallas);
+        float tn = ui.letra * 0.62f;
+        p.caja(x + 4, cy + 1, p.ancho(nombre, tn, true) + 10, p.altoDeLinea(tn) + 2, 4, 0x1B1F2A, 0.72f);
+        p.texto(nombre, x + 8, cy + 2, tn, true, esFantasma ? FANTASMA : BLANCO, 1);
     }
 
     private static void valla(Pincel p, float px, float suelo, float alto, boolean saltada, int numero, Ui ui) {

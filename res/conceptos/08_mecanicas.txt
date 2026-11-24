@@ -29,11 +29,11 @@ de:
 en:
     What it is: The fight moves in little jumps called ticks, like the pictures of a flip book. Each tick your robot reads its code: first the events (onHit, onSeeEnemy…) and onTick last.
     The numbers: There are 30 ticks per second and a round lasts 1200 ticks (40 seconds). The robot has three controls: wheels, body and head (the sight). Each control keeps only the LAST order of the tick. The head turns about 14° per tick (less with heavy weapons).
-    In the fight: With "Step by step" the fight pauses and you move one tick at a time: you see the line of your code that acts, what each control gets and how far the sight still has to go.
+    In the fight: With “Step by step” the fight pauses and you move one tick at a time: you see the line of your code that acts, what each control gets and how far the sight still has to go.
     From your code: Wheels: ahead, back, stop. Body: turn, turnTo. Head: aim, aimTo, aimAt. remainingDistance, remainingTurn and remainingAim say how much is left. attack fires at once, where the head points now.
 pseudo.es:
     EN CADA TURNO:
-        primero, los avisos (me han dado, veo a alguien...)
+        primero, los avisos (me han dado, veo a alguien…)
         después, cadaTurno
         cada mando hace caso a su ÚLTIMA orden
     SI quiero acertar:
@@ -42,7 +42,7 @@ pseudo.es:
         atacar
 pseudo.de:
     IN JEDEM ZUG:
-        zuerst die Meldungen (getroffen, sehe jemanden ...)
+        zuerst die Meldungen (getroffen, sehe jemanden …)
         danach jedenZug
         jeder Regler folgt seinem LETZTEN Befehl
     WENN ich treffen will:
@@ -51,7 +51,7 @@ pseudo.de:
         angreifen
 pseudo.en:
     EVERY TICK:
-        first, the events (I was hit, I see someone...)
+        first, the events (I was hit, I see someone…)
         then, onTick
         each control obeys its LAST order
     IF I want to hit:
@@ -76,14 +76,14 @@ es:
     Desde tu código: blindaje() te dice cuánto te queda (de 0 a 100). ronda() y turnoActual() dicen en qué momento estás. alAcabarRonda se llama al final de cada ronda.
 de:
     Was es ist: Den Kampf gewinnt, wer über alle Runden WENIGER Schaden nimmt. Du musst den Gegner nicht kaputt machen: Es reicht, weniger einzustecken, als du austeilst.
-    Die Zahlen: Ein Kampf hat mehrere Runden (bei Herausforderungen wählst du 3, 4, 6, 10 oder 12). Jede Runde dauert 40 Sekunden oder endet früher, wenn bei einem Roboter der Kopf kaputtgeht (k.o.). Ist der Unterschied kleiner als ein halber Punkt, ist es unentschieden. Aufgeben heißt verlieren.
+    Die Zahlen: Ein Kampf hat mehrere Runden (bei Herausforderungen wählst du 3, 4, 6, 10 oder 12). Jede Runde dauert 40 Sekunden oder endet früher, wenn bei einem Roboter der Kopf kaputtgeht (k. o.). Ist der Unterschied kleiner als ein halber Punkt, ist es unentschieden. Aufgeben heißt verlieren.
     Im Kampf: Oben siehst du „Runde X von Y“, die Uhr (in den letzten 10 Sekunden rot) und den erlittenen Schaden jedes Roboters. Zwischen den Runden sagt dir der Bericht, wie du stehst.
-    In deinem Code: panzerung() sagt, wie viel dir bleibt (0 bis 100). runde() und zug() sagen, wann du gerade bist. beiRundenende wird am Ende jeder Runde aufgerufen.
+    In deinem Code: panzerung() sagt, wie viel dir bleibt (0 bis 100). runde() und zug() sagen, an welchem Punkt des Kampfes du bist. beiRundenende wird am Ende jeder Runde aufgerufen.
 en:
     What it is: The fight is won by whoever takes LESS damage over all the rounds. You do not need to break the rival: it is enough to take less than you give.
-    The numbers: A fight has several rounds (in Challenges you choose 3, 4, 6, 10 or 12). Each round lasts 40 seconds, or ends sooner if a robot gets its head broken (knockout). If the difference is under half a point, it is a draw. Giving up means losing.
-    In the fight: At the top you see "Round X of Y", the clock (red in the last 10 seconds) and the damage each robot has taken. Between rounds, the report tells you how you are doing.
-    From your code: armor() tells you how much you have left (0 to 100). round() and tick() tell you when you are. onRoundEnd is called at the end of each round.
+    The numbers: A fight has several rounds (in Challenges you choose 3, 4, 6, 10 or 12). Each round lasts 40 seconds, or ends sooner if a robot gets its head broken (knockout). If the difference is under half a point, it is a draw. Surrendering means losing.
+    In the fight: At the top you see “Round X of Y”, the clock (red in the last 10 seconds) and the damage each robot has taken. Between rounds, the report tells you how you are doing.
+    From your code: armor() tells you how much you have left (0 to 100). round() and tick() tell you where you are in the fight. onRoundEnd is called at the end of each round.
 pseudo.es:
     AL ACABAR LA PELEA:
         sumar el daño que ha recibido cada robot
@@ -123,7 +123,7 @@ es:
     Desde tu código: blindaje() te da lo que te queda en total (de 0 a 100). En alRecibirGolpe(g), g.pieza() dice qué parte te han dado y g.dano() cuánto.
 de:
     Was es ist: Dein Roboter hat vier Teile: Kopf, linken Arm, rechten Arm und Beine. Jeder Treffer landet auf einem davon, ein bisschen zufällig. Fällt ein Teil auf null, geht es kaputt.
-    Die Zahlen: Arm kaputt: Dieser Arm greift nicht mehr an. Beine kaputt: weniger als halbe Geschwindigkeit (×0,4) und halbe Drehung. Kopf kaputt: k.o. für diese Runde. Nahkampftreffer landen öfter auf den Armen, Fernschüsse öfter auf den Beinen.
+    Die Zahlen: Arm kaputt: Dieser Arm greift nicht mehr an. Beine kaputt: weniger als halbes Tempo (×0,4) und halbe Drehung. Kopf kaputt: k. o. für diese Runde. Nahkampftreffer landen öfter auf den Armen, Fernschüsse öfter auf den Beinen.
     Im Kampf: Oben gibt es pro Teil einen Balken: grün, gelb und rot. Jeder Treffer hinterlässt eine Delle (oder eine Brandspur bei Laser und Feuer), die den ganzen Kampf bleibt. Bei viel Schaden raucht der Roboter.
     In deinem Code: panzerung() gibt dir, was insgesamt bleibt (0 bis 100). In beiTreffer(g) sagt g.teil(), welches Teil getroffen wurde, und g.schaden(), wie viel.
 en:
@@ -164,9 +164,9 @@ es:
     Desde tu código: energia() te dice cuánta tienes. listoIzquierda(), listoDerecha() y listoEspecial() te dicen si ya se puede usar (con la energía y el enfriamiento contados).
 de:
     Was es ist: Energie ist wie die Batterie des Roboters. Laser, Kopf-Spezialfähigkeiten, Fähigkeiten und sogar Fahren verbrauchen sie. In jedem Zug lädt sie sich ein wenig von selbst auf.
-    Die Zahlen: Der Kern bestimmt, wie viel hineinpasst (90 bis 180) und wie viel pro Zug nachlädt (0,4 bis 0,8). Fahren kostet 0,012 pro Schritt (mehr bei Überladung). Eine Waffe schießt nur, wenn du die ganze Energie hast, die sie kostet.
+    Die Zahlen: Der Kern bestimmt, wie viel hineinpasst (90 bis 180) und wie viel pro Zug nachgeladen wird (0,4 bis 0,8). Fahren kostet 0,012 pro Schritt (mehr bei Überladung). Eine Waffe schießt nur, wenn du die ganze Energie hast, die sie kostet.
     Im Kampf: Es ist der gelbe Balken unter den Teilen jedes Roboters.
-    In deinem Code: energie() sagt dir, wie viel du hast. bereitLinks(), bereitRechts() und bereitSpezial() sagen, ob es schon geht (Energie und Abkühlen mitgezählt).
+    In deinem Code: energie() sagt dir, wie viel du hast. bereitLinks(), bereitRechts() und bereitSpezial() sagen, ob es schon geht (Energie und Abkühlzeit mitgezählt).
 en:
     What it is: Energy is like the robot’s battery. Lasers, head specials, abilities and even moving spend it. It recharges a little by itself every tick.
     The numbers: The core decides how much fits (90 to 180) and how much comes back each tick (0.4 to 0.8). Moving costs 0.012 per step (more if overloaded). A weapon only fires if you have all the energy it costs.
@@ -191,26 +191,26 @@ pseudo.en:
 === mec_armas
 nivel: 6
 tema: --
-titulo.es: Armas: enfriamiento y cargas
-titulo.de: Waffen: Abkühlen und Ladungen
-titulo.en: Weapons: cooldown and charges
+titulo.es: Armas: enfriamiento y ráfagas
+titulo.de: Waffen: Abkühlzeit und Salven
+titulo.en: Weapons: cooldown and bursts
 claves.es: armas, arma, enfriamiento, cargas, laser, balas, misiles, cuerpo a cuerpo, lanzallamas, alcance, atacar
 claves.de: waffen, waffe, abkuehlen, ladungen, laser, kugeln, raketen, nahkampf, flammenwerfer, reichweite, angreifen
 claves.en: weapons, weapon, cooldown, charges, laser, bullets, missiles, melee, flamethrower, range, attack
 ver: mec_energia, mec_potencia, mec_turno
 es:
     Qué es: Cada brazo lleva un arma. Después de atacar, el brazo tiene que enfriarse unos turnos antes de volver a atacar, como quien recupera el aliento. Hay láseres (dan al instante), balas, misiles que persiguen, armas de cerca y el lanzallamas.
-    Las cifras: Cada arma tiene daño, alcance y enfriamiento. Por ejemplo: láser básico, 6 de daño a 520 de distancia y 22 turnos de espera; puños, 14 de daño a 55 y 26 turnos. Algunas tienen cargas: el sable fotónico da 4 golpes seguidos y luego descansa 55 turnos. Cada brazo ataca como mucho una vez por turno.
+    Las cifras: Cada arma tiene daño, alcance y enfriamiento. Por ejemplo: láser básico, 6 de daño a 520 de distancia y 22 turnos de espera; puños, 14 de daño a 55 y 26 turnos. Algunas tienen ráfagas: el sable fotónico da 4 golpes seguidos y luego descansa 55 turnos. Cada brazo ataca como mucho una vez por turno.
     En la pelea: Ves el rayo, la bala o el golpe, con su chispa y su sonido. En la Tienda ves las cifras de cada arma.
     Desde tu código: atacar() usa el brazo derecho y, si lo llamas otra vez en el mismo turno, el izquierdo. atacarIzquierda() y atacarDerecha() eligen brazo. armaIzquierda(), alcanceIzquierda() y listoIzquierda() (y las de la derecha) te cuentan cómo es el arma y si está lista.
 de:
     Was es ist: Jeder Arm trägt eine Waffe. Nach einem Angriff muss der Arm ein paar Züge abkühlen, bevor er wieder angreift, wie jemand, der Luft holt. Es gibt Laser (treffen sofort), Kugeln, Raketen, die verfolgen, Nahkampfwaffen und den Flammenwerfer.
-    Die Zahlen: Jede Waffe hat Schaden, Reichweite und Abkühlzeit. Zum Beispiel: Basislaser, 6 Schaden auf 520 Entfernung und 22 Züge Pause; Fäuste, 14 Schaden auf 55 und 26 Züge. Manche haben Ladungen: Der Photonensäbel schlägt 4-mal hintereinander zu und ruht dann 55 Züge. Jeder Arm greift höchstens einmal pro Zug an.
+    Die Zahlen: Jede Waffe hat Schaden, Reichweite und Abkühlzeit. Zum Beispiel: Basislaser, 6 Schaden auf 520 Entfernung und 22 Züge Pause; Fäuste, 14 Schaden auf 55 und 26 Züge. Manche haben Salven: Die Photonklinge schlägt 4-mal hintereinander zu und ruht dann 55 Züge. Jeder Arm greift höchstens einmal pro Zug an.
     Im Kampf: Du siehst den Strahl, die Kugel oder den Schlag, mit Funken und Geräusch. Im Laden siehst du die Zahlen jeder Waffe.
     In deinem Code: angreifen() nimmt den rechten Arm und, wenn du es im selben Zug noch einmal aufrufst, den linken. angriffLinks() und angriffRechts() wählen den Arm. waffeLinks(), reichweiteLinks() und bereitLinks() (und die rechten) sagen dir, wie die Waffe ist und ob sie bereit ist.
 en:
     What it is: Each arm carries a weapon. After attacking, the arm has to cool down for a few ticks before it attacks again, like someone catching their breath. There are lasers (they hit at once), bullets, missiles that chase, close-up weapons and the flamethrower.
-    The numbers: Each weapon has damage, range and cooldown. For example: basic laser, 6 damage at 520 distance and 22 ticks of waiting; fists, 14 damage at 55 and 26 ticks. Some have charges: the photon saber strikes 4 times in a row and then rests for 55 ticks. Each arm attacks at most once per tick.
+    The numbers: Each weapon has damage, range and cooldown. For example: basic laser, 6 damage at 520 distance and 22 ticks of waiting; fists, 14 damage at 55 and 26 ticks. Some have bursts: the photon saber strikes 4 times in a row and then rests for 55 ticks. Each arm attacks at most once per tick.
     In the fight: You see the beam, the bullet or the blow, with its sparks and sound. In the Shop you see each weapon’s numbers.
     From your code: attack() uses the right arm and, if you call it again in the same tick, the left one. attackLeft() and attackRight() choose the arm. weaponLeft(), rangeLeft() and readyLeft() (and the right ones) tell you what the weapon is like and whether it is ready.
 pseudo.es:
@@ -269,7 +269,7 @@ pseudo.es:
 pseudo.de:
     WENN der Gegner nah ist und stillsteht:
         hohe Leistung (trifft hart)
-    WENN er weit weg ist oder schnell:
+    WENN er weit weg ist oder sehr schnell ist:
         niedrige Leistung (schnelle Kugel)
     angreifen
 pseudo.en:
@@ -296,11 +296,11 @@ es:
     Desde tu código: El escudo de un brazo se levanta atacando con ese brazo (atacarIzquierda o atacarDerecha). El especial de la cabeza, con especial(). especialCabeza() dice cuál tienes y listoEspecial() si está listo.
 de:
     Was es ist: Ein Schild schluckt einen Teil des Schadens, wie ein Regenschirm, der fast den ganzen Regen abhält. Am Arm schützt er nur nach vorn, dorthin, wohin der Kopf schaut; am Kopf von allen Seiten. Manche Köpfe haben eine andere Spezialfähigkeit: Turbo, Reparieren, Tarnung, Impuls oder Überlast.
-    Die Zahlen: Ein Schild hält 10 % bis 85 % des Schadens eine Weile ab (der Armschild: 70 % für 45 Züge, dann 90 Züge Pause). Turbo: ×1,8 Geschwindigkeit für 60 Züge. Reparieren: heilt 16. Tarnung: Man sieht dich nicht weiter als 150. Impuls: betäubt alle in der Nähe. Überlast: ×1,5 Schaden für 90 Züge. Alle kosten Energie und brauchen dann Pause.
+    Die Zahlen: Ein Schild hält 10 % bis 85 % des Schadens eine Weile ab (der Armschild: 70 % für 45 Züge, dann 90 Züge Pause). Turbo: ×1,8 Tempo für 60 Züge. Reparieren: heilt 16. Tarnung: Man sieht dich nicht weiter als 150. Impuls: betäubt alle in der Nähe. Überlast: ×1,5 Schaden für 90 Züge. Alle kosten Energie und brauchen dann eine Pause.
     Im Kampf: Eine farbige Aura um den Roboter; hält er einen Treffer ab, sprühen blaue Funken. Mit Tarnung flackert der Roboter.
     In deinem Code: Den Armschild hebst du, indem du mit diesem Arm angreifst (angriffLinks oder angriffRechts). Die Kopf-Spezialfähigkeit mit spezial(). spezialKopf() sagt, welche du hast, und bereitSpezial(), ob sie bereit ist.
 en:
-    What it is: A shield swallows part of the damage, like an umbrella that stops almost all the rain. On an arm it only protects the front, where the head points; on the head, all around. Some heads bring another special: turbo, repair, camouflage, pulse or overload.
+    What it is: A shield swallows part of the damage, like an umbrella that stops almost all the rain. On an arm it only protects the front, where the head points; on the head, all around. Some heads come with another special: turbo, repair, camouflage, pulse or overload.
     The numbers: A shield stops 10% to 85% of the damage for a while (the arm shield: 70% for 45 ticks, then 90 ticks of waiting). Turbo: ×1.8 speed for 60 ticks. Repair: heals 16. Camouflage: nobody sees you beyond 150. Pulse: stuns those close to you. Overload: ×1.5 damage for 90 ticks. They all cost energy and then wait.
     In the fight: A colored aura around the robot; when it stops a hit, blue sparks fly. With camouflage, the robot flickers.
     From your code: You raise an arm shield by attacking with that arm (attackLeft or attackRight). The head special, with special(). headSpecial() says which one you have and readySpecial() whether it is ready.
@@ -336,12 +336,12 @@ es:
     En la pelea: Un acelerón, una onda de radar o un escudo alrededor del robot.
     Desde tu código: arquetipo() te dice el tuyo. Llama a embestir(), pulsoRadar() o fortificar(); si no es la de tu modelo, no hace nada y la consola te avisa.
 de:
-    Was es ist: Jedes Robotermodell hat einen Typ (seinen Archetyp) und kann etwas Besonderes: Angreifer stürmen los, Taktiker senden einen Radarimpuls, Verteidiger befestigen sich.
+    Was es ist: Jedes Robotermodell hat einen Typ (seinen Archetyp) und kann etwas Besonderes: Angriffsroboter stürmen los, Taktikroboter senden einen Radarimpuls, Verteidigungsroboter befestigen sich.
     Die Zahlen: ansturm (Angriff): 12 Energie; rast 18 Züge lang ×1,55 nach vorn. radarImpuls (Taktik): 10 Energie; sieht 25 Züge lang rundherum und weiter (×1,5). befestigen (Verteidigung): 12 Energie; ein Schild von 55 % für 45 Züge, aber er bleibt stehen. Danach 90 bis 105 Züge Pause.
     Im Kampf: Ein Spurt, eine Radarwelle oder ein Schild um den Roboter.
     In deinem Code: archetyp() sagt dir deinen. Ruf ansturm(), radarImpuls() oder befestigen() auf; passt sie nicht zu deinem Modell, passiert nichts und die Konsole sagt es dir.
 en:
-    What it is: Each robot model is of a type (its archetype) and can do one special thing: assault robots charge, tactical ones send a radar pulse and defenders fortify.
+    What it is: Each robot model has a type (its archetype) and can do one special thing: assault robots charge, tactical ones send a radar pulse and defenders fortify.
     The numbers: charge (assault): 12 energy; rushes forward ×1.55 for 18 ticks. radarPulse (tactical): 10 energy; for 25 ticks it sees all around and farther (×1.5). fortify (defender): 12 energy; a 55% shield for 45 ticks, but it stands still. Afterwards, 90 to 105 ticks of waiting.
     In the fight: A burst of speed, a radar wave or a shield around the robot.
     From your code: archetype() tells you yours. Call charge(), radarPulse() or fortify(); if it is not your model’s, nothing happens and the console tells you.
@@ -353,7 +353,7 @@ pseudo.es:
     SI mi tipo es defensor Y me queda poco blindaje:
         fortificar
 pseudo.de:
-    WENN mein Typ Angriff ist UND der Gegner vor mir:
+    WENN mein Typ Angriff ist UND der Gegner vor mir ist:
         losstürmen
     WENN mein Typ Taktik ist UND ich niemanden sehe:
         Radarimpuls
@@ -384,7 +384,7 @@ es:
     Desde tu código: pesoTotal(), cargaMaxima(), proporcionDeCarga(), sobrecargado(), locomocion() y velocidadMaxima() te dicen cómo vas.
 de:
     Was es ist: Die Beine tragen alles andere, wie einen Rucksack. Trägst du zu viel für deine Beine, schleppt sich der Roboter dahin.
-    Die Zahlen: Gemessen wird die Last: das Gewicht von allem außer den Beinen, geteilt durch das, was die Beine tragen. Bis 70 %: leicht (weicht etwas besser aus). Bis 100 %: normal, etwas langsamer. Bis 120 %: überladen (40 % langsamer, dreht schlechter, verbraucht mehr beim Fahren und weicht nicht aus). Über 120 %: Er kann nicht kämpfen. Jede Beinart ist anders: Räder (schnell, schlecht auf Öl), Ketten (langsam, rutschen nicht), Spinnenbeine, Schwebeteil, Flügel (fliegt) oder zwei Beine.
+    Die Zahlen: Gemessen wird die Last: das Gewicht von allem außer den Beinen, geteilt durch das, was die Beine tragen. Bis 70 %: leicht (weicht etwas besser aus). Bis 100 %: normal, etwas langsamer. Bis 120 %: überladen (40 % langsamer, dreht schlechter, verbraucht mehr beim Fahren und weicht nicht aus). Über 120 %: darf nicht kämpfen. Jede Beinart ist anders: Räder (schnell, schlecht auf Öl), Ketten (langsam, rutschen nicht), Spinnenbeine, Schwebeteil, Flügel (fliegt) oder zwei Beine.
     Im Kampf: In der Werkstatt und im Laden gibt es einen Gewichtsbalken mit grüner, gelber und roter Zone und einem Strich bei 120 %.
     In deinem Code: gesamtgewicht(), traglast(), lastanteil(), ueberladen(), fortbewegung() und hoechstgeschwindigkeit() sagen dir, wie es steht.
 en:
@@ -425,14 +425,14 @@ es:
     Desde tu código: terreno() te dice qué pisas ahora. velocidadMaxima() ya cuenta el suelo que pisas.
 de:
     Was es ist: Der Boden der Arena ist nicht überall gleich: Es gibt Ölflecken, Pfützen, Rampen, Schutt und Fallen. Jede Beinart kommt auf jedem Boden besser oder schlechter voran, wie Stiefel oder Badelatschen im Schnee.
-    Die Zahlen: Auf Öl fahren Räder mit gut der Hälfte (×0,55), Ketten merken nichts. Wasser gibt einen Kurzschluss: 22 Züge Schlingern (dem Schwebeteil macht es nichts). Auf Schutt fahren Räder mit der Hälfte, Spinnenbeine etwas besser (×1,15).
+    Die Zahlen: Auf Öl fahren Räder mit gut halbem Tempo (×0,55), Ketten merken nichts. Wasser gibt einen Kurzschluss: 22 Züge Schlingern (dem Schwebeteil macht es nichts). Auf Schutt fahren Räder mit halbem Tempo, Spinnenbeine etwas besser (×1,15).
     Im Kampf: Die Zonen sieht man am Boden an ihrer Farbe: Öl dunkel und glänzend, Wasser blau, Rampen und Schutt.
     In deinem Code: gelaende() sagt dir, worauf du gerade stehst. hoechstgeschwindigkeit() rechnet den Boden schon mit.
 en:
     What it is: The arena floor is not the same everywhere: there are oil slicks, puddles, ramps, rubble and traps. Each kind of legs does better or worse on each floor, like boots or flip-flops in the snow.
-    The numbers: On oil, wheels go at just over half speed (×0.55) and tracks do not even notice. Water gives a short circuit: 22 ticks of swerving (hover legs are not affected). On rubble, wheels go at half speed and spider legs a bit better (×1.15).
+    The numbers: On oil, wheels go at just over half speed (×0.55) and tracks do not even notice. Water causes a short circuit: 22 ticks of swerving (hover legs are not affected). On rubble, wheels go at half speed and spider legs a bit better (×1.15).
     In the fight: You see the zones on the floor by their color: oil dark and shiny, water blue, ramps and rubble.
-    From your code: terrain() tells you what you are standing on now. topSpeed() already counts the floor you are on.
+    From your code: terrain() tells you what you are standing on now. topSpeed() already takes the floor you are on into account.
 pseudo.es:
     SI piso aceite Y llevo ruedas:
         salir de ahí por el camino más corto
@@ -539,7 +539,7 @@ es:
     Qué es: De ronda en ronda cae un aparato en la arena: un motor a chorro, un imán, un martillo… Si lo coges y lo enchufas en el hueco correcto, tu robot lo puede usar.
     Las cifras: Aparece a los 3 segundos de empezar la ronda y se coge tocándolo. Enchufarlo tarda 30 turnos; luego, cada uso tiene su espera (de 120 a 240 turnos). Cada aparato va en un hueco: espalda, piernas, cabeza o brazo. En el hueco equivocado no se sujeta.
     En la pelea: Entre ronda y ronda te dicen cuál viene, y con el botón del aparato puedes leer su código.
-    Desde tu código: aparatos() te dice dónde están; miAparato() el que llevas; conectar(hueco) lo enchufa y usarAparato() lo usa.
+    Desde tu código: aparatos() te dice dónde están; miAparato(), el que llevas; conectar(hueco) lo enchufa y usarAparato() lo usa.
 de:
     Was es ist: Von Runde zu Runde fällt ein Gerät in die Arena: eine Düse, ein Magnet, ein Hammer … Nimmst du es und steckst es in den richtigen Steckplatz, kann dein Roboter es benutzen.
     Die Zahlen: Es erscheint 3 Sekunden nach Rundenbeginn; du nimmst es, indem du es berührst. Anschließen dauert 30 Züge; danach hat jede Benutzung ihre Pause (120 bis 240 Züge). Jedes Gerät gehört in einen Steckplatz: Rücken, Beine, Kopf oder Arm. Im falschen hält es nicht.
@@ -549,7 +549,7 @@ en:
     What it is: From round to round a gadget drops into the arena: a jet engine, a magnet, a hammer… If you grab it and plug it into the right slot, your robot can use it.
     The numbers: It appears 3 seconds after the round starts and you grab it by touching it. Plugging it in takes 30 ticks; then each use has its wait (120 to 240 ticks). Each gadget goes in a slot: back, legs, head or arm. In the wrong slot it does not hold.
     In the fight: Between rounds you are told which one is coming, and with the gadget button you can read its code.
-    From your code: gadgets() tells you where they are; myGadget() the one you carry; plugIn(slot) plugs it in and useGadget() uses it.
+    From your code: gadgets() tells you where they are; myGadget(), the one you carry; plugIn(slot) plugs it in and useGadget() uses it.
 pseudo.es:
     SI hay un aparato cerca Y no llevo ninguno:
         ir a por él
@@ -596,7 +596,7 @@ en:
     What it is: In long fights the robot does not start each round like new: part of the damage stays, like the tiredness of someone who has run a lot.
     The numbers: With 4 rounds or fewer there is no wear. With 6, a little (0.24); with 12, a lot (0.96). Even so, no part starts the round below half.
     In the fight: More smoke and more dents; the bars start the round not quite full.
-    From your code: armor() at the start of the round (in onStart) tells you how you arrive.
+    From your code: armor() at the start of the round (in onStart) tells you what shape you arrive in.
 pseudo.es:
     AL EMPEZAR la ronda:
         SI llego con poco blindaje:
@@ -622,17 +622,17 @@ claves.en: step limit, limit, steps, thinking too much, error, exception, stunne
 ver: mec_senior, mec_turno
 es:
     Qué es: En cada turno tu robot solo puede pensar un rato, como en un examen con tiempo. Si tu código hace demasiadas cuentas en un turno, se pasa del tope y el robot se queda quieto, pensando, unos turnos. Si tu código se rompe (una excepción), se queda aturdido.
-    Las cifras: El núcleo da entre 3000 y 40000 pasos por turno; cada vuelta de un bucle y cada método cuentan. Pasarse: unos turnos sin hacer nada (como mucho 20). Un error: 8 turnos aturdido.
+    Las cifras: El núcleo da entre 3000 y 40 000 pasos de cálculo por turno; cada vuelta de un bucle y cada método cuentan. Pasarse: unos turnos sin hacer nada (como mucho 20). Un error: 8 turnos aturdido.
     En la pelea: El locutor lo dice y suena un aviso. En el depurador, la barra de pasos se pone roja y la consola dice qué línea falló.
     Desde tu código: No hay nada que llamar: se trata de hacer menos trabajo en cada turno. Lo pesado, una sola vez en alEmpezar.
 de:
     Was es ist: In jedem Zug darf dein Roboter nur eine Weile nachdenken, wie bei einer Prüfung mit Zeitlimit. Rechnet dein Code in einem Zug zu viel, überschreitet er das Limit, und der Roboter bleibt ein paar Züge stehen und denkt. Stürzt dein Code ab (eine Ausnahme), ist er benommen.
-    Die Zahlen: Der Kern gibt 3000 bis 40000 Schritte pro Zug; jeder Schleifendurchlauf und jede Methode zählen. Zu viel: ein paar Züge ohne Aktion (höchstens 20). Ein Fehler: 8 Züge benommen.
-    Im Kampf: Der Sprecher sagt es, und ein Warnton erklingt. Im Debugger wird der Schritte-Balken rot, und die Konsole sagt, welche Zeile fehlschlug.
+    Die Zahlen: Der Kern gibt 3000 bis 40 000 Rechenschritte pro Zug; jeder Schleifendurchlauf und jede Methode zählen. Zu viel: ein paar Züge ohne Aktion (höchstens 20). Ein Fehler: 8 Züge benommen.
+    Im Kampf: Der Ansager sagt es, und ein Warnton erklingt. Im Debugger wird der Schritte-Balken rot, und die Konsole sagt, welche Zeile fehlschlug.
     In deinem Code: Es gibt nichts aufzurufen: Es geht darum, in jedem Zug weniger zu tun. Das Schwere einmal in beimStart.
 en:
     What it is: Each tick your robot can only think for a while, like an exam with a time limit. If your code does too many calculations in one tick, it goes over the limit and the robot stands still, thinking, for a few ticks. If your code breaks (an exception), it is stunned.
-    The numbers: The core gives between 3000 and 40000 steps per tick; each loop pass and each method counts. Going over: a few ticks doing nothing (20 at most). An error: 8 ticks stunned.
+    The numbers: The core gives between 3,000 and 40,000 computation steps per tick; each loop iteration and each method counts. Going over: a few ticks doing nothing (20 at most). An error: 8 ticks stunned.
     In the fight: The announcer says so and a warning sounds. In the debugger, the steps bar turns red and the console says which line failed.
     From your code: There is nothing to call: it is about doing less work each tick. The heavy work, once, in onStart.
 pseudo.es:
@@ -662,17 +662,17 @@ claves.de: budget, budgets, senior, millisekunden, speicher, parallel, threads
 claves.en: budget, budgets, senior, milliseconds, memory, parallel, threads
 ver: mec_tope, peleas_senior
 es:
-    Qué es: En las peleas Senior, además de los pasos, se mide el tiempo de verdad y la memoria que usa tu código en cada turno, como en un programa de verdad que tiene que ir fino.
+    Qué es: En las peleas Senior, además de los pasos de cálculo, se mide el tiempo de verdad y la memoria que usa tu código en cada turno, como en un programa de verdad que tiene que ir fino.
     Las cifras: Hay dos perfiles: 2,5 ms, 8 KB y 350 pasos por turno, o 1,5 ms, 4 KB y 220 pasos. Pasarse quita 6 de energía y 2 turnos sin pensar. Los primeros 512 bytes de memoria son gratis. Hay una pelea de 2 contra 2 en la que los robots piensan a la vez (en paralelo).
     En la pelea: En el marcador y en el depurador hay barras de tiempo y de memoria.
     Desde tu código: Que tu código no cree objetos nuevos en cada turno ni repita cuentas. En paralelo, cuidado con lo que compartes con tu compañero.
 de:
-    Was es ist: In Senior-Kämpfen werden außer den Schritten auch die echte Zeit und der Speicher gemessen, die dein Code pro Zug braucht, wie bei einem echten Programm, das schlank laufen muss.
+    Was es ist: In Senior-Kämpfen werden außer den Rechenschritten auch die echte Zeit und der Speicher gemessen, die dein Code pro Zug braucht, wie bei einem echten Programm, das schlank laufen muss.
     Die Zahlen: Es gibt zwei Profile: 2,5 ms, 8 KB und 350 Schritte pro Zug oder 1,5 ms, 4 KB und 220 Schritte. Zu viel kostet 6 Energie und 2 Züge ohne Denken. Die ersten 512 Byte Speicher sind gratis. In einem 2-gegen-2-Kampf denken die Roboter gleichzeitig (parallel).
     Im Kampf: Auf der Anzeigetafel und im Debugger gibt es Balken für Zeit und Speicher.
     In deinem Code: Dein Code soll nicht in jedem Zug neue Objekte erzeugen oder Rechnungen wiederholen. Parallel: Vorsicht mit dem, was du mit deinem Teamkameraden teilst.
 en:
-    What it is: In Senior fights, besides the steps, the real time and the memory your code uses each tick are measured, like a real program that has to run lean.
+    What it is: In Senior fights, besides the computation steps, the real time and the memory your code uses each tick are measured, like a real program that has to run lean.
     The numbers: There are two profiles: 2.5 ms, 8 KB and 350 steps per tick, or 1.5 ms, 4 KB and 220 steps. Going over costs 6 energy and 2 ticks without thinking. The first 512 bytes of memory are free. There is a 2-vs-2 fight where the robots think at the same time (in parallel).
     In the fight: On the scoreboard and in the debugger there are bars for time and memory.
     From your code: Your code should not create new objects every tick or repeat calculations. In parallel, be careful with what you share with your teammate.
@@ -704,7 +704,7 @@ claves.en: radar, see, sight, cannot see, cone, head, distance, angle, seen enem
 ver: mec_turno, mec_equipo
 es:
     Qué es: Tu robot ve con la cabeza, como con una linterna: solo ve lo que tiene delante de la cabeza y no muy lejos. Lo que está pegado a él lo nota siempre.
-    Las cifras: Sin cabeza especial ve hasta 400 de distancia. Cada cabeza es distinta: el ojo ve muy lejos (900) pero estrecho (30°); la panorámica ve ancho (140°) pero más cerca (420). A menos de 110 te ve siempre.
+    Las cifras: Sin cabeza especial ve hasta 400 de distancia. Cada cabeza es distinta: el ojo ve muy lejos (900), pero estrecho (30°); la panorámica ve ancho (140°), pero más cerca (420). A menos de 110 te ve siempre.
     En la pelea: Con el Visor (F8) ves el radar de cada robot dibujado en la arena.
     Desde tu código: alVerEnemigo(e) se llama por cada enemigo que ve, del más cercano al más lejano. enemigosVistos() te da la lista. e.distancia() y e.angulo() te dicen dónde está.
 de:
@@ -744,8 +744,8 @@ claves.de: laden, kaufen, teile, teil, preis, mk, serie, teil-aufgabe, teil akti
 claves.en: shop, buy, parts, part, price, mk, series, part challenge, activate part
 ver: mec_dinero_rangos, mec_peso, tienda_y_monedas
 es:
-    Qué es: En la Tienda cambias monedas por piezas: armas, cabezas, núcleos y piernas. Cada pieza pide un rango mínimo. Al comprarla, antes de usarla tienes que pasar un reto de código corto.
-    Las cifras: Cada pieza viene en series, de Mk I a Mk V. Cada Mk mejora un poco la pieza (por ejemplo, +10 % de daño) y cuesta un 55 % del precio base más. Las Mk altas piden más rango.
+    Qué es: En la Tienda cambias monedas por piezas: armas, cabezas, núcleos y piernas. Cada pieza pide una etiqueta mínima. Al comprarla, antes de usarla tienes que pasar un reto de código corto.
+    Las cifras: Cada pieza viene en series, de Mk I a Mk V. Cada Mk mejora un poco la pieza (por ejemplo, +10 % de daño) y cuesta un 55 % del precio base más. Las Mk altas piden una etiqueta más alta.
     En la pelea: Lo que compras se monta en el Taller (pestaña Piezas) y cambia las cifras del robot y su peso.
     Desde tu código: Las piezas no se programan, pero cambian lo que te dicen armaIzquierda(), alcanceDerecha(), pesoTotal() y los demás.
 de:
@@ -754,8 +754,8 @@ de:
     Im Kampf: Was du kaufst, baust du in der Werkstatt ein (Reiter Teile); es ändert die Zahlen des Roboters und sein Gewicht.
     In deinem Code: Teile werden nicht programmiert, aber sie ändern, was dir waffeLinks(), reichweiteRechts(), gesamtgewicht() und die anderen sagen.
 en:
-    What it is: In the Shop you trade coins for parts: weapons, heads, cores and legs. Each part asks for a minimum rank. After buying it, you have to pass a short code challenge before you can use it.
-    The numbers: Each part comes in series, from Mk I to Mk V. Each Mk improves the part a little (for example, +10% damage) and costs 55% of the base price more. High Mk parts ask for a higher rank.
+    What it is: In the Shop you trade coins for parts: weapons, heads, cores and legs. Each part requires a minimum rank. After buying it, you have to pass a short code task before you can use it.
+    The numbers: Each part comes in series, from Mk I to Mk V. Each Mk improves the part a little (for example, +10% damage) and costs an extra 55% of the base price. High Mk parts require a higher rank.
     In the fight: What you buy is fitted in the Workshop (Parts tab) and changes the robot’s numbers and its weight.
     From your code: Parts are not programmed, but they change what weaponLeft(), rangeRight(), totalWeight() and the others tell you.
 pseudo.es:
@@ -774,7 +774,7 @@ pseudo.en:
 === mec_dinero_rangos
 nivel: 6
 tema: --
-titulo.es: Monedas y rangos
+titulo.es: Monedas y etiquetas
 titulo.de: Münzen und Stufen
 titulo.en: Coins and ranks
 claves.es: monedas, dinero, rango, rangos, subir de nivel, bajar de nivel, noob, junior, senior, master, etiqueta
@@ -782,8 +782,8 @@ claves.de: muenzen, geld, stufe, stufen, aufsteigen, absteigen, noob, junior, se
 claves.en: coins, money, rank, ranks, level up, level down, noob, junior, senior, master
 ver: mec_tienda, tienda_y_monedas
 es:
-    Qué es: Ganas monedas ganando peleas, resolviendo ejercicios y en los minijuegos. Tu rango (Noob, Junior, Senior, Master) dice a qué nivel juegas: subes ganando peleas de tu nivel y resolviendo ejercicios de sus temas.
-    Las cifras: Ganar una pelea da 2 monedas en Noob, 3 en Junior y 3,5 en Senior y Master. Cada ejercicio nuevo resuelto da 0,25. Para subir de escalón hacen falta unas cuantas victorias en tu rango y el 70 % de sus ejercicios. Si pierdes muchas seguidas, puedes bajar (antes sale una alarma roja).
+    Qué es: Ganas monedas ganando peleas, resolviendo ejercicios y en los minijuegos. Tu etiqueta (Noob, Junior, Senior, Master) dice a qué nivel juegas: subes ganando peleas de tu nivel y resolviendo ejercicios de sus temas.
+    Las cifras: Ganar una pelea da 2 monedas en Noob, 3 en Junior y 3,5 en Senior y Master. Cada ejercicio nuevo resuelto da 0,25. Para subir de escalón hacen falta unas cuantas victorias en tu etiqueta y el 70 % de sus ejercicios. Si pierdes muchas seguidas, puedes bajar (antes sale una alarma roja).
     En la pelea: Las monedas se ven arriba en el menú; la barra de arriba a la derecha dice cuánto te falta para subir.
     Desde tu código: No hay nada que llamar: es tu progreso como jugador.
 de:
@@ -793,7 +793,7 @@ de:
     In deinem Code: Es gibt nichts aufzurufen: Es ist dein Fortschritt als Spieler.
 en:
     What it is: You earn coins by winning fights, solving exercises and in the minigames. Your rank (Noob, Junior, Senior, Master) says what level you play at: you go up by winning fights at your level and solving exercises from its topics.
-    The numbers: Winning a fight gives 2 coins at Noob, 3 at Junior and 3.5 at Senior and Master. Each newly solved exercise gives 0.25. To go up a step you need a few wins at your rank and 70% of its exercises. If you lose many in a row, you can go down (a red alarm shows first).
+    The numbers: Winning a fight gives 2 coins at Noob, 3 at Junior and 3.5 at Senior and Master. Each newly solved exercise gives 0.25. To rank up you need a few wins at your rank and 70% of its exercises. If you lose many in a row, you can drop a rank (a red alarm shows first).
     In the fight: You see the coins at the top of the menu; the bar at the top right says how much you still need to go up.
     From your code: There is nothing to call: it is your progress as a player.
 pseudo.es:
@@ -825,15 +825,15 @@ es:
     En la pelea: Se nota en las cifras, no en el dibujo. En el menú, debajo del robot, ves su modelo y su naturaleza.
     Desde tu código: Elige una forma de pelear que aproveche lo suyo: un Furia, de cerca; un Foco, de lejos; un Éter, moviéndose mucho.
 de:
-    Was es ist: Jedes Modell hat eine Natur, die es in einer Sache besser macht: Stahl (Panzerung), Blitz (Tempo), Fokus (Zielen), Wut (Nahkampf), Verstand (schneller denken und abkühlen) oder Äther (Ausweichen). Und jedes bringt seine typische Waffe mit.
-    Die Zahlen: +8 % auf das Seine. Ein Kern derselben Natur bringt mehr als einer einer anderen. Seine typische Waffe gibt weitere +8 %.
+    Was es ist: Jedes Modell hat eine Natur, die es in einer Sache besser macht: Stahl (Panzerung), Blitz (Tempo), Fokus (Zielen), Wut (Nahkampf), Geist (schneller denken und abkühlen) oder Äther (Ausweichen). Und jedes bringt seine typische Waffe mit.
+    Die Zahlen: +8 % auf das Seine. Ein Kern derselben Natur bringt mehr als einer anderer Natur. Seine typische Waffe gibt weitere +8 %.
     Im Kampf: Man merkt es an den Zahlen, nicht an der Zeichnung. Im Menü siehst du unter dem Roboter sein Modell und seine Natur.
     In deinem Code: Wähle einen Kampfstil, der das nutzt: ein Wut-Modell nah dran, ein Fokus-Modell aus der Ferne, ein Äther-Modell immer in Bewegung.
 en:
-    What it is: Each model has a nature that makes it better at one thing: Steel (armor), Lightning (speed), Focus (aim), Fury (close-up blows), Wit (thinking and cooling down sooner) or Ether (dodging). And each one comes with its signature weapon.
-    The numbers: A +8% in its own thing. A core of the same nature adds more than one of another. Its signature weapon gives another +8%.
+    What it is: Each model has a nature that makes it better at one thing: Steel (armor), Bolt (speed), Focus (aim), Fury (close-up blows), Wit (thinking and cooling down sooner) or Aether (dodging). And each one comes with its signature weapon.
+    The numbers: +8% in its specialty. A core of the same nature adds more than one of another. Its signature weapon gives another +8%.
     In the fight: You notice it in the numbers, not in the drawing. In the menu, under the robot, you see its model and its nature.
-    From your code: Choose a way of fighting that uses it: a Fury model up close, a Focus model from afar, an Ether model always on the move.
+    From your code: Choose a way of fighting that uses it: a Fury model up close, a Focus model from afar, an Aether model always on the move.
 pseudo.es:
     SI mi robot es de cerca (Furia):
         acercarme y golpear
@@ -862,18 +862,18 @@ claves.en: class effects, oop, private, public, final, static, fields, encapsula
 ver: encapsulacion, mec_tope
 es:
     Qué es: Cómo escribes tu clase cambia un poco la pelea, como llevar la mochila bien cerrada. Los campos privados te protegen; los públicos que se pueden cambiar te hacen más fácil de ver y de dañar; los final dejan pensar un poco más.
-    Las cifras: Cada campo private: −2 % de daño recibido (hasta −8 %) y al enemigo le cuesta un 4 % más verte. Cada campo public que se puede cambiar: +4 % de daño recibido (hasta +12 %). Cada final: +5 % de pasos por turno (hasta +25 %). En equipo, static ayuda al radar y a la recarga.
+    Las cifras: Cada campo private: −2 % de daño recibido (hasta −8 %) y al rival le cuesta un 4 % más verte. Cada campo public que se puede cambiar: +4 % de daño recibido (hasta +12 %). Cada final: +5 % de pasos de cálculo por turno (hasta +25 %). En equipo, static ayuda al radar y a la recarga.
     En la pelea: En el informe de la ronda, «Efectos de tu clase» dice qué te ha sumado o restado.
     Desde tu código: Es cómo declaras tus campos: private, final, static…
 de:
     Was es ist: Wie du deine Klasse schreibst, ändert den Kampf ein wenig, wie ein gut geschlossener Rucksack. Private Felder schützen dich; öffentliche veränderbare machen dich leichter sichtbar und verwundbar; final-Felder lassen dich etwas mehr denken.
-    Die Zahlen: Jedes private Feld: −2 % erlittener Schaden (bis −8 %), und der Gegner sieht dich 4 % schlechter. Jedes veränderbare public-Feld: +4 % erlittener Schaden (bis +12 %). Jedes final: +5 % Schritte pro Zug (bis +25 %). Im Team hilft static dem Radar und dem Aufladen.
+    Die Zahlen: Jedes private Feld: −2 % erlittener Schaden (bis −8 %), und der Gegner sieht dich 4 % schlechter. Jedes veränderbare public-Feld: +4 % erlittener Schaden (bis +12 %). Jedes final: +5 % Rechenschritte pro Zug (bis +25 %). Im Team hilft static dem Radar und dem Aufladen.
     Im Kampf: Im Rundenbericht sagt „Effekte deiner Klasse“, was es dir gebracht oder gekostet hat.
     In deinem Code: Es ist die Art, wie du deine Felder deklarierst: private, final, static …
 en:
     What it is: How you write your class changes the fight a little, like keeping your backpack well closed. Private fields protect you; public fields that can change make you easier to see and to hurt; final ones let you think a bit more.
-    The numbers: Each private field: −2% damage taken (down to −8%) and the enemy sees you 4% worse. Each public field that can change: +4% damage taken (up to +12%). Each final: +5% steps per tick (up to +25%). In a team, static helps the radar and the recharge.
-    In the fight: In the round report, "Effects of your class" says what it added or took away.
+    The numbers: Each private field: −2% damage taken (down to −8%) and the rival sees you 4% worse. Each public field that can change: +4% damage taken (up to +12%). Each final: +5% computation steps per tick (up to +25%). In a team, static helps the radar and the recharge.
+    In the fight: In the round report, “Effects of your class” says what it added or took away.
     From your code: It is how you declare your fields: private, final, static…
 pseudo.es:
     MIS DATOS:
@@ -891,9 +891,9 @@ pseudo.en:
 === mec_equipo
 nivel: 6
 tema: --
-titulo.es: Equipos, todos contra todos y varios enemigos
+titulo.es: Equipos, todos contra todos y varios rivales
 titulo.de: Teams, alle gegen alle und mehrere Gegner
-titulo.en: Teams, free-for-all and several enemies
+titulo.en: Teams, free-for-all and several rivals
 claves.es: equipo, equipos, compañero, battle royale, todos contra todos, varios enemigos, drones, avisar al equipo
 claves.de: team, teams, kamerad, battle royale, alle gegen alle, mehrere gegner, drohnen, team melden
 claves.en: team, teams, teammate, battle royale, free for all, several enemies, drones, tell team
@@ -909,7 +909,7 @@ de:
     Im Kampf: Jedes Team hat seine Farbe auf der Anzeigetafel.
     In deinem Code: gesehen(), um zu wählen, wen du angreifst. teamMelden(nachricht) und beiTeamNachricht, um mit deinem Kameraden zu reden; kameraden() sagt dir, wer sie sind.
 en:
-    What it is: Sometimes you do not fight one against one: in Teams it is 2 against 2; in the free-for-all (battle royale) there are up to 6 robots; and sometimes the rival brings drones or friends.
+    What it is: Sometimes you do not fight one-on-one: in Teams it is 2 against 2; in the free-for-all (battle royale) there are up to 6 robots; and sometimes the rival brings drones or friends.
     The numbers: The team that takes less damage, adding both robots, wins. You do not hurt your teammate, but it does block your laser. From Junior on there are more fights against several (40% at Junior, 55% at Senior); drones are weaker.
     In the fight: Each team has its color on the scoreboard.
     From your code: seenEnemies() to choose whom to attack. tellTeam(message) and onTeamMessage to talk to your teammate; teammates() tells you who they are.
@@ -954,8 +954,8 @@ de:
     In deinem Code: Benutze in deinem Roboter das Thema des Bosses (steht auf seiner Karte im Spezialmodus).
 en:
     What it is: Bosses are special rivals for a Java topic. You hardly hurt them if your code does not really use that topic (for example, a loop or a class).
-    The numbers: Without the topic, only 10% of the damage gets through. If you use it, normal damage. When you win: an epic part and a medal. Against bosses, your coach is in hospital: no tips.
-    In the fight: The scoreboard says "immune" or "vulnerable".
+    The numbers: Without the topic, only 10% of the damage gets through. If you use it, normal damage. When you win: an epic part and a medal. Against bosses, your coach is in the hospital: no tips.
+    In the fight: The scoreboard says “immune” or “vulnerable”.
     From your code: Use the boss’s topic in your robot (its card in Special mode says which).
 pseudo.es:
     ANTES de un jefe:
@@ -991,7 +991,7 @@ de:
     Im Kampf: Große blinkende Zahlen und der Countdown.
     In deinem Code: Es ist eine kurze eigene Übung; sie ändert deinen Roboter nicht. In den Einstellungen kannst du sie ausschalten.
 en:
-    What it is: In the second round of a one-against-one fight, the fight freezes and a special weapon appears, with a code challenge and a countdown.
+    What it is: In the second round of a one-on-one fight, the fight freezes and a special weapon appears, with a code task and a countdown.
     The numbers: You have 45 seconds at Noob, 60 to 65 at Junior and 85 to 90 at Senior. If you pass all the tests, your robot runs to the weapon and strikes; with half, it misses; otherwise the rival sometimes takes it.
     In the fight: Big blinking numbers and the countdown.
     From your code: It is a short exercise of its own; it does not change your robot. You can turn it off in Settings.
@@ -1005,5 +1005,5 @@ pseudo.de:
         sie lösen, bevor die Zeit abläuft
 pseudo.en:
     WHEN the special weapon appears:
-        read the challenge calmly
+        read the task calmly
         solve it before time runs out

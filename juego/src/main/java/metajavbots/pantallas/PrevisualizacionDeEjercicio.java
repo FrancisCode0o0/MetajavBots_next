@@ -102,6 +102,7 @@ public final class PrevisualizacionDeEjercicio {
                 esperaEscribir(ui, x, y + 30, w, h - 30, false, estado, reloj);
                 break;
         }
+        EscenasDelRobotito.rotulo(p, escena, x, y, w, h);
         p.sinRecorte();
         dibujarCabecera(ui, x, y, w, h, estado);
     }

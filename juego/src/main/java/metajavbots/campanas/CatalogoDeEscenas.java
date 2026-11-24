@@ -24,7 +24,7 @@ public final class CatalogoDeEscenas {
         if (c == null || k == null) {
             return escenaGenerica("default:1", "cobalto", "chatarra", false,
                     tr("Escena de campaña", "Kampagnenszene", "Campaign scene"),
-                    tr("El combate está a punto de empezar.", "Der Kampf beginnt gleich.", "The fight is about to begin."));
+                    tr("La pelea está a punto de empezar.", "Der Kampf beginnt gleich.", "The fight is about to begin."));
         }
         if ("creed1".equals(c.id)) return escenaCreed(k);
         if ("isla_torneo".equals(c.id)) return escenaIsla(k);
@@ -42,7 +42,7 @@ public final class CatalogoDeEscenas {
         switch (k.numero) {
             case 1:
                 return new EscenaDeCampana(id, Momento.INICIO,
-                        tr("El sótano de las tuercas", "Der Keller der Muttern", "The Basement of Bolts"),
+                        tr("El sótano de las tuercas", "Der Keller der Muttern", "The basement of bolts"),
                         List.of(
                                 new Vineta(Decorado.GIMNASIO, Animacion.ENTRADA, "cobalto", k.modelo, true, false, false,
                                         tr("Adonis Cromo cuelga la corbata de oficina y entra en el gimnasio de {entrenador}.",
@@ -51,7 +51,7 @@ public final class CatalogoDeEscenas {
                                         tr("¡Vengo a compilar a puñetazos!", "Ich bin hier, um mit Fäusten zu kompilieren!",
                                                 "I'm here to compile with my fists!"),
                                         tr("Primero aguanta tres segundos contra {rival}.", "Halt erst mal drei Sekunden gegen {rival} durch.",
-                                                "First try lasting three seconds against {rival}.")),
+                                                "First, try to last three seconds against {rival}.")),
                                 new Vineta(Decorado.GIMNASIO, Animacion.SACUDIDA, "cobalto", k.modelo, false, false, true,
                                         tr("El saco de entrenamiento sale volando antes siquiera de sonar la campana.",
                                                 "Der Boxsack fliegt davon, noch bevor der Gong ertönt.",
@@ -61,25 +61,25 @@ public final class CatalogoDeEscenas {
                                                 "Let's see if you compile under pressure!"))));
             case 2:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("Montaje absurdo en la chatarrería", "Absurde Montage auf dem Schrottplatz", "Absurd Scrapyard Montage"),
+                        tr("Montaje absurdo en la chatarrería", "Absurde Montage auf dem Schrottplatz", "Absurd junkyard montage"),
                         List.of(
                                 new Vineta(Decorado.PLAYA, Animacion.ZOOM, "cobalto", k.modelo, true, false, false,
                                         tr("{entrenador} diseña un entrenamiento imposible: perseguir drones tostadores y cargar lavadoras.",
                                                 "{entrenador} entwirft ein unmögliches Training: Toaster-Drohnen jagen und Waschmaschinen stemmen.",
-                                                "{entrenador} designs an impossible drill: chasing toaster-drones and lifting washing machines."),
+                                                "{entrenador} designs an impossible drill: chasing toaster drones and lifting washing machines."),
                                         tr("¡Sin pies ligeros no hay título!", "Ohne leichte Füße kein Titel!", "No light feet, no title!"),
-                                        tr("¡Tus tuercas suenan a chatarra nueva!", "Deine Muttern klingen nach Frischmetall!",
-                                                "Your bolts sound brand new!")),
+                                        tr("¡Tus tuercas suenan a chatarra nueva!", "Deine Muttern klingen nach neuem Schrott!",
+                                                "Your bolts sound like brand-new scrap!")),
                                 new Vineta(Decorado.RING_NEON, Animacion.DESTELLO, "cobalto", k.modelo, true, false, true,
                                         tr("Las cámaras enfocan la primera pelea televisada contra {rival}.",
                                                 "Die Kameras richten sich auf den ersten Fernsehkampf gegen {rival}.",
-                                                "The cameras lock onto the first televised bout against {rival}."),
+                                                "The cameras lock onto the first televised fight against {rival}."),
                                         tr("¡Salgo en directo y sin errores!", "Ich bin live und fehlerfrei!", "I'm live and bug-free!"),
                                         tr("¡Te voltearé antes de los anuncios!", "Ich kippe dich noch vor der Werbung!",
                                                 "I'll flip you before the commercial break!"))));
             case 3:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("Título regional y visita al hospital", "Regionaltitel und Krankenhausbesuch", "Regional Title and Hospital Visit"),
+                        tr("Título regional y visita al hospital", "Regionaltitel und Krankenhausbesuch", "Regional title and hospital visit"),
                         List.of(
                                 new Vineta(Decorado.HOSPITAL, Animacion.SACUDIDA, "cobalto", k.modelo, true, true, false,
                                         tr("¡Catástrofe! {entrenador} bebió limpiaparabrisas con gas creyendo que era aceite energético.",
@@ -99,7 +99,7 @@ public final class CatalogoDeEscenas {
                                                 "Show me your code, challenger!"))));
             default:
                 return new EscenaDeCampana(id, Momento.INICIO,
-                        tr("Taller perdido en el desierto", "Verlorene Werkstatt in der Wüste", "Lost Desert Garage"),
+                        tr("Taller perdido en el desierto", "Verlorene Werkstatt in der Wüste", "Lost workshop in the desert"),
                         List.of(
                                 new Vineta(Decorado.DESIERTO_SOL, Animacion.ZOOM, "cobalto", k.modelo, true, false, false,
                                         tr("Sin aire acondicionado y a 50 grados: {entrenador} manda golpear neumáticos gigantes.",
@@ -107,7 +107,7 @@ public final class CatalogoDeEscenas {
                                                 "No AC at 120 degrees: {entrenador} orders sledgehammer drills on giant tires."),
                                         tr("¡Si tu código no se derrite aquí, no cae nunca!",
                                                 "Wenn dein Code hier nicht schmilzt, fällt er nie!",
-                                                "If your code doesn't melt here, it never breaks!"),
+                                                "If your code doesn't melt here, it'll never break!"),
                                         tr("¡El desierto solo acepta acero templado!", "Die Wüste duldet nur gehärteten Stahl!",
                                                 "The desert only respects tempered steel!"))));
         }
@@ -118,7 +118,7 @@ public final class CatalogoDeEscenas {
         switch (k.numero) {
             case 5:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("Exhibición en la cocina gigante", "Schaukampf in der Riesenküche", "Giant Kitchen Exhibition"),
+                        tr("Exhibición en la cocina gigante", "Schaukampf in der Riesenküche", "Giant kitchen exhibition"),
                         List.of(
                                 new Vineta(Decorado.COCINA_TORNEO, Animacion.SACUDIDA, "cobalto", k.modelo, true, false, true,
                                         tr("Una exhibición benéfica acaba en caos cuando {rival} enciende las batidoras industriales.",
@@ -130,7 +130,7 @@ public final class CatalogoDeEscenas {
                                                 "Tonight I'm blending your {pieza}!"))));
             case 6:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("El coloso de hielo y el cubito traidor", "Der Eiskoloss und der tückische Würfel", "The Ice Colossus and the Rogue Cube"),
+                        tr("El coloso de hielo y el cubito traidor", "Der Eiskoloss und der tückische Würfel", "The ice colossus and the rogue cube"),
                         List.of(
                                 new Vineta(Decorado.HOSPITAL, Animacion.LLUVIA, "cobalto", k.modelo, true, true, false,
                                         tr("En el vestuario helado, {entrenador} resbala con un cubito decorativo y vuelve a la camilla.",
@@ -139,18 +139,18 @@ public final class CatalogoDeEscenas {
                                         tr("¡No dejes que te congele el bucle!", "Lass dir nicht die Schleife einfrieren!",
                                                 "Don't let it freeze your loop!"),
                                         tr("Temperatura óptima. Rival obsoleto.", "Optimale Temperatur. Gegner veraltet.",
-                                                "Optimal temperature. Opponent obsolete.")),
+                                                "Optimal temperature. Rival obsolete.")),
                                 new Vineta(Decorado.VOLCAN_HIELO, Animacion.ZOOM, "cobalto", k.modelo, false, false, true,
                                         tr("{rival} ni parpadea ni siente el frío. Toca demostrar temple de Senior.",
                                                 "{rival} blinzelt nicht und spürt keine Kälte. Zeit für echte Senior-Nerven.",
                                                 "{rival} never blinks and feels no cold. Time to show real Senior grit."),
-                                        tr("¡Mi código arde incluso bajo cero!", "Mein Code glüht selbst unter Null!",
+                                        tr("¡Mi código arde incluso bajo cero!", "Mein Code glüht selbst unter null!",
                                                 "My code burns even below zero!"),
                                         tr("Calculando tu derrota en 3… 2… 1.", "Berechne deine Niederlage in 3 … 2 … 1.",
                                                 "Computing your defeat in 3… 2… 1."))));
             case 7:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("Duelo bajo la lluvia en la azotea", "Duell im Regen auf dem Dach", "Rooftop Duel in the Rain"),
+                        tr("Duelo bajo la lluvia en la azotea", "Duell im Regen auf dem Dach", "Rooftop duel in the rain"),
                         List.of(
                                 new Vineta(Decorado.TORMENTA_AZOTEA, Animacion.LLUVIA, "cobalto", k.modelo, true, false, false,
                                         tr("Bajo relámpagos y aguacero, {rival} confiesa que copió tus antiguos planos del patio.",
@@ -162,7 +162,7 @@ public final class CatalogoDeEscenas {
                                                 "I know every turn before you write it!"))));
             default:
                 return new EscenaDeCampana(id, Momento.FINAL,
-                        tr("Último asalto por el cinturón mundial", "Letzte Runde um den Weltmeistergürtel", "Final Round for the World Belt"),
+                        tr("Último asalto por el cinturón mundial", "Letzte Runde um den Weltmeistergürtel", "Final round for the world belt"),
                         List.of(
                                 new Vineta(Decorado.HOSPITAL, Animacion.SACUDIDA, "cobalto", k.modelo, true, true, false,
                                         tr("Antes de la final mundial, {entrenador} se pegó la gorra al monitor cardíaco con pegamento industrial.",
@@ -171,12 +171,12 @@ public final class CatalogoDeEscenas {
                                         tr("¡Cuando suene la última campana, recuerda quién eres!",
                                                 "Wenn der letzte Gong ertönt, denk daran, wer du bist!",
                                                 "When the final bell rings, remember who you are!"),
-                                        tr("¡El cinturón mundial no cambiará de dueño!", "Der Weltgürtel wechselt nicht den Besitzer!",
+                                        tr("¡El cinturón mundial no cambiará de dueño!", "Der Weltmeistergürtel wechselt nicht den Besitzer!",
                                                 "The world belt isn't changing hands!")),
                                 new Vineta(Decorado.MILAGRO, Animacion.CONFETI, "cobalto", k.modelo, true, false, true,
                                         tr("El estadio entero corea tu nombre. Si ganas a {rival}, ¡habrá milagro en el ring!",
                                                 "Das ganze Stadion ruft deinen Namen. Besiegst du {rival}, geschieht im Ring ein Wunder!",
-                                                "The entire stadium chants your name. Beat {rival} and a ringside miracle awaits!"),
+                                                "The entire stadium chants your name. Beat {rival} and there'll be a miracle in the ring!"),
                                         tr("¡A escribir nuestra propia leyenda!", "Schreiben wir unsere eigene Legende!",
                                                 "Let's write our own legend!"),
                                         tr("¡Que suene la campana definitiva!", "Lasst den letzten Gong erklingen!",
@@ -195,7 +195,7 @@ public final class CatalogoDeEscenas {
         switch (k.numero) {
             case 1:
                 return new EscenaDeCampana(id, Momento.INICIO,
-                        tr("Desembarco en Isla Cortocircuito", "Landung auf Insel Kurzschluss", "Landing on Short-Circuit Island"),
+                        tr("Desembarco en Isla Cortocircuito", "Landung auf der Insel Kurzschluss", "Landing on Short-Circuit Island"),
                         List.of(
                                 new Vineta(Decorado.ISLA_PUERTO, Animacion.ENTRADA, "cobalto", k.modelo, true, false, true,
                                         tr("Un transbordador oxidado atraca en la isla secreta del Torneo de los 1000 Voltios.",
@@ -207,7 +207,7 @@ public final class CatalogoDeEscenas {
                                                 "Nobody lands without getting past {rival}!"))));
             case 2:
                 return new EscenaDeCampana(id, Momento.INICIO,
-                        tr("La prueba del coco de cobre", "Die Prüfung der Kupferkokosnuss", "The Copper-Coconut Trial"),
+                        tr("La prueba del coco de cobre", "Die Prüfung der Kupferkokosnuss", "The copper coconut trial"),
                         List.of(
                                 new Vineta(Decorado.TEMPLO_ISLA, Animacion.ZOOM, "cobalto", k.modelo, true, false, false,
                                         tr("Un ermitaño excéntrico te venda el radar: debes esquivar cocos de cobre y superar a {rival}.",
@@ -219,7 +219,7 @@ public final class CatalogoDeEscenas {
                                                 "A restless radar always trips!"))));
             case 3:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("Octavos de final en el foso magnético", "Achtelfinale in der Magnetgrube", "Round of 16 in the Magnet Pit"),
+                        tr("Octavos de final en el foso magnético", "Achtelfinale in der Magnetgrube", "Round of 16 in the magnet pit"),
                         List.of(
                                 new Vineta(Decorado.DESIERTO_SOL, Animacion.SACUDIDA, "cobalto", k.modelo, true, false, true,
                                         tr("Empiezan las eliminatorias. {rival} activa un imán colosal para quedarse con tus tornillos.",
@@ -231,10 +231,10 @@ public final class CatalogoDeEscenas {
                                                 "Magnetic attraction guaranteed!"))));
             default:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("Cuartos en la cocina volcánica", "Viertelfinale in der Vulkanküche", "Quarterfinal in the Volcanic Kitchen"),
+                        tr("Cuartos en la cocina volcánica", "Viertelfinale in der Vulkanküche", "Quarterfinal in the volcanic kitchen"),
                         List.of(
                                 new Vineta(Decorado.HOSPITAL, Animacion.SACUDIDA, "cobalto", k.modelo, true, true, false,
-                                        tr("¡Urgencia en el bufé! {entrenador} probó sopa de litio extrapicante y acabó en enfermería.",
+                                        tr("¡Urgencia en el bufé! {entrenador} probó sopa de litio extrapicante y acabó en la enfermería.",
                                                 "Notfall am Buffet! {entrenador} kostete extrascharfe Lithium-Suppe und landete auf der Krankenstation.",
                                                 "Buffet emergency! {entrenador} tasted extra-spicy lithium soup and landed in the infirmary."),
                                         tr("¡Agua… no, aceite frío! ¡Pasa a semifinales!", "Wasser … nein, kaltes Öl! Ab ins Halbfinale!",
@@ -256,18 +256,18 @@ public final class CatalogoDeEscenas {
         switch (k.numero) {
             case 5:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("El laboratorio de chispas", "Das Funkenlabor", "The Spark Laboratory"),
+                        tr("El laboratorio de chispas", "Das Funkenlabor", "The spark laboratory"),
                         List.of(
                                 new Vineta(Decorado.RING_NEON, Animacion.DESTELLO, "cobalto", k.modelo, true, false, true,
                                         tr("En los túneles de la isla, {rival} recita monólogos teatrales mientras lanza arcos eléctricos.",
                                                 "In den Inseltunneln hält {rival} dramatische Monologe und schleudert Lichtbögen.",
                                                 "In the island tunnels, {rival} delivers dramatic monologues while hurling electric arcs."),
-                                        tr("¡Menos discurso y más combate!", "Weniger Rede, mehr Kampf!", "Less monologue, more fighting!"),
+                                        tr("¡Menos discurso y más pelea!", "Weniger Rede, mehr Kampf!", "Less monologue, more fighting!"),
                                         tr("¡Contempla mis mil voltios de genialidad!", "Bestaune meine tausend Volt Genialität!",
                                                 "Behold my thousand volts of genius!"))));
             case 6:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("Semifinal en el volcán helado", "Halbfinale auf dem Eisvulkan", "Semifinal on the Ice Volcano"),
+                        tr("Semifinal en el volcán helado", "Halbfinale auf dem Eisvulkan", "Semifinal on the ice volcano"),
                         List.of(
                                 new Vineta(Decorado.VOLCAN_HIELO, Animacion.LLUVIA, "cobalto", k.modelo, true, false, true,
                                         tr("En la cumbre helada del Monte Voltio, {rival} se inclina con exquisita educación antes de embestir.",
@@ -279,7 +279,7 @@ public final class CatalogoDeEscenas {
                                                 "Pardon the inconvenience; I am about to launch you very far."))));
             case 7:
                 return new EscenaDeCampana(id, Momento.GIRO,
-                        tr("El campeón invicto de la isla", "Der ungeschlagene Insel-Champion", "The Unbeaten Island Champion"),
+                        tr("El campeón invicto de la isla", "Der ungeschlagene Insel-Champion", "The unbeaten island champion"),
                         List.of(
                                 new Vineta(Decorado.HOSPITAL, Animacion.ZOOM, "cobalto", k.modelo, true, true, false,
                                         tr("{entrenador} intentó meditar dentro de una nevera industrial para entender a {rival}… y se congeló.",
@@ -288,7 +288,7 @@ public final class CatalogoDeEscenas {
                                         tr("¡Brrr… rompe su patrón perfecto!", "Brrr … brich sein perfektes Muster!",
                                                 "Brrr… break its flawless pattern!"),
                                         tr("Probabilidad de victoria rival: 0,00 %.", "Siegchance des Gegners: 0,00 %.",
-                                                "Opponent win probability: 0.00%.")),
+                                                "Rival win probability: 0.00%.")),
                                 new Vineta(Decorado.ESTADIO, Animacion.DESTELLO, "cobalto", k.modelo, false, false, true,
                                         tr("Silencio absoluto en las gradas. {rival} jamás ha cedido una sola ronda en la isla.",
                                                 "Totenstille auf den Rängen. {rival} hat auf der Insel noch nie eine Runde abgegeben.",
@@ -299,7 +299,7 @@ public final class CatalogoDeEscenas {
                                                 "Initiating flawless victory protocol."))));
             default:
                 return new EscenaDeCampana(id, Momento.FINAL,
-                        tr("Final bajo la tormenta: el Enchufe Dorado", "Finale im Sturm: Der Goldene Stecker", "Stormy Final: The Golden Plug"),
+                        tr("Final bajo la tormenta: el Enchufe Dorado", "Finale im Sturm: der Goldene Stecker", "Stormy final: the Golden Plug"),
                         List.of(
                                 new Vineta(Decorado.HOSPITAL, Animacion.SACUDIDA, "cobalto", k.modelo, true, true, false,
                                         tr("{entrenador} se enredó en la pancarta de fuegos artificiales VIP antes de la gran final.",
@@ -312,7 +312,7 @@ public final class CatalogoDeEscenas {
                                 new Vineta(Decorado.TORMENTA_AZOTEA, Animacion.LLUVIA, "cobalto", k.modelo, false, false, true,
                                         tr("Truenos sobre el faro de la isla. {rival}, el anfitrión secreto, entra al ring bajo la lluvia.",
                                                 "Donner über dem Inselleuchtturm. {rival}, der geheime Gastgeber, betritt im Regen den Ring.",
-                                                "Thunder crashes over the island lighthouse. {rival}, the secret host, steps into the rain."),
+                                                "Thunder crashes over the island lighthouse. {rival}, the secret host, steps into the ring in the rain."),
                                         tr("¡Apagaré tu espectáculo con un golpe limpio!", "Ich beende deine Show mit einem sauberen Treffer!",
                                                 "I'll shut down your show with one clean strike!"),
                                         tr("¡Que caiga un rayo sobre el mejor robot!", "Möge der Blitz den besten Roboter krönen!",
@@ -337,10 +337,10 @@ public final class CatalogoDeEscenas {
             return new EscenaDeCampana(id, Momento.FINAL, c.titulo, List.of(
                     new Vineta(Decorado.HOSPITAL, Animacion.SACUDIDA, "cobalto", k.modelo, true, true, false,
                             k.texto,
-                            tr("¡Gana este combate por mí!", "Gewinn diesen Kampf für mich!", "Win this fight for me!"),
+                            tr("¡Gana esta pelea por mí!", "Gewinn diesen Kampf für mich!", "Win this fight for me!"),
                             tr("¡Nadie me quita el título!", "Niemand nimmt mir den Titel!", "Nobody takes my title!")),
                     new Vineta(dec, Animacion.CONFETI, "cobalto", k.modelo, false, false, true,
-                            tr("Todo está listo en la arena frente a {rival}.", "In der Arena ist alles bereit gegen {rival}.",
+                            tr("Todo está listo en la arena frente a {rival}.", "In der Arena ist alles bereit für den Kampf gegen {rival}.",
                                     "Everything is set in the arena against {rival}."),
                             tr("¡Vamos allá!", "Los geht's!", "Let's go!"),
                             tr("¡En guardia!", "Mach dich bereit!", "On guard!"))));

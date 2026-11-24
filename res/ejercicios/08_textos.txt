@@ -143,7 +143,7 @@ java: 8
 tipo: metodo
 titulo.es: El mensaje al revés
 titulo.de: Die Nachricht rückwärts
-titulo.en: The message backward
+titulo.en: The backward message
 enunciado.es: El rival manda sus órdenes escritas al revés para despistar. Devuelve el mensaje dado la vuelta, con la ayuda de un StringBuilder.
 enunciado.de: Der Gegner schickt seine Befehle rückwärts, um uns zu verwirren. Gib die Nachricht umgedreht zurück, mit Hilfe eines StringBuilder.
 enunciado.en: The rival sends its orders written backward to confuse us. Return the message reversed, with the help of a StringBuilder.
@@ -167,7 +167,7 @@ tema: 08
 dificultad: 2
 java: 17
 tipo: metodo
-titulo.es: El cartel del combate (bloque de texto)
+titulo.es: El cartel de la pelea (bloque de texto)
 titulo.de: Das Kampfplakat (Textblock)
 titulo.en: The fight poster (text block)
 enunciado.es: Devuelve el cartel de tres líneas, cada una terminada en salto de línea: "RONDA <ronda>", "Robot: <robot>" y "Listo para luchar". Escríbelo con un bloque de texto (tres comillas """) y rellénalo con formatted: las dos cosas son de Java 15.
@@ -447,7 +447,7 @@ titulo.de: Den Spitznamen einrahmen
 titulo.en: Frame the robot's nickname
 enunciado.es: Recibes un marco de exactamente 4 caracteres (como "[[]]" o "<<>>") y el apodo del robot. Devuelve una cadena con el apodo metido justo en el centro del marco. Ejemplos: enmarcar("<<>>", "Rex") devuelve "<<Rex>>" y enmarcar("[[]]", "Zap") devuelve "[[Zap]]".
 enunciado.de: Du bekommst einen Rahmen aus genau 4 Zeichen (wie "[[]]" oder "<<>>") und den Spitznamen des Roboters. Gib einen Text zurück, bei dem der Spitzname genau in der Mitte des Rahmens sitzt. Beispiele: enmarcar("<<>>", "Rex") gibt "<<Rex>>" zurück und enmarcar("[[]]", "Zap") "[[Zap]]".
-enunciado.en: You are given a 4-character frame (such as "[[]]" or "<<>>") and a robot's nickname. Return a string with the nickname placed right in the middle of the frame. Examples: enmarcar("<<>>", "Rex") returns "<<Rex>>" and enmarcar("[[]]", "Zap") returns "[[Zap]]".
+enunciado.en: You are given a frame of exactly 4 characters (such as "[[]]" or "<<>>") and a robot's nickname. Return a string with the nickname placed right in the middle of the frame. Examples: enmarcar("<<>>", "Rex") returns "<<Rex>>" and enmarcar("[[]]", "Zap") returns "[[Zap]]".
 pista.es: Usa marco.substring(0, 2) para la primera mitad y marco.substring(2) para la segunda.
 pista.de: Nutze marco.substring(0, 2) für die erste Hälfte und marco.substring(2) für die zweite.
 pista.en: Use marco.substring(0, 2) for the first half and marco.substring(2) for the second.

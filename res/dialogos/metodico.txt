@@ -16,7 +16,7 @@ en: {jugador}, give me the coordinates and I'll bore the tunnel.
 
 es: Todo blindaje tiene un punto flaco, {rival}. Voy a por él.
 de: Jede Panzerung hat eine Schwachstelle, {rival}. Ich suche sie mir.
-en: Every armor has a weak spot, {rival}. I'm going straight for it.
+en: All armor has a weak spot, {rival}. I'm going straight for it.
 
 [inicio_ronda]
 es: Ronda {ronda}. Broca calibrada al milímetro.
@@ -100,7 +100,7 @@ de: Das erreicht meinen Kern nicht. Ich grabe weiter.
 en: That doesn't reach my core. Keeping up the dig.
 
 es: Presión soportada. Devolviendo el favor.
-de: Druck ausgehalten. Erwidere den Gefallen.
+de: Druck ausgehalten. Ich revanchiere mich.
 en: Pressure sustained. Returning the favor.
 
 [golpe_fuerte]
@@ -126,7 +126,7 @@ de: Struktur geschwächt, aber der Bohrer dreht sich weiter.
 en: Structure compromised, yet the drill keeps spinning.
 
 es: Queda poco casco, {jugador}. Vamos a por el golpe definitivo.
-de: Wenig Hülle übrig, {jugador}. Gehen wir auf den finalen Treffer.
+de: Wenig Hülle übrig, {jugador}. Setzen wir zum finalen Treffer an.
 en: Low hull left, {jugador}. Let's go for the decisive bore.
 
 es: Trabajar bajo presión es mi especialidad, {rival}.
@@ -215,11 +215,11 @@ de: Wenn ich das Loch finde, ist der Kampf vorbei.
 en: Once I find the hole, the fight is over.
 
 es: Victoria subterránea y limpia. Ni un tornillo fuera de plano.
-de: Sauberer Sieg. Keine einzige Schraube außerhalb des Plans.
-en: Clean, methodical victory. Not a bolt off blueprint.
+de: Sauberer Sieg unter Tage. Keine einzige Schraube außerhalb des Plans.
+en: Clean underground victory. Not a bolt off blueprint.
 
 es: Te he dejado como un queso gruyer, {rival}.
-de: Ich habe dich wie Schweizer Käse zurückgelassen, {rival}.
+de: Ich habe dich durchlöchert wie einen Schweizer Käse, {rival}.
 en: Left you looking like Swiss cheese, {rival}.
 
 [derrota]
@@ -303,7 +303,7 @@ es: Error de coordenadas. Esperando nueva calibración.
 de: Koordinatenfehler. Warte auf Neukalibrierung.
 en: Coordinate error. Awaiting recalibration.
 
-es: Falla técnica en mi código. Revisa esa línea, {jugador}.
+es: Fallo técnico en mi código. Revisa esa línea, {jugador}.
 de: Technischer Defekt in meinem Code. Prüfe diese Zeile, {jugador}.
 en: Technical fault in my code. Check that line, {jugador}.
 

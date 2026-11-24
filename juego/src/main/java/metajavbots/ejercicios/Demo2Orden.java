@@ -58,7 +58,7 @@ final class Demo2Orden {
                                 + "mover una sola línea fuera de su sitio puede hacer que el robot falle todos sus tiros.",
                         "Dein Roboter liest den Code von oben nach unten, Schritt für Schritt, genau wie beim Anziehen am Morgen: "
                                 + "Zuerst ziehst du die Socken an und erst danach die Schuhe.\n"
-                                + "Wenn du die Reihenfolge umdrehst und die Schuhe vor den Socken anziehst, gibt es ein Chaos.\n"
+                                + "Wenn du die Reihenfolge umdrehst und die Schuhe vor den Socken anziehst, gibt es Chaos.\n"
                                 + "Im Code ist es genauso: Eine einzige Zeile am falschen Platz kann dafür sorgen, dass dein Roboter jeden Schuss verfehlt.",
                         "Your robot reads your code from top to bottom, step by step, just like getting dressed in the morning: "
                                 + "first you put on your socks, and only then your shoes.\n"
@@ -85,7 +85,7 @@ final class Demo2Orden {
                                 + "selbst wenn die Puppe schon vor dir steht, und überschreibt das Zielen aus beiSicht().",
                         "Look at what just happened in the arena! The radar spotted the dummy, the robot fired, and the shot flew right past it.\n"
                                 + "Look at line 15 highlighted in red: aim(25); sits outside the curly braces ({}) of the if.\n"
-                                + "That 25 turns the weapon 25 degrees to the left (counter-clockwise) on every tick, "
+                                + "That 25 turns the weapon 25 degrees to the left (counterclockwise) on every tick, "
                                 + "even when the dummy is right in front of you, overwriting the aim from onSeeEnemy()."),
                 15, new int[]{6, 7}, true, 12, 90, Accion.FALLO_ORDEN, Resaltado.ERROR, null);
     }
@@ -138,7 +138,7 @@ final class Demo2Orden {
                         "Look at line 14 highlighted in green! We moved aim(25); up by just one line so it sits inside the curly braces ({}) "
                                 + "of if (seenEnemies().isEmpty()).\n"
                                 + "Now the robot only requests 40 units forward and sweeps the radar 25 degrees left when it sees nobody.\n"
-                                + "The instant the dummy appears, onTick() stops spinning the aim, and onSeeEnemy() works in logical order: "
+                                + "The instant the dummy appears, onTick() stops spinning the sight, and onSeeEnemy() works in logical order: "
                                 + "first aim with aimTo(e.angle());, then shoot with attack();."),
                 14, new int[]{6, 7, 12}, true, 0, 0, Accion.CORREGIR_LINEA, Resaltado.BIEN, codigoFijo);
     }
@@ -159,7 +159,7 @@ final class Demo2Orden {
                                 + "Schau oben auf den Panzerungsbalken der Puppe: Durch diesen Treffer ist er sofort gesunken. "
                                 + "Eine einzige verschobene Zeile hat alles repariert!",
                         "Bullseye! With aim(25); moved inside the if, the robot no longer ruins its own aim.\n"
-                                + "The blue radar cone finds the dummy, the aim locks straight onto it, and the shot lands cleanly.\n"
+                                + "The blue radar cone finds the dummy, the sight locks straight onto it, and the shot lands cleanly.\n"
                                 + "Look at the dummy's armor bar at the top: it just dropped from that hit. Moving one single line fixed everything!"),
                 7, new int[]{6, 14}, true, 12, 110, Accion.ACIERTO_ORDEN, Resaltado.BIEN, codigoFijo);
     }
@@ -178,14 +178,14 @@ final class Demo2Orden {
                                 + "3. Gasta tus monedas en la [[Tienda]] para comprar piezas nuevas, actívalas superando su pequeño reto de código, "
                                 + "móntalas en el [[Taller]] y gana peleas para llegar a Junior.",
                         "Jetzt verstehst du, wie dein Roboter denkt. Um von Noob zu Junior aufzusteigen, folge diesem Plan Schritt für Schritt:\n"
-                                + "1. Öffne [[Minispiele]], um immer nur eine Fähigkeit auf einmal zu üben (fahren, Radar, zielen, schießen und ausweichen).\n"
+                                + "1. Öffne [[Minispiele]], um immer nur eine Fähigkeit auf einmal zu üben (Fahren, Radar, Zielen, Schießen und Ausweichen).\n"
                                 + "2. Löse kurze [[Übungen]], wie kleine Rätsel, um Münzen zu verdienen und jedes Thema zu meistern.\n"
                                 + "3. Gib deine Münzen im [[Laden]] für neue Teile aus, schalte sie mit ihrer kurzen Code-Aufgabe frei, "
                                 + "bau sie in der [[Werkstatt]] ein und gewinne Kämpfe, um Junior zu erreichen.",
                         "Now you understand how your robot thinks. To climb from Noob to Junior, follow this step-by-step map:\n"
                                 + "1. Open [[Minigames]] to practice one skill at a time (moving, radar, aiming, shooting, and dodging).\n"
                                 + "2. Solve short [[Exercises]], like quick puzzles, to earn coins and master each topic.\n"
-                                + "3. Spend your coins in the [[Shop]] to buy new parts, unlock them with their short code challenge, "
+                                + "3. Spend your coins in the [[Shop]] to buy new parts, unlock them with their short code task, "
                                 + "equip them in the [[Workshop]], and win fights to reach Junior."),
                 3, new int[]{5, 6, 7, 11, 14}, true, 0, 0, Accion.CIERRE, Resaltado.BIEN, codigoFijo);
     }

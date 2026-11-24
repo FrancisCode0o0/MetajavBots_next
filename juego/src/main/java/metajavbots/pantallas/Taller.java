@@ -464,8 +464,7 @@ public final class Taller implements Pantalla {
                 ui.avisar(m.lema.en(T.idioma) + "\n\n" + metajavbots.tutor.Biografias.deRobot(m.id, T.idioma));
             }
             if (disponible && !es && ui.e.clic(cx, cy, cw, chh)) {
-                r.modelo = m.id;
-                r.piezas.clear();
+                r.cambiarModelo(m, T.idioma);
                 j.sonidos.tocar("servo", 0.6f);
                 j.guardar();
             }

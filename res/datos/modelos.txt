@@ -262,7 +262,7 @@ desbloqueo = victorias:14
 
 [voltio]
 nombre = Voltio | Volti | Volt
-lema = ¡Doscientos mil voltios de espectáculo! | Zweihunderttausend Volt Show! | Two hundred thousand volts of showtime!
+lema = ¡Doscientos mil voltios de espectáculo! | Zweihunderttausend Volt Spektakel! | Two hundred thousand volts of showtime!
 naturaleza = RAYO
 arquetipo = ASALTO
 personalidad = euforico

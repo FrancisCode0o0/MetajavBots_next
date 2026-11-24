@@ -154,7 +154,7 @@ dificultad: 3
 java: 8
 tipo: metodo
 titulo.es: La vida media del equipo
-titulo.de: Das Durchschnittsleben des Teams
+titulo.de: Das durchschnittliche Leben des Teams
 titulo.en: The team's average life
 enunciado.es: Devuelve la media de las vidas del equipo, con decimales. Si el equipo está vacío, devuelve 0.0 (no se puede dividir entre 0). Ejemplo: mediaDeVida(new int[]{1, 2}) devuelve 1.5.
 enunciado.de: Gib das durchschnittliche Leben des Teams mit Nachkommastellen zurück. Ist das Team leer, gib 0.0 zurück (durch 0 teilen geht nicht). Beispiel: mediaDeVida(new int[]{1, 2}) gibt 1.5 zurück.
@@ -330,7 +330,7 @@ enunciado.es: Cada número del array es un disparo: mayor que 0 es un acierto y 
 enunciado.de: Jede Zahl im Array ist ein Schuss: größer als 0 ist ein Treffer, 0 ein Fehlschuss. Gib die längste Serie von Treffern hintereinander zurück. Beispiel: rachaMasLarga(new int[]{5, 3, 0, 2, 8, 1, 0}) gibt 3 zurück.
 enunciado.en: Each number in the array is a shot: greater than 0 is a hit and 0 is a miss. Return the longest run of hits in a row. Example: rachaMasLarga(new int[]{5, 3, 0, 2, 8, 1, 0}) returns 3.
 pista.es: Lleva dos variables: la racha actual (sube con cada acierto y vuelve a 0 con un fallo) y la mejor vista hasta ahora.
-pista.de: Merk dir zwei Werte: die aktuelle Serie (steigt bei jedem Treffer, fällt bei einem Fehlschuss auf 0) und die beste bisher.
+pista.de: Merk dir zwei Werte: die aktuelle Serie (steigt bei jedem Treffer, fällt bei einem Fehlschuss auf 0) und die bisher beste.
 pista.en: Keep two variables: the current streak (goes up with each hit, back to 0 on a miss) and the best one seen so far.
 firma: static int rachaMasLarga(int[] disparos)
 plantilla:
@@ -475,7 +475,7 @@ titulo.de: Radarspitzen zählen
 titulo.en: Count radar peaks
 enunciado.es: El radar devuelve una fila de intensidades. Un «pico» es una posición interior que es estrictamente mayor que sus dos vecinas (izquierda y derecha). El primero y el último nunca cuentan como picos. Devuelve cuántos picos hay. Ejemplos: contarPicos(new int[]{1, 5, 2, 8, 3}) devuelve 2 y contarPicos(new int[]{3, 3, 3}) devuelve 0.
 enunciado.de: Das Radar liefert eine Reihe von Signalstärken. Eine „Spitze“ ist eine innere Position, die echt größer als ihre beiden Nachbarn (links und rechts) ist. Das erste und das letzte Element zählen nie als Spitze. Gib zurück, wie viele Spitzen es gibt. Beispiele: contarPicos(new int[]{1, 5, 2, 8, 3}) gibt 2 zurück und contarPicos(new int[]{3, 3, 3}) 0.
-enunciado.en: The radar returns a row of signal strengths. A "peak" is an interior position strictly greater than both its left and right neighbors. The first and last elements never count as peaks. Return how many peaks there are. Examples: contarPicos(new int[]{1, 5, 2, 8, 3}) returns 2 and contarPicos(new int[]{3, 3, 3}) returns 0.
+enunciado.en: The radar returns a row of signal strengths. A “peak” is an interior position strictly greater than both its left and right neighbors. The first and last elements never count as peaks. Return how many peaks there are. Examples: contarPicos(new int[]{1, 5, 2, 8, 3}) returns 2 and contarPicos(new int[]{3, 3, 3}) returns 0.
 pista.es: Recorre con i desde 1 hasta senal.length - 2 (incluido) y comprueba senal[i] > senal[i - 1] && senal[i] > senal[i + 1].
 pista.de: Lauf mit i von 1 bis senal.length - 2 (einschließlich) und prüfe senal[i] > senal[i - 1] && senal[i] > senal[i + 1].
 pista.en: Loop i from 1 to senal.length - 2 (inclusive) and check senal[i] > senal[i - 1] && senal[i] > senal[i + 1].
@@ -540,7 +540,7 @@ titulo.de: Größte Spanne zwischen Klonen
 titulo.en: Widest span between clones
 enunciado.es: El «alcance» de un código en el array es el número de posiciones desde su primera aparición hasta la última, ambas incluidas (un elemento único tiene alcance 1). Devuelve el mayor alcance del array (0 si está vacío). Ejemplos: mayorAlcance(new int[]{1, 2, 1, 1, 3}) devuelve 4, mayorAlcance(new int[]{1, 4, 2, 1, 4, 1, 4}) devuelve 6 y mayorAlcance(new int[]{9}) devuelve 1.
 enunciado.de: Die „Spanne“ eines Codes im Array ist die Anzahl der Positionen von seinem ersten bis zu seinem letzten Vorkommen, beide eingeschlossen (ein einzelnes Element hat Spanne 1). Gib die größte Spanne im Array zurück (0, wenn es leer ist). Beispiele: mayorAlcance(new int[]{1, 2, 1, 1, 3}) gibt 4 zurück, mayorAlcance(new int[]{1, 4, 2, 1, 4, 1, 4}) 6 und mayorAlcance(new int[]{9}) 1.
-enunciado.en: The "span" of a value in the array is the number of positions from its leftmost to its rightmost appearance, inclusive (a single value has span 1). Return the largest span in the array (0 if empty). Examples: mayorAlcance(new int[]{1, 2, 1, 1, 3}) returns 4, mayorAlcance(new int[]{1, 4, 2, 1, 4, 1, 4}) returns 6, and mayorAlcance(new int[]{9}) returns 1.
+enunciado.en: The “span” of a value in the array is the number of positions from its leftmost to its rightmost appearance, inclusive (a single value has span 1). Return the largest span in the array (0 if empty). Examples: mayorAlcance(new int[]{1, 2, 1, 1, 3}) returns 4, mayorAlcance(new int[]{1, 4, 2, 1, 4, 1, 4}) returns 6, and mayorAlcance(new int[]{9}) returns 1.
 pista.es: Para cada posición i, busca desde el final hacia atrás la última posición j con datos[j] == datos[i]; su alcance es j - i + 1.
 pista.de: Such für jede Position i von hinten rückwärts die letzte Position j mit datos[j] == datos[i]; ihre Spanne ist j - i + 1.
 pista.en: For each position i, scan backward from the end for the last position j with datos[j] == datos[i]; its span is j - i + 1.
@@ -615,9 +615,9 @@ tipo: metodo
 titulo.es: Transponer el mapa de calor
 titulo.de: Die Wärmekarte transponieren
 titulo.en: Transpose the heat map
-enunciado.es: El escáner guarda el mapa de calor de la arena en una matriz rectangular mapa (todas las filas tienen la misma longitud). Devuelve su transpuesta: una matriz nueva donde la fila f y columna c pasan a estar en [c][f]. Si mapa está vacío o tiene 0 columnas, devuelve un array 2D vacío. Ejemplos: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) devuelve {{1, 4}, {2, 5}, {3, 6}}.
-enunciado.de: Der Scanner speichert die Wärmekarte der Arena in einer rechteckigen Matrix mapa (alle Zeilen sind gleich lang). Gib ihre Transponierte zurück: eine neue Matrix, in der Zeile f und Spalte c an [c][f] stehen. Ist mapa leer oder hat 0 Spalten, gib ein leeres 2D-Array zurück. Beispiel: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) gibt {{1, 4}, {2, 5}, {3, 6}} zurück.
-enunciado.en: The scanner stores the arena heat map in a rectangular matrix mapa (all rows have the same length). Return its transpose: a new matrix where row f and column c move to [c][f]. If mapa is empty or has 0 columns, return an empty 2D array. Example: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) returns {{1, 4}, {2, 5}, {3, 6}}.
+enunciado.es: El escáner guarda el mapa de calor de la arena en una matriz rectangular mapa (todas las filas tienen la misma longitud). Devuelve su transpuesta: una matriz nueva donde el elemento de la fila f y la columna c pasa a estar en [c][f]. Si mapa está vacío o tiene 0 columnas, devuelve un array 2D vacío. Ejemplo: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) devuelve {{1, 4}, {2, 5}, {3, 6}}.
+enunciado.de: Der Scanner speichert die Wärmekarte der Arena in einer rechteckigen Matrix mapa (alle Zeilen sind gleich lang). Gib ihre Transponierte zurück: eine neue Matrix, in der das Element aus Zeile f und Spalte c an [c][f] steht. Ist mapa leer oder hat 0 Spalten, gib ein leeres 2D-Array zurück. Beispiel: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) gibt {{1, 4}, {2, 5}, {3, 6}} zurück.
+enunciado.en: The scanner stores the arena heat map in a rectangular matrix mapa (all rows have the same length). Return its transpose: a new matrix where the element at row f, column c moves to [c][f]. If mapa is empty or has 0 columns, return an empty 2D array. Example: transponer(new int[][]{{1, 2, 3}, {4, 5, 6}}) returns {{1, 4}, {2, 5}, {3, 6}}.
 pista.es: Si filas == 0 o columnas == 0, devuelve new int[0][0]. Si no, crea new int[columnas][filas] y copia res[c][f] = mapa[f][c].
 pista.de: Bei filas == 0 oder columnas == 0 gib new int[0][0] zurück. Sonst erzeuge new int[columnas][filas] und kopiere res[c][f] = mapa[f][c].
 pista.en: If filas == 0 or columnas == 0, return new int[0][0]. Otherwise create new int[columnas][filas] and copy res[c][f] = mapa[f][c].

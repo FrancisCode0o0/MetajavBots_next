@@ -116,9 +116,9 @@ tipo: clase
 titulo.es: Un contador que no pierde golpes
 titulo.de: Ein Zähler, der keine Treffer verliert
 titulo.en: A counter that never misses a hit
-enunciado.es: Varios hilos llaman a sumar() a la vez. Si dos leen y escriben valor al mismo tiempo, se pierden sumas (una condición de carrera). Completa sumar() y valor() con synchronized para que cada suma cuente. martillear(hilos, veces) ya está hecho: lo usa para probarlo.
+enunciado.es: Varios hilos llaman a sumar() a la vez. Si dos leen y escriben valor al mismo tiempo, se pierden sumas (una condición de carrera). Completa sumar() y valor() con synchronized para que cada suma cuente. martillear(hilos, veces) ya está hecho: se usa para probarlo.
 enunciado.de: Mehrere Threads rufen gleichzeitig sumar() auf. Lesen und schreiben zwei gleichzeitig valor, gehen Additionen verloren (eine Race Condition). Vervollständige sumar() und valor() mit synchronized, damit jede Addition zählt. martillear(hilos, veces) ist schon fertig und testet es.
-enunciado.en: Several threads call sumar() at once. If two read and write valor at the same time, increments are lost (a race condition). Complete sumar() and valor() with synchronized so that every increment counts. martillear(hilos, veces) is already done: it uses them to test it.
+enunciado.en: Several threads call sumar() at once. If two read and write valor at the same time, increments are lost (a race condition). Complete sumar() and valor() with synchronized so that every increment counts. martillear(hilos, veces) is already done: it is used for testing.
 pista.es: public synchronized void sumar() { valor++; } valor++ son tres pasos (leer, sumar, escribir): synchronized hace que solo un hilo a la vez los dé.
 pista.de: public synchronized void sumar() { valor++; } valor++ sind drei Schritte (lesen, addieren, schreiben): synchronized sorgt dafür, dass immer nur ein Thread sie macht.
 pista.en: public synchronized void sumar() { valor++; } valor++ is three steps (read, add, write): synchronized makes sure only one thread at a time takes them.
@@ -326,7 +326,7 @@ enunciado.es: Escribe static List<Integer> danos(List<Integer> distancias) en la
 enunciado.de: Schreib static List<Integer> danos(List<Integer> distancias) in der Klasse Balistica. Für jede Entfernung d berechnet eine Callable-Aufgabe den Schaden max(0, 100 - d / 10). Starte alle mit invokeAll in einem Pool mit 3 Threads und gib die Ergebnisse in derselben Reihenfolge wie die Entfernungen zurück. Fahr den Pool immer herunter.
 enunciado.en: Write static List<Integer> danos(List<Integer> distancias) in the Balistica class. For each distance d, a Callable task computes the damage max(0, 100 - d / 10). Launch them all with invokeAll on a pool of 3 threads and return the results in the same order as the distances. Always shut the pool down.
 pista.es: Un Callable<Integer> devuelve un valor (un Runnable no). invokeAll espera a todas y da una List<Future<Integer>> en orden; future.get() da cada resultado. El shutdown, en un finally.
-pista.de: Ein Callable<Integer> liefert einen Wert (ein Runnable nicht). invokeAll wartet auf alle und liefert eine List<Future<Integer>> in Reihenfolge; future.get() liefert jedes Ergebnis. Das shutdown gehört in ein finally.
+pista.de: Ein Callable<Integer> liefert einen Wert (ein Runnable nicht). invokeAll wartet auf alle und liefert eine List<Future<Integer>> in der richtigen Reihenfolge; future.get() liefert jedes Ergebnis. Das shutdown gehört in ein finally.
 pista.en: A Callable<Integer> returns a value (a Runnable doesn't). invokeAll waits for all of them and gives a List<Future<Integer>> in order; future.get() gives each result. Put the shutdown in a finally.
 plantilla:
     import java.util.*;
@@ -520,8 +520,8 @@ enunciado.es: En la clase Enlace, escribe static List<String> transmitir(List<St
 enunciado.de: Schreib in der Klasse Enlace static List<String> transmitir(List<String> mensajes): Ein Sender-Thread legt die Nachrichten der Reihe nach in eine ArrayBlockingQueue mit Kapazität 2 (Java 5) und am Ende eine Endmarke; ein Empfänger-Thread holt sie bis zur Marke heraus und speichert sie. Warte auf beide und gib das Empfangene zurück. Als Marke nimm Optional.empty() in einer Queue aus Optional<String>.
 enunciado.en: In the Enlace class, write static List<String> transmitir(List<String> mensajes): a sender thread puts the messages, in order, into an ArrayBlockingQueue with capacity 2 (Java 5) and then an end mark; a receiver thread takes them out up to the mark and keeps them. Wait for both and return what was received. As the mark, use Optional.empty() in a queue of Optional<String>.
 pista.es: put() espera si la cola está llena y take() si está vacía: así se coordinan solos. La marca de fin (la «píldora venenosa») le dice al receptor que pare. Ambos lanzan InterruptedException: atrápala dentro de cada lambda.
-pista.de: put() wartet, wenn die Queue voll ist, und take(), wenn sie leer ist: So stimmen sie sich von selbst ab. Die Endmarke (die «Giftpille») sagt dem Empfänger, dass er aufhören soll. Beide werfen InterruptedException: Fang sie in jedem Lambda ab.
-pista.en: put() waits when the queue is full and take() when it is empty: that way they coordinate on their own. The end mark (the "poison pill") tells the receiver to stop. Both throw InterruptedException: catch it inside each lambda.
+pista.de: put() wartet, wenn die Queue voll ist, und take(), wenn sie leer ist: So stimmen sie sich von selbst ab. Die Endmarke (die „Giftpille“) sagt dem Empfänger, dass er aufhören soll. Beide werfen InterruptedException: Fang sie in jedem Lambda ab.
+pista.en: put() waits when the queue is full and take() when it is empty: that way they coordinate on their own. The end mark (the “poison pill”) tells the receiver to stop. Both throw InterruptedException: catch it inside each lambda.
 plantilla:
     import java.util.*;
     import java.util.concurrent.*;
@@ -590,7 +590,7 @@ enunciado.es: Escribe static void mover(Almacen de, Almacen a, int n): pasa n pi
 enunciado.de: Schreib static void mover(Almacen de, Almacen a, int n): Verschieb n Teile von einem Lager ins andere und sperre dabei beide (wirf eine IllegalStateException, wenn de nicht genug hat). Sperrt ein Thread erst Nord und dann Süd, während ein anderer erst Süd und dann Nord sperrt, warten sie ewig aufeinander (ein Deadlock). Vermeide das, indem du immer zuerst das Lager mit der kleineren id sperrst. cruce(veces) ist schon fertig.
 enunciado.en: Write static void mover(Almacen de, Almacen a, int n): move n parts from one store to the other while locking both (and throw IllegalStateException if de doesn't have enough). If one thread locks north then south while another locks south then north, they wait for each other forever (a deadlock). Avoid it by always locking the one with the lower id first. cruce(veces) is already done.
 pista.es: Almacen primero = de.id < a.id ? de : a; Almacen segundo = primero == de ? a : de; synchronized (primero) { synchronized (segundo) { ... } } Un orden fijo para los candados hace imposible el ciclo de esperas.
-pista.de: Almacen primero = de.id < a.id ? de : a; Almacen segundo = primero == de ? a : de; synchronized (primero) { synchronized (segundo) { ... } } Eine feste Reihenfolge der Sperren macht den Warte-Kreis unmöglich.
+pista.de: Almacen primero = de.id < a.id ? de : a; Almacen segundo = primero == de ? a : de; synchronized (primero) { synchronized (segundo) { ... } } Eine feste Reihenfolge der Sperren macht den Wartezyklus unmöglich.
 pista.en: Almacen primero = de.id < a.id ? de : a; Almacen segundo = primero == de ? a : de; synchronized (primero) { synchronized (segundo) { ... } } A fixed lock order makes the cycle of waits impossible.
 plantilla:
     public class Almacen {
@@ -688,7 +688,7 @@ casos:
     ((Supplier<String>) () -> { Almacen.mover(new Almacen(1, 3), new Almacen(2, 0), 5); return "movido"; }).get() => !IllegalStateException
 terminos.de:
     // bloquea los dos almacenes, siempre en el mismo orden ==> // sperre beide Lager, immer in derselben Reihenfolge
-    /** Ya hecho: dos hilos se pasan piezas a la vez, en sentidos contrarios. */ ==> /** Schon fertig: zwei Threads schieben sich gleichzeitig Teile zu. */
+    /** Ya hecho: dos hilos se pasan piezas a la vez, en sentidos contrarios. */ ==> /** Schon fertig: Zwei Threads schieben sich gleichzeitig Teile zu. */
     no hay bastantes piezas ==> nicht genug Teile
     "movido" ==> "verschoben"
 terminos.en:

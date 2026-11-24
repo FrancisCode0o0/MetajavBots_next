@@ -16,7 +16,7 @@ final class PlantillasDestruccion {
         switch (id) {
             case DE:
                 return "import metajavbots.api.*;\n\n"
-                        + "// Spezial-Herausforderung: 3x-Arena mit Countdown.\n"
+                        + "// Spezialaufgabe: 3x-Arena mit Countdown.\n"
                         + "// Nutze hindernisse() und gesehen(), um herabfallende defekte Roboter\n"
                         + "// sowie Kisten, Fässer und Schornsteine zu zerstören und zu überleben.\n"
                         + "public class UeberlebensBot extends MetajavbotDe {\n"
@@ -41,7 +41,7 @@ final class PlantillasDestruccion {
                         + "}\n";
             case EN:
                 return "import metajavbots.api.*;\n\n"
-                        + "// Special challenge: 3x arena with countdown.\n"
+                        + "// Special task: 3x arena with countdown.\n"
                         + "// Use obstacles() and seenEnemies() to destroy falling broken robots\n"
                         + "// plus crates, barrels, and chimneys while surviving until zero.\n"
                         + "public class SurvivalBot extends MetajavbotEn {\n"

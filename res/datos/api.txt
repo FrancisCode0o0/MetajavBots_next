@@ -6,8 +6,8 @@ firma: void alEmpezar()
 firma.de: void beimStart()
 firma.en: void onStart()
 es: Evento sin parámetros ni valor de retorno. El motor lo ejecuta una sola vez al empezar cada ronda, justo antes del turno 0. Úsalo para inicializar variables, colocar el radar o dar la primera orden de movimiento.
-de: Ereignis ohne Parameter und Rückgabewert. Wird einmal zu Beginn jeder Runde direkt vor Zug 0 ausgeführt. Ideal für Startwerte, Startbefehle oder das Lesen aus dem Gedächtnis.
-en: Event with no parameters or return value. Runs once at the start of every round just before tick 0. Use it to initialize variables, set up aim, or issue the opening move order.
+de: Ereignis ohne Parameter und Rückgabewert. Wird einmal zu Beginn jeder Runde direkt vor Zug 0 ausgeführt. Nutze es, um Variablen zu initialisieren, das Radar auszurichten oder den ersten Fahrbefehl zu geben.
+en: Event with no parameters or return value. Runs once at the start of every round just before tick 0. Use it to initialize variables, position the radar, or issue the opening move order.
 donde.es: Decláralo con @Override en el cuerpo de tu clase Metajavbot, nunca dentro de otro método; no lo llames tú, sustituye al constructor para órdenes iniciales.
 donde.de: Mit @Override direkt im Rumpf deiner MetajavbotDe-Klasse deklarieren, nie in einer anderen Methode; nicht selbst aufrufen, ersetzt den Konstruktor für Startbefehle.
 donde.en: Declare with @Override directly inside your MetajavbotEn class body, never nested in another method; don't call it manually—use it instead of a constructor for opening orders.
@@ -29,9 +29,9 @@ tema: 11
 firma: void cadaTurno()
 firma.de: void jedenZug()
 firma.en: void onTick()
-es: Evento principal del robot, sin parámetros ni retorno. El motor lo ejecuta automáticamente unos 30 veces por segundo, al final de cada turno (después de los avisos y de alVerEnemigo). Aquí va tu lógica continua: patrullar, barrer con el radar o decidir el siguiente movimiento. Orden de cada turno: primero los avisos (alRecibirGolpe, alChocarConPared…), luego alVerEnemigo y por último cadaTurno. Cada mando (avance, giro y mira) recuerda solo la última orden del turno: si aquí das una orden del mismo mando que en un aviso, la de aquí borra la del aviso.
-de: Hauptmethode des Roboters ohne Parameter und Rückgabewert. Läuft automatisch ca. 30-mal pro Sekunde am Ende jedes Zugs (nach Ereignissen und beiSicht). Hierhin gehört deine laufende Steuerung: patrouillieren und Radar schwenken. Reihenfolge in jedem Zug: zuerst die Meldungen (beiTreffer, beiWand …), dann beiSicht und zuletzt jedenZug. Jeder Regler (Fahren, Drehen, Visier) merkt sich nur den letzten Befehl des Zugs: Gibst du hier einen Befehl für denselben Regler wie in einer Meldung, löscht der von hier den aus der Meldung.
-en: Main robot hook with no parameters or return value. Runs automatically about 30 times per second at the end of every tick (after event handlers and onSeeEnemy). Put continuous logic here: patrolling and sweeping the radar. Order of every tick: first the events (onHit, onHitWall…), then onSeeEnemy and finally onTick. Each control (move, turn and sight) remembers only the last order of the tick: if you give an order here for the same control as in an event, the one here erases the one from the event.
+es: Evento principal del robot, sin parámetros ni retorno. El motor lo ejecuta automáticamente unas 30 veces por segundo, al final de cada turno (después de los avisos y de alVerEnemigo). Aquí va tu lógica continua: patrullar, barrer con el radar o decidir el siguiente movimiento. Orden de cada turno: primero los avisos (alRecibirGolpe, alChocarConPared…), luego alVerEnemigo y por último cadaTurno. Cada mando (avance, giro y mira) recuerda solo la última orden del turno: si aquí das una orden del mismo mando que en un aviso, la de aquí borra la del aviso.
+de: Hauptmethode des Roboters ohne Parameter und Rückgabewert. Läuft automatisch ca. 30-mal pro Sekunde am Ende jedes Zugs (nach den Meldungen und beiSicht). Hierhin gehört deine laufende Steuerung: patrouillieren, das Radar schwenken oder die nächste Bewegung festlegen. Reihenfolge in jedem Zug: zuerst die Meldungen (beiTreffer, beiWand …), dann beiSicht und zuletzt jedenZug. Jeder Regler (Fahren, Drehen, Visier) merkt sich nur den letzten Befehl des Zugs: Gibst du hier einen Befehl für denselben Regler wie in einer Meldung, löscht der von hier den aus der Meldung.
+en: Main robot hook with no parameters or return value. Runs automatically about 30 times per second at the end of every tick (after event handlers and onSeeEnemy). Put continuous logic here: patrolling, sweeping the radar or deciding the next move. Order of every tick: first the events (onHit, onHitWall…), then onSeeEnemy and finally onTick. Each control (move, turn and sight) remembers only the last order of the tick: if you give an order here for the same control as in an event, the one here erases the one from the event.
 donde.es: Decláralo con @Override directamente en tu clase Metajavbot (no dentro de otro método ni con bucles infinitos dentro, porque el motor lo llama cada turno).
 donde.de: Mit @Override direkt in deiner MetajavbotDe-Klasse deklarieren (nie verschachtelt und ohne Endlosschleife darin, da die Engine sie jeden Zug selbst aufruft).
 donde.en: Declare with @Override directly in your MetajavbotEn class (never inside another method and without infinite loops inside, as the engine calls it every tick).
@@ -84,8 +84,8 @@ firma: void alRecibirGolpe(Golpe g)
 firma.de: void beiTreffer(Treffer t)
 firma.en: void onHit(Hit h)
 es: Evento sin retorno. Se ejecuta al inicio del turno cuando el robot recibió al menos un impacto en el turno anterior. Recibe g (Golpe) indicando el daño sufrido, el arma atacante, el ángulo desde el que vino el golpe y qué pieza recibió el daño.
-de: Ereignis ohne Rückgabewert. Läuft zu Beginn des Zugs, wenn du im vorigen Zug getroffen wurdest. Bekommt t (Treffer) mit Schaden, Angriffs-Waffe, Herkunftswinkel und getroffenem Teil.
-en: Event with no return value. Runs at the start of the tick when your robot took a hit on the previous tick. Receives h (Hit) telling the damage taken, weapon used, incoming angle, and which body part was hit.
+de: Ereignis ohne Rückgabewert. Läuft zu Beginn des Zugs, wenn du im vorigen Zug getroffen wurdest. Bekommt t (Treffer) mit Schaden, Angriffswaffe, Herkunftswinkel und getroffenem Teil.
+en: Event with no return value. Runs at the start of the tick when your robot took a hit on the previous tick. Receives h (Hit) indicating the damage taken, weapon used, incoming angle, and which body part was hit.
 donde.es: Decláralo con @Override a nivel de clase en Metajavbot para reaccionar a impactos; no va dentro de otros métodos ni debes llamarlo manualmente.
 donde.de: Mit @Override auf Klassenebene in MetajavbotDe anlegen, um auf Treffer zu reagieren; gehört nicht in andere Methoden und wird nicht von Hand aufgerufen.
 donde.en: Declare with @Override at class level in MetajavbotEn to react to incoming hits; never place it inside another method or call it directly.
@@ -99,7 +99,7 @@ ejemplo.de:
         vorwaerts(90)                // aus der Schussbahn fahren
 ejemplo.en:
     ON HIT h:
-        turnTo(h.angle() + 90)       // move perpendicular to shot
+        turnTo(h.angle() + 90)       // move perpendicular to the shot
         ahead(90)                    // step out of the line of fire
 
 === api.alAcertar
@@ -109,7 +109,7 @@ firma.de: void beiEigenemTreffer(Treffer t)
 firma.en: void onHitEnemy(Hit h)
 es: Evento sin retorno. Se ejecuta al inicio del turno cuando uno de tus disparos o ataques cuerpo a cuerpo impacta al enemigo. Recibe g (Golpe) con el daño hecho, tu arma, el ángulo y la pieza golpeada del rival.
 de: Ereignis ohne Rückgabewert. Läuft zu Beginn des Zugs, wenn dein Angriff einen Gegner getroffen hat. Bekommt t (Treffer) mit ausgeteiltem Schaden, Waffe, Winkel und getroffenem Gegnerteil.
-en: Event with no return value. Runs at the start of the tick when one of your attacks hit an opponent. Receives h (Hit) with damage dealt, weapon, angle, and hit enemy part.
+en: Event with no return value. Runs at the start of the tick when one of your attacks hits an opponent. Receives h (Hit) with damage dealt, weapon, angle, and which enemy part was hit.
 donde.es: Decláralo con @Override en el cuerpo de tu clase Metajavbot para reaccionar al acertar; nunca dentro de alVerEnemigo() ni invocado por tu cuenta.
 donde.de: Mit @Override im Rumpf deiner MetajavbotDe-Klasse deklarieren, um auf eigene Treffer zu reagieren; nie in beiSicht() verschachteln oder selbst aufrufen.
 donde.en: Declare with @Override in your MetajavbotEn class body to react when your attack lands; never nest it inside onSeeEnemy() or call it manually.
@@ -156,10 +156,10 @@ firma: void alChocarConEnemigo(Enemigo e)
 firma.de: void beiZusammenstoss(Gegner g)
 firma.en: void onBump(Enemy e)
 es: Evento sin retorno. Se ejecuta cuando tu cuerpo colisiona directamente con otro robot. Recibe e (Enemigo) con los datos de ese rival para apuntar enseguida o separarte según tus armas.
-de: Ereignis ohne Rückgabewert. Läuft bei direkter Kollision mit einem anderen Roboter. Bekommt g (Gegner), um sofort auf ihn zu zielen oder auf Abstand zu gehen.
-en: Event with no return value. Runs when your body directly collides with another robot. Receives e (Enemy) so you can immediately aim at it or step back.
+de: Ereignis ohne Rückgabewert. Läuft bei direkter Kollision mit einem anderen Roboter. Bekommt g (Gegner), um sofort auf ihn zu zielen oder je nach deinen Waffen auf Abstand zu gehen.
+en: Event with no return value. Runs when your body directly collides with another robot. Receives e (Enemy) so you can immediately aim at it or step back, depending on your weapons.
 donde.es: Decláralo con @Override en tu clase Metajavbot para reaccionar al choque cuerpo a cuerpo; nunca dentro de otro método ni llamado a mano.
-donde.de: Mit @Override in deiner MetajavbotDe-Klasse deklarieren, um auf Zusammenstöße zu reagieren; nie in einer Methode verschachteln oder selbst aufrufen.
+donde.de: Mit @Override in deiner MetajavbotDe-Klasse deklarieren, um auf Zusammenstöße zu reagieren; nie in einer anderen Methode verschachteln oder selbst aufrufen.
 donde.en: Declare with @Override in your MetajavbotEn class to react to robot collisions; never put it inside another method or call it manually.
 ejemplo.es:
     AL CHOCAR CON enemigo e:
@@ -180,8 +180,8 @@ firma: void alAcabarRonda()
 firma.de: void beiRundenende()
 firma.en: void onRoundEnd()
 es: Evento sin parámetros ni retorno. Se ejecuta una vez al terminar cada ronda (por tiempo o por KO). Sirve para resumir datos en memoria() o mostrar mensajes finales.
-de: Ereignis ohne Parameter und Rückgabewert. Läuft einmal am Ende jeder Runde (Zeitablauf oder K.o.). Eignet sich zum Speichern von Ergebnissen in gedaechtnis().
-en: Event with no parameters or return value. Runs once when a round finishes (timeout or knockout). Useful to record stats in memory() for the next round.
+de: Ereignis ohne Parameter und Rückgabewert. Läuft einmal am Ende jeder Runde (Zeitablauf oder K.o.). Eignet sich, um Daten in gedaechtnis() zusammenzufassen oder Abschlussmeldungen auszugeben.
+en: Event with no parameters or return value. Runs once when a round finishes (timeout or knockout). Useful to summarize data in memory() or show final messages.
 donde.es: Decláralo con @Override a nivel de clase en Metajavbot para guardar datos en memoria() al final; aquí ya no tiene sentido dar órdenes de movimiento o ataque.
 donde.de: Mit @Override auf Klassenebene in MetajavbotDe deklarieren, um am Ende Daten in gedaechtnis() zu sichern; Bewegungs- oder Angriffsbefehle wirken hier nicht mehr.
 donde.en: Declare with @Override at class level in MetajavbotEn to save data into memory() at round end; issuing move or attack orders here has no effect.
@@ -201,7 +201,7 @@ firma: void alOirAlEquipo(String de, String mensaje)
 firma.de: void beiTeamNachricht(String von, String nachricht)
 firma.en: void onTeamMessage(String from, String message)
 es: Evento sin retorno para combates por equipos. Se ejecuta un turno después de que un compañero llame a avisarAlEquipo(...). Parámetros: de (nombre del compañero) y mensaje (el texto enviado).
-de: Ereignis ohne Rückgabewert für Teamkämpfe. Läuft einen Zug nachdem ein Kamerad teamMelden(...) aufgerufen hat. Parameter: von (Name des Kameraden) und nachricht (gesendeter Text).
+de: Ereignis ohne Rückgabewert für Teamkämpfe. Läuft einen Zug, nachdem ein Kamerad teamMelden(...) aufgerufen hat. Parameter: von (Name des Kameraden) und nachricht (gesendeter Text).
 en: Event with no return value for team battles. Runs one tick after a teammate calls tellTeam(...). Parameters: from (teammate name) and message (text sent).
 donde.es: Sobrescríbelo en el cuerpo de tu clase Metajavbot para recibir avisos de aliados en peleas por equipos; nunca lo declares dentro de otro método ni lo llames tú.
 donde.de: Im Rumpf deiner MetajavbotDe-Klasse überschreiben, um Team-Nachrichten zu empfangen; nie in einer anderen Methode deklarieren oder selbst aufrufen.
@@ -239,7 +239,7 @@ ejemplo.de:
     WENN restStrecke() == 0:
         vorwaerts(120)
 ejemplo.en:
-    // Move 120 px once previous order completes:
+    // Move 120 px once the previous order completes:
     IF remainingDistance() == 0:
         ahead(120)
 
@@ -276,8 +276,8 @@ es: Orden de giro del cuerpo no bloqueante, sin retorno. Parámetro: grados rela
 de: Nicht-blockierender Drehbefehl ohne Rückgabewert. Parameter: grad relativ zur aktuellen Richtung (positiv links/gegen Uhrzeigersinn; negativ rechts). Wird Zug um Zug mit deinem Drehtempo ausgeführt. Nur der letzte Drehbefehl des Zugs zählt (drehen, drehenNach, anhalten …): Der später aufgerufene löscht den vorigen.
 en: Non-blocking body rotation order with no return value. Parameter: degrees relative to current heading (positive turns left/CCW; negative turns right). Executed over subsequent ticks at your turn speed. Only the last turn order of the tick counts (turn, turnTo, stop…): the one called later erases the earlier one.
 donde.es: Llámalo dentro de cadaTurno() o eventos de choque para rotar el cuerpo; no lo pongas en el constructor ni lo confundas con apuntar() si solo quieres mover la mira.
-donde.de: In jedenZug() oder Kollisionsereignissen aufrufen, um den Rumpf zu drehen; nie im Konstruktor nutzen und nicht mit zielen() verwechseln.
-donde.en: Call inside onTick() or collision events to rotate the chassis; never in the constructor, and don't confuse it with aim() when you only want to turn the turret.
+donde.de: In jedenZug() oder Kollisionsereignissen aufrufen, um den Körper zu drehen; nie im Konstruktor nutzen und nicht mit zielen() verwechseln, wenn du nur das Visier bewegen willst.
+donde.en: Call inside onTick() or collision events to rotate the body; never in the constructor, and don't confuse it with aim() when you only want to move the sight.
 ejemplo.es:
     // Gira 90 grados a la izquierda poco a poco:
     SI restanteGiro() == 0:
@@ -300,8 +300,8 @@ es: Orden de giro del cuerpo hacia la izquierda (sentido antihorario), sin retor
 de: Drehbefehl für den Körper nach links (gegen den Uhrzeigersinn), ohne Rückgabewert. Parameter: grad nach links. Entspricht drehen(grad) und wird Zug um Zug ausgeführt.
 en: Non-blocking body turn to the left (counter-clockwise) with no return value. Parameter: degrees to turn left. Equivalent to turn(degrees) and runs tick by tick.
 donde.es: Invócalo dentro de cadaTurno() o eventos para virar a la izquierda con ángulos positivos; evita llamarlo en el constructor o con valores negativos confusos.
-donde.de: In jedenZug() oder Ereignissen mit positivem Winkel zum Linksdrehen nutzen; nicht im Konstruktor aufrufen.
-donde.en: Invoke inside onTick() or events with a positive angle to steer left; avoid calling it in the constructor.
+donde.de: In jedenZug() oder Ereignissen mit positivem Winkel zum Linksdrehen nutzen; nicht im Konstruktor oder mit verwirrenden negativen Werten aufrufen.
+donde.en: Invoke inside onTick() or events with a positive angle to steer left; avoid calling it in the constructor or with confusing negative values.
 ejemplo.es:
     SI restanteGiro() == 0:
         girarIzquierda(45)   // +45° respecto al rumbo actual
@@ -321,7 +321,7 @@ es: Orden de giro del cuerpo hacia la derecha (sentido horario), sin retorno. Pa
 de: Drehbefehl für den Körper nach rechts (im Uhrzeigersinn), ohne Rückgabewert. Parameter: grad nach rechts (entspricht drehen(-grad)). Wird Zug um Zug ausgeführt und ersetzt alte Drehbefehle.
 en: Non-blocking body turn to the right (clockwise) with no return value. Parameter: degrees to turn right (same as turn(-degrees)). Runs tick by tick and replaces previous turn orders.
 donde.es: Invócalo dentro de cadaTurno() o eventos para girar el cuerpo en sentido horario; nunca en el constructor ni fuera de un método del robot.
-donde.de: In jedenZug() oder Ereignissen für Rechtsdrehungen des Rumpfs aufrufen; niemals im Konstruktor oder außerhalb einer Methode.
+donde.de: In jedenZug() oder Ereignissen für Rechtsdrehungen des Körpers aufrufen; niemals im Konstruktor oder außerhalb einer Methode des Roboters.
 donde.en: Call inside onTick() or events to rotate the body clockwise; never in the constructor or outside a robot method.
 ejemplo.es:
     AL CHOCAR CON PARED:
@@ -364,7 +364,7 @@ firma.de: void anhalten()
 firma.en: void stop()
 es: Orden inmediata sin parámetros ni retorno. Cancela las órdenes pendientes de avance y giro del cuerpo (avanzar/girar quedan a 0), deteniendo el desplazamiento sin afectar a la mira.
 de: Sofortbefehl ohne Parameter und Rückgabewert. Löscht laufende Fahr- und Drehaufträge des Körpers (Reststrecke und Restdrehung auf 0), lässt das Visier aber unberührt.
-en: Immediate order with no parameters or return value. Clears pending body movement and rotation orders (remaining distance and turn become 0) without affecting your aim.
+en: Immediate order with no parameters or return value. Clears pending body movement and rotation orders (remaining distance and turn become 0) without affecting the sight.
 donde.es: Úsalo dentro de cadaTurno() o eventos (como alVerEnemigo() o alChocarConPared()) para cancelar avance y giro pendientes; no lo llames en el constructor.
 donde.de: In jedenZug() oder Ereignissen (z. B. beiSicht() oder beiWand()) aufrufen, um offene Fahrt und Drehung sofort abzubrechen; nie im Konstruktor.
 donde.en: Call inside onTick() or events (like onSeeEnemy() or onHitWall()) to cancel pending movement and turning; never in the constructor.
@@ -387,8 +387,8 @@ firma: void apuntar(double grados)
 firma.de: void zielen(double grad)
 firma.en: void aim(double degrees)
 es: Orden no bloqueante sin retorno para girar los brazos y el radar, independientemente del cuerpo. Parámetro: grados relativos a mira() (positivos hacia la izquierda). Se ejecuta turno a turno; si no ves enemigos, úsalo para barrer la arena. Solo vale la última orden de mira del turno (apuntar, apuntarHacia, apuntarA): un apuntar en cadaTurno borra el apuntarHacia que diste en alVerEnemigo. La mira gira despacio, unos 14° por turno según el arma.
-de: Nicht-blockierender Befehl ohne Rückgabewert zum Drehen von Armen und Radar unabhängig vom Körper. Parameter: grad relativ zu blick() (positiv links). Läuft Zug um Zug; ideal zum Radarsuchen. Nur der letzte Visierbefehl des Zugs zählt (zielen, zielenNach, zielenAuf): Ein zielen in jedenZug löscht das zielenNach aus beiSicht. Das Visier dreht langsam, etwa 14° pro Zug je nach Waffe.
-en: Non-blocking order with no return value to rotate arms and radar independently of the body. Parameter: degrees relative to aimDirection() (positive left). Runs tick by tick; great for radar sweeping. Only the last sight order of the tick counts (aim, aimTo, aimAt): an aim in onTick erases the aimTo you gave in onSeeEnemy. The sight turns slowly, about 14° per tick depending on the weapon.
+de: Nicht-blockierender Befehl ohne Rückgabewert zum Drehen von Armen und Radar unabhängig vom Körper. Parameter: grad relativ zu blick() (positiv links). Läuft Zug um Zug; siehst du keine Gegner, nutze ihn, um die Arena abzusuchen. Nur der letzte Visierbefehl des Zugs zählt (zielen, zielenNach, zielenAuf): Ein zielen in jedenZug löscht das zielenNach aus beiSicht. Das Visier dreht langsam, etwa 14° pro Zug je nach Waffe.
+en: Non-blocking order with no return value to rotate arms and radar independently of the body. Parameter: degrees relative to aimDirection() (positive left). Runs tick by tick; if you see no enemies, use it to sweep the arena. Only the last sight order of the tick counts (aim, aimTo, aimAt): an aim in onTick erases the aimTo you gave in onSeeEnemy. The sight turns slowly, about 14° per tick depending on the weapon.
 donde.es: Llámalo en cadaTurno() para barrer con el radar o en alEmpezar() para orientar la mira; nunca en el constructor ni dentro de alAcabarRonda().
 donde.de: In jedenZug() zum Radarschwenk oder in beimStart() zum Ausrichten aufrufen; nie im Konstruktor und nicht in beiRundenende().
 donde.en: Call in onTick() to sweep the radar or in onStart() to orient the sight; never in the constructor or inside onRoundEnd().
@@ -412,7 +412,7 @@ firma.de: void zielenNach(double winkel)
 firma.en: void aimTo(double angle)
 es: Orden absoluta de puntería sin retorno. Parámetro: angulo absoluto en grados (0 derecha, 90 arriba). Calcula el camino más corto desde mira() y va girando la mira en los turnos siguientes hasta alinearla. No es instantáneo: la mira gira despacio, unos 14° por turno según el arma, y restanteMira() dice cuánto le falta. Solo vale la última orden de mira del turno: si cadaTurno llama después a apuntar, esta se borra.
 de: Absoluter Zielbefehl ohne Rückgabewert. Parameter: absoluter Zielwinkel in Grad (0 rechts, 90 oben). Berechnet den kürzesten Drehweg von blick() und richtet das Visier Zug um Zug aus. Nicht sofort: Das Visier dreht langsam, etwa 14° pro Zug je nach Waffe, und restZielen() sagt, wie viel noch fehlt. Nur der letzte Visierbefehl des Zugs zählt: Ruft jedenZug danach zielen auf, ist dieser gelöscht.
-en: Absolute aiming order with no return value. Parameter: absolute angle in degrees (0 right, 90 up). Computes shortest delta from aimDirection() and turns the sight over upcoming ticks. Not instant: the sight turns slowly, about 14° per tick depending on the weapon, and remainingAim() tells you how much is left. Only the last sight order of the tick counts: if onTick calls aim afterwards, this one is erased.
+en: Absolute aiming order with no return value. Parameter: absolute angle in degrees (0 right, 90 up). Computes the shortest delta from aimDirection() and turns the sight over upcoming ticks. Not instant: the sight turns slowly, about 14° per tick depending on the weapon, and remainingAim() tells you how much is left. Only the last sight order of the tick counts: if onTick calls aim afterwards, this one is erased.
 donde.es: Úsalo dentro de alVerEnemigo(Enemigo e) o cadaTurno() pasándole un ángulo absoluto como e.angulo(); nunca en el constructor ni en el cuerpo de la clase.
 donde.de: In beiSicht(Gegner g) oder jedenZug() mit absolutem Winkel wie g.winkel() aufrufen; nie im Konstruktor oder direkt im Klassenrumpf.
 donde.en: Call inside onSeeEnemy(Enemy e) or onTick() with an absolute angle such as e.angle(); never in the constructor or class body.
@@ -454,7 +454,7 @@ ejemplo.de:
     double fy = g.y() + Math.sin(Math.toRadians(g.richtung())) * g.geschwindigkeit() * 6;
     zielenAuf(fx, fy);
 ejemplo.en:
-    // Aim at predicted future point (fx, fy):
+    // Aim at a predicted future point (fx, fy):
     double fx = e.x() + Math.cos(Math.toRadians(e.heading())) * e.speed() * 6;
     double fy = e.y() + Math.sin(Math.toRadians(e.heading())) * e.speed() * 6;
     aimAt(fx, fy);
@@ -465,9 +465,9 @@ firma: boolean atacarIzquierda()
 firma.de: boolean angriffLinks()
 firma.en: boolean attackLeft()
 es: Dispara o activa el arma del brazo izquierdo en la dirección de mira(). Se ejecuta en el turno actual si el brazo está sano, recargado y tienes energía suficiente; devuelve true si atacó y false si aún no estaba listo.
-de: Löst die Waffe des linken Arms in Richtung blick() aus. Wirkt in diesem Zug, falls der Arm intakt, abgekühlt und genug Energie da ist; gibt true bei Erfolg und false sonst zurück.
+de: Löst die Waffe des linken Arms in Richtung blick() aus. Wirkt in diesem Zug, falls der Arm intakt und abgekühlt ist und genug Energie da ist; gibt bei Erfolg true zurück, sonst false.
 en: Fires or activates the left arm weapon along aimDirection(). Runs this tick if the arm is intact, cooled down, and energy suffices; returns true if fired, false otherwise.
-donde.es: Llámalo dentro de alVerEnemigo() o cadaTurno() cuando el rival esté en mira y alcance, mejor comprobando listoIzquierda(); nunca en el constructor.
+donde.es: Llámalo dentro de alVerEnemigo() o cadaTurno() cuando el rival esté en la mira y al alcance, mejor comprobando listoIzquierda(); nunca en el constructor.
 donde.de: In beiSicht() oder jedenZug() aufrufen, wenn der Gegner im Visier und in Reichweite ist, am besten nach bereitLinks(); nie im Konstruktor.
 donde.en: Call inside onSeeEnemy() or onTick() when the target is lined up and in range, ideally after checking readyLeft(); never in the constructor.
 ejemplo.es:
@@ -485,12 +485,12 @@ tema: 04
 firma: boolean atacarDerecha()
 firma.de: boolean angriffRechts()
 firma.en: boolean attackRight()
-es: Dispara o activa el arma del brazo derecho hacia donde apunta mira(). Se ejecuta en este turno si el brazo derecho tiene pieza, no está roto, acabó su recarga y alcanza energía; devuelve true si atacó o false si no pudo.
-de: Löst die Waffe des rechten Arms in Richtung blick() aus. Wirkt in diesem Zug, falls der Arm intakt, bereit und genug Energie vorhanden ist; gibt true zurück, wenn er angriff.
+es: Dispara o activa el arma del brazo derecho hacia donde apunta mira(). Se ejecuta en este turno si el brazo derecho tiene pieza, no está roto, acabó su recarga y hay energía suficiente; devuelve true si atacó o false si no pudo.
+de: Löst die Waffe des rechten Arms in Richtung blick() aus. Wirkt in diesem Zug, falls der Arm intakt und bereit ist und genug Energie vorhanden ist; gibt true zurück, wenn er angriff, sonst false.
 en: Fires or activates the right arm weapon along aimDirection(). Runs this tick if the right arm is intact, cooled down, and energy suffices; returns true if it attacked, false otherwise.
 donde.es: Invócalo en alVerEnemigo() o cadaTurno() tras alinear la mira y verificar alcanceDerecha(); evita llamarlo a ciegas en alEmpezar() o en el constructor.
 donde.de: In beiSicht() oder jedenZug() nach dem Zielen und Prüfen von reichweiteRechts() aufrufen; nicht blind in beimStart() oder im Konstruktor.
-donde.en: Invoke in onSeeEnemy() or onTick() after lining up aim and checking rangeRight(); avoid calling it blindly in onStart() or the constructor.
+donde.en: Invoke in onSeeEnemy() or onTick() after lining up the sight and checking rangeRight(); avoid calling it blindly in onStart() or the constructor.
 ejemplo.es:
     SI listoDerecha() Y e.distancia() <= alcanceDerecha():
         boolean disparo = atacarDerecha()
@@ -510,7 +510,7 @@ es: Activa en este turno la habilidad especial equipada en la cabeza (escudo, tu
 de: Aktiviert in diesem Zug die Spezialfähigkeit des Kopfes (Schild, Turbo, Reparatur, Tarnung, Puls oder Überladung) ohne Parameter. Gibt true zurück, wenn es geklappt hat, sonst false.
 en: Activates the head piece's special ability this tick (shield, turbo, repair, cloak, pulse, or overload) with no parameters. Returns true if triggered, false if unequipped, cooling down, or low energy.
 donde.es: Llámalo en cadaTurno(), alRecibirGolpe() o alVerEnemigo() cuando listoEspecial() sea true y la situación lo pida; no en el constructor ni en alAcabarRonda().
-donde.de: In jedenZug(), beiTreffer() oder beiSicht() aufrufen, wenn bereitSpezial() true liefert und der Moment passt; nie im Konstruktor oder beiRundenende().
+donde.de: In jedenZug(), beiTreffer() oder beiSicht() aufrufen, wenn bereitSpezial() true liefert und der Moment passt; nie im Konstruktor oder in beiRundenende().
 donde.en: Call in onTick(), onHit(), or onSeeEnemy() when readySpecial() is true and the timing fits; never in the constructor or onRoundEnd().
 ejemplo.es:
     SI blindaje() < 60 Y listoEspecial():
@@ -528,8 +528,8 @@ firma: boolean embestir()
 firma.de: boolean ansturm()
 firma.en: boolean charge()
 es: Habilidad propia del arquetipo Asalto: embestida frontal con impulso de velocidad (avisa en consola en otros arquetipos).
-de: Eigene Fähigkeit des Archetyps Sturm: Vorwärts-Temposchub (warnt in der Konsole bei anderen Archetypen).
-en: Signature ability of the Assault archetype: forward speed burst (warns in the console on other archetypes).
+de: Eigene Fähigkeit des Archetyps Sturm: frontaler Rammstoß mit Temposchub (warnt in der Konsole bei anderen Archetypen).
+en: Signature ability of the Assault archetype: head-on charge with a speed burst (warns in the console on other archetypes).
 donde.es: Llámalo dentro de cadaTurno() o alVerEnemigo(e) solo en robots de arquetipo Asalto (en otros arquetipos devuelve false y avisa en consola).
 donde.de: In jedenZug() oder beiSicht(g) nur bei Sturm-Robotern aufrufen (bei anderen Archetypen liefert es false und warnt in der Konsole).
 donde.en: Call inside onTick() or onSeeEnemy(e) only on Assault-archetype robots (on other archetypes it returns false and warns in the console).
@@ -555,8 +555,8 @@ firma: boolean pulsoRadar()
 firma.de: boolean radarImpuls()
 firma.en: boolean radarPulse()
 es: Habilidad propia del arquetipo Táctico: barrido de radar en 360° con alcance ampliado (avisa en consola en otros arquetipos).
-de: Eigene Fähigkeit des Archetyps Taktiker: 360°-Radarimpuls mit größerer Reichweite (warnt bei anderen Archetypen).
-en: Signature ability of the Tactical archetype: 360° extended-range radar sweep (warns on other archetypes).
+de: Eigene Fähigkeit des Archetyps Taktiker: 360°-Radarimpuls mit größerer Reichweite (warnt in der Konsole bei anderen Archetypen).
+en: Signature ability of the Tactical archetype: 360° extended-range radar sweep (warns in the console on other archetypes).
 donde.es: Llámalo dentro de cadaTurno() o alRecibirGolpe(g) solo en robots de arquetipo Táctico para revelar rivales en 360° (en otros avisa en consola).
 donde.de: In jedenZug() oder beiTreffer(t) nur bei Taktiker-Robotern aufrufen, um Gegner rundum in 360° zu erfassen (sonst Konsolenwarnung).
 donde.en: Call inside onTick() or onHit(h) only on Tactical-archetype robots to reveal enemies in 360° (otherwise logs a console warning).
@@ -579,8 +579,8 @@ firma: boolean fortificar()
 firma.de: boolean befestigen()
 firma.en: boolean fortify()
 es: Habilidad propia del arquetipo Defensor: postura fortificada que reduce el daño recibido (avisa en consola en otros arquetipos).
-de: Eigene Fähigkeit des Archetyps Verteidiger: Abwehrhaltung, verringert Schaden (warnt bei anderen Archetypen).
-en: Signature ability of the Defender archetype: fortified stance that reduces incoming damage (warns on other archetypes).
+de: Eigene Fähigkeit des Archetyps Verteidiger: Abwehrhaltung, die den erlittenen Schaden verringert (warnt in der Konsole bei anderen Archetypen).
+en: Signature ability of the Defender archetype: fortified stance that reduces incoming damage (warns in the console on other archetypes).
 donde.es: Llámalo dentro de alRecibirGolpe(g) o cadaTurno() solo en robots de arquetipo Defensor para activar la postura blindada (en otros avisa en consola).
 donde.de: In beiTreffer(t) oder jedenZug() nur bei Verteidiger-Robotern aufrufen, um die Abwehrhaltung zu aktivieren (sonst Konsolenwarnung).
 donde.en: Call inside onHit(h) or onTick() only on Defender-archetype robots to raise the fortified stance (otherwise logs a console warning).
@@ -603,10 +603,10 @@ firma: boolean atacar()
 firma.de: boolean angreifen()
 firma.en: boolean attack()
 es: Atajo sin parámetros que intenta atacar en este turno primero con el brazo derecho y, si no está listo, con el izquierdo hacia donde apunta mira(). Devuelve true si alguno de los dos brazos logró atacar; false si ambos estaban ocupados o sin energía. Dispara al momento, hacia donde apunta la mira AHORA, no hacia donde le acabas de pedir que gire. Llamarlo dos veces en el mismo turno usa los dos brazos; más veces no hace nada, porque los brazos tienen que enfriarse.
-de: Kurzbefehl ohne Parameter: greift in diesem Zug zuerst mit dem rechten Arm an und falls der nicht bereit ist, mit dem linken Richtung blick(). Gibt true zurück, sobald ein Arm angreift, sonst false. Schießt sofort, dorthin, wohin das Visier JETZT zeigt, nicht dorthin, wohin es sich gerade drehen soll. Zweimal im selben Zug benutzt beide Arme; öfter bringt nichts, weil die Arme abkühlen müssen.
+de: Kurzbefehl ohne Parameter: greift in diesem Zug zuerst mit dem rechten Arm an und, falls der nicht bereit ist, mit dem linken Richtung blick(). Gibt true zurück, sobald ein Arm angreift, sonst false. Schießt sofort dorthin, wohin das Visier JETZT zeigt, nicht dorthin, wohin es sich gerade drehen soll. Zweimal im selben Zug aufgerufen, benutzt er beide Arme; öfter bringt nichts, weil die Arme abkühlen müssen.
 en: Shortcut with no parameters: tries attacking this tick with the right arm first, and if not ready, the left arm along aimDirection(). Returns true if either arm attacked, false otherwise. Fires at once, where the sight points NOW, not where you just asked it to turn. Calling it twice in the same tick uses both arms; more calls do nothing, because the arms need to cool down.
 donde.es: Llámalo dentro de alVerEnemigo() o cadaTurno() tras comprobar que apuntas al rival; no lo pongas en el constructor ni en un bucle para disparar varias veces en un turno.
-donde.de: In beiSicht() oder jedenZug() aufrufen, sobald das Visier passt; nicht im Konstruktor und nicht in einer Schleife (pro Zug feuert ohnehin nur ein Befehl).
+donde.de: In beiSicht() oder jedenZug() aufrufen, sobald das Visier passt; nicht im Konstruktor und nicht in einer Schleife, um mehrmals pro Zug zu schießen.
 donde.en: Call inside onSeeEnemy() or onTick() once aimed at the foe; never in the constructor or in a loop expecting multiple shots in one tick.
 ejemplo.es:
     AL VER enemigo e:
@@ -647,7 +647,7 @@ tema: 04
 firma: boolean listoDerecha()
 firma.de: boolean bereitRechts()
 firma.en: boolean readyRight()
-es: Consulta instantánea sin parámetros. Devuelve true si el brazo derecho tiene arma, sigue operativo, acabó su recarga y hay energía bastante para disparar en este turno.
+es: Consulta instantánea sin parámetros. Devuelve true si el brazo derecho tiene arma, sigue operativo, acabó su recarga y hay energía suficiente para disparar en este turno.
 de: Sofortabfrage ohne Parameter. Gibt true zurück, wenn der rechte Arm eine Waffe hat, intakt ist, abgekühlt ist und genug Energie für einen Angriff bereitsteht.
 en: Instant query with no parameters. Returns true if the right arm is equipped, intact, cooled down, and has enough energy to attack this tick.
 donde.es: Colócalo en la condición de un if dentro de alVerEnemigo() o cadaTurno() antes de atacarDerecha(); nunca en inicializadores de campos ni en el constructor.
@@ -690,7 +690,7 @@ firma: String armaIzquierda()
 firma.de: String waffeLinks()
 firma.en: String weaponLeft()
 es: Consulta sin parámetros. Devuelve el nombre interno en mayúsculas del arma izquierda ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") o "" si no llevas arma. Compáralo siempre con equals(), nunca con ==.
-de: Abfrage ohne Parameter. Gibt den internen Namen der linken Waffe zurück ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") oder "" ohne Waffe. Immer mit equals() prüfen, nicht mit ==.
+de: Abfrage ohne Parameter. Gibt den internen Namen der linken Waffe in Großbuchstaben zurück ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") oder "" ohne Waffe. Immer mit equals() prüfen, nicht mit ==.
 en: Query with no parameters. Returns the internal uppercase type of the left weapon ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") or "" if none. Always compare with equals(), never ==.
 donde.es: Consúltalo en alEmpezar() o en un if dentro de cadaTurno() (comparando con .equals, no con ==) para adaptar tu táctica al arma; nunca en el constructor.
 donde.de: In beimStart() oder einem if in jedenZug() abfragen (mit .equals vergleichen, nicht mit ==), um die Taktik anzupassen; nie im Konstruktor.
@@ -703,7 +703,7 @@ ejemplo.de:
         // für Nahkampf heranfahren
 ejemplo.en:
     IF weaponLeft().equals("CUERPO"):
-        // close distance for melee
+        // close the distance for melee
 
 === api.armaDerecha
 tema: 08
@@ -712,8 +712,8 @@ firma.de: String waffeRechts()
 firma.en: String weaponRight()
 es: Consulta sin parámetros. Devuelve el tipo del arma derecha ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") o "" si no tiene. Útil para decidir si mantener distancia o acercarte al enemigo.
 de: Abfrage ohne Parameter. Gibt den Typ der rechten Waffe zurück ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") oder "". Hilft bei der Wahl zwischen Fern- und Nahkampf.
-en: Query with no parameters. Returns the right arm weapon type ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") or "" if unequipped. Helpful to decide combat range.
-donde.es: Consúltalo una vez en alEmpezar() o en métodos auxiliares para elegir distancia óptima; compáralo con .equals y nunca lo llames en el constructor.
+en: Query with no parameters. Returns the right arm weapon type ("LASER", "BALA", "MISIL", "CUERPO", "LLAMA", "ESCUDO", "REPARAR") or "" if unequipped. Helpful to decide whether to keep your distance or close in on the enemy.
+donde.es: Consúltalo una vez en alEmpezar() o en métodos auxiliares para elegir la distancia óptima; compáralo con .equals y nunca lo llames en el constructor.
 donde.de: Einmal in beimStart() oder in Hilfsmethoden abfragen, um die passende Distanz zu wählen; mit .equals vergleichen und nie im Konstruktor aufrufen.
 donde.en: Read once in onStart() or helper methods to pick your fighting range; compare with .equals and never call it in the constructor.
 ejemplo.es:
@@ -732,8 +732,8 @@ firma: String especialCabeza()
 firma.de: String spezialKopf()
 firma.en: String headSpecial()
 es: Consulta sin parámetros. Devuelve en mayúsculas el tipo de especial de tu cabeza ("ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA") o "" si no tiene especial.
-de: Abfrage ohne Parameter. Gibt großgeschrieben das Spezielle des Kopfes zurück ("ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA") oder "" wenn keins eingebaut ist.
-en: Query with no parameters. Returns uppercase type of your head special ("ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA") or "" if none.
+de: Abfrage ohne Parameter. Gibt den Typ der Spezialfähigkeit deines Kopfes in Großbuchstaben zurück ("ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA") oder "", wenn keine eingebaut ist.
+en: Query with no parameters. Returns the uppercase type of your head special ("ESCUDO", "TURBO", "REPARAR", "CAMUFLAJE", "PULSO", "SOBRECARGA") or "" if none.
 donde.es: Léelo en alEmpezar() o antes de usar especial() dentro de cadaTurno() para saber qué habilidad llevas equipada; no lo llames en el constructor.
 donde.de: In beimStart() oder vor spezial() in jedenZug() abfragen, um die ausgerüstete Kopffähigkeit zu erkennen; nicht im Konstruktor nutzen.
 donde.en: Read in onStart() or before calling special() in onTick() to know which head ability is equipped; never call it in the constructor.
@@ -839,7 +839,7 @@ firma.en: double loadLimit()
 es: Lo que aguantan tus piernas (su carga).
 de: Was deine Beine aushalten (ihre Traglast).
 en: What your legs can carry (their load limit).
-donde.es: Consúltalo en alEmpezar(): depende de tus piernas (las orugas aguantan lo que más; las alas, lo que menos).
+donde.es: Consúltalo en alEmpezar(): depende de tus piernas (las orugas son las que más aguantan; las alas, las que menos).
 donde.de: In beimStart() abfragen: Es hängt von deinen Beinen ab (Ketten tragen am meisten, Flügel am wenigsten).
 donde.en: Check it in onStart(): it depends on your legs (treads carry the most; wings, the least).
 
@@ -933,7 +933,7 @@ firma: String terreno()
 firma.de: String gelaende()
 firma.en: String terrain()
 es: El terreno que pisas: "LLANO", "ACEITE", "AGUA", "RAMPA", "ESCOMBROS" o "TRAMPA".
-de: Das Gelände unter dir: "LLANO" (eben), "ACEITE" (Öl), "AGUA" (Wasser), "RAMPA", "ESCOMBROS" (Trümmer) oder "TRAMPA" (Bodenfalle).
+de: Das Gelände unter dir: "LLANO" (eben), "ACEITE" (Öl), "AGUA" (Wasser), "RAMPA" (Rampe), "ESCOMBROS" (Trümmer) oder "TRAMPA" (Bodenfalle).
 en: The terrain under you: "LLANO" (flat), "ACEITE" (oil), "AGUA" (water), "RAMPA" (ramp), "ESCOMBROS" (rubble), or "TRAMPA" (floor trap).
 donde.es: Consúltalo en cadaTurno(): si pisas "AGUA" o "TRAMPA", sal de ahí; compáralo con equals().
 donde.de: In jedenZug() abfragen: Stehst du auf "AGUA" (Wasser) oder "TRAMPA" (Falle), geh weg; mit equals() vergleichen.
@@ -978,9 +978,9 @@ firma: double x()
 firma.de: double x()
 firma.en: double x()
 es: Consulta sin parámetros. Devuelve tu coordenada horizontal actual en píxeles, de 0 (borde izquierdo) a anchoArena() (borde derecho). Útil para detectar si te acercas demasiado a las paredes laterales.
-de: Abfrage ohne Parameter. Gibt deine aktuelle waagerechte Position in Pixeln zurück, von 0 (linker Rand) bis arenaBreite() (rechter Rand). Nützlich zum Erkennen seitlicher Wände.
-en: Query with no parameters. Returns your current horizontal position in pixels, from 0 (left wall) to arenaWidth() (right wall). Useful to detect approaching side walls.
-donde.es: Úsalo dentro de cadaTurno(), alEmpezar() o eventos para medir cercanía a paredes laterales o calcular vectores; nunca en el constructor ni como declaración de campo.
+de: Abfrage ohne Parameter. Gibt deine aktuelle waagerechte Position in Pixeln zurück, von 0 (linker Rand) bis arenaBreite() (rechter Rand). Nützlich, um zu erkennen, ob du den Seitenwänden zu nahe kommst.
+en: Query with no parameters. Returns your current horizontal position in pixels, from 0 (left wall) to arenaWidth() (right wall). Useful to detect whether you are getting too close to the side walls.
+donde.es: Úsalo dentro de cadaTurno(), alEmpezar() o eventos para medir la cercanía a las paredes laterales o calcular vectores; nunca en el constructor ni como declaración de campo.
 donde.de: In jedenZug(), beimStart() oder Ereignissen nutzen, um Wandabstand oder Vektoren zu berechnen; nie im Konstruktor oder als Feldinitialisierung.
 donde.en: Use inside onTick(), onStart(), or events to check side-wall proximity or compute vectors; never in the constructor or field initializers.
 ejemplo.es:
@@ -1023,7 +1023,7 @@ es: Consulta sin parámetros. Devuelve hacia dónde apunta tu cuerpo en grados a
 de: Abfrage ohne Parameter. Gibt an, wohin dein Körper zeigt, als absoluten Winkel in (-180, 180]: 0 ist rechts (Osten), 90 oben (Norden), 180 links und -90 unten.
 en: Query with no parameters. Returns your body's absolute heading in degrees normalized to (-180, 180]: 0 is right (east), 90 up (north), 180 left, -90 down.
 donde.es: Consúltalo dentro de cadaTurno() o eventos para saber hacia dónde apunta el cuerpo antes de girar; no lo confundas con mira() ni lo llames en el constructor.
-donde.de: In jedenZug() oder Ereignissen abfragen, wohin der Rumpf zeigt; nicht mit blick() verwechseln und nie im Konstruktor aufrufen.
+donde.de: In jedenZug() oder Ereignissen abfragen, wohin der Körper zeigt; nicht mit blick() verwechseln und nie im Konstruktor aufrufen.
 donde.en: Query inside onTick() or events to know which way the body faces; don't confuse it with aimDirection() and never call it in the constructor.
 ejemplo.es:
     // Gira justo en dirección opuesta a la actual:
@@ -1032,7 +1032,7 @@ ejemplo.de:
     // In die genau entgegengesetzte Richtung drehen:
     drehenNach(richtung() + 180)
 ejemplo.en:
-    // Turn straight opposite to current direction:
+    // Turn to face the exact opposite direction:
     turnTo(heading() + 180)
 
 === api.mira
@@ -1045,7 +1045,7 @@ de: Abfrage ohne Parameter. Gibt den aktuellen absoluten Winkel von Armen und Ra
 en: Query with no parameters. Returns the current absolute angle of your arms and radar in (-180, 180]. Can differ from heading() because the sight rotates independently.
 donde.es: Úsalo dentro de alVerEnemigo() o cadaTurno() para calcular el error angular normalizar(e.angulo() - mira()) antes de disparar; nunca en el constructor.
 donde.de: In beiSicht() oder jedenZug() nutzen, um den Zielfehler normalisieren(g.winkel() - blick()) vor dem Schuss zu prüfen; nie im Konstruktor.
-donde.en: Use inside onSeeEnemy() or onTick() to measure aim error normalize(e.angle() - aimDirection()) before firing; never in the constructor.
+donde.en: Use inside onSeeEnemy() or onTick() to measure the aim error normalize(e.angle() - aimDirection()) before firing; never in the constructor.
 ejemplo.es:
     double error = Math.abs(normalizar(e.angulo() - mira()));
     SI error < 4: atacar();
@@ -1072,7 +1072,7 @@ ejemplo.es:
         avanzar(100)   // arranca si te quedaste quieto
 ejemplo.de:
     WENN Math.abs(geschwindigkeit()) < 0.5 UND restStrecke() == 0:
-        vorwaerts(100) // losfahren, wenn man stillsteht
+        vorwaerts(100) // losfahren, wenn du stillstehst
 ejemplo.en:
     IF Math.abs(speed()) < 0.5 AND remainingDistance() == 0:
         ahead(100)     // start moving if stationary
@@ -1082,9 +1082,9 @@ tema: 02
 firma: double energia()
 firma.de: double energie()
 firma.en: double energy()
-es: Consulta sin parámetros. Devuelve tu energía actual. Se recarga un poco en cada turno según tu núcleo y se gasta al disparar armas de energía o activar lo especial de la cabeza.
-de: Abfrage ohne Parameter. Gibt deine aktuelle Energie zurück. Lädt sich pro Zug je nach Kern auf und wird für Schüsse und Kopffähigkeiten verbraucht.
-en: Query with no parameters. Returns your current energy. Regenerates slightly each tick based on your core and is spent on firing weapons and head specials.
+es: Consulta sin parámetros. Devuelve tu energía actual. Se recarga un poco en cada turno según tu núcleo y se gasta al disparar armas de energía o activar la habilidad especial de la cabeza.
+de: Abfrage ohne Parameter. Gibt deine aktuelle Energie zurück. Lädt sich in jedem Zug je nach Kern etwas auf und wird beim Abfeuern von Energiewaffen und für die Spezialfähigkeit des Kopfes verbraucht.
+en: Query with no parameters. Returns your current energy. Regenerates slightly each tick based on your core and is spent on firing energy weapons and using your head special.
 donde.es: Consúltalo en condiciones if dentro de cadaTurno() o alVerEnemigo() para reservar energía para láseres o especial(); no va en el constructor.
 donde.de: In if-Abfragen in jedenZug() oder beiSicht() prüfen, um Energie für Laser oder spezial() zu sparen; gehört nicht in den Konstruktor.
 donde.en: Check inside if conditions in onTick() or onSeeEnemy() to save energy for lasers or special(); never in the constructor.
@@ -1110,7 +1110,7 @@ firma: double blindaje()
 firma.de: double panzerung()
 firma.en: double armor()
 es: Consulta sin parámetros. Devuelve el porcentaje de blindaje total que te queda en todas tus piezas, de 0 a 100. Úsalo para decidir cuándo curarte, poner escudo o huir.
-de: Abfrage ohne Parameter. Gibt deine verbleibende Gesamtpanzerung aller Teile in Prozent von 0 bis 100 zurück. Hilft zu entscheiden, wann Schutz oder Rückzug nötig ist.
+de: Abfrage ohne Parameter. Gibt deine verbleibende Gesamtpanzerung aller Teile in Prozent von 0 bis 100 zurück. Hilft zu entscheiden, wann du dich reparieren, einen Schild einsetzen oder fliehen solltest.
 en: Query with no parameters. Returns your remaining overall armor across all parts as a percentage from 0 to 100. Useful to decide when to shield, heal, or retreat.
 donde.es: Consúltalo en cadaTurno() o alRecibirGolpe() para cambiar a modo defensivo o reparar cuando baje; no lo llames en el constructor.
 donde.de: In jedenZug() oder beiTreffer() abfragen, um bei niedriger Panzerung defensiv zu agieren oder zu reparieren; nicht im Konstruktor.
@@ -1131,11 +1131,11 @@ firma: int turnoActual()
 firma.de: int zug()
 firma.en: int tick()
 es: Consulta sin parámetros. Devuelve el número de turno de la ronda actual empezando en 0 (en peleas normales hay 30 turnos por segundo hasta 1200). Sirve para hacer acciones periódicas con el operador «%».
-de: Abfrage ohne Parameter. Gibt die Zugnummer der laufenden Runde ab 0 zurück (normalerweise 30 Züge pro Sekunde bis 1200). Ideal für periodische Aktionen mit «%».
-en: Query with no parameters. Returns the current round's tick counter starting at 0 (typically 30 ticks per second up to 1200). Useful for periodic actions with the «%» operator.
+de: Abfrage ohne Parameter. Gibt die Zugnummer der laufenden Runde ab 0 zurück (normalerweise 30 Züge pro Sekunde bis 1200). Ideal für periodische Aktionen mit „%“.
+en: Query with no parameters. Returns the current round's tick counter starting at 0 (typically 30 ticks per second up to 1200). Useful for periodic actions with the “%” operator.
 donde.es: Úsalo en cadaTurno() o eventos para medir cuántos turnos pasaron desde el último avistamiento o alternar patrones periódicos; nunca en el constructor.
 donde.de: In jedenZug() oder Ereignissen nutzen, um Züge seit der letzten Sichtung zu zählen oder Muster zu takten; nie im Konstruktor.
-donde.en: Use in onTick() or events to track ticks since last sighting or time periodic patterns; never in the constructor.
+donde.en: Use in onTick() or events to track ticks since the last sighting or time periodic patterns; never in the constructor.
 ejemplo.es:
     // Cambia de lado cada 45 turnos (1,5 segundos):
     SI turnoActual() % 45 == 0:
@@ -1155,8 +1155,8 @@ firma: int ronda()
 firma.de: int runde()
 firma.en: int round()
 es: Consulta sin parámetros. Devuelve el número de la ronda actual empezando en 1 (normalmente de 1 a 4, o hasta 12 en combates largos). Sirve para ajustar tu estrategia según la ronda.
-de: Abfrage ohne Parameter. Gibt die Nummer der aktuellen Runde ab 1 zurück (meist 1 bis 4, bei langen Kämpfen mehr). Praktisch, um die Taktik je Runde anzupassen.
-en: Query with no parameters. Returns the current round number starting from 1 (usually 1 to 4, or more in longer bouts). Helpful to adapt your strategy per round.
+de: Abfrage ohne Parameter. Gibt die Nummer der aktuellen Runde ab 1 zurück (meist 1 bis 4, bei langen Kämpfen bis zu 12). Praktisch, um die Taktik je Runde anzupassen.
+en: Query with no parameters. Returns the current round number starting from 1 (usually 1 to 4, or up to 12 in longer bouts). Helpful to adapt your strategy per round.
 donde.es: Consúltalo en alEmpezar() o alAcabarRonda() para adaptar la estrategia entre rondas junto con memoria(); no lo llames en el constructor.
 donde.de: In beimStart() oder beiRundenende() abfragen, um die Strategie je Runde zusammen mit gedaechtnis() anzupassen; nicht im Konstruktor.
 donde.en: Query in onStart() or onRoundEnd() to adapt strategy across rounds alongside memory(); never call it in the constructor.
@@ -1200,8 +1200,8 @@ es: Consulta sin parámetros. Devuelve el alto total de la arena en píxeles (no
 de: Abfrage ohne Parameter. Gibt die Gesamthöhe der Arena in Pixeln zurück (üblicherweise 700). Gültige y-Werte reichen von 0 (unten) bis arenaHoehe() (oben).
 en: Query with no parameters. Returns the total height of the arena in pixels (typically 700). Valid y coordinates range from 0 (bottom) to arenaHeight() (top).
 donde.es: Úsalo en alEmpezar() o cadaTurno() para calcular márgenes verticales y evitar el borde superior; nunca en inicializadores de campos ni en el constructor.
-donde.de: In beimStart() oder jedenZug() für obere Randabstände und Mittelpunkte nutzen; niemals in Feld-Initialisierern oder im Konstruktor.
-donde.en: Use in onStart() or onTick() for vertical margins and center calculations; never in field initializers or the constructor.
+donde.de: In beimStart() oder jedenZug() nutzen, um vertikale Randabstände zu berechnen und den oberen Rand zu meiden; niemals in Feld-Initialisierern oder im Konstruktor.
+donde.en: Use in onStart() or onTick() to compute vertical margins and avoid the top edge; never in field initializers or the constructor.
 ejemplo.es:
     boolean cercaTecho = y() > altoArena() - 70;
     SI cercaTecho: girarHacia(-90);
@@ -1218,7 +1218,7 @@ firma: double restanteAvance()
 firma.de: double restStrecke()
 firma.en: double remainingDistance()
 es: Consulta sin parámetros. Devuelve los píxeles que faltan para completar tu última orden avanzar(...) o retroceder(...) (negativo si aún retrocede, 0 si ya llegó o se detuvo).
-de: Abfrage ohne Parameter. Gibt die verbleibenden Pixel deines letzten Fahrbefehls zurück (negativ beim Rückwärtsfahren, 0 wenn angekommen oder angehalten).
+de: Abfrage ohne Parameter. Gibt die verbleibenden Pixel deines letzten Fahrbefehls zurück (negativ beim Rückwärtsfahren, 0, wenn angekommen oder angehalten).
 en: Query with no parameters. Returns the remaining pixels of your last ahead(...) or back(...) order (negative if reversing, 0 when finished or stopped).
 donde.es: Compáralo con 0 dentro de un if en cadaTurno() para encadenar un nuevo avanzar() solo al terminar el anterior; no lo uses en el constructor.
 donde.de: In einem if in jedenZug() mit 0 vergleichen, um erst nach Abschluss der Fahrt ein neues vorwaerts() zu geben; nicht im Konstruktor.
@@ -1287,11 +1287,11 @@ firma: List<Enemigo> enemigosVistos()
 firma.de: List<Gegner> gesehen()
 firma.en: List<Enemy> seenEnemies()
 es: Consulta sin parámetros. Devuelve una lista (List<Enemigo>) con todos los rivales que tu radar ve en este turno, ordenada del más cercano al más lejano (lista vacía si no ves ninguno).
-de: Abfrage ohne Parameter. Gibt eine Liste (List<Gegner>) aller Gegner zurück, die dein Radar in diesem Zug sieht, sortiert vom nächsten zum fernsten (leer, wenn niemand in Sicht).
+de: Abfrage ohne Parameter. Gibt eine Liste (List<Gegner>) aller Gegner zurück, die dein Radar in diesem Zug sieht, sortiert vom nächsten zum fernsten (leer, wenn niemand in Sicht ist).
 en: Query with no parameters. Returns a List<Enemy> of all opponents visible to your radar this tick, sorted nearest first (empty list if none are seen).
 donde.es: Úsalo dentro de cadaTurno() para saber si ves a alguien (.isEmpty()) o recorrer varios rivales con un for-each; en alVerEnemigo() ya recibes a cada uno.
 donde.de: In jedenZug() nutzen, um per .isEmpty() zu prüfen, ob du jemanden siehst, oder mehrere Gegner zu durchlaufen; in beiSicht() erhältst du sie schon einzeln.
-donde.en: Call inside onTick() to check if anyone is visible (.isEmpty()) or iterate multiple foes; inside onSeeEnemy() you already receive each one.
+donde.en: Call inside onTick() to check if anyone is visible (.isEmpty()) or iterate over multiple foes; inside onSeeEnemy() you already receive each one.
 ejemplo.es:
     List<Enemigo> lista = enemigosVistos();
     SI !lista.isEmpty():
@@ -1311,8 +1311,8 @@ firma: List<Obstaculo> obstaculos()
 firma.de: List<Hindernis> hindernisse()
 firma.en: List<Obstacle> obstacles()
 es: Consulta sin parámetros. Devuelve la lista de trampas y obstáculos presentes en la arena actual (pinchos, sierras, foso, imán, barriles…), o una lista vacía en arenas limpias. Úsala en cadaTurno para esquivarlos antes de pisarlos.
-de: Abfrage ohne Parameter. Gibt die Liste aller Fallen und Hindernisse der aktuellen Arena zurück (Stacheln, Sägen, Grube, Magnet, Fässer…), oder eine leere Liste in normalen Arenen.
-en: Query with no parameters. Returns the list of traps and obstacles in the current arena (spikes, saws, pit, magnet, barrels…), or an empty list on clean arenas. Check in onTick to steer clear.
+de: Abfrage ohne Parameter. Gibt die Liste aller Fallen und Hindernisse der aktuellen Arena zurück (Stacheln, Sägen, Grube, Magnet, Fässer …) oder eine leere Liste in normalen Arenen. Nutze sie in jedenZug, um ihnen auszuweichen, bevor du hineinfährst.
+en: Query with no parameters. Returns the list of traps and obstacles in the current arena (spikes, saws, pit, magnet, barrels…), or an empty list in clean arenas. Check in onTick to steer clear.
 donde.es: Recórrelo con un for-each dentro de cadaTurno() (o alEmpezar() si son fijos) para esquivar trampas y barriles; nunca en el constructor.
 donde.de: In jedenZug() (oder beimStart() bei festen Objekten) mit for-each durchlaufen, um Fallen und Fässer zu umfahren; nie im Konstruktor.
 donde.en: Iterate with a for-each loop inside onTick() (or onStart() for static ones) to dodge traps and barrels; never in the constructor.
@@ -1338,8 +1338,8 @@ firma: List<Aparato> aparatos()
 firma.de: List<Geraet> geraete()
 firma.en: List<Gadget> gadgets()
 es: Consulta sin parámetros. Devuelve los aparatos libres tirados en el suelo de la arena en este momento (salen a los pocos segundos si la opción está activa). Muévete sobre uno para recogerlo automáticamente.
-de: Abfrage ohne Parameter. Gibt die noch freien Geräte auf dem Boden der Arena zurück (erscheinen nach einigen Sekunden, falls aktiviert). Fahr über eines, um es aufzusammeln.
-en: Query with no parameters. Returns free gadgets lying on the arena floor right now (spawn after a few seconds when enabled). Drive over one to pick it up automatically.
+de: Abfrage ohne Parameter. Gibt die noch freien Geräte auf dem Boden der Arena zurück (erscheinen nach einigen Sekunden, falls aktiviert). Fahr über eines, um es automatisch aufzusammeln.
+en: Query with no parameters. Returns free gadgets lying on the arena floor right now (they spawn after a few seconds when enabled). Drive over one to pick it up automatically.
 donde.es: Recórrelo en cadaTurno() cuando miAparato() sea null para ir a recoger un aparato del suelo; no lo llames en el constructor.
 donde.de: In jedenZug() durchlaufen, solange meinGeraet() null ist, um ein Gerät vom Boden einzusammeln; nicht im Konstruktor aufrufen.
 donde.en: Iterate inside onTick() while myGadget() is null to steer toward a gadget on the floor; never call it in the constructor.
@@ -1365,7 +1365,7 @@ firma: Aparato miAparato()
 firma.de: Geraet meinGeraet()
 firma.en: Gadget myGadget()
 es: Consulta sin parámetros. Devuelve el aparato que tu robot lleva recogido ahora mismo, o null si no lleva ninguno. Sirve para comprobar si falta conectarlo con conectar(...) o si ya está listo() para usar.
-de: Abfrage ohne Parameter. Gibt das Gerät zurück, das dein Roboter gerade trägt, oder null wenn keines. Prüfe damit, ob anschliessen(...) nötig ist oder bereit() schon true liefert.
+de: Abfrage ohne Parameter. Gibt das Gerät zurück, das dein Roboter gerade trägt, oder null, wenn es keines trägt. Prüfe damit, ob anschliessen(...) nötig ist oder bereit() schon true liefert.
 en: Query with no parameters. Returns the gadget your robot currently carries, or null if none. Use it to check whether plugIn(...) is still needed or ready() is true.
 donde.es: Guárdalo en una variable local dentro de cadaTurno() y comprueba siempre != null antes de leer sus métodos; nunca lo llames en el constructor.
 donde.de: In jedenZug() in einer lokalen Variable speichern und immer != null prüfen, bevor du seine Methoden aufrufst; nie im Konstruktor.
@@ -1388,8 +1388,8 @@ tema: 13
 firma: boolean conectar(String hueco)
 firma.de: boolean anschliessen(String platz)
 firma.en: boolean plugIn(String slot)
-es: Empieza a montar el aparato que recogiste en el hueco indicado ("espalda", "piernas", "cabeza" o "brazo"). Consulta el código del aparato durante la pelea para ver su hueco exacto: si aciertas tarda 1 segundo (30 turnos) en montarse y devuelve true; si no corresponde devuelve false.
-de: Startet die Montage des eingesammelten Geräts am Platz ("ruecken", "beine", "kopf" oder "arm"). Lies den Geräte-Code im Kampf: stimmt der Platz, dauert die Montage 1 Sekunde (30 Züge) und liefert true, sonst false.
+es: Empieza a montar el aparato que recogiste en el hueco indicado ("espalda", "piernas", "cabeza" o "brazo"). Consulta el código del aparato durante la pelea para ver su hueco exacto: si aciertas, tarda 1 segundo (30 turnos) en montarse y devuelve true; si no corresponde, devuelve false.
+de: Startet die Montage des eingesammelten Geräts am angegebenen Platz ("ruecken", "beine", "kopf" oder "arm"). Lies den Geräte-Code im Kampf: stimmt der Platz, dauert die Montage 1 Sekunde (30 Züge) und liefert true, sonst false.
 en: Starts mounting your carried gadget into the given slot ("back", "legs", "head", or "arm"). Check the gadget's code mid-fight for the right slot: if correct, mounting takes 1 second (30 ticks) and returns true; otherwise false.
 donde.es: Llámalo en cadaTurno() solo cuando miAparato() != null y !miAparato().conectado(), pasando el hueco exacto del aparato; no en el constructor.
 donde.de: In jedenZug() nur aufrufen, wenn meinGeraet() != null und !meinGeraet().angeschlossen() gilt, mit dem passenden Platz; nicht im Konstruktor.
@@ -1413,7 +1413,7 @@ firma: boolean usarAparato()
 firma.de: boolean geraetBenutzen()
 firma.en: boolean useGadget()
 es: Activa en este turno el aparato ya montado y recargado en dirección a mira() (ideal para chorro, antigravedad, descarga o aceite). Devuelve true si se activó o false si aún se monta, no está conectado o está en recarga.
-de: Löst in diesem Zug das angeschlossene und geladene Gerät in Richtung blick() aus (ideal für Düse, Antigravitation, Schock, Öl). Gibt true bei Aktivierung zurück, sonst false.
+de: Löst in diesem Zug das angeschlossene und geladene Gerät in Richtung blick() aus (ideal für Düse, Antigravitation, Schock oder Öl). Gibt true zurück, wenn es ausgelöst wurde, oder false, wenn es noch montiert wird, nicht angeschlossen ist oder nachlädt.
 en: Triggers your mounted and recharged gadget this tick along aimDirection() (great for jet, anti-gravity, shock, or oil). Returns true if triggered, false if still mounting, unplugged, or cooling down.
 donde.es: Invócalo en cadaTurno() o alVerEnemigo() cuando miAparato() != null y miAparato().listo() sea true; nunca en el constructor ni sin haberlo conectado.
 donde.de: In jedenZug() oder beiSicht() aufrufen, wenn meinGeraet() != null und meinGeraet().bereit() true ist; nie im Konstruktor oder vor anschliessen().
@@ -1458,10 +1458,10 @@ firma: List<Enemigo> companeros()
 firma.de: List<Gegner> kameraden()
 firma.en: List<Enemy> teammates()
 es: Consulta sin parámetros para peleas por equipos. Devuelve la lista de compañeros aliados vivos en este turno (con su posición exacta aunque no estén en tu radar), o una lista vacía cuando peleas solo.
-de: Abfrage ohne Parameter für Teamkämpfe. Gibt die Liste lebender Verbündeter in diesem Zug zurück (mit Position, auch außerhalb des Radars), oder leer in Einzelkämpfen.
-en: Query with no parameters for team battles. Returns the list of living allies this tick (with position even outside radar cone), or an empty list in solo fights.
+de: Abfrage ohne Parameter für Teamkämpfe. Gibt die Liste lebender Verbündeter in diesem Zug zurück (mit genauer Position, auch außerhalb des Radars) oder eine leere Liste in Einzelkämpfen.
+en: Query with no parameters for team battles. Returns the list of living allies this tick (with their exact position, even outside your radar), or an empty list in solo fights.
 donde.es: Recórrelo en cadaTurno() o alVerEnemigo() en peleas por equipos para evitar estorbar a aliados o coordinar fuego; en duelos 1v1 devuelve lista vacía.
-donde.de: In Teamkämpfen in jedenZug() oder beiSicht() durchlaufen, um Verbündete nicht zu blockieren oder abzustimmen; im 1v1 immer leer.
+donde.de: In Teamkämpfen in jedenZug() oder beiSicht() durchlaufen, um Verbündeten nicht im Weg zu stehen oder das Feuer abzustimmen; im 1v1 immer leer.
 donde.en: Iterate in onTick() or onSeeEnemy() during team fights to coordinate or avoid blocking allies; in 1v1 fights it is always empty.
 ejemplo.es:
     PARA CADA aliado EN companeros():
@@ -1500,7 +1500,7 @@ firma: double anguloHacia(double x, double y)
 firma.de: double winkelZu(double x, double y)
 firma.en: double angleTo(double x, double y)
 es: Función auxiliar sin efectos laterales. Parámetros: coordenadas (x, y) de un punto de la arena. Devuelve el ángulo absoluto en grados desde tu posición actual hasta ese punto, listo para usar en girarHacia o apuntarHacia.
-de: Hilfsfunktion ohne Nebenwirkungen. Parameter: Koordinaten (x, y) in der Arena. Gibt den absoluten Winkel in Grad von deiner Position zu diesem Punkt zurück.
+de: Hilfsfunktion ohne Nebenwirkungen. Parameter: Koordinaten (x, y) in der Arena. Gibt den absoluten Winkel in Grad von deiner aktuellen Position zu diesem Punkt zurück, direkt nutzbar für drehenNach oder zielenNach.
 en: Pure helper function. Parameters: arena coordinates (x, y). Returns the absolute angle in degrees from your current position to that point, ready for turnTo or aimTo.
 donde.es: Úsalo como argumento de girarHacia() o apuntarHacia() dentro de cadaTurno() o eventos; depende de tu posición, así que nunca lo llames en el constructor.
 donde.de: Als Argument für drehenNach() oder zielenNach() in jedenZug() oder Ereignissen nutzen; hängt von deiner Position ab, daher nie im Konstruktor.
@@ -1542,7 +1542,7 @@ firma: double normalizar(double grados)
 firma.de: double normalisieren(double grad)
 firma.en: double normalize(double degrees)
 es: Función auxiliar matemática. Parámetro: cualquier ángulo en grados. Lo ajusta al rango (-180, 180] para evitar giros largos innecesarios (por ejemplo, normalizar(350) devuelve -10).
-de: Mathematische Hilfsfunktion. Parameter: beliebiger Winkel in Grad. Bringt ihn in (-180, 180], um unnötige Umwege beim Drehen zu vermeiden (normalisieren(350) ergibt -10).
+de: Mathematische Hilfsfunktion. Parameter: beliebiger Winkel in Grad. Bringt ihn in den Bereich (-180, 180], um unnötige Umwege beim Drehen zu vermeiden (normalisieren(350) ergibt -10).
 en: Math helper function. Parameter: any angle in degrees. Wraps it into (-180, 180] to avoid long spins (for example, normalize(350) returns -10).
 donde.es: Úsalo dentro de expresiones de ángulo en cualquier método (p. ej. normalizar(e.angulo() - mira())) para mantener diferencias entre -180 y 180 grados.
 donde.de: In Winkelberechnungen innerhalb jeder Methode einsetzen (z. B. normalisieren(g.winkel() - blick())), um Differenzen in (-180, 180] zu halten.
@@ -1563,9 +1563,9 @@ firma: Random azar()
 firma.de: Random zufall()
 firma.en: Random random()
 es: Consulta sin parámetros. Devuelve el generador Random propio y determinista de tu robot (la misma semilla de pelea produce la misma secuencia). Úsalo en lugar de Math.random() para elegir direcciones o pausas aleatorias.
-de: Abfrage ohne Parameter. Gibt den eigenen, reproduzierbaren Random-Generator deines Roboters zurück. Nutze ihn statt Math.random() für zufällige Richtungen oder Pausen.
+de: Abfrage ohne Parameter. Gibt den eigenen, reproduzierbaren Random-Generator deines Roboters zurück (derselbe Kampf-Seed erzeugt dieselbe Folge). Nutze ihn statt Math.random() für zufällige Richtungen oder Pausen.
 en: Query with no parameters. Returns your robot's deterministic Random generator (replaying the same seed reproduces choices). Prefer it over Math.random() for random turns or timings.
-donde.es: Llámalo dentro de alEmpezar(), cadaTurno() o eventos para elegir giros o pausas aleatorias reproducibles; no lo guardes en un campo inicializado antes de alEmpezar().
+donde.es: Llámalo dentro de alEmpezar(), cadaTurno() o eventos para elegir giros o pausas aleatorios reproducibles; no lo guardes en un campo inicializado antes de alEmpezar().
 donde.de: In beimStart(), jedenZug() oder Ereignissen für reproduzierbare Zufallswerte nutzen; nicht schon vor beimStart() in einem Feld-Initialisierer aufrufen.
 donde.en: Call inside onStart(), onTick(), or events for reproducible random moves; don't invoke it in a field initializer before onStart().
 ejemplo.es:
@@ -1584,8 +1584,8 @@ firma: void decir(Object texto)
 firma.de: void sagen(Object text)
 firma.en: void say(Object text)
 es: Acción visual sin valor de retorno. Parámetro: cualquier texto o dato (se convierte a String, máx. 120 caracteres). Muestra un bocadillo encima del robot durante unos 3 segundos sin afectar al combate.
-de: Visuelle Aktion ohne Rückgabewert. Parameter: beliebiger Text oder Wert (max. 120 Zeichen). Zeigt etwa 3 Sekunden lang eine Sprechblase über deinem Roboter an.
-en: Visual action with no return value. Parameter: any text or value (converted to String, max 120 chars). Displays a speech bubble over your robot for about 3 seconds.
+de: Visuelle Aktion ohne Rückgabewert. Parameter: beliebiger Text oder Wert (wird in einen String umgewandelt, max. 120 Zeichen). Zeigt etwa 3 Sekunden lang eine Sprechblase über deinem Roboter an, ohne den Kampf zu beeinflussen.
+en: Visual action with no return value. Parameter: any text or value (converted to String, max 120 chars). Displays a speech bubble over your robot for about 3 seconds without affecting combat.
 donde.es: Llámalo en eventos puntuales (alEmpezar(), alAcertar(), alRecibirGolpe()) para mostrar un bocadillo; evita llamarlo cada turno seguido o se pisará el texto.
 donde.de: In punktuellen Ereignissen (beimStart(), beiEigenemTreffer(), beiTreffer()) für Sprechblasen nutzen; nicht jeden Zug aufrufen, sonst überschreibt sich der Text.
 donde.en: Call in occasional events (onStart(), onHitEnemy(), onHit()) for speech bubbles; avoid calling it every tick or messages will overwrite each other.
@@ -1606,7 +1606,7 @@ firma.de: void ausgeben(Object text)
 firma.en: void print(Object text)
 es: Función de depuración sin retorno. Parámetro: mensaje o variable a inspeccionar. Escribe una línea en la consola del depurador (F9 en combate) junto con el número de turno actual.
 de: Debug-Ausgabe ohne Rückgabewert. Parameter: Nachricht oder Variable. Schreibt den Wert zusammen mit dem aktuellen Zug in die Debugger-Konsole des Kampfes (F9).
-en: Debugging helper with no return value. Parameter: message or variable to inspect. Prints a line in your robot's debugger console (F9 during fight) stamped with the current tick.
+en: Debugging helper with no return value. Parameter: message or variable to inspect. Prints a line to your robot's debugger console (F9 during a fight) stamped with the current tick.
 donde.es: Úsalo dentro de eventos o condiciones concretas para depurar en la consola del robot; evita llamarlo sin filtro en cadaTurno() para no inundar el registro.
 donde.de: In Ereignissen oder gezielten if-Zweigen zum Debuggen in der Roboterkonsole nutzen; nicht ungefiltert in jedem Zug ausgeben.
 donde.en: Call inside events or guarded if blocks to debug in the robot console; avoid calling it unconditionally every tick or you'll flood the log.
@@ -1630,7 +1630,7 @@ firma.de: Gegner: double x()
 firma.en: Enemy: double x()
 es: Método de consulta del objeto Enemigo recibido en alVerEnemigo o enemigosVistos(). Devuelve la coordenada horizontal x (píxeles) que tenía el rival en la foto de este turno.
 de: Abfragemethode am Objekt Gegner aus beiSicht oder gesehen(). Gibt die waagerechte x-Koordinate (Pixel) des Gegners in der Momentaufnahme dieses Zugs zurück.
-en: Getter on Enemy received in onSeeEnemy or seenEnemies(). Returns the opponent's horizontal x coordinate (in pixels) captured at the start of this tick.
+en: Getter on the Enemy object received in onSeeEnemy or seenEnemies(). Returns the opponent's horizontal x coordinate (in pixels) captured at the start of this tick.
 donde.es: Invócalo sobre el parámetro e dentro de alVerEnemigo(Enemigo e), alChocarConEnemigo() o un elemento de enemigosVistos() / companeros(); nunca suelto.
 donde.de: Nur auf dem Parameter g in beiSicht(Gegner g), beiZusammenstoss() oder einem Element aus gesehen() / kameraden() aufrufen; niemals alleinstehend.
 donde.en: Call on the parameter e inside onSeeEnemy(Enemy e), onBump(), or an item from seenEnemies() / teammates(); never standalone.
@@ -1651,7 +1651,7 @@ firma.de: Gegner: double y()
 firma.en: Enemy: double y()
 es: Método de consulta sobre un Enemigo visto. Devuelve su coordenada vertical y (píxeles, de 0 abajo a altoArena() arriba) en el instante del avistamiento.
 de: Abfragemethode am gesehenen Gegner. Gibt seine senkrechte y-Koordinate (Pixel, 0 unten bis arenaHoehe() oben) zum Zeitpunkt der Sichtung zurück.
-en: Getter on a seen Enemy. Returns its vertical y coordinate (in pixels, 0 bottom to arenaHeight() top) at the moment of detection.
+en: Getter on a seen Enemy. Returns its vertical y coordinate (in pixels, from 0 at the bottom to arenaHeight() at the top) at the moment of detection.
 donde.es: Invócalo sobre un objeto Enemigo (e.y()) dentro de alVerEnemigo(), alChocarConEnemigo() o al recorrer enemigosVistos(); si escribes y() solo, lees tu propia Y.
 donde.de: Auf einem Gegner-Objekt (g.y()) in beiSicht(), beiZusammenstoss() oder einer gesehen()-Schleife aufrufen; y() allein liefert deine eigene Position.
 donde.en: Call on an Enemy object (e.y()) in onSeeEnemy(), onBump(), or a seenEnemies() loop; plain y() reads your own position instead.
@@ -1674,7 +1674,7 @@ es: Método de consulta sobre Enemigo sin parámetros. Devuelve la distancia en 
 de: Abfragemethode am Gegner ohne Parameter. Gibt den direkten Abstand in Pixeln zwischen dir und dem Gegner zurück. Wichtig für Reichweiten-Checks.
 en: Getter on Enemy with no parameters. Returns the straight-line distance in pixels between you and that enemy. Essential for checking weapon range.
 donde.es: Úsalo como e.distancia() en alVerEnemigo() o al recorrer enemigosVistos() para comparar con tu alcance; no existe como método suelto de Metajavbot.
-donde.de: Als g.entfernung() in beiSicht() oder beim Durchlaufen von gesehen() mit deiner Reichweite vergleichen; existiert nicht direkt auf MetajavbotDe.
+donde.de: Als g.entfernung() in beiSicht() oder beim Durchlaufen von gesehen() mit deiner Reichweite vergleichen; existiert nicht als eigene Methode von MetajavbotDe.
 donde.en: Use as e.distance() in onSeeEnemy() or when looping over seenEnemies() to compare with your weapon range; not a standalone MetajavbotEn method.
 ejemplo.es:
     SI e.distancia() <= alcanceDerecha():
@@ -1699,7 +1699,7 @@ firma.de: Gegner: double winkel()
 firma.en: Enemy: double angle()
 es: Método de consulta sin parámetros sobre Enemigo. Devuelve el ángulo absoluto (en grados) desde tu posición hacia ese rival. Pásalo directamente a apuntarHacia(...) para apuntarle.
 de: Abfragemethode am Gegner ohne Parameter. Gibt den absoluten Winkel (Grad) von deiner Position zum Gegner zurück. Direkt in zielenNach(...) nutzbar.
-en: Getter on Enemy with no parameters. Returns the absolute angle (degrees) from your robot toward that opponent. Pass straight into aimTo(...) to track it.
+en: Getter on Enemy with no parameters. Returns the absolute angle (degrees) from your robot toward that opponent. Pass it straight to aimTo(...) to aim at it.
 donde.es: Pásalo como e.angulo() a apuntarHacia() o girarHacia() dentro de alVerEnemigo() o un bucle sobre enemigosVistos(); nunca lo llames sin el objeto delante.
 donde.de: Als g.winkel() an zielenNach() oder drehenNach() in beiSicht() oder einer gesehen()-Schleife übergeben; nie ohne Gegner-Referenz davor aufrufen.
 donde.en: Pass e.angle() to aimTo() or turnTo() inside onSeeEnemy() or a seenEnemies() loop; never call it without an Enemy reference in front.
@@ -1722,8 +1722,8 @@ firma: Enemigo: double rumbo()
 firma.de: Gegner: double richtung()
 firma.en: Enemy: double heading()
 es: Método de consulta sobre Enemigo sin parámetros. Devuelve la dirección en grados (-180, 180] hacia donde apunta el cuerpo del enemigo. Útil junto a e.velocidad() para predecir su desplazamiento.
-de: Abfragemethode am Gegner ohne Parameter. Gibt die Ausrichtung des gegnerischen Körpers in Grad (-180, 180] zurück. Hilft zusammen mit g.geschwindigkeit() bei der Vorhersage.
-en: Getter on Enemy with no parameters. Returns the opponent body's heading in degrees (-180, 180]. Combine with e.speed() to predict future position.
+de: Abfragemethode am Gegner ohne Parameter. Gibt die Ausrichtung des gegnerischen Körpers in Grad (-180, 180] zurück. Hilft zusammen mit g.geschwindigkeit() bei der Vorhersage seiner Bewegung.
+en: Getter on Enemy with no parameters. Returns the opponent body's heading in degrees (-180, 180]. Combine with e.speed() to predict its future position.
 donde.es: Llámalo sobre e (e.rumbo()) dentro de alVerEnemigo() para predecir hacia dónde se mueve el rival; rumbo() sin prefijo devuelve tu propio rumbo.
 donde.de: Auf g (g.richtung()) in beiSicht() aufrufen, um die Bewegungsrichtung des Gegners vorauszuberechnen; richtung() allein ist dein eigener Kurs.
 donde.en: Call on e (e.heading()) inside onSeeEnemy() to predict enemy movement; bare heading() returns your own chassis direction.
@@ -1743,7 +1743,7 @@ firma: Enemigo: double velocidad()
 firma.de: Gegner: double geschwindigkeit()
 firma.en: Enemy: double speed()
 es: Método de consulta sobre Enemigo. Devuelve cuántos píxeles por turno se mueve el rival (0 si está parado, negativo si marcha atrás). Si va rápido, conviene apuntar un poco por delante de su trayectoria.
-de: Abfragemethode am Gegner. Gibt sein Tempo in Pixeln pro Zug zurück (0 im Stand, negativ rückwärts). Bei schnellen Gegnern lohnt sich Vorhalt beim Zielen.
+de: Abfragemethode am Gegner. Gibt sein Tempo in Pixeln pro Zug zurück (0 im Stand, negativ bei Rückwärtsfahrt). Bei schnellen Gegnern lohnt sich Vorhalt beim Zielen.
 en: Getter on Enemy. Returns how many pixels per tick the opponent is moving (0 when stationary, negative in reverse). Fast targets call for predictive lead shots.
 donde.es: Úsalo como e.velocidad() junto a e.rumbo() dentro de alVerEnemigo() para disparo predictivo; velocidad() sin objeto devuelve tu propia velocidad.
 donde.de: Als g.geschwindigkeit() zusammen mit g.richtung() in beiSicht() für Vorhalteschüsse nutzen; geschwindigkeit() ohne Objekt ist dein eigenes Tempo.
@@ -1765,7 +1765,7 @@ firma.de: Gegner: double panzerung()
 firma.en: Enemy: double armor()
 es: Método de consulta sobre Enemigo. Devuelve el porcentaje de blindaje restante del rival (de 0 a 100). Útil en battle royale o por equipos para priorizar al oponente más debilitado.
 de: Abfragemethode am Gegner. Gibt die restliche Panzerung des Gegners in Prozent (0 bis 100) zurück. Ideal in Mehrkämpfen, um geschwächte Ziele zuerst anzugreifen.
-en: Getter on Enemy. Returns the enemy's remaining overall armor percentage (0 to 100). Great in team or royale modes to finish off the weakest rival.
+en: Getter on Enemy. Returns the enemy's remaining overall armor percentage (0 to 100). Great in battle royale or team fights to finish off the weakest rival.
 donde.es: Consúltalo como e.blindaje() en alVerEnemigo() o al elegir objetivo en enemigosVistos() para rematar al más tocado; blindaje() solo devuelve el tuyo.
 donde.de: Als g.panzerung() in beiSicht() oder bei der Zielwahl in gesehen() prüfen, um geschwächte Gegner zu fokussieren; panzerung() allein ist deine eigene.
 donde.en: Check e.armor() in onSeeEnemy() or when picking a target from seenEnemies() to focus weak foes; bare armor() returns your own armor.
@@ -1785,12 +1785,12 @@ tema: 13
 firma: Enemigo: String nombre()
 firma.de: Gegner: String name()
 firma.en: Enemy: String name()
-es: Método de consulta sobre Enemigo. Devuelve el nombre String del robot avistado. Sirve para identificar a un rival concreto o mencionarlo en decir(...) o escribir(...).
+es: Método de consulta sobre Enemigo. Devuelve el nombre del robot avistado como String. Sirve para identificar a un rival concreto o mencionarlo en decir(...) o escribir(...).
 de: Abfragemethode am Gegner. Gibt den Namen des gesichteten Roboters als String zurück. Praktisch zur Identifikation oder für Ausgaben in sagen(...) / ausgeben(...).
 en: Getter on Enemy. Returns the seen robot's name as a String. Useful to track a specific opponent or reference it in say(...) or print(...).
-donde.es: Invócalo como e.nombre() en alVerEnemigo() o al recorrer companeros() para identificar robots en logs o memoria(); nunca como método suelto.
+donde.es: Invócalo como e.nombre() en alVerEnemigo() o al recorrer companeros() para identificar robots en registros o en memoria(); nunca como método suelto.
 donde.de: Als g.name() in beiSicht() oder beim Durchlaufen von kameraden() für Logs oder gedaechtnis()-Schlüssel nutzen; nicht ohne Objekt davor.
-donde.en: Call as e.name() in onSeeEnemy() or over teammates() to identify robots in logs or memory() keys; never standalone.
+donde.en: Call as e.name() in onSeeEnemy() or when looping over teammates() to identify robots in logs or memory() keys; never standalone.
 ejemplo.es:
     escribir("Veo a " + e.nombre() + " a distancia " + (int) e.distancia());
 ejemplo.de:
@@ -1804,10 +1804,10 @@ firma: Enemigo: String modelo()
 firma.de: Gegner: String modell()
 firma.en: Enemy: String model()
 es: Método de consulta sobre Enemigo. Devuelve el identificador en minúsculas del modelo del rival (p. ej. "cobalto", "vigia", "chispa"). Útil para adaptar tu táctica según su chasis.
-de: Abfragemethode am Gegner. Gibt die Modell-ID des Gegners in Kleinbuchstaben zurück (z. B. "cobalto", "vigia"). Hilfreich, um deine Taktik seinem Fahrwerk anzupassen.
-en: Getter on Enemy. Returns the lowercase model ID of the opponent (e.g. "cobalto", "vigia"). Helpful to tailor tactics against specific robot builds.
+de: Abfragemethode am Gegner. Gibt die Modell-ID des Gegners in Kleinbuchstaben zurück (z. B. "cobalto", "vigia", "chispa"). Hilfreich, um deine Taktik seinem Chassis anzupassen.
+en: Getter on Enemy. Returns the lowercase model ID of the opponent (e.g. "cobalto", "vigia", "chispa"). Helpful to tailor tactics against specific robot builds.
 donde.es: Llámalo como e.modelo() en alVerEnemigo() (comparando con .equals) para reconocer el chasis del rival y adaptar tu táctica; nunca sin objeto Enemigo.
-donde.de: Als g.modell() in beiSicht() (mit .equals vergleichen) nutzen, um das gegnerische Modell zu erkennen; niemals ohne Gegner-Objekt davor.
+donde.de: Als g.modell() in beiSicht() (mit .equals vergleichen) nutzen, um das gegnerische Modell zu erkennen und deine Taktik anzupassen; niemals ohne Gegner-Objekt davor.
 donde.en: Call as e.model() in onSeeEnemy() (comparing with .equals) to recognize the rival's chassis and adapt; never without an Enemy object.
 ejemplo.es:
     SI e.modelo().equals("avispa"):
@@ -1825,10 +1825,10 @@ firma: Enemigo: boolean vuela()
 firma.de: Gegner: boolean fliegt()
 firma.en: Enemy: boolean flies()
 es: Método de consulta sobre Enemigo. Devuelve true si ese robot está en el aire ahora (alas, propulsor antigravedad, un salto o un volteo). Si solo salta o lo han volteado, ningún golpe cuerpo a cuerpo lo alcanza; si vuela con alas, esquiva muchos golpes (no los de armas largas, como látigos y bolas) y sufre más con misiles, imanes y armas antiaéreas. Las armas a distancia sí le llegan.
-de: Abfragemethode am Gegner. Gibt true zurück, wenn er gerade in der Luft ist (Flügel, Antigravitation, ein Sprung oder umgeworfen). Springt er nur oder wurde er umgeworfen, trifft ihn kein Nahkampfschlag; fliegt er mit Flügeln, weicht er vielen Schlägen aus (nicht denen langer Waffen wie Peitschen und Kugeln) und leidet mehr unter Raketen, Magneten und Flugabwehrwaffen. Fernwaffen treffen ihn.
+de: Abfragemethode am Gegner. Gibt true zurück, wenn er gerade in der Luft ist (Flügel, Antigravitation, ein Sprung oder ein Umwurf). Springt er nur oder wurde er umgeworfen, trifft ihn kein Nahkampfschlag; fliegt er mit Flügeln, weicht er vielen Schlägen aus (nicht denen langer Waffen wie Peitschen und Kugeln) und leidet mehr unter Raketen, Magneten und Flugabwehrwaffen. Fernwaffen treffen ihn.
 en: Getter on Enemy. Returns true if the enemy is airborne right now (wings, anti-gravity, a jump, or a flip). If it is only jumping or was flipped, no melee hit reaches it; if it flies with wings, it dodges many hits (not those of long weapons such as whips and chain balls) and suffers more from missiles, magnets, and flak weapons. Ranged weapons hit it.
 donde.es: Úsalo en un if como e.vuela() dentro de alVerEnemigo() para no desperdiciar ataques cuerpo a cuerpo contra rivales aéreos; siempre sobre el parámetro e.
-donde.de: In einem if als g.fliegt() in beiSicht() prüfen, um keine Nahkampfangriffe an fliegende Gegner zu verschwenden; stets über g aufrufen.
+donde.de: In einem if als g.fliegt() in beiSicht() prüfen, um keine Nahkampfangriffe an fliegende Gegner zu verschwenden; stets auf g aufrufen.
 donde.en: Check e.flies() in an if inside onSeeEnemy() so you don't waste melee attacks on airborne foes; always call it on the Enemy reference.
 ejemplo.es:
     SI e.vuela() Y armaDerecha().equals("CUERPO") Y listoIzquierda():
@@ -1858,7 +1858,7 @@ firma: Golpe: double dano()
 firma.de: Treffer: double schaden()
 firma.en: Hit: double damage()
 es: Método de consulta sobre Golpe (recibido en alRecibirGolpe o alAcertar). Devuelve los puntos de daño aplicados tras reducciones o escudos. Permite distinguir rasguños leves de impactos fuertes.
-de: Abfragemethode an Treffer (in beiTreffer oder beiEigenemTreffer). Gibt die erlittenen oder ausgeteilten Schadenspunkte nach Schildreduktion zurück.
+de: Abfragemethode an Treffer (in beiTreffer oder beiEigenemTreffer). Gibt die erlittenen oder ausgeteilten Schadenspunkte nach Schildreduktion zurück. So unterscheidest du leichte Kratzer von harten Treffern.
 en: Getter on Hit (inside onHit or onHitEnemy). Returns the damage points dealt after shields or reductions, letting you tell scratches apart from heavy hits.
 donde.es: Invócalo sobre el parámetro g (g.dano()) únicamente dentro de alRecibirGolpe(Golpe g) o alAcertar(Golpe g); no existe fuera de esos eventos.
 donde.de: Nur auf dem Parameter t (t.schaden()) innerhalb von beiTreffer(Treffer t) oder beiEigenemTreffer(Treffer t) aufrufen; außerhalb existiert kein Treffer.
@@ -1888,8 +1888,8 @@ es: Método de consulta sobre Golpe. Devuelve con qué se produjo el golpe: "las
 de: Abfragemethode an Treffer. Gibt die Schadensquelle zurück: "laser", "kugel", "rakete", "nahkampf", "flamme", "puls", "zusammenstoss" oder "wand". Mit equals() vergleichen.
 en: Getter on Hit. Returns the hit source: "laser", "bullet", "missile", "melee", "flame", "pulse", "ram", or "wall". Compare using equals().
 donde.es: Léelo como g.arma() dentro de alRecibirGolpe() o alAcertar() (comparando con .equals) para distinguir láser, bala, misil o choque; nunca suelto.
-donde.de: Als t.waffe() in beiTreffer() oder beiEigenemTreffer() (mit .equals vergleichen) abfragen, um Laser, Kugel oder Nahkampf zu unterscheiden; nie alleinstehend.
-donde.en: Read as h.weapon() inside onHit() or onHitEnemy() (compare with .equals) to tell laser, bullet, missile, or melee apart; never standalone.
+donde.de: Als t.waffe() in beiTreffer() oder beiEigenemTreffer() (mit .equals vergleichen) abfragen, um Laser, Kugel, Rakete oder Zusammenstoß zu unterscheiden; nie alleinstehend.
+donde.en: Read as h.weapon() inside onHit() or onHitEnemy() (compare with .equals) to tell laser, bullet, missile, or ram apart; never standalone.
 ejemplo.es:
     AL RECIBIR golpe g:
         SI !g.arma().equals("pared"):
@@ -1934,7 +1934,7 @@ firma.de: Treffer: String teil()
 firma.en: Hit: String part()
 es: Método de consulta sobre Golpe. Devuelve qué zona recibió el impacto ("cabeza", "izquierda", "derecha" o "piernas"). Útil para proteger o evitar exponer una zona dañada.
 de: Abfragemethode an Treffer. Gibt zurück, welches Teil getroffen wurde ("kopf", "links", "rechts" oder "beine"). Nützlich, um beschädigte Teile zu schützen.
-en: Getter on Hit. Returns which body part was struck ("head", "left", "right", or "legs"). Useful to react if critical parts take heavy hits.
+en: Getter on Hit. Returns which body part was struck ("head", "left", "right", or "legs"). Useful to protect a damaged part or avoid exposing it.
 donde.es: Consúltalo como g.pieza() dentro de alRecibirGolpe() o alAcertar() para saber si dieron en cabeza, brazos o piernas; no lo llames sin el parámetro Golpe.
 donde.de: Als t.teil() in beiTreffer() oder beiEigenemTreffer() abfragen, um Kopf-, Arm- oder Beintreffer zu erkennen; nie ohne Treffer-Parameter aufrufen.
 donde.en: Query h.part() inside onHit() or onHitEnemy() to see if head, arms, or legs were struck; never call it without the Hit parameter.
@@ -1957,10 +1957,10 @@ firma: Obstaculo: String tipo()
 firma.de: Hindernis: String typ()
 firma.en: Obstacle: String type()
 es: Método de consulta sobre un elemento de obstaculos(). Devuelve su tipo en minúsculas ("pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "hielo", "aceite" o "pegamento"). Compáralo con equals().
-de: Abfragemethode zu einem Objekt aus hindernisse(). Gibt den Typ kleingeschrieben zurück ("pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "hielo", "aceite", "pegamento").
-en: Getter on an element from obstacles(). Returns its lowercase ID ("pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "hielo", "aceite", or "pegamento"). Compare with equals().
+de: Abfragemethode zu einem Objekt aus hindernisse(). Gibt den Typ kleingeschrieben zurück ("pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "hielo", "aceite" oder "pegamento"). Mit equals() vergleichen.
+en: Getter on an element from obstacles(). Returns its type in lowercase ("pinchos", "sierra", "iman", "foso", "barril", "carrito", "chimenea", "rayo", "hielo", "aceite", or "pegamento"). Compare with equals().
 donde.es: Llámalo sobre cada elemento o de obstaculos() (o.tipo(), comparado con .equals) dentro de cadaTurno() para distinguir pinchos, sierras, foso o barriles; nunca suelto.
-donde.de: Auf jedem Element o aus hindernisse() (o.typ(), mit .equals vergleichen) in jedenZug() aufrufen, um Stacheln, Sägen oder Fässer zu unterscheiden; nie ohne Objekt.
+donde.de: Auf jedem Element o aus hindernisse() (o.typ(), mit .equals vergleichen) in jedenZug() aufrufen, um Stacheln, Sägen, Grube oder Fässer zu unterscheiden; nie ohne Objekt.
 donde.en: Call on each item o from obstacles() (o.type(), compared with .equals) inside onTick() to tell spikes, saws, pits, or barrels apart; never standalone.
 ejemplo.es:
     PARA CADA o EN obstaculos():
@@ -1999,8 +1999,8 @@ firma: Obstaculo: double y()
 firma.de: Hindernis: double y()
 firma.en: Obstacle: double y()
 es: Método de consulta sobre Obstaculo. Devuelve la coordenada vertical y del centro de la trampa u objeto en píxeles (0 abajo, altoArena() arriba).
-de: Abfragemethode an Hindernis. Gibt die senkrechte y-Koordinate der Mitte in Pixeln zurück (0 unten, arenaHoehe() oben).
-en: Getter on Obstacle. Returns the vertical y coordinate of the obstacle's center in pixels (0 bottom, arenaHeight() top).
+de: Abfragemethode an Hindernis. Gibt die senkrechte y-Koordinate der Mitte des Hindernisses in Pixeln zurück (0 unten, arenaHoehe() oben).
+en: Getter on Obstacle. Returns the vertical y coordinate of the obstacle's center in pixels (0 at the bottom, arenaHeight() at the top).
 donde.es: Invócalo como o.y() sobre un objeto Obstaculo obtenido de obstaculos() dentro de cadaTurno(); sin prefijo, y() leería tu propia posición vertical.
 donde.de: Als o.y() auf einem Hindernis aus hindernisse() in jedenZug() aufrufen; ohne Objekt davor liest y() deine eigene vertikale Position.
 donde.en: Call as o.y() on an Obstacle from obstacles() inside onTick(); without the object prefix, y() reads your own vertical position.
@@ -2020,8 +2020,8 @@ firma: Obstaculo: double radio()
 firma.de: Hindernis: double radius()
 firma.en: Obstacle: double radius()
 es: Método de consulta sobre Obstaculo. Devuelve el radio en píxeles de su zona circular alrededor de (x(), y()). Mantente a más de o.radio() + 40 píxeles de distancia para no rozarlo.
-de: Abfragemethode an Hindernis. Gibt den Radius seines Wirkungskreises in Pixeln um (x(), y()) zurück. Halte über o.radius() + 40 Pixel Abstand.
-en: Getter on Obstacle. Returns the radius in pixels around (x(), y()). Keep further than o.radius() + 40 pixels away to stay clear.
+de: Abfragemethode an Hindernis. Gibt den Radius seines Wirkungskreises in Pixeln um (x(), y()) zurück. Halte mehr als o.radius() + 40 Pixel Abstand, um es nicht zu streifen.
+en: Getter on Obstacle. Returns the radius in pixels of its circular zone around (x(), y()). Stay more than o.radius() + 40 pixels away so you don't graze it.
 donde.es: Súmalo como margen de seguridad (o.radio() + 40) al comparar o.distancia() dentro de un bucle sobre obstaculos() en cadaTurno(); nunca suelto.
 donde.de: Als Sicherheitsabstand (o.radius() + 40) beim Vergleich mit o.entfernung() in einer hindernisse()-Schleife in jedenZug() nutzen; nie alleinstehend.
 donde.en: Add it as a safety margin (o.radius() + 40) when checking o.distance() inside an obstacles() loop in onTick(); never standalone.
@@ -2044,7 +2044,7 @@ es: Método de consulta sobre Obstaculo. Devuelve la distancia en píxeles desde
 de: Abfragemethode an Hindernis. Gibt den Abstand in Pixeln zwischen dir und der Mitte des Hindernisses in diesem Zug zurück.
 en: Getter on Obstacle. Returns the distance in pixels from your robot to the obstacle's center this tick.
 donde.es: Compáralo como o.distancia() dentro de un for-each de obstaculos() en cadaTurno() para esquivar solo los obstáculos cercanos; siempre sobre el objeto o.
-donde.de: Als o.entfernung() in einer for-each-Schleife über hindernisse() in jedenZug() prüfen, um nur nahe Hindernisse zu umgehen; stets über o aufrufen.
+donde.de: Als o.entfernung() in einer for-each-Schleife über hindernisse() in jedenZug() prüfen, um nur nahe Hindernisse zu umgehen; stets auf o aufrufen.
 donde.en: Check o.distance() inside a for-each over obstacles() in onTick() to dodge only nearby hazards; always invoke it on the Obstacle item.
 ejemplo.es:
     SI o.peligroso() Y o.distancia() < o.radio() + 50:
@@ -2062,7 +2062,7 @@ firma: Obstaculo: double angulo()
 firma.de: Hindernis: double winkel()
 firma.en: Obstacle: double angle()
 es: Método de consulta sobre Obstaculo. Devuelve el ángulo absoluto (grados) desde tu robot hacia el centro del obstáculo. Para alejarte de él, gira hacia o.angulo() + 180.
-de: Abfragemethode an Hindernis. Gibt den absoluten Winkel (Grad) von dir zum Hindernis zurück. Dreh nach o.winkel() + 180, um dich zu entfernen.
+de: Abfragemethode an Hindernis. Gibt den absoluten Winkel (Grad) von dir zur Mitte des Hindernisses zurück. Dreh nach o.winkel() + 180, um dich zu entfernen.
 en: Getter on Obstacle. Returns the absolute angle (degrees) from your robot toward the obstacle's center. Turn toward o.angle() + 180 to steer away.
 donde.es: Úsalo como o.angulo() dentro de un bucle sobre obstaculos() en cadaTurno() para girar en sentido contrario (o.angulo() + 180) y alejarte; nunca sin prefijo.
 donde.de: Als o.winkel() in einer hindernisse()-Schleife in jedenZug() nutzen, um wegzudrehen (o.winkel() + 180); nie ohne Hindernis-Objekt davor.
@@ -2083,8 +2083,8 @@ firma: Obstaculo: boolean peligroso()
 firma.de: Hindernis: boolean gefaehrlich()
 firma.en: Obstacle: boolean dangerous()
 es: Método de consulta sobre Obstaculo. Devuelve true si la trampa hace daño o frena ahora mismo (las sierras, el carrito o el foso siempre son true; pinchos y rayos solo cuando están activos).
-de: Abfragemethode an Hindernis. Gibt true zurück, wenn die Falle gerade schadet oder bremst (Sägen, Grube, Wagen immer; Stacheln und Blitz nur in ihrer aktiven Phase).
-en: Getter on Obstacle. Returns true if the trap currently harms or hinders you (saws, pit, cart are always true; spikes and lightning only during active phase).
+de: Abfragemethode an Hindernis. Gibt true zurück, wenn die Falle gerade schadet oder bremst (Sägen, Grube und Wagen immer; Stacheln und Blitze nur in ihrer aktiven Phase).
+en: Getter on Obstacle. Returns true if the trap currently harms or hinders you (saws, the pit and the cart are always true; spikes and lightning only while active).
 donde.es: Compruébalo en un if como o.peligroso() al recorrer obstaculos() en cadaTurno() para evitar pinchos o trampas activas ahora mismo; nunca suelto.
 donde.de: In einem if als o.gefaehrlich() beim Durchlaufen von hindernisse() in jedenZug() prüfen, um gerade aktive Fallen zu meiden; nie alleinstehend.
 donde.en: Check o.dangerous() in an if while looping over obstacles() in onTick() to avoid currently active traps; never standalone.
@@ -2104,8 +2104,8 @@ firma: Obstaculo: boolean solido()
 firma.de: Hindernis: boolean fest()
 firma.en: Obstacle: boolean solid()
 es: Método de consulta sobre Obstaculo. Devuelve true si bloquea físicamente el paso (como barriles o el carrito) y debes rodearlo para no quedar atascado.
-de: Abfragemethode an Hindernis. Gibt true zurück, wenn es den Weg physisch blockiert (z. B. Fässer oder Wagen) und du herumfahren musst.
-en: Getter on Obstacle. Returns true if it physically blocks movement (like barrels or the cart) so you must steer around it.
+de: Abfragemethode an Hindernis. Gibt true zurück, wenn es den Weg physisch blockiert (z. B. Fässer oder Wagen) und du es umfahren musst, um nicht stecken zu bleiben.
+en: Getter on Obstacle. Returns true if it physically blocks movement (like barrels or the cart) and you must steer around it so you don't get stuck.
 donde.es: Consúltalo como o.solido() dentro de un bucle de obstaculos() en cadaTurno() para rodear muros o barriles que bloquean el paso; siempre sobre o.
 donde.de: Als o.fest() in einer hindernisse()-Schleife in jedenZug() abfragen, um blockierende Objekte gezielt zu umfahren; immer auf o aufrufen.
 donde.en: Query o.solid() inside an obstacles() loop in onTick() to steer around impassable barriers; always call it on the Obstacle instance.
@@ -2126,9 +2126,9 @@ firma.de: Hindernis: double richtung()
 firma.en: Obstacle: double heading()
 es: Método de consulta sobre Obstaculo. Devuelve en grados la dirección en la que se desplaza un obstáculo móvil como el carrito (0 si está quieto).
 de: Abfragemethode an Hindernis. Gibt in Grad die Bewegungsrichtung eines beweglichen Hindernisses wie des Wagens zurück (0 im Stillstand).
-en: Getter on Obstacle. Returns in degrees the movement direction of a moving obstacle like the cart (0 when stationary).
+en: Getter on Obstacle. Returns the movement direction, in degrees, of a moving obstacle like the cart (0 when stationary).
 donde.es: Léelo como o.rumbo() sobre un elemento de obstaculos() en cadaTurno() cuando o.velocidad() > 0 para esquivar obstáculos móviles como carritos; nunca sin o.
-donde.de: Als o.richtung() auf einem Element aus hindernisse() in jedenZug() lesen, wenn o.geschwindigkeit() > 0 gilt, um bewegte Hindernisse zu umgehen.
+donde.de: Als o.richtung() auf einem Element aus hindernisse() in jedenZug() lesen, wenn o.geschwindigkeit() > 0 gilt, um bewegte Hindernisse zu umgehen; nie ohne Objekt.
 donde.en: Read o.heading() on an obstacles() item in onTick() when o.speed() > 0 to dodge moving hazards like carts; never without the item prefix.
 ejemplo.es:
     SI o.velocidad() > 0:
@@ -2167,7 +2167,7 @@ firma: Aparato: String tipo()
 firma.de: Geraet: String typ()
 firma.en: Gadget: String type()
 es: Método de consulta sobre un Aparato. Devuelve su identificador en minúsculas: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite" o "pegamento". Compáralo con equals().
-de: Abfragemethode an Geraet. Gibt seine Kennung kleingeschrieben zurück: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite" oder "pegamento".
+de: Abfragemethode an Geraet. Gibt seine Kennung kleingeschrieben zurück: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite" oder "pegamento". Mit equals() vergleichen.
 en: Getter on Gadget. Returns its lowercase ID: "chorro", "antigravedad", "descarga", "lanzallamas", "aceite", or "pegamento". Compare with equals().
 donde.es: Invócalo como a.tipo() sobre un elemento de aparatos() o sobre miAparato() (tras comprobar != null) en cadaTurno() para decidir a qué hueco conectarlo.
 donde.de: Als a.typ() auf einem Element aus geraete() oder auf meinGeraet() (nach != null-Prüfung) in jedenZug() aufrufen, um den passenden Platz zu wählen.
@@ -2190,12 +2190,12 @@ tema: 13
 firma: Aparato: String nombre()
 firma.de: Geraet: String name()
 firma.en: Gadget: String name()
-es: Método de consulta sobre un Aparato. Devuelve su nombre comercial (por ejemplo "Jetzazo", "Flotón", "Chispazo"), útil para anunciarlo con decir(...) o escribir(...).
+es: Método de consulta sobre un Aparato. Devuelve su nombre comercial (por ejemplo, "Jetzazo", "Flotón", "Chispazo"), útil para anunciarlo con decir(...) o escribir(...).
 de: Abfragemethode an Geraet. Gibt den Markennamen zurück (z. B. "Jetzazo", "Flotón", "Chispazo"), geeignet für sagen(...) oder ausgeben(...).
 en: Getter on Gadget. Returns its brand name (e.g. "Jetzazo", "Flotón", "Chispazo"), handy to announce with say(...) or print(...).
 donde.es: Úsalo como a.nombre() sobre un Aparato de aparatos() o miAparato() (no null) para anunciarlo con decir() o escribir(); nunca como llamada suelta.
 donde.de: Als a.name() auf einem Geraet aus geraete() oder meinGeraet() (nicht null) für sagen() oder ausgeben() nutzen; nie ohne Objekt davor.
-donde.en: Use a.name() on a Gadget from gadgets() or non-null myGadget() to announce it via say() or print(); never as a bare call.
+donde.en: Use a.name() on a Gadget from gadgets() or on a non-null myGadget() to announce it via say() or print(); never as a bare call.
 ejemplo.es:
     SI miAparato() != null:
         decir("¡Cogí " + miAparato().nombre() + "!");
@@ -2212,8 +2212,8 @@ firma: Aparato: double x()
 firma.de: Geraet: double x()
 firma.en: Gadget: double x()
 es: Método de consulta sobre un Aparato. Devuelve su coordenada horizontal x en píxeles dentro de la arena (si ya lo llevas encima, coincide con tu propia x()).
-de: Abfragemethode an Geraet. Gibt die waagerechte x-Koordinate in Pixeln zurück (trägst du es schon, entspricht es deinem eigenen x()).
-en: Getter on Gadget. Returns its horizontal x coordinate in pixels inside the arena (if you are carrying it, matches your x()).
+de: Abfragemethode an Geraet. Gibt die waagerechte x-Koordinate in Pixeln zurück (trägst du es schon, entspricht sie deinem eigenen x()).
+en: Getter on Gadget. Returns its horizontal x coordinate in pixels inside the arena (if you are already carrying it, it matches your own x()).
 donde.es: Léelo como a.x() sobre un elemento de aparatos() dentro de cadaTurno() para dirigirte hacia él; recuerda que x() sin prefijo es tu propia posición.
 donde.de: Als a.x() auf einem Element aus geraete() in jedenZug() lesen, um es anzusteuern; x() ohne Präfix ist deine eigene Position.
 donde.en: Read a.x() on a gadgets() item inside onTick() to navigate toward it; remember bare x() is your own position.
@@ -2229,9 +2229,9 @@ tema: 13
 firma: Aparato: double y()
 firma.de: Geraet: double y()
 firma.en: Gadget: double y()
-es: Método de consulta sobre un Aparato. Devuelve su coordenada vertical y en píxeles en la arena (0 abajo a altoArena() arriba; si lo llevas, coincide con tu y()).
+es: Método de consulta sobre un Aparato. Devuelve su coordenada vertical y en píxeles en la arena (de 0 abajo a altoArena() arriba; si lo llevas, coincide con tu y()).
 de: Abfragemethode an Geraet. Gibt die senkrechte y-Koordinate in Pixeln zurück (0 unten bis arenaHoehe() oben; beim Tragen dein eigenes y()).
-en: Getter on Gadget. Returns its vertical y coordinate in pixels in the arena (0 bottom to arenaHeight() top; if carried, matches your y()).
+en: Getter on Gadget. Returns its vertical y coordinate in pixels in the arena (from 0 at the bottom to arenaHeight() at the top; if carried, it matches your y()).
 donde.es: Léelo como a.y() sobre un elemento de aparatos() en cadaTurno() junto a a.x() para trazar rumbo al aparato; sin prefijo, y() devuelve tu propia Y.
 donde.de: Als a.y() auf einem Element aus geraete() in jedenZug() zusammen mit a.x() nutzen, um das Gerät anzufahren; y() allein ist deine eigene Y-Koordinate.
 donde.en: Read a.y() on a gadgets() item in onTick() together with a.x() to head for it; bare y() returns your own Y coordinate.
@@ -2252,7 +2252,7 @@ es: Método de consulta sobre un Aparato. Devuelve los píxeles de distancia ent
 de: Abfragemethode an Geraet. Gibt den Abstand in Pixeln zwischen dir und dem Gerät zurück (0, wenn du es schon trägst).
 en: Getter on Gadget. Returns the distance in pixels between your robot and that gadget (0 when already carried).
 donde.es: Compáralo como a.distancia() al recorrer aparatos() en cadaTurno() para elegir el aparato más cercano del suelo; siempre sobre la variable a.
-donde.de: Als a.entfernung() beim Durchlaufen von geraete() in jedenZug() vergleichen, um das nächste Gerät auf dem Boden zu wählen; stets über a aufrufen.
+donde.de: Als a.entfernung() beim Durchlaufen von geraete() in jedenZug() vergleichen, um das nächste Gerät auf dem Boden zu wählen; stets auf a aufrufen.
 donde.en: Compare a.distance() when looping over gadgets() in onTick() to pick the nearest floor gadget; always call it on the Gadget variable.
 ejemplo.es:
     Aparato a = aparatos().get(0);
@@ -2273,11 +2273,11 @@ firma: Aparato: double angulo()
 firma.de: Geraet: double winkel()
 firma.en: Gadget: double angle()
 es: Método de consulta sobre un Aparato. Devuelve el ángulo absoluto (en grados) desde tu posición hacia ese aparato en el suelo para girar directamente hacia él.
-de: Abfragemethode an Geraet. Gibt den absoluten Winkel (Grad) von deiner Position zu diesem Gerät auf dem Boden zurück.
+de: Abfragemethode an Geraet. Gibt den absoluten Winkel (Grad) von deiner Position zu diesem Gerät auf dem Boden zurück, um dich direkt dorthin zu drehen.
 en: Getter on Gadget. Returns the absolute angle (degrees) from your robot toward that gadget on the floor so you can turn straight to it.
 donde.es: Pásalo como a.angulo() a girarHacia() dentro de cadaTurno() al recorrer aparatos() para caminar directo al aparato; nunca lo llames sin el objeto a.
 donde.de: Als a.winkel() an drehenNach() in jedenZug() übergeben, wenn du geraete() durchläufst, um direkt darauf zuzufahren; nie ohne Objekt davor.
-donde.en: Pass a.angle() to turnTo() inside onTick() when iterating gadgets() to head straight to it; never call it without the Gadget object.
+donde.en: Pass a.angle() to turnTo() inside onTick() when iterating over gadgets() to head straight to it; never call it without the Gadget object.
 ejemplo.es:
     SI miAparato() == null Y !aparatos().isEmpty():
         girarHacia(aparatos().get(0).angulo());
@@ -2301,7 +2301,7 @@ de: Abfrage ohne Parameter an deinem Gerät. Gibt true zurück, sobald die 1-sek
 en: Getter with no parameters on your gadget. Returns true once the 1-second mount after plugIn(...) finishes, or false while unplugged or mounting.
 donde.es: Compruébalo en un if como !a.conectado() sobre miAparato() (tras verificar a != null) en cadaTurno() antes de llamar a conectar(); en aparatos del suelo siempre es false.
 donde.de: In einem if als !a.angeschlossen() auf meinGeraet() (nach a != null) in jedenZug() prüfen, bevor du anschliessen() aufrufst; bei Bodengeräten immer false.
-donde.en: Check !a.pluggedIn() on myGadget() (after a != null) in onTick() before calling plugIn(); for floor gadgets it is always false.
+donde.en: Check !a.pluggedIn() on myGadget() (after checking a != null) in onTick() before calling plugIn(); for floor gadgets it is always false.
 ejemplo.es:
     Aparato a = miAparato();
     SI a != null Y !a.conectado():
@@ -2321,7 +2321,7 @@ firma: Aparato: boolean listo()
 firma.de: Geraet: boolean bereit()
 firma.en: Gadget: boolean ready()
 es: Método de consulta sin parámetros sobre tu aparato. Devuelve true solo si está conectado y además su tiempo de recarga ya llegó a 0, listo para activarse con usarAparato(...).
-de: Abfrage ohne Parameter an deinem Gerät. Gibt nur dann true zurück, wenn es angeschlossen ist und seine Abkühlzeit auf 0 steht, bereit für geraetBenutzen(...).
+de: Abfrage ohne Parameter an deinem Gerät. Gibt nur dann true zurück, wenn es angeschlossen ist und seine Nachladezeit auf 0 steht, bereit für geraetBenutzen(...).
 en: Getter with no parameters on your gadget. Returns true only when it is both plugged in and off cooldown, ready to trigger with useGadget(...).
 donde.es: Úsalo en un if como a.listo() sobre miAparato() (comprobando antes a != null) en cadaTurno() o alVerEnemigo() justo antes de usarAparato().
 donde.de: In einem if als a.bereit() auf meinGeraet() (vorher a != null prüfen) in jedenZug() oder beiSicht() direkt vor geraetBenutzen() einsetzen.

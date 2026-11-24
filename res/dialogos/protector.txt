@@ -66,7 +66,7 @@ de: So verteidigt man ein Team.
 en: That's how you defend a team.
 
 es: Un golpe por cada vez que te preocupaste, {jugador}.
-de: Ein Treffer für jedes Mal, dass du dir Sorgen gemacht hast, {jugador}.
+de: Ein Treffer für jedes Mal, wenn du dir Sorgen gemacht hast, {jugador}.
 en: One hit for every time you worried, {jugador}.
 
 [fallo]
@@ -105,8 +105,8 @@ en: Whoa! Good thing it hit me and not you.
 
 [golpe_fuerte]
 es: ¡Uf! Eso ha sido fuerte. Aguanto.
-de: Uff! Das war heftig. Ich halte.
-en: Oof! That was heavy. I'm holding.
+de: Uff! Das war heftig. Ich halte stand.
+en: Oof! That was heavy. I'm holding up.
 
 es: Mi escudo ha sonado como una campana.
 de: Mein Schild hat geläutet wie eine Glocke.
@@ -206,9 +206,9 @@ de: Durchatmen. Wir sind immer noch ein gutes Team.
 en: Breathe. We're still a good team.
 
 [victoria]
-es: ¡Lo logramos, {jugador}! Nadie ha salido herido... bueno, casi nadie.
-de: Geschafft, {jugador}! Keiner wurde verletzt... na ja, fast keiner.
-en: We did it, {jugador}! Nobody got hurt... well, almost nobody.
+es: ¡Lo logramos, {jugador}! Nadie ha salido herido… bueno, casi nadie.
+de: Geschafft, {jugador}! Keiner wurde verletzt … na ja, fast keiner.
+en: We did it, {jugador}! Nobody got hurt… well, almost nobody.
 
 es: Buena pelea, {rival}. ¿Te ayudo a levantarte?
 de: Guter Kampf, {rival}. Soll ich dir aufhelfen?
@@ -223,9 +223,9 @@ de: Das haben wir beide gewonnen. Dein Code, mein Schild.
 en: We both won this. Your code, my shield.
 
 [derrota]
-es: Lo siento, {jugador}... cuídate tú ahora.
-de: Tut mir leid, {jugador}... pass jetzt du auf dich auf.
-en: I'm sorry, {jugador}... you look after yourself now.
+es: Lo siento, {jugador}… cuídate tú ahora.
+de: Tut mir leid, {jugador} … pass jetzt du auf dich auf.
+en: I'm sorry, {jugador}… you look after yourself now.
 
 es: Apartaos todos, que voy a explotar. ¡Con cuidado!
 de: Alle zurück, ich explodiere gleich. Vorsicht!
@@ -235,9 +235,9 @@ es: Bien peleado, {rival}. No te acerques mucho, ¿eh?
 de: Gut gekämpft, {rival}. Komm mir lieber nicht zu nah, ja?
 en: Well fought, {rival}. Don't stand too close, okay?
 
-es: El escudo cae... pero vuelve. Siempre vuelve.
-de: Der Schild fällt... aber er kommt zurück. Immer.
-en: The shield falls... but it comes back. Always.
+es: El escudo cae… pero vuelve. Siempre vuelve.
+de: Der Schild fällt … aber er kommt zurück. Immer.
+en: The shield falls… but it comes back. Always.
 
 [burla]
 es: ¿Eso es todo? Mi escudo quiere más trabajo.
@@ -252,9 +252,9 @@ es: Puedes intentarlo por la izquierda. O por la derecha. Da igual.
 de: Versuch's von links. Oder von rechts. Ist egal.
 en: Try the left. Or the right. Doesn't matter.
 
-es: Llamo a la puerta... ¡ah, no, que la puerta soy yo!
-de: Ich klopfe an die Tür... ach nein, die Tür bin ja ich!
-en: Knock knock... oh wait, I'm the door!
+es: Llamo a la puerta… ¡ah, no, que la puerta soy yo!
+de: Ich klopfe an die Tür … ach nein, die Tür bin ja ich!
+en: Knock knock… oh wait, I'm the door!
 
 [pulla]
 es: He visto tostadoras que dan más miedo que tú.
@@ -267,7 +267,7 @@ en: My shield hits harder than your cannon, {rival}.
 
 es: Llevas toda la ronda pegando a un muro. ¿Cómo va eso?
 de: Du schlägst die ganze Runde gegen eine Wand. Wie läuft's?
-en: You've been punching a wall all round. How's that going?
+en: You've been punching a wall the whole round. How's that going?
 
 es: Podría hacer esto durante días. Tú, no.
 de: Das könnte ich tagelang machen. Du nicht.
@@ -350,9 +350,9 @@ es: Un parche más. Ya tengo una buena colección.
 de: Noch ein Flicken. Ich habe schon eine schöne Sammlung.
 en: Another patch. I've got quite the collection.
 
-es: Reparando... como quien se pone una tirita.
-de: Repariere... wie ein Pflaster aufkleben.
-en: Repairing... like putting on a band-aid.
+es: Reparando… como quien se pone una tirita.
+de: Repariere … als würde ich ein Pflaster aufkleben.
+en: Repairing… like putting on a Band-Aid.
 
 es: Ya está. Listo para seguir protegiendo.
 de: So. Bereit, weiter zu beschützen.

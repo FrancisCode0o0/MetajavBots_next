@@ -14,7 +14,7 @@ de: Methoden. length() sagt, wie viele Zeichen er hat (mit Klammern, anders als 
 de: liefert das erste, substring(0, 3) ein Stück und toUpperCase() macht Großbuchstaben. Die Indizes
 de: beginnen wie immer bei 0.
 en: A String is text: a row of chars, like an array of letters, but with lots of handy methods.
-en: length() gives how many characters it has (with parentheses, unlike arrays), charAt(0) the first,
+en: length() tells you how many characters it has (with parentheses, unlike arrays), charAt(0) the first,
 en: substring(0, 3) a piece and toUpperCase() turns it into capitals. Indexes start at 0, as always.
 codigo:
     @Override
@@ -59,8 +59,8 @@ de: Das ist DIE Java-Falle: Um Texte zu vergleichen, taugt == nicht. == fragt �
 de: nicht „Steht dasselbe drin?“. Zwei gleiche Texte können an verschiedenen Stellen im Speicher liegen,
 de: und dann sagt == false. Manchmal klappt es zufällig, und das ist das Schlimmste: Es versagt im wichtigen Kampf.
 de: Nimm immer equals: t.waffe().equals("laser").
-en: This is THE Java trap: to compare text, == doesn't work. == asks "is it the same object?",
-en: not "does it say the same thing?". Two equal texts can live in different places in memory,
+en: This is THE Java trap: to compare text, == doesn't work. == asks “is it the same object?”,
+en: not “does it say the same thing?”. Two equal texts can live in different places in memory,
 en: and then == says false. Sometimes it works by luck, which is the worst: it fails in the fight that matters.
 en: Always use equals: h.weapon().equals("laser").
 codigo:
@@ -78,7 +78,7 @@ codigo:
 es: Más amigos de comparar: equalsIgnoreCase ignora mayúsculas, startsWith y contains buscan dentro,
 es: isEmpty dice si no hay nada y, desde Java 11, isBlank dice si solo hay espacios y strip los quita.
 es: Escribir "laser".equals(x) en vez de x.equals("laser") tiene premio: si x es null, no explota.
-de: Weitere Vergleichshelfer: equalsIgnoreCase ignoriert Groß und klein, startsWith und contains suchen darin,
+de: Weitere Vergleichshelfer: equalsIgnoreCase ignoriert Groß- und Kleinschreibung, startsWith und contains suchen darin,
 de: isEmpty sagt, ob gar nichts drinsteht, und seit Java 11 sagt isBlank, ob nur Leerzeichen da sind,
 de: und strip entfernt sie. "laser".equals(x) statt x.equals("laser") lohnt sich: Ist x null, knallt es nicht.
 en: More comparison helpers: equalsIgnoreCase ignores case, startsWith and contains search inside, isEmpty
@@ -106,11 +106,11 @@ es: Como los String no cambian, cada + en un bucle fabrica un texto nuevo y tira
 es: da igual; con diez mil, tu robot pierde el turno. StringBuilder es un texto que SÍ cambia:
 es: append añade al final sin copiar todo cada vez, y toString() te da el String cuando acabas.
 de: Weil Strings sich nicht ändern, baut jedes + in einer Schleife einen neuen Text und wirft den alten weg.
-de: Bei zehn Runden egal, bei zehntausend verliert dein Roboter den Zug. StringBuilder ist ein Text, der sich
+de: Bei zehn Durchläufen egal, bei zehntausend verliert dein Roboter den Zug. StringBuilder ist ein Text, der sich
 de: DOCH ändert: append hängt hinten an, ohne alles zu kopieren, und toString() liefert am Ende den String.
-en: Since Strings don't change, every + in a loop builds a new text and throws the old one away. For ten laps
-en: it doesn't matter; for ten thousand, your robot loses its turn. StringBuilder is text that DOES change:
-en: append adds to the end without copying everything, and toString() gives you the String when you're done.
+en: Since Strings don't change, every + in a loop builds a new text and throws the old one away. For ten iterations
+en: it doesn't matter; for ten thousand, your robot loses its tick. StringBuilder is text that DOES change:
+en: append adds to the end without copying everything each time, and toString() gives you the String when you're done.
 codigo:
     StringBuilder sb = new StringBuilder();
     for (int i = 0; i < 5; i++) {

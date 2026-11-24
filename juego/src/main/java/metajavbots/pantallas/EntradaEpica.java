@@ -15,9 +15,10 @@ import metajavbots.tutor.Biografias;
 /**
  * ENTRADA ÉPICA — Antes de la primera ronda, el locutor loco presenta a los
  * robots uno a uno, como en el boxeo: la arena a oscuras, dos focos que
- * barren hasta él, humo a sus pies, su nombre en grande y su biografía
- * absurda en una frase (res/biografias/robots.txt). Se salta con un clic,
- * Espacio o Esc.
+ * barren hasta él, humo a sus pies, su nombre en grande y, debajo, su modelo
+ * y su biografía absurda en una frase (res/biografias/robots.txt). El locutor
+ * solo canta la esquina y el nombre: la biografía sale una vez, en la caja.
+ * Se salta con un clic, Espacio o Esc.
  */
 public final class EntradaEpica {
 
@@ -54,8 +55,7 @@ public final class EntradaEpica {
             if (c == null) return;
             for (int k = 0; k < 8; k++) v.efectos.humo(v.sx(c.x, c.y) + (k - 4) * 14, v.sy(c.y) - 6, 1.2f);
             j.sonidos.tocar("campana", 0.6f);
-            narrador.anunciar(T.f(quien == 0 ? "entrada.esquina_1" : quien == 1 ? "entrada.esquina_2" : "entrada.esquina_n", p.combatientes[quien].nombre)
-                    + " " + biografia(p, quien));
+            narrador.anunciar(T.f(quien == 0 ? "entrada.esquina_1" : quien == 1 ? "entrada.esquina_2" : "entrada.esquina_n", p.combatientes[quien].nombre));
         } else if (quien >= cuantos && anunciado < cuantos) {
             anunciado = cuantos;
             narrador.anunciar(T.t("entrada.a_pelear"));
@@ -95,16 +95,17 @@ public final class EntradaEpica {
         v.robotDe(pi, p, quien);
         // El nombre, que entra deslizándose; debajo, su modelo y su biografía en una frase.
         String nombre = p.combatientes[quien].nombre.toUpperCase();
-        // El texto, en la mitad contraria a la del robot: no lo tapa.
+        // El texto, en la mitad contraria a la del robot: no lo tapa. Y debajo de la banda del locutor (v.techo): no lo tapa ella.
+        float arriba = Math.max(y + h * 0.04f, v.techo + 10);
         float mitad = cx > x + w / 2 ? x + w * 0.3f : x + w * 0.7f, ancho = Math.min(w * 0.55f, 760);
         float entra = Math.min(1, local / 0.45f), tn = ui.cabe(nombre, ancho, ui.letra * 3.2f, true);
         float nx = mitad + (1 - entra) * (quien % 2 == 0 ? -w : w);
         int color = quien == 0 ? 0x3FA9F5 : quien == 1 ? 0xFF6B6B : 0xFFC857;
-        pi.textoCentrado(nombre, nx + 3, y + h * 0.04f + 3, tn, true, 0x000000, 0.6f * entra);
-        pi.textoCentrado(nombre, nx, y + h * 0.04f, tn, true, color, entra);
+        pi.textoCentrado(nombre, nx + 3, arriba + 3, tn, true, 0x000000, 0.6f * entra);
+        pi.textoCentrado(nombre, nx, arriba, tn, true, color, entra);
         String linea = T.f("pelea.modelo", p.combatientes[quien].montaje.modelo.nombre(T.idioma)) + " · " + biografia(p, quien);
         float bw = ancho, tb = ui.letra * 1.05f;
-        float bh = pi.altoDeParrafo(linea, bw - 40, tb) + 24, by = y + h * 0.04f + tn * 1.4f;
+        float bh = pi.altoDeParrafo(linea, bw - 40, tb) + 24, by = arriba + tn * 1.4f;
         float a = Math.min(1, Math.max(0, (local - 0.5f) / 0.4f));
         pi.caja(mitad - bw / 2, by, bw, bh, 12, 0x0B0F18, 0.85f * a);
         pi.parrafo(linea, mitad - bw / 2 + 20, by + 12, bw - 40, tb, 0xF4F1E8, a);

@@ -41,6 +41,8 @@ public final class Narrador {
     private boolean[] avisoPocoBlindaje;
     private boolean primerGolpe;
     private int ultimoLider = -1;
+    /** La ronda en curso, para el hueco {ronda} de lo que dicen el locutor y los robots. */
+    private int rondaActual = 1;
     /** Pullas nuevas que ha escrito el cerebro de IA para la computadora (ya moderadas); se gastan al decirlas. */
     public final java.util.Deque<String> pullasDeLaIA = new java.util.concurrent.ConcurrentLinkedDeque<>();
 
@@ -72,6 +74,7 @@ public final class Narrador {
         h.put("rival", quien >= 0 ? nombres[rival(quien)] : nombres[1]);
         h.put("jugador", jugador);
         h.put("pieza", pieza == null ? "" : pieza);
+        h.put("ronda", Integer.toString(rondaActual));
         return h;
     }
 
@@ -101,8 +104,8 @@ public final class Narrador {
     }
 
     public void ronda(int ronda) {
+        rondaActual = ronda;
         Map<String, String> h = huecos(-1, null);
-        h.put("ronda", Integer.toString(ronda));
         locutor(ronda == 1 ? "inicio_pelea" : "inicio_ronda", true, h);
         robot(0, ronda == 1 ? "saludo" : "inicio_ronda", true, null);
         robot(1, ronda == 1 ? "saludo" : "inicio_ronda", true, null);

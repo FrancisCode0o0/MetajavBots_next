@@ -41,9 +41,9 @@ final class FichasDePaquetes {
         if ("TopeDeCalculo".equals(c.id)) {
             String desc = capitalizarPunto(resumen.isEmpty() ? c.descripcion(id) : resumen);
             String donde = id.elegir(
-                    "Lo lanza el motor si un bucle en cadaTurno() u otro evento supera el límite de pasos; evita bucles infinitos.",
-                    "Wird von der Engine ausgelöst, wenn eine Schleife in jedenZug() das Schrittlimit sprengt; vermeide Endlosschleifen.",
-                    "Thrown by the engine if a loop in onTick() or an event exceeds the step budget; avoid infinite loops.");
+                    "Lo lanza el motor si un bucle en cadaTurno() u otro evento supera el tope de cálculo; evita bucles infinitos.",
+                    "Wird von der Engine ausgelöst, wenn eine Schleife in jedenZug() oder einem anderen Ereignis das Rechenlimit sprengt; vermeide Endlosschleifen.",
+                    "Thrown by the engine if a loop in onTick() or an event exceeds the step limit; avoid infinite loops.");
             String pseudo = id.elegir(
                     "CADA TURNO:\n    REPETIR como máximo 10 veces:\n        hacer cálculo corto\n    // sin bucles infinitos",
                     "JEDEN ZUG:\n    WIEDERHOLE höchstens 10-mal:\n        kurze Berechnung ausführen\n    // keine Endlosschleifen",
@@ -141,20 +141,20 @@ final class FichasDePaquetes {
         if ("metajavbots.junit".equals(c.paquete)) {
             if (c.tipo == Paquetes.Tipo.ANOTACION) {
                 return id.elegir(
-                        "Colócalo justo encima de un método de prueba en el Laboratorio o en ejercicios de tests (no dentro de un robot de combate).",
+                        "Colócalo justo encima de un método de prueba en el Laboratorio o en ejercicios de pruebas (no dentro de un robot de pelea).",
                         "Direkt über einer Testmethode im Labor oder in Testübungen platzieren (nicht in einem Kampfroboter).",
-                        "Place it right above a test method in the Laboratory or testing exercises (not inside a combat robot).");
+                        "Place it right above a test method in the Lab or in testing exercises (not inside a fighting robot).");
             }
             return id.elegir(
                     "Llámalo dentro de un método marcado con @Test en el Laboratorio o en los ejercicios de pruebas unitarias.",
                     "Innerhalb einer mit @Test markierten Methode im Labor oder in Unit-Test-Übungen aufrufen.",
-                    "Call it inside a @Test method in the Laboratory or in unit-testing exercises.");
+                    "Call it inside a @Test method in the Lab or in unit-testing exercises.");
         }
         if (c.soloEjercicio) {
             return id.elegir(
-                    "Solo disponible en ejercicios y Laboratorio (la caja de arena bloquea la concurrencia en robots). Úsalo en métodos de ejercicio.",
+                    "Solo disponible en ejercicios y en el Laboratorio (la caja de arena bloquea la concurrencia en robots). Úsalo en métodos de ejercicio.",
                     "Nur in Übungen und im Labor erlaubt (die Sandbox sperrt Nebenläufigkeit in Robotern). Nutze es in Übungsmethoden.",
-                    "Available only in exercises and the Laboratory (the sandbox blocks concurrency in robots). Use it in exercise methods.");
+                    "Available only in exercises and the Lab (the sandbox blocks concurrency in robots). Use it in exercise methods.");
         }
         if (c.tipo == Paquetes.Tipo.EXCEPCION || c.tipo == Paquetes.Tipo.ERROR) {
             return id.elegir(
@@ -405,7 +405,7 @@ final class FichasDePaquetes {
             return id.elegir(
                     "// En un ejercicio o en el Laboratorio:\n// Usar " + comp + " -> " + primero,
                     "// In einer Übung oder im Labor:\n// " + comp + " -> " + primero + " verwenden",
-                    "// In an exercise or the Laboratory:\n// Use " + comp + " -> " + primero);
+                    "// In an exercise or the Lab:\n// Use " + comp + " -> " + primero);
         }
         String ejComp = c == null ? "" : c.ejemplo(id);
         if (!ejComp.isBlank() && !contieneApiOtroIdioma(ejComp, id)) {

@@ -73,6 +73,7 @@ public final class Pruebas {
         PruebasDeEquilibrioTorneo.apuntar();
         PruebasDeMusica.apuntar();
         PruebasDelRecorridoMenu.apuntar();
+        PruebasDeEstilo.apuntar();
 
         List<String> fallos = new ArrayList<>();
         int pasados = 0;

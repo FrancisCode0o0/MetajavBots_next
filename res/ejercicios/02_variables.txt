@@ -114,7 +114,7 @@ titulo.es: Potencia sin decimales
 titulo.de: Leistung ohne Nachkommastellen
 titulo.en: Power without decimals
 enunciado.es: El medidor solo enseña números enteros. Convierte la potencia a int quitándole los decimales (sin redondear). Ejemplo: potenciaEntera(7.9) devuelve 7.
-enunciado.de: Die Anzeige kann nur ganze Zahlen. Wandle die Leistung in einen int um, indem du die Nachkommastellen abschneidest (nicht runden). Beispiel: potenciaEntera(7.9) gibt 7 zurück.
+enunciado.de: Die Anzeige zeigt nur ganze Zahlen an. Wandle die Leistung in einen int um, indem du die Nachkommastellen abschneidest (nicht runden). Beispiel: potenciaEntera(7.9) gibt 7 zurück.
 enunciado.en: The gauge can only show whole numbers. Convert the power to an int by cutting off the decimals (no rounding). Example: potenciaEntera(7.9) returns 7.
 pista.es: Un double no cabe solo en un int: hay que pedirlo con un cast, (int) potencia. Corta hacia el cero: (int) -2.5 es -2.
 pista.de: Ein double passt nicht von allein in einen int: Du brauchst einen Cast, (int) potencia. Er schneidet Richtung null ab: (int) -2.5 ist -2.
@@ -166,7 +166,7 @@ titulo.es: La letra siguiente
 titulo.de: Der nächste Buchstabe
 titulo.en: The next letter
 enunciado.es: Los robots se nombran por letras. Devuelve el char que va justo después de c en Unicode. Ejemplo: siguienteLetra('a') devuelve 'b'.
-enunciado.de: Die Roboter werden mit Buchstaben benannt. Gib das char zurück, das in Unicode direkt nach c kommt. Beispiel: siguienteLetra('a') gibt 'b' zurück.
+enunciado.de: Die Roboter werden mit Buchstaben benannt. Gib den char zurück, der in Unicode direkt nach c kommt. Beispiel: siguienteLetra('a') gibt 'b' zurück.
 enunciado.en: Robots are named with letters. Return the char that comes right after c in Unicode. Example: siguienteLetra('a') returns 'b'.
 pista.es: c + 1 da un int (98 para 'a'). Para volver a tenerlo como char, haz un cast: (char) (c + 1).
 pista.de: c + 1 ergibt einen int (98 für 'a'). Um wieder ein char zu bekommen, brauchst du einen Cast: (char) (c + 1).

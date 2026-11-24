@@ -189,7 +189,7 @@ public final class PresupuestoSenior {
                     inf.topes++;
                     c.deuda = Math.min(20, c.deuda + 2 + inf.topes / 3);
                     if (inf.topes <= 3 || inf.topes % 20 == 0) {
-                        c.combatiente.escribir(pelea.turno(), "⏱ Tope de cálculo (" + tope + " pasos por turno): el robot se queda pensando "
+                        c.combatiente.escribir(pelea.turno(), "⏱ Tope de cálculo (" + tope + " pasos de cálculo por turno): el robot se queda pensando "
                                 + c.deuda + " turnos.");
                     }
                     pelea.suceso(Suceso.Tipo.TOPE, c.indice, c.x, c.y, 0, c.deuda, "");

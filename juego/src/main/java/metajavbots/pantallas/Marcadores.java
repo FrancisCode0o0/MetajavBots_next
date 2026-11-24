@@ -19,6 +19,12 @@ public final class Marcadores {
     /** Altura fija de la barra superior del marcador. */
     public static final float ALTO = 88f;
 
+    /**
+     * El marcador que se ha dibujado en este fotograma (0: ninguno, 2: el de dos, 3: el de varios), para que la marca de
+     * la música (que se dibuja después, encima de todo) no tape la ronda ni los nombres. Ella lo vuelve a poner a 0.
+     */
+    public static int dibujadoAhora;
+
     /** Geometría horizontal del marcador 1 contra 1 (bloques laterales, partes y columna central). */
     public record GeometriaDos(float xIzq, float xDer, float anchoBloque, float pasoParte, float anchoParte,
             float centroX, float centroAncho) {
@@ -123,6 +129,7 @@ public final class Marcadores {
 
     /** Dibuja el marcador superior en un duelo de dos combatientes. */
     static void deDos(Juego j, Pelea pelea, Encuentro encuentro) {
+        dibujadoAhora = 2;
         Pincel p = j.pincel;
         Ui ui = j.ui;
         p.rect(0, 0, p.ancho, ALTO, ui.tema.panel, 0.97f);
@@ -234,6 +241,7 @@ public final class Marcadores {
 
     /** Dibuja el marcador superior cuando pelean más de dos robots. */
     static void deVarios(Juego j, Pelea pelea) {
+        dibujadoAhora = 3;
         Pincel p = j.pincel;
         Ui ui = j.ui;
         p.rect(0, 0, p.ancho, ALTO, ui.tema.panel, 0.97f);

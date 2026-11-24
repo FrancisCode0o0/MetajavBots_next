@@ -69,8 +69,8 @@ enunciado.es: El taller tiene eco: imprime el sonido dos veces, cada vez en su p
 enunciado.de: Die Werkstatt hallt: Gib das Geräusch zweimal aus, jedes Mal in einer eigenen Zeile. Beispiel: eco("BIP") gibt BIP und darunter noch einmal BIP aus.
 enunciado.en: The workshop echoes: print the sound twice, each time on its own line. Example: eco("BIP") prints BIP and then BIP again below it.
 pista.es: Un programa son sentencias que se ejecutan una tras otra. Escribe dos veces la misma sentencia.
-pista.de: Ein Programm sind Anweisungen, die nacheinander ausgeführt werden. Schreib dieselbe Anweisung zweimal.
-pista.en: A program is statements that run one after another. Write the same statement twice.
+pista.de: Ein Programm besteht aus Anweisungen, die nacheinander ausgeführt werden. Schreib dieselbe Anweisung zweimal.
+pista.en: A program is a series of statements that run one after another. Write the same statement twice.
 firma: static void eco(String sonido)
 plantilla:
     System.out.println(sonido);
@@ -136,7 +136,7 @@ titulo.de: Vorstellung vor dem Kampf
 titulo.en: Introduce yourself before the fight
 enunciado.es: Imprime una línea con el nombre y, entre paréntesis, el modelo. Ejemplo: presentarse("Chispa", "Titan") imprime Robot: Chispa (Titan)
 enunciado.de: Gib eine Zeile mit dem Namen und dem Modell in Klammern aus. Beispiel: presentarse("Chispa", "Titan") gibt Robot: Chispa (Titan) aus.
-enunciado.en: Print one line with the name and, in brackets, the model. Example: presentarse("Chispa", "Titan") prints Robot: Chispa (Titan)
+enunciado.en: Print one line with the name and, in parentheses, the model. Example: presentarse("Chispa", "Titan") prints Robot: Chispa (Titan)
 pista.es: El + pega textos: "Robot: " + nombre + " (" + modelo + ")". Fíjate en los espacios.
 pista.de: Das + klebt Texte zusammen: "Robot: " + nombre + " (" + modelo + ")". Achte auf die Leerzeichen.
 pista.en: The + glues texts together: "Robot: " + nombre + " (" + modelo + ")". Watch the spaces.
@@ -160,7 +160,7 @@ titulo.es: La cuenta atrás desordenada
 titulo.de: Der durcheinandergeratene Countdown
 titulo.en: The jumbled countdown
 enunciado.es: Las sentencias están en mal orden. Ordénalas para que se imprima 3, 2, 1 (cada número en su línea) y luego el texto fin. Ejemplo: cuentaAtras("GO!") imprime 3, 2, 1 y GO!
-enunciado.de: Die Anweisungen stehen in der falschen Reihenfolge. Ordne sie so, dass 3, 2, 1 (jede Zahl in einer Zeile) und danach der Text fin ausgegeben wird. Beispiel: cuentaAtras("GO!") gibt 3, 2, 1 und GO! aus.
+enunciado.de: Die Anweisungen stehen in der falschen Reihenfolge. Ordne sie so, dass 3, 2, 1 (jede Zahl in einer Zeile) und danach der Text fin ausgegeben werden. Beispiel: cuentaAtras("GO!") gibt 3, 2, 1 und GO! aus.
 enunciado.en: The statements are in the wrong order. Rearrange them so it prints 3, 2, 1 (each number on its own line) and then the text fin. Example: cuentaAtras("GO!") prints 3, 2, 1 and GO!
 pista.es: Java ejecuta las sentencias de arriba abajo. Mueve las líneas, no hace falta escribir nada nuevo.
 pista.de: Java führt die Anweisungen von oben nach unten aus. Verschiebe die Zeilen, du musst nichts Neues schreiben.
@@ -195,7 +195,7 @@ titulo.es: Silenciar una línea con un comentario
 titulo.de: Eine Zeile mit einem Kommentar stummschalten
 titulo.en: Silence a line with a comment
 enunciado.es: El robot imprime un ERROR 404 que sobra. No borres la línea: conviértela en un comentario para que no se ejecute. Debe quedar Robot: nombre y luego OK.
-enunciado.de: Der Roboter gibt einen überflüssigen ERROR 404 aus. Lösch die Zeile nicht: mach einen Kommentar daraus, damit sie nicht ausgeführt wird. Übrig bleiben Robot: nombre und danach OK.
+enunciado.de: Der Roboter gibt einen überflüssigen ERROR 404 aus. Lösch die Zeile nicht: Mach einen Kommentar daraus, damit sie nicht ausgeführt wird. Übrig bleiben Robot: nombre und danach OK.
 enunciado.en: The robot prints a stray ERROR 404. Don't delete the line: turn it into a comment so it doesn't run. What remains is Robot: nombre followed by OK.
 pista.es: Todo lo que va detrás de // hasta el final de la línea es un comentario: Java lo ignora. Para varias líneas, /* ... */.
 pista.de: Alles nach // bis zum Zeilenende ist ein Kommentar: Java ignoriert es. Für mehrere Zeilen gibt es /* ... */.
@@ -285,7 +285,7 @@ enunciado.de: Der Bericht soll den Gesamtschaden zweier Treffer zeigen: Total: u
 enunciado.en: The report should show the total damage of two hits: Total: and the sum. Example: informe(3, 5) prints Total: 8. Right now it prints Total: 35. Fix it.
 pista.es: Java lee el + de izquierda a derecha: texto + número da texto. Pon la suma entre paréntesis para hacerla antes: (golpe1 + golpe2).
 pista.de: Java liest + von links nach rechts: Text + Zahl ergibt Text. Setz die Summe in Klammern, damit sie zuerst passiert: (golpe1 + golpe2).
-pista.en: Java reads + from left to right: text + number gives text. Put the sum in brackets so it happens first: (golpe1 + golpe2).
+pista.en: Java reads + from left to right: text + number gives text. Put the sum in parentheses so it happens first: (golpe1 + golpe2).
 firma: static void informe(int golpe1, int golpe2)
 plantilla:
     System.out.println("Total: " + golpe1 + golpe2);
@@ -306,7 +306,7 @@ tipo: salida
 titulo.es: Energía bien alineada con printf
 titulo.de: Sauber ausgerichtete Energie mit printf
 titulo.en: Neatly aligned energy with printf
-enunciado.es: Imprime el nombre, dos puntos, un espacio y el porcentaje ocupando 3 huecos (alineado a la derecha) seguido de %. Ejemplo: energia("Bit", 5) imprime "Bit:   5%" y energia("Titan", 100) imprime "Titan: 100%".
+enunciado.es: Imprime el nombre, dos puntos, un espacio y el porcentaje en 3 huecos (alineado a la derecha) seguido de %. Ejemplo: energia("Bit", 5) imprime "Bit:   5%" y energia("Titan", 100) imprime "Titan: 100%".
 enunciado.de: Gib den Namen, einen Doppelpunkt, ein Leerzeichen und den Prozentwert mit 3 Stellen Breite (rechtsbündig) und danach % aus. Beispiel: energia("Bit", 5) gibt "Bit:   5%" aus, energia("Titan", 100) gibt "Titan: 100%" aus.
 enunciado.en: Print the name, a colon, a space and the percentage taking 3 places (right-aligned) followed by %. Example: energia("Bit", 5) prints "Bit:   5%" and energia("Titan", 100) prints "Titan: 100%".
 pista.es: System.out.printf("%s: %3d%%%n", nombre, porcentaje); %s es un texto, %3d un entero de 3 huecos, %% un signo % y %n el salto de línea.

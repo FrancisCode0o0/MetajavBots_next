@@ -85,6 +85,24 @@ public final class Capturas extends Juego {
                 entrada.dibujar(j, pelea, vista, 0, 88, j.pincel.ancho, j.pincel.alto - 88);
             }
         });
+        // La presentación de verdad, en la pantalla de la pelea: con la banda del locutor encima y los marcadores.
+        for (int k = 1; k <= 2; k++) {
+            final float paso = k == 1 ? 1.6f / 400 : 4.4f / 400;
+            pantallas.put("08p_presentacion_" + k, () -> new Pantalla() {
+                private metajavbots.pantallas.PantallaPelea pp;
+
+                @Override
+                public void alEntrar(Juego j) {
+                    metajavbots.pantallas.Encuentro e = metajavbots.pantallas.PrepararPelea.encuentro(j, "ADAPTADA");
+                    pp = new metajavbots.pantallas.PantallaPelea(e);
+                    pp.alEntrar(j);
+                }
+
+                @Override
+                public void fotograma(Juego j, float dt) {
+                    pp.fotograma(j, paso);
+                }            });
+        }
     }
 
     /** Las pantallas de lo último: los aparatos de la arena. */
@@ -207,7 +225,7 @@ public final class Capturas extends Juego {
                     float x = 130 + i * (j.pincel.ancho - 260) / (es.size() - 1);
                     metajavbots.tutor.CabezaDeEntrenador.dibujar(j.pincel, es.get(i), x, 330, 80, i % 2 == 0, t + i);
                     j.pincel.textoCentrado(es.get(i).nombre.es, x, 520, 18, true, 0xFFFFFF, 1);
-                    j.pincel.parrafo(es.get(i).papel.es, x - 95, 560, 190, 14, 0xBBBBBB, 1);
+                    j.pincel.parrafo(es.get(i).papel.en(metajavbots.textos.T.idioma), x - 95, 560, 190, 14, 0xBBBBBB, 1);
                 }
             }
         });

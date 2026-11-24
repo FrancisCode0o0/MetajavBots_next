@@ -210,7 +210,7 @@ titulo.es: ¿Quién juega en cada equipo?
 titulo.de: Wer spielt in welchem Team?
 titulo.en: Who plays on each team?
 enunciado.es: El mapa dice el equipo de cada robot. Devuelve el mapa al revés: para cada valor, la lista de claves que lo tienen, en el orden en que las recorre el mapa original. Funciona con cualquier tipo de claves y valores.
-enunciado.de: Die Map nennt das Team jedes Roboters. Gib sie umgedreht zurück: zu jedem Wert die Liste der Schlüssel, die ihn haben, in der Reihenfolge, in der die ursprüngliche Map sie durchläuft. Funktioniert mit beliebigen Schlüssel- und Werttypen.
+enunciado.de: Die Map nennt das Team jedes Roboters. Gib sie umgedreht zurück: zu jedem Wert die Liste der Schlüssel, die ihn haben, in der Reihenfolge, in der die ursprüngliche Map sie durchläuft. Die Methode funktioniert mit beliebigen Schlüssel- und Werttypen.
 enunciado.en: The map says which team each robot is on. Return it inverted: for each value, the list of keys that have it, in the order the original map iterates them. It works for any key and value types.
 pista.es: Recorre mapa.entrySet() y usa resultado.computeIfAbsent(valor, v -> new ArrayList<>()).add(clave) (computeIfAbsent llegó en Java 8).
 pista.de: Geh mapa.entrySet() durch und nutze resultado.computeIfAbsent(wert, v -> new ArrayList<>()).add(schluessel) (computeIfAbsent gibt es seit Java 8).
@@ -239,7 +239,7 @@ titulo.es: Escuadrones de robots
 titulo.de: Roboterstaffeln
 titulo.en: Robot squads
 enunciado.es: Reparte la lista en trozos de tamano elementos, en orden; el último puede quedar más corto. Si tamano es menor que 1, lanza IllegalArgumentException. Funciona con listas de cualquier tipo.
-enunciado.de: Teile die Liste der Reihe nach in Stücke mit je tamano Elementen; das letzte darf kürzer sein. Ist tamano kleiner als 1, wirf eine IllegalArgumentException. Funktioniert mit Listen jedes Typs.
+enunciado.de: Teile die Liste der Reihe nach in Stücke mit je tamano Elementen; das letzte darf kürzer sein. Ist tamano kleiner als 1, wirf eine IllegalArgumentException. Die Methode funktioniert mit Listen jedes Typs.
 enunciado.en: Split the list, in order, into chunks of tamano elements; the last one may be shorter. If tamano is less than 1, throw an IllegalArgumentException. It works with lists of any type.
 pista.es: Avanza de tamano en tamano y copia cada trozo con new ArrayList<>(lista.subList(i, Math.min(i + tamano, lista.size()))). En Java 24, gather(Gatherers.windowFixed(tamano)) hace lo mismo con streams.
 pista.de: Geh in Schritten von tamano weiter und kopiere jedes Stück mit new ArrayList<>(lista.subList(i, Math.min(i + tamano, lista.size()))). In Java 24 macht gather(Gatherers.windowFixed(tamano)) dasselbe mit Streams.
@@ -442,8 +442,8 @@ titulo.es: El mejor según lo que tú digas
 titulo.de: Das Beste nach deinem Maßstab
 titulo.en: The best by your own measure
 enunciado.es: Devuelve el elemento de la lista cuya clave (la que calcula la función clave) es la mayor. Si hay empate, el primero. Si la lista está vacía, null. La firma usa dos variables de tipo y comodines: así sirve para cualquier elemento y cualquier clave comparable.
-enunciado.de: Gib das Element der Liste zurück, dessen Schlüssel (berechnet von der Funktion clave) am größten ist. Bei Gleichstand das erste. Ist die Liste leer, null. Die Signatur nutzt zwei Typvariablen und Wildcards: So passt sie für jedes Element und jeden vergleichbaren Schlüssel.
-enunciado.en: Return the element of the list whose key (computed by the clave function) is the largest. On a tie, the first one. If the list is empty, null. The signature uses two type variables and wildcards, so it works for any element and any comparable key.
+enunciado.de: Gib das Element der Liste zurück, dessen Schlüssel (berechnet von der Funktion clave) am größten ist. Bei Gleichstand das erste. Ist die Liste leer, null. Die Signatur nutzt zwei Typvariablen und Wildcards: So funktioniert sie für jedes Element und jeden vergleichbaren Schlüssel.
+enunciado.en: Return the element of the list whose key (computed by the clave function) is the largest. If there is a tie, the first one. If the list is empty, null. The signature uses two type variables and wildcards, so it works for any element and any comparable key.
 pista.es: Guarda el mejor elemento y su clave; cambia solo si la nueva clave es estrictamente mayor (compareTo(...) > 0). PECS: la función consume T (? super T) y produce C (? extends C).
 pista.de: Merk dir das beste Element und seinen Schlüssel; wechsle nur, wenn der neue Schlüssel echt größer ist (compareTo(...) > 0). PECS: Die Funktion verbraucht T (? super T) und erzeugt C (? extends C).
 pista.en: Keep the best element and its key; switch only when the new key is strictly larger (compareTo(...) > 0). PECS: the function consumes T (? super T) and produces C (? extends C).
@@ -479,9 +479,9 @@ titulo.en: A cheat-proof inventory
 enunciado.es: El Inventario guarda una cosa por tipo. Escribe <T> Inventario poner(Class<T> tipo, T valor) (devuelve this; si ya había una de ese tipo, la sustituye), <T> T sacar(Class<T> tipo) (null si no hay) e int tamano(). Aunque alguien use tipos crudos para colar un valor del tipo equivocado, poner debe lanzar ClassCastException en el momento.
 enunciado.de: Das Inventario speichert ein Ding pro Typ. Schreib <T> Inventario poner(Class<T> tipo, T valor) (gibt this zurück; gab es schon eins dieses Typs, wird es ersetzt), <T> T sacar(Class<T> tipo) (null, wenn keins da ist) und int tamano(). Auch wenn jemand mit Raw Types einen Wert vom falschen Typ einschmuggelt, muss poner sofort eine ClassCastException werfen.
 enunciado.en: The Inventario stores one thing per type. Write <T> Inventario poner(Class<T> tipo, T valor) (returns this; if there was already one of that type, it is replaced), <T> T sacar(Class<T> tipo) (null if there is none) and int tamano(). Even if someone uses raw types to sneak in a value of the wrong type, poner must throw a ClassCastException right away.
-pista.es: Guarda en un Map<Class<?>, Object>. El objeto Class<T> hace de «llave con tipo»: tipo.cast(valor) comprueba el tipo al guardar y tipo.cast(...) convierte sin warnings al sacar.
-pista.de: Speichere in einer Map<Class<?>, Object>. Das Class<T>-Objekt ist ein «typisierter Schlüssel»: tipo.cast(valor) prüft den Typ beim Speichern, und tipo.cast(...) wandelt beim Herausholen ohne Warnungen um.
-pista.en: Store in a Map<Class<?>, Object>. The Class<T> object acts as a "typed key": tipo.cast(valor) checks the type when storing, and tipo.cast(...) converts without warnings when taking it out.
+pista.es: Guarda en un Map<Class<?>, Object>. El objeto Class<T> hace de «llave con tipo»: tipo.cast(valor) comprueba el tipo al guardar y tipo.cast(...) convierte sin advertencias al sacar.
+pista.de: Speichere in einer Map<Class<?>, Object>. Das Class<T>-Objekt ist ein „typisierter Schlüssel“: tipo.cast(valor) prüft den Typ beim Speichern, und tipo.cast(...) wandelt beim Herausholen ohne Warnungen um.
+pista.en: Store in a Map<Class<?>, Object>. The Class<T> object acts as a “typed key”: tipo.cast(valor) checks the type when storing, and tipo.cast(...) converts without warnings when taking it out.
 plantilla:
     import java.util.*;
 

@@ -155,6 +155,10 @@ public final class PantallaPelea implements Pantalla {
     @Override
     public void alSalir(Juego j) { if (pelea != null) pelea.cerrar(); }
 
+    @Override
+    public float reservaAbajo() {
+        return 76;
+    }
     /** Carga el código ejecutable del combate sin piloto automático ni compilación implícita de robots nunca compilados. */
     private void cargarCodigoInicial(Jugador jug, Jugador.Robot r, String codigo) {
         if (encuentro.codigo != null) {
@@ -587,7 +591,7 @@ public final class PantallaPelea implements Pantalla {
         Ui ui = j.ui;
         p.rect(0, 88, p.ancho, p.alto - 88, 0x000000, 0.55f);
         float x = 30, y = 110, w = p.ancho - 60, h = p.alto - 140;
-        p.caja(x, y, w, h, 14, ui.tema.panel, 0.98f);
+        p.caja(x, y, w, h, 14, ui.tema.panel, 1f);
         String titRonda = T.f("pelea.entre_rondas", pelea.ronda(), pelea.ronda() + 1);
         float tamTit = ui.cabe(titRonda, w - 48, Math.min(32f, ui.letra * 1.3f), true);
         p.texto(ui.recortarTexto(titRonda, w - 48, tamTit, true), x + 24, y + 14, tamTit, true, ui.tema.texto, 1);

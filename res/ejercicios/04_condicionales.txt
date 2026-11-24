@@ -95,8 +95,8 @@ enunciado.es: El láser dispara si hay al menos coste de energía y el cañón n
 enunciado.de: Der Laser feuert, wenn mindestens coste Energie da ist und das Rohr nicht überhitzt ist. Gib true zurück, wenn er feuern kann. Beispiel: puedeDisparar(50, 30, false) gibt true zurück.
 enunciado.en: The laser fires if there is at least coste energy and the barrel isn't overheated. Return true if it can fire. Example: puedeDisparar(50, 30, false) returns true.
 pista.es: ! le da la vuelta a un boolean: !sobrecalentado es «no está sobrecalentado». Júntalo con && a la condición de la energía.
-pista.de: ! dreht einen boolean um: !sobrecalentado heißt «nicht überhitzt». Verbinde es mit && mit der Bedingung für die Energie.
-pista.en: ! flips a boolean: !sobrecalentado means "not overheated". Join it with && to the energy condition.
+pista.de: ! dreht einen boolean um: !sobrecalentado heißt „nicht überhitzt“. Verbinde es mit && mit der Bedingung für die Energie.
+pista.en: ! flips a boolean: !sobrecalentado means “not overheated”. Join it with && to the energy condition.
 firma: static boolean puedeDisparar(int energia, int coste, boolean sobrecalentado)
 plantilla:
     return energia >= coste;
@@ -303,11 +303,11 @@ titulo.es: El calendario del taller
 titulo.de: Der Werkstattkalender
 titulo.en: The workshop calendar
 enunciado.es: El taller abre el 29 de febrero solo en los años bisiestos: los divisibles entre 4, salvo los divisibles entre 100, que solo lo son si también son divisibles entre 400. Devuelve true si el año es bisiesto. Ejemplo: esBisiesto(2024) devuelve true y esBisiesto(1900), false.
-enunciado.de: Die Werkstatt öffnet am 29. Februar nur in Schaltjahren: durch 4 teilbar, außer durch 100 teilbar – die sind es nur, wenn sie auch durch 400 teilbar sind. Gib true zurück, wenn das Jahr ein Schaltjahr ist. Beispiel: esBisiesto(2024) gibt true zurück, esBisiesto(1900) false.
+enunciado.de: Die Werkstatt öffnet am 29. Februar nur in Schaltjahren: durch 4 teilbare Jahre, außer den durch 100 teilbaren – die sind es nur, wenn sie auch durch 400 teilbar sind. Gib true zurück, wenn das Jahr ein Schaltjahr ist. Beispiel: esBisiesto(2024) gibt true zurück, esBisiesto(1900) false.
 enunciado.en: The workshop opens on 29 February only in leap years: those divisible by 4, except those divisible by 100, which only count if they are also divisible by 400. Return true if the year is a leap year. Example: esBisiesto(2024) returns true and esBisiesto(1900) false.
 pista.es: Empieza por la regla más especial: si es divisible entre 400, true; si no, si es divisible entre 100, false; si no, mira el 4.
 pista.de: Fang mit der speziellsten Regel an: durch 400 teilbar, dann true; sonst durch 100 teilbar, dann false; sonst schau auf die 4.
-pista.en: Start with the most special rule: divisible by 400 means true; otherwise divisible by 100 means false; otherwise check 4.
+pista.en: Start with the most specific rule: divisible by 400 means true; otherwise divisible by 100 means false; otherwise check 4.
 firma: static boolean esBisiesto(int anio)
 plantilla:
     return anio % 4 == 0;
@@ -381,8 +381,8 @@ enunciado.es: Cada nivel de blindaje añade sus placas a las de los niveles de a
 enunciado.de: Jede Panzerstufe legt ihre Platten auf die der Stufen darunter: Stufe 1 gibt 10, Stufe 2 legt 20 drauf und Stufe 3 noch 30. Gib die gesamte Panzerung der Stufe zurück (außerhalb von 1 bis 3: 0). Beispiel: armaduraPorNivel(3) gibt 60 zurück. Löse es mit einem switch ohne break.
 enunciado.en: Each armor level adds its plates on top of the levels below: level 1 gives 10, level 2 adds 20 and level 3 adds 30. Return the total armor of the level (outside 1 to 3: 0). Example: armaduraPorNivel(3) returns 60. Do it with a switch without break.
 pista.es: Sin break, el switch «se cae» al caso de abajo. Ordena los casos de 3 a 1 y suma en cada uno: case 3 suma 30 y sigue al case 2…
-pista.de: Ohne break «fällt» der switch in den nächsten Fall durch. Ordne die Fälle von 3 bis 1 und addiere in jedem: case 3 addiert 30 und läuft weiter zu case 2 …
-pista.en: Without break, the switch "falls through" into the case below. Order the cases from 3 down to 1 and add in each: case 3 adds 30 and carries on to case 2…
+pista.de: Ohne break „fällt“ der switch in den nächsten Fall durch. Ordne die Fälle von 3 bis 1 und addiere in jedem: case 3 addiert 30 und läuft weiter zu case 2 …
+pista.en: Without break, the switch “falls through” into the case below. Order the cases from 3 down to 1 and add in each: case 3 adds 30 and carries on to case 2…
 firma: static int armaduraPorNivel(int nivel)
 plantilla:
     int armadura = 0;

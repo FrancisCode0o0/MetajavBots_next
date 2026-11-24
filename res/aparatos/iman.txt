@@ -34,8 +34,8 @@ public final class Iman implements Aparato {
 }
 == de
 /**
- * MAGNET «Imanator» — Ein Magnetimpuls in den Winkel, den du
- * angibst: Zieht Gegner in einem Kegel von 260 zu dir heran und
+ * MAGNET „Imanator“ — Ein Magnetimpuls in den Winkel, den du
+ * angibst: zieht Gegner in einem Kegel von 260 zu dir heran und
  * lenkt feindliche Geschosse in der Nähe in diesen Winkel um.
  *
  * So schließt du es an deinen Roboter an:
@@ -68,7 +68,7 @@ public final class Magnet implements Geraet {
 }
 == en
 /**
- * MAGNET «Imanator» — A magnetic pulse at the angle you give:
+ * MAGNET “Imanator” — A magnetic pulse at the angle you give:
  * pulls enemies in a 260-unit cone toward you and deflects nearby
  * enemy projectiles toward that angle.
  *

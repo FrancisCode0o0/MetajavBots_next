@@ -4,7 +4,7 @@ tema: 03
 orden: 1
 titulo.es: Las cuentas del robot
 titulo.de: Der Roboter rechnet
-titulo.en: The robot does the maths
+titulo.en: The robot does the math
 --- pagina
 es: Una expresión es cualquier cosa que Java puede calcular hasta llegar a un valor: 3 + 4, blindaje() / 2,
 es: e.distancia() - 50. Los operadores de siempre: + suma, - resta, * multiplica y / divide.
@@ -26,10 +26,10 @@ codigo:
 es: El operador % da el resto de una división: 17 % 5 es 2. Parece una rareza, pero es oro para un robot:
 es: turnoActual() % 60 va de 0 a 59 y vuelve a empezar, como un reloj. Sirve para hacer algo cada cierto
 es: tiempo, para saber si un número es par (n % 2 == 0) o para quedarte con la última cifra (n % 10).
-de: Der Operator % liefert den Rest einer Division: 17 % 5 ist 2. Klingt nach Spielerei, ist aber Gold wert:
+de: Der Operator % liefert den Rest einer Division: 17 % 5 ist 2. Klingt nach Spielerei, ist aber für einen Roboter Gold wert:
 de: zug() % 60 läuft von 0 bis 59 und fängt wieder von vorn an, wie eine Uhr. Damit tust du etwas in festen
 de: Abständen, prüfst, ob eine Zahl gerade ist (n % 2 == 0), oder holst dir die letzte Ziffer (n % 10).
-en: The % operator gives the remainder of a division: 17 % 5 is 2. Sounds like a curiosity, but it's gold:
+en: The % operator gives the remainder of a division: 17 % 5 is 2. Sounds like a curiosity, but it's gold for a robot:
 en: tick() % 60 goes from 0 to 59 and starts again, like a clock. Use it to do something every so often,
 en: to check if a number is even (n % 2 == 0) or to grab the last digit (n % 10).
 codigo:
@@ -87,8 +87,8 @@ es: ni mira b. Así puedes escribir listoDerecha() && e.distancia() < 200 sin ca
 de: Bedingungen verknüpfst du so: && ist „und“ (beide müssen stimmen), || ist „oder“ (eine reicht),
 de: und ! ist „nicht“ (dreht es um). Java ist faul, und das ist gut: Ist bei a && b schon a false,
 de: schaut es sich b gar nicht mehr an. So prüfst du bereitRechts() && g.entfernung() < 200 ohne Mehraufwand.
-en: To combine conditions: && means "and" (both must hold), || means "or" (one is enough)
-en: and ! means "not" (it flips it). Java is lazy, and that's good: in a && b, if a is false,
+en: To combine conditions: && means “and” (both must hold), || means “or” (one is enough)
+en: and ! means “not” (it flips it). Java is lazy, and that's good: in a && b, if a is false,
 en: it doesn't even look at b. So you can write readyRight() && e.distance() < 200 with no wasted work.
 codigo:
     boolean disparar = listoDerecha() && e.distancia() < alcanceDerecha();
@@ -99,16 +99,16 @@ es: El operador ternario es un «si» en miniatura que da un valor: condición ?
 es: Es perfecto para elegir entre dos números, pero si la cosa se complica, usa un if de verdad (tema 4).
 de: Der ternäre Operator ist ein Mini-„wenn“, das einen Wert liefert: bedingung ? wennJa : wennNein.
 de: Ideal, um zwischen zwei Zahlen zu wählen; wird es komplizierter, nimm ein richtiges if (Thema 4).
-en: The ternary operator is a tiny "if" that produces a value: condition ? ifTrue : ifFalse.
+en: The ternary operator is a tiny “if” that produces a value: condition ? ifTrue : ifFalse.
 en: It's perfect for choosing between two numbers, but if things get complicated, use a real if (topic 4).
 codigo:
     double paso = blindaje() < 30 ? 120 : 50;   // tocado: corre
     avanzar(paso);
 --- tarea
 ejercicio: t03_en_alcance
-es: ¿Está a tiro el enemigo? Devuélvelo con una sola comparación.
+es: ¿Está a tiro el rival? Devuélvelo con una sola comparación.
 de: Ist der Gegner in Reichweite? Gib es mit einem einzigen Vergleich zurück.
-en: Is the enemy in range? Return it with a single comparison.
+en: Is the rival in range? Return it with a single comparison.
 --- tarea
 ejercicio: t03_un_solo_escudo
 es: Un escudo y solo uno: combina condiciones con cuidado para que dos escudos no valgan.
@@ -129,7 +129,7 @@ de: Eins dazuzählen ist so häufig, dass es eine Abkürzung gibt: treffer++ ist
 de: Es gibt auch +=, -=, *= und /=: leben -= 10 zieht 10 ab. Mit Feldern zählst du so mit, was im Kampf passiert,
 de: zum Beispiel in beiEigenemTreffer (onHitEnemy), das jedes Mal aufgerufen wird, wenn du triffst.
 en: Adding one is so common it has a shortcut: hits++ is the same as hits = hits + 1.
-en: There's also +=, -=, *= and /=: life -= 10 subtracts 10. Use them with fields to keep score of the fight,
+en: There are also +=, -=, *= and /=: life -= 10 subtracts 10. Use them with fields to keep score of the fight,
 en: for example in onHitEnemy (alAcertar), which is called every time you land a hit.
 codigo:
     int aciertos = 0;
@@ -142,7 +142,7 @@ codigo:
 es: Cuidado con + y los textos. "Van " + 2 + 3 da "Van 23": Java lee de izquierda a derecha,
 es: y en cuanto hay un texto, + pega en vez de sumar. Si querías 5, pon paréntesis: "Van " + (2 + 3).
 de: Vorsicht mit + und Text. "Schon " + 2 + 3 ergibt "Schon 23": Java liest von links nach rechts,
-de: und sobald Text im Spiel ist, klebt + zusammen, statt zu addieren. Wolltest du 5: "Schon " + (2 + 3).
+de: und sobald Text im Spiel ist, klebt + zusammen, statt zu addieren. Wolltest du 5, setz Klammern: "Schon " + (2 + 3).
 en: Careful with + and text. "Hits " + 2 + 3 gives "Hits 23": Java reads from left to right,
 en: and as soon as there's text, + glues instead of adding. If you wanted 5, use parentheses: "Hits " + (2 + 3).
 --- pagina
@@ -165,5 +165,5 @@ en: Count your hits with ++ in onHitEnemy, announce them in a speech bubble and 
 --- tarea
 ejercicio: t03_limitar_energia
 es: Que la energía no se salga nunca de 0 a 100 (Math.clamp, Java 21).
-de: Die Energie darf nie aus 0 bis 100 herausfallen (Math.clamp, Java 21).
+de: Die Energie darf den Bereich von 0 bis 100 nie verlassen (Math.clamp, Java 21).
 en: Energy must never leave the range 0 to 100 (Math.clamp, Java 21).

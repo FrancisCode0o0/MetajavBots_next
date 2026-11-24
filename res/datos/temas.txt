@@ -2,7 +2,7 @@
 # ejercicios, los tutoriales y el manual. Una línea por tema:
 #   id | bloque | etiqueta en que se aprende | Java desde | español | Deutsch | English
 # Bloques: FUNDAMENTOS, CONTROL, DATOS, POO, AVANZADO, PROFESIONAL.
-01 | FUNDAMENTOS | NOOB_1   | 1  | Primeros pasos: programa, sentencias y comentarios | Erste Schritte: Programm, Anweisungen, Kommentare | First steps: program, statements and comments
+01 | FUNDAMENTOS | NOOB_1   | 1  | Primeros pasos: programa, sentencias y comentarios | Erste Schritte: Programm, Anweisungen und Kommentare | First steps: program, statements and comments
 02 | FUNDAMENTOS | NOOB_1   | 1  | Variables y tipos primitivos | Variablen und primitive Typen | Variables and primitive types
 03 | FUNDAMENTOS | NOOB_2   | 1  | Operadores y expresiones | Operatoren und Ausdrücke | Operators and expressions
 04 | CONTROL     | NOOB_2   | 1  | Condicionales: if, else y switch | Bedingungen: if, else und switch | Conditionals: if, else and switch

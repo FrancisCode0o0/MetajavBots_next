@@ -224,8 +224,10 @@ public final class VentanaDeCodigo {
         if (soloLectura) {
             String s = "■ " + metajavbots.textos.T.t("editor.solo_lectura");
             float tl = tamano * 0.8f, ew = p.ancho(s, tl, false) + 16;
-            p.caja(x + w - 22 - ew, y + 4, ew, tl * 1.5f, 6, t.panelAlto, 0.95f);
-            p.texto(s, x + w - 14 - ew, y + 4 + tl * 0.2f, tl, false, t.textoSuave, 1);
+            // Como una pestaña colgada del borde de arriba del editor, por fuera: así no tapa el final de la primera línea.
+            float eh = tl * 1.5f, ey = Math.max(0, y - eh + 3);
+            p.caja(x + w - 22 - ew, ey, ew, eh, 6, t.panelAlto, 1f);
+            p.texto(s, x + w - 14 - ew, ey + tl * 0.2f, tl, false, t.textoSuave, 1);
         }
     }
 

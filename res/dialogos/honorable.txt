@@ -173,7 +173,7 @@ en: My cape took that one for me.
 
 [victoria_ronda]
 es: Ronda {ronda} para mí. Te felicito por el esfuerzo.
-de: Runde {ronda} geht an mich. Respekt für deinen Einsatz.
+de: Runde {ronda} geht an mich. Respekt vor deinem Einsatz.
 en: Round {ronda} is mine. My respects for your effort.
 
 es: El acero ha decidido esta ronda.
@@ -228,7 +228,7 @@ de: Du hast mich fair besiegt. Ich verneige mich.
 en: You beat me fairly. I bow to you.
 
 es: Mi acero se apaga… pero mi honor sigue intacto.
-de: Mein Stahl erlischt… doch meine Ehre bleibt.
+de: Mein Stahl erlischt … doch meine Ehre bleibt.
 en: My steel goes dark… but my honor stands.
 
 es: {jugador}, perdóname. Volveré más afilado.
@@ -236,7 +236,7 @@ de: {jugador}, verzeih mir. Ich komme schärfer zurück.
 en: {jugador}, forgive me. I'll return sharper.
 
 es: Un duelo digno de recordar. Adiós…
-de: Ein Duell, an das man sich erinnert. Lebwohl…
+de: Ein Duell, an das man sich erinnert. Lebwohl …
 en: A duel worth remembering. Farewell…
 
 [burla]
@@ -245,7 +245,7 @@ de: Deine Deckung ist offen, mein Freund.
 en: Your guard is open, friend.
 
 es: ¿Eso es todo? Esperaba más de ti.
-de: Ist das alles? Ich hatte mehr erwartet.
+de: Ist das alles? Ich hatte mehr von dir erwartet.
 en: Is that all? I expected more from you.
 
 es: Con todo respeto: llegas tarde.
@@ -301,10 +301,10 @@ en: {jugador}, my blade is stuck in its sheath. An exception?
 
 es: Un fallo en el código. No es deshonra si lo corriges.
 de: Ein Fehler im Code. Keine Schande, wenn du ihn behebst.
-en: A bug in the code. No shame, if you fix it.
+en: A bug in the code. No shame if you fix it.
 
 es: Mi brazo no obedece. Reviso mi juramento… digo, mi código.
-de: Mein Arm gehorcht nicht. Ich prüfe meinen Schwur… äh, Code.
+de: Mein Arm gehorcht nicht. Ich prüfe meinen Schwur … äh, Code.
 en: My arm won't obey. Checking my oath… I mean, my code.
 
 es: Tropiezo sin rival delante. Qué vergüenza, {jugador}.

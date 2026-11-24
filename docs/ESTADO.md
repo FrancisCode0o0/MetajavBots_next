@@ -2,6 +2,14 @@
 
 Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDrive\Hochschule\Desarrollo de juegos\MetajavBots_next`, rama `main`.
 
+## REVISION_ESTILO_METAJAVBOTS (24-nov-2026) — a medias, la sigue OpenCode
+
+Fran (24-nov): el modo historia (HISTORIA_GUIADA y DISENO_HISTORIA) queda aparte, en la rama `main` local (b09babd), hasta que él rehaga el arte. Esta rama, `revision_estilo`, sale de CLARIDAD (8347a86) y trae la primera pasada de la revisión de estilo que Opus dejó sin terminar por el límite de uso (copia íntegra en la rama `revision_estilo_wip`), sin lo del modo historia.
+
+**Hecho (Opus)**: primera pasada de estilo y ortotipografía de los textos (unas 3380 correcciones), docs/GLOSARIO.md, PruebasDeEstilo, «¿Cómo se juega?» sin el «?» de más, nombre del robot bajo la banda del locutor y biografía una sola vez.
+
+**Pendiente**: compilar y pasar las pruebas (la rama aún no se ha compilado), segunda pasada, docs/REVISION_ESTILO.md, quitar el botón «Paso a paso» de la barra de las peleas normales, capturas finales. Lo hace OpenCode con ENCARGO_REVISION_ESTILO_OPENCODE.md.
+
 ## CLARIDAD_METAJAVBOTS (23-nov-2026, Opus) — hecho
 
 Que se entienda cómo se juega cada parte, «para el más lego». El repaso modo a modo, las mecánicas y todo lo decidido, en **docs/CLARIDAD.md**.

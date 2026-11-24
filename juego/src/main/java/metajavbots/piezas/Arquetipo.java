@@ -8,13 +8,13 @@ import metajavbots.textos.Idioma;
  * API trilingüe ({@code embestir}, {@code pulsoRadar}, {@code fortificar}).
  */
 public enum Arquetipo {
-    ASALTO("Asalto", "Sturm", "Assault",
+    ASALTO("Asalto", "Angriff", "Assault",
             "embestir()", "ansturm()", "charge()",
             "impulso frontal de velocidad", "Vorwärts-Temposchub", "forward speed burst"),
-    TACTICO("Táctico", "Taktiker", "Tactical",
+    TACTICO("Táctico", "Taktik", "Tactical",
             "pulsoRadar()", "radarImpuls()", "radarPulse()",
             "barrido de radar en 360°", "360°-Radarimpuls", "360° radar sweep"),
-    DEFENSOR("Defensor", "Verteidiger", "Defender",
+    DEFENSOR("Defensor", "Verteidigung", "Defender",
             "fortificar()", "befestigen()", "fortify()",
             "postura blindada que reduce el daño", "Abwehrhaltung gegen Schaden", "fortified stance that reduces damage");
 

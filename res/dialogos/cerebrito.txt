@@ -27,13 +27,13 @@ es: Ronda {ronda}. Contador del bucle: {ronda}. Condición de salida: ganar.
 de: Runde {ronda}. Schleifenzähler: {ronda}. Abbruchbedingung: Sieg.
 en: Round {ronda}. Loop counter: {ronda}. Exit condition: victory.
 
-es: Recalculando trayectorias... listo.
-de: Berechne Flugbahnen neu... fertig.
-en: Recalculating trajectories... done.
+es: Recalculando trayectorias… listo.
+de: Berechne Flugbahnen neu … fertig.
+en: Recalculating trajectories… done.
 
 es: Ronda {ronda}. Hipótesis: hoy gano. Vamos a comprobarla.
-de: Runde {ronda}. Hypothese: Ich gewinne. Prüfen wir sie.
-en: Round {ronda}. Hypothesis: I win. Let's test it.
+de: Runde {ronda}. Hypothese: Heute gewinne ich. Prüfen wir sie.
+en: Round {ronda}. Hypothesis: I win today. Let's test it.
 
 [ataque]
 es: Ángulo de 37,5 grados. Fuego.
@@ -65,9 +65,9 @@ es: Error de cálculo del rival: estar ahí.
 de: Rechenfehler des Gegners: dort zu stehen.
 en: Opponent's calculation error: standing there.
 
-es: Acierto número siete... no, ocho. Llevo la cuenta.
-de: Treffer Nummer sieben... nein, acht. Ich zähle mit.
-en: Hit number seven... no, eight. I'm keeping count.
+es: Acierto número siete… no, ocho. Llevo la cuenta.
+de: Treffer Nummer sieben … nein, acht. Ich zähle mit.
+en: Hit number seven… no, eight. I'm keeping count.
 
 [fallo]
 es: Fallo. Mi modelo no contaba con eso.
@@ -116,9 +116,9 @@ es: Golpe muy por encima de la media. Impresionante. Y molesto.
 de: Treffer weit über dem Durchschnitt. Beeindruckend. Und lästig.
 en: Hit far above average. Impressive. And annoying.
 
-es: Veo los números en hexadecimal... mala señal.
-de: Ich sehe alle Zahlen in Hexadezimal... schlechtes Zeichen.
-en: I'm seeing numbers in hexadecimal... bad sign.
+es: Veo los números en hexadecimal… mala señal.
+de: Ich sehe alle Zahlen in Hexadezimal … schlechtes Zeichen.
+en: I'm seeing numbers in hexadecimal… bad sign.
 
 [poco_blindaje]
 es: Blindaje al 12 %. Situación: subóptima.
@@ -130,7 +130,7 @@ de: Überlebenschance: gering. Aber nicht null. Niemals null.
 en: Survival odds: low. But not zero. Never zero.
 
 es: Activando el plan B. Y el C. Y el D, por si acaso.
-de: Aktiviere Plan B. Und C. Und D, nur für den Fall.
+de: Aktiviere Plan B. Und C. Und D, für alle Fälle.
 en: Activating plan B. And C. And D, just in case.
 
 es: Mis cálculos siguen intactos. Mi carcasa, no tanto.
@@ -139,7 +139,7 @@ en: My calculations are intact. My casing, not so much.
 
 [parte_rota]
 es: Pieza perdida: {pieza}. Recalculando sin ella.
-de: Teil verloren: {pieza}. Ich rechne ohne neu.
+de: Teil verloren: {pieza}. Ich rechne ohne das Teil neu.
 en: Part lost: {pieza}. Recalculating without it.
 
 es: {pieza} rota. Lo tenía en el 0,4 % de los futuros.
@@ -223,13 +223,13 @@ de: {jugador}, dein Algorithmus ist O(gewinnen).
 en: {jugador}, your algorithm runs in O(win).
 
 [derrota]
-es: Esto... no estaba en ningún futuro.
-de: Das... war in keiner Zukunft vorgesehen.
-en: This... wasn't in any of the futures.
+es: Esto… no estaba en ningún futuro.
+de: Das … war in keiner Zukunft vorgesehen.
+en: This… wasn't in any of the futures.
 
-es: Error fatal. Guardando volcado de memoria... ¡Bum!
-de: Schwerer Fehler. Speichere Speicherabbild... Bumm!
-en: Fatal error. Saving memory dump... Boom!
+es: Error fatal. Guardando volcado de memoria… ¡Bum!
+de: Schwerer Fehler. Speichere Speicherabbild … Bumm!
+en: Fatal error. Saving memory dump… Boom!
 
 es: {jugador}, revisa mi código. Línea 42. Seguro.
 de: {jugador}, prüf meinen Code. Zeile 42. Ganz sicher.
@@ -309,7 +309,7 @@ en: Division by zero. The one thing I can't compute.
 
 es: {jugador}, me has puesto un punto y coma (;) donde no iba. Lo he notado.
 de: {jugador}, da ist ein Semikolon (;) zu viel. Ich hab's gemerkt.
-en: {jugador}, there's a stray semicolon. I noticed.
+en: {jugador}, there's a stray semicolon (;). I noticed.
 
 [espera]
 es: Mientras escribes, calculo decimales de pi. Voy por el millón.
@@ -346,9 +346,9 @@ de: {jugador}, diesen Code würde ich in ein Lehrbuch drucken.
 en: {jugador}, I'd put this code in a textbook.
 
 [reparar]
-es: Reparación en curso: 47 %... 81 %... 100 %.
-de: Reparatur läuft: 47 %... 81 %... 100 %.
-en: Repair in progress: 47%... 81%... 100%.
+es: Reparación en curso: 47 %… 81 %… 100 %.
+de: Reparatur läuft: 47 % … 81 % … 100 %.
+en: Repair in progress: 47%… 81%… 100%.
 
 es: Aplicando parche 1.0.1.
 de: Spiele Patch 1.0.1 ein.

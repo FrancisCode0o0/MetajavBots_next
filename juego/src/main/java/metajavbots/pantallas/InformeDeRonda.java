@@ -70,7 +70,7 @@ public final class InformeDeRonda {
             yy += 10;
             Combatiente.Informe inf = pelea.informe(i);
             for (java.util.Map.Entry<String, int[]> e : inf.porArma.entrySet()) {
-                String t = "· " + e.getKey() + ": " + e.getValue()[1] + "/" + e.getValue()[0];
+                String t = "· " + nombreDelArma(e.getKey()) + ": " + e.getValue()[1] + "/" + e.getValue()[0];
                 p.texto(t, cx + 10, yy, ui.letra * 0.8f, false, ui.tema.textoSuave, 1);
                 if (ui.e.dentro(cx, yy, col - 22, ui.letra * 1.3f)) ui.avisar(T.t("informe.que.arma"));
                 yy += ui.letra * 1.3f;
@@ -128,5 +128,11 @@ public final class InformeDeRonda {
             y += p.parrafo("• " + e.texto, x + 6, y, w - 6, ui.letra * 0.78f, colPoo, 1) + 4;
         }
         return y;
+    }
+
+    /** El nombre de un arma o de una causa de daño en el idioma del jugador (laser, bala, choque…; res/textos/ui.txt, arma_de.*). */
+    static String nombreDelArma(String arma) {
+        String clave = "arma_de." + arma;
+        return T.existe(clave) ? T.t(clave) : arma;
     }
 }

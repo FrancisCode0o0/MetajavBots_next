@@ -17,6 +17,7 @@ import java.util.stream.Stream;
 
 import metajavbots.cerebro.Ranura;
 import metajavbots.cerebro.Tarea;
+import metajavbots.piezas.Modelo;
 import metajavbots.piezas.Montaje;
 import metajavbots.textos.Idioma;
 
@@ -271,6 +272,9 @@ public final class Guardado {
             }
             Path codigo = dir.resolve("robot_" + (i + 1) + ".java");
             if (Files.exists(codigo)) r.codigo = Files.readString(codigo, StandardCharsets.UTF_8);
+            // Un robot que se llama como otro modelo (se le cambió el modelo y se quedó con el nombre de antes) toma el del suyo.
+            Modelo suyo = Modelo.de(r.modelo);
+            if (suyo != null && r.seLlamaComoOtroModelo()) r.nombre = suyo.nombre(j.idioma);
             j.robots.add(r);
         }
         leerLista(v.get("piezasGanadas"), j.piezasGanadas);

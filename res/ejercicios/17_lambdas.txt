@@ -180,7 +180,7 @@ enunciado.es: Devuelve una sola Function que aplique todos los pasos en orden: p
 enunciado.de: Gib eine einzige Function zurück, die alle Schritte der Reihe nach anwendet: zuerst pasos.get(0), dann pasos.get(1) … Ist die Liste leer, gibt die Funktion zurück, was sie bekommt.
 enunciado.en: Return a single Function that applies every step in order: first pasos.get(0), then pasos.get(1)… If the list is empty, the function returns whatever it receives.
 pista.es: Empieza con Function.identity() y ve uniendo con resultado = resultado.andThen(paso). Ojo: compose aplica en el orden contrario.
-pista.de: Beginne mit Function.identity() und häng an mit resultado = resultado.andThen(paso). Achtung: compose wendet in umgekehrter Reihenfolge an.
+pista.de: Beginne mit Function.identity() und häng mit resultado = resultado.andThen(paso) einen Schritt nach dem anderen an. Achtung: compose wendet in umgekehrter Reihenfolge an.
 pista.en: Start with Function.identity() and keep joining with resultado = resultado.andThen(paso). Careful: compose applies in the opposite order.
 firma: static Function<Integer, Integer> encadenar(List<Function<Integer, Integer>> pasos)
 plantilla:
@@ -252,8 +252,8 @@ enunciado.es: Devuelve una función que dé los mismos resultados que f pero que
 enunciado.de: Gib eine Funktion zurück, die dieselben Ergebnisse wie f liefert, f aber nur einmal pro unterschiedlichem Wert aufruft: Merk dir die Ergebnisse und liefere sie erneut. Das ist Memoisierung, eine häufige Technik in Algorithmen.
 enunciado.en: Return a function that gives the same results as f but calls it only once for each distinct value: store the results and reuse them. This is memoization, a technique used a lot in algorithms.
 pista.es: Crea un Map<T, R> fuera de la lambda y devuelve x -> memoria.computeIfAbsent(x, f). La lambda «captura» el mapa y lo conserva entre llamadas.
-pista.de: Leg eine Map<T, R> außerhalb des Lambdas an und gib x -> memoria.computeIfAbsent(x, f) zurück. Das Lambda «fängt» die Map ein und behält sie zwischen den Aufrufen.
-pista.en: Create a Map<T, R> outside the lambda and return x -> memoria.computeIfAbsent(x, f). The lambda "captures" the map and keeps it between calls.
+pista.de: Leg eine Map<T, R> außerhalb des Lambdas an und gib x -> memoria.computeIfAbsent(x, f) zurück. Das Lambda „fängt“ die Map ein und behält sie zwischen den Aufrufen.
+pista.en: Create a Map<T, R> outside the lambda and return x -> memoria.computeIfAbsent(x, f). The lambda “captures” the map and keeps it between calls.
 firma: static <T, R> Function<T, R> recordar(Function<T, R> f)
 plantilla:
     return f;

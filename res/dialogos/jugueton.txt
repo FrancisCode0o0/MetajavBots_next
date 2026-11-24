@@ -24,7 +24,7 @@ de: Level {ronda}! Ready? GO!
 en: Level {ronda}! Ready? GO!
 
 es: Ronda {ronda}. Cargando… cargando… ¡listo!
-de: Runde {ronda}. Lädt… lädt… fertig!
+de: Runde {ronda}. Lädt … lädt … fertig!
 en: Round {ronda}. Loading… loading… done!
 
 es: ¡Mundo {ronda}! Aquí sale el jefe, seguro.
@@ -37,7 +37,7 @@ en: Round {ronda}! Combo counter reset.
 
 [ataque]
 es: ¡Arriba, arriba, abajo, abajo… FUEGO!
-de: Hoch, hoch, runter, runter… FEUER!
+de: Hoch, hoch, runter, runter … FEUER!
 en: Up, up, down, down… FIRE!
 
 es: ¡Pium pium!
@@ -48,7 +48,7 @@ es: ¡Botón A! ¡Botón A! ¡Botón A!
 de: A-Knopf! A-Knopf! A-Knopf!
 en: A button! A button! A button!
 
-es: ¡Toma powerup!
+es: ¡Toma power-up!
 de: Hier, ein Power-up!
 en: Have a power-up!
 
@@ -129,7 +129,7 @@ es: ¡Barra en rojo! ¡Bip, bip, bip!
 de: Balken im Roten! Piep, piep, piep!
 en: Health bar in the red! Beep, beep, beep!
 
-es: {jugador}, ¿guardaste la partida? Pregunto por nada.
+es: {jugador}, ¿guardaste la partida? Solo pregunto.
 de: {jugador}, hast du gespeichert? Nur so gefragt.
 en: {jugador}, did you save the game? Just asking.
 
@@ -224,7 +224,7 @@ en: End credits! And I'm in all of them!
 
 [derrota]
 es: Game over… ¿alguien tiene otra moneda?
-de: Game Over… hat jemand noch eine Münze?
+de: Game Over … hat jemand noch eine Münze?
 en: Game over… anyone got another coin?
 
 es: ¡Nooo! ¡Y no había guardado!
@@ -232,7 +232,7 @@ de: Neiiin! Und ich hab nicht gespeichert!
 en: Nooo! And I didn't save!
 
 es: Pantalla de continuar… diez… nueve… ocho…
-de: Weiter-Bildschirm… zehn… neun… acht…
+de: Weiter-Bildschirm … zehn … neun … acht …
 en: Continue screen… ten… nine… eight…
 
 es: Bien jugado, {rival}. ¡Pero te reto otra vez!
@@ -263,7 +263,7 @@ en: {rival}, you play like you read the manual upside down.
 
 es: Eres un enemigo de nivel uno con traje de jefe.
 de: Du bist ein Level-eins-Gegner im Boss-Kostüm.
-en: You're a level one enemy in a boss costume.
+en: You're a level-one enemy in a boss costume.
 
 es: Tu récord lo bato con los ojos cerrados y un dedo.
 de: Deinen Highscore knacke ich blind und mit einem Finger.
@@ -291,7 +291,7 @@ de: Mehr Erfahrungspunkte! Meine Pixel glitzern.
 en: More XP! My pixels are sparkling.
 
 es: ¡Logro conseguido: ser increíbles!
-de: Erfolg freigeschaltet: Unglaublich sein!
+de: Erfolg freigeschaltet: unglaublich sein!
 en: Achievement unlocked: being awesome!
 
 [error_codigo]
@@ -314,14 +314,14 @@ en: Blue screen! Well, green. But broken.
 [espera]
 es: Mientras programas, juego a la serpiente en mi pantalla.
 de: Während du codest, spiele ich Snake auf meinem Bildschirm.
-en: While you code, I'm playing snake on my screen.
+en: While you code, I'm playing Snake on my screen.
 
 es: ¿Ya? ¿Ya? ¿Ya? ¿Ya está?
 de: Fertig? Fertig? Fertig? Schon fertig?
 en: Done? Done? Done? Is it done?
 
 es: Pantalla de carga… la más larga de mi vida.
-de: Ladebildschirm… der längste meines Lebens.
+de: Ladebildschirm … der längste meines Lebens.
 en: Loading screen… the longest of my life.
 
 es: Ponme un truco secreto, {jugador}. Uno chulo.
@@ -355,7 +355,7 @@ de: Heiltrank! Gluck, gluck, gluck!
 en: Potion! Glug, glug, glug!
 
 es: Recargando barra de vida… ¡tirurí!
-de: Lebensbalken lädt… düdelü!
+de: Lebensbalken lädt … düdelü!
 en: Refilling health bar… bleep bloop!
 
 es: ¡Respawn! Como nuevo.

@@ -135,7 +135,7 @@ tipo: clase
 titulo.es: Fibonacci con memoria
 titulo.de: Fibonacci mit Gedächtnis
 titulo.en: Fibonacci with memory
-enunciado.es: fib(0) = 0, fib(1) = 1 y fib(n) = fib(n - 1) + fib(n - 2). La versión de la plantilla es correcta pero calcula lo mismo millones de veces: fib(90) no acabaría nunca. Guarda cada resultado la primera vez (memoización) para que static long fib(int n) sea rápida. Si n es negativo, IllegalArgumentException.
+enunciado.es: fib(0) = 0, fib(1) = 1 y fib(n) = fib(n - 1) + fib(n - 2). La versión de la plantilla es correcta, pero calcula lo mismo millones de veces: fib(90) no acabaría nunca. Guarda cada resultado la primera vez (memoización) para que static long fib(int n) sea rápida. Si n es negativo, IllegalArgumentException.
 enunciado.de: fib(0) = 0, fib(1) = 1 und fib(n) = fib(n - 1) + fib(n - 2). Die Version in der Vorlage ist richtig, rechnet aber dasselbe millionenfach: fib(90) würde nie fertig. Speichere jedes Ergebnis beim ersten Mal (Memoisierung), damit static long fib(int n) schnell ist. Bei negativem n eine IllegalArgumentException.
 enunciado.en: fib(0) = 0, fib(1) = 1 and fib(n) = fib(n - 1) + fib(n - 2). The template's version is correct but computes the same thing millions of times: fib(90) would never finish. Store each result the first time (memoization) so that static long fib(int n) is fast. If n is negative, IllegalArgumentException.
 pista.es: Un private static final Map<Integer, Long> memoria: mira si ya está con get; si no, calcula, guarda con put y devuelve. Ojo: computeIfAbsent con recursión dentro lanza ConcurrentModificationException en un HashMap.
@@ -272,7 +272,7 @@ enunciado.es: El mapa de la arena tiene suelo '.' y muros '#'. Desde (fila, col)
 enunciado.de: Die Arenakarte hat Boden '.' und Mauern '#'. Ab (fila, col) markiert der Roboter mit 'o' allen Boden, den er waagerecht oder senkrecht erreichen kann. Gib zurück, wie viele Felder er markiert hat. Startet er außerhalb der Karte, auf einer Mauer oder auf schon Markiertem, 0.
 enunciado.en: The arena map has floor '.' and walls '#'. From (fila, col), the robot paints with 'o' all the floor it can reach moving horizontally or vertically. Return how many cells it painted. If it starts outside the map, on a wall or on something already painted, 0.
 pista.es: Es el «relleno por difusión» (flood fill). Si la casilla no vale, return 0. Si vale, píntala primero (así no vuelves a ella) y devuelve 1 + la suma de las cuatro vecinas.
-pista.de: Das ist «Flood Fill». Ist das Feld ungültig, return 0. Sonst markiere es zuerst (damit du nicht zurückkommst) und gib 1 + die Summe der vier Nachbarn zurück.
+pista.de: Das ist „Flood Fill“. Ist das Feld ungültig, return 0. Sonst markiere es zuerst (damit du nicht zurückkommst) und gib 1 + die Summe der vier Nachbarn zurück.
 pista.en: This is flood fill. If the cell isn't valid, return 0. Otherwise paint it first (so you don't come back to it) and return 1 + the sum of the four neighbors.
 firma: static int rellenar(char[][] mapa, int fila, int col)
 plantilla:
@@ -474,9 +474,9 @@ tipo: metodo
 titulo.es: Torretas sin fuego cruzado
 titulo.de: Geschütztürme ohne Kreuzfeuer
 titulo.en: Turrets without crossfire
-enunciado.es: Hay que poner n torretas en una cuadrícula de n x n, una por fila, sin que dos compartan columna ni diagonal (se dispararían). columnas[f] dice en qué columna está la torreta de la fila f, para las filas anteriores a fila. Devuelve de cuántas formas se pueden colocar las que faltan. La llamada inicial es colocar(n, 0, new int[n]).
-enunciado.de: Es sollen n Geschütztürme auf ein n x n-Raster, einer pro Zeile, ohne dass zwei Spalte oder Diagonale teilen (sie würden sich beschießen). columnas[f] gibt für die Zeilen vor fila an, in welcher Spalte der Turm von Zeile f steht. Gib zurück, auf wie viele Arten sich die fehlenden platzieren lassen. Der erste Aufruf ist colocar(n, 0, new int[n]).
-enunciado.en: You must place n turrets on an n x n grid, one per row, so that no two share a column or a diagonal (they would shoot each other). columnas[f] says which column the turret in row f is in, for the rows before fila. Return how many ways the remaining ones can be placed. The first call is colocar(n, 0, new int[n]).
+enunciado.es: Hay que poner n torretas en una cuadrícula de n × n, una por fila, sin que dos compartan columna ni diagonal (se dispararían). columnas[f] dice en qué columna está la torreta de la fila f, para las filas anteriores a fila. Devuelve de cuántas formas se pueden colocar las que faltan. La llamada inicial es colocar(n, 0, new int[n]).
+enunciado.de: Es sollen n Geschütztürme auf ein n×n-Raster gestellt werden, einer pro Zeile, ohne dass sich zwei eine Spalte oder Diagonale teilen (sie würden sich beschießen). columnas[f] gibt für die Zeilen vor fila an, in welcher Spalte der Turm von Zeile f steht. Gib zurück, auf wie viele Arten sich die fehlenden platzieren lassen. Der erste Aufruf ist colocar(n, 0, new int[n]).
+enunciado.en: You must place n turrets on an n × n grid, one per row, so that no two share a column or a diagonal (they would shoot each other). columnas[f] says which column the turret in row f is in, for the rows before fila. Return how many ways the remaining ones can be placed. The first call is colocar(n, 0, new int[n]).
 pista.es: Si fila == n, ya están todas: 1 forma. Si no, prueba cada columna c: si no choca con ninguna fila anterior f (columnas[f] != c y Math.abs(columnas[f] - c) != fila - f), apúntala en columnas[fila] y suma colocar(n, fila + 1, columnas).
 pista.de: Ist fila == n, stehen alle: 1 Möglichkeit. Sonst probier jede Spalte c: Kollidiert sie mit keiner früheren Zeile f (columnas[f] != c und Math.abs(columnas[f] - c) != fila - f), trag sie in columnas[fila] ein und addiere colocar(n, fila + 1, columnas).
 pista.en: If fila == n, they are all placed: 1 way. Otherwise try each column c: if it doesn't clash with any earlier row f (columnas[f] != c and Math.abs(columnas[f] - c) != fila - f), record it in columnas[fila] and add colocar(n, fila + 1, columnas).
@@ -582,9 +582,9 @@ titulo.en: Paths across the arena grid
 enunciado.es: Un robot empieza en la esquina superior izquierda de una cuadrícula de filas por columnas y quiere llegar a la esquina inferior derecha moviéndose solo hacia abajo o hacia la derecha. Devuelve de forma recursiva cuántos caminos distintos hay (0 si filas <= 0 o columnas <= 0). Ejemplos: caminos(2, 2) devuelve 2, caminos(2, 3) devuelve 3 y caminos(3, 3) devuelve 6.
 enunciado.de: Ein Roboter startet in der oberen linken Ecke eines Rasters mit filas Zeilen und columnas Spalten und will nach unten rechts, indem er nur nach unten oder rechts fährt. Gib rekursiv zurück, wie viele verschiedene Wege es gibt (0 bei filas <= 0 oder columnas <= 0). Beispiele: caminos(2, 2) gibt 2 zurück, caminos(2, 3) 3 und caminos(3, 3) 6.
 enunciado.en: A robot starts at the top-left corner of a grid with filas rows and columnas columns and wants to reach the bottom-right corner moving only down or right. Recursively return how many distinct paths exist (0 if filas <= 0 or columnas <= 0). Examples: caminos(2, 2) returns 2, caminos(2, 3) returns 3, and caminos(3, 3) returns 6.
-pista.es: Si filas == 1 o columnas == 1 solo hay 1 camino recto. En cualquier otro caso, suma bajar (filas - 1, columnas) más ir a la derecha (filas, columnas - 1).
+pista.es: Si filas == 1 o columnas == 1, solo hay 1 camino recto. En cualquier otro caso, suma bajar (filas - 1, columnas) más ir a la derecha (filas, columnas - 1).
 pista.de: Bei filas == 1 oder columnas == 1 gibt es genau 1 geraden Weg. Sonst addiere nach unten (filas - 1, columnas) und nach rechts (filas, columnas - 1).
-pista.en: If filas == 1 or columnas == 1 there is only 1 straight path. Otherwise add going down (filas - 1, columnas) plus going right (filas, columnas - 1).
+pista.en: If filas == 1 or columnas == 1, there is only 1 straight path. Otherwise add going down (filas - 1, columnas) plus going right (filas, columnas - 1).
 firma: static int caminos(int filas, int columnas)
 plantilla:
     return 0;
@@ -648,7 +648,7 @@ titulo.de: Den Schrott in zwei gleiche Stapel teilen
 titulo.en: Split scrap into two equal lots
 enunciado.es: Dos robots quieren repartirse toda la chatarra del array pesos en dos montones (cada pieza va exactamente a un montón) de modo que ambos montones pesen exactamente lo mismo. Devuelve true si el reparto es posible usando recursión con retroceso. Ejemplos: dividirEnDos(new int[]{2, 2}) devuelve true, dividirEnDos(new int[]{2, 3}) devuelve false y dividirEnDos(new int[]{5, 2, 3}) devuelve true.
 enunciado.de: Zwei Roboter wollen den gesamten Schrott im Array pesos auf zwei Stapel aufteilen (jedes Teil kommt genau auf einen Stapel), sodass beide Stapel gleich viel wiegen. Gib mit Rekursion und Backtracking true zurück, wenn die Aufteilung möglich ist. Beispiele: dividirEnDos(new int[]{2, 2}) gibt true zurück, dividirEnDos(new int[]{2, 3}) false und dividirEnDos(new int[]{5, 2, 3}) true.
-enunciado.en: Two robots want to divide all the scrap in array pesos into two piles (every piece goes to exactly one pile) so that both piles have the exact same total weight. Return true if such a split is possible using recursive backtracking. Examples: dividirEnDos(new int[]{2, 2}) returns true, dividirEnDos(new int[]{2, 3}) returns false, and dividirEnDos(new int[]{5, 2, 3}) returns true.
+enunciado.en: Two robots want to divide all the scrap in array pesos into two piles (every part goes to exactly one pile) so that both piles have the exact same total weight. Return true if such a split is possible using recursive backtracking. Examples: dividirEnDos(new int[]{2, 2}) returns true, dividirEnDos(new int[]{2, 3}) returns false, and dividirEnDos(new int[]{5, 2, 3}) returns true.
 pista.es: Usa un método auxiliar recursivo auxiliar(pesos, indice, sumaA, sumaB) que pruebe meter pesos[indice] en sumaA o en sumaB; al llegar al final, comprueba sumaA == sumaB.
 pista.de: Nutze eine rekursive Hilfsmethode auxiliar(pesos, indice, sumaA, sumaB), die pesos[indice] entweder zu sumaA oder zu sumaB legt; am Ende prüfe sumaA == sumaB.
 pista.en: Use a recursive helper auxiliar(pesos, indice, sumaA, sumaB) that tries adding pesos[indice] to either sumaA or sumaB; at the end check sumaA == sumaB.

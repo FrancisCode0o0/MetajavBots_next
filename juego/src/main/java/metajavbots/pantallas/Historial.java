@@ -72,8 +72,9 @@ public final class Historial implements Pantalla {
             if (my2 + tFila > p.alto - 32) break;
             String cta = en.getValue()[0] + " / " + en.getValue()[1];
             float wCta = p.ancho(cta, tFila, false) + 16;
-            float tNom = ui.cabeEntero(en.getKey(), cwMitad - 36 - wCta, tFila, false);
-            p.texto(en.getKey(), mx + 18, my2, tNom, false, ui.tema.texto, 1);
+            String modo = nombreDelModo(en.getKey());
+            float tNom = ui.cabeEntero(modo, cwMitad - 36 - wCta, tFila, false);
+            p.texto(modo, mx + 18, my2, tNom, false, ui.tema.texto, 1);
             p.textoDerecha(cta, mx + cwMitad - 18, my2, tFila, false, ui.tema.textoSuave, 1);
             my2 += tFila * 1.42f;
         }
@@ -117,7 +118,7 @@ public final class Historial implements Pantalla {
             p.texto(resultado, c2, yy, tl, true, color, 1);
             String danoTxt = Math.round(r.danoHecho) + " / " + Math.round(r.danoRecibido);
             float cifras = Math.max(p.ancho("000 / 000", tl, false), p.ancho(danoTxt, tl, false)) + 36;
-            String rivalModo = r.rival + " (" + r.modo + ")";
+            String rivalModo = r.rival + " (" + nombreDelModo(r.modo) + ")";
             float tRiv = ui.cabeEntero(rivalModo, Math.max(60, rx + rw - cifras - c3), tl, false);
             p.texto(rivalModo, c3, yy, tRiv, false, ui.tema.texto, 1);
             p.textoDerecha(danoTxt, rx + rw - 28, yy, tl, false, ui.tema.textoSuave, 1);
@@ -187,5 +188,25 @@ public final class Historial implements Pantalla {
             p.rect(x + 20 + i * bw, alto >= 0 ? base - alto : base, bw - 3, Math.max(2, Math.abs(alto)), color, 1);
         }
         if (n == 0) p.textoCentrado(T.t("historial.vacio"), x + gw / 2, base - 10, ui.letra * 0.9f, false, ui.tema.textoApagado, 1);
+    }
+
+    /** El nombre de un modo de pelea guardado en el historial (ADAPTADA, AZAR…) en el idioma del jugador. */
+    static String nombreDelModo(String modo) {
+        String clave = switch (modo == null ? "" : modo) {
+            case "ADAPTADA" -> "pelear.adaptada";
+            case "AZAR" -> "pelear.azar";
+            case "PRACTICA" -> "pelear.practica";
+            case "AJENO" -> "pelear.ajenos";
+            case "ROYALE" -> "pelear.royale";
+            case "EQUIPOS" -> "pelear.equipos";
+            case "ROTO" -> "especial.rotos";
+            case "TOPE" -> "especial.tope";
+            case "SENIOR" -> "especial.senior";
+            case "TEMARIO" -> "menu.temario";
+            case "TUTORIAL" -> "menu.tutoriales";
+            case "HISTORIA" -> "menu.historia";
+            default -> "modo." + (modo == null ? "" : modo.toLowerCase(java.util.Locale.ROOT));
+        };
+        return T.existe(clave) ? T.t(clave) : modo;
     }
 }

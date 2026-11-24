@@ -24,12 +24,12 @@ es:
 de:
     In MetajavBots steuerst du deinen Roboter nicht mit dem Controller: Du schreibst ihm in Java, was er tun soll, und im Kampf macht er es allein.
     Das ist, als wärst du Trainer eines sehr gehorsamen Boxers: Im Gym (der Werkstatt) bringst du ihm die Schläge bei; im Ring (Auf in den Kampf! oder Herausforderungen) kannst du nur zuschauen und aus der Ecke rufen; zwischen den Runden (der Pause) änderst du die Taktik.
-    Fang mit den Tutorials und Demonstrationen an: Sie gehen von null bis Senior, und jede Lektion verbessert deinen Roboter. Die Übungen sind kurz und prüfen sich selbst. Den Kampf gewinnt, wer weniger Schaden nimmt.
+    Fang mit den Tutorials und Demos an: Sie gehen von null bis Senior, und jede Lektion verbessert deinen Roboter. Die Übungen sind kurz und prüfen sich selbst. Den Kampf gewinnt, wer weniger Schaden nimmt.
     Und wenn du etwas nicht verstehst, drück F2 und frag mich: Variable, Klasse, Laden, Debugger, warum ich verliere … egal was.
 en:
     In MetajavBots you don't steer your robot with a controller: you write in Java what it should do, and in the fight it does it on its own.
     It's like coaching a very obedient boxer: in the gym (the Workshop) you teach it the punches; in the ring (Let's fight! or Challenges) you can only watch and shout from the corner; between rounds (the break) you change its tactics.
-    Start with Tutorials and Demonstrations: they go from zero to senior and each lesson improves your robot. The Exercises are short and check themselves. Whoever takes less damage wins the fight.
+    Start with Tutorials and Demos: they go from zero to senior and each lesson improves your robot. The Exercises are short and check themselves. Whoever takes less damage wins the fight.
     And if you don't understand something, press F2 and ask me: variable, class, shop, debugger, why am I losing… anything.
 pseudo.es:
     REPETIR:
@@ -70,20 +70,20 @@ es:
     Tu robot tiene tres mandos: las ruedas (avanzar, retroceder), el cuerpo (girar, girarHacia) y la cabeza, que es su mira (apuntar, apuntarHacia, apuntarA). Y obedece con tres reglas.
     Una: cada mando recuerda solo la última orden del turno. Es como un mando a distancia con un solo botón de memoria: si pulsas dos canales, se queda con el segundo. En cada turno se llama primero a los avisos (alRecibirGolpe, alVerEnemigo…) y después a cadaTurno, así que si cadaTurno le da otra orden a la cabeza, borra la que le diste en alVerEnemigo.
     Dos: las órdenes tardan. La cabeza gira despacio, como un búho, unos 14° en cada turno (menos con armas pesadas). Pedir «mira allí» no la pone allí de golpe: llega varios turnos después.
-    Tres: atacar() dispara al momento, hacia donde mira la cabeza en ese instante, no hacia donde le acabas de pedir que mire. Si lo llamas otra vez en el mismo turno usa el otro brazo; más veces no hace nada, porque los brazos tienen que enfriarse.
+    Tres: atacar() dispara al momento, hacia donde mira la cabeza en ese instante, no hacia donde le acabas de pedir que mire. Si lo llamas otra vez en el mismo turno, usa el otro brazo; más veces no hace nada, porque los brazos tienen que enfriarse.
     Para verlo: en la pelea, pulsa «Paso a paso». La pelea se para y, turno a turno, ves qué línea de tu código actúa, qué recibe cada mando y cuánto le falta a la mira. Si una orden borra a otra o atacas con la mira lejos, el depurador y yo te diremos las dos líneas de tu código.
 de:
     Dein Roboter hat drei Regler: die Räder (vorwaerts, rueckwaerts), den Körper (drehen, drehenNach) und den Kopf, also sein Visier (zielen, zielenNach, zielenAuf). Und er gehorcht nach drei Regeln.
     Erstens: Jeder Regler merkt sich nur den letzten Befehl des Zugs. Wie eine Fernbedienung mit nur einer Speichertaste: Drückst du zwei Sender, bleibt der zweite. In jedem Zug laufen zuerst die Meldungen (beiTreffer, beiSicht …) und dann jedenZug. Gibt jedenZug dem Kopf also einen anderen Befehl, löscht er den aus beiSicht.
-    Zweitens: Befehle brauchen Zeit. Der Kopf dreht langsam, wie eine Eule, etwa 14° pro Zug (mit schweren Waffen weniger). „Schau dorthin“ bringt ihn nicht auf einen Schlag dorthin: Er kommt erst ein paar Züge später an.
+    Zweitens: Befehle brauchen Zeit. Der Kopf dreht sich langsam, wie eine Eule, etwa 14° pro Zug (mit schweren Waffen weniger). „Schau dorthin“ bringt ihn nicht auf einen Schlag dorthin: Er kommt erst ein paar Züge später an.
     Drittens: angreifen() schießt sofort, dorthin, wohin der Kopf in diesem Moment schaut, nicht dorthin, wohin er gerade schauen soll. Rufst du es im selben Zug noch einmal auf, nimmt es den anderen Arm; öfter bringt nichts, weil die Arme abkühlen müssen.
     Zum Ansehen: Drück im Kampf auf „Schritt für Schritt“. Der Kampf hält an, und Zug für Zug siehst du, welche Zeile deines Codes wirkt, was jeder Regler bekommt und wie viel dem Visier noch fehlt. Löscht ein Befehl einen anderen oder greifst du mit dem Visier weit daneben an, nennen der Debugger und ich dir die zwei Zeilen deines Codes.
 en:
-    Your robot has three controls: the wheels (ahead, back), the body (turn, turnTo) and the head, which is its sight (aim, aimTo, aimAt). And it obeys by three rules.
+    Your robot has three controls: the wheels (ahead, back), the body (turn, turnTo) and the head, which is its sight (aim, aimTo, aimAt). And it obeys according to three rules.
     One: each control remembers only the last order of the tick. It's like a remote with a single memory button: press two channels and it keeps the second. Every tick the events run first (onHit, onSeeEnemy…) and onTick last, so if onTick gives the head another order, it erases the one you gave in onSeeEnemy.
-    Two: orders take time. The head turns slowly, like an owl, about 14° each tick (less with heavy weapons). Saying "look over there" doesn't put it there at once: it arrives a few ticks later.
+    Two: orders take time. The head turns slowly, like an owl, about 14° each tick (less with heavy weapons). Saying “look over there” doesn't put it there at once: it arrives a few ticks later.
     Three: attack() fires at once, where the head is looking at that moment, not where you just asked it to look. Call it again in the same tick and it uses the other arm; more calls do nothing, because the arms need to cool down.
-    To see it: in a fight, press "Step by step". The fight pauses and, tick by tick, you see which line of your code acts, what each control gets and how far the sight still has to go. If an order erases another or you attack with the sight far off, the debugger and I will tell you the two lines of your code.
+    To see it: in a fight, press “Step by step”. The fight pauses and, tick by tick, you see which line of your code acts, what each control gets and how far the sight still has to go. If an order erases another or you attack with the sight far off, the debugger and I will tell you the two lines of your code.
 pseudo.es:
     CADA TURNO, en este orden:
         1. los avisos (al recibir golpe, al ver enemigo…)
@@ -105,8 +105,8 @@ pseudo.en:
 ejemplo:
     // Lo que hace la plantilla del primer robot, turno a turno: || Was die Vorlage des ersten Roboters Zug für Zug tut: || What the first robot's template does, tick by tick:
     public void alVerEnemigo(Enemigo e) {
-        apuntarHacia(e.angulo());   // 1.º pide «mira al enemigo» || 1. verlangt „schau zum Gegner“ || 1st asks "look at the enemy"
-        atacar();                   // 2.º dispara YA, hacia donde mira AHORA || 2. schießt SOFORT, wohin es JETZT schaut || 2nd fires NOW, where it looks NOW
+        apuntarHacia(e.angulo());   // 1.º pide «mira al enemigo» || 1. verlangt „schau zum Gegner“ || 1st asks “look at the enemy”
+        atacar();                   // 2.º dispara YA, hacia donde mira AHORA || 2. schießt SOFORT, wohin er JETZT schaut || 2nd fires NOW, where it looks NOW
     }
     public void cadaTurno() {
         apuntar(12);                // 3.º borra la orden del 1.º || 3. löscht den Befehl aus 1. || 3rd erases the order from the 1st
@@ -116,50 +116,50 @@ ejemplo:
 nivel: 6
 tema: --
 titulo.es: Tutoriales y Demostraciones
-titulo.de: Tutorials und Demonstrationen
-titulo.en: Tutorials and Demonstrations
+titulo.de: Tutorials und Demos
+titulo.en: Tutorials and Demos
 claves.es: como empiezo, empezar, principiante, tutorial, tutoriales, demostracion, demostraciones, demos, aprender desde cero, primeros pasos
 claves.de: wie fange ich an, anfangen, anfanger, tutorial, tutorials, demonstration, demonstrationen, demos, von null lernen, erste schritte
 claves.en: how do i start, get started, beginner, tutorial, tutorials, demonstration, demonstrations, demos, learn from scratch, first steps
 resumen.ia: Tutorials (guided lessons from zero to senior) and Demonstrations (watch example robots fight with coach commentary)
 tip.juego_empezar_tutoriales.condicion: principiante
 tip.juego_empezar_tutoriales.es: ¡Eh, si no sabes por dónde empezar, pásate por [[Tutoriales]] y mira alguna de las [[Demostraciones]]!
-tip.juego_empezar_tutoriales.de: Hey, wenn du nicht weißt, wo du anfangen sollst, schau in die [[Tutorials]] und sieh dir eine der [[Demonstrationen]] an!
-tip.juego_empezar_tutoriales.en: Hey, if you're not sure where to start, head to [[Tutorials]] and watch one of the [[Demonstrations]]!
+tip.juego_empezar_tutoriales.de: Hey, wenn du nicht weißt, wo du anfangen sollst, schau in die [[Tutorials]] und sieh dir eine der [[Demos]] an!
+tip.juego_empezar_tutoriales.en: Hey, if you're not sure where to start, head to [[Tutorials]] and watch one of the [[Demos]]!
 tip.juego_demostraciones.condicion: principiante
 tip.juego_demostraciones.es: ¿Quieres ver robots reales en acción antes de programar el tuyo? En [[Demostraciones]] te explico sus trucos paso a paso.
-tip.juego_demostraciones.de: Willst du echte Roboter in Aktion sehen, bevor du deinen programmierst? In den [[Demonstrationen]] erkläre ich dir ihre Tricks Schritt für Schritt.
-tip.juego_demostraciones.en: Want to see real robots in action before coding yours? In [[Demonstrations]] I break down their tricks step by step.
+tip.juego_demostraciones.de: Willst du echte Roboter in Aktion sehen, bevor du deinen programmierst? In den [[Demos]] erkläre ich dir ihre Tricks Schritt für Schritt.
+tip.juego_demostraciones.en: Want to see real robots in action before coding yours? In [[Demos]] I break down their tricks step by step.
 ver: como_jugar, minijuegos_y_ejercicios, taller_y_compilar
 es:
-    Si acabas de llegar o no sabes por dónde empezar, tu mejor puerta de entrada son los Tutoriales y las Demostraciones en el bloque Aprender del Menú.
+    Si acabas de llegar o no sabes por dónde empezar, tu mejor puerta de entrada son los Tutoriales y las Demostraciones en el bloque Aprender del menú.
     Los Tutoriales te guían paso a paso desde cero hasta nivel senior: en cada lección aprendes un concepto de Java y lo aplicas enseguida a tu robot, sin abrumarte.
     En Demostraciones puedes ver peleas explicadas con robots reales en acción, con comentarios del entrenador, para entender cómo se mueven, apuntan y esquivan antes de escribir tu propio código.
-    Un truco de entrenador: mira una Demostración corta, haz el primer Tutorial y enseguida estarás listo para tu primer combate.
+    Un truco de entrenador: mira una demostración corta, haz el primer tutorial y enseguida estarás listo para tu primera pelea.
 de:
-    Wenn du gerade erst anfängst oder nicht weißt, wo du starten sollst, sind Tutorials und Demonstrationen im Bereich Lernen des Menüs der beste Einstieg.
-    Die Tutorials führen dich Schritt für Schritt von null bis Senior: In jeder Lektion lernst du ein Java-Konzept und wendest es sofort auf deinen Roboter an.
-    In den Demonstrationen siehst du erklärte Kämpfe echter Beispielroboter mit Trainerkommentar, damit du verstehst, wie sie fahren, zielen und ausweichen, bevor du selbst codest.
-    Ein Trainer-Tipp: Schau dir eine kurze Demonstration an, mach das erste Tutorial, und schon bist du bereit für deinen ersten Kampf.
+    Wenn du gerade erst anfängst oder nicht weißt, wo du starten sollst, sind Tutorials und Demos im Bereich Lernen des Menüs der beste Einstieg.
+    Die Tutorials führen dich Schritt für Schritt von null bis Senior: In jeder Lektion lernst du ein Java-Konzept und wendest es sofort auf deinen Roboter an, ohne dich zu überfordern.
+    In den Demos siehst du erklärte Kämpfe echter Beispielroboter mit Trainerkommentar, damit du verstehst, wie sie fahren, zielen und ausweichen, bevor du selbst codest.
+    Ein Trainer-Tipp: Schau dir eine kurze Demo an, mach das erste Tutorial, und schon bist du bereit für deinen ersten Kampf.
 en:
-    If you just arrived or aren't sure where to begin, your best starting point is Tutorials and Demonstrations in the Learn section of the Menu.
-    Tutorials guide you step by step from scratch to senior level: each lesson teaches a Java concept and lets you apply it to your robot right away.
-    In Demonstrations you can watch guided fights with real example robots and coach commentary, so you see how they move, aim and dodge before writing your own code.
-    Coach's tip: watch one short Demonstration, finish the first Tutorial, and you'll be ready for your first match in minutes.
+    If you just arrived or aren't sure where to begin, your best starting point is Tutorials and Demos in the Learn section of the menu.
+    Tutorials guide you step by step from scratch to senior level: each lesson teaches a Java concept and lets you apply it to your robot right away, without overwhelming you.
+    In Demos you can watch guided fights with real example robots and coach commentary, so you see how they move, aim and dodge before writing your own code.
+    Coach's tip: watch one short demo, finish the first tutorial, and you'll be ready for your first fight in minutes.
 pseudo.es:
     Menú → Aprender → Demostraciones (ver cómo pelean los ejemplos)
     Menú → Aprender → Tutoriales (lección a lección)
     aplicar lo aprendido en el Taller
 pseudo.de:
-    Menü → Lernen → Demonstrationen (Beispielkämpfe ansehen)
+    Menü → Lernen → Demos (Beispielkämpfe ansehen)
     Menü → Lernen → Tutorials (Lektion für Lektion)
     das Gelernte in der Werkstatt anwenden
 pseudo.en:
-    Menu → Learn → Demonstrations (watch example fights)
+    Menu → Learn → Demos (watch example fights)
     Menu → Learn → Tutorials (lesson by lesson)
     apply what you learned in the Workshop
 ejemplo:
-    // Empieza sin miedo: Tutoriales + Demostraciones || Fang ohne Scheu an: Tutorials + Demonstrationen || Start without fear: Tutorials + Demonstrations
+    // Empieza sin miedo: Tutoriales + Demostraciones || Fang ohne Scheu an: Tutorials + Demos || Start without fear: Tutorials + Demos
     // Cada lección desbloquea ideas reales para tu robot || Jede Lektion liefert echte Ideen für deinen Roboter || Every lesson gives real ideas for your robot
 
 === minijuegos_y_ejercicios
@@ -174,28 +174,28 @@ claves.en: minigames, minigame, exercises, exercise, codingbat, practice, train,
 resumen.ia: Minigames (5 short drills: move, radar, aim, shoot smart, dodge obstacles) and Exercises (300+ CodingBat- and CodeStepByStep-style Java problems scaling from warmup to hard strings, logic, loops, 1D/2D arrays, collections, recursive backtracking, OOP classes/inheritance/exceptions, with a live preview of the little robot waiting in its scene before you press Check, plus auto-checks)
 tip.juego_oxidado_minijuegos.condicion: oxidado
 tip.juego_oxidado_minijuegos.es: ¿Un poco oxidado tras las últimas peleas? En [[Minijuegos]] y [[Ejercicios]] tienes más de 300 retos progresivos (de calentamiento a algoritmos, matrices, colecciones y POO) para volver a punto.
-tip.juego_oxidado_minijuegos.de: Etwas eingerostet nach den letzten Kämpfen? In [[Minispielen]] und [[Übungen]] warten über 300 gestaffelte Aufgaben (vom Aufwärmen bis zu Algorithmen, Matrizen, Collections und OOP) auf dich.
+tip.juego_oxidado_minijuegos.de: Etwas eingerostet nach den letzten Kämpfen? In [[Minispielen]] und [[Übungen]] warten über 300 gestaffelte Aufgaben (vom Aufwärmen bis zu Algorithmen, Matrizen, Collections und OOP) auf dich, damit du wieder in Form kommst.
 tip.juego_oxidado_minijuegos.en: Feeling a bit rusty after recent fights? [[Minigames]] and [[Exercises]] pack over 300 progressive drills—from quick warmups to algorithms, 2D matrices, collections, and OOP—to get you sharp again.
 ver: tutoriales_y_demos, hora_de_hoy_y_temario, por_que_pierdo, minijuego_destruccion
 es:
     Si llevas varias derrotas, te sientes oxidado o quieres practicar una habilidad concreta sin la presión del ring, entra en Minijuegos y en Ejercicios.
     Los Minijuegos son cinco retos cortos contra el muñeco de entrenamiento: moverse sin chocar, girar el radar, apuntar, disparar con cabeza y esquivar obstáculos.
-    Los Ejercicios reúnen más de 300 problemas de Java al estilo CodingBat y CodeStepByStep con progresión real de dificultad (de 1 a 5 estrellas): desde calentamientos de lógica, cadenas y bucles hasta retos avanzados de arrays 1D/2D, colecciones (List, Set, Map), recursión con retroceso, clases, herencia y excepciones. Se comprueban solos al instante, dan monedas y experiencia para subir de rango, y cada uno muestra desde el inicio una vista previa del robotito en su escenario esperando a que pulses Comprobar para ver en vivo cómo ejecuta tu código.
+    Los Ejercicios reúnen más de 300 problemas de Java al estilo CodingBat y CodeStepByStep con progresión real de dificultad (de 1 a 5 estrellas): desde calentamientos de lógica, cadenas y bucles hasta retos avanzados de arrays 1D/2D, colecciones (List, Set, Map), recursión con retroceso, clases, herencia y excepciones. Se comprueban solos al instante, dan monedas y experiencia para subir de etiqueta, y cada uno muestra desde el inicio una vista previa del robotito en su escenario esperando a que pulses Comprobar para ver en vivo cómo ejecuta tu código.
     Alternar un minijuego con dos o tres ejercicios de dificultad creciente es la mejor forma de coger soltura antes de volver a la Arena.
 de:
     Wenn du ein paar Niederlagen hintereinander hast, dich eingerostet fühlst oder gezielt üben willst, öffne Minispiele und Übungen.
-    Die Minispiele sind fünf kurze Aufgaben gegen die Trainingspuppe: fahren ohne hängen zu bleiben, das Radar drehen, zielen, mit Köpfchen schießen und Hindernissen ausweichen.
-    Die Übungen umfassen über 300 Java-Aufgaben im Stil von CodingBat und CodeStepByStep mit echter Schwierigkeitsprogression (1 bis 5 Sterne): von leichten Aufwärmübungen zu Logik, Texten und Schleifen bis zu anspruchsvollen Aufgaben mit 1D-/2D-Arrays, Collections (List, Set, Map), Backtracking-Rekursion, Klassen, Vererbung und Ausnahmen. Sie prüfen sich sofort selbst, bringen Münzen sowie Erfahrung für den Aufstieg, und jede Übung zeigt von Anfang an eine Vorschau des kleinen Roboters in seiner Szene, der darauf wartet, dass du auf Prüfen drückst, um deinen Code live in Aktion zu sehen.
+    Die Minispiele sind fünf kurze Aufgaben gegen die Trainingspuppe: fahren, ohne hängen zu bleiben, das Radar drehen, zielen, mit Köpfchen schießen und Hindernissen ausweichen.
+    Die Übungen umfassen über 300 Java-Aufgaben im Stil von CodingBat und CodeStepByStep mit echter Schwierigkeitsprogression (1 bis 5 Sterne): von leichten Aufwärmübungen in Logik, Texten und Schleifen bis zu anspruchsvollen Aufgaben mit 1D-/2D-Arrays, Collections (List, Set, Map), Backtracking-Rekursion, Klassen, Vererbung und Ausnahmen. Sie prüfen sich sofort selbst, bringen Münzen sowie Erfahrung für den Aufstieg, und jede Übung zeigt von Anfang an eine Vorschau des kleinen Roboters in seiner Szene, der darauf wartet, dass du auf Prüfen drückst, um deinen Code live in Aktion zu sehen.
     Ein Minispiel im Wechsel mit zwei oder drei Übungen steigender Schwierigkeit ist das beste Training vor dem nächsten Kampf.
 en:
-    If you've had a few losses, feel rusty, or want to sharpen one skill without ring pressure, open Minigames and Exercises.
+    If you've had a few losses, feel rusty, or want to sharpen one skill without the pressure of the ring, open Minigames and Exercises.
     Minigames are five short drills against the training dummy: moving cleanly, sweeping the radar, aiming, shooting smart, and dodging obstacles.
-    Exercises gather over 300 CodingBat- and CodeStepByStep-style Java problems with a real difficulty progression (1 to 5 stars): from quick warmups in logic, strings, and loops up to tough challenges in 1D/2D arrays, collections (List, Set, Map), recursive backtracking, classes, inheritance, and exceptions. They self-check immediately, reward coins and experience toward your next rank, and each exercise shows a preview of the little robot waiting in its scene right away until you press Check to watch it run your code live.
-    Mixing one minigame with two or three exercises of rising difficulty is the fastest way to warm up before heading back to the Arena.
+    Exercises gather over 300 CodingBat- and CodeStepByStep-style Java problems with a real difficulty progression (1 to 5 stars): from quick warmups in logic, strings, and loops up to tough challenges in 1D/2D arrays, collections (List, Set, Map), recursive backtracking, classes, inheritance, and exceptions. They self-check immediately, reward coins and experience toward your next rank, and each exercise shows from the start a preview of the little robot in its scene, waiting for you to press Check so you can watch it run your code live.
+    Mixing one minigame with two or three exercises of rising difficulty is the best way to warm up before heading back to the Arena.
 pseudo.es:
     Minijuegos → practicar moverse, radar, apuntar, disparar y esquivar
     Ejercicios → resolver retos cortos con pruebas automáticas
-    ganar monedas y experiencia para subir de rango
+    ganar monedas y experiencia para subir de etiqueta
 pseudo.de:
     Minispiele → fahren, Radar, zielen, schießen und ausweichen üben
     Übungen → kurze Aufgaben mit automatischen Tests lösen
@@ -219,12 +219,12 @@ claves.de: die stunde heute, stunde heute, sitzung, routine, was lerne ich heute
 claves.en: today's hour, todays hour, session, routine, what to study today, my syllabus, syllabus, paste syllabus, class, exam, course
 resumen.ia: Today's hour (guided daily session: weak spots, new topic, fight) and My syllabus (paste or load a class syllabus to practice exact topics)
 tip.juego_hora_de_hoy.condicion: oxidado
-tip.juego_hora_de_hoy.es: ¿No sabes qué practicar hoy? En [[La hora de hoy]] te preparo repaso de lo flojo, un tema nuevo y una pelea.
-tip.juego_hora_de_hoy.de: Weißt du nicht, was du heute üben sollst? In [[Die Stunde heute]] stelle ich dir Wiederholung, ein neues Thema und einen Kampf zusammen.
+tip.juego_hora_de_hoy.es: ¿No sabes qué practicar hoy? En [[La hora de hoy]] te preparo un repaso de lo flojo, un tema nuevo y una pelea.
+tip.juego_hora_de_hoy.de: Weißt du nicht, was du heute üben sollst? In [[Die Stunde heute]] stelle ich dir eine Wiederholung deiner Schwachstellen, ein neues Thema und einen Kampf zusammen.
 tip.juego_hora_de_hoy.en: Not sure what to practice today? In [[Today's hour]] I line up weak-spot review, a new topic and a fight for you.
 tip.juego_temario.condicion: aleatorio
 tip.juego_temario.es: ¿Tienes examen o temario propio? Pégalo o cárgalo en [[Mi temario]] y practicamos exactamente los temas que necesitas.
-tip.juego_temario.de: Steht eine Prüfung an oder hast du einen eigenen Lehrplan? Füge ihn in [[Mein Lehrplan]] ein, dann üben wir genau diese Themen.
+tip.juego_temario.de: Steht eine Prüfung an oder hast du einen eigenen Lehrplan? Füge ihn in [[Mein Lehrplan]] ein oder lade ihn dort, dann üben wir genau diese Themen.
 tip.juego_temario.en: Have an exam or your own syllabus? Paste or load it in [[My syllabus]] and we'll practice those exact topics.
 ver: minijuegos_y_ejercicios, tutoriales_y_demos, ver_notas
 es:
@@ -233,10 +233,10 @@ es:
     En Mi temario puedes pegar o cargar el temario de tu clase o curso; el juego detecta los temas de Java que aparecen y te prepara ejercicios y lecciones a medida.
     Es como tener un plan de gimnasio personalizado: no pierdes tiempo pensando qué hacer y atacas justo lo que necesitas.
 de:
-    Weißt du nicht, was du heute üben sollst, oder steht eine Prüfung an? Genau dafür gibt es Die Stunde heute und Mein Lehrplan.
+    Weißt du nicht, was du heute üben sollst, oder steht eine Prüfung an? Genau dafür gibt es „Die Stunde heute“ und „Mein Lehrplan“.
     Die Stunde heute stellt dir eine komplette Trainingseinheit zusammen: Zuerst wiederholst du deine schwächeren Themen, dann lernst du etwas Neues und testest es zum Schluss im Kampf.
-    In Mein Lehrplan kannst du den Lehrplan deines Kurses einfügen oder laden; das Spiel erkennt die Java-Themen und stellt passende Übungen und Lektionen zusammen.
-    Wie ein persönlicher Trainingsplan: Du verlierst keine Zeit mit Suchen und trainierst genau das, was du brauchst.
+    In „Mein Lehrplan“ kannst du den Lehrplan deines Kurses einfügen oder laden; das Spiel erkennt die Java-Themen und stellt passende Übungen und Lektionen zusammen.
+    Das ist wie ein persönlicher Trainingsplan: Du verlierst keine Zeit mit Suchen und trainierst genau das, was du brauchst.
 en:
     Not sure what to practice today or preparing for a coding exam? That's what Today's hour and My syllabus are for.
     Today's hour builds a full training session for you: first it reviews your weak spots, then introduces a new topic, and finishes with a fight to put it to the test.
@@ -253,7 +253,7 @@ pseudo.en:
     My syllabus → paste or load your syllabus → practice those exact topics
 ejemplo:
     // Una sesión diaria constante vale más que un atracón || Regelmäßiges Training schlägt jeden Marathon || Steady daily sessions beat cramming
-    // Pega tu temario en «Mi temario» para filtrar ejercicios || Füge deinen Lehrplan in „Mein Lehrplan“ ein || Paste your syllabus in "My syllabus" to filter exercises
+    // Pega tu temario en «Mi temario» para filtrar ejercicios || Füge deinen Lehrplan in „Mein Lehrplan“ ein, um Übungen zu filtern || Paste your syllabus in “My syllabus” to filter exercises
 
 === taller_y_compilar
 nivel: 6
@@ -274,9 +274,9 @@ tip.juego_taller.es: En el [[Taller]] tienes arriba a la izquierda el botón roj
 tip.juego_taller.de: In der [[Werkstatt]] findest du oben links den roten Button [[Kompilieren]] (Strg+S): Bearbeitest du Code ohne Kompilieren oder mit Fehlern, läuft die letzte gültig kompilierte Version weiter.
 tip.juego_taller.en: In the [[Workshop]], the red [[Compile]] button (Ctrl+S) is at the top left of the Code bar: if you edit without compiling or with errors, your robot keeps running the last valid compiled version.
 tip.juego_visor_tactico.condicion: aleatorio
-tip.juego_visor_tactico.es: Activa el [[visor táctico]] durante el combate o en el banco de pruebas para ver el cono del radar, el alcance y las trayectorias en tiempo real.
-tip.juego_visor_tactico.de: Schalte im Kampf oder auf dem Prüfstand die [[Taktikansicht]] ein, um Radarkegel, Reichweite und Flugbahnen live zu sehen.
-tip.juego_visor_tactico.en: Turn on the [[tactical view]] during a fight or on the test bench to see radar cones, weapon range and trajectories live.
+tip.juego_visor_tactico.es: Activa el [[visor táctico]] durante la pelea o en el banco de pruebas para ver el cono del radar, el alcance y las trayectorias en tiempo real.
+tip.juego_visor_tactico.de: Schalte im Kampf oder auf dem Prüfstand die [[Taktikanzeige]] ein, um Radarkegel, Reichweite und Flugbahnen live zu sehen.
+tip.juego_visor_tactico.en: Turn on the [[tactical visor]] during a fight or on the test bench to see radar cones, weapon range and trajectories live.
 ver: como_jugar, tienda_y_monedas, depuracion_y_testing
 es:
     El Taller es el gimnasio y el banco de trabajo de tu robot: aquí escribes su código Java, lo compilas, cambias sus piezas y consultas la documentación de la API.
@@ -291,7 +291,7 @@ de:
 en:
     The Workshop is your robot's gym and workbench: you write its Java code, compile it, swap its parts, and browse the API documentation.
     Very important: the red Compile button with yellow text (or Ctrl+S) is the first button in the top bar of the Workshop's Code tab. If you have never compiled your robot, it enters the arena standing still and doing nothing. If you compiled before and later edit without recompiling (or with errors), your robot runs the exact last valid version you compiled; if anything is wrong, the editor underlines it in red and F2 explains it.
-    "Test here" opens a live test bench next to the editor against a dummy without touching your match history, and the Documentation tab lists every API method.
+    “Test here” opens a live test bench next to the editor against a dummy without touching your history, and the Documentation tab lists every API method.
     You can also manage multiple robots, switch models, and equip parts you've won or activated from the Shop.
 pseudo.es:
     Taller → editar código → Compilar (Ctrl+S)
@@ -321,28 +321,28 @@ claves.en: shop, coins, buy, parts, gear, nature, natures, activate part, rank, 
 resumen.ia: Shop and economy (buy parts, gear, natures, a flak cannon against fliers, a hover preview of how each part changes the robot's weight, load ratio, speed and turning, new ranged/energy weapons balanced by power vs. cooldown/energy, temporal shields with slow recharge and protection types — general, anti-projectile, anti-impact, full-spectrum — and cycle-based laser swords / heavy blunt weapons with burst charges followed by multi-turn cooldown; distributed across Noob, Junior, Senior, and Special ranks with strictly increasing prices calibrated against competition rewards; purchased parts activate via a short Java code challenge)
 tip.juego_tienda.condicion: monedas
 tip.juego_tienda.es: ¿Tienes monedas ahorradas? En la [[Tienda]] (Noob, Junior, Senior y Especial) hay armas de energía, escudos temporales con recarga lenta, espadas láser por ciclos y el cañón antiaéreo contra voladores; al pasar el ratón por una pieza ves cómo cambiarían el peso y la velocidad de tu robot, y todas se activan con un breve reto de código.
-tip.juego_tienda.de: Hast du Münzen gespart? Im [[Laden]] (Noob, Junior, Senior und Spezial) warten Energiewaffen, temporäre Schilde mit langsamer Aufladung, Laserschwerter mit Angriffszyklen und die Flugabwehrkanone gegen Flieger; fährst du mit der Maus über ein Teil, siehst du, wie sich Gewicht und Tempo deines Roboters ändern würden – alle mit kurzer Code-Aufgabe.
-tip.juego_tienda.en: Got coins saved up? The [[Shop]] (Noob, Junior, Senior, and Special) offers energy weapons, slow-recharging temporal shields, cycle-based laser swords, and the flak cannon against fliers; hover over a part to see how your robot's weight and speed would change—each activated via a short code challenge.
+tip.juego_tienda.de: Hast du Münzen gespart? Im [[Laden]] (Noob, Junior, Senior und Spezial) warten Energiewaffen, temporäre Schilde mit langsamer Aufladung, Laserschwerter mit Angriffszyklen und die Flugabwehrkanone gegen Flieger; fährst du mit der Maus über ein Teil, siehst du, wie sich Gewicht und Tempo deines Roboters ändern würden – und alle werden mit einer kurzen Code-Aufgabe aktiviert.
+tip.juego_tienda.en: Got coins saved up? The [[Shop]] (Noob, Junior, Senior, and Special) offers energy weapons, slow-recharging temporal shields, cycle-based laser swords, and the flak cannon against fliers; hover over a part to see how your robot's weight and speed would change; each one is activated with a short code task.
 tip.juego_piezas_naturalezas.condicion: aleatorio
 tip.juego_piezas_naturalezas.es: Combinar bien las [[piezas y naturalezas]] de tu robot en el Taller cambia por completo su velocidad, alcance, tipo de escudo y aguante.
 tip.juego_piezas_naturalezas.de: Eine kluge Kombination aus [[Teilen und Naturen]] in der Werkstatt verändert Tempo, Reichweite, Schildtyp und Ausdauer deines Roboters spürbar.
 tip.juego_piezas_naturalezas.en: Mixing your robot's [[parts and natures]] thoughtfully in the Workshop completely changes its speed, range, shield type, and durability.
 ver: taller_y_compilar, minijuegos_y_ejercicios, modelos_y_armas, ver_notas
 es:
-    Cada pelea ganada, cada carrera de obstáculos, cada reto de Destrucción y supervivencia y cada ejercicio resuelto te da monedas gastables para la Tienda además de experiencia para subir de rango.
-    La Tienda está organizada en cuatro rangos con precios crecientes acordes a los ingresos de cada nivel: Noob (piezas accesibles tras unas pocas partidas), Junior (mejoras intermedias), Senior (armamento avanzado) y Especial (desbloqueado al vencer a un jefe o llegar a Master, con equipamiento de élite).
-    El catálogo incluye armas a distancia y de energía equilibradas entre potencia y enfriamiento/consumo (desde el Microhaz rápido hasta el Cañón de pulso solar y el Cañón de riel cuántico), escudos temporales con recarga lenta y distintos tipos de protección (general, antiproyectil, antichoque e integral), y espadas láser o armas contundentes (Sable fotónico, Maza de impacto, Espada láser pesada y Ariete cinético) que permiten una ráfaga de golpes por ciclo antes de exigir varios turnos de enfriamiento.
+    Cada pelea ganada, cada carrera de obstáculos, cada reto de Destrucción y supervivencia y cada ejercicio resuelto te da monedas gastables para la Tienda además de experiencia para subir de etiqueta.
+    La Tienda está organizada en cuatro rangos con precios crecientes acordes a los ingresos de cada nivel: Noob (piezas accesibles tras unas pocas peleas), Junior (mejoras intermedias), Senior (armamento avanzado) y Especial (desbloqueado al vencer a un jefe o llegar a Master, con equipamiento de élite).
+    El catálogo incluye armas a distancia y de energía equilibradas entre potencia y enfriamiento/consumo (desde el Microhaz rápido hasta el Cañón de pulso solar y el Cañón de riel cuántico), escudos temporales con recarga lenta y distintos tipos de protección (general, antiproyectil, antichoque e integral), y espadas láser o armas contundentes (Sable fotónico ligero, Maza de impacto, Espada láser pesada y Ariete cinético) que permiten una ráfaga de golpes por ciclo antes de exigir varios turnos de enfriamiento.
     Cuando compras una pieza, queda pendiente de activar hasta que superas un breve reto de código en Java (desde la Tienda o el Taller); así la haces tuya y puedes equiparla.
 de:
-    Jeder gewonnene Kampf, jeder Hindernislauf, jede Runde Zerstörung & Überleben und jede gelöste Übung bringt dir neben Erfahrung für den Aufstieg auch ausgebbare Münzen für den Laden.
-    Der Laden ist in vier Stufen mit steigenden Preisen passend zu den jeweiligen Einnahmen gegliedert: Noob (nach wenigen Partien erreichbar), Junior (mittlere Upgrades), Senior (fortgeschrittene Ausrüstung) und Spezial (freigeschaltet nach einem Boss-Sieg oder Rang Master, mit Elite-Teilen).
-    Zum Angebot gehören Fernkampf- und Energiewaffen im Ausgleich zwischen Schlagkraft und Abkühlung/Energieverbrauch (vom Schnellen Mikrostrahl bis zur Solarpulskanone und Quanten-Railgun), temporäre Schilde mit langsamer Aufladung und verschiedenen Schutzarten (Allround, Projektilabwehr, Stoßabwehr und Vollschutz) sowie Laserschwerter und wuchtige Nahkampfwaffen (Photonklinge, Aufprallkeule, Schweres Laserschwert und Kinetischer Rammbock) mit begrenzter Salve pro Zyklus vor einer mehrzügigen Abkühlphase.
+    Jeder gewonnene Kampf, jeder Hindernislauf, jede Runde Zerstörung und Überleben und jede gelöste Übung bringt dir neben Erfahrung für den Aufstieg auch ausgebbare Münzen für den Laden.
+    Der Laden ist in vier Stufen mit steigenden Preisen passend zu den jeweiligen Einnahmen gegliedert: Noob (nach wenigen Kämpfen erreichbar), Junior (mittlere Upgrades), Senior (fortgeschrittene Ausrüstung) und Spezial (freigeschaltet nach einem Boss-Sieg oder dem Erreichen der Stufe Master, mit Elite-Teilen).
+    Zum Angebot gehören Fernkampf- und Energiewaffen im Ausgleich zwischen Schlagkraft und Abkühlzeit/Energieverbrauch (vom Schnellen Mikrostrahl bis zur Solarpulskanone und Quanten-Railgun), temporäre Schilde mit langsamer Aufladung und verschiedenen Schutzarten (Allround, Projektilabwehr, Stoßabwehr und Vollschutz) sowie Laserschwerter und wuchtige Nahkampfwaffen (Leichte Photonklinge, Aufprallkeule, Schweres Laserschwert und Kinetischer Rammbock) mit begrenzter Salve pro Zyklus vor einer mehrzügigen Abkühlphase.
     Nach dem Kauf bleibt jedes Teil ausstehend, bis du eine kurze Java-Code-Aufgabe löst (im Laden oder in der Werkstatt); danach kannst du es ausrüsten.
 en:
-    Every fight won, Obstacle race, Destruction & Survival run, and solved exercise earns spendable coins for the Shop alongside experience toward your next rank.
-    The Shop is organized into four ranks with strictly rising prices calibrated against each tier's income: Noob (reachable after a few matches), Junior (mid-tier upgrades), Senior (advanced gear), and Special (unlocked by defeating a boss or reaching Master, featuring elite equipment).
-    The catalog includes ranged and energy weapons trading power against charge/cooldown and energy draw (from the Rapid micro-beam to the Solar pulse cannon and Quantum railgun), temporal shields with slow recharge and distinct protection types (general, anti-projectile, anti-impact, and full-spectrum), and laser swords or heavy blunt weapons (Light photon saber, Impact mace, Heavy laser sword, and Kinetic ram) that deliver a burst of strikes per cycle before entering a multi-turn cooldown.
-    After buying a part, it stays pending until you pass a short Java code challenge (from the Shop or the Workshop); once activated, you can equip it.
+    Every fight won, obstacle race, Destruction and survival task, and solved exercise earns spendable coins for the Shop alongside experience toward your next rank.
+    The Shop is organized into four ranks with strictly rising prices calibrated against each tier's income: Noob (reachable after a few fights), Junior (mid-tier upgrades), Senior (advanced gear), and Special (unlocked by defeating a boss or reaching Master, featuring elite equipment).
+    The catalog includes ranged and energy weapons trading power against cooldown and energy draw (from the Rapid micro-beam to the Solar pulse cannon and Quantum railgun), temporal shields with slow recharge and distinct protection types (general, anti-projectile, anti-impact, and full-spectrum), and laser swords or heavy blunt weapons (Light photon saber, Impact mace, Heavy laser sword, and Kinetic ram) that deliver a burst of strikes per cycle before entering a multi-tick cooldown.
+    After you buy a part, it stays pending until you pass a short Java code task (from the Shop or the Workshop); once activated, you can equip it.
 pseudo.es:
     ganar peleas, carreras, destrucción y ejercicios → acumular monedas
     Tienda (Noob < Junior < Senior < Especial) → elegir compensación (potencia/carga, escudo/recarga o ráfaga/ciclo)
@@ -354,25 +354,25 @@ pseudo.de:
 pseudo.en:
     win fights, races, destruction runs, and exercises → earn coins
     Shop (Noob < Junior < Senior < Special) → pick your trade-off (power/charge, shield/recharge, or burst/cycle)
-    buy part → pass short code challenge → equip in the Workshop
+    buy part → pass short code task → equip in the Workshop
 ejemplo:
     // Economía por rangos: Noob < Junior < Senior < Especial || Stufen-Wirtschaft: Noob < Junior < Senior < Spezial || Tiered economy: Noob < Junior < Senior < Special
-    // Escudos temporales y armas por ciclo se activan con su reto de código || Temporäre Schilde und Zykluswaffen per Code-Aufgabe aktivieren || Temporal shields and cycle weapons activate via code challenge
+    // Escudos temporales y armas por ciclo se activan con su reto de código || Temporäre Schilde und Zykluswaffen per Code-Aufgabe aktivieren || Temporal shields and cycle weapons activate via code task
 
 === depuracion_y_testing
 nivel: 6
 tema: --
 titulo.es: Depuración y Testing
 titulo.de: Debugging und Testing
-titulo.en: Debugging and Testing
+titulo.en: Debugging and testing
 claves.es: depuracion, depurador, depurador en vivo, testing, robots rotos, reparar robot, paso a paso, breakpoint, laboratorio, laboratorio de pruebas, pruebas, junit, mutantes, caja negra, caja blanca
 claves.de: debugging, debugger, live-debugger, testing, kaputte roboter, roboter reparieren, schritt fur schritt, breakpoint, test-labor, tests, junit, mutanten, blackbox, whitebox
 claves.en: debugging, debugger, live debugger, testing, broken robots, repair robot, step by step, breakpoint, testing lab, tests, junit, mutants, blackbox, whitebox
 resumen.ia: Debugging & Testing (broken robots, live step debugger, testing lab with JUnit/mutants)
 tip.juego_depuracion.condicion: aleatorio
 tip.juego_depuracion.es: Si tu robot hace cosas raras, pásate por [[Depuración y Testing]]: robots rotos, depurador paso a paso y laboratorio de pruebas.
-tip.juego_depuracion.de: Wenn dein Roboter seltsame Dinge tut, schau in [[Debugging & Testing]] vorbei: kaputte Roboter, Live-Debugger und Test-Labor.
-tip.juego_depuracion.en: If your robot acts strangely, check out [[Debugging & Testing]]: broken robots, live step debugger and testing lab.
+tip.juego_depuracion.de: Wenn dein Roboter seltsame Dinge tut, schau bei [[Debugging und Testing]] vorbei: kaputte Roboter, Live-Debugger und Test-Labor.
+tip.juego_depuracion.en: If your robot acts strangely, check out [[Debugging and testing]]: broken robots, live step debugger and testing lab.
 tip.juego_depurador_paso.condicion: aleatorio
 tip.juego_depurador_paso.es: Con el [[depurador paso a paso]] puedes pausar la pelea, avanzar turno a turno y ver qué decide tu robot en cada línea.
 tip.juego_depurador_paso.de: Mit dem [[Live-Debugger]] pausierst du den Kampf, gehst Zug für Zug weiter und siehst in jeder Zeile, was dein Roboter entscheidet.
@@ -392,14 +392,14 @@ es:
     En el Laboratorio escribes pruebas estilo JUnit (@Test, assertEquals) con técnicas de caja negra, caja blanca y mutantes para comprobar si tus tests cazan errores escondidos.
     Si tu robot hace cosas raras en la arena, pasar cinco minutos en Depuración y Testing te ahorra una hora de adivinar a ciegas.
 de:
-    Unter Debugging & Testing trainierst du dein Entwicklerauge: Fehler schnell finden und mit Tests beweisen, dass dein Code wirklich stimmt.
+    Unter Debugging und Testing trainierst du dein Entwicklerauge: Fehler schnell finden und mit Tests beweisen, dass dein Code wirklich stimmt.
     Drei Werkzeuge warten hier: Kaputte Roboter (echte Bugs finden und beheben), der Live-Debugger (Zug für Zug Variablen und Entscheidungen beobachten) und das Test-Labor.
     Im Test-Labor schreibst du JUnit-Tests (@Test, assertEquals) mit Blackbox-, Whitebox- und Mutanten-Techniken, um zu prüfen, ob deine Tests versteckte Fehler aufspüren.
     Wenn sich dein Roboter in der Arena seltsam verhält, sparen dir fünf Minuten hier eine Stunde blindes Raten.
 en:
-    In Debugging & Testing you train your engineering eye: spotting bugs fast and proving with tests that your code truly works.
+    In Debugging and testing you train your engineering eye: spotting bugs fast and proving with tests that your code truly works.
     Three tools live here: Broken robots (find and fix real bugs in faulty robots), the Live debugger (step through ticks watching variables and decisions), and the Testing lab.
-    In the Testing lab you write JUnit-style tests (@Test, assertEquals) using blackbox, whitebox and mutant testing to see whether your suite catches hidden bugs.
+    In the Testing lab you write JUnit-style tests (@Test, assertEquals) using black-box, white-box and mutation testing to see whether your suite catches hidden bugs.
     Whenever your robot behaves strangely in the arena, five minutes here saves an hour of blind guessing.
 pseudo.es:
     Robots rotos → leer el síntoma, localizar el bug y arreglarlo
@@ -429,44 +429,44 @@ claves.en: arena, story, lets fight, challenges, fight, match, special mode, bos
 resumen.ia: Arena (Story with illustrated campaigns, Let's fight!, Challenges, Obstacle race direct access, Special mode with bosses, step limits, Senior fights, coding challenges and Destruction & Survival, Statistics)
 tip.juego_arena.condicion: aleatorio
 tip.juego_arena.es: En la [[Arena]] tienes [[Historia]], [[¡A pelear!]], [[Desafíos]], la [[Carrera de obstáculos]], [[Modo especial]] (jefes, retos y Destrucción y supervivencia) y [[Estadísticas]].
-tip.juego_arena.de: In der [[Arena]] findest du [[Geschichte]], [[Auf in den Kampf!]], [[Herausforderungen]], den [[Hindernislauf]], den [[Spezialmodus]] (Bosse, Herausforderungen und Zerstörung & Überleben) und [[Statistiken]].
-tip.juego_arena.en: In the [[Arena]] you've got [[Story]], [[Let's fight!]], [[Challenges]], [[Obstacle race]], [[Special mode]] (bosses, challenges and Destruction & Survival) and [[Statistics]].
+tip.juego_arena.de: In der [[Arena]] findest du [[Geschichte]], [[Auf in den Kampf!]], [[Herausforderungen]], den [[Hindernislauf]], den [[Spezialmodus]] (Bosse, Programmier-Aufgaben sowie Zerstörung und Überleben) und [[Statistiken]].
+tip.juego_arena.en: In the [[Arena]] you've got [[Story]], [[Let's fight!]], [[Challenges]], [[Obstacle race]], [[Special mode]] (bosses, programming tasks and Destruction and survival) and [[Statistics]].
 ver: por_que_pierdo, ver_notas, como_jugar, carrera_de_obstaculos, minijuego_destruccion
 es:
-    El bloque Arena reúne todas las formas de poner a prueba tu robot en combate real y analizar tus resultados.
-    «Historia» abre las campañas principales con escenas ilustradas y dieciocho historias de combate; «¡A pelear!» lanza al instante un combate contra la computadora a tu nivel, con las rondas que elegiste en Desafíos; «Desafíos» te deja elegir rival, modo al azar, el desafío, battle royale, equipos o robots de otros jugadores; y «Carrera de obstáculos» tiene aquí su acceso directo.
+    El bloque Arena reúne todas las formas de poner a prueba tu robot en una pelea real y analizar tus resultados.
+    «Historia» abre las campañas principales con escenas ilustradas y dieciocho historias de combate; «¡A pelear!» lanza al instante una pelea contra la computadora a tu nivel, con las rondas que elegiste en Desafíos; «Desafíos» te deja elegir rival, modo al azar, el desafío, battle royale, equipos o robots de otros jugadores; y «Carrera de obstáculos» tiene aquí su acceso directo.
     En Modo especial te esperan los jefes de tema, el tope de cálculo, las peleas Senior, retos de programación y Destrucción y supervivencia.
-    Y en Estadísticas puedes revisar cada combate, tus victorias, derrotas y evolución para ver en qué estás mejorando.
+    Y en Estadísticas puedes revisar cada pelea, tus victorias, derrotas y evolución para ver en qué estás mejorando.
 de:
     Der Bereich Arena vereint alle Möglichkeiten, deinen Roboter im echten Kampf zu testen und Ergebnisse auszuwerten.
-    „Geschichte“ öffnet die Hauptkampagnen mit illustrierten Szenen und achtzehn Kampfgeschichten; „Auf in den Kampf!“ startet sofort einen Kampf gegen den Computer auf deiner Stufe, mit den Runden, die du unter Herausforderungen gewählt hast; unter „Herausforderungen“ wählst du Gegner, Zufallskämpfe, Herausforderung, Battle Royale, Team oder fremde Roboter; und der „Hindernislauf“ hat hier seinen direkten Zugang.
-    Im Spezialmodus warten Themen-Bosse, Rechenlimit, Senior-Kämpfe, Programmier-Herausforderungen und Zerstörung & Überleben.
+    „Geschichte“ öffnet die Hauptkampagnen mit illustrierten Szenen und achtzehn Kampfgeschichten; „Auf in den Kampf!“ startet sofort einen Kampf gegen den Computer auf deiner Stufe, mit den Runden, die du unter Herausforderungen gewählt hast; unter „Herausforderungen“ wählst du Gegner, Zufallskämpfe, Herausforderung, Battle Royale, Team oder Roboter anderer Spieler; und der „Hindernislauf“ hat hier seinen direkten Zugang.
+    Im Spezialmodus warten Themen-Bosse, Rechenlimit, Senior-Kämpfe, Programmier-Aufgaben und Zerstörung und Überleben.
     Unter Statistiken siehst du jeden Kampf mit Siegen, Niederlagen und Verlauf, um deinen Fortschritt zu verfolgen.
 en:
-    The Arena section brings together every way to test your robot in live combat and review your results.
-    "Story" opens the featured campaigns with illustrated scenes and eighteen combat stories; "Let's fight!" launches an instant match against the computer at your rank, with the rounds you chose under Challenges; "Challenges" lets you pick opponents, random matches, the challenge, battle royale, teams, or other players' robots; and "Obstacle race" has its direct entry right here.
-    In Special mode you'll face topic bosses, step-limit matches, Senior fights, coding challenges, and Destruction & Survival.
+    The Arena section brings together every way to test your robot in a real fight and review your results.
+    “Story” opens the main campaigns with illustrated scenes and eighteen combat stories; “Let's fight!” launches an instant fight against the computer at your rank, with the rounds you chose under Challenges; “Challenges” lets you pick a rival, random mode, the challenge, battle royale, teams, or other players' robots; and “Obstacle race” has its direct entry right here.
+    In Special mode you'll face topic bosses, step-limit fights, Senior fights, programming tasks, and Destruction and survival.
     And Statistics records every fight, your wins, losses and progression so you can track how you improve.
 pseudo.es:
     Historia → campañas con escenas ilustradas
-    ¡A pelear! → combate rápido a tu nivel
-    Desafíos → elegir rival, al azar o robots de otros
+    ¡A pelear! → pelea rápida a tu nivel
+    Desafíos → elegir rival, al azar o robots de otros jugadores
     Modo especial → jefes, peleas Senior y retos
     Estadísticas → revisar estadísticas y resultados
 pseudo.de:
     Geschichte → Kampagnen mit illustrierten Szenen
     Auf in den Kampf! → schneller Kampf auf deiner Stufe
-    Herausforderungen → Gegner, Zufall oder fremde Roboter wählen
-    Spezialmodus → Bosse, Senior-Kämpfe und Herausforderungen
+    Herausforderungen → Gegner, Zufall oder Roboter anderer Spieler wählen
+    Spezialmodus → Bosse, Senior-Kämpfe und Aufgaben
     Statistiken → Statistiken und Ergebnisse prüfen
 pseudo.en:
     Story → campaigns with illustrated scenes
-    Let's fight! → quick match at your rank
+    Let's fight! → quick fight at your rank
     Challenges → pick rival, random or other players' robots
-    Special mode → bosses, Senior fights and challenges
+    Special mode → bosses, Senior fights and tasks
     Statistics → check stats and results
 ejemplo:
-    // En combate, haz clic en un enemigo para que lo analice || Klick im Kampf einen Gegner an, damit ich ihn analysiere || During a fight, click an enemy so I can analyze it
+    // En la pelea, haz clic en un rival para que lo analice || Klick im Kampf einen Gegner an, damit ich ihn analysiere || During a fight, click a rival so I can analyze it
     // En la pausa entre rondas puedes ajustar tu código || In der Rundenpause kannst du deinen Code anpassen || Between rounds you can tweak your code
 
 === panel_ia_y_ajustes
@@ -474,15 +474,15 @@ nivel: 6
 tema: --
 titulo.es: Panel de la IA, Ajustes y entrenadores
 titulo.de: KI-Steuerung, Einstellungen und Trainer
-titulo.en: AI Panel, Settings and coaches
+titulo.en: AI panel, Settings and coaches
 claves.es: panel de la ia, panel ia, dificultad, agresividad, humor, cortesia, ajustes, configuracion, voz, idioma, letra, tamano de letra, cambiar entrenador, elegir entrenador
 claves.de: ki-steuerung, ki-panel, schwierigkeit, aggressivitat, humor, hoflichkeit, einstellungen, konfiguration, stimme, sprache, schrift, schriftgrosse, trainer wechseln, trainer wahlen
 claves.en: ai panel, difficulty, aggressiveness, humor, politeness, settings, configuration, voice, language, font, font size, change coach, choose coach
 resumen.ia: AI Panel (adjust AI difficulty, aggressiveness, humor and politeness) and Settings (local KoboldCpp & online AI brains, voice, language, font size, change coach)
 tip.juego_panel_ia.condicion: aleatorio
-tip.juego_panel_ia.es: ¿La computadora te parece demasiado dura o demasiado blanda? Ajusta su dificultad, agresividad, humor y cortesía en [[Panel de la IA]].
+tip.juego_panel_ia.es: ¿La computadora te parece demasiado dura o demasiado blanda? Ajusta su dificultad, agresividad, humor y cortesía en el [[Panel de la IA]].
 tip.juego_panel_ia.de: Ist dir der Computer zu hart oder zu zahm? Stell Schwierigkeit, Aggressivität, Humor und Höflichkeit in der [[KI-Steuerung]] ein.
-tip.juego_panel_ia.en: Computer feeling too tough or too gentle? Tune its difficulty, aggressiveness, humor and politeness in [[AI panel]].
+tip.juego_panel_ia.en: Computer feeling too tough or too gentle? Tune its difficulty, aggressiveness, humor and politeness in the [[AI panel]].
 tip.juego_ajustes.condicion: aleatorio
 tip.juego_ajustes.es: En [[Ajustes]] puedes configurar cerebros de IA (locales o en línea), voz, idioma, tamaño de letra o cambiar de entrenador cuando quieras.
 tip.juego_ajustes.de: In den [[Einstellungen]] richtest du KI-Gehirne (lokal oder online), Stimme, Sprache und Schriftgröße ein oder wechselst jederzeit deinen Trainer.
@@ -490,21 +490,21 @@ tip.juego_ajustes.en: In [[Settings]] you can set up AI brains (local or online)
 tip.juego_cambio_entrenador.condicion: aleatorio
 tip.juego_cambio_entrenador.es: ¿Te apetece otro estilo de esquina? Puedes cambiar de [[entrenador]] en cualquier momento desde Ajustes o el Panel del Tutor.
 tip.juego_cambio_entrenador.de: Lust auf einen anderen Stil in deiner Ecke? Du kannst deinen [[Trainer]] jederzeit in den Einstellungen oder im Tutor-Panel wechseln.
-tip.juego_cambio_entrenador.en: Want a different corner style? You can switch your [[coach]] anytime from Settings or the Tutor Panel.
+tip.juego_cambio_entrenador.en: Want a different corner style? You can switch your [[coach]] anytime from Settings or the Tutor panel.
 ver: cerebro_ia, cerebro_local, cerebro_en_linea
 es:
     Desde el Panel de la IA y desde Ajustes personalizas tanto el comportamiento de tus rivales como toda tu experiencia en MetajavBots.
-    En Panel de la IA regulas la dificultad de la computadora (adaptada a ti o fija) y su personalidad: agresividad, humor y cortesía en sus comentarios.
+    En el Panel de la IA regulas la dificultad de la computadora (adaptada a ti o fija) y su personalidad: agresividad, humor y cortesía en sus comentarios.
     En Ajustes cambias el idioma (español, alemán o inglés), el tamaño de letra, el tema visual, el volumen y la voz, activas o desactivas al entrenador flotante, eliges qué entrenador quieres que te acompañe y configuras las tres casillas de cerebros de IA (locales o en línea).
-    Recuerda que el juego funciona al completo sin IA, y si cambias de entrenador la cabecita, el nombre y la voz se actualizan al instante.
+    Recuerda que el juego funciona al completo sin IA, y si cambias de entrenador, la cabecita, el nombre y la voz se actualizan al instante.
 de:
-    Über KI-Steuerung und Einstellungen passt du sowohl das Verhalten deiner Gegner als auch dein gesamtes Erlebnis in MetajavBots an.
-    In der KI-Steuerung stellst du die Schwierigkeit des Computers (angepasst oder fest) sowie Aggressivität, Humor und Höflichkeit seiner Sprüche ein.
+    Über die KI-Steuerung und die Einstellungen passt du sowohl das Verhalten deiner Gegner als auch dein gesamtes Erlebnis in MetajavBots an.
+    In der KI-Steuerung stellst du die Schwierigkeit des Computers (an dich angepasst oder fest) sowie Aggressivität, Humor und Höflichkeit seiner Sprüche ein.
     In den Einstellungen änderst du Sprache (Spanisch, Deutsch oder Englisch), Schriftgröße, Design, Lautstärke und Stimme, schaltest den schwebenden Trainer ein oder aus, wählst deinen Trainer und richtest die drei Plätze für KI-Gehirne (lokal oder online) ein.
     Denk daran: Das Spiel läuft komplett ohne KI, und beim Trainerwechsel passen sich Kopf, Name und Stimme sofort an.
 en:
-    Through AI Panel and Settings you customize both your computer rivals' behavior and your entire MetajavBots setup.
-    In AI Panel you tune the computer's difficulty (adaptive or fixed) along with its aggressiveness, humor and politeness.
+    Through the AI panel and Settings you customize both your computer rivals' behavior and your entire MetajavBots setup.
+    In the AI panel you tune the computer's difficulty (adaptive or fixed) along with its aggressiveness and the humor and politeness of its comments.
     In Settings you change language (Spanish, German or English), font size, theme, audio and voice, toggle the floating coach, pick which coach accompanies you, and configure the three AI brain slots (local or online).
     Remember the whole game works without AI, and switching coaches updates the portrait, name and voice immediately.
 pseudo.es:
@@ -514,10 +514,10 @@ pseudo.de:
     KI-Steuerung → Schwierigkeit, Aggressivität, Humor und Höflichkeit
     Einstellungen → Sprache, Schrift, Ton/Stimme, Trainertyp und KI-Gehirne
 pseudo.en:
-    AI Panel → difficulty, aggressiveness, humor and politeness
+    AI panel → difficulty, aggressiveness, humor and politeness
     Settings → language, font, audio/voice, coach type and AI brains
 ejemplo:
-    // Cambia de entrenador en Ajustes o en el Panel del Tutor || Wechsle den Trainer in den Einstellungen oder im Tutor-Panel || Switch coaches in Settings or the Tutor Panel
+    // Cambia de entrenador en Ajustes o en el Panel del Tutor || Wechsle den Trainer in den Einstellungen oder im Tutor-Panel || Switch coaches in Settings or the Tutor panel
     // Pulsa F2 en cualquier momento para abrir mi consulta || Drück jederzeit F2, um meine Sprechstunde zu öffnen || Press F2 anytime to open my consultation window
 
 === por_que_pierdo
@@ -531,19 +531,19 @@ claves.de: warum verliere ich, verliere, verlieren, ich verliere immer, wie gewi
 claves.en: why am i losing, why do i lose, losing, i always lose, how do i win, win
 ver: turno, depurar, minijuegos_y_ejercicios
 es:
-    Casi siempre se pierde por una de estas tres cosas: el robot no ve al enemigo, no le apunta, o se queda quieto recibiendo.
+    Casi siempre se pierde por una de estas tres cosas: el robot no ve al rival, no le apunta, o se queda quieto recibiendo.
     Piensa en un boxeador con los ojos vendados que lanza puñetazos al aire mientras el otro le zurra: no le falta fuerza, le falta saber dónde está el rival.
-    Mira el informe de la pausa entre rondas: el daño que hiciste y el que recibiste, tu puntería y los errores. En la pelea, haz clic en el enemigo y te diré cómo pelea él (si te rodea, si huye, si vuela) y qué probar.
+    Mira el informe de la pausa entre rondas: el daño que hiciste y el que recibiste, tu puntería y los errores. En la pelea, haz clic en el rival y te diré cómo pelea él (si te rodea, si huye, si vuela) y qué probar.
     El fallo típico: cambiarlo todo a la vez. Cambia una cosa, pelea y mira si mejora.
 de:
     Meistens verliert man aus einem von drei Gründen: Der Roboter sieht den Gegner nicht, zielt nicht auf ihn oder bleibt stehen und steckt ein.
     Stell dir einen Boxer mit verbundenen Augen vor, der in die Luft schlägt, während der andere ihn verprügelt: Ihm fehlt nicht die Kraft, sondern das Wissen, wo der Gegner ist.
-    Schau dir den Bericht in der Pause zwischen den Runden an: ausgeteilter und eingesteckter Schaden, Trefferquote und Fehler. Klick im Kampf den Gegner an, dann sage ich dir, wie er kämpft (ob er dich umkreist, flieht, fliegt) und was du probieren kannst.
+    Schau dir den Bericht in der Pause zwischen den Runden an: verursachter und erlittener Schaden, Trefferquote und Fehler. Klick im Kampf den Gegner an, dann sage ich dir, wie er kämpft (ob er dich umkreist, flieht, fliegt) und was du probieren kannst.
     Der typische Fehler: alles auf einmal zu ändern. Ändere eine Sache, kämpf und schau, ob es besser wird.
 en:
-    You almost always lose for one of three reasons: the robot doesn't see the enemy, doesn't aim at it, or stands still taking hits.
+    You almost always lose for one of three reasons: the robot doesn't see the rival, doesn't aim at it, or stands still taking hits.
     Picture a blindfolded boxer punching the air while the other one pummels them: it's not strength they lack, it's knowing where the rival is.
-    Check the report in the break between rounds: damage dealt and taken, accuracy and errors. During the fight, click the enemy and I'll tell you how it fights (whether it circles you, runs, flies) and what to try.
+    Check the report in the break between rounds: damage dealt and taken, accuracy and errors. During the fight, click the rival and I'll tell you how it fights (whether it circles you, runs, flies) and what to try.
     The classic mistake: changing everything at once. Change one thing, fight and see whether it gets better.
 pseudo.es:
     AL VER al enemigo:
@@ -584,26 +584,26 @@ claves.de: ergebnisse, noten, meine noten, fortschritt, statistik, verlauf, stuf
 claves.en: results, grades, my grades, progress, stats, statistics, history, rank, experience
 ver: como_jugar, por_que_pierdo, arena_y_modos
 es:
-    Tus notas están en tres sitios: arriba del Menú (tu etiqueta, de Noob a Senior, y lo que te falta para subir), en Estadísticas (cada pelea con sus números) y en Ejercicios (los que llevas resueltos de cada tema).
-    Es como el cartel del gimnasio donde se apuntan los combates: quién ganó, por cuánto y con qué golpes.
+    Tus notas están en tres sitios: arriba, en el menú (tu etiqueta, de Noob a Senior, y lo que te falta para subir), en Estadísticas (cada pelea con sus números) y en Ejercicios (los que llevas resueltos de cada tema).
+    Es como el cartel del gimnasio donde se apuntan las peleas: quién ganó, por cuánto y con qué golpes.
     Tras cada pelea, «Revisar el código» le pone nota a tu robot: qué hace bien, qué se puede mejorar y por qué.
     No te obsesiones con perder: cada derrota dice qué practicar, y el juego te propone repasar lo flojo.
 de:
-    Deine Ergebnisse stehen an drei Stellen: oben im Menü (dein Abzeichen von Noob bis Senior und was dir zum Aufstieg fehlt), unter Statistiken (jeder Kampf mit seinen Zahlen) und bei den Übungen (wie viele du pro Thema gelöst hast).
-    Wie die Tafel im Gym, auf der die Kämpfe stehen: wer gewonnen hat, wie deutlich und mit welchen Schlägen.
+    Deine Ergebnisse stehen an drei Stellen: oben im Menü (deine Stufe von Noob bis Senior und was dir zum Aufstieg fehlt), unter Statistiken (jeder Kampf mit seinen Zahlen) und bei den Übungen (wie viele du pro Thema gelöst hast).
+    Das ist wie die Tafel im Gym, auf der die Kämpfe stehen: wer gewonnen hat, wie deutlich und mit welchen Schlägen.
     Nach jedem Kampf benotet „Code prüfen“ deinen Roboter: was er gut macht, was besser geht und warum.
-    Lass dich vom Verlieren nicht entmutigen: Jede Niederlage zeigt, was du üben solltest.
+    Lass dich vom Verlieren nicht entmutigen: Jede Niederlage zeigt, was du üben solltest, und das Spiel schlägt dir vor, deine Schwachstellen zu wiederholen.
 en:
-    Your results are in three places: at the top of the Menu (your rank, from Noob to Senior, and what you need to level up), in Statistics (every fight with its numbers) and in Exercises (how many you've solved per topic).
-    Like the board at the gym where fights are written up: who won, by how much and with which punches.
-    After each fight, "Review code" grades your robot: what it does well, what could be better and why.
-    Don't be put off by losing: every defeat tells you what to practice.
+    Your results are in three places: at the top of the menu (your rank, from Noob to Senior, and what you need to rank up), in Statistics (every fight with its numbers) and in Exercises (how many you've solved per topic).
+    It's like the board at the gym where fights are written up: who won, by how much and with which punches.
+    After each fight, “Review the code” grades your robot: what it does well, what could be better and why.
+    Don't be put off by losing: every defeat tells you what to practice, and the game suggests reviewing your weak spots.
 pseudo.es:
     Menú → mi etiqueta y lo que falta
     Estadísticas → cada pelea
     Ejercicios → los ✓ de cada tema
 pseudo.de:
-    Menü → mein Abzeichen und was fehlt
+    Menü → meine Stufe und was fehlt
     Statistiken → jeder Kampf
     Übungen → die ✓ pro Thema
 pseudo.en:
@@ -611,7 +611,7 @@ pseudo.en:
     Statistics → every fight
     Exercises → the ✓ per topic
 ejemplo:
-    // Tras la pelea: «Revisar el código» || Nach dem Kampf: „Code prüfen“ || After the fight: «Review code»
+    // Tras la pelea: «Revisar el código» || Nach dem Kampf: „Code prüfen“ || After the fight: “Review the code”
     // Puntería 34 %: ¿apuntas antes de atacar? || Trefferquote 34 %: Zielst du vor dem Angriff? || Accuracy 34%: do you aim before attacking?
 
 === cerebro_ia
@@ -626,15 +626,15 @@ claves.de: gehirn, gehirne, ki, kunstliche intelligenz, ki-gehirn, was ist ein g
 claves.en: brain, brains, ai, artificial intelligence, ai brain, what is a brain
 resumen.ia: AI brains (optional: three slots combining local KoboldCpp models and online Gemini/Claude/OpenAI keys)
 tip.juego_cerebros_ia.condicion: aleatorio
-tip.juego_cerebros_ia.es: El juego funciona al completo sin IA, pero si conectas un [[cerebro de IA]] local u online en Ajustes responderé cualquier duda sobre tu código.
+tip.juego_cerebros_ia.es: El juego funciona al completo sin IA, pero si conectas un [[cerebro de IA]] local o en línea en Ajustes, responderé cualquier duda sobre tu código.
 tip.juego_cerebros_ia.de: Das Spiel läuft komplett ohne KI, aber mit einem lokalen oder Online-[[KI-Gehirn]] in den Einstellungen beantworte ich jede Frage zu deinem Code.
-tip.juego_cerebros_ia.en: The whole game works without AI, and if you hook up a local or online [[AI brain]] in Settings I can answer any question about your code.
+tip.juego_cerebros_ia.en: The whole game works without AI, but if you hook up a local or online [[AI brain]] in Settings, I can answer any question about your code.
 ver: cerebro_local, cerebro_en_linea, tres_casillas
 es:
     Un cerebro de IA es un programa que entiende lo que escribes y contesta con sus palabras. El juego funciona entero sin él; con él, el entrenador responde a cualquier pregunta y la computadora inventa pullas nuevas.
     Es como contratar a un comentarista que sabe de boxeo: sin él la pelea es igual de buena, pero con él alguien te explica cada golpe.
     Hay tres casillas para cerebros: cada una puede ser local (en tu ordenador) o en línea (en internet, con tu clave), mezclados como quieras, y los tres trabajan a la vez.
-    Lo de la guía con dibujos lo explica paso a paso: pulsa el botón de abajo.
+    La guía con dibujos lo explica paso a paso: pulsa el botón de abajo.
 de:
     Ein KI-Gehirn ist ein Programm, das versteht, was du schreibst, und mit eigenen Worten antwortet. Das Spiel funktioniert komplett ohne; mit ihm beantwortet der Trainer jede Frage, und der Computer erfindet neue Sprüche.
     Wie ein Kommentator, der etwas vom Boxen versteht: Ohne ihn ist der Kampf genauso gut, aber mit ihm erklärt dir jemand jeden Schlag.
@@ -683,7 +683,7 @@ de:
 en:
     A local brain lives on your computer: no internet, no key, and it's free. You need two files: the KoboldCpp program (koboldcpp.exe) and a model (a big .gguf file).
     Like having the commentator in your own gym instead of phoning them: no call charges, but they take up room (memory).
-    Put both in one folder and pick it in Settings › AI brains › "Models folder". Then, in a slot, "Local", the model with ◄ ► and "Test".
+    Put both in one folder and pick it in Settings › AI brains › “Models folder”. Then, in a slot, “Local”, the model with ◄ ► and “Test”.
     The classic mistake: downloading a model too big for the computer's memory. On a laptop, start with Gemma 3 4B (Q4_K_M, about 2.5 GB).
 pseudo.es:
     bajar koboldcpp.exe
@@ -699,7 +699,7 @@ pseudo.en:
     download koboldcpp.exe
     download a .gguf model
     put them together in one folder
-    Settings: folder, "Local" slot, model, Test
+    Settings: folder, “Local” slot, model, Test
 ejemplo:
 
 === cerebro_en_linea
@@ -721,12 +721,12 @@ es:
 de:
     Ein Online-Gehirn lebt im Internet (Google Gemini, Claude oder OpenAI) und braucht einen Schlüssel: ein langes Passwort, das nur dir gehört. Es ist meist klüger und schneller als ein lokales, braucht aber Internet.
     Wie ein berühmter Kommentator am Telefon: Er antwortet sofort und weiß alles, aber jeden Anruf bezahlt, wer den Schlüssel hat (Google erlaubt kostenlose Nutzung bis zu einem Limit).
-    Hol dir den Schlüssel auf der Seite des Anbieters, füge ihn in Einstellungen › KI-Gehirne › Platz „Online“ ein und klick „Speichern“: Er landet in deinem Benutzerordner, nie im Spielstand.
+    Hol dir den Schlüssel auf der Seite des Anbieters, füge ihn in Einstellungen › KI-Gehirne › Platz „Online“ ein und klick auf „Speichern“: Er landet in deinem Benutzerordner, nie im Spielstand.
     Der typische Fehler: den Schlüssel weitergeben oder ins Internet hochladen. Das ist wie dein Bankpasswort herzugeben: niemals.
 en:
     An online brain lives on the internet (Google Gemini, Claude or OpenAI) and needs a key: a long password that's yours alone. It's usually smarter and faster than a local one, but it needs internet.
     Like phoning a famous commentator: they answer right away and know everything, but every call is paid by whoever holds the key (Google offers free use up to a limit).
-    Get the key from the provider's site, paste it in Settings › AI brains › an "Online" slot and press "Save": it's stored in your user folder, never in the save file.
+    Get the key from the provider's site, paste it in Settings › AI brains › an “Online” slot and press “Save”: it's stored in your user folder, never in your save.
     The classic mistake: sharing the key or uploading it anywhere. That's like handing out your bank password: never.
 pseudo.es:
     entrar en la página del proveedor
@@ -739,7 +739,7 @@ pseudo.de:
 pseudo.en:
     open the provider's site
     create the key and copy it
-    Settings: "Online" slot, provider, paste, Save, Test
+    Settings: “Online” slot, provider, paste, Save, Test
 ejemplo:
 
 === tres_casillas
@@ -761,19 +761,19 @@ es:
 de:
     Es gibt drei Plätze für Gehirne, und jeder nimmt jedes: drei lokale, drei online oder beliebig gemischt. Alle drei arbeiten gleichzeitig.
     Wie ein Eckenteam mit drei Helfern: einer, der schnell Wasser reicht und anfeuert, einer, der klug deine Deckung korrigiert, und ein dritter in Reserve, falls einer ausfällt.
-    In Einstellungen › KI-Gehirne verteilt „Was jedes Gehirn macht“ die Arbeit: das schnelle für Sprüche und Sprecher, das klügere für die Code-Prüfung und den Trainer. „Empfohlen“ verteilt alles selbst.
+    In Einstellungen › KI-Gehirne verteilt „Was jedes Gehirn macht“ die Arbeit: das schnelle für Sprüche und den Ansager, das klügere für die Code-Prüfung und den Trainer. „Empfohlen“ verteilt alles selbst.
     Fällt das Gehirn einer Aufgabe aus, antwortet ein anderes.
 en:
     There are three brain slots, and each takes any kind: three local, three online or any mix. All three work at the same time.
     Like a corner team with three helpers: a quick one handing you water and cheering, a smart one fixing your guard, and a third in reserve in case one fails.
-    In Settings › AI brains, "What each brain does" shares out the work: the fast one for taunts and the announcer; the smarter one for reviewing your code and for the coach. "Recommended" does it for you.
+    In Settings › AI brains, “What each brain does” shares out the work: the fast one for taunts and the announcer; the smarter one for reviewing your code and for the coach. “Recommended” does it for you.
     If the brain for a task fails, another one answers.
 pseudo.es:
     casilla 1 ← local rápido (pullas, locutor)
     casilla 2 ← en línea listo (revisión, entrenador)
     casilla 3 ← de reserva
 pseudo.de:
-    Platz 1 ← schnell, lokal (Sprüche, Sprecher)
+    Platz 1 ← schnell, lokal (Sprüche, Ansager)
     Platz 2 ← klug, online (Prüfung, Trainer)
     Platz 3 ← Reserve
 pseudo.en:
@@ -799,14 +799,14 @@ es:
     Para no esperar en mitad de una pelea, despiértalos antes con «Probar el cerebro» en Ajustes. Si pasan 8 minutos sin usarse, se vuelven a dormir.
     Si uno no despierta: mira la carpeta y el modelo, cierra programas que gasten mucha memoria y vuelve a probar.
 de:
-    Lokale Gehirne schlafen, um keinen Speicher zu verbrauchen, und wachen von selbst auf, wenn sie zum ersten Mal gebraucht werden. Das dauert 20 Sekunden bis eine Minute; so lange steht da „Denke nach …“.
+    Lokale Gehirne schlafen, um keinen Speicher zu verbrauchen, und wachen von selbst auf, wenn sie zum ersten Mal gebraucht werden. Das dauert 20 Sekunden bis eine Minute; so lange steht da „Denke nach…“.
     Wie der Sparringspartner, der in der Kabine ein Nickerchen macht: Erst wenn du ihn rufst, kommt er, und zwar gähnend.
     Damit du nicht mitten im Kampf wartest, weck sie vorher mit „Gehirn testen“ in den Einstellungen. Nach 8 Minuten ohne Nutzung schlafen sie wieder ein.
     Wacht eins nicht auf: Prüf Ordner und Modell, schließ speicherhungrige Programme und probier es noch einmal.
 en:
-    Local brains sleep so as not to use memory and wake up by themselves the first time they're needed. Waking takes 20 seconds to a minute; meanwhile you'll see "Thinking…".
+    Local brains sleep so as not to use memory and wake up by themselves the first time they're needed. Waking takes 20 seconds to a minute; meanwhile you'll see “Thinking…”.
     Like the sparring partner napping in the locker room: they don't come out until you call, and they come out yawning.
-    So you don't wait mid-fight, wake them beforehand with "Test brain" in Settings. After 8 minutes unused they go back to sleep.
+    So you don't wait mid-fight, wake them beforehand with “Test brain” in Settings. After 8 minutes unused they go back to sleep.
     If one won't wake: check the folder and the model, close memory-hungry programs and try again.
 pseudo.es:
     SI el cerebro duerme:
@@ -837,24 +837,24 @@ claves.en: obstacle race, race, obstacles, arena, 6x track, rotating arena, hidd
 resumen.ia: Obstacle race (accessed directly from the Arena block in the Main Menu: 6x base track on Noob that grows by one third — ×4/3 — at each difficulty tier from Noob to Junior, Senior, and Special, rotating to a different arena every race with smooth camera and minimap; right inside the race menu you can choose and visually preview all your unlocked robot models, switch between your robots, and swap your available/purchased parts — head, left arm, right arm, legs — without going back to the Workshop; difficulty tiers Noob, Junior, Senior, and Special unlock progressively by player rank and Special mode, each with sublevels I, II, and III, and rewards scale up with difficulty and sublevel; race against the computer or another player's robot from robots_ajenos/; damage scales with difficulty so driving straight blindly destroys your robot; the track features instant-kill lethal traps "trampa_mortal", 1 or 2 bonus coins "moneda" placed in risky zones worth +1 coin each, jump ramps "rampa" that briefly lift the robot into the air to clear ground traps without slowing down, falling water zones "agua" that cause a brief electrical short-circuit and temporary heading disorientation, spaced repair pickups "reparacion", speed boosts "impulso", hidden/sudden obstacles, and broken robots; destroying targets awards extra coins: +0.2 per destructible obstacle, +0.4 per broken robot, and +1.0 for destroying the main rival before the end; live combat against your rival is allowed; factory code is deliberately clumsy; strict win/loss reward rule: winning awards 100% of the scaled victory reward + bonuses + Gold perfection bonus (+1/4 coin), losing without breaking or collecting anything awards 0 coins, losing after earning bonuses awards exactly 1/4 (25%) of their value, and pressing Surrender during a race ends it immediately with 0 rewards — 0 coins and 0 hundredths, no bonuses or 1/4)
 tip.juego_carrera_obstaculos.condicion: aleatorio
 tip.juego_carrera_obstaculos.es: Entra a la [[Carrera de obstáculos]] directamente desde el bloque Arena del menú principal, elige y previsualiza tus modelos desbloqueados y piezas ahí mismo y sube dificultad/subnivel (I–III): esquiva "trampa_mortal" y "agua", salta en "rampa", recoge "reparacion" y "moneda" (+1), y recuerda que rendirse da 0 recompensas y perder reduce bonos a 1/4.
-tip.juego_carrera_obstaculos.de: Starte den [[Hindernislauf]] direkt im Arena-Bereich des Hauptmenüs, wähle dort deine freigeschalteten Modelle mit Vorschau sowie Teile und steigere Stufe/Unterstufe (I–III): Weiche "trampa_mortal" und "agua" aus, springe über "rampa", sammle "reparacion" und "moneda" (+1) — Aufgeben bringt 0 Belohnung und Niederlagen kürzen Boni auf 1/4.
-tip.juego_carrera_obstaculos.en: Launch [[Obstacle race]] directly from the Arena section of the Main Menu, pick and preview your unlocked models and parts right in its menu, and raise difficulty/sublevel (I–III): dodge "trampa_mortal" and "agua", jump with "rampa", grab "reparacion" and "moneda" (+1), and remember surrendering gives 0 rewards while defeat cuts bonuses to 1/4.
+tip.juego_carrera_obstaculos.de: Starte den [[Hindernislauf]] direkt im Arena-Bereich des Hauptmenüs, wähle dort deine freigeschalteten Modelle mit Vorschau sowie Teile und steigere Schwierigkeit/Unterstufe (I–III): Weiche "trampa_mortal" und "agua" aus, springe mit "rampa", sammle "reparacion" und "moneda" (+1) — Aufgeben bringt 0 Belohnung und Niederlagen kürzen Boni auf 1/4.
+tip.juego_carrera_obstaculos.en: Launch [[Obstacle race]] directly from the Arena section of the main menu, pick and preview your unlocked models and parts right in its menu, and raise difficulty/sublevel (I–III): dodge "trampa_mortal" and "agua", jump with "rampa", grab "reparacion" and "moneda" (+1), and remember surrendering gives 0 rewards while defeat cuts bonuses to 1/4.
 ver: arena_y_modos, if_else, tienda_y_monedas
 es:
-    La Carrera de obstáculos se accede directamente desde el bloque Arena del menú principal. Se disputa en una pista larga (6× más grande que la arena base en Noob) que crece un tercio en cada nivel de dificultad (Noob → Junior ×4/3 → Senior ×(4/3)² → Especial ×(4/3)³), con cámara de seguimiento fluida, minimapa panorámico y una arena distinta en cada nueva carrera.
-    Directamente desde el menú de la Carrera de obstáculos puedes elegir y previsualizar en vivo todos tus modelos de robot desbloqueados, alternar entre tus robots y equipar tus piezas disponibles/compradas (cabeza, brazo izquierdo, brazo derecho y piernas) sin salir al Taller, viendo al instante su aspecto y cifras reales. Además eliges rival (máquina o robots_ajenos/) y seleccionas dificultad y subnivel (I, II, III): Noob está abierto desde el inicio, Junior se desbloquea al llegar a rango Junior, Senior al llegar a rango Senior y Especial al desbloquear el Modo especial (venciendo a un jefe o llegando a Master). Cuanto mayor es la dificultad y el subnivel, mayores son las recompensas.
-    En este modo los choques contra obstáculos, las trampas y los disparos enemigos hacen mucho más daño que en el combate normal, y ese multiplicador sube aún más con la dificultad (Noob < Junior < Senior < Especial): avanzar en línea recta a ciegas destruye tu robot antes de llegar a la meta. Además hay trampas mortales ("trampa_mortal") que destruyen el robot de un solo golpe aunque esté al 100 % de blindaje, zonas de caída de agua ("agua") que provocan un breve cortocircuito eléctrico y desorientan momentáneamente el rumbo, rampas de salto ("rampa") que elevan brevemente al robot para sortear trampas de suelo sin frenar, 1 o 2 monedas extra ("moneda") colocadas en zonas peligrosas (+1 moneda base cada una), bonos de reparación ("reparacion"), impulsos ("impulso"), obstáculos ocultos/repentinos y robots defectuosos.
-    El combate contra tu adversario está permitido durante toda la carrera, y destruir elementos suma bonos: +0,2 base por cada obstáculo destructible (barril o chimenea), +0,4 por cada robot defectuoso y +1 por destruir al rival principal antes del final, escalados por el multiplicador de dificultad y subnivel. El código de fábrica es torpe a propósito y nunca gana solo: debes programar tu estrategia y pulsar Compilar. Durante la carrera puedes pulsar el botón «Rendirse» en la barra superior para abandonar al instante sin recibir recompensas (0 monedas y 0 centésimas). Regla estricta de recompensas: si ganas recibes el 100 % (recompensa de victoria + bonos + medalla de oro con +1/4 de moneda por perfección); si pierdes sin romper ni recoger nada recibes 0 monedas; si pierdes pero conseguiste algún bono, recibes exactamente 1/4 (25 %) de su valor, acumulado en centésimas exactas; si te rindes, 0.
+    A la Carrera de obstáculos se accede directamente desde el bloque Arena del menú principal. Se disputa en una pista larga (6× más grande que la arena base en Noob) que crece un tercio en cada nivel de dificultad (Noob → Junior ×4/3 → Senior ×(4/3)² → Especial ×(4/3)³), con cámara de seguimiento fluida, minimapa panorámico y una arena distinta en cada nueva carrera.
+    Directamente desde el menú de la Carrera de obstáculos puedes elegir y previsualizar en vivo todos tus modelos de robot desbloqueados, alternar entre tus robots y equipar tus piezas disponibles/compradas (cabeza, brazo izquierdo, brazo derecho y piernas) sin salir al Taller, viendo al instante su aspecto y cifras reales. Además eliges rival (computadora o robots_ajenos/) y seleccionas dificultad y subnivel (I, II, III): Noob está abierto desde el inicio, Junior se desbloquea al llegar a la etiqueta Junior, Senior al llegar a la etiqueta Senior y Especial al desbloquear el Modo especial (venciendo a un jefe o llegando a Master). Cuanto mayor es la dificultad y el subnivel, mayores son las recompensas.
+    En este modo los choques contra obstáculos, las trampas y los disparos enemigos hacen mucho más daño que en una pelea normal, y ese multiplicador sube aún más con la dificultad (Noob < Junior < Senior < Especial): avanzar en línea recta a ciegas destruye tu robot antes de llegar a la meta. Además hay trampas mortales ("trampa_mortal") que destruyen el robot de un solo golpe aunque esté al 100 % de blindaje, zonas de caída de agua ("agua") que provocan un breve cortocircuito eléctrico y desorientan momentáneamente el rumbo, rampas de salto ("rampa") que elevan brevemente al robot para sortear trampas de suelo sin frenar, 1 o 2 monedas extra ("moneda") colocadas en zonas peligrosas (+1 moneda base cada una), bonos de reparación ("reparacion"), impulsos ("impulso"), obstáculos ocultos/repentinos y robots defectuosos.
+    La pelea contra tu rival está permitida durante toda la carrera, y destruir elementos suma bonos: +0,2 base por cada obstáculo destructible (barril o chimenea), +0,4 por cada robot defectuoso y +1 por destruir al rival principal antes del final, escalados por el multiplicador de dificultad y subnivel. El código de fábrica es torpe a propósito y nunca gana solo: debes programar tu estrategia y pulsar «Compilar». Durante la carrera puedes pulsar el botón «Rendirse» en la barra superior para abandonar al instante sin recibir recompensas (0 monedas y 0 centésimas). Regla estricta de recompensas: si ganas, recibes el 100 % (recompensa de victoria + bonos + medalla de oro con +1/4 de moneda por perfección); si pierdes sin romper ni recoger nada, recibes 0 monedas; si pierdes pero conseguiste algún bono, recibes exactamente 1/4 (25 %) de su valor, acumulado en centésimas exactas; si te rindes, 0.
 de:
     Der Hindernislauf ist direkt über den Bereich Arena im Hauptmenü erreichbar und führt über eine lange 6×-Strecke (Basisgröße auf Noob), die mit jeder Schwierigkeitsstufe um ein Drittel wächst (Noob → Junior ×4/3 → Senior ×(4/3)² → Spezial ×(4/3)³), mit weicher Verfolgungskamera, kompakter Übersichtskarte und einer neuen Arena in jedem Lauf.
-    Direkt im Menü des Hindernislaufs kannst du alle deine freigeschalteten Robotermodelle auswählen und live in der Vorschau sehen, zwischen deinen Robotern wechseln und deine verfügbaren bzw. gekauften Teile (Kopf, linker Arm, rechter Arm, Beine) tauschen, ohne erst in die Werkstatt zu müssen, wobei Aussehen und echte Werte sofort aktualisiert werden. Zudem wählst du den Gegner (Computer oder robots_ajenos/) sowie Schwierigkeit und Unterstufe (I, II, III): Noob ist von Beginn an frei, Junior ab Rang Junior, Senior ab Rang Senior und Spezial nach Freischaltung des Spezialmodus (Boss besiegen oder Rang Master erreichen). Höhere Schwierigkeiten und Unterstufen erhöhen die Belohnungen.
-    In diesem Modus richten Kollisionen mit Hindernissen, Fallen und gegnerische Schüsse deutlich mehr Schaden an als im normalen Kampf, und dieser Multiplikator steigt mit der Schwierigkeit weiter an (Noob < Junior < Senior < Spezial): Blind geradeaus zu fahren zerstört deinen Roboter noch vor dem Ziel. Außerdem gibt es tödliche Fallen ("trampa_mortal"), die selbst bei 100 % Panzerung sofort zerstören, Wasserzonen ("agua"), die einen kurzen elektrischen Kurzschluss auslösen und den Kurs vorübergehend verwirren, Sprungrampen ("rampa"), die den Roboter kurz abheben lassen, um Bodenfallen ohne abzubremsen zu überspringen, 1 oder 2 Extramünzen ("moneda") an gefährlichen Stellen (+1 Basis-Münze pro Stück), Reparaturboni ("reparacion"), Tempo-Boosts ("impulso"), versteckte/plötzliche Hindernisse und defekte Roboter.
-    Kampf gegen den Gegner ist während des gesamten Laufs erlaubt, und Zerstörungen bringen Boni (+0,2 Basis pro zerstörbarem Hindernis, +0,4 pro defektem Roboter, +1 für das Zerstören des Hauptgegners), skaliert nach Schwierigkeit und Unterstufe. Der Werkscode ist absichtlich ungeschickt und gewinnt nie allein: Programmiere deine Strategie und drück Kompilieren. Während des Laufs kannst du über die Schaltfläche „Aufgeben“ in der oberen Leiste sofort abbrechen, ohne Belohnungen zu erhalten (0 Münzen und 0 Hundertstel). Strikte Belohnungsregel: Bei Sieg erhältst du 100 % (Siegprämie + Boni + Goldmedaille mit +1/4 Münze für Perfektion); bei Niederlage ohne Zerstörung oder Beute gibt es 0 Münzen; bei Niederlage mit Boni erhältst du exakt 1/4 (25 %) ihres Werts, genau in Hundertsteln verbucht; bei Aufgabe 0.
+    Direkt im Menü des Hindernislaufs kannst du alle deine freigeschalteten Robotermodelle auswählen und live in der Vorschau sehen, zwischen deinen Robotern wechseln und deine verfügbaren bzw. gekauften Teile (Kopf, linker Arm, rechter Arm, Beine) tauschen, ohne erst in die Werkstatt zu müssen, wobei Aussehen und echte Werte sofort aktualisiert werden. Zudem wählst du den Gegner (Computer oder robots_ajenos/) sowie Schwierigkeit und Unterstufe (I, II, III): Noob ist von Beginn an frei, Junior ab Stufe Junior, Senior ab Stufe Senior und Spezial nach Freischaltung des Spezialmodus (Boss besiegen oder Stufe Master erreichen). Höhere Schwierigkeiten und Unterstufen erhöhen die Belohnungen.
+    In diesem Modus richten Kollisionen mit Hindernissen, Fallen und gegnerische Schüsse deutlich mehr Schaden an als im normalen Kampf, und dieser Multiplikator steigt mit der Schwierigkeit weiter an (Noob < Junior < Senior < Spezial): Blind geradeaus zu fahren zerstört deinen Roboter noch vor dem Ziel. Außerdem gibt es tödliche Fallen ("trampa_mortal"), die den Roboter selbst bei 100 % Panzerung sofort zerstören, Wasserzonen ("agua"), die einen kurzen elektrischen Kurzschluss auslösen und den Kurs vorübergehend verwirren, Sprungrampen ("rampa"), die den Roboter kurz abheben lassen, um Bodenfallen ohne Abbremsen zu überspringen, 1 oder 2 Extramünzen ("moneda") an gefährlichen Stellen (+1 Basis-Münze pro Stück), Reparaturboni ("reparacion"), Tempo-Boosts ("impulso"), versteckte/plötzliche Hindernisse und defekte Roboter.
+    Kampf gegen den Gegner ist während des gesamten Laufs erlaubt, und Zerstörungen bringen Boni (+0,2 Basis pro zerstörbarem Hindernis, +0,4 pro defektem Roboter, +1 für das Zerstören des Hauptgegners vor dem Ende), skaliert nach Schwierigkeit und Unterstufe. Der Werkscode ist absichtlich ungeschickt und gewinnt nie allein: Programmiere deine Strategie und drück „Kompilieren“. Während des Laufs kannst du über die Schaltfläche „Aufgeben“ in der oberen Leiste sofort abbrechen, ohne Belohnungen zu erhalten (0 Münzen und 0 Hundertstel). Strikte Belohnungsregel: Bei Sieg erhältst du 100 % (Siegprämie + Boni + Goldmedaille mit +1/4 Münze für Perfektion); bei Niederlage ohne Zerstörung oder Beute gibt es 0 Münzen; bei Niederlage mit Boni erhältst du exakt 1/4 (25 %) ihres Werts, genau in Hundertsteln verbucht; beim Aufgeben 0.
 en:
-    Obstacle race is accessed directly from the Arena section of the Main Menu and runs on a long 6× track (base size on Noob) that grows by one third at every difficulty tier (Noob → Junior ×4/3 → Senior ×(4/3)² → Special ×(4/3)³), with a smooth follow camera, compact panoramic minimap, and a different arena on every new race.
+    Obstacle race is accessed directly from the Arena section of the main menu and runs on a long 6× track (base size on Noob) that grows by one third at every difficulty tier (Noob → Junior ×4/3 → Senior ×(4/3)² → Special ×(4/3)³), with a smooth follow camera, compact panoramic minimap, and a different arena on every new race.
     Right inside the Obstacle race menu you can choose and live-preview all your unlocked robot models, switch between your robots, and swap your available/purchased parts (head, left arm, right arm, and legs) without going back to the Workshop, updating both appearance and real stats immediately. You also choose your rival (computer or robots_ajenos/) and pick difficulty and sublevel (I, II, III): Noob is open from the start, Junior unlocks at Junior rank, Senior unlocks at Senior rank, and Special unlocks with Special mode (defeating a boss or reaching Master rank). Higher difficulties and sublevels award larger rewards.
-    In this mode, collisions with obstacles, traps, and enemy shots deal much higher multiplied damage than in standard combat, scaling further with difficulty (Noob < Junior < Senior < Special), so driving straight blindly destroys your robot before the finish line. The track also features instant-kill lethal traps ("trampa_mortal") that destroy your robot in one hit even at 100% armor, falling water zones ("agua") that trigger a brief electrical short circuit and temporarily disrupt your heading, jump ramps ("rampa") that briefly lift your robot over ground traps without slowing down, 1 or 2 bonus coins ("moneda") placed in risky zones (+1 base coin each), spaced repair pickups ("reparacion"), speed boosts ("impulso"), hidden/sudden obstacles, and broken robots.
-    Combat against your rival is allowed throughout the race, and destroying targets awards bonuses (+0.2 base per destructible obstacle, +0.4 per broken robot, and +1 for destroying the main rival), scaled by the difficulty and sublevel multiplier. The factory code is deliberately clumsy and never wins on its own: write your own strategy and press Compile. During a race you can press the "Surrender" button in the top bar to abandon immediately with 0 rewards (0 coins and 0 hundredths). Strict reward rule: winning awards 100% (victory reward + bonuses + Gold perfection medal with +1/4 bonus coin); losing without breaking or collecting anything awards 0 coins; losing after earning bonuses awards exactly 1/4 (25%) of their value, tracked accurately in hundredths; surrendering awards 0.
+    In this mode, collisions with obstacles, traps, and enemy shots deal much higher multiplied damage than in a normal fight, scaling further with difficulty (Noob < Junior < Senior < Special), so driving straight blindly destroys your robot before the finish line. The track also features instant-kill lethal traps ("trampa_mortal") that destroy your robot in one hit even at 100% armor, falling water zones ("agua") that trigger a brief electrical short circuit and temporarily disrupt your heading, jump ramps ("rampa") that briefly lift your robot over ground traps without slowing down, 1 or 2 bonus coins ("moneda") placed in risky zones (+1 base coin each), spaced repair pickups ("reparacion"), speed boosts ("impulso"), hidden/sudden obstacles, and broken robots.
+    Fighting your rival is allowed throughout the race, and destroying targets awards bonuses (+0.2 base per destructible obstacle, +0.4 per broken robot, and +1 for destroying the main rival before the end), scaled by the difficulty and sublevel multiplier. The factory code is deliberately clumsy and never wins on its own: write your own strategy and press “Compile”. During a race you can press the “Surrender” button in the top bar to abandon immediately with 0 rewards (0 coins and 0 hundredths). Strict reward rule: winning awards 100% (victory reward + bonuses + Gold perfection medal with +1/4 bonus coin); losing without breaking or collecting anything awards 0 coins; losing after earning bonuses awards exactly 1/4 (25%) of their value, tracked accurately in hundredths; surrendering awards 0.
 pseudo.es:
     Menú principal → Arena → Carrera de obstáculos → elegir y previsualizar modelo desbloqueado, robot, piezas, dificultad (Noob/Junior/Senior/Especial) y subnivel (I/II/III)
     SI hay trampa mortal ("trampa_mortal") o agua ("agua") delante → esquivar (o usar "rampa" para saltar)
@@ -866,13 +866,13 @@ pseudo.de:
     WENN tödliche Falle ("trampa_mortal") oder Wasser ("agua") voraus → ausweichen (oder "rampa" zum Springen nutzen)
     WENN Extramünze ("moneda"), Reparatur ("reparacion") oder Boost ("impulso") erreichbar → gezielt einsammeln
     WENN Fass/Schornstein (+0,2), defekter Roboter (+0,4) oder Gegner (+1) nah → zielen und angreifen
-    Sieg = 100 % der skalierten Beute (+1/4 bei Perfektion); Niederlage ohne Boni = 0; Niederlage mit Boni = 1/4; Aufgeben = 0
+    Sieg = 100 % der skalierten Belohnung (+1/4 bei Perfektion); Niederlage ohne Boni = 0; Niederlage mit Boni = 1/4; Aufgeben = 0
 pseudo.en:
-    Main Menu → Arena → Obstacle race → pick and preview unlocked model, robot, parts, difficulty (Noob/Junior/Senior/Special), and sublevel (I/II/III)
+    Main menu → Arena → Obstacle race → pick and preview unlocked model, robot, parts, difficulty (Noob/Junior/Senior/Special), and sublevel (I/II/III)
     IF lethal trap ("trampa_mortal") or water ("agua") ahead → dodge (or take a "rampa" to jump over it)
     IF bonus coin ("moneda"), repair ("reparacion"), or boost ("impulso") is reachable → collect it carefully
     IF barrel/chimney (+0.2), broken robot (+0.4), or rival (+1) nearby → aim and attack
-    win = 100% of scaled reward (+1/4 if perfect); defeat without bonuses = 0; defeat with bonuses = 1/4; surrender = 0
+    win = 100% of scaled prize (+1/4 if perfect); loss without bonuses = 0; loss with bonuses = 1/4; surrender = 0
 ejemplo:
     public class Corredor extends Metajavbot {
         @Override
@@ -883,7 +883,7 @@ ejemplo:
                         apuntarHacia(o.angulo());
                         atacar(); // destruir obstáculo || Hindernis zerstören || destroy obstacle
                     } else {
-                        girarHacia(o.y() >= y() ? -50 : 50); // esquivar fijo || festem ausweichen || dodge fixed
+                        girarHacia(o.y() >= y() ? -50 : 50); // esquivar fijo || fest ausweichen || fixed dodge
                     }
                 }
             }
@@ -894,33 +894,33 @@ ejemplo:
 === modelos_y_armas
 nivel: 6
 tema: --
-titulo.es: Modelos, armas características y equilibrio
-titulo.de: Modelle, charakteristische Waffen und Balance
+titulo.es: Modelos, armas propias y equilibrio
+titulo.de: Modelle, eigene Waffen und Balance
 titulo.en: Models, signature weapons and balance
 claves.es: modelos, equilibrio, compensacion, armas caracteristicas, armas propias, sinergia, velocidad, blindaje, corto alcance, distancia, destruir obstaculos, escudos temporales, espada laser, ciclos de ataque, recarga lenta
 claves.de: modelle, balance, ausgleich, charakteristische waffen, eigene waffen, synergie, tempo, panzerung, nahkampf, fernkampf, hindernisse zerstoeren, temporare schilde, laserschwert, angriffszyklen, langsame aufladung
 claves.en: models, balance, trade-offs, signature weapons, characteristic weapons, synergy, speed, armor, close range, long range, destroy obstacles, temporal shields, laser sword, attack cycles, slow recharge
 resumen.ia: Robot models, signature weapons, and shop weapon/shield trade-offs (every model balances strengths against weaknesses and grants +8% synergy with signature weapons; ranged/energy shop weapons trade higher power for longer cooldown and energy cost; temporal shields trade stronger or broader protection — general, anti-projectile, anti-impact, full-spectrum — for slower recharge; laser swords and heavy blunt weapons trade high robot and obstacle destruction power for limited burst attacks per cycle followed by a multi-turn cooldown; weapon damage formulas apply identically across standard fights, Obstacle race, and Destruction & Survival, while the weight, load, mass, recoil and locomotion rules of concept peso_carga_locomocion only fully apply in standard fights — minigames keep their own rules and only apply terrain-on-locomotion; every part has a weight, so a heavy cannon may leave you slow)
 tip.juego_modelos_equilibrio.condicion: aleatorio
-tip.juego_modelos_equilibrio.es: Cada modelo y cada arma nueva funciona por compensación: más potencia implica recarga larga, más escudo exige enfriamiento lento y las [[espadas láser y contundentes]] funcionan por ráfagas de ciclo.
-tip.juego_modelos_equilibrio.de: Jedes Modell und jede neue Waffe folgt dem Ausgleichsprinzip: Mehr Kraft heißt längere Abkühlung, stärkerer Schild lädt langsamer, und [[Laserschwerter & Schlagwaffen]] arbeiten in Zyklen.
-tip.juego_modelos_equilibrio.en: Every model and new weapon works by trade-offs: more power means longer cooldown, stronger shields recharge slower, and [[laser swords & blunt weapons]] run on burst cycles.
+tip.juego_modelos_equilibrio.es: Cada modelo y cada arma nueva funciona por compensación: más potencia implica enfriamiento largo, más escudo exige recarga lenta y las [[espadas láser y contundentes]] funcionan por ráfagas de ciclo.
+tip.juego_modelos_equilibrio.de: Jedes Modell und jede neue Waffe folgt dem Ausgleichsprinzip: Mehr Kraft heißt längere Abkühlzeit, stärkerer Schild lädt langsamer, und [[Laserschwerter und Schlagwaffen]] arbeiten in Zyklen.
+tip.juego_modelos_equilibrio.en: Every model and new weapon works by trade-offs: more power means longer cooldown, stronger shields recharge slower, and [[laser swords and blunt weapons]] run on burst cycles.
 ver: taller_y_compilar, tienda_y_monedas, carrera_de_obstaculos, peso_carga_locomocion
 es:
     En MetajavBots ningún modelo de robot ni arma es superior en todo: cada uno tiene fortalezas claras compensadas con otras estadísticas para mantener el equilibrio entre todos.
     Quien destaca en velocidad y esquiva (como los modelos de Rayo o Éter) lleva menos blindaje; quien destaca en blindaje (Acero) gira y se mueve más despacio; Furia pega más fuerte cuerpo a cuerpo cediendo a distancia, Foco destaca a distancia cediendo en cuerpo a cuerpo y aguante, e Ingenio gana pasos de cálculo y enfriamiento más rápido.
-    Las piezas ampliadas de la Tienda siguen la misma regla: las armas rápidas de energía tienen poca potencia y recarga corta mientras los cañones pesados exigen carga larga y mucha energía; los escudos temporales protegen durante unos turnos según su tipo (general, antiproyectil, antichoque o integral) y cuanto mayor es su absorción más lenta es su recarga; y las espadas láser y armas contundentes (Sable fotónico, Maza de impacto, Espada láser pesada y Ariete cinético) ofrecen gran destrucción contra robots y obstáculos destructibles a cambio de un número limitado de golpes por ciclo antes de entrar en enfriamiento de varios turnos.
-    Cada modelo mantiene además la sinergia (+8 %, ★) con sus armas características, y todas estas cifras de daño, escudos, ciclos y multiplicadores contra obstáculos se aplican exactamente igual en peleas estándar, campañas, Carrera de obstáculos y Destrucción y supervivencia. Además, cada pieza pesa: llevar el cañón más grande puede dejarte lento y sobrecargado, así que conviene pensar qué montas según el rival y la arena (lo explica «Peso, carga, locomoción, terrenos y contrarios»).
+    Las piezas ampliadas de la Tienda siguen la misma regla: las armas rápidas de energía tienen poca potencia y enfriamiento corto, mientras los cañones pesados exigen un tiempo de carga largo y mucha energía; los escudos temporales protegen durante unos turnos según su tipo (general, antiproyectil, antichoque o integral) y cuanto mayor es su absorción, más lenta es su recarga; y las espadas láser y armas contundentes (Sable fotónico ligero, Maza de impacto, Espada láser pesada y Ariete cinético) ofrecen gran destrucción contra robots y obstáculos destructibles a cambio de un número limitado de golpes por ciclo antes de entrar en enfriamiento de varios turnos.
+    Cada modelo mantiene además la sinergia (+8 %, ★) con sus armas propias, y todas estas cifras de daño, escudos, ciclos y multiplicadores contra obstáculos se aplican exactamente igual en peleas estándar, campañas, Carrera de obstáculos y Destrucción y supervivencia. Además, cada pieza pesa: llevar el cañón más grande puede dejarte lento y sobrecargado, así que conviene pensar qué montas según el rival y la arena (lo explica «Peso, carga, locomoción, terrenos y contrarios»).
 de:
     In MetajavBots ist weder ein Robotermodell noch eine Waffe in allem überlegen: Jede Stärke wird durch klare Nachteile ausgeglichen, damit alle Spielstile fair bleiben.
-    Schnelle und wendige Modelle (Blitz oder Äther) tragen weniger Panzerung; schwer gepanzerte Modelle (Stahl) sind träger; Wut glänzt im Nahkampf statt im Fernkampf, Fokus im Fernkampf statt im Nahkampf, und Geist gewinnt Rechenschritte und schnellere Abkühlung.
-    Die erweiterten Laden-Teile folgen demselben Prinzip: Schnelle Energiewaffen haben wenig Schaden und kurze Abkühlung, schwere Kanonen verlangen lange Ladezeit und viel Energie; temporäre Schilde schützen für begrenzte Züge je nach Typ (Allround, Projektilabwehr, Stoßabwehr oder Vollschutz) und laden umso langsamer, je stärker sie blocken; und Laserschwerter sowie wuchtige Nahkampfwaffen (Photonklinge, Aufprallkeule, Schweres Laserschwert, Kinetischer Rammbock) bieten hohe Zerstörungskraft gegen Roboter und Hindernisse gegen begrenzte Schläge pro Zyklus mit anschließender mehrzügiger Abkühlung.
-    Jedes Modell behält zudem seine Synergie (+8 %, ★) mit charakteristischen Waffen, und alle Formeln für Schaden, Schilde, Zyklen und Hinderniszerstörung gelten identisch in Standardkämpfen, Kampagnen, Hindernislauf und Zerstörung & Überleben. Außerdem wiegt jedes Teil etwas: Die größte Kanone kann dich langsam und überladen machen, also überlege, was du je nach Gegner und Arena montierst (siehe „Gewicht, Traglast, Fortbewegung, Gelände und Konter“).
+    Schnelle und wendige Modelle (Blitz oder Äther) tragen weniger Panzerung; schwer gepanzerte Modelle (Stahl) sind träger; Wut glänzt im Nahkampf statt im Fernkampf, Fokus im Fernkampf statt im Nahkampf, und Geist gewinnt Rechenschritte und kürzere Abkühlzeit.
+    Die erweiterten Laden-Teile folgen demselben Prinzip: Schnelle Energiewaffen haben wenig Schaden und kurze Abkühlzeit, schwere Kanonen verlangen lange Ladezeit und viel Energie; temporäre Schilde schützen einige Züge lang je nach Typ (Allround, Projektilabwehr, Stoßabwehr oder Vollschutz) und laden umso langsamer, je stärker sie blocken; und Laserschwerter sowie wuchtige Nahkampfwaffen (Leichte Photonklinge, Aufprallkeule, Schweres Laserschwert, Kinetischer Rammbock) bieten hohe Zerstörungskraft gegen Roboter und Hindernisse, dafür aber nur begrenzte Schläge pro Zyklus mit anschließender mehrzügiger Abkühlzeit.
+    Jedes Modell behält zudem seine Synergie (+8 %, ★) mit seinen eigenen Waffen, und alle Formeln für Schaden, Schilde, Zyklen und Hinderniszerstörung gelten identisch in Standardkämpfen, Kampagnen, Hindernislauf und Zerstörung und Überleben. Außerdem wiegt jedes Teil etwas: Die größte Kanone kann dich langsam und überladen machen, also überlege, was du je nach Gegner und Arena montierst (siehe „Gewicht, Traglast, Fortbewegung, Gelände und Konter“).
 en:
     In MetajavBots no robot model or weapon is superior at everything: every strength is balanced by clear trade-offs so every build stays competitive.
     Fast evasive models (Bolt or Aether) carry lighter armor; heavy Steel models turn and move slower; Fury excels in melee over range, Focus excels at range over melee, and Wit gains computation steps and faster cooldowns.
     The expanded Shop catalog follows the same rule: rapid energy weapons deal light damage with short cooldowns while heavy cannons demand long charge times and high energy; temporal shields protect for a limited window according to their type (general, anti-projectile, anti-impact, or full-spectrum) with slower recharge the stronger they block; and laser swords and heavy blunt weapons (Light photon saber, Impact mace, Heavy laser sword, and Kinetic ram) deliver high destruction against robots and destructible obstacles in exchange for a fixed burst of strikes per cycle before entering a multi-turn cooldown.
-    Every model also keeps its +8% (★) synergy with signature weapons, and all damage, shield, cycle, and obstacle-destruction formulas apply identically in standard fights, campaigns, Obstacle race, and Destruction & Survival. On top of that, every part has a weight: carrying the biggest cannon can leave you slow and overloaded, so think about what you equip for each rival and arena (see "Weight, load, locomotion, terrain, and counters").
+    Every model also keeps its +8% (★) synergy with signature weapons, and all damage, shield, cycle, and obstacle-destruction formulas apply identically in standard fights, campaigns, Obstacle race, and Destruction and survival. On top of that, every part has a weight: carrying the biggest cannon can leave you slow and overloaded, so think about what you equip for each rival and arena (see “Weight, load, locomotion, terrain, and counters”).
 pseudo.es:
     distancia/energía: potencia alta ↔ enfriamiento largo y mayor energía
     escudos temporales: tipo y % de bloqueo ↔ recarga lenta
@@ -928,14 +928,14 @@ pseudo.es:
 pseudo.de:
     Fernkampf/Energie: hohe Kraft ↔ lange Abkühlung und höherer Energieverbrauch
     temporäre Schilde: Schutztyp und Block-% ↔ langsame Aufladung
-    Laserschwerter & Schlagwaffen: Zerstörung ↔ Schläge pro Zyklus + mehrzügige Pause
+    Laserschwerter und Schlagwaffen: Zerstörung ↔ Schläge pro Zyklus + mehrzügige Pause
 pseudo.en:
     ranged/energy: high power ↔ long cooldown and higher energy draw
-    temporal shields: protection type & block % ↔ slow recharge
-    laser swords & blunt weapons: destruction ↔ burst strikes per cycle + multi-turn cooldown
+    temporal shields: protection type and block % ↔ slow recharge
+    laser swords and blunt weapons: destruction ↔ burst strikes per cycle + multi-turn cooldown
 ejemplo:
     // Equilibrio por compensación: potencia ↔ carga, protección ↔ recarga, destrucción ↔ ciclo || Ausgleich: Kraft ↔ Ladung, Schutz ↔ Aufladung, Zerstörung ↔ Zyklus || Trade-offs: power ↔ charge, shield ↔ recharge, destruction ↔ cycle
-    // Mismas fórmulas en Arena, Carrera de obstáculos y Destrucción y supervivencia || Gleiche Formeln in Arena, Hindernislauf und Zerstörung & Überleben || Same formulas in Arena, Obstacle race, and Destruction & Survival
+    // Mismas fórmulas en Arena, Carrera de obstáculos y Destrucción y supervivencia || Gleiche Formeln in Arena, Hindernislauf und Zerstörung und Überleben || Same formulas in Arena, Obstacle race, and Destruction and survival
 
 
 === peso_carga_locomocion
@@ -964,18 +964,18 @@ ver: modelos_y_armas, tienda_y_monedas, taller_y_compilar
 es:
     Las piernas de tu robot cargan con todo lo demás: el chasis de su modelo, la cabeza, los dos brazos con sus armas, el núcleo y la naturaleza. Lo que aguantan se llama carga, y lo que importa es la proporción: peso que cargan dividido entre su carga. Hasta el 70 % vas ligero y esquivas un poco más; hasta el 100 % tu velocidad, tu aceleración y tu giro bajan poco a poco (un 15 % como mucho); hasta el 120 % vas sobrecargado: corres y aceleras un 40 % menos, giras un 30 % peor, gastas más energía al moverte y no saltas ni esquivas rápido. Por encima del 120 % el robot no puede salir a pelear, y el Taller te dice qué pieza pesa más para quitarla o cambiarla.
     Como en Robocode, cuanto más deprisa vas, peor giras, y frenar es el doble de rápido que acelerar: si quieres girar en seco, frena primero. Un arma pesada hace que la mira gire más despacio, y si es de distancia y muy pesada, su retroceso te echa hacia atrás y retrasa el siguiente disparo (las orugas y las patas de araña lo absorben). Las armas de potencia regulable (cañón ligero, bláster de iones, cañón predictor) siguen el reparto de Robocode: con regularPotencia(3) pegas cuatro veces más que con 1, pero la bala va más lenta, el cañón se calienta más y cada disparo gasta energía.
-    La masa decide los choques: el que pesa más empuja y voltea al que pesa menos, y una embestida hace más daño cuanto más pesa y más corre quien embiste. Cada locomoción tiene su papel: las orugas cargan lo que más, casi no se dejan empujar ni voltear y rinden igual en cualquier terreno, pero son lentas; las ruedas son las más rápidas en llano y las mejores embistiendo, pero sufren en aceite, agua, rampas y escombros, y las cuñas y los volteadores las tumban; el flotador ignora el aceite y las trampas de suelo, aunque los imanes y los empujones le afectan más; las alas pasan por encima del suelo y esquivan muchos golpes (no los de armas largas como látigos y bolas), pero cargan poco, son frágiles, lo pasan fatal en el agua y caen ante misiles, imanes y armas antiaéreas; las patas de araña giran mejor que nadie y van firmes en escombros y rampas; las piernas son equilibradas, y las de muelle saltan y esquivan a cambio de cargar menos.
+    La masa decide los choques: el que pesa más empuja y voltea al que pesa menos, y una embestida hace más daño cuanto más pesa y más corre quien embiste. Cada locomoción tiene su papel: las orugas son las que más cargan, casi no se dejan empujar ni voltear y rinden igual en cualquier terreno, pero son lentas; las ruedas son las más rápidas en llano y las mejores embistiendo, pero sufren en aceite, agua, rampas y escombros, y las cuñas y los volteadores las tumban; el flotador ignora el aceite y las trampas de suelo, aunque los imanes y los empujones le afectan más; las alas pasan por encima del suelo y esquivan muchos golpes (no los de armas largas como látigos y bolas), pero cargan poco, son frágiles, lo pasan fatal en el agua y caen ante misiles, imanes y armas antiaéreas; las patas de araña giran mejor que nadie y van firmes en escombros y rampas; las piernas son equilibradas, y las de muelle saltan y esquivan a cambio de cargar menos.
     Cada arena mezcla terrenos (llano, aceite, agua, rampas, escombros y trampas de suelo) para que cada locomoción tenga arenas donde brilla y arenas donde sufre; antes de pelear ves cuál toca. Y ningún estilo gana siempre: el tanque con orugas gana al embestidor ligero, el francotirador gana al tanque si mantiene la distancia, el embestidor alcanza al francotirador, los escudos frenan a voladores y embestidores, las arañas de cuerpo a cuerpo rompen los muros de escudos, y el volador cae ante el imán, los misiles y el antiaéreo. En la Carrera de obstáculos y en Destrucción y supervivencia se respetan sus reglas y su daño: allí solo cuenta el terreno sobre la locomoción.
 de:
     Die Beine deines Roboters tragen alles andere: das Chassis seines Modells, den Kopf, beide Arme mit ihren Waffen, den Kern und die Natur. Was sie aushalten, heißt Traglast, und wichtig ist das Verhältnis: getragenes Gewicht geteilt durch Traglast. Bis 70 % bist du leicht und weichst etwas besser aus; bis 100 % sinken Tempo, Beschleunigung und Drehung allmählich (höchstens um 15 %); bis 120 % bist du überladen: 40 % weniger Tempo und Beschleunigung, 30 % schlechtere Drehung, mehr Energie beim Fahren und weder Sprünge noch schnelles Ausweichen. Über 120 % darf der Roboter nicht kämpfen, und die Werkstatt zeigt dir, welches Teil am schwersten ist, damit du es abnimmst oder tauschst.
     Wie bei Robocode gilt: Je schneller du fährst, desto schlechter drehst du, und Bremsen geht doppelt so schnell wie Beschleunigen; willst du scharf drehen, bremse zuerst. Eine schwere Waffe lässt das Visier langsamer drehen, und ist sie eine schwere Fernwaffe, schiebt dich ihr Rückstoß zurück und verzögert den nächsten Schuss (Ketten und Spinnenbeine fangen ihn ab). Waffen mit regelbarer Leistung (leichte Kanone, Ionenblaster, Vorhersagekanone) folgen der Robocode-Verteilung: Mit leistungRegeln(3) triffst du viermal so stark wie mit 1, aber die Kugel ist langsamer, die Kanone wird heißer und jeder Schuss kostet Energie.
     Die Masse entscheidet bei Zusammenstößen: Wer schwerer ist, schiebt und wirft den Leichteren um, und ein Rammstoß macht umso mehr Schaden, je schwerer und schneller der Rammer ist. Jede Fortbewegung hat ihre Rolle: Ketten tragen am meisten, lassen sich kaum schubsen oder umwerfen und sind auf jedem Gelände gleich, aber langsam; Räder sind auf ebenem Boden am schnellsten und rammen am besten, leiden aber auf Öl, Wasser, Rampen und Trümmern, und Keile und Flipper werfen sie um; die Schwebeplatte ignoriert Öl und Bodenfallen, aber Magnete und Stöße treffen sie stärker; Flügel fliegen über den Boden und weichen vielen Schlägen aus (nicht denen langer Waffen wie Peitschen und Kugeln), tragen aber wenig, sind zerbrechlich, leiden schrecklich im Wasser und fallen durch Raketen, Magnete und Flugabwehrwaffen; Spinnenbeine drehen besser als alle anderen und stehen fest auf Trümmern und Rampen; Beine sind ausgewogen, und Sprungbeine springen und weichen aus, tragen dafür aber weniger.
-    Jede Arena mischt Gelände (eben, Öl, Wasser, Rampen, Trümmer und Bodenfallen), damit jede Fortbewegung Arenen hat, in denen sie glänzt, und andere, in denen sie leidet; vor dem Kampf siehst du, welche dran ist. Und kein Stil gewinnt immer: Der Kettenpanzer schlägt den leichten Rammer, der Scharfschütze den Panzer, wenn er Abstand hält, der Rammer holt den Scharfschützen ein, Schilde bremsen Flieger und Rammer, Nahkampfspinnen brechen Schildwälle auf, und der Flieger fällt durch Magnet, Raketen und Flugabwehr. Im Hindernislauf und bei Zerstörung & Überleben gelten deren eigene Regeln und Schadenswerte: Dort zählt nur das Gelände für die Fortbewegung.
+    Jede Arena mischt Gelände (eben, Öl, Wasser, Rampen, Trümmer und Bodenfallen), damit jede Fortbewegung Arenen hat, in denen sie glänzt, und andere, in denen sie leidet; vor dem Kampf siehst du, welche dran ist. Und kein Stil gewinnt immer: Der Kettenpanzer schlägt den leichten Rammer, der Scharfschütze den Panzer, wenn er Abstand hält, der Rammer holt den Scharfschützen ein, Schilde bremsen Flieger und Rammer, Nahkampfspinnen brechen Schildwälle auf, und der Flieger fällt durch Magnet, Raketen und Flugabwehr. Im Hindernislauf und bei Zerstörung und Überleben gelten deren eigene Regeln und Schadenswerte: Dort zählt nur das Gelände für die Fortbewegung.
 en:
     Your robot's legs carry everything else: the chassis of its model, the head, both arms with their weapons, the core, and the nature. What they can carry is the load limit, and what matters is the ratio: carried weight divided by load limit. Up to 70% you are light and dodge a little more; up to 100% your speed, acceleration, and turning drop little by little (15% at most); up to 120% you are overloaded: 40% less speed and acceleration, 30% worse turning, more energy spent moving, and no jumps or quick dodges. Above 120% the robot cannot go out to fight, and the Workshop tells you which part weighs the most so you can remove or swap it.
     As in Robocode, the faster you go, the worse you turn, and braking is twice as fast as accelerating: if you want a sharp turn, brake first. A heavy weapon makes the sight turn more slowly, and if it is a very heavy ranged weapon, its recoil pushes you back and delays the next shot (treads and spider legs absorb it). Adjustable-power weapons (light cannon, ion blaster, predictor cannon) follow the Robocode split: with setPower(3) you hit four times as hard as with 1, but the bullet is slower, the gun heats up more, and every shot costs energy.
     Mass decides collisions: the heavier robot pushes and flips the lighter one, and a ram deals more damage the heavier and faster the rammer is. Every locomotion has its role: treads carry the most, can hardly be pushed or flipped, and perform the same on any terrain, but they are slow; wheels are the fastest on flat ground and the best at ramming, but they struggle on oil, water, ramps, and rubble, and wedges and flippers knock them over; the hover pad ignores oil and floor traps, although magnets and pushes affect it more; wings fly over the floor and dodge many hits (not those of long weapons such as whips and chain balls), but they carry little, are fragile, have a terrible time on water, and fall to missiles, magnets, and flak weapons; spider legs turn better than anyone and stand firm on rubble and ramps; legs are balanced, and spring legs jump and dodge in exchange for carrying less.
-    Every arena mixes terrain (flat ground, oil, water, ramps, rubble, and floor traps) so that each locomotion has arenas where it shines and arenas where it struggles; before the fight you see which one is next. And no style always wins: the treaded tank beats the light rammer, the sniper beats the tank if it keeps its distance, the rammer catches the sniper, shields stop fliers and rammers, melee spiders break shield walls, and the flier falls to the magnet, missiles, and flak. In the Obstacle race and in Destruction & Survival their own rules and damage stay as they are: there, only terrain on locomotion counts.
+    Every arena mixes terrain (flat ground, oil, water, ramps, rubble, and floor traps) so that each locomotion has arenas where it shines and arenas where it struggles; before the fight you see which one is next. And no style always wins: the treaded tank beats the light rammer, the sniper beats the tank if it keeps its distance, the rammer catches the sniper, shields stop fliers and rammers, melee spiders break shield walls, and the flier falls to the magnet, missiles, and flak. In the Obstacle race and in Destruction and survival their own rules and damage stay as they are: there, only terrain on locomotion counts.
 pseudo.es:
     r = pesoTotal() / cargaMaxima()
     SI r > 1.2: no puede pelear (quita lo que más pesa)
@@ -1010,32 +1010,32 @@ ejemplo:
 nivel: 6
 tema: --
 titulo.es: Destrucción y supervivencia 3×
-titulo.de: Zerstörung & Überleben 3×
-titulo.en: 3× Destruction & Survival
+titulo.de: Zerstörung und Überleben 3×
+titulo.en: 3× Destruction and survival
 claves.es: destruccion y supervivencia, reto especial, minijuego especial, destruccion, supervivencia, arena 3x, 3x, cuenta atras, robots del cielo, caen del cielo, caen cerca, caen encima, sombra, brotan del suelo, trayectoria, robots agresivos, dano elevado, 2.08x, 3 golpes, 4 golpes, 0.1, 0.6, +0.5, 1/4, dificultad, noob, junior, senior, especial
 claves.de: zerstörung und überleben, zerstörung, überleben, zerstoerung und ueberleben, spezial-herausforderung, spezial herausforderung, spezial-minispiel, spezial minispiel, zerstoerung, ueberleben, 3x arena, 3x, countdown, roboter vom himmel, fallen vom himmel, fallen in der naehe, schatten, boden, fahrbahn, aggressive roboter, hoher schaden, 2.08x, 0.1, 0.6, +0.5, 1/4, schwierigkeit, noob, junior, senior, spezial
 claves.en: destruction and survival, special challenge, special minigame, destruction, survival, 3x arena, 3x, countdown, falling robots, sky drops, drop nearby, shadow warning, ground hazards, path bias, aggressive robots, high damage, 2.08x, 0.1, 0.6, +0.5, 1/4, difficulty, noob, junior, senior, special
 resumen.ia: Destruction & Survival (located inside Special mode under its own Destruction & Survival tab, no longer in Minigames: 3x arena with smooth follow camera, compact minimap, and a 60s countdown; during the countdown aggressive erratic broken robots fall from the sky — mostly landing nearby around the player's zone and only very rarely targeting directly on top when the player's movement is predictable, always after a brief ~0.8s ground shadow warning, dealing heavy landing impact damage if you do not move away, and then clumsily chasing and shooting toward the player with slight scatter — while destructible crates, barrels, chimneys and ground traps sprout frequently ahead of the player's trajectory; incoming damage is high across all sources — at least 2.08x Obstacle race, so 3–4 hits strip at least 40–50% of total armor even on Noob and even more on Junior/Senior/Special; you can choose your unlocked robot model with live preview, swap available parts, and select difficulty Noob/Junior/Senior/Special with sublevels I/II/III; each destroyed object or broken robot awards 0.1 to 0.6 coins in exact hundredths, surviving until zero pays 100% of accumulated loot plus a +0.5 coin survival bonus, dying early reduces loot to 1/4, and surrendering awards 0)
 tip.juego_minijuego_destruccion.condicion: aleatorio
-tip.juego_minijuego_destruccion.es: En [[Modo especial]] tienes «Destrucción y supervivencia» (arena 3× con cuenta atrás): la mayoría de los robots caen cerca de tu zona y solo muy pocos encima si eres previsible (siempre tras ~0,8 s de sombra); 3 o 4 golpes quitan ≥ 40 %–50 % del blindaje incluso en Noob (daño ≥ 2,08× sobre Carrera); cada baja da 0,1–0,6 monedas, sobrevivir +0,5 y morir 1/4.
-tip.juego_minijuego_destruccion.de: Im [[Spezialmodus]] wartet „Zerstörung & Überleben“ (3×-Arena mit Countdown): Die meisten Roboter fallen in deiner Nähe und nur sehr wenige direkt auf dich, wenn deine Bahn vorhersehbar ist (immer nach ~0,8 s Warnschatten); 3–4 Treffer kosten ≥ 40–50 % Panzerung auf Noob (Schaden ≥ 2,08× über Hindernislauf); jede Zerstörung bringt 0,1–0,6 Münzen, Überleben +0,5 und Aus 1/4.
-tip.juego_minijuego_destruccion.en: Inside [[Special mode]], try "Destruction & Survival" (3× arena with countdown): most falling robots land nearby and only very few drop right on you when your movement is predictable (always after a ~0.8s shadow warning); 3–4 hits strip ≥ 40–50% armor even on Noob (damage ≥ 2.08× Obstacle race); each kill gives 0.1–0.6 coins, surviving +0.5, and early death 1/4.
+tip.juego_minijuego_destruccion.es: En [[Modo especial]] tienes «Destrucción y supervivencia» (arena 3× con cuenta atrás): la mayoría de los robots caen cerca de tu zona y solo muy pocos encima si eres previsible (siempre tras ~0,8 s de sombra); 3 o 4 golpes quitan ≥ 40 %–50 % del blindaje incluso en Noob (daño ≥ 2,08× sobre la Carrera); cada baja da 0,1–0,6 monedas, sobrevivir +0,5 y morir 1/4.
+tip.juego_minijuego_destruccion.de: Im [[Spezialmodus]] wartet „Zerstörung und Überleben“ (3×-Arena mit Countdown): Die meisten Roboter fallen in deiner Nähe und nur sehr wenige direkt auf dich, wenn deine Bahn vorhersehbar ist (immer nach ~0,8 s Warnschatten); 3–4 Treffer kosten ≥ 40–50 % Panzerung selbst auf Noob (Schaden ≥ 2,08× über Hindernislauf); jede Zerstörung bringt 0,1–0,6 Münzen, Überleben +0,5 und Aus 1/4.
+tip.juego_minijuego_destruccion.en: Inside [[Special mode]], try “Destruction and survival” (3× arena with countdown): most falling robots land nearby and only very few drop right on you when your movement is predictable (always after a ~0.8 s shadow warning); 3–4 hits strip ≥ 40–50% armor even on Noob (damage ≥ 2.08× Obstacle race); each kill gives 0.1–0.6 coins, surviving +0.5, and early death 1/4.
 ver: arena_y_modos, carrera_de_obstaculos, tienda_y_monedas
 es:
-    Destrucción y supervivencia se encuentra dentro de Modo especial, en su propia pestaña «Destrucción y supervivencia» (ya no está en Minijuegos, que queda dedicado a sus 5 retos básicos).
-    Se juega en una arena 3× más grande que la arena estándar (3000 × 700), con cámara de seguimiento fluida centrada en tu robot, minimapa compacto y una cuenta atrás de 60 segundos. Los obstáculos y trampas (cajas, barriles, chimeneas, pinchos, sierras y bloques) brotan con alta frecuencia delante de tu trayectoria para obligarte a esquivar o abrirte paso disparando. Además caen robots averiados del cielo: por defecto aterrizan cerca de tu zona para mantener la tensión, y solo muy pocos caen directamente encima cuando tu movimiento resulta previsible (quieto o en línea recta constante), siempre tras una sombra/alerta de ~0,8 s en el suelo. Una vez en tierra, mantienen su movimiento torpe y errático pero te persiguen y disparan hacia tu zona con ligera dispersión.
+    Destrucción y supervivencia se encuentra dentro del Modo especial, en su propia pestaña «Destrucción y supervivencia» (ya no está en Minijuegos, que queda dedicado a sus 5 retos básicos).
+    Se juega en una arena 3× más grande que la arena estándar (3000 × 700), con cámara de seguimiento fluida centrada en tu robot, minimapa compacto y una cuenta atrás de 60 segundos. Los obstáculos y trampas (cajas, barriles, chimeneas, pinchos, sierras y bloques) brotan con alta frecuencia delante de tu trayectoria para obligarte a esquivar o abrirte paso disparando. Además caen robots averiados del cielo: por defecto aterrizan cerca de tu zona para mantener la tensión, y solo muy pocos caen directamente encima cuando tu movimiento resulta previsible (quieto o en línea recta constante), siempre tras una sombra/alerta de ~0,8 s en el suelo. Una vez en tierra, mantienen su movimiento torpe y errático, pero te persiguen y disparan hacia tu zona con ligera dispersión.
     El daño recibido es elevado en todas sus fuentes (choques, trampas, impacto de caída y disparos enemigos), con un multiplicador ≥ 2,08× sobre la Carrera de obstáculos: 3 o 4 golpes quitan al menos el 40 %–50 % de tu blindaje total incluso en Noob, y aún más al subir a Junior, Senior y Especial. En su propio menú puedes elegir y previsualizar tus modelos desbloqueados, cambiar piezas del inventario sin salir al Taller y elegir dificultad (Noob, Junior, Senior, Especial) y subniveles I, II y III.
     Recompensas exactas en centésimas: cada objeto destructible o robot averiado que destruyes suma entre 0,1 y 0,6 monedas. Si sobrevives hasta que la cuenta atrás llegue a cero, cobras el 100 % de lo acumulado más +0,5 monedas extra de bono de supervivencia. Si mueres antes de terminar, cobras únicamente 1/4 (25 %) de lo acumulado (0 si no destruiste nada), y si te rindes recibes 0.
 de:
-    Zerstörung & Überleben befindet sich im Spezialmodus im eigenen Reiter „Zerstörung & Überleben“ (nicht mehr unter Minispiele, das seinen 5 Grundaufgaben gewidmet bleibt).
+    Zerstörung und Überleben befindet sich im Spezialmodus im eigenen Reiter „Zerstörung und Überleben“ (nicht mehr unter Minispiele, das seinen 5 Grundaufgaben gewidmet bleibt).
     Gespielt wird in einer 3× größeren Arena als üblich (3000 × 700) mit weicher Verfolgungskamera, kompakter Übersichtskarte und einem 60-Sekunden-Countdown. Hindernisse und Fallen (Kisten, Fässer, Schornsteine, Stacheln, Sägen und Blöcke) sprießen häufig direkt vor deiner Fahrbahn, sodass du ausweichen oder dich freischießen musst. Vom Himmel stürzen zudem defekte Roboter: Standardmäßig landen sie in deiner Nähe, und nur sehr wenige zielen direkt auf dich, wenn deine Bewegung vorhersehbar bleibt (Stillstand oder konstante Gerade), immer nach einem ~0,8 s langen Warnschatten am Boden. Am Boden bleiben sie ungeschickt und ruckelig, verfolgen dich aber gezielt und feuern mit leichter Streuung in deine Richtung.
-    Der erlittene Schaden ist aus allen Quellen hoch (Kollisionen, Fallen, Aufprall und gegnerische Schüsse) mit einem Multiplikator ≥ 2,08× über dem Hindernislauf: 3–4 Treffer kosten mindestens 40–50 % deiner gesamten Panzerung auf Noob, und noch mehr auf Junior, Senior und Spezial. Direkt im Menü wählst du freigeschaltete Modelle mit Vorschau, tauschst Inventarteile ohne Werkstattbesuch und stellst Schwierigkeit (Noob, Junior, Senior, Spezial) sowie Unterstufen I, II und III ein.
-    Exakte Belohnungen in Hundertsteln: Jedes zerstörte Objekt oder jeder defekte Roboter bringt zwischen 0,1 und 0,6 Münzen. Überlebst du bis zum Ende des Countdowns, erhältst du 100 % deiner Beute plus +0,5 Münzen Überlebensbonus. Scheidest du vorher aus, bekommst du nur 1/4 (25 %) der gesammelten Beute (0 ohne Zerstörung); bei Aufgabe gibt es 0.
+    Der erlittene Schaden ist aus allen Quellen hoch (Kollisionen, Fallen, Aufprall und gegnerische Schüsse) mit einem Multiplikator ≥ 2,08× über dem Hindernislauf: 3–4 Treffer kosten mindestens 40–50 % deiner gesamten Panzerung selbst auf Noob und noch mehr auf Junior, Senior und Spezial. Direkt im Menü wählst du freigeschaltete Modelle mit Vorschau, tauschst Inventarteile ohne Werkstattbesuch und stellst Schwierigkeit (Noob, Junior, Senior, Spezial) sowie Unterstufen I, II und III ein.
+    Exakte Belohnungen in Hundertsteln: Jedes zerstörte Objekt oder jeder defekte Roboter bringt zwischen 0,1 und 0,6 Münzen. Überlebst du bis zum Ende des Countdowns, erhältst du 100 % deiner Beute plus +0,5 Münzen Überlebensbonus. Scheidest du vorher aus, bekommst du nur 1/4 (25 %) der gesammelten Beute (0 ohne Zerstörung); beim Aufgeben gibt es 0.
 en:
-    Destruction & Survival lives inside Special mode, under its own "Destruction & Survival" tab (no longer in Minigames, which stays focused on its 5 basic drills).
-    It takes place in an arena 3× larger than the standard arena (3000 × 700) with a smooth follow camera centered on your robot, a compact minimap, and a 60-second countdown. Obstacles and traps (crates, barrels, chimneys, spikes, saws, and blocks) sprout frequently right ahead of your trajectory so you must dodge or blast your way through. Broken robots also drop from the sky: by default they land nearby around your zone to keep pressure high, and only very few drop right on top of you when your movement is predictable (standing still or moving in a steady straight line), always after a ~0.8s ground shadow warning. Once grounded, they keep their clumsy erratic movement while actively turning toward your zone and firing in your direction with slight scatter.
+    Destruction and survival lives inside Special mode, under its own “Destruction and survival” tab (no longer in Minigames, which stays focused on its 5 basic drills).
+    It takes place in an arena 3× larger than the standard arena (3000 × 700) with a smooth follow camera centered on your robot, a compact minimap, and a 60-second countdown. Obstacles and traps (crates, barrels, chimneys, spikes, saws, and blocks) sprout frequently right ahead of your trajectory so you must dodge or blast your way through. Broken robots also drop from the sky: by default they land nearby around your zone to keep pressure high, and only very few drop right on top of you when your movement is predictable (standing still or moving in a steady straight line), always after a ~0.8 s ground shadow warning. Once grounded, they keep their clumsy erratic movement while actively turning toward your zone and firing in your direction with slight scatter.
     Incoming damage is high from every source (obstacle collisions, traps, sky-drop impacts, and enemy shots) at ≥ 2.08× Obstacle race: 3–4 hits strip at least 40–50% of your total armor even on Noob, and even more on Junior, Senior, and Special. Right inside its menu you can pick and live-preview your unlocked models, swap available inventory parts without leaving for the Workshop, and choose difficulty (Noob, Junior, Senior, Special) with sublevels I, II, and III.
-    Exact hundredths rewards: each destroyed object or broken robot awards between 0.1 and 0.6 coins. If you survive until the countdown hits zero, you collect 100% of your accumulated loot plus a +0.5 coin survival bonus. If you die early, you only collect 1/4 (25%) of your accumulated loot (0 if you destroyed nothing), and surrendering awards 0.
+    Rewards in exact hundredths: each destroyed object or broken robot awards between 0.1 and 0.6 coins. If you survive until the countdown hits zero, you collect 100% of your accumulated loot plus a +0.5 coin survival bonus. If you die early, you only collect 1/4 (25%) of your accumulated loot (0 if you destroyed nothing), and surrendering awards 0.
 pseudo.es:
     Modo especial → Destrucción y supervivencia → elegir modelo, piezas, dificultad (Noob–Especial) y subnivel (I–III)
     MIENTRAS cuenta atrás > 0:
@@ -1043,19 +1043,19 @@ pseudo.es:
         destruir objetos y robots averiados (0,1–0,6 monedas c/u)
     SI sobrevives → 100 % acumulado + 0,5 monedas; SI mueres antes → 1/4; SI te rindes → 0
 pseudo.de:
-    Spezialmodus → Zerstörung & Überleben → Modell, Teile, Schwierigkeit (Noob–Spezial) und Unterstufe (I–III) wählen
+    Spezialmodus → Zerstörung und Überleben → Modell, Teile, Schwierigkeit (Noob–Spezial) und Unterstufe (I–III) wählen
     SOLANGE Countdown > 0:
         Kurs variieren gegen Direkttreffer, Warnschatten (~0,8 s) und Hindernissen ausweichen (Schaden ≥ 2,08× über Hindernislauf: 3–4 Treffer = ≥ 40–50 % Panzerung)
         Objekte und defekte Roboter zerstören (je 0,1–0,6 Münzen)
-    WENN du überlebst → 100 % Beute + 0,5 Münzen; WENN du vorher stirbst → 1/4; Aufgabe → 0
+    WENN du überlebst → 100 % Beute + 0,5 Münzen; WENN du vorher stirbst → 1/4; Aufgeben → 0
 pseudo.en:
-    Special mode → Destruction & Survival → pick model, parts, difficulty (Noob–Special), and sublevel (I–III)
+    Special mode → Destruction and survival → pick model, parts, difficulty (Noob–Special), and sublevel (I–III)
     WHILE countdown > 0:
-        vary your heading to avoid direct drops, dodge shadows (~0.8s) and path hazards (damage ≥ 2.08× Obstacle race: 3–4 hits = ≥ 40–50% armor)
+        vary your heading to avoid direct drops, dodge shadows (~0.8 s) and path hazards (damage ≥ 2.08× Obstacle race: 3–4 hits = ≥ 40–50% armor)
         destroy objects and broken robots (0.1–0.6 coins each)
     IF you survive → 100% loot + 0.5 coins; IF you die early → 1/4; surrender → 0
 ejemplo:
-    // Destrucción 3×: muévete para esquivar caídas y disparos; cada baja da 0,1–0,6 monedas y sobrevivir +0,5 || 3×-Zerstörung: weiche Einschlägen und Schüssen aus; 0,1–0,6 Münzen je Ziel, +0,5 fürs Überleben || 3× Destruction: keep moving to dodge drops and shots; 0.1–0.6 coins per target, +0.5 for surviving
+    // Destrucción 3×: muévete para esquivar caídas y disparos; cada baja da 0,1–0,6 monedas y sobrevivir +0,5 || 3×-Zerstörung: Weiche Einschlägen und Schüssen aus; 0,1–0,6 Münzen je Ziel, +0,5 fürs Überleben || 3× Destruction: keep moving to dodge drops and shots; 0.1–0.6 coins per target, +0.5 for surviving
 
 
 === peleas_senior
@@ -1069,21 +1069,21 @@ claves.de: senior kampfe, senior-kampfe, senior, zeitbudget, speicherbudget, par
 claves.en: senior fights, senior, time budget, memory budget, parallel robots, parallel, senior rivals, lord big-o, baron 361, countess data-race, sir nullpointer, baroness gc-storm, bytecode boss, 0xcafebabe
 resumen.ia: Senior fights (in Special mode › Senior Fights tab: per-tick deterministic time and memory/allocation budgets with live HUD/debugger bars and latency/energy penalties; parallel robots 2v2 mode executing concurrently in a bounded daemon pool without blocking rendering or leaking threads; five absurd Senior rivals punishing classic pitfalls — expensive O(n²) loops, unnormalized ±180° angles, unsynchronized shared mutable state, unchecked nulls, and memory/energy waste — with targeted Revisor feedback; plus the 0xCAFEBABE bytecode Senior boss and real .class bytecode analysis)
 tip.juego_peleas_senior.condicion: aleatorio
-tip.juego_peleas_senior.es: ¿Listo para el nivel experto? En [[Modo especial]] › «Peleas Senior» te esperan presupuestos reales de tiempo y memoria por turno, combates con robots en paralelo, el jefe de bytecode 0xCAFEBABE y cinco rivales absurdos que castigan fallos típicos.
-tip.juego_peleas_senior.de: Bereit für das Expertenniveau? Im [[Spezialmodus]] › „Senior-Kämpfe“ warten echte Zeit- und Speicherbudgets pro Zug, Kämpfe mit parallelen Robotern, der Bytecode-Boss 0xCAFEBABE und fünf absurde Gegner gegen typische Fehler.
-tip.juego_peleas_senior.en: Ready for expert level? In [[Special mode]] › "Senior Fights" you will find real per-tick time and memory budgets, parallel robot battles, the 0xCAFEBABE bytecode boss, and five absurd rivals that punish classic pitfalls.
+tip.juego_peleas_senior.es: ¿Listo para el nivel experto? En [[Modo especial]] › «Peleas Senior» te esperan presupuestos reales de tiempo y memoria por turno, peleas con robots en paralelo, el jefe de bytecode 0xCAFEBABE y cinco rivales absurdos que castigan fallos típicos.
+tip.juego_peleas_senior.de: Bereit für das Expertenniveau? Im [[Spezialmodus]] › „Senior-Kämpfe“ warten echte Zeit- und Speicherbudgets pro Zug, Kämpfe mit parallelen Robotern, der Bytecode-Boss 0xCAFEBABE und fünf absurde Gegner, die typische Fehler bestrafen.
+tip.juego_peleas_senior.en: Ready for expert level? In [[Special mode]] › “Senior fights” you will find real per-tick time and memory budgets, parallel robot fights, the 0xCAFEBABE bytecode boss, and five absurd rivals that punish classic pitfalls.
 ver: arena_y_modos, bytecode, hilo
 es:
-    En Modo especial › Peleas Senior el combate exige ingeniería de nivel Senior real: presupuestos estrictos de tiempo (milisegundos por turno) y de memoria/asignaciones (kilobytes por turno) medidos de forma determinista, con barras en vivo en el HUD y en el depurador (F9). Si te pasas del presupuesto, tu robot sufre latencia (pierde turnos) y desgaste de energía.
-    También puedes lanzar combates con robots en paralelo (2 contra 2 ejecutándose a la vez en hilos demonio acotados, sin bloquear la pantalla ni dejar hilos colgados al terminar) y enfrentarte al jefe de bytecode «El Desensamblador 0xCAFEBABE» (constantes primitivas y operaciones limpias sin autoboxing).
+    En Modo especial › Peleas Senior la pelea exige ingeniería de nivel Senior real: presupuestos estrictos de tiempo (milisegundos por turno) y de memoria/asignaciones (kilobytes por turno) medidos de forma determinista, con barras en vivo en el HUD y en el depurador (F9). Si te pasas del presupuesto, tu robot sufre latencia (pierde turnos) y desgaste de energía.
+    También puedes lanzar peleas con robots en paralelo (2 contra 2 ejecutándose a la vez en hilos demonio acotados, sin bloquear la pantalla ni dejar hilos colgados al terminar) y enfrentarte al jefe de bytecode «El Desensamblador 0xCAFEBABE» (constantes primitivas y operaciones limpias sin autoboxing).
     Además hay cinco rivales Senior con biografías absurdas que castigan fallos típicos: Don Relojero O(n²) (bucles caros), Barón 361° (ángulos sin normalizar en ±180°), Condesa Carrera de Datos (estado mutable compartido sin sincronizar), Señor NullPointer (nulos sin comprobar) y Baronesa Basura GC (asignaciones por turno y mala gestión de energía). Al terminar cada ronda, el Revisor te da diagnóstico y consejos concretos.
 de:
     Unter Spezialmodus › Senior-Kämpfe verlangt der Ring echtes Senior-Handwerk: strenge Zeitbudgets (Millisekunden pro Zug) und deterministische Speicher-/Allokationsbudgets (Kilobyte pro Zug) mit Live-Balken im HUD und im Debugger (F9). Überschreitest du das Budget, verliert dein Roboter Züge durch Latenz und büßt Energie ein.
     Zudem kannst du Kämpfe mit parallelen Robotern starten (2 gegen 2 gleichzeitig in einem begrenzten Daemon-Threadpool, ohne das Rendering zu blockieren oder Threads zurückzulassen) sowie gegen den Bytecode-Boss „Der Disassembler 0xCAFEBABE“ antreten (primitive Konstanten und sauberer Code ohne Autoboxing).
     Fünf absurde Senior-Gegner bestrafen gezielt typische Fehler: Meister Endlosschleife (teure Schleifen), Baron 361° (nicht normalisierte Winkel um ±180°), Gräfin Datenrennen (unsicherer geteilter Zustand), Herr Nullzeiger (ungeprüfte nulls) und Baronin Müllsammler (Allokationen pro Zug und Energieverschwendung). Nach jeder Runde liefert der Prüfer gezielte Hinweise.
 en:
-    In Special mode › Senior Fights, the arena demands real Senior engineering: strict per-tick time budgets (milliseconds) and deterministic memory/allocation budgets (kilobytes) with live bars in the HUD and the debugger (F9). Exceeding a budget penalizes your robot with latency debt (skipped ticks) and energy drain.
-    You can also launch parallel robot fights (2v2 running concurrently in a bounded daemon thread pool without blocking rendering or leaking threads) and challenge the bytecode boss "The 0xCAFEBABE Disassembler" (primitive constants and clean zero-autoboxing code).
+    In Special mode › Senior fights, the arena demands real Senior engineering: strict per-tick time budgets (milliseconds) and deterministic memory/allocation budgets (kilobytes) with live bars in the HUD and the debugger (F9). Exceeding a budget penalizes your robot with latency debt (skipped ticks) and energy drain.
+    You can also launch parallel robot fights (2v2 running concurrently in a bounded daemon thread pool without blocking rendering or leaking threads) and challenge the bytecode boss “The 0xCAFEBABE Disassembler” (primitive constants and clean zero-autoboxing code).
     Five absurd Senior rivals punish classic mistakes: Lord Big-O (expensive loops), Baron 361° (unnormalized angles around ±180°), Countess Data-Race (unsynchronized shared mutable state), Sir NullPointer (unchecked nulls), and Baroness GC-Storm (per-tick allocations and energy waste). After each round, the Reviewer gives targeted feedback.
 pseudo.es:
     Modo especial → Peleas Senior → elegir presupuesto, paralelo o rival Senior
@@ -1094,7 +1094,7 @@ pseudo.de:
     new in jedenZug() vermeiden und primitive Felder wiederverwenden
     normalisieren(ziel - blick()), != null prüfen und geteilten Zustand synchronisieren
 pseudo.en:
-    Special mode → Senior Fights → pick budget, parallel fight, or Senior rival
+    Special mode → Senior fights → pick budget, parallel fight, or Senior rival
     avoid new inside onTick() and reuse primitive fields
     normalize(target - aimDirection()), check != null, and synchronize shared state
 ejemplo:
@@ -1123,7 +1123,7 @@ resumen.ia: Custom Java robot parts, Medabots-style arena gadgets, and split-scr
 tip.juego_pieza_propia_repeticion.condicion: aleatorio
 tip.juego_pieza_propia_repeticion.es: En Taller › Piezas puedes pulsar «Diseña tu pieza» para programar tu propia pieza Java (PiezaPropia, máx. 100 puntos), probar la nueva [[sierra]] «Sierrón» en la arena y ver la repetición con tu código al lado para guardarla como GIF.
 tip.juego_pieza_propia_repeticion.de: Unter Werkstatt › Teile kannst du „Eigenes Teil bauen“ öffnen, dein eigenes Java-Teil (EigenesTeil, max. 100 Punkte) schreiben, die neue [[Säge]] „Sierrón“ in der Arena testen und die Wiederholung samt Code als GIF speichern.
-tip.juego_pieza_propia_repeticion.en: In Workshop › Parts you can open "Design your part" to code your own Java part (CustomPart, max 100 points), try the new "Sierrón" [[saw]] gadget in the arena, and watch the split-screen replay with your code and export it as a GIF.
+tip.juego_pieza_propia_repeticion.en: In Workshop › Parts you can open “Design your part” to code your own Java part (CustomPart, max 100 points), try the new “Sierrón” [[saw]] gadget in the arena, and watch the split-screen replay with your code and export it as a GIF.
 ver: taller_y_compilar, modelos_y_armas, arena_y_modos
 es:
     En el Taller › Piezas puedes abrir «Diseña tu pieza» para crear tu propia pieza en Java implementando la interfaz PiezaPropia (o EigenesTeil en alemán y CustomPart en inglés). Se compila bajo las mismas barandillas de seguridad (Vigilante y Cargador) que los robots, respeta un presupuesto máximo de 100 puntos de equilibrio por ranura (brazo, cabeza, piernas o núcleo) para evitar piezas rotas, se guarda en tu partida y se monta igual que las piezas del catálogo o las activadas en la Tienda.
@@ -1132,21 +1132,21 @@ es:
 de:
     Unter Werkstatt › Teile kannst du „Eigenes Teil bauen“ öffnen und dein eigenes Roboterteil in Java schreiben, indem du EigenesTeil (oder PiezaPropia / CustomPart) implementierst. Es wird unter denselben Sicherheitsregeln (Vigilante und Cargador) kompiliert, bleibt im Balance-Budget von höchstens 100 Punkten pro Platz (Arm, Kopf, Beine oder Kern), wird im Spielstand gespeichert und wie gewohnt am Roboter montiert.
     In der Arena erscheinen zudem neun Medabots-artige Geräte zum Einsammeln und Anschließen per Code: Düsentriebwerk, Antigravitation, Elektroschock, Flammenwerfer, Öl, Kleber, Magnet, Hammer und die neue Kreissäge „Sierrón“ (Platz "arm", schnelle Schnitte im Nahkampf).
-    Nach einem Kampf zeigt die Wiederholung des besten Treffers eine geteilte Ansicht: links die Arena in Zeitlupe, rechts der ausgeführte Roboter-Code mit hervorgehobenen Zeilen, plus „Als GIF speichern“ im Hintergrund ohne Ruckler.
+    Nach einem Kampf zeigt die Wiederholung des besten Treffers eine geteilte Ansicht: links die Arena in Zeitlupe, rechts der ausgeführte Roboter-Code mit hervorgehobenen Zeilen, dazu den Knopf „Als GIF speichern“, der ein animiertes GIF exportiert, ohne das Bild anzuhalten.
 en:
-    In Workshop › Parts you can open "Design your part" to write your own robot part in Java by implementing CustomPart (or PiezaPropia / EigenesTeil). It compiles under the same Vigilante and Cargador security guardrails, enforces a 100-point balance budget per slot (arm, head, legs, or core) so no part is broken, saves to your profile, and mounts on your robot alongside catalog and activated shop parts.
-    The arena also spawns nine Medabots-style gadgets you pick up and plug in via code: jet engine, antigravity, shock, flamethrower, oil, glue, magnet, hammer, and the new "Sierrón" circular saw (plugs into "arm" for rapid close-range slashes).
-    After a fight, Replay opens a split-screen view with the slow-motion arena on the left, your robot's executed code on the right highlighting active lines per tick, and a non-blocking "Save GIF" button that exports a valid animated GIF.
+    In Workshop › Parts you can open “Design your part” to write your own robot part in Java by implementing CustomPart (or PiezaPropia / EigenesTeil). It compiles under the same Vigilante and Cargador security guardrails, enforces a 100-point balance budget per slot (arm, head, legs, or core) so no part is broken, is stored in your save, and mounts on your robot alongside catalog and activated shop parts.
+    The arena also spawns nine Medabots-style gadgets you pick up and plug in via code: jet engine, antigravity, shock, flamethrower, oil, glue, magnet, hammer, and the new “Sierrón” circular saw (plugs into "arm" for rapid close-range slashes).
+    After a fight, Replay opens a split-screen view with the slow-motion arena on the left, your robot's executed code on the right highlighting active lines per tick, and a non-blocking “Save GIF” button that exports a valid animated GIF.
 pseudo.es:
     Taller → Piezas → Diseña tu pieza → implementar PiezaPropia (presupuesto ≤ 100) → Guardar y montar
     En pelea: recoger aparato "sierra" → conectar("brazo") → usarAparato(angulo)
     Al acabar: Repetición → ver código sincronizado → Guardar GIF
 pseudo.de:
-    Werkstatt → Teile → Eigenes Teil bauen → EigenesTeil implementieren (Budget ≤ 100) → Speichern & einbauen
+    Werkstatt → Teile → Eigenes Teil bauen → EigenesTeil implementieren (Budget ≤ 100) → Speichern und einbauen
     Im Kampf: Gerät "sierra" aufheben → anschliessen("arm") → geraetBenutzen(winkel)
     Am Ende: Wiederholung → Code verfolgen → Als GIF speichern
 pseudo.en:
-    Workshop → Parts → Design your part → implement CustomPart (budget ≤ 100) → Save & mount
+    Workshop → Parts → Design your part → implement CustomPart (budget ≤ 100) → Save and mount
     In fight: pick up "sierra" gadget → plugIn("arm") → useGadget(angle)
     After fight: Replay → watch synced code → Save GIF
 ejemplo:
@@ -1168,7 +1168,7 @@ ejemplo:
 nivel: 6
 tema: --
 titulo.es: Historia: campañas ampliadas con escenas y biografías editables
-titulo.de: Geschichte: Erweiterte Kampagnen mit Szenen und bearbeitbaren Biografien
+titulo.de: Geschichte: erweiterte Kampagnen mit Szenen und bearbeitbaren Biografien
 titulo.en: Story: Expanded story campaigns with scenes and editable biographies
 claves.es: creed, credo, adonis, campanas creed, isla clandestina, torneo 1000 voltios, enchufe dorado, escenas, vinetas, historia, entrenador, biografias, editar biografias, restaurar biografia, personalidades
 claves.de: creed, credo, adonis, creed kampagnen, geheime insel, 1000 volt turnier, goldener stecker, szenen, bilder, geschichte, trainer, biografien, biografien bearbeiten, biografie wiederherstellen, personlichkeiten
@@ -1177,23 +1177,23 @@ resumen.ia: Expanded Story Campaigns with Illustrated Scenes (two featured 8-cha
 tip.juego_creed_y_biografias.condicion: aleatorio
 tip.juego_creed_y_biografias.es: En [[Historia]] (bloque Arena del menú principal) te esperan dos campañas largas de 8 capítulos ([[Creed]] ampliada e Isla Clandestina: Torneo de los 1000 Voltios) con escenas ilustradas por capítulo, los 7 entrenadores con voz propia y progreso guardado por separado.
 tip.juego_creed_y_biografias.de: Unter [[Geschichte]] (im Arena-Bereich des Hauptmenüs) warten zwei große 8-Kapitel-Kampagnen (erweitertes [[Creed]] und Geheime Insel: Das 1000-Volt-Turnier) mit illustrierten Szenen pro Kapitel, allen 7 Trainern mit eigener Stimme und getrennt gespeichertem Fortschritt.
-tip.juego_creed_y_biografias.en: In [[Story]] (inside the Arena block of the Main Menu), play two full 8-chapter campaigns (expanded [[Creed]] and Secret Island: The 1000-Volt Tournament) with code-drawn illustrated scenes in every chapter, all 7 coaches keeping their own voice, and separately saved progress.
+tip.juego_creed_y_biografias.en: In [[Story]] (inside the Arena block of the main menu), play two full 8-chapter campaigns (expanded [[Creed]] and Secret Island: The 1000-Volt Tournament) with code-drawn illustrated scenes in every chapter, all 7 coaches keeping their own voice, and separately saved progress.
 ver: arena_y_modos, modelos_y_armas, como_jugar
 es:
-    En el botón Historia del bloque Arena destacan dos campañas principales de ocho capítulos cada una, con progresión de dificultad por rangos (Noob, Junior, Senior y Especial) y avance guardado por separado en tu partida: la campaña estilo Creed ampliada («Credo: el hijo del cromo») y una segunda historia original («Isla Clandestina: Torneo de los 1000 Voltios» en Isla Cortocircuito por el Enchufe Dorado), además de las demás parodias de combate.
+    En el botón Historia del bloque Arena destacan dos campañas principales de ocho capítulos cada una, con progresión de dificultad por etiquetas (Noob, Junior, Senior y Especial) y avance guardado por separado en tu partida: la campaña estilo Creed ampliada («Credo: el hijo del cromo») y una segunda historia original («Isla Clandestina: Torneo de los 1000 Voltios» en Isla Cortocircuito por el Enchufe Dorado), además de las demás parodias de combate.
     Ambas integran a cualquiera de los siete entrenadores seleccionables (Don Tuercas, Maestro Aceite, Capitán Voltaje, Sargento Remache, Sensei Cobra-7, Maestro Yanobit y Gran Maestro Pelobit), respetando su voz, su personalidad y sus propios comentarios de esquina.
     Cada capítulo incluye escenas ilustradas dibujadas por código con viñetas, robots, entrenadores, público, bocadillos y animaciones (entrada, zoom, sacudida, destello, lluvia o confeti), que puedes ver desde el botón «Escena», avanzar con clic/tecla o saltar al instante con Esc.
     Además, desde Taller › Modelo y desde Ajustes puedes abrir el Editor de biografías para consultar, editar y guardar tus propias biografías de los 22 robots y los 7 entrenadores en español, alemán e inglés, sin alterar los archivos originales.
 de:
-    Über die Schaltfläche Geschichte im Arena-Bereich stehen zwei große Hauptkampagnen mit je acht Kapiteln, Schwierigkeitsprogression über alle Stufen (Noob, Junior, Senior und Spezial) und getrennt gespeichertem Fortschritt bereit: die erweiterte Creed-Kampagne („Credo: Sohn des Chroms“) sowie die neue zweite Geschichte („Geheime Insel: Das 1000-Volt-Turnier“ auf Insel Kurzschluss um den Goldenen Stecker), zusammen mit den weiteren Kampfparodien.
+    Über die Schaltfläche Geschichte im Arena-Bereich stehen zwei große Hauptkampagnen mit je acht Kapiteln, Schwierigkeitsprogression über alle Stufen (Noob, Junior, Senior und Spezial) und getrennt gespeichertem Fortschritt bereit: die erweiterte Creed-Kampagne („Credo: Sohn des Chroms“) sowie die neue zweite Geschichte („Geheime Insel: Das 1000-Volt-Turnier“ auf der Insel Kurzschluss um den Goldenen Stecker), zusammen mit den weiteren Kampfparodien.
     Beide funktionieren mit allen sieben wählbaren Trainern (Meister Mutter, Meister Öl, Kapitän Volt, Feldwebel Niete, Sensei Kobra-7, Meister Yanobit und Großmeister Pelobit) samt eigener Stimme, Persönlichkeit und Ecken-Kommentar.
     Jedes Kapitel bietet per Code gezeichnete illustrierte Szenen mit Bildern, Robotern, Trainern, Publikum, Sprechblasen und Animationen (Einblendung, Zoom, Beben, Blitz, Regen oder Konfetti), die du jederzeit per „Szene“ ansehen, per Klick/Taste weiterschalten oder mit Esc sofort überspringen kannst.
-    Außerdem findest du unter Werkstatt › Modell und in den Einstellungen den Biografie-Editor für alle 22 Roboter und 7 Trainer auf Spanisch, Deutsch und Englisch.
+    Außerdem findest du unter Werkstatt › Modell und in den Einstellungen den Biografie-Editor, mit dem du eigene Biografien für alle 22 Roboter und 7 Trainer auf Spanisch, Deutsch und Englisch ansehen, bearbeiten und speichern kannst, ohne die Originaldateien zu verändern.
 en:
     Under the Story button in the Arena section, two featured 8-chapter story campaigns lead the list with difficulty scaling across Noob, Junior, Senior, and Special ranks and independently saved progress: the expanded Creed campaign ("Credo: Son of Chrome") and a brand-new original tournament story ("Secret Island: The 1000-Volt Tournament" on Short-Circuit Island for the Golden Plug), alongside the rest of the combat parodies.
     Both support all seven selectable coaches (Old Man Nuts, Master Oil, Captain Voltage, Sergeant Rivet, Sensei Cobra-7, Master Yanobit, and Grandmaster Pelobit), preserving each coach's own voice, personality, and corner talk.
-    Every chapter features code-drawn illustrated scenes with comic panels, robots, coaches, crowds, speech bubbles, and animations (entrance, zoom, shake, flash, rain, or confetti), which you can preview anytime via "Scene", advance with click/key, or skip instantly with Esc.
-    You can also open the Biography Editor from Workshop › Model or Settings to read, edit, save, and restore biographies for all 22 robots and 7 coaches in Spanish, German, and English.
+    Every chapter features code-drawn illustrated scenes with comic panels, robots, coaches, crowds, speech bubbles, and animations (entrance, zoom, shake, flash, rain, or confetti), which you can preview anytime via “Scene”, advance with click/key, or skip instantly with Esc.
+    You can also open the Biography editor from Workshop › Model or Settings to read, edit, save, and restore biographies for all 22 robots and 7 coaches in Spanish, German, and English, without changing the original files.
 pseudo.es:
     Menú principal → Arena → Historia → elegir Credo (8 caps.) o Isla Clandestina (8 caps.) → elegir entrenador (◄ ►)
     Ver escena ilustrada (clic/Espacio avanza, Esc salta) → superar cada capítulo y los jefes finales
@@ -1203,14 +1203,14 @@ pseudo.de:
     Illustrierte Szene ansehen (Klick/Leertaste weiter, Esc überspringen) → Kapitel und Endbosse meistern
     Werkstatt → Modell (oder Einstellungen) → Biografien bearbeiten → Speichern oder Original wiederherstellen
 pseudo.en:
-    Main Menu → Arena → Story → pick Credo (8 ch.) or Secret Island (8 ch.) → pick any coach (◄ ►)
+    Main menu → Arena → Story → pick Credo (8 ch.) or Secret Island (8 ch.) → pick any coach (◄ ►)
     Watch illustrated scene (click/Space advances, Esc skips) → clear each chapter and the final bosses
     Workshop → Model (or Settings) → Edit biographies → Save or Restore original
 ejemplo:
     public class CampeonCreed extends Metajavbot {
         @Override
         public void cadaTurno() {
-            avanzar(12); // ritmo constante de combate largo || gleichmäßiges Tempo für lange Kämpfe || steady pace for long fights
+            avanzar(12); // ritmo constante para peleas largas || gleichmäßiges Tempo für lange Kämpfe || steady pace for long fights
             girar(4);
         }
     }

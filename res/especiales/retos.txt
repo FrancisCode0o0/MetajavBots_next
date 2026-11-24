@@ -59,7 +59,7 @@ java: 8
 tipo: metodo
 titulo.es: Martillo Titán: golpe contra escudo
 titulo.de: Titanhammer: Treffer gegen Schild
-titulo.en: Titan Hammer: smash vs shield
+titulo.en: Titan Hammer: smash vs. shield
 enunciado.es: Calcula el daño real del martillo: al valor golpe réstale escudo, pero el resultado nunca puede ser negativo (como mínimo 0).
 enunciado.de: Berechne den echten Hammerschaden: Ziehe von golpe den Wert escudo ab, aber das Ergebnis darf nie negativ werden (mindestens 0).
 enunciado.en: Compute the hammer's net damage: subtract escudo from golpe, never returning less than 0.
@@ -85,7 +85,7 @@ tipo: metodo
 titulo.es: Martillo Titán: tramo tras avanzar
 titulo.de: Titanhammer: Reststrecke nach Vorstoß
 titulo.en: Titan Hammer: distance left
-enunciado.es: Tu robot está a dist del enemigo y da una zancada de tamaño paso. Devuelve la distancia restante sin pasarse de 0 si el paso supera dist.
+enunciado.es: Tu robot está a dist del enemigo y da una zancada de tamaño paso. Devuelve la distancia restante sin bajar de 0 si el paso supera dist.
 enunciado.de: Dein Roboter ist dist vom Gegner entfernt und macht einen Schritt der Größe paso. Gib die verbleibende Distanz zurück, mindestens jedoch 0.
 enunciado.en: Your robot is dist away from the enemy and steps forward by paso. Return the remaining distance, clamped at 0 if paso exceeds dist.
 pista.es: Resta paso a dist y quédate con Math.max(0, ...).
@@ -217,7 +217,7 @@ titulo.de: Plasmakanone: Überhitzung prüfen
 titulo.en: Plasma Cannon: overheat check
 enunciado.es: El cañón está a calor grados y el siguiente disparo añade subida grados. Devuelve true si supera estrictamente el límite max (se sobrecalienta), o false si aguanta.
 enunciado.de: Die Kanone hat calor Grad und der nächste Schuss fügt subida hinzu. Gib true zurück, wenn die Grenze max streng überschritten wird, sonst false.
-enunciado.en: The cannon is at calor degrees and the next shot adds subida degrees. Return true if it strictly exceeds limit max, otherwise false.
+enunciado.en: The cannon is at calor degrees and the next shot adds subida degrees. Return true if it strictly exceeds the limit max, otherwise false.
 pista.es: Suma calor + subida y compáralo con > max.
 pista.de: Addiere calor + subida und prüfe > max.
 pista.en: Add calor + subida and check > max.
@@ -238,7 +238,7 @@ dificultad: 2
 java: 8
 tipo: metodo
 titulo.es: Cañón de Plasma: ráfaga sobrecargada
-titulo.de: Plasmakanone: Überladene Salve
+titulo.de: Plasmakanone: überladene Salve
 titulo.en: Plasma Cannon: supercharged burst
 enunciado.es: El cañón dispara tiros proyectiles de daño dano cada uno y suma un bono de plasma final. Devuelve el daño total de la ráfaga.
 enunciado.de: Die Kanone feuert tiros Projektile mit jeweils dano Schaden und addiert einen Plasma-Bonus bono. Gib den Gesamtschaden der Salve zurück.
@@ -348,9 +348,9 @@ titulo.de: Donnerharpune: kürzester Drehweg
 titulo.en: Thunder Harpoon: shortest turn angle
 enunciado.es: Tu mira apunta a mira grados y el objetivo está en objetivo grados. Devuelve cuántos grados debes girar en el rango (-180, 180] para llegar por el camino más corto.
 enunciado.de: Dein Visier zeigt auf mira Grad und das Ziel liegt bei objetivo Grad. Gib die kleinste Drehung in (-180, 180] zurück, um direkt dorthin zu drehen.
-enunciado.en: Your sight points at mira degrees and the target is at objetivo degrees. Return the shortest turn in (-180, 180] to rotate straight onto target.
+enunciado.en: Your sight points at mira degrees and the target is at objetivo degrees. Return the shortest turn in (-180, 180] to rotate straight onto the target.
 pista.es: Toma d = (objetivo - mira) % 360; si d > 180 resta 360, si d <= -180 suma 360.
-pista.de: Nimm d = (objetivo - mira) % 360; wenn d > 180 ziehe 360 ab, wenn d <= -180 addiere 360.
+pista.de: Nimm d = (objetivo - mira) % 360; wenn d > 180, ziehe 360 ab, wenn d <= -180, addiere 360.
 pista.en: Compute d = (objetivo - mira) % 360; if d > 180 subtract 360, if d <= -180 add 360.
 firma: static int giroCorto(int mira, int objetivo)
 plantilla:
@@ -454,7 +454,7 @@ titulo.es: Torreta Enjambre: elegir el objetivo más cercano
 titulo.de: Schwarmgeschütz: nächstes Ziel wählen
 titulo.en: Swarm Turret: pick closest target
 enunciado.es: Recibes un array dists con las distancias a varios objetivos y un alcance máximo max. Devuelve el índice del objetivo más cercano con dists[i] <= max, o -1 si ninguno está al alcance (en empate, el menor índice).
-enunciado.de: Du erhältst ein Array dists mit Zielabständen und eine Maximalreichweite max. Gib den Index des nächsten Ziels mit dists[i] <= max zurück, oder -1, wenn keines erreichbar ist (bei Gleichstand den kleineren Index).
+enunciado.de: Du erhältst ein Array dists mit Zielabständen und eine Maximalreichweite max. Gib den Index des nächsten Ziels mit dists[i] <= max zurück oder -1, wenn keines erreichbar ist (bei Gleichstand den kleineren Index).
 enunciado.en: Given an array dists of target distances and a maximum range max, return the index of the closest target with dists[i] <= max, or -1 if none is in range (tie-break: lower index).
 pista.es: Guarda el mejor índice empezando en -1; recorre dists y actualiza si dists[i] <= max y mejora la menor distancia vista.
 pista.de: Merke dir den besten Index (Start -1); durchlaufe dists und aktualisiere, wenn dists[i] <= max und näher als der bisherige Treffer ist.

@@ -7,8 +7,8 @@ de: Hallo, {rival}! Wie magst du dein Omelett: locker oder hoch in der Luft?
 en: Hey, {rival}! How do you like your omelet: fluffy or airborne?
 
 es: ¡{yo} al mando! Prepárate para ver el techo de cerca, {rival}.
-de: {yo} am Start! Mach dich bereit, die Decke aus der Nähe zu sehen, {rival}.
-en: {yo} reporting in! Get ready to see the ceiling up close, {rival}.
+de: {yo} hat das Kommando! Mach dich bereit, die Decke aus der Nähe zu sehen, {rival}.
+en: {yo} in command! Get ready to see the ceiling up close, {rival}.
 
 es: ¡Hoy le damos la vuelta al marcador, {jugador}!
 de: Heute drehen wir das Ergebnis auf den Kopf, {jugador}!
@@ -32,8 +32,8 @@ de: Noch eine Runde Akrobatik! Auf in die Luft!
 en: Another round of acrobatics! Time to fly!
 
 es: Ronda {ronda}, {jugador}. ¡Que nadie se quede boca abajo!
-de: Runde {ronda}, {jugador}. Bleibt niemand auf dem Rücken!
-en: Round {ronda}, {jugador}. Let's flip them onto their back!
+de: Runde {ronda}, {jugador}. Keiner soll auf dem Rücken liegen bleiben!
+en: Round {ronda}, {jugador}. Let's make sure nobody ends up upside down!
 
 [ataque]
 es: ¡Al aire con {arma}!
@@ -80,7 +80,7 @@ en: Just flipped a speck of dust! Very stylish, though.
 
 es: ¡Qué escurridizo eres, {rival}! ¡Pareces aceite!
 de: Wie glitschig du bist, {rival}! Wie Öl!
-en: You're slippery, {rival}! Like cooking oil!
+en: You're so slippery, {rival}! Like cooking oil!
 
 es: ¡Ensayo general! El siguiente sí despega.
 de: Generalprobe! Der nächste hebt ab.
@@ -189,9 +189,9 @@ de: Wir haben diese Runde komplett auf den Kopf gestellt!
 en: Turned this whole round upside down!
 
 [derrota_ronda]
-es: ¡Ay, esta vez la tortilla caí yo!
+es: ¡Ay, esta vez la tortilla fui yo!
 de: Autsch, diesmal bin ich als Omelett gelandet!
-en: Ouch, I landed like the omelet that time!
+en: Ouch, I landed like the omelet this time!
 
 es: ¡Bien hecho, {rival}! Pero a la siguiente te toca volar a ti.
 de: Gut gemacht, {rival}! Aber nächstes Mal fliegst du.
@@ -266,7 +266,7 @@ de: Ich werfe dich so hoch, dass du den Satelliten winken kannst!
 en: I'm going to launch you so high you'll wave at satellites!
 
 es: ¡He volteado bares enteros con más estabilidad que tu código!
-de: Ich habe ganze Bars mit mehr Stabilität gewendet als deinen Code!
+de: Ich habe ganze Bars gewendet, die stabiler waren als dein Code!
 en: I've flipped entire bars more stable than your code!
 
 es: ¡Gira todo lo que quieras, {rival}: acabarás mirando al techo!
@@ -295,7 +295,7 @@ es: ¡Plof! ¡Me he tropezado con una excepción, {jugador}!
 de: Plumps! Über eine Exception gestolpert, {jugador}!
 en: Plop! Tripped over an exception, {jugador}!
 
-es: ¡He intentado dar una voltereta y me dio un null!
+es: ¡He intentado dar una voltereta y me ha dado un null!
 de: Ich wollte einen Salto machen und bin auf einem null gelandet!
 en: Tried a somersault and landed on a null!
 
@@ -321,7 +321,7 @@ de: Mein Hebel ist geölt und bereit für die Show!
 en: My lever's oiled and ready for showtime!
 
 es: ¡Un código con chispa y hacemos volar la arena!
-de: Ein pfiffiger Code und wir lassen die Arena abheben!
+de: Ein pfiffiger Code, und wir lassen die Arena abheben!
 en: One clever script and we'll make the arena fly!
 
 [elogio]
@@ -339,7 +339,7 @@ en: Clean, nimble, and witty! Love it!
 
 es: ¡Con esto, {jugador}, dejamos a todos patas arriba!
 de: Damit stellen wir alle auf den Kopf, {jugador}!
-en: With this, {jugador}, we'll flip everyone on their head!
+en: With this, {jugador}, we'll turn everyone upside down!
 
 [reparar]
 es: ¡Aprieto un muelle y listo para otro salto!

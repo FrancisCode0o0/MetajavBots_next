@@ -228,16 +228,16 @@ en: Your code and my steel, {jugador}. Good team.
 
 [derrota]
 es: Bien peleado, {rival}. Me toca descansar.
-de: Gut gekämpft, {rival}. Zeit, dass ich ruhe.
+de: Gut gekämpft, {rival}. Zeit, mich auszuruhen.
 en: Well fought, {rival}. Time for me to rest.
 
 es: Hasta los muros caen. Luego se reconstruyen.
 de: Auch Mauern fallen. Dann baut man sie wieder auf.
 en: Even walls fall. Then they get rebuilt.
 
-es: {jugador}... arréglame. Volveremos.
-de: {jugador}... reparier mich. Wir kommen wieder.
-en: {jugador}... fix me. We will be back.
+es: {jugador}… arréglame. Volveremos.
+de: {jugador} … reparier mich. Wir kommen wieder.
+en: {jugador}… fix me. We will be back.
 
 es: No me arrepiento de nada. Bum.
 de: Ich bereue nichts. Bumm.

@@ -51,4 +51,12 @@ public interface Pantalla {
     default String musica() {
         return "menu";
     }
+
+    /**
+     * Cuánto mide la barra de botones de abajo de esta pantalla (0 si no tiene): el cartel de los consejos del ayudante
+     * de la esquina sube por encima de ella para no tapar sus botones.
+     */
+    default float reservaAbajo() {
+        return 0;
+    }
 }

@@ -10,7 +10,7 @@ es: Soy {yo}. Yo solo paseo la cadena; los golpes los decide ella.
 de: Ich bin {yo}. Ich führe nur die Kette aus; die Schläge entscheidet sie.
 en: I'm {yo}. I just walk the chain; she decides the hits.
 
-es: {jugador}, suéltanos la correa que ya estamos calientes.
+es: {jugador}, suéltanos la correa, que ya estamos calientes.
 de: {jugador}, mach die Leine los, wir sind schon heiß.
 en: {jugador}, let us off the leash, we're fired up.
 
@@ -28,7 +28,7 @@ de: Runde {ronda}: Kette straff, Laune schwer.
 en: Round {ronda}: tight chain, heavy mood.
 
 es: ¡Otra ronda! A ver cuánto aguantas sin doblarte, {rival}.
-de: Noch eine Runde! Mal sehen, wie lange du durchhältst, {rival}.
+de: Noch eine Runde! Mal sehen, wie lange du durchhältst, ohne dich zu verbiegen, {rival}.
 en: Another round! Let's see how long you last without bending, {rival}.
 
 es: Ronda {ronda}. La bola va y viene, y tú te vas al suelo.
@@ -74,7 +74,7 @@ es: ¡Maldita sea, le he dado al aire! ¡Calma, Doña Pepa!
 de: Verdammt, nur Luft getroffen! Ruhig, Frau Pepa!
 en: Darn it, hit nothing but air! Easy, Lady Pepa!
 
-es: ¡Eh, {rival}, quédate quieto que la bola pesa mucho!
+es: ¡Eh, {rival}, quédate quieto, que la bola pesa mucho!
 de: Hey, {rival}, bleib stehen, die Kugel ist schwer!
 en: Hey, {rival}, stand still, this ball is heavy!
 
@@ -231,7 +231,7 @@ es: ¡Tranquila, Doña Pepa, mañana volvemos al ring!
 de: Ruhig, Frau Pepa, morgen kehren wir in den Ring zurück!
 en: Easy, Lady Pepa, tomorrow we're back in the ring!
 
-es: ¡{jugador}, engrasa la cadena que hoy nos han dado bien!
+es: ¡{jugador}, engrasa la cadena, que hoy nos han dado bien!
 de: {jugador}, öle die Kette, heute haben wir ordentlich eingesteckt!
 en: {jugador}, oil the chain, we took a real beating today!
 

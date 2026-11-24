@@ -68,7 +68,7 @@ titulo.es: Las armas, en un enum
 titulo.de: Die Waffen als enum
 titulo.en: Weapons as an enum
 enunciado.es: Escribe enum Arma con LASER(12, 600), BALA(8, 400), MISIL(25, 300) y LLAMA(30, 100) (daño y alcance). Métodos: int dano(), int alcance(), boolean alcanza(int distancia) (si distancia <= alcance) y static Optional<Arma> mejorPara(int distancia): la que más daño hace entre las que alcanzan.
-enunciado.de: Schreib enum Arma mit LASER(12, 600), BALA(8, 400), MISIL(25, 300) und LLAMA(30, 100) (Schaden und Reichweite). Methoden: int dano(), int alcance(), boolean alcanza(int distancia) (wenn distancia <= alcance) und static Optional<Arma> mejorPara(int distancia): die mit dem meisten Schaden unter denen, die hinreichen.
+enunciado.de: Schreib enum Arma mit LASER(12, 600), BALA(8, 400), MISIL(25, 300) und LLAMA(30, 100) (Schaden und Reichweite). Methoden: int dano(), int alcance(), boolean alcanza(int distancia) (wenn distancia <= alcance) und static Optional<Arma> mejorPara(int distancia): die mit dem meisten Schaden unter denen, die weit genug reichen.
 enunciado.en: Write enum Arma with LASER(12, 600), BALA(8, 400), MISIL(25, 300) and LLAMA(30, 100) (damage and range). Methods: int dano(), int alcance(), boolean alcanza(int distancia) (when distancia <= alcance) and static Optional<Arma> mejorPara(int distancia): the one doing most damage among those in range.
 pista.es: Un enum puede tener campos y un constructor (privado). values() da todas las constantes: Arrays.stream(values()).filter(a -> a.alcanza(distancia)).max(Comparator.comparingInt(Arma::dano)).
 pista.de: Ein enum darf Felder und einen (privaten) Konstruktor haben. values() liefert alle Konstanten: Arrays.stream(values()).filter(a -> a.alcanza(distancia)).max(Comparator.comparingInt(Arma::dano)).
@@ -173,7 +173,7 @@ titulo.es: ¿Qué ha captado el sensor?
 titulo.de: Was hat der Sensor erfasst?
 titulo.en: What did the sensor pick up?
 enunciado.es: Devuelve "número N" si cosa es un Integer, "texto de N letras" si es un String que no está en blanco, "array de N" si es un int[] y "otra cosa" en cualquier otro caso (también null). Usa instanceof con patrón (Java 16): sin casts.
-enunciado.de: Gib "zahl N" zurück, wenn cosa ein Integer ist, "text mit N zeichen", wenn es ein nicht leerer String ist, "array mit N", wenn es ein int[] ist, und sonst "etwas anderes" (auch bei null). Nutze instanceof mit Pattern (Java 16): ohne Casts.
+enunciado.de: Gib "zahl N" zurück, wenn cosa ein Integer ist, "text mit N zeichen", wenn es ein String ist, der nicht nur aus Leerzeichen besteht, "array mit N", wenn es ein int[] ist, und sonst "etwas anderes" (auch bei null). Nutze instanceof mit Pattern (Java 16): ohne Casts.
 enunciado.en: Return "number N" if cosa is an Integer, "text of N letters" if it is a String that isn't blank, "array of N" if it is an int[], and "something else" otherwise (null too). Use instanceof with a pattern (Java 16): no casts.
 pista.es: if (cosa instanceof String s && !s.isBlank()) declara s solo cuando encaja. instanceof con null siempre da false.
 pista.de: if (cosa instanceof String s && !s.isBlank()) deklariert s nur, wenn es passt. instanceof mit null ist immer false.
@@ -335,7 +335,7 @@ titulo.es: Clasificar lecturas del radar
 titulo.de: Radarmeldungen einordnen
 titulo.en: Classify radar readings
 enunciado.es: Con pattern matching en switch (Java 21): null da "sin señal"; un Integer negativo, "error N" (N sin signo); otro Integer, "distancia N"; un String en blanco, "vacía"; otro String, "mensaje: S"; un Double, "ángulo D" con un decimal; cualquier otra cosa, "desconocida".
-enunciado.de: Mit Pattern Matching im switch (Java 21): null ergibt "kein signal"; ein negativer Integer "fehler N" (N ohne Vorzeichen); ein anderer Integer "distanz N"; ein leerer String "leer"; ein anderer String "nachricht: S"; ein Double "winkel D" mit einer Nachkommastelle; alles andere "unbekannt".
+enunciado.de: Mit Pattern Matching im switch (Java 21): null ergibt "kein signal"; ein negativer Integer "fehler N" (N ohne Vorzeichen); ein anderer Integer "distanz N"; ein leerer oder nur aus Leerzeichen bestehender String "leer"; ein anderer String "nachricht: S"; ein Double "winkel D" mit einer Nachkommastelle; alles andere "unbekannt".
 enunciado.en: With pattern matching for switch (Java 21): null gives "no signal"; a negative Integer, "error N" (N without the sign); any other Integer, "distance N"; a blank String, "blank"; any other String, "message: S"; a Double, "angle D" with one decimal; anything else, "unknown".
 pista.es: case null -> ...; case Integer i when i < 0 -> ...; case Integer i -> ...; Los casos con when van antes que los generales. Para el decimal: String.format(Locale.ROOT, "%.1f", d).
 pista.de: case null -> ...; case Integer i when i < 0 -> ...; case Integer i -> ...; Die Fälle mit when kommen vor den allgemeinen. Für die Nachkommastelle: String.format(Locale.ROOT, "%.1f", d).

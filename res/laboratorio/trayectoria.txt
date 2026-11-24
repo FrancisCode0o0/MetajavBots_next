@@ -5,7 +5,7 @@ titulo.de: Tests für die Flugbahn
 titulo.en: Tests for the trajectory
 enunciado.es: La clase Trayectoria calcula el ángulo (en grados, 0 = este, 90 = norte, como Math.atan2) y la distancia entre dos puntos de la arena. Escribe al menos 3 pruebas con @Test que pasen con la clase buena y cacen a los tres mutantes (copias con un fallo escondido). Piensa en los cuatro cuadrantes y en la raíz cuadrada.
 enunciado.de: Die Klasse Trayectoria berechnet den Winkel (in Grad, 0 = Osten, 90 = Norden, wie Math.atan2) und den Abstand zwischen zwei Punkten der Arena. Schreibe mindestens 3 Tests mit @Test, die mit der richtigen Klasse bestehen und die drei Mutanten (Kopien mit verstecktem Fehler) fangen. Denk an alle vier Quadranten und an die Quadratwurzel.
-enunciado.en: The class Trayectoria computes the angle (degrees, 0 = east, 90 = north, like Math.atan2) and the distance between two arena points. Write at least 3 @Test methods that pass with the correct class and catch the three mutants (copies with a hidden bug). Think of all four quadrants and of the square root.
+enunciado.en: The class Trayectoria computes the angle (degrees, 0 = east, 90 = north, like Math.atan2) and the distance between two arena points. Write at least 3 @Test methods that pass with the correct class and catch the three mutants (copies with a hidden bug). Think about all four quadrants and the square root.
 clase:
     public class Trayectoria {
         public static double anguloHacia(double x1, double y1, double x2, double y2) {

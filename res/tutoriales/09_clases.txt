@@ -25,8 +25,8 @@ es: Si quieres decirlo en voz alta, existe this: this.avanzar(50) es exactamente
 de: Darum überleben Felder zwischen den Zügen: Sie gehören dem Objekt, und das Objekt lebt die ganze Runde.
 de: Und darum kannst du vorwaerts() aufrufen, ohne zu sagen, wer: In der Klasse ist „ich“ selbstverständlich.
 de: Willst du es aussprechen, gibt es this: this.vorwaerts(50) ist genau dasselbe.
-en: That's why fields survive between turns: they belong to the object, and the object lives all round.
-en: And that's why you can call ahead() without saying whose: inside the class, "me" is understood.
+en: That's why fields survive between ticks: they belong to the object, and the object lives for the whole round.
+en: And that's why you can call ahead() without saying whose: inside the class, “me” is understood.
 en: If you want to say it out loud, there's this: this.ahead(50) means exactly the same.
 --- tarea
 ejercicio: t09_robot_listo
@@ -38,18 +38,18 @@ en: Your first real robot written as a class: fields, methods and nothing else.
 tema: 09
 orden: 2
 titulo.es: Tus propias piezas
-titulo.de: Deine eigenen Bauteile
+titulo.de: Deine eigenen Teile
 titulo.en: Your own parts
 --- pagina
 es: No todo tiene que vivir dentro de MiRobot. Puedes escribir clases pequeñas en el mismo archivo
 es: (sin public delante) para agrupar datos que van juntos. Por ejemplo, un Avistamiento: dónde estaba
-es: el enemigo, hacia dónde iba y en qué turno lo viste. Tres variables sueltas se pierden; un objeto no.
+es: el rival, hacia dónde iba y en qué turno lo viste. Tres variables sueltas se pierden; un objeto no.
 de: Nicht alles muss in MiRobot wohnen. Du kannst kleine Klassen in dieselbe Datei schreiben
 de: (ohne public davor), um Daten zu bündeln, die zusammengehören. Zum Beispiel eine Sichtung: wo der Gegner war,
 de: wohin er fuhr und in welchem Zug du ihn gesehen hast. Drei lose Variablen gehen verloren, ein Objekt nicht.
 en: Not everything has to live inside MiRobot. You can write small classes in the same file
-en: (without public in front) to bundle data that belongs together. For example a Sighting: where the enemy was,
-en: where it was heading and on which turn you saw it. Three loose variables get lost; an object doesn't.
+en: (without public in front) to bundle data that belongs together. For example a Sighting: where the rival was,
+en: where it was heading and on which tick you saw it. Three loose variables get lost; an object doesn't.
 codigo:
     class Avistamiento {
         double x, y, rumbo, velocidad;
@@ -57,13 +57,13 @@ codigo:
     }
 --- pagina
 es: Con new fabricas un objeto, y con el punto llegas a sus campos y métodos. Una variable de clase
-es: no contiene el objeto, lo SEÑALA (como con los arrays). Si no señala a nada vale null, y usar
+es: no contiene el objeto, lo SEÑALA (como con los arrays). Si no señala a nada, vale null, y usar
 es: un null con el punto es la excepción más famosa de Java: NullPointerException. Antes de usarlo, pregunta.
 de: Mit new baust du ein Objekt, und über den Punkt erreichst du seine Felder und Methoden. Eine Variable
 de: mit Klassentyp enthält das Objekt nicht, sie ZEIGT darauf (wie bei Arrays). Zeigt sie auf nichts, ist sie null,
 de: und null mit Punkt zu benutzen ist die berühmteste Ausnahme in Java: NullPointerException. Frag vorher nach.
 en: With new you build an object, and the dot takes you to its fields and methods. A class-typed variable
-en: doesn't hold the object, it POINTS to it (as with arrays). If it points to nothing it's null, and using
+en: doesn't hold the object, it POINTS to it (as with arrays). If it points to nothing, it's null, and using
 en: a null with the dot is Java's most famous exception: NullPointerException. Check before you use it.
 codigo:
     Avistamiento ultimo = null;
@@ -92,7 +92,7 @@ en: Store what you see in an object of your own class (created with new) and aim
 --- tarea
 ejercicio: t09_pieza_ficha
 es: Que una pieza sepa presentarse sola: escribe su toString.
-de: Ein Bauteil soll sich selbst vorstellen können: Schreib seine toString-Methode.
+de: Ein Teil soll sich selbst vorstellen können: Schreib seine toString-Methode.
 en: Let a part introduce itself: write its toString.
 
 === l09_constructores
@@ -105,7 +105,7 @@ titulo.en: Constructors and shared things
 es: Rellenar los campos uno a uno después del new es pesado y fácil de olvidar. Un constructor es un método
 es: especial, con el nombre de la clase y sin tipo de retorno, que se ejecuta al hacer new. Así el objeto nace
 es: completo: new Avistamiento(e, turnoActual()). Dentro, this.x = x distingue el campo del parámetro.
-de: Die Felder nach dem new einzeln zu füllen ist mühsam und leicht vergessen. Ein Konstruktor ist eine besondere
+de: Die Felder nach dem new einzeln zu füllen ist mühsam und leicht zu vergessen. Ein Konstruktor ist eine besondere
 de: Methode mit dem Namen der Klasse und ohne Rückgabetyp, die bei new läuft. So kommt das Objekt vollständig
 de: zur Welt: new Avistamiento(g, zug()). Darin unterscheidet this.x = x das Feld vom Parameter.
 en: Filling fields one by one after new is tedious and easy to forget. A constructor is a special method,
@@ -134,7 +134,7 @@ de: Gut für globale Zähler (wie viele Sichtungen du insgesamt hattest) und fü
 de: Aber Vorsicht: Ein veränderliches static ist wie eine Tafel im Flur, jeder kritzelt darauf.
 en: A static field doesn't belong to each object but to the whole class: they all share it.
 en: It's good for global counters (how many sightings you've had in total) and for constants.
-en: Don't overdo it: a static that changes is like a whiteboard in a corridor, anyone can scribble on it.
+en: Don't overdo it: a static that changes is like a whiteboard in a corridor: anyone can scribble on it.
 --- tarea
 ejercicio: t09_arma_constructores
 es: Un arma que se puede crear de varias formas: varios constructores, una sola clase.

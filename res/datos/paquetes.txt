@@ -24,8 +24,8 @@ auto: false
 plantilla: true
 solo_ejercicio: false
 resumen.es: La API de los robots de combate: eventos, movimiento, radar, armas, memoria y límites de cálculo.
-resumen.de: Die Roboter-API für Kämpfe: Ereignisse, Bewegung, Radar, Waffen, Gedächtnis und Rechenlimit.
-resumen.en: The combat robot API: events, movement, radar, weapons, memory and computation limits.
+resumen.de: Die Roboter-API für Kämpfe: Ereignisse, Bewegung, Radar, Waffen, Gedächtnis und Rechenlimits.
+resumen.en: The fighting robot API: events, movement, radar, weapons, memory and computation limits.
 es:
     Paquete propio de MetajavBots con todo lo necesario para programar un robot de combate. Ya viene importado en la primera línea de todas las plantillas del Taller con «import metajavbots.api.*;».
     Según el idioma del juego cambian los nombres de la clase base y sus interfaces (Metajavbot/Enemigo/Golpe en español, MetajavbotDe/Gegner/Treffer en alemán, MetajavbotEn/Enemy/Hit en inglés), pero los tres funcionan igual por dentro.
@@ -33,7 +33,7 @@ de:
     Das eigene Paket von MetajavBots mit allem, was du zum Programmieren eines Kampfroboters brauchst. Es steht bereits in der ersten Zeile jeder Werkstatt-Vorlage als „import metajavbots.api.*;“.
     Je nach Spielsprache heißen Basisklasse und Interfaces anders (MetajavbotDe/Gegner/Treffer auf Deutsch, Metajavbot/Enemigo/Golpe auf Spanisch, MetajavbotEn/Enemy/Hit auf Englisch), funktionieren intern aber identisch.
 en:
-    MetajavBots' own package with everything you need to program a fighting robot. It is already imported on the first line of every Workshop template as "import metajavbots.api.*;".
+    MetajavBots' own package with everything you need to program a fighting robot. It is already imported on the first line of every Workshop template as “import metajavbots.api.*;”.
     Depending on the game language, the base class and interfaces use localized names (MetajavbotEn/Enemy/Hit in English, Metajavbot/Enemigo/Golpe in Spanish, MetajavbotDe/Gegner/Treffer in German), all backed by the same engine.
 
 --- Metajavbot
@@ -54,7 +54,7 @@ miembros.es:
     void apuntar(double grados) / apuntarHacia(double angulo) — gira la mira y el radar
     void atacar() / usarEspecial() — dispara las armas o activa el ataque especial de la cabeza
     double blindaje() / energia() / x() / y() — consulta tu estado actual en la arena
-    Map<String, Object> memoria() — guarda datos entre rondas del mismo combate
+    Map<String, Object> memoria() — guarda datos entre rondas de la misma pelea
 miembros.de:
     void jedenZug() — läuft etwa 30-mal pro Sekunde mit deiner Hauptlogik
     void beimStart() — läuft einmal zu Beginn jeder Runde
@@ -69,14 +69,14 @@ miembros.de:
 miembros.en:
     void onTick() — runs about 30 times per second with your main logic
     void onStart() — runs once at the start of every round
-    void onSeeEnemy(Enemy e) — triggered when an opponent enters your radar cone
+    void onSeeEnemy(Enemy e) — triggered when a rival enters your radar cone
     void onHit(Hit h) — triggered when you take a hit
     void ahead(double d) / back(double d) — moves the robot by that distance
     void turn(double degrees) / turnTo(double angle) — turns the robot body
     void aim(double degrees) / aimTo(double angle) — turns the sight and radar
     void attack() / useSpecial() — fires your weapons or triggers the head special
     double armor() / energy() / x() / y() — reads your current state in the arena
-    Map<String, Object> memory() — stores data across rounds of the same match
+    Map<String, Object> memory() — stores data across rounds of the same fight
 ejemplo:
     import metajavbots.api.*;
 
@@ -140,9 +140,9 @@ nombre.es: Golpe
 nombre.de: Treffer
 nombre.en: Hit
 tipo: interfaz
-es: Información de un impacto recibido (alRecibirGolpe) o acertado al rival (alAcertar): daño, arma, ángulo y pieza alcanzada.
-de: Informationen über einen eingesteckten (beiTreffer) oder gelandeten Treffer (beiEigenemTreffer): Schaden, Waffe, Winkel und getroffenes Teil.
-en: Details about a hit you took (onHit) or landed (onHitEnemy): damage, weapon, angle and body part struck.
+es: Información de un impacto recibido (alRecibirGolpe) o asestado al rival (alAcertar): daño, arma, ángulo y pieza alcanzada.
+de: Informationen über einen erhaltenen (beiTreffer) oder erzielten Treffer (beiEigenemTreffer): Schaden, Waffe, Winkel und getroffenes Teil.
+en: Details about a hit you took (onHit) or landed (onHitEnemy): damage, weapon, angle and part struck.
 miembros.es:
     double dano() — cuánto blindaje quitó el golpe
     String arma() — tipo de golpe: "laser", "bala", "misil", "cuerpo", "choque" o "pared"
@@ -168,12 +168,12 @@ ejemplo:
 --- TopeDeCalculo
 tipo: error
 es: Error lanzado automáticamente si tu código supera el presupuesto de pasos de cálculo de un turno (por ejemplo, un bucle infinito o demasiado pesado). Al ser un Error y no una Exception, un catch (Exception) no lo oculta.
-de: Ein Error, der automatisch ausgelöst wird, wenn dein Code das Schrittbudget eines Zugs überschreitet (z. B. Endlosschleife). Da es ein Error statt einer Exception ist, schluckt catch (Exception) ihn nicht.
+de: Ein Error, der automatisch ausgelöst wird, wenn dein Code das Budget an Rechenschritten eines Zugs überschreitet (z. B. eine Endlosschleife oder eine zu schwere Schleife). Da es ein Error statt einer Exception ist, schluckt catch (Exception) ihn nicht.
 en: Error thrown automatically when your code exceeds a tick's computation step budget (for example, an infinite or overly heavy loop). Because it extends Error rather than Exception, catch (Exception) does not hide it.
 miembros.es:
     String getMessage() — explica que se agotó el límite de pasos del turno
 miembros.de:
-    String getMessage() — erklärt, dass das Schrittlimit des Zugs erschöpft ist
+    String getMessage() — erklärt, dass das Rechenlimit des Zugs erschöpft ist
 miembros.en:
     String getMessage() — explains that the tick's step limit was exceeded
 ejemplo:
@@ -189,23 +189,23 @@ plantilla: false
 solo_ejercicio: true
 resumen.es: Anotaciones y aserciones estilo JUnit 5 para escribir pruebas unitarias en el Laboratorio y los ejercicios.
 resumen.de: Annotationen und Zusicherungen im JUnit-5-Stil für Unit-Tests im Labor und in Übungen.
-resumen.en: JUnit 5-style annotations and assertions for writing unit tests in the Laboratory and exercises.
+resumen.en: JUnit 5-style annotations and assertions for writing unit tests in the Lab and exercises.
 es:
     Paquete de pruebas unitarias del juego, compatible en nombres y estilo con JUnit 5 (org.junit.jupiter.api). Se usa en el Laboratorio y en los ejercicios de pruebas para comprobar resultados, arrays y excepciones esperadas.
     Combina «import metajavbots.junit.*;» con «import static metajavbots.junit.Assertions.*;» para escribir @Test y assertEquals directamente.
 de:
-    Das Unit-Test-Paket des Spiels, in Namen und Stil kompatibel zu JUnit 5 (org.junit.jupiter.api). Du nutzt es im Labor und in Testübungen, um Ergebnisse, Arrays und erwartete Exceptions zu prüfen.
+    Das Unit-Test-Paket des Spiels, in Namen und Stil kompatibel mit JUnit 5 (org.junit.jupiter.api). Du nutzt es im Labor und in Testübungen, um Ergebnisse, Arrays und erwartete Exceptions zu prüfen.
     Kombiniere „import metajavbots.junit.*;“ mit „import static metajavbots.junit.Assertions.*;“, um @Test und assertEquals direkt zu schreiben.
 en:
-    The game's unit-testing package, matching JUnit 5 (org.junit.jupiter.api) names and style. Used in the Laboratory and testing exercises to verify return values, arrays and expected exceptions.
-    Combine "import metajavbots.junit.*;" with "import static metajavbots.junit.Assertions.*;" to write @Test and assertEquals directly.
+    The game's unit-testing package, matching JUnit 5 (org.junit.jupiter.api) names and style. Used in the Lab and testing exercises to verify return values, arrays and expected exceptions.
+    Combine “import metajavbots.junit.*;” with “import static metajavbots.junit.Assertions.*;” to write @Test and assertEquals directly.
 
 --- Test
 tipo: anotacion
 solo_ejercicio: true
 es: Marca un método como prueba unitaria que el Laboratorio ejecutará automáticamente.
 de: Markiert eine Methode als Unit-Test, den das Labor automatisch ausführt.
-en: Marks a method as a unit test that the Laboratory runs automatically.
+en: Marks a method as a unit test that the Lab runs automatically.
 miembros.es:
     @Test — se coloca justo encima del método de prueba (sin parámetros, void)
 miembros.de:
@@ -268,7 +268,7 @@ tipo: clase
 solo_ejercicio: true
 es: Colección de métodos estáticos para comprobar que tu código produce el valor, la condición o la excepción esperada.
 de: Sammlung statischer Methoden, um erwartete Werte, Bedingungen oder Exceptions zu prüfen.
-en: Collection of static methods to verify expected values, conditions, arrays or thrown exceptions.
+en: Collection of static methods to verify expected values, conditions or thrown exceptions.
 miembros.es:
     assertEquals(esperado, real) — comprueba igualdad (y con delta para double)
     assertNotEquals(noEsperado, real) — comprueba que dos valores son distintos
@@ -283,7 +283,7 @@ miembros.de:
     assertNotEquals(nichtErwartet, ist) — prüft Ungleichheit
     assertTrue(bed) / assertFalse(bed) — prüft eine boolesche Bedingung
     assertNull(o) / assertNotNull(o) — prüft auf null oder nicht null
-    assertArrayEquals(erw, ist) — vergleicht Arrays inhaltsgleich
+    assertArrayEquals(erw, ist) — vergleicht Arrays nach Inhalt
     assertThrows(Typ.class, () -> ...) — verlangt, dass diese Exception fliegt
     assertDoesNotThrow(() -> ...) — verlangt, dass keine Exception fliegt
     fail(nachricht) — lässt den Test sofort fehlschlagen
@@ -344,7 +344,7 @@ resumen.de: Grundlegende Java-Klassen (String, Math, Object, Wrapper, Exceptions
 resumen.en: Core Java classes (String, Math, Object, wrappers, exceptions and basic annotations). Always imported automatically.
 es:
     Es el único paquete que Java importa automáticamente en todos los archivos: puedes usar String, Math, Integer, Double, System o IllegalArgumentException sin escribir ninguna línea import.
-    En MetajavBots, el Vigilante permite las clases fundamentales de cálculo, texto, envoltorios, interfaces básicas y excepciones comunes, pero bloquea cualquier acceso peligroso al sistema operativo o reflexión.
+    En MetajavBots, el Vigilante permite las clases fundamentales de cálculo, texto, envoltorios, interfaces básicas y excepciones comunes, pero bloquea cualquier acceso peligroso al sistema operativo o a la reflexión.
 de:
     Das einzige Paket, das Java in jeder Datei automatisch importiert: String, Math, Integer, Double, System oder IllegalArgumentException funktionieren ohne jede import-Zeile.
     In MetajavBots erlaubt der Wächter (Vigilante) die Kernklassen für Rechnen, Text, Wrapper, Basis-Interfaces und übliche Exceptions, sperrt aber gefährliche Systemzugriffe und Reflexion.
@@ -428,7 +428,7 @@ miembros.es:
     int length() / String toString() — tamaño actual y conversión a String final
 miembros.de:
     StringBuilder append(x) — hängt Text, Zahl oder Zeichen hinten an
-    StringBuilder insert(int pos, x) / delete(int a, int b) — fügt ein oder löscht an Position
+    StringBuilder insert(int pos, x) / delete(int a, int b) — fügt ein oder löscht an einer Position
     StringBuilder reverse() — kehrt den Inhalt um
     int length() / String toString() — aktuelle Länge und Umwandlung in String
 miembros.en:
@@ -531,7 +531,7 @@ miembros.es:
     Boolean.parseBoolean(String s) — true solo si s equivale a "true" sin distinguir mayúsculas
     Boolean.TRUE / Boolean.FALSE — constantes envoltorio
 miembros.de:
-    Boolean.parseBoolean(String s) — true nur wenn s (ohne Groß-/Kleinschreibung) "true" ist
+    Boolean.parseBoolean(String s) — true nur, wenn s (ohne Groß-/Kleinschreibung) "true" ist
     Boolean.TRUE / Boolean.FALSE — Wrapper-Konstanten
 miembros.en:
     Boolean.parseBoolean(String s) — returns true only if s equals "true" ignoring case
@@ -562,7 +562,7 @@ ejemplo:
 --- System
 tipo: clase
 es: Utilidades del sistema permitidas en la caja de arena: salida por consola (System.out), reloj (currentTimeMillis/nanoTime) y copia rápida de arrays. Están bloqueados System.exit, System.in, getenv y getProperty.
-de: In der Sandbox erlaubte System-Hilfsmittel: Konsolenausgabe (System.out), Zeitmessung (currentTimeMillis/nanoTime) und Array-Kopieren. Gesperrt sind System.exit, System.in, getenv und getProperty.
+de: In der Sandbox erlaubte System-Hilfsmittel: Konsolenausgabe (System.out), Zeitmessung (currentTimeMillis/nanoTime) und schnelles Kopieren von Arrays. Gesperrt sind System.exit, System.in, getenv und getProperty.
 en: Sandbox-safe system utilities: console output (System.out), clock (currentTimeMillis/nanoTime) and fast array copying. System.exit, System.in, getenv and getProperty are blocked.
 miembros.es:
     System.out.println(...) / printf(...) — imprime en la consola del juego o ejercicio
@@ -583,12 +583,12 @@ ejemplo:
 --- Comparable
 tipo: interfaz
 es: Define el orden natural de una clase para que pueda ordenarse automáticamente con Collections.sort, Arrays.sort o TreeSet.
-de: Definiert die natürliche Ordnung einer Klasse für Collections.sort, Arrays.sort oder TreeSet.
+de: Definiert die natürliche Ordnung einer Klasse, damit sie automatisch mit Collections.sort, Arrays.sort oder TreeSet sortiert werden kann.
 en: Defines the natural ordering of a class so it can be sorted automatically with Collections.sort, Arrays.sort or TreeSet.
 miembros.es:
     int compareTo(T otro) — negativo si this < otro, 0 si iguales, positivo si this > otro
 miembros.de:
-    int compareTo(T anderer) — negativ wenn this < anderer, 0 wenn gleich, positiv wenn this > anderer
+    int compareTo(T anderer) — negativ, wenn this < anderer, 0, wenn gleich, positiv, wenn this > anderer
 miembros.en:
     int compareTo(T other) — negative if this < other, 0 if equal, positive if this > other
 ejemplo:
@@ -649,7 +649,7 @@ ejemplo:
 tipo: clase
 es: Clase base automática de todos los tipos «record» (Java 16+), que generan constructor, getters, equals, hashCode y toString solos.
 de: Automatische Basisklasse aller „record“-Typen (Java 16+), die Konstruktor, Getter, equals, hashCode und toString automatisch erzeugen.
-en: Automatic base class of all "record" types (Java 16+), which auto-generate constructor, accessors, equals, hashCode and toString.
+en: Automatic base class of all “record” types (Java 16+), which auto-generate constructor, accessors, equals, hashCode and toString.
 miembros.es:
     equals / hashCode / toString — generados automáticamente a partir de los componentes del record
 miembros.de:
@@ -777,7 +777,7 @@ ejemplo:
 --- NullPointerException
 tipo: excepcion
 es: Se lanza al intentar usar un método o atributo sobre una referencia que vale null. Prevenible comprobando != null o usando Optional.
-de: Wird geworfen, wenn eine Methode oder ein Feld auf null aufgerufen wird. Vermeidbar durch != null oder Optional.
+de: Wird geworfen, wenn auf null eine Methode aufgerufen oder ein Feld gelesen wird. Vermeidbar durch != null oder Optional.
 en: Thrown when calling a method or accessing a field on a null reference. Preventable with != null checks or Optional.
 miembros.es:
     String getMessage() — en Java moderno indica exactamente qué expresión era null
@@ -791,8 +791,8 @@ ejemplo:
 
 --- IndexOutOfBoundsException
 tipo: excepcion
-es: Se lanza al acceder a una posición negativa o mayor/igual que la longitud de un array, List o String.
-de: Wird geworfen beim Zugriff auf einen negativen Index oder einen Index >= Länge bei Array, List oder String.
+es: Se lanza al acceder a una posición negativa o mayor o igual que la longitud de un array, List o String.
+de: Wird beim Zugriff auf einen negativen Index oder einen Index >= Länge bei Array, List oder String geworfen.
 en: Thrown when accessing a negative index or an index >= length on an array, List or String.
 miembros.es:
     String getMessage() — indica el índice pedido y el tamaño real
@@ -840,8 +840,8 @@ ejemplo:
 tipo: clase
 solo_ejercicio: true
 es: Hilo de ejecución concurrente (solo ejercicios de concurrencia; bloqueado en robots de combate para mantener determinismo y rendimiento).
-de: Nebenläufiger Ausführungs-Thread (nur in Nebenläufigkeits-Übungen erlaubt; in Kampfrobotern gesperrt).
-en: Concurrent execution thread (allowed only in concurrency exercises; blocked in combat robots).
+de: Nebenläufiger Ausführungs-Thread (nur in Nebenläufigkeits-Übungen erlaubt; in Kampfrobotern gesperrt, damit Kämpfe deterministisch und schnell bleiben).
+en: Concurrent execution thread (allowed only in concurrency exercises; blocked in combat robots to keep fights deterministic and fast).
 miembros.es:
     new Thread(Runnable r) / start() — crea y arranca un hilo nuevo
     join() — espera a que el hilo termine
@@ -850,12 +850,12 @@ miembros.es:
 miembros.de:
     new Thread(Runnable r) / start() — erzeugt und startet einen neuen Thread
     join() — wartet auf das Ende des Threads
-    Thread.sleep(long ms) — pausiert den aktuellen Thread
-    Thread.ofVirtual().start(Runnable r) — startet einen virtuellen Thread (Java 21+)
+    Thread.sleep(long ms) — pausiert den aktuellen Thread einige Millisekunden lang
+    Thread.ofVirtual().start(Runnable r) — startet einen leichtgewichtigen virtuellen Thread (Java 21+)
 miembros.en:
     new Thread(Runnable r) / start() — creates and starts a new thread
     join() — waits for the thread to finish
-    Thread.sleep(long ms) — pauses the current thread for milliseconds
+    Thread.sleep(long ms) — pauses the current thread for a few milliseconds
     Thread.ofVirtual().start(Runnable r) — starts a lightweight virtual thread (Java 21+)
 ejemplo:
     Thread t = new Thread(() -> System.out.println("Hola desde otro hilo"));
@@ -875,10 +875,10 @@ es:
     Recuerda que «import java.util.*;» importa las clases de java.util, pero NO sus subpaquetes como java.util.function, java.util.stream o java.util.regex (cada subpaquete necesita su propio import).
 de:
     Das meistgenutzte Paket der Java-Standardbibliothek. Es enthält Datenstrukturen (Listen, Mengen, Maps, Warteschlangen), Hilfsklassen zum Sortieren und Suchen (Arrays, Collections, Comparator), Optional und Zufallszahlen (Random).
-    Wichtig: „import java.util.*;“ importiert nur Klassen direkt in java.util, NICHT Unterpakete wie java.util.function, java.util.stream oder java.util.regex.
+    Wichtig: „import java.util.*;“ importiert nur Klassen direkt in java.util, NICHT Unterpakete wie java.util.function, java.util.stream oder java.util.regex (jedes Unterpaket braucht seinen eigenen Import).
 en:
     The most widely used package in the Java standard library. It provides data structures (lists, sets, maps, queues), sorting and searching utilities (Arrays, Collections, Comparator), Optional values and random numbers (Random).
-    Remember that "import java.util.*;" imports classes directly in java.util, NOT subpackages like java.util.function, java.util.stream or java.util.regex (each subpackage needs its own import).
+    Remember that “import java.util.*;” imports classes directly in java.util, NOT subpackages like java.util.function, java.util.stream or java.util.regex (each subpackage needs its own import).
 bloqueado.es: ServiceLoader, java.util.prefs, java.util.jar, java.util.zip, java.util.logging, java.util.spi (y Timer en robots).
 bloqueado.de: ServiceLoader, java.util.prefs, java.util.jar, java.util.zip, java.util.logging, java.util.spi (und Timer in Robotern).
 bloqueado.en: ServiceLoader, java.util.prefs, java.util.jar, java.util.zip, java.util.logging, java.util.spi (and Timer in robots).
@@ -936,7 +936,7 @@ ejemplo:
 
 --- LinkedList
 tipo: clase
-es: Lista doblemente enlazada que implementa List y Deque: rápida al insertar/quitar en extremos, más lenta en acceso por índice que ArrayList.
+es: Lista doblemente enlazada que implementa List y Deque: rápida al insertar o quitar en los extremos, más lenta en acceso por índice que ArrayList.
 de: Doppelt verkettete Liste (List und Deque): schnell an den Enden, aber langsamer beim Indexzugriff als ArrayList.
 en: Doubly linked list implementing both List and Deque: fast insertions/removals at ends, slower random access than ArrayList.
 miembros.es:
@@ -1006,7 +1006,7 @@ miembros.es:
     ceiling(E e) / floor(E e) — elemento más cercano mayor/menor o igual
 miembros.de:
     first() / last() — kleinstes und größtes Element
-    ceiling(E e) / floor(E e) — nächstgelegenes größeres/kleineres Element
+    ceiling(E e) / floor(E e) — nächstgelegenes größeres/kleineres oder gleiches Element
 miembros.en:
     first() / last() — smallest and largest element
     ceiling(E e) / floor(E e) — nearest greater-or-equal / less-or-equal element
@@ -1020,7 +1020,7 @@ ejemplo:
 --- Map
 tipo: interfaz
 es: Diccionario clave → valor (sin claves duplicadas). Muy útil para contar frecuencias, indexar rivales por nombre o guardar memoria del robot.
-de: Wörterbuch Schlüssel → Wert (ohne doppelte Schlüssel). Ideal zum Zählen, Nachschlagen nach Namen oder für Roboter-Daten.
+de: Wörterbuch Schlüssel → Wert (ohne doppelte Schlüssel). Ideal zum Zählen, Nachschlagen nach Namen oder für das Gedächtnis des Roboters.
 en: Key → value dictionary (unique keys). Great for counting frequencies, indexing rivals by name or storing robot memory.
 miembros.es:
     put(K k, V v) / get(Object k) / getOrDefault(Object k, V def) — escribir y leer valores
@@ -1031,7 +1031,7 @@ miembros.es:
 miembros.de:
     put(K k, V v) / get(Object k) / getOrDefault(Object k, V def) — schreiben und lesen
     containsKey(Object k) / remove(Object k) / size() — prüfen und löschen
-    computeIfAbsent(K k, f) / merge(K k, V v, f) — zählen oder gruppieren in einer Zeile
+    computeIfAbsent(K k, f) / merge(K k, V v, f) — in einer Zeile zählen oder gruppieren
     entrySet() / keySet() / values() — Einträge, Schlüssel oder Werte durchlaufen
     Map.of(k1, v1, k2, v2) — kurze unveränderliche Map erstellen
 miembros.en:
@@ -1114,7 +1114,7 @@ miembros.es:
     peek() — mira el primero sin quitarlo
 miembros.de:
     offer(E e) — fügt ein Element in die Schlange ein
-    poll() — entnimmt das erste Element (oder null wenn leer)
+    poll() — entnimmt das erste Element (oder null, wenn leer)
     peek() — schaut das erste Element an, ohne es zu entfernen
 miembros.en:
     offer(E e) — inserts an element into the queue
@@ -1171,7 +1171,7 @@ ejemplo:
 --- PriorityQueue
 tipo: clase
 es: Cola con prioridad basada en montículo (min-heap): poll() siempre devuelve el elemento más pequeño (o el primero según tu Comparator).
-de: Prioritätswarteschlange auf Heap-Basis (Min-Heap): poll() liefert immer das kleinste Element (oder gemäß Comparator).
+de: Prioritätswarteschlange auf Heap-Basis (Min-Heap): poll() liefert immer das kleinste Element (oder das erste gemäß deinem Comparator).
 en: Min-heap priority queue: poll() always returns the smallest element (or highest priority per your Comparator).
 miembros.es:
     new PriorityQueue<>() / new PriorityQueue<>(Comparator) — crea la cola con prioridad
@@ -1217,7 +1217,7 @@ ejemplo:
 --- Arrays
 tipo: clase
 es: Métodos estáticos para trabajar con arrays primitivos y de objetos: ordenar, imprimir, copiar, rellenar y convertir a Stream.
-de: Statische Hilfsmethoden für Arrays: Sortieren, Ausgeben, Kopieren, Füllen und in Streams umwandeln.
+de: Statische Hilfsmethoden für primitive und Objekt-Arrays: Sortieren, Ausgeben, Kopieren, Füllen und in Streams umwandeln.
 en: Static utility methods for primitive and object arrays: sorting, printing, copying, filling and streaming.
 miembros.es:
     Arrays.sort(arr) / binarySearch(arr, x) — ordena y busca en un array ordenado
@@ -1243,7 +1243,7 @@ ejemplo:
 --- Comparator
 tipo: interfaz
 es: Define criterios de ordenación externos sin modificar la clase ordenada; se combina cómodamente con lambdas y comparing().
-de: Definiert externe Sortierkriterien ohne die Klasse zu ändern; sehr bequem mit Lambdas und comparing().
+de: Definiert externe Sortierkriterien, ohne die Klasse zu ändern; sehr bequem mit Lambdas und comparing().
 en: Defines external sorting criteria without modifying the sorted class; pairs cleanly with lambdas and comparing().
 miembros.es:
     Comparator.comparing(f) / comparingDouble(f) / comparingInt(f) — ordena por una propiedad
@@ -1293,7 +1293,7 @@ ejemplo:
 --- Objects
 tipo: clase
 es: Métodos estáticos seguros frente a null para comparar objetos, calcular hashCode y exigir argumentos no nulos.
-de: Null-sichere Hilfsmethoden zum Vergleichen von Objekten, für hashCode und zur Prüfung auf nicht-null.
+de: Null-sichere Hilfsmethoden zum Vergleichen von Objekten, für hashCode und zur Prüfung, ob Argumente nicht null sind.
 en: Null-safe static helpers for comparing objects, computing hashCode and requiring non-null arguments.
 miembros.es:
     Objects.equals(a, b) — compara sin lanzar NullPointerException si alguno es null
@@ -1315,12 +1315,12 @@ ejemplo:
 --- Random
 tipo: clase
 es: Generador de números pseudoaleatorios (enteros, decimales, booleanos); admite semilla fija para pruebas reproducibles.
-de: Pseudozufallszahlengenerator (Ganzzahlen, Kommazahlen, Booleans); unterstützt festen Seed für reproduzierbare Tests.
-en: Pseudo-random number generator (ints, doubles, booleans); accepts a fixed seed for reproducible behavior.
+de: Pseudozufallszahlengenerator (Ganzzahlen, Kommazahlen, Booleans); unterstützt einen festen Seed für reproduzierbare Tests.
+en: Pseudo-random number generator (ints, doubles, booleans); accepts a fixed seed for reproducible tests.
 miembros.es:
     new Random() / new Random(long semilla) — crea el generador
     nextInt(int limite) / nextInt(min, max) — entero aleatorio
-    nextDouble() / nextBoolean() — decimal en [0, 1) o booleano al 50%
+    nextDouble() / nextBoolean() — decimal en [0, 1) o booleano al 50 %
 miembros.de:
     new Random() / new Random(long seed) — erstellt den Generator
     nextInt(int grenze) / nextInt(min, max) — zufällige Ganzzahl
@@ -1337,7 +1337,7 @@ ejemplo:
 
 --- Scanner
 tipo: clase
-es: Analizador de texto en memoria (lee palabras, enteros o líneas desde un String). Recuerda que System.in y archivos de disco están bloqueados.
+es: Analizador de texto en memoria (lee palabras, enteros o líneas desde un String). Recuerda que System.in y los archivos de disco están bloqueados.
 de: Text-Scanner im Speicher (liest Wörter, Zahlen oder Zeilen aus einem String). System.in und Dateien sind gesperrt.
 en: In-memory text scanner (reads tokens, numbers or lines from a String). Note that System.in and disk files are blocked.
 miembros.es:
@@ -1405,11 +1405,11 @@ es:
 de:
     Enthält die funktionalen Interfaces für Stream, Optional und Sammlungen (filter, map, forEach, computeIfAbsent…). Sie gehören nicht zu „import java.util.*;“ und brauchen einen eigenen Import.
 en:
-    Provides the functional interfaces used by Stream, Optional and collection methods (filter, map, forEach, computeIfAbsent…). Not included by "import java.util.*;": import this subpackage explicitly.
+    Provides the functional interfaces used by Stream, Optional and collection methods (filter, map, forEach, computeIfAbsent…). Not included by “import java.util.*;”: import this subpackage explicitly.
 
 --- Predicate
 tipo: interfaz
-es: Condición que recibe un valor T y devuelve boolean (T -> boolean). Es el tipo que espera Stream.filter() y List.removeIf().
+es: Condición que recibe un valor T y devuelve boolean (T -> boolean). Es el tipo que esperan Stream.filter() y List.removeIf().
 de: Bedingung, die ein T nimmt und boolean liefert (T -> boolean). Typ für Stream.filter() und List.removeIf().
 en: Condition taking a T and returning boolean (T -> boolean). Used by Stream.filter() and List.removeIf().
 miembros.es:
@@ -1429,7 +1429,7 @@ ejemplo:
 
 --- Function
 tipo: interfaz
-es: Transformación de un tipo T a otro R (T -> R). Es el tipo que espera Stream.map() y Optional.map().
+es: Transformación de un tipo T a otro R (T -> R). Es el tipo que esperan Stream.map() y Optional.map().
 de: Umwandlung von Typ T nach R (T -> R). Typ für Stream.map() und Optional.map().
 en: Transformation from type T to R (T -> R). Used by Stream.map() and Optional.map().
 miembros.es:
@@ -1449,7 +1449,7 @@ ejemplo:
 
 --- Consumer
 tipo: interfaz
-es: Acción que consume un valor T sin devolver nada (T -> void). Es el tipo que espera forEach() y Optional.ifPresent().
+es: Acción que consume un valor T sin devolver nada (T -> void). Es el tipo que esperan forEach() y Optional.ifPresent().
 de: Aktion, die ein T verarbeitet und nichts zurückgibt (T -> void). Typ für forEach() und Optional.ifPresent().
 en: Action that consumes a T and returns nothing (T -> void). Used by forEach() and Optional.ifPresent().
 miembros.es:
@@ -1541,9 +1541,9 @@ en: Specialization of Function where input and output have the same type (T -> T
 miembros.es:
     T apply(T t) — transforma un valor en otro del mismo tipo
 miembros.de:
-    T apply(T t) — wandelt einen Wert in denselben Typ um
+    T apply(T t) — wandelt einen Wert in einen anderen desselben Typs um
 miembros.en:
-    T apply(T t) — transforms a value into the same type
+    T apply(T t) — transforms a value into another of the same type
 ejemplo:
     import java.util.function.UnaryOperator;
 
@@ -1575,7 +1575,7 @@ resumen.de: Funktionale Datenströme (Stream, Collectors, IntStream, DoubleStrea
 resumen.en: Functional data pipelines (Stream, Collectors, IntStream, DoubleStream) to filter, map and aggregate data.
 es:
     Permite procesar colecciones y arrays de forma declarativa encadenando pasos como filter, map, sorted y collect sin escribir bucles anidados.
-    Los streams son perezosos (no hacen nada hasta la operación terminal como toList, count, sum o min) y solo se recorren una vez.
+    Los streams son perezosos (no hacen nada hasta una operación terminal como toList, count, sum o min) y solo se recorren una vez.
 de:
     Ermöglicht deklarative Verarbeitung von Sammlungen und Arrays über filter, map, sorted und collect ohne verschachtelte Schleifen.
     Streams arbeiten verzögert (erst bei einer Terminaloperation wie toList, count, sum oder min) und lassen sich nur einmal durchlaufen.
@@ -1614,7 +1614,7 @@ ejemplo:
 --- Collectors
 tipo: clase
 es: Fábrica de recolectores para Stream.collect(): agrupar en mapas, unir textos, contar o calcular promedios.
-de: Fabrik für Sammler in Stream.collect(): Gruppieren in Maps, Texte verbinden, zählen oder Durchschnitte bilden.
+de: Fabrik für Sammler in Stream.collect(): in Maps gruppieren, Texte verbinden, zählen oder Durchschnitte bilden.
 en: Factory of collectors for Stream.collect(): grouping into maps, joining strings, counting or averaging.
 miembros.es:
     Collectors.toList() / toSet() / toMap(k, v) — recoge en lista, conjunto o mapa
@@ -1662,7 +1662,7 @@ ejemplo:
 --- DoubleStream
 tipo: interfaz
 es: Stream especializado en primitivos double para promedios, sumas y máximos de distancias, daños o ángulos.
-de: Auf primitive double spezialisierter Stream für Durchschnitte, Summen und Maxima von Abständen oder Schaden.
+de: Auf primitive double spezialisierter Stream für Durchschnitte, Summen und Maxima von Abständen, Schaden oder Winkeln.
 en: Primitive double stream for averages, sums and maximums over distances, damage or angles.
 miembros.es:
     DoubleStream.of(a, b, ...) — crea un flujo de decimales
@@ -1691,12 +1691,12 @@ es:
 de:
     Für anspruchsvolle Textsuche (Zahlen extrahieren, Formate prüfen, Ersetzungen). Ein einmal kompiliertes Pattern wiederzuverwenden ist deutlich schneller als String.matches() in jedem Zug.
 en:
-    For rich text pattern matching (extracting numbers, validating formats or replacing matches). Compiling a Pattern once and reusing it is much faster than calling String.matches() every tick.
+    For complex text searches (extracting numbers, validating formats or replacing matches). Compiling a Pattern once and reusing it is much faster than calling String.matches() every tick.
 
 --- Pattern
 tipo: clase
 es: Expresión regular compilada e inmutable (se puede guardar en una constante static final).
-de: Kompilierter, unveränderlicher regulärer Ausdruck (gut als static final Konstante speicherbar).
+de: Kompilierter, unveränderlicher regulärer Ausdruck (gut als static-final-Konstante speicherbar).
 en: Compiled, immutable regular expression (safe to store in a static final constant).
 miembros.es:
     Pattern.compile(String regex) — compila la expresión regular
@@ -1719,7 +1719,7 @@ ejemplo:
 --- Matcher
 tipo: clase
 es: Motor que recorre un texto buscando coincidencias de un Pattern y extrayendo grupos entre paréntesis.
-de: Suchmaschine, die einen Text nach Treffern eines Patterns durchsucht und Gruppen ausliest.
+de: Mechanismus, der einen Text nach Treffern eines Patterns durchsucht und Gruppen ausliest.
 en: Engine that scans input text for matches of a Pattern and extracts capturing groups.
 miembros.es:
     find() — avanza a la siguiente coincidencia dentro del texto
@@ -1729,7 +1729,7 @@ miembros.es:
 miembros.de:
     find() — springt zum nächsten Treffer im Text
     matches() — verlangt, dass der GESAMTE Text passt
-    group() / group(int n) — liefert den Treffer oder Gruppe n
+    group() / group(int n) — liefert den Treffer oder die Gruppe n
     replaceAll(String ersatz) — ersetzt alle Treffer
 miembros.en:
     find() — advances to the next match in the text
@@ -1745,7 +1745,7 @@ ejemplo:
 --- PatternSyntaxException
 tipo: excepcion
 es: Excepción no comprobada que se lanza al pasar una expresión regular mal escrita a Pattern.compile().
-de: Ungeprüfte Exception, wenn ein syntaktisch fehlerhafter regulärer Ausdruck an Pattern.compile() übergeben wird.
+de: Ungeprüfte Exception, die geworfen wird, wenn ein syntaktisch fehlerhafter regulärer Ausdruck an Pattern.compile() übergeben wird.
 en: Unchecked exception thrown when an invalid regular expression is passed to Pattern.compile().
 miembros.es:
     String getDescription() / int getIndex() — indica qué falló y en qué posición del patrón
@@ -1767,20 +1767,20 @@ resumen.de: Werkzeuge für Nebenläufigkeit und thread-sichere Sammlungen (Execu
 resumen.en: Concurrency utilities and thread-safe collections (executors and CompletableFuture are for exercises only).
 es:
     Ofrece estructuras seguras para múltiples hilos (ConcurrentHashMap) y herramientas de coordinación (CountDownLatch, Semaphore, ExecutorService, CompletableFuture).
-    En robots de combate están prohibidos los hilos, ejecutores y CompletableFuture para garantizar combates justos y reproducibles; úsalos en los ejercicios de concurrencia (tema 20).
+    En robots de combate están prohibidos los hilos, ejecutores y CompletableFuture para garantizar peleas justas y reproducibles; úsalos en los ejercicios de concurrencia (tema 20).
 de:
     Bietet thread-sichere Strukturen (ConcurrentHashMap) sowie Koordinations- und Executor-Werkzeuge (CountDownLatch, Semaphore, ExecutorService, CompletableFuture).
-    In Kampfrobotern sind Threads, Executoren und CompletableFuture gesperrt; nutze sie in den Nebenläufigkeits-Übungen (Thema 20).
+    In Kampfrobotern sind Threads, Executoren und CompletableFuture gesperrt, damit Kämpfe fair und reproduzierbar bleiben; nutze sie in den Nebenläufigkeits-Übungen (Thema 20).
 en:
     Provides thread-safe collections (ConcurrentHashMap) and coordination/executor tools (CountDownLatch, Semaphore, ExecutorService, CompletableFuture).
-    In combat robots, threads, executors and CompletableFuture are blocked to keep fights deterministic; use them in concurrency exercises (topic 20).
+    In combat robots, threads, executors and CompletableFuture are blocked to keep fights fair and reproducible; use them in concurrency exercises (topic 20).
 bloqueado.es: En robots (modo ROBOT): Executor, ExecutorService, Executors, ForkJoinPool, CompletableFuture, ThreadPoolExecutor, ScheduledExecutorService y StructuredTaskScope están bloqueados (permitidos en ejercicios).
 bloqueado.de: In Robotern (ROBOT-Modus): Executor, ExecutorService, Executors, ForkJoinPool, CompletableFuture, ThreadPoolExecutor, ScheduledExecutorService und StructuredTaskScope sind gesperrt (in Übungen erlaubt).
 bloqueado.en: In robots (ROBOT mode): Executor, ExecutorService, Executors, ForkJoinPool, CompletableFuture, ThreadPoolExecutor, ScheduledExecutorService and StructuredTaskScope are blocked (allowed in exercises).
 
 --- ConcurrentHashMap
 tipo: clase
-es: Mapa concurrente de alto rendimiento seguro entre varios hilos sin bloquear toda la tabla. No admite claves ni valores null.
+es: Mapa concurrente de alto rendimiento, seguro entre varios hilos sin bloquear toda la tabla. No admite claves ni valores null.
 de: Hochperformante, thread-sichere Map ohne globales Sperren. Erlaubt weder null-Schlüssel noch null-Werte.
 en: High-performance thread-safe Map without global locking. Disallows null keys and null values.
 miembros.es:
@@ -1788,7 +1788,7 @@ miembros.es:
     compute(k, f) / merge(k, v, f) — actualización atómica sin condiciones de carrera
 miembros.de:
     put(k, v) / get(k) / putIfAbsent(k, v) — atomare Operationen pro Schlüssel
-    compute(k, f) / merge(k, v, f) — atomare Aktualisierung ohne Race Condition
+    compute(k, f) / merge(k, v, f) — atomare Aktualisierung ohne Race Conditions
 miembros.en:
     put(k, v) / get(k) / putIfAbsent(k, v) — atomic per-key operations
     compute(k, f) / merge(k, v, f) — race-free atomic updates
@@ -1825,7 +1825,7 @@ ejemplo:
 tipo: clase
 solo_ejercicio: true
 es: Fábrica de ejecutores de hilos (fijos, virtuales o de un solo hilo) para ejercicios de concurrencia.
-de: Fabrik für Thread-Executoren (fester Pool, virtuelle Threads oder einzelner Thread) für Übungen.
+de: Fabrik für Thread-Executoren (fester Pool, virtuelle Threads oder einzelner Thread) für Nebenläufigkeits-Übungen.
 en: Factory methods for thread executors (fixed pools, virtual threads or single-thread) for concurrency exercises.
 miembros.es:
     Executors.newFixedThreadPool(int n) — pool con n hilos de plataforma
@@ -1847,7 +1847,7 @@ ejemplo:
 tipo: clase
 solo_ejercicio: true
 es: Futuro componible para encadenar cálculos asíncronos (thenApply, thenCombine, allOf) en ejercicios de concurrencia.
-de: Kombinierbares Future zum Verketten asynchroner Berechnungen (thenApply, thenCombine, allOf) in Übungen.
+de: Kombinierbares Future zum Verketten asynchroner Berechnungen (thenApply, thenCombine, allOf) in Nebenläufigkeits-Übungen.
 en: Composable future for chaining asynchronous computations (thenApply, thenCombine, allOf) in concurrency exercises.
 miembros.es:
     CompletableFuture.supplyAsync(Supplier) — lanza un cálculo asíncrono
@@ -1876,7 +1876,7 @@ miembros.de:
     countDown() / await() — zählt herunter oder wartet bis null
 miembros.en:
     new CountDownLatch(int n) — initializes the count to n
-    countDown() / await() — decrements count or blocks until zero
+    countDown() / await() — decrements the count or blocks until zero
 ejemplo:
     import java.util.concurrent.CountDownLatch;
 
@@ -1886,7 +1886,7 @@ ejemplo:
 --- Semaphore
 tipo: clase
 es: Semáforo de permisos que limita cuántos hilos pueden acceder simultáneamente a un recurso compartido.
-de: Semaphor mit Genehmigungen, um den gleichzeitigen Zugriff auf eine Ressource zu begrenzen.
+de: Semaphor mit Genehmigungen, um den gleichzeitigen Zugriff auf eine gemeinsam genutzte Ressource zu begrenzen.
 en: Permit-based semaphore limiting how many threads can access a shared resource concurrently.
 miembros.es:
     new Semaphore(int permisos) — define el número máximo de accesos simultáneos
@@ -1935,7 +1935,7 @@ miembros.de:
 miembros.en:
     get() / set(int v) — atomically reads or writes the value
     incrementAndGet() / addAndGet(int delta) — atomically adds and returns the updated value
-    compareAndSet(exp, update) — updates only if the current value equals expected
+    compareAndSet(exp, update) — updates only if the current value equals the expected value
 ejemplo:
     import java.util.concurrent.atomic.AtomicInteger;
 
@@ -2004,15 +2004,15 @@ resumen.en: Arbitrary-precision arithmetic (BigInteger, BigDecimal, RoundingMode
 es:
     Cuando int/long se quedan cortos (números gigantes) o double pierde precisión decimal (dinero, porcentajes exactos), java.math ofrece BigInteger y BigDecimal. Ambos son inmutables: sus operaciones devuelven un objeto nuevo.
 de:
-    Wenn int/long überlaufen oder double binäre Rundungsfehler zeigt (Geld, exakte Dezimalzahlen), liefert java.math BigInteger und BigDecimal. Beide sind unveränderlich.
+    Wenn int/long überlaufen oder double binäre Rundungsfehler zeigt (Geld, exakte Dezimalzahlen), liefert java.math BigInteger und BigDecimal. Beide sind unveränderlich: Ihre Operationen liefern ein neues Objekt.
 en:
     When int/long overflow or double suffers binary rounding drift (money, exact decimals), java.math provides BigInteger and BigDecimal. Both are immutable: every operation returns a new instance.
 
 --- BigInteger
 tipo: clase
 es: Entero inmutable de tamaño arbitrario (limitado solo por la memoria): ideal para factoriales grandes, combinatoria o criptografía básica.
-de: Unveränderliche Ganzzahl beliebiger Größe: ideal für große Fakultäten, Kombinatorik oder Zahlentheorie.
-en: Immutable arbitrary-precision integer: ideal for large factorials, combinatorics or number theory.
+de: Unveränderliche Ganzzahl beliebiger Größe (nur durch den Speicher begrenzt): ideal für große Fakultäten, Kombinatorik oder einfache Kryptografie.
+en: Immutable arbitrary-precision integer (limited only by memory): ideal for large factorials, combinatorics or basic cryptography.
 miembros.es:
     BigInteger.valueOf(long n) / new BigInteger(String s) — crea un BigInteger
     add(b) / subtract(b) / multiply(b) / divide(b) / mod(b) — operaciones aritméticas exactas
@@ -2060,7 +2060,7 @@ es: Enumerado que indica cómo redondear al dividir o fijar decimales en BigDeci
 de: Enum, das festlegt, wie bei BigDecimal-Division oder setScale gerundet wird.
 en: Enum specifying how to round results in BigDecimal division or setScale.
 miembros.es:
-    HALF_UP — redondeo clásico escolar (0.5 sube)
+    HALF_UP — redondeo clásico escolar (0,5 sube)
     HALF_EVEN — redondeo bancario (a la cifra par más cercana)
     DOWN / UP / FLOOR / CEILING — truncar o redondear hacia arriba/abajo
 miembros.de:
@@ -2069,7 +2069,7 @@ miembros.de:
     DOWN / UP / FLOOR / CEILING — Abschneiden oder Auf-/Abrunden
 miembros.en:
     HALF_UP — standard half-up rounding (0.5 rounds up)
-    HALF_EVEN — banker's rounding (to nearest even digit)
+    HALF_EVEN — banker's rounding (to the nearest even digit)
     DOWN / UP / FLOOR / CEILING — truncation or directional rounding
 ejemplo:
     import java.math.BigDecimal;
@@ -2108,9 +2108,9 @@ resumen.en: Modern immutable date, time, instant and duration API (LocalDate, Lo
 es:
     Sustituye a las antiguas y propensas a errores java.util.Date y Calendar. Todas sus clases son inmutables y claras: LocalDate (solo fecha), LocalTime (solo hora), LocalDateTime (ambas), Instant (marca UTC), Duration (tiempo en segundos/ns) y Period (años/meses/días).
 de:
-    Ersetzt das veraltete java.util.Date und Calendar. Alle Klassen sind unveränderlich und klar: LocalDate (Datum), LocalTime (Uhrzeit), LocalDateTime (beides), Instant (UTC-Zeitpunkt), Duration und Period.
+    Ersetzt die veralteten, fehleranfälligen Klassen java.util.Date und Calendar. Alle Klassen sind unveränderlich und klar: LocalDate (Datum), LocalTime (Uhrzeit), LocalDateTime (beides), Instant (UTC-Zeitpunkt), Duration (Zeitspanne in Sekunden/ns) und Period (Jahre/Monate/Tage).
 en:
-    Replaces legacy java.util.Date and Calendar. All classes are immutable and clear: LocalDate (date only), LocalTime (time only), LocalDateTime (both), Instant (UTC timestamp), Duration and Period.
+    Replaces the legacy, error-prone java.util.Date and Calendar. All classes are immutable and clear: LocalDate (date only), LocalTime (time only), LocalDateTime (both), Instant (UTC timestamp), Duration (time in seconds/ns) and Period (years/months/days).
 
 --- LocalDate
 tipo: clase
@@ -2145,7 +2145,7 @@ miembros.es:
     plusMinutes(n) / isAfter(otra) — suma tiempo o compara horas
 miembros.de:
     LocalTime.now() / of(std, min) / parse("14:30") — erstellt eine Uhrzeit
-    plusMinutes(n) / isAfter(andere) — addiert Zeit oder vergleicht
+    plusMinutes(n) / isAfter(andere) — addiert Zeit oder vergleicht Uhrzeiten
 miembros.en:
     LocalTime.now() / of(h, m) / parse("14:30") — creates a time
     plusMinutes(n) / isAfter(other) — adds time or compares times
@@ -2195,7 +2195,7 @@ ejemplo:
 tipo: clase
 es: Cantidad de tiempo medida en segundos y nanosegundos (para cronometrar o sumar horas/minutos/segundos).
 de: Zeitspanne in Sekunden und Nanosekunden (zum Messen oder Addieren von Stunden/Minuten/Sekunden).
-en: Time-based amount measured in seconds and nanoseconds.
+en: Time-based amount measured in seconds and nanoseconds (for timing or adding hours/minutes/seconds).
 miembros.es:
     Duration.ofSeconds(n) / ofMillis(n) / between(a, b) — crea o mide una duración
     toMillis() / toSeconds() — convierte a milisegundos o segundos
@@ -2279,20 +2279,20 @@ resumen.es: Formateo y análisis de fechas y horas con DateTimeFormatter.
 resumen.de: Formatieren und Parsen von Datum und Uhrzeit mit DateTimeFormatter.
 resumen.en: Formatting and parsing dates and times with DateTimeFormatter.
 es:
-    Subpaquete de java.time dedicado a convertir fechas y horas a texto legible (como "19/11/2026") y leer textos con un patrón concreto.
+    Subpaquete de java.time dedicado a convertir fechas y horas a texto legible (como «19/11/2026») y leer textos con un patrón concreto.
 de:
     Unterpaket von java.time zum Formatieren von Datum/Uhrzeit als lesbarer Text (z. B. „19.11.2026“) und zum Parsen nach Muster.
 en:
-    Subpackage of java.time for formatting dates/times into readable strings (like "19/11/2026") and parsing text with a custom pattern.
+    Subpackage of java.time for formatting dates/times into readable strings (like “19/11/2026”) and parsing text with a custom pattern.
 
 --- DateTimeFormatter
 tipo: clase
 es: Formateador inmutable y seguro entre hilos para convertir LocalDate, LocalTime o LocalDateTime a texto y viceversa.
-de: Unveränderlicher, thread-sicherer Formatierer für LocalDate, LocalTime und LocalDateTime.
+de: Unveränderlicher, thread-sicherer Formatierer, der LocalDate, LocalTime oder LocalDateTime in Text umwandelt und umgekehrt.
 en: Immutable, thread-safe formatter for converting LocalDate, LocalTime or LocalDateTime to and from text.
 miembros.es:
     DateTimeFormatter.ofPattern("dd/MM/yyyy") — crea un formateador con patrón propio
-    ISO_LOCAL_DATE / ISO_LOCAL_TIME — formatos estándar ISO-8601
+    ISO_LOCAL_DATE / ISO_LOCAL_TIME — formatos estándar ISO 8601
     format(temporal) — devuelve el texto formateado
 miembros.de:
     DateTimeFormatter.ofPattern("dd.MM.yyyy") — erstellt einen Formatierer mit eigenem Muster
@@ -2300,7 +2300,7 @@ miembros.de:
     format(temporal) — liefert den formatierten Text
 miembros.en:
     DateTimeFormatter.ofPattern("yyyy-MM-dd") — creates a custom pattern formatter
-    ISO_LOCAL_DATE / ISO_LOCAL_TIME — standard ISO-8601 formatters
+    ISO_LOCAL_DATE / ISO_LOCAL_TIME — standard ISO 8601 formatters
     format(temporal) — formats a date/time to String
 ejemplo:
     import java.time.LocalDate;
@@ -2312,7 +2312,7 @@ ejemplo:
 --- DateTimeParseException
 tipo: excepcion
 es: Excepción no comprobada que se lanza cuando un texto no coincide con el formato esperado al analizar una fecha u hora.
-de: Ungeprüfte Exception, wenn ein Text beim Parsen nicht zum erwarteten Datums- oder Zeitformat passt.
+de: Ungeprüfte Exception, die geworfen wird, wenn ein Text beim Parsen nicht zum erwarteten Datums- oder Zeitformat passt.
 en: Unchecked exception thrown when a text string cannot be parsed into a date or time.
 miembros.es:
     String getParsedString() / int getErrorIndex() — muestra el texto fallido y dónde falló
@@ -2347,7 +2347,7 @@ en: Formats decimal numbers using a pattern string (such as "#,##0.00" or "0.0")
 miembros.es:
     new DecimalFormat("0.00") / format(double n) — formatea un decimal con precisión fija
 miembros.de:
-    new DecimalFormat("0.00") / format(double n) — formatiert eine Dezimalzahl
+    new DecimalFormat("0.00") / format(double n) — formatiert eine Dezimalzahl mit fester Stellenzahl
 miembros.en:
     new DecimalFormat("0.00") / format(double n) — formats a decimal with fixed digits
 ejemplo:
@@ -2358,7 +2358,7 @@ ejemplo:
 --- NumberFormat
 tipo: clase
 es: Formateo y análisis de números, porcentajes y divisas adaptado a un Locale.
-de: Formatierung und Parsing von Zahlen, Prozenten und Währungen passend zu einem Locale.
+de: Formatierung und Parsing von Zahlen, Prozentwerten und Währungen passend zu einem Locale.
 en: Locale-aware formatting and parsing for numbers, percentages and currencies.
 miembros.es:
     NumberFormat.getInstance(Locale) / getPercentInstance() — obtiene un formateador
@@ -2377,7 +2377,7 @@ ejemplo:
 --- Normalizer
 tipo: clase
 es: Descompone caracteres Unicode acentuados (como á, é, ü) para poder quitar tildes al comparar o buscar textos.
-de: Zerlegt akzentuierte Unicode-Zeichen (wie ä, ö, ü, é), um Akzente bei Suchen zu entfernen.
+de: Zerlegt akzentuierte Unicode-Zeichen (wie ä, ö, ü, é), um Akzente beim Vergleichen oder Suchen entfernen zu können.
 en: Decomposes accented Unicode characters (like á, é, ü) so diacritics can be stripped for accent-insensitive search.
 miembros.es:
     Normalizer.normalize(texto, Normalizer.Form.NFD) — separa letra base y diacrítico
@@ -2485,8 +2485,8 @@ ejemplo:
 --- PrintStream
 tipo: clase
 es: Tipo de System.out y System.err para imprimir texto formateado. No puedes construir nuevos PrintStream con «new» (bloqueado por seguridad).
-de: Typ von System.out und System.err für formatierte Ausgaben. Eigene PrintStream-Instanzen mit „new“ sind gesperrt.
-en: Type of System.out and System.err for formatted output. Constructing new PrintStream instances with "new" is blocked by the sandbox.
+de: Typ von System.out und System.err für formatierte Ausgaben. Eigene PrintStream-Instanzen mit „new“ sind aus Sicherheitsgründen gesperrt.
+en: Type of System.out and System.err for formatted output. Constructing new PrintStream instances with “new” is blocked by the sandbox.
 miembros.es:
     println(x) / print(x) / printf(fmt, args...) — disponibles a través de System.out
 miembros.de:

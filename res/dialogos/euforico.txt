@@ -65,7 +65,7 @@ es: ¡Qué golpe! ¡Que alguien lo repita a cámara lenta!
 de: Was für ein Treffer! Bitte in Zeitlupe noch mal!
 en: What a hit! Somebody replay that in slow motion!
 
-es: ¡{jugador}, has visto eso! ¡Lo has visto!
+es: {jugador}, ¡¿has visto eso?! ¡¿Lo has visto?!
 de: {jugador}, hast du das gesehen?! Hast du's gesehen?!
 en: {jugador}, did you see that?! Did you see it?!
 
@@ -114,7 +114,7 @@ en: What a monster hit! Respect, {rival}!
 
 es: ¡Se han ido las luces! ¡Ah, no, ya vuelven!
 de: Licht aus! Ah nein, geht schon wieder!
-en: Lights out! Oh no, wait, they're back!
+en: Lights out! Oh, wait, no, they're back!
 
 es: ¡Bajón de tensión! ¡Nooo!
 de: Spannungsabfall! Neiiin!
@@ -126,7 +126,7 @@ de: Akku im Roten! Aber die Laune im Grünen!
 en: Battery in the red! But my mood's still green!
 
 es: ¡Me quedan pocos voltios… pero son voltios de campeón!
-de: Nur noch wenige Volt… aber Champion-Volt!
+de: Nur noch wenige Volt … aber Champion-Volt!
 en: Only a few volts left… but champion volts!
 
 es: {jugador}, ¡no me apagues! ¡Aún tengo show!
@@ -224,7 +224,7 @@ en: {rival}, you were an AWESOME opponent! Again!
 
 [derrota]
 es: ¡Bzzz… qué final… tan… espectacular…!
-de: Bzzz… was für ein… spektakuläres… Ende…!
+de: Bzzz … was für ein … spektakuläres … Ende …!
 en: Bzzz… what a… spectacular… finale…!
 
 es: ¡Si exploto, que sea con fuegos artificiales!

@@ -112,7 +112,7 @@ es: Respetable golpe, {rival}. Muy respetable.
 de: Respektabler Treffer, {rival}. Sehr respektabel.
 en: Respectable strike, {rival}. Very respectable.
 
-es: Me has despertado la siesta. Ahora voy en serio.
+es: Me has despertado de la siesta. Ahora voy en serio.
 de: Du hast mich aus dem Mittagsschlaf geweckt. Jetzt wird es ernst.
 en: You woke me from my nap. Now I'm serious.
 
@@ -147,8 +147,8 @@ de: Du hast mir den {pieza} abgerissen, {rival}. Ich lasse trotzdem nicht los.
 en: You tore off my {pieza}, {rival}. Still not letting go.
 
 es: Sin {pieza} voy más despacio todavía. Qué paz.
-de: Ohne {pieza} bin ich noch ruhiger. Was für ein Frieden.
-en: Without my {pieza} I'm even calmer. What peace.
+de: Ohne {pieza} bin ich noch langsamer. Was für ein Frieden.
+en: Without my {pieza} I'm even slower. What peace.
 
 es: {pieza} rota. Con el resto me sobra para aguantar.
 de: Mit meinem {pieza} ist Schluss. Der Rest reicht mir zum Durchhalten.
@@ -211,7 +211,7 @@ de: Ich sagte es doch, {rival}: langsam, aber ich lasse nicht los.
 en: Told you, {rival}: slow, but I never let go.
 
 es: Gran trabajo, {jugador}. Hoy nos merecemos una siesta larga.
-de: Große Arbeit, {jugador}. Heute verdienen wir ein langes Nickerchen.
+de: Tolle Arbeit, {jugador}. Heute haben wir uns ein langes Nickerchen verdient.
 en: Great work, {jugador}. Today we've earned a long nap.
 
 es: Ciento cuarenta años de experiencia no fallan.

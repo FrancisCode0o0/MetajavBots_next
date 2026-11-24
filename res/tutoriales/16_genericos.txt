@@ -11,9 +11,9 @@ es: un cast y rezar: si dentro había un String y tú esperabas un Enemigo, Clas
 es: Los genéricos ponen el tipo entre < > y el compilador lo vigila por ti: List<Enemigo> solo admite enemigos,
 es: y lo que sacas ya es un Enemigo, sin cast. El error se mueve de la arena al taller, que es donde lo quieres.
 de: Vor Java 5 speicherten Listen Object, also irgendetwas. Beim Herausholen musstest du casten und beten:
-de: War ein String drin und du erwartetest einen Gegner, gab es mitten im Kampf eine ClassCastException.
+de: War ein String drin und erwartetest du einen Gegner, gab es mitten im Kampf eine ClassCastException.
 de: Generics schreiben den Typ in < >, und der Compiler passt für dich auf: List<Gegner> nimmt nur Gegner,
-de: und was du herausholst, ist schon einer, ohne Cast. Der Fehler wandert von der Arena in die Werkstatt.
+de: und was du herausholst, ist schon einer, ohne Cast. Der Fehler wandert von der Arena in die Werkstatt, wo du ihn haben willst.
 en: Before Java 5, lists stored Object, meaning anything at all. Taking something out meant a cast and a
 en: prayer: if there was a String inside and you expected an Enemy, ClassCastException in the middle of the
 en: fight. Generics put the type between < > and the compiler guards it for you: List<Enemy> only accepts
@@ -27,10 +27,10 @@ es: el código una vez y vale para todo.
 de: gedaechtnis() ist eine Map<String, Object>, dort brauchst du also wieder Casts: der Preis für „alles
 de: speichern“. Auch deine eigenen Klassen können generisch sein: class Caja<T> funktioniert für T =
 de: Integer, String, Gegner … Das T ist eine Lücke, die beim Benutzen gefüllt wird: new
-de: Caja<String>("laser"). Einmal geschrieben, passt für alles.
+de: Caja<String>("laser"). Einmal geschrieben, passt der Code für alles.
 en: memory() is a Map<String, Object>, so there you're back to casts: the price of storing anything. Your
 en: own classes can be generic too: class Caja<T> works for T = Integer, String, Enemy… The T is a gap that
-en: gets filled when you use it: new Caja<String>("laser"). Write the code once and it fits everything.
+en: gets filled when you use it: new Caja<String>("laser"). Write the code once and it works for everything.
 codigo:
     class Ultimos<T> {
         private final List<T> datos = new ArrayList<>();
@@ -53,7 +53,7 @@ codigo:
 --- tarea
 ejercicio: t16_caja_de_piezas
 es: Una caja que vale para cualquier pieza: tu primera clase genérica.
-de: Eine Kiste für jedes Bauteil: deine erste generische Klasse.
+de: Eine Kiste für jedes Teil: deine erste generische Klasse.
 en: A box that works for any part: your first generic class.
 --- tarea
 ejercicio: t16_par_de_valores
@@ -75,7 +75,7 @@ de: Auch eine Methode kann generisch sein, ohne dass ihre Klasse es ist: static 
 de: Das <T> vor dem Rückgabetyp kündigt an: „Hier kommt ein noch offener Typ“. Java leitet ihn aus dem Argument ab,
 de: also gibt ultimo(treffer) einen Treffer zurück und ultimo(namen) einen String.
 en: A method can be generic without its class being generic: static <T> T ultimo(List<T> list).
-en: The <T> before the return type announces: "there's a type still to be decided here". Java infers it from
+en: The <T> before the return type announces: “there's a type still to be decided here”. Java infers it from
 en: what you pass, so ultimo(hits) returns a Hit and ultimo(names) returns a String.
 --- pagina
 es: A veces T no puede ser cualquier cosa. Para buscar el mayor necesitas poder comparar, así que pones un límite:
@@ -123,8 +123,8 @@ de: Überraschung: Eine List<Integer> ist KEINE List<Number>, obwohl ein Integer
 de: durch die Hintertür ein Double in eine Integer-Liste schmuggeln. Für „eine Liste von irgendwas, das Number ist“
 de: gibt es die Wildcard: List<? extends Number>. Daraus kannst du Numbers LESEN, aber nichts hinzufügen.
 en: Surprise: a List<Integer> is NOT a List<Number>, even though an Integer is a Number. If it were, you
-en: could sneak a Double into a list of Integers through the back door. For "a list of something that's a
-en: Number" there's the wildcard: List<? extends Number>. You can READ Numbers from it, but you can't add
+en: could sneak a Double into a list of Integers through the back door. For “a list of something that's a
+en: Number” there's the wildcard: List<? extends Number>. You can READ Numbers from it, but you can't add
 en: anything.
 --- pagina
 es: La regla para recordarlo se llama PECS: Producer Extends, Consumer Super. Si la lista te DA cosas, extends;

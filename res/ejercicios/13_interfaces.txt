@@ -122,7 +122,7 @@ dificultad: 2
 java: 8
 tipo: clase
 titulo.es: Métodos default: ¿necesita reparación?
-titulo.de: default-Methoden: Muss repariert werden?
+titulo.de: default-Methoden: Reparatur nötig?
 titulo.en: Default methods: does it need repairs?
 enunciado.es: Desde Java 8, una interfaz puede traer métodos ya escritos con default. Escribe la interfaz Reparable con int vida(), int vidaMaxima(), default boolean necesitaReparacion() (vida por debajo de la mitad del máximo) y default int puntosQueFaltan(). Después, Torreta(int vida) (máximo 80), que usa los default tal cual, y Muro(int vida) (máximo 200), que sobrescribe necesitaReparacion: un muro se repara por debajo de 150.
 enunciado.de: Seit Java 8 kann ein Interface fertige Methoden mit default mitbringen. Schreibe das Interface Reparable mit int vida(), int vidaMaxima(), default boolean necesitaReparacion() (Leben unter der Hälfte des Maximums) und default int puntosQueFaltan(). Danach Torreta(int vida) (Maximum 80), die die default-Methoden unverändert benutzt, und Muro(int vida) (Maximum 200), die necesitaReparacion überschreibt: Eine Mauer wird unter 150 repariert.
@@ -368,7 +368,7 @@ titulo.de: static-Methoden in einem Interface
 titulo.en: Static methods in an interface
 enunciado.es: Desde Java 8, una interfaz también puede tener métodos static. Escribe la interfaz Arma con int dano(), default int danoCritico() (el doble), static Arma de(int dano) (un arma con ese daño; IllegalArgumentException si es negativo) y static Arma mejor(Arma a, Arma b) (la de más daño; a si empatan). Escribe también Martillo implements Arma, con daño 6.
 enunciado.de: Seit Java 8 kann ein Interface auch static-Methoden haben. Schreibe das Interface Arma mit int dano(), default int danoCritico() (das Doppelte), static Arma de(int dano) (eine Waffe mit diesem Schaden; IllegalArgumentException, wenn negativ) und static Arma mejor(Arma a, Arma b) (die mit mehr Schaden; bei Gleichstand a). Schreibe auch Martillo implements Arma mit Schaden 6.
-enunciado.en: Since Java 8, an interface can also have static methods. Write the interface Arma with int dano(), default int danoCritico() (double), static Arma de(int dano) (a weapon with that damage; IllegalArgumentException if negative) and static Arma mejor(Arma a, Arma b) (the one with more damage; a on a tie). Also write Martillo implements Arma, with damage 6.
+enunciado.en: Since Java 8, an interface can also have static methods. Write the interface Arma with int dano(), default int danoCritico() (twice the damage), static Arma de(int dano) (a weapon with that damage; IllegalArgumentException if negative) and static Arma mejor(Arma a, Arma b) (the one with more damage; a on a tie). Also write Martillo implements Arma, with damage 6.
 pista.es: Los static se llaman con el nombre de la interfaz: Arma.de(4). Dentro de de puedes devolver una clase anónima, new Arma() { ... }, o una lambda: () -> dano.
 pista.de: static-Methoden ruft man über den Namen des Interfaces auf: Arma.de(4). In de kannst du eine anonyme Klasse new Arma() { ... } oder ein Lambda () -> dano zurückgeben.
 pista.en: Static methods are called with the interface's name: Arma.de(4). Inside de you can return an anonymous class, new Arma() { ... }, or a lambda: () -> dano.
@@ -625,7 +625,7 @@ tema: 13
 dificultad: 5
 java: 8
 tipo: clase
-titulo.es: La cuenta atrás del combate (Iterator propio)
+titulo.es: La cuenta atrás de la pelea (Iterator propio)
 titulo.de: Der Countdown zum Kampf (eigener Iterator)
 titulo.en: The fight countdown (your own Iterator)
 enunciado.es: Escribe CuentaAtras implements Iterable<Integer> con CuentaAtras(int desde) (IllegalArgumentException si es negativo) e Iterator<Integer> iterator(), que da desde, desde - 1, …, 1. Escribe tú el Iterator (hasNext y next), sin listas: next sin más elementos lanza NoSuchElementException. Cada llamada a iterator() empieza de nuevo, así que dos for anidados sobre la misma cuenta funcionan.

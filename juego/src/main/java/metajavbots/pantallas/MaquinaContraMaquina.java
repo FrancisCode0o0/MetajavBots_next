@@ -50,6 +50,11 @@ public final class MaquinaContraMaquina implements Pantalla {
     private final Dialogo dialogo = new Dialogo();
 
     @Override
+    public float reservaAbajo() {
+        return 76;
+    }
+
+    @Override
     public void alEntrar(Juego j) {
         if (vista != null) return;
         vista = new VistaDeArena(j.pincel);
@@ -140,12 +145,14 @@ public final class MaquinaContraMaquina implements Pantalla {
         }
         seguir = ui.casilla(T.t("mcm.seguir"), seguir, bx + 20, by + 10, T.t("mcm.seguir_ayuda"));
         p.textoCentrado(T.f("pelea.ronda", pelea.ronda(), pelea.rondas), p.ancho / 2 + 200, by + 12, ui.letra, true, ui.tema.texto, 1);
+        // «Otra pelea», a la izquierda de la cabecita del ayudante de la esquina: no la tapa.
+        float xOtra = Math.min(p.ancho - 230, EntrenadorFlotante.cajaRecogida(p.ancho, p.alto, ui.letra).x() - 222);
         if (pelea.estado() == Pelea.Estado.TERMINADA) {
             int g = pelea.ganador();
             p.textoCentrado(g < 0 ? T.t("final.empate") : T.f("mcm.gana", pelea.combatientes[g].nombre), p.ancho / 2, arriba + 20, ui.letra * 1.6f, true,
                     0xFFC857, 1);
-            if (ui.boton(T.t("mcm.otra"), p.ancho - 230, by, 210, 46, Ui.Estilo.PRINCIPAL)) pelea = null;
-        } else if (ui.boton(T.t("mcm.otra"), p.ancho - 230, by, 210, 46, Ui.Estilo.PLANO)) {
+            if (ui.boton(T.t("mcm.otra"), xOtra, by, 210, 46, Ui.Estilo.PRINCIPAL)) pelea = null;
+        } else if (ui.boton(T.t("mcm.otra"), xOtra, by, 210, 46, Ui.Estilo.PLANO)) {
             pelea = null;
         }
         if (tiempoLocutor > 0) {

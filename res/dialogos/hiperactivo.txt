@@ -40,8 +40,8 @@ es: ¡Pium-pium-pium!
 de: Piu-piu-piu!
 en: Pew-pew-pew!
 
-es: ¡Toma, toma, y toma otra!
-de: Da, da, und noch eins!
+es: ¡Toma, toma y toma otra!
+de: Da, da und noch eins!
 en: Here, here, and one more!
 
 es: ¡{arma} a toda pastilla!
@@ -324,9 +324,9 @@ es: ¡{jugador}, escribe más rápido! ¡Te espero! ¡Un poco!
 de: {jugador}, tipp schneller! Ich warte! Ein bisschen!
 en: {jugador}, type faster! I'll wait! A little!
 
-es: Tic-tac-tic-tac... ¡Me aburro! ¡No, no me aburro! ¡Sí!
-de: Tick-tack-tick-tack... Langweilig! Nein, doch nicht! Doch!
-en: Tick-tock-tick-tock... Bored! No, not bored! Yes, bored!
+es: Tic-tac-tic-tac… ¡Me aburro! ¡No, no me aburro! ¡Sí!
+de: Tick-tack-tick-tack … Langweilig! Nein, doch nicht! Doch!
+en: Tick-tock-tick-tock… Bored! No, not bored! Yes, bored!
 
 [elogio]
 es: ¡Uau! ¡Ese código va a toda velocidad!

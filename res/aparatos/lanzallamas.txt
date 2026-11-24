@@ -34,7 +34,7 @@ public final class Lanzallamas implements Aparato {
 }
 == de
 /**
- * FLAMMENWERFER «Chamuscator» — Ein Feuerstrahl, 180 lang, 1
+ * FLAMMENWERFER „Chamuscator“ — Ein Feuerstrahl, 180 lang, 1
  * Sekunde, in den Winkel, den du angibst: verbrennt nach und nach,
  * wen er erwischt.
  *
@@ -68,7 +68,7 @@ public final class Flammenwerfer implements Geraet {
 }
 == en
 /**
- * FLAMETHROWER «Chamuscator» — A jet of fire 180 long for 1 second,
+ * FLAMETHROWER “Chamuscator” — A jet of fire 180 long for 1 second,
  * at the angle you give: slowly burns whoever it catches.
  *
  * How to plug it into your robot:

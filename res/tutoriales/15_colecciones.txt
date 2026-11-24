@@ -14,12 +14,12 @@ de: add fügt hinzu, get(i) liest, size() zählt, remove entfernt. In < > steht 
 de: List<Gegner> ist „eine Liste von Gegnern“. Seit Java 7 darfst du new ArrayList<>() mit leerer Raute schreiben.
 en: An array has a fixed size; a List grows and shrinks by itself. ArrayList is the most used: add adds,
 en: get(i) reads, size() tells you how many and remove takes one out. The type it holds goes between < >:
-en: List<Enemy> means "a list of enemies". Since Java 7 you can write new ArrayList<>() with the empty diamond.
+en: List<Enemy> means “a list of enemies”. Since Java 7 you can write new ArrayList<>() with the empty diamond.
 --- pagina
 es: enemigosVistos() te da la lista de los enemigos que ves ahora mismo. Con varios rivales, recórrela
 es: y quédate con el más cercano: es el más fácil de acertar y el que más daño te puede hacer.
 es: Fíjate en el null inicial: si la lista está vacía, no hay a quién disparar.
-de: gesehen() liefert die Liste der Gegner, die du gerade siehst. Bei mehreren Rivalen geh sie durch
+de: gesehen() liefert die Liste der Gegner, die du gerade siehst. Bei mehreren Gegnern geh sie durch
 de: und nimm den nächsten: Er ist am leichtesten zu treffen und kann dir am meisten schaden.
 de: Beachte das null am Anfang: Ist die Liste leer, gibt es niemanden zum Beschießen.
 en: seenEnemies() gives you the list of enemies you can see right now. With several rivals, walk through it
@@ -77,21 +77,21 @@ de: Ein Set ist ein Beutel ohne Doppelte: Zweimal dasselbe hinzufügen bewirkt n
 de: „Welche verschiedenen Modelle habe ich gesehen?“. HashSet ist schnell, aber ohne Reihenfolge; TreeSet sortiert.
 de: Damit ein Set zwei deiner Objekte als gleich erkennt, braucht deine Klasse equals und hashCode.
 en: A Set is a bag with no duplicates: adding the same thing twice does nothing. Good for questions like
-en: "which different models have I seen?". HashSet is fast but keeps no order; TreeSet sorts them.
+en: “which different models have I seen?”. HashSet is fast but keeps no order; TreeSet sorts them.
 en: For a Set to recognize two of your objects as equal, your class needs equals and hashCode.
 --- pagina
 es: Un Map guarda pares clave → valor, como un diccionario: put(clave, valor) guarda, get(clave) busca.
 es: memoria() es un Map<String, Object>, ¡y sobrevive entre rondas aunque cambies el código!
 es: Úsalo para aprender del rival: qué arma te ha hecho más daño, cuántas rondas has ganado.
 es: getOrDefault y merge ahorran los ifs de «¿ya existía esta clave?».
-de: Eine Map speichert Paare Schlüssel → Wert, wie ein Wörterbuch: put(schluessel, wert) speichert, get
+de: Eine Map speichert Paare Schlüssel → Wert, wie ein Wörterbuch: put(schluessel, wert) speichert, get(schluessel)
 de: sucht. gedaechtnis() ist eine Map<String, Object>, und sie überlebt zwischen den Runden, selbst wenn du
 de: den Code änderst! Lern damit vom Gegner: welche Waffe dir am meisten geschadet hat, wie viele Runden du
 de: gewonnen hast. getOrDefault und merge ersparen die ifs à la „Gab es den Schlüssel schon?“.
 en: A Map stores key → value pairs, like a dictionary: put(key, value) stores, get(key) looks up.
 en: memory() is a Map<String, Object>, and it survives between rounds even if you change your code!
 en: Use it to learn from the rival: which weapon hurt you most, how many rounds you've won.
-en: getOrDefault and merge save you the "did this key exist already?" ifs.
+en: getOrDefault and merge save you the “did this key exist already?” ifs.
 codigo:
     @Override
     public void alRecibirGolpe(Golpe g) {
@@ -107,7 +107,7 @@ codigo:
 robot: usa:memoria
 es: Guarda en memoria() algo que aprendas en la ronda (el daño por arma, por ejemplo) y escríbelo al empezar
 es: la siguiente.
-de: Speichere in gedaechtnis() etwas, das du in der Runde lernst (Schaden pro Waffe etwa), und gib es danach aus.
+de: Speichere in gedaechtnis() etwas, das du in der Runde lernst (Schaden pro Waffe etwa), und gib es zu Beginn der nächsten aus.
 en: Store something you learn in the round in memory() (damage per weapon, say) and print it when the next
 en: one starts.
 --- tarea
@@ -137,7 +137,7 @@ en: and a Deque is a queue open at both ends: addLast to join the queue, pollFir
 --- pagina
 es: Trampa famosa: quitar elementos de una lista mientras la recorres con for-each lanza
 es: ConcurrentModificationException. La lista cambia bajo tus pies y el bucle se pierde. Usa un Iterator
-es: con su remove(), o mejor aún lista.removeIf(g -> g.dano() < 5), que lo hace bien por ti.
+es: con su remove(), o, mejor aún, lista.removeIf(g -> g.dano() < 5), que lo hace bien por ti.
 de: Berühmte Falle: Elemente aus einer Liste zu entfernen, während du sie mit for-each durchläufst, wirft eine
 de: ConcurrentModificationException. Die Liste ändert sich unter deinen Füßen, und die Schleife verirrt sich.
 de: Nimm einen Iterator mit seinem remove() oder besser liste.removeIf(t -> t.schaden() < 5), das macht es richtig.
@@ -170,21 +170,21 @@ titulo.es: Pelear en equipo
 titulo.de: Im Team kämpfen
 titulo.en: Fighting as a team
 --- pagina
-es: En Equipos sois dos contra dos; en el todos contra todos, hasta seis robots. Gana el equipo que recibe menos daño, sumando los dos.
-de: Bei Teams kämpft ihr zwei gegen zwei; bei Alle gegen alle sind es bis zu sechs Roboter. Es gewinnt das Team, das zusammen weniger Schaden nimmt.
-en: In Teams it is two against two; in the free-for-all, up to six robots. The team that takes less damage, adding both, wins.
+es: En «Por equipos» sois dos contra dos; en el todos contra todos, hasta seis robots. Gana el equipo que recibe menos daño, sumando los dos.
+de: Bei „Im Team“ kämpft ihr zwei gegen zwei; bei „Alle gegen alle“ sind es bis zu sechs Roboter. Es gewinnt das Team, das zusammen weniger Schaden nimmt.
+en: In “Teams” it is two against two; in the free-for-all, up to six robots. The team that takes less damage in total wins.
 --- pagina
 es: Tu robot ve una lista de enemigos: enemigosVistos(). Ya no basta con «el enemigo»: hay que elegir a cuál.
 de: Dein Roboter sieht eine Liste von Gegnern: gesehen(). „Der Gegner“ reicht nicht mehr: Du musst wählen, welcher.
-en: Your robot sees a list of enemies: seenEnemies(). "The enemy" is no longer enough: you have to choose which one.
+en: Your robot sees a list of enemies: seenEnemies(). “The enemy” is no longer enough: you have to choose which one.
 --- pagina
-es: Adivina: si cada robot de tu equipo ataca a un enemigo distinto, ¿acabáis antes o después que si atacáis los dos al mismo?
+es: Adivina: si cada robot de tu equipo ataca a un rival distinto, ¿acabáis antes o después que si atacáis los dos al mismo?
 es:
 es: Piénsalo antes de pasar la página.
 de: Rate mal: Wenn jeder Roboter deines Teams einen anderen Gegner angreift, seid ihr dann schneller oder langsamer, als wenn ihr beide denselben angreift?
 de:
 de: Überleg es dir, bevor du umblätterst.
-en: Guess: if each robot in your team attacks a different enemy, do you finish sooner or later than if you both attack the same one?
+en: Guess: if each robot on your team attacks a different rival, do you finish sooner or later than if you both attack the same one?
 en:
 en: Think about it before turning the page.
 --- pagina
@@ -198,7 +198,7 @@ es: La idea, en palabras: AL VER a varios → elegir al más débil → avisar a
 de: Reden: teamMelden(nachricht) schickt deinem Kameraden eine kurze Nachricht; sie kommt im nächsten Zug in beiTeamNachricht an. kameraden() sagt dir, wer sie sind.
 de:
 de: Die Idee in Worten: BEIM SEHEN mehrerer → den schwächsten wählen → dem Kameraden Bescheid sagen → WENN der Kamerad etwas meldet → auf denselben gehen.
-en: Talking: tellTeam(message) sends a short message to your teammate; it arrives the next tick, in onTeamMessage. teammates() tells you who they are.
+en: Talking: tellTeam(message) sends a short message to your teammate; it arrives on the next tick, in onTeamMessage. teammates() tells you who they are.
 en:
 en: The idea in words: WHEN I SEE several → pick the weakest → tell my teammate → WHEN my teammate calls → go for the same one.
 --- tarea

@@ -39,6 +39,29 @@ public final class Jugador {
             this.modelo = modelo;
         }
 
+        /**
+         * Le cambia el modelo (con sus piezas de fábrica). Si aún se llamaba como su modelo de antes, en
+         * cualquier idioma, toma el nombre del nuevo: así no sale «Cobalto · Modelo: Chispa».
+         */
+        public void cambiarModelo(Modelo nuevo, Idioma idioma) {
+            if (nuevo == null || nuevo.id.equals(modelo)) return;
+            Modelo antes = Modelo.de(modelo);
+            if (antes != null && seLlamaComo(antes)) nombre = nuevo.nombre(idioma);
+            modelo = nuevo.id;
+            piezas.clear();
+        }
+
+        /** Si se llama como otro modelo que no es el suyo (en cualquier idioma): el nombre confundiría con su modelo. */
+        public boolean seLlamaComoOtroModelo() {
+            for (Modelo m : Modelo.todos()) if (!m.id.equals(modelo) && seLlamaComo(m)) return true;
+            return false;
+        }
+
+        private boolean seLlamaComo(Modelo m) {
+            for (Idioma i : Idioma.values()) if (m.nombre(i).equalsIgnoreCase(nombre == null ? "" : nombre.strip())) return true;
+            return false;
+        }
+
         /** Indica si el robot tiene una versión válida compilada lista para pelear. */
         public boolean tieneCodigoCompilado() {
             return compiladoAlgunaVez && codigoCompilado != null && !codigoCompilado.isBlank();

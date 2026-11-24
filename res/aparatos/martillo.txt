@@ -34,8 +34,8 @@ public final class Martillo implements Aparato {
 }
 == de
 /**
- * HAMMER «Mazazo» — Ein ansteckbarer Nahkampf-Hammer in den Winkel,
- * den du angibst: Schlägt mit 10 Schaden zu, stößt den Gegner
+ * HAMMER „Mazazo“ — Ein ansteckbarer Nahkampf-Hammer in den Winkel,
+ * den du angibst: schlägt mit 10 Schaden zu, stößt den Gegner
  * zurück und betäubt ihn kurz.
  *
  * So schließt du es an deinen Roboter an:
@@ -68,7 +68,7 @@ public final class Hammer implements Geraet {
 }
 == en
 /**
- * HAMMER «Mazazo» — An attachable short-range hammer aimed at the
+ * HAMMER “Mazazo” — An attachable short-range hammer aimed at the
  * angle you give: deals 10 damage, knocks the enemy back and stuns
  * them briefly.
  *

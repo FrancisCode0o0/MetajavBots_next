@@ -187,8 +187,8 @@ public final class Demostracion {
                         "Aquí no mueves al robot con flechas como un coche teledirigido: tu robot pelea solo.\n"
                                 + "El código de la derecha es su hoja de instrucciones, como una receta de cocina que obedece al pie de la letra.\n"
                                 + "En el [[Taller]] escribes tu plan, pulsas Ctrl+S para guardarlo y comprobar que no tiene faltas (compilar), y lo pruebas.\n"
-                                + "Si alguna vez te atascas, pulsa F2 para abrir al entrenador.",
-                        "Hier steuerst du den Roboter nicht mit Pfeiltasten wie ein Fernsteuerauto: Dein Roboter kämpft ganz allein.\n"
+                                + "Si alguna vez te atascas, pulsa F2 para abrir el entrenador.",
+                        "Hier steuerst du den Roboter nicht mit Pfeiltasten wie ein ferngesteuertes Auto: Dein Roboter kämpft ganz allein.\n"
                                 + "Der Code rechts ist seine Anleitung, wie ein Kochrezept, das er Schritt für Schritt genau befolgt.\n"
                                 + "In der [[Werkstatt]] schreibst du deinen Plan, drückst Strg+S zum Speichern und Prüfen "
                                 + "auf Fehler (Kompilieren) und testest ihn.\n"
@@ -225,12 +225,12 @@ public final class Demostracion {
                 "avanzar",
                 new Trilingue(
                         "Avanzar y qué significa el número",
-                        "Vorwärts fahren und was die Zahl bedeutet",
+                        "Vorwärtsfahren und was die Zahl bedeutet",
                         "Moving forward and what the number means"),
                 new Trilingue(
                         "avanzar(80); no mueve al robot de golpe: fija una orden solicitada de 80 unidades hacia adelante.\n"
                                 + "El robot cumple esa orden poco a poco durante varios turnos según su velocidad y aceleración: "
-                                + "la distancia efectiva recorrida es menor en cada turno y puede detenerse antes si choca o recibe otra orden.\n"
+                                + "la distancia efectiva recorrida es menor en cada turno y el robot puede detenerse antes si choca o recibe otra orden.\n"
                                 + "El número entre paréntesis () marca ese objetivo (20 es corto, 150 largo y -50 marcha atrás); "
                                 + "el punto y coma (;) cierra la orden.",
                         "vorwaerts(80); bewegt den Roboter nicht sofort: Es setzt einen angeforderten Befehl über 80 Einheiten nach vorn.\n"
@@ -240,7 +240,7 @@ public final class Demostracion {
                                 + "das Semikolon (;) schließt den Befehl ab.",
                         "ahead(80); does not teleport the robot: it sets a requested order of 80 units forward.\n"
                                 + "The robot carries it out gradually over several ticks according to its speed and acceleration: "
-                                + "the actual distance traveled each tick is smaller and may stop early on a wall or a new order.\n"
+                                + "the actual distance traveled each tick is smaller, and the robot may stop early on a wall or a new order.\n"
                                 + "The number in parentheses () sets that target (20 is short, 150 is long, -50 goes backward); "
                                 + "the semicolon (;) ends the order."),
                 6, new int[]{5}, false, 18, 45, Accion.AVANZAR);
@@ -263,12 +263,12 @@ public final class Demostracion {
                         "drehen(45); dreht den Körper des Roboters auf der Stelle. In der Arena zeigt 0° nach rechts (wie 3 Uhr auf einer Uhr) "
                                 + "und 90° nach oben (wie 12 Uhr).\n"
                                 + "Positive Zahlen drehen gegen den Uhrzeigersinn (aus Sicht des Roboters nach links): "
-                                + "90 ist eine Vierteldrehung (von 3 auf 12 Uhr), 180 eine halbe Kehrtwende und 45 eine sanfte Drehung.\n"
+                                + "90 ist eine Vierteldrehung (von 3 auf 12 Uhr), 180 eine halbe Drehung und 45 eine sanfte Drehung.\n"
                                 + "Mit einem Minuszeichen wie drehen(-45); dreht er im Uhrzeigersinn (aus Sicht des Roboters nach rechts): "
                                 + "-90 dreht wie von 12 auf 3 Uhr.",
                         "turn(45); rotates the robot's body on the spot. In the arena, 0° points right (like 3 o'clock on a clock) "
                                 + "and 90° points up (like 12 o'clock).\n"
-                                + "Positive numbers turn counter-clockwise (to the robot's left): "
+                                + "Positive numbers turn counterclockwise (to the robot's left): "
                                 + "90 is a quarter turn (from 3 to 12), 180 is a half-turn around, and 45 is a gentle turn.\n"
                                 + "With a minus sign, like turn(-45);, it turns clockwise (to the robot's right): "
                                 + "-90 turns like from 12 to 3."),
@@ -297,9 +297,9 @@ public final class Demostracion {
                                 + "mit negativen Zahlen nach rechts), ohne den ganzen Körper zu drehen.",
                         "That blue cone in the arena is the radar: think of it as an invisible flashlight. "
                                 + "Outside that beam, your robot is blind and cannot tell where the rival is.\n"
-                                + "The line if (seenEnemies().isEmpty()) asks \"do I see nobody yet?\" "
+                                + "The line if (seenEnemies().isEmpty()) asks “Do I see nobody yet?” "
                                 + "When the answer is yes, it runs aim(15);.\n"
-                                + "aim(15); turns that flashlight and the arms 15 degrees to the left (counter-clockwise; "
+                                + "aim(15); turns that flashlight and the arms 15 degrees to the left (counterclockwise; "
                                 + "negative numbers turn right) without turning the whole body."),
                 9, new int[]{8, 10}, true, 22, 34, Accion.RADAR);
     }
@@ -314,7 +314,7 @@ public final class Demostracion {
                 new Trilingue(
                         "¡Justo en este instante la luz del radar tocó al muñeco y saltó alVerEnemigo(Enemigo e)!\n"
                                 + "Piensa en alVerEnemigo como una alarma que suena solo cuando tu linterna ilumina a un rival.\n"
-                                + "La letra e es una ficha con los datos del enemigo que acabas de ver: "
+                                + "La letra e es una ficha con los datos del rival que acabas de ver: "
                                 + "hacia dónde está (e.angulo()) y a qué distancia (e.distancia()).",
                         "Genau in diesem Moment traf das Radarlicht die Puppe und löste beiSicht(Gegner e) aus!\n"
                                 + "Stell dir beiSicht wie einen Alarm vor, der genau dann klingelt, wenn deine Taschenlampe einen Gegner anleuchtet.\n"
@@ -342,7 +342,7 @@ public final class Demostracion {
                                 + "Fíjate también en las barras de blindaje y energía encima de la arena: disparar gasta energía y el arma necesita recargar.",
                         "Zuerst richtet zielenNach(e.winkel()); die Waffe auf die Puppe aus, wie einen Gartenschlauch, bevor du den Hahn aufdrehst.\n"
                                 + "Danach fordert angreifen(); den Schuss von deiner aktuellen Position an "
-                                + "(pro Zug löst die Engine Angriffe vor der Bewegung aus). "
+                                + "(pro Zug wertet die Engine Angriffe vor der Bewegung aus). "
                                 + "Schau, wie der Schuss die Puppe trifft!\n"
                                 + "Achte auch auf die Panzerungs- und Energiebalken über der Arena: Schießen kostet Energie, und die Waffe muss nachladen.",
                         "First aimTo(e.angle()); aligns the weapon with the dummy, like aiming a garden hose before turning on the tap.\n"
@@ -362,7 +362,7 @@ public final class Demostracion {
                 new Trilingue(
                         "Ya conoces el ciclo completo del juego: en el [[Taller]] escribes tu hoja de instrucciones y la pruebas contra el muñeco.\n"
                                 + "Pulsas Ctrl+S para guardarla y comprobar que no hay errores, y luego vas al botón [[¡A pelear!]] contra rivales de verdad.\n"
-                                + "Entre cada ronda la pelea se pausa sola: así ves qué salió mal, "
+                                + "Entre ronda y ronda, la pelea se pausa sola: así ves qué salió mal, "
                                 + "cambias líneas de tu código o pones piezas nuevas y vuelves a intentarlo.",
                         "Jetzt kennst du den ganzen Ablauf: In der [[Werkstatt]] schreibst du deine Anleitung und testest sie an der Puppe.\n"
                                 + "Du drückst Strg+S zum Speichern und Prüfen und klickst dann auf die Schaltfläche [[Auf in den Kampf!]] gegen echte Gegner.\n"
@@ -370,7 +370,7 @@ public final class Demostracion {
                                 + "änderst Codezeilen oder baust neue Teile ein und probierst es erneut.",
                         "Now you know the full game loop: in the [[Workshop]] you write your instruction sheet and test it against the dummy.\n"
                                 + "Press Ctrl+S to save and check it, then click the [[Let's fight!]] button against real rivals.\n"
-                                + "Between every round the fight pauses on its own: you can see what went wrong, "
+                                + "Between rounds, the fight pauses on its own: you can see what went wrong, "
                                 + "tweak lines of code or swap parts, and try again."),
                 3, new int[]{5, 14, 15, 16}, true, 0, 0, Accion.CIERRE);
     }

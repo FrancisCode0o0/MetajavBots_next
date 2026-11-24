@@ -34,7 +34,7 @@ public final class BobinaDeDescarga implements Aparato {
 }
 == de
 /**
- * ENTLADESPULE «Chispazo» — Ein Stromschlag um dich herum: Gegner
+ * ENTLADESPULE „Chispazo“ — Ein Stromschlag um dich herum: Gegner
  * näher als 150 bekommen 6 Schaden und können sich kurz nicht
  * bewegen.
  *
@@ -68,7 +68,7 @@ public final class Entladespule implements Geraet {
 }
 == en
 /**
- * SHOCKCOIL «Chispazo» — An electric shock all around you: enemies
+ * SHOCKCOIL “Chispazo” — An electric shock all around you: enemies
  * closer than 150 take 6 damage and are stunned for a while.
  *
  * How to plug it into your robot:

@@ -43,13 +43,13 @@ es: Piénsalo antes de pasar la página.
 de: Rate mal: Im selben Zug sagst du dem Kopf „schau zum Gegner“ und gleich danach „schau nach rechts“. Wohin schaut er?
 de:
 de: Überleg es dir, bevor du umblätterst.
-en: Guess: in the same tick you tell the head "look at the enemy" and, right after, "look to the right". Where does it look?
+en: Guess: in the same tick you tell the head “look at the enemy” and, right after, “look to the right”. Where does it look?
 en:
 en: Think about it before turning the page.
 --- pagina
 es: A la derecha: la segunda orden borra la primera.
 es:
-es: Por eso, cuando quieras que mire al enemigo, que nada más le dé otra orden a la cabeza en ese mismo turno.
+es: Por eso, cuando quieras que mire al enemigo, que nada le dé otra orden a la cabeza en ese mismo turno.
 de: Nach rechts: Der zweite Befehl löscht den ersten.
 de:
 de: Darum: Wenn er zum Gegner schauen soll, darf ihm in diesem Zug nichts anderes einen Kopf-Befehl geben.
@@ -89,7 +89,7 @@ de: Stell dir ein Rezept für einen blitzschnellen, sehr wörtlichen Koch vor. S
 de: diskutiert er nicht, sondern backt dir einen salzigen Kuchen. In dieser Arena schreibst du Rezepte in Java.
 en: Programming means writing instructions for a machine that obeys you to the letter.
 en: Your robot does not think for itself: it does EXACTLY what you write, no more and no less.
-en: Think of a recipe for a lightning-fast, very literal cook. Write "salt" instead of "sugar" and it won't argue,
+en: Think of a recipe for a lightning-fast, very literal cook. Write “salt” instead of “sugar” and it won't argue,
 en: it will just bake you a salty cake. In this arena, the recipes are written in Java.
 --- pagina
 es: Antes de escribir nada, mira cómo obedece tu robot. Tiene tres mandos: las ruedas (avanzar), el cuerpo (girar)
@@ -113,7 +113,7 @@ en: and the head, which is its sight (aim). There are three rules, and it pays t
 en:
 en: 1. Each control remembers only the LAST order you give it in each tick. Ask the head for two things and it does the second and forgets the first.
 en:
-en: 2. Orders take time. The head turns slowly, like an owl: a little each tick. Saying "look over there" does not put it there at once.
+en: 2. Orders take time. The head turns slowly, like an owl: a little each tick. Saying “look over there” does not put it there at once.
 en:
 en: 3. Firing is instant: the shot goes where the head is looking AT THAT MOMENT, not where you just asked it to look.
 --- pagina
@@ -138,8 +138,8 @@ de: Was du zwischen die geschweiften Klammern ({}) von jedenZug() schreibst,
 de: macht der Roboter in jedem Zug des Kampfes, etwa 30-mal pro Sekunde. Das ist dein erstes Testgelände.
 en: In the workshop you will see some code already written. Don't let the strange words (class, extends,
 en: @Override, public void) scare you: you'll understand them in topics 9 to 11. For now only one thing matters:
-en: whatever you write between the curly braces ({}) of onTick(), the robot does on every turn
-en: of the fight, about 30 times per second. That gap is your first testing ground.
+en: whatever you write between the curly braces ({}) of onTick(), the robot does on every tick
+en: of the fight, about 30 times per second. That space is your first testing ground.
 codigo:
     public class MiRobot extends Metajavbot {
         @Override
@@ -153,11 +153,11 @@ es: final de la frase: sin él, Java no sabe dónde acaba tu orden y te lo dirá
 es: Es el error número uno de todo el que empieza, así que si algo no compila, busca primero el punto y coma (;) que falta.
 es: Prueba esta: el texto entre comillas es lo que dirá tu robot en un bocadillo.
 de: Ein Befehl heißt in Java Anweisung und endet [[immer]] mit einem Semikolon (;). Das Semikolon ist der Punkt
-de: am Satzende: Ohne es weiß Java nicht, wo dein Befehl aufhört, und meldet sich mit einem roten Fehler.
+de: am Satzende: Ohne Semikolon weiß Java nicht, wo dein Befehl aufhört, und meldet sich mit einem roten Fehler.
 de: Das ist der Anfängerfehler Nummer eins. Wenn etwas nicht kompiliert, such zuerst das fehlende Semikolon (;).
 de: Probier diese hier (auf Deutsch heißt die Methode sagen):
 de: Der Text in Anführungszeichen erscheint in einer Sprechblase.
-en: An order in Java is called a statement, and it ALWAYS ends with a semicolon. The semicolon is the full stop
+en: An order in Java is called a statement, and it ALWAYS ends with a semicolon. The semicolon is the period
 en: of the sentence: without it, Java can't tell where your order ends, and it will complain in red.
 en: It's the number one beginner mistake, so when something won't compile, look for the missing ; first.
 en: Try this one (in English the method is called say): the text in quotes appears in a speech bubble.
@@ -182,8 +182,8 @@ codigo:
 --- tarea
 robot: ronda_sin_errores
 es: Haz que tu robot diga algo en cada turno con decir(...) y aguanta una ronda de práctica sin ningún error.
-de: Lass deinen Roboter in jedem Zug etwas mit sagen(...) sagen und überstehe eine Übungsrunde ganz ohne Fehler.
-en: Make your robot say something every turn with say(...) and get through a practice round without any errors.
+de: Lass deinen Roboter in jedem Zug etwas mit sagen(...) sagen und überstehe eine Trainingsrunde ganz ohne Fehler.
+en: Make your robot say something every tick with say(...) and get through a practice round without any errors.
 --- tarea
 ejercicio: t01_encender
 es: Tu primer programa de verdad: enciende el robot escribiendo el texto exacto en su pantalla.
@@ -227,7 +227,7 @@ es: Gana quien recibe MENOS daño sumando todas las rondas. Arriba ves el daño 
 de: 3. Kämpfen. Drück „Auf in den Kampf!“. Dein Roboter kämpft allein; du schaust zu.
 de:
 de: Es gewinnt, wer über alle Runden WENIGER Schaden nimmt. Oben siehst du den Schaden von jedem.
-en: 3. Fight. Press "Let's fight!". Your robot fights on its own; you watch.
+en: 3. Fight. Press “Let's fight!”. Your robot fights on its own; you watch.
 en:
 en: Whoever takes LESS damage over all the rounds wins. At the top you see each one's damage.
 --- pagina
@@ -236,7 +236,7 @@ es:
 es: Pasa el ratón por una cifra: te dice qué significa. Si va mal, debajo sale una pista en amarillo. Con un clic, la ficha de esa regla.
 de: 4. Den Bericht lesen. Zwischen den Runden kommt ein Bericht mit deinen Zahlen.
 de:
-de: Fahr mit der Maus über eine Zahl: Sie sagt dir, was sie bedeutet. Läuft es schlecht, steht darunter ein gelber Tipp. Mit einem Klick die Karte zu dieser Regel.
+de: Fahr mit der Maus über eine Zahl: Sie sagt dir, was sie bedeutet. Läuft es schlecht, steht darunter ein gelber Hinweis. Mit einem Klick die Karte zu dieser Regel.
 en: 4. Read the report. Between rounds a report shows your numbers.
 en:
 en: Move the mouse over a number: it tells you what it means. If it is going badly, a yellow hint appears underneath. One click opens the card for that rule.
@@ -288,7 +288,7 @@ de: Zum Bewegen gibt es vorwaerts(strecke), drehen(grad), rueckwaerts(strecke) u
 de: (im spanischen Code: avanzar, girar, retroceder, detener).
 de: Die Zahlen in Klammern sind die Angaben für den Befehl.
 en: Statements run from top to bottom, one after another, like falling dominoes.
-en: Order matters: "move, then turn" doesn't leave you where "turn, then move" does.
+en: Order matters: “move, then turn” doesn't leave you where “turn, then move” does.
 en: To move you have ahead(distance), turn(degrees), back(distance) and stop()
 en: (in the Spanish code: avanzar, girar, retroceder, detener). The numbers in parentheses are the order's data.
 codigo:
@@ -302,8 +302,8 @@ de: Wichtiger Trick: Befehle warten nicht. vorwaerts(60) hält das Programm nich
 de: es sagt nur „ich will 60 vorwärts“, und der Roboter erledigt das Zug für Zug. Weil jedenZug 30-mal pro Sekunde
 de: läuft, ersetzt jeder neue Fahrbefehl den alten. Deshalb hält ein Roboter mit vorwaerts(60) in jedem Zug nie an.
 en: Important trick: orders don't wait. ahead(60) doesn't freeze the program until you arrive; it just says
-en: "I want to move 60" and the robot does it turn by turn. Since onTick runs 30 times per second,
-en: each new movement order replaces the last. That's why a robot with ahead(60) every turn never stops.
+en: “I want to move 60” and the robot does it tick by tick. Since onTick runs 30 times per second,
+en: each new movement order replaces the last. That's why a robot with ahead(60) every tick never stops.
 --- pagina
 es: Java distingue mayúsculas y minúsculas: Avanzar(60) o AVANZAR(60) no existen, solo avanzar(60).
 es: Tampoco perdona los paréntesis: avanzar 60; es un error. Si el compilador te subraya algo,
@@ -321,10 +321,10 @@ es: a e, el enemigo. Apunta a su ángulo y ataca. Para que el radar barra la are
 es: con apuntar(25). Copia esto tal cual: entenderás cada pieza poco a poco, y ya muerde.
 de: Zum Kämpfen musst du sehen. beiSicht (onSeeEnemy) wird aufgerufen, wann immer dein Radar einen Gegner sieht,
 de: und darin hast du g, den Gegner. Ziel auf seinen Winkel und greif an. Damit das Radar die Arena absucht,
-de: dreh das Visier in jedem Zug mit zielen(25). Kopier das einfach: Du verstehst jedes Teil nach und nach.
+de: dreh das Visier in jedem Zug mit zielen(25). Kopier das einfach: Du verstehst jedes Teil nach und nach, und es beißt schon.
 en: To fight you need to see. alVerEnemigo (onSeeEnemy) is called whenever your radar spots a rival,
 en: and inside it you have e, the enemy. Aim at its angle and attack. To sweep the arena with the radar,
-en: turn your aim every turn with aim(25). Just copy this: you'll understand each piece bit by bit, and it bites.
+en: turn your sight every tick with aim(25). Just copy this: you'll understand each piece bit by bit, and it already bites.
 codigo:
     @Override
     public void cadaTurno() {
@@ -383,7 +383,7 @@ de: So testest du am schnellsten: „Was wäre, wenn nicht?“
 de: Ein guter Kommentar erklärt das Warum; ein schlechter wiederholt nur den Code (// fährt 60 vorwärts).
 en: Comments have a secret superpower: switching lines off without deleting them. Put // in front of an order
 en: and the robot stops doing it; remove it and it's back.
-en: It's the fastest way to test "what if I didn't do this?".
+en: It's the fastest way to test “what if I didn't do this?”.
 en: A good comment explains the why; a bad one repeats what the code already says (// moves 60 ahead).
 codigo:
     avanzar(60);
@@ -395,7 +395,7 @@ es: pelea: el código es válido, pero hace algo imposible, y el locutor se ríe
 es: hasta los profesionales ven rojo varias veces al día. Lo importante es leer el mensaje con calma.
 de: Kompilierfehler und Laufzeitfehler sind nicht dasselbe. Die ersten findet Java vor dem Kampf (fehlendes ;,
 de: offene Klammer, falsch geschriebener Name), und der Roboter startet gar nicht. Die zweiten passieren mitten
-de: im Kampf: Der Code ist gültig, tut aber etwas Unmögliches, und der Sprecher lacht dich aus. Beides ist normal:
+de: im Kampf: Der Code ist gültig, tut aber etwas Unmögliches, und der Ansager lacht dich aus. Beides ist normal:
 de: Auch Profis sehen mehrmals am Tag rot. Wichtig ist, die Meldung in Ruhe zu lesen.
 en: Compile errors and runtime errors are not the same thing. Java finds the first kind before the fight
 en: (a missing ;, an unclosed brace, a misspelled name) and the robot won't even start. The second kind happens
@@ -408,7 +408,7 @@ de: Eine Zeile ist zu viel. Lösch sie nicht: Schalte sie mit einem Kommentar au
 en: One line is too many. Don't delete it: switch it off with a comment.
 --- tarea
 ejercicio: t01_presentarse
-es: Antes del combate, todo robot que se precie se presenta. Escribe su presentación línea a línea.
+es: Antes de la pelea, todo robot que se precie se presenta. Escribe su presentación línea a línea.
 de: Vor dem Kampf stellt sich jeder anständige Roboter vor. Schreib seine Vorstellung Zeile für Zeile.
 en: Before a fight, every self-respecting robot introduces itself. Write its introduction line by line.
 
@@ -426,7 +426,7 @@ de: In Anführungszeichen sind manche Zeichen besonders. \n ist ein Zeilenumbruc
 de: die den Text nicht beenden. Der Backslash \ warnt Java: „Was jetzt kommt, ist nicht, wonach es aussieht.“
 de: println schreibt und springt in die nächste Zeile; print schreibt und bleibt in derselben Zeile.
 en: Inside quotes, some characters are special. \n is a line break and \" is a quote that doesn't end the text.
-en: The backslash \ warns Java: "what comes next is not what it looks like".
+en: The backslash \ warns Java: “what comes next is not what it looks like”.
 en: println writes and moves to a new line; print writes and stays on the same line.
 codigo:
     System.out.print("Blindaje: ");

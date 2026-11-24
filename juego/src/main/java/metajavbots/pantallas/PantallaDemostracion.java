@@ -306,7 +306,7 @@ public final class PantallaDemostracion implements Pantalla {
                 dibujarIndicadorDemo4Texto(p, ax, ay, aw, tl, 0xFF6B6B,
                         idioma.elegir("public mutable: +8 % daño · +16 % radar rival",
                                 "public veränderbar: +8 % Schaden · +16 % Gegner-Radar",
-                                "mutable public: +8% damage · +16% enemy radar"));
+                                "mutable public: +8% damage · +16% rival radar"));
                 break;
             case POO_ENCAPSULADO:
                 dibujarIndicadorDemo4Texto(p, ax, ay, aw, tl, 0x5BD685,
@@ -334,7 +334,7 @@ public final class PantallaDemostracion implements Pantalla {
                 dibujarIndicadorDemo4Texto(p, ax, ay, aw, tl, 0xFF6B6B,
                         idioma.elegir("⏱ TopeDeCalculo · deuda de turnos",
                                 "⏱ TopeDeCalculo · Zugschuld",
-                                "⏱ TopeDeCalculo · turn debt"));
+                                "⏱ TopeDeCalculo · tick debt"));
                 break;
             default:
                 break;

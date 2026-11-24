@@ -15,7 +15,7 @@ de: gibt, nicht, wie sie funktionieren. Die Arena hat ihre eigene geheime Klasse
 de: welche, ist dir egal.
 en: You've been using an interface since topic 1: Enemy (Enemigo). You ask e.distance() or e.angle()
 en: and you've never seen HOW it's calculated. An interface is a contract: it says WHICH methods exist,
-en: not how they work. The arena has its own secret class that fulfils it, and you don't care which one.
+en: not how they work. The arena has its own secret class that fulfills it, and you don't care which one.
 --- pagina
 es: Una clase firma el contrato con implements y entonces tiene que escribir todos sus métodos.
 es: La diferencia con heredar: una clase solo puede extender a UN padre, pero puede implementar
@@ -43,9 +43,9 @@ es: «attempting to assign weaker access privileges». Ahora ya sabes qué signi
 de: Typischer Fehler: beim Implementieren public vergessen. Methoden eines Interfaces sind zwingend öffentlich,
 de: und deine Version darf nicht „weniger öffentlich“ sein: Ohne public meldet der Compiler
 de: „attempting to assign weaker access privileges“. Jetzt weißt du, was das heißt.
-en: Typical mistake: forgetting public when implementing. Interface methods are public by force,
-en: and your version can't be "less public": without public, the compiler says
-en: "attempting to assign weaker access privileges". Now you know what it means.
+en: Typical mistake: forgetting public when implementing. Interface methods are necessarily public,
+en: and your version can't be “less public”: without public, the compiler says
+en: “attempting to assign weaker access privileges”. Now you know what it means.
 --- tarea
 robot: usa:interface
 es: Define una interfaz propia (por ejemplo, Punteria), impleméntala y úsala para apuntar durante una ronda.
@@ -61,17 +61,17 @@ en: Everything that shoots signs the same contract.
 tema: 13
 orden: 2
 titulo.es: Cambiar la puntería en marcha
-titulo.de: Das Zielen im Lauf wechseln
+titulo.de: Das Zielen im laufenden Kampf wechseln
 titulo.en: Swapping your aim on the fly
 --- pagina
 es: Con una interfaz, la forma de apuntar se vuelve una pieza intercambiable: el patrón Estrategia.
 es: La puntería directa va bien contra robots lentos; contra los rápidos, mejor apuntar adonde ESTARÁN.
 es: El robot guarda una Punteria y la cambia según lo que vea, sin tocar nada más del código.
-de: Mit einem Interface wird das Zielen zum austauschbaren Bauteil: das Strategie-Muster.
+de: Mit einem Interface wird das Zielen zum austauschbaren Teil: das Strategie-Muster.
 de: Direktes Zielen klappt gegen langsame Roboter; gegen schnelle zielst du besser dorthin, wo sie SEIN WERDEN.
 de: Der Roboter merkt sich eine Punteria und wechselt sie je nach Lage, ohne sonst etwas am Code zu ändern.
 en: With an interface, the way you aim becomes a swappable part: the Strategy pattern.
-en: Direct aim works against slow robots; against fast ones, better aim where they WILL BE.
+en: Direct aim works against slow robots; against fast ones, better to aim where they WILL BE.
 en: The robot keeps a Punteria and swaps it depending on what it sees, without touching the rest of the code.
 codigo:
     class Adelantada implements Punteria {
@@ -95,20 +95,20 @@ es: Desde Java 8 una interfaz puede traer métodos default: con cuerpo, listos p
 es: puede sobrescribir si quiere. Sirven para añadir métodos a una interfaz sin romper las clases
 es: que ya la implementaban. También admite métodos static (Java 8) y private (Java 9) de ayuda.
 de: Seit Java 8 kann ein Interface default-Methoden mitbringen: mit Rumpf, sofort benutzbar, und jede Klasse
-de: darf sie überschreiben. So ergänzt man ein Interface um Methoden, ohne die Klassen zu zerbrechen,
+de: darf sie überschreiben. So ergänzt man ein Interface um Methoden, ohne die Klassen kaputt zu machen,
 de: die es schon implementieren. Dazu kommen static-Methoden (Java 8) und private Hilfsmethoden (Java 9).
 en: Since Java 8 an interface can come with default methods: with a body, ready to use, which each class
 en: may override if it wants. They let you add methods to an interface without breaking the classes
 en: that already implemented it. Interfaces also allow static (Java 8) and private (Java 9) helper methods.
 --- tarea
 robot: aciertos>=8
-es: Elige la puntería (directa o adelantada) según la velocidad del enemigo y acierta 8 veces en una ronda.
-de: Wähle das Zielen (direkt oder vorhaltend) nach der Geschwindigkeit des Gegners und triff 8-mal in einer Runde.
-en: Pick the aim (direct or leading) by the enemy's speed and land 8 hits in one round.
+es: Elige la puntería (directa o adelantada) según la velocidad del rival y acierta 8 veces en una ronda.
+de: Wähle das Zielen (direkt oder vorhaltend) nach dem Tempo des Gegners und triff 8-mal in einer Runde.
+en: Pick the aim (direct or leading) by the rival's speed and land 8 hits in one round.
 --- tarea
 ejercicio: t13_sensor_estrategia
 es: Cambia de sensor en marcha: una interfaz, varias estrategias.
-de: Wechsle den Sensor im Lauf: ein Interface, mehrere Strategien.
+de: Wechsle den Sensor im laufenden Betrieb: ein Interface, mehrere Strategien.
 en: Swap the sensor on the fly: one interface, several strategies.
 
 === l13_interfaces_de_java
@@ -121,10 +121,10 @@ titulo.en: The interfaces Java ships with
 es: Java está lleno de interfaces que puedes firmar. Comparable<T> dice «sé compararme con otro»: implementa
 es: compareTo (negativo si voy antes, 0 si empatamos, positivo si voy después) y tus objetos
 es: se podrán ordenar con Collections.sort o List.sort. Iterable<T> deja recorrer tu clase con for-each.
-de: Java steckt voller Interfaces, die du unterschreiben kannst. Comparable<T> heißt „ich kann mich vergleichen“:
+de: Java steckt voller Interfaces, die du unterschreiben kannst. Comparable<T> heißt „Ich kann mich mit anderen vergleichen“:
 de: Implementiere compareTo (negativ, wenn ich zuerst komme, 0 bei Gleichstand, positiv, wenn danach),
 de: und deine Objekte lassen sich mit Collections.sort oder List.sort sortieren. Iterable<T> erlaubt for-each.
-en: Java is full of interfaces you can sign. Comparable<T> says "I know how to compare myself": implement
+en: Java is full of interfaces you can sign. Comparable<T> says “I know how to compare myself to others”: implement
 en: compareTo (negative if I come first, 0 for a tie, positive if I come after) and your objects
 en: can be sorted with Collections.sort or List.sort. Iterable<T> lets you walk your class with for-each.
 codigo:

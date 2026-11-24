@@ -319,7 +319,7 @@ titulo.de: Binär sprechen
 titulo.en: Speaking binary
 enunciado.es: Los robots hablan en binario. Devuelve n (0 o positivo) escrito en base 2, como texto, sin usar Integer.toBinaryString. Ejemplo: aBinario(5) devuelve "101" y aBinario(0), "0".
 enunciado.de: Roboter sprechen binär. Gib n (0 oder positiv) im Zweiersystem als Text zurück, ohne Integer.toBinaryString. Beispiel: aBinario(5) gibt "101" zurück, aBinario(0) "0".
-enunciado.en: Robots speak binary. Return n (0 or positive) written in base 2 as a text, without using Integer.toBinaryString. Example: aBinario(5) returns "101" and aBinario(0) returns "0".
+enunciado.en: Robots speak binary. Return n (0 or positive) written in base 2 as text, without using Integer.toBinaryString. Example: aBinario(5) returns "101" and aBinario(0) returns "0".
 pista.es: n % 2 es la última cifra binaria y n / 2 quita esa cifra. Ve poniendo cada cifra DELANTE del texto. El 0 es un caso aparte.
 pista.de: n % 2 ist die letzte Binärziffer, und n / 2 entfernt sie. Setz jede Ziffer VOR den bisherigen Text. Die 0 ist ein Sonderfall.
 pista.en: n % 2 is the last binary digit and n / 2 removes it. Put each digit IN FRONT of the text so far. 0 is a special case.
@@ -456,7 +456,7 @@ titulo.de: Energie-Plateaus zählen
 titulo.en: Count energy plateaus
 enunciado.es: El medidor de energía registra una secuencia de lecturas. Llamamos «meseta» a una serie de dos o más lecturas iguales seguidas. Devuelve cuántas mesetas hay en lecturas. Ejemplos: contarMesetas(new int[]{1, 2, 2, 3, 4, 4}) devuelve 2, contarMesetas(new int[]{1, 1, 2, 1, 1}) devuelve 2 y contarMesetas(new int[]{1, 1, 1, 1}) devuelve 1.
 enunciado.de: Das Energiemessgerät zeichnet eine Folge von Messwerten auf. Ein „Plateau“ ist eine Serie von zwei oder mehr gleichen Werten hintereinander. Gib zurück, wie viele Plateaus in lecturas vorkommen. Beispiele: contarMesetas(new int[]{1, 2, 2, 3, 4, 4}) gibt 2 zurück, contarMesetas(new int[]{1, 1, 2, 1, 1}) 2 und contarMesetas(new int[]{1, 1, 1, 1}) 1.
-enunciado.en: The energy meter logs a sequence of readings. A "plateau" is a run of two or more equal readings in a row. Return how many plateaus appear in lecturas. Examples: contarMesetas(new int[]{1, 2, 2, 3, 4, 4}) returns 2, contarMesetas(new int[]{1, 1, 2, 1, 1}) returns 2, and contarMesetas(new int[]{1, 1, 1, 1}) returns 1.
+enunciado.en: The energy meter logs a sequence of readings. A “plateau” is a run of two or more equal readings in a row. Return how many plateaus appear in lecturas. Examples: contarMesetas(new int[]{1, 2, 2, 3, 4, 4}) returns 2, contarMesetas(new int[]{1, 1, 2, 1, 1}) returns 2, and contarMesetas(new int[]{1, 1, 1, 1}) returns 1.
 pista.es: Lleva un boolean enMeseta para no contar dos veces el mismo bloque: suma 1 solo cuando empieza una pareja igual y aún no estabas en meseta.
 pista.de: Merk dir mit einem boolean enMeseta, ob du schon in einem Block bist: Zähle nur dann +1, wenn ein gleiches Paar beginnt und du noch nicht in einem Plateau warst.
 pista.en: Track a boolean enMeseta so you don't count the same run twice: add 1 only when a matching pair starts and you weren't already in a plateau.
@@ -494,7 +494,7 @@ titulo.es: Pasos de calibración (Collatz)
 titulo.de: Kalibrierungsschritte (Collatz)
 titulo.en: Calibration steps (Collatz)
 enunciado.es: Un motor rebelde se calibra repitiendo esta regla hasta llegar a 1: si el valor actual es par, se divide entre 2; si es impar, pasa a 3 * valor + 1. Devuelve cuántos pasos hace falta dar desde n (si n <= 1, devuelve 0). Ejemplos: pasosCalibracion(6) devuelve 8, pasosCalibracion(1) devuelve 0 y pasosCalibracion(3) devuelve 7.
-enunciado.de: Ein widerspenstiger Motor wird kalibriert, indem man diese Regel bis zur 1 wiederholt: Ist der aktuelle Wert gerade, teile durch 2; ist er ungerade, wird er zu 3 * wert + 1. Gib die Anzahl der Schritte ab n zurück (bei n <= 1 gib 0 zurück). Beispiele: pasosCalibracion(6) gibt 8 zurück, pasosCalibracion(1) 0 und pasosCalibracion(3) 7.
+enunciado.de: Ein widerspenstiger Motor wird kalibriert, indem man diese Regel bis zur 1 wiederholt: Ist der aktuelle Wert gerade, wird er durch 2 geteilt; ist er ungerade, wird er zu 3 * wert + 1. Gib die Anzahl der Schritte ab n zurück (bei n <= 1 gib 0 zurück). Beispiele: pasosCalibracion(6) gibt 8 zurück, pasosCalibracion(1) 0 und pasosCalibracion(3) 7.
 enunciado.en: A stubborn motor is calibrated by repeating this rule until reaching 1: if the current value is even, divide by 2; if it is odd, replace it with 3 * value + 1. Return how many steps it takes starting from n (if n <= 1, return 0). Examples: pasosCalibracion(6) returns 8, pasosCalibracion(1) returns 0, and pasosCalibracion(3) returns 7.
 pista.es: Usa long para el valor actual por si crece mucho, y un while (actual > 1) que cuente cada iteración.
 pista.de: Nutze long für den aktuellen Wert, falls er groß wird, und eine while (actual > 1)-Schleife, die jeden Schritt zählt.

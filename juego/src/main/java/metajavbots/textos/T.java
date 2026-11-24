@@ -7,6 +7,8 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * T — Los textos de la interfaz en los tres idiomas (res/textos/ui.txt, una
@@ -53,10 +55,34 @@ public final class T {
         return t == null ? clave : t.en(id == null ? Idioma.ES : id);
     }
 
+    /** «{0:paso|pasos}»: la palabra en singular si el hueco 0 vale 1 (o -1), y si no, en plural. */
+    private static final Pattern PLURAL = Pattern.compile("\\{(\\d+):([^|{}]*)\\|([^{}]*)\\}");
+
     public static String f(String clave, Object... huecos) {
-        String s = t(clave);
+        String s = plurales(t(clave), huecos);
         for (int i = 0; i < huecos.length; i++) s = s.replace("{" + i + "}", String.valueOf(huecos[i]));
         return s;
+    }
+
+    /** Elige singular o plural en cada «{n:singular|plural}» según el valor del hueco n. */
+    public static String plurales(String s, Object... huecos) {
+        if (s.indexOf(':') < 0) return s;
+        Matcher m = PLURAL.matcher(s);
+        StringBuilder b = new StringBuilder();
+        while (m.find()) {
+            int i = Integer.parseInt(m.group(1));
+            boolean uno = false;
+            if (i < huecos.length && huecos[i] != null) {
+                try {
+                    uno = Math.abs(Double.parseDouble(String.valueOf(huecos[i]).replace(',', '.').strip())) == 1;
+                } catch (NumberFormatException e) {
+                    uno = false;
+                }
+            }
+            m.appendReplacement(b, Matcher.quoteReplacement(uno ? m.group(2) : m.group(3)));
+        }
+        m.appendTail(b);
+        return b.toString();
     }
 
     public static boolean existe(String clave) {

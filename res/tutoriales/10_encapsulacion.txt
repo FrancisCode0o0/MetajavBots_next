@@ -18,11 +18,11 @@ en: the field is private and you can only READ its value through a method. If an
 en: the game would break. That's encapsulation: protecting data so it always makes sense.
 --- pagina
 es: Haz lo mismo con tus clases. Campos private y métodos públicos que hacen cosas con reglas:
-es: un Medidor de amenaza solo sube y baja dentro de 0 a 100, se pase lo que se pase.
+es: un Medidor de amenaza solo sube y baja entre 0 y 100, se pase lo que se pase.
 es: Un getter (amenaza()) deja mirar; en lugar de un setter que acepta cualquier cosa, ofrece acciones
 es: con sentido (subir, bajar). Así el error no puede entrar ni queriendo.
 de: Mach es mit deinen Klassen genauso: private Felder und öffentliche Methoden mit Regeln:
-de: Ein Bedrohungsmesser bewegt sich immer nur zwischen 0 und 100, egal was passiert.
+de: Ein Bedrohungsmesser bewegt sich immer nur zwischen 0 und 100, egal, was passiert.
 de: Ein Getter (amenaza()) erlaubt das Ansehen; statt eines Setters, der alles schluckt, gibt es sinnvolle
 de: Aktionen (subir, bajar). So kommt der Fehler nicht einmal absichtlich hinein.
 en: Do the same with your classes. Private fields and public methods that act with rules:
@@ -49,7 +49,7 @@ es: que preocuparse de los límites: el Medidor se encarga, y nadie puede dejarl
 de: Im Roboter: Jeder erhaltene Treffer erhöht die Bedrohung, jeder ruhige Zug senkt sie ein wenig.
 de: Über 50 geht der Roboter in die Defensive. Das Schöne: jedenZug muss sich nicht mehr um die Grenzen kümmern.
 de: Das erledigt der Medidor, und niemand kann ihn aus Versehen auf -7 setzen.
-en: In the robot: each hit taken raises the threat and each quiet turn lowers it a little.
+en: In the robot: each hit taken raises the threat and each quiet tick lowers it a little.
 en: Above 50, the robot goes defensive. The nice part is that onTick no longer has to worry about
 en: limits: the Medidor takes care of it, and nobody can leave it at -7 by mistake.
 codigo:
@@ -72,7 +72,7 @@ en: Write a class with private fields and methods that keep its rules, and use i
 --- tarea
 ejercicio: t10_barra_de_vida
 es: Una barra de vida que nunca se sale de sus límites, por mucho que la empujen.
-de: Ein Lebensbalken, der nie aus seinen Grenzen fällt, egal wie sehr man drückt.
+de: Ein Lebensbalken, der nie aus seinen Grenzen fällt, egal, wie sehr man drückt.
 en: A health bar that never leaves its limits, however hard it's pushed.
 
 === l10_constructores_que_vigilan
@@ -87,10 +87,10 @@ es: nace roto. Si te dan un alcance negativo, lanza un error en el acto (lo ver�
 es: es mucho mejor fallar al construir que descubrirlo veinte turnos después en mitad de la pelea.
 de: Der Konstruktor ist die Eingangstür des Objekts: Prüfst du dort die Daten, wird kein Objekt kaputt geboren.
 de: Bekommst du eine negative Reichweite, wirf sofort einen Fehler (mehr dazu in Thema 14):
-de: Lieber beim Bauen scheitern als es zwanzig Züge später mitten im Kampf zu merken.
+de: Lieber beim Bauen scheitern, als es zwanzig Züge später mitten im Kampf zu merken.
 en: The constructor is the object's front door: if you check the data there, no object is born broken.
 en: If you're given a negative range, throw an error right away (topic 14 covers it in depth):
-en: failing at construction is far better than finding out twenty turns later in the middle of a fight.
+en: failing at construction is far better than finding out twenty ticks later in the middle of a fight.
 codigo:
     class Arma {
         private final String nombre;
@@ -115,7 +115,7 @@ de: bleibt es. Klingt nach Einschränkung, ist aber eine enorme Beruhigung: Du k
 de: ohne Angst, es verändert zurückzubekommen. Zum „Ändern“ gibst du ein neues zurück, so wie String.
 en: If every field is final and no method changes them, the object is IMMUTABLE: it stays as it was born.
 en: Sounds limiting, but it's a huge relief: you can pass it to any method without fear of getting it back
-en: changed. To "modify" it, you return a new one, just like String does.
+en: changed. To “modify” it, you return a new one, just like String does.
 --- tarea
 ejercicio: t10_numero_de_serie
 es: Números de serie que siempre son válidos: que el constructor no deje pasar ni uno malo.
@@ -153,7 +153,7 @@ es: Cuando un objeto tiene muchos datos opcionales, un constructor con ocho par�
 es: (¿el quinto era el peso o la velocidad?). El patrón Builder lo resuelve: un ayudante que va
 es: recogiendo los datos con nombre, paso a paso, y al final construye el objeto ya comprobado.
 de: Hat ein Objekt viele optionale Daten, ist ein Konstruktor mit acht Parametern unlesbar
-de: (war der fünfte das Gewicht oder die Geschwindigkeit?). Das Builder-Muster löst das: ein Helfer,
+de: (war der fünfte das Gewicht oder das Tempo?). Das Builder-Muster löst das: ein Helfer,
 de: der die Daten Schritt für Schritt mit Namen einsammelt und am Ende das geprüfte Objekt baut.
 en: When an object has lots of optional data, an eight-parameter constructor is unreadable
 en: (was the fifth one weight or speed?). The Builder pattern solves it: a helper that collects

@@ -167,7 +167,7 @@ titulo.de: Die Rundenuhr (formatted, Java 15)
 titulo.en: The round clock (formatted, Java 15)
 enunciado.es: Devuelve el tiempo como minutos:segundos, con los segundos siempre en dos cifras. Java 15 trajo el método formatted de String: "%02d".formatted(7) da "07". Ejemplo: tiempoDeRonda(75) devuelve "1:15" y tiempoDeRonda(0), "0:00".
 enunciado.de: Gib die Zeit als Minuten:Sekunden zurück, die Sekunden immer zweistellig. Java 15 hat die String-Methode formatted eingeführt: "%02d".formatted(7) ergibt "07". Beispiel: tiempoDeRonda(75) gibt "1:15" zurück, tiempoDeRonda(0) "0:00".
-enunciado.en: Return the time as minutes:seconds, with the seconds always two digits. Java 15 introduced String's formatted method: "%02d".formatted(7) gives "07". Example: tiempoDeRonda(75) returns "1:15" and tiempoDeRonda(0) returns "0:00".
+enunciado.en: Return the time as minutes:seconds, with the seconds always as two digits. Java 15 introduced String's formatted method: "%02d".formatted(7) gives "07". Example: tiempoDeRonda(75) returns "1:15" and tiempoDeRonda(0) returns "0:00".
 pista.es: Los minutos son segundos / 60 y lo que sobra, segundos % 60. Luego: "%d:%02d".formatted(minutos, resto). Antes de Java 15: String.format(...).
 pista.de: Die Minuten sind segundos / 60, der Rest segundos % 60. Dann: "%d:%02d".formatted(minutos, resto). Vor Java 15: String.format(...).
 pista.en: The minutes are segundos / 60 and what's left over is segundos % 60. Then: "%d:%02d".formatted(minutos, resto). Before Java 15: String.format(...).
@@ -268,7 +268,7 @@ java: 8
 tipo: metodo
 titulo.es: Redondear a unos decimales
 titulo.de: Auf Nachkommastellen runden
-titulo.en: Round to some decimals
+titulo.en: Round to decimal places
 enunciado.es: Devuelve valor redondeado a tantos decimales como diga decimales (0 o más). Ejemplo: redondear(3.14159, 2) devuelve 3.14 y redondear(2.5, 0), 3.0.
 enunciado.de: Gib valor auf so viele Nachkommastellen gerundet zurück, wie decimales angibt (0 oder mehr). Beispiel: redondear(3.14159, 2) gibt 3.14 zurück, redondear(2.5, 0) 3.0.
 enunciado.en: Return valor rounded to as many decimal places as decimales says (0 or more). Example: redondear(3.14159, 2) returns 3.14 and redondear(2.5, 0) returns 3.0.
@@ -297,7 +297,7 @@ titulo.es: Números de serie capicúa
 titulo.de: Palindrom-Seriennummern
 titulo.en: Palindrome serial numbers
 enunciado.es: Escribe la clase Cifras con dos métodos: invertir(n), que da la vuelta a las cifras de n (n >= 0), y esCapicua(n), que devuelve true si n se lee igual al revés. esCapicua tiene que usar invertir. Ejemplo: Cifras.invertir(123) devuelve 321 y Cifras.esCapicua(121), true.
-enunciado.de: Schreib die Klasse Cifras mit zwei Methoden: invertir(n), das die Ziffern von n umdreht (n >= 0), und esCapicua(n), das true zurückgibt, wenn n rückwärts gleich gelesen wird. esCapicua muss invertir benutzen. Beispiel: Cifras.invertir(123) gibt 321 zurück, Cifras.esCapicua(121) true.
+enunciado.de: Schreib die Klasse Cifras mit zwei Methoden: invertir(n), das die Ziffern von n umdreht (n >= 0), und esCapicua(n), das true zurückgibt, wenn sich n rückwärts genauso liest. esCapicua muss invertir benutzen. Beispiel: Cifras.invertir(123) gibt 321 zurück, Cifras.esCapicua(121) true.
 enunciado.en: Write the class Cifras with two methods: invertir(n), which reverses the digits of n (n >= 0), and esCapicua(n), which returns true if n reads the same backward. esCapicua must use invertir. Example: Cifras.invertir(123) returns 321 and Cifras.esCapicua(121) returns true.
 pista.es: Dividir el problema en métodos pequeños lo hace fácil: si ya tienes invertir, esCapicua es una sola línea: return invertir(n) == n;
 pista.de: Teilt man das Problem in kleine Methoden, wird es leicht: Hast du invertir schon, ist esCapicua nur eine Zeile: return invertir(n) == n;

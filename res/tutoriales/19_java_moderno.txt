@@ -76,7 +76,7 @@ es: inmutable para llevar datos: Java escribe por ti el constructor, los método
 es: equals, hashCode y toString.
 de: Erinnerst du dich an die Sichtung aus Thema 9, mit Konstruktor, finals, toString …? Seit Java 16 passt
 de: das alles in eine Zeile: record Avistamiento(double x, double y, int turno) {}. Ein Record ist eine
-de: unveränderliche Klasse für Daten: Java schreibt dir Konstruktor, die Methoden x(), y(), turno(),
+de: unveränderliche Klasse für Daten: Java schreibt dir den Konstruktor, die Methoden x(), y(), turno(),
 de: equals, hashCode und toString.
 en: Remember the Sighting from topic 9, with its constructor, its finals, its toString…? Since Java 16
 en: all of that fits on one line: record Avistamiento(double x, double y, int turno) {}. A record is an
@@ -118,7 +118,7 @@ codigo:
 --- tarea
 robot: usa:record
 es: Usa un record para guardar o predecir posiciones y apunta con él durante una ronda.
-de: Benutz ein Record, um Positionen zu speichern oder vorherzusagen, und ziel eine Runde lang damit.
+de: Benutz einen Record, um Positionen zu speichern oder vorherzusagen, und ziel eine Runde lang damit.
 en: Use a record to store or predict positions and aim with it for a round.
 --- tarea
 ejercicio: t19_record_posicion
@@ -154,7 +154,7 @@ de: jeden switch, der ihn nicht abdeckt. Und seit Java 22 sagt _: „Den brauche
 en: Since Java 21, switch accepts type and record patterns: case Eco(double d, double a) when d < 100
 en: checks the type, pulls out the components and adds a condition, all on one line.
 en: With a sealed hierarchy there's no need for default: add a new type and the compiler points out
-en: every switch that no longer covers it. And since Java 22, _ says "I don't need this one".
+en: every switch that no longer covers it. And since Java 22, _ says “I don't need this one”.
 codigo:
     sealed interface Lectura permits Eco, Ruido, Nada {}
     record Eco(double distancia, double angulo) implements Lectura {}
@@ -188,9 +188,9 @@ titulo.en: Fresh from the workshop
 --- pagina
 es: Java saca versión cada seis meses, y muchas novedades te hacen la vida más fácil. Repaso rápido de lo
 es: que ya has visto: var (10), switch con flechas y como expresión (14), bloques de texto (15),
-es: records e instanceof con patrón (16), sealed (17), switch con patrones, record patterns y colecciones
+es: records e instanceof con patrón (16), sealed (17), switch con patrones, patrones de record y colecciones
 es: secuenciadas (21), variables sin nombre con _ (22) y gatherers (24).
-de: Java erscheint alle sechs Monate, und viele Neuerungen machen dir das Leben leichter. Kurze Wiederholung:
+de: Java erscheint alle sechs Monate, und viele Neuerungen machen dir das Leben leichter. Kurze Wiederholung dessen, was du schon gesehen hast:
 de: var (10), switch mit Pfeilen und als Ausdruck (14), Textblöcke (15), Records und instanceof mit Muster (16),
 de: sealed (17), switch mit Mustern, Record-Muster und Sequenced Collections (21), unbenannte Variablen mit _ (22)
 de: und Gatherers (24).
@@ -203,7 +203,7 @@ es: Java 25 trae dos más. Los archivos compactos: un programa pequeño ya no ne
 es: basta con void main() { IO.println("¡Hola!"); }, ideal para probar ideas rápido.
 es: Y los cuerpos de constructor flexibles: puedes comprobar los argumentos ANTES de llamar a super(...),
 es: en vez de inventar métodos auxiliares estáticos solo para validar.
-de: Java 25 bringt zwei weitere. Kompakte Quelldateien: Ein kleines Programm braucht weder class noch static,
+de: Java 25 bringt zwei weitere. Kompakte Quelldateien: Ein kleines Programm braucht kein class und kein static mehr,
 de: void main() { IO.println("Hallo!"); } genügt, ideal, um Ideen schnell auszuprobieren.
 de: Und flexible Konstruktor-Rümpfe: Du darfst Argumente VOR dem Aufruf von super(...) prüfen,
 de: statt statische Hilfsmethoden nur fürs Validieren zu erfinden.

@@ -15,7 +15,7 @@ de: nach giros[4], fliegt der Roboter mit einer ArrayIndexOutOfBoundsException i
 de: Die Größe wird beim Anlegen festgelegt und ändert sich nie mehr.
 en: An array is a row of boxes of the same type, one after another, each with a number: its index.
 en: The first is 0, not 1, and the last is length - 1. Ask for giros[4] in an array of 4
-en: and the robot blows up with an ArrayIndexOutOfBoundsException. The size is fixed when it's created.
+en: and the robot blows up with an ArrayIndexOutOfBoundsException. The size is fixed when it's created and never changes.
 codigo:
     double[] giros = {90, -45, 30, -75};    // una coreografía
     int[] golpes = new int[10];             // diez ceros
@@ -29,7 +29,7 @@ de: Ein Array gibt deinem Roboter eine Choreografie, die der Gegner nicht vorher
 de: Mit % läuft der Index von selbst im Kreis und fällt nie heraus: Alle 30 Züge kommt die nächste Bewegung.
 de: Willst du einen anderen Tanz, änderst du die Zahlen im Array und sonst nichts.
 en: An array gives your robot a dance the rival can't predict and you can change easily.
-en: With % the index wraps around on its own and never falls off the end: every 30 turns, the next move.
+en: With % the index wraps around on its own and never falls off the end: every 30 ticks, the next move.
 en: Want a different dance? Change the numbers in the array and nothing else.
 codigo:
     double[] giros = {90, -45, 30, -75};
@@ -49,7 +49,7 @@ en: Move your robot with a dance stored in an array, using length so you never f
 --- tarea
 ejercicio: t07_ultima_pieza
 es: La última pieza del estante. Pista: no es la que tiene el número length.
-de: Das letzte Teil im Regal. Tipp: Es ist nicht das mit der Nummer length.
+de: Das letzte Teil im Regal. Hinweis: Es ist nicht das mit der Nummer length.
 en: The last part on the shelf. Hint: it's not the one numbered length.
 
 === l07_recorrer
@@ -83,7 +83,7 @@ de: Fach, und am Ende geht es mit % zurück zu 0. So hast du immer die letzten 5
 de: und kannst entscheiden: „Wenn die letzten Treffer zusammen viel sind, wechsle ich die Taktik.“
 en: A very robot-ish trick: remember the last hits in a circular array. You store each hit in the next box
 en: and, when you reach the end, go back to 0 with %. That way you always have the last 5 without the array
-en: growing, and you can decide: "if the last hits add up to a lot, I change tactics".
+en: growing, and you can decide: “if the last hits add up to a lot, I change tactics”.
 codigo:
     double[] ultimos = new double[5];
     int siguiente = 0;
@@ -139,13 +139,13 @@ en: for the console (println of an array only shows something like [D@1b6d3586) 
 en: To use it, put import java.util.Arrays; at the top of the file.
 --- pagina
 es: Un array puede contener arrays: es una tabla, filas y columnas. Divide la arena en casillas de 100
-es: y lleva la cuenta de dónde has visto al enemigo: visto[columna][fila]++. Con el tiempo sabrás
+es: y lleva la cuenta de dónde has visto al rival: visto[columna][fila]++. Con el tiempo conocerás
 es: sus rincones favoritos. visto.length son las columnas y visto[0].length las filas.
 de: Ein Array kann Arrays enthalten: eine Tabelle mit Zeilen und Spalten. Teil die Arena in Felder von 100
 de: und zähl mit, wo du den Gegner gesehen hast: visto[spalte][zeile]++. Mit der Zeit kennst du
 de: seine Lieblingsecken. visto.length sind die Spalten, visto[0].length die Zeilen.
 en: An array can hold arrays: that's a table, rows and columns. Split the arena into 100-unit squares
-en: and count where you've seen the enemy: visto[column][row]++. Over time you'll learn
+en: and count where you've seen the rival: visto[column][row]++. Over time you'll learn
 en: its favorite corners. visto.length is the number of columns and visto[0].length the rows.
 codigo:
     int[][] visto = new int[20][20];

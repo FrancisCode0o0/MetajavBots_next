@@ -81,7 +81,7 @@ public enum Etiqueta {
                         "Fortgeschrittenes Java: Generics, Lambdas, Streams, Threads, Entwurf und Tests.",
                         "Advanced Java: generics, lambdas, streams, threads, design and testing.");
             default:
-                return i.elegir("El límite. Pocos llegan.", "Die Grenze. Nur wenige kommen an.", "The limit. Few get here.");
+                return i.elegir("El límite. Pocos llegan.", "Die Grenze. Nur wenige schaffen es bis hierher.", "The limit. Few get here.");
         }
     }
 

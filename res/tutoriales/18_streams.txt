@@ -20,13 +20,13 @@ en: filter only lets through what meets a condition, map transforms each element
 en: a terminal operation (toList, count, min…) collects the result. They arrived in Java 8 along with lambdas,
 en: and instead of saying HOW to walk the list, you say WHAT you want from it.
 --- pagina
-es: El bucle del tema 15 para elegir al enemigo más cercano cabe en una tubería. min devuelve un Optional,
+es: El bucle del tema 15 para elegir al rival más cercano cabe en una tubería. min devuelve un Optional,
 es: una caja que puede estar vacía (si no ves a nadie). ifPresentOrElse decide qué hacer en cada caso
 es: sin que tengas que tocar un solo null.
 de: Die Schleife aus Thema 15, die den nächsten Gegner wählt, passt in eine Pipeline. min liefert ein Optional,
-de: eine Schachtel, die leer sein kann (wenn du niemanden siehst). ifPresentOrElse entscheidet für beide Fälle,
+de: eine Schachtel, die leer sein kann (wenn du niemanden siehst). ifPresentOrElse entscheidet für jeden Fall, was zu tun ist,
 de: ohne dass du ein einziges null anfasst.
-en: The loop from topic 15 that picks the nearest enemy fits in a pipeline. min returns an Optional,
+en: The loop from topic 15 that picks the nearest rival fits in a pipeline. min returns an Optional,
 en: a box that may be empty (if you can't see anyone). ifPresentOrElse decides what to do in each case
 en: without you touching a single null.
 codigo:
@@ -46,7 +46,7 @@ es: Los streams son perezosos: nada se ejecuta hasta la operación terminal. Si 
 es: lista.stream().filter(...) y no lo terminas, no pasa nada de nada. Y un stream se usa UNA vez:
 es: reutilizarlo lanza IllegalStateException. Si necesitas otro recorrido, pide otro stream().
 de: Streams sind faul: Nichts läuft vor der terminalen Operation. Schreibst du nur
-de: liste.stream().filter(...) und schließt es nicht ab, passiert rein gar nichts. Und ein Stream wird
+de: liste.stream().filter(...) und schließt ihn nicht ab, passiert rein gar nichts. Und ein Stream wird
 de: EINMAL benutzt: Ihn wiederzuverwenden wirft eine IllegalStateException. Brauchst du einen zweiten
 de: Durchlauf, hol dir ein neues stream().
 en: Streams are lazy: nothing runs until the terminal operation. If you write just list.stream().filter(...)
@@ -124,7 +124,7 @@ de: groupingBy(Treffer::waffe, Collectors.counting()) beantwortet „Wie viele T
 de: partitioningBy teilt in zwei, true und false. Und Collectors.teeing (Java 12) schickt jedes Element
 de: an zwei Kollektoren gleichzeitig und fügt deren Ergebnisse danach zusammen.
 en: Collectors.groupingBy splits elements into groups by a key and gives you a Map:
-en: groupingBy(Hit::weapon, Collectors.counting()) answers "how many hits from each weapon?".
+en: groupingBy(Hit::weapon, Collectors.counting()) answers “how many hits from each weapon?”.
 en: partitioningBy splits into two, true and false. And Collectors.teeing (Java 12) sends each element
 en: to two collectors at once and then merges their results.
 codigo:

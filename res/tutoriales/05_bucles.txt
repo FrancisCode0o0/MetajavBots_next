@@ -16,8 +16,8 @@ de: wiederholen etwas INNERHALB eines Zuges: zählen, suchen, rechnen. Und sie m
 de: denn solange deine Schleife kreist, endet der Zug nicht, und der Roboter erstarrt beim Nachdenken.
 en: Surprise: you're already using a loop without knowing it. The fight calls onTick over and over,
 en: 30 times a second: that's the game loop, and the arena runs it. The loops you write repeat something
-en: WITHIN a turn: counting, searching, calculating. And they must finish fast, because while your loop
-en: spins, the turn doesn't end and the robot freezes, lost in thought.
+en: WITHIN a tick: counting, searching, calculating. And they must finish fast, because while your loop
+en: spins, the tick doesn't end and the robot freezes, lost in thought.
 --- pagina
 es: while (condición) { ... } repite mientras la condición sea verdad. Dentro tiene que cambiar algo
 es: que acabe volviéndola falsa; si no, el bucle es infinito. La arena lo corta para que no se cuelgue
@@ -25,11 +25,11 @@ es: el juego, pero tu robot pierde el turno y el locutor no te lo perdonará.
 es: El despiste típico: olvidar el i++ o la línea que hace avanzar la cuenta.
 de: while (bedingung) { ... } wiederholt, solange die Bedingung wahr ist. Darin muss sich etwas ändern,
 de: das sie irgendwann falsch macht, sonst läuft die Schleife ewig. Die Arena bricht sie ab, damit das Spiel
-de: nicht hängt, aber dein Roboter verliert den Zug, und der Sprecher lässt dich das spüren.
+de: nicht hängt, aber dein Roboter verliert den Zug, und der Ansager lässt dich das spüren.
 de: Der typische Patzer: das i++ vergessen oder die Zeile, die das Zählen voranbringt.
 en: while (condition) { ... } repeats as long as the condition is true. Something inside must change
 en: so that it eventually becomes false; otherwise the loop is infinite. The arena cuts it off so the game
-en: doesn't hang, but your robot loses its turn and the announcer will never let you forget it.
+en: doesn't hang, but your robot loses its tick and the announcer will never let you forget it.
 en: The typical slip: forgetting the i++ or the line that moves the count along.
 codigo:
     // ¿Cuántos pasos de 50 caben hasta la pared derecha?
@@ -42,7 +42,7 @@ codigo:
     escribir("Caben " + pasos + " pasos");
 --- tarea
 ejercicio: t05_cuenta_atras
-es: La cuenta atrás antes del combate, con un bucle en vez de diez líneas.
+es: La cuenta atrás antes de la pelea, con un bucle en vez de diez líneas.
 de: Der Countdown vor dem Kampf, mit einer Schleife statt zehn Zeilen.
 en: The countdown before the fight, with a loop instead of ten lines.
 --- tarea
@@ -61,11 +61,11 @@ titulo.en: For: the counting loop
 es: Cuando sabes cuántas vueltas quieres, for lo junta todo en una línea: desde dónde empiezas, hasta cuándo
 es: sigues y cómo avanzas. for (int i = 0; i < 3; i++) da tres vueltas: con i valiendo 0, 1 y 2.
 es: Los programadores cuentan desde 0 (lo verás en los arrays), así que acostúmbrate pronto.
-de: Weißt du, wie viele Runden du willst, packt for alles in eine Zeile: wo du anfängst, wie lange du weitermachst
+de: Weißt du, wie viele Durchläufe du willst, packt for alles in eine Zeile: wo du anfängst, wie lange du weitermachst
 de: und wie du weiterzählst. for (int i = 0; i < 3; i++) läuft dreimal: mit i gleich 0, 1 und 2.
 de: Programmierer zählen ab 0 (das siehst du bei Arrays), also gewöhn dich früh daran.
-en: When you know how many laps you want, for puts it all on one line: where you start, how long you keep going
-en: and how you step. for (int i = 0; i < 3; i++) goes round three times: with i being 0, 1 and 2.
+en: When you know how many iterations you want, for puts it all on one line: where you start, how long you keep going
+en: and how you step. for (int i = 0; i < 3; i++) runs three times: with i being 0, 1 and 2.
 en: Programmers count from 0 (you'll see why with arrays), so get used to it early.
 codigo:
     @Override
@@ -80,10 +80,10 @@ es: El error de «uno de más o uno de menos» es tan común que tiene nombre (o
 es: i < 3 da 3 vueltas; i <= 3 da 4. Antes de dar por bueno un bucle, prueba de cabeza la primera
 es: y la última vuelta: ¿cuánto vale i? ¿Debería entrar? Diez segundos de esto ahorran diez minutos de búsqueda.
 de: Der „eins zu viel oder eins zu wenig“-Fehler ist so häufig, dass er einen Namen hat (Off-by-one).
-de: i < 3 läuft dreimal; i <= 3 viermal. Bevor du einer Schleife traust, spiel im Kopf die erste und die letzte
-de: Runde durch: Welchen Wert hat i? Sollte es hinein? Zehn Sekunden dafür sparen zehn Minuten Suche.
-en: The "one too many or one too few" bug is so common it has a name (off-by-one).
-en: i < 3 goes round 3 times; i <= 3 goes 4 times. Before trusting a loop, run the first and last lap
+de: i < 3 läuft dreimal; i <= 3 viermal. Bevor du einer Schleife traust, spiel im Kopf den ersten und den letzten
+de: Durchlauf durch: Welchen Wert hat i? Sollte es hinein? Zehn Sekunden dafür sparen zehn Minuten Suche.
+en: The “one too many or one too few” bug is so common it has a name (off-by-one).
+en: i < 3 runs 3 times; i <= 3 runs 4 times. Before trusting a loop, run the first and last iteration
 en: in your head: what's i? Should it get in? Ten seconds of this saves ten minutes of hunting.
 --- pagina
 es: Un for también sirve para probar opciones y quedarte con la mejor. Aquí el robot prueba ocho direcciones
@@ -114,8 +114,8 @@ en: Use a for in your robot (the onStart countdown or the best-direction search)
 --- tarea
 ejercicio: t05_tabla_de_danio
 es: Imprime la tabla del daño acumulado, una línea por vuelta.
-de: Gib die Tabelle des aufsummierten Schadens aus, eine Zeile pro Runde.
-en: Print the table of accumulated damage, one line per lap.
+de: Gib die Tabelle des aufsummierten Schadens aus, eine Zeile pro Durchlauf.
+en: Print the table of accumulated damage, one line per iteration.
 
 === l05_do_while_break
 tema: 05
@@ -127,22 +127,22 @@ titulo.en: At least once, and emergency exits
 es: do { ... } while (condición); hace la vuelta [[primero]] y pregunta después, así que siempre entra
 es: al menos una vez. Viene bien cuando la primera vuelta es obligatoria, como contar las cifras
 es: de un número: hasta el 0 tiene una. No olvides el punto y coma (;) del final, que aquí sí va.
-de: do { ... } while (bedingung); dreht [[zuerst]] eine Runde und fragt danach, läuft also mindestens einmal.
-de: Praktisch, wenn die erste Runde Pflicht ist, etwa beim Zählen der Ziffern einer Zahl: Selbst die 0 hat eine.
+de: do { ... } while (bedingung); macht [[zuerst]] einen Durchlauf und fragt danach, läuft also mindestens einmal.
+de: Praktisch, wenn der erste Durchlauf Pflicht ist, etwa beim Zählen der Ziffern einer Zahl: Selbst die 0 hat eine.
 de: Vergiss das Semikolon (;) am Ende nicht, hier gehört es hin.
-en: do { ... } while (condition); does the lap [[first]] and asks afterward, so it always runs at least once.
-en: Handy when the first lap is mandatory, like counting the digits of a number: even 0 has one.
+en: do { ... } while (condition); does the iteration [[first]] and asks afterward, so it always runs at least once.
+en: Handy when the first iteration is mandatory, like counting the digits of a number: even 0 has one.
 en: Don't forget the ; at the end; here it belongs.
 --- pagina
 es: break sale del bucle en el acto; continue se salta el resto de la vuelta y pasa a la siguiente.
 es: Úsalos cuando ya sabes la respuesta: si buscas el primer número primo, no hace falta seguir mirando
 es: después de encontrarlo. Bien usados ahorran trabajo; abusar de ellos hace el bucle difícil de seguir.
-de: break verlässt die Schleife sofort; continue überspringt den Rest der Runde und macht mit der nächsten weiter.
+de: break verlässt die Schleife sofort; continue überspringt den Rest des Durchlaufs und macht mit dem nächsten weiter.
 de: Nimm sie, wenn du die Antwort schon kennst: Suchst du die erste Primzahl, musst du danach nicht weitersuchen.
 de: Gut eingesetzt sparen sie Arbeit; zu viele davon machen die Schleife schwer zu verfolgen.
-en: break leaves the loop on the spot; continue skips the rest of the lap and moves on to the next.
+en: break leaves the loop on the spot; continue skips the rest of the iteration and moves on to the next.
 en: Use them when you already know the answer: if you're looking for the first prime, no need to keep
-en: looking once you've found it. Used well they save work; overused, they make loops hard to follow.
+en: looking once you've found it. Used well, they save work; overused, they make loops hard to follow.
 codigo:
     for (int n = 2; n < 100; n++) {
         if (n % 7 != 0) {
@@ -155,12 +155,12 @@ codigo:
 es: Un bucle dentro de otro da una vuelta entera por cada vuelta del de fuera: perfecto para dibujar
 es: rectángulos con letras, filas por columnas. Si el de fuera da 5 vueltas y el de dentro 10, son 50 en total.
 es: Con números grandes eso crece deprisa, y el robot tiene poco tiempo por turno: piensa antes de anidar.
-de: Eine Schleife in einer Schleife dreht eine volle Runde pro Runde der äußeren: ideal für Rechtecke aus
-de: Buchstaben, Zeilen mal Spalten. 5 Runden außen und 10 innen sind 50 insgesamt.
+de: Eine Schleife in einer Schleife macht einen vollen Durchlauf pro Durchlauf der äußeren: ideal für Rechtecke aus
+de: Buchstaben, Zeilen mal Spalten. 5 Durchläufe außen und 10 innen sind 50 insgesamt.
 de: Bei großen Zahlen wächst das schnell, und der Roboter hat pro Zug wenig Zeit: Erst denken, dann verschachteln.
-en: A loop inside another does a full lap for every lap of the outer one: perfect for drawing rectangles
-en: of letters, rows by columns. 5 laps outside and 10 inside make 50 in total.
-en: With big numbers that grows fast, and the robot has little time per turn: think before you nest.
+en: A loop inside another runs all its iterations for every iteration of the outer one: perfect for drawing rectangles
+en: of letters, rows by columns. 5 iterations outside and 10 inside make 50 in total.
+en: With big numbers that grows fast, and the robot has little time per tick: think before you nest.
 --- tarea
 ejercicio: t05_cuantas_cifras
 es: ¿Cuántas cifras tiene un número? Un trabajo para do-while.
@@ -176,22 +176,22 @@ en: Draw the arena frame with two loops, one inside the other.
 tema: 05
 orden: 90
 titulo.es: La carrera de obstáculos
-titulo.de: Das Hindernisrennen
+titulo.de: Der Hindernislauf
 titulo.en: The obstacle race
 --- pagina
 es: La carrera es otro juego: aquí no gana quien recibe menos daño, sino quien llega antes a la meta, a la derecha de la pista.
-de: Das Rennen ist ein anderes Spiel: Hier gewinnt nicht, wer weniger Schaden nimmt, sondern wer zuerst im Ziel ist, rechts auf der Strecke.
+de: Der Lauf ist ein anderes Spiel: Hier gewinnt nicht, wer weniger Schaden nimmt, sondern wer zuerst im Ziel ist, rechts auf der Strecke.
 en: The race is a different game: here the winner is not whoever takes less damage, but whoever reaches the finish first, on the right of the track.
 --- pagina
 es: Tiene su propio código: el de la pantalla de la carrera, no el del Taller.
 es:
 es: Compílalo allí antes de pulsar «¡Iniciar carrera!». Sin compilar, el robot se queda quieto en la salida.
-de: Es hat seinen eigenen Code: den auf dem Rennbildschirm, nicht den aus der Werkstatt.
+de: Er hat seinen eigenen Code: den auf dem Bildschirm des Laufs, nicht den aus der Werkstatt.
 de:
 de: Kompiliere ihn dort, bevor du „Lauf starten!“ drückst. Ohne Kompilieren bleibt der Roboter am Start stehen.
 en: It has its own code: the one on the race screen, not the Workshop one.
 en:
-en: Compile it there before pressing "Start race!". Without compiling, the robot stays still at the start.
+en: Compile it there before pressing “Start race!”. Without compiling, the robot stays still at the start.
 --- pagina
 es: Por el camino hay trampas (pinchos, sierras, fosos), barriles y rivales.
 es:
@@ -244,11 +244,11 @@ de: Hier ist das Ziel durchzuhalten: 60 Sekunden in einer riesigen Arena. Stehst
 en: Here the goal is to hold on: 60 seconds in a huge arena. If you are still standing at the end, you survived.
 --- pagina
 es: Como en la carrera, tiene su propio código en su pantalla. Está en Modo especial, en su última pestaña.
-de: Wie beim Rennen hat es seinen eigenen Code auf seinem Bildschirm. Du findest es im Spezialmodus, im letzten Reiter.
-en: Like the race, it has its own code on its screen. You find it in Special mode, in its last tab.
+de: Wie beim Lauf hat es seinen eigenen Code auf seinem Bildschirm. Du findest es im Spezialmodus, im letzten Reiter.
+en: Like the race, it has its own code on its screen. You'll find it in Special mode, in its last tab.
 --- pagina
 es: Los golpes duelen mucho más que en la carrera. Lo que más ayuda: no quedarse quieto y no acercarse a los robots que pegan fuerte.
-de: Treffer tun viel mehr weh als im Rennen. Was am meisten hilft: nicht stehen bleiben und nicht zu nah an die Roboter, die hart zuschlagen.
+de: Treffer tun viel mehr weh als im Lauf. Was am meisten hilft: nicht stehen bleiben und nicht zu nah an die Roboter, die hart zuschlagen.
 en: Hits hurt much more than in the race. What helps most: do not stand still and do not get close to the robots that hit hard.
 --- pagina
 es: Adivina: ¿qué da más monedas, romper todo lo que veas o sobrevivir?
@@ -273,5 +273,5 @@ en: The idea in words: EVERY TICK → IF a robot comes closer → move away → 
 --- tarea
 ejercicio: j_elegir_brazo
 es: Para atacar bien con lo que tienes a tiro, elige el brazo adecuado: resuelve este ejercicio.
-de: Um mit dem anzugreifen, was in Reichweite ist, wähl den richtigen Arm: Löse diese Übung.
+de: Um mit dem gut anzugreifen, was in Reichweite ist, wähl den richtigen Arm: Löse diese Übung.
 en: To attack well with whatever is in range, choose the right arm: solve this exercise.

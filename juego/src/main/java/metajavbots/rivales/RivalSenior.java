@@ -40,7 +40,7 @@ public final class RivalSenior extends Metajavbot {
                         "Strict time budget (2.5 ms and 260 steps/tick): punishes expensive loops and O(n²) algorithms."),
                 new Trilingue(
                         "Reduce la complejidad de cadaTurno(): evita bucles anidados y precalcula valores constantes fuera del turno.",
-                        "Reduziere die Komplexität von jedenZug(): Vermeide verschachtelte Schleifen und berechne Konstanten vorab.",
+                        "Reduziere die Komplexität von jedenZug(): Vermeide verschachtelte Schleifen und berechne Konstanten außerhalb des Zuges vorab.",
                         "Lower onTick() complexity: avoid nested loops and precompute constants outside the tick.")),
         ANGULOS("senior_angulos", "avispa", 0.80, 0L, 0L, 0L, false,
                 new Trilingue("Barón 361°", "Baron 361°", "Baron 361°"),
@@ -61,10 +61,10 @@ public final class RivalSenior extends Metajavbot {
                 new Trilingue(
                         "Sus dos brazos se pelearon por la misma taza de aceite sin synchronized y terminaron sirviendo café al árbitro.",
                         "Ihre zwei Arme stritten ohne synchronized um dieselbe Öltasse und servierten am Ende dem Schiedsrichter Kaffee.",
-                        "Its two arms fought over the same oil cup without synchronized and ended up pouring espresso on the referee."),
+                        "Its two arms fought over the same oil cup without synchronized and ended up serving coffee to the referee."),
                 new Trilingue(
                         "Robots en paralelo (2 contra 2 simultáneos): castiga estado estático mutable y colecciones sin sincronizar.",
-                        "Parallele Roboter (2 gegen 2 gleichzeitig): bestraft veränderlichen static-Zustand und unsichere Collections.",
+                        "Parallele Roboter (2 gegen 2 gleichzeitig): bestraft veränderlichen static-Zustand und nicht synchronisierte Collections.",
                         "Parallel robots (simultaneous 2v2): punishes mutable static state and unsynchronized collections."),
                 new Trilingue(
                         "En paralelo, evita campos static mutables y usa AtomicInteger, ConcurrentHashMap, synchronized o avisarAlEquipo().",
@@ -78,8 +78,8 @@ public final class RivalSenior extends Metajavbot {
                         "Tried to drink from a null mug in the cafeteria and threw an exception that blacked out the stadium."),
                 new Trilingue(
                         "Rompe el contacto de radar con camuflaje y flanqueos: castiga leer miAparato(), memoria() o listas sin comprobar null.",
-                        "Bricht den Radarkontakt mit Tarnung ab: bestraft Zugriffe auf meinGeraet(), gedaechtnis() oder Listen ohne null-Prüfung.",
-                        "Breaks radar lock with stealth dashes: punishes using myGadget(), memory(), or lists without null/empty checks."),
+                        "Bricht den Radarkontakt mit Tarnung und Flankenmanövern ab: bestraft Zugriffe auf meinGeraet(), gedaechtnis() oder Listen ohne null-Prüfung.",
+                        "Breaks radar lock with stealth and flanking: punishes using myGadget(), memory(), or lists without null/empty checks."),
                 new Trilingue(
                         "Comprueba siempre != null y !isEmpty() antes de acceder a miAparato(), memoria().get(...) o enemigosVistos().get(0).",
                         "Prüfe immer != null und !isEmpty(), bevor du auf meinGeraet(), gedaechtnis().get(...) oder gesehen().get(0) zugreifst.",
@@ -93,10 +93,10 @@ public final class RivalSenior extends Metajavbot {
                 new Trilingue(
                         "Presupuesto estricto de memoria (8 KB/turno) y desgaste de energía: castiga crear objetos en bucles y malgastar disparos.",
                         "Strenges Speicherbudget (8 KB/Zug) und Energiedruck: bestraft Objekterzeugung in Schleifen und Fehlschüsse.",
-                        "Strict memory budget (8 KB/tick) and energy pressure: punishes per-tick allocations and wasteful firing."),
+                        "Strict memory budget (8 KB/tick) and energy pressure: punishes creating objects in loops and wasteful firing."),
                 new Trilingue(
                         "Reutiliza campos primitivos, evita new dentro de bucles/cadaTurno() y dispara solo cuando tengas energía y puntería.",
-                        "Verwende primitive Felder wieder, vermeide new in Schleifen/jedenZug() und feuere nur mit Energie und Zielgenauigkeit.",
+                        "Verwende primitive Felder wieder, vermeide new in Schleifen/jedenZug() und feuere nur, wenn du Energie hast und gut zielst.",
                         "Reuse primitive fields, avoid new inside loops/onTick(), and fire only when energy and aim line up."));
 
         public final String id, modelo;

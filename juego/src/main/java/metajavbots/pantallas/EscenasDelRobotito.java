@@ -19,23 +19,23 @@ public final class EscenasDelRobotito {
 
     /** Un escenario por concepto, con su nombre en tres idiomas (sale abajo, en el suelo). */
     enum Escena {
-        DESPERTAR("01", "Primeros pasos: el robot se enciende", "Erste Schritte: der Roboter startet", "First steps: the robot boots up"),
+        DESPERTAR("01", "Primeros pasos: el robot se enciende", "Erste Schritte: Der Roboter startet", "First steps: the robot boots up"),
         TARROS("02", "Variables: tarros con etiqueta", "Variablen: Gläser mit Etikett", "Variables: labeled jars"),
         BALANZA("03", "Operadores: la balanza", "Operatoren: die Waage", "Operators: the scales"),
         APARCAMIENTO("04", "Condicionales: ¿qué plaza?", "Bedingungen: welcher Parkplatz?", "Conditionals: which parking spot?"),
-        OBRA("05", "Bucles: vuelta a vuelta, la torre", "Schleifen: Runde um Runde, der Turm", "Loops: lap by lap, the tower"),
+        OBRA("05", "Bucles: vuelta a vuelta, la torre", "Schleifen: Durchlauf um Durchlauf, der Turm", "Loops: lap by lap, the tower"),
         COCINA("06", "Métodos: una receta que se repite", "Methoden: ein Rezept zum Wiederholen", "Methods: a reusable recipe"),
         TAQUILLAS("07", "Arrays: taquillas numeradas desde 0", "Arrays: nummerierte Schließfächer ab 0", "Arrays: lockers numbered from 0"),
         PINTURA("08", "Textos: letra a letra", "Texte: Buchstabe für Buchstabe", "Text: letter by letter"),
         PLANOS("09", "Clases: el plano y sus robots", "Klassen: der Bauplan und seine Roboter", "Classes: the blueprint and its robots"),
         CAJA_FUERTE("10", "Encapsulación: la caja fuerte", "Kapselung: der Tresor", "Encapsulation: the safe"),
-        FAMILIA("11", "Herencia: la familia que hereda la antena", "Vererbung: die Familie erbt die Antenne", "Inheritance: the family inherits the antenna"),
+        FAMILIA("11", "Herencia: la familia que hereda la antena", "Vererbung: die Familie, die die Antenne erbt", "Inheritance: the family inherits the antenna"),
         CORO("12", "Polimorfismo: la misma orden, cada uno a su manera", "Polymorphie: derselbe Befehl, jeder auf seine Art",
                 "Polymorphism: same order, each in its own way"),
         ENCHUFES("13", "Interfaces: el mismo enchufe para todos", "Interfaces: dieselbe Steckdose für alle", "Interfaces: the same plug for all"),
         TROPIEZO("14", "Excepciones: tropieza, lo atrapa y sigue", "Ausnahmen: stolpert, fängt sich und macht weiter",
                 "Exceptions: trips, catches it and carries on"),
-        CLASIFICAR("15", "Colecciones: cada cosa en su saco", "Collections: alles in seinen Sack", "Collections: everything in its sack"),
+        CLASIFICAR("15", "Colecciones: cada cosa en su saco", "Collections: jedes Ding in seinen Sack", "Collections: everything in its sack"),
         CAJAS_T("16", "Genéricos: la caja <T> vale para todo", "Generics: die Kiste <T> passt für alles", "Generics: the <T> box fits anything"),
         MAQUINA("17", "Lambdas: la maquinita que transforma", "Lambdas: die kleine Verwandlungsmaschine", "Lambdas: the little transforming machine"),
         RIO("18", "Streams: el río de piezas y su filtro", "Streams: der Fluss der Teile und sein Filter", "Streams: the river of parts and its filter"),
@@ -47,7 +47,7 @@ public final class EscenasDelRobotito {
         ARQUITECTO("22", "Pruebas y diseño: el inspector de calidad", "Tests und Entwurf: der Qualitätsprüfer", "Testing and design: the quality inspector"),
         COMPOSICION("", "Composición: un robot hecho de piezas", "Komposition: ein Roboter aus Teilen", "Composition: a robot made of parts"),
         ABSTRACTA("", "Clases abstractas: el molde con huecos que rellena cada hijo", "Abstrakte Klassen: die Form mit Lücken, die jedes Kind füllt",
-                "Abstract classes: the mould with gaps each child fills in");
+                "Abstract classes: the mold with gaps each child fills in");
 
         final String tema;
         final Trilingue nombre;
@@ -87,7 +87,14 @@ public final class EscenasDelRobotito {
         float dx = x + w - 200, arriba = y + 56;
         if (e.ordinal() < Escena.CORO.ordinal()) fondoDeLasBases(p, e, x, y, w, reloj, suelo, dx, arriba);
         else fondoDeLoAvanzado(p, e, x, y, w, reloj, suelo, dx, arriba);
-        p.texto("◆ " + e.nombre.en(T.idioma == null ? Idioma.ES : T.idioma), x + 14, suelo + 4, 14, true, 0xF2EEE3, 0.85f);
+    }
+
+    /** El rótulo de la escena («◆ Bucles: …»), abajo a la izquierda: se dibuja al final, con su fondo, para que nada lo tape. */
+    static void rotulo(Pincel p, Escena e, float x, float y, float w, float h) {
+        String r = "◆ " + e.nombre.en(T.idioma == null ? Idioma.ES : T.idioma);
+        float suelo = y + h - 26;
+        p.caja(x + 8, suelo + 2, Math.min(w - 16, p.ancho(r, 14, true) + 14), 22, 6, 0x1B1F2A, 0.8f);
+        p.texto(r, x + 14, suelo + 4, 14, true, 0xF2EEE3, 0.95f);
     }
 
     /** Los fondos de los fundamentos, del control, de los datos y de las primeras ideas de objetos. */
@@ -339,6 +346,7 @@ public final class EscenasDelRobotito {
         float suelo = y + h - 26;
         for (int k = 0; k < 5; k++) objeto(p, e, x + 90 + k * 26, suelo - 26 - (k % 2) * 26, 24, 0xC98B4A, 0xC98B4A, 1);
         AnimacionDelCaso.robotito(p, x + 40, suelo, (float) Math.abs(Math.sin(reloj * 3)), true, 0x3FA9F5);
+        rotulo(p, e, x, y, w, h);
         p.sinRecorte();
     }
 

@@ -93,6 +93,7 @@ final class AnimacionDelCaso {
             case ALARMA: AccionesDelRobotito.alarma(ui, x, suelo, w, hh, esperado.substring(1), obtenido, f, r.bien); break;
             default: AccionesDelRobotito.escribir(ui, x, yy, w, hh, texto(esperado), texto(obtenido), f, r.bien, false, paseo(e, r)); break;
         }
+        EscenasDelRobotito.rotulo(p, escenaActual, x, y, w, h);
         p.sinRecorte();
         String veredicto = r.bien ? "✔ " + T.t("animacion.bien") : "✘ " + T.t("animacion.mal");
         p.textoDerecha(veredicto, x + w - 250, y + 8, ui.letra * 0.9f, true, r.bien ? VERDE : ROJO, 1);

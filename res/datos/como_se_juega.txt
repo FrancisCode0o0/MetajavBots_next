@@ -18,13 +18,13 @@ titulo.de: MetajavBots in zwei Minuten
 titulo.en: MetajavBots in two minutes
 objetivo.es: Tu robot pelea solo. Tú no lo manejas: le escribes órdenes en Java y él las obedece. Una orden es una línea de tu código, como «avanza 50 pasos».
 objetivo.de: Dein Roboter kämpft allein. Du steuerst ihn nicht: Du schreibst ihm Befehle in Java, und er gehorcht. Ein Befehl ist eine Zeile deines Codes, wie „fahr 50 Schritte vor“.
-objetivo.en: Your robot fights on its own. You do not drive it: you write it orders in Java and it obeys. An order is a line of your code, like "move 50 steps ahead".
+objetivo.en: Your robot fights on its own. You do not drive it: you write orders for it in Java and it obeys. An order is a line of your code, like “move 50 steps ahead”.
 gana.es: Gana la pelea quien recibe MENOS daño, no quien pega más.
-gana.de: Den Kampf gewinnt, wer WENIGER Schaden nimmt, nicht wer mehr austeilt.
+gana.de: Den Kampf gewinnt, wer WENIGER Schaden nimmt, nicht, wer mehr austeilt.
 gana.en: The fight is won by whoever takes LESS damage, not whoever hits harder.
 nota.es: Si empiezas de cero, sigue el camino «Empezar» del menú: te lleva paso a paso.
 nota.de: Fängst du bei null an, folge dem Weg „Loslegen“ im Menü: Er führt dich Schritt für Schritt.
-nota.en: If you are starting from zero, follow the "Start" path in the menu: it takes you step by step.
+nota.en: If you are starting from scratch, follow the “Start” path in the menu: it takes you step by step.
 metodos: cadaTurno, avanzar, atacar
 mecanicas: mec_turno, mec_como_se_gana
 pseudo.es:
@@ -41,18 +41,18 @@ pseudo.en:
     BETWEEN ROUNDS: change what did not work
 
 === taller
-titulo.es: El Taller
+titulo.es: El taller
 titulo.de: Die Werkstatt
-titulo.en: The Workshop
+titulo.en: The workshop
 objetivo.es: Aquí escribes el código de tu robot: lo que hará él solo en la pelea.
 objetivo.de: Hier schreibst du den Code deines Roboters: was er im Kampf allein tun wird.
 objetivo.en: Here you write your robot’s code: what it will do on its own in the fight.
-gana.es: Pulsa Compilar (Ctrl+S) para comprobar que no tiene faltas. Si sale en verde, tu robot ya pelea con ese código.
-gana.de: Drück Kompilieren (Strg+S), um zu prüfen, dass er keine Fehler hat. Ist es grün, kämpft dein Roboter schon mit diesem Code.
-gana.en: Press Compile (Ctrl+S) to check it has no mistakes. If it turns green, your robot already fights with that code.
-nota.es: El robot usa la última versión que compilaste bien. En Piezas cambias armas y piernas: mira la barra de peso.
-nota.de: Der Roboter nutzt die letzte Version, die fehlerfrei kompiliert hat. Unter Teile wechselst du Waffen und Beine: Achte auf den Gewichtsbalken.
-nota.en: The robot uses the last version that compiled fine. In Parts you change weapons and legs: watch the weight bar.
+gana.es: Pulsa «Compilar» (Ctrl+S) para comprobar que no tiene faltas. Si sale en verde, tu robot ya pelea con ese código.
+gana.de: Drück „Kompilieren“ (Strg+S), um zu prüfen, dass er keine Fehler hat. Ist es grün, kämpft dein Roboter schon mit diesem Code.
+gana.en: Press “Compile” (Ctrl+S) to check it has no mistakes. If it turns green, your robot already fights with that code.
+nota.es: El robot usa la última versión que compilaste bien. En «Piezas» cambias armas y piernas: mira la barra de peso.
+nota.de: Der Roboter nutzt die letzte Version, die fehlerfrei kompiliert hat. Unter „Teile“ wechselst du Waffen und Beine: Achte auf den Gewichtsbalken.
+nota.en: The robot uses the last version that compiled fine. In “Parts” you change weapons and legs: watch the weight bar.
 metodos: cadaTurno, alVerEnemigo, avanzar, girar, apuntarHacia, atacar
 mecanicas: mec_turno, mec_peso, mec_armas, mec_energia
 pseudo.es:
@@ -89,7 +89,7 @@ gana.de: Du gewinnst das Kapitel, wenn dein Roboter weniger Schaden nimmt als de
 gana.en: You win the chapter if your robot takes less damage than the rival. Then the next one opens.
 nota.es: Tu robot pelea con el código del Taller: tú solo miras. En los capítulos de jefe, tu entrenador está en el hospital.
 nota.de: Dein Roboter kämpft mit dem Code aus der Werkstatt: Du schaust nur zu. In Boss-Kapiteln liegt dein Trainer im Krankenhaus.
-nota.en: Your robot fights with its Workshop code: you just watch. In boss chapters, your coach is in hospital.
+nota.en: Your robot fights with its Workshop code: you just watch. In boss chapters, your coach is in the hospital.
 metodos: cadaTurno, alVerEnemigo, apuntarHacia, atacar
 mecanicas: mec_como_se_gana, mec_jefes
 pseudo.es:
@@ -114,13 +114,13 @@ titulo.de: Auf in den Kampf!
 titulo.en: Let’s fight!
 objetivo.es: Una pelea de varias rondas contra un robot de tu nivel. Tu robot pelea solo, con su código.
 objetivo.de: Ein Kampf über mehrere Runden gegen einen Roboter deiner Stufe. Dein Roboter kämpft allein, mit seinem Code.
-objetivo.en: A fight of several rounds against a robot of your level. Your robot fights on its own, with its code.
+objetivo.en: A fight of several rounds against a robot of your rank. Your robot fights on its own, with its code.
 gana.es: Gana quien recibe MENOS daño sumando todas las rondas. Si a un robot le rompen la cabeza, esa ronda se acaba.
 gana.de: Es gewinnt, wer über alle Runden WENIGER Schaden nimmt. Geht bei einem Roboter der Kopf kaputt, endet diese Runde.
 gana.en: Whoever takes LESS damage over all the rounds wins. If a robot’s head breaks, that round ends.
 nota.es: Entre rondas lees el informe y cambias código y piezas. «Paso a paso» para la pelea y te enseña tu código turno a turno.
 nota.de: Zwischen den Runden liest du den Bericht und änderst Code und Teile. „Schritt für Schritt“ hält den Kampf an und zeigt dir deinen Code Zug für Zug.
-nota.en: Between rounds you read the report and change code and parts. "Step by step" pauses the fight and shows you your code tick by tick.
+nota.en: Between rounds you read the report and change code and parts. “Step by step” pauses the fight and shows you your code tick by tick.
 metodos: cadaTurno, alVerEnemigo, apuntarHacia, atacar, alRecibirGolpe
 mecanicas: mec_como_se_gana, mec_turno, mec_partes
 pseudo.es:
@@ -141,13 +141,13 @@ titulo.es: Desafíos
 titulo.de: Herausforderungen
 titulo.en: Challenges
 objetivo.es: Aquí eliges cómo pelear: cuántas rondas, contra quién y de qué tipo (práctica, al azar, en equipo, todos contra todos…).
-objetivo.de: Hier wählst du, wie du kämpfst: wie viele Runden, gegen wen und welche Art (Übung, zufällig, im Team, alle gegen alle …).
+objetivo.de: Hier wählst du, wie du kämpfst: wie viele Runden, gegen wen und welche Art (Training, zufällig, im Team, alle gegen alle …).
 objetivo.en: Here you choose how to fight: how many rounds, against whom and what kind (practice, random, in a team, free-for-all…).
 gana.es: En casi todas gana quien recibe MENOS daño. La práctica no cuenta: sirve para probar sin miedo.
-gana.de: Fast überall gewinnt, wer WENIGER Schaden nimmt. Die Übung zählt nicht: Sie ist zum angstfreien Ausprobieren.
+gana.de: Fast überall gewinnt, wer WENIGER Schaden nimmt. Das Training zählt nicht: Es ist zum angstfreien Ausprobieren.
 gana.en: In almost all of them, whoever takes LESS damage wins. Practice does not count: it is for trying things without fear.
-nota.es: El Desafío fuerte sale cada 5 peleas: un rival tres rangos por encima y, si ganas, un premio grande.
-nota.de: Die große Herausforderung kommt alle 5 Kämpfe: ein Gegner drei Stufen höher und, wenn du gewinnst, ein großer Preis.
+nota.es: El Desafío fuerte sale cada 5 peleas: un rival tres etiquetas por encima y, si ganas, un premio grande.
+nota.de: Die große Herausforderung kommt alle 5 Kämpfe: ein Gegner drei Stufen höher und, wenn du gewinnst, eine große Belohnung.
 nota.en: The big Challenge comes every 5 fights: a rival three ranks higher and, if you win, a big prize.
 metodos: cadaTurno, alVerEnemigo, enemigosVistos, atacar
 mecanicas: mec_como_se_gana, mec_desgaste, mec_equipo
@@ -157,7 +157,7 @@ pseudo.es:
     SI quiero subir: pelea normal o desafío
 pseudo.de:
     Runden und Kampfart wählen
-    WENN ich etwas Neues testen will: Übung
+    WENN ich etwas Neues testen will: Training
     WENN ich aufsteigen will: normaler Kampf oder Herausforderung
 pseudo.en:
     choose rounds and kind of fight
@@ -194,17 +194,17 @@ pseudo.en:
 
 === carrera
 titulo.es: Carrera de obstáculos
-titulo.de: Hindernisrennen
+titulo.de: Hindernislauf
 titulo.en: Obstacle race
 objetivo.es: Una carrera por una pista larga con trampas, barriles y rivales. Aquí tu robot usa el código de esta pantalla, no el del Taller.
-objetivo.de: Ein Rennen auf einer langen Strecke mit Fallen, Fässern und Gegnern. Hier nutzt dein Roboter den Code dieses Bildschirms, nicht den aus der Werkstatt.
+objetivo.de: Ein Lauf auf einer langen Strecke mit Fallen, Fässern und Gegnern. Hier nutzt dein Roboter den Code dieses Bildschirms, nicht den aus der Werkstatt.
 objetivo.en: A race along a long track with traps, barrels and rivals. Here your robot uses the code on this screen, not the Workshop one.
 gana.es: Gana el primero que cruza la meta, a la derecha. Si se acaba el tiempo, gana el que va más adelante.
 gana.de: Es gewinnt, wer zuerst über die Ziellinie rechts fährt. Ist die Zeit um, gewinnt, wer weiter vorn ist.
 gana.en: The first to cross the finish line, on the right, wins. If time runs out, whoever is furthest ahead wins.
 nota.es: Compila antes de pulsar «¡Iniciar carrera!»: sin compilar, el robot se queda quieto. Romper barriles da monedas.
 nota.de: Kompiliere, bevor du „Lauf starten!“ drückst: Ohne Kompilieren bleibt der Roboter stehen. Fässer kaputt machen bringt Münzen.
-nota.en: Compile before pressing "Start race!": without compiling, the robot stands still. Breaking barrels gives coins.
+nota.en: Compile before pressing “Start race!”: without compiling, the robot stands still. Breaking barrels gives coins.
 metodos: avanzar, girarHacia, obstaculos, atacar
 mecanicas: mec_trampas, mec_terrenos, mec_peso
 pseudo.es:
@@ -237,7 +237,7 @@ gana.es: Si sigues en pie al acabar la cuenta atrás, has sobrevivido. Cada cosa
 gana.de: Stehst du noch, wenn der Countdown endet, hast du überlebt. Jedes Ding und jeder Roboter, den du zerstörst, bringt Münzen.
 gana.en: If you are still standing when the countdown ends, you survived. Each thing or robot you break gives coins.
 nota.es: Aquí los golpes duelen mucho más que en la carrera: no te quedes quieto.
-nota.de: Hier tun Treffer viel mehr weh als im Rennen: Bleib nicht stehen.
+nota.de: Hier tun Treffer viel mehr weh als beim Hindernislauf: Bleib nicht stehen.
 nota.en: Here hits hurt much more than in the race: do not stand still.
 metodos: obstaculos, enemigosVistos, atacar, avanzar
 mecanicas: mec_trampas, mec_partes
@@ -263,13 +263,13 @@ titulo.de: Minispiele
 titulo.en: Minigames
 objetivo.es: Cinco retos cortos contra un muñeco, cada uno con una sola cosa nueva: moverse, girar, apuntar, disparar y esquivar.
 objetivo.de: Fünf kurze Aufgaben gegen eine Puppe, jede mit nur einer neuen Sache: fahren, drehen, zielen, schießen und ausweichen.
-objetivo.en: Five short challenges against a dummy, each with just one new thing: move, turn, aim, shoot and dodge.
+objetivo.en: Five short tasks against a dummy, each with just one new thing: move, turn, aim, shoot and dodge.
 gana.es: Cada reto dice su meta (por ejemplo, acertar 3 veces). Si la cumples en la ronda, queda hecho.
 gana.de: Jede Aufgabe nennt ihr Ziel (zum Beispiel 3-mal treffen). Schaffst du es in der Runde, ist sie erledigt.
-gana.en: Each challenge states its goal (for example, hit 3 times). If you meet it in the round, it is done.
+gana.en: Each task states its goal (for example, hit 3 times). If you meet it in the round, it is done.
 nota.es: Usan el código de tu robot: escríbelo y compílalo en el Taller (botón «Taller» de cada reto) y luego pulsa «Jugar».
 nota.de: Sie nutzen den Code deines Roboters: Schreib und kompiliere ihn in der Werkstatt (Knopf „Werkstatt“ jeder Aufgabe) und drück dann „Spielen“.
-nota.en: They use your robot’s code: write and compile it in the Workshop ("Workshop" button on each challenge) and then press "Play".
+nota.en: They use your robot’s code: write and compile it in the Workshop (“Workshop” button on each task) and then press “Play”.
 metodos: avanzar, girar, apuntarHacia, atacar, obstaculos
 mecanicas: mec_turno, mec_radar
 pseudo.es:
@@ -283,7 +283,7 @@ pseudo.de:
     kompilieren und spielen
     WENN es nicht klappt: eine Sache ändern und noch einmal probieren
 pseudo.en:
-    read the challenge’s goal
+    read the task’s goal
     in the Workshop, write only what it asks
     compile and play
     IF it does not work: change one thing and try again
@@ -292,9 +292,9 @@ pseudo.en:
 titulo.es: Modo especial
 titulo.de: Spezialmodus
 titulo.en: Special mode
-objetivo.es: Pruebas especiales: jefes de cada tema, peleas con poco tope de cálculo, peleas Senior, retos de programar y robots de otros.
-objetivo.de: Besondere Prüfungen: Bosse für jedes Thema, Kämpfe mit wenig Rechenlimit, Senior-Kämpfe, Programmieraufgaben und Roboter von anderen.
-objetivo.en: Special tests: bosses for each topic, fights with a low step limit, Senior fights, coding challenges and other people’s robots.
+objetivo.es: Pruebas especiales: jefes de cada tema, peleas con poco tope de cálculo, peleas Senior, retos de programar y robots de otros jugadores.
+objetivo.de: Besondere Prüfungen: Bosse für jedes Thema, Kämpfe mit niedrigem Rechenlimit, Senior-Kämpfe, Programmieraufgaben und Roboter anderer Spieler.
+objetivo.en: Special tests: bosses for each topic, fights with a low step limit, Senior fights, programming tasks and other players’ robots.
 gana.es: Cada pestaña dice su meta. En las peleas, como siempre, gana quien recibe menos daño.
 gana.de: Jeder Reiter nennt sein Ziel. In den Kämpfen gewinnt wie immer, wer weniger Schaden nimmt.
 gana.en: Each tab states its goal. In the fights, as always, whoever takes less damage wins.
@@ -348,11 +348,11 @@ titulo.en: Exercises
 objetivo.es: Ejercicios cortos de Java que se comprueban solos. No son de la arena: son para practicar.
 objetivo.de: Kurze Java-Übungen, die sich selbst prüfen. Sie sind nicht für die Arena: Sie sind zum Üben.
 objetivo.en: Short Java exercises that check themselves. They are not for the arena: they are for practice.
-gana.es: Escribe tu respuesta y pulsa Comprobar (Ctrl+S): cada caso sale en verde o en rojo. Está hecho cuando todos salen en verde.
-gana.de: Schreib deine Antwort und drück Prüfen (Strg+S): Jeder Fall wird grün oder rot. Fertig ist es, wenn alle grün sind.
-gana.en: Write your answer and press Check (Ctrl+S): each case turns green or red. It is done when they are all green.
+gana.es: Escribe tu respuesta y pulsa «Comprobar» (Ctrl+S): cada caso sale en verde o en rojo. Está hecho cuando todos salen en verde.
+gana.de: Schreib deine Antwort und drück „Prüfen“ (Strg+S): Jeder Fall wird grün oder rot. Fertig ist es, wenn alle grün sind.
+gana.en: Write your answer and press “Check” (Ctrl+S): each case turns green or red. It is done when they are all green.
 nota.es: Si te atascas, pide una pista. Tras 3 intentos puedes ver la solución. Cada ejercicio nuevo da 0,25 monedas.
-nota.de: Wenn du feststeckst, hol dir einen Tipp. Nach 3 Versuchen kannst du die Lösung sehen. Jede neue Übung bringt 0,25 Münzen.
+nota.de: Wenn du feststeckst, hol dir einen Hinweis. Nach 3 Versuchen kannst du die Lösung sehen. Jede neue Übung bringt 0,25 Münzen.
 nota.en: If you get stuck, ask for a hint. After 3 tries you can see the solution. Each new exercise gives 0.25 coins.
 metodos:
 mecanicas: mec_dinero_rangos
@@ -405,17 +405,17 @@ pseudo.en:
 
 === demostraciones
 titulo.es: Demostraciones
-titulo.de: Demonstrationen
-titulo.en: Demonstrations
+titulo.de: Demos
+titulo.en: Demos
 objetivo.es: Mira cómo lo hace un robot en la arena mientras el entrenador lo explica, línea a línea.
 objetivo.de: Schau zu, wie ein Roboter es in der Arena macht, während der Trainer es Zeile für Zeile erklärt.
 objetivo.en: Watch a robot do it in the arena while the coach explains it, line by line.
-gana.es: No hay que ganar: pulsa Continuar para el paso siguiente o Repetir paso para verlo otra vez.
-gana.de: Hier gibt es nichts zu gewinnen: Drück Weiter für den nächsten Schritt oder Schritt wiederholen, um ihn noch einmal zu sehen.
-gana.en: There is nothing to win: press Continue for the next step or Repeat step to see it again.
-nota.es: Antes de pulsar Continuar, intenta adivinar qué hará el robot.
-nota.de: Bevor du Weiter drückst, versuch zu erraten, was der Roboter tun wird.
-nota.en: Before pressing Continue, try to guess what the robot will do.
+gana.es: No hay que ganar: pulsa «Seguir» para el paso siguiente o «Repetir paso» para verlo otra vez.
+gana.de: Hier gibt es nichts zu gewinnen: Drück „Weiter“ für den nächsten Schritt oder „Schritt wiederholen“, um ihn noch einmal zu sehen.
+gana.en: There is nothing to win: press “Continue” for the next step or “Repeat step” to see it again.
+nota.es: Antes de pulsar «Seguir», intenta adivinar qué hará el robot.
+nota.de: Bevor du „Weiter“ drückst, versuch zu erraten, was der Roboter tun wird.
+nota.en: Before pressing “Continue”, try to guess what the robot will do.
 metodos: cadaTurno, avanzar, apuntarHacia, atacar
 mecanicas: mec_turno, mec_radar
 pseudo.es:
@@ -435,18 +435,18 @@ pseudo.en:
     continue
 
 === tienda
-titulo.es: La Tienda
+titulo.es: La tienda
 titulo.de: Der Laden
-titulo.en: The Shop
+titulo.en: The shop
 objetivo.es: Cambias monedas por piezas nuevas: armas, cabezas, núcleos y piernas.
 objetivo.de: Du tauschst Münzen gegen neue Teile: Waffen, Köpfe, Kerne und Beine.
 objetivo.en: You trade coins for new parts: weapons, heads, cores and legs.
 gana.es: Al comprar una pieza pasas un reto de código corto, y queda lista para montarla en el Taller.
 gana.de: Nach dem Kauf eines Teils löst du eine kurze Code-Aufgabe, dann kannst du es in der Werkstatt einbauen.
-gana.en: When you buy a part you pass a short code challenge, and then it is ready to fit in the Workshop.
+gana.en: When you buy a part you pass a short code task, and then it is ready to fit in the Workshop.
 nota.es: Antes de comprar, mira el peso: si te pasas del 120 % de lo que aguantan tus piernas, no puedes pelear.
-nota.de: Achte vor dem Kauf auf das Gewicht: Über 120 % von dem, was deine Beine tragen, kannst du nicht kämpfen.
-nota.en: Before buying, check the weight: over 120% of what your legs can carry, you cannot fight.
+nota.de: Achte vor dem Kauf auf das Gewicht: Liegst du über 120 % dessen, was deine Beine tragen, kannst du nicht kämpfen.
+nota.en: Before buying, check the weight: if you go over 120% of what your legs can carry, you cannot fight.
 metodos: armaIzquierda, alcanceDerecha, pesoTotal
 mecanicas: mec_tienda, mec_dinero_rangos, mec_peso, mec_armas
 pseudo.es:
@@ -463,7 +463,7 @@ pseudo.en:
     look at my coins
     choose a part that suits my way of fighting
     check the weight fits
-    buy it and pass its challenge
+    buy it and pass its task
 
 === pieza
 titulo.es: Diseña tu pieza
@@ -473,11 +473,11 @@ objetivo.es: Diseñas tu propia pieza escribiendo una clase de Java.
 objetivo.de: Du entwirfst dein eigenes Teil, indem du eine Java-Klasse schreibst.
 objetivo.en: You design your own part by writing a Java class.
 gana.es: Pulsa «Compilar y validar»: si cabe en el presupuesto de 100 puntos, «Guardar y montar» la pone en tu robot.
-gana.de: Drück „Kompilieren & prüfen“: Passt es ins Budget von 100 Punkten, baut „Speichern & einbauen“ es in deinen Roboter ein.
-gana.en: Press "Compile & validate": if it fits the 100-point budget, "Save & mount" puts it on your robot.
+gana.de: Drück „Kompilieren und prüfen“: Passt es ins Budget von 100 Punkten, baut „Speichern und einbauen“ es in deinen Roboter ein.
+gana.en: Press “Compile and validate”: if it fits the 100-point budget, “Save and mount” puts it on your robot.
 nota.es: Cuanto más fuerte en una cosa, menos puntos te quedan para las demás.
 nota.de: Je stärker in einer Sache, desto weniger Punkte bleiben für den Rest.
-nota.en: The stronger in one thing, the fewer points you have left for the rest.
+nota.en: The stronger it is in one thing, the fewer points you have left for the rest.
 metodos:
 mecanicas: mec_armas, mec_peso
 pseudo.es:
@@ -491,21 +491,21 @@ pseudo.de:
 pseudo.en:
     share out the 100 points
     compile and validate
-    IF it fits: save and fit
+    IF it fits: save and mount
 
 === depuracion
-titulo.es: Depuración y Testing
-titulo.de: Debugging und Testen
-titulo.en: Debugging and Testing
+titulo.es: Depuración y pruebas
+titulo.de: Debugging und Tests
+titulo.en: Debugging and testing
 objetivo.es: Aquí arreglas robots rotos (con una pista) y practicas el depurador y las pruebas de código.
-objetivo.de: Hier reparierst du kaputte Roboter (mit einem Tipp) und übst den Debugger und Code-Tests.
+objetivo.de: Hier reparierst du kaputte Roboter (mit einem Hinweis) und übst den Umgang mit dem Debugger und mit Code-Tests.
 objetivo.en: Here you fix broken robots (with a hint) and practice the debugger and code tests.
 gana.es: Un robot roto queda arreglado cuando su código compila, lo has cambiado y cumple su meta en la arena.
 gana.de: Ein kaputter Roboter ist repariert, wenn sein Code kompiliert, du ihn geändert hast und er sein Ziel in der Arena erreicht.
 gana.en: A broken robot is fixed when its code compiles, you have changed it and it meets its goal in the arena.
 nota.es: En la pelea, «Paso a paso» (o F9) te deja ver qué línea actúa en cada turno.
 nota.de: Im Kampf zeigt dir „Schritt für Schritt“ (oder F9), welche Zeile in jedem Zug wirkt.
-nota.en: In the fight, "Step by step" (or F9) lets you see which line acts each tick.
+nota.en: In the fight, “Step by step” (or F9) lets you see which line acts each tick.
 metodos: escribir, decir
 mecanicas: mec_turno, mec_tope
 pseudo.es:

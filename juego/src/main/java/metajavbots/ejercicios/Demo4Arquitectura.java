@@ -28,11 +28,11 @@ final class Demo4Arquitectura {
                 "Demo 4: OOP in combat, gadgets, energy, and step limit");
         Trilingue resumen = new Trilingue(
                 "Comprueba en vivo cómo los modificadores POO, los aparatos, el gasto de energía "
-                        + "y el tope de pasos con deuda de turnos cambian el combate real.",
+                        + "y el tope de cálculo con deuda de turnos cambian la pelea real.",
                 "Erlebe live, wie OOP-Modifikatoren, Geräte, Energieverbrauch "
                         + "und das Rechenlimit mit Zugschuld den echten Kampf verändern.",
-                "See live how OOP modifiers, gadgets, energy management, "
-                        + "and the step limit with turn debt change real combat.");
+                "See live how OOP modifiers, gadgets, energy use, "
+                        + "and the step limit with tick debt change real fights.");
         Trilingue codPooExp = new Trilingue(codigoPooExpuestoEs(), codigoPooExpuestoDe(), codigoPooExpuestoEn());
         Trilingue codPooEnc = new Trilingue(codigoPooEncapsuladoEs(), codigoPooEncapsuladoDe(), codigoPooEncapsuladoEn());
         Trilingue codApErr = new Trilingue(codigoAparatoErrorEs(), codigoAparatoErrorDe(), codigoAparatoErrorEn());
@@ -68,11 +68,11 @@ final class Demo4Arquitectura {
                         "Die Engine prüft beim Rundenstart die Java-Modifikatoren deiner Klasse.\n"
                                 + "Hier legen die Zeilen 4 und 5 veränderbaren Zustand ungeschützt als public offen.\n"
                                 + "Das kostet in der Arena: Der Gegner erkennt dich früher (+16 % Gegner-Radar bei zwei Feldern) "
-                                + "und du nimmst mehr Schaden pro Treffer (+8 % erlittener Schaden). Schau auf den Treffer eben!",
+                                + "und du nimmst mehr Schaden pro Treffer (+8 % erlittener Schaden). Schau dir den Treffer von eben an!",
                         "The engine inspects your class's Java modifiers when each round starts.\n"
                                 + "Here lines 4 and 5 expose mutable state as unencapsulated public fields.\n"
-                                + "That carries a real arena penalty: enemies detect you farther away (+16% enemy radar with two fields) "
-                                + "and you take more damage per hit (+8% incoming damage). Watch the hit it just took!"),
+                                + "That carries a real arena penalty: the rival detects you from farther away (+16% rival radar with two fields) "
+                                + "and you take more damage per hit (+8% damage taken). Watch the hit it just took!"),
                 4, new int[]{5, 8}, true, 12, 55, Accion.POO_EXPUESTO, Resaltado.ERROR, null);
     }
 
@@ -85,15 +85,15 @@ final class Demo4Arquitectura {
                         "Encapsulating with private, final, and static"),
                 new Trilingue(
                         "Ahora el estado es private (líneas 4, 5 y método auxiliar en línea 10): reduces el daño recibido (-6 %) "
-                                + "y acortas el radar enemigo (-8 %).\n"
-                                + "Las constantes private final (líneas 6 y 7) amplían tu presupuesto de pasos por turno (+10 %).\n"
-                                + "El campo static (línea 8) conserva memoria de clase y en combates por equipos (2v2+) aporta +10 % radar y +8 % recarga.",
+                                + "y acortas el radar del rival (-8 %).\n"
+                                + "Las constantes private final (líneas 6 y 7) amplían tu presupuesto de pasos de cálculo por turno (+10 %).\n"
+                                + "El campo static (línea 8) conserva memoria de clase y en peleas por equipos (2v2+) aporta +10 % radar y +8 % recarga.",
                         "Jetzt ist der Zustand private (Zeilen 4, 5 und Hilfsmethode in Zeile 10): Du verringerst erlittenen Schaden (-6 %) "
                                 + "und verkürzt das Gegner-Radar (-8 %).\n"
-                                + "Die Konstanten private final (Zeilen 6 und 7) erweitern dein Schrittbudget pro Zug (+10 %).\n"
+                                + "Die Konstanten private final (Zeilen 6 und 7) erweitern dein Rechenschritt-Budget pro Zug (+10 %).\n"
                                 + "Das Feld static (Zeile 8) hält Klassenspeicher und bringt im Teamkampf (2v2+) +10 % Radar und +8 % Aufladung.",
-                        "Now the state is private (lines 4, 5, and helper method on line 10): you cut incoming damage (-6%) "
-                                + "and shrink enemy radar range (-8%).\n"
+                        "Now the state is private (lines 4, 5, and helper method on line 10): you cut damage taken (-6%) "
+                                + "and shrink the rival's radar range (-8%).\n"
                                 + "The private final constants (lines 6 and 7) expand your per-tick step budget (+10%).\n"
                                 + "The static field (line 8) keeps class memory and in team fights (2v2+) grants +10% own radar and +8% energy recharge."),
                 4, new int[]{6, 8, 10}, true, 12, 55, Accion.POO_ENCAPSULADO, Resaltado.BIEN, codigo);
@@ -155,7 +155,7 @@ final class Demo4Arquitectura {
                                 + "Al guardar una reserva mínima con energia() >= RESERVA_MINIMA (línea 16), "
                                 + "la recarga natural por turno recupera energía entre ráfagas.",
                         "Schau oben im HUD auf den gelben Energiebalken.\n"
-                                + "Schießen mit angreifen() und spezial() verbrauchen sofort Energie; ohne sie feuern die Waffen nicht.\n"
+                                + "Schießen mit angreifen() und das Aktivieren von spezial() verbrauchen sofort Energie; ohne sie feuern die Waffen nicht.\n"
                                 + "Wenn du mit energie() >= MINDESTRESERVE (Zeile 16) eine Reserve hältst, "
                                 + "füllt die natürliche Aufladung pro Zug deine Energie zwischen Salven wieder auf.",
                         "Watch the yellow energy bar in the top HUD.\n"
@@ -171,18 +171,18 @@ final class Demo4Arquitectura {
                 new Trilingue(
                         "Tope de cálculo (TopeDeCalculo) y deuda de turnos",
                         "Rechenlimit (TopeDeCalculo) und Zugschuld",
-                        "Step limit (TopeDeCalculo) and turn debt"),
+                        "Step limit (TopeDeCalculo) and tick debt"),
                 new Trilingue(
                         "Cada turno tu código tiene un presupuesto limitado de pasos de cálculo.\n"
                                 + "El bucle anidado 200 × 200 de las líneas 7 y 8 supera ese tope: el motor corta la ejecución con TopeDeCalculo.\n"
                                 + "Como penalización, el robot contrae deuda de turnos y queda bloqueado sin ejecutar tu código hasta saldarla.",
                         "In jedem Zug hat dein Code ein begrenztes Budget an Rechenschritten.\n"
-                                + "Die verschachtelte 200 × 200-Schleife in den Zeilen 7 und 8 überschreitet dieses Limit: "
+                                + "Die verschachtelte 200-×-200-Schleife in den Zeilen 7 und 8 überschreitet dieses Limit: "
                                 + "Die Engine bricht den Zug mit TopeDeCalculo ab.\n"
                                 + "Als Strafe entsteht Zugschuld, und der Roboter bleibt ohne Code-Ausführung blockiert, bis sie abgebaut ist.",
                         "On every tick your code has a finite budget of computation steps.\n"
                                 + "The nested 200 × 200 loop on lines 7 and 8 blows past that cap: the engine aborts the tick with TopeDeCalculo.\n"
-                                + "As a penalty, the robot incurs turn debt and stays locked out of running your code until the debt is paid off."),
+                                + "As a penalty, the robot incurs tick debt and stays locked out of running your code until the debt is paid off."),
                 8, new int[]{7, 9}, true, 8, 45, Accion.TOPE_DEUDA, Resaltado.ERROR, codigo);
     }
 
@@ -190,22 +190,22 @@ final class Demo4Arquitectura {
         return new Paso(
                 "tope_optimizado",
                 new Trilingue(
-                        "Versión optimizada dentro del presupuesto de pasos",
-                        "Optimierte Version innerhalb des Schrittbudgets",
+                        "Versión optimizada dentro del presupuesto de pasos de cálculo",
+                        "Optimierte Version innerhalb des Rechenschritt-Budgets",
                         "Optimized version within the step budget"),
                 new Trilingue(
                         "Al eliminar el bucle innecesario, cadaTurno() hace trabajo directo O(1) con enemigosVistos() "
-                                + "y entra de sobra en el tope de pasos.\n"
+                                + "y entra de sobra en el tope de cálculo.\n"
                                 + "Además, private final ERROR_MAX (línea 5) añade margen extra al presupuesto.\n"
                                 + "Sin TopeDeCalculo ni deuda de turnos, el robot responde en todos los turnos, alinea la mira y acierta al muñeco.",
                         "Ohne die unnötige Schleife erledigt jedenZug() direkte O(1)-Arbeit mit gesehen() "
-                                + "und bleibt locker im Schrittbudget.\n"
+                                + "und bleibt locker im Rechenschritt-Budget.\n"
                                 + "Zudem gibt private final MAX_FEHLER (Zeile 5) zusätzlichen Spielraum beim Limit.\n"
                                 + "Ohne TopeDeCalculo und Zugschuld reagiert der Roboter in jedem Zug, richtet das Visier aus und trifft die Puppe.",
                         "By removing the wasteful loop, onTick() does direct O(1) work with seenEnemies() "
                                 + "and stays well inside the step budget.\n"
                                 + "On top of that, private final MAX_ERROR (line 5) adds extra step headroom.\n"
-                                + "With zero TopeDeCalculo cuts and zero turn debt, the robot acts every tick, lines up its sight, and hits the dummy."),
+                                + "With zero TopeDeCalculo cuts and zero tick debt, the robot acts every tick, lines up its sight, and hits the dummy."),
                 16, new int[]{5, 9, 15, 17}, true, 12, 110, Accion.TOPE_OPTIMO, Resaltado.BIEN, codigo);
     }
 
@@ -217,7 +217,7 @@ final class Demo4Arquitectura {
                         "Java-Architektur = echte Leistung in der Arena",
                         "Java architecture = real arena performance"),
                 new Trilingue(
-                        "En MetajavBots el buen diseño Java se nota físicamente en combate:\n"
+                        "En MetajavBots el buen diseño Java se nota físicamente en la pelea:\n"
                                 + "1. Encapsula con private, fija constantes con final, coordina equipos con static y evita campos public mutables.\n"
                                 + "2. Recoge aparatos, revisa miAparato().tipo() y conéctalos en su hueco real.\n"
                                 + "3. Cuida tu energia() y evita bucles pesados para no sufrir TopeDeCalculo ni deuda de turnos; "
@@ -225,12 +225,12 @@ final class Demo4Arquitectura {
                         "In MetajavBots wirkt sich sauberes Java-Design physisch im Kampf aus:\n"
                                 + "1. Kapsle mit private, setze Konstanten mit final, koordiniere Teams mit static und meide veränderbare public-Felder.\n"
                                 + "2. Hebe Geräte auf, prüfe meinGeraet().typ() und schließe sie am richtigen Platz an.\n"
-                                + "3. Achte auf deine energie() und vermeide schwere Schleifen gegen TopeDeCalculo und Zugschuld; "
+                                + "3. Achte auf deine energie() und vermeide schwere Schleifen, um TopeDeCalculo und Zugschuld zu entgehen; "
                                 + "nutze es jetzt in der [[Werkstatt]] und den [[Übungen]].",
-                        "In MetajavBots, clean Java design translates directly into physical combat performance:\n"
+                        "In MetajavBots, clean Java design translates directly into physical performance in fights:\n"
                                 + "1. Encapsulate with private, lock constants with final, coordinate teams with static, and avoid mutable public fields.\n"
                                 + "2. Pick up gadgets, inspect myGadget().type(), and plug them into their valid slot.\n"
-                                + "3. Watch your energy() and avoid heavy loops to prevent TopeDeCalculo and turn debt; "
+                                + "3. Watch your energy() and avoid heavy loops to prevent TopeDeCalculo and tick debt; "
                                 + "apply it now in the [[Workshop]] and [[Exercises]]."),
                 5, new int[]{9, 15, 16, 17}, true, 0, 0, Accion.CIERRE, Resaltado.BIEN, codigo);
     }

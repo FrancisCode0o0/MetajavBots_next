@@ -133,9 +133,10 @@ public final class MiniJuegos implements Pantalla {
         while (tDesc > 11f && p.altoDeParrafo(desc, w - 36, tDesc) > maxDescH) tDesc -= 0.5f;
         yy += p.parrafo(desc, x + 18, yy, w - 36, tDesc, ui.tema.textoSuave, 1) + 5;
         String obj = Objetivo.texto(objetivo);
-        float tObj = ajustarAncho(p, obj, w - 36, Math.min(ui.letra * 0.80f, 18f), 11f, true);
-        p.texto(obj, x + 18, yy, tObj, true, ui.tema.aviso, 1);
-        yy += p.altoDeLinea(tObj) + 6;
+        // El objetivo, en uno o dos renglones (en alemán y con letra grande no cabe en uno): nunca se sale de la tarjeta.
+        float tObj = Math.min(ui.letra * 0.80f, 18f);
+        while (tObj > 12f && p.altoDeParrafo(obj, w - 36, tObj, true) > p.altoDeLinea(tObj) * 2.3f) tObj -= 0.5f;
+        yy += p.parrafo(obj, x + 18, yy, w - 36, tObj, true, ui.tema.aviso, 1) + 6;
         dibujarPseudocodigo(p, ui, T.t("mini." + id + ".pseudo"), x + 18, yy, w - 36, y + h - 62 - yy);
         float bw = (w - 48) / 2;
         if (ui.boton(T.t("mini.jugar"), x + 18, y + h - 54, bw, 42, hecho ? Ui.Estilo.NORMAL : Ui.Estilo.PRINCIPAL)) {

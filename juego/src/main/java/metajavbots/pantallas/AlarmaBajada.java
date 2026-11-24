@@ -136,7 +136,7 @@ public final class AlarmaBajada {
         float hTrans = p.altoDeLinea(tamTrans);
         float hAviso = p.altoDeParrafo(aviso, w - 40, tamAviso, false);
         float h = 14 + hTit + 4 + hTrans + 6 + hAviso + 14;
-        p.caja(x, y, w, h, 12, fondo, 0.98f);
+        p.caja(x, y, w, h, 12, fondo, 1f);
         p.bordeRedondeado(x, y, w, h, 12, borde, 0.65f + 0.35f * pulso, 2.5f);
         // Baliza luminosa izquierda.
         p.brillo(x + 22, y + 14 + hTit * 0.5f, 10 + 4 * pulso, ROJO_VIVO, 0.6f * pulso);
@@ -180,7 +180,7 @@ public final class AlarmaBajada {
         float bx = p.ancho - bw - 40;
         float by = Math.max(arriba + 12, p.alto - bh - 36);
         p.caja(bx + 3, by + 4, bw, bh, 12, 0x000000, 0.35f * alfa);
-        p.caja(bx, by, bw, bh, 12, fondo, 0.96f * alfa);
+        p.caja(bx, by, bw, bh, 12, fondo, alfa);
         p.bordeRedondeado(bx, by, bw, bh, 12, borde, alfa * (0.65f + 0.35f * pulso), 2.5f);
         p.brillo(bx + 24, by + bh / 2, 12 + 4 * pulso, ROJO_VIVO, 0.65f * alfa * pulso);
         p.circulo(bx + 24, by + bh / 2, 6, ROJO_CLARO, alfa);

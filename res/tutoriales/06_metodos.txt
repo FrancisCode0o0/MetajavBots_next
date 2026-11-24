@@ -14,7 +14,7 @@ de: ein Stück Code mit Namen, das du jederzeit aufrufen kannst. Wozu? Weil jede
 de: und „ausweichen()“ versteht man auf einen Blick, drei Zeilen Drehen und Fahren muss man erst entschlüsseln.
 en: You've already written methods without noticing: onTick and onSeeEnemy are methods. A method is a named
 en: piece of code you can call whenever you like. Why bother? Because onTick is turning into a jungle,
-en: and "dodge()" makes sense at a glance, while three lines of turns and moves have to be deciphered.
+en: and “dodge()” makes sense at a glance, while three lines of turns and moves have to be deciphered.
 codigo:
     void esquivar(double anguloDelGolpe) {
         girarHacia(anguloDelGolpe + 90);
@@ -31,11 +31,11 @@ es: al parámetro anguloDelGolpe. Un método va DENTRO de la clase pero FUERA de
 es: meter un método dentro de otro es un error de compilación muy frecuente al principio.
 de: Die erste Zeile ist die Signatur: void heißt „gibt nichts zurück“, esquivar ist der Name, und in Klammern
 de: stehen die Parameter, die Angaben, die sie braucht. Beim Aufruf esquivar(t.winkel()) wandert der Wert
-de: in den Parameter. Eine Methode steht IN der Klasse, aber AUSSERHALB der anderen Methoden:
+de: in den Parameter anguloDelGolpe. Eine Methode steht IN der Klasse, aber AUSSERHALB der anderen Methoden:
 de: Eine Methode in eine andere zu schreiben ist am Anfang ein sehr häufiger Kompilierfehler.
 en: The first line is the signature: void means it returns nothing, esquivar is the name and the parentheses
 en: hold the parameters, the data it needs. When you call esquivar(h.angle()), the value travels into
-en: the parameter. A method goes INSIDE the class but OUTSIDE the other methods:
+en: the parameter anguloDelGolpe. A method goes INSIDE the class but OUTSIDE the other methods:
 en: putting a method inside another is a very common compile error at the start.
 --- tarea
 robot: ronda_sin_errores
@@ -67,7 +67,7 @@ de: mit „missing return statement“.
 en: A method can return a result. Instead of void you write the type it returns, and return hands back
 en: the value and ends the method. That way you write questions with names: aTiro(e) reads like a sentence.
 en: If a method says it returns a boolean, EVERY path through it must end in a return; otherwise Java
-en: complains with "missing return statement".
+en: complains with “missing return statement”.
 codigo:
     boolean aTiro(Enemigo e) {
         return e.distancia() < alcanceDerecha();
@@ -96,13 +96,13 @@ en: mess up your numbers. If you want a new result, return it.
 es: Un buen método hace una sola cosa y su nombre lo dice. Si para explicar lo que hace necesitas un «y»
 es: («apunta y además decide si huir»), seguramente son dos métodos. Y un truco: return a mitad de método
 es: (una «salida rápida») te ahorra anidar ifs: if (!listoDerecha()) return; y el resto ya sabe que está listo.
-de: Eine gute Methode tut genau eine Sache, und ihr Name sagt welche. Brauchst du zum Erklären ein „und“
+de: Eine gute Methode tut genau eine Sache, und ihr Name sagt, welche. Brauchst du zum Erklären ein „und“
 de: („zielt und entscheidet außerdem, ob er flieht“), sind es wahrscheinlich zwei Methoden. Und ein Trick:
 de: Ein return mitten in der Methode erspart verschachtelte ifs: if (!bereitRechts()) return; und der Rest
 de: weiß Bescheid.
-en: A good method does one thing and its name says what. If you need an "and" to explain it
-en: ("aims and also decides whether to flee"), it's probably two methods. And a trick: a return halfway through
-en: (an "early exit") saves you nesting ifs: if (!readyRight()) return; and the rest knows it's ready.
+en: A good method does one thing and its name says what. If you need an “and” to explain it
+en: (“aims and also decides whether to flee”), it's probably two methods. And a trick: a return halfway through
+en: (an “early exit”) saves you nesting ifs: if (!readyRight()) return; and the rest knows it's ready.
 --- tarea
 robot: usa:return
 es: Escribe un método tuyo que devuelva algo (con return) y úsalo en las decisiones del robot durante una ronda.
@@ -111,9 +111,9 @@ de: Entscheidungen.
 en: Write your own method that returns something (with return) and use it in the robot's decisions for a round.
 --- tarea
 ejercicio: t06_distancia
-es: La distancia hasta el enemigo, en un método que puedas reutilizar mil veces.
+es: La distancia hasta el rival, en un método que puedas reutilizar mil veces.
 de: Der Abstand zum Gegner, in einer Methode, die du tausendmal wiederverwenden kannst.
-en: The distance to the enemy, in a method you can reuse a thousand times.
+en: The distance to the rival, in a method you can reuse a thousand times.
 
 === l06_sobrecarga
 tema: 06
@@ -146,7 +146,7 @@ es: Math.max es static, por eso lo llamas con el nombre de la clase. Los de tu r
 es: no lo son: necesitan saber DE QUÉ robot hablas.
 de: Mit drei Punkten (Varargs) nimmt eine Methode beliebig viele Werte an: double suma(double... treffer).
 de: Darin ist treffer ein Array (Thema 7). Und static-Methoden brauchen keinen Roboter:
-de: Math.max ist static, deshalb rufst du es über den Klassennamen auf. Die deines Roboters (vorwaerts, drehen)
+de: Math.max ist static, deshalb rufst du sie über den Klassennamen auf. Die deines Roboters (vorwaerts, drehen)
 de: sind es nicht: Sie müssen wissen, VON WELCHEM Roboter die Rede ist.
 en: With three dots (varargs) a method accepts as many values as you like: double suma(double... hits).
 en: Inside, hits is an array (topic 7). And static methods don't need a robot to work:

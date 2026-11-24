@@ -105,7 +105,7 @@ en: …
 
 [golpe_fuerte]
 es: Eso… ha llegado hasta el fondo.
-de: Das… ging bis tief hinein.
+de: Das … ging bis tief hinein.
 en: That… went all the way down.
 
 es: La sombra se agrieta.
@@ -193,8 +193,8 @@ es: El sol asoma. Solo un momento.
 de: Die Sonne lugt hervor. Nur kurz.
 en: The sun peeks out. Only for a moment.
 
-es: Me dejo ver. Error mío.
-de: Ich habe mich zeigen lassen. Mein Fehler.
+es: Me dejé ver. Error mío.
+de: Ich habe mich sehen lassen. Mein Fehler.
 en: I let myself be seen. My mistake.
 
 es: Una ronda es un instante. La noche es eterna.
@@ -224,7 +224,7 @@ en: Back to the shadow. Until the next night.
 
 [derrota]
 es: La luz gana… esta vez.
-de: Das Licht gewinnt… dieses Mal.
+de: Das Licht gewinnt … dieses Mal.
 en: The light wins… this time.
 
 es: Toda sombra vuelve al caer la tarde.
@@ -236,7 +236,7 @@ de: Merk dir meinen Namen, {rival}. Ich sage ihn nicht zweimal.
 en: Remember my name, {rival}. I won't say it twice.
 
 es: El cristal se rompe… la oscuridad, no.
-de: Der Kristall zerbricht… die Dunkelheit nicht.
+de: Der Kristall zerbricht … die Dunkelheit nicht.
 en: The crystal shatters… the darkness doesn't.
 
 [burla]

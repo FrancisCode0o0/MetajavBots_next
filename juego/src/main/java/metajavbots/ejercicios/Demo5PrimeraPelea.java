@@ -59,7 +59,7 @@ final class Demo5PrimeraPelea {
                 + "\n" + "es gewinnt, wer WENIGER Schaden nimmt"
                 + "\n" + ""
                 + "\n" + "IN JEDEM ZUG:"
-                + "\n" + "    ein Stück vorwärts fahren"
+                + "\n" + "    ein Stück vorwärtsfahren"
                 + "\n" + "    den Körper ein wenig drehen"
                 + "\n" + "    WENN ich niemanden sehe:"
                 + "\n" + "        den Kopf drehen und suchen"
@@ -114,7 +114,7 @@ final class Demo5PrimeraPelea {
                 "Rechts steht der Befehlszettel eines Roboters, aber in Worten, nicht in Java: So siehst du die "
                         + "Idee, ohne etwas abzuschreiben.\nDein Roboter kämpft allein: Er tut, was dort steht. Und es "
                         + "gewinnt, wer WENIGER Schaden nimmt, nicht wer mehr austeilt.",
-                "On the right is a robot’s order sheet, but in words, not in Java: that way you see the idea "
+                "On the right is a robot's order sheet, but in words, not in Java: that way you see the idea "
                         + "without copying anything.\nYour robot fights on its own: it does what is written there. And "
                         + "whoever takes LESS damage wins, not whoever hits harder."),
                 1, new int[]{3}, false, 0, 0, Accion.QUIETO);
@@ -125,16 +125,16 @@ final class Demo5PrimeraPelea {
                 "avanzar",
                 new Trilingue(
                 "Avanzar",
-                "Vorwärts fahren",
+                "Vorwärtsfahren",
                 "Moving ahead"),
                 new Trilingue(
                 "Mira la arena: el robot avanza. La orden no lo teletransporta: le dice «ve hacia allí» y él va "
-                        + "poco a poco, turno a turno.\nAntes de pulsar Continuar, adivina: ¿qué hará ahora con el cuerpo?",
+                        + "poco a poco, turno a turno.\nAntes de pulsar «Continuar», adivina: ¿qué hará ahora con el cuerpo?",
                 "Schau in die Arena: Der Roboter fährt. Der Befehl beamt ihn nicht: Er sagt „fahr dorthin“, und "
-                        + "er fährt nach und nach, Zug für Zug.\nBevor du Weiter drückst, rate: Was macht er jetzt mit dem "
+                        + "er fährt nach und nach, Zug für Zug.\nBevor du „Weiter“ drückst, rate: Was macht er jetzt mit dem "
                         + "Körper?",
-                "Look at the arena: the robot moves ahead. The order does not teleport it: it says \"go over "
-                        + "there\" and it goes little by little, tick by tick.\nBefore pressing Continue, guess: what will "
+                "Look at the arena: the robot moves ahead. The order does not teleport it: it says “go over "
+                        + "there” and it goes little by little, tick by tick.\nBefore pressing “Continue”, guess: what will "
                         + "it do with its body now?"),
                 6, new int[]{5}, false, 18, 45, Accion.AVANZAR);
     }
@@ -181,14 +181,14 @@ final class Demo5PrimeraPelea {
                 "Er sieht ihn!",
                 "It sees it!"),
                 new Trilingue(
-                "En cuanto el enemigo entra en la luz de la linterna, salta el aviso «al ver al enemigo».\nLos "
+                "En cuanto el rival entra en la luz de la linterna, salta el aviso «al ver al enemigo».\nLos "
                         + "avisos se leen ANTES que «en cada turno». Si «en cada turno» le da otra orden a la cabeza, "
                         + "borra la del aviso.",
                 "Sobald der Gegner in den Lichtkegel kommt, kommt die Meldung „beim Sehen des "
                         + "Gegners“.\nMeldungen werden VOR „in jedem Zug“ gelesen. Gibt „in jedem Zug“ dem Kopf einen "
                         + "anderen Befehl, löscht er den aus der Meldung.",
-                "As soon as the enemy enters the flashlight’s beam, the event \"when I see the enemy\" "
-                        + "fires.\nEvents are read BEFORE \"every tick\". If \"every tick\" gives the head another order, it "
+                "As soon as the rival enters the flashlight's beam, the event “when I see the enemy” "
+                        + "fires.\nEvents are read BEFORE “every tick”. If “every tick” gives the head another order, it "
                         + "erases the one from the event."),
                 14, new int[]{8}, true, 10, 120, Accion.DETECTAR);
     }
@@ -201,12 +201,12 @@ final class Demo5PrimeraPelea {
                 "Zielen, warten und angreifen",
                 "Aim, wait and attack"),
                 new Trilingue(
-                "La cabeza gira hacia el enemigo despacio, como un búho. El ataque sale hacia donde mira la "
+                "La cabeza gira hacia el rival despacio, como un búho. El ataque sale hacia donde mira la "
                         + "cabeza EN ESE MOMENTO.\nPor eso espera a que la mira llegue y entonces ataca. Mira cómo acierta.",
                 "Der Kopf dreht sich langsam zum Gegner, wie eine Eule. Der Angriff geht dorthin, wohin der "
                         + "Kopf IN DIESEM MOMENT schaut.\nDarum wartet er, bis das Visier angekommen ist, und greift dann "
                         + "an. Schau, wie er trifft.",
-                "The head turns toward the enemy slowly, like an owl. The attack goes where the head points AT "
+                "The head turns toward the rival slowly, like an owl. The attack goes where the head points AT "
                         + "THAT MOMENT.\nSo it waits for the sight to get there and then attacks. Watch it hit."),
                 15, new int[]{14,16}, true, 20, 140, Accion.APUNTAR_Y_DISPARAR);
     }
@@ -222,13 +222,13 @@ final class Demo5PrimeraPelea {
                 "Entre ronda y ronda, el informe te dice qué ha ido bien y qué no, con una pista para cada "
                         + "cifra que va mal.\nCambia UNA sola cosa, compila y vuelve a pelear. Ahora te toca a ti "
                         + "escribirlo en Java, con tus palabras: en Tutoriales, «Tu primera pelea completa».",
-                "Zwischen den Runden sagt dir der Bericht, was gut lief und was nicht, mit einem Tipp für jede "
+                "Zwischen den Runden sagt dir der Bericht, was gut lief und was nicht, mit einem Hinweis für jede "
                         + "Zahl, die schlecht ist.\nÄndere nur EINE Sache, kompiliere und kämpfe noch einmal. Jetzt bist "
                         + "du dran, es in Java mit deinen Worten zu schreiben: unter Tutorials, „Dein erster ganzer "
                         + "Kampf“.",
                 "Between rounds, the report tells you what went well and what did not, with a hint for each "
                         + "number that is going badly.\nChange just ONE thing, compile and fight again. Now it is your "
-                        + "turn to write it in Java, in your own words: in Tutorials, \"Your first complete fight\"."),
+                        + "turn to write it in Java, in your own words: in Tutorials, “Your first complete fight”."),
                 19, new int[]{18,20,21}, false, 0, 0, Accion.CIERRE);
     }
 }

@@ -7,7 +7,7 @@ java: 8
 tipo: clase
 titulo.es: Cada arma suena a su manera
 titulo.de: Jede Waffe klingt anders
-titulo.en: Every weapon sounds its own way
+titulo.en: Every weapon has its own sound
 enunciado.es: La clase abstracta Arma tiene el método abstracto String sonido() y String rafaga(), que repite el sonido tres veces separado por espacios. Escribe Laser y Canon, las dos extends Arma: el sonido del láser es "piu" y el del cañón, "bum".
 enunciado.de: Die abstrakte Klasse Arma hat die abstrakte Methode String sonido() und String rafaga(), die den Klang dreimal mit Leerzeichen wiederholt. Schreibe Laser und Canon, beide extends Arma: Der Laser macht "piep", die Kanone "bumm".
 enunciado.en: The abstract class Arma has the abstract method String sonido() and String rafaga(), which repeats the sound three times separated by spaces. Write Laser and Canon, both extends Arma: the laser's sound is "pew" and the cannon's is "boom".
@@ -226,8 +226,8 @@ titulo.en: The workshop check-up
 enunciado.es: Escribe la clase abstracta Pieza con Pieza(String nombre), el método abstracto String estado(), String informe() ("<nombre>: <estado>") y static String revisar(Pieza[] piezas), que junta los informes con "; ". Después, Rueda(int desgaste) (nombre "rueda"; "gastada" si el desgaste pasa de 50, si no "bien") y Laser(int disparos) (nombre "laser"; "recargar" sin disparos, si no "listo").
 enunciado.de: Schreibe die abstrakte Klasse Pieza mit Pieza(String nombre), der abstrakten Methode String estado(), String informe() ("<nombre>: <estado>") und static String revisar(Pieza[] piezas), das die Berichte mit "; " verbindet. Danach Rueda(int desgaste) (Name "rad"; "abgenutzt", wenn der Verschleiß über 50 liegt, sonst "gut") und Laser(int disparos) (Name "laser"; "nachladen" ohne Schüsse, sonst "bereit").
 enunciado.en: Write the abstract class Pieza with Pieza(String nombre), the abstract method String estado(), String informe() ("<nombre>: <estado>") and static String revisar(Pieza[] piezas), which joins the reports with "; ". Then Rueda(int desgaste) (name "wheel"; "worn" if the wear is over 50, otherwise "good") and Laser(int disparos) (name "laser"; "reload" with no shots, otherwise "ready").
-pista.es: Rueda(int desgaste) { super("rueda"); this.desgaste = desgaste; }. En revisar, un StringBuilder y pon "; " delante de todos menos del primero.
-pista.de: Rueda(int desgaste) { super("rad"); this.desgaste = desgaste; }. In revisar ein StringBuilder, und "; " vor alle außer dem ersten.
+pista.es: Rueda(int desgaste) { super("rueda"); this.desgaste = desgaste; }. En revisar, usa un StringBuilder y pon "; " delante de todos menos del primero.
+pista.de: Rueda(int desgaste) { super("rad"); this.desgaste = desgaste; }. Nimm in revisar einen StringBuilder und setze "; " vor alle außer dem ersten.
 pista.en: Rueda(int desgaste) { super("wheel"); this.desgaste = desgaste; }. In revisar, use a StringBuilder and put "; " before all but the first.
 plantilla:
     public abstract class Pieza {

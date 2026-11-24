@@ -12,10 +12,10 @@ es: que cambias algo, y te avisa si has roto lo que antes funcionaba. Los ejerci
 es: cada caso es una prueba.
 de: Von Hand in der Arena zu testen ist langsam: Zeile ändern, kämpfen, schauen. Ein automatischer Test ist
 de: Code, der deinen Code prüft: „Gebe ich ihm das, muss jenes herauskommen.“ Er läuft in einer Sekunde, bei
-de: jeder Änderung, und meldet, wenn du kaputt gemacht hast, was vorher lief. Die Aufgaben in diesem Spiel
+de: jeder Änderung, und meldet, wenn du kaputt gemacht hast, was vorher lief. Die Übungen in diesem Spiel
 de: sind genau das: Jeder Fall ist ein Test.
 en: Testing by hand in the arena is slow: change a line, fight, watch. An automated test is code
-en: that checks your code: "if I give it this, it must return that". It runs in a second, every time
+en: that checks your code: “if I give it this, it must return that”. It runs in a second, every time
 en: you change something, and warns you if you've broken what used to work. This game's exercises are exactly that:
 en: every case is a test.
 --- pagina
@@ -24,7 +24,7 @@ es: obtenido) compara. assertThrows comprueba que algo lanza la excepción que d
 es: pero sobre todo los bordes: cero, vacío, justo en el límite, negativo. Ahí se esconden los bichos.
 de: In Java ist JUnit das Standardwerkzeug. Jeder Test ist eine Methode mit @Test, und assertEquals(erwartet,
 de: tatsaechlich) vergleicht. assertThrows prüft, ob etwas die richtige Ausnahme wirft. Teste die normalen Fälle,
-de: aber vor allem die Ränder: null, leer, genau an der Grenze, negativ. Dort verstecken sich die Käfer.
+de: aber vor allem die Ränder: 0, leer, genau an der Grenze, negativ. Dort verstecken sich die Käfer.
 en: In Java, the standard tool is JUnit. Each test is a method with @Test, and assertEquals(expected,
 en: actual) compares. assertThrows checks that something throws the exception it should. Test the normal cases,
 en: but above all the edges: zero, empty, exactly on the limit, negative. That's where the bugs hide.
@@ -132,19 +132,19 @@ es: Estrategia (la Punteria intercambiable), Método plantilla (Metajavbot llama
 es: Builder (montar robots paso a paso) y Estado (el cerebro con estados). Saber su nombre te permite
 es: hablar de diseño en una frase: «aquí haría falta una Estrategia».
 de: Ein Entwurfsmuster ist eine Lösung, die so oft funktioniert, dass sie einen Namen bekommen hat. Einige
-de: kennst du: Strategie (das austauschbare Punteria), Schablonenmethode (Metajavbot ruft dein jedenZug
+de: hast du schon benutzt: Strategie (das austauschbare Punteria), Schablonenmethode (Metajavbot ruft dein jedenZug
 de: auf), Builder (Roboter Schritt für Schritt bauen) und Zustand (das Gehirn mit Zuständen). Mit den Namen
 de: redest du über Entwurf in einem Satz: „Hier bräuchte es eine Strategie.“
 en: A design pattern is a solution that works so often it has been given a name. You've already used several:
 en: Strategy (the swappable Punteria), Template method (Metajavbot calling your onTick),
 en: Builder (assembling robots step by step) and State (the brain with states). Knowing their names lets you
-en: talk about design in one sentence: "this needs a Strategy".
+en: talk about design in one sentence: “this needs a Strategy”.
 --- pagina
 es: Otro clásico: Orden (Command). Cada acción es un objeto con hacer() y deshacer(), y guardas las hechas
 es: en una pila. Así deshacer es sacar la última y llamar a su deshacer(). Así funciona el Ctrl+Z de casi
 es: cualquier editor.
 de: Noch ein Klassiker: Befehl (Command). Jede Aktion ist ein Objekt mit hacer() und deshacer(), und die erledigten
-de: kommen auf einen Stapel. Rückgängig heißt: den letzten nehmen und sein deshacer() aufrufen.
+de: kommen auf einen Stapel. Rückgängigmachen heißt: den letzten nehmen und sein deshacer() aufrufen.
 de: So funktioniert Strg+Z in fast jedem Editor.
 en: Another classic: Command. Each action is an object with hacer() and deshacer(), and you keep the done
 en: ones on a stack. Undo is just taking the last one and calling its deshacer(). That's how Ctrl+Z works in
@@ -196,7 +196,7 @@ titulo.de: Dein Meisterstück
 titulo.en: Your masterpiece
 --- pagina
 es: Es hora de juntarlo todo. Un robot de nivel Master suele tener la misma forma: un record para lo que sabe
-es: del enemigo, una Punteria intercambiable (directa o adelantada), un enum de estados para decidir qué hacer,
+es: del rival, una Punteria intercambiable (directa o adelantada), un enum de estados para decidir qué hacer,
 es: esquiva perpendicular hacia el lado con más sitio y memoria() para aprender de ronda en ronda.
 es: Cada pieza es pequeña y probada; juntas, dan miedo.
 de: Zeit, alles zusammenzubringen. Ein Master-Roboter hat meist dieselbe Form: ein Record für das, was er
@@ -204,7 +204,7 @@ de: über den Gegner weiß, ein austauschbares Punteria (direkt oder vorhaltend)
 de: die Entscheidungen, seitliches Ausweichen zur Seite mit mehr Platz und gedaechtnis(), um von Runde zu
 de: Runde zu lernen. Jedes Teil ist klein und getestet; zusammen machen sie Angst.
 en: Time to put it all together. A Master-level robot usually has the same shape: a record for what it knows
-en: about the enemy, a swappable Punteria (direct or leading), an enum of states to decide what to do,
+en: about the rival, a swappable Punteria (direct or leading), an enum of states to decide what to do,
 en: perpendicular dodging toward the roomier side and memory() to learn from round to round.
 en: Each piece is small and tested; together, they're terrifying.
 codigo:
@@ -228,11 +228,11 @@ codigo:
 es: Y ahora, a pulir con datos. Escribe en la consola tus aciertos y el daño recibido por ronda, cambia UNA
 es: cosa cada vez y compara. Los grandes robots no se escriben de una sentada: se afinan pelea a pelea.
 es: Has llegado desde no saber qué era un punto y coma hasta diseñar sistemas. Eso ya es programar en serio.
-de: Und jetzt wird mit Daten poliert. Gib deine Treffer und den erlittenen Schaden pro Runde aus, ändere
+de: Und jetzt wird mit Daten poliert. Gib deine Treffer und den erlittenen Schaden pro Runde in der Konsole aus, ändere
 de: immer nur EINE Sache und vergleiche. Große Roboter entstehen nicht in einem Rutsch: Sie werden Kampf für
 de: Kampf geschliffen. Du bist von „Was ist ein Semikolon?“ bis zum Entwerfen von Systemen gekommen. Das ist
 de: ernsthaftes Programmieren.
-en: And now, polish with data. Print your hits and the damage taken per round, change ONE thing at a time
+en: And now, polish with data. Print your hits and the damage taken per round to the console, change ONE thing at a time
 en: and compare. Great robots aren't written in one sitting: they're tuned fight after fight.
 en: You've gone from not knowing what a semicolon was to designing systems. That's real programming.
 --- tarea

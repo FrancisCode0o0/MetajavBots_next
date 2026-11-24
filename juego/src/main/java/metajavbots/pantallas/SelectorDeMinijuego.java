@@ -100,10 +100,7 @@ final class SelectorDeMinijuego {
         if (r == null || modeloId == null || modeloId.isBlank()) return false;
         for (Modelo m : Progreso.modelosDisponibles(jugador)) {
             if (m.id.equals(modeloId)) {
-                if (!m.id.equals(r.modelo)) {
-                    r.modelo = m.id;
-                    r.piezas.clear();
-                }
+                r.cambiarModelo(m, jugador.idioma);
                 return true;
             }
         }

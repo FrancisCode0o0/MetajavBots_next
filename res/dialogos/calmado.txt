@@ -40,13 +40,13 @@ es: Fijado.
 de: Erfasst.
 en: Locked.
 
-es: Exhalo... y disparo.
-de: Ausatmen... und Schuss.
-en: Exhale... and fire.
+es: Exhalo… y disparo.
+de: Ausatmen … und Schuss.
+en: Exhale… and fire.
 
 es: {arma}, a la cabeza.
 de: {arma}, auf den Kopf.
-en: {arma}, aiming high.
+en: {arma}, aiming for the head.
 
 es: Quieto ahí, {rival}. Así.
 de: Halt still, {rival}. Genau so.
@@ -201,7 +201,7 @@ es: Está bien, {jugador}. Respira. Volvemos.
 de: Alles gut, {jugador}. Atme. Wir kommen zurück.
 en: It's fine, {jugador}. Breathe. We'll be back.
 
-es: Me ha leído bien, {rival}. Cambiaré de lectura.
+es: Me has leído bien, {rival}. Cambiaré de lectura.
 de: Du hast mich gut gelesen, {rival}. Ich ändere die Handschrift.
 en: You read me well, {rival}. I'll change the script.
 
@@ -227,9 +227,9 @@ es: Hasta aquí. Sin rencor, {rival}.
 de: Das war's. Nichts für ungut, {rival}.
 en: That's it. No hard feelings, {rival}.
 
-es: El visor se apaga... despacio.
-de: Das Visier erlischt... langsam.
-en: The scope goes dark... slowly.
+es: El visor se apaga… despacio.
+de: Das Visier erlischt … langsam.
+en: The scope goes dark… slowly.
 
 es: Tranquilo, {jugador}. Se repara. Todo se repara.
 de: Ruhig, {jugador}. Das lässt sich reparieren. Alles.
@@ -363,9 +363,9 @@ de: Wieder in Form. Fast.
 en: Back in shape. Almost.
 
 [especial]
-es: Respiración contenida...
-de: Atem anhalten...
-en: Holding my breath...
+es: Respiración contenida…
+de: Atem anhalten …
+en: Holding my breath…
 
 es: Disparo perfecto.
 de: Perfekter Schuss.

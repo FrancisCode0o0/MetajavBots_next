@@ -256,7 +256,7 @@ public final class DisenadorDePieza {
             err.add(idm.elegir(
                     "«" + campo + "» debe estar entre " + fmt(min) + " y " + fmt(max) + " (salió " + valor + ").",
                     "„" + campo + "“ muss zwischen " + fmt(min) + " und " + fmt(max) + " liegen (war " + valor + ").",
-                    "\"" + campo + "\" must be between " + fmt(min) + " and " + fmt(max) + " (got " + valor + ")."));
+                    "“" + campo + "” must be between " + fmt(min) + " and " + fmt(max) + " (got " + valor + ")."));
             return Math.max(min, Math.min(max, Double.isFinite(valor) ? valor : min));
         }
         return valor;
@@ -450,7 +450,7 @@ public final class DisenadorDePieza {
                 break;
         }
         return "import metajavbots.api.CustomPart;\n\n"
-                + "/** Design your own robot part within the 100-point balance budget. */\n"
+                + "/** Design your own robot part within the maximum budget of 100 points. */\n"
                 + "public class MyPart implements CustomPart {\n" + cuerpo + "}\n";
     }
 

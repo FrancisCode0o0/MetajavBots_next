@@ -33,7 +33,7 @@ public final class MotorAChorro implements Aparato {
 }
 == de
 /**
- * DUESENTRIEBWERK «Jetzazo» — Ein Feuerstoß: 2/3 Sekunden lang
+ * DUESENTRIEBWERK „Jetzazo“ — Ein Feuerstoß: 2/3 Sekunden lang
  * fährst du 2,6-mal so schnell.
  *
  * So schließt du es an deinen Roboter an:
@@ -66,7 +66,7 @@ public final class Duesentriebwerk implements Geraet {
 }
 == en
 /**
- * JETENGINE «Jetzazo» — A burst of fire: for 2/3 of a second you go
+ * JETENGINE “Jetzazo” — A burst of fire: for 2/3 of a second you go
  * 2.6 times faster.
  *
  * How to plug it into your robot:

@@ -3,7 +3,7 @@
 
 [saludo]
 es: Bienvenido a mi tela, {rival}. Pasa, pasa… la salida ya no existe.
-de: Willkommen in meinem Netz, {rival}. Komm rein… einen Ausgang gibt es nicht mehr.
+de: Willkommen in meinem Netz, {rival}. Komm rein … einen Ausgang gibt es nicht mehr.
 en: Welcome to my web, {rival}. Come in, come in… the exit is gone.
 
 es: Qué casualidad encontrarte aquí, {rival}. Bueno, casualidad no.
@@ -36,12 +36,12 @@ de: Neue Runde, neues Netz. Ich liebe diese Arbeit.
 en: New round, new web. I adore this job.
 
 es: Ronda {ronda}, {rival}. Paso uno de mi plan… de doce.
-de: Runde {ronda}, {rival}. Schritt eins meines Plans… von zwölf.
+de: Runde {ronda}, {rival}. Schritt eins meines Plans … von zwölf.
 en: Round {ronda}, {rival}. Step one of my plan… out of twelve.
 
 [ataque]
 es: Un hilito por aquí…
-de: Ein Fädchen hierhin…
+de: Ein Fädchen hierhin …
 en: A little thread right here…
 
 es: Esto ya estaba escrito, querido.
@@ -53,7 +53,7 @@ de: Zieh mal an diesem Faden, mal sehen.
 en: Pull this thread and see what happens.
 
 es: Cierro la red… despacito.
-de: Ich ziehe das Netz zu… ganz langsam.
+de: Ich ziehe das Netz zu … ganz langsam.
 en: Closing the net… nice and slow.
 
 [acierto]
@@ -104,7 +104,7 @@ de: Ein Faden gerissen. Ich habe Hunderte.
 en: One thread snapped. I have hundreds.
 
 es: Ay. Eso no lo había… sí, sí lo había previsto.
-de: Au. Das hatte ich nicht… doch, doch, hatte ich.
+de: Au. Das hatte ich nicht … doch, doch, hatte ich.
 en: Ow. I didn't see that… no, wait, I did.
 
 [golpe_fuerte]
@@ -126,7 +126,7 @@ en: Interesting. You just moved up my list.
 
 [poco_blindaje]
 es: Me quedan pocos hilos… y todos apuntan a ti.
-de: Mir bleiben wenige Fäden… und alle zeigen auf dich.
+de: Mir bleiben wenige Fäden … und alle zeigen auf dich.
 en: Few threads left… and every one points at you.
 
 es: Una araña herida es una araña con ideas.
@@ -139,7 +139,7 @@ en: Relax, {jugador}. Everything's under control. Almost.
 
 es: Me hago la débil. Es una táctica. Seguro.
 de: Ich tu nur schwach. Das ist Taktik. Bestimmt.
-en: I'm only pretending to be weak. It's tactics. Surely.
+en: I'm only pretending to be weak. It's a tactic. Surely.
 
 [parte_rota]
 es: Adiós, {pieza}. Te sacrifico por una causa mayor.
@@ -155,7 +155,7 @@ de: Du hast mir {pieza} genommen. Das merke ich mir. Für immer.
 en: You took my {pieza}. I'll remember that. Forever.
 
 es: Sin {pieza}… pues tejo con lo que me queda.
-de: Ohne {pieza}… dann webe ich eben mit dem Rest.
+de: Ohne {pieza} … dann webe ich eben mit dem Rest.
 en: No {pieza}… then I'll weave with what's left.
 
 [esquiva]
@@ -168,8 +168,8 @@ de: Huch, suchst du jemanden?
 en: Oops, looking for someone?
 
 es: Me cuelgo un momentito… ¡y ya no estoy!
-de: Ich häng mich kurz ab… und weg bin ich!
-en: I just hang here a second… and I'm gone!
+de: Ich seil mich kurz ab … und weg bin ich!
+en: I'll just hang here a second… and I'm gone!
 
 es: Sabía por dónde vendría. Lo sé todo.
 de: Ich wusste, woher es kommt. Ich weiß alles.
@@ -177,7 +177,7 @@ en: I knew where that was coming from. I know everything.
 
 [victoria_ronda]
 es: Primera mosca de la tarde. Qué rica.
-de: Die erste Fliege des Tages. Köstlich.
+de: Die erste Fliege des Nachmittags. Köstlich.
 en: First fly of the afternoon. Delicious.
 
 es: Ronda {ronda}, mía. Las siguientes ya están tejidas.
@@ -220,7 +220,7 @@ en: Thank you for taking part in my plan, {rival}.
 
 es: {jugador}, lo vi venir desde la ronda uno. Bueno, desde ayer.
 de: {jugador}, ich hab's seit Runde eins kommen sehen. Seit gestern, eigentlich.
-en: {jugador}, I saw it coming since round one. Since yesterday, really.
+en: {jugador}, I saw it coming from round one. Since yesterday, really.
 
 es: Todos los hilos llevaban aquí. A mi victoria.
 de: Alle Fäden führten hierher. Zu meinem Sieg.
@@ -228,7 +228,7 @@ en: Every thread led here. To my victory.
 
 [derrota]
 es: Imposible… ¡había calculado todos los hilos!
-de: Unmöglich… ich hatte jeden Faden berechnet!
+de: Unmöglich … ich hatte jeden Faden berechnet!
 en: Impossible… I had calculated every thread!
 
 es: Esto no acaba aquí, {rival}. Tengo más telas.
@@ -236,12 +236,12 @@ de: Das ist nicht vorbei, {rival}. Ich habe noch mehr Netze.
 en: This isn't over, {rival}. I have other webs.
 
 es: El plan B era… espera, ¿dónde está el plan B?
-de: Plan B war… Moment, wo ist Plan B?
+de: Plan B war … Moment, wo ist Plan B?
 en: Plan B was… wait, where is plan B?
 
 es: Me deshilacho… pero volveré a tejer.
-de: Ich zerfasere… aber ich werde wieder weben.
-en: I'm unravelling… but I will weave again.
+de: Ich zerfasere … aber ich werde wieder weben.
+en: I'm unraveling… but I will weave again.
 
 [burla]
 es: Qué movimientos tan previsibles, cielo.

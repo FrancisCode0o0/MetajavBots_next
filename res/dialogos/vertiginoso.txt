@@ -2,7 +2,7 @@
 # Campeón de peonzas perpetuamente mareado. Todo es un torbellino veloz y chispeante.
 
 [saludo]
-es: ¡Hola, {rival}! ¡Espera, que veo dos de ti! ¡Me encargo de los dos!
+es: ¡Hola, {rival}! ¡Espera, que te veo doble! ¡Me encargo de los dos!
 de: Hallo, {rival}! Moment, ich sehe dich doppelt! Ich kümmere mich um beide!
 en: Hi, {rival}! Wait, I see two of you! I'll handle both!
 
@@ -14,7 +14,7 @@ es: ¡Gané el campeonato de peonzas siendo la peonza! ¡Allá voy!
 de: Ich habe die Kreisel-Meisterschaft als der Kreisel gewonnen! Los geht's!
 en: I won the spinning-top championship by being the top! Here I go!
 
-es: ¡Giro, salto, chispa! ¡Agárrate que viene huracán, {rival}!
+es: ¡Giro, salto, chispa! ¡Agárrate, que viene un huracán, {rival}!
 de: Drehen, Springen, Funken! Halt dich fest, ein Wirbelsturm kommt, {rival}!
 en: Spin, flip, spark! Hang on, a hurricane's coming, {rival}!
 
@@ -80,7 +80,7 @@ en: Hey, {rival}, stop spinning around too!
 
 es: ¡Qué vértigo! ¡El siguiente giro sí te engancha!
 de: Was für ein Dreh! Die nächste Kurve erwischt dich!
-en: What a spin! The next curve catches you!
+en: What a spin! The next curve will catch you!
 
 es: ¡Solo hice un bucle decorativo en el aire!
 de: Das war nur eine dekorative Schleife in der Luft!
@@ -139,7 +139,7 @@ en: Final whirlwind engaged!
 
 [parte_rota]
 es: ¡Salió volando {pieza}! ¡Menos peso, giro el doble de rápido!
-de: Mein {pieza} ist weggeflogen! Weniger Gewicht, doppelt so schneller Dreh!
+de: Mein {pieza} ist weggeflogen! Weniger Gewicht, doppelt so schnelle Drehung!
 en: My {pieza} flew off! Less weight, twice the spin!
 
 es: ¡Me has arrancado {pieza}, {rival}! ¡Ahora soy más aerodinámico!
@@ -207,7 +207,7 @@ en: Just a quick break to shake off the vertigo!
 
 [victoria]
 es: ¡Giro, salto, chispa y trofeo, {jugador}! ¡Qué fiesta!
-de: Drehen, springen, Funken und Pokal, {jugador}! Was für ein Fest!
+de: Drehen, Springen, Funken und Pokal, {jugador}! Was für ein Fest!
 en: Spin, flip, spark, and trophy, {jugador}! What a party!
 
 es: ¡Te dejé mareado hasta el martes que viene, {rival}!
@@ -253,7 +253,7 @@ de: Noch ein bisschen langsamer und du wirkst wie eine Statue, {rival}!
 en: Any slower and you'll look like a statue, {rival}!
 
 es: ¡Yo ya di tres vueltas mientras tú cargabas el arma!
-de: Ich habe schon drei Runden gedreht, während du deine Waffe lädst!
+de: Ich habe schon drei Runden gedreht, während du deine Waffe geladen hast!
 en: I did three laps while you were charging your weapon!
 
 [pulla]
@@ -320,7 +320,7 @@ es: ¡Un poquito de código veloz y arrasamos la arena!
 de: Ein bisschen flotter Code und wir fegen über die Arena!
 en: A dash of fast code and we'll sweep the arena!
 
-es: ¡Si me quedo quieto mucho rato me caigo de lado!
+es: ¡Si me quedo quieto mucho rato, me caigo de lado!
 de: Wenn ich zu lange stillstehe, kippe ich zur Seite um!
 en: If I stand still too long I tip over sideways!
 

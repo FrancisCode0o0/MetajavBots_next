@@ -9,17 +9,17 @@ titulo.en: When something blows up
 es: Una excepción es la forma que tiene Java de decir «esto no se puede hacer»: dividir un int entre 0,
 es: usar un null, pedir la casilla 10 de un array de 5. Java para en seco, lanza la excepción y,
 es: si nadie la atrapa, tu robot pierde el turno (y el locutor se lo pasa en grande).
-de: Eine Ausnahme ist Javas Art zu sagen „das geht nicht“: ein int durch 0 teilen, null benutzen,
+de: Eine Ausnahme ist Javas Art, „das geht nicht“ zu sagen: ein int durch 0 teilen, null benutzen,
 de: in einem Array mit 5 Fächern nach Fach 10 fragen. Java stoppt sofort, wirft die Ausnahme, und
-de: fängt sie niemand, verliert dein Roboter den Zug (und der Sprecher hat seinen Spaß).
-en: An exception is Java's way of saying "this can't be done": dividing an int by 0,
+de: fängt sie niemand, verliert dein Roboter den Zug (und der Ansager hat seinen Spaß).
+en: An exception is Java's way of saying “this can't be done”: dividing an int by 0,
 en: using a null, asking for box 10 of a 5-box array. Java stops dead, throws the exception and,
-en: if nobody catches it, your robot loses its turn (and the announcer has a field day).
+en: if nobody catches it, your robot loses its tick (and the announcer has a field day).
 --- pagina
 es: Aprende a leer el mensaje: el nombre dice QUÉ pasó (NullPointerException, ArithmeticException…),
 es: el texto dice el detalle y la traza dice DÓNDE: busca la primera línea que mencione tu código
 es: y su número de línea. Desde Java 14 los NullPointerException dicen incluso qué variable era null.
-es: Lo de abajo de la traza es quien llamó a quien, como migas de pan hasta el error.
+es: Lo de abajo de la traza es quién llamó a quién, como migas de pan hasta el error.
 de: Lern, die Meldung zu lesen: Der Name sagt, WAS passiert ist (NullPointerException, ArithmeticException
 de: …), der Text nennt Details, und der Stacktrace sagt, WO: Such die erste Zeile mit deinem Code und ihrer
 de: Zeilennummer. Seit Java 14 verraten NullPointerExceptions sogar, welche Variable null war. Weiter unten
@@ -46,9 +46,9 @@ codigo:
 --- tarea
 robot: ronda_sin_errores
 es: Revisa tu robot buscando divisiones, nulls e índices peligrosos, y aguanta una ronda entera sin excepciones.
-de: Durchsuch deinen Roboter nach gefährlichen Divisionen, nulls und Indizes und überstehe eine Runde ohne
-de: Ausnahme.
-en: Go through your robot looking for risky divisions, nulls and indexes, and get through a round with no
+de: Durchsuch deinen Roboter nach gefährlichen Divisionen, nulls und Indizes und übersteh eine ganze Runde ohne
+de: Ausnahmen.
+en: Go through your robot looking for risky divisions, nulls and indexes, and get through a whole round with no
 en: exceptions.
 --- tarea
 ejercicio: t14_leer_nivel
@@ -98,7 +98,7 @@ en: an error swallowed in silence is the hardest one to find.
 --- tarea
 ejercicio: t14_finally_disparo
 es: Dispara y enfría el arma siempre, pase lo que pase: finally.
-de: Schieß und kühl die Waffe immer ab, egal was passiert: finally.
+de: Schieß und kühl die Waffe immer ab, egal, was passiert: finally.
 en: Fire and always cool the weapon, whatever happens: finally.
 --- tarea
 ejercicio: t14_multicatch
@@ -136,7 +136,7 @@ es: te OBLIGA a atraparlas o a declararlas con throws. Desde Java 7, try-with-re
 es: try (var canal = abrir()) { ... } llama a close() al salir, incluso si algo falla.
 de: Es gibt zwei Familien. Ungeprüfte (RuntimeException und ihre Kinder) sind meist Programmierfehler
 de: und erzwingen nichts. Geprüfte (Exception, etwa IOException) sind erwartbare äußere Probleme, und Java
-de: ZWINGT dich, sie zu fangen oder mit throws anzukündigen. Seit Java 7 schließt try-with-resources von selbst:
+de: ZWINGT dich, sie zu fangen oder mit throws anzukündigen. Seit Java 7 schließt try-with-resources von selbst, was du öffnest:
 de: try (var kanal = oeffnen()) { ... } ruft beim Verlassen close() auf, auch wenn etwas schiefgeht.
 en: There are two families. Unchecked ones (RuntimeException and its children) are usually programming bugs
 en: and force nothing. Checked ones (Exception, like IOException) are expected outside problems, and Java

@@ -11,7 +11,7 @@ de: {rival}, heute Abend darfst du meine Nebenrolle spielen.
 en: {rival}, tonight you have the honor of being my supporting act.
 
 es: Damas, caballeros, robots… ¡yo!
-de: Meine Damen, meine Herren, Roboter… ich!
+de: Meine Damen, meine Herren, Roboter … ich!
 en: Ladies, gentlemen, robots… me!
 
 es: {jugador}, ¿has traído flores? Las necesitaré al final.
@@ -19,7 +19,7 @@ de: {jugador}, hast du Blumen dabei? Die brauche ich am Ende.
 en: {jugador}, did you bring flowers? I'll need them at the end.
 
 es: Que se haga la luz… ¡y que queme!
-de: Es werde Licht… und es brenne!
+de: Es werde Licht … und es brenne!
 en: Let there be light… and let it burn!
 
 [inicio_ronda]
@@ -32,7 +32,7 @@ de: Runde {ronda}. Publikum, holt die Taschentücher raus.
 en: Round {ronda}. Audience, ready your handkerchiefs.
 
 es: ¡Luces, cámara… combate!
-de: Licht, Kamera… Kampf!
+de: Licht, Kamera … Kampf!
 en: Lights, camera… combat!
 
 es: Escena {ronda}: la estrella brilla, el villano tiembla.
@@ -58,7 +58,7 @@ en: Spotlight, please! I attack!
 
 [acierto]
 es: ¡Bravo! ¡Bravísimo! ¡Lo digo yo misma!
-de: Bravo! Bravissimo! Das sag ich mir selbst!
+de: Bravo! Bravissimo! Das sag ich selbst!
 en: Bravo! Bravissimo! I'll say it myself!
 
 es: ¡Y el público enloquece!
@@ -100,7 +100,7 @@ de: Was für eine Respektlosigkeit gegenüber einer Künstlerin!
 en: Such disrespect for an artist!
 
 es: ¡Me tambaleo… con estilo!
-de: Ich wanke… aber mit Stil!
+de: Ich wanke … aber mit Stil!
 en: I stagger… with style!
 
 es: Esto irá a mis memorias, {rival}.
@@ -126,7 +126,7 @@ en: Audience, witness this injustice!
 
 [poco_blindaje]
 es: Es el tercer acto… y la heroína está herida.
-de: Dritter Akt… und die Heldin ist verwundet.
+de: Dritter Akt … und die Heldin ist verwundet.
 en: Act three… and the heroine is wounded.
 
 es: Mi luz parpadea, pero el espectáculo continúa.
@@ -138,7 +138,7 @@ de: Wenn ich falle, dann im Scheinwerferlicht.
 en: If I fall, let it be in the spotlight.
 
 es: {jugador}… dile al mundo que brillé.
-de: {jugador}… sag der Welt, dass ich gestrahlt habe.
+de: {jugador} … sag der Welt, dass ich gestrahlt habe.
 en: {jugador}… tell the world I shone.
 
 [parte_rota]
@@ -181,7 +181,7 @@ de: Ende von Akt {ronda}! Applaus, bitte!
 en: End of act {ronda}! Applause, please!
 
 es: Una reverencia… y otra… y otra más.
-de: Eine Verbeugung… und noch eine… und noch eine.
+de: Eine Verbeugung … und noch eine … und noch eine.
 en: A bow… and another… and one more.
 
 es: El público pide un bis. Concedido.
@@ -228,7 +228,7 @@ en: {rival}, you were an adorable supporting act.
 
 [derrota]
 es: Así termina la estrella… en su escena más bella…
-de: So endet der Star… in seiner schönsten Szene…
+de: So endet der Star … in seiner schönsten Szene …
 en: And so the star fades… in its most beautiful scene…
 
 es: ¡Recordadme! ¡Recordad mi luz!
@@ -240,7 +240,7 @@ de: Das ist nicht das Ende! Nur das Ende der ersten Staffel!
 en: This isn't the end! Only the season finale!
 
 es: Bajad el telón… despacio… con violines…
-de: Lasst den Vorhang fallen… langsam… mit Geigen…
+de: Lasst den Vorhang fallen … langsam … mit Geigen …
 en: Lower the curtain… slowly… with violins…
 
 [burla]
@@ -271,7 +271,7 @@ en: I'd shine a light on you, but there's nothing to show.
 
 es: Mis críticas son mejores que tus ataques. Y eso que son malas.
 de: Meine Kritiken sind besser als deine Angriffe. Und die sind schlecht.
-en: My bad reviews hit harder than your attacks.
+en: My reviews are better than your attacks. And they're bad reviews.
 
 es: ¿Quieres un papel? Hoy hacías de árbol. Y lo hacías mal.
 de: Du willst eine Rolle? Du warst heute der Baum. Und schlecht.
@@ -368,7 +368,7 @@ en: Nobody may see me like this. Repairing!
 
 [especial]
 es: ¡Que se haga la luz… y que queme!
-de: Es werde Licht… und es brenne!
+de: Es werde Licht … und es brenne!
 en: Let there be light… and let it burn!
 
 es: ¡Gran final de mil vatios!

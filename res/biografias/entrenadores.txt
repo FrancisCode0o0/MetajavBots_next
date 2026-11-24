@@ -8,7 +8,7 @@ en: Forty years in the same scrapyard gym, grumbling at everyone. They say he sm
 
 [aceite]
 es: Te hará encerar tuercas durante semanas sin explicarte por qué. Al final lo entenderás todo, o tendrás muchas tuercas brillantes.
-de: Er lässt dich wochenlang Muttern polieren, ohne zu sagen warum. Am Ende verstehst du alles, oder du hast viele glänzende Muttern.
+de: Er lässt dich wochenlang Muttern polieren, ohne zu sagen, warum. Am Ende verstehst du alles, oder du hast viele glänzende Muttern.
 en: He'll have you waxing nuts for weeks without saying why. In the end you'll understand everything, or own a lot of shiny nuts.
 
 [voltaje]
@@ -24,7 +24,7 @@ en: He didn't want to train you. He said no seven times and locked the workshop 
 [cobra]
 es: Su lema es «sin compasión con los bugs». Grita mucho, pero solo a los errores de compilación; a ti, nunca.
 de: Sein Motto ist „keine Gnade für Bugs“. Er schreit viel, aber nur Kompilierfehler an; dich nie.
-en: His motto is "no mercy for bugs". He shouts a lot, but only at compile errors; never at you.
+en: His motto is “no mercy for bugs.” He shouts a lot, but only at compile errors; never at you.
 
 [yanobit]
 es: Enseña judo de bits en un estanque. Dice que un buen programador cae siete veces y se levanta ocho, y que el octavo es un bucle.
