@@ -567,8 +567,8 @@ final class PruebasDeMinijuegoDestruccion {
             }
 
             igual("Destrucción y supervivencia", T.en("especial.destruccion", Idioma.ES), "nombre ES pestaña ModoEspecial");
-            igual("Zerstörung & Überleben", T.en("especial.destruccion", Idioma.DE), "nombre DE pestaña ModoEspecial");
-            igual("Destruction & Survival", T.en("especial.destruccion", Idioma.EN), "nombre EN pestaña ModoEspecial");
+            igual("Zerstörung und Überleben", T.en("especial.destruccion", Idioma.DE), "nombre DE pestaña ModoEspecial");
+            igual("Destruction and survival", T.en("especial.destruccion", Idioma.EN), "nombre EN pestaña ModoEspecial");
 
             String[] claves = {
                     "especial.destruccion", "especial.destruccion_ayuda", "especial.destruccion_entrar",

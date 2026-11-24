@@ -37,7 +37,6 @@ import metajavbots.tutor.Entrenador;
  * volver y, si no estaba fijado abierto, vuelve a meterse en la esquina.
  */
 public final class EntrenadorFlotante {
-
     // ================================================================ frecuencia y enfriamiento del cartelito
     /** Segundos antes de que salga el primer consejo automático al iniciar la sesión. */
     public static final float ESPERA_INICIAL_TIP = 60f;

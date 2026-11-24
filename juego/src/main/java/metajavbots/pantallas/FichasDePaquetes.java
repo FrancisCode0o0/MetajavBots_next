@@ -42,7 +42,8 @@ final class FichasDePaquetes {
             String desc = capitalizarPunto(resumen.isEmpty() ? c.descripcion(id) : resumen);
             String donde = id.elegir(
                     "Lo lanza el motor si un bucle en cadaTurno() u otro evento supera el tope de cálculo; evita bucles infinitos.",
-                    "Wird von der Engine ausgelöst, wenn eine Schleife in jedenZug() oder einem anderen Ereignis das Rechenlimit sprengt; vermeide Endlosschleifen.",
+                    "Wird von der Engine ausgelöst, wenn eine Schleife in jedenZug() oder einem anderen Ereignis das Rechenlimit sprengt; "
+                    + "vermeide Endlosschleifen.",
                     "Thrown by the engine if a loop in onTick() or an event exceeds the step limit; avoid infinite loops.");
             String pseudo = id.elegir(
                     "CADA TURNO:\n    REPETIR como máximo 10 veces:\n        hacer cálculo corto\n    // sin bucles infinitos",

@@ -65,7 +65,8 @@ public final class RivalesAbsurdos {
                     "It bounced so high at its robotics graduation that it went through the roof and collected its diploma from a helicopter."),
             new Perfil("Cablegordo",
                     "Se enredó con un alargador de cincuenta metros en un concurso de baile y ganó el primer premio por arte contemporáneo.",
-                    "Er verhedderte sich bei einem Tanzwettbewerb in einem fünfzig Meter langen Verlängerungskabel und gewann den ersten Preis für zeitgenössische Kunst.",
+                    "Er verhedderte sich bei einem Tanzwettbewerb in einem fünfzig Meter langen "
+                    + "Verlängerungskabel und gewann den ersten Preis für zeitgenössische Kunst.",
                     "It got tangled in a fifty-meter extension cord at a dance contest and won first prize for contemporary art."),
             new Perfil("Chatarrix",
                     "Construyó su blindaje con tapas de cacerola y convenció al jurado de que el sonido a sartén era una táctica psicológica.",

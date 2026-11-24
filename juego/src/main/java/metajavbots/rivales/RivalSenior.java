@@ -78,7 +78,8 @@ public final class RivalSenior extends Metajavbot {
                         "Tried to drink from a null mug in the cafeteria and threw an exception that blacked out the stadium."),
                 new Trilingue(
                         "Rompe el contacto de radar con camuflaje y flanqueos: castiga leer miAparato(), memoria() o listas sin comprobar null.",
-                        "Bricht den Radarkontakt mit Tarnung und Flankenmanövern ab: bestraft Zugriffe auf meinGeraet(), gedaechtnis() oder Listen ohne null-Prüfung.",
+                        "Bricht den Radarkontakt mit Tarnung und Flankenmanövern ab: bestraft Zugriffe auf meinGeraet(), "
+                        + "gedaechtnis() oder Listen ohne null-Prüfung.",
                         "Breaks radar lock with stealth and flanking: punishes using myGadget(), memory(), or lists without null/empty checks."),
                 new Trilingue(
                         "Comprueba siempre != null y !isEmpty() antes de acceder a miAparato(), memoria().get(...) o enemigosVistos().get(0).",

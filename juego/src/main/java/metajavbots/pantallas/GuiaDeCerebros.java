@@ -81,7 +81,9 @@ public final class GuiaDeCerebros implements Pantalla {
             pagina--;
             desp.alPrincipio();
         }
-        if (pagina < PAGINAS - 1 && ui.boton(T.t("guia.siguiente") + " ►", Math.min(p.ancho - 240, EntrenadorFlotante.cajaRecogida(p.ancho, p.alto, ui.letra).x() - 232), p.alto - 66, 220, 50, Ui.Estilo.PRINCIPAL)) {
+        if (pagina < PAGINAS - 1 && ui.boton(T.t("guia.siguiente") + " ►",
+                Math.min(p.ancho - 240, EntrenadorFlotante.cajaRecogida(p.ancho, p.alto, ui.letra).x() - 232), p.alto - 66, 220, 50,
+                Ui.Estilo.PRINCIPAL)) {
             pagina++;
             desp.alPrincipio();
         }

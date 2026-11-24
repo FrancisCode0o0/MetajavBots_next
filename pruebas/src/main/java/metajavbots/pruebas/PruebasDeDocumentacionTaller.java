@@ -42,7 +42,7 @@ final class PruebasDeDocumentacionTaller {
 
             Trilingue atras = T.todos().get("paquetes.atras");
             cierto(atras != null, "existe clave paquetes.atras");
-            igual("Atrás", atras.en(Idioma.ES), "atrás ES");
+            igual("Volver", atras.en(Idioma.ES), "atrás ES");
             igual("Zurück", atras.en(Idioma.DE), "atrás DE");
             igual("Back", atras.en(Idioma.EN), "atrás EN");
 

@@ -112,8 +112,8 @@ public final class PlantillasDeEjercicios {
                     + (2 * k) + " = " + (3 * k) + ".",
                     "Gib die Summe der Vielfachen von " + k + " zwischen 1 und n (n eingeschlossen) zurück. Zum Beispiel mit n = " + (2 * k) + ": " + k + " + "
                     + (2 * k) + " = " + (3 * k) + ".",
-                    "Return the sum of the multiples of " + k + " from 1 to n (n included). For example, with n = " + (2 * k) + ": " + k + " + " + (2 * k) + " = "
-                    + (3 * k) + "."},
+                    "Return the sum of the multiples of " + k + " from 1 to n (n included). For example, with n = " + (2 * k) + ": " + k + " + "
+                    + (2 * k) + " = " + (3 * k) + "."},
                 "static int sumaDeMultiplos(int n)", "return 0;",
                 "int s = 0;\nfor (int i = " + k + "; i <= n; i += " + k + ") {\n    s += i;\n}\nreturn s;", casos);
     }

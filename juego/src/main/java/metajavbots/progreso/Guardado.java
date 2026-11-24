@@ -303,6 +303,18 @@ public final class Guardado {
         j.carpetaModelos = v.getOrDefault("carpetaModelos", "");
         leerCerebros(v, j);
         leerAjustes(v, j);
+        leerArchivosDelJugador(dir, v, j);
+        leerPiezasPropias(dir, j);
+        leerEstadoCompilacionRobots(dir, v, j);
+        // Las partidas de antes del camino «Empezar»: quien ya había jugado ve el menú entero, como siempre.
+        if (!v.containsKey("menuCompleto")) {
+            j.menuCompleto = !j.historial.isEmpty() || !j.tutorialesHechos.isEmpty() || !j.ejerciciosResueltos.isEmpty();
+        }
+        return j;
+    }
+
+    /** Los archivos sueltos de la partida: el código de los ejercicios, el historial y el último rival. */
+    private static void leerArchivosDelJugador(Path dir, Map<String, String> v, Jugador j) throws IOException {
         Path ej = dir.resolve("ejercicios");
         if (Files.isDirectory(ej)) {
             try (Stream<Path> s = Files.list(ej)) {
@@ -322,13 +334,6 @@ public final class Guardado {
         j.ultimoRivalNombre = v.getOrDefault("ultimoRivalNombre", "");
         Path ultimoRival = dir.resolve("ultimo_rival.java");
         if (Files.exists(ultimoRival)) j.ultimoRivalCodigo = Files.readString(ultimoRival, StandardCharsets.UTF_8);
-        leerPiezasPropias(dir, j);
-        leerEstadoCompilacionRobots(dir, v, j);
-        // Las partidas de antes del camino «Empezar»: quien ya había jugado ve el menú entero, como siempre.
-        if (!v.containsKey("menuCompleto")) {
-            j.menuCompleto = !j.historial.isEmpty() || !j.tutorialesHechos.isEmpty() || !j.ejerciciosResueltos.isEmpty();
-        }
-        return j;
     }
 
     private static void leerPiezasPropias(Path dir, Jugador j) throws IOException {

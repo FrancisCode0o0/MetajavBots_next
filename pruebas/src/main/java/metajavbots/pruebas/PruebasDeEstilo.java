@@ -78,7 +78,9 @@ final class PruebasDeEstilo {
             for (Texto t : textos()) {
                 if (!t.idioma().equals("es") || t.bloque()) continue;
                 // Fuera los operadores de Java: !x, x != y, n! (factorial), a ? b : c, <? extends T>, «!» citado.
-                String s = sinCodigo(t.texto()).replaceAll("«[^»\\s]{1,3}»", "").replaceAll("(^|\\s)[!?](\\s|$)", " ").replaceAll("[(<,]\\s*\\?", "(").replaceAll("![\\w(]|[\\w)]!|!=|<\\?|\\?>", "");
+                String s = sinCodigo(t.texto()).replaceAll("«[^»\\s]{1,3}»", "")
+                        .replaceAll("(^|\\s)[!?](\\s|$)", " ").replaceAll("[(<,]\\s*\\?", "(")
+                        .replaceAll("![\\w(]|[\\w)]!|!=|<\\?|\\?>", "");
                 if (cuenta(s, '?') > cuenta(s, '¿') || cuenta(s, '!') > cuenta(s, '¡')) mal.add(t.toString());
             }
             vacia(mal, "preguntas o exclamaciones sin ¿ o ¡");
@@ -156,7 +158,8 @@ final class PruebasDeEstilo {
     /** Si es una frase de verdad (varias palabras en minúscula), no un nombre, una cifra o un trozo de código. */
     private static boolean pareceFrase(String s) {
         String sin = sinCodigo(s);
-        return sin.length() > 25 && Pattern.compile("\\p{Ll}{3,} \\p{Ll}{2,} \\p{Ll}{2,} \\p{Ll}{2,}").matcher(sin).find() && !sin.contains("(") && !sin.contains(";");
+        return sin.length() > 25 && Pattern.compile("\\p{Ll}{3,} \\p{Ll}{2,} \\p{Ll}{2,} \\p{Ll}{2,}").matcher(sin).find()
+                && !sin.contains("(") && !sin.contains(";");
     }
 
     /** Todos los textos de res/ para el jugador, en el orden de los archivos. */
