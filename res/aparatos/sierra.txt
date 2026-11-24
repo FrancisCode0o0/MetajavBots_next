@@ -69,7 +69,7 @@ public final class Saege implements Geraet {
 == en
 /**
  * SAW “Sierrón” — An attachable high-RPM circular saw aimed at the
- * angle you give: spins for nearly a second and shreds any close enemy
+ * angle you give: spins for nearly a second and shreds any nearby rival
  * in front of you with rapid hits.
  *
  * How to plug it into your robot:

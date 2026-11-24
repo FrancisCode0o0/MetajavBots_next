@@ -87,7 +87,7 @@ de:
 en:
     Compiling means translating what you write (the source code, in Java, which people can read) into a language the machine can run. A program called a compiler does it.
     It's the workshop inspector: before your robot is allowed into the ring, it checks every part. If a screw is missing (a ;) or a part doesn't exist, there's no fight: you get the robot back with a red sticker on the exact spot of the problem.
-    In Java, the compiler javac turns MiRobot.java into MiRobot.class, which holds bytecode: simple instructions that the Java virtual machine (the JVM) runs on any computer. In the game you never type javac: you press the red Compile button (with yellow text) in the Workshop's Code tab top bar (or Ctrl+S), and if it compiles, your robot fights with the new code.
+    In Java, the compiler javac turns MiRobot.java into MiRobot.class, which holds bytecode: simple instructions that the Java virtual machine (the JVM) runs on any computer. In the game you never type javac: you press the red Compile button (with yellow text) in the top bar of the Workshop's Code tab (or Ctrl+S), and if it compiles, your robot fights with the new code.
     Key game rule: if you have never compiled your robot, it enters the arena standing still and doing nothing (there is no autopilot). If you already compiled a valid version before and later edit without recompiling—or with errors—your robot runs exactly the last valid version you compiled. Compile often and fix the first red error before the others.
 pseudo.es:
     escribo MiRobot.java            (para personas)
@@ -141,7 +141,7 @@ es:
     El fallo típico es olvidar el punto y coma (;) del final: el compilador marca en rojo «';' expected», a menudo al final de la línea o en la siguiente, porque se da cuenta tarde. El otro, poner un punto y coma (;) justo después de if (...): eso cierra una orden vacía y lo de debajo se hace siempre.
 de:
     Eine Anweisung ist ein vollständiger Befehl, wie ein Satz: „fahr 50 vorwärts“, „merk dir diese Zahl“, „sag hallo“. In Java enden fast alle mit einem Semikolon (;).
-    Das Semikolon ist das „Over!“ im Funkgerät des Trainers: Bis der Roboter es hört, weiß er nicht, ob der Befehl zu Ende ist. Ohne klingt „fahr 50 dreh 10“ für ihn wie ein einziger seltsamer Schrei, und er bleibt stehen und kratzt sich an der Antenne.
+    Das Semikolon ist das „Over!“ im Funkgerät des Trainers: Bis der Roboter es hört, weiß er nicht, ob der Befehl zu Ende ist. Ohne Semikolon klingt „fahr 50 dreh 10“ für ihn wie ein einziger seltsamer Schrei, und er bleibt stehen und kratzt sich an der Antenne.
     Im Spiel ist jede Zeile wie vorwaerts(50); oder sagen("Hallo!"); eine Anweisung. Du kannst zwei in eine Zeile schreiben (vorwaerts(50); drehen(10);), lesbarer ist aber eine pro Zeile. Was geschweifte Klammern öffnet, wie if (...) { } oder jedenZug() { } selbst, bekommt hinter der Klammer kein Semikolon (;).
     Der typische Fehler: das Semikolon (;) am Ende vergessen. Der Compiler markiert dann „';' expected“ in Rot, oft am Zeilenende oder erst in der nächsten Zeile, weil er es spät merkt. Der zweite: ein Semikolon (;) direkt hinter if (...). Das beendet einen leeren Befehl, und was darunter steht, passiert immer.
 en:
@@ -189,7 +189,7 @@ ver: sentencia, depurar, pseudocodigo
 es:
     Un comentario es un texto dentro del código que Java no lee: es solo para las personas. Sirve para explicar por qué haces algo o para apagar una línea sin borrarla.
     Son los garabatos del mecánico en la chapa del robot: «ojo, el brazo izquierdo tira a la derecha». El robot no sabe leer, así que no le afectan; pero el mecánico de mañana (tú) los agradecerá cuando no recuerde por qué el brazo va atado con cinta americana.
-    Con // el comentario va hasta el final de la línea; con /* y */ puede ocupar varias líneas o solo un trocito. En el taller, Ctrl+/ comenta o descomenta la línea en la que estás: perfecto para probar «¿y si mi robot no girase?».
+    Con // el comentario va hasta el final de la línea; con /* y */ puede ocupar varias líneas o solo un trocito. En el Taller, Ctrl+/ comenta o descomenta la línea en la que estás: perfecto para probar «¿y si mi robot no girase?».
     El fallo típico es abrir /* y olvidarse del */: todo lo de debajo se vuelve comentario y el compilador se queja de cosas rarísimas. Y un comentario malo repite el código (// avanza 50); uno bueno cuenta el porqué (// me muevo para no ser un blanco fácil).
 de:
     Ein Kommentar ist Text im Code, den Java nicht liest: Er ist nur für Menschen. Damit erklärst du, warum du etwas tust, oder schaltest eine Zeile aus, ohne sie zu löschen.
@@ -199,7 +199,7 @@ de:
 en:
     A comment is text inside the code that Java doesn't read: it's only for people. You use it to explain why you do something, or to switch a line off without deleting it.
     Comments are the mechanic's scribbles on the robot's bodywork: “careful, the left arm pulls to the right”. The robot can't read, so they don't affect it; but tomorrow's mechanic (you) will be grateful when you can't remember why the arm is held on with duct tape.
-    With // the comment runs to the end of the line; with /* and */ it can span several lines or just a little piece. In the workshop, Ctrl+/ comments or uncomments the line you're on: perfect for testing “what if my robot didn't turn?”
+    With // the comment runs to the end of the line; with /* and */ it can span several lines or just a little piece. In the Workshop, Ctrl+/ comments or uncomments the line you're on: perfect for testing “what if my robot didn't turn?”
     The classic mistake is opening /* and forgetting the */: everything below becomes a comment and the compiler complains about the strangest things. And a bad comment repeats the code (// moves 50 ahead); a good one tells you why (// I keep moving so I'm not an easy target).
 pseudo.es:
     CADA TURNO:
@@ -218,7 +218,7 @@ pseudo.en:
         move ahead 60    (note: moving makes me harder to hit)
         turn 4
         (switched off: turn 15)
-        turn the aim 25
+        turn the sight 25
 ejemplo:
     @Override
     public void cadaTurno() {
@@ -338,7 +338,7 @@ pseudo.en:
         write hits
 ejemplo:
     public class MiRobot extends Metajavbot {
-        int golpes = 0;                 // fuera: dura toda la ronda || außen: hält die ganze Runde || outside: lasts the whole round
+        int golpes = 0;                 // fuera: dura toda la ronda || außerhalb: hält die ganze Runde || outside: lasts the whole round
 
         @Override
         public void alRecibirGolpe(Golpe g) {
@@ -369,7 +369,7 @@ de:
     Der typische Fehler: ein double in ein int stecken. int vida = blindaje(); kompiliert nicht („possible lossy conversion from double to int“), weil die Nachkommastellen verloren gingen. Nimm double vida = blindaje(); oder wandle absichtlich mit (int) um.
 en:
     A type says what kind of value fits in a variable: a whole number, one with decimals, a yes or a no, a letter. Java wants to know before it stores anything.
-    It's like the parts store in the workshop: the arm socket only takes arms, and if you try to jam a wheel in, the mechanic gives you a funny look and refuses. An int variable is a socket shaped like a whole number: neither 3.5 nor “hello” will fit.
+    It's like the parts storeroom in the workshop: the arm socket only takes arms, and if you try to jam a wheel in, the mechanic gives you a funny look and refuses. An int variable is a socket shaped like a whole number: neither 3.5 nor “hello” will fit.
     The most common primitive types are int (whole numbers: 3, -7), double (decimals: 2.5), boolean (true or false) and char (one character: 'A'). In the game, energia (energy) and blindaje (armor) return a double, turnoActual (tick) returns an int and listoIzquierda (readyLeft) returns a boolean. There are more (long, float, byte, short), but those four are enough to start with. Text, String, is not primitive: it's an object.
     The classic mistake is putting a double into an int: int vida = blindaje(); doesn't compile (“possible lossy conversion from double to int”), because the decimals would be lost. Use double vida = blindaje(); or convert on purpose with (int).
 pseudo.es:
@@ -482,7 +482,7 @@ de:
     Der typische Fehler: einen Durchschnitt oder Prozentsatz mit int ausrechnen, und heraus kommt 0. int haelfte = 1 / 2; ist 0. Nimm ein double in die Rechnung (1.0 / 2) oder speichere das Ergebnis gleich in einem double. Und vergleiche double nicht mit exaktem ==: 0.1 + 0.2 ergibt nicht genau 0.3.
 en:
     Java mainly stores numbers in two ways: int for whole numbers (3, -12, 100) and double for numbers with decimals (2.5, 0.75). Decimals are written with a point, never a comma.
-    An int is the round counter: there's no such thing as “round two and a half”. A double is the weigh-in scale: 87.3 kilos of proud scrap metal. Hand the round counter half a round and it bins it without a second glance.
+    An int is the round counter: there's no such thing as “round two and a half”. A double is the weigh-in scale: 87.3 kilos of proud scrap metal. Hand the round counter half a round and it tosses it in the trash without a second glance.
     In the game, turnoActual (tick) and ronda (round) are int; energia (energy), blindaje (armor), x(), y() and e.distancia() (distance) are double. Careful with division: 7 / 2 between two ints gives 3 (the decimal part is dropped), but 7.0 / 2 gives 3.5. And % gives the remainder: 7 % 2 is 1.
     The classic mistake is working out an average or a percentage with ints and getting 0: int half = 1 / 2; is 0. Put a double into the calculation (1.0 / 2) or store the result in a double from the start. And don't compare doubles with an exact ==: 0.1 + 0.2 is not exactly 0.3.
 pseudo.es:
@@ -594,7 +594,7 @@ de:
     Der typische Fehler: den Vorrang vergessen. e.distancia() - 50 / 2 zieht 25 ab, nicht die Hälfte von allem. Im Zweifel: Klammern setzen. Der andere: "1" + 2 ergibt "12" (zusammengeklebter Text), nicht 3.
 en:
     Operators are the signs for doing sums: + adds, - subtracts, * multiplies, / divides and % gives the remainder of a division. With them you write expressions, like 2 + 3 * 4.
-    They're the keys on the calculator the coach keeps in his tracksuit pocket: “the distance, minus the arm's reach, times two”. The robot can't count on its fingers (it has pincers), but with these five keys it solves every sum in the fight.
+    They're the keys on the calculator the coach keeps in his tracksuit pocket: “the distance, minus the arm's range, times two”. The robot can't count on its fingers (it has pincers), but with these five keys it solves every sum in the fight.
     Just like at school, * / and % come before + and -: 2 + 3 * 4 gives 14, and (2 + 3) * 4 gives 20. In the game, avanzar(e.distancia() - 50); (ahead, distance) closes in until it's 50 away, and turnoActual() % 30 == 0 (tick) is true once every 30 ticks, roughly once a second. The + also glues text together: "life: " + blindaje() (armor).
     The classic mistake is forgetting precedence: e.distancia() - 50 / 2 subtracts 25, not half of the whole thing. When in doubt, add parentheses. The other one: "1" + 2 gives "12" (glued text), not 3.
 pseudo.es:
@@ -623,7 +623,7 @@ ejemplo:
     public void alVerEnemigo(Enemigo e) {
         double falta = e.distancia() - 50;                 // resta: lo que falta para quedar a 50 || Minus: was fehlt, bis ich bei 50 bin || minus: how far until I'm 50 away
         if (falta > 0) avanzar(falta);
-        double media = (blindaje() + e.blindaje()) / 2;    // paréntesis: primero suma, luego divide || Klammern: erst addieren, dann teilen || brackets: add first, then divide
+        double media = (blindaje() + e.blindaje()) / 2;    // paréntesis: primero suma, luego divide || Klammern: erst addieren, dann teilen || parentheses: add first, then divide
         if (turnoActual() % 30 == 0) {                     // resto 0: una vez cada 30 turnos || Rest 0: einmal alle 30 Züge || remainder 0: once every 30 ticks
             escribir("media de blindaje: " + media);
         }
@@ -641,7 +641,7 @@ claves.en: comparison, comparisons, compare, compare numbers, greater than, less
 ver: boolean, asignacion, if_else, operadores_logicos
 es:
     Comparar es preguntar cómo es un valor frente a otro: ¿es mayor?, ¿menor?, ¿igual?, ¿distinto? La respuesta siempre es true o false.
-    Es el pesaje antes del combate: «¿pesa más el Destructor 3000 que la Tostadora Furiosa?». El juez no da opiniones ni hace chistes: solo dice sí o no, y luego se va a merendar.
+    Es el pesaje antes de la pelea: «¿pesa más el Destructor 3000 que la Tostadora Furiosa?». El juez no da opiniones ni hace chistes: solo dice sí o no, y luego se va a merendar.
     En Java: < menor, > mayor, <= menor o igual, >= mayor o igual, == igual y != distinto. En el juego, if (e.distancia() < 80) atacar(); pega solo si el rival está cerca, e if (blindaje() <= 20) retroceder(50); huye cuando queda poco blindaje.
     El fallo típico es usar = en vez de == (eso guarda, no compara) y comparar textos con ==: para String usa equals, como e.nombre().equals("Tostadora"). Ojo también con 0 < x < 10, que en Java no vale: hay que escribir x > 0 && x < 10.
 de:
@@ -831,7 +831,7 @@ es:
     Llamar a un método es pedirle a un trozo de código ya hecho que haga su trabajo. Se escribe su nombre seguido de paréntesis, y dentro van los datos que necesita: avanzar(50).
     Es pulsar un botón del mando del robot: «avanzar», «girar», «pegar». No necesitas saber qué engranajes se mueven por dentro; solo pulsar el botón correcto y decirle cuánto. Gritarle «¡avanza!» sin paréntesis es como pulsar el aire con mucha convicción.
     El juego te da un montón: avanzar(50) avanza 50, girar(90) gira 90 grados, apuntarHacia(e.angulo()) apunta al rival y atacar() pega (sin datos, pero con sus paréntesis vacíos). Algunos además contestan algo y puedes guardarlo: double vida = blindaje();, o e.distancia(), con un punto, para preguntárselo al rival. Java también tiene los suyos: Math.max(3, 7) da 7.
-    El fallo típico es olvidar los paréntesis (atacar; no compila), escribir mal el nombre o las mayúsculas (Avanzar(50) no existe) o darle datos que no espera (avanzar("mucho")). En el taller, F1 sobre una palabra te enseña qué pide cada método.
+    El fallo típico es olvidar los paréntesis (atacar; no compila), escribir mal el nombre o las mayúsculas (Avanzar(50) no existe) o darle datos que no espera (avanzar("mucho")). En el Taller, F1 sobre una palabra te enseña qué pide cada método.
 de:
     Eine Methode aufrufen heißt, ein fertiges Stück Code zu bitten, seine Arbeit zu machen. Du schreibst ihren Namen, dahinter Klammern, und in die Klammern kommen die Angaben, die sie braucht: avanzar(50) (auf Deutsch vorwaerts(50)).
     Das ist wie ein Knopf auf der Fernbedienung des Roboters: „vorwärts“, „drehen“, „zuschlagen“. Welche Zahnräder sich drinnen drehen, musst du nicht wissen; du drückst nur den richtigen Knopf und sagst, wie viel. „Vorwärts!“ ohne Klammern zu brüllen ist, als würdest du sehr überzeugt in die Luft drücken.
@@ -841,7 +841,7 @@ en:
     Calling a method means asking a ready-made piece of code to do its job. You write its name followed by parentheses, and inside go the values it needs: avanzar(50) (ahead(50) in English).
     It's pressing a button on the robot's remote: “move”, “turn”, “punch”. You don't need to know which cogs spin inside; you just press the right button and say how much. Yelling “move!” without parentheses is like jabbing at thin air with great conviction.
     The game gives you loads of them: avanzar(50) (ahead) moves 50 forward, girar(90) (turn) turns 90 degrees, apuntarHacia(e.angulo()) (aimTo, angle) aims at the rival and atacar() (attack) strikes, with no values but still with its empty parentheses. Some also give you an answer you can keep: double vida = blindaje(); (armor), or e.distancia() (distance), with a dot, to ask the rival. Java has its own too: Math.max(3, 7) gives 7.
-    The classic mistake is forgetting the parentheses (atacar; doesn't compile), misspelling the name or its capitals (Avanzar(50) doesn't exist) or giving it values it doesn't expect (avanzar("lots")). In the workshop, F1 on a word shows you what each method needs.
+    The classic mistake is forgetting the parentheses (atacar; doesn't compile), misspelling the name or its capitals (Avanzar(50) doesn't exist) or giving it values it doesn't expect (avanzar("lots")). In the Workshop, F1 on a word shows you what each method needs.
 pseudo.es:
     CADA TURNO:
         avanzar(50)               (botón + cuánto)
@@ -866,7 +866,7 @@ pseudo.en:
 ejemplo:
     @Override
     public void cadaTurno() {
-        avanzar(50);                                 // nombre + paréntesis + dato || Name + Klammern + Angabe || name + brackets + value
+        avanzar(50);                                 // nombre + paréntesis + dato || Name + Klammern + Angabe || name + parentheses + value
         girar(10);
         apuntar(25);
         double vida = blindaje();                    // este contesta: guardo lo que dice || diese antwortet: ich speichere die Antwort || this one answers: I keep what it says
@@ -887,7 +887,7 @@ claves.en: pseudocode, pseudo code, what is pseudocode, from pseudocode to java,
 ver: algoritmo, programa, if_else, comentario
 es:
     El pseudocódigo es escribir los pasos de un programa en tu propio idioma, sin preocuparte de puntos y comas ni de palabras exactas. Es el borrador de la idea, antes de pasarla a Java.
-    Es la estrategia que el entrenador garabatea en una servilleta antes del combate: «SI el rival se acerca: pégale; SI NO: da vueltas». La servilleta no pelea, pero sin ella el robot sale al ring a improvisar, y un robot improvisando da bastante pena.
+    Es la estrategia que el entrenador garabatea en una servilleta antes de la pelea: «SI el rival se acerca: pégale; SI NO: da vueltas». La servilleta no pelea, pero sin ella el robot sale al ring a improvisar, y un robot improvisando da bastante pena.
     Para pasarlo a Java, cada línea se convierte en una sentencia: «CADA TURNO» es cadaTurno() { }, «SI … SI NO …» es if (…) { } else { }, «avanzar 50» es avanzar(50);, y lo que va sangrado debajo va entre llaves. Este entrenador te enseña siempre el pseudocódigo al lado del Java para que veas cómo se corresponden.
     El fallo típico es saltarse el pseudocódigo y pelearse a la vez con la idea y con Java. Otro, escribirlo tan vago («ganar la pelea») que no hay forma de traducirlo: cada línea debe ser una orden o una pregunta que el robot sepa hacer.
 de:
@@ -899,7 +899,7 @@ en:
     Pseudocode means writing the steps of a program in your own language, without worrying about semicolons or exact words. It's the rough draft of the idea, before you turn it into Java.
     It's the game plan the coach scribbles on a napkin before the fight: “IF the rival comes closer: hit them; ELSE: run in circles”. The napkin doesn't fight, but without it the robot goes into the ring to improvise, and an improvising robot is a sorry sight.
     To turn it into Java, each line becomes a statement: “EVERY TICK” becomes cadaTurno (onTick) with its { }, “IF … ELSE …” becomes if (…) { } else { }, “move ahead 50” becomes avanzar(50); (ahead), and whatever is indented underneath goes between the braces. This coach always shows you the pseudocode next to the Java so you can see what matches what.
-    The classic mistake is skipping the pseudocode and wrestling with the idea and with Java at the same time. Another is writing it so vaguely (“win the fight”) that it can't be translated: every line should be an order or a question the robot knows how to do.
+    The classic mistake is skipping the pseudocode and wrestling with the idea and with Java at the same time. Another is writing it so vaguely (“win the fight”) that it can't be translated: every line should be an order or a question the robot can handle.
 pseudo.es:
     CADA TURNO:
         girar la mira 25
@@ -920,7 +920,7 @@ pseudo.de:
             bis zu ihm fahren
 pseudo.en:
     EVERY TICK:
-        turn the aim 25
+        turn the sight 25
     ON SEEING THE RIVAL:
         IF they're closer than 80:
             attack
@@ -930,14 +930,14 @@ pseudo.en:
 ejemplo:
     @Override
     public void cadaTurno() {                  // CADA TURNO: || JEDEN ZUG: || EVERY TICK:
-        apuntar(25);                           // girar la mira 25 || Visier um 25 drehen || turn the aim 25
+        apuntar(25);                           // girar la mira 25 || Visier um 25 drehen || turn the sight 25
     }
     @Override
     public void alVerEnemigo(Enemigo e) {      // AL VER AL RIVAL: || BEI SICHT DES GEGNERS: || ON SEEING THE RIVAL:
         if (e.distancia() < 80) {              // SI está a menos de 80: || WENN er näher als 80 ist: || IF they're closer than 80:
             atacar();                          // atacar || angreifen || attack
         } else {                               // SI NO: || SONST: || ELSE:
-            girarHacia(e.angulo());            // girar hacia él || zu ihm drehen || turn towards them
+            girarHacia(e.angulo());            // girar hacia él || zu ihm drehen || turn toward them
             avanzar(e.distancia());            // avanzar hasta él || bis zu ihm fahren || move up to them
         }
     }
@@ -965,7 +965,7 @@ de:
 en:
     An algorithm is a list of ordered, precise steps to solve a problem. A cooking recipe is an algorithm; so are the instructions for flat-pack furniture (even if there's always one screw left over).
     For your robot: “1. Turn the radar until you see someone. 2. If you see them, aim. 3. If they're close, hit; otherwise, get closer. 4. Back to step 1.” That's a fighting algorithm. The Furious Toaster's is shorter: “1. Scream. 2. Crash into the wall.”
-    An algorithm isn't Java: it's the idea. First you think it through (in pseudocode or on paper) and then you write it in Java with statements, ifs and methods like apuntarHacia(e.angulo()) (aimTo, angle) or atacar() (attack). Java already ships some famous ones, like Collections.sort(list) to sort or Math.max(a, b) to keep the larger one.
+    An algorithm isn't Java: it's the idea. First you think it through (in pseudocode or on paper) and then you write it in Java with statements, ifs and methods like apuntarHacia(e.angulo()) (aimTo, angle) or atacar() (attack). Java already ships with some famous ones, like Collections.sort(list) to sort or Math.max(a, b) to keep the larger one.
     The classic mistake is leaving steps vague (“get a bit closer”) or cases unthought-of (what if I can't see anyone? what if there are two?). A good algorithm finishes, forgets no case, and every step could be followed by someone without having to ask.
 pseudo.es:
     CADA TURNO:
@@ -1022,8 +1022,8 @@ claves.en: compile error, compilation error, does not compile, red underline, re
 ver: compilar, sentencia, bloque, error_en_ejecucion
 es:
     Un error de compilación es algo de tu código que Java no entiende, y por eso se niega a convertirlo en programa. El robot ni siquiera llega a pisar la arena con ese código.
-    Es el inspector del taller devolviéndote el robot con una pegatina roja: «Aquí falta un tornillo». No es un drama: el inspector es un quisquilloso, pero también tu mejor amigo, porque te avisa ANTES de que el brazo se caiga en mitad del combate.
-    En el taller, al compilar (Ctrl+S), la línea con el problema sale marcada en rojo; pasa el ratón por encima y el juego te lo explica. Los más típicos: «';' expected» (falta un punto y coma), «cannot find symbol» (un nombre mal escrito, como avanzr(50) o Blindaje()) e «incompatible types» (un texto donde va un número).
+    Es el inspector del taller devolviéndote el robot con una pegatina roja: «Aquí falta un tornillo». No es un drama: el inspector es un quisquilloso, pero también tu mejor amigo, porque te avisa ANTES de que el brazo se caiga en mitad de la pelea.
+    En el Taller, al compilar (Ctrl+S), la línea con el problema sale marcada en rojo; pasa el ratón por encima y el juego te lo explica. Los más típicos: «';' expected» (falta un punto y coma), «cannot find symbol» (un nombre mal escrito, como avanzr(50) o Blindaje()) e «incompatible types» (un texto donde va un número).
     El fallo típico es intentar arreglar todos los errores a la vez: arregla solo el [[primero]] y vuelve a compilar, porque los demás suelen ser su eco. Y mira también la línea de antes: si a una le falta el punto y coma (;), Java a veces se queja en la siguiente.
 de:
     Ein Kompilierfehler ist etwas in deinem Code, das Java nicht versteht, und deshalb weigert es sich, daraus ein Programm zu machen. Mit diesem Code betritt der Roboter die Arena gar nicht erst.
@@ -1033,7 +1033,7 @@ de:
 en:
     A compile error is something in your code that Java doesn't understand, so it refuses to turn it into a program. With that code, the robot never even sets foot in the arena.
     It's the workshop inspector handing your robot back with a red sticker: “there's a screw missing here”. No drama: the inspector is a nitpicker, but also your best friend, because they warn you BEFORE the arm falls off in the middle of the fight.
-    In the workshop, when you compile (Ctrl+S), the line with the problem is marked in red; hover over it and the game explains it. The usual suspects: “';' expected” (a semicolon is missing), “cannot find symbol” (a misspelled name, like ahaed(50) or Armor()) and “incompatible types” (text where a number should go).
+    In the Workshop, when you compile (Ctrl+S), the line with the problem is marked in red; hover over it and the game explains it. The usual suspects: “';' expected” (a semicolon is missing), “cannot find symbol” (a misspelled name, like ahaed(50) or Armor()) and “incompatible types” (text where a number should go).
     The classic mistake is trying to fix every error at once: fix only the FIRST one and compile again, because the rest are often just its echo. And check the line before too: if that one is missing its ;, Java sometimes complains on the next.
 pseudo.es:
     pulso Compilar
@@ -1082,7 +1082,7 @@ es:
     El fallo típico es suponer que siempre habrá algo: un rival a la vista, un número distinto de cero. Antes de usarlo, compruébalo con un if, como if (!enemigosVistos().isEmpty()) o if (vistos > 0). Y lee el nombre de la excepción: casi siempre dice exactamente qué pasó.
 de:
     Ein Laufzeitfehler passiert, wenn der Code korrekt geschrieben ist (er kompiliert), aber beim Ausführen etwas Unmögliches versucht, etwa durch null teilen oder etwas benutzen, das es nicht gibt. In Java heißt das Ausnahme (Exception).
-    Das ist der Roboter, der die Werkstattprüfung mit Bestnote besteht und dann im Ring mit dem Arm zuschlagen will, den er auf der Werkbank liegen gelassen hat. Der verrückte Sprecher brüllt es durch die Halle, das Publikum lacht, und der Roboter starrt auf seine leere Schulter.
+    Das ist der Roboter, der die Werkstattprüfung mit Bestnote besteht und dann im Ring mit dem Arm zuschlagen will, den er auf der Werkbank liegen gelassen hat. Der verrückte Ansager brüllt es durch die Halle, das Publikum lacht, und der Roboter starrt auf seine leere Schulter.
     Klassische Beispiele: 100 / 0 mit int wirft eine ArithmeticException; eine Variable benutzen, die null ist, wirft eine NullPointerException; und ein Element verlangen, das es nicht gibt, etwa enemigosVistos().get(0) (gesehen), wenn du niemanden siehst, wirft eine IndexOutOfBoundsException. Im Spiel geht der Kampf weiter, aber in diesem Zug bricht deine Methode an der fehlerhaften Zeile ab, und die Konsole deines Roboters sagt dir, welche Ausnahme es war.
     Der typische Fehler: davon ausgehen, dass immer etwas da ist: ein Gegner in Sicht, eine Zahl ungleich null. Prüf es vorher mit einem if, etwa if (!enemigosVistos().isEmpty()) oder if (vistos > 0). Und lies den Namen der Ausnahme: Er sagt fast immer genau, was passiert ist.
 en:
@@ -1151,7 +1151,7 @@ en:
     Debugging means finding out why a program doesn't do what you expected, and fixing it. It isn't guessing: it's looking at what really happens, step by step, until you catch the guilty line.
     It's the workshop detective, magnifying glass and trench coat: “why does the robot turn left when I asked for right?” They question every line, check the variables' alibis and, in the end, the culprit is usually a minus sign that looks as if butter wouldn't melt in its mouth.
     Three tools: print what each thing is worth with escribir("distance: " + e.distancia()) (print, distance) or System.out.println; switch lines off with // to see which one causes the trouble; and the game's debugger: in any fight, Space pauses, F9 shows your robot's variables live, its steps and its console, and → steps one tick.
-    The classic mistake is changing things at random “to see if it works”. Do it the other way round: look first (print or pause), then think about why it happens, and change only one thing at a time. And remove your test prints when you're done, or they'll flood the console 30 times a second.
+    The classic mistake is changing things at random “to see if it works”. Do it the other way around: look first (print or pause), then think about why it happens, and change only one thing at a time. And remove your test prints when you're done, or they'll flood the console 30 times a second.
 pseudo.es:
     MIENTRAS el robot haga algo raro:
         pausar y mirar sus variables (F9)

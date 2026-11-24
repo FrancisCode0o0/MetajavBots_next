@@ -62,7 +62,7 @@ public final class Magnet implements Geraet {
     /** Was es beim Benutzen tut. */
     void benutzen(MetajavbotDe roboter, double winkel) {
         if (warten > 0) return;
-        roboter.anziehenUndAblenken(winkel, 260, 65);   // Reichweite 260, Zug 65
+        roboter.anziehenUndAblenken(winkel, 260, 65);   // Reichweite 260, Zugkraft 65
         warten = 180;
     }
 }

@@ -69,7 +69,7 @@ public final class Hammer implements Geraet {
 == en
 /**
  * HAMMER “Mazazo” — An attachable short-range hammer aimed at the
- * angle you give: deals 10 damage, knocks the enemy back and stuns
+ * angle you give: deals 10 damage, knocks the rival back and stuns
  * them briefly.
  *
  * How to plug it into your robot:

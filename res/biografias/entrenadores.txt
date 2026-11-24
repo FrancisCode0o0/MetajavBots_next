@@ -24,10 +24,10 @@ en: He didn't want to train you. He said no seven times and locked the workshop 
 [cobra]
 es: Su lema es «sin compasión con los bugs». Grita mucho, pero solo a los errores de compilación; a ti, nunca.
 de: Sein Motto ist „keine Gnade für Bugs“. Er schreit viel, aber nur Kompilierfehler an; dich nie.
-en: His motto is “no mercy for bugs.” He shouts a lot, but only at compile errors; never at you.
+en: His motto is “no mercy for bugs” He shouts a lot, but only at compile errors; never at you.
 
 [yanobit]
-es: Enseña judo de bits en un estanque. Dice que un buen programador cae siete veces y se levanta ocho, y que el octavo es un bucle.
+es: Enseña judo de bits en un estanque. Dice que un buen programador cae siete veces y se levanta ocho, y que la octava es un bucle.
 de: Er lehrt Bit-Judo an einem Teich. Er sagt, ein guter Programmierer fällt siebenmal und steht achtmal auf, und das achte ist eine Schleife.
 en: He teaches bit-judo by a pond. He says a good programmer falls seven times and rises eight, and the eighth is a loop.
 

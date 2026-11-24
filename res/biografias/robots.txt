@@ -5,7 +5,7 @@
 [cobalto]
 es: Nació en una fábrica de neveras y nadie se dio cuenta durante tres años. Todavía enfría los zumos que le dejan en el pecho.
 de: Er wurde in einer Kühlschrankfabrik geboren und drei Jahre lang hat es keiner gemerkt. Er kühlt immer noch die Säfte, die man ihm auf die Brust stellt.
-en: Born in a fridge factory, and nobody noticed for three years. He still chills any juice you leave on his chest.
+en: He was born in a fridge factory, and nobody noticed for three years. He still chills any juice you leave on his chest.
 
 [chispa]
 es: Fue el primer robot en correr una maratón… dentro de una lavadora. Desde entonces no sabe estarse quieta.
