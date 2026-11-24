@@ -434,7 +434,7 @@ public final class PantallaPelea implements Pantalla {
             entrenador.dibujar(j, pelea, vista, ancho, dt, !pausa);
             if (!panelDelAparato.estaAbierto()) entrenador.clic(j, pelea, vista);
         }
-        if (!depurador && !entreRondas && anchoAviso > 0 && entrenador.avisoAlBorde(j, p.ancho - anchoAviso, dt, !pausa)) empezarPasoAPaso();
+        if (!depurador && !entreRondas && anchoAviso > 0) entrenador.avisoAlBorde(j, p.ancho - anchoAviso, dt, !pausa);
         if (!terminada && !entreRondas) controles(j, ancho);
         if (entreRondas) entreRondas(j);
         if (terminada) pantallaFinal(j, dt);
@@ -517,10 +517,9 @@ public final class PantallaPelea implements Pantalla {
         float der = depurador ? p.ancho - 460 : Math.min(anchoArena, EntrenadorFlotante.cajaRecogida(p.ancho, p.alto, ui.letra).x() + 12f);
         float tBtn = Math.min(ui.letra, PanelDelAparato.ALTO_BOTON * 0.5f);
         String txtPaso = T.t("pelea.paso"), txtVisor = T.t("pelea.visor"), txtDep = T.t("pelea.depurador"), txtRend = T.t("pelea.rendirse");
-        String txtPasoAPaso = T.t("pelea.paso_a_paso");
         metajavbots.combate.Aparatos.Tipo sig = pelea.aparatos.siguiente();
-        // El hueco del paso siempre está: en pausa, «Un turno»; en marcha, «Paso a paso» (para y abre el depurador en el turno).
-        float wPaso = Math.max(p.ancho(txtPaso, tBtn, true), p.ancho(txtPasoAPaso, tBtn, true)) + 28f;
+        // El hueco del paso solo existe en pausa: «Un turno». En marcha no se ofrece el paso a paso.
+        float wPaso = p.ancho(txtPaso, tBtn, true) + 28f;
         Marcadores.BarraInferior b = Marcadores.calcularBarraInferior(p.alto, der, true, wPaso,
                 Math.min(160f, p.ancho(txtVisor, tBtn, true) + 32f), Math.min(220f, p.ancho(txtDep, tBtn, true) + 32f),
                 Math.min(190f, p.ancho(txtRend, tBtn, true) + 32f), sig != null, PanelDelAparato.anchoBotonDeseado(p, ui, sig));
@@ -537,7 +536,6 @@ public final class PantallaPelea implements Pantalla {
             x += 62;
         }
         if (pausa && ui.boton(txtPaso, x, y, b.wPaso(), 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_ayuda"))) pasoAPaso(j);
-        if (!pausa && ui.boton(txtPasoAPaso, x, y, b.wPaso(), 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_a_paso_ayuda"))) empezarPasoAPaso();
         if (ui.boton(txtVisor, b.xVisor(), y, b.wVisor(), 46, j.visorTactico ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,
                 T.t("pelea.visor_ayuda"))) j.visorTactico = !j.visorTactico;
         if (ui.boton(txtDep, b.xDepurador(), y, b.wDepurador(), 46, depurador ? Ui.Estilo.ELEGIDO : Ui.Estilo.PLANO, true,

@@ -19,17 +19,17 @@ ver: como_obedece, mec_radar, mec_tope
 es:
     Qué es: La pelea va a saltitos llamados turnos, como los dibujos de un cuaderno que pasas deprisa. En cada turno tu robot lee su código: primero los avisos (alRecibirGolpe, alVerEnemigo…) y al final cadaTurno.
     Las cifras: Hay 30 turnos por segundo y una ronda dura 1200 turnos (40 segundos). El robot tiene tres mandos: ruedas, cuerpo y cabeza (la mira). Cada mando se queda solo con la ÚLTIMA orden del turno. La cabeza gira unos 14° por turno (menos con armas pesadas).
-    En la pelea: Con «Paso a paso» la pelea se para y avanzas turno a turno: ves la línea de tu código que actúa, qué recibe cada mando y cuánto le falta a la mira.
+    En la pelea: Pausa con Espacio y avanza con «Un turno» (o →) turno a turno: ves la línea de tu código que actúa, qué recibe cada mando y cuánto le falta a la mira.
     Desde tu código: Ruedas: avanzar, retroceder, detener. Cuerpo: girar, girarHacia. Cabeza: apuntar, apuntarHacia, apuntarA. restanteAvance, restanteGiro y restanteMira dicen cuánto falta. atacar dispara ya, hacia donde mira la cabeza ahora.
 de:
     Was es ist: Der Kampf läuft in kleinen Sprüngen, den Zügen, wie die Bilder eines Daumenkinos. In jedem Zug liest dein Roboter seinen Code: zuerst die Meldungen (beiTreffer, beiSicht …), zuletzt jedenZug.
     Die Zahlen: 30 Züge pro Sekunde; eine Runde dauert 1200 Züge (40 Sekunden). Der Roboter hat drei Regler: Räder, Körper und Kopf (das Visier). Jeder Regler behält nur den LETZTEN Befehl des Zugs. Der Kopf dreht sich etwa 14° pro Zug (mit schweren Waffen weniger).
-    Im Kampf: Mit „Schritt für Schritt“ hält der Kampf an, und du gehst Zug für Zug weiter: Du siehst die Zeile deines Codes, die wirkt, was jeder Regler bekommt und wie viel dem Visier noch fehlt.
+    Im Kampf: Pausiere mit der Leertaste und geh mit „Ein Zug“ (oder →) Zug für Zug weiter: Du siehst die Zeile deines Codes, die wirkt, was jeder Regler bekommt und wie viel dem Visier noch fehlt.
     In deinem Code: Räder: vorwaerts, rueckwaerts, anhalten. Körper: drehen, drehenNach. Kopf: zielen, zielenNach, zielenAuf. restStrecke, restDrehung und restZielen sagen, wie viel noch fehlt. angreifen schießt sofort, dorthin, wohin der Kopf jetzt schaut.
 en:
     What it is: The fight moves in little jumps called ticks, like the pictures of a flip book. Each tick your robot reads its code: first the events (onHit, onSeeEnemy…) and onTick last.
     The numbers: There are 30 ticks per second and a round lasts 1200 ticks (40 seconds). The robot has three controls: wheels, body and head (the sight). Each control keeps only the LAST order of the tick. The head turns about 14° per tick (less with heavy weapons).
-    In the fight: With “Step by step” the fight pauses and you move one tick at a time: you see the line of your code that acts, what each control gets and how far the sight still has to go.
+    In the fight: Pause with Space and step with “One tick” (or →) one tick at a time: you see the line of your code that acts, what each control gets and how far the sight still has to go.
     From your code: Wheels: ahead, back, stop. Body: turn, turnTo. Head: aim, aimTo, aimAt. remainingDistance, remainingTurn and remainingAim say how much is left. attack fires at once, where the head points now.
 pseudo.es:
     EN CADA TURNO:

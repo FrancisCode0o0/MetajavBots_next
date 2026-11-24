@@ -118,9 +118,9 @@ objetivo.en: A fight of several rounds against a robot of your rank. Your robot 
 gana.es: Gana quien recibe MENOS daño sumando todas las rondas. Si a un robot le rompen la cabeza, esa ronda se acaba.
 gana.de: Es gewinnt, wer über alle Runden WENIGER Schaden nimmt. Geht bei einem Roboter der Kopf kaputt, endet diese Runde.
 gana.en: Whoever takes LESS damage over all the rounds wins. If a robot’s head breaks, that round ends.
-nota.es: Entre rondas lees el informe y cambias código y piezas. «Paso a paso» para la pelea y te enseña tu código turno a turno.
-nota.de: Zwischen den Runden liest du den Bericht und änderst Code und Teile. „Schritt für Schritt“ hält den Kampf an und zeigt dir deinen Code Zug für Zug.
-nota.en: Between rounds you read the report and change code and parts. “Step by step” pauses the fight and shows you your code tick by tick.
+nota.es: Entre rondas lees el informe y cambias código y piezas. En la pelea, Espacio pausa y «Un turno» te enseña tu código turno a turno.
+nota.de: Zwischen den Runden liest du den Bericht und änderst Code und Teile. Im Kampf pausiert die Leertaste, und „Ein Zug“ zeigt dir deinen Code Zug für Zug.
+nota.en: Between rounds you read the report and change code and parts. In the fight, Space pauses and “One tick” shows you your code tick by tick.
 metodos: cadaTurno, alVerEnemigo, apuntarHacia, atacar, alRecibirGolpe
 mecanicas: mec_como_se_gana, mec_turno, mec_partes
 pseudo.es:
@@ -503,9 +503,9 @@ objetivo.en: Here you fix broken robots (with a hint) and practice the debugger 
 gana.es: Un robot roto queda arreglado cuando su código compila, lo has cambiado y cumple su meta en la arena.
 gana.de: Ein kaputter Roboter ist repariert, wenn sein Code kompiliert, du ihn geändert hast und er sein Ziel in der Arena erreicht.
 gana.en: A broken robot is fixed when its code compiles, you have changed it and it meets its goal in the arena.
-nota.es: En la pelea, «Paso a paso» (o F9) te deja ver qué línea actúa en cada turno.
-nota.de: Im Kampf zeigt dir „Schritt für Schritt“ (oder F9), welche Zeile in jedem Zug wirkt.
-nota.en: In the fight, “Step by step” (or F9) lets you see which line acts each tick.
+nota.es: En la pelea, pausa con Espacio y avanza con «Un turno» (o →) para ver qué línea actúa en cada turno. F9 abre el depurador.
+nota.de: Im Kampf pausierst du mit der Leertaste und gehst mit „Ein Zug“ (oder →) weiter, um zu sehen, welche Zeile in jedem Zug wirkt. F9 öffnet den Debugger.
+nota.en: In the fight, pause with Space and step with “One tick” (or →) to see which line acts each tick. F9 opens the debugger.
 metodos: escribir, decir
 mecanicas: mec_turno, mec_tope
 pseudo.es:

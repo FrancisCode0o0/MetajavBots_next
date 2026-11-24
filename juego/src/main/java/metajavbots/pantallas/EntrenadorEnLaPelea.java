@@ -223,11 +223,11 @@ final class EntrenadorEnLaPelea {
     }
 
     /**
-     * El panel del aviso al borde derecho de la arena: la cabeza del entrenador, el aviso en llano y dos botones
-     * («Paso a paso» y «Entendido»). Lo dice en voz alta una vez. Devuelve true si el jugador pidió el paso a paso.
+     * El panel del aviso al borde derecho de la arena: la cabeza del entrenador, el aviso en llano y el botón
+     * «Entendido». Lo dice en voz alta una vez.
      */
-    boolean avisoAlBorde(Juego j, float x, float dt, boolean enMarcha) {
-        if (asomaAviso <= 0) return false;
+    void avisoAlBorde(Juego j, float x, float dt, boolean enMarcha) {
+        if (asomaAviso <= 0) return;
         Pincel p = j.pincel;
         Ui ui = j.ui;
         Entrenador en = Entrenador.de(j.jugador.entrenador);
@@ -248,9 +248,6 @@ final class EntrenadorEnLaPelea {
         float tl = Math.min(22, ui.letra * 0.95f);
         cy += p.parrafo(texto, tx, cy, tw, tl, ui.tema.texto, 1) + 14;
         cy += p.parrafo(T.t("aviso.ordenes.f9"), tx, cy, tw, Math.min(19, ui.letra * 0.8f), ui.tema.textoSuave, 1) + 18;
-        float bw = (tw - 10) / 2;
-        boolean paso = ui.boton(T.t("pelea.paso_a_paso"), tx, cy, bw, 46, Ui.Estilo.NORMAL, avisos.activo(), T.t("pelea.paso_a_paso_ayuda"));
-        if (ui.boton(T.t("comun.entendido"), tx + bw + 10, cy, bw, 46, Ui.Estilo.PRINCIPAL, avisos.activo(), null) || paso) avisos.cerrar();
-        return paso;
+        if (ui.boton(T.t("comun.entendido"), tx, cy, tw, 46, Ui.Estilo.PRINCIPAL, avisos.activo(), null)) avisos.cerrar();
     }
 }

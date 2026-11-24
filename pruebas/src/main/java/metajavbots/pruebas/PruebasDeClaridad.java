@@ -306,7 +306,7 @@ final class PruebasDeClaridad {
                 "como.mecanicas", "como.seguir", "como.todas", "como.todas_ayuda", "mecanicas.titulo", "mecanicas.intro", "mecanicas.idea",
                 "mecanicas.ver", "camino.titulo", "camino.paso", "camino.empezar", "camino.seguir", "camino.todo", "camino.todo_ayuda",
                 "camino.que.leccion", "camino.que.ejercicio", "camino.que.pelea", "camino.pelea", "menu.mecanicas", "menu.mecanicas_ayuda",
-                "ajustes.camino", "ajustes.camino_ayuda", "peso.ficha", "camino.se_abre", "pelea.paso_a_paso", "pelea.paso_a_paso_ayuda",
+                "ajustes.camino", "ajustes.camino_ayuda", "peso.ficha", "camino.se_abre",
                 "pelea.mandos", "pelea.mando_ruedas",
                 "pelea.mando_ruedas_quietas", "pelea.mando_cuerpo", "pelea.mando_cuerpo_quieto", "pelea.mando_cabeza", "pelea.mando_cabeza_llego",
                 "pelea.mando_disparo", "aviso.ordenes.titulo", "informe.pista_titulo", "informe.ficha", "informe.que.arma", "informe.que.poo"};
