@@ -30,7 +30,8 @@ public final class T {
                     if (linea.isBlank() || linea.strip().startsWith("#")) continue;
                     int i = linea.indexOf('=');
                     if (i <= 0) continue;
-                    String[] p = linea.substring(i + 1).split("\\|", -1);
+                    // El separador de idiomas es « | » (con espacios): dentro de {0:uno|varios} la barra es parte del texto.
+                    String[] p = linea.substring(i + 1).split(" \\| ", -1);
                     TEXTOS.put(linea.substring(0, i).strip(), new Trilingue(
                             p[0].strip().replace("\\n", "\n"),
                             p.length > 1 ? p[1].strip().replace("\\n", "\n") : "",

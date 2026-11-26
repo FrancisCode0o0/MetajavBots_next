@@ -8,6 +8,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -44,6 +45,71 @@ final class PruebasDeEstilo {
     private static final Pattern CLAVE = Pattern.compile("^([\\w.\\-\\[\\]]+)\\s*[=:]\\s?(.*)$");
     private static final Pattern HABLA = Pattern.compile("^[A-ZÑ]+:\\s*");
     private static final String[] IDIOMAS = {"es", "de", "en"};
+
+    /** Clave y trozo que debe decir con 1 y con 2, en español, alemán e inglés. */
+    private static final String[][] PLURALES = {
+            {"menu.marcador", "1 victoria", "2 victorias", "1 Sieg", "2 Siege", "1 win", "2 wins"},
+            {"menu.experiencia", "1 punto de experiencia", "2 puntos de experiencia", "1 Erfahrungspunkt", "2 Erfahrungspunkte",
+                    "1 experience point", "2 experience points"},
+            {"menu.monedas", "1 moneda", "2 monedas", "1 Münze", "2 Münzen", "1 coin", "2 coins"},
+            {"tienda.sin_saldo", "Te falta 1 moneda", "Te faltan 2 monedas", "Dir fehlt 1 Münze", "Dir fehlen 2 Münzen",
+                    "You need 1 more coin", "You need 2 more coins"},
+            {"tienda.ok", "(-1 moneda)", "(-2 monedas)", "(-1 Münze)", "(-2 Münzen)", "(-1 coin)", "(-2 coins)"},
+            {"pelear.desafio_espera", "falta 1 pelea", "faltan 2 peleas", "Noch 1 Kampf", "Noch 2 Kämpfe",
+                    "1 more fight", "2 more fights"},
+            {"pelea.mando_ruedas", "falta 1 paso", "faltan 2 pasos", "noch 1 Schritt", "noch 2 Schritte",
+                    "1 step still", "2 steps still"},
+            {"pelea.errores", "1 error:", "2 errores:", "1 Fehler:", "2 Fehler:", "1 error:", "2 errors:"},
+            {"pelea.pasos", "1 de 1 paso", "2 de 2 pasos", "1 von 1 Rechenschritt", "2 von 2 Rechenschritten",
+                    "1 of 1 computation step", "2 of 2 computation steps"},
+            {"informe.topes", "media de 1 paso", "media de 2 pasos", "im Schnitt 1 Rechenschritt",
+                    "im Schnitt 2 Rechenschritte", "average 1 computation step", "average 2 computation steps"},
+            {"poo.consejo_public", "Tienes 1 campo public", "Tienes 2 campos public", "Du hast 1 veränderbares public-Feld",
+                    "Du hast 2 veränderbare public-Felder", "You have 1 unencapsulated mutable public field",
+                    "You have 2 unencapsulated mutable public fields"},
+            {"final.experiencia", "+1 punto de experiencia", "+2 puntos de experiencia", "+1 Erfahrungspunkt",
+                    "+2 Erfahrungspunkte", "+1 experience point", "+2 experience points"},
+            {"taller.mas_robots", "con 1 victoria", "con 2 victorias", "nach 1 Sieg", "nach 2 Siegen",
+                    "with 1 win", "with 2 wins"},
+            {"desbloqueo.victorias", "1 victoria", "2 victorias", "1 Sieg", "2 Siege", "1 win", "2 wins"},
+            {"editor.encontrados", "1 encontrado", "2 encontrados", "1 gefunden", "2 gefunden", "1 found", "2 found"},
+            {"paquetes.elementos", "1 elemento", "2 elementos", "1 Element", "2 Elemente", "1 element", "2 elements"},
+            {"ejercicio.no_compila", "(1 error)", "(2 errores)", "(1 Fehler)", "(2 Fehler)", "(1 error)", "(2 errors)"},
+            {"ejercicio.casi", "1 de 1 caso", "2 de 2 casos", "1 von 1 Fall", "2 von 2 Fällen",
+                    "1 of 1 case", "2 of 2 cases"},
+            {"objetivo.aciertos", "acierta 1 vez", "acierta 2 veces", "Triff 1-mal", "Triff 2-mal",
+                    "land 1 hit", "land 2 hits"},
+            {"revisor.errores", "ha fallado 1 vez", "ha fallado 2 veces", "1-mal abgestürzt", "2-mal abgestürzt",
+                    "failed 1 time", "failed 2 times"},
+            {"revisor.magicos", "1 número «mágico» suelto", "2 números «mágicos» sueltos", "1 „magische“ Zahl",
+                    "2 „magische“ Zahlen", "1 “magic” number", "2 “magic” numbers"},
+            {"revisor.metodo_largo", "mide 1 línea", "mide 2 líneas", "hat 1 Zeile", "hat 2 Zeilen",
+                    "is 1 line long", "is 2 lines long"},
+            {"temario.validados", "propuso 1 ejercicio", "propuso 2 ejercicios", "schlug 1 Übung vor",
+                    "schlug 2 Übungen vor", "proposed 1 exercise", "proposed 2 exercises"},
+            {"temario.cargado", "(1 línea)", "(2 líneas)", "(1 Zeile)", "(2 Zeilen)", "(1 line)", "(2 lines)"},
+            {"temario.guardado", "1 · 1 ejercicio", "2 · 2 ejercicios", "1 · 1 Übung", "2 · 2 Übungen",
+                    "1 · 1 exercise", "2 · 2 exercises"},
+            {"carrera.cuenta", "1 paso, 1 valla", "2 pasos, 2 vallas", "1 Schritt, 1 Hürde", "2 Schritte, 2 Hürden",
+                    "1 step, 1 hurdle", "2 steps, 2 hurdles"},
+            {"carrera.pierdes", "llega 1 paso antes", "llega 2 pasos antes", "ist 1 Schritt schneller",
+                    "ist 2 Schritte schneller", "is 1 step faster", "is 2 steps faster"},
+            {"campanas.detalle", "1 · 1 ronda", "2 · 2 rondas", "1 · 1 Runde", "2 · 2 Runden", "1 · 1 round", "2 · 2 rounds"},
+            {"demo.pasos", "1 paso", "2 pasos", "1 Schritt", "2 Schritte", "1 step", "2 steps"},
+            {"carrera_obs.botin_total", "+1 moneda", "+2 monedas", "+1 Münze", "+2 Münzen", "+1 coin", "+2 coins"},
+            {"carrera_obs.derrota_cuarto", "+1 moneda", "+2 monedas", "+1 Münze", "+2 Münzen", "+1 coin", "+2 coins"},
+            {"destruccion.hud_botin", "Botín: 1 moneda", "Botín: 2 monedas", "Beute: 1 Münze", "Beute: 2 Münzen",
+                    "Loot: 1 coin", "Loot: 2 coins"},
+            {"destruccion.desglose_bajas", "Acumulado: 1 moneda", "Acumulado: 2 monedas", "Gesammelt: 1 Münze",
+                    "Gesammelt: 2 Münzen", "Accumulated: 1 coin", "Accumulated: 2 coins"},
+            {"destruccion.bono_supervivencia", "1 bono = +1 moneda", "2 bonos = +2 monedas", "1 Bonus = +1 Münze",
+                    "2 Bonus = +2 Münzen", "1 bonus = +1 coin", "2 bonuses = +2 coins"},
+            {"destruccion.derrota_cuarto", "+1 moneda", "+2 monedas", "+1 Münze", "+2 Münzen", "+1 coin", "+2 coins"},
+            {"destruccion.saldo_final", "+1 moneda", "+2 monedas", "+1 Münze", "+2 Münzen", "+1 coin", "+2 coins"},
+            {"revisor.senior_nulos", "Se produjo 1 NullPointerException", "Se produjeron 2 NullPointerException",
+                    "Es gab 1 NullPointerException", "Es gab 2 NullPointerException", "Hit 1 NullPointerException",
+                    "Hit 2 NullPointerExceptions"}
+    };
 
     private PruebasDeEstilo() {
     }
@@ -113,6 +179,7 @@ final class PruebasDeEstilo {
             vacia(mal, "dos espacios seguidos");
         });
         caso("estilo: los botones con icono llevan un solo signo (el icono o el texto), en es, de y en", () -> botonesConIcono());
+        caso("estilo: claves del código y plurales en los tres idiomas", () -> pendienteDelCodigo());
         caso("estilo: un robot que cambia de modelo deja de llamarse como el de antes (nada de «Cobalto · Modelo: Chispa»)", () -> {
             Modelo cobalto = Modelo.de("cobalto"), chispa = Modelo.de("chispa");
             Jugador.Robot r = new Jugador.Robot(cobalto.nombre(Idioma.ES), "cobalto");
@@ -156,6 +223,54 @@ final class PruebasDeEstilo {
             }
         }
         vacia(mal, "botones con el signo duplicado");
+    }
+
+    /** Las claves que el historial y el informe buscaban en ui.txt y no estaban, y los plurales que T.f ya resuelve. */
+    private static void pendienteDelCodigo() {
+        nombresDelCodigo();
+        plurales();
+    }
+
+    /** modos y causas de daño del historial y del informe, traducidos en los tres idiomas. */
+    private static void nombresDelCodigo() {
+        igual("campaña", T.en("modo.campana", Idioma.ES), "modo.campana en es");
+        igual("Kampagne", T.en("modo.campana", Idioma.DE), "modo.campana en de");
+        igual("campaign", T.en("modo.campana", Idioma.EN), "modo.campana en en");
+        igual("jefe", T.en("modo.jefe", Idioma.ES), "modo.jefe en es");
+        igual("Boss", T.en("modo.jefe", Idioma.DE), "modo.jefe en de");
+        igual("boss", T.en("modo.jefe", Idioma.EN), "modo.jefe en en");
+        for (Idioma id : Idioma.values()) {
+            for (String arma : ARMAS) {
+                String clave = "arma_de." + arma;
+                cierto(T.existe(clave), "falta " + clave);
+                cierto(!T.en(clave, id).equals(clave), clave + " sin traducir en " + id);
+            }
+        }
+    }
+
+    private static final List<String> ARMAS = List.of("laser", "bala", "misil", "cuerpo", "llama", "choque", "pared",
+            "pulso", "caida_robot", "descarga", "martillo", "sierra", "foso", "carrito");
+
+    /** Con 1 dice el singular y con 2 el plural, en cada idioma. */
+    private static void plurales() {
+        for (String[] fila : PLURALES) {
+            for (int k = 0; k < 3; k++) {
+                Idioma id = Idioma.values()[k];
+                cierto(forma(fila[0], id, 1).contains(fila[1 + k * 2]),
+                        fila[0] + " en " + id + " con 1: " + forma(fila[0], id, 1));
+                cierto(forma(fila[0], id, 2).contains(fila[2 + k * 2]),
+                        fila[0] + " en " + id + " con 2: " + forma(fila[0], id, 2));
+            }
+        }
+    }
+
+    /** Rellena todos los huecos con el mismo número para poder comprobar cada marcador de plural. */
+    private static String forma(String clave, Idioma id, int n) {
+        Object[] huecos = new Object[10];
+        Arrays.fill(huecos, n);
+        String s = T.plurales(T.en(clave, id), huecos);
+        for (int i = 0; i < huecos.length; i++) s = s.replace("{" + i + "}", String.valueOf(n));
+        return s;
     }
 
     private static void vacia(List<String> mal, String que) {
