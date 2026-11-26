@@ -532,7 +532,7 @@ public final class PantallaPelea implements Pantalla {
         }
         if (Marcadores.cabeAyuda(der)) {
             String como = ComoSeJuega.idDe(this);
-            if (como != null && ui.boton("?", x, y, 56, 46, Ui.Estilo.PLANO, true, T.t("como.boton"))) j.comoSeJuega.abrir(j, como);
+            if (como != null && ui.boton("?", x, y, 56, 46, Ui.Estilo.PLANO, true, T.t("como.boton_icono_ayuda"))) j.comoSeJuega.abrir(j, como);
             x += 62;
         }
         if (pausa && ui.boton(txtPaso, x, y, b.wPaso(), 46, Ui.Estilo.PLANO, true, T.t("pelea.paso_ayuda"))) pasoAPaso(j);

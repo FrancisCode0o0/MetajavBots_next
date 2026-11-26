@@ -383,6 +383,7 @@ ajustes.camino = Menú para empezar (el camino paso a paso) | Menü für den Anf
 ajustes.camino_ayuda = El menú enseña un solo camino y va abriendo lo demás poco a poco. Quítalo para verlo todo. | Das Menü zeigt nur einen Weg und öffnet den Rest nach und nach. Schalte es aus, um alles zu sehen. | The menu shows a single path and opens the rest little by little. Turn it off to see everything.
 como.boton = ¿Cómo se juega? | Wie spielt man das? | How do I play?
 como.boton_ayuda = El objetivo, cómo se gana y qué métodos de tu robot importan aquí. | Das Ziel, wie man gewinnt und welche Methoden deines Roboters hier zählen. | The goal, how you win and which methods of your robot matter here.
+como.boton_icono_ayuda = Cómo se juega | So wird gespielt | How to play
 como.titulo = ¿Cómo se juega? | Wie spielt man das? | How do I play?
 como.objetivo = Qué hay que hacer | Was zu tun ist | What to do
 como.gana = Cómo se gana | So gewinnt man | How you win

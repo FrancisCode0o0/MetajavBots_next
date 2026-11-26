@@ -112,11 +112,7 @@ final class PruebasDeEstilo {
             }
             vacia(mal, "dos espacios seguidos");
         });
-        caso("estilo: el botón «¿Cómo se juega?» no lleva un «?» de más delante", () -> {
-            for (Idioma i : Idioma.values()) cierto(!T.en("como.boton", i).startsWith("?"), "como.boton en " + i);
-            String comun = Files.readString(Path.of("juego", "src", "main", "java", "metajavbots", "pantallas", "Comun.java"), StandardCharsets.UTF_8);
-            cierto(!comun.contains("\"? \" + T.t(\"como.boton\")"), "Comun.botonComoSeJuega no pone «? » delante");
-        });
+        caso("estilo: los botones con icono llevan un solo signo (el icono o el texto), en es, de y en", () -> botonesConIcono());
         caso("estilo: un robot que cambia de modelo deja de llamarse como el de antes (nada de «Cobalto · Modelo: Chispa»)", () -> {
             Modelo cobalto = Modelo.de("cobalto"), chispa = Modelo.de("chispa");
             Jugador.Robot r = new Jugador.Robot(cobalto.nombre(Idioma.ES), "cobalto");
@@ -129,6 +125,37 @@ final class PruebasDeEstilo {
             Jugador.Robot viejo = new Jugador.Robot(cobalto.nombre(Idioma.DE), "chispa");
             cierto(viejo.seLlamaComoOtroModelo(), "se nota que «Kobalt» es el nombre de otro modelo");
         });
+    }
+
+    /** Ningún botón con «?» de icono puede llevar un texto (o una ayuda) que vuelva a poner el signo, en ningún idioma. */
+    private static void botonesConIcono() throws Exception {
+        for (Idioma i : Idioma.values()) cierto(!T.en("como.boton", i).startsWith("?"), "como.boton en " + i);
+        List<String> mal = new ArrayList<>();
+        Pattern boton = Pattern.compile("boton\\(\\s*\"([^\"]*)\"([\\s\\S]{0,400}?)\\)");
+        Pattern clave = Pattern.compile("T\\.[tf]\\(\"([\\w.]+)\"");
+        try (Stream<Path> archivos = Files.walk(Path.of("juego", "src", "main", "java"))) {
+            for (Path p : archivos.filter(q -> q.toString().endsWith(".java")).sorted().toList()) {
+                String fuente = Files.readString(p, StandardCharsets.UTF_8);
+                Matcher b = boton.matcher(fuente);
+                while (b.find()) {
+                    String icono = b.group(1).strip();
+                    if (!icono.equals("?") && !icono.startsWith("? ")) continue;
+                    if (icono.length() > 1 && (icono.substring(1).contains("?") || icono.substring(1).contains("¿"))) {
+                        mal.add(p + ": icono y texto con signos en «" + icono + "»");
+                    }
+                    Matcher c = clave.matcher(b.group(2));
+                    while (c.find()) {
+                        for (Idioma id : Idioma.values()) {
+                            String texto = T.en(c.group(1), id);
+                            if (texto.contains("?") || texto.contains("¿")) {
+                                mal.add(p + ": «?» con " + c.group(1) + " en " + id + ": " + texto);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        vacia(mal, "botones con el signo duplicado");
     }
 
     private static void vacia(List<String> mal, String que) {
