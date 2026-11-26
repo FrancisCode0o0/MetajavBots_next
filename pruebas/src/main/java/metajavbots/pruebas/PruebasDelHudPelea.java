@@ -5,10 +5,16 @@ import static metajavbots.pruebas.Pruebas.cierto;
 import static metajavbots.pruebas.Pruebas.falso;
 
 import metajavbots.combate.Aparatos;
+import metajavbots.combate.Combatiente;
+import metajavbots.combate.Pelea;
+import metajavbots.pantallas.EntradaEpica;
 import metajavbots.pantallas.Marcadores;
 import metajavbots.pantallas.PanelDelAparato;
+import metajavbots.piezas.Modelo;
+import metajavbots.piezas.Montaje;
 import metajavbots.textos.Idioma;
 import metajavbots.textos.T;
+import metajavbots.tutor.Biografias;
 
 /** Pruebas de geometría del HUD de la pelea (marcadores, barra inferior, panel del aparato y banda del locutor). */
 final class PruebasDelHudPelea {
@@ -20,6 +26,36 @@ final class PruebasDelHudPelea {
         barraInferiorSinSolapamientos();
         panelDelAparatoYMarcadores();
         bandaDelLocutorYTecho();
+        presentacionSinRepetirNiTapar();
+    }
+
+    /** La presentación de la pelea: «Nombre, modelo X» y la biografía una vez en el bocadillo; el nombre, debajo. */
+    private static void presentacionSinRepetirNiTapar() {
+        caso("hud pelea: la presentación dice «nombre, modelo X» y la biografía una sola vez, y el nombre va bajo el bocadillo", () -> {
+            Idioma antes = T.idioma;
+            try {
+                Combatiente a = new Combatiente("Cobalto", new Montaje(Modelo.de("chispa")), null);
+                Combatiente b = new Combatiente("Zumbamatic", new Montaje(Modelo.de("cobalto")), null);
+                Pelea p = new Pelea(a, b, 1L);
+                float techo = Marcadores.geometriaBanda(1600f, true, false, 120f).techo();
+                for (Idioma id : Idioma.values()) {
+                    T.idioma = id;
+                    String s = EntradaEpica.presentacion(p, 0);
+                    String nombreModelo = T.f("entrada.nombre_modelo", a.nombre, a.montaje.modelo.nombre(id));
+                    cierto(s.contains(nombreModelo), "nombre y modelo en " + id + ": " + s);
+                    String bio = Biografias.deRobot("chispa", id);
+                    int corte = bio.indexOf(". ");
+                    String frase = corte > 0 ? bio.substring(0, corte + 1) : bio;
+                    cierto(s.endsWith(frase), "la biografía cierra la frase en " + id + ": " + s);
+                    int primera = s.indexOf(frase);
+                    cierto(primera >= 0 && s.indexOf(frase, primera + 1) < 0, "la biografía sale una sola vez en " + id + ": " + s);
+                    cierto(!s.contains(T.en("pelea.modelo", id).split("\\{")[0]), "sin la etiqueta del marcador en " + id + ": " + s);
+                    cierto(EntradaEpica.yDelNombre(88f, 812f, techo) >= techo + 10f, "el nombre empieza debajo del bocadillo en " + id);
+                }
+            } finally {
+                T.idioma = antes;
+            }
+        });
     }
 
     private static void barraInferiorSinSolapamientos() {

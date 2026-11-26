@@ -1055,6 +1055,7 @@ especial.desvanece = Nadie llegó a tiempo: el arma se desvanece. | Niemand war 
 entrada.esquina_1 = ¡En la esquina azul… {0}! | In der blauen Ecke … {0}! | In the blue corner… {0}!
 entrada.esquina_2 = ¡Y en la esquina roja… {0}! | Und in der roten Ecke … {0}! | And in the red corner… {0}!
 entrada.esquina_n = ¡Y también… {0}! | Und außerdem … {0}! | And also… {0}!
+entrada.nombre_modelo = {0}, modelo {1} | {0}, Modell {1} | {0}, model {1}
 entrada.a_pelear = [[¡A pelear!]] | [[Kampf!]] | [[Fight!]]
 entrada.saltar = Clic, Espacio o Esc para saltar la presentación | Klick, Leertaste oder Esc überspringt die Vorstellung | Click, Space or Esc to skip the introduction
 publico.bien = [[¡Bien!]] | [[Jaaa!]] | [[Yeah!]]
