@@ -103,7 +103,7 @@ final class PruebasDelEntrenador {
         caso("entrenador: el ejemplo de cada concepto se ve con la API y los comentarios del idioma del jugador", () -> {
             Concepto v = Concepto.de("variable");
             cierto(v.ejemplo(Idioma.ES).contains("alRecibirGolpe") && v.ejemplo(Idioma.ES).contains("// fuera: dura toda la ronda"), "español");
-            cierto(v.ejemplo(Idioma.DE).contains("beiTreffer") && v.ejemplo(Idioma.DE).contains("// außen: hält die ganze Runde"), "alemán");
+            cierto(v.ejemplo(Idioma.DE).contains("beiTreffer") && v.ejemplo(Idioma.DE).contains("// außerhalb: hält die ganze Runde"), "alemán");
             cierto(v.ejemplo(Idioma.EN).contains("onHit") && v.ejemplo(Idioma.EN).contains("// outside: lasts the whole round"), "inglés");
         });
 
