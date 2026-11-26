@@ -763,7 +763,7 @@ ejemplo:
 --- IllegalStateException
 tipo: excepcion
 es: Excepción no comprobada que indica que un objeto no está en el estado adecuado para ejecutar esa operación.
-de: Ungeprüfte Exception, wenn ein Objekt nicht im passenden Zustand für eine Operation ist.
+de: Ungeprüfte Exception, die geworfen wird, wenn ein Objekt nicht im passenden Zustand für eine Operation ist.
 en: Unchecked exception indicating an object is not in the right state for the requested operation.
 miembros.es:
     new IllegalStateException(String msg) — describe por qué el estado actual no permite la acción
@@ -841,7 +841,7 @@ tipo: clase
 solo_ejercicio: true
 es: Hilo de ejecución concurrente (solo ejercicios de concurrencia; bloqueado en robots de combate para mantener determinismo y rendimiento).
 de: Nebenläufiger Ausführungs-Thread (nur in Nebenläufigkeits-Übungen erlaubt; in Kampfrobotern gesperrt, damit Kämpfe deterministisch und schnell bleiben).
-en: Concurrent execution thread (allowed only in concurrency exercises; blocked in combat robots to keep fights deterministic and fast).
+en: Concurrent execution thread (allowed only in concurrency exercises; blocked in combat robots to keep fights fair and reproducible and fast).
 miembros.es:
     new Thread(Runnable r) / start() — crea y arranca un hilo nuevo
     join() — espera a que el hilo termine

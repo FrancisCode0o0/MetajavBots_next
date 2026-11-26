@@ -874,7 +874,7 @@ ejemplo: String.format("%d de %d", 3, 4)  // "3 de 4"      "%s!".formatted("Hola
 tema: 08
 firma: static String join(CharSequence separador, Iterable<String> partes)
 es: Une varios textos poniendo el separador entre ellos. Desde Java 8.
-de: Verbindet mehrere Texte mit dem Trenner dazwischen. Seit Java 8.
+de: Verbindet mehrere Texte mit dem Trennzeichen dazwischen. Seit Java 8.
 en: Joins several strings with the separator between them. Since Java 8.
 donde.es: Llámalo estáticamente como String.join(", ", lista) cuando tengas una lista o varios textos que unir con separador; evita concatenar en bucle si ya tienes la colección.
 donde.de: Statisch als String.join(", ", liste) aufrufen, um eine Sammlung oder mehrere Texte mit Trenner zu verbinden; sauberer als manuelles Verketten in Schleifen.
