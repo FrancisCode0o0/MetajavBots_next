@@ -2310,7 +2310,7 @@ de: Ein Thread führt eine Aufgabe parallel zum restlichen Programm aus. Roboter
 en: A thread runs a task alongside the rest of the program. Robots aren't allowed to create threads.
 donde.es: Úsalo en ejercicios de concurrencia o programas Java independientes; en robots (Metajavbot) NO está permitido porque el vigilante bloquea los hilos.
 donde.de: In Nebenläufigkeits-Übungen oder eigenen Java-Programmen nutzen; in Robotern (MetajavbotDe) NICHT erlaubt, da der Wächter Threads blockiert.
-donde.en: Use in concurrency exercises or standalone Java programs; NOT allowed inside robots (MetajavbotEn) because the sandbox blocks threads.
+donde.en: Use in concurrency exercises or standalone Java programs; NOT allowed inside robots (MetajavbotEn), because the sandbox blocks threads.
 ejemplo: Thread t = new Thread(() -> System.out.println("hola desde otro hilo"));
 
 === Thread.start
