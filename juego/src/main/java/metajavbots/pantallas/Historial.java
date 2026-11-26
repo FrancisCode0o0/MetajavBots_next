@@ -164,7 +164,9 @@ public final class Historial implements Pantalla {
             p.caja(cx + 12, y, cw - 24, 3, 1.5f, acento, 0.9f);
             float tv = ui.cabeEntero(cifras[i][1], cw - 20, Math.min(34f, ui.letra * 1.75f), true);
             p.textoCentrado(cifras[i][1], cx + cw / 2, y + 12, tv, true, ui.tema.texto, 1);
-            float tl = ui.cabeEntero(cifras[i][0], cw - 20, Math.min(16f, ui.letra * 0.72f), false);
+            // La tarjeta mide cw−8: dejar cw−12 da 2 px de aire a cada lado. Con cw−20 la etiqueta alemana
+            // «mittl. erlittener Schaden» se salía 4 px aunque se bajara a la letra mínima (14).
+            float tl = ui.cabeEntero(cifras[i][0], cw - 12, Math.min(16f, ui.letra * 0.72f), false);
             p.textoCentrado(cifras[i][0], cx + cw / 2, y + 60, tl, false, ui.tema.textoSuave, 1);
         }
     }

@@ -54,6 +54,7 @@ public final class Pruebas {
         PruebasDeDemo4.apuntar();
         PruebasDeNormalizacion.apuntar();
         PruebasDelHudPelea.apuntar();
+        PruebasDeMedicionDeTextos.apuntar();
         PruebasDeObstaculosDestructibles.apuntar();
         PruebasDeCarreraDeObstaculos.apuntar();
         PruebasDeCarreraDeObstaculos2.apuntar();
