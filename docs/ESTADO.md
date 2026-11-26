@@ -2,13 +2,15 @@
 
 Encargo METAJAVBOTS (17-nov-2026, Opus, de noche). Repositorio propio en `OneDrive\Hochschule\Desarrollo de juegos\MetajavBots_next`, rama `main`.
 
-## REVISION_ESTILO_METAJAVBOTS (24-nov-2026) — a medias, la sigue OpenCode
+## REVISION_ESTILO_METAJAVBOTS (26-nov-2026) — terminada
 
-Fran (24-nov): el modo historia (HISTORIA_GUIADA y DISENO_HISTORIA) queda aparte, en la rama `main` local (b09babd), hasta que él rehaga el arte. Esta rama, `revision_estilo`, sale de CLARIDAD (8347a86) y trae la primera pasada de la revisión de estilo que Opus dejó sin terminar por el límite de uso (copia íntegra en la rama `revision_estilo_wip`), sin lo del modo historia.
+Rama `revision_estilo`, desde CLARIDAD (8347a86), sin el modo historia (sigue aparte en `main`, b09babd, hasta que Fran rehaga el arte). Cerrada por OpenCode con un commit por parte y sin `git push`.
 
-**Hecho (Opus)**: primera pasada de estilo y ortotipografía de los textos (unas 3380 correcciones), docs/GLOSARIO.md, PruebasDeEstilo, «¿Cómo se juega?» sin el «?» de más, nombre del robot bajo la banda del locutor y biografía una sola vez.
+**Hecho**: primera pasada de estilo (3385 correcciones) y segunda (384 correcciones en 16 trozos), repaso texto a texto del resto de trozos, botón «Paso a paso» fuera de las peleas normales, claves de modos y armas y plurales en los tres idiomas, presentación «nombre, modelo X» con la biografía una sola vez, botones con icono sin signo duplicado, y prueba nueva de medición de textos en ES/DE/EN con letra 18 y 26 (`MedidorDeTextos` + `PruebasDeMedicionDeTextos`); arreglo real de layout en `Historial` (etiqueta alemana de `historial.dano_medio`). Detalle en [REVISION_ESTILO.md](REVISION_ESTILO.md) y en el informe de capturas de letra 26.
 
-**Pendiente**: compilar y pasar las pruebas (la rama aún no se ha compilado), segunda pasada, docs/REVISION_ESTILO.md, quitar el botón «Paso a paso» de la barra de las peleas normales, capturas finales. Lo hace OpenCode con ENCARGO_REVISION_ESTILO_OPENCODE.md.
+**Verificación**: `.\gradlew.bat compileJava estilo pruebas:prueba` → **344 casos bien, 0 mal**, Checkstyle sin avisos. Capturas para que Fran las mire en `build/capturas/` (letra normal), `build/capturas/de26/` y `build/capturas/en26/` (alemán e inglés a letra 26), hechas con `.\gradlew.bat lwjgl3:capturas`.
+
+**Para Fran**: las dudas (14 nuevas y 115 heredadas de los JSON, cada una con sus opciones) están en [REVISION_ESTILO.md](REVISION_ESTILO.md). Las herramientas sueltas de la raíz pasan a `material_revision/herramientas/`.
 
 ## CLARIDAD_METAJAVBOTS (23-nov-2026, Opus) — hecho
 
