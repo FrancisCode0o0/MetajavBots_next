@@ -48,7 +48,7 @@ requiere: rocko
 1.escenario: NEON
 1.rondas: 3
 1.texto: Rocko se gasta los premios en una moto que no sabe conducir y lo contratan para un anuncio de aftershave. No sabe leer el guion. El robot del anuncio se enfada. | Rocko verprasst sein Preisgeld für ein Motorrad, das er nicht fahren kann, und dreht einen Werbespot für Rasierwasser. Er kann das Drehbuch nicht lesen. Der Werbe-Roboter wird sauer. | Rocko blows his prize money on a motorbike he can't ride and lands an aftershave commercial. He can't read the script. The commercial robot gets angry.
-1.victoria: Lo despiden del anuncio, pero el director dice que «tiene algo». Probablemente óxido. | Er fliegt aus dem Spot, aber der Regisseur sagt, er „hat was“. Wahrscheinlich Rost. | He's fired from the commercial, but the director says he “has something.” Probably rust.
+1.victoria: Lo despiden del anuncio, pero el director dice que «tiene algo». Probablemente óxido. | Er fliegt aus dem Spot, aber der Regisseur sagt, er „hat was“. Wahrscheinlich Rost. | He's fired from the commercial, but the director says he “has something”. Probably rust.
 2.rival: Aspiradora Veloz | Flinker Sauger | Speedy Vacuum
 2.modelo: avispa
 2.nivel: 0.35
@@ -84,7 +84,7 @@ requiere: rocko2
 2.escenario: HANGAR
 2.rondas: 3
 2.texto: Garrote Lunk entrena solo, en un sótano, y no sonríe nunca. Rocko entrena en un hotel con piano. Lo que tiene que pasar, pasa. | Knüppel Lunk trainiert allein in einem Keller und lächelt nie. Rocko trainiert in einem Hotel mit Klavier. Es kommt, wie es kommen muss. | Club Lunk trains alone in a basement and never smiles. Rocko trains in a hotel with a piano. What has to happen, happens.
-2.victoria: Rocko gana por los pelos… pero sabe que le falta algo: el ojo del tostador. Su viejo rival, Apolo Cromo, se ofrece a entrenarlo. | Rocko gewinnt knapp … aber ihm fehlt etwas: das Auge des Toasters. Sein alter Rivale Apollo Chrom bietet an, ihn zu trainieren. | Rocko scrapes a win… but he's missing something: the eye of the toaster. His old rival, Apollo Chrome, offers to train him.
+2.victoria: Rocko gana por los pelos… pero sabe que le falta algo: el ojo del tostador. Su viejo rival, Apolo Cromo, se ofrece a entrenarlo. | Rocko gewinnt knapp … aber er weiß, dass ihm etwas fehlt: das Auge des Toasters. Sein alter Rivale Apollo Chrom bietet an, ihn zu trainieren. | Rocko scrapes a win… but he knows he's missing something: the eye of the toaster. His old rival, Apollo Chrome, offers to train him.
 3.rival: Garrote Lunk | Knüppel Lunk | Club Lunk
 3.modelo: mazo
 3.nivel: 0.65
@@ -141,7 +141,7 @@ requiere: rocko4
 2.nivel: 0.5
 2.escenario: NEON
 2.rondas: 3
-2.texto: El representante Tiburón le promete a Tomi luces, dinero y una cinta dorada. Tomi se va con él. Rocko intenta hablar con el representante. El representante tiene seguridad. | Manager Hai verspricht Tomi Licht, Geld und einen goldenen Gürtel. Tomi geht mit ihm. Rocko will mit dem Manager reden. Der Manager hat Security. | Agent Shark promises Tommy lights, money and a golden belt. Tommy leaves with him. Rocko tries to talk to the agent. The agent has security.
+2.texto: El representante Tiburón le promete a Tomi luces, dinero y un cinturón dorado. Tomi se va con él. Rocko intenta hablar con el representante. El representante tiene seguridad. | Manager Hai verspricht Tomi Licht, Geld und einen goldenen Gürtel. Tomi geht mit ihm. Rocko will mit dem Manager reden. Der Manager hat Security. | Agent Shark promises Tommy lights, money and a golden belt. Tommy leaves with him. Rocko tries to talk to the agent. The agent has security.
 2.victoria: La seguridad, desmontada en piezas de recambio. Tomi lo reta: «¡Pelea conmigo, viejo!». | Die Security: zerlegt in Ersatzteile. Tomi fordert ihn heraus: „Kämpf gegen mich, Alter!“ | Security, reduced to spare parts. Tommy challenges him: “Fight me, old man!”
 3.rival: Tomi Cañón | Tomi Kanone | Tommy Cannon
 3.modelo: vigia
@@ -235,7 +235,7 @@ requiere: karatebit
 3.escenario: NEON
 3.rondas: 4
 3.texto: En el festival, con tambores y farolillos, Elegido Nueve pelea de verdad. El pueblo entero hace girar sus ventiladores para animar a Dani. | Beim Fest, mit Trommeln und Laternen, kämpft Auserwählter Neun ernsthaft. Das ganze Dorf lässt seine Ventilatoren kreisen, um Dani anzufeuern. | At the festival, with drums and lanterns, Chosen Nine fights for real. The whole village spins its fans to cheer Dani on.
-3.victoria: ¡La técnica del ventilador funciona! Dani le aprieta la nariz a Elegido Nueve en vez de rematarlo: «¿Vivir o morir?». «Vivir… y ventilar». | Die Ventilator-Technik wirkt! Dani drückt Auserwählter Neun die Nase, statt ihn fertigzumachen: „Leben oder sterben?“ „Leben … und lüften.“ | The fan technique works! Dani squeezes Chosen Nine's nose instead of finishing him: “Live or die?” “Live… and ventilate.”
+3.victoria: ¡La técnica del ventilador funciona! Dani le aprieta la nariz a Elegido Nueve en vez de rematarlo: «¿Vivir o morir?». «Vivir… y ventilar». | Die Ventilator-Technik wirkt! Dani drückt dem Auserwählten Neun die Nase, statt ihn fertigzumachen: „Leben oder sterben?“ „Leben … und lüften.“ | The fan technique works! Dani squeezes Chosen Nine's nose instead of finishing him: “Live or die?” “Live… and ventilate.”
 
 [karatebit3]
 titulo: Kárate-bit III: el torneo trucado | Karate-Bit III: Das gezinkte Turnier | Karate-Bit III: The rigged tournament
@@ -249,7 +249,7 @@ requiere: karatebit2
 1.nivel: 0.45
 1.escenario: LABORATORIO
 1.rondas: 3
-1.texto: Tery Plateado se ofrece a entrenar a Dani «gratis». Sus métodos: golpear placas de cemento hasta abollarse los nudillos. Algo huele a trampa. Y a aceite quemado. | Tery Silberling bietet an, Dani „kostenlos“ zu trainieren. Seine Methode: auf Betonplatten schlagen, bis die Knöchel verbeult sind. Das riecht nach Falle. Und nach verbranntem Öl. | Tery Silverson offers to train Dani “for free.” His method: punching concrete slabs until your knuckles dent. Something smells like a trap. And like burnt oil.
+1.texto: Tery Plateado se ofrece a entrenar a Dani «gratis». Sus métodos: golpear placas de cemento hasta abollarse los nudillos. Algo huele a trampa. Y a aceite quemado. | Tery Silberling bietet an, Dani „kostenlos“ zu trainieren. Seine Methode: auf Betonplatten schlagen, bis die Knöchel verbeult sind. Das riecht nach Falle. Und nach verbranntem Öl. | Tery Silverson offers to train Dani “for free”. His method: punching concrete slabs until your knuckles dent. Something smells like a trap. And like burnt oil.
 1.victoria: Dani se da cuenta del truco y vuelve con Miyaceite, que lo lleva a buscar un bonsái de cobre en un acantilado. | Dani durchschaut den Trick und kehrt zu Miyaöl zurück, der mit ihm an einer Klippe einen Kupfer-Bonsai sucht. | Dani sees through the trick and goes back to Miyoili, who takes him to find a copper bonsai on a cliff.
 2.rival: Bonsái Vengativo | Rachsüchtiger Bonsai | Vengeful Bonsai
 2.modelo: tejedora
@@ -343,7 +343,7 @@ requiere: kungbit
 2.nivel: 0.5
 2.escenario: HANGAR
 2.rondas: 2
-2.texto: Sus dos maestros no se ponen de acuerdo: uno dice «dar aceite»; el otro, «chaqueta puesta». Para entrenarlo, pelean los dos contra él a la vez. Por turnos. Más o menos. | Seine zwei Meister sind sich uneinig: Der eine sagt „Öl drauf“, der andere „Jacke an“. Zum Training kämpfen beide gleichzeitig gegen ihn. Abwechselnd. Ungefähr. | His two masters can't agree: one says “oil on,” the other “jacket on.” To train him, they both fight him at once. Taking turns. Sort of.
+2.texto: Sus dos maestros no se ponen de acuerdo: uno dice «dar aceite»; el otro, «chaqueta puesta». Para entrenarlo, pelean los dos contra él a la vez. Por turnos. Más o menos. | Seine zwei Meister sind sich uneinig: Der eine sagt „Öl drauf“, der andere „Jacke an“. Zum Training kämpfen beide gleichzeitig gegen ihn. Abwechselnd. Ungefähr. | His two masters can't agree: one says “oil on”, the other “jacket on”. To train him, they both fight him at once. Taking turns. Sort of.
 2.victoria: Li-bit mezcla las dos escuelas: da aceite con la chaqueta puesta. Los maestros se miran y se dan la mano. | Li-Bit verbindet beide Schulen: Er ölt mit angezogener Jacke. Die Meister sehen sich an und geben sich die Hand. | Li-bit blends both schools: oil on, with his jacket on. The masters look at each other and shake hands.
 3.rival: Campeón del Dragón | Drachen-Champion | Dragon Champion
 3.modelo: remolino
@@ -371,7 +371,7 @@ musica: drama
 2.nivel: 0.5
 2.escenario: COCINA
 2.rondas: 2
-2.texto: Para pelear por el título tiene que dar el peso. La báscula del gimnasio dice que no. LaMota decide pelearse con la báscula. | Für den Titelkampf muss er das Gewicht schaffen. Die Waage sagt nein. LaMotte beschließt, sich mit der Waage zu prügeln. | To fight for the title he has to make weight. The gym scales say no. LaMote decides to fight the scales.
+2.texto: Para pelear por el título tiene que dar el peso. La báscula del gimnasio dice que no. LaMota decide pelearse con la báscula. | Für den Titelkampf muss er das Gewicht schaffen. Die Waage im Gym sagt nein. LaMotte beschließt, sich mit der Waage zu prügeln. | To fight for the title he has to make weight. The gym scales say no. LaMote decides to fight the scales.
 2.victoria: La báscula marca el peso justo, por miedo. Hay pelea por el título. | Die Waage zeigt aus Angst das richtige Gewicht. Es gibt einen Titelkampf. | The scales show the right weight, out of fear. There's a title fight.
 3.rival: Rayo Azucarado | Zucker-Blitz | Sugar Bolt
 3.modelo: chispa
@@ -383,7 +383,7 @@ musica: drama
 
 [granyudo]
 titulo: La leyenda del gran yudo-bit | Die Legende vom großen Judo-Bit | The legend of the great judo-bit
-lema: Un joven fuerte y sin cabeza aprende que el yudo-bit es ceder para vencer. | Ein starker, kopfloser Junge lernt, dass Judo-Bit Nachgeben heißt, um zu siegen. | A strong, headstrong youngster learns that judo-bit means yielding to win.
+lema: Un joven fuerte y sin cabeza aprende que el yudo-bit es ceder para vencer. | Ein starker, kopfloser Junge lernt, dass Judo-Bit heißt, nachzugeben, um zu siegen. | A strong, headstrong youngster learns that judo-bit means yielding to win.
 homenaje: Sanshiro Sugata (1943)
 entrenador: yanobit
 musica: oriental
@@ -392,7 +392,7 @@ musica: oriental
 1.nivel: 0.35
 1.escenario: DESIERTO
 1.rondas: 3
-1.texto: Sanshi-bit llega a la ciudad para aprender jiu-jitsu, pero ve cómo un viejo maestro de yudo-bit tira al canal a toda una banda sin despeinarse. Se cambia de escuela en el acto. | Sanshi-Bit kommt in die Stadt, um Jiu-Jitsu zu lernen, sieht aber, wie ein alter Judo-Bit-Meister eine ganze Bande in den Kanal wirft, ohne sich zu zerzausen. Er wechselt sofort die Schule. | Sanshi-bit comes to town to learn jiu-jitsu, but sees an old judo-bit master throw a whole gang into the canal without a hair out of place. He switches schools on the spot.
+1.texto: Sanshi-bit llega a la ciudad para aprender jiu-jitsu, pero ve cómo un viejo maestro de yudo-bit tira al canal a toda una banda sin despeinarse. Se cambia de escuela en el acto. | Sanshi-Bit kommt in die Stadt, um Jiu-Jitsu zu lernen, sieht aber, wie ein alter Judo-Bit-Meister eine ganze Bande in den Kanal wirft, ohne dass ihm ein Haar verrutscht. Er wechselt sofort die Schule. | Sanshi-bit comes to town to learn jiu-jitsu, but sees an old judo-bit master throw a whole gang into the canal without a hair out of place. He switches schools on the spot.
 1.victoria: Sanshi-bit gana, pero celebra a lo bruto y rompe media calle. El maestro no está contento. | Sanshi-Bit gewinnt, feiert aber so wild, dass die halbe Straße kaputtgeht. Der Meister ist nicht zufrieden. | Sanshi-bit wins, but celebrates so wildly he wrecks half the street. The master is not pleased.
 2.rival: El Poste del Estanque | Der Teichpfahl | The Pond Post
 2.modelo: galapago
@@ -435,7 +435,7 @@ musica: drama
 3.escenario: NEON
 3.rondas: 4
 3.texto: La pelea por el título contra la Osa Azul, que pega cuando suena la campana y también un poco después. Remache le dice: «Protégete siempre». | Der Titelkampf gegen die Blaue Bärin, die beim Gong zuschlägt und auch ein bisschen danach. Niete sagt: „Schütz dich immer.“ | The title fight against the Blue Bear, who hits at the bell and a little bit after. Rivet tells her: “Always protect yourself.”
-3.victoria: ¡Campeona! Remache, por fin, le traduce el apodo: «Mi tesoro de silicio». Y se le empañan los sensores. | Weltmeisterin! Niete übersetzt endlich den Spitznamen: „Mein Silizium-Schatz.“ Und seine Sensoren beschlagen. | Champion! Rivet finally translates the nickname: “My silicon treasure.” And his sensors mist up.
+3.victoria: ¡Campeona! Remache, por fin, le traduce el apodo: «Mi tesoro de silicio». Y se le empañan los sensores. | Weltmeisterin! Niete übersetzt endlich den Spitznamen: „Mein Silizium-Schatz“. Und seine Sensoren beschlagen. | Champion! Rivet finally translates the nickname: “My silicon treasure”. And his sensors mist up.
 
 [aceropuro]
 titulo: Acero de saldo | Ramsch-Stahl | Bargain steel
@@ -504,7 +504,7 @@ musica: artes_marciales
 1.nivel: 0.3
 1.escenario: LABORATORIO
 1.rondas: 2
-1.texto: Frank Dux-bit se escapa del cuartel para ir al kumite secreto. Antes, su maestro lo pone a prueba con los ojos vendados: atrapar a un robot que roba arroz sin derramar ni un grano. | Frank Dux-Bit büxt aus der Kaserne aus, um zum geheimen Kumite zu gehen. Vorher prüft ihn sein Meister mit verbundenen Augen: einen Reis-Dieb-Roboter fangen, ohne ein Korn zu verschütten. | Frank Dux-bit sneaks out of the barracks to go to the secret kumite. First, his master tests him blindfolded: catch a rice-stealing robot without spilling a single grain.
+1.texto: Frank Dux-bit se escapa del cuartel para ir al kumite secreto. Antes, su maestro lo pone a prueba con los ojos vendados: atrapar a un robot que roba arroz sin derramar ni un grano. | Frank Dux-Bit büxt aus der Kaserne aus, um zum geheimen Kumite zu gehen. Vorher prüft ihn sein Meister mit verbundenen Augen: einen Reisdieb-Roboter fangen, ohne ein Korn zu verschütten. | Frank Dux-bit sneaks out of the barracks to go to the secret kumite. First, his master tests him blindfolded: catch a rice-stealing robot without spilling a single grain.
 1.victoria: Ni un grano fuera. El maestro le da la cinta del kumite y una bolsa de arroz para el viaje. | Kein Korn daneben. Der Meister gibt ihm das Kumite-Stirnband und eine Tüte Reis für die Reise. | Not a grain spilled. The master gives him the kumite headband and a bag of rice for the trip.
 2.rival: Luchador de Sumo-Bit | Sumo-Bit-Ringer | Sumo-Bit Wrestler
 2.modelo: bastion
@@ -543,7 +543,7 @@ destacada: true
 2.rango: Noob
 2.escenario: CHATARRERIA
 2.rondas: 3
-2.texto: Tu entrenador prepara un montaje absurdo entre barriles, persecuciones de drones tostadores y flexiones de servomotor. Primera pelea televisada contra Dani «el Cable», que nunca ha perdido un asalto. | Dein Trainer startet eine absurde Trainingsmontage mit Fässern, Toaster-Drohnenjagden und Servo-Liegestützen. Erster Fernsehkampf gegen Dani „das Kabel“, der noch nie eine Runde verloren hat. | Your coach launches an absurd training montage with barrels, toaster-drone chases, and servo push-ups. First televised bout against Danny “The Cable,” who has never dropped a round.
+2.texto: Tu entrenador prepara un montaje absurdo entre barriles, persecuciones de drones tostadores y flexiones de servomotor. Primera pelea televisada contra Dani «el Cable», que nunca ha perdido un asalto. | Dein Trainer startet eine absurde Trainingsmontage mit Fässern, Toaster-Drohnenjagden und Servo-Liegestützen. Erster Fernsehkampf gegen Dani „das Kabel“, der noch nie eine Runde verloren hat. | Your coach launches an absurd training montage with barrels, toaster-drone chases, and servo push-ups. First televised bout against Danny “The Cable”, who has never dropped a round.
 2.victoria: ¡Adonis lo voltea en el último segundo! La prensa descubre su talento y el campeón regional lanza el reto. | Adonis kippt ihn in der letzten Sekunde! Die Presse entdeckt sein Talent, und der Regionalmeister fordert ihn heraus. | Adonis flips him in the final second! The press discovers his talent, and the regional champion issues a challenge.
 3.rival: Ricky Voltio-Rey | Ricky Volt-König | Ricky Volt-King
 3.modelo: faro
@@ -688,7 +688,7 @@ destacada: true
 3.rango: Junior
 3.escenario: CHATARRERIA
 3.rondas: 3
-3.texto: Octavos de final en la chatarrería del muelle contra el Duque Imán-Loco, que intenta arrancar los tornillos a sus rivales con un electroimán gigante y risas teatrales. | Achtelfinale auf dem Hafenschrottplatz gegen Herzog Irr-Magnet, der versucht, seinen Gegnern mit einem Riesenmagneten und theatralischem Gelächter die Schrauben auszuziehen. | Round of 16 in the dock scrapyard against Duke Mad-Magnet, who tries to yank his rivals' bolts out with a giant electromagnet and theatrical laughter.
+3.texto: Octavos de final en la chatarrería del muelle contra el Duque Imán-Loco, que intenta arrancar los tornillos a sus rivales con un electroimán gigante y risas teatrales. | Achtelfinale auf dem Hafenschrottplatz gegen Herzog Irr-Magnet, der versucht, seinen Gegnern mit einem Riesenmagneten und theatralischem Gelächter die Schrauben herauszureißen. | Round of 16 in the dock scrapyard against Duke Mad-Magnet, who tries to yank his rivals' bolts out with a giant electromagnet and theatrical laughter.
 3.victoria: El electroimán se pega a una farola y el duque sale despedido al mar. ¡Pasas a cuartos de final! | Der Elektromagnet klebt an einer Laterne und der Herzog fliegt ins Meer. Ab ins Viertelfinale! | The electromagnet sticks to a lamppost and the duke splashes into the sea. On to the quarterfinals!
 4.rival: Señora Sartén-Turbo | Frau Turbo-Pfanne | Lady Turbo-Skillet
 4.modelo: serrucho

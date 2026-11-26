@@ -46,7 +46,7 @@ titulo.de: Die Werkstatt
 titulo.en: The workshop
 objetivo.es: Aquí escribes el código de tu robot: lo que hará él solo en la pelea.
 objetivo.de: Hier schreibst du den Code deines Roboters: was er im Kampf allein tun wird.
-objetivo.en: Here you write your robot’s code: what it will do on its own in the fight.
+objetivo.en: Here you write your robot's code: what it will do on its own in the fight.
 gana.es: Pulsa «Compilar» (Ctrl+S) para comprobar que no tiene faltas. Si sale en verde, tu robot ya pelea con ese código.
 gana.de: Drück „Kompilieren“ (Strg+S), um zu prüfen, dass er keine Fehler hat. Ist es grün, kämpft dein Roboter schon mit diesem Code.
 gana.en: Press “Compile” (Ctrl+S) to check it has no mistakes. If it turns green, your robot already fights with that code.
@@ -111,13 +111,13 @@ pseudo.en:
 === pelea
 titulo.es: ¡A pelear!
 titulo.de: Auf in den Kampf!
-titulo.en: Let’s fight!
+titulo.en: Let's fight!
 objetivo.es: Una pelea de varias rondas contra un robot de tu nivel. Tu robot pelea solo, con su código.
 objetivo.de: Ein Kampf über mehrere Runden gegen einen Roboter deiner Stufe. Dein Roboter kämpft allein, mit seinem Code.
 objetivo.en: A fight of several rounds against a robot of your rank. Your robot fights on its own, with its code.
 gana.es: Gana quien recibe MENOS daño sumando todas las rondas. Si a un robot le rompen la cabeza, esa ronda se acaba.
 gana.de: Es gewinnt, wer über alle Runden WENIGER Schaden nimmt. Geht bei einem Roboter der Kopf kaputt, endet diese Runde.
-gana.en: Whoever takes LESS damage over all the rounds wins. If a robot’s head breaks, that round ends.
+gana.en: Whoever takes LESS damage over all the rounds wins. If a robot's head breaks, that round ends.
 nota.es: Entre rondas lees el informe y cambias código y piezas. En la pelea, Espacio pausa y «Un turno» te enseña tu código turno a turno.
 nota.de: Zwischen den Runden liest du den Bericht und änderst Code und Teile. Im Kampf pausiert die Leertaste, und „Ein Zug“ zeigt dir deinen Code Zug für Zug.
 nota.en: Between rounds you read the report and change code and parts. In the fight, Space pauses and “One tick” shows you your code tick by tick.
@@ -129,7 +129,7 @@ pseudo.es:
     AL RECIBIR un golpe: cambiar de sitio
 pseudo.de:
     IN JEDEM ZUG: mich bewegen
-    BEIM SEHEN des Gegners: zu ihm zielen und angreifen
+    BEIM SEHEN des Gegners: auf ihn zielen und angreifen
     BEI EINEM TREFFER: den Platz wechseln
 pseudo.en:
     EVERY TICK: keep moving
@@ -162,7 +162,7 @@ pseudo.de:
 pseudo.en:
     choose rounds and kind of fight
     IF I want to try something new: practice
-    IF I want to go up: normal fight or challenge
+    IF I want to rank up: normal fight or challenge
 
 === equipos
 titulo.es: Equipos y todos contra todos
@@ -269,7 +269,7 @@ gana.de: Jede Aufgabe nennt ihr Ziel (zum Beispiel 3-mal treffen). Schaffst du e
 gana.en: Each task states its goal (for example, hit 3 times). If you meet it in the round, it is done.
 nota.es: Usan el código de tu robot: escríbelo y compílalo en el Taller (botón «Taller» de cada reto) y luego pulsa «Jugar».
 nota.de: Sie nutzen den Code deines Roboters: Schreib und kompiliere ihn in der Werkstatt (Knopf „Werkstatt“ jeder Aufgabe) und drück dann „Spielen“.
-nota.en: They use your robot’s code: write and compile it in the Workshop (“Workshop” button on each task) and then press “Play”.
+nota.en: They use your robot's code: write and compile it in the Workshop (“Workshop” button on each task) and then press “Play”.
 metodos: avanzar, girar, apuntarHacia, atacar, obstaculos
 mecanicas: mec_turno, mec_radar
 pseudo.es:
@@ -283,7 +283,7 @@ pseudo.de:
     kompilieren und spielen
     WENN es nicht klappt: eine Sache ändern und noch einmal probieren
 pseudo.en:
-    read the task’s goal
+    read the task's goal
     in the Workshop, write only what it asks
     compile and play
     IF it does not work: change one thing and try again
@@ -294,7 +294,7 @@ titulo.de: Spezialmodus
 titulo.en: Special mode
 objetivo.es: Pruebas especiales: jefes de cada tema, peleas con poco tope de cálculo, peleas Senior, retos de programar y robots de otros jugadores.
 objetivo.de: Besondere Prüfungen: Bosse für jedes Thema, Kämpfe mit niedrigem Rechenlimit, Senior-Kämpfe, Programmieraufgaben und Roboter anderer Spieler.
-objetivo.en: Special tests: bosses for each topic, fights with a low step limit, Senior fights, programming tasks and other players’ robots.
+objetivo.en: Special tests: bosses for each topic, fights with a low step limit, Senior fights, programming tasks and other players' robots.
 gana.es: Cada pestaña dice su meta. En las peleas, como siempre, gana quien recibe menos daño.
 gana.de: Jeder Reiter nennt sein Ziel. In den Kämpfen gewinnt wie immer, wer weniger Schaden nimmt.
 gana.en: Each tab states its goal. In the fights, as always, whoever takes less damage wins.
@@ -422,7 +422,7 @@ pseudo.es:
     leer el paso
     adivinar qué hará el robot
     mirar si acerté
-    continuar
+    seguir
 pseudo.de:
     den Schritt lesen
     raten, was der Roboter tun wird
@@ -499,7 +499,7 @@ titulo.de: Debugging und Tests
 titulo.en: Debugging and testing
 objetivo.es: Aquí arreglas robots rotos (con una pista) y practicas el depurador y las pruebas de código.
 objetivo.de: Hier reparierst du kaputte Roboter (mit einem Hinweis) und übst den Umgang mit dem Debugger und mit Code-Tests.
-objetivo.en: Here you fix broken robots (with a hint) and practice the debugger and code tests.
+objetivo.en: Here you fix broken robots (with a hint) and practice with the debugger and code tests.
 gana.es: Un robot roto queda arreglado cuando su código compila, lo has cambiado y cumple su meta en la arena.
 gana.de: Ein kaputter Roboter ist repariert, wenn sein Code kompiliert, du ihn geändert hast und er sein Ziel in der Arena erreicht.
 gana.en: A broken robot is fixed when its code compiles, you have changed it and it meets its goal in the arena.
@@ -519,7 +519,7 @@ pseudo.de:
     die fehlerhafte Zeile ändern
     ausprobieren
 pseudo.en:
-    read the robot’s symptom
+    read the robot's symptom
     watch its code step by step
     change the line that fails
     try it
@@ -550,4 +550,4 @@ pseudo.de:
 pseudo.en:
     choose a card
     read the idea
-    think how to write it myself in Java
+    think about how to write it myself in Java

@@ -15,9 +15,9 @@ firma: public static void main(String[] args) { ... }
 es: El punto de entrada de un programa: Java empieza por aquí. Los robots no lo necesitan.
 de: Der Einstiegspunkt eines Programms: Hier startet Java. Roboter brauchen ihn nicht.
 en: A program's entry point: Java starts here. Robots don't need one.
-donde.es: Decláralo directamente en el cuerpo de una clase Java independiente; en tus robots (Metajavbot) NO lo pongas porque el motor ejecuta sus eventos.
+donde.es: Decláralo directamente en el cuerpo de una clase Java independiente; en tus robots (Metajavbot) NO lo pongas, porque el motor ejecuta sus eventos.
 donde.de: Direkt im Rumpf einer eigenständigen Java-Klasse deklarieren; in Robotern (MetajavbotDe) NICHT verwenden, da die Engine die Ereignisse startet.
-donde.en: Declare directly inside a standalone Java class body; do NOT add it to robots (MetajavbotEn) because the engine runs their event methods instead.
+donde.en: Declare directly inside a standalone Java class body; do NOT add it to robots (MetajavbotEn), because the engine runs their event methods instead.
 ejemplo: public static void main(String[] args) { System.out.println("Hola"); }
 
 === sintaxis.sentencia
@@ -129,7 +129,7 @@ de: Java leitet den Typ aus dem Wert ab. Nur für lokale Variablen mit Startwert
 en: Java infers the type from the value. Only for local variables with an initial value. Since Java 10.
 donde.es: Úsalo solo en variables locales dentro de métodos o bucles con valor inicial; NO vale para campos de clase, parámetros, retornos ni con valor inicial null.
 donde.de: Nur für lokale Variablen in Methoden oder Schleifen mit direktem Startwert; NICHT für Klassenfelder, Parameter, Rückgabetypen oder null-Initialisierung.
-donde.en: Use only for local variables inside methods or loops with an initializer; NOT allowed for class fields, parameters, return types, or null.
+donde.en: Use only for local variables inside methods or loops with an initializer; NOT allowed for class fields, parameters, return types, or with a null initializer.
 ejemplo: var enemigos = enemigosVistos();  // List<Enemigo>
 
 === sintaxis.final
@@ -226,10 +226,10 @@ ejemplo: double paso = blindaje() < 30 ? -50 : 50;
 tema: 03
 firma: ()   !  ++  --   * / %   + -   < > <= >=   == !=   &&   ||   ?:   = +=
 es: El orden en que se calculan los operadores, de primero a último. En caso de duda, paréntesis.
-de: Die Reihenfolge, in der Operatoren ausgewertet werden, von zuerst bis zuletzt. Im Zweifel Klammern.
+de: Die Reihenfolge, in der Operatoren ausgewertet werden, vom ersten bis zum letzten. Im Zweifel Klammern.
 en: The order in which operators are evaluated, first to last. When in doubt, use parentheses.
 donde.es: Aplícala al escribir expresiones largas dentro de cálculos o condiciones; ante cualquier duda, añade paréntesis () en lugar de fiarte de la memoria.
-donde.de: Beim Schreiben längerer Ausdrücke in Rechnungen oder Bedingungen beachten; im Zweifel lieber Klammern () setzen statt zu raten.
+donde.de: Beim Schreiben längerer Ausdrücke in Rechnungen oder Bedingungen beachten; im Zweifel lieber Klammern () setzen, statt zu raten.
 donde.en: Keep it in mind when writing multi-operator expressions; whenever in doubt, add parentheses () rather than relying on memory.
 ejemplo: 2 + 3 * 4  // 14      (2 + 3) * 4  // 20
 
@@ -283,9 +283,9 @@ firma: static double sqrt(double a)
 es: La raíz cuadrada.
 de: Die Quadratwurzel.
 en: The square root.
-donde.es: Úsalo en cálculos geométricos dentro de métodos asegurándote de que el argumento no sea negativo (si lo es, devuelve NaN); para distancias prefiere Math.hypot().
+donde.es: Úsalo en cálculos geométricos dentro de métodos, asegurándote de que el argumento no sea negativo (si lo es, devuelve NaN); para distancias prefiere Math.hypot().
 donde.de: In Geometrieberechnungen innerhalb von Methoden nutzen und sicherstellen, dass das Argument >= 0 ist (sonst NaN); für Abstände besser Math.hypot().
-donde.en: Use in geometric formulas inside methods ensuring the argument is non-negative (otherwise NaN); for 2D distances prefer Math.hypot().
+donde.en: Use in geometric formulas inside methods, ensuring the argument is non-negative (otherwise NaN); for 2D distances prefer Math.hypot().
 ejemplo: Math.sqrt(dx * dx + dy * dy)
 
 === Math.round
@@ -338,7 +338,7 @@ firma: static double toRadians(double grados)      static double toDegrees(doubl
 es: Pasa de grados a radianes; toDegrees hace lo contrario. 180 grados son Math.PI radianes.
 de: Rechnet Grad in Bogenmaß um; toDegrees macht das Gegenteil. 180 Grad sind Math.PI.
 en: Converts degrees to radians; toDegrees does the opposite. 180 degrees are Math.PI radians.
-donde.es: Envuélvelo alrededor de ángulos en grados justo dentro de Math.sin() o Math.cos(), y usa Math.toDegrees() sobre resultados de Math.atan2().
+donde.es: Envuelve con él los ángulos en grados justo dentro de Math.sin() o Math.cos(), y usa Math.toDegrees() sobre resultados de Math.atan2().
 donde.de: Direkt um Gradwerte innerhalb von Math.sin() oder Math.cos() legen und Math.toDegrees() für Ergebnisse von Math.atan2() nutzen.
 donde.en: Wrap degree angles right inside Math.sin() or Math.cos(), and wrap Math.atan2() results in Math.toDegrees().
 ejemplo: Math.toDegrees(Math.PI / 2)  // 90.0
@@ -406,7 +406,7 @@ firma: switch (valor) { case A: ...; break; default: ...; }
 es: Elige un camino según el valor (int, char, String o enum). Sin break, sigue con el case siguiente.
 de: Wählt einen Weg nach dem Wert (int, char, String oder enum). Ohne break geht es beim nächsten case weiter.
 en: Picks a path by value (int, char, String or enum). Without break it falls through to the next case.
-donde.es: Úsalo dentro de un método para comparar una variable contra valores constantes (int, String, enum); no olvides break al final de cada case clásico.
+donde.es: Úsalo dentro de un método para comparar una variable con valores constantes (int, String, enum); no olvides break al final de cada case clásico.
 donde.de: In einer Methode nutzen, um einen Wert mit Konstanten (int, String, enum) zu vergleichen; beim klassischen switch das break pro case nicht vergessen.
 donde.en: Use inside a method to branch on constant values (int, String, enum); don't forget break at the end of each classic case.
 ejemplo: switch (ronda()) { case 1: decir("¡Hola!"); break; default: decir("Otra vez"); }
@@ -441,8 +441,8 @@ firma: while (condicion) { ... }
 es: Repite el bloque mientras la condición sea true. Si al principio es false, no se ejecuta nunca.
 de: Wiederholt den Block, solange die Bedingung true ist. Ist sie anfangs false, läuft er nie.
 en: Repeats the block while the condition is true. If it's false at the start, it never runs.
-donde.es: Escríbelo dentro de un método cuando no sepas cuántas vueltas hacen falta; en robots asegura siempre una condición de salida rápida para no agotar el tope de pasos.
-donde.de: In einer Methode nutzen, wenn die Wiederholungszahl offen ist; in Robotern immer eine schnelle Abbruchbedingung sichern, um das Schrittlimit nicht zu sprengen.
+donde.es: Escríbelo dentro de un método cuando no sepas cuántas vueltas hacen falta; en robots asegura siempre una condición de salida rápida para no agotar el tope de cálculo.
+donde.de: In einer Methode nutzen, wenn die Wiederholungszahl offen ist; in Robotern immer eine schnelle Abbruchbedingung sichern, um das Rechenlimit nicht zu sprengen.
 donde.en: Write inside a method when the iteration count isn't known upfront; in robots always guarantee a quick exit so you don't hit the step limit.
 ejemplo: int n = 10; while (n > 0) { n -= 3; }  // n = -2
 
@@ -483,7 +483,7 @@ ejemplo: for (Enemigo e : enemigosVistos()) { if (e.distancia() < 50) { atacar()
 tema: 05
 firma: continue;
 es: Salta el resto de esta vuelta y pasa a la siguiente.
-de: Überspringt den Rest dieses Durchlaufs und macht mit der nächsten weiter.
+de: Überspringt den Rest dieses Durchlaufs und macht mit dem nächsten weiter.
 en: Skips the rest of this iteration and moves on to the next.
 donde.es: Úsalo únicamente dentro de un bucle (for, while, do-while) para saltar a la siguiente iteración; en un while asegúrate de actualizar antes el contador.
 donde.de: Nur in Schleifen (for, while, do-while) nutzen, um den Rest des Durchlaufs zu überspringen; in while vorher den Zähler aktualisieren, sonst Endlosschleife.
@@ -610,7 +610,7 @@ firma: array.length
 es: Cuántas posiciones tiene el array. Es un campo, sin paréntesis (en String es length()).
 de: Wie viele Positionen das Array hat. Ein Feld, ohne Klammern (bei String ist es length()).
 en: How many positions the array has. It's a field, without parentheses (on a String it's length()).
-donde.es: Úsalo sobre una variable array (a.length, sin paréntesis) en límites de bucles; no intentes asignarle un valor porque es de solo lectura.
+donde.es: Úsalo sobre una variable array (a.length, sin paréntesis) en límites de bucles; no intentes asignarle un valor, porque es de solo lectura.
 donde.de: Auf einer Array-Variable (a.length, ohne Klammern) als Schleifengrenze nutzen; es ist schreibgeschützt und kann nicht verändert werden.
 donde.en: Read on an array variable (a.length, no parentheses) as a loop bound; it is read-only and cannot be assigned to.
 ejemplo: for (int i = 0; i < a.length; i++) suma += a[i];
@@ -665,7 +665,7 @@ firma: static void fill(int[] a, int valor)
 es: Pone el mismo valor en todas las posiciones.
 de: Setzt denselben Wert in alle Positionen.
 en: Puts the same value in every position.
-donde.es: Llámalo tras crear un array o al reiniciar estado en alEmpezar() para rellenarlo de golpe (requiere import java.util.Arrays;); no devuelve un nuevo array.
+donde.es: Llámalo tras crear un array o al reiniciar el estado en alEmpezar() para rellenarlo de golpe (requiere import java.util.Arrays;); no devuelve un nuevo array.
 donde.de: Nach dem Erzeugen eines Arrays oder zum Zurücksetzen in beimStart() aufrufen (braucht import java.util.Arrays;); ändert direkt das bestehende Array.
 donde.en: Call after creating an array or when resetting state in onStart() (requires import java.util.Arrays;); it mutates the existing array in place.
 ejemplo: double[] d = new double[4]; Arrays.fill(d, -1);  // [-1.0, -1.0, -1.0, -1.0]
@@ -810,7 +810,7 @@ firma: String replace(CharSequence viejo, CharSequence nuevo)
 es: Devuelve una copia con todas las apariciones cambiadas.
 de: Gibt eine Kopie zurück, in der alle Vorkommen ersetzt sind.
 en: Returns a copy with every occurrence replaced.
-donde.es: Invócalo sobre un String y asigna el nuevo texto devuelto; llamarlo como sentencia suelta se descarta porque String es inmutable.
+donde.es: Invócalo sobre un String y asigna el nuevo texto devuelto; si lo llamas como sentencia suelta, el resultado se pierde, porque String es inmutable.
 donde.de: Auf einem String aufrufen und den neuen Rückgabewert zuweisen; als alleinstehende Anweisung geht das Ergebnis verloren, da String unveränderlich ist.
 donde.en: Call on a String and assign the returned copy; calling it as a bare statement discards the result because String is immutable.
 ejemplo: "a-b-c".replace("-", "+")  // "a+b+c"
@@ -886,8 +886,8 @@ tema: 08
 firma: """ + salto de línea, las líneas del texto, y """ para cerrar
 es: Texto de varias líneas entre tres comillas; la sangría común se quita sola. Desde Java 15.
 de: Mehrzeiliger Text zwischen drei Anführungszeichen; gemeinsame Einrückung fällt weg. Seit Java 15.
-en: Multi-line text between triple quotes; common indentation is removed. Since Java 15.
-donde.es: Úsalo en expresiones String multilínea empezando el contenido en la línea SIGUIENTE a las tres comillas de apertura """; no puedes poner texto en esa misma primera línea.
+en: Multiline text between triple quotes; common indentation is removed. Since Java 15.
+donde.es: Úsalo en expresiones String multilínea, empezando el contenido en la línea SIGUIENTE a las tres comillas de apertura """; no puedes poner texto en esa misma primera línea.
 donde.de: Für mehrzeilige Strings nutzen, wobei der Inhalt erst in der NÄCHSTEN Zeile nach den öffnenden """ beginnt; Text in derselben ersten Zeile kompiliert nicht.
 donde.en: Use for multiline String expressions, starting the content on the line AFTER the opening """; placing text on that opening line will not compile.
 ejemplo: String s = """ [salto de línea] Hola [salto de línea] arena""";  // igual que "Hola\narena"
@@ -922,7 +922,7 @@ de: Fügt etwas an einer Position ein oder löscht das Zeichen an einer Position
 en: Inserts something at a position, or deletes the character at a position.
 donde.es: Invócalo sobre un StringBuilder comprobando que la posición esté entre 0 y sb.length(); no lo llames sobre un String normal.
 donde.de: Auf einem StringBuilder aufrufen und sicherstellen, dass die Position zwischen 0 und sb.length() liegt; funktioniert nicht auf normalen Strings.
-donde.en: Call on a StringBuilder ensuring the index is between 0 and sb.length(); does not work on regular Strings.
+donde.en: Call on a StringBuilder, making sure the index is between 0 and sb.length(); does not work on regular Strings.
 ejemplo: new StringBuilder("ac").insert(1, "b")  // "abc"
 
 === StringBuilder.toString
@@ -999,8 +999,8 @@ firma: objeto.campo      objeto.metodo(args)
 es: El punto accede a lo que tiene un objeto.
 de: Der Punkt greift auf das zu, was ein Objekt hat.
 en: The dot accesses what an object has.
-donde.es: Úsalo entre una referencia de objeto (o nombre de clase estática) y su miembro; asegúrate antes de que el objeto no sea null para evitar NullPointerException.
-donde.de: Zwischen einer Objektreferenz (oder einem Klassennamen) und ihrem Mitglied setzen; vorher prüfen, dass die Referenz nicht null ist.
+donde.es: Úsalo entre una referencia de objeto (o un nombre de clase, para los miembros estáticos) y su miembro; asegúrate antes de que el objeto no sea null para evitar NullPointerException.
+donde.de: Zwischen einer Objektreferenz (oder einem Klassennamen) und ihrem Mitglied setzen; vorher prüfen, dass die Referenz nicht null ist, um eine NullPointerException zu vermeiden.
 donde.en: Place between an object reference (or class name for statics) and its member; ensure the object is non-null first to avoid NullPointerException.
 ejemplo: e.distancia()      "hola".length()
 
@@ -1057,7 +1057,7 @@ es: Quién puede ver algo: todos; subclases y paquete; solo el paquete; solo la 
 de: Wer etwas sehen darf: alle; Unterklassen und Paket; nur das Paket; nur die eigene Klasse.
 en: Who can see something: everyone; subclasses and package; only the package; only the class itself.
 donde.es: Colócalos al inicio de clases, campos, constructores o métodos (private para detalles internos, public para eventos sobrescritos del robot); nunca en variables locales.
-donde.de: An den Anfang von Klassen, Feldern, Konstruktoren oder Methoden setzen (private für Internes, public für Roboter-Ereignisse); nie bei lokalen Variablen.
+donde.de: An den Anfang von Klassen, Feldern, Konstruktoren oder Methoden setzen (private für Internes, public für überschriebene Roboter-Ereignisse); nie bei lokalen Variablen.
 donde.en: Place at the start of classes, fields, constructors, or methods (private for internals, public for overridden robot events); never on local variables.
 ejemplo: private int vida = 100;
 
@@ -1077,7 +1077,7 @@ tema: 10
 firma: public NombreClase(parametros) { ... }
 es: Prepara el objeto al crearlo con new. Se llama como la clase y no tiene tipo de retorno.
 de: Bereitet das Objekt beim Erzeugen mit new vor. Heißt wie die Klasse und hat keinen Rückgabetyp.
-en: Sets up the object when created with new. Named like the class, with no return type.
+en: Sets up the object when created with new. It has the same name as the class and no return type.
 donde.es: Decláralo en el cuerpo de la clase con el mismo nombre exacto y sin tipo de retorno; en robots NO llames aquí a avanzar(), x() ni memoria() (hazlo en alEmpezar()).
 donde.de: Im Klassenrumpf mit exakt dem Klassennamen und ohne Rückgabetyp deklarieren; in Robotern hier KEINE API-Aufrufe wie vorwaerts(), x() oder gedaechtnis() machen (dafür beimStart()).
 donde.en: Declare in the class body with the exact class name and no return type; in robots NEVER call ahead(), x(), or memory() here (use onStart() instead).
@@ -1089,9 +1089,9 @@ firma: this.campo      this.metodo()      this(args)
 es: El objeto actual. Distingue el campo del parámetro de igual nombre; this(...) llama a otro constructor.
 de: Das aktuelle Objekt. Trennt Feld und gleichnamigen Parameter; this(...) ruft einen anderen Konstruktor auf.
 en: The current object. Tells a field from a same-named parameter; this(...) calls another constructor.
-donde.es: Úsalo dentro de constructores o métodos de instancia para distinguir campos de parámetros (this.x = x); this(...) solo puede ser la primera línea de un constructor, y nunca en métodos static.
+donde.es: Úsalo dentro de constructores o métodos de instancia para distinguir campos de parámetros (this.x = x); this(...) solo puede ir en la primera línea de un constructor, y nunca en métodos static.
 donde.de: In Konstruktoren oder Instanzmethoden nutzen, um Felder von Parametern zu trennen (this.x = x); this(...) darf nur in der ersten Konstruktorzeile stehen, nie in static-Methoden.
-donde.en: Use inside constructors or instance methods to disambiguate fields from parameters (this.x = x); this(...) must be the first line of a constructor, and this is never allowed in static methods.
+donde.en: Use inside constructors or instance methods to distinguish fields from parameters (this.x = x); this(...) must be the first line of a constructor, and this is never allowed in static methods.
 ejemplo: public Objetivo() { this(0, 0); }
 
 === sintaxis.campo.static
@@ -1109,7 +1109,7 @@ ejemplo: static int creados = 0;   public Objetivo() { creados++; }
 tema: 10
 firma: static <T> T requireNonNull(T obj, String mensaje)
 es: Lanza NullPointerException con tu mensaje si obj es null; si no, lo devuelve. Útil en constructores.
-de: Wirft eine NullPointerException mit deiner Meldung, wenn obj null ist; sonst gibt es obj zurück.
+de: Wirft eine NullPointerException mit deiner Meldung, wenn obj null ist; sonst gibt es obj zurück. Praktisch in Konstruktoren.
 en: Throws a NullPointerException with your message if obj is null; otherwise returns it. Handy in constructors.
 donde.es: Ponlo al principio de un constructor o método para validar parámetros obligatorios (requiere import java.util.Objects; arriba) antes de guardarlos en campos.
 donde.de: An den Anfang eines Konstruktors oder einer Methode setzen, um Pflichtparameter vor dem Speichern zu prüfen (braucht import java.util.Objects; am Dateianfang).
@@ -1168,7 +1168,7 @@ firma: public class Object
 es: La madre de todas las clases. Por eso cualquier objeto tiene toString, equals y hashCode.
 de: Die Oberklasse aller Klassen. Deshalb hat jedes Objekt toString, equals und hashCode.
 en: The parent of every class. That's why every object has toString, equals and hashCode.
-donde.es: Úsalo como tipo genérico máximo solo cuando realmente aceptes cualquier objeto (p. ej. Map<String, Object> en memoria()); prefiere tipos concretos cuando puedas.
+donde.es: Úsalo como el tipo más general solo cuando realmente aceptes cualquier objeto (p. ej. Map<String, Object> en memoria()); prefiere tipos concretos cuando puedas.
 donde.de: Als allgemeinsten Referenztyp nur nutzen, wenn wirklich beliebige Objekte erlaubt sind (z. B. Map<String, Object> in gedaechtnis()); sonst konkretere Typen wählen.
 donde.en: Use as the root reference type only when any object is genuinely allowed (like Map<String, Object> in memory()); prefer specific types elsewhere.
 ejemplo: Object o = "texto"; System.out.println(o.toString());
@@ -1204,7 +1204,7 @@ es: Pregunta si el objeto es de ese tipo (o de una hija). Con null da false.
 de: Fragt, ob das Objekt von diesem Typ (oder einer Unterklasse) ist. Mit null ergibt es false.
 en: Asks whether the object is of that type (or a subclass). With null it gives false.
 donde.es: Úsalo en condiciones if antes de convertir una referencia (por ejemplo al leer valores de memoria().get("clave")); devuelve false si la referencia es null.
-donde.de: In if-Bedingungen vor einem Cast nutzen (z. B. beim Lesen aus gedaechtnis().get("key")); liefert bei null sicher false statt einer Exception.
+donde.de: In if-Bedingungen vor einem Cast nutzen (z. B. beim Lesen aus gedaechtnis().get("key")); liefert bei null sicher false statt einer Ausnahme.
 donde.en: Use in if conditions before casting a reference (e.g. when reading values from memory().get("key")); safely returns false if the reference is null.
 ejemplo: if (a instanceof Laser) { ... }
 
@@ -1260,8 +1260,8 @@ firma: static tipo metodo() { ... }      private tipo ayuda() { ... }
 es: Las interfaces pueden tener métodos static (Java 8) y private para ayudarse (Java 9).
 de: Interfaces können static-Methoden (Java 8) und private Hilfsmethoden (Java 9) haben.
 en: Interfaces can have static methods (Java 8) and private helper methods (Java 9).
-donde.es: Declara métodos static o private auxiliares dentro del cuerpo de una interfaz; los static se llaman con NombreInterfaz.metodo(), nunca a través de la subclase.
-donde.de: Statische oder private Hilfsmethoden im Rumpf eines Interface deklarieren; static-Methoden werden stets über InterfaceName.methode() aufgerufen.
+donde.es: Declara métodos static o private auxiliares dentro del cuerpo de una interfaz; los static se llaman con NombreInterfaz.metodo(), nunca a través de una clase que la implemente.
+donde.de: Statische oder private Hilfsmethoden im Rumpf eines Interface deklarieren; static-Methoden werden stets über InterfaceName.methode() aufgerufen, nie über eine implementierende Klasse.
 donde.en: Declare static or private helper methods inside an interface body; static ones must be called via InterfaceName.method(), never through an implementing class.
 ejemplo: interface Estrategia { static Estrategia quieta() { return r -> r.detener(); } }
 
@@ -1279,7 +1279,7 @@ ejemplo: public int compareTo(Objetivo o) { return Double.compare(distancia(), o
 === Integer.compare
 tema: 13
 firma: static int compare(int a, int b)      static int Double.compare(double a, double b)
-es: Compara dos números sin restar (restar puede desbordarse). Ideal dentro de compareTo.
+es: Compara dos números sin restar (la resta puede desbordarse). Ideal dentro de compareTo.
 de: Vergleicht zwei Zahlen ohne Subtraktion (die überlaufen kann). Ideal in compareTo.
 en: Compares two numbers without subtracting (which can overflow). Ideal inside compareTo.
 donde.es: Úsalo dentro de compareTo() o de un Comparator en lugar de restar (a - b), evitando desbordamientos y problemas con NaN en Double.compare().
@@ -1350,9 +1350,9 @@ firma: Exception (comprobadas)      RuntimeException (no comprobadas)
 es: Las comprobadas hay que capturarlas o declararlas con throws; las de RuntimeException, no.
 de: Geprüfte Ausnahmen muss man fangen oder mit throws deklarieren; RuntimeExceptions nicht.
 en: Checked exceptions must be caught or declared with throws; RuntimeExceptions needn't be.
-donde.es: Tenlo en cuenta al diseñar métodos o capturar errores: las comprobadas (Exception) exigen try-catch o throws; las RuntimeException no obligan a declararlo.
+donde.es: Tenlo en cuenta al diseñar métodos o capturar errores: las comprobadas (Exception) exigen try-catch o throws; las RuntimeException no obligan a declararlas.
 donde.de: Beim Entwurf und Abfangen beachten: Geprüfte Ausnahmen (Exception) verlangen try-catch oder throws; RuntimeException muss nicht deklariert werden.
-donde.en: Keep in mind when writing methods: checked exceptions (Exception) require try-catch or throws; RuntimeException subclasses do not.
+donde.en: Keep in mind when designing methods or catching errors: checked exceptions (Exception) require try-catch or throws; RuntimeException subclasses do not.
 ejemplo: IOException (comprobada)      IllegalStateException (no comprobada)
 
 === sintaxis.excepcion.propia
@@ -1441,7 +1441,7 @@ es: Añade un elemento al final (o en esa posición).
 de: Fügt ein Element am Ende (oder an dieser Position) hinzu.
 en: Adds an element at the end (or at that position).
 donde.es: Invócalo sobre una lista mutable (como ArrayList) dentro de métodos o eventos; falla con UnsupportedOperationException si la lista viene de List.of().
-donde.de: Auf einer veränderlichen Liste (wie ArrayList) in Methoden oder Ereignissen aufrufen; schlägt bei Listen aus List.of() fehl.
+donde.de: Auf einer veränderlichen Liste (wie ArrayList) in Methoden oder Ereignissen aufrufen; schlägt bei Listen aus List.of() mit einer UnsupportedOperationException fehl.
 donde.en: Call on a mutable list (like ArrayList) inside methods or events; throws UnsupportedOperationException on lists created with List.of().
 ejemplo: armas.add("LASER");
 
@@ -1450,7 +1450,7 @@ tema: 15
 firma: E get(int indice)
 es: El elemento de esa posición (desde 0). Fuera de rango lanza IndexOutOfBoundsException.
 de: Das Element an dieser Position (ab 0). Außerhalb des Bereichs: IndexOutOfBoundsException.
-en: The element at that position (from 0). Out of range throws IndexOutOfBoundsException.
+en: The element at that position (from 0). Out of range, it throws IndexOutOfBoundsException.
 donde.es: Llámalo sobre una List tras verificar que el índice esté entre 0 y lista.size() - 1 (p. ej. !enemigosVistos().isEmpty() antes de get(0)).
 donde.de: Auf einer List erst aufrufen, nachdem 0 <= index < liste.size() geprüft wurde (z. B. !gesehen().isEmpty() vor get(0)).
 donde.en: Call on a List only after ensuring 0 <= index < list.size() (e.g. check !seenEnemies().isEmpty() before get(0)).
@@ -1474,7 +1474,7 @@ es: Quita por posición o por valor. Ojo con List<Integer>: remove(1) quita la p
 de: Entfernt per Position oder per Wert. Vorsicht bei List<Integer>: remove(1) entfernt Position 1.
 en: Removes by position or by value. Careful with List<Integer>: remove(1) removes position 1.
 donde.es: Invócalo sobre una lista mutable; NO lo llames dentro de un bucle for-each sobre esa misma lista (usa removeIf() o un Iterator para evitar ConcurrentModificationException).
-donde.de: Auf einer veränderlichen Liste nutzen; NICHT mitten in einer for-each-Schleife über dieselbe Liste aufrufen (stattdessen removeIf() oder Iterator verwenden).
+donde.de: Auf einer veränderlichen Liste nutzen; NICHT mitten in einer for-each-Schleife über dieselbe Liste aufrufen (stattdessen removeIf() oder einen Iterator verwenden, um eine ConcurrentModificationException zu vermeiden).
 donde.en: Call on a mutable list; NEVER call it inside a for-each loop over that same list (use removeIf() or an Iterator to avoid ConcurrentModificationException).
 ejemplo: numeros.remove(Integer.valueOf(7));  // quita el valor 7
 
@@ -1495,8 +1495,8 @@ firma: boolean contains(Object o)      int indexOf(Object o)
 es: Dice si la colección tiene ese elemento (usa equals); indexOf da su posición o -1.
 de: Sagt, ob die Collection das Element enthält (per equals); indexOf liefert die Position oder -1.
 en: Tells whether the collection has that element (using equals); indexOf gives its position or -1.
-donde.es: Úsalo en condiciones if sobre listas pequeñas; si vas a consultar pertenencia muchas veces dentro de cadaTurno(), usa mejor un HashSet para no gastar pasos.
-donde.de: In if-Bedingungen bei kleinen Listen nutzen; wenn du in jedenZug() oft nachschlägst, nimm lieber ein HashSet, um Schritte zu sparen.
+donde.es: Úsalo en condiciones if sobre listas pequeñas; si vas a consultar pertenencia muchas veces dentro de cadaTurno(), usa mejor un HashSet para no gastar pasos de cálculo.
+donde.de: In if-Bedingungen bei kleinen Listen nutzen; wenn du in jedenZug() oft nachschlägst, nimm lieber ein HashSet, um Rechenschritte zu sparen.
 donde.en: Use in if checks on small lists; if you check membership repeatedly inside onTick(), prefer a HashSet to save computation steps.
 ejemplo: armas.contains("LASER")  // true
 
@@ -1606,7 +1606,7 @@ es: Un número que resume el objeto; lo usan HashMap y HashSet. Objetos iguales 
 de: Eine Zahl, die das Objekt zusammenfasst; genutzt von HashMap und HashSet. Gleiche Objekte, gleicher Wert.
 en: A number summarizing the object; used by HashMap and HashSet. Equal objects must give the same one.
 donde.es: Sobrescríbelo con @Override en el cuerpo de la misma clase donde sobrescribiste equals(), usando los mismos campos (Objects.hash(...)), para que funcione en HashMap y HashSet.
-donde.de: Mit @Override in derselben Klasse überschreiben, in der du equals() überschreibst, mit denselben Feldern (Objects.hash(...)), damit HashMap und HashSet stimmen.
+donde.de: Mit @Override in derselben Klasse überschreiben, in der du equals() überschreibst, mit denselben Feldern (Objects.hash(...)), damit HashMap und HashSet richtig funktionieren.
 donde.en: Override with @Override in the same class where you override equals(), using the same fields (Objects.hash(...)), so HashMap and HashSet work properly.
 ejemplo: @Override public int hashCode() { return Objects.hash(x, y); }
 
@@ -1650,7 +1650,7 @@ es: Desordena la lista al azar; reverse le da la vuelta.
 de: Mischt die Liste zufällig; reverse kehrt sie um.
 en: Shuffles the list randomly; reverse turns it around.
 donde.es: Llámalo como sentencia propia sobre una lista mutable (en robots pasa azar() como segundo argumento para reproducibilidad; requiere import java.util.Collections;).
-donde.de: Als eigene Anweisung auf einer veränderlichen Liste aufrufen (in Robotern zufall() als zweites Argument mitgeben; braucht import java.util.Collections;).
+donde.de: Als eigene Anweisung auf einer veränderlichen Liste aufrufen (in Robotern zufall() als zweites Argument mitgeben, damit es reproduzierbar bleibt; braucht import java.util.Collections;).
 donde.en: Call as a standalone statement on a mutable list (in robots pass random() as the second argument for reproducibility; needs import java.util.Collections;).
 ejemplo: Collections.shuffle(planes, azar());
 
@@ -1674,14 +1674,14 @@ es: Una clase que funciona con cualquier tipo, que se elige al usarla. Desde Jav
 de: Eine Klasse, die mit jedem Typ funktioniert; der Typ wird bei der Verwendung gewählt. Seit Java 5.
 en: A class that works with any type, chosen when you use it. Since Java 5.
 donde.es: Declara <T> justo tras el nombre de la clase en su cabecera para contenedores reutilizables; dentro de esa clase no puedes usar T en campos o métodos static.
-donde.de: <T> direkt hinter den Klassennamen im Klassenkopf setzen; innerhalb der Klasse darf T nicht in static-Feldern oder static-Methoden genutzt werden.
+donde.de: <T> direkt hinter den Klassennamen im Klassenkopf setzen, um wiederverwendbare Container zu bauen; innerhalb der Klasse darf T nicht in static-Feldern oder static-Methoden genutzt werden.
 donde.en: Place <T> right after the class name in its header for reusable containers; inside the class you cannot reference T from static fields or methods.
 ejemplo: class Caja<T> { T dentro; }   Caja<String> c = new Caja<>();
 
 === sintaxis.metodo.generico
 tema: 16
 firma: static <T> tipoRetorno nombre(T param)
-es: Un método con su propio tipo variable; Java lo deduce por los argumentos.
+es: Un método con su propia variable de tipo; Java lo deduce por los argumentos.
 de: Eine Methode mit eigener Typvariable; Java leitet sie aus den Argumenten ab.
 en: A method with its own type variable; Java infers it from the arguments.
 donde.es: Coloca <T> justo delante del tipo de retorno en la firma del método (después de public static si los hay); no lo pongas detrás del nombre del método.
@@ -1707,7 +1707,7 @@ es: Limita T a ese tipo o sus hijos, para poder usar sus métodos dentro.
 de: Beschränkt T auf diesen Typ oder seine Untertypen, damit du dessen Methoden nutzen kannst.
 en: Restricts T to that type or its subtypes, so you can use its methods inside.
 donde.es: Ponlo dentro de la declaración <T extends Tipo> de una clase o método genérico para poder llamar a métodos de Tipo sobre T; usa extends tanto para clases como para interfaces.
-donde.de: In der Typparameter-Deklaration <T extends Typ> einer generischen Klasse oder Methode nutzen; extends gilt dabei sowohl für Klassen als auch für Interfaces.
+donde.de: In der Typparameter-Deklaration <T extends Typ> einer generischen Klasse oder Methode nutzen, um Methoden von Typ auf T aufzurufen; extends gilt dabei sowohl für Klassen als auch für Interfaces.
 donde.en: Write inside the <T extends Type> declaration of a generic class or method so you can call Type's methods on T; use extends for interfaces too, not implements.
 ejemplo: static <T extends Comparable<T>> T mayor(T a, T b) { return a.compareTo(b) >= 0 ? a : b; }
 
@@ -1716,10 +1716,10 @@ tema: 16
 firma: List<? extends Tipo>
 es: Una lista de algún subtipo de Tipo: se lee como Tipo pero no se puede añadir. Es un «productor».
 de: Eine Liste irgendeines Untertyps von Typ: Lesen als Typ geht, Hinzufügen nicht. Ein „Produzent“.
-en: A list of some subtype of Type: you can read as Type but not add. A “producer”.
+en: A list of some subtype of Type: you can read from it as Type but not add to it. A “producer”.
 donde.es: Úsalo en tipos de parámetros de métodos que solo LEEN elementos de una lista (productor); no puedes añadir elementos nuevos (salvo null) a una List<? extends Tipo>.
 donde.de: In Methodenparametern nutzen, die Elemente einer Liste nur LESEN (Produzent); neue Elemente (außer null) lassen sich in List<? extends Typ> nicht einfügen.
-donde.en: Use in method parameter types that only READ from a list (producer); you cannot add new items (other than null) into a List<? extends Type>.
+donde.en: Use in method parameter types that only READ from a list (producer); you cannot add new items (other than null) to a List<? extends Type>.
 ejemplo: double suma(List<? extends Number> l) { double s = 0; for (Number n : l) s += n.doubleValue(); return s; }
 
 === sintaxis.comodin.super
@@ -1730,7 +1730,7 @@ de: Eine Liste für Typ oder einen Obertyp: Typ hinzufügen geht. Ein „Konsume
 en: A list of Type or a supertype: you can add Type. A “consumer” (the PECS rule).
 donde.es: Úsalo en tipos de parámetros de métodos que ESCRIBEN o añaden elementos a una lista (consumidor); al leer de ella solo recibes Object.
 donde.de: In Methodenparametern nutzen, die Elemente in eine Liste SCHREIBEN (Konsument); beim Auslesen erhältst du allerdings nur Object.
-donde.en: Use in method parameter types that WRITE or add elements into a list (consumer); reading back from it only yields Object.
+donde.en: Use in method parameter types that WRITE or add elements to a list (consumer); reading back from it only yields Object.
 ejemplo: void rellenar(List<? super Integer> l) { l.add(1); l.add(2); }
 
 === sintaxis.borrado.tipos
@@ -1740,8 +1740,8 @@ es: Los genéricos solo existen al compilar: no admiten primitivos ni se pueden 
 de: Generics gibt es nur beim Kompilieren: keine primitiven Typen, kein new T().
 en: Generics exist only at compile time: no primitive types and no new T().
 donde.es: Recuérdalo al escribir código genérico: usa tipos envoltorio (List<Integer>), evita new T() o instanceof List<String> y pasa un Supplier<T> o Class<T> si necesitas crear instancias.
-donde.de: Bei generischem Code beachten: Wrapper-Typen (List<Integer>) nehmen, new T() und instanceof List<String> vermeiden und bei Bedarf Supplier<T> übergeben.
-donde.en: Remember when writing generics: use wrappers (List<Integer>), avoid new T() or instanceof List<String>, and pass a Supplier<T> if instantiation is needed.
+donde.de: Bei generischem Code beachten: Wrapper-Typen (List<Integer>) nehmen, new T() und instanceof List<String> vermeiden und bei Bedarf Supplier<T> oder Class<T> übergeben.
+donde.en: Remember when writing generics: use wrappers (List<Integer>), avoid new T() or instanceof List<String>, and pass a Supplier<T> or Class<T> if instantiation is needed.
 ejemplo: List<Integer> bien = new ArrayList<>();   // List<int> no compila
 
 # ==================================================================== 17 Lambdas e interfaces funcionales
@@ -1760,7 +1760,7 @@ ejemplo: Predicate<Enemigo> cerca = e -> e.distancia() < 150;
 === sintaxis.interfaz.funcional
 tema: 17
 firma: @FunctionalInterface interface X { un solo método abstracto }
-es: Una interfaz con un único método abstracto. Cualquier lambda puede ser de ese tipo.
+es: Una interfaz con un único método abstracto. Cualquier lambda compatible puede ser de ese tipo.
 de: Ein Interface mit genau einer abstrakten Methode. Jede passende Lambda kann diesen Typ haben.
 en: An interface with exactly one abstract method. Any matching lambda can have that type.
 donde.es: Coloca @FunctionalInterface justo encima de una interfaz que tenga exactamente UN método abstracto; el compilador te avisará si añades un segundo por error.
@@ -1775,14 +1775,14 @@ es: Recibe un valor y devuelve otro. andThen encadena dos funciones.
 de: Nimmt einen Wert und gibt einen anderen zurück. andThen verkettet zwei Funktionen.
 en: Takes a value and returns another. andThen chains two functions.
 donde.es: Úsalo como tipo de parámetro o variable (con import java.util.function.*;) cuando un método deba recibir una transformación de T a R, como en Stream.map().
-donde.de: Als Parameter- oder Variablentyp (mit import java.util.function.*;) nutzen, wenn eine Methode eine Umwandlung von T nach R erhält (z. B. Stream.map()).
+donde.de: Als Parameter- oder Variablentyp (mit import java.util.function.*;) nutzen, wenn eine Methode eine Umwandlung von T nach R erhalten soll (z. B. Stream.map()).
 donde.en: Use as a parameter or variable type (with import java.util.function.*;) when accepting a T-to-R transformation, such as in Stream.map().
 ejemplo: Function<String, Integer> largo = String::length; largo.apply("bala")  // 4
 
 === Predicate
 tema: 17
 firma: interface Predicate<T> { boolean test(T t); }
-es: Una condición sobre un valor. Se combinan con and, or y negate.
+es: Una condición sobre un valor. Se combina con and, or y negate.
 de: Eine Bedingung über einen Wert. Kombinierbar mit and, or und negate.
 en: A condition on a value. Combine them with and, or and negate.
 donde.es: Úsalo como tipo de parámetro (con import java.util.function.*;) para pasar reglas de filtrado reutilizables a Stream.filter() o Collection.removeIf().
